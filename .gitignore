@@ -4,4 +4,5 @@ vendor/*
 composer.phar
 composer.lock
 
+application/configs/application.ini
 data/logs/*
