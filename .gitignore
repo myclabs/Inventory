@@ -6,3 +6,4 @@ composer.lock
 
 application/configs/application.ini
 data/logs/*
+public/yui

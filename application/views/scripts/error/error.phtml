@@ -1,0 +1,31 @@
+<div class="hero-unit">
+    <h1><?=$this->error['code']?></h1>
+    <p><?=$this->error['message']?></p>
+    <?php
+    echo $this->button(__('UI', 'button', 'previousPage'), 'circle-arrow-left icon-white',
+        array('class' => 'btn-warning', 'onclick' => 'history.back();'));
+    ?>
+</div>
+
+<?php if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'developpement') || (APPLICATION_ENV == 'test')) { ?>
+
+<div class="page-header">
+    <h2>Information complémentaire pour l'environnement : <?=APPLICATION_ENV?></h2>
+</div>
+
+<h3>Informations sur l'erreur:</h3>
+<p>
+    <b>Message :</b> <?=$this->error['message']?>
+</p>
+
+<hr />
+
+<h3>Trace d'exécution:</h3>
+<pre><?=$this->error['error']->exception->getTraceAsString()?></pre>
+
+<hr />
+
+<h3>Paramètres de la requête HTTP :</h3>
+<pre><?=var_export($this->error['error']->request->getParams(), true)?></pre>
+
+<?php } ?>

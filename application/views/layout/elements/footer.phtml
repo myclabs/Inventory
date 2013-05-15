@@ -1,0 +1,20 @@
+<footer>
+
+    <div class="feedback-form"></div>
+    <script>
+        $(function() {
+            var url = "<?=$this->baseUrl('feedback/submit')?>";
+            <?php
+            if (Zend_Auth::getInstance()->hasIdentity()) {
+                $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+                $userEmail = $connectedUser->getEmail();
+                echo "var data = {user: '$userEmail'};";
+            } else {
+                echo "var data = {};";
+            }
+            ?>
+            $(".feedback-form").feedbackForm(url, data);
+        });
+    </script>
+
+</footer>

@@ -1,0 +1,401 @@
+<?php
+if (Zend_Auth::getInstance()->hasIdentity()) {
+    $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+
+    $leftMenu = [];
+
+    $aclQuery = new Core_Model_Query();
+    $aclQuery->aclFilter->enabled = true;
+    $aclQuery->aclFilter->user = $connectedUser;
+    $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+    $isConnectedUserAbleToSeeProjects = (Inventory_Model_Project::countTotal($aclQuery) > 0);
+
+    if ($isConnectedUserAbleToSeeProjects) {
+        $leftMenu[1] = [
+            'name' => __('Orga', 'name', 'organization'),
+            'url' => $this->baseUrl('inventory/project/'),
+        ];
+    }
+    $leftMenu[3] = [
+        'name' => __('Inventory', 'menu', 'simulations'),
+        'url' => $this->baseUrl('simulation/set/manage'),
+    ];
+    $leftMenu[4] = [
+        'name' => __('Inventory', 'menu', 'referentials'),
+        'url' => '#',
+        'submenu' => []
+    ];
+
+    $isAllowedToViewAllUser = User_Service_ACL::getInstance()->isAllowed(
+        $connectedUser,
+        User_Model_Action_Default::VIEW(),
+        User_Model_Resource_Entity::loadByEntityName('User_Model_User')
+    );
+    if ($isAllowedToViewAllUser) {
+        $leftMenu[5] = [
+            'name' => __('Inventory', 'menu', 'administration'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('User', 'name', 'users'),
+                    'url'  => 'user/profile/list',
+                ],
+            ],
+        ];
+    }
+
+    $refer = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
+    $refer = preg_replace('#'.Zend_Controller_Front::getInstance()->getBaseUrl().'/#', '', $refer, 1);
+    $refer = urlencode($refer);
+    $connection = array(
+        'name'    => $connectedUser->getName() . ' ',
+        'icon'    => 'off',
+        'url'     => 'user/action/logout?refer='.$refer,
+        'submenu' => array(
+            array(
+                'name' => __('User', 'menu', 'myAccount'),
+                'url'  => 'user/profile/edit/',
+            ),
+            array(
+                'name' => __('User', 'menu', 'logout'),
+                'url'  => 'user/action/logout?refer='.$refer,
+            ),
+        ),
+    );
+
+    $subMenuReferencial = &$leftMenu[4]['submenu'];
+
+    $isAllowedToEditReferential = User_Service_ACL::getInstance()->isAllowed(
+        $connectedUser,
+        User_Model_Action_Default::EDIT(),
+        User_Model_Resource_Named::loadByName('referential')
+    );
+    if ($isAllowedToEditReferential) {
+        $subMenuReferencial[] = [
+            'name' => __('AF', 'name', 'accountingForms'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('UI', 'name', 'tree'),
+                    'url' => 'af/af/tree'
+                ],
+                [
+                    'name' => __('UI', 'name', 'list'),
+                    'url' => 'af/af/list'
+                ],
+                [
+                    'name' => __('TEC', 'interpreter', 'pageTitle'),
+                    'url' => 'tec/expression/test'
+                ],
+            ]
+        ];
+    }
+    if ($isAllowedToEditReferential) {
+        $subMenuReferencial[] = [
+            'name' => __('Classif', 'name', 'classification'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('UI', 'name', 'axes'),
+                    'url' => 'classif/axis/manage'
+                ],
+                [
+                    'name' => __('UI', 'name', 'members'),
+                    'url' => 'classif/member/manage'
+                ],
+                [
+                    'name' => __('Classif', 'name', 'indicators'),
+                    'url' => 'classif/indicator/manage'
+                ],
+                [
+                    'name' => __('Classif', 'name', 'contexts'),
+                    'url' => 'classif/context/manage'
+                ],
+                [
+                    'name' => __('Classif', 'contextIndicator', 'contextIndicators'),
+                    'url' => 'classif/contextindicator/manage'
+                ],
+                [
+                    'name'    => __('UI', 'name', 'control'),
+                    'url'     => 'classif/consistency/check',
+                ],
+            ]
+        ];
+    }
+    if ($isAllowedToEditReferential) {
+        $subMenuReferencial[] = [
+            'name' => __('Techno', 'name', 'parameters'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Techno', 'familyTree', 'familyTreeEdit'),
+                    'url' => 'techno/family/tree-edit'
+                ],
+                [
+                    'name' => __('Techno', 'familyTree', 'familyTreeConsult'),
+                    'url' => 'techno/family/tree'
+                ],
+                [
+                    'name' => __('Techno', 'familyList', 'familyListEdit'),
+                    'url' => 'techno/family/list-edit'
+                ],
+                [
+                    'name' => __('Techno', 'familyList', 'familyListConsult'),
+                    'url' => 'techno/family/list'
+                ],
+                [
+                    'name' => __('Techno', 'name', 'meanings'),
+                    'url' => 'techno/meaning/list'
+                ],
+                [
+                    'name' => __('UI', 'name', 'control'),
+                    'url' => 'techno/validation/results'
+                ],
+            ],
+        ];
+    } else {
+        $subMenuReferencial[] = [
+            'name' => __('Techno', 'name', 'parameters'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Techno', 'familyTree', 'familyTree'),
+                    'url' => 'techno/family/tree'
+                ],
+                [
+                    'name' => __('Techno', 'familyList', 'familyList'),
+                    'url' => 'techno/family/list'
+                ],
+            ]
+        ];
+    }
+    if ($isAllowedToEditReferential) {
+        $subMenuReferencial[] = [
+            'name' => __('Keyword', 'menu', 'semanticResources'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Keyword', 'menu', 'keywordGraph'),
+                    'url' => 'keyword/graph/root'
+                ],
+                [
+                    'name' => __('Keyword', 'menu', 'keywordList'),
+                    'url' => 'keyword/keyword/manage'
+                ],
+                [
+                    'name' => __('Keyword', 'relation', 'pageTitle'),
+                    'url' => 'keyword/association/manage'
+                ],
+                [
+                    'name' => __('Keyword', 'name', 'predicates'),
+                    'url' => 'keyword/predicate/manage'
+                ],
+            ]
+        ];
+    }
+
+    $subMenuReferencial[] = [
+        'name' => __('Unit', 'name', 'units'),
+        'url' => '#',
+        'submenu' => [
+            [
+                'name' => __('Unit', 'name', 'standardUnits'),
+                'url' => 'unit/consult/standardunits'
+            ],
+            [
+                'name' => __('Unit', 'name', 'extendedUnits'),
+                'url' => 'unit/consult/extendedunits'
+            ],
+            [
+                'name' => __('Unit', 'name', 'discreteUnits'),
+                'url' => 'unit/consult/discreteunits'
+            ],
+            [
+                'name' => __('Unit', 'name', 'physicalQuantities'),
+                'url' => 'unit/consult/physicalquantities'
+            ],
+        ]
+    ];
+
+} else {
+    $leftMenu = array();
+    $refer = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
+    $refer = preg_replace('#'.Zend_Controller_Front::getInstance()->getBaseUrl().'/#', '', $refer, 1);
+    $refer = urlencode($refer);
+    $connection = array(
+        'name'    => __('User', 'name', 'connection'),
+        'icon'    => 'off',
+        'url'     => 'user/action/login?refer='.$refer,
+        'submenu' => null,
+    );
+}
+$rightMenu = [ $connection ];
+?>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="index">My C-Tool</a>
+
+            <div class="btn-group pull-right">
+                <?php foreach ($rightMenu as $node) {
+                    if (isset($node['submenu']) && (is_array($node['submenu'])) && (count($node['submenu']) > 0)) {
+                        ?>
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <?php       foreach ($node['submenu'] as $submenu) { ?>
+                                <li><a href="<?=$submenu['url']?>"><?=$submenu['name']?></a></li>
+                                <?php if ($submenu != end($node['submenu'])) { ?>
+                                    <li class="divider"></li>
+                                <?php } ?>
+                            <?php } ?>
+                        </ul>
+                    <?php } else { ?>
+                        <a class="btn" href="<?=$node['url']?>"><i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?>
+                        </a>
+                    <?php } ?>
+                <?php } ?>
+            </div>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <?php foreach ($leftMenu as $node) {
+                        $liClasses = array();
+                        if (isset($node['active']) && $node['active']) {
+                            $liClasses[] = 'active';
+                        }
+                        if (isset($node['submenu']) && (count($node['submenu']) > 0)) {
+                            $liClasses[] = 'dropdown';
+                        }
+                        $liClass = (count($liClasses) > 0) ? ' class="' . implode(' ', $liClasses) . '"' : '';
+                        $mainLink = (isset($node['url']) && ($node['url'] != '')) ? ' href="' . $node['url'] . '"' : '';
+                        ?>
+                        <?php
+                        if (isset($node['submenu']) && (is_array($node['submenu']))
+                            && (count($node['submenu']) > 0)
+                        ) {
+                            ?>
+                            <li<?=$liClass?>>
+                                <a<?=$mainLink?> class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <?=$node['name']?>
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <?php foreach ($node['submenu'] as $submenu) { ?>
+                                        <?php
+                                        if (isset($submenu['submenu']) && (is_array($submenu['submenu']))
+                                            && (count($submenu['submenu']) > 0)
+                                        ) {
+                                            ?>
+                                            <li class="dropdown-submenu">
+                                                <a href="<?=$submenu['url']?>"><?=$submenu['name']?></a>
+                                                <ul class="dropdown-menu">
+                                                    <?php foreach ($submenu['submenu'] as $submenuBis) { ?>
+                                                        <li><a href="<?=$submenuBis['url']?>"><?=$submenuBis['name']?></a></li>
+                                                    <?php } ?>
+                                                </ul>
+                                            </li>
+                                        <?php } else { ?>
+                                            <li><a href="<?=$submenu['url']?>"><?=$submenu['name']?></a></li>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </ul>
+                            </li>
+                        <?php } else { ?>
+                            <li<?=$liClass?>><a<?=$mainLink?>><?=$node['name']?></a></li>
+                        <?php } ?>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div><div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="index">My C-Tool</a>
+
+            <div class="btn-group pull-right">
+                <?php foreach ($rightMenu as $node) {
+                    if (isset($node['submenu']) && (is_array($node['submenu'])) && (count($node['submenu']) > 0)) {
+                        ?>
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <?php       foreach ($node['submenu'] as $submenu) { ?>
+                                <li><a href="<?=$submenu['url']?>"><?=$submenu['name']?></a></li>
+                                <?php if ($submenu != end($node['submenu'])) { ?>
+                                    <li class="divider"></li>
+                                <?php } ?>
+                            <?php } ?>
+                        </ul>
+                    <?php } else { ?>
+                        <a class="btn" href="<?=$node['url']?>"><i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?>
+                        </a>
+                    <?php } ?>
+                <?php } ?>
+            </div>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <?php foreach ($leftMenu as $node) {
+                        $liClasses = array();
+                        if (isset($node['active']) && $node['active']) {
+                            $liClasses[] = 'active';
+                        }
+                        if (isset($node['submenu']) && (count($node['submenu']) > 0)) {
+                            $liClasses[] = 'dropdown';
+                        }
+                        $liClass = (count($liClasses) > 0) ? ' class="' . implode(' ', $liClasses) . '"' : '';
+                        $mainLink = (isset($node['url']) && ($node['url'] != '')) ? ' href="' . $node['url'] . '"' : '';
+                        ?>
+                        <?php
+                        if (isset($node['submenu']) && (is_array($node['submenu']))
+                            && (count($node['submenu']) > 0)
+                        ) {
+                            ?>
+                            <li<?=$liClass?>>
+                                <a<?=$mainLink?> class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <?=$node['name']?>
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <?php foreach ($node['submenu'] as $submenu) { ?>
+                                        <?php
+                                        if (isset($submenu['submenu']) && (is_array($submenu['submenu']))
+                                            && (count($submenu['submenu']) > 0)
+                                        ) {
+                                            ?>
+                                            <li class="dropdown-submenu">
+                                                <a href="<?=$submenu['url']?>"><?=$submenu['name']?></a>
+                                                <ul class="dropdown-menu">
+                                                    <?php foreach ($submenu['submenu'] as $submenuBis) { ?>
+                                                        <li><a href="<?=$submenuBis['url']?>"><?=$submenuBis['name']?></a></li>
+                                                    <?php } ?>
+                                                </ul>
+                                            </li>
+                                        <?php } else { ?>
+                                            <li><a href="<?=$submenu['url']?>"><?=$submenu['name']?></a></li>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </ul>
+                            </li>
+                        <?php } else { ?>
+                            <li<?=$liClass?>><a<?=$mainLink?>><?=$node['name']?></a></li>
+                        <?php } ?>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
