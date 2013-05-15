@@ -1,0 +1,8 @@
+{
+	"require": {
+		"php": ">=5.4.0",
+		"zendframework/zendframework1": "1.12.*",
+		"doctrine/orm": "2.3.*",
+		"symfony/yaml": "*"
+	}
+}
