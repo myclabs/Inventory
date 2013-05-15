@@ -1,9 +1,10 @@
 .DS_Store
 .idea/*
+.vagrant/*
 vendor/*
 composer.phar
 composer.lock
 
 application/configs/application.ini
 data/logs/*
-public/yui
+public/yui/*
