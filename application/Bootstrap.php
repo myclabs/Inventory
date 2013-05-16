@@ -35,7 +35,7 @@ class Bootstrap extends Core_Bootstrap
             $autoloader->addModule($module, $moduleRoot);
 
             // Controllers
-            $frontController->addControllerDirectory($moduleRoot . '/controllers', $module);
+            $frontController->addControllerDirectory($moduleRoot . '/controllers', strtolower($module));
 
             // Bootstrap
             require_once $moduleRoot . '/Bootstrap.php';
@@ -64,7 +64,7 @@ class Bootstrap extends Core_Bootstrap
     {
         $this->bootstrap('View');
         $view = $this->getResource('view');
-        $view->addHelperPath(PACKAGE_PATH . '/src/View/Helper', 'UI_View_Helper');
+        $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
     }
 
     /**
