@@ -1,0 +1,30 @@
+# tec\models\mappers\TEC_Model_Expression.yml
+TEC_Model_Expression:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: TEC_Expression
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    expression:
+      column: expression
+      type: text
+      nullable: true
+    type:
+      column: type
+      type: string
+      nullable: false
+  oneToOne:
+    rootNode:
+      targetEntity: TEC_Model_Composite
+      joinColumns:
+        rootNode:
+          referencedColumnName: id
+      nullable: false
+      cascade: [ persist, remove ]
+  lifecycleCallbacks:
+    prePersist: [ preSave ]

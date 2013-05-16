@@ -23,6 +23,7 @@ class Bootstrap extends Core_Bootstrap
         $modules = [
             'Unit',
             'User',
+            'TEC',
         ];
 
         foreach ($modules as $module) {

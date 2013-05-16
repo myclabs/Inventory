@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+        
+        <!-- Arithmétique -->
+ 
+        <tu tuid="operatorSum">
+            <tuv xml:lang="fr">
+                <seg>Somme</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sum</seg>
+            </tuv>
+        </tu>
+        <tu tuid="operatorProduct">
+            <tuv xml:lang="fr">
+                <seg>Produit</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Product</seg>
+            </tuv>
+        </tu>
+        <tu tuid="modifierSumAdd">
+            <tuv xml:lang="fr">
+                <seg>+ </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>+ </seg>
+            </tuv>
+        </tu>
+        <tu tuid="modifierSumSub">
+            <tuv xml:lang="fr">
+                <seg>- </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>- </seg>
+            </tuv>
+        </tu>
+        <tu tuid="modifierProductSub">
+            <tuv xml:lang="fr">
+                <seg>1/</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>1/</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Booléen -->
+ 
+        <tu tuid="operatorOr">
+            <tuv xml:lang="fr">
+                <seg>OU</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>OR</seg>
+            </tuv>
+        </tu>
+        <tu tuid="operatorAnd">
+            <tuv xml:lang="fr">
+                <seg>ET</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>AND</seg>
+            </tuv>
+        </tu>
+        <tu tuid="modifierLogicalNot">
+            <tuv xml:lang="fr">
+                <seg>NON </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>NOT </seg>
+            </tuv>
+        </tu>
+
+        <!-- Sélection -->
+ 
+        <tu tuid="questionMark">
+            <tuv xml:lang="fr">
+                <seg> ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg> ?</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

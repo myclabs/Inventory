@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="expression">
+            <tuv xml:lang="fr">
+                <seg>Expression</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Expression</seg>
+            </tuv>
+        </tu>
+        <tu tuid="expressions">
+            <tuv xml:lang="fr">
+                <seg>Expressions</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Expressions</seg>
+            </tuv>
+        </tu>
+        <tu tuid="selection">
+            <tuv xml:lang="fr">
+                <seg>Sélection</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Selection</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

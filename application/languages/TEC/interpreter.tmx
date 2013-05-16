@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+     <tu tuid="pageTitle">
+         <tuv xml:lang="fr">
+             <seg>Interpréteur d'expression</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Expression interpreter</seg>
+         </tuv>
+     </tu>
+     <tu tuid="expressionTypeLabel">
+         <tuv xml:lang="fr">
+             <seg>Type d'expression</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Expression type</seg>
+         </tuv>
+     </tu>
+     <tu tuid="authorizedCharactersInOperands">
+         <tuv xml:lang="fr">
+             <seg>Caractères autorisés pour les opérandes : "a..z", "0..9", et "_".</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Authorized characters in operands : "a..z", "0..9", et "_".</seg>
+         </tuv>
+     </tu>
+     <tu tuid="arithmeticExpression">
+         <tuv xml:lang="fr">
+             <seg>Expression arithmétique : <code>a + b * (c - d) - (e - f) / g</code></seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Arithmetic expression: <code>a + b * (c - d) - (e - f) / g</code></seg>
+         </tuv>
+     </tu>
+     <tu tuid="booleanExpression">
+         <tuv xml:lang="fr">
+             <seg>Expression booléenne : <code>(salade | soupe) &amp; (viande | poisson) &amp; dessert</code></seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Boolean expression: <code>(salad | soup) &amp; (meat | fish) &amp; dessert</code></seg>
+         </tuv>
+     </tu>
+     <tu tuid="selectionExpression">
+         <tuv xml:lang="fr">
+             <seg>Sélection : <code>beau_temps : (soleil : chapeau_ &#59; chaleur : short) &#59; pluie : parapluie_ &#59; : chaussures</code></seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Selection: <code>nice_weather : (sun : hat &#59; heat : shorts) &#59; rain : umbrella &#59; : shoes</code></seg>
+         </tuv>
+     </tu>
+     <tu tuid="incorrectExpressionMessage">
+         <tuv xml:lang="fr">
+             <seg>L'expression n'a pas pu être interprétée.</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Expression could not be interpreted.</seg>
+         </tuv>
+     </tu>
+     <tu tuid="correctExpressionMessage">
+         <tuv xml:lang="fr">
+             <seg>L'expression est syntaxiquement correcte.</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Expression syntax is proper.</seg>
+         </tuv>
+     </tu>
+     <tu tuid="returnExpressionLabel">
+         <tuv xml:lang="fr">
+             <seg>Expression et arbre renvoyés</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Returned expression and tree</seg>
+         </tuv>
+     </tu>
+
+
+	</body>
+</tmx>

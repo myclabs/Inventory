@@ -1,0 +1,17 @@
+# tec\models\mappers\TEC_Model_Composite.yml
+TEC_Model_Composite:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: TEC_Composite
+  fields:
+    operator:
+      column: operator
+      type: string
+      length: 3
+      nullable: false
+  oneToMany:
+    children:
+      targetEntity: TEC_Model_Component
+      mappedBy: parent
+      nullable: true
+      cascade: [ persist, remove ]

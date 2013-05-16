@@ -38,7 +38,8 @@ phpunit
 
 SVN revision migrated for each package:
 
-* Core: 12213
-* UI: 12205
-* Unit: 12214
-* User: 12212
+- Core: 12213
+- UI: 12205
+- Unit: 12214
+- User: 12212
+- TEC: 12083

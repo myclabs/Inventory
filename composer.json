@@ -4,7 +4,8 @@
 			"Core": "src/",
 			"UI": "src/",
 			"Unit": "src/",
-			"User": "src/"
+			"User": "src/",
+			"TEC": "src/"
 		}
 	},
 	"require": {

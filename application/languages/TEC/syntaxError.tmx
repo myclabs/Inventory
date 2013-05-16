@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+    
+    <!-- Nombre de parenthèses ouvrantes et fermantes diffèrent -->
+    
+     <tu tuid="openingBracketNotClosed">
+         <tuv xml:lang="fr">
+             <seg>Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante.</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>At least one opening bracket is not closed.</seg>
+         </tuv>
+     </tu>
+     <tu tuid="closingBracketNotOpened">
+         <tuv xml:lang="fr">
+             <seg>Au moins une parenthèse fermante n'est associée à aucune parenthèse ouvrante.</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>At least one closing bracket is not opened.</seg>
+         </tuv>
+     </tu>
+
+    <!-- Autres erreurs -->
+    
+     <tu tuid="missingOperator">
+         <tuv xml:lang="fr">
+             <seg>Il manque un opérateur dans l'expression « [PART] ».</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>An operator is missing in expression "[PART]".</seg>
+         </tuv>
+     </tu>
+     <tu tuid="emptyOperand">
+         <tuv xml:lang="fr">
+             <seg>L'expression contient une opérande vide.</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Expression contains an empty operand.</seg>
+         </tuv>
+     </tu>
+     <tu tuid="invalidOperand">
+         <tuv xml:lang="fr">
+             <seg>L'opérande « [PART] » contient des caractères non autorisés.</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Operand "[PART]" contains unauthorized characters.</seg>
+         </tuv>
+     </tu>
+
+    <!-- Erreurs spécifiques pour les expressions de type « sélection » -->
+    
+     <tu tuid="invalidSelection">
+         <tuv xml:lang="fr">
+             <seg>L'élément à sélectionner « [PART] » a une expression invalide.</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>"[PART]" should denote an item to be selected, but its expression is not valid.</seg>
+         </tuv>
+     </tu>
+     <tu tuid="emptySelection">
+         <tuv xml:lang="fr">
+             <seg>Dans l'expression « [PART] », l'élément à sélectionner est vide.</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>Item to be selected is empty in expression "[PART]".</seg>
+         </tuv>
+     </tu>
+
+    </body>
+</tmx>
