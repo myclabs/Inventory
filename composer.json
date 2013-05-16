@@ -5,7 +5,8 @@
 			"UI": "src/",
 			"Unit": "src/",
 			"User": "src/",
-			"TEC": "src/"
+			"TEC": "src/",
+			"Exec": "src/"
 		}
 	},
 	"require": {
