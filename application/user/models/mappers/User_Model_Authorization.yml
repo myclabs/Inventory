@@ -1,0 +1,35 @@
+User_Model_Authorization:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: User_Authorization
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    action:
+      type: user_action
+      nullable: false
+
+  manyToOne:
+    identity:
+      targetEntity: User_Model_SecurityIdentity
+      inversedBy: directAuthorizations
+      joinColumn:
+        name: idIdentity
+        referencedColumnName: id
+        nullable: false
+    resource:
+      targetEntity: User_Model_Resource
+      inversedBy: directAuthorizations
+      joinColumn:
+        name: idResource
+        referencedColumnName: id
+        nullable: false
+
+  uniqueConstraints:
+    uniqueAuthorization:
+      columns: [idIdentity, action, idResource]

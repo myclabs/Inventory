@@ -21,11 +21,18 @@ class Bootstrap extends Core_Bootstrap
         $autoloader->addModule('Default', APPLICATION_PATH);
 
         $modules = [
-            'Unit'
+            'Unit',
+            'User',
         ];
 
         foreach ($modules as $module) {
             $moduleRoot = APPLICATION_PATH . '/' . strtolower($module);
+
+            // Autoloader
+            $autoloader->addModule($module, $moduleRoot);
+
+            // Controllers
+            $frontController->addControllerDirectory($moduleRoot . '/controllers', $module);
 
             // Bootstrap
             require_once $moduleRoot . '/Bootstrap.php';
@@ -35,12 +42,6 @@ class Bootstrap extends Core_Bootstrap
             $bootstrap->setRun($this->_run);
             $bootstrap->bootstrap();
             $this->_run = $bootstrap->getRun();
-
-            // Autoloader
-            $autoloader->addModule($module, $moduleRoot);
-
-            // Controllers
-            $frontController->addControllerDirectory($moduleRoot . '/controllers', $module);
 
             // Doctrine Mappers
             $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);

@@ -1,0 +1,25 @@
+User_Model_SecurityIdentity:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: User_SecurityIdentity
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type
+    type: string
+  discriminatorMap:
+    user: User_Model_User
+    role: User_Model_Role
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToMany:
+    directAuthorizations:
+      targetEntity: User_Model_Authorization
+      mappedBy: identity
+      cascade: [ all ]
+      orphanRemoval: true

@@ -3,7 +3,8 @@
 		"psr-0": {
 			"Core": "src/",
 			"UI": "src/",
-			"Unit": "src/"
+			"Unit": "src/",
+			"User": "src/"
 		}
 	},
 	"require": {
