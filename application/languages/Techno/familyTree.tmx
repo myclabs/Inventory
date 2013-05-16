@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="familyTree">
+            <tuv xml:lang="fr">
+                <seg>Arbre des familles</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Family tree</seg>
+            </tuv>
+        </tu>
+        <tu tuid="familyTreeEdit">
+            <tuv xml:lang="fr">
+                <seg>Arbre des familles (édition)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Family tree (edit)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="familyTreeConsult">
+            <tuv xml:lang="fr">
+                <seg>Arbre des familles (consultation)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Family tree (consult)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addCategoryPopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une catégorie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Category addition</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addCategoryButton">
+            <tuv xml:lang="fr">
+                <seg>Ajouter une catégorie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Add a category</seg>
+            </tuv>
+        </tu>
+        <tu tuid="editCategoryPopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Édition d'une catégorie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Category edition</seg>
+            </tuv>
+        </tu>
+        <tu tuid="editFamilyPopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Édition d'une famille</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Family edition</seg>
+            </tuv>
+        </tu>
+        <tu tuid="categoryHasChild">
+            <tuv xml:lang="fr">
+                <seg>Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins une famille ou une autre catégorie).</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This category cannot be deleted, since it is not empty (it contains at least a family or another category).</seg>
+            </tuv>
+        </tu>
+    
+    </body>
+</tmx>
+ 

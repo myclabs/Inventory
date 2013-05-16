@@ -1,0 +1,4 @@
+Techno_Model_Family_Process:
+  type: entity
+  repositoryClass: Techno_Model_Repository_Family
+  table: Techno_Family_Process

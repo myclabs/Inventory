@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+    
+        <tu tuid="pageTitle">
+            <tuv xml:lang="fr">
+                <seg>Relations entre mots clés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Relations between keywords</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une relation entre mots clés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Addition of a relation between keywords</seg>
+            </tuv>
+        </tu>
+    
+        <!-- Messages -->
+                
+        <tu tuid="inexistentKeyword">
+            <tuv xml:lang="fr">
+                <seg>Cette saisie ne correspond à aucun mot clé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This input does not match any existing keyword.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inexistentPredicate">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir l'un des prédicats existants.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select one of the existing predicates.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="associationSubjectSameAsObject">
+            <tuv xml:lang="fr">
+                <seg></seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg></seg>
+            </tuv>
+        </tu>
+        <tu tuid="associationAlreadyExists">
+            <tuv xml:lang="fr">
+                <seg>Les deux mots clés indiqués sont déjà reliés par le même prédicat.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The two selected keywords are already linked by the same predicate.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="semanticResources">
+            <tuv xml:lang="fr">
+                <seg>Ressources sémantiques</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Semantic resources</seg>
+            </tuv>
+        </tu>
+        <tu tuid="keywordGraph">
+            <tuv xml:lang="fr">
+                <seg>Graphe des mots clés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Keyword graph</seg>
+            </tuv>
+        </tu>
+        <tu tuid="keywordList">
+            <tuv xml:lang="fr">
+                <seg>Liste des mots clés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Keyword list</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

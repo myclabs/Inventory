@@ -1,0 +1,102 @@
+<?php
+/**
+ * @author  matthieu.napoli
+ * @package Techno
+ */
+
+/** @var $family Techno_Model_Family */
+$family = $this->family;
+$dimensions = $family->getDimensions();
+
+if (count($dimensions) === 0) {
+    echo "<p class='muted'>" . __('', '', 'Aucune donnée à afficher.') . "</p>";
+    return;
+}
+
+$tmd = new UI_TMD('elements');
+if ($this->edit) {
+    $tmd->formatCells = '<a href="{url}">{value} ± {uncertainty}</a>';
+} else {
+    $tmd->formatCells = '{value} ± {uncertainty}';
+}
+
+// Ajout des dimensions/colonnes
+foreach ($dimensions as $dimension) {
+    // Éléments de la dimension
+    $values = array_map(
+        function (Techno_Model_Family_Member $member) {
+            return $member->getLabel();
+        },
+        $dimension->getMembers()->toArray()
+    );
+    // Ajoute la dimension
+    if ($dimension->getOrientation() == Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL) {
+        $tmd->addDimensionIndexCol(Core_Tools::ucFirst($dimension->getLabel()),
+                                   $values,
+                                   $dimension->getPosition());
+    } else {
+        $tmd->addDimensionIndexLine(Core_Tools::ucFirst($dimension->getLabel()),
+                                    $values,
+                                    $dimension->getPosition());
+    }
+}
+
+/**
+ * Callback pour remplir les cellules
+ * @param array $coordinates array(indexDimension => indexMember)
+ * Les coordonnées sont dans l'ordre de la position, les dimensions horizontales en premier
+ * @return array|null|string
+ */
+$tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
+    $locale = Core_Locale::loadDefault();
+    $members = [];
+    $index = 0;
+    foreach ($dimensions as $dimension) {
+        $dimensionMembers = $dimension->getMembers();
+        $members[] = $dimensionMembers[$coordinates[$index]];
+        $index++;
+    }
+    $cell = $family->getCell($members);
+    $chosenElement = $cell->getChosenElement();
+    if ($chosenElement !== null) {
+        /** @var Techno_Model_Element_Coeff|Techno_Model_Element_Process $chosenElement */
+        return [
+            'url'         => $this->baseUrl('techno/element/details/id/' . $chosenElement->getId()),
+            'value'       => $locale->formatNumber($chosenElement->getValue()->digitalValue, 3),
+            'uncertainty' => $locale->formatUncertainty($chosenElement->getValue()->relativeUncertainty),
+            'unit'        => $chosenElement->getUnit()->getSymbol(),
+        ];
+    }
+    if ($this->edit) {
+        $addButton = new UI_HTML_Button('Ajouter');
+        $addButton->icon = 'plus-sign';
+        $addButton->addAttribute('class', 'btn-mini');
+        $addButton->addAttribute('onclick', 'addElement(' . json_encode($coordinates) . ')');
+        return $addButton->getHTML();
+    }
+    return null;
+};
+
+$tmd->display();
+
+?>
+
+<?php if ($this->edit) : ?>
+
+    <script>
+
+        function addElement(coordinates) {
+            var url = "<?=$this->baseUrl('techno/tmd_family-elements-tmd/add-element')?>";
+            var data = {
+                'id': <?=$family->getId()?>,
+                'coordinates':coordinates
+            };
+            $.post(url, data, function (data, textStatus, jqXHR) {
+                location.reload();
+            });
+            return false;
+        }
+
+    </script>
+
+<?php endif;

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <!-- Titre de la page -->
+
+        <tu tuid="pageTitle">
+            <tuv xml:lang="fr">
+                <seg>Graphe des mots clés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Keywords Graph</seg>
+            </tuv>
+        </tu>
+
+        <!-- Titres des trois colonnes quand on se trouve sur un mot clé -->
+    
+        <tu tuid="subjectKeywords">
+            <tuv xml:lang="fr">
+                <seg>Sujets</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Subjects</seg>
+            </tuv>
+        </tu>
+        <tu tuid="currentKeyword">
+            <tuv xml:lang="fr">
+                <seg>Courant</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Current</seg>
+            </tuv>
+        </tu>
+        <tu tuid="objectKeywords">
+            <tuv xml:lang="fr">
+                <seg>Objets</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Objects</seg>
+            </tuv>
+        </tu>
+
+        <!-- Titre de la colonne des mots clés racines -->
+
+        <tu tuid="rootKeywords">
+            <tuv xml:lang="fr">
+                <seg>Mots clés racines</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Toot keywords</seg>
+            </tuv>
+        </tu>
+
+        <!-- Lien vers les mots clés racines -->
+        
+        <tu tuid="goToRootKeywords">
+            <tuv xml:lang="fr">
+                <seg>Aller aux mots clés racines</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Go to root keywords</seg>
+            </tuv>
+        </tu>
+    
+        <!-- Messages -->
+        
+        <tu tuid="nonExistentKeyword">
+            <tuv xml:lang="fr">
+                <seg>Le contenu du champ « Aller à » n'a mené à aucun mot clé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The content of the "Go to" field has not led to any keyword.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

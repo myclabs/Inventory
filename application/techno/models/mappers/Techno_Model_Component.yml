@@ -1,0 +1,45 @@
+Techno_Model_Component:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Techno_Component
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type
+    type: string
+    length: 100
+  discriminatorMap:
+    element_process: Techno_Model_Element_Process
+    element_coeff: Techno_Model_Element_Coeff
+    family_process: Techno_Model_Family_Process
+    family_coeff: Techno_Model_Family_Coeff
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    documentation:
+      type: text
+      nullable: true
+    refBaseUnit:
+      type: string
+    refUnit:
+      type: string
+
+  manyToMany:
+    tags:
+      targetEntity: Techno_Model_Tag
+      joinTable:
+        name: Techno_Component_Tags
+        joinColumns:
+          idComponent:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idTag:
+            referencedColumnName: id
+            unique: true
+      cascade: [all]
+      orphanRemoval: true

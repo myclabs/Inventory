@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+    
+        <!-- Messages -->
+
+        <tu tuid="incompatibleUnit">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir une unité associée à la même grandeur physique que l'unité initiale.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please choose a new unit corresponding to the same physical quantity as previous unit.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

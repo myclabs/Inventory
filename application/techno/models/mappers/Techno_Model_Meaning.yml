@@ -1,0 +1,24 @@
+Techno_Model_Meaning:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Techno_Meaning
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    refKeyword:
+      type: string
+      unique: true
+    position:
+      type: integer
+      nullable: false
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

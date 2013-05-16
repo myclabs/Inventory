@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+    
+        <!-- Onglet « Général » -->
+
+        <!-- Formulaire des données générales -->
+
+        <tu tuid="generalDataTitle">
+            <tuv xml:lang="fr">
+                <seg>Général</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>General</seg>
+            </tuv>
+        </tu>
+
+        <!-- Tags de description -->
+
+        <!-- 
+        <tu tuid="descriptionTagTitle">
+            <tuv xml:lang="fr">
+                <seg>Tags de description</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Description tags</seg>
+            </tuv>
+        </tu>
+        -->
+        <tu tuid="descriptionTagAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un tag</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a tag</seg>
+            </tuv>
+        </tu>
+
+        <!-- Tags communs des éléments -->
+        <!-- 
+        <tu tuid="commonTagTitle">
+            <tuv xml:lang="fr">
+                <seg>Tags communs des éléments de la famille</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Family elements common tags</seg>
+            </tuv>
+        </tu>
+        -->
+        
+        <!-- Dimensions -->
+
+        <tu tuid="dimensionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une dimension</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a dimension</seg>
+            </tuv>
+        </tu>
+
+        <!-- Suppression -->
+
+        <tu tuid="deleteButtonLabel">
+            <tuv xml:lang="fr">
+                <seg>Supprimer cette famille</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Delete this family</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cantDeleteFamily">
+            <tuv xml:lang="fr">
+                <seg>Cette famille ne peut pas être supprimmée, car elle possède au moins un élément choisi.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This family cannot be deleted, since it contains at least one chosen element.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Onglet « Documentation » -->
+
+        <tu tuid="noDocumentation">
+            <tuv xml:lang="fr">
+                <seg>Il n'y a aucune documentation pour cette famille.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No documentation for this family.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>
