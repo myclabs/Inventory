@@ -109,7 +109,7 @@ class Core_Model_Query
      */
     public function getQuery(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
-        $this->parseToQueryBuilderWithoutLimit($queryBuilder);
+        $this->parseToQueryBuilderWithLimit($queryBuilder);
 
         $query = $queryBuilder->getQuery();
 
@@ -136,9 +136,9 @@ class Core_Model_Query
      * @param Doctrine\ORM\QueryBuilder $queryBuilder
      * @return \Doctrine\ORM\Query
      */
-    public function getQueryWithLimit(Doctrine\ORM\QueryBuilder $queryBuilder)
+    public function getQueryWithoutLimit(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
-        $this->parseToQueryBuilderWithLimit($queryBuilder);
+        $this->parseToQueryBuilderWithoutLimit($queryBuilder);
 
         $query = $queryBuilder->getQuery();
 

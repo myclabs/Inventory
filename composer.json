@@ -10,9 +10,12 @@
 		"doctrine/orm": "2.3.*",
 		"doctrine/annotations": "1.*",
 		"doctrine/common": "dev-ChainDriverFix as 2.3.0",
-		"gedmo/doctrine-extensions": "dev-Fix-DriverChain",
-		"symfony/yaml": "*"
+		"gedmo/doctrine-extensions": "dev-Issue-266",
+		"symfony/yaml": "*",
+		"pear/console_commandline": "dev-trunk"
 	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"repositories": [
 		{
 			"type": "git",

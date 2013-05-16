@@ -59,23 +59,21 @@ class Core_Script_Build
      */
     public function __construct()
     {
-        // Get package.
-        $package = Core_Package_Manager::getCurrentPackage();
         // Available actions.
-        $this->_availableActions = $this->getActions($package);
+        $this->_availableActions = $this->getActions();
         // Available actions in the dependencies.
-        $this->_dependencies = Core_Package_Manager::getAllDependencies();
-        foreach ($this->_dependencies as $dependency) {
-            try {
-                $actions = $this->getActions($dependency);
-            } catch (Exception $e){
-                $actions = array();
-                echo 'Notice: No actions for '.$dependency->getName().PHP_EOL;
-                echo "\t".$e->getMessage().PHP_EOL;
-                echo '---------------------------'.PHP_EOL;
-            }
-            $this->_availableActionsDependencies[$dependency->getName()] = $actions;
-        }
+//        $this->_dependencies = Core_Package_Manager::getAllDependencies();
+//        foreach ($this->_dependencies as $dependency) {
+//            try {
+//                $actions = $this->getActions($dependency);
+//            } catch (Exception $e){
+//                $actions = array();
+//                echo 'Notice: No actions for '.$dependency->getName().PHP_EOL;
+//                echo "\t".$e->getMessage().PHP_EOL;
+//                echo '---------------------------'.PHP_EOL;
+//            }
+//            $this->_availableActionsDependencies[$dependency->getName()] = $actions;
+//        }
         // CLI parser.
         $this->_parser = new Console_CommandLine(array(
             'name' => "php build.php",
@@ -94,13 +92,6 @@ class Core_Script_Build
                             ."Default is '-e testsunitaires,developpement'",
             'default'     => 'testsunitaires,developpement',
         ));
-        $this->_parser->addOption('targetPackage', array(
-            'short_name'  => '-t',
-            'long_name'   => '--targetPackage',
-            'description' => "Target package name where the actions can be found. Example: '-t Log'. "
-                             ."Default is '-t current_package'",
-            'default'     => $package->getName(),
-        ));
     }
 
     /**
@@ -114,39 +105,16 @@ class Core_Script_Build
 
         // Options.
         $environments   = $this->parseEnvironmentOption($result->options['environment']);
-        $currentPackage = Core_Package_Manager::getCurrentPackage();
-        $targetPackageName = $result->options['targetPackage'];
 
-        // Get the action list.
-        if ($targetPackageName != $currentPackage->getName()) {
-            if (!array_key_exists($targetPackageName, $this->_availableActionsDependencies)) {
-                throw new Core_Exception_InvalidArgument(
-                    'The target package is not in the dependencies list of the current package.'
-                );
+        // Actions.
+        $actions = array();
+        foreach ($result->args['actions'] as $actionName) {
+            if (! isset($this->_availableActions[$actionName])) {
+                $actionChoice = implode(', ', array_keys($this->_availableActions));
+                throw new Core_Exception_InvalidArgument("Action '$actionName' doesn't exist. "
+                    ."Possible values for the actions are $actionChoice.");
             }
-            // Actions.
-            $actions = array();
-            foreach ($result->args['actions'] as $actionName) {
-                if (! isset($this->_availableActionsDependencies[$targetPackageName][$actionName])) {
-                    $actionChoice = implode(', ', array_keys($this->_availableActionsDependencies[$targetPackageName]));
-                    throw new Core_Exception_InvalidArgument(
-                        'Action "'.$actionName.'" doesn\'t exist. '.
-                        'Possible values for the actions of the package '.$targetPackageName.' are '.$actionChoice.'.'
-                    );
-                }
-                $actions[$actionName] = $this->_availableActionsDependencies[$targetPackageName][$actionName];
-            }
-        } else {
-            // Actions.
-            $actions = array();
-            foreach ($result->args['actions'] as $actionName) {
-                if (! isset($this->_availableActions[$actionName])) {
-                    $actionChoice = implode(', ', array_keys($this->_availableActions));
-                    throw new Core_Exception_InvalidArgument("Action '$actionName' doesn't exist. "
-                        ."Possible values for the actions are $actionChoice.");
-                }
-                $actions[$actionName] = $this->_availableActions[$actionName];
-            }
+            $actions[$actionName] = $this->_availableActions[$actionName];
         }
 
         // Run the actions.
@@ -154,7 +122,7 @@ class Core_Script_Build
         foreach ($actions as $actionName => $action) {
             // Action.
             $action->dynamicEnvironments = $environments;
-            echo $targetPackageName.' > '.$actionName.PHP_EOL;
+            echo 'Inventory > '.$actionName.PHP_EOL;
             $action->run();
         }
     }
@@ -184,14 +152,12 @@ class Core_Script_Build
     /**
      * Returns the actions that exists in the build/ directory of the package
      *
-     * @param Core_Package $package Package
-     *
      * @return array(actionName => Core_Script_Action)
      */
-    private function getActions(Core_Package $package)
+    private function getActions()
     {
         $actions = array();
-        $basePath = $package->getPath().'/scripts/build';
+        $basePath = PACKAGE_PATH . '/scripts/build';
         // Find scripts in subdirectories.
         if (! is_dir($basePath)) {
             throw new Exception("The directory '$basePath' doesn't exist");
@@ -208,7 +174,7 @@ class Core_Script_Build
                 }
                 require_once $scriptFilename;
                 // Construct classname.
-                $classname = $package->getName().'_'.ucfirst($file);
+                $classname = 'Inventory_'.ucfirst($file);
                 // Check if class exists
                 if (! class_exists($classname)) {
                     throw new Exception(
@@ -217,7 +183,7 @@ class Core_Script_Build
                 }
                 // Load the action class.
                 $instance = new $classname();
-                $instance->dynamicPackage = $package;
+                $instance->dynamicPackage = 'Inventory';
                 // Check if class extends Core_Script_Action
                 if (! $instance instanceof Core_Script_Action) {
                     throw new Exception(

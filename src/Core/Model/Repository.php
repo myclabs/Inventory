@@ -104,7 +104,7 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
         $queryParameters->entityName = $entityName;
         $this->addCustomParametersToQueryBuilder($queryBuilderCountTotal, $queryParameters);
 
-        return $queryParameters->getQueryWithLimit($queryBuilderCountTotal)->getSingleScalarResult();
+        return $queryParameters->getQueryWithoutLimit($queryBuilderCountTotal)->getSingleScalarResult();
     }
 
     /**

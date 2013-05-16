@@ -419,7 +419,7 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
         $query = new Core_Model_Query();
         $query->order->addOrder($conditionName);
         try {
-            $query->parseToQueryBuilderWithLimit($queryBuilder);
+            $query->getQueryWithoutLimit($queryBuilder);
         } catch (Core_Exception_UndefinedAttribute $e) {
             if ($e->getMessage() == 'Neither Alias or RootAlias for condition "'.$conditionName.'" are defined') {
                 throw $e;
