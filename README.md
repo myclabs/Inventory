@@ -43,4 +43,5 @@ SVN revision migrated for each package:
 - Unit: 12214
 - User: 12212
 - TEC: 12083
+- Calc: 10810
 - Exec: 10295

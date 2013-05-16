@@ -6,6 +6,7 @@
 			"Unit": "src/",
 			"User": "src/",
 			"TEC": "src/",
+			"Calc": "src/",
 			"Exec": "src/"
 		}
 	},

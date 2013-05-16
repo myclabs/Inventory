@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\DBAL\Types\Type;
+
 /**
  * Application bootstrap
  */
@@ -63,6 +65,15 @@ class Bootstrap extends Core_Bootstrap
         $this->bootstrap('View');
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/View/Helper', 'UI_View_Helper');
+    }
+
+    /**
+     * Initialise le mapping des types en BDD
+     */
+    protected function _initCalcTypeMapping()
+    {
+        Type::addType(Calc_TypeMapping_Value::TYPE_NAME, 'Calc_TypeMapping_Value');
+        Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, 'Calc_TypeMapping_UnitValue');
     }
 
 }
