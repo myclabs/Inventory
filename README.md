@@ -49,3 +49,4 @@ SVN revision migrated for each package:
 - Exec: 11090
 - Export: 12202
 - Classif: 12212
+- Keyword: 12212

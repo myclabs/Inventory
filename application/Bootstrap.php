@@ -27,6 +27,7 @@ class Bootstrap extends Core_Bootstrap
             'User',
             'TEC',
             'Classif',
+            'Keyword',
         ];
 
         foreach ($modules as $module) {

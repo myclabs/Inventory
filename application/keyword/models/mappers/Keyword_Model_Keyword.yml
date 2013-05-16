@@ -1,0 +1,32 @@
+# keyword\models\mappers\Keyword_Model_Keyword.yml
+Keyword_Model_Keyword:
+  type: entity
+  repositoryClass: Keyword_Model_Repository_Keyword
+  table: Keyword_Keyword
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    ref:
+      column: ref
+      type: string
+      length: 255
+      unique: true
+      nullable: false
+    label:
+      column: label
+      type: string
+      length: 255
+      nullable: false
+  oneToMany:
+    objectAssociation:
+      targetEntity: Keyword_Model_Association
+      mappedBy: object
+      cascade: [ remove ]
+    subjectAssociation:
+      targetEntity: Keyword_Model_Association
+      mappedBy: subject
+      cascade: [ remove ]
