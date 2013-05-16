@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Titre de la page -->
+
+        <tu tuid="pageTitleSuffix">
+            <tuv xml:lang="fr">
+                <seg> — modification de l'adresse e-mail</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg> — e-mail address change</seg>
+            </tuv>
+        </tu>
+
+        <!-- Formulaire -->
+
+        <tu tuid="password">
+            <tuv xml:lang="fr">
+                <seg>Merci de re-saisir votre mot de passe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please enter your password again</seg>
+            </tuv>
+        </tu>   
+        <tu tuid="oldEmail">
+            <tuv xml:lang="fr">
+                <seg>Ancienne adresse e-mail</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Old e-mail address</seg>
+            </tuv>
+        </tu>   
+        <tu tuid="newEmail">
+            <tuv xml:lang="fr">
+                <seg>Nouvelle adresse e-mail</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>New e-mail address</seg>
+            </tuv>
+        </tu>   
+        <tu tuid="confirmNewEmail">
+            <tuv xml:lang="fr">
+                <seg>Nouvelle adresse e-mail (confirmation)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please confirm new e-mail address</seg>
+            </tuv>
+        </tu>   
+
+        <!-- Validation du formulaire -->
+
+        <tu tuid="emailsAreNotIdentical">
+            <tuv xml:lang="fr">
+                <seg>Cette saisie de la nouvelle adresse e-mail n'est pas identique à la précédente.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This typing of the new e-mail address is not identical to the one above.</seg>
+            </tuv>
+        </tu>   
+
+        <!-- Messages -->
+
+        <tu tuid="userInformedByEmail">
+            <tuv xml:lang="fr">
+                <seg> Un e-mail a été envoyé à l'utilisateur (à l'ancienne et à la nouvelle adresse) pour l'en informer.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg> User has been informed by e-mail (to old and new address).</seg>
+            </tuv>
+        </tu>   
+
+    </body>
+</tmx>

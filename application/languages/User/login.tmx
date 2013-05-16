@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Formulaire de connection -->
+
+        <tu tuid="youAreNotConnected">
+            <tuv xml:lang="fr">
+                <seg>Vous n'êtes pas connecté.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You are not conneted.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="forgottenPassword">
+            <tuv xml:lang="fr">
+                <seg>Mot de passe oublié ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Forgot password ?</seg>
+            </tuv>
+        </tu>
+
+        <!-- Messages -->
+
+        <tu tuid="unknownEmail">
+            <tuv xml:lang="fr">
+                <seg>L'adresse e-mail indiquée ne correspond à aucun compte existant.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Given e-mail address does not match any existing account.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidPassword">
+            <tuv xml:lang="fr">
+                <seg>Le mot de passe indiqué est invalide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Invalid password.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="youAreConnected">
+            <tuv xml:lang="fr">
+                <seg>Vous êtes à présent connecté en tant que : </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You are now connected as: </seg>
+            </tuv>
+        </tu>
+        <tu tuid="accountDisabled">
+            <tuv xml:lang="fr">
+                <seg>La connexion a été refusée, car votre compte utilisateur est désactivé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Connection denied, your user account is disabled.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

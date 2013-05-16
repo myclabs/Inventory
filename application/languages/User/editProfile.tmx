@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Titre de la page -->
+
+        <tu tuid="pageTitleMyAccount">
+            <tuv xml:lang="fr">
+                <seg>Mon compte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>My account</seg>
+            </tuv>
+        </tu>
+        <tu tuid="pageTitleSomeoneElsesAccount">
+            <tuv xml:lang="fr">
+                <seg>Compte de l'utilisateur : </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Account of user: </seg>
+            </tuv>
+        </tu>
+
+        <!-- Formulaire -->
+
+        <tu tuid="disable">
+            <tuv xml:lang="fr">
+                <seg>Désactiver cet utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Disable this user</seg>
+            </tuv>
+        </tu>
+
+        <!-- Popup de confirmation -->
+
+        <tu tuid="confirmDisableUser">
+            <tuv xml:lang="fr">
+                <seg>Êtes-vous sûr de vouloir désactiver cet utilisateur ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Are you sure you want to disable this user ?</seg>
+            </tuv>
+        </tu>
+
+        <!-- Messages -->
+
+        <tu tuid="userInformedByEmail">
+            <tuv xml:lang="fr">
+                <seg> Un e-mail a été envoyé à l'utilisateur pour l'en informer.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg> User has been informed by e-mail.</seg>
+            </tuv>
+        </tu>   
+        <tu tuid="accountActivated">
+            <tuv xml:lang="fr">
+                <seg>Ce compte utilisateur a été ré-activé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This user account has been reactivated.</seg>
+            </tuv>
+        </tu> 
+        <tu tuid="accountDeactivated">
+            <tuv xml:lang="fr">
+                <seg>Ce compte utilisateur a été désactivé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This user account has been deactivated.</seg>
+            </tuv>
+        </tu>   
+
+    </body>
+</tmx>

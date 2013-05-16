@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+    
+        <tu tuid="action">
+            <tuv xml:lang="fr">
+                <seg>Action</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Action</seg>
+            </tuv>
+        </tu>
+        <tu tuid="connection">
+            <tuv xml:lang="fr">
+                <seg>Connexion</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Connection</seg>
+            </tuv>
+        </tu>
+        <tu tuid="firstName">
+            <tuv xml:lang="fr">
+                <seg>Prénom</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>First name</seg>
+            </tuv>
+        </tu>
+        <tu tuid="lastName">
+            <tuv xml:lang="fr">
+                <seg>Nom</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Last name</seg>
+            </tuv>
+        </tu>
+        <tu tuid="password">
+            <tuv xml:lang="fr">
+                <seg>Mot de passe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Password</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resource">
+            <tuv xml:lang="fr">
+                <seg>Ressource</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Resource</seg>
+            </tuv>
+        </tu>
+        <tu tuid="role">
+            <tuv xml:lang="fr">
+                <seg>Rôle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Role</seg>
+            </tuv>
+        </tu>
+        <tu tuid="roles">
+            <tuv xml:lang="fr">
+                <seg>Rôles</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Roles</seg>
+            </tuv>
+        </tu>
+        <tu tuid="users">
+            <tuv xml:lang="fr">
+                <seg>Utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users</seg>
+            </tuv>
+        </tu>
+
+
+    </body>
+</tmx>

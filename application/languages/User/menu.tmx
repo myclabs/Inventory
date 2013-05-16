@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="myAccount">
+            <tuv xml:lang="fr">
+                <seg>Mon compte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>My account</seg>
+            </tuv>
+        </tu>
+        <tu tuid="login">
+            <tuv xml:lang="fr">
+                <seg>Connexion</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Login</seg>
+            </tuv>
+        </tu>
+        <tu tuid="logout">
+            <tuv xml:lang="fr">
+                <seg>Déconnexion</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Logout</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>    

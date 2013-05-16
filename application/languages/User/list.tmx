@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+        <!-- Titre de la page -->
+
+        <tu tuid="pageTitle">
+            <tuv xml:lang="fr">
+                <seg>Comptes utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User accounts</seg>
+            </tuv>
+        </tu>
+
+        <!-- Datagrid -->
+
+        <tu tuid="firstConnectionHeader">
+            <tuv xml:lang="fr">
+                <seg>1ère connexion</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>1st connection</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un compte utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a user account</seg>
+            </tuv>
+        </tu>
+
+        <!-- Validation du formulaire -->
+
+        <tu tuid="emailAlreadyUsed">
+            <tuv xml:lang="fr">
+                <seg>Il existe déjà un compte utilisateur associé à cette adresse e-mail.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User account with this e-mail address already exists.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Messages -->
+
+        <tu tuid="accountCreated">
+            <tuv xml:lang="fr">
+                <seg>Le compte utilisateur a été créé. Un e-mail contenant les identifiants de connexion a été envoyé à l'adresse e-mail saisie pour ce compte.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User account has been created. An e-mail with login parameters has been sent to the e-mail address provided for this account.</seg>
+            </tuv>
+            
+        </tu>
+	</body>
+</tmx>
