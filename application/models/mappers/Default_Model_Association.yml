@@ -1,0 +1,28 @@
+# default\models\mappers\Default_Model_Association.yml
+Default_Model_Association:
+  type: entity
+  repositoryClass: Default_Model_Repository_Association
+  table: Default_Association
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      column: name
+      type: string
+      length: 50
+      nullable: true
+  manyToMany:
+    simples:
+      targetEntity: Default_Model_Simple
+      joinTable:
+        name: Default_SimpleAssociation
+        joinColumns:
+          associationid:
+            referencedColumnName: id
+        inverseJoinColumns:
+          simpleid:
+            referencedColumnName: id

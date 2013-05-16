@@ -1,0 +1,21 @@
+# default\models\mappers\Default_Model_Simple.yml
+Default_Model_Simple:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Default_Simple
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      column: name
+      type: string
+      length: 50
+      nullable: true
+    creationDate:
+      column: creationDate
+      type: datetime
+      nullable: true

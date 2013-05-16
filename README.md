@@ -5,7 +5,7 @@
 Install [composer](http://getcomposer.org/doc/00-intro.md) and run:
 
 ```bash
-$ composer install
+composer install
 ```
 
 ## Run
@@ -13,17 +13,29 @@ $ composer install
 Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](http://www.vagrantup.com/):
 
 ```bash
-$ vagrant up
+vagrant up
 ```
 
 SSH to the virtual machine:
 
 ```bash
-$ vagrant ssh
+vagrant ssh
 ```
 
 Destroy the VM:
 
 ```bash
-$ vagrant destroy
+vagrant destroy
 ```
+
+### Tests
+
+```bash
+phpunit -c phpunit.xml
+```
+
+## Migration from SVN
+
+SVN revision migrated for each package:
+
+* Core: 12213

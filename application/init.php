@@ -18,8 +18,6 @@ if (! defined('APPLICATION_ENV')) {
 
 require_once PACKAGE_PATH . '/vendor/autoload.php';
 
-require_once 'Zend/Application.php';
-
 // Config
 $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
 $configShared = new Zend_Config_Ini(APPLICATION_PATH . '/configs/shared.ini', APPLICATION_ENV, true);

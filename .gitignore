@@ -7,4 +7,5 @@ composer.lock
 
 application/configs/application.ini
 data/logs/*
+data/proxies/*
 public/yui/*

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+		<tu tuid="pageNotFound">
+            <tuv xml:lang="fr">
+                <seg>La page recherchée n'a pas pu être trouvée.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The requested page could not be found.</seg>
+            </tuv>
+		</tu>
+		<tu tuid="applicationError">
+			<tuv xml:lang="fr">
+				<seg>L'application a rencontré une erreur.</seg>
+			</tuv>
+            <tuv xml:lang="en">
+                <seg>Application encountered an error.</seg>
+            </tuv>
+		</tu>
+        <tu tuid="emptyRequiredField">
+            <tuv xml:lang="fr">
+                <seg>Merci de renseigner ce champ.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please fill up this field.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="unauthorizedRef">
+            <tuv xml:lang="fr">
+                <seg>Merci d'utiliser seulement les caractères : "a..z", "0..9", et "_".</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please use only characters "a..z", "0..9", and "_".</seg>
+            </tuv>
+        </tu>
+
+	</body>
+</tmx>
