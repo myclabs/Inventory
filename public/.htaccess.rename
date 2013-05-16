@@ -1,6 +1,6 @@
 # Règles de réécriture pour Zend Framework
 RewriteEngine on
-RewriteBase /inventory/
+#RewriteBase /inventory/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule !\.(js|ico|gif|jpg|png|css)$ index.php  

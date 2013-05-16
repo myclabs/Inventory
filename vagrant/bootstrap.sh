@@ -34,6 +34,9 @@ rm -rf /var/www
 ln -fs /vagrant/public /var/www
 cp /vagrant/vagrant/php.ini /etc/php5/apache2/
 cp /vagrant/vagrant/php.ini /etc/php5/cli/
+cp /vagrant/vagrant/000-default /etc/apache2/sites-enabled/000-default
+a2enmod rewrite
+apachectl restart
 
 # phpMyAdmin
 export DEBIAN_FRONTEND=noninteractive
