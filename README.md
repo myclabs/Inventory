@@ -31,7 +31,7 @@ vagrant destroy
 ### Tests
 
 ```bash
-phpunit -c phpunit.xml
+phpunit
 ```
 
 ## Migration from SVN
