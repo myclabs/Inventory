@@ -1,0 +1,30 @@
+# classif\models\mappers\Classif_Model_Context.yml
+Classif_Model_Context:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Classif_Context
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      unique: true
+      nullable: false
+    label:
+      type: string
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

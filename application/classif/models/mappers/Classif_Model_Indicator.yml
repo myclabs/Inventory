@@ -1,0 +1,38 @@
+# classif\models\mappers\Classif_Model_Indicator.yml
+Classif_Model_Indicator:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Classif_Indicator
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      unique: true
+      nullable: false
+    label:
+      type: string
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+    unit:
+      column: refUnit
+      type: string
+      nullable: false
+    ratioUnit:
+      column: refRatioUnit
+      type: string
+      nullable: false
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

@@ -17,7 +17,7 @@ class Bootstrap extends Core_Bootstrap
         $frontController = Zend_Controller_Front::getInstance();
         /* @var $doctrineConfig Doctrine\ORM\Configuration */
         $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
-        /** @var DriverChain $driver */
+        /** @var Doctrine\ORM\Mapping\Driver\DriverChain $driver */
         $driver = $doctrineConfig->getMetadataDriverImpl();
 
         $autoloader->addModule('Default', APPLICATION_PATH);
@@ -26,6 +26,7 @@ class Bootstrap extends Core_Bootstrap
             'Unit',
             'User',
             'TEC',
+            'Classif',
         ];
 
         foreach ($modules as $module) {

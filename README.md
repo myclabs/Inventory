@@ -48,3 +48,4 @@ SVN revision migrated for each package:
 - Calc: 11087
 - Exec: 11090
 - Export: 12202
+- Classif: 12212
