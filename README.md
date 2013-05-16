@@ -16,6 +16,8 @@ Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](h
 vagrant up
 ```
 
+The website is accessible at http://localhost:8080/.
+
 SSH to the virtual machine:
 
 ```bash
