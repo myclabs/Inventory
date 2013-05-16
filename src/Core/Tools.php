@@ -5,6 +5,8 @@
  * @subpackage Tool
  */
 
+use Netcarver\Textile;
+
 /**
  * Classe regroupant des fonctions utilitaires transverses.
  *
@@ -143,10 +145,10 @@ abstract class Core_Tools
     public static function textile($text)
     {
         if (self::$textile === null) {
-            require_once(LIBRARY_PATH.'/External/Textile/classTextile.php');
-            self::$textile = new Textile();
+//            require_once(LIBRARY_PATH.'/External/Textile/classTextile.php');
+            self::$textile = new Textile\Parser();
         }
-        return self::$textile->TextileThis($text);
+        return self::$textile->textileThis($text);
     }
 
     /**

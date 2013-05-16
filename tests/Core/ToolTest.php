@@ -125,10 +125,10 @@ class Core_Test_ToolTest extends PHPUnit_Framework_TestCase
     {
         $textileString = 'Un _rapide_ -test- pour vérifier l\'inclusion de la classe **Textile**';
 
-        $htmlString = '	<p>Un <em>rapide</em> <del>test</del>'.
+        $htmlString = '<p>Un <em>rapide</em> <del>test</del>'.
             ' pour vérifier l&#8217;inclusion de la classe <b>Textile</b></p>';
 
-        $this->assertEquals(Core_Tools::textile($textileString), $htmlString);
+        $this->assertEquals($htmlString, Core_Tools::textile($textileString));
     }
 
     public function testUCFirst()

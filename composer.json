@@ -12,7 +12,8 @@
 		"doctrine/common": "dev-ChainDriverFix as 2.3.0",
 		"gedmo/doctrine-extensions": "dev-Issue-266",
 		"symfony/yaml": "*",
-		"pear/console_commandline": "dev-trunk"
+		"pear/console_commandline": "dev-trunk",
+		"netcarver/textile": "3.5.*"
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,

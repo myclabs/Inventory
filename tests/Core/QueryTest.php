@@ -392,18 +392,12 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
     /**
      * Vérifie qu'une exception est lancé si l'on essaye d'accéder à un attribut personnalisé inexistant.
      * @expectedException Core_Exception_UndefinedAttribute
+     * @expectedExceptionMessage Attempt to access undefined custom property : undefinedAttribute
      */
     public function testGetUndefinedAttribute()
     {
         $query = new Core_Model_Query();
-        try {
-            $valueUndefinedAttribute = $query->undefinedAttribute;
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            if ($e->getMessage() == 'Attempt to access undefined custom attribute : undefinedAttribute') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->undefinedAttribute;
     }
 
     /**
