@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="discreteUnits">
+            <tuv xml:lang="fr">
+                <seg>Unités discrètes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Discrete units</seg>
+            </tuv>
+        </tu>
+        <tu tuid="extendedUnits">
+            <tuv xml:lang="fr">
+                <seg>Unités étendues</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Extended units</seg>
+            </tuv>
+        </tu>
+        <tu tuid="multiplier">
+            <tuv xml:lang="fr">
+                <seg>Multiplicateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Multiplier</seg>
+            </tuv>
+        </tu>
+        <tu tuid="physicalQuantity">
+            <tuv xml:lang="fr">
+                <seg>Grandeur physique</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Physical quantity</seg>
+            </tuv>
+        </tu>
+        <tu tuid="physicalQuantities">
+            <tuv xml:lang="fr">
+                <seg>Grandeurs physiques</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Physical quantities</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ratioUnit">
+            <tuv xml:lang="fr">
+                <seg>Unité pour ratio</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ratio unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="referenceUnit">
+            <tuv xml:lang="fr">
+                <seg>Unité de reférence</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reference unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="standardUnits">
+            <tuv xml:lang="fr">
+                <seg>Unités standards</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Standard units</seg>
+            </tuv>
+        </tu>
+        <tu tuid="symbol">
+            <tuv xml:lang="fr">
+                <seg>Symbole</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Symbol</seg>
+            </tuv>
+        </tu>
+        <tu tuid="unit">
+            <tuv xml:lang="fr">
+                <seg>Unité</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="units">
+            <tuv xml:lang="fr">
+                <seg>Unités</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Units</seg>
+            </tuv>
+        </tu>
+        <tu tuid="unitSystem">
+            <tuv xml:lang="fr">
+                <seg>Système d'unités</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Unit system</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

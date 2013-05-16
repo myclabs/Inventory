@@ -1,0 +1,5 @@
+# unit\models\mappers\Unit_Model_Unit_Discrete.yml
+Unit_Model_Unit_Discrete:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Unit_DiscreteUnit

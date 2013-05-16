@@ -37,7 +37,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'Doctrine',
                 'DefaultEntityManager',
                 'WorkDispatcher',
-                'Modules',
                 // Il faut initialiser le front controller pour que l'ajout de dossiers
                 // de controleurs soit pris en compte
             );

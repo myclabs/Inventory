@@ -2,7 +2,8 @@
 	"autoload": {
 		"psr-0": {
 			"Core": "src/",
-			"UI": "src/"
+			"UI": "src/",
+			"Unit": "src/"
 		}
 	},
 	"require": {

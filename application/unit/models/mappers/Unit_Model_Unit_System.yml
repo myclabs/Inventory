@@ -1,0 +1,24 @@
+# unit\models\mappers\Unit_Model_Unit_System.yml
+Unit_Model_Unit_System:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Unit_UnitSystem
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      unique: true
+    name:
+      type: string
+      gedmo:
+        - translatable

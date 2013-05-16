@@ -1,0 +1,39 @@
+# unit\models\mappers\Unit_Model_Unit.yml
+Unit_Model_Unit:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Unit_Unit
+  inheritanceType: JOINED
+  discriminatorColumn:
+    name: unitType
+    type: string
+    length: 8
+  discriminatorMap:
+    standard: Unit_Model_Unit_Standard
+    extended: Unit_Model_Unit_Extended
+    discrete: Unit_Model_Unit_Discrete
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      unique: true
+    name:
+      type: string
+      nullable: true
+      gedmo:
+        - translatable
+    symbol:
+      type: string
+      gedmo:
+        - translatable
