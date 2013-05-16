@@ -1,7 +1,8 @@
 {
 	"autoload": {
 		"psr-0": {
-			"Core": "src/"
+			"Core": "src/",
+			"UI": "src/"
 		}
 	},
 	"require": {
@@ -13,18 +14,23 @@
 		"gedmo/doctrine-extensions": "dev-Issue-266",
 		"symfony/yaml": "*",
 		"pear/console_commandline": "dev-trunk",
-		"netcarver/textile": "3.5.*"
+		"netcarver/textile": "3.5.*",
+	    "mridgway/ZendX_Doctrine2": "dev-master"
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"repositories": [
 		{
 			"type": "git",
-			"url": "https://github.com/myclabs/common.git"
+			"url": "git://github.com/myclabs/common.git"
 		},
 		{
 			"type": "git",
-			"url": "https://github.com/mnapoli/DoctrineExtensions.git"
+			"url": "git://github.com/mnapoli/DoctrineExtensions.git"
+		},
+		{
+			"type": "git",
+			"url": "git://github.com/myclabs/ZendX_Doctrine2.git"
 		}
 	]
 }
