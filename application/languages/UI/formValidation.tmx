@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="emptyRequiredField">
+            <tuv xml:lang="fr">
+                <seg>Merci de renseigner ce champ.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please fill up this field.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="alreadyUsedIdentifier">
+            <tuv xml:lang="fr">
+                <seg>Merci de choisir un autre identifiant, celui-ci est déjà utilisé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please choose another identifier, this one is already used.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidUnit">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir un identifiant d'unité valide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please enter a valid unit identifier.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidEmail">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir une adresse e-mail valide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please enter a valid e-mail address.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidDate">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir date au format AAAA-MM-JJ.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please enter a date under the form YYYYY-MM-DD.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidNumber">
+            <tuv xml:lang="fr">
+                <seg>La quantité saisie n'a pas pu être interprétée, merci de corriger.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Entered quantity could not be read, please correct it.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidUncertainty">
+            <tuv xml:lang="fr">
+                <seg>L'incertitude saisie n'a pas pu être interprétée, merci de corriger.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Entered uncertainty could not be read, please correct it.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

@@ -1,0 +1,81 @@
+/* Pas de masque dans la Datagrid lors des actions Ajax */
+.yui-skin-sam .yui-dt-mask { display: none !important; }
+
+/* La Datagrid prend toute la largeur de son conteneur (la page) */
+.yui-skin-sam .yui-dt table { width:100%; margin: 5px 0px; }
+
+/* Paginator à droite */
+.yui-skin-sam .yui-dt-paginator { text-align: right; }
+.yui-skin-sam .yui-dt-paginator select { width: auto; }
+
+/* Suppression des padding verticaux des éléments pour égaliser l'affichage */
+.yui-skin-sam .yui-dt-paginator span.contextPagination a,
+.yui-skin-sam .yui-dt-paginator span.contextPagination span { display: inline; margin: 0px 3px; }
+.yui-skin-sam .yui-dt-paginator select { height: 20px; margin: 0px 0px 2px 0px; padding: 1px; }
+
+/* Pas d'affichage de la colonne contenant les index (correction d'un défaut d'affichage) */
+.yui-skin-sam .yui-dt-col-index { display: none; }
+
+/* Titre des colonnes : au centre et en gras */
+.yui-skin-sam .yui-dt-first th { text-align: center !important; }
+.yui-skin-sam .yui-dt-label span { font-weight: bold; }
+
+/* Curseur par défaut sur les cellules */
+.yui-skin-sam td { cursor: default; }
+.yui-skin-sam td.yui-dt-editable { cursor: pointer; }
+
+/* Alignement des Cellules */
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_align_left,
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_align_middle,
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_align_right {
+	display: inline-block; width: 100%
+}
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_align_left { text-align: left; }
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_align_middle { text-align: center; }
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_align_right { text-align: right; }
+
+/* Curseur pointer et couleur des cellules désactivé */
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_cell_disabled { color: #888888; text-decoration: line-through; }
+
+/* Curseur et label d'édition des cellules éditables */
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_cell_editable {
+    display: inline-block;
+    float: right;
+    width: 25px;
+    height: 100%;
+    text-align: right;
+    color: #555555;
+}
+.yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_cell_editable i { vertical-align: bottom; opacity: 0.5; }
+
+/* Taille des cellules de pourcentage */
+.yui-skin-sam td .yui-dt-liner .progress { margin-bottom: 0px; }
+
+/* Décoration des icônes des cellules de position */
+.yui-skin-sam td span span.datagrid_order_enable { cursor: pointer; }
+.yui-skin-sam td span span.datagrid_order_disable { color: #888888; text-decoration: line-through; }
+
+/* Taille des popups d'éditions */
+.yui-dt-editor input[type="text"] { width: 90% !important; }
+.yui-dt-editor select { width: 100% !important; }
+.yui-dt-editor .yui-dt-button button { width: auto; }
+.yui-dt-editor label { display: inline-block; margin-right: 10px}
+.yui-dt-editor input[type="checkbox"] { float:left; display: inline-block; margin-right: 10px; }
+.yui-dt-editor input[type="checkbox"] + label { clear: right; display: block; }
+.yui-dt-editor .yui-calcontainer { border: none; padding: 0px; }
+
+/* Ajustement de markitup dans l'éditeur en ligne */
+.yui-dt-editor textarea {
+    display: block;
+    min-width: 98%;
+    min-height: 100px;
+    padding: 1%;
+    border: 1px solid #808080;
+    background: white;
+}
+.yui-dt-editor .markItUp { border: none; margin: -6px; }
+.yui-dt-editor .markItUp .markItUpContainer { border: none; margin-bottom: 5px; }
+.yui-dt-editor .markItUp .markItUpContainer .markItUpEditor { width: 98% !important; }
+
+/* Ajustement des icônes de reset des champs du filtre */
+.form .reset { vertical-align: text-bottom; cursor: pointer; }

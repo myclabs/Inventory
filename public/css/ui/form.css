@@ -1,0 +1,80 @@
+/* Redéfinition de la largeur des label dans les formulaires */
+.form .control-label { width: 400px; }
+.form .controls { margin-left: 430px; }
+.form .controls > div { margin-right: 25px; }
+.form .controls > div:first-child { width: 380px; margin-right: 0px; }
+.form .input { display: inline-block; }
+.form .input.hide { display: none; }
+.form .incertitude { width: 30px; }
+.form .subGroup { margin-left: 40px; }
+.form .form-actions { padding-left: 426px; }
+.form .form-actions > * { margin: 0px 5px; }
+
+.form .withdraw1 > label { width: 360px; }
+.form .withdraw1 > .controls { margin-left: 390px; }
+.form .withdraw2 > label { width: 320px; }
+.form .withdraw2 > .controls { margin-left: 350px; }
+.form .withdraw3 > label { width: 280px; }
+.form .withdraw3 > .controls { margin-left: 310px; }
+.form .withdraw4 > label { width: 240px; }
+.form .withdraw4 > .controls { margin-left: 270px; }
+.form .withdraw5 > label { width: 200px; }
+.form .withdraw5 > .controls { margin-left: 230px; }
+.form .withdraw6 > label { width: 160px; }
+.form .withdraw6 > .controls { margin-left: 190px; }
+.form .withdraw7 > label { width: 120px; }
+.form .withdraw7 > .controls { margin-left: 150px; }
+.form .withdraw8 > label { width: 80px; }
+.form .withdraw8 > .controls { margin-left: 110px; }
+.form input + .help-block, .form select + .help-block, .form textarea + .help-block,
+.form .uneditable-input + .help-block, .form .input-prepend + .help-block, .form .input-append + .help-block {
+    margin-top: 0px;
+}
+
+.form textarea { width: auto; height: auto; }
+/* Redéfinition du champs markItUp */
+.form .markItUp { width: auto; border: none; }
+.form .markItUp .markItUpContainer { width: 760px; padding: 0px; border: inherit; background: none; }
+.markItUp textarea { width: 98%; padding: 1%; background: none;
+ /* Réécritue des règles de twitter bootstrap */
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+     -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+      -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+       -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+          transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+.markItUp textarea:focus{
+  border-color: rgba(82, 168, 236, 0.8);
+  outline: 0;
+  outline: thin dotted \9;
+  /* IE6-9 */
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.markItUp .markItUpFooter { display: none; }
+
+/* Redéfinition du champs autocomplete */
+.form .input .select2-container { width: 220px; }
+
+/* Redéfinition de la largeur des label dans les formulaires dans des modaux*/
+.modal .form .control-label { width: 135px; }
+.modal .form .controls { margin-left: 165px; }
+.modal .form .markItUp .markItUpContainer { width: 500px; }
+
+/* Fix temporaires pour select2 et les append/prepend de Bootstrap */
+.select2-dropdown-open .select2-choice, .select2-container .select2-choice {
+    font-size:initial;
+}
+.input-append .select2-offscreen,
+.input-prepend .select2-offscreen {
+    position: absolute;
+}

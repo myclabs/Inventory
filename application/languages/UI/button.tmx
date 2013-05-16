@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <!-- Bouton de la page d'erreur -->
+
+        <tu tuid="previousPage">
+            <tuv xml:lang="fr">
+                <seg>Revenir à la page précédente</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Go back to previous page</seg>
+            </tuv>
+        </tu>
+        
+
+           
+		
+    </body>
+</tmx>

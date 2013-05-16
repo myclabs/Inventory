@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Préfixes en fonction du type de message -->
+        
+        <tu tuid="titleInfo">
+            <tuv xml:lang="fr">
+                <seg>Info :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Info:</seg>
+            </tuv>
+        </tu>
+        <tu tuid="titleSuccess">
+            <tuv xml:lang="fr">
+                <seg>Ok :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ok:</seg>
+            </tuv>
+        </tu>
+        <tu tuid="titleError">
+            <tuv xml:lang="fr">
+                <seg>Erreur !</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Error!</seg>
+            </tuv>
+        </tu>
+        <tu tuid="titleWarning">
+            <tuv xml:lang="fr">
+                <seg>Attention !</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Warning!</seg>
+            </tuv>
+        </tu>
+        <tu tuid="areYouSure">
+            <tuv xml:lang="fr">
+                <seg>Êtes-vous sûr ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Are you sure?</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Messages génériques de confirmation suite à ajout, modification, suppression -->
+        
+        <tu tuid="added">
+            <tuv xml:lang="fr">
+                <seg>Ajout effectué.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation performed.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="updated">
+            <tuv xml:lang="fr">
+                <seg>Modification effectuée.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Update performed.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="nullUpdated">
+            <tuv xml:lang="fr">
+                <seg>Cette action n'a entraîné aucune modification.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No change resulted from this action.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deleted">
+            <tuv xml:lang="fr">
+                <seg>Suppression effectuée.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion performed.</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Messages en réponse au déclenchement d'une action traitée en tâche de fond -->
+        
+        <tu tuid="addedLater">
+            <tuv xml:lang="fr">
+                <seg>Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation in progress. Depending on existing data this operation can be instantaneous or require some time.</seg>
+            </tuv>
+        </tu>
+         <tu tuid="updatedLater">
+            <tuv xml:lang="fr">
+                <seg>Modification en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. La modification sera visible au plus tard dans quelques minutes.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Update in progress. Depending on existing data this operation can be instantaneous or require some time. Changes will be visible at the latest within a few minutes.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deletedLater">
+            <tuv xml:lang="fr">
+                <seg>Suppression en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. La modification sera visible au plus tard dans quelques minutes.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion in progress. Depending on existing data this operation can be instantaneous or require some time. Changes will be visible at the latest within a few minutes.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="operationInProgress">
+            <tuv xml:lang="fr">
+                <seg>Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Operation in progress. Depending on existing data this operation can be instantaneous or require some time. Changes will be visible at the latest within a few minutes.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

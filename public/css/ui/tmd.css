@@ -1,0 +1,11 @@
+/* Largeur minimale de la table */
+table.tmd.table.small { width: auto; }
+/* Suppression de l'alternance des couleurs sur les headers */
+table.tmd.table.table-striped tr th { background-color: inherit; }
+/* Alignement des headers au centre */
+table.tmd.table th { text-align: center; width: auto; }
+/* Les headers correspondant aux index sont mis en italique */
+table.tmd.table th.indexValue { font-style: italic; font-weight: normal; }
+/* Élargissement des liens et alignement des icônes dans les tables */
+table.tmd.table td a { display: inline-block; width: 100%; height: 100%; }
+table.tmd.table td i { vertical-align: text-bottom; }

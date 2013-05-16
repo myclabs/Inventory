@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+        <tu tuid="alphabetical">
+            <tuv xml:lang="fr">
+                <seg>Alphabétique</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Alphabetical</seg>
+            </tuv>
+        </tu>
+        <tu tuid="checked">
+            <tuv xml:lang="fr">
+                <seg>Coché</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Checked</seg>
+            </tuv>
+        </tu>
+        <tu tuid="closed">
+            <tuv xml:lang="fr">
+                <seg>Clôturé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Closed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="complete">
+            <tuv xml:lang="fr">
+                <seg>Complet</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Complete</seg>
+            </tuv>
+        </tu>
+        <tu tuid="conventional">
+            <tuv xml:lang="fr">
+                <seg>Conventionnel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Conventional</seg>
+            </tuv>
+        </tu>
+        <tu tuid="disabled">
+            <tuv xml:lang="fr">
+                <seg>Désactivé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Disabled</seg>
+            </tuv>
+        </tu>
+        <tu tuid="disabledFem">
+            <tuv xml:lang="fr">
+                <seg>Désactivée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Disabled</seg>
+            </tuv>
+        </tu>
+        <tu tuid="displayed">
+            <tuv xml:lang="fr">
+                <seg>Affiché</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Displayed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="displayedFem">
+            <tuv xml:lang="fr">
+                <seg>Affichée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Displayed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="enabled">
+            <tuv xml:lang="fr">
+                <seg>Activé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Enabled</seg>
+            </tuv>
+        </tu>
+        <tu tuid="enabledFem">
+            <tuv xml:lang="fr">
+                <seg>Activée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Enabled</seg>
+            </tuv>
+        </tu>
+        <tu tuid="false">
+            <tuv xml:lang="fr">
+                <seg>Faux</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>False</seg>
+            </tuv>
+        </tu>
+        <tu tuid="finished">
+            <tuv xml:lang="fr">
+                <seg>Terminé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="foldaway">
+            <tuv xml:lang="fr">
+                <seg>Repliable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Foldaway</seg>
+            </tuv>
+        </tu>
+        <tu tuid="folded">
+            <tuv xml:lang="fr">
+                <seg>Replié</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Folded</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inProgress">
+            <tuv xml:lang="fr">
+                <seg>En cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>In progress</seg>
+            </tuv>
+        </tu>
+        <tu tuid="masked">
+            <tuv xml:lang="fr">
+                <seg>Masqué</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Masked</seg>
+            </tuv>
+        </tu>
+        <tu tuid="maskedFem">
+            <tuv xml:lang="fr">
+                <seg>Masquée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Masked</seg>
+            </tuv>
+        </tu>
+        <tu tuid="nonFoldaway">
+            <tuv xml:lang="fr">
+                <seg>Non repliable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Non foldaway</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notSelected">
+            <tuv xml:lang="fr">
+                <seg>Non sélectionné</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not selected</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notSelectedFem">
+            <tuv xml:lang="fr">
+                <seg>Non sélectionnée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not selected</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notUpToDate">
+            <tuv xml:lang="fr">
+                <seg>Pas à jour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="optional">
+            <tuv xml:lang="fr">
+                <seg>Facultatif</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>optional</seg>
+            </tuv>
+        </tu>
+        <tu tuid="required">
+            <tuv xml:lang="fr">
+                <seg>Obligatoire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Required</seg>
+            </tuv>
+        </tu>
+        <tu tuid="selected">
+            <tuv xml:lang="fr">
+                <seg>Sélectionné</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Selected</seg>
+            </tuv>
+        </tu>
+        <tu tuid="selectedFem">
+            <tuv xml:lang="fr">
+                <seg>Sélectionnée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Selected</seg>
+            </tuv>
+        </tu>
+        <tu tuid="true">
+            <tuv xml:lang="fr">
+                <seg>Vrai</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>True</seg>
+            </tuv>
+        </tu>
+        <tu tuid="unchecked">
+            <tuv xml:lang="fr">
+                <seg>Décoché</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Unchecked</seg>
+            </tuv>
+        </tu>
+        <tu tuid="upToDate">
+            <tuv xml:lang="fr">
+                <seg>À jour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="visible">
+            <tuv xml:lang="fr">
+                <seg>Visible</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Visible</seg>
+            </tuv>
+        </tu>
+    </body>
+</tmx>

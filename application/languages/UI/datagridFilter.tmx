@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="TitleFilterActive">
+            <tuv xml:lang="fr">
+                <seg>Un filtre précédemment utilisé est toujours actif.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>A previously used filter is still active.</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Colonne liste -->
+        
+        <tu tuid="ColListEqual">
+            <tuv xml:lang="fr">
+                <seg>égal(e) à</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>equal</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Colonne booléenne -->
+        
+        <tu tuid="ColBoolEqual">
+            <tuv xml:lang="fr">
+                <seg>égal(e) à</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>equal</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Colonne lien -->
+        
+        <tu tuid="ColLinkEqual">
+            <tuv xml:lang="fr">
+                <seg>contient</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>contains</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Colonne date -->
+        
+        <tu tuid="ColDateLower">
+            <tuv xml:lang="fr">
+                <seg>antérieure à</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>before</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ColDateHigher">
+            <tuv xml:lang="fr">
+                <seg>postérieure à</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>after</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Colonne nombre -->
+        
+        <tu tuid="ColNumberEqual">
+            <tuv xml:lang="fr">
+                <seg>=</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>=</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ColNumberLower">
+            <tuv xml:lang="fr">
+                <seg>&lt;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&lt;</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ColNumberHigher">
+            <tuv xml:lang="fr">
+                <seg>&gt;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&gt;</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Colonne ordre -->
+        
+        <tu tuid="ColOrderEqual">
+            <tuv xml:lang="fr">
+                <seg>=</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>=</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ColOrderLower">
+            <tuv xml:lang="fr">
+                <seg>&lt;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&lt;</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ColOrderHigher">
+            <tuv xml:lang="fr">
+                <seg>&gt;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&gt;</seg>
+            </tuv>
+        </tu>
+
+        <!-- Colonne pourcentage -->
+        
+        <tu tuid="ColPercentEqual">
+            <tuv xml:lang="fr">
+                <seg>=</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>=</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ColPercentLower">
+            <tuv xml:lang="fr">
+                <seg>&lt;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&lt;</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ColPercentHigher">
+            <tuv xml:lang="fr">
+                <seg>&gt;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&gt;</seg>
+            </tuv>
+        </tu>
+
+        <!-- Colonne texte -->
+        
+        <tu tuid="ColTextEqual">
+            <tuv xml:lang="fr">
+                <seg>contient</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>contains</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+		<tu tuid="add">
+			<tuv xml:lang="fr">
+				<seg>Ajouter</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Add</seg>
+			</tuv>
+		</tu>
+        <tu tuid="cancel">
+            <tuv xml:lang="fr">
+                <seg>Annuler</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Cancel</seg>
+            </tuv>
+        </tu>
+        <tu tuid="close">
+            <tuv xml:lang="fr">
+                <seg>Fermer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Close</seg>
+            </tuv>
+        </tu>
+        <tu tuid="collapseAll">
+            <tuv xml:lang="fr">
+                <seg>Tout replier</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collapse all</seg>
+            </tuv>
+        </tu>
+		<tu tuid="confirm">
+			<tuv xml:lang="fr">
+				<seg>Confirmer</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Confirm</seg>
+			</tuv>
+		</tu>
+        <tu tuid="consult">
+            <tuv xml:lang="fr">
+                <seg>Consulter</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Consult</seg>
+            </tuv>
+        </tu>
+		<tu tuid="control">
+			<tuv xml:lang="fr">
+				<seg>Contrôler</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Control</seg>
+			</tuv>
+		</tu>
+		<tu tuid="delete">
+			<tuv xml:lang="fr">
+				<seg>Supprimer</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Delete</seg>
+			</tuv>
+		</tu>
+		<tu tuid="disable">
+			<tuv xml:lang="fr">
+				<seg>Désactiver</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Disable</seg>
+			</tuv>
+		</tu>
+		<tu tuid="edit">
+			<tuv xml:lang="fr">
+				<seg>Éditer</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Edit</seg>
+			</tuv>
+		</tu>
+        <tu tuid="enable">
+            <tuv xml:lang="fr">
+                <seg>Activer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Enable</seg>
+            </tuv>
+        </tu>
+        <tu tuid="erase">
+            <tuv xml:lang="fr">
+                <seg>Effacer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Erase</seg>
+            </tuv>
+        </tu>
+        <tu tuid="expandAll">
+            <tuv xml:lang="fr">
+                <seg>Tout déplier</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Expand all</seg>
+            </tuv>
+        </tu>
+		<tu tuid="exportToExcel">
+			<tuv xml:lang="fr">
+				<seg>Exporter au format Excel</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Export to Excel</seg>
+			</tuv>
+		</tu>
+		<tu tuid="exportToPDF">
+			<tuv xml:lang="fr">
+				<seg>Exporter au format PDF</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Export to PDF</seg>
+			</tuv>
+		</tu>
+		<tu tuid="filter">
+			<tuv xml:lang="fr">
+				<seg>Filtrer</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Filter</seg>
+			</tuv>
+		</tu>
+		<tu tuid="goTo">
+			<tuv xml:lang="fr">
+				<seg>Aller à</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Go to</seg>
+			</tuv>
+		</tu>
+        <tu tuid="hide">
+            <tuv xml:lang="fr">
+                <seg>Masquer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Hide</seg>
+            </tuv>
+        </tu>
+        <tu tuid="interpret">
+            <tuv xml:lang="fr">
+                <seg>Interpréter</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Interpret</seg>
+            </tuv>
+        </tu>
+		<tu tuid="launch">
+			<tuv xml:lang="fr">
+				<seg>Lancer</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Launch</seg>
+			</tuv>
+		</tu>
+		<tu tuid="quit">
+			<tuv xml:lang="fr">
+				<seg>Quitter</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Quit</seg>
+			</tuv>
+		</tu>
+		<tu tuid="reset">
+			<tuv xml:lang="fr">
+				<seg>Réinitialiser</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Reset</seg>
+			</tuv>
+		</tu>
+		<tu tuid="save">
+			<tuv xml:lang="fr">
+				<seg>Enregistrer</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Save</seg>
+			</tuv>
+		</tu>
+        <tu tuid="show">
+            <tuv xml:lang="fr">
+                <seg>Afficher</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Show</seg>
+            </tuv>
+        </tu>
+        <tu tuid="submit">
+            <tuv xml:lang="fr">
+                <seg>Soumettre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Submit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="validate">
+            <tuv xml:lang="fr">
+                <seg>Valider</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Validate</seg>
+            </tuv>
+        </tu>
+	</body>
+</tmx>

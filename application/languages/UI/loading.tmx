@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Général -->
+
+        <tu tuid="loading">
+            <tuv xml:lang="fr">
+                <seg>Chargement...</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Loading...</seg>
+            </tuv>
+        </tu>     
+        <tu tuid="error">
+            <tuv xml:lang="fr">
+                <seg>Erreur : les données n\'ont pas pu être chargées.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>An error occured while loading data.</seg>
+            </tuv>
+        </tu>
+    
+        <!-- Datagrid -->
+        
+        <tu tuid="empty">
+            <tuv xml:lang="fr">
+                <seg>Aucune donnée à afficher.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No data available.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

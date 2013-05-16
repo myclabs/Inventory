@@ -1,0 +1,14 @@
+# Règles de réécriture pour Zend Framework
+RewriteEngine on
+RewriteBase /inventory/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule !\.(js|ico|gif|jpg|png|css)$ index.php  
+
+# Sécurité : Ne pas autoriser le parcours des répertoires
+Options -Indexes
+
+# Configuration PHP
+php_flag magic_quotes_gpc off
+php_flag register_globals off
+php_flag short_open_tag on

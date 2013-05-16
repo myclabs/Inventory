@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+        <!-- Ponctuation -->
+
+        <tu tuid=":">
+            <tuv xml:lang="fr">
+                <seg> : </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>: </seg>
+            </tuv>
+        </tu>
+        
+        <!-- Autre -->        
+        
+        <tu tuid="after">
+            <tuv xml:lang="fr">
+                <seg>Après</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>After</seg>
+            </tuv>
+        </tu>
+        <tu tuid="all">
+            <tuv xml:lang="fr">
+                <seg>Tous</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All</seg>
+            </tuv>
+        </tu>
+        <tu tuid="backButton">
+            <tuv xml:lang="fr">
+                <seg>Retour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Back</seg>
+            </tuv>
+        </tu>
+        <tu tuid="first">
+            <tuv xml:lang="fr">
+                <seg>Premier</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>First</seg>
+            </tuv>
+        </tu>
+        <tu tuid="last">
+            <tuv xml:lang="fr">
+                <seg>Dernier</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Last</seg>
+            </tuv>
+        </tu>
+        <tu tuid="no">
+            <tuv xml:lang="fr">
+                <seg>Non</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No</seg>
+            </tuv>
+        </tu>
+        <tu tuid="nok">
+            <tuv xml:lang="fr">
+                <seg>NOT OK</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>NOT OK</seg>
+            </tuv>
+        </tu>
+        <tu tuid="none">
+            <tuv xml:lang="fr">
+                <seg>Aucun</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>None</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noneFem">
+            <tuv xml:lang="fr">
+                <seg>Aucune</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>None</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ok">
+            <tuv xml:lang="fr">
+                <seg>OK</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>OK</seg>
+            </tuv>
+        </tu>
+        <tu tuid="one">
+            <tuv xml:lang="fr">
+                <seg>Un</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>One</seg>
+            </tuv>
+        </tu>
+        <tu tuid="several">
+            <tuv xml:lang="fr">
+                <seg>Plusieurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Several</seg>
+            </tuv>
+        </tu>
+        <tu tuid="yes">
+            <tuv xml:lang="fr">
+                <seg>Oui</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Yes</seg>
+            </tuv>
+        </tu>
+
+        <!-- Absence de description -->        
+        
+        <tu tuid="noDescription">
+            <tuv xml:lang="fr">
+                <seg>Aucune description.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No description.</seg>
+            </tuv>
+        </tu>
+
+	</body>
+</tmx>

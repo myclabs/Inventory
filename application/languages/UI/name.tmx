@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+        <tu tuid="activation">
+            <tuv xml:lang="fr">
+                <seg>Activation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Activation</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addition">
+            <tuv xml:lang="fr">
+                <seg>Ajout</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Addition</seg>
+            </tuv>
+        </tu>
+		<tu tuid="axes">
+			<tuv xml:lang="fr">
+				<seg>Axes</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Axes</seg>
+			</tuv>
+		</tu>
+		<tu tuid="axis">
+			<tuv xml:lang="fr">
+				<seg>Axe</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Axis</seg>
+			</tuv>
+		</tu>
+        <tu tuid="browsing">
+            <tuv xml:lang="fr">
+                <seg>Navigation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Browsing</seg>
+            </tuv>
+        </tu>
+        <tu tuid="category">
+            <tuv xml:lang="fr">
+                <seg>Catégorie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Category</seg>
+            </tuv>
+        </tu>
+        <tu tuid="condition">
+            <tuv xml:lang="fr">
+                <seg>Condition</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Condition</seg>
+            </tuv>
+        </tu>
+		<tu tuid="conditions">
+			<tuv xml:lang="fr">
+				<seg>Conditions</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Conditions</seg>
+			</tuv>
+		</tu>
+		<tu tuid="configuration">
+			<tuv xml:lang="fr">
+				<seg>Configuration</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Configuration</seg>
+			</tuv>
+		</tu>
+        <tu tuid="constant">
+            <tuv xml:lang="fr">
+                <seg>Constante</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Constant</seg>
+            </tuv>
+        </tu>
+        <tu tuid="constants">
+            <tuv xml:lang="fr">
+                <seg>Constantes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Constants</seg>
+            </tuv>
+        </tu>
+		<tu tuid="consultation">
+			<tuv xml:lang="fr">
+				<seg>Consultation</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Consultation</seg>
+			</tuv>
+		</tu>
+		<tu tuid="control">
+			<tuv xml:lang="fr">
+				<seg>Contrôle</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Control</seg>
+			</tuv>
+		</tu>
+        <tu tuid="creationDate">
+            <tuv xml:lang="fr">
+                <seg>Date de création</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="date">
+            <tuv xml:lang="fr">
+                <seg>Date</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deletion">
+            <tuv xml:lang="fr">
+                <seg>Suppression</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion</seg>
+            </tuv>
+        </tu>
+        <tu tuid="description">
+            <tuv xml:lang="fr">
+                <seg>Description</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Description</seg>
+            </tuv>
+        </tu>
+        <tu tuid="details">
+            <tuv xml:lang="fr">
+                <seg>Détails</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Details</seg>
+            </tuv>
+        </tu>
+        <tu tuid="diagnostic">
+            <tuv xml:lang="fr">
+                <seg>Diagnostic</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Diagnosis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="display">
+            <tuv xml:lang="fr">
+                <seg>Affichage</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Display</seg>
+            </tuv>
+        </tu>
+        <tu tuid="documentation">
+            <tuv xml:lang="fr">
+                <seg>Documentation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Documentation</seg>
+            </tuv>
+        </tu>
+        <tu tuid="edition">
+            <tuv xml:lang="fr">
+                <seg>Edition</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Edition</seg>
+            </tuv>
+        </tu>
+        <tu tuid="elements">
+            <tuv xml:lang="fr">
+                <seg>Éléments</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Elements</seg>
+            </tuv>
+        </tu>
+        <tu tuid="emailAddress">    
+            <tuv xml:lang="fr">
+                <seg>Adresse e-mail</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>E-mail address</seg>
+            </tuv>
+        </tu>
+		<tu tuid="errors">
+			<tuv xml:lang="fr">
+				<seg>Erreurs</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Errors</seg>
+			</tuv>
+		</tu>
+        <tu tuid="field">
+            <tuv xml:lang="fr">
+                <seg>Champ</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Field</seg>
+            </tuv>
+        </tu>
+        <tu tuid="filters">
+            <tuv xml:lang="fr">
+                <seg>Filtres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Filters</seg>
+            </tuv>
+        </tu>
+        <tu tuid="forms">
+            <tuv xml:lang="fr">
+                <seg>Formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Forms</seg>
+            </tuv>
+        </tu>
+        <tu tuid="general">
+            <tuv xml:lang="fr">
+                <seg>Général</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>General</seg>
+            </tuv>
+        </tu>
+        <tu tuid="graph">
+            <tuv xml:lang="fr">
+                <seg>Graphe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Graph</seg>
+            </tuv>
+        </tu>
+		<tu tuid="help">
+			<tuv xml:lang="fr">
+				<seg>Aide</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Help</seg>
+			</tuv>
+		</tu>
+		<tu tuid="home">
+			<tuv xml:lang="fr">
+				<seg>Accueil</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Home</seg>
+			</tuv>
+		</tu>
+        <tu tuid="identifier">
+            <tuv xml:lang="fr">
+                <seg>Identifiant</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Identifier</seg>
+            </tuv>
+        </tu>
+        <tu tuid="informations">
+            <tuv xml:lang="fr">
+                <seg>Informations</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Informations</seg>
+            </tuv>
+        </tu>
+        <tu tuid="input">
+            <tuv xml:lang="fr">
+                <seg>Saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputs">
+            <tuv xml:lang="fr">
+                <seg>Saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inputs</seg>
+            </tuv>
+        </tu>
+        <tu tuid="label">
+            <tuv xml:lang="fr">
+                <seg>Libellé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Label</seg>
+            </tuv>
+        </tu>
+		<tu tuid="list">
+			<tuv xml:lang="fr">
+				<seg>Liste</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>List</seg>
+			</tuv>
+		</tu>
+		<tu tuid="member">
+			<tuv xml:lang="fr">
+				<seg>Membre</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Member</seg>
+			</tuv>
+		</tu>
+        <tu tuid="members">
+            <tuv xml:lang="fr">
+                <seg>Membres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Members</seg>
+            </tuv>
+        </tu>
+        <tu tuid="name">
+            <tuv xml:lang="fr">
+                <seg>Nom</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Name</seg>
+            </tuv>
+        </tu>
+        <tu tuid="operators">
+            <tuv xml:lang="fr">
+                <seg>Opérateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Operators</seg>
+            </tuv>
+        </tu>
+		<tu tuid="option">
+			<tuv xml:lang="fr">
+				<seg>Option</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Option</seg>
+			</tuv>
+		</tu>
+        <tu tuid="options">
+            <tuv xml:lang="fr">
+                <seg>Options</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Options</seg>
+            </tuv>
+        </tu>
+        <tu tuid="order">
+            <tuv xml:lang="fr">
+                <seg>Ordre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Order</seg>
+            </tuv>
+        </tu>
+        <tu tuid="orderType">
+            <tuv xml:lang="fr">
+                <seg>Type d'ordre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Order type</seg>
+            </tuv>
+        </tu>
+        <tu tuid="parameters">
+            <tuv xml:lang="fr">
+                <seg>Paramètres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parameters</seg>
+            </tuv>
+        </tu>
+        <tu tuid="parameter">
+            <tuv xml:lang="fr">
+                <seg>Paramètre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parameter</seg>
+            </tuv>
+        </tu>
+        <tu tuid="parent">
+            <tuv xml:lang="fr">
+                <seg>Parent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parent</seg>
+            </tuv>
+        </tu>
+        <tu tuid="parentCategory">
+            <tuv xml:lang="fr">
+                <seg>Catégorie parente</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parent category</seg>
+            </tuv>
+        </tu>
+        <tu tuid="position">
+            <tuv xml:lang="fr">
+                <seg>Position</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Position</seg>
+            </tuv>
+        </tu>
+        <tu tuid="progress">
+            <tuv xml:lang="fr">
+                <seg>Avancement</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Progress</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projects">
+            <tuv xml:lang="fr">
+                <seg>Projets</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Projects</seg>
+            </tuv>
+        </tu>
+        <tu tuid="query">
+            <tuv xml:lang="fr">
+                <seg>Requête</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Query</seg>
+            </tuv>
+        </tu>
+        <tu tuid="referenceValue">
+            <tuv xml:lang="fr">
+                <seg>Valeur de référence</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reference value</seg>
+            </tuv>
+        </tu>
+		<tu tuid="relation">
+			<tuv xml:lang="fr">
+				<seg>Relation</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Relation</seg>
+			</tuv>
+		</tu>
+		<tu tuid="relations">
+			<tuv xml:lang="fr">
+				<seg>Relations</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Relations</seg>
+			</tuv>
+		</tu>
+        <tu tuid="result">
+            <tuv xml:lang="fr">
+                <seg>Résultat</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Result</seg>
+            </tuv>
+        </tu>
+        <tu tuid="results">
+            <tuv xml:lang="fr">
+                <seg>Résultats</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Results</seg>
+            </tuv>
+        </tu>
+        <tu tuid="root">
+            <tuv xml:lang="fr">
+                <seg>Racine</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Root</seg>
+            </tuv>
+        </tu>
+        <tu tuid="status">
+            <tuv xml:lang="fr">
+                <seg>Statut</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="test">
+            <tuv xml:lang="fr">
+                <seg>Test</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Test</seg>
+            </tuv>
+        </tu>
+        <tu tuid="total">
+            <tuv xml:lang="fr">
+                <seg>Total</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Total</seg>
+            </tuv>
+        </tu>
+        <tu tuid="tree">
+            <tuv xml:lang="fr">
+                <seg>Arbre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Tree</seg>
+            </tuv>
+        </tu>
+        <tu tuid="type">
+            <tuv xml:lang="fr">
+                <seg>Type</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Type</seg>
+            </tuv>
+        </tu>
+		<tu tuid="uncertainty">
+			<tuv xml:lang="fr">
+				<seg>Incertitude</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Uncertainty</seg>
+			</tuv>
+		</tu>
+        <tu tuid="value">
+            <tuv xml:lang="fr">
+                <seg>Valeur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Value</seg>
+            </tuv>
+        </tu>
+        <tu tuid="values">
+            <tuv xml:lang="fr">
+                <seg>Valeurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Values</seg>
+            </tuv>
+        </tu>
+	</body>
+</tmx>

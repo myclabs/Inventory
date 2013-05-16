@@ -1,0 +1,10 @@
+/*================================*/
+/*              Tree              */
+/*================================*/
+
+.tree { margin: 5px 0px; }
+
+.tree .ygtvitem a.ygtvspacer { display: none; }
+
+.tree_fold_link { cursor: pointer; color: #0088CC; }
+.tree_fold_link:hover { text-decoration: underline; }
