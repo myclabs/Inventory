@@ -131,6 +131,9 @@ class User_Model_Resource_Entity extends User_Model_Resource
      */
     private static function getEntityNameFromEntity(Core_Model_Entity $entity)
     {
+        if ($entity instanceof \Doctrine\ORM\Proxy\Proxy) {
+            return get_parent_class($entity);
+        }
         return get_class($entity);
     }
 

@@ -33,6 +33,7 @@ class Core_Work_SimpleDispatcher implements Core_Work_Dispatcher
      */
     public function runBackground(Core_Work_Task $task)
     {
+        set_time_limit(0);
         $worker = $this->getWorker($task);
 
         $worker->execute($task);

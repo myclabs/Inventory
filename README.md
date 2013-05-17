@@ -52,10 +52,10 @@ phpunit
 
 SVN revision migrated for each package:
 
-- Core: 12213
+- Core: 12223
 - UI: 12205
 - Unit: 12214
-- User: 12212
+- User: 12223
 - TEC: 12083
 - Calc: 11087
 - Exec: 11090
