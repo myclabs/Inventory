@@ -29,7 +29,7 @@ Orga_Model_Cell:
   manyToOne:
     granularity:
       targetEntity: Orga_Model_Granularity
-      inversedBy: cell
+      inversedBy: cells
       joinColumn:
         name: idGranularity
         referencedColumnName: id
@@ -37,6 +37,7 @@ Orga_Model_Cell:
   manyToMany:
     members:
       targetEntity: Orga_Model_Member
+      inversedBy: cells
       joinTable:
         name: Orga_Cell_Member
         joinColumns:
