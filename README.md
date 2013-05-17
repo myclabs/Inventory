@@ -17,7 +17,17 @@ cp application/configs/application.ini.default application/configs/application.i
 cp public/.htaccess.default public/.htaccess
 ```
 
-## Run
+Set up file rights
+
+```bash
+chmod 777 data/documents
+chmod 777 data/logs
+chmod 777 data/proxies
+chmod -R 777 public/cache
+chmod 777 public/temp
+```
+
+## Run with Vagrant
 
 Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](http://www.vagrantup.com/):
 
