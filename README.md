@@ -33,6 +33,7 @@ SSH to the virtual machine:
 
 ```bash
 vagrant ssh
+cd /vagrant
 ```
 
 Destroy the VM:
