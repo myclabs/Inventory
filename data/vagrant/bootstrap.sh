@@ -34,7 +34,7 @@ rm -rf /var/www
 ln -fs /vagrant/public /var/www
 cp /vagrant/vagrant/php.ini /etc/php5/apache2/
 cp /vagrant/vagrant/php.ini /etc/php5/cli/
-cp /vagrant/vagrant/000-default /etc/apache2/sites-enabled/000-default
+cp /vagrant/vagrant/apache-000-default /etc/apache2/sites-enabled/000-default
 a2enmod rewrite
 apachectl restart
 
@@ -46,6 +46,7 @@ echo 'phpmyadmin phpmyadmin/mysql/admin-pass password ' | debconf-set-selections
 echo 'phpmyadmin phpmyadmin/mysql/app-pass password ' | debconf-set-selections
 echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf-set-selections
 apt-get install -q -y phpmyadmin
+cp /vagrant/vagrant/phpmyadmin-config.inc.php /etc/phpmyadmin/config.inc.php
 
 # Gearman
 apt-get install -y build-essential
