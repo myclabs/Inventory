@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Titre de la page -->
+
+        <tu tuid="pageTitle">
+            <tuv xml:lang="fr">
+                <seg>Jeux de simulations</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Simulation sets</seg>
+            </tuv>
+        </tu>
+
+        <!-- Datagrid -->
+
+        <tu tuid="numberOfScenariosHeader">
+            <tuv xml:lang="fr">
+                <seg>Nombre de scénarios</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of scenarios</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un jeu de simulations</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a simulation set</seg>
+            </tuv>
+        </tu>
+
+
+    </body>
+</tmx>

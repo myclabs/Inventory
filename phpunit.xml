@@ -19,6 +19,7 @@
             <directory>./tests/AF</directory>
             <directory>./tests/Social</directory>
             <directory>./tests/Orga</directory>
+            <directory>./tests/Simulation</directory>
             <exclude>./tests/Unit</exclude>
         </testsuite>
 

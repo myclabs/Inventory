@@ -35,6 +35,7 @@ class Bootstrap extends Core_Bootstrap
             'AF',
             'Social',
             'Orga',
+            'Simulation',
         ];
 
         foreach ($modules as $module) {

@@ -1,0 +1,49 @@
+<?php
+// Liste des Simulation d'un Set.
+$datagridListScenarios = new UI_Datagrid('listScenarios', 'datagrid_scenario', 'simulation');
+
+$colLabelScenario = new UI_Datagrid_Col_Text('labelScenario', __('UI', 'name', 'label'));
+$colLabelScenario->editable = true;
+$colLabelScenario->addable = true;
+$datagridListScenarios->addCol($colLabelScenario);
+
+$colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('UI', 'name', 'progress'));
+$datagridListScenarios->addCol($colAdvancementInput);
+
+$colStateInput = new UI_Datagrid_Col_List('stateInput', __('UI', 'name', 'status'));
+$colStateInput->withEmptyElement = false;
+$colStateInput->editable = false;
+$colStateInput->addable = false;
+$imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
+$imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
+$imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incompletecomplete');
+$imageInputIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+$colStateInput->list = array(
+    AF_Model_InputSet_Primary::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
+    AF_Model_InputSet_Primary::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
+    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => $imageCalculationIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusCalculationIncomplete'),
+    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
+);
+$datagridListScenarios->addCol($colStateInput);
+
+$colTotalValueInput = new UI_Datagrid_Col_Number('totalValueGESInput', __('AF', 'inputList', 'GESTotalValueHeader'));
+$colTotalValueInput->editable = false;
+$colTotalValueInput->addable = false;
+$datagridListScenarios->addCol($colTotalValueInput);
+
+$colTotalUncertaintyInput = new UI_Datagrid_Col_Number('totalUncertaintyGESInput', __('UI', 'name', 'uncertainty') . ' (%)');
+$colTotalUncertaintyInput->editable = false;
+$colTotalUncertaintyInput->addable = false;
+$datagridListScenarios->addCol($colTotalUncertaintyInput);
+
+$colLinkEdit = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'input'));
+$colLinkEdit->addable = false;
+$datagridListScenarios->addCol($colLinkEdit);
+
+$datagridListScenarios->pagination = false;
+$datagridListScenarios->addElements = true;
+$datagridListScenarios->addPanelTitle = __('Simulation', 'setSingle', 'addPanelTitle');
+$datagridListScenarios->deleteElements = true;
+$datagridListScenarios->addParam('idSet', $this->idSet);
+
+$datagridListScenarios->display();

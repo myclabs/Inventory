@@ -1,0 +1,35 @@
+<?php
+    // Liste des Set.
+?>
+<div class="page-header">
+    <h1>
+        <?=__('Simulation', 'setList', 'pageTitle')?>
+    </h1>
+</div>
+
+<?php
+    $datagridListSet = new UI_Datagrid('listSet', 'datagrid_set', 'simulation');
+
+    $colLabelAF = new UI_Datagrid_Col_List('labelAF', __('AF', 'name', 'accountingForm'));
+    $colLabelAF->list = $this->listAF;
+    $colLabelAF->addable = true;
+    $datagridListSet->addCol($colLabelAF);
+
+    $colLabelSet = new UI_Datagrid_Col_Text('labelSet', __('UI', 'name', 'label'));
+    $colLabelSet->editable = true;
+    $colLabelSet->addable = true;
+    $datagridListSet->addCol($colLabelSet);
+
+    $colNbPrimarySet = new UI_Datagrid_Col_Number('nbPrimarySet', __('Simulation', 'setList', 'numberOfScenariosHeader'));
+    $colNbPrimarySet->addable = false;
+    $datagridListSet->addCol($colNbPrimarySet);
+
+    $colLinkScenario = new UI_Datagrid_Col_Link('detail', __('UI', 'name', 'details'));
+    $datagridListSet->addCol($colLinkScenario);
+
+    $datagridListSet->pagination = false;
+    $datagridListSet->addElements = true;
+    $datagridListSet->addPanelTitle = __('Simulation', 'setList', 'addPanelTitle');
+    $datagridListSet->deleteElements = true;
+
+    $datagridListSet->display();

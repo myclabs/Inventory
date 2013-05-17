@@ -1,0 +1,60 @@
+# simulation\models\mappers\Simulation_Model_Scenario.yml
+Simulation_Model_Scenario:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Simulation_Scenario
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    label:
+      column: label
+      type: string
+      length: 255
+      nullable: false
+
+  oneToOne:
+    aFInputSetPrimary:
+      targetEntity: AF_Model_InputSet_Primary
+      joinColumn:
+        name: idAFInputSetPrimary
+        referencedColumnName: id
+        nullable: true
+      cascade: [ persist, remove ]
+    dWMember:
+      targetEntity: DW_Model_Member
+      joinColumn:
+        name: idDWMember
+        referencedColumnName: id
+        nullable: false
+      cascade: [ persist, remove ]
+
+  manyToOne:
+    set:
+      targetEntity: Simulation_Model_Set
+      inversedBy: scenarios
+      joinColumn:
+        name: idSet
+        referencedColumnName: id
+        nullable: false
+
+  manyToMany:
+    dWResults:
+      targetEntity: DW_Model_Result
+      joinTable:
+        name: Simulation_Scenario_DWResults
+        joinColumns:
+          idScenario:
+            referencedColumnName: id
+            nullable: false
+        inverseJoinColumns:
+          idDWResult:
+            referencedColumnName: id
+            nullable: false
+            unique: true
+      cascade: [ persist, remove ]
