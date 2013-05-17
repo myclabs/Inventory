@@ -26,9 +26,11 @@ class Inventory_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initInventoryObservers()
     {
-        Core_EventDispatcher::getInstance()->addListener('Inventory_Model_GranularityDataProvider', 'Orga_Model_Granularity');
-        Core_EventDispatcher::getInstance()->addListener('Inventory_Model_CellDataProvider', 'Orga_Model_Cell');
-        Core_EventDispatcher::getInstance()->addListener('Inventory_Model_GranularityReport', 'DW_Model_Report');
+        if (APPLICATION_ENV != 'testsunitaires') {
+            Core_EventDispatcher::getInstance()->addListener('Inventory_Model_GranularityDataProvider', 'Orga_Model_Granularity');
+            Core_EventDispatcher::getInstance()->addListener('Inventory_Model_CellDataProvider', 'Orga_Model_Cell');
+            Core_EventDispatcher::getInstance()->addListener('Inventory_Model_GranularityReport', 'DW_Model_Report');
+        }
     }
 
     /**
@@ -48,16 +50,18 @@ class Inventory_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initInventoryACLManagerListener()
     {
-        if (! Zend_Registry::isRegistered('EntityManagers')) {
-            return;
+        if (APPLICATION_ENV != 'testsunitaires') {
+            if (! Zend_Registry::isRegistered('EntityManagers')) {
+                return;
+            }
+            $entityManagers = Zend_Registry::get('EntityManagers');
+            /** @var $entityManager Doctrine\ORM\EntityManager */
+            $entityManager = $entityManagers['default'];
+            $events = [
+                Doctrine\ORM\Events::postFlush,
+            ];
+            $entityManager->getEventManager()->addEventListener($events, Inventory_Service_ACLManager::getInstance());
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
-        $events = [
-            Doctrine\ORM\Events::postFlush,
-        ];
-        $entityManager->getEventManager()->addEventListener($events, Inventory_Service_ACLManager::getInstance());
     }
 
 }
