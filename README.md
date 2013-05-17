@@ -10,6 +10,13 @@ Install [composer](http://getcomposer.org/doc/00-intro.md) and run:
 composer install
 ```
 
+Set up config files
+
+```bash
+cp application/configs/application.ini.default application/configs/application.ini
+cp public/.htaccess.default public/.htaccess
+```
+
 ## Run
 
 Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](http://www.vagrantup.com/):

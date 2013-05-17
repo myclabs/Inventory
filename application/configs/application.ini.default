@@ -1,0 +1,9 @@
+[production]
+
+[test : production]
+
+[developpement : test]
+
+[testsunitaires : test]
+
+[script : developpement]
