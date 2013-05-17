@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <!-- Les traductions suivantes sont répliquées à l'identique dans Classif -->
+
+        <tu tuid="seekedIssue">
+            <tuv xml:lang="fr">
+                <seg>Anomalie recherchée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Seeked issue</seg>
+            </tuv>
+        </tu>
+        <tu tuid="abnormalItems">
+            <tuv xml:lang="fr">
+                <seg>Éléments présentant des anomalies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Abnormal items</seg>
+            </tuv>
+        </tu>
+        <tu tuid="axisWithNoMember">
+            <tuv xml:lang="fr">
+                <seg>Axe sans membre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Axis with no number</seg>
+            </tuv>
+        </tu>
+        <tu tuid="memberWithNoDirectChild">
+            <tuv xml:lang="fr">
+                <seg>Membre sans enfant d'un axe non situé à la racine</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Member with no child in an axis not placed at root</seg>
+            </tuv>
+        </tu>
+        <tu tuid="memberWithMissingDirectParent">
+            <tuv xml:lang="fr">
+                <seg>Membre pour lequel manque un membre parent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Member for which a parent is missing</seg>
+            </tuv>
+        </tu>
+        <tu tuid="renewControl">
+            <tuv xml:lang="fr">
+                <seg>Renouveler le contrôle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Renew control</seg>
+            </tuv>
+        </tu>
+
+
+    </body>
+</tmx>

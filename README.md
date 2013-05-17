@@ -60,3 +60,4 @@ SVN revision migrated for each package:
 - Algo: 12124
 - AF: 12220
 - Social: 12212
+- Orga: 12202

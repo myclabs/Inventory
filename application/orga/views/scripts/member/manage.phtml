@@ -1,0 +1,63 @@
+<?php
+/**
+ * @author valentin.claras
+ * @author sidoine.tardieu
+ * @package Orga
+ * Datagrids des membres d'un cube.
+ */
+foreach ($this->axes as $axis) {
+    /** @var $axis Orga_Model_Axis */
+
+    $datagridAxisMembers = new UI_Datagrid('listMembers'.$axis->getRef(), 'datagrid_member', 'orga');
+
+    // Label du membre de l'axe.
+    $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+    $columnLabel->editable = true;
+    $datagridAxisMembers->addCol($columnLabel);
+
+    // Ref du membre de l'axe.
+    $columnRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+    $columnRef->editable = true;
+    $datagridAxisMembers->addCol($columnRef);
+
+    // Membres broaders pour chaque axe broader.
+    foreach ($axis->getDirectBroaders() as $broaderAxis) {
+        // Construction de la liste de membres.
+        $columnBroader = new UI_Datagrid_Col_List('broader'.$broaderAxis->getRef(), $broaderAxis->getLabel());
+        $columnBroader->list = 'orga/datagrid_member/getparents?refParentAxis='.$broaderAxis->getRef().'&';
+        $columnBroader->list .= 'idFilterCell='.$this->idFilterCell.'&';
+        $columnBroader->dynamicList = true;
+        $columnBroader->editable = true;
+        $datagridAxisMembers->addCol($columnBroader);
+    }
+
+    $datagridAxisMembers->deleteElements = true;
+    if ($this->idCell !== null) {
+        $datagridAxisMembers->addParam('idCell', $this->idCell);
+    }
+    $datagridAxisMembers->addParam('idCube', $this->idCube);
+    $datagridAxisMembers->addParam('refAxis', $axis->getRef());
+    $datagridAxisMembers->addParam('idFilterCell', $this->idFilterCell);
+    if (!empty($this->idFilterCell)) {
+        $datagridAxisMembers->pagination = false;
+    }
+    $datagridAxisMembers->initialLoading = false;
+    $datagridAxisMembers->addElements = true;
+    $datagridAxisMembers->addPanelTitle = __('Orga', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
+
+    echo $this->collapse('members'.$axis->getRef(), $axis->getLabel(), $datagridAxisMembers->getHTML())->collapsed();
+
+    $script = '';
+    $script .= '$(\'#members'.$axis->getRef().'\').on(\'show\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'members'.$axis->getRef().'_wrapper\') {';
+    $script .= 'listMembers'.$axis->getRef().'.filter();';
+    $script .= '}';
+    $script .= '});';
+
+    if ($this->display === false) {
+        echo '<script type="text/javascript">'.$datagridAxisMembers->getScript().$script.'</script>';
+    } else {
+        UI_Datagrid::addHeader($datagridAxisMembers);
+        $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+    }
+}

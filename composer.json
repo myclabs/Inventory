@@ -13,7 +13,8 @@
 			"Doc": "src/",
 			"DW": "src/",
 			"Algo": "src/",
-			"AF": "src/"
+			"AF": "src/",
+			"Orga": "src/"
 		}
 	},
 	"require": {

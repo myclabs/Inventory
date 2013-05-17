@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="labelGlobalCellExtended">
+            <tuv xml:lang="fr">
+                <seg>Unité organisationnelle globale</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Global organizational unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="labelGlobalCell">
+            <tuv xml:lang="fr">
+                <seg>Unité globale</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Global unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="irrelevantCell">
+            <tuv xml:lang="fr">
+                <seg>Cette unité organisationnelle n'est pas pertinente, il n'est donc pas possible d'y accéder.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This organizational unit is irrelevant, therefore access to it is locked.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

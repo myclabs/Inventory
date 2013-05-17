@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+    
+        <!-- Popups d'ajout et d'édition -->
+        
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un axe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Axis addition</seg>
+            </tuv>
+        </tu>
+        <tu tuid="editPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Édition d'un axe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Axis edition</seg>
+            </tuv>
+        </tu>
+        <tu tuid="parentAxisLabel">
+            <tuv xml:lang="fr">
+                <seg>Agrège l'axe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Aggregates axis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="contextualizingLabel">
+            <tuv xml:lang="fr">
+                <seg>Rôle des membres de cet axe vis-à-vis des membres des axes plus fins</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Role of the members of this axis with respect to members of narrower axes</seg>
+            </tuv>
+        </tu>
+        <tu tuid="contextualizingOption">
+            <tuv xml:lang="fr">
+                <seg>Contextualisant</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Contextualizing</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notContextualizingOption">
+            <tuv xml:lang="fr">
+                <seg>Non contextualisant</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not contextualizing</seg>
+            </tuv>
+        </tu>    
+    
+        <!-- Messages -->
+        
+        <tu tuid="axisHasDirectBroaders">
+            <tuv xml:lang="fr">
+                <seg>Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This axis cannot be deleted, since it is hierarchically linked to (at least) one coarser axis.</seg>
+            </tuv>
+        </tu>    
+        <tu tuid="axisHasGranularities">
+            <tuv xml:lang="fr">
+                <seg>Cet axe ne peut pas être supprimé, car il intervient dans la définition de (au moins) un niveau organisationnel.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This axis cannot be deleted, since it is involved in the definition of (at least) one organizational level.</seg>
+            </tuv>
+        </tu>    
+        <tu tuid="axisHasMembers">
+            <tuv xml:lang="fr">
+                <seg>Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses membres.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Before deleting this axis, please delete its members first.</seg>
+            </tuv>
+        </tu>    
+
+
+    </body>
+</tmx>

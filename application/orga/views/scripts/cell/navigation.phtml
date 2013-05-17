@@ -1,0 +1,105 @@
+<?php
+/**
+ * Volet navigation
+ * @author valentin.claras
+ * @author diana.dragusin
+ * @package Orga
+ */
+?>
+
+<!--
+<h3>Navigation</h3>
+<hr />
+ -->
+<?php
+$parentCells = array_reverse($this->cell->getParentCells());
+if (count($parentCells) > 0) {
+?>
+<ul id="navigationParent">
+<?php
+    foreach ($parentCells as $parentCell) {
+        if ($parentCell->getGranularity()->isNavigable()) {
+?>
+        <li class="navigationParent">
+            <?php if ($this->configuration->isParentCellALink($parentCell)) { ?>
+            <a href="<?=$this->configuration->getOutputUrl()?>idCell=<?=$parentCell->getKey()['id']?>">
+                <?= $parentCell->getLabel()?>
+            </a>
+            <?php } else { ?>
+                    <?= $parentCell->getLabel()?>
+            <?php } ?>
+        </li>
+<?php
+        }
+    }
+?>
+</ul>
+<hr />
+<?php
+    }
+?>
+<div id="navigationCurrent">
+    <?= $this->cell->getLabel() ?>
+</div>
+<?php
+    foreach ($this->cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+        if ($narrowerGranularity->isNavigable() && $narrowerGranularity->hasCells()) {
+            $form = new UI_Form('navigation_'.$narrowerGranularity->getKey()['id']);
+            $form->setAjax(false);
+            $form->setAction(
+                'orga/forms_navigation/gotocell?'.
+                'idCell='.$this->cell->getKey()['id'].'&'.
+                'idGranularity='.$narrowerGranularity->getKey()['id'].'&'.
+                'url='.urlencode($this->configuration->getOutputUrl())
+            );
+
+            $idAddedAxes = array();
+            if ($this->cell->hasMembers()) {
+                $childMembers = $this->cell->getChildMembersForGranularity($narrowerGranularity);
+                foreach ($narrowerGranularity->getAxes() as $narrowerAxis) {
+                    if (!$this->cell->getGranularity()->hasAxis($narrowerAxis)) {
+                        $select = new UI_Form_Element_Select($narrowerAxis->getRef());
+                        $select->setLabel($narrowerAxis->getLabel());
+                        if (isset($childMembers[$narrowerAxis->getRef()])) {
+                            $listChildMembers = $childMembers[$narrowerAxis->getRef()];
+                        } else {
+                            $listChildMembers = $narrowerAxis->getMembers();
+                        }
+                        foreach ($listChildMembers as $childMember) {
+                            $option = new UI_Form_Element_Option(
+                                $childMember->getCompleteRef(),
+                                $childMember->getCompleteRef(),
+                                $childMember->getLabel()
+                            );
+                            $select->addOption($option);
+                        }
+                        $form->addElement($select);
+                    }
+                }
+            } else {
+                foreach ($narrowerGranularity->getAxes() as $narrowerAxis) {
+                    $select = new UI_Form_Element_Select($narrowerAxis->getRef());
+                    $select->setLabel($narrowerAxis->getLabel());
+                    foreach ($narrowerAxis->getMembers() as $childMember) {
+                        $option = new UI_Form_Element_Option(
+                            $childMember->getCompleteRef(),
+                            $childMember->getCompleteRef(),
+                            $childMember->getLabel()
+                        );
+                        $select->addOption($option);
+                    }
+                    $form->addElement($select);
+                }
+            }
+?>
+    <hr />
+    <?php
+        $submit = new UI_Form_Element_Submit('goTo'.$narrowerGranularity->getKey()['id']);
+        $submit->setLabel(__('UI', 'verb', 'goTo'));
+        $form->addElement($submit);
+        $form->display();
+    ?>
+<?php
+        }
+    }
+?>

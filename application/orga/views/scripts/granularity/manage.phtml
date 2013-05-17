@@ -1,0 +1,39 @@
+<?php
+/**
+ * @author valentin.claras
+ * @author sidoine.tardieu
+ * @package Orga
+ * Contenu de l'onglet des grannularity
+ */
+$datagrid = new UI_Datagrid('granularity', 'datagrid_granularity', 'orga');
+
+$columnAxis = new UI_Datagrid_Col_List('axes', __('UI', 'name', 'axes'));
+$columnAxis->list = $this->listAxes;
+$columnAxis->multiple = true;
+$columnAxis->addable = true;
+$columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_BOX;
+$datagrid->addCol($columnAxis);
+
+$columnNavigable = new UI_Datagrid_Col_Bool('navigable', __('Orga', 'granularity', 'navigableHeader'));
+$columnNavigable->addable = true;
+$columnNavigable->editable = true;
+$columnNavigable->defaultAddValue = false;
+$columnNavigable->textTrue = __('Orga', 'granularity', 'navigableOption');
+$columnNavigable->textFalse = __('Orga', 'granularity', 'notNavigableOption');
+$columnNavigable->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'granularity', 'navigableOption');
+$columnNavigable->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'granularity', 'notNavigableOption');
+$datagrid->addCol($columnNavigable);
+
+$datagrid->pagination = false;
+if ($this->idCell !== null) {
+    $datagrid->addParam('idCell', $this->idCell);
+}
+$datagrid->addParam('idCube', $this->idCube);
+$datagrid->deleteElements = true;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('Orga', 'granularity', 'addPanelTitle');
+if ($this->display === false) {
+    echo $datagrid->render();
+} else {
+    $datagrid->display();
+}

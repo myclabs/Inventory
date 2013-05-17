@@ -1,0 +1,51 @@
+# orga\models\mappers\Orga_Model_Cell.yml
+Orga_Model_Cell:
+  type: entity
+  repositoryClass: Orga_Model_Repository_Cell
+  table: Orga_Cell
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    membersHashKey:
+      column: membersHashKey
+      type: string
+      length: 7650
+      nullable: false
+    relevant:
+      column: relevant
+      type: boolean
+      nullable: false
+    allParentsRelevant:
+      column: allParentsRelevant
+      type: boolean
+      nullable: false
+
+  manyToOne:
+    granularity:
+      targetEntity: Orga_Model_Granularity
+      inversedBy: cell
+      joinColumn:
+        name: idGranularity
+        referencedColumnName: id
+
+  manyToMany:
+    members:
+      targetEntity: Orga_Model_Member
+      joinTable:
+        name: Orga_Cell_Member
+        joinColumns:
+          idCell:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idMember:
+            referencedColumnName: id
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preRemove: [ preDelete ]

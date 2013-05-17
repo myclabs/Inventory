@@ -1,0 +1,72 @@
+# orga\models\mappers\Orga_Model_Granularity.yml
+Orga_Model_Granularity:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Orga_Granularity
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      column: ref
+      type: string
+      length: 255
+      nullable: false
+    navigable:
+      column: navigable
+      type: boolean
+      nullable: false
+    position:
+      column: position
+      type: integer
+      length: 2
+      nullable: false
+
+  manyToOne:
+    cube:
+      targetEntity: Orga_Model_Cube
+      inversedBy: granularities
+      joinColumn:
+        name: idCube
+        referencedColumnName: id
+        nullable: false
+
+  manyToMany:
+    axes:
+      targetEntity: Orga_Model_Axis
+      inversedBy: granularities
+      joinTable:
+        name: Orga_Granularity_Axis
+        joinColumns:
+          idGranularity:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idAxis:
+            referencedColumnName: id
+      orderBy:
+        globalPosition: ASC
+
+  oneToMany:
+    cells:
+      targetEntity: Orga_Model_Cell
+      mappedBy: granularity
+      orderBy:
+        membersHashKey: ASC
+      cascade: [ persist, remove ]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]
+
+  uniqueConstraints:
+      refUniqueness:
+          columns:
+              - ref
+              - idCube

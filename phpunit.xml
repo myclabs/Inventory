@@ -18,6 +18,7 @@
             <directory>./tests/Algo</directory>
             <directory>./tests/AF</directory>
             <directory>./tests/Social</directory>
+            <directory>./tests/Orga</directory>
             <exclude>./tests/Unit</exclude>
         </testsuite>
 
