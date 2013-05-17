@@ -6,8 +6,5 @@ composer.phar
 composer.lock
 
 application/configs/application.ini
-data/logs/*.log
-data/proxies/*
 public/.htaccess
-public/cache/captcha/*.png
 public/yui/*
