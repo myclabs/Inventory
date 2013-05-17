@@ -1,0 +1,9 @@
+Algo_Model_Selection_TextKey_Input:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Algo_Selection_TextKey_Input
+
+  fields:
+    inputRef:
+      type: string
+      nullable: false

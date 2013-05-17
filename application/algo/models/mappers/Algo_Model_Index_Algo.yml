@@ -1,0 +1,12 @@
+Algo_Model_Index_Algo:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Algo_Index_Algo
+
+  manyToOne:
+    algo:
+      targetEntity: Algo_Model_Selection_TextKey
+      joinColumn:
+        name: idAlgo
+        referencedColumnName: id
+        nullable: false

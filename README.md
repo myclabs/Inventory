@@ -53,3 +53,4 @@ SVN revision migrated for each package:
 - Techno: 12212
 - Doc: 12202
 - DW: 12222
+- Algo: 12124

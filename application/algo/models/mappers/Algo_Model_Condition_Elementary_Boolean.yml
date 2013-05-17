@@ -1,0 +1,9 @@
+Algo_Model_Condition_Elementary_Boolean:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Algo_Condition_Elementary_Boolean
+
+  fields:
+    value:
+      type: boolean
+      nullable: true

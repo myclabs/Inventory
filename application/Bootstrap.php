@@ -31,6 +31,7 @@ class Bootstrap extends Core_Bootstrap
             'Techno',
             'Doc',
             'DW',
+            'Algo',
         ];
 
         foreach ($modules as $module) {

@@ -1,0 +1,13 @@
+Algo_Model_Condition_Elementary:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Algo_Condition_Elementary
+
+  fields:
+    relation:
+      type: integer
+      nullable: true
+    inputRef:
+      type: string
+      nullable: true
+

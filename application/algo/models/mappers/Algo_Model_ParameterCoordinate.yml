@@ -1,0 +1,32 @@
+Algo_Model_ParameterCoordinate:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Algo_ParameterCoordinate
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_parameter
+    type: string
+  discriminatorMap:
+    fixed: Algo_Model_ParameterCoordinate_Fixed
+    algo: Algo_Model_ParameterCoordinate_Algo
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    refDimensionMeaning:
+      type: string
+      nullable: false
+
+  manyToOne:
+    algoParameter:
+      targetEntity: Algo_Model_Numeric_Parameter
+      inversedBy: parameterCoordinates
+      joinColumn:
+        name: idAlgo
+        referencedColumnName: id
+        nullable: false

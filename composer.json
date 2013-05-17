@@ -11,7 +11,8 @@
 			"Export": "src/",
 			"Keyword": "src/",
 			"Doc": "src/",
-			"DW": "src/"
+			"DW": "src/",
+			"Algo": "src/"
 		}
 	},
 	"require": {

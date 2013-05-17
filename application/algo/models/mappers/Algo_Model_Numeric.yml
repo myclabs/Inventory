@@ -1,0 +1,23 @@
+Algo_Model_Numeric:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Algo_Numeric
+
+  fields:
+    label:
+      type: string
+      nullable: true
+    refContext:
+      type: string
+      nullable: true
+    refIndicator:
+      type: string
+      nullable: true
+
+  oneToMany:
+    indexes:
+      targetEntity: Algo_Model_Index
+      orphanRemoval: true
+      mappedBy: algoNumeric
+      cascade: [ all ]
+      orphanRemoval: true
