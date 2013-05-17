@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.example.org/standardUnit"
+        xmlns:tns="http://www.example.org/standardUnit"
+        elementFormDefault="qualified">
+
+    <element name="xml">
+        <complexType>
+            <sequence>
+                <element name="standardUnit" type="tns:standardUnit" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="standardUnit">
+        <sequence>
+            <element name="name" type="tns:name"/>
+            <element name="symbol" type="tns:name"/>
+            <element name="quantityRef" type="string"/>
+            <element name="multiplier" type="string"/>
+            <element name="unitSystemRef" type="string"/>
+        </sequence>
+        <attribute name="ref" type="tns:refType" use="required"/>
+    </complexType>
+
+    <simpleType name="refType">
+        <restriction base="string">
+            <pattern value="([a-z0-9_-_/])*"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="name">
+        <sequence>
+            <element name="fr" type="string"/>
+            <element name="en" type="string"/>
+        </sequence>
+    </complexType>
+
+</schema>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xml xmlns="http://www.example.org/extendedUnit"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.example.org/extendedUnit extendedUnit.xsd ">
+
+    <extendedUnit ref="masse_equivalent_gaz_effet_serre">
+        <name>Masse équivalent gaz à effet de serre</name>
+        <derivedQuantityRef>kg</derivedQuantityRef>
+        <quantityExtensionRef>co2e</quantityExtensionRef>
+    </extendedUnit>
+
+    <extendedUnit ref="masse_equivalent_gaz_effet_serre">
+        <name>Masse équivalent gaz à effet de serre</name>
+        <derivedQuantityRef>g</derivedQuantityRef>
+        <quantityExtensionRef>co2e</quantityExtensionRef>
+    </extendedUnit>
+
+    <extendedUnit ref="masse_equivalent_gaz_effet_serre">
+        <name>Masse équivalent gaz à effet de serre</name>
+        <derivedQuantityRef>t</derivedQuantityRef>
+        <quantityExtensionRef>co2e</quantityExtensionRef>
+    </extendedUnit>
+
+    <extendedUnit ref="masse_equivalent_gaz_effet_serre">
+        <name>Masse équivalent gaz à effet de serre</name>
+        <derivedQuantityRef>kg</derivedQuantityRef>
+        <quantityExtensionRef>ce</quantityExtensionRef>
+    </extendedUnit>
+
+    <extendedUnit ref="masse_equivalent_gaz_effet_serre">
+        <name>Masse équivalent gaz à effet de serre</name>
+        <derivedQuantityRef>g</derivedQuantityRef>
+        <quantityExtensionRef>ce</quantityExtensionRef>
+    </extendedUnit>
+
+    <extendedUnit ref="masse_equivalent_gaz_effet_serre">
+        <name>Masse équivalent gaz à effet de serre</name>
+        <derivedQuantityRef>t</derivedQuantityRef>
+        <quantityExtensionRef>ce</quantityExtensionRef>
+    </extendedUnit>
+
+</xml>

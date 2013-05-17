@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.example.org/quantities"
+        xmlns:tns="http://www.example.org/quantities"
+        elementFormDefault="qualified">
+
+    <element name="xml">
+        <complexType>
+            <sequence>
+                <element name="quantity" type="tns:quantity" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="quantity">
+        <sequence>
+            <element name="name" type="tns:name"/>
+            <element name="standardUnitRef" type="string"/>
+            <element name="symbol" type="string"/>
+            <element name="isBase" type="boolean"/>
+            <element name="component" type="tns:component" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="ref" type="tns:refType" use="required"/>
+    </complexType>
+
+    <complexType name="component">
+        <sequence>
+            <element name="baseQuantityRef" type="string"/>
+            <element name="exponent" type="integer"/>
+        </sequence>
+    </complexType>
+
+    <simpleType name="refType">
+        <restriction base="string">
+            <pattern value="([a-z0-9_-_/])*"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="name">
+        <sequence>
+            <element name="fr" type="string"/>
+            <element name="en" type="string"/>
+        </sequence>
+    </complexType>
+
+</schema>

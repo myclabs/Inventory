@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.example.org/discreteUnit"
+        xmlns:tns="http://www.example.org/discreteUnit"
+        elementFormDefault="qualified">
+
+    <element name="xml">
+        <complexType>
+            <sequence>
+                <element name="discreteUnit" type="tns:discreteUnit" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="discreteUnit">
+        <sequence>
+            <element name="name" type="string"/>
+        </sequence>
+        <attribute name="ref" type="tns:refType" use="required"/>
+    </complexType>
+
+    <simpleType name="refType">
+        <restriction base="string">
+            <pattern value="([a-z0-9_-])*"/>
+        </restriction>
+    </simpleType>
+</schema>

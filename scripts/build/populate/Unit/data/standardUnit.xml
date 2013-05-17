@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xml xmlns="http://www.example.org/standardUnit"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.example.org/standardUnit standardUnit.xsd ">
+
+    <!-- Pour toutes les conventions relatives à l'ordre entre les objets, le choix des identifiants, des symboles, et des libellés, voir specs -->
+
+    <!-- Exposant zéro -->
+
+    <!-- Sans dimension -->
+
+    <standardUnit ref="pourcent">
+        <name>
+            <fr>pourcent</fr>
+            <en>percent</en>
+        </name>
+        <symbol>
+            <fr>%</fr>
+            <en>%</en>
+        </symbol>
+        <quantityRef>sans_dimension</quantityRef>
+        <multiplier>0.01</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="un">
+        <name>
+            <fr> </fr>
+            <en> </en>
+        </name>
+        <symbol>
+            <fr> </fr>
+            <en> </en>
+        </symbol>
+        <quantityRef>sans_dimension</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <!-- Exposant un -->
+
+    <!-- Longueur -->
+
+    <standardUnit ref="m">
+        <name>
+            <fr>mètre</fr>
+            <en>meter</en>
+        </name>
+        <symbol>
+            <fr>m</fr>
+            <en>m</en>
+        </symbol>
+        <quantityRef>l</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="km">
+        <name>
+            <fr>kilomètre</fr>
+            <en>kilometer</en>
+        </name>
+        <symbol>
+            <fr>km</fr>
+            <en>km</en>
+        </symbol>
+        <quantityRef>l</quantityRef>
+        <multiplier>1000</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="100km">
+        <name>
+            <fr>cent kilomètres</fr>
+            <en>hundred kilometers</en>
+        </name>
+        <symbol>
+            <fr>100 km</fr>
+            <en>100 km</en>
+        </symbol>
+        <quantityRef>l</quantityRef>
+        <multiplier>100000</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="1000km">
+        <name>
+            <fr>mille kilomètres</fr>
+            <en>thousand kilometers</en>
+        </name>
+        <symbol>
+            <fr>1000 km</fr>
+            <en>1000 km</en>
+        </symbol>
+        <quantityRef>l</quantityRef>
+        <multiplier>1e+006</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <!-- Masse -->
+
+    <standardUnit ref="g">
+        <name>
+            <fr>gramme</fr>
+            <en>gram</en>
+        </name>
+        <symbol>
+            <fr>g</fr>
+            <en>g</en>
+        </symbol>
+        <quantityRef>m</quantityRef>
+        <multiplier>0.001</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="kg">
+        <name>
+            <fr>kilogramme</fr>
+            <en>kilogram</en>
+        </name>
+        <symbol>
+            <fr>kg</fr>
+            <en>kg</en>
+        </symbol>
+        <quantityRef>m</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="t">
+        <name>
+            <fr>tonne</fr>
+            <en>tonne</en>
+        </name>
+        <symbol>
+            <fr>t</fr>
+            <en>t</en>
+        </symbol>
+        <quantityRef>m</quantityRef>
+        <multiplier>1000</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <!-- Temps -->
+
+    <standardUnit ref="s">
+        <name>
+            <fr>seconde</fr>
+            <en>second</en>
+        </name>
+        <symbol>
+            <fr>s</fr>
+            <en>s</en>
+        </symbol>
+        <quantityRef>t</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="h">
+        <name>
+            <fr>heure</fr>
+            <en>hour</en>
+        </name>
+        <symbol>
+            <fr>h</fr>
+            <en>h</en>
+        </symbol>
+        <quantityRef>t</quantityRef>
+        <multiplier>3600</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="jour"> <!-- ou bien "jour" ? impossible d'utiliser "j" comme ref car déjà pris pour le Joule -->
+        <name>
+            <fr>jour</fr>
+            <en>day</en>
+        </name>
+        <symbol>
+            <fr>jour</fr>
+            <en>day</en>
+        </symbol>
+        <!-- ou bien "d" ? ou bien "jour" ? -->
+        <quantityRef>t</quantityRef>
+        <multiplier>86400</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="mois">
+        <name>
+            <fr>mois</fr>
+            <en>month</en>
+        </name>
+        <symbol>
+            <fr>mois</fr>
+            <en>month</en>
+        </symbol>
+        <quantityRef>t</quantityRef>
+        <multiplier>2.62974383e+006</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="an">    <!-- et non pas "année" qui désigne une période plutôt qu'une unité de temps -->
+        <name>
+            <fr>an</fr>
+            <en>year</en>
+        </name>
+        <symbol>
+            <fr>an</fr>
+            <en>yr</en>
+        </symbol>
+        <quantityRef>t</quantityRef>
+        <multiplier>3.155692596e+007</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <!-- Numéraire -->
+
+    <standardUnit ref="euro">
+        <name>
+            <fr>euro</fr>
+            <en>euro</en>
+        </name>
+        <symbol>
+            <fr>€</fr>
+            <en>€</en>
+        </symbol>
+        <quantityRef>numeraire</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="kiloeuro">
+        <name>
+            <fr>kiloeuro</fr>
+            <en>kiloeuro</en>
+        </name>
+        <symbol>
+            <fr>k€</fr>
+            <en>k€</en>
+        </symbol>
+        <quantityRef>numeraire</quantityRef>
+        <multiplier>1000</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="dollar">
+        <name>
+            <fr>dollar</fr>
+            <en>dollar</en>
+        </name>
+        <symbol>
+            <fr>$</fr>
+            <en>$</en>
+        </symbol>
+        <quantityRef>numeraire</quantityRef>
+        <multiplier>0.7671123589</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <!-- Exposant deux -->
+
+    <!-- Surface -->
+
+    <standardUnit ref="m2">
+        <name>
+            <fr>mètre carré</fr>
+            <en>square meter</en>
+        </name>
+        <symbol>
+            <fr>m²</fr>
+            <en>m²</en>
+        </symbol>
+        <quantityRef>l2</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="ha">
+        <name>
+            <fr>hectare</fr>
+            <en>hectare</en>
+        </name>
+        <symbol>
+            <fr>ha</fr>
+            <en>ha</en>
+        </symbol>
+        <quantityRef>l2</quantityRef>
+        <multiplier>10000</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <!-- Vitesse -->
+
+    <standardUnit ref="m/s">
+        <name>
+            <fr>mètre par seconde</fr>
+            <en>meter per second</en>
+        </name>
+        <symbol>
+            <fr>m/s</fr>
+            <en>m/s</en>
+        </symbol>
+        <quantityRef>l/t</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="noeud"> <!-- ou bien "nd" ? ou bien "kt" ? -->
+        <name>
+            <fr>nœud</fr>
+            <en>knot</en>
+        </name>
+        <symbol>
+            <fr>kt</fr>
+            <en>kt</en>
+        </symbol>
+        <!-- ou bien "nd" ? ou bien "noeud" ? -->
+        <quantityRef>l/t</quantityRef>
+        <multiplier>0.51444444</multiplier>
+        <unitSystemRef>anglo_saxon</unitSystemRef>
+    </standardUnit>
+
+    <!-- Exposant trois -->
+
+    <!-- Volume -->
+
+    <standardUnit ref="l">
+        <name>
+            <fr>litre</fr>
+            <en>liter</en>
+        </name>
+        <symbol>
+            <fr>ℓ</fr>
+            <en>ℓ</en>
+        </symbol>
+        <!-- "l" est à éviter car peu lisible, "L" ne respecte pas tout à fait les standards, le meilleur symbole est "ℓ" -->
+        <quantityRef>l3</quantityRef>
+        <multiplier>0.001</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="hl">
+        <name>
+            <fr>hectolitre</fr>
+            <en>hectoliter</en>
+        </name>
+        <symbol>
+            <fr>hℓ</fr>
+            <en>hℓ</en>
+        </symbol>
+        <quantityRef>l3</quantityRef>
+        <multiplier>0.1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="m3">
+        <name>
+            <fr>mètre cube</fr>
+            <en>cubic metre</en>
+        </name>
+        <symbol>
+            <fr>m3</fr>
+            <en>m3</en>
+        </symbol>
+        <quantityRef>l3</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="bl">
+        <name>
+            <fr>baril</fr>
+            <en>barrel</en>
+        </name>
+        <symbol>
+            <fr>bl</fr>
+            <en>bbl</en>
+        </symbol>
+        <quantityRef>l3</quantityRef>
+        <multiplier>0.1589873</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <!-- Exposant quatre -->
+
+    <!-- Exposant cinq -->
+
+    <!-- Energie -->
+
+    <standardUnit ref="j">
+        <name>
+            <fr>joule</fr>
+            <en>joule</en>
+        </name>
+        <symbol>
+            <fr>J</fr>
+            <en>J</en>
+        </symbol>
+        <quantityRef>ml2/t2</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="kj">
+        <name>
+            <fr>kilojoule</fr>
+            <en>kilojoule</en>
+        </name>
+        <symbol>
+            <fr>kJ</fr>
+            <en>kJ</en>
+        </symbol>
+        <quantityRef>ml2/t2</quantityRef>
+        <multiplier>1000</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="mj">
+        <name>
+            <fr>mégajoule</fr>
+            <en>megajoule</en>
+        </name>
+        <symbol>
+            <fr>MJ</fr>
+            <en>MJ</en>
+        </symbol>
+        <quantityRef>ml2/t2</quantityRef>
+        <multiplier>1e+006</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="kwh">
+        <name>
+            <fr>kilowatt-heure</fr>
+            <en>kilowatt-hour</en>
+        </name>
+        <symbol>
+            <fr>kWh</fr>
+            <en>kWh</en>
+        </symbol>
+        <quantityRef>ml2/t2</quantityRef>
+        <multiplier>3.6e+006</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="gj">
+        <name>
+            <fr>gigajoule</fr>
+            <en>gigajoule</en>
+        </name>
+        <symbol>
+            <fr>GJ</fr>
+            <en>GJ</en>
+        </symbol>
+        <quantityRef>ml2/t2</quantityRef>
+        <multiplier>1e+009</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="mwh">
+        <name>
+            <fr>mégawatt-heure</fr>
+            <en>megawatt-hour</en>
+        </name>
+        <symbol>
+            <fr>MWh</fr>
+            <en>MWh</en>
+        </symbol>
+        <quantityRef>ml2/t2</quantityRef>
+        <multiplier>3.6e+009</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="tep">
+        <name>
+            <fr>tonne équivalent pétrole</fr>
+            <en>tonne of oil equivalent</en>
+        </name>
+        <symbol>
+            <fr>TEP</fr>
+            <en>toe</en>
+        </symbol>
+        <quantityRef>ml2/t2</quantityRef>
+        <multiplier>4.1868e+010</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <!-- Exposant six -->
+
+    <!-- Puissance -->
+
+    <standardUnit ref="w">
+        <name>
+            <fr>watt</fr>
+            <en>watt</en>
+        </name>
+        <symbol>
+            <fr>W</fr>
+            <en>W</en>
+        </symbol>
+        <quantityRef>ml2/t3</quantityRef>
+        <multiplier>1</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="kw">
+        <name>
+            <fr>kilowatt</fr>
+            <en>kilowatt</en>
+        </name>
+        <symbol>
+            <fr>kW</fr>
+            <en>kW</en>
+        </symbol>
+        <quantityRef>ml2/t3</quantityRef>
+        <multiplier>1000</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+</xml>

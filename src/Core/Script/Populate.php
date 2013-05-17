@@ -18,7 +18,7 @@ abstract class Core_Script_Populate extends Core_Script_Action
      *
      * @var array
      */
-    protected $acceptedEnvironments = array('developpement', 'test', 'production');
+    protected $acceptedEnvironments = array('developpement', 'test', 'production', 'testsunitaires');
 
     /**
      * Run the action for each environment.

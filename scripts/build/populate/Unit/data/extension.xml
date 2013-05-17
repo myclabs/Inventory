@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xml xmlns="http://www.example.org/extension"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.example.org/extension extension.xsd ">
+
+    <!-- Pour toutes les conventions relatives à l'ordre entre les objets, le choix des identifiants, des symboles, et des libellés, voir specs -->
+
+    <extension ref="co2e">
+        <name>équivalent CO2</name>
+        <symbol>équ. CO2</symbol>
+        <multiplier>1</multiplier>
+    </extension>
+
+    <extension ref="ce">
+        <name>équivalent carbone</name>
+        <symbol>équ. C</symbol>
+        <multiplier>3.666666667</multiplier>
+    </extension>
+
+</xml> 

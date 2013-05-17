@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xml xmlns="http://www.example.org/discreteUnit"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.example.org/discreteUnit discreteUnit.xsd ">
+
+    <!-- Pour toutes les conventions relatives à l'ordre entre les objets, le choix des identifiants, des symboles, et des libellés, voir specs -->
+
+    <discreteUnit ref="animal">
+        <name>animal</name>
+    </discreteUnit>
+
+    <discreteUnit ref="appareil">
+        <name>appareil</name>
+    </discreteUnit>
+
+    <discreteUnit ref="bouteille">
+        <name>bouteille</name>
+    </discreteUnit>
+
+    <discreteUnit ref="logement">
+        <name>logement</name>
+    </discreteUnit>
+
+    <discreteUnit ref="homme">
+        <name>homme</name>
+    </discreteUnit>
+
+    <discreteUnit ref="machine">
+        <name>machine</name>
+    </discreteUnit>
+
+    <discreteUnit ref="occupant">
+        <name>occupant</name>
+    </discreteUnit>
+
+    <discreteUnit ref="passager">
+        <name>passager</name>
+    </discreteUnit>
+
+    <discreteUnit ref="personne">
+        <name>personne</name>
+    </discreteUnit>
+
+    <discreteUnit ref="repas">
+        <name>repas</name>
+    </discreteUnit>
+
+    <!--
+    l'unité suivante sera utilisée pour éviter de créer trop d'unités discrètes pour des cas particuliers
+    par exemple pour le formulaire "immobilisations" du projet Bolloré
+    -->
+    <discreteUnit ref="unite">
+        <name>unité</name>
+    </discreteUnit>
+
+    <discreteUnit ref="vehicule">
+        <name>véhicule</name>
+    </discreteUnit>
+
+    <discreteUnit ref="visiteur">
+        <name>visiteur</name>
+    </discreteUnit>
+
+</xml>
+                    

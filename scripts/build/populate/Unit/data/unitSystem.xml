@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xml xmlns="http://www.example.org/unitSystem"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.example.org/unitSystem unitSystem.xsd ">
+
+    <!-- Pour toutes les conventions relatives à l'ordre entre les objets, le choix des identifiants, des symboles, et des libellés, voir specs -->
+
+    <unitSystem ref="international">
+        <name>
+            <fr>International</fr>
+            <en>International</en>
+        </name>
+    </unitSystem>
+
+    <unitSystem ref="anglo_saxon">
+        <name>
+            <fr>Anglo-saxon</fr>
+            <en>Anglo-saxon</en>
+        </name>
+    </unitSystem>
+
+</xml>

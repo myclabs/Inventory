@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    phpunit -c phpunit.xml
--->
 <phpunit colors="true"
          bootstrap="./tests/init.php">
 
     <testsuites>
-        <testsuite name="Inventory tests">
-            <directory>./tests/</directory>
+
+        <testsuite name="Inventory without Unit">
+            <directory>./tests/Core</directory>
+            <directory>./tests/User</directory>
+            <directory>./tests/Calc</directory>
+            <directory>./tests/TEC</directory>
+            <directory>./tests/Exec</directory>
+            <directory>./tests/Classif</directory>
+            <directory>./tests/Keyword</directory>
+            <directory>./tests/Export</directory>
+            <directory>./tests/Techno</directory>
+            <exclude>./tests/Unit</exclude>
         </testsuite>
+
     </testsuites>
 
 </phpunit>
