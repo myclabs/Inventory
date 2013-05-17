@@ -1,0 +1,34 @@
+<?php
+// Popup de reset des Project.
+?>
+<p>
+    <?=__('Inventory', 'projectList', 'analysisDataStatus').__('UI', 'other', ':')?>
+    <?php
+    if ($this->areProjetDWCubesUpToDate) {
+        echo '<i class="icon-ok"></i> '.__('UI', 'property', 'upToDate');
+    } else {
+        echo '<i class="icon-remove"></i> '.__('UI', 'property', 'notUpToDate');
+    }
+    ?>
+</p>
+<p>
+    <?=__('Inventory', 'projectList', 'projectRebuildWarningMessage')?>
+</p>
+
+<?= $this->button(__('Inventory', 'projectList', 'projectRebuildButton'), 'ok icon-white', array('id' => 'resetDWCubes', 'class' => 'btn-primary')) ?>
+
+<script type="text/javascript">
+    $('#resetDWCubes').click(function() {
+        $('#listProjects_resetDWCubesAndDatasUpToDate_popup').modal('hide');
+        setMask(true);
+        $.post(
+            'inventory/project/resetdwcubes/idProject/<?=$this->idProject?>',
+            function(data, textStatus, jqXHR){
+                setMask(false);
+                addMessage(data.message, 'success');
+            }
+        ).error(
+            function(o) {setMask(false);errorHandler(o);}
+        );
+    });
+</script>

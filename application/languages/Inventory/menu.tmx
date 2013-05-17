@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="applicationName">
+            <tuv xml:lang="fr">
+                <seg>My C-Tool</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>My C-Tool</seg>
+            </tuv>
+        </tu>
+        <!--
+        <tu tuid="myPerimeter">
+            <tuv xml:lang="fr">
+                <seg>Mon périmètre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>My perimeter</seg>
+            </tuv>
+        </tu>
+        -->
+        <tu tuid="simulations">
+            <tuv xml:lang="fr">
+                <seg>Simulations</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Simulations</seg>
+            </tuv>
+        </tu>
+        <tu tuid="referentials">
+            <tuv xml:lang="fr">
+                <seg>Référentiels</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reference data</seg>
+            </tuv>
+        </tu>
+        <tu tuid="administration">
+            <tuv xml:lang="fr">
+                <seg>Administration</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administration</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>    

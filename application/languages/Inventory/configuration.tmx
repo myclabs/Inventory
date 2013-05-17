@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+		<!-- Titres -->
+
+        <tu tuid="granularityDataProviderTitle">
+            <tuv xml:lang="fr">
+                <seg>Propriétés des niveaux organisationnels (hors choix des formulaires et saisie)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational levels properties (besides forms choice and input)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="AFGranularitiesTitle">
+            <tuv xml:lang="fr">
+                <seg>Niveaux organisationnels de choix des formulaires et de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational levels for forms choice and input</seg>
+            </tuv>
+        </tu>
+        <tu tuid="granularityAnalysesTitle">
+            <tuv xml:lang="fr">
+                <seg>Configuration des analyses préconfigurées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Configuration of preconfigured analyses</seg>
+            </tuv>
+        </tu>
+
+        <!-- Datagrid « granularityDataProvider » -->
+        
+        <tu tuid="cellsWithOrgaTabHeader">
+            <tuv xml:lang="fr">
+                <seg>Onglet « Structure »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>"Structure" tab</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellsWithAFConfigTabHeader">
+            <tuv xml:lang="fr">
+                <seg>Onglet « Formulaires »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>"Forms" tab</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellsWithDWCubesHeader">
+            <tuv xml:lang="fr">
+                <seg>Cubes d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis cubes</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Datagrid « AFGranularities » -->
+        
+        <tu tuid="orgaGranularityForInventoryStatusNotDefined">
+            <tuv xml:lang="fr">
+                <seg>Pour accéder à cette interface, merci de renseigner au préalable le niveau organisationnel d'assignation du statut des inventaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>In order to access this interface, please first choose the organizational level where inventory status will be assigned.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="labelAFConfigOrgaGranularity">
+            <tuv xml:lang="fr">
+                <seg>Choix des formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Form choice</seg>
+            </tuv>
+        </tu>
+        <tu tuid="labelAFInputOrgaGranularity">
+            <tuv xml:lang="fr">
+                <seg>Saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputGranularityNeedsToBeNarrowerThanConfigGranularity">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le choix des formulaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select for input an organizational level narrower than or equal to the one selected for form choice.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputGranularityNeedsToBeNarrowerThanInventoryGranularity">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le statut des inventaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select for input an organizational level narrower than or equal to the one selected for inventory status.</seg>
+            </tuv>
+        </tu>
+
+
+	</body>
+</tmx>    

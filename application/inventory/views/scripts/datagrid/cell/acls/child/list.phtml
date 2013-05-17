@@ -1,0 +1,30 @@
+<?php
+/**
+ * @author valentin.claras
+ * @package Inventory
+ * @subpackage View
+ */
+
+$action = $this->action;
+
+$datagridACLs = new UI_Datagrid('cellACLs'.$action.$this->idCell, 'datagrid_cell_acls_current', 'inventory');
+
+$columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'name', 'firstName'));
+$columnUserFirstName->addable = false;
+$datagridACLs->addCol($columnUserFirstName);
+
+$columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'name', 'lastName'));
+$columnUserLastName->addable = false;
+$datagridACLs->addCol($columnUserLastName);
+
+$columnUserEmail = new UI_Datagrid_Col_Text('userEmail', __('UI', 'name', 'emailAddress'));
+$datagridACLs->addCol($columnUserEmail);
+
+$columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'name', 'role'));
+$columnRole->list = $this->listRoles;
+$datagridACLs->addCol($columnRole);
+
+$datagridACLs->addParam('idCell', $this->idCell);
+
+echo $datagridACLs->render();
+?>

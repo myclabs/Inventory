@@ -70,3 +70,4 @@ SVN revision migrated for each package:
 - Social: 12212
 - Orga: 12202
 - Simulation: 12202
+- Inventory: 12223

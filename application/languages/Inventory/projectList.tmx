@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+		<!-- Datagrid -->
+		
+        <tu tuid="orgaGranularityForInventoryStatus">
+            <tuv xml:lang="fr">
+                <seg>Niveau organisationnel des inventaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventories organizational level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization creation</seg>
+            </tuv>
+        </tu>
+        <tu tuid="InputGranularityNotNarrowerThanNewInventoryGranularity">
+            <tuv xml:lang="fr">
+                <seg>La modification n'a pas pu être effectuée, car le niveau indiqué est strictement plus fin qu'au moins un des niveaux de saisie de l'organisation.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This change could not be performed, since the level given is strictly narrower than at least one of organization input levels.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Colonne de statut des données d'analyse -->
+        
+        <tu tuid="statusRebuildHeader">
+            <tuv xml:lang="fr">
+                <seg>Statut / régénération données d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data status / rebuild</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusRebuildColumnLink">
+            <tuv xml:lang="fr">
+                <seg>Statut / régénération données d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data status / rebuild</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusRebuildPopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Statut / régénération des données d'analyse d'une organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Status / rebuild of analysis data of an organization</seg>
+            </tuv>
+        </tu>
+        <tu tuid="analysisDataStatus">
+            <tuv xml:lang="fr">
+                <seg>Statut des données d'analyse de l'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Status of organization analysis data</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectRebuildWarningMessage">
+            <tuv xml:lang="fr">
+                <seg>Vous pouvez régénérer l'ensemble des données d'analyse de cette organisation en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You can rebuild the whole analysis data of this organization by clicking on the button below. This may take time.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectRebuildButton">
+            <tuv xml:lang="fr">
+                <seg>Régénérer l'ensemble des données d'analyse de l'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Rebuild the whole analysis data for this organization</seg>
+            </tuv>
+        </tu>
+
+	</body>
+</tmx>    

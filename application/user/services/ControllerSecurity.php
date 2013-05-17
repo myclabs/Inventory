@@ -79,8 +79,7 @@ class User_Service_ControllerSecurity extends Core_Singleton
     private function getAnnotationReader()
     {
         if ($this->annotationReader == null) {
-            $pathToModule = Core_Package_Manager::getPackage('Core')->getPath();
-            AnnotationRegistry::registerFile($pathToModule . '/library/Annotation/Secure.php');
+            AnnotationRegistry::registerFile(PACKAGE_PATH . '/src/Core/Annotation/Secure.php');
             $this->annotationReader = new AnnotationReader();
         }
         return $this->annotationReader;

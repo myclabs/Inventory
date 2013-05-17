@@ -1,0 +1,43 @@
+# Inventory\models\mappers\Inventory_Model_GranularityReport.yml
+Inventory_Model_GranularityReport:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Inventory_GranularityReport
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToOne:
+    granularityDataProviderDWReport:
+      targetEntity: DW_Model_Report
+      joinColumn:
+        name: idGranularityDataProviderDWReport
+        referencedColumnName: id
+        nullable: true
+        unique: true
+
+  manyToOne:
+    granularityDataProvider:
+      targetEntity: Inventory_Model_GranularityDataProvider
+      inversedBy: granularityReports
+      joinColumn:
+        name: idGranularityDataProvider
+        referencedColumnName: id
+        nullable: false
+
+  manyToMany:
+    cellDataProviderDWReports:
+      targetEntity: DW_Model_Report
+      joinTable:
+        name: Inventory_GranularityReport_CellDataProviderDWReport
+        joinColumns:
+          idGranularityReport:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idDWReport:
+            referencedColumnName: id
+      cascade: [ persist, remove ]

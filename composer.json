@@ -14,7 +14,8 @@
 			"DW": "src/",
 			"Algo": "src/",
 			"AF": "src/",
-			"Orga": "src/"
+			"Orga": "src/",
+			"Inventory": "src/"
 		}
 	},
 	"require": {

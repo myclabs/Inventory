@@ -1,0 +1,55 @@
+<?php
+$datagrid = new UI_Datagrid('contextActions', 'datagrid_cell_actions_context', 'inventory');
+
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn->editable = true;
+$datagrid->addCol($labelColumn);
+
+$genericActionColumn = new UI_Datagrid_Col_List('genericAction', __('Social', 'name', 'actionTemplate'));
+$genericActionColumn->list = [];
+foreach ($this->genericActions as $genericAction) {
+    /** @var $genericAction Social_Model_GenericAction */
+    $genericActionColumn->list[$genericAction->getId()] = $genericAction->getLabel();
+}
+$genericActionColumn->sortName = Social_Model_ContextAction::QUERY_GENERIC_ACTION;
+$datagrid->addCol($genericActionColumn);
+
+$themeColumn = new UI_Datagrid_Col_List('theme', __('Social', 'name', 'actionTheme'));
+$themeColumn->addable = false;
+$themeColumn->list = [];
+foreach ($this->themes as $theme) {
+    /** @var $theme Social_Model_Theme */
+    $themeColumn->list[$theme->getId()] = $theme->getLabel();
+}
+$datagrid->addCol($themeColumn);
+
+$personInChargeColumn = new UI_Datagrid_Col_Text('personInCharge', __('Social', 'action', 'personInCharge'));
+$datagrid->addCol($personInChargeColumn);
+
+$launchDateColumn = new UI_Datagrid_Col_Date('launchDate', __('Social', 'action', 'launchDate'));
+$datagrid->addCol($launchDateColumn);
+
+$targetDateColumn = new UI_Datagrid_Col_Date('targetDate', __('Social', 'action', 'targetDate'));
+$datagrid->addCol($targetDateColumn);
+
+$progressColumn = new UI_Datagrid_Col_List('progress', __('UI', 'name', 'progress'));
+$progressColumn->list = [
+    Social_Model_ContextAction::PROGRESS_PLANNED => __('Social', 'action', 'plannedFem'),
+    Social_Model_ContextAction::PROGRESS_LAUNCHED => __('UI', 'property', 'inProgress'),
+    Social_Model_ContextAction::PROGRESS_ACHIEVED => __('UI', 'property', 'finished'),
+];
+$datagrid->addCol($progressColumn);
+
+$descriptionColumn = new UI_Datagrid_Col_LongText('description', __('UI', 'name', 'description'));
+$descriptionColumn->popup->title = __('UI', 'name', 'description');
+$datagrid->addCol($descriptionColumn);
+
+$detailsColumn = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+$datagrid->addCol($detailsColumn);
+
+$datagrid->addParam('idCell', $this->idCell);
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('Social', 'action', 'addPanelTitle');
+$datagrid->pagination = false;
+$datagrid->deleteElements = true;
+echo $datagrid->render();

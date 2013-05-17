@@ -36,6 +36,7 @@ class Bootstrap extends Core_Bootstrap
             'Social',
             'Orga',
             'Simulation',
+            'Inventory',
         ];
 
         foreach ($modules as $module) {
@@ -84,6 +85,19 @@ class Bootstrap extends Core_Bootstrap
     {
         Type::addType(Calc_TypeMapping_Value::TYPE_NAME, 'Calc_TypeMapping_Value');
         Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, 'Calc_TypeMapping_UnitValue');
+    }
+
+    /**
+     * Enregistrement du plugin pour les ACL
+     */
+    protected function _initPluginAcl()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        // Plugin des Acl
+        if (Zend_Registry::isRegistered('activerAcl') && Zend_Registry::get('activerAcl')) {
+            $front->registerPlugin(new Inventory_Plugin_Acl());
+            Zend_Registry::set('pluginAcl', 'User_Plugin_Acl');
+        }
     }
 
 }

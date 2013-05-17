@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Libellés des différents rôles -->
+
+        <tu tuid="projectAdministrator">
+            <tuv xml:lang="fr">
+                <seg>Administrateur d'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization administrator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectAdministrators">
+            <tuv xml:lang="fr">
+                <seg>Administrateurs d'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization administrators</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellAdministrator">
+            <tuv xml:lang="fr">
+                <seg>Administrateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administrator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellAdministrators">
+            <tuv xml:lang="fr">
+                <seg>Administrateur(s)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administrator(s)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellContributor">
+            <tuv xml:lang="fr">
+                <seg>Contributeur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Contributor</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellContributors">
+            <tuv xml:lang="fr">
+                <seg>Contributeur(s)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Contributor(s)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellObserver">
+            <tuv xml:lang="fr">
+                <seg>Observateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Observer</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellObservers">
+            <tuv xml:lang="fr">
+                <seg>Observateur(s)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Observer(s)</seg>
+            </tuv>
+        </tu>
+
+        <!-- Datagrid -->
+
+         <tu tuid="cellGenericAdministrators">
+            <tuv xml:lang="fr">
+                <seg>Administrateurs &amp; contributeurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administrators &amp; contributors</seg>
+            </tuv>
+        </tu>
+        <tu tuid="detailCellRolesHeader">
+            <tuv xml:lang="fr">
+                <seg>Adm. | Cont. | Obs.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Adm. | Cont. | Obs.</seg>
+            </tuv>
+        </tu>
+ 
+        <!-- Ajout -->
+
+        <tu tuid="addAdministratorPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un administrateur d'organisation (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a organization administrator (creation of a new user or assignation of this role to an existing user)</seg>
+            </tuv>
+        </tu>        
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Création d'un utilisateur ou attribution d'un rôle à un utilisateur existant</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User creation or role assignation to an existing user</seg>
+            </tuv>
+        </tu>        
+        <tu tuid="userAlreadyHasRole">
+            <tuv xml:lang="fr">
+                <seg>Ce rôle est déjà attribué à l'utilisateur indiqué.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This role is already assigned to the user above.</seg>
+            </tuv>
+        </tu>        
+
+        <!-- Messages de confirmation de l'ajout -->
+
+        <tu tuid="userCreatedFromRessource">
+            <tuv xml:lang="fr">
+                <seg>Un compte utilisateur a été créé pour cette adresse e-mail. Un e-mail contenant les identifiants de connexion a été envoyé à cette même adresse.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User account has been created for this e-mail address. An e-mail with login parameter has been sent to this address.</seg>
+            </tuv>
+        </tu>        
+        <tu tuid="roleAddedToExistingUser">
+            <tuv xml:lang="fr">
+                <seg>L'adresse e-mail saisie correspond à un compte utilisateur existant, auquel le rôle indiqué a été attribué. L'utilisateur en sera informé par e-mail.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Given e-mail address is that of an existing account, to which the given role has been assigned. User will be informed by e-mail.</seg>
+            </tuv>
+        </tu>        
+
+        <!-- Suppression -->
+
+        <tu tuid="userRoleRemovedFromUser">
+            <tuv xml:lang="fr">
+                <seg>Suppression effectuée. L'utilisateur en sera informé par e-mail.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion performed. User will be informed by e-mail.</seg>
+            </tuv>
+        </tu>        
+
+    </body>
+</tmx>    

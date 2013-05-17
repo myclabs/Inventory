@@ -1,0 +1,65 @@
+# Inventory\models\mappers\Inventory_Model_GranularityDataProvider.yml
+Inventory_Model_GranularityDataProvider:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Inventory_GranularityDataProvider
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    cellsWithACL:
+      column: cellsWithACL
+      type: boolean
+      nullable: false
+    cellsGenerateDWCubes:
+      column: cellsGenerateDWCubes
+      type: boolean
+      nullable: false
+    cellsWithOrgaTab:
+      column: cellsWithOrgaTab
+      type: boolean
+      nullable: false
+    cellsWithAFConfigTab:
+      column: cellsWithAFConfigTab
+      type: boolean
+      nullable: false
+    cellsWithSocialGenericActions:
+      column: cellsWithSocialGenericActions
+      type: boolean
+      nullable: false
+    cellsWithSocialContextActions:
+      column: cellsWithSocialContextActions
+      type: boolean
+      nullable: false
+    cellsWithInputDocs:
+      column: cellsWithInputDocs
+      type: boolean
+      nullable: false
+
+  oneToOne:
+    orgaGranularity:
+      targetEntity: Orga_Model_Granularity
+      joinColumn:
+        name: idOrgaGranularity
+        referencedColumnName: id
+        nullable: false
+        unique: true
+    dWCube:
+      targetEntity: DW_Model_Cube
+      joinColumn:
+        name: idDWCube
+        referencedColumnName: id
+        nullable: true
+        unique: true
+      cascade: [ persist, remove ]
+
+  oneToMany:
+    granularityReports:
+      targetEntity: Inventory_Model_GranularityReport
+      mappedBy: granularityDataProvider
+      cascade: [ persist, remove ]

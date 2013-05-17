@@ -1,0 +1,47 @@
+<?php
+/**
+ * @author valentin.claras
+ * @author cyril.perraud
+ * @package Inventory
+ * @subpackage View
+ */
+?>
+<fieldset class="wrapper">
+    <legend style="cursor: default"><?=__('DW', 'rebuild', 'analysisDataRebuildCollapse') ?></legend>
+    <p><?=__('DW', 'rebuild', 'analysisDataRebuildWarningMessageOrganization') ?></p>
+    <?= $this->button(__('DW', 'rebuild', 'analysisDataRebuildButton'), 'refresh icon-white', array('id' => 'resetDWCubes', 'class' => 'btn-primary')) ?>
+    <script>
+        $('#resetDWCubes').click(function() {
+            setMask(true);
+            $.post(
+                    'inventory/cell/resetdws/idCell/<?=$this->idCell?>',
+                    function(data, textStatus, jqXHR){
+                        setMask(false);
+                        addMessage(data.message, 'success');
+                    }
+            ).error(
+                    function(o) { setMask(false); errorHandler(o); }
+            );
+        });
+    </script>
+</fieldset>
+
+<fieldset class="wrapper">
+    <legend style="cursor: default"><?=__('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
+    <p><?=__('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
+    <?= $this->button(__('DW', 'rebuild', 'outputDataRebuildButton'), 'refresh icon-white', array('id' => 'calculateInputs', 'class' => 'btn-primary')) ?>
+    <script>
+        $('#calculateInputs').click(function() {
+            setMask(true);
+            $.post(
+                    'inventory/cell/calculateinputs/idCell/<?=$this->idCell?>',
+                    function(data, textStatus, jqXHR){
+                        setMask(false);
+                        addMessage(data.message, 'success');
+                    }
+            ).error(
+                    function(o) { setMask(false); errorHandler(o); }
+            );
+        });
+    </script>
+</fieldset>

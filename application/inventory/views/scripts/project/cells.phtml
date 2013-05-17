@@ -1,0 +1,31 @@
+<?php
+// Liste des Cellules d'un Project (auquel l'utilisateur à accès).
+?>
+<div class="page-header">
+    <h1>
+        <?=__('Orga', 'cells', 'pageTitle')?>
+    </h1>
+</div>
+
+<?php
+$datagridCells = new UI_Datagrid('listCells', 'datagrid_cells', 'inventory');
+
+$columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$datagridCells->addCol($columnLabel);
+
+$columnGranularity = new UI_Datagrid_Col_List('granularity', __('Orga', 'name', 'level'));
+$columnGranularity->list = $this->listGranularities;
+$datagridCells->addCol($columnGranularity);
+
+$columnAccess = new UI_Datagrid_Col_List('access', __('User', 'name', 'role'));
+$columnAccess->list = $this->listAccess;
+$columnAccess->multiple = true;
+$datagridCells->addCol($columnAccess);
+
+$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+$datagridCells->addCol($columnDetails);
+
+$datagridCells->addParam('idProject', $this->idProject);
+$datagridCells->pagination = false;
+
+$datagridCells->display();
