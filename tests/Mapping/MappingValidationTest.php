@@ -1,16 +1,15 @@
 <?php
 /**
  * @author matthieu.napoli
- * @package Core
+ * @package Test
  */
 
 use Doctrine\ORM\Tools\SchemaValidator;
 
 /**
- * Validation du mapping Doctrine
- * @package Core
+ * @package Test
  */
-abstract class Core_Test_MappingValidationTest extends Core_Test_TestCase
+class MappingValidationTest extends Core_Test_TestCase
 {
 
     /**
