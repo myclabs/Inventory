@@ -1,0 +1,19 @@
+#navigationClose { width: 2%; margin-left: 0px; margin-right: -2%; cursor: pointer; }
+
+#navigationPanel { width: 15%; overflow: hidden; }
+#navigationPanel.well { padding: 1%; }
+
+#navigationCurrent { font-weight: bold; font-size: 1.1em; }
+
+#navigationPanel h3 { margin: 0px 0px; }
+#navigationPanel hr { margin: 8px 0px; }
+#navigationPanel ul { margin: 0px; list-style: none; }
+#navigationPanel form { margin: 0px; }
+#navigationPanel form .control-label { width: 100px; }
+#navigationPanel form .controls { margin-left: 0px; }
+#navigationPanel form .controls div { width: 100%; }
+#navigationPanel .form-horizontal .control-group { margin-bottom: 5px; }
+#navigationPanel .form-horizontal .control-label { float: none; text-align: left; }
+#navigationPanel form select { width: 100%; }
+
+#navigationContent { float: right; width: 82%; }
