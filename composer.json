@@ -39,7 +39,7 @@
 		},
 		{
 			"type": "git",
-			"url": "git://github.com/myclabs/ZendX_Doctrine2.git"
+			"url": "git://github.com/mridgway/ZendX_Doctrine2.git"
 		}
 	]
 }
