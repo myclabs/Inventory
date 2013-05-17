@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Suppression -->
+
+        <tu tuid="deleteReference"> <!-- Après quelques modifs on est finalement revenu au terme générique "Supprimer" -->
+            <tuv xml:lang="fr">
+                <seg>Supprimer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Delete</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deletionPopupInformation">
+            <tuv xml:lang="fr">
+                <seg>Cette action supprimera la référence au document, mais pas le document lui-même.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This will delete the reference to the document, but not the document itself.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Ajout -->
+
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une référence à un document</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a reference to a document</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addPanelBody">
+            <tuv xml:lang="fr">
+                <seg>Pour ajouter une référence merci de sélectionner l'un des documents listés ci-dessous et de cliquer sur "Ajouter une référence au document sélectionné". 
+Si le document auquel vous souhaitez faire référence ne figure pas dans cette liste vous pouvez l'y ajouter en cliquant sur "Ajouter un nouveau document".</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>To add a reference please select one of the documents listed below and click on "Add a reference to the selected document".
+If the document to which you want to refer does not appear in this list, you can add it to the list by clickin on "Add a new document".</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addNewDocument">
+            <tuv xml:lang="fr">
+                <seg>Ajouter un nouveau document.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Add a new document.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addNewReference">
+            <tuv xml:lang="fr">
+                <seg>Ajouter une référence au document sélectionné</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Add a reference to the selected document</seg>
+            </tuv>
+        </tu>
+
+        <!-- Ajout -->
+
+        <tu tuid="referenceToThisDocumentAlreadyExists">
+            <tuv xml:lang="fr">
+                <seg>Le document sélectionné est déjà présent parmi ces références.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Selected document already exists among these références.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>    

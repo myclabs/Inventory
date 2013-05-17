@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Attributs -->
+
+        <tu tuid="extension">
+            <tuv xml:lang="fr">
+                <seg>Extension</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Extension</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fileSize">
+            <tuv xml:lang="fr">
+                <seg>Taille (Mo)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Size (Mo)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fileAddress">
+            <tuv xml:lang="fr">
+                <seg>Adresse du fichier</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>File address</seg>
+            </tuv>
+        </tu>
+        <tu tuid="quotations">
+            <tuv xml:lang="fr">
+                <seg>Citations</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Quotations</seg>
+            </tuv>
+        </tu>
+
+        <!-- Ajout -->
+
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un document</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a document</seg>
+            </tuv>
+        </tu>
+        <tu tuid="uploading">
+            <tuv xml:lang="fr">
+                <seg>Téléversement en cours…</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Uploading…</seg>
+            </tuv>
+        </tu>
+
+        <!-- Messages -->
+
+        <tu tuid="invalidMIMEType">
+            <tuv xml:lang="fr">
+                <seg>Le type MIME du fichier joint n'est pas autorisé ou n'a pas été reconnu.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The MIME type of the file is not allowed or could not be read.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noDocumentGiven">
+            <tuv xml:lang="fr">
+                <seg>L'adresse indiquée est vide ou invalide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Given address is empty or not valid.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="uploadError">
+            <tuv xml:lang="fr">
+                <seg>Une erreur est intervenue au cours du téléversement.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>An error was encountered during upload.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="downloadError">
+            <tuv xml:lang="fr">
+                <seg>Une erreur est intervenue au cours du téléchargement.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>An error occurred during download.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>    

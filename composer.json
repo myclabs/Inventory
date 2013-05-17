@@ -9,7 +9,8 @@
 			"Calc": "src/",
 			"Exec": "src/",
 			"Export": "src/",
-			"Keyword": "src/"
+			"Keyword": "src/",
+			"Doc": "src/"
 		}
 	},
 	"require": {

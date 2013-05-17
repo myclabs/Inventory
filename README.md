@@ -51,3 +51,4 @@ SVN revision migrated for each package:
 - Classif: 12212
 - Keyword: 12212
 - Techno: 12212
+- Doc: 12202
