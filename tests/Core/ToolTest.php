@@ -20,8 +20,8 @@ class Core_Test_ToolTest extends PHPUnit_Framework_TestCase
     {
         // Taille fixe.
         $tabChaines = array();
-        // Répète le test 500 fois car c'est aléatoire.
-        for ($i = 0; $i < 500; $i++) {
+        // Répète le test 100 fois car c'est aléatoire.
+        for ($i = 0; $i < 100; $i++) {
             $taille = (int) rand(10, 50);
             $chaine = Core_Tools::generateString($taille);
             $this->assertEquals($taille, strlen($chaine));
