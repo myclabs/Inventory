@@ -1,0 +1,4 @@
+Social_Model_Comment:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Social_Comment

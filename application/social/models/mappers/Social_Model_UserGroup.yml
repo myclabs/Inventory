@@ -1,0 +1,31 @@
+Social_Model_UserGroup:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Social_UserGroup
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+      unique: true
+    label:
+      type: string
+      nullable: true
+
+  manyToMany:
+    users:
+      targetEntity: User_Model_User
+      joinTable:
+        name: Social_UserGroup_Users
+        joinColumns:
+          idUserGroup:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idUser:
+            referencedColumnName: id

@@ -1,0 +1,137 @@
+<?php
+/** @var $contextAction Social_Model_ContextAction */
+$contextAction = $this->contextAction;
+
+/** @var $documentLibrary Doc_Model_Library */
+if (isset($this->documentLibrary)) {
+    $documentLibrary = $this->documentLibrary;
+} else {
+    // Bibliothèque de test créée dans le build populate
+    try {
+        $documentLibrary = Doc_Model_Library::load(1);
+    } catch (Core_Exception_NotFound $e) {
+        throw new Exception("Aucune bibliothèque globale de test trouvée, il est nécessaire de lancer build populate");
+    }
+}
+
+$locale = Core_Locale::loadDefault();
+?>
+
+<div class="page-header">
+    <?php if (isset($this->returnUrl)) : ?>
+        <small class="pull-right">
+            <a class="btn" href="<?=$this->returnUrl?>">
+                <i class="icon-arrow-left"></i>
+                <?=__('UI', 'other', 'backButton')?>
+            </a>
+        </small>
+    <?php endif; ?>
+    <h1>
+        <?php
+        if (!isset($this->title)) {
+            echo __('Social', 'action', 'actionDetails');
+        } else {
+            echo $this->title;
+        }
+        ?>
+    </h1>
+</div>
+
+<?php
+$form = new UI_Form('editContextAction');
+
+$form->setAction('social/action/context-action-update/id/' . $contextAction->getId());
+
+$genericActionField = new UI_Form_Element_Select('genericAction');
+$genericActionField->setLabel(__('Social', 'name', 'actionTemplate'));
+$query = new Core_Model_Query();
+$query->order->addOrder(Social_Model_GenericAction::QUERY_LABEL);
+foreach (Social_Model_GenericAction::loadList($query) as $genericAction) {
+    /** @var $genericAction Social_Model_GenericAction */
+    $genericActionField->addOption(new UI_Form_Element_Option($genericAction->getId(), $genericAction->getId(),
+                                                              $genericAction->getLabel()));
+}
+$genericActionField->setValue($contextAction->getGenericAction()->getId());
+$form->addElement($genericActionField);
+
+$labelField = new UI_Form_Element_Text('label');
+$labelField->setLabel(__('UI', 'name', 'label'));
+$labelField->setValue($contextAction->getLabel());
+$labelField->addValidator('alnum');
+$form->addElement($labelField);
+
+$personInChargeField = new UI_Form_Element_Text('personInCharge');
+$personInChargeField->setLabel(__('Social', 'action', 'personInCharge'));
+$personInChargeField->setValue($contextAction->getPersonInCharge());
+$form->addElement($personInChargeField);
+
+$launchDateField = new UI_Form_Element_Pattern_Date('launchDate');
+$launchDateField->setLabel(__('Social', 'action', 'launchDate'));
+$launchDateField->setValue($locale->formatDate($contextAction->getLaunchDate()));
+$form->addElement($launchDateField);
+
+$targetDateField = new UI_Form_Element_Pattern_Date('targetDate');
+$targetDateField->setLabel(__('Social', 'action', 'targetDate'));
+$targetDateField->setValue($locale->formatDate($contextAction->getTargetDate()));
+$form->addElement($targetDateField);
+
+$progressField = new UI_Form_Element_Select('progress');
+$progressField->setLabel(__('UI', 'name', 'progress'));
+$option = new UI_Form_Element_Option(Social_Model_ContextAction::PROGRESS_PLANNED,
+                                     Social_Model_ContextAction::PROGRESS_PLANNED,
+                                     __('Social', 'action', 'plannedFem'));
+$progressField->addOption($option);
+$option = new UI_Form_Element_Option(Social_Model_ContextAction::PROGRESS_LAUNCHED,
+                                     Social_Model_ContextAction::PROGRESS_LAUNCHED,
+                                     __('UI', 'property', 'inProgress'));
+$progressField->addOption($option);
+$option = new UI_Form_Element_Option(Social_Model_ContextAction::PROGRESS_ACHIEVED,
+                                     Social_Model_ContextAction::PROGRESS_ACHIEVED,
+                                     __('UI', 'property', 'finished'));
+$progressField->addOption($option);
+$progressField->setValue($contextAction->getProgress());
+$form->addElement($progressField);
+
+// Key figures
+foreach ($contextAction->getKeyFigures() as $contextActionKeyFigure) {
+    $keyFigure = $contextActionKeyFigure->getActionKeyFigure();
+    $field = new UI_Form_Element_Numeric((string) $keyFigure->getId(), true);
+    $field->getElement()->addSuffix($keyFigure->getUnit()->getSymbol());
+    $field->setLabel($keyFigure->getLabel());
+    $field->setValue($contextActionKeyFigure->getValue());
+    $form->addElement($field);
+}
+
+$descriptionField = new UI_Form_Element_Textarea('description');
+$descriptionField->setLabel(__('UI', 'name', 'description'));
+$descriptionField->setValue($contextAction->getDescription());
+$form->addElement($descriptionField);
+
+$form->addSubmitButton();
+$form->display();
+?>
+
+
+<h2><?=__('Social', 'actionTemplate', 'documentReferences')?></h2>
+
+<?php
+echo $this->partial('bibliography/view.phtml',
+                    'doc',
+                    array(
+                         'library'      => $documentLibrary,
+                         'bibliography' => $contextAction->getDocumentBibliography(),
+                    )
+);
+?>
+
+
+<h2><?=__('Social', 'name', 'comments')?></h2>
+
+<?php
+echo $this->partial('comment/list.phtml',
+                    'social',
+                    array(
+                         'comments' => $this->comments,
+                         'endpointAdd' => 'social/action/context-action-add-comment/id/' . $contextAction->getId(),
+                    )
+);

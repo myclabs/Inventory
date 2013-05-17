@@ -1,0 +1,27 @@
+Social_Model_ActionKeyFigure:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Social_ActionKeyFigure
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    label:
+      type: string
+      nullable: false
+    unitRef:
+      type: string
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

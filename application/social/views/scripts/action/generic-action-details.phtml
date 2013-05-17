@@ -1,0 +1,92 @@
+<?php
+/** @var $genericAction Social_Model_GenericAction */
+$genericAction = $this->genericAction;
+
+/** @var $documentLibrary Doc_Model_Library */
+if (isset($this->documentLibrary)) {
+    $documentLibrary = $this->documentLibrary;
+} else {
+    // Bibliothèque de test créée dans le build populate
+    try {
+        $documentLibrary = Doc_Model_Library::load(1);
+    } catch (Core_Exception_NotFound $e) {
+        throw new Exception("Aucune bibliothèque globale de test trouvée, il est nécessaire de lancer build populate");
+    }
+}
+?>
+
+<div class="page-header">
+    <?php if (isset($this->returnUrl)) : ?>
+        <small class="pull-right">
+            <a class="btn" href="<?=$this->returnUrl?>">
+                <i class="icon-arrow-left"></i>
+                <?=__('UI', 'other', 'backButton')?>
+            </a>
+        </small>
+    <?php endif; ?>
+    <h1>
+        <?php
+        if (!isset($this->title)) {
+            echo __('Social', 'actionTemplate', 'actionTemplateDetails');
+        } else {
+            echo $this->title;
+        }
+        ?>
+    </h1>
+</div>
+
+<?php
+$form = new UI_Form('editGenericAction');
+
+$form->setAction('social/action/generic-action-update/id/' . $genericAction->getId());
+
+$themeField = new UI_Form_Element_Select('theme');
+$themeField->setLabel(__('Social', 'name', 'actionTheme'));
+$query = new Core_Model_Query();
+$query->order->addOrder(Social_Model_Theme::QUERY_LABEL);
+foreach (Social_Model_Theme::loadList($query) as $theme) {
+    /** @var $theme Social_Model_Theme */
+    $themeField->addOption(new UI_Form_Element_Option($theme->getId(), $theme->getId(), $theme->getLabel()));
+}
+$themeField->setValue($genericAction->getTheme()->getId());
+$form->addElement($themeField);
+
+$labelField = new UI_Form_Element_Text('label');
+$labelField->setLabel(__('UI', 'name', 'label'));
+$labelField->setValue($genericAction->getLabel());
+$labelField->addValidator('alnum');
+$form->addElement($labelField);
+
+$descriptionField = new UI_Form_Element_Textarea('description');
+$descriptionField->setLabel(__('UI', 'name', 'description'));
+$descriptionField->setValue($genericAction->getDescription());
+$form->addElement($descriptionField);
+
+$form->addSubmitButton();
+$form->display();
+?>
+
+
+<h2><?=__('Social', 'actionTemplate', 'documentReferences')?></h2>
+
+<?php
+echo $this->partial('bibliography/view.phtml',
+                    'doc',
+                    array(
+                         'library'      => $documentLibrary,
+                         'bibliography' => $genericAction->getDocumentBibliography(),
+                    )
+);
+?>
+
+
+<h2><?=__('Social', 'name', 'comments')?></h2>
+
+<?php
+echo $this->partial('comment/list.phtml',
+                    'social',
+                    array(
+                         'comments' => $this->comments,
+                         'endpointAdd' => 'social/action/generic-action-add-comment/id/' . $genericAction->getId(),
+                    )
+);

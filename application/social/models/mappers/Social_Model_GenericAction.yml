@@ -1,0 +1,19 @@
+Social_Model_GenericAction:
+  type: entity
+  repositoryClass: Social_Model_Repository_GenericAction
+  table: Social_GenericAction
+
+  manyToOne:
+    theme:
+      targetEntity: Social_Model_Theme
+      joinColumn:
+        name: idTheme
+        referencedColumnName: id
+        nullable: false
+
+  oneToMany:
+    contextActions:
+      targetEntity: Social_Model_ContextAction
+      mappedBy: genericAction
+      orderBy:
+        label: ASC

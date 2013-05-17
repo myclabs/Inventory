@@ -1,0 +1,24 @@
+Social_Model_Text:
+  type: mappedSuperclass
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    text:
+      type: text
+      nullable: true
+    creationDate:
+      type: datetime
+      nullable: false
+
+  manyToOne:
+    author:
+      targetEntity: User_Model_User
+      joinColumn:
+        name: idAuthor
+        referencedColumnName: id
+        nullable: true

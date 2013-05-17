@@ -1,0 +1,37 @@
+Social_Model_ContextAction:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Social_ContextAction
+
+  fields:
+    launchDate:
+      type: datetime
+      nullable: true
+    targetDate:
+      type: datetime
+      nullable: true
+    achievementDate:
+      type: datetime
+      nullable: true
+    progress:
+      type: string
+      nullable: false
+    personInCharge:
+      type: string
+      nullable: true
+
+  manyToOne:
+    genericAction:
+      targetEntity: Social_Model_GenericAction
+      inversedBy: contextActions
+      joinColumn:
+        name: idGenericAction
+        referencedColumnName: id
+        nullable: false
+
+  oneToMany:
+    keyFigures:
+      targetEntity: Social_Model_ContextActionKeyFigure
+      orphanRemoval: true
+      mappedBy: contextAction
+      cascade: [ all ]

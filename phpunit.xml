@@ -5,6 +5,7 @@
     <testsuites>
 
         <testsuite name="Inventory without Unit">
+            <file>./tests/MappingValidationTest.php</file>
             <directory>./tests/Core</directory>
             <directory>./tests/User</directory>
             <directory>./tests/Calc</directory>
@@ -16,6 +17,7 @@
             <directory>./tests/Techno</directory>
             <directory>./tests/Algo</directory>
             <directory>./tests/AF</directory>
+            <directory>./tests/Social</directory>
             <exclude>./tests/Unit</exclude>
         </testsuite>
 

@@ -59,3 +59,4 @@ SVN revision migrated for each package:
 - DW: 12222
 - Algo: 12124
 - AF: 12220
+- Social: 12212

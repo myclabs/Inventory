@@ -1,0 +1,31 @@
+Social_Model_News:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Social_News
+
+  fields:
+    title:
+      type: string
+      nullable: true
+    publicationDate:
+      type: datetime
+      nullable: true
+    published:
+      type: boolean
+      nullable: false
+
+  manyToMany:
+    comments:
+      targetEntity: Social_Model_Comment
+      joinTable:
+        name: Social_News_Comments
+        joinColumns:
+          idNews:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idComment:
+            referencedColumnName: id
+      orderBy:
+        creationDate: ASC
+      orphanRemoval: true
+      cascade: [ all ]

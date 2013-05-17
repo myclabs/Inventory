@@ -1,0 +1,22 @@
+<div class="page-header">
+    <h1><?=__('Social', 'name', 'contacts')?></h1>
+</div>
+
+<?php
+UI_Datagrid::addHeader();
+
+
+$tabView = new UI_Tab_View('contactsContainer');
+
+$tabUser = new UI_Tab('usersTab');
+$tabUser->label = __('User', 'name', 'users');
+$tabUser->content = $this->partial('message/contacts/users.phtml', 'social');
+$tabUser->active = true;
+$tabView->addTab($tabUser);
+
+$tabUserGroup = new UI_Tab('userGroupsTab');
+$tabUserGroup->label = __('Social', 'name', 'userGroups');
+$tabUserGroup->content = $this->partial('message/contacts/user-groups.phtml', 'social');
+$tabView->addTab($tabUserGroup);
+
+$tabView->display();

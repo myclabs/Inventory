@@ -1,0 +1,22 @@
+<?php
+/** @var $group Social_Model_UserGroup */
+$group = $this->group;
+
+UI_Datagrid::addHeader();
+
+$datagrid = new UI_Datagrid('members', 'datagrid_user-group_member', 'social');
+$datagrid->addParam('id', $group->getId());
+
+// Prénom
+$colFirstName = new UI_Datagrid_Col_Text('prenom', __('User', 'name', 'firstName'));
+$datagrid->addCol($colFirstName);
+
+// Nom
+$colLastName = new UI_Datagrid_Col_Text('nom', __('User', 'name', 'lastName'));
+$datagrid->addCol($colLastName);
+
+// Email
+$colEmail = new UI_Datagrid_Col_Text('email', __('UI', 'name', 'emailAddress'));
+$datagrid->addCol($colEmail);
+
+echo $datagrid->render();
