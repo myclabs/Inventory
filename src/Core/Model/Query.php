@@ -255,7 +255,7 @@ class Core_Model_Query
      *
      * @return void
      */
-    protected function parseToQueryBuilderWithoutLimit(Doctrine\ORM\QueryBuilder $queryBuilder)
+    public function parseToQueryBuilderWithoutLimit(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         // Vérifie le format des données.
         $this->validate();
@@ -271,7 +271,7 @@ class Core_Model_Query
      *
      * @return void
      */
-    protected function parseToQueryBuilderWithLimit(Doctrine\ORM\QueryBuilder $queryBuilder)
+    public function parseToQueryBuilderWithLimit(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         $this->parseToQueryBuilderWithoutLimit($queryBuilder);
         $this->addLimitToQueryBuilder($queryBuilder);

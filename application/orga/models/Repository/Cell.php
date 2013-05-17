@@ -30,10 +30,11 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
         $queryBuilder->distinct();
         $queryParameters->rootAlias = $cellAlias;
         $this->addCustomParametersToQueryBuilder($queryBuilder, $queryParameters);
+        $queryParameters->parseToQueryBuilderWithLimit($queryBuilder);
         $this->addMembersFiltersToQueryBuilder($queryParameters, $queryBuilder);
         $this->parseArrayMembersToQueryBuilder($arrayMembers, $queryBuilder);
 
-        return $queryParameters->getQuery($queryBuilder)->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
@@ -53,10 +54,11 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
         $queryBuilder->select($queryBuilder->expr()->countDistinct($cellAlias));
         $queryParameters->rootAlias = $cellAlias;
         $this->addCustomParametersToQueryBuilder($queryBuilder, $queryParameters);
+        $queryParameters->parseToQueryBuilderWithoutLimit($queryBuilder);
         $this->addMembersFiltersToQueryBuilder($queryParameters, $queryBuilder);
         $this->parseArrayMembersToQueryBuilder($arrayMembers, $queryBuilder);
 
-        return $queryParameters->getQuery($queryBuilder)->getSingleScalarResult();
+        return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
     /**

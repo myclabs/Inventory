@@ -38,6 +38,7 @@ class Default_Model_Repository_Association extends Core_Model_Repository
         $queryBuilder->distinct();
         $queryParameters->rootAlias = Default_Model_Association::getAlias();
         $this->leftJoinSimple($queryBuilder);
+        $queryParameters->parseToQueryBuilderWithLimit($queryBuilder);
         $queryBuilder->andWhere(
                 $queryBuilder->expr()->in(
                         Default_Model_Association::getAlias().'.'.Default_Model_Association::QUERY_ID,
@@ -45,7 +46,7 @@ class Default_Model_Repository_Association extends Core_Model_Repository
                     )
             );
 
-        return $queryParameters->getQuery($queryBuilder)->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
@@ -59,6 +60,7 @@ class Default_Model_Repository_Association extends Core_Model_Repository
         $queryBuilderCountTotal->select($queryBuilderCountTotal->expr()->countDistinct(Default_Model_Association::getAlias()));
         $queryParameters->rootAlias = Default_Model_Association::getAlias();
         $this->leftJoinSimple($queryBuilderCountTotal);
+        $queryParameters->parseToQueryBuilderWithLimit($queryBuilderCountTotal);
         $queryBuilderCountTotal->andWhere(
                 $queryBuilderCountTotal->expr()->in(
                         Default_Model_Association::getAlias().'.'.Default_Model_Association::QUERY_ID,
@@ -66,7 +68,7 @@ class Default_Model_Repository_Association extends Core_Model_Repository
                     )
             );
 
-        return $queryParameters->getQuery($queryBuilderCountTotal)->getSingleScalarResult();
+        return $queryBuilderCountTotal->getQuery()->getSingleScalarResult();
     }
 
     /**

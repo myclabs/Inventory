@@ -28,6 +28,7 @@ class Keyword_Model_Repository_Keyword extends Core_Model_Repository
         $queryBuilderLoadListRoots->distinct();
         $queryParameters->rootAlias = $entityName::getAlias();
         $this->addCustomParametersToQueryBuilder($queryBuilderLoadListRoots);
+        $queryParameters->parseToQueryBuilderWithLimit($queryBuilderLoadListRoots);
 
         $queryBuilderLoadListRoots->leftJoin(
                 Keyword_Model_Keyword::getAlias().'.objectAssociation',
@@ -43,7 +44,7 @@ class Keyword_Model_Repository_Keyword extends Core_Model_Repository
                     )
             );
 
-        return $queryParameters->getQuery($queryBuilderLoadListRoots)->getResult();
+        return $queryBuilderLoadListRoots->getQuery()->getResult();
     }
 
     /**
