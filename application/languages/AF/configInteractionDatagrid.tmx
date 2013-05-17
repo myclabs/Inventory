@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Modifications de l'état de composants -->
+
+        <tu tuid="targetComponentHeader">
+            <tuv xml:lang="fr">
+                <seg>Composant cible</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Target component</seg>
+            </tuv>
+        </tu>
+        <tu tuid="actionTypeHeader">
+            <tuv xml:lang="fr">
+                <seg>Type d'action</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>actionType</seg>
+            </tuv>
+        </tu>
+        <tu tuid="componentChangeActionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une action de modification de l'état d'un composant</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of change of a component state</seg>
+            </tuv>
+        </tu>
+
+        <!-- Assignations de valeurs fixées ou du résultats d'algorithme à des champs -->
+
+        <tu tuid="methodOfDeterminingHeader">
+            <tuv xml:lang="fr">
+                <seg>Mode de détermination</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Method of determining</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fixedValueOption">
+            <tuv xml:lang="fr">
+                <seg>Valeur fixée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Fixed value</seg>
+            </tuv>
+        </tu>
+        <tu tuid="valueAssignmentActionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une action d'assignation de valeur à un champ</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an action assigning a value to a field</seg>
+            </tuv>
+        </tu>
+        <tu tuid="valueAssignmentActionEditPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Édition de la valeur ou de l'algorithme à assigner</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Edition of the value or the algorithm to be assigned</seg>
+            </tuv>
+        </tu>
+        <tu tuid="valueToBeAssignedLabel">
+            <tuv xml:lang="fr">
+                <seg>Valeur à assigner</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Value to be assigned</seg>
+            </tuv>
+        </tu>
+        <tu tuid="uncertaintyToBeAssignedLabel">
+            <tuv xml:lang="fr">
+                <seg>Incertitude à assigner</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Uncertainty to be assigned</seg>
+            </tuv>
+        </tu>
+        <tu tuid="algorithmToBeAssignedLabel">
+            <tuv xml:lang="fr">
+                <seg>Algorithme dont le résultat est à assigner</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Algorithm providing the value to be assigned</seg>
+            </tuv>
+        </tu>
+
+        <!-- Conditions composées -->
+
+        <tu tuid="composedConditionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une condition composée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a composed condition</seg>
+            </tuv>
+        </tu>
+
+        <!-- Conditions élémentaires -->
+
+        <tu tuid="equalOption">
+            <tuv xml:lang="fr">
+                <seg>=</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>=</seg>
+            </tuv>
+        </tu>      
+        <tu tuid="differentOption">
+            <tuv xml:lang="fr">
+                <seg>&#8800;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&#8800;</seg>
+            </tuv>
+        </tu>       
+        <tu tuid="greaterOption">
+            <tuv xml:lang="fr">
+                <seg>&gt;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&gt;</seg>
+            </tuv>
+        </tu>       
+        <tu tuid="lowerOption">
+            <tuv xml:lang="fr">
+                <seg>&lt;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&lt;</seg>
+            </tuv>
+        </tu>        
+        <tu tuid="greaterOrEqualOption">
+            <tuv xml:lang="fr">
+                <seg>&#8805;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&#8805;</seg>
+            </tuv>
+        </tu>
+        <tu tuid="lowerOrEqualOption">
+            <tuv xml:lang="fr">
+                <seg>&#8804;</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>&#8804;</seg>
+            </tuv>
+        </tu>
+        <tu tuid="containsOption">
+            <tuv xml:lang="fr">
+                <seg>Contient</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Contains</seg>
+            </tuv>
+        </tu>
+        <tu tuid="doesNotContainOption">
+            <tuv xml:lang="fr">
+                <seg>Ne contient pas</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Does not contain</seg>
+            </tuv>
+        </tu>
+        <tu tuid="elementaryConditionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une condition élémentaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an elementary condition</seg>
+            </tuv>
+        </tu>
+        <tu tuid="elementaryConditionEditPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Édition d'une condition élémentaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Edition of an elementary condition</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

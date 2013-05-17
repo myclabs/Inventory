@@ -1,0 +1,17 @@
+AF_Model_Condition_Elementary:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Condition_Elementary
+
+  fields:
+    relation:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    field:
+      targetEntity: AF_Model_Component_Field
+      joinColumn:
+        name: idField
+        referencedColumnName: id
+        nullable: false

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="componentStateModificationCollapse">
+            <tuv xml:lang="fr">
+                <seg>Modifications de l'état de composants</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Component state changes</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fixedValueOrAlgorithmResultAssignmentCollapse">
+            <tuv xml:lang="fr">
+                <seg>Assignations de valeurs à des champs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Value assignments to fields</seg>
+            </tuv>
+        </tu>
+        <tu tuid="composedConditionCollapse">
+            <tuv xml:lang="fr">
+                <seg>Conditions composées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Composed conditions</seg>
+            </tuv>
+        </tu>
+        <tu tuid="elementaryConditionCollapse">
+            <tuv xml:lang="fr">
+                <seg>Conditions élémentaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Elementary conditions</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

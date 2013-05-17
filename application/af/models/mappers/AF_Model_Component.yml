@@ -1,0 +1,80 @@
+AF_Model_Component:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: AF_Component
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_component
+    type: string
+  discriminatorMap:
+    group: AF_Model_Component_Group
+    subaf: AF_Model_Component_SubAF
+    subaf_notrepeated: AF_Model_Component_SubAF_NotRepeated
+    subaf_repeated: AF_Model_Component_SubAF_Repeated
+    field: AF_Model_Component_Field
+    checkbox: AF_Model_Component_Checkbox
+    numeric: AF_Model_Component_Numeric
+    select: AF_Model_Component_Select
+    select_single: AF_Model_Component_Select_Single
+    select_multi: AF_Model_Component_Select_Multi
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    label:
+      type: string
+      nullable: true
+    help:
+      type: text
+      nullable: true
+    visible:
+      type: boolean
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    af:
+      targetEntity: AF_Model_AF
+      inversedBy: components
+      joinColumn:
+        name: idAF
+        referencedColumnName: id
+        nullable: true
+        onDelete: SET NULL
+    group:
+      targetEntity: AF_Model_Component_Group
+      inversedBy: subComponents
+      orderBy:
+        position: ASC
+      joinColumn:
+        name: idGroup
+        referencedColumnName: id
+        nullable: true
+
+  oneToMany:
+    actions:
+      targetEntity: AF_Model_Action
+      mappedBy: targetComponent
+      cascade: [ all ]
+      orphanRemoval: true
+
+  uniqueConstraints:
+    # ref unique dans un AF
+    ref:
+      columns: [idAF, ref]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

@@ -1,0 +1,18 @@
+AF_Model_Component_Select:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: AF_Component_Select
+
+  fields:
+    required:
+      type: boolean
+      nullable: false
+
+  oneToMany:
+    options:
+      targetEntity: AF_Model_Component_Select_Option
+      mappedBy: select
+      orderBy:
+        position: ASC
+      cascade: [ all ]
+      orphanRemoval: true

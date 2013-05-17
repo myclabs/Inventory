@@ -12,7 +12,8 @@
 			"Keyword": "src/",
 			"Doc": "src/",
 			"DW": "src/",
-			"Algo": "src/"
+			"Algo": "src/",
+			"AF": "src/"
 		}
 	},
 	"require": {

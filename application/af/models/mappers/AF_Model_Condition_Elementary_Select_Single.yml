@@ -1,0 +1,12 @@
+AF_Model_Condition_Elementary_Select_Single:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Condition_Elementary_Select_Single
+
+  manyToOne:
+    option:
+      targetEntity: AF_Model_Component_Select_Option
+      joinColumn:
+        name: idOption
+        referencedColumnName: id
+        nullable: true

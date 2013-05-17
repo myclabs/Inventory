@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+    
+        <tu tuid="general">
+            <tuv xml:lang="fr">
+                <seg>Général</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>General</seg>
+            </tuv>
+        </tu>
+        <tu tuid="structure">
+            <tuv xml:lang="fr">
+                <seg>Structure</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Structure</seg>
+            </tuv>
+        </tu>
+         <tu tuid="components">
+            <tuv xml:lang="fr">
+                <seg>Composants</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Components</seg>
+            </tuv>
+        </tu>
+        <tu tuid="interactions">
+            <tuv xml:lang="fr">
+                <seg>Interactions</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Interactions</seg>
+            </tuv>
+        </tu>
+        <tu tuid="treatment">
+            <tuv xml:lang="fr">
+                <seg>Traitement</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Treatment</seg>
+            </tuv>
+        </tu>
+         <tu tuid="control">
+            <tuv xml:lang="fr">
+                <seg>Contrôle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Control</seg>
+            </tuv>
+        </tu>       
+        
+    </body>
+</tmx>

@@ -1,0 +1,74 @@
+<?php
+/**
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af AF_Model_AF */
+$af = $this->af;
+$script = '';
+
+
+$actionsSetState = new UI_HTML_Collapse('actionsSetState');
+$actionsSetState->foldedByDefault = true;
+$actionsSetState->title = __('AF', 'configInteractionCollapse', 'componentStateModificationCollapse');
+$actionsSetState->body = $this->partial('edit/actions/set-state.phtml',
+                                        [
+                                        'af'            => $af,
+                                        'componentList' => $this->componentList,
+                                        'conditionList' => $this->conditionList
+                                        ]);
+echo $actionsSetState->render();
+
+$script .= '$(\'#actionsSetState\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'actionsSetState_wrapper\') {';
+$script .= 'actionsSetState.filter();';
+$script .= '}';
+$script .= '});';
+
+
+$actionsSetValue = new UI_HTML_Collapse('actionsSetValue');
+$actionsSetValue->foldedByDefault = true;
+$actionsSetValue->title = __('AF', 'configInteractionCollapse', 'fixedValueOrAlgorithmResultAssignmentCollapse');
+$actionsSetValue->body = $this->partial('edit/actions/set-value.phtml',
+                                        [
+                                        'af'            => $af,
+                                        'componentList' => $this->componentList,
+                                        'conditionList' => $this->conditionList
+                                        ]);
+echo $actionsSetValue->render();
+
+$script .= '$(\'#actionsSetValue\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'actionsSetValue_wrapper\') {';
+$script .= 'actionsSetValue.filter();';
+$script .= '}';
+$script .= '});';
+
+
+$conditionsExpression = new UI_HTML_Collapse('conditionsExpression');
+$conditionsExpression->foldedByDefault = true;
+$conditionsExpression->title = __('AF', 'configInteractionCollapse', 'composedConditionCollapse');
+$conditionsExpression->body = $this->partial('edit/conditions/expression.phtml', array('af' => $this->af));
+echo $conditionsExpression->render();
+
+$script .= '$(\'#conditionsExpression\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'conditionsExpression_wrapper\') {';
+$script .= 'conditionsExpression.filter();';
+$script .= '}';
+$script .= '});';
+
+
+$conditionsElementary = new UI_HTML_Collapse('conditionsElementary');
+$conditionsElementary->foldedByDefault = true;
+$conditionsElementary->title = __('AF', 'configInteractionCollapse', 'elementaryConditionCollapse');
+$conditionsElementary->body = $this->partial('edit/conditions/elementary.phtml',
+                                             ['af' => $af, 'componentList' => $this->componentList]);
+echo $conditionsElementary->render();
+
+$script .= '$(\'#conditionsElementary\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'conditionsElementary_wrapper\') {';
+$script .= 'conditionsElementary.filter();';
+$script .= '}';
+$script .= '});';
+
+
+echo '<script type="text/javascript">/*<![CDATA[*/'.$script.'/*]]>*/</script>';

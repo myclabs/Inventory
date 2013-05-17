@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Algorithmes numériques -->
+
+        <!-- Popup d'indexation -->
+
+        <!-- Expressions -->
+
+        <tu tuid="resultUnitHeader">
+            <tuv xml:lang="fr">
+                <seg>Unité du résultat</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Result unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numericExpressionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un algorithme numérique de type « expression »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a numeric algorithm of "expression" type</seg>
+            </tuv>
+        </tu>
+
+        <!-- Paramètres -->
+
+        <tu tuid="numericParameterAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un algorithme numérique de type « paramètre »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a numeric algorithm of "parameter" type</seg>
+            </tuv>
+        </tu>
+
+        <!-- Popup des coordonnées d'un paramètre -->
+
+        <tu tuid="fixedCoordinatesPopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Coordonnées fixées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Fixed coordinates</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fixedCoordinateAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une coordonnée fixée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a fixed coordinate</seg>
+            </tuv>
+        </tu>
+        <tu tuid="algoCoordinatesPopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Coordonnées déterminées par algorithme</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Coordinates calculated by an algorithm</seg>
+            </tuv>
+        </tu>
+        <tu tuid="algoCoordinateAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une coordonnée déterminée par algorithme</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an algorithm determined coordinate</seg>
+            </tuv>
+        </tu>
+
+        <!-- Constantes -->
+
+        <tu tuid="numericConstantAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un algorithme numérique de type « constante »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a numeric algorithm of "constant" type</seg>
+            </tuv>
+        </tu>
+
+        <!-- Algorithmes de sélection d’identifiant -->
+
+        <!-- Expressions -->
+
+        <tu tuid="expressionTextIdentifierSelectionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un algorithme de sélection d’identifiant de type « expression »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an identifier selection algorithm of "expression" type</seg>
+            </tuv>
+        </tu>
+
+        <!-- A partir d'une saisie de champ de sélection simple -->
+
+        <tu tuid="singleSelectionInputTextIdentifierSelectionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un algorithme de sélection d’identifiant basé sur la saisie d'un champ de sélection simple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an identifier selection algorithm based on a single selection input</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

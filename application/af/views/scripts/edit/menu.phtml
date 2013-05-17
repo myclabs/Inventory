@@ -1,0 +1,105 @@
+<?php
+/**
+ * @package AF
+ */
+/** @var $af AF_Model_AF */
+$af = $this->af;
+?>
+
+<div class="navbar">
+    <div class="navbar-inner">
+
+        <a class="brand" href="#"><?=$af->getLabel()?></a>
+
+        <ul class="nav">
+            <li class="active">
+                <a href="#"><?= __('UI', 'name', 'configuration');?></a>
+            </li>
+            <li>
+                <a href="<?=$this->baseUrl()?>/af/af/test/id/<?=$af->getId()?>">
+                    <?= __('UI', 'name', 'test');?></a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+<?php
+UI_Datagrid::addHeader();
+UI_Popup_Generic::addHeader();
+UI_Form::addHeader();
+UI_Tree::addHeader();
+UI_HTML_Button::addHeader();
+
+$tabView = new UI_Tab_View('container');
+
+// Général
+$general = new UI_Tab('general');
+$general->label = __('AF', 'configTab', 'general');
+$general->dataSource = 'af/edit/general-tab/id/' . $af->getId();
+$general->useCache = true;
+if (!isset($this->onglet)) {
+    $general->active = true;
+}
+
+// Structure
+$structure = new UI_Tab('structure');
+$structure->label = __('AF', 'configTab', 'structure');
+$structure->dataSource = 'af/edit/structure/id/' . $af->getId();
+$structure->useCache = false;
+
+// Composants
+$element = new UI_Tab('component');
+if (isset($this->onglet) && $this->onglet == 'component') {
+    $element->active = true;
+}
+$element->label = __('AF', 'configTab', 'components');
+$element->dataSource = 'af/edit/components/id/' . $af->getId();
+$element->useCache = true;
+
+// Interactions
+$interaction = new UI_Tab('interaction');
+if (isset($this->onglet) && $this->onglet == 'interaction') {
+    $interaction->active = true;
+}
+$interaction->label = __('AF', 'configTab', 'interactions');
+$interaction->dataSource = 'af/edit/interactions/id/' . $af->getId();
+$interaction->useCache = true;
+
+// Traitements
+$traitement = new UI_Tab('traitement');
+$traitement->label = __('AF', 'configTab', 'treatment');
+$traitement->dataSource = 'af/edit/traitement/id/' . $af->getId();
+$traitement->useCache = true;
+if (isset($this->onglet) && $this->onglet == 'traitement') {
+    $traitement->active = true;
+}
+
+// Controle
+$control = new UI_Tab('control');
+$control->label = __('AF', 'configTab', 'control');
+$control->dataSource = 'af/edit/control/id/' . $af->getId();
+$control->useCache = true;
+if (isset($this->onglet) && $this->onglet == 'control') {
+    $control->active = true;
+}
+
+// Ajout des tabs à l'ensemble.
+$tabView->addTab($general);
+$tabView->addTab($structure);
+$tabView->addTab($element);
+$tabView->addTab($interaction);
+$tabView->addTab($traitement);
+$tabView->addTab($control);
+
+// Affichage du TabView.
+$tabView->display();
+?>
+
+<div class="well">
+    <?php
+    $quitButton = new UI_HTML_Button(__('UI', 'verb', 'quit'));
+    $quitButton->link = $this->baseUrl('af/af/list');
+    $quitButton->display();
+    ?>
+</div>

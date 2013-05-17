@@ -1,0 +1,19 @@
+AF_Model_Condition_Expression:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Condition_Expression
+
+  fields:
+    expression:
+      type: text
+      nullable: false
+
+  manyToOne:
+    tecExpression:
+      targetEntity: TEC_Model_Expression
+      joinColumn:
+        name: idTECExpression
+        referencedColumnName: id
+        nullable: false
+      cascade: [ all ]
+      orphanRemoval: true

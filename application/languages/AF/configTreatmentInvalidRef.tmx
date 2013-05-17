@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+		<!-- Techno -->
+
+		<tu tuid="family">
+			<tuv xml:lang="fr">
+				<seg>
+					<em>Famille non trouvée</em>
+				</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>
+					<em>Family not found</em>
+				</seg>
+			</tuv>
+		</tu>
+		<tu tuid="dimension">
+			<tuv xml:lang="fr">
+				<seg>
+					<em>Dimension non trouvée</em>
+				</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>
+					<em>Dimension not found</em>
+				</seg>
+			</tuv>
+		</tu>
+		<tu tuid="member">
+			<tuv xml:lang="fr">
+				<seg>
+					<em>Membre non trouvé</em>
+				</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>
+					<em>Member not found</em>
+				</seg>
+			</tuv>
+		</tu>
+
+		<!-- Classif -->
+
+        <tu tuid="indicator">
+            <tuv xml:lang="fr">
+                <seg>
+                    <em>Indicateur non trouvé</em>
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    <em>Indicator not found</em>
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="axis">
+            <tuv xml:lang="fr">
+                <seg>
+                    <em>Axe non trouvé</em>
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    <em>Axis not found</em>
+                </seg>
+            </tuv>
+        </tu>
+
+	</body>
+</tmx>

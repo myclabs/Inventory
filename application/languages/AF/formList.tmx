@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="pageTitle">
+            <tuv xml:lang="fr">
+                <seg>Liste des formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Form list</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un formulaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a form</seg>
+            </tuv>
+        </tu>
+
+        <!-- Messages -->
+
+        <tu tuid="afUsedByOtherAF">
+            <tuv xml:lang="fr">
+                <seg>Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This form cannot be deleted, since it is used as a subform by another form.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

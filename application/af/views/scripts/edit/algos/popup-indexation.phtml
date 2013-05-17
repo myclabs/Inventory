@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author  matthieu.napoli
+ * @author  yoann.croizer
+ * @package AF
+ */
+
+/** @var $algo Algo_Model_Numeric_Expression */
+$algo = $this->algo;
+
+$datagrid = new UI_Datagrid('algoResultIndexes', 'datagrid_edit_algos_indexation', 'af');
+$datagrid->pagination = false;
+$datagrid->addParam('idAlgo', $algo->getId());
+
+// Colonne Axe
+$axisColumn = new UI_Datagrid_Col_Text('axis', __('UI', 'name', 'axis'));
+$datagrid->addCol($axisColumn);
+
+// Colonne de choix du type
+$typeColumn = new UI_Datagrid_Col_List('type', __('AF', 'configInteractionDatagrid', 'methodOfDeterminingHeader'));
+$typeColumn->editable = true;
+$typeColumn->list = [
+    'Algo_Model_Index_Fixed' => __('AF', 'configInteractionDatagrid', 'fixedValueOption'),
+    'Algo_Model_Index_Algo'  => __('Algo', 'name', 'algorithm')
+];
+$datagrid->addCol($typeColumn);
+
+// Colonne liste des membre de classif ou algo en fonction du type
+$valueColumn = new UI_Datagrid_Col_List('value', __('UI', 'name', 'value'));
+$valueColumn->dynamicList = true;
+$valueColumn->list = $this->baseUrl('af/datagrid_edit_algos_indexation/get-value-list');
+$valueColumn->editable = true;
+$datagrid->addCol($valueColumn);
+
+echo $datagrid->render();

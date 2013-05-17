@@ -1,0 +1,16 @@
+AF_Model_InputSet_Primary:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_InputSet_Primary
+
+  fields:
+    finished:
+      type: boolean
+      nullable: false
+
+  oneToOne:
+    outputSet:
+      targetEntity: AF_Model_Output_OutputSet
+      mappedBy: inputSet
+      orphanRemoval: true
+      cascade: [ all ]

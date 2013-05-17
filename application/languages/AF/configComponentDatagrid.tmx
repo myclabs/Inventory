@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Groupes -->
+
+        <tu tuid="initialVisibilityHeader">
+            <tuv xml:lang="fr">
+                <seg>Visibilité initiale</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Initial visibility</seg>
+            </tuv>
+        </tu>
+        <tu tuid="foldawayHeader">
+            <tuv xml:lang="fr">
+                <seg>Repliable ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Foldaway ?</seg>
+            </tuv>
+        </tu>
+        <tu tuid="groupAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un groupe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a group</seg>
+            </tuv>
+        </tu>
+
+        <!-- Sous-formulaires -->
+
+        <tu tuid="associatedFormHeader">
+            <tuv xml:lang="fr">
+                <seg>Formulaire associé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Associated form</seg>
+            </tuv>
+        </tu>
+        <tu tuid="repeatableInputHeader">
+            <tuv xml:lang="fr">
+                <seg>Saisie répétable ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Repeatable input ?</seg>
+            </tuv>
+        </tu>
+        <tu tuid="unrepeatableOption">
+            <tuv xml:lang="fr">
+                <seg>Non répétable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Unrepeatable</seg>
+            </tuv>
+        </tu>
+        <tu tuid="repeatableZeroItemOption">
+            <tuv xml:lang="fr">
+                <seg>Répétable, init. zéro</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Repeatable, init. none</seg>
+            </tuv>
+        </tu>
+        <tu tuid="repeatableOneSuppressibleItemOption">
+            <tuv xml:lang="fr">
+                <seg>Répétable, init. une supprimable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Repeatable, init. one suppressible</seg>
+            </tuv>
+        </tu>
+        <tu tuid="repeatableOneUnsuppressibleItemOption">
+            <tuv xml:lang="fr">
+                <seg>Répétable, init. une non supprimable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Repeatable, init. one unsuppressible</seg>
+            </tuv>
+        </tu>
+        <tu tuid="freeLabelHeader">
+            <tuv xml:lang="fr">
+                <seg>Libellé libre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Free label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="withFreeLabelOption">
+            <tuv xml:lang="fr">
+                <seg>Avec libellé libre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>With free label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="withoutFreeLabelOption">
+            <tuv xml:lang="fr">
+                <seg>Sans libellé libre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Without free label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="subformAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un sous-formulaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a subform</seg>
+            </tuv>
+        </tu>
+
+        <!-- Champs de saisie numérique -->
+
+        <tu tuid="initialActivationHeader">
+            <tuv xml:lang="fr">
+                <seg>Activation initiale</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Initial activation</seg>
+            </tuv>
+        </tu>
+        <tu tuid="requiredHeader">
+            <tuv xml:lang="fr">
+                <seg>Obligatoire ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Required ?</seg>
+            </tuv>
+        </tu>
+        <tu tuid="withUncertaintyHeader">
+            <tuv xml:lang="fr">
+                <seg>Aff. incertitude</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Displ. uncertainty</seg>
+            </tuv>
+        </tu>
+        <tu tuid="initialValueHeader">
+            <tuv xml:lang="fr">
+                <seg>Valeur initiale</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Initial value</seg>
+            </tuv>
+        </tu>
+        <tu tuid="initialUncertaintyHeader">
+            <tuv xml:lang="fr">
+                <seg>Incertitude initiale</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Initial uncertainty</seg>
+            </tuv>
+        </tu>
+        <tu tuid="defaultValueReminderHeader">
+            <tuv xml:lang="fr">
+                <seg>Rappel valeur par défaut</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Default value reminder</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numericAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un champ numérique</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a numeric field</seg>
+            </tuv>
+        </tu>
+
+        <!-- Champs de sélection simple -->
+
+        <tu tuid="styleHeader">
+            <tuv xml:lang="fr">
+                <seg>Style</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Style</seg>
+            </tuv>
+        </tu>
+        <tu tuid="radioOption">
+            <tuv xml:lang="fr">
+                <seg>Boutons radio</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Radio buttons</seg>
+            </tuv>
+        </tu>
+        <tu tuid="singleSelectOption">
+            <tuv xml:lang="fr">
+                <seg>Liste déroulante</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Scrolling list</seg>
+            </tuv>
+        </tu>
+        <tu tuid="singleSelectAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un champ de sélection simple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a single selection field</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Options d'un champ de sélection simple (ou multiple) -->
+
+        <tu tuid="optionSelectAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une option</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an option</seg>
+            </tuv>
+        </tu>
+
+        <!-- Champs de sélection multiple -->
+
+        <tu tuid="multiCheckboxOption">
+            <tuv xml:lang="fr">
+                <seg>Cases à cocher</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Multicheckbox</seg>
+            </tuv>
+        </tu>
+        <tu tuid="multiSelectOption">
+            <tuv xml:lang="fr">
+                <seg>Liste déroulante à choix multiple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Multiselect scrolling list</seg>
+            </tuv>
+        </tu>
+         <tu tuid="notSelectedOption">
+            <tuv xml:lang="fr">
+                <seg>Non sélectionnée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not selected</seg>
+            </tuv>
+        </tu>
+        <tu tuid="multiSelectAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un champ de sélection multiple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a multiple selection field</seg>
+            </tuv>
+        </tu>
+
+        <!-- Champs booléens -->
+
+        <tu tuid="checkboxAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un champ booléen</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a boolean field</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

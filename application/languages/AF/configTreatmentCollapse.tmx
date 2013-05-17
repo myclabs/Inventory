@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="executionAlgorithmCollapse">
+            <tuv xml:lang="fr">
+                <seg>Algorithme d'exécution</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Execution algorithm</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numericAlgorithmCollapse">
+            <tuv xml:lang="fr">
+                <seg>Algorithmes numériques</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Numeric algorithms</seg>
+            </tuv>
+        </tu>               
+        <tu tuid="numericInputCollapse">
+            <tuv xml:lang="fr">
+                <seg>Saisies de champs numériques</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Numeric inputs</seg>
+            </tuv>
+        </tu>
+        <tu tuid="textkeySelectionAlgorithmCollapse">
+            <tuv xml:lang="fr">
+                <seg>Algorithmes de sélection d’identifiant</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Identifier selection algorithms</seg>
+            </tuv>
+        </tu>      
+        <tu tuid="inputTextkeySelectionCollapse">
+            <tuv xml:lang="fr">
+                <seg>A partir d'une saisie de champ de sélection simple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Based on a single selection field</seg>
+            </tuv>
+        </tu>   
+        
+    </body>
+</tmx>

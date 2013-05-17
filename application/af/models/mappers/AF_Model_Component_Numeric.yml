@@ -1,0 +1,21 @@
+AF_Model_Component_Numeric:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: AF_Component_Numeric
+
+  fields:
+    unit:
+      type: unit_api
+      nullable: false
+    withUncertainty:
+      type: boolean
+      nullable: false
+    defaultValue:
+      type: calc_value
+      nullable: false
+    defaultValueReminder:
+      type: boolean
+      nullable: false
+    required:
+      type: boolean
+      nullable: false

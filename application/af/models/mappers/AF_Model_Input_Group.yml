@@ -1,0 +1,4 @@
+AF_Model_Input_Group:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Input_Group

@@ -1,0 +1,9 @@
+AF_Model_Action_SetValue_Checkbox:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Action_SetValue_Checkbox
+
+  fields:
+    checked:
+      type: boolean
+      nullable: false

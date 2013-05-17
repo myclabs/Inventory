@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="groupCollapse">
+            <tuv xml:lang="fr">
+                <seg>Groupes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Groups</seg>
+            </tuv>
+        </tu>
+        <tu tuid="subFormCollapse">
+            <tuv xml:lang="fr">
+                <seg>Sous-formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Subforms</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numericInputFieldCollapse">
+            <tuv xml:lang="fr">
+                <seg>Champs numériques</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Numeric fields</seg>
+            </tuv>
+        </tu>
+       <tu tuid="singleSelectionFieldCollapse">
+            <tuv xml:lang="fr">
+                <seg>Champs de sélection simple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Single selection fields</seg>
+            </tuv>
+        </tu>
+        <tu tuid="multipleSelectionFieldCollapse">
+            <tuv xml:lang="fr">
+                <seg>Champs de sélection multiple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Multiple selection fields</seg>
+            </tuv>
+        </tu>
+         <tu tuid="booleanFieldCollapse">
+            <tuv xml:lang="fr">
+                <seg>Champs booléens</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Booleans fields</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

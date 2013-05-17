@@ -1,0 +1,9 @@
+AF_Model_Input_Select_Single:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Input_Select_Single
+
+  fields:
+    value:
+      type: string
+      nullable: true

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="emptyGroup">
+            <tuv xml:lang="fr">
+                <seg>Le groupe « [REF] » est vide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Group "[REF]" is empty.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="zeroOrOneOption">
+            <tuv xml:lang="fr">
+                <seg>Le champ de sélection « [REF] » possède moins de deux options.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Selection field "[REF]" has less than two options.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

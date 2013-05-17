@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="conditionUsedByActionDeletionDenied">
+            <tuv xml:lang="fr">
+                <seg>Cette condition ne peut pas être supprimée, car elle intervient dans le déclenchement d'une (ou plusieurs) actions.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This condition cannot be deleted, since it is involved in the triggering of (at least) one action.</seg>
+            </tuv>
+        </tu>
+
+
+    </body>
+</tmx>
+

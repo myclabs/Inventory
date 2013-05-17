@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+		<!-- Bandeau de haut de page -->
+
+		<!-- Statuts d'avancement -->
+
+		<tu tuid="statusInProgress">
+			<tuv xml:lang="fr">
+				<seg>Saisie en cours</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>In progress</seg>
+			</tuv>
+		</tu>
+		<tu tuid="statusInputIncomplete">
+			<tuv xml:lang="fr">
+				<seg>Saisie incomplète</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Incomplete</seg>
+			</tuv>
+		</tu>
+		<tu tuid="statusCalculationIncomplete">
+			<tuv xml:lang="fr">
+				<seg>Saisie complète, calculs incomplets</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Complete input, incomplete calculation</seg>
+			</tuv>
+		</tu>
+		<tu tuid="statusComplete">
+			<tuv xml:lang="fr">
+				<seg>Saisie complète</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Complete</seg>
+			</tuv>
+		</tu>
+		<tu tuid="statusFinished">
+			<tuv xml:lang="fr">
+				<seg>Saisie terminée</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Finished</seg>
+			</tuv>
+		</tu>
+
+		<!-- Marquer la saisie comme terminée -->
+
+		<tu tuid="markInputAsFinished">
+			<tuv xml:lang="fr">
+				<seg>Marquer la saisie comme terminée</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Mark input as finished</seg>
+			</tuv>
+		</tu>
+		<tu tuid="markInProgressInputAsFinishedTooltip">
+			<tuv xml:lang="fr">
+				<seg>Modifications en cours, merci d'enregistrer pour pouvoir
+					marquer la saisie comme terminée.</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Changes have been made, if you want to mark as finished please
+					save first.</seg>
+			</tuv>
+		</tu>
+		<tu tuid="markIncompleteInputAsFinishedTooltip">
+			<tuv xml:lang="fr">
+				<seg>Saisie incomplète, merci de compléter la saisie pour pouvoir la
+					marquer comme terminée.</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Input is incomplete, if you want to mark as finished please
+					complete first.</seg>
+			</tuv>
+		</tu>
+
+		<!-- Contenu du formulaire -->
+
+		<tu tuid="freeLabel">
+			<tuv xml:lang="fr">
+				<seg>Libellé libre</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Free label</seg>
+			</tuv>
+		</tu>
+
+		<!-- Boutons -->
+
+		<tu tuid="resultsPreview">
+			<tuv xml:lang="fr">
+				<seg>Aperçu des résultats</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Results preview</seg>
+			</tuv>
+		</tu>
+
+		<!-- Messages au clic sur « Enregistrer » -->
+
+		<tu tuid="incompleteInputSaved">
+			<tuv xml:lang="fr">
+				<seg>Enregistrement effectué (saisie incomplète).</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Saving done (incomplete input).</seg>
+			</tuv>
+		</tu>
+		<tu tuid="completeInputSaved">
+			<tuv xml:lang="fr">
+				<seg>Enregistrement effectué (saisie complète).</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Saving done (complete input).</seg>
+			</tuv>
+		</tu>
+
+		<!-- Contenus des popups de confirmation au clic sur « Réinitialiser » 
+			ou « Quitter » -->
+
+		<tu tuid="confirmReinitializeInput">
+			<tuv xml:lang="fr">
+				<seg>Perte des modifications non enregistrées. Poursuivre ?</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Unsaved changes will be lost, please confirm.</seg>
+			</tuv>
+		</tu>
+		<tu tuid="confirmExitInput">
+			<tuv xml:lang="fr">
+				<seg>Perte des modifications non enregistrées. Poursuivre ?</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Unsaved changes will be lost, please confirm.</seg>
+			</tuv>
+		</tu>
+
+		<!-- Messages à afficher pour l'aperçu des résultats, les résultats, les 
+			détails calculs -->
+
+		<tu tuid="incompleteInput">
+			<tuv xml:lang="fr">
+				<seg>La saisie enregistrée est incomplète, ses résultats ne peuvent être affichés.</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Saved input is not complete, the results cannot be displayed.</seg>
+			</tuv>
+		</tu>
+        <tu tuid="completeInputNoResult">
+            <tuv xml:lang="fr">
+                <seg>La saisie enregistrée est complète mais n'a généré aucun résultat.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Saved input is complete but has not generated any result.</seg>
+            </tuv>
+        </tu>
+
+		<!-- Message lors de la modification du caractère terminée ou non -->
+
+		<tu tuid="progressStatusUpdated">
+			<tuv xml:lang="fr">
+				<seg>Statut d'avancement modifié.</seg>
+			</tuv>
+			<tuv xml:lang="en">
+				<seg>Progress status updated.</seg>
+			</tuv>
+		</tu>
+
+	</body>
+</tmx>
+        

@@ -1,0 +1,96 @@
+<?php
+/**
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @package AF
+ */
+/** @var $af AF_Model_AF */
+$af = $this->af;
+$script = '';
+
+
+// Groupes
+$groups = new UI_HTML_Collapse('groups');
+$groups->foldedByDefault = true;
+$groups->title = __('AF', 'configComponentCollapse', 'groupCollapse');
+$groups->body = $this->partial('edit/components/groups.phtml', array('af' => $this->af));
+echo $groups->render();
+
+$script .= '$(\'#groups\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'groups_wrapper\') {';
+$script .= 'groupDatagrid.filter();';
+$script .= '}';
+$script .= '});';
+
+
+// Sous-formulaires
+$subAF = new UI_HTML_Collapse('subAF');
+$subAF->foldedByDefault = true;
+$subAF->title = __('AF', 'configComponentCollapse', 'subFormCollapse');
+$subAF->body = $this->partial('edit/components/sub-af.phtml', array('af' => $this->af));
+echo $subAF->render();
+
+$script .= '$(\'#subAF\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'subAF_wrapper\') {';
+$script .= 'subAfDatagrid.filter();';
+$script .= '}';
+$script .= '});';
+
+
+// Champs numériques
+$numericFields = new UI_HTML_Collapse('numericFields');
+$numericFields->foldedByDefault = true;
+$numericFields->title = __('AF', 'configComponentCollapse', 'numericInputFieldCollapse');
+$numericFields->body = $this->partial('edit/components/numeric-fields.phtml', array('af' => $this->af));
+echo $numericFields->render();
+
+$script .= '$(\'#numericFields\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'numericFields_wrapper\') {';
+$script .= 'numericFieldDatagrid.filter();';
+$script .= '}';
+$script .= '});';
+
+
+// Champs de sélection simple
+$selectSingleFields = new UI_HTML_Collapse('selectSingleFields');
+$selectSingleFields->foldedByDefault = true;
+$selectSingleFields->title = __('AF', 'configComponentCollapse', 'singleSelectionFieldCollapse');
+$selectSingleFields->body = $this->partial('edit/components/select-single-fields.phtml', array('af' => $this->af));
+echo $selectSingleFields->render();
+
+$script .= '$(\'#selectSingleFields\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'selectSingleFields_wrapper\') {';
+$script .= 'selectSingleFieldDatagrid.filter();';
+$script .= '}';
+$script .= '});';
+
+
+// Champs de sélection multiple
+$selectMultiFields = new UI_HTML_Collapse('selectMultiFields');
+$selectMultiFields->foldedByDefault = true;
+$selectMultiFields->title = __('AF', 'configComponentCollapse', 'multipleSelectionFieldCollapse');
+$selectMultiFields->body = $this->partial('edit/components/select-multi-fields.phtml', array('af' => $this->af));
+echo $selectMultiFields->render();
+
+$script .= '$(\'#selectMultiFields\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'selectMultiFields_wrapper\') {';
+$script .= 'selectMultiFieldDatagrid.filter();';
+$script .= '}';
+$script .= '});';
+
+
+// Checkbox
+$checkboxFields = new UI_HTML_Collapse('checkboxFields');
+$checkboxFields->foldedByDefault = true;
+$checkboxFields->title = __('AF', 'configComponentCollapse', 'booleanFieldCollapse');
+$checkboxFields->body = $this->partial('edit/components/checkbox-fields.phtml', array('af' => $this->af));
+echo $checkboxFields->render();
+
+$script .= '$(\'#checkboxFields\').on(\'show\', function(e) {';
+$script .= 'if ($(e.target).attr(\'id\') == \'checkboxFields_wrapper\') {';
+$script .= 'checkboxFieldDatagrid.filter();';
+$script .= '}';
+$script .= '});';
+
+
+echo '<script type="text/javascript">/*<![CDATA[*/'.$script.'/*]]>*/</script>';

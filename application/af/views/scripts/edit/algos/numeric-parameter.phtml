@@ -1,0 +1,59 @@
+<?php
+/**
+ * Datagrid des algos paramètres
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af AF_Model_AF */
+$af = $this->af;
+
+$datagrid = new UI_Datagrid('algoNumericParameter', 'datagrid_edit_algos_numeric-parameter', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'numericParameterAddPanelTitle');
+$datagrid->deleteElements = true;
+
+// Label
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn->editable = true;
+$datagrid->addCol($labelColumn);
+
+// Ref
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$refColumn->editable = true;
+$datagrid->addCol($refColumn);
+
+// Famille
+$familyColumn = new UI_Datagrid_Col_List('family', __('Techno', 'name', 'family'));
+$familyColumn->list = [];
+foreach (Techno_Model_Family::loadList() as $family) {
+    /** @var $family Techno_Model_Family */
+    $familyColumn->list[$family->getRef()] = $family->getLabel();
+}
+$familyColumn->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
+$familyColumn->editable = true;
+$datagrid->addCol($familyColumn);
+
+// Coordonnées
+$coordinatesColumn = new UI_Datagrid_Col_Popup('coordinates', __('Techno', 'name', 'coordinates'));
+$coordinatesColumn->popup->addAttribute('class', 'large');
+$datagrid->addCol($coordinatesColumn);
+
+// Context indicator
+$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classif', 'name', 'indicator'));
+$contextIndicatorColumn->editable = true;
+$contextIndicatorColumn->dynamicList = true;
+$contextIndicatorColumn->list = $this->baseUrl(
+    '/af/datagrid_edit_algos_numeric-parameter/get-context-indicator-list/');
+$contextIndicatorColumn->withEmptyElement = true;
+$datagrid->addCol($contextIndicatorColumn);
+
+// Indexation
+$resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
+$resultIndexColumn->popup->title = __('Algo', 'name', 'indexation');
+$resultIndexColumn->popup->addAttribute('class', 'large');
+$datagrid->addCol($resultIndexColumn);
+
+echo $datagrid->render();

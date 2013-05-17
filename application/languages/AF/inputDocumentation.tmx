@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+        <tu tuid="masterForm">
+            <tuv xml:lang="fr">
+                <seg>Formulaire maître</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Master form</seg>
+            </tuv>
+        </tu>
+        <tu tuid="calledForm">
+            <tuv xml:lang="fr">
+                <seg>Formulaire appelé :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Called form:</seg>
+            </tuv>
+        </tu>
+        <tu tuid="repeated">
+            <tuv xml:lang="fr">
+                <seg>répété</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>repeated</seg>
+            </tuv>
+        </tu>
+        <tu tuid="usedParameterFamilies">
+            <tuv xml:lang="fr">
+                <seg>Familles de paramètres utilisées :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Used parameter families:</seg>
+            </tuv>
+        </tu>
+	</body>
+</tmx>
+        

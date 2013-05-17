@@ -1,0 +1,9 @@
+AF_Model_Input_Numeric:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Input_Numeric
+
+  fields:
+    value:
+      type: calc_unitvalue
+      nullable: false

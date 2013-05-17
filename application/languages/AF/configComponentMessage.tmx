@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="groupNotEmptyDeletionDenied">
+            <tuv xml:lang="fr">
+                <seg>Ce groupe ne peut pas être supprimé, car il contient un ou plusieurs composants.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This group cannot be deleted, since it contains one or several components.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notRepeatedWithoutFreeLAbel">
+            <tuv xml:lang="fr">
+                <seg>Seuls les sous-formulaires répétés peuvent comprendre un champ libellé libre.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Only repeated subforms can be equipped with a free label.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fieldUsedByInteractionConditionDeletionDenied">
+            <tuv xml:lang="fr">
+                <seg>Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Interactions » porte sur lui.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This field cannot be deleted, since at least one of the elementary conditions of the « Interactions » tab relies on it.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fieldUsedByAlgoConditionDeletionDenied">
+            <tuv xml:lang="fr">
+                <seg>Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Traitement » porte sur lui.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This field cannot be deleted, since at least one of the elementary conditions of the « Treatment » tab relies on it.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="optionUsedByInteractionConditionDeletionDenied">
+            <tuv xml:lang="fr">
+                <seg>Cette option ne peut pas être supprimée, car elle joue le rôle de valeur de référence pour une (au moins) des conditions élémentaires de l'onglet « Interactions ».</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This option cannot be deleted, since it is used as reference value by at least one among elementary conditions of the « Interactions » tab.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="optionUsedByAlgoConditionDeletionDenied">
+            <tuv xml:lang="fr">
+                <seg>Cette option ne peut pas être supprimée, car elle joue le rôle de valeur de référence pour une (au moins) des conditions élémentaires de l'onglet « Traitement ».</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This option cannot be deleted, since it is used as reference value by at least one among elementary conditions of the « Treatment » tab.</seg>
+            </tuv>
+        </tu>
+        
+    </body>
+</tmx>

@@ -1,0 +1,9 @@
+AF_Model_InputSet_Sub:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_InputSet_Sub
+
+  fields:
+    freeLabel:
+      type: string
+      nullable: true

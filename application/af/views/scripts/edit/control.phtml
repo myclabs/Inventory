@@ -1,0 +1,27 @@
+<?php
+/**
+ * @author  matthieu.napoli
+ * @author  hugo.charbonnier
+ * @package AF
+ */
+/** @var $af AF_Model_AF */
+$af = $this->af;
+
+$controlButton = new UI_HTML_Button(__('UI', 'verb', 'control'));
+$controlButton->addAttribute('class', 'doControl');
+
+?>
+
+<p>
+    <?=$controlButton->render();?>
+</p>
+
+<div id="controlResults"></div>
+
+<script type="text/javascript">
+    $(".doControl").click(function () {
+        $("#controlResults")
+                .empty()
+                .load('af/edit/control-results/id/' + <?=$af->getId()?>);
+    });
+</script>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+
+        <!-- Expressions -->
+
+        <tu tuid="invalidExpression">
+            <tuv xml:lang="fr">
+                <seg>L'expression saisie présente les erreurs de syntaxe suivantes :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Expression contains the following syntax errors:</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidExpressionWithErrors">
+            <tuv xml:lang="fr">
+                <seg>L'expression saisie présente les erreurs de syntaxe suivantes : [ERRORS]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Expression contains the following syntax errors: [ERRORS]</seg>
+            </tuv>
+        </tu>
+
+        <!-- Paramètres -->
+
+        <tu tuid="unrecognizedFamily">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir un identifiant de famille valide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please provide a valid family identifier.</seg>
+            </tuv>
+        </tu>
+        <!-- Algorithmes de sélection d'identifiant -->
+
+        <tu tuid="algoUsed">
+            <tuv xml:lang="fr">
+                <seg>Cet algorithme ne peut pas être supprimé, car il est utilisé pour l'indexation d'au moins un algorithme numérique ou la détermination d'au moins une coordonnée d'algorithme de type paramètre.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This algorithm cannot be deleted, since it is used for indexation of at least one numeric algorithm or determination of at least one numeric algorithm of parameter type.</seg>
+            </tuv>
+        </tu>
+    
+    </body>
+</tmx>

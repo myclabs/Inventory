@@ -15,6 +15,7 @@
             <directory>./tests/Export</directory>
             <directory>./tests/Techno</directory>
             <directory>./tests/Algo</directory>
+            <directory>./tests/AF</directory>
             <exclude>./tests/Unit</exclude>
         </testsuite>
 

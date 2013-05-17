@@ -1,0 +1,4 @@
+AF_Model_Input_SubAF:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Input_SubAF

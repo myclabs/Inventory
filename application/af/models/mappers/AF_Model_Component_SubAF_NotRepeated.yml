@@ -1,0 +1,4 @@
+AF_Model_Component_SubAF_NotRepeated:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: AF_Component_SubAF_NotRepeated

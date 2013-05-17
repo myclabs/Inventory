@@ -32,6 +32,7 @@ class Bootstrap extends Core_Bootstrap
             'Doc',
             'DW',
             'Algo',
+            'AF',
         ];
 
         foreach ($modules as $module) {
