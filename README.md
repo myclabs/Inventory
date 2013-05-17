@@ -52,3 +52,4 @@ SVN revision migrated for each package:
 - Keyword: 12212
 - Techno: 12212
 - Doc: 12202
+- DW: 12222

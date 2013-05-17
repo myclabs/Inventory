@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+    <!-- Caractère obligatoire du choix du type de valeurs à fournir par l'analyse -->
+    
+        <tu tuid="reportTypeMandatory">
+            <tuv xml:lang="fr">
+                <seg>Merci de préciser la nature des valeurs à fournir.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please specify the type of values to provide.</seg>
+            </tuv>
+        </tu>
+
+    <!-- Les axes 1 et 2 ne peuvent pas être identiques -->
+    
+        <tu tuid="axisTwoSameAsOne">
+            <tuv xml:lang="fr">
+                <seg>Merci de choisir deux axes différents.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please choose different axes.</seg>
+            </tuv>
+        </tu>
+
+    <!-- Les axes 1 et 2 ne peuvent pas être reliés -->
+    
+        <tu tuid="axisTwoLinkedToOne">
+            <tuv xml:lang="fr">
+                <seg>Merci de choisir deux axes non hiérarchiquement reliés.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please choose two axes not related in the hierarchy.</seg>
+            </tuv>
+        </tu>
+                  
+    <!-- Caractère obligatoire du choix du type de graphique à afficher -->
+    
+        <tu tuid="chartTypeInvalid">
+            <tuv xml:lang="fr">
+                <seg>Merci de préciser le type de graphique à afficher.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please specify the type of values to provide.</seg>
+            </tuv>
+        </tu>
+
+    <!-- Les filtres sur plusieurs membres doivent en sélectionner au moins un -->
+    
+        <tu tuid="filterMemberInvalid">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner au moins un élément.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select at least one item.</seg>
+            </tuv>
+        </tu>
+
+
+    </body>
+</tmx>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+    
+        <tu tuid="add">
+            <tuv xml:lang="fr">
+                <seg>Nouvelle analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>New report</seg>
+            </tuv>
+        </tu>
+        <tu tuid="detailedSpreadsheetExport">
+            <tuv xml:lang="fr">
+                <seg>Export Excel détaillé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Detailed Excel export</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

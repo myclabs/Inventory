@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="noFilter">
+            <tuv xml:lang="fr">
+                <seg>Aucun filtre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No filter</seg>
+            </tuv>
+        </tu>
+        <tu tuid="dateFormat">
+            <tuv xml:lang="fr">
+                <seg>Y-m-d</seg>    <!-- Pour avoir les heures et les minutes on pourrait afficher : "Y-d-m  h:i" mais bugs sur l'heure du serveur semble-t-il -->
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Y-d-m</seg>  
+            </tuv>
+        </tu>
+        <tu tuid="detailedCompleteExport">
+            <tuv xml:lang="fr">
+                <seg>Export complet détaillé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Detailed complete export</seg>
+            </tuv>
+        </tu>
+        <tu tuid="detailedCompleteExportFirstSheet">
+            <tuv xml:lang="fr">
+                <seg>Général</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>General</seg>
+            </tuv>
+        </tu>
+   
+    </body>
+</tmx>

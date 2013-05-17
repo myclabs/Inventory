@@ -1,0 +1,41 @@
+# dw\models\mappers\DW_Model_Filter.yml
+DW_Model_Filter:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: DW_Filter
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    report:
+      targetEntity: DW_Model_Report
+      joinColumn:
+        name: idReport
+        referencedColumnName: id
+      nullable: false
+      fetch: EAGER
+    axis:
+      targetEntity: DW_Model_Axis
+      joinColumn:
+        name: idAxis
+        referencedColumnName: id
+      nullable: false
+      fetch: EAGER
+
+  manyToMany:
+    members:
+      targetEntity: DW_Model_Member
+      joinTable:
+        name: DW_Filter_Member
+        joinColumns:
+          idFilter:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idMember:
+            referencedColumnName: id
+      fetch: EAGER

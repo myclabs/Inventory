@@ -1,0 +1,37 @@
+# dw\models\mappers\DW_Model_Cube.yml
+DW_Model_Cube:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: DW_Cube
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    label:
+      column: label
+      type: string
+      length: 255
+      nullable: false
+
+  oneToMany:
+    reports:
+      targetEntity: DW_Model_Report
+      mappedBy: cube
+      cascade: [ remove ]
+    axes:
+      targetEntity: DW_Model_Axis
+      mappedBy: cube
+      orderBy:
+        position: ASC
+      cascade: [ persist, remove ]
+    indicators:
+      targetEntity: DW_Model_Indicator
+      mappedBy: cube
+      orderBy:
+        position: ASC
+      cascade: [ persist, remove ]

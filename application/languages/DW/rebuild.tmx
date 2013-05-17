@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+        
+        <!-- Message d'alerte dans l'onglet "Analyses" -->
+        
+        <tu tuid="analysisTabRebuildAlert">
+            <tuv xml:lang="fr">
+                <seg>Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Structure data of the analysis cube (axes, members, indicators) are not up to date.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellAdministratorWarningMessage">
+            <tuv xml:lang="fr">
+                <seg>Si le problème persiste, merci de le signaler à un administrateur de l'application.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>If problem persists please contact an administrator.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellNonAdministratorWarningMessage">
+            <tuv xml:lang="fr">
+                <seg>Merci de signaler le problème à un administrateur de l'application.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please contact an administrator.</seg>
+            </tuv>
+        </tu>
+         
+        <!-- Onglet "Reconstruction données" -->
+        
+        <tu tuid="dataRebuildTab">
+            <tuv xml:lang="fr">
+                <seg>Reconst. données</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Data rebuild</seg>
+            </tuv>
+        </tu>
+ 
+         <!-- Titres des collapses -->
+        
+        <tu tuid="analysisDataRebuildCollapse">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data rebuild</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outputDataRebuildCollapse">
+            <tuv xml:lang="fr">
+                <seg>Relance des calculs et régénération des données d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Computations restart and analysis data rebuild</seg>
+            </tuv>
+        </tu>
+ 
+         <!-- Textes explicatifs -->
+        
+        <tu tuid="analysisDataRebuildWarningMessageOrganization">
+            <tuv xml:lang="fr">
+                <seg>Vous pouvez régénérer l'ensemble des données d'analyse de cette unité organisationnelle et de toutes ses sous-unités en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You can rebuild all analysis data of this organizational unit and all its subunits by clicking on the button below. This operation may take time.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="analysisDataRebuildWarningMessageSimulation">
+            <tuv xml:lang="fr">
+                <seg>Vous pouvez régénérer l'ensemble des données d'analyse de ce jeu de simulation en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You can rebuild all analysis data of this simulation set by clicking on the button below. This operation may take time.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outputDataRebuildWarningMessageOrganization">
+            <tuv xml:lang="fr">
+                <seg>Vous pouvez relancer l'ensemble des calculs et régénérer l'ensemble des données d'analyse pour cette unité organisationnelle et pour toutes ses sous-unités en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You can restart all calculations and rebuild all analysis data of this organizational unit and all its subunits by clicking on the button below. This operation may take time.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outputDataRebuildWarningMessageSimulation">
+            <tuv xml:lang="fr">
+                <seg>Vous pouvez relancer l'ensemble des calculs et régénérer l'ensemble des données d'analyse pour ce jeu de simulation en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You can restart all calculations and rebuild all analysis data for this simulation set by clicking on the button below. This operation may take time.</seg>
+            </tuv>
+        </tu>
+ 
+         <!-- Boutons -->
+        
+        <tu tuid="analysisDataRebuildButton">
+            <tuv xml:lang="fr">
+                <seg>Régénérer les données d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Rebuild analysis data</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outputDataRebuildButton">
+            <tuv xml:lang="fr">
+                <seg>Relancer les calculs et régénérer les données d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Restart computations and rebuild analysis data</seg>
+            </tuv>
+        </tu>
+ 
+         <!-- Messages de confirmation -->
+         <!--  
+        
+        <tu tuid="analysisDataRebuildConfirmationMessage">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d'analyse effectuée.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data rebuild performed.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outputDataRebuildConfirmationMessage">
+            <tuv xml:lang="fr">
+                <seg>Relance des calculs et régénération des données d'analyse effectuées.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Computations restart and analysis data rebuild performed.</seg>
+            </tuv>
+        </tu>
+        -->
+
+         <!-- Messages d'erreur -->
+        
+        <tu tuid="analysisDataRebuildFailMessage">
+            <tuv xml:lang="fr">
+                <seg>La régénération des données du cube d'analyse a été interrompue, car certains résultats ne sont pas compatibles avec le référentiel de classification. Merci d'essayer de relancer les calculs (bouton suivant) ou de vérifier la cohérence des différents référentiels.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data rebuild was interrupted, because some results are not compatible with the classification referential. Please try to restart computations (next button) or check the various referentials.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outputDataRebuildFailMessage">
+            <tuv xml:lang="fr">
+                <seg>Une erreur a été détectée lors de la relance des calculs. Merci de vérifier la validité des différents référentiels, et de ré-essayer après correction des erreurs trouvées.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>An error was found during computations restart. Please check the validity of the various referentials, and try again after correction.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

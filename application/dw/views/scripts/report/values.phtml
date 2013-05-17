@@ -1,0 +1,32 @@
+<?php
+/**
+ * @author valentin.claras
+ * @author cyril.perraud
+ * @package DW
+ * @subpackage View
+ */
+$datagridValues = new UI_Datagrid('reportValues', 'datagrid_values', 'dw');
+$datagridValues->addParam('idCube', $this->idCube);
+$datagridValues->addParam('hashReport', $this->hashReport);
+
+if ($this->numeratorAxis1 !== null) {
+    $numeratorAxis1 = $this->numeratorAxis1;
+    $columnAxisOne = new UI_Datagrid_Col_Text('valueAxis'.$numeratorAxis1->getRef(), $numeratorAxis1->getLabel());
+    $datagridValues->addCol($columnAxisOne);
+
+    $numeratorAxis2 = $this->numeratorAxis2;
+    if ($this->numeratorAxis2 !== null) {
+        $columnAxisTwo = new UI_Datagrid_Col_Text('valueAxis'.$numeratorAxis2->getRef(), $numeratorAxis2->getLabel());
+        $datagridValues->addCol($columnAxisTwo);
+    }
+}
+
+$columnDigital = new UI_Datagrid_Col_Number('valueDigital', __('UI', 'name', 'value').' ('.$this->valueUnit.')');
+$datagridValues->addCol($columnDigital);
+
+$columnUncertainty = new UI_Datagrid_Col_Percent('valueUncertainty', __('UI', 'name', 'uncertainty').' (%)');
+$datagridValues->addCol($columnUncertainty);
+
+$datagridValues->pagination = false;
+
+echo $datagridValues->render();

@@ -1,0 +1,352 @@
+<?php
+/**
+ * @author valentin.claras
+ * @author cyril.perraud
+ * @package DW
+ * @subpackage View
+ */
+?>
+
+<div class="page-header">
+    <h1 id="reportLabel"><?=$this->reportLabel?><?=$this->viewConfiguration->getComplementaryPageTitle()?></h1>
+    <small>
+        <?php if ($this->isNew) { ?>
+        <a id="exportAsPdf" href="javascript: void(0)" class="btn disabled">
+            <img src="images/dw/pdf_gris.png" alt="pdf" />
+        <?php } else { ?>
+        <a id="exportAsPdf" href="dw/report/pdf/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn">
+            <img src="images/dw/pdf.png" alt="pdf" />
+        <?php }?>
+            <?=__('UI', 'verb','exportToPDF')?>
+        </a>
+        <?php if ($this->isNew) { ?>
+        <a id="exportAsExcel" href="javascript: void(0)" class="btn disabled">
+            <img src="images/dw/xls_gris.png" alt="xls" />
+        <?php } else { ?>
+        <a id="exportAsExcel" href="dw/report/excel/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn">
+            <img src="images/dw/xls.png" alt="xls" />
+        <?php }?>
+            <?=__('UI', 'verb','exportToExcel')?>
+        </a>
+    </small>
+    <small class="pull-right">
+        <?=$this->button(__('UI', 'other', 'backButton'), 'arrow-left')->link($this->viewConfiguration->getOutputURL())?>
+    </small>
+</div>
+<div class="row-fluid">
+    <div class="span well" id="configurationPanel">
+        <div>
+            <!-- <h2><?=__('UI', 'name', 'configuration')?></h2>  -->
+            <span id="reportState" class="badge badge-<?=($this->isNew)?'warning':'success'?>">
+                <i class="icon-info-sign icon-white"></i>
+                <?php
+                if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
+                    if ($this->isNew) {
+                        echo __('DW', 'config', 'reportNotSaved');
+                    } else {
+                        echo __('DW', 'config', 'reportSavedAndNotChanged');
+                    }
+                } else {
+                    if ($this->isNew) {
+                        echo __('DW', 'config', 'reportNotLaunched');
+                    } else {
+                        echo __('DW', 'config', 'reportLaunched');
+                    }
+                }
+                ?>
+            </span>
+            <?php if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) { ?>
+            <hr />
+            <?php
+            $saveReportDisplayPopupButton = new UI_HTML_Button(__('UI', 'verb', 'save'));
+            $saveReportDisplayPopupButton->id = 'saveReportButton';
+            $saveReportDisplayPopupButton->icon = 'hdd icon-white';
+            $saveReportDisplayPopupButton->link = '#';
+            $saveReportDisplayPopupButton->addAttribute('data-toggle', 'modal');
+            if ($this->isNew) {
+                $saveReportDisplayPopupButton->addAttribute('class', 'btn-inverse disabled');
+                $saveReportDisplayPopupButton->addAttribute('data-target', '#');
+                $saveReportDisplayPopupButton->addAttribute('title', __('DW', 'config', 'applyNeededBeforeSaveReportTooltip'));
+            } else {
+                $saveReportDisplayPopupButton->addAttribute('class', 'btn-primary');
+                $saveReportDisplayPopupButton->addAttribute('data-target', '#saveReport');
+            }
+            $saveReportDisplayPopupButton->display();
+
+            $saveReportForm = new UI_Form('saveReportAs');
+            $saveReportForm->setAction('dw/report/save/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
+            $saveReportForm->setAjax(true, 'parseSaveForm');
+
+            // Utile pour les actions de notification javascript.
+            //  0 (false) indique un formulaire chargé.
+            //  1 (true)  indique un nouveau formulaire.
+            $isNew = new UI_Form_Element_Hidden('isNew');
+            $isNew->setValue($this->isNew);
+            $saveReportForm->addElement($isNew);
+
+            if (!$this->isNew) {
+                $radioSaveType = new UI_Form_Element_Radio('saveType');
+                if ($this->viewConfiguration->canBeUpdated()) {
+                    $optionUpdate = new UI_Form_Element_Option('update', 'update', __('DW', 'config', 'updateReportOption'));
+                    $radioSaveType->addOption($optionUpdate);
+                }
+                if ($this->viewConfiguration->canBeSavedAs()) {
+                    $optionSaveAs = new UI_Form_Element_Option('saveAs', 'saveAs', __('DW', 'config', 'saveReportAsOption'));
+                    $radioSaveType->addOption($optionSaveAs);
+                }
+                if ($this->viewConfiguration->canBeUpdated()) {
+                    $radioSaveType->setValue($optionUpdate->value);
+                } else {
+                    $radioSaveType->setValue($optionSaveAs->value);
+                }
+                $saveReportForm->addElement($radioSaveType);
+            }
+
+            $saveLabelReport = new UI_Form_Element_Text('saveLabelReport');
+            $saveLabelReport->setLabel(__('UI', 'name', 'label'));
+            $saveLabelReport->setRequired(true);
+            if (!$this->isNew) {
+                $saveLabelReport->setValue($this->reportLabel);
+            }
+            $saveReportForm->addElement($saveLabelReport);
+
+            if (!$this->isNew) {
+                $optionSaveAsSelected = new UI_Form_Condition_Elementary(
+                    'optionSaveAsSelected',
+                    $radioSaveType,
+                    UI_Form_Condition_Elementary::EQUAL,
+                    $optionSaveAs->value
+                );
+
+                $setLabelNullValue = new UI_Form_Action_SetValue('setLabelNullValue');
+                $setLabelNullValue->condition = $optionSaveAsSelected;
+                $setLabelNullValue->value = null;
+                $setLabelNullValue->backValue = $this->reportLabel;
+                $saveLabelReport->getElement()->addAction($setLabelNullValue);
+            }
+
+            $saveReportButton = new UI_HTML_Button(__('UI', 'verb', 'save'));
+            $saveReportButton->icon = 'ok icon-white';
+            $saveReportButton->addAttribute('class', 'btn-primary');
+            $saveReportButton->addAttribute('onclick', '$(\'#saveReportAs\').submit();');
+
+            $saveReportClosePopupButton = new UI_HTML_Button(__('UI', 'verb', 'cancel'));
+            $saveReportClosePopupButton->icon = 'remove';
+            $saveReportClosePopupButton->link = '#';
+            $saveReportClosePopupButton->addAttribute('data-toggle', 'modal');
+            $saveReportClosePopupButton->addAttribute('data-target', '#saveReport');
+
+            $saveReportPopup = new UI_Popup_Static('saveReport');
+            $saveReportPopup->title = __('DW', 'config', 'saveReportPopupTitle');
+            $saveReportPopup->body = $saveReportForm->getHTML();
+            $saveReportPopup->footer = $saveReportButton->getHTML().$saveReportClosePopupButton->getHTML();
+            $saveReportPopup->display();
+
+            $this->headScript()->appendScript('$(document).ready(function(){'.$saveReportForm->getScript().'});');
+        }
+        ?>
+        </div>
+        <div>
+            <?php
+            $this->configurationForm->display();
+            ?>
+        </div>
+    </div>
+    <div id="configurationClose" class="span">
+        <i class="icon-indent-right"> </i>
+    </div>
+    <div id="reportContent" class="span">
+        <?php
+
+        $tabView = new UI_Tab_View('container');
+
+        $tabGraph = new UI_Tab('graph', __('DW', 'name', 'chart'));
+        $tabGraph->dataSource = 'dw/report/graph/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport;
+        $tabGraph->useCache = true;
+        if (!$this->isNew) {
+            $tabGraph->active = true;
+        } else {
+            $tabGraph->disabled = true;
+        }
+        $tabView->addTab($tabGraph);
+        UI_Chart_Generic::addHeader();
+
+        $tabValues = new UI_Tab('values', __('UI', 'name', 'values'));
+        $tabValues->dataSource = 'dw/report/values/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport;
+        $tabValues->useCache = true;
+        if ($this->isNew) {
+            $tabValues->disabled = true;
+        }
+        $tabView->addTab($tabValues);
+        UI_Datagrid::addHeader();
+
+        $tabView->display();
+
+        $script = '';
+        // Fonction d'ouverture et de fermeture du volet de configuration.
+        $script .= '$(\'#configurationClose\').click(';
+        $script .= 'function() {';
+        $script .= 'if ($(\'#configurationClose i:first-child\').hasClass(\'icon-indent-right\')) {';
+        $script .= '$(\'#configurationClose i:first-child\').removeClass(\'icon-indent-right\');';
+        $script .= '$(\'#configurationClose i:first-child\').addClass(\'icon-indent-left\');';
+        $script .= '$(\'#configurationPanel\').animate({width: "toggle"}, 50, function() {$(\'#reportContent\').animate({width: "98%"}, \'fast\');});';
+        $script .= '} else {';
+        $script .= '$(\'#configurationClose i:first-child\').removeClass(\'icon-indent-left\');';
+        $script .= '$(\'#configurationClose i:first-child\').addClass(\'icon-indent-right\');';
+        $script .= '$(\'#reportContent\').animate({width: "82%"}, 50, function() {$(\'#configurationPanel\').animate({width: "toggle"}, \'fast\');});';
+        $script .= '}';
+        $script .= '});';
+        // Détection et notification d'un changement sur le formulaire.
+        $script .= '$(\'#'.$this->hashReport.' input, #'.$this->hashReport.' select\').change(function() {';
+        $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-important\');';
+        $script .= '$(\'#reportState\').html(\'<i class="icon-exclamation-sign icon-white"></i> '.__('DW', 'config', 'reportChangedApplyRequired').'\');';
+        if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
+            $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-inverse disabled\');';
+            $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#\');';
+            $script .= '$(\'#saveReportButton\').attr(\'title\', \''.addslashes(__('DW', 'config', 'applyNeededBeforeSaveReportTooltip')).'\');';
+        }
+        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn disabled\');';
+        $script .= '$(\'#exportAsPdf\').attr(\'href\', \'javascript: void(0)\');';
+        $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf_gris.png\');';
+        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn disabled\');';
+        $script .= '$(\'#exportAsExcel\').attr(\'href\', \'javascript: void(0)\');';
+        $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls_gris.png\');';
+        $script .= '});';
+        // Détection et notification d'un reset sur le formulaire.
+        $script .= '$(\'#resetReportConfiguration\').click(function() {';
+        if ($this->isNew) {
+            $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-warning\');';
+            if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
+                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportNotSaved').'\');';
+                $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-inverse disabled\');';
+                $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#\');';
+                $script .= '$(\'#saveReportButton\').attr(\'title\', \''.addslashes(__('DW', 'config', 'applyNeededBeforeSaveReportTooltip')).'\');';
+            } else {
+                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportNotLaunched').'\');';
+                $script .= '$(\'#container_graph\').empty();';
+                $script .= '$(\'#container_values\').empty();';
+                $script .= '$(\'#container li\').addClass(\'disabled\');';
+                $script .= 'if ($(\'#container_graph_li\').hasClass(\'active\')) {';
+                $script .= '$(\'#container_graph_li\').removeClass(\'active\');';
+                $script .= '}';
+                $script .= 'if ($(\'#container_values_li\').hasClass(\'active\')) {';
+                $script .= '$(\'#container_values_li\').removeClass(\'active\');';
+                $script .= '}';
+            }
+        } else {
+            $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn\');';
+            $script .= '$(\'#exportAsPdf\').attr(\'href\', \'dw/report/pdf/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
+            $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf.png\');';
+            $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn\');';
+            $script .= '$(\'#exportAsExcel\').attr(\'href\', \'dw/report/excel/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
+            $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls.png\');';
+            $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-success\');';
+            if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
+                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportSavedAndNotChanged').'\');';
+                $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-primary\');';
+                $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#saveReport\');';
+                $script .= '$(\'#saveReportButton\').attr(\'title\', \'\');';
+            } else {
+                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportLaunched').'\');';
+                $script .= 'if (form'.$this->hashReport.'HasChanged == true) {';
+                $script .= '$(\'#'.$this->hashReport.'\').submit();';
+                $script .= '}';
+            }
+        }
+        $script .= '});';
+        // Surcharge de la fonction de sounission du formulaire de configuration.
+        $script .= '$.fn.parseConfigurationForm = function(response) {';
+        $script .= '$(\'#'.$this->hashReport.'\').parseFormValidation(response);';
+        if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
+            if ($this->isNew) {
+                $script .= 'if (form'.$this->hashReport.'HasChanged == true) {';
+                $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-warning\');';
+                $script .= '$(\'#reportState\').html(\'<i class="icon-warning-sign icon-white"></i> '.__('DW', 'config', 'reportChangedSaveRequired').'\');';
+                $script .= '}';
+            } else {
+                $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-warning\');';
+                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportNotSaved').'\');';
+            }
+        } else {
+            $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-success\');';
+            $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportLaunched').'\');';
+        }
+        if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
+            $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-primary\');';
+            $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#saveReport\');';
+            $script .= '$(\'#saveReportButton\').attr(\'title\', \'\');';
+        }
+        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn\');';
+        $script .= '$(\'#exportAsPdf\').attr(\'href\', \'dw/report/pdf/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
+        $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf.png\');';
+        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn\');';
+        $script .= '$(\'#exportAsExcel\').attr(\'href\', \'dw/report/excel/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
+        $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls.png\');';
+        if ($this->isNew) {
+            $script .= 'if ($(\'#container_graph_li\').hasClass(\'disabled\')) {';
+            $script .= '$(\'#container_graph_li\').removeClass(\'disabled\');';
+            $script .= '}';
+            $script .= 'if ($(\'#container_values_li\').hasClass(\'disabled\')) {';
+            $script .= '$(\'#container_values_li\').removeClass(\'disabled\');';
+            $script .= '}';
+        }
+        $script .= '$(\'#container_graph\').attr(\'data-cached\', false);';
+        $script .= '$(\'#container_values\').attr(\'data-cached\', false);';
+        $script .= 'if ($(\'#container_graph_li\').hasClass(\'active\')) {';
+        $script .= '$(\'#container_graph_li\').removeClass(\'active\');';
+        $script .= '}';
+        $script .= '$(\'#container_graph_li a\').tab(\'show\');';
+        $script .= '};';
+        if ($this->isNew) {
+            $script .= '$(\'#container li\').addClass(\'disabled\');';
+        }
+        // Surcharge de la fonction de sounission du formulaire de sauvegarde.
+        $script .= '$.fn.parseSaveForm = function(response) {';
+        $script .= '$(\'#'.$this->hashReport.'\').parseFormValidation(response);';
+        $script .= 'window.location.replace(\''.$this->viewConfiguration->getSaveURL().'idReport=\'+response.idReport);';
+        $script .= '};';
+
+        // Fonction de récupération de l'image.
+        $script .= 'function getImageData(idChart) {';
+        $script .= 'var chartArea = $(\'#\' + idChart + \' div:first-child div:first-child\')[0];';
+        $script .= 'var svg = chartArea.innerHTML.replace(/&nbsp;/g, " ");';
+        $script .= 'var doc = chartArea.ownerDocument;';
+        $script .= 'var canvas = doc.createElement( \'canvas\');';
+        $script .= 'canvas.setAttribute(\'width\', chartArea.offsetWidth);';
+        $script .= 'canvas.setAttribute(\'height\', chartArea.offsetHeight);';
+        $script .= 'canvas.setAttribute(\'style\', ';
+        $script .= '\'position: absolute; \'';
+        $script .= ' +\'top: \' + (-chartArea.offsetHeight * 2) + \'px; \'';
+        $script .= ' +\'left: \' + (-chartArea.offsetWidth * 2) + \'px;\'';
+        $script .= ');';
+        $script .= 'doc.body.appendChild(canvas);';
+        $script .= 'canvg(canvas, svg);';
+        $script .= 'var imgData = canvas.toDataURL(\'image/png\');';
+        $script .= 'canvas.parentNode.removeChild(canvas);';
+        $script .= 'return imgData;';
+        $script .= '}';
+        // Fonction de récupération de l'image.
+        $script .= 'function saveImageData(e) {';
+        $script .= 'if (!($(e.target).hasClass(\'disabled\'))) {';
+        $script .= 'e.preventDefault();';
+        $script .= '$.post(';
+        $script .= '\'dw/report/saveimagedata\',';
+        $script .= '{idCube: '.$this->idCube.', name: \'pdfChart\', image: getImageData(\'reportChart\')},';
+        $script .= 'function(){';
+        $script .= 'window.location = $(e.target).prop(\'href\');';
+        $script .= '}';
+        $script .= ').error(function() {';
+        $script .= 'addMessage(\''.addslashes(__('DW', 'report', 'unableToSaveChartImage')).'\', \'error\');';
+        $script .= 'window.location = $(e.target).prop(\'href\');';
+        $script .= '});';
+        $script .= '}';
+        $script .= '}';
+        // Changement du fonctionnement initial du lien d'export Pdf.
+        $script .= '$(\'#exportAsPdf\').click(saveImageData);';
+
+        $this->headScript()->appendFile('http://canvg.googlecode.com/svn/trunk/rgbcolor.js', 'text/javascript');
+        $this->headScript()->appendFile('http://canvg.googlecode.com/svn/trunk/canvg.js', 'text/javascript');
+        $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+        ?>
+    </div>
+</div>

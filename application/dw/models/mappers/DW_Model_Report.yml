@@ -1,0 +1,97 @@
+# dw\models\mappers\DW_Model_Report.yml
+DW_Model_Report:
+  type: entity
+  repositoryClass: DW_Model_Repository_Report
+  table: DW_Report
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    label:
+      column: label
+      type: string
+      length: 255
+      nullable: false
+    chartType:
+      column: chartType
+      type: string
+      length: 255
+      nullable: true
+    sortType:
+      column: sortType
+      type: string
+      length: 255
+      nullable: false
+    withUncertainty:
+      column: withUncertainty
+      type: boolean
+      nullable: false
+
+  manyToOne:
+    cube:
+      targetEntity: DW_Model_Cube
+      inversedBy: reports
+      joinColumn:
+        name: idCube
+        referencedColumnName: id
+        nullable: false
+      fetch: EAGER
+    numerator:
+      targetEntity: DW_Model_Indicator
+      joinColumn:
+        name: idNumerator
+        referencedColumnName: id
+        nullable: true
+      fetch: EAGER
+    numeratorAxis1:
+      targetEntity: DW_Model_Axis
+      joinColumn:
+        name: idNumeratorAxis1
+        referencedColumnName: id
+        nullable: true
+      fetch: EAGER
+    numeratorAxis2:
+      targetEntity: DW_Model_Axis
+      joinColumn:
+        name: idNumeratorAxis2
+        referencedColumnName: id
+        nullable: true
+      fetch: EAGER
+    denominator:
+      targetEntity: DW_Model_Indicator
+      joinColumn:
+        name: idDenominator
+        referencedColumnName: id
+        nullable: true
+      fetch: EAGER
+    denominatorAxis1:
+      targetEntity: DW_Model_Axis
+      joinColumn:
+        name: idDenominatorAxis1
+        referencedColumnName: id
+        nullable: true
+      fetch: EAGER
+    denominatorAxis2:
+      targetEntity: DW_Model_Axis
+      joinColumn:
+        name: idDenominatorAxis2
+        referencedColumnName: id
+        nullable: true
+      fetch: EAGER
+
+  oneToMany:
+    filters:
+      targetEntity: DW_Model_Filter
+      mappedBy: report
+      fetch: EAGER
+      cascade: [ persist, remove ]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    postUpdate: [ postUpdate ]
+    preRemove: [ preDelete ]

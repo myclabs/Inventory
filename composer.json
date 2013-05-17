@@ -10,7 +10,8 @@
 			"Exec": "src/",
 			"Export": "src/",
 			"Keyword": "src/",
-			"Doc": "src/"
+			"Doc": "src/",
+			"DW": "src/"
 		}
 	},
 	"require": {

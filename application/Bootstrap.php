@@ -30,6 +30,7 @@ class Bootstrap extends Core_Bootstrap
             'Keyword',
             'Techno',
             'Doc',
+            'DW',
         ];
 
         foreach ($modules as $module) {

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+    
+        <!-- Indicateur du statut de l'analyse -->
+        
+        <tu tuid="reportNotSaved">
+            <tuv xml:lang="fr">
+                <seg>Nouvelle configuration</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>New configuration</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportChangedApplyRequired">
+            <tuv xml:lang="fr">
+                <seg>Modifications en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ongoing changes</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportSavedAndNotChanged">
+            <tuv xml:lang="fr">
+                <seg>Configuration enregistrée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Configuration saved</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportChangedSaveRequired">
+            <tuv xml:lang="fr">
+                <seg>Modifications non enregistrées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Changes not saved</seg>
+            </tuv>
+        </tu>
+
+        <!-- Bouton et popup d'enregistrement -->
+        
+        <tu tuid="applyNeededBeforeSaveReportTooltip">
+            <tuv xml:lang="fr">
+                <seg>Vous devez lancer l'analyse pour pouvoir l'enregistrer.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You must launch the report before saving it.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="saveReportPopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Enregistrer la configuration de l'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Save report configuration</seg>
+            </tuv>
+        </tu>
+        <tu tuid="updateReportOption">
+            <tuv xml:lang="fr">
+                <seg>Mettre à jour la configuration existante</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Update current configuration</seg>
+            </tuv>
+        </tu>
+        <tu tuid="saveReportAsOption">
+            <tuv xml:lang="fr">
+                <seg>Créer une nouvelle configuration</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Save as a new configuration</seg>
+            </tuv>
+        </tu>
+
+        <!-- Formulaire -->
+        
+        <tu tuid="denominatorSelect">
+            <tuv xml:lang="fr">
+                <seg>divisé par</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>divided by</seg>
+            </tuv>
+        </tu>
+        <tu tuid="oneAxisOption">
+            <tuv xml:lang="fr">
+                <seg>Un axe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>One axis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="twoAxesOption">
+            <tuv xml:lang="fr">
+                <seg>Deux axes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Two axes</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numeratorAxesGroup">
+            <tuv xml:lang="fr">
+                <seg>Axes du numérateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Numerator axes</seg>
+            </tuv>
+        </tu>
+        <tu tuid="denominatorAxesGroup">
+            <tuv xml:lang="fr">
+                <seg>Axes du dénominateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Denominator axes</seg>
+            </tuv>
+        </tu>
+
+    <!-- Libellés des options pour les différents types de graphe -->
+    
+    <!-- 1D -->
+    
+        <tu tuid="chartTypePieOption">
+            <tuv xml:lang="fr">
+                <seg>Camembert</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Pie</seg>
+            </tuv>
+        </tu>
+        <tu tuid="chartTypeVerticalOption">
+            <tuv xml:lang="fr">
+                <seg>Histogramme vertical</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Vertical bar chart</seg>
+            </tuv>
+        </tu>
+        <tu tuid="chartTypeHorizontalOption">
+            <tuv xml:lang="fr">
+                <seg>Histogramme horizontal</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Horizontal bar chart</seg>
+            </tuv>
+        </tu>
+
+    <!-- 2D -->
+    
+        <tu tuid="chartTypeVerticalStackedOption">
+            <tuv xml:lang="fr">
+                <seg>Histogramme vertical empilé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Vertical stacked bar chart</seg>
+            </tuv>
+        </tu>
+        <tu tuid="chartTypeVerticalGroupedOption">
+            <tuv xml:lang="fr">
+                <seg>Histogramme vertical groupé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Vertical grouped bar chart</seg>
+            </tuv>
+        </tu>
+        <tu tuid="chartTypeHorizontalStackedOption">
+            <tuv xml:lang="fr">
+                <seg>Histogramme horizontal empilé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Horizontal stacked bar chart</seg>
+            </tuv>
+        </tu>
+        <tu tuid="chartTypeHorizontalGroupedOption">
+            <tuv xml:lang="fr">
+                <seg>Histogramme horizontal groupé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Horizontal grouped bar chart</seg>
+            </tuv>
+        </tu>
+
+    <!-- Autres options d'affichage -->
+    
+        <tu tuid="sortByDecreasingValues">
+            <tuv xml:lang="fr">
+                <seg>Valeurs décroissantes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sort by decreasing values</seg>
+            </tuv>
+        </tu>
+        <tu tuid="sortByIncreasingValues">
+            <tuv xml:lang="fr">
+                <seg>Valeurs croissantes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sort by increasing values</seg>
+            </tuv>
+        </tu>
+        <tu tuid="sortByMembers">
+            <tuv xml:lang="fr">
+                <seg>Valeurs non ordonnées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No sort by values</seg>
+            </tuv>
+        </tu>
+        <tu tuid="withUncertaintyCheckbox">
+            <tuv xml:lang="fr">
+                <seg>Afficher l'incertitude</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Display uncertainty</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="analyses">
+            <tuv xml:lang="fr">
+                <seg>Analyses</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analyses</seg>
+            </tuv>
+        </tu>
+        <tu tuid="chart">
+            <tuv xml:lang="fr">
+                <seg>Graphique</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Chart</seg>
+            </tuv>
+        </tu>
+        <tu tuid="denominator">
+            <tuv xml:lang="fr">
+                <seg>Dénominateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Denominator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="denominatorMin">
+            <tuv xml:lang="fr">
+                <seg>dénominateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>denominator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="indicator">   <!-- Car traduction dans Classif pas accessible depuis DW -->
+            <tuv xml:lang="fr">
+                <seg>Indicateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Indicator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numerator">
+            <tuv xml:lang="fr">
+                <seg>Numérateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Numerator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numeratorMin">
+            <tuv xml:lang="fr">
+                <seg>numérateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>numerator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ratio">
+            <tuv xml:lang="fr">
+                <seg>Ratio</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ratio</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>
