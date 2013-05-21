@@ -1,11 +1,9 @@
 .page-header h1 { margin-right: 25px; }
 .page-header a { margin: 5px; }
 
-#configurationClose { width: 2%; margin-left: 0px; margin-right: -2%; cursor: pointer; }
+#configurationClose { width: 25px; margin-left: 0px; cursor: pointer; }
 
-#configurationPanel { width: 15%; overflow: hidden; }
-#configurationPanel.well { padding: 1%; }
-#configurationPanel .well { padding: 12px; }
+#configurationPanel { min-width: 200px; max-width: 350px; width: auto; padding: 1%; }
 
 #configurationPanel h3 { margin: 0px 0px; }
 #configurationPanel hr { margin: 8px 0px; }
@@ -18,12 +16,10 @@
 #configurationPanel > div + div .form-horizontal .control-group { margin-bottom: 5px; }
 #configurationPanel > div + div .form-horizontal .control-label { float: none; text-align: left; }
 #configurationPanel > div + div form select { width: 100%; }
-
 #configurationPanel > div + div .form .subGroup { margin-left: 0px; }
 #configurationPanel > div + div .form .subGroup .control-group { margin-left: 0px !important; }
 #configurationPanel > div + div .form .subGroup legend { margin-bottom: 0px !important; }
 #configurationPanel > div + div .form label.radio { display: inline-block; margin-right: 8px; }
 #configurationPanel > div + div .form .form-actions { padding: 10px 0px; margin: 0px; text-align: center; }
 
-#reportContent { float: right; width: 82%; }
-#reportContent .tab-content { overflow: visible; }
+#reportContent { float: none; width: auto; overflow: hidden; }

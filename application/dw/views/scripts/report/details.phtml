@@ -189,11 +189,11 @@
         $script .= 'if ($(\'#configurationClose i:first-child\').hasClass(\'icon-indent-right\')) {';
         $script .= '$(\'#configurationClose i:first-child\').removeClass(\'icon-indent-right\');';
         $script .= '$(\'#configurationClose i:first-child\').addClass(\'icon-indent-left\');';
-        $script .= '$(\'#configurationPanel\').animate({width: "toggle"}, 50, function() {$(\'#reportContent\').animate({width: "98%"}, \'fast\');});';
+        $script .= '$(\'#configurationPanel\').animate({width: "toggle"}, 50);';
         $script .= '} else {';
         $script .= '$(\'#configurationClose i:first-child\').removeClass(\'icon-indent-left\');';
         $script .= '$(\'#configurationClose i:first-child\').addClass(\'icon-indent-right\');';
-        $script .= '$(\'#reportContent\').animate({width: "82%"}, 50, function() {$(\'#configurationPanel\').animate({width: "toggle"}, \'fast\');});';
+        $script .= '$(\'#reportContent\').animate({width: "toggle"}, 50);';
         $script .= '}';
         $script .= '});';
         // Détection et notification d'un changement sur le formulaire.

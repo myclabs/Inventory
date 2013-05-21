@@ -52,11 +52,11 @@ $script .= 'function() {';
 $script .= 'if ($(\'#navigationClose i:first-child\').hasClass(\'icon-indent-right\')) {';
 $script .= '$(\'#navigationClose i:first-child\').removeClass(\'icon-indent-right\');';
 $script .= '$(\'#navigationClose i:first-child\').addClass(\'icon-indent-left\');';
-$script .= '$(\'#navigationPanel\').animate({width: "toggle"}, 50, function() {$(\'#navigationContent\').animate({width: "98%"}, \'fast\');});';
+$script .= '$(\'#navigationPanel\').animate({width: "toggle"}, 50);';
 $script .= '} else {';
 $script .= '$(\'#navigationClose i:first-child\').removeClass(\'icon-indent-left\');';
 $script .= '$(\'#navigationClose i:first-child\').addClass(\'icon-indent-right\');';
-$script .= '$(\'#navigationContent\').animate({width: "82%"}, 50, function() {$(\'#navigationPanel\').animate({width: "toggle"}, \'fast\');});';
+$script .= '$(\'#navigationPanel\').animate({width: "toggle"}, 50);';
 $script .= '}';
 $script .= '});';
 

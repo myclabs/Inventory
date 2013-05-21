@@ -1,7 +1,6 @@
-#navigationClose { width: 2%; margin-left: 0px; margin-right: -2%; cursor: pointer; }
+#navigationClose { width: 25px; margin-left: 0px; cursor: pointer; }
 
-#navigationPanel { width: 15%; overflow: hidden; }
-#navigationPanel.well { padding: 1%; }
+#navigationPanel { min-width: 200px; max-width: 350px; width: auto; padding: 1%; }
 
 #navigationCurrent { font-weight: bold; font-size: 1.1em; }
 
@@ -16,4 +15,4 @@
 #navigationPanel .form-horizontal .control-label { float: none; text-align: left; }
 #navigationPanel form select { width: 100%; }
 
-#navigationContent { float: right; width: 82%; }
+#navigationContent { float: none; width: auto; overflow: hidden; }
