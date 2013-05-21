@@ -15,7 +15,7 @@ class Inventory_ProjectController extends Core_Controller_Ajax
 {
     /**
      * Redirection sur la liste.
-     * @Secure("public")
+     * @Secure("loggedIn")
      */
     public function indexAction()
     {
