@@ -49,13 +49,16 @@ class Bootstrap extends Core_Bootstrap
             $frontController->addControllerDirectory($moduleRoot . '/controllers', strtolower($module));
 
             // Bootstrap
-            require_once $moduleRoot . '/Bootstrap.php';
-            $bootstrapName = $module . '_Bootstrap';
-            /** @var $bootstrap Core_Package_Bootstrap */
-            $bootstrap = new $bootstrapName($this->_application);
-            $bootstrap->setRun($this->_run);
-            $bootstrap->bootstrap();
-            $this->_run = $bootstrap->getRun();
+            $bootstrapFile = $moduleRoot . '/Bootstrap.php';
+            if (file_exists($bootstrapFile)) {
+                require_once $bootstrapFile;
+                $bootstrapName = $module . '_Bootstrap';
+                /** @var $bootstrap Core_Package_Bootstrap */
+                $bootstrap = new $bootstrapName($this->_application);
+                $bootstrap->setRun($this->_run);
+                $bootstrap->bootstrap();
+                $this->_run = $bootstrap->getRun();
+            }
 
             // Doctrine Mappers
             $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
