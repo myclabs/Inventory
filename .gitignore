@@ -7,4 +7,3 @@ composer.lock
 
 application/configs/application.ini
 public/.htaccess
-public/yui/*
