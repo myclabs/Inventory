@@ -13,7 +13,11 @@ class IndexController extends Core_Controller
      */
     public function indexAction()
     {
-        $this->_redirect("index/accueil");
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $this->_redirect("inventory/project/");
+        }
+        $this->_redirect("user/action/login");
     }
 
     /**
