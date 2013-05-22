@@ -1,7 +1,7 @@
 <?php
 /**
- * @author hugo.charbonniere
- * @author yoann.croizer
+ * @author  hugo.charbonniere
+ * @author  yoann.croizer
  * @package Unit
  *
  */
@@ -19,8 +19,6 @@ class Unit_Script_Populate_extendedUnit
     public function run()
     {
         $this->generateExtendedUnit();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->flush();
     }
 
     /**
@@ -28,51 +26,58 @@ class Unit_Script_Populate_extendedUnit
      */
     protected function generateExtendedUnit()
     {
-     $xml = new DOMDocument();
-        $xml->load(__DIR__ . "/data/extension.xml");
-        foreach ($xml->getElementsByTagName('quantity') as $xmlPhysicalQuantity) {
-            $this->parsePhysicalQuantity($xmlPhysicalQuantity);
-        }
+        $massPhysicalQuantity = Unit_Model_PhysicalQuantity::loadByRef('m');
+        $this->parsePhysicalQuantity($massPhysicalQuantity);
     }
 
     /**
      * Parcours le fichier xml des unités étendues
-     * @param DOMElement $element
-     */
-    protected function parsePhysicalQuantity(DOMElement $element)
-    {
-        foreach ($element->getElementsByTagName('extension') as $xmlExtensions) {
-            $physicalQuantity = Unit_Model_PhysicalQuantity::loadByRef($element->getAttribute('ref'));
-            $this->parseExtendedUnit($xmlExtensions, $physicalQuantity);
-        }
-    }
-
-    /**
-     * Parcours le fichier xml des unités étendues
-     * @param DOMElement $element
      * @param Unit_Model_PhysicalQuantity $physicalQuantity
      */
-    protected function parseExtendedUnit(DOMElement $element, $physicalQuantity)
+    protected function parsePhysicalQuantity(Unit_Model_PhysicalQuantity $physicalQuantity)
     {
-        $extension = Unit_Model_Unit_Extension::loadByRef($element->getAttribute('ref'));
+        foreach (Unit_Model_Unit_Extension::loadList() as $extension) {
+            $this->parseExtendedUnit($extension, $physicalQuantity);
+        }
+    }
 
-        $queryPhysicalQuantity = new Core_Model_Query();
-        $queryPhysicalQuantity->filter->addCondition(Unit_Model_Unit_Standard::QUERY_PHYSICALQUANTITY, $physicalQuantity);
-        foreach (Unit_Model_Unit_Standard::loadList($queryPhysicalQuantity) as $standardUnit) {
+    /**
+     * Parcours le fichier xml des unités étendues
+     * @param Unit_Model_Unit_Extension   $extension
+     * @param Unit_Model_PhysicalQuantity $physicalQuantity
+     */
+    protected function parseExtendedUnit(Unit_Model_Unit_Extension $extension,
+                                         Unit_Model_PhysicalQuantity $physicalQuantity
+    ) {
+        $entityManagers = Zend_Registry::get('EntityManagers');
+
+        $query = new Core_Model_Query();
+        $query->filter->addCondition(Unit_Model_Unit_Standard::QUERY_PHYSICALQUANTITY,
+                                                     $physicalQuantity);
+
+        foreach (Unit_Model_Unit_Standard::loadList($query) as $standardUnit) {
+            /** @var Unit_Model_Unit_Standard $standardUnit */
+
             $extendedUnit = new Unit_Model_Unit_Extended();
-            $extendedUnit->setRef($standardUnit->getRef().'_'.$element->getAttribute('ref'));
-            $extendedUnit->setName(
-                    $standardUnit->getName().' '.$element->getElementsByTagName('name')->item(0)->firstChild->nodeValue
-                );
-            $extendedUnit->setSymbol(
-                    $standardUnit->getSymbol().' '.$element->getElementsByTagName('symbol')->item(0)->firstChild->nodeValue
-                );
-            $extendedUnit->setMultiplier(
-                    $standardUnit->getMultiplier() * $element->getElementsByTagName('multiplier')->item(0)->firstChild->nodeValue
-                );
+            $extendedUnit->setRef($standardUnit->getRef() . '_' . $extension->getRef());
+            $extendedUnit->setMultiplier($standardUnit->getMultiplier() * $extension->getMultiplier());
             $extendedUnit->setExtension($extension);
             $extendedUnit->setStandardUnit($standardUnit);
-            $extendedUnit->save();
+
+            foreach (['fr', 'en'] as $lang) {
+                $locale = Core_Locale::load($lang);
+
+                $standardUnit->reloadWithLocale($locale);
+                $extension->reloadWithLocale($locale);
+
+                $extendedUnit->setTranslationLocale($locale);
+
+                $extendedUnit->setName($standardUnit->getName() . ' ' . $extension->getName());
+                $extendedUnit->setSymbol($standardUnit->getSymbol() . ' ' . $extension->getSymbol());
+
+                $extendedUnit->save();
+                $entityManagers['unit']->flush();
+            }
         }
     }
 }

@@ -40,11 +40,49 @@ class Unit_Script_Populate_Extension
      */
     protected function parseExtension(DOMElement $element)
     {
+        $entityManagers = Zend_Registry::get('EntityManagers');
+
         $extension = new Unit_Model_Unit_Extension();
         $extension->setRef($element->getAttribute('ref'));
-        $extension->setName($element->getElementsByTagName('name')->item(0)->firstChild->nodeValue);
-        $extension->setSymbol($element->getElementsByTagName('symbol')->item(0)->firstChild->nodeValue);
         $extension->setMultiplier($element->getElementsByTagName('multiplier')->item(0)->firstChild->nodeValue);
-        $extension->save();
+
+        // Label & Symbol
+        foreach (['fr', 'en'] as $lang) {
+            // Label
+            $found = false;
+            foreach ($element->getElementsByTagName('name')->item(0)->childNodes as $node) {
+                if (trim($node->nodeName) == $lang) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                echo "WARN: not found $lang traduction for name";
+                continue;
+            }
+            /** @var $node DOMNode */
+            $name = trim($node->nodeValue);
+
+            // Symbol
+            $found = false;
+            foreach ($element->getElementsByTagName('symbol')->item(0)->childNodes as $node) {
+                if (trim($node->nodeName) == $lang) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                echo "WARN: not found $lang traduction for symbol";
+                continue;
+            }
+            /** @var $node DOMNode */
+            $symbol = trim($node->nodeValue);
+
+            $extension->setTranslationLocale(Core_Locale::load($lang));
+            $extension->setName($name);
+            $extension->setSymbol($symbol);
+            $extension->save();
+            $entityManagers['unit']->flush();
+        }
     }
 }

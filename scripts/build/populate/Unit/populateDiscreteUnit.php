@@ -40,11 +40,25 @@ class Unit_Script_Populate_DiscreteUnit
      */
     protected function parseDiscreteUnit(DOMElement $element)
     {
+        $entityManagers = Zend_Registry::get('EntityManagers');
+
         $discreteUnit = new Unit_Model_Unit_Discrete();
         $discreteUnit->setRef($element->getAttribute('ref'));
-        $discreteUnit->setName($element->getElementsByTagName('name')->item(0)->firstChild->nodeValue);
-        $discreteUnit->setSymbol($element->getElementsByTagName('name')->item(0)->firstChild->nodeValue);
-        $discreteUnit->save();
+
+        foreach ($element->getElementsByTagName('name')->item(0)->childNodes as $node) {
+            /** @var $node DOMNode */
+            $lang = trim($node->nodeName);
+            $value = trim($node->nodeValue);
+            if ($lang == '' || $value == '') {
+                continue;
+            }
+
+            $discreteUnit->setTranslationLocale(Core_Locale::load($lang));
+            $discreteUnit->setName($value);
+            $discreteUnit->setSymbol($value);
+            $discreteUnit->save();
+            $entityManagers['unit']->flush();
+        }
     }
 
 }

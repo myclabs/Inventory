@@ -4,10 +4,6 @@ Unit_Model_Unit_Standard:
   repositoryClass: Core_Model_Repository
   table: Unit_StandardUnit
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   fields:
     multiplier:
       type: float
