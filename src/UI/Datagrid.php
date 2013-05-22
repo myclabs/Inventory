@@ -511,6 +511,16 @@ class UI_Datagrid extends UI_Generic
     }
 
     /**
+     * Fonction qui permet de récupérer toutes les colonnes ajoutées à la datagrid.
+     *
+     * @return array
+     */
+    public function getCols()
+    {
+        return array_values(ksort($this->_cols));
+    }
+
+    /**
      * Fonction qui définit la colonne et la direction du tri par défaut dans la datagrid.
      *
      * Attention : la colonne doit avoir été ajouté avant et son nomTri doit être défini.
