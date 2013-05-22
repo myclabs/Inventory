@@ -15,8 +15,8 @@
 
     <complexType name="extension">
         <sequence>
-            <element name="name" type="string"/>
-            <element name="symbol" type="string"/>
+            <element name="name" type="tns:name"/>
+            <element name="symbol" type="tns:name"/>
             <element name="multiplier" type="float"/>
         </sequence>
         <attribute name="ref" type="tns:refType" use="required"/>
@@ -27,4 +27,11 @@
             <pattern value="([a-z0-9_-])*"/>
         </restriction>
     </simpleType>
+
+    <complexType name="name">
+        <sequence>
+            <element name="fr" type="string"/>
+            <element name="en" type="string"/>
+        </sequence>
+    </complexType>
 </schema>
