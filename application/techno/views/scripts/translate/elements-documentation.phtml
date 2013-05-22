@@ -8,8 +8,7 @@
     <div class="page-header">
         <h1><?=__('Techno', 'element', 'translate')?></h1>
     </div>
-<?
-
+<?php
 $id = 'datagrideTranslate_'.Techno_Model_Element::getAlias().'_documentation';
 $datagrid = new UI_Datagrid($id, 'datagrid_translate_elements_documentation', 'techno');
 $datagrid->automaticFiltering = false;
