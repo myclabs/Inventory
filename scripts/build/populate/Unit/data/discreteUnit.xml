@@ -7,43 +7,73 @@
     <!-- Pour toutes les conventions relatives à l'ordre entre les objets, le choix des identifiants, des symboles, et des libellés, voir specs -->
 
     <discreteUnit ref="animal">
-        <name>animal</name>
+        <name>
+            <fr>animal</fr>
+            <en>animal</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="appareil">
-        <name>appareil</name>
+        <name>
+            <fr>appareil</fr>
+            <en>appareil</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="bouteille">
-        <name>bouteille</name>
+        <name>
+            <fr>bouteille</fr>
+            <en>bottle</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="logement">
-        <name>logement</name>
+        <name>
+            <fr>logement</fr>
+            <en>housing</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="homme">
-        <name>homme</name>
+        <name>
+            <fr>homme</fr>
+            <en>man</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="machine">
-        <name>machine</name>
+        <name>
+            <fr>machine</fr>
+            <en>machine</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="occupant">
-        <name>occupant</name>
+        <name>
+            <fr>occupant</fr>
+            <en>occupant</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="passager">
-        <name>passager</name>
+        <name>
+            <fr>passager</fr>
+            <en>passenger</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="personne">
-        <name>personne</name>
+        <name>
+            <fr>personne</fr>
+            <en>person</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="repas">
-        <name>repas</name>
+        <name>
+            <fr>repas</fr>
+            <en>meal</en>
+        </name>
     </discreteUnit>
 
     <!--
@@ -51,15 +81,24 @@
     par exemple pour le formulaire "immobilisations" du projet Bolloré
     -->
     <discreteUnit ref="unite">
-        <name>unité</name>
+        <name>
+            <fr>unité</fr>
+            <en>unit</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="vehicule">
-        <name>véhicule</name>
+        <name>
+            <fr>véhicule</fr>
+            <en>vehicle</en>
+        </name>
     </discreteUnit>
 
     <discreteUnit ref="visiteur">
-        <name>visiteur</name>
+        <name>
+            <fr>visiteur</fr>
+            <en>visitor</en>
+        </name>
     </discreteUnit>
 
 </xml>
