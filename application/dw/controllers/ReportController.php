@@ -429,7 +429,7 @@ class DW_ReportController extends Core_Controller_Ajax
     {
         $this->sendJsonResponse(
             file_put_contents(
-                Core_Package_Manager::getCurrentPackage()->getPath().'/public/temp/'.$this->_getParam('name').'.png',
+                PACKAGE_PATH.'/public/temp/'.$this->_getParam('name').'.png',
                 base64_decode(explode(',', $this->_getParam('image'))[1])
             )
         );

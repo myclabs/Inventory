@@ -448,8 +448,7 @@ class Inventory_Tab_CelldetailsController extends Core_Controller
         );
 
         $this->view->specificExports = array();
-        $currentPackage = Core_Package_Manager::getCurrentPackage();
-        $specificReportsDirectoryPath = $currentPackage->getPath().'/data/specificExports/'.
+        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
             $cellDataProvider->getProject()->getKey()['id'].'/'.
             str_replace('|', '_', $orgaCell->getGranularity()->getRef()).'/';
         if (is_dir($specificReportsDirectoryPath)) {

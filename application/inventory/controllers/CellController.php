@@ -404,7 +404,7 @@ class Inventory_CellController extends Core_Controller_Ajax
             $exportUrl = null;
         }
 
-        $specificReportsDirectoryPath = Core_Package_Manager::getCurrentPackage()->getPath().'/data/specificExports/'.
+        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
             $cellDataProvider->getProject()->getKey()['id'].'/'.
             str_replace('|', '_', $orgaCell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
