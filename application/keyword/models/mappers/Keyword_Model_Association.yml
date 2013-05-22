@@ -3,12 +3,14 @@ Keyword_Model_Association:
   type: entity
   repositoryClass: Keyword_Model_Repository_Association
   table: Keyword_Association
+
   id:
     id:
       column: id
       type: integer
       generator:
         strategy: AUTO
+
   manyToOne:
     subject:
       targetEntity: Keyword_Model_Keyword
@@ -30,6 +32,7 @@ Keyword_Model_Association:
         idPredicate:
           referencedColumnName: id
       nullable : false
+
   uniqueConstraints:
     associationUniqueness:
       columns: idSubjectKeyword,idObjectKeyword,idPredicate

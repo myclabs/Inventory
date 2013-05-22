@@ -15,6 +15,8 @@ use \Doctrine\Common\Collections\ArrayCollection;
 abstract class Techno_Model_Component extends Core_Model_Entity
 {
 
+    use Core_Model_Entity_Translatable;
+
     /**
      * @var int
      */

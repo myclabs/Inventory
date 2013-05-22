@@ -3,6 +3,10 @@ Techno_Model_Family:
   repositoryClass: Techno_Model_Repository_Family
   table: Techno_Family
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   fields:
     ref:
       type: string
@@ -10,6 +14,8 @@ Techno_Model_Family:
     label:
       type: string
       nullable: true
+      gedmo:
+        - translatable
     position:
       type: integer
       nullable: false

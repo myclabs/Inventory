@@ -4,6 +4,10 @@ Classif_Model_Member:
   repositoryClass: Core_Model_Repository_Ordered
   table: Classif_Member
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       column: id
@@ -18,6 +22,8 @@ Classif_Model_Member:
     label:
       type: string
       nullable: false
+      gedmo:
+        - translatable
     position:
       type: integer
       nullable: false

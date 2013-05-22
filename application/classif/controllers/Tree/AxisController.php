@@ -1,14 +1,18 @@
 <?php
 /**
+ * Classe Classif_Tree_AxisController
+ * @author valentin.claras
  * @author sidoine.tardieu
  * @package Classif
+ * @subpackage Controller
  */
 
 use Core\Annotation\Secure;
 
 /**
+ * Classe controlleur de tree des axes.
  * @package Classif
- * UI_Controller_Datagrid
+ * @subpackage Controller
  */
 class Classif_Tree_AxisController extends UI_Controller_Tree
 {

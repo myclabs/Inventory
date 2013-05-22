@@ -4,6 +4,10 @@ Classif_Model_Indicator:
   repositoryClass: Core_Model_Repository_Ordered
   table: Classif_Indicator
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       column: id
@@ -19,6 +23,8 @@ Classif_Model_Indicator:
     label:
       type: string
       nullable: false
+      gedmo:
+        - translatable
     position:
       type: integer
       nullable: false

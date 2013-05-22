@@ -3,6 +3,10 @@ Techno_Model_Component:
   repositoryClass: Core_Model_Repository
   table: Techno_Component
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   inheritanceType: joined
   discriminatorColumn:
     name: type
@@ -24,6 +28,8 @@ Techno_Model_Component:
     documentation:
       type: text
       nullable: true
+      gedmo:
+        - translatable
     refBaseUnit:
       type: string
     refUnit:

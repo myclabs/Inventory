@@ -18,6 +18,7 @@ class Classif_Model_Indicator extends Core_Model_Entity
 {
 
     use Core_Strategy_Ordered;
+    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';

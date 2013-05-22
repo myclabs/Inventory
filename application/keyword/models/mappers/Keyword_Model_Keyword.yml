@@ -3,12 +3,18 @@ Keyword_Model_Keyword:
   type: entity
   repositoryClass: Keyword_Model_Repository_Keyword
   table: Keyword_Keyword
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       column: id
       type: integer
       generator:
         strategy: AUTO
+
   fields:
     ref:
       column: ref
@@ -21,6 +27,9 @@ Keyword_Model_Keyword:
       type: string
       length: 255
       nullable: false
+      gedmo:
+        - translatable
+
   oneToMany:
     objectAssociation:
       targetEntity: Keyword_Model_Association

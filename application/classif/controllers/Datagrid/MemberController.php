@@ -4,13 +4,15 @@
  * @author valentin.claras
  * @author cyril.perraud
  * @package Classif
+ * @subpackage Controller
  */
 
 use Core\Annotation\Secure;
 
 /**
- * Enter description here ...
+ * Classe du controller du datagrid des indicateurs
  * @package Classif
+ * @subpackage Controller
  */
 class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
 {

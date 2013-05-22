@@ -14,6 +14,9 @@
  */
 class Keyword_Model_Keyword extends Core_Model_Entity
 {
+
+    use Core_Model_Entity_Translatable;
+
     // Constantes de tri et filtres.
     const QUERY_ID = 'id';
     const QUERY_REF = 'ref';
