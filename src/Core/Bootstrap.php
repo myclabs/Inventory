@@ -381,7 +381,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Langues
         $configuration = Zend_Registry::get('configuration');
         if (isset($configuration->translation)) {
-            $languages = $configuration->translation->langs;
+            $languages = $configuration->translation->languages;
         } else {
             $languages = [];
         }
