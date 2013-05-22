@@ -473,6 +473,20 @@
         <unitSystemRef>international</unitSystemRef>
     </standardUnit>
 
+    <standardUnit ref="gwh">
+        <name>
+            <fr>gigawatt-heure</fr>
+            <en>gigawatt-hour</en>
+        </name>
+        <symbol>
+            <fr>GWh</fr>
+            <en>GWh</en>
+        </symbol>
+        <quantityRef>ml2/t2</quantityRef>
+        <multiplier>3.6e+012</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
     <standardUnit ref="tep">
         <name>
             <fr>tonne équivalent pétrole</fr>
@@ -516,6 +530,34 @@
         </symbol>
         <quantityRef>ml2/t3</quantityRef>
         <multiplier>1000</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="mw">
+        <name>
+            <fr>megawatt</fr>
+            <en>megawatt</en>
+        </name>
+        <symbol>
+            <fr>MW</fr>
+            <en>MW</en>
+        </symbol>
+        <quantityRef>ml2/t3</quantityRef>
+        <multiplier>1e+006</multiplier>
+        <unitSystemRef>international</unitSystemRef>
+    </standardUnit>
+
+    <standardUnit ref="gw">
+        <name>
+            <fr>gigawatt</fr>
+            <en>gigawatt</en>
+        </name>
+        <symbol>
+            <fr>GW</fr>
+            <en>GW</en>
+        </symbol>
+        <quantityRef>ml2/t3</quantityRef>
+        <multiplier>1e+009</multiplier>
         <unitSystemRef>international</unitSystemRef>
     </standardUnit>
 
