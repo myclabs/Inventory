@@ -36,7 +36,7 @@ class UI_View_Helper_Image extends Zend_View_Helper_Abstract
      * @param string $alt
      * @param array $attributes
      *
-     * @return string
+     * @return UI_View_Helper_Image
      */
     public function image($source, $alt, $attributes=array())
     {

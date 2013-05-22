@@ -1582,7 +1582,7 @@ class UI_Datagrid extends UI_Generic
         $broker->view->headScript()->appendFile('yui/build/datasource/datasource-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/datatable/datatable-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('yui/build/calendar/calendar.js', 'text/javascript');
+        $broker->view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
 
         UI_Form::addHeader();
 

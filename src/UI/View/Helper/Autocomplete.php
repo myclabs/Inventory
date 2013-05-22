@@ -36,7 +36,7 @@ class UI_View_Helper_Autocomplete extends Zend_View_Helper_Abstract
      * @param string $source
      * @param string $placeholder
      *
-     * @return UI_JS_AutoComplete
+     * @return UI_View_Helper_Autocomplete
      */
     public function autocomplete($id, $source, $placeholder=null)
     {
@@ -50,7 +50,7 @@ class UI_View_Helper_Autocomplete extends Zend_View_Helper_Abstract
      *
      * @param int $minimumInputLength
      *
-     * @return UI_JS_AutoComplete
+     * @return UI_View_Helper_Autocomplete
      */
     public function minimumInputLength($minimumInputLength)
     {
@@ -63,7 +63,7 @@ class UI_View_Helper_Autocomplete extends Zend_View_Helper_Abstract
      *
      * @param bool $multiple
      *
-     * @return UI_JS_AutoComplete
+     * @return UI_View_Helper_Autocomplete
      */
     public function multipleSelection($multiple)
     {
@@ -77,7 +77,7 @@ class UI_View_Helper_Autocomplete extends Zend_View_Helper_Abstract
      * @param string $attributeName
      * @param string $attributeValue
      *
-     * @return UI_JS_AutoComplete
+     * @return UI_View_Helper_Autocomplete
      */
     public function addAttribute($attributeName, $attributeValue)
     {
@@ -91,7 +91,7 @@ class UI_View_Helper_Autocomplete extends Zend_View_Helper_Abstract
      * @param string $optionName
      * @param string $optionValue
      *
-     * @return UI_JS_AutoComplete
+     * @return UI_View_Helper_Autocomplete
      */
     public function addOption($optionName, $optionValue)
     {

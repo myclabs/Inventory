@@ -36,7 +36,7 @@ class UI_View_Helper_Collapse extends Zend_View_Helper_Abstract
      * @param string $body
      * @param array $attributes
      *
-     * @return string
+     * @return UI_View_Helper_Collapse
      */
     public function collapse($id, $title, $body, $attributes=array())
     {
@@ -50,7 +50,7 @@ class UI_View_Helper_Collapse extends Zend_View_Helper_Abstract
     /**
      * Définie le Collapse comme étant fermé par défaut.
      *
-     * @return string
+     * @return UI_View_Helper_Collapse
      */
     public function collapsed()
     {
