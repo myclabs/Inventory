@@ -513,7 +513,7 @@ class UI_Datagrid extends UI_Generic
     /**
      * Fonction qui permet de récupérer toutes les colonnes ajoutées à la datagrid.
      *
-     * @return array
+     * @return UI_Datagrid_Col_Generic[]
      */
     public function getCols()
     {
