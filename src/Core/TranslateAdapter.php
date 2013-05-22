@@ -282,16 +282,15 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
             require_once 'Zend/Translate/Exception.php';
             throw new Zend_Translate_Exception("La langue ({$locale}) n'existe pas");
         }
-        $localeFound = true;
-//         $localeFound = false;
-//         foreach ($this->_loadedData as $file => $datas) {
-//             foreach ($datas as $dataLocale => $translates) {
-//                 if ($dataLocale == $locale) {
-//                     $localeFound = true;
-//                     break 2;
-//                 }
-//             }
-//         }
+
+        $localeFound = false;
+        $authorizedLocales = Zend_Registry::get('languages');
+        if (in_array($locale, $authorizedLocales)) {
+            $localeFound = true;
+        } else if (in_array(explode('_', $locale)[0], $authorizedLocales)) {
+            $locale = explode('_', $locale)[0];
+            $localeFound = true;
+        }
 
         if (!$localeFound) {
             if (!$this->_options['disableNotices']) {
@@ -301,6 +300,7 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
                     trigger_error("Aucune traduction trouvée dans la langue '{$locale}'.", E_USER_NOTICE);
                 }
             }
+            $locale = Zend_Registry::get('configuration')->translation->fallback;
         }
 
         if ($this->_options['locale'] != $locale) {

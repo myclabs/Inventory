@@ -37,6 +37,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'Doctrine',
                 'DefaultEntityManager',
                 'WorkDispatcher',
+                'Translations',
                 // Il faut initialiser le front controller pour que l'ajout de dossiers
                 // de controleurs soit pris en compte
             );
@@ -381,7 +382,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Langues
         $configuration = Zend_Registry::get('configuration');
         if (isset($configuration->translation)) {
-            $languages = $configuration->translation->languages;
+            $languages = $configuration->translation->languages->toArray();
         } else {
             $languages = [];
         }
