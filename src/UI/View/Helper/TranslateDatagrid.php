@@ -42,7 +42,7 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      */
     public function translateDatagrid($className, $attribute, $controller, $module = null, $editable = true)
     {
-        $id = 'datagrideTranslate_' . $className::getAlias() . '_' . $attribute;
+        $id = 'datagridTranslate_' . $className::getAlias() . '_' . $attribute;
         $this->_datagrid = new UI_Datagrid($id, $controller, $module);
         $this->_datagrid->automaticFiltering = false;
 
