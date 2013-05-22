@@ -4,6 +4,10 @@ Unit_Model_Unit_Extension:
   repositoryClass: Core_Model_Repository
   table: Unit_UnitExtension
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       type: integer
