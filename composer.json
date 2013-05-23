@@ -24,7 +24,7 @@
 		"doctrine/orm": "2.3.*",
 		"doctrine/annotations": "1.*",
 		"doctrine/common": "dev-ChainDriverFix as 2.3.0",
-		"gedmo/doctrine-extensions": "dev-Issue-266",
+		"gedmo/doctrine-extensions": "dev-master",
 		"symfony/yaml": "*",
 		"pear/console_commandline": "dev-trunk",
 		"netcarver/textile": "3.5.*",
@@ -38,10 +38,6 @@
 		{
 			"type": "git",
 			"url": "git://github.com/myclabs/common.git"
-		},
-		{
-			"type": "git",
-			"url": "git://github.com/mnapoli/DoctrineExtensions.git"
 		},
 		{
 			"type": "git",

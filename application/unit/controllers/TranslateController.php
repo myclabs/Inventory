@@ -15,7 +15,7 @@ class Unit_TranslateController extends Core_Controller
 {
 
     /**
-     * @Secure("editTechno")
+     * @Secure("viewUnit")
      */
     public function translationsAction()
     {
