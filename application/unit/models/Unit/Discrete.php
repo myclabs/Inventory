@@ -46,7 +46,7 @@ class Unit_Model_Unit_Discrete extends Unit_Model_Unit
 
     /**
      * Renvoi l'unité de reference (elle-meme).
-     * @return Unite_Model_Unit_UniteDiscrete
+     * @return Unit_Model_Unit_Discrete
      */
     public function getReferenceUnit()
     {
@@ -56,6 +56,7 @@ class Unit_Model_Unit_Discrete extends Unit_Model_Unit
     /**
      * Renvoi le facteur de Conversion de l'unité
      * @param Unit_Model_Unit $unit
+     * @throws Core_Exception_InvalidArgument Units need to be the same
      * @return int 1
      */
     public function getConversionFactor(Unit_Model_Unit $unit)
