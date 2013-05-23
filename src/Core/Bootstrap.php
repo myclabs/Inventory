@@ -393,6 +393,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * Crée l'entity manager utilisé par défaut. Méthode utilise pour recréer un entity manager
      * si celui-ci se ferme à cause d'une exception
+     * @param mixed $connectionSettings
      * @return Core_ORM_EntityManager
      */
     public function createDefaultEntityManager($connectionSettings = null)
