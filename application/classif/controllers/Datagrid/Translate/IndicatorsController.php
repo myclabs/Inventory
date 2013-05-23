@@ -16,6 +16,15 @@ use Core\Annotation\Secure;
 class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Datagrid
 {
     /**
+     * Désactivation du fallback des traductions.
+     */
+    public function init()
+    {
+        parent::init();
+        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
+    }
+
+    /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
      * @Secure("viewClassif")

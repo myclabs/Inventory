@@ -16,6 +16,15 @@ use Core\Annotation\Secure;
 class Keyword_Datagrid_Translate_Predicates_ReverselabelController extends UI_Controller_Datagrid
 {
     /**
+     * Désactivation du fallback des traductions.
+     */
+    public function init()
+    {
+        parent::init();
+        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
+    }
+
+    /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
      * @Secure("viewKeyword")

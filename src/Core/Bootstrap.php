@@ -425,6 +425,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getId());
         $translatableListener->setDefaultLocale('fr');
         $translatableListener->setTranslationFallback(true);
+        Zend_Registry::set('doctrineTranslate', $translatableListener);
 
         $em->getEventManager()->addEventSubscriber($translatableListener);
 

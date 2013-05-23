@@ -16,6 +16,15 @@ use Core\Annotation\Secure;
 class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Controller_Datagrid
 {
     /**
+     * Désactivation du fallback des traductions.
+     */
+    public function init()
+    {
+        parent::init();
+        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
+    }
+
+    /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
      * @Secure("viewTechno")
@@ -30,14 +39,20 @@ class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Cont
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);
                 $family->reloadWithLocale($locale);
+                $brutText = Core_Tools::removeTextileMarkUp($family->getDocumentation());
+                if (empty($brutText)) {
+                    $brutText = __('UI', 'translate', 'empty');
+                }
                 $data[$language] = $this->cellLongText(
                     'techno/datagrid_translate_families_documentation/view/id/'.$family->getId().'/locale/'.$language,
-                    'techno/datagrid_translate_families_documentation/edit/id/'.$family->getId().'/locale/'.$language
+                    'techno/datagrid_translate_families_documentation/edit/id/'.$family->getId().'/locale/'.$language,
+                    substr($brutText, 0, 50).((strlen($brutText) > 50) ? __('UI', 'translate', '…') : ''),
+                    'zoom-in'
                 );
             }
             $this->addline($data);
         }
-        $this->totalFamilies = Techno_Model_Family::countTotal($this->request);
+        $this->totalElements = Techno_Model_Family::countTotal($this->request);
 
         $this->send();
     }

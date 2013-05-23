@@ -16,6 +16,15 @@ use Core\Annotation\Secure;
 class Techno_Datagrid_Translate_Elements_DocumentationController extends UI_Controller_Datagrid
 {
     /**
+     * Désactivation du fallback des traductions.
+     */
+    public function init()
+    {
+        parent::init();
+        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
+    }
+
+    /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
      * @Secure("viewTechno")
@@ -30,9 +39,15 @@ class Techno_Datagrid_Translate_Elements_DocumentationController extends UI_Cont
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);
                 $element->reloadWithLocale($locale);
+                $brutText = Core_Tools::removeTextileMarkUp($element->getDocumentation());
+                if (empty($brutText)) {
+                    $brutText = __('UI', 'translate', 'empty');
+                }
                 $data[$language] = $this->cellLongText(
                     'techno/datagrid_translate_elements_documentation/view/id/'.$element->getId().'/locale/'.$language,
-                    'techno/datagrid_translate_elements_documentation/edit/id/'.$element->getId().'/locale/'.$language
+                    'techno/datagrid_translate_elements_documentation/edit/id/'.$element->getId().'/locale/'.$language,
+                    substr($brutText, 0, 50).((strlen($brutText) > 50) ? __('UI', 'translate', '…') : ''),
+                    'zoom-in'
                 );
             }
             $this->addline($data);

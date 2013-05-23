@@ -145,10 +145,19 @@ abstract class Core_Tools
     public static function textile($text)
     {
         if (self::$textile === null) {
-//            require_once(LIBRARY_PATH.'/External/Textile/classTextile.php');
             self::$textile = new Textile\Parser();
         }
         return self::$textile->textileThis($text);
+    }
+
+    /**
+     * Retire les balises textiles d'une chaîne texte.
+     * @param string $text
+     * @return string
+     */
+    public static function removeTextileMarkUp($text)
+    {
+        return $text;
     }
 
     /**
