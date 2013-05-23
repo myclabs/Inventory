@@ -27,7 +27,7 @@ class Techno_Datagrid_Translate_Families_LabelController extends UI_Controller_D
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("viewTechno")
+     * @Secure("editTechno")
      */
     public function getelementsAction()
     {

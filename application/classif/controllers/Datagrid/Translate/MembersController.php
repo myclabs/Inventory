@@ -27,7 +27,7 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("viewClassif")
+     * @Secure("editClassif")
      */
     public function getelementsAction()
     {

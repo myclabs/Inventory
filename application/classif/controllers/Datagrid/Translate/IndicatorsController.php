@@ -27,7 +27,7 @@ class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Data
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("viewClassif")
+     * @Secure("editClassif")
      */
     public function getelementsAction()
     {

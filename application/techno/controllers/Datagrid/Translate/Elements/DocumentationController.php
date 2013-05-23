@@ -27,7 +27,7 @@ class Techno_Datagrid_Translate_Elements_DocumentationController extends UI_Cont
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("viewTechno")
+     * @Secure("editTechno")
      */
     public function getelementsAction()
     {

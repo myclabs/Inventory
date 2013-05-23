@@ -27,7 +27,7 @@ class Keyword_Datagrid_Translate_Predicates_LabelController extends UI_Controlle
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("viewKeyword")
+     * @Secure("editKeyword")
      */
     public function getelementsAction()
     {

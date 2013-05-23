@@ -27,7 +27,7 @@ class Keyword_Datagrid_Translate_Predicates_ReverselabelController extends UI_Co
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("viewKeyword")
+     * @Secure("editKeyword")
      */
     public function getelementsAction()
     {
