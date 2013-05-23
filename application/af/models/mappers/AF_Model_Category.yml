@@ -3,6 +3,10 @@ AF_Model_Category:
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Category
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       type: integer
@@ -12,6 +16,8 @@ AF_Model_Category:
   fields:
     label:
       type: string
+      gedmo:
+        - translatable
     position:
       type: integer
       nullable: false

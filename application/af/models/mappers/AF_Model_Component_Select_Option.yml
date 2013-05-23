@@ -3,6 +3,10 @@ AF_Model_Component_Select_Option:
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component_Select_Option
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       type: integer
@@ -16,6 +20,8 @@ AF_Model_Component_Select_Option:
     label:
       type: string
       nullable: true
+      gedmo:
+        - translatable
     visible:
       type: boolean
       nullable: false

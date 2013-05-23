@@ -19,6 +19,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
 {
 
     use Core_Strategy_Ordered;
+    use Core_Model_Entity_Translatable;
 
     // Filtres pour les requetes
     const QUERY_AF = 'af';

@@ -17,6 +17,7 @@ class AF_Model_Component_Select_Option extends Core_Model_Entity
 {
 
     use Core_Strategy_Ordered;
+    use Core_Model_Entity_Translatable;
 
     // Constant used for query sorting and filtering
     const QUERY_SELECT = 'select';

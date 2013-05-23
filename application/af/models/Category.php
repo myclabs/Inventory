@@ -15,6 +15,7 @@ class AF_Model_Category extends Core_Model_Entity
 {
 
     use Core_Strategy_Ordered;
+    use Core_Model_Entity_Translatable;
 
     const QUERY_POSITION = 'position';
     const QUERY_PARENT_CATEGORY = 'parentCategory';

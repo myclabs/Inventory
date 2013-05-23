@@ -18,6 +18,7 @@ class AF_Model_AF extends Core_Model_Entity
 {
 
     use Core_Strategy_Ordered;
+    use Core_Model_Entity_Translatable;
 
     const ALGO_MAIN_REF = 'main';
 

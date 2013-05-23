@@ -3,6 +3,10 @@ AF_Model_Component:
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   inheritanceType: joined
   discriminatorColumn:
     name: type_component
@@ -32,9 +36,13 @@ AF_Model_Component:
     label:
       type: string
       nullable: true
+      gedmo:
+        - translatable
     help:
       type: text
       nullable: true
+      gedmo:
+        - translatable
     visible:
       type: boolean
       nullable: false

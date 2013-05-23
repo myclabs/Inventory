@@ -15,6 +15,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class Algo_Model_Numeric extends Algo_Model_Algo
 {
 
+    use Core_Model_Entity_Translatable;
+
     /**
      * @var string
      */
