@@ -6,21 +6,8 @@
  */
 ?>
     <div class="page-header">
-        <h1><?=__('AF', 'component', 'translate')?></h1>
+        <h1><?= __('AF', 'component', 'translate') ?></h1>
     </div>
 <?php
-$id = 'datagrideTranslate_AF_Model_Family_help';
-$datagrid = new UI_Datagrid($id, 'datagrid_translate_components_help', 'af');
-$datagrid->automaticFiltering = false;
-
-$identifierColumn = new UI_Datagrid_Col_Text('identifier', __('UI', 'translate', 'identifier'));
-$identifierColumn->editable = false;
-$datagrid->addCol($identifierColumn);
-
-foreach (Zend_Registry::get('languages') as $language) {
-    $languageColumn = new UI_Datagrid_Col_LongText($language, __('UI', 'translate', 'language'.$language));
-    $languageColumn->editable = true;
-    $datagrid->addCol($languageColumn);
-}
-
-$datagrid->display();
+echo $this->translateDatagrid('AF_Model_Family', 'help', 'datagrid_translate_components_help', 'af')
+    ->addIdentifierCol()->addLanguagesLongTextCols();

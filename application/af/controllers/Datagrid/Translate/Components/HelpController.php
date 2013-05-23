@@ -67,7 +67,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
         $component = AF_Model_Component::load($this->update['index']);
         $component->setTranslationLocale(Core_Locale::load($this->update['column']));
         $component->setHelp($this->update['value']);
-        $this->data = $component->getLabel();
+        $this->data = $component->getHelp();
 
         $this->send(true);
     }
@@ -75,17 +75,17 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("viewAF")
+     * @Secure("editAF")
      */
     public function viewAction()
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $family = Techno_Model_Family::load($this->_getParam('id'));
+        $component = AF_Model_Component::load($this->_getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
-        $family->reloadWithLocale($locale);
+        $component->reloadWithLocale($locale);
 
-        echo Core_Tools::textile($family->getDocumentation());
+        echo Core_Tools::textile($component->getHelp());
     }
 
     /**
@@ -97,10 +97,10 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $family = Techno_Model_Family::load($this->_getParam('id'));
+        $component = AF_Model_Component::load($this->_getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
-        $family->reloadWithLocale($locale);
+        $component->reloadWithLocale($locale);
 
-        echo $family->getDocumentation();
+        echo $component->getHelp();
     }
 }

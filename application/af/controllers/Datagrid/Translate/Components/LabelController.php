@@ -13,7 +13,7 @@ use Core\Annotation\Secure;
  * @package AF
  * @subpackage Controller
  */
-class AF_Datagrid_Translate_ComponentsController extends UI_Controller_Datagrid
+class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Datagrid
 {
     /**
      * Désactivation du fallback des traductions.
