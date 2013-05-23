@@ -271,36 +271,13 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
     public function setLocale($locale)
     {
         if (($locale === "auto") || ($locale === null)) {
-            $this->_automatic = true;
+            $locale = Core_Locale::loadDefault()->getId();
         } else {
-            $this->_automatic = false;
-        }
-
-        try {
-            $locale = Zend_Locale::findLocale($locale);
-        } catch (Zend_Locale_Exception $e) {
-            require_once 'Zend/Translate/Exception.php';
-            throw new Zend_Translate_Exception("La langue ({$locale}) n'existe pas");
-        }
-
-        $localeFound = false;
-        $authorizedLocales = Zend_Registry::get('languages');
-        if (in_array($locale, $authorizedLocales)) {
-            $localeFound = true;
-        } else if (in_array(explode('_', $locale)[0], $authorizedLocales)) {
-            $locale = explode('_', $locale)[0];
-            $localeFound = true;
-        }
-
-        if (!$localeFound) {
-            if (!$this->_options['disableNotices']) {
-                if ($this->_options['log']) {
-                    $this->_options['log']->notice("Aucune traduction trouvée dans la langue '{$locale}'.");
-                } else {
-                    trigger_error("Aucune traduction trouvée dans la langue '{$locale}'.", E_USER_NOTICE);
-                }
+            try {
+                $locale = Core_Locale::load($locale)->getId();
+            } catch (Core_Exception_InvalidArgument $e) {
+                $locale = Core_Locale::loadDefault()->getId();
             }
-            $locale = Zend_Registry::get('configuration')->translation->fallback;
         }
 
         if ($this->_options['locale'] != $locale) {

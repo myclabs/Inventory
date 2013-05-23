@@ -51,8 +51,8 @@ class UI_Form_Element_Pattern_Date extends UI_Form_Element_Text
     {
         $script = '';
 
-        $days = Zend_Locale_Data::getList(Core_Locale::loadDefault()->id, 'days');
-        $weekInfos = Zend_Locale_Data::getList(Core_Locale::loadDefault()->id, 'week');
+        $days = Zend_Locale_Data::getList(Core_Locale::loadDefault()->getId(), 'days');
+        $weekInfos = Zend_Locale_Data::getList(Core_Locale::loadDefault()->getId(), 'week');
         $weekStart = ((int) $days['format']['narrow'][$weekInfos['firstDay']]) - 1;
 
         //@todo Date : Trouver un moyen de récupérer le format en fonction de la locale.
