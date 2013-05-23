@@ -30,6 +30,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'Autoloader',
                 'UTF8',
                 'Configuration',
+                'Translations',
                 'ErrorLog',
                 'ErrorHandler',
                 'FrontController',
@@ -37,7 +38,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'Doctrine',
                 'DefaultEntityManager',
                 'WorkDispatcher',
-                'Translations',
                 // Il faut initialiser le front controller pour que l'ajout de dossiers
                 // de controleurs soit pris en compte
             );
@@ -54,14 +54,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         require PACKAGE_PATH . '/vendor/autoload.php';
         Core_Autoloader::getInstance()->register();
-    }
-
-    /**
-     * Place le bootstrap dans le registry pour être accessible dans les TestCase
-     */
-    protected function _initBootstrapInRegistry()
-    {
-        Zend_Registry::set('bootstrap', $this);
     }
 
     /**
@@ -240,6 +232,111 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
+     * Crée l'entity manager utilisé par défaut. Méthode utilise pour recréer un entity manager
+     * si celui-ci se ferme à cause d'une exception
+     * @return Core_ORM_EntityManager
+     */
+    public function createDefaultEntityManager($connectionSettings = null)
+    {
+        if ($connectionSettings == null) {
+            // Récupération de la configuration de la connexion dans l'application.ini
+            $connectionSettings = Zend_Registry::get('configuration')->doctrine->default->connection;
+        }
+
+        $connectionArray = array(
+            'driver'        => $connectionSettings->driver,
+            'user'          => $connectionSettings->user,
+            'password'      => $connectionSettings->password,
+            'dbname'        => $connectionSettings->dbname,
+            'host'          => $connectionSettings->host,
+            'port'          => $connectionSettings->port,
+            'driverOptions' => array(
+                1002 => 'SET NAMES utf8'
+            ),
+        );
+
+        /* @var $doctrineConfig Doctrine\ORM\Configuration */
+        $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
+
+        // Création de l'EntityManager depuis la configuration de doctrine.
+        $em = Core_ORM_EntityManager::create($connectionArray, $doctrineConfig);
+
+        // Configuration des extensions doctrine
+        $translatableListener = new Gedmo\Translatable\TranslatableListener();
+        $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
+        $translatableListener->setDefaultLocale('fr');
+        $translatableListener->setTranslationFallback(true);
+        Zend_Registry::set('doctrineTranslate', $translatableListener);
+
+        $em->getEventManager()->addEventSubscriber($translatableListener);
+
+        return $em;
+    }
+
+    /**
+     * Work dispatcher
+     */
+    protected function _initWorkDispatcher()
+    {
+        // Détermine si on utilise gearman
+        $configuration = Zend_Registry::get('configuration');
+        if (isset($configuration->gearman) && isset($configuration->gearman->enabled)) {
+            $useGearman = (bool) $configuration->gearman->enabled;
+        } else {
+            $useGearman = true;
+        }
+        $useGearman = $useGearman && extension_loaded('gearman');
+
+        if ($useGearman) {
+            $workDispatcher = new Core_Work_GearmanDispatcher();
+        } else {
+            $workDispatcher = new Core_Work_SimpleDispatcher();
+        }
+        Zend_Registry::set('workDispatcher', $workDispatcher);
+
+        // Register workers
+        $workDispatcher->registerWorker(new Core_Work_ServiceCall_Worker());
+    }
+
+    /**
+     * Traductions
+     */
+    protected function _initTranslations()
+    {
+        // Langues
+        $configuration = Zend_Registry::get('configuration');
+        if (isset($configuration->translation)) {
+            $languages = $configuration->translation->languages->toArray();
+        } else {
+            $languages = [];
+        }
+
+        Zend_Registry::set('languages', $languages);
+    }
+
+    /**
+     * Session namespace
+     */
+    protected function _initSessionNamespace()
+    {
+        $auth = Zend_Auth::getInstance();
+        $name = Zend_Registry::get('applicationName');
+        if ($name == '') {
+            $configuration = Zend_Registry::get('configuration');
+            $name = $configuration->sessionStorage->name;
+        }
+        $auth->setStorage(new Zend_Auth_Storage_Session($name));
+    }
+
+    /**
+     * Place le bootstrap dans le registry pour être accessible dans les TestCase
+     */
+    protected function _initBootstrapInRegistry()
+    {
+        Zend_Registry::set('bootstrap', $this);
+    }
+
+    /**
      * Définition du doctype du document.
      */
     protected function _initDocType()
@@ -247,6 +344,15 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->bootstrap('View');
         $view = $this->getResource('View');
         $view->doctype('HTML5');
+    }
+
+    /**
+     * Enregistre les plugins de Core.
+     */
+    protected function _initPluginCore()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin(new Core_Plugin_Flush());
     }
 
     /**
@@ -259,15 +365,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //  Car Core n'est pas un module.
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH.'/src/View/Helper', 'Core_View_Helper');
-    }
-
-    /**
-     * Enregistre les plugins de Core.
-     */
-    protected function _initPluginCore()
-    {
-        $front = Zend_Controller_Front::getInstance();
-        $front->registerPlugin(new Core_Plugin_Flush());
     }
 
     /**
@@ -333,104 +430,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 )
             );
         }
-    }
-
-    /**
-     * Work dispatcher
-     */
-    protected function _initWorkDispatcher()
-    {
-        // Détermine si on utilise gearman
-        $configuration = Zend_Registry::get('configuration');
-        if (isset($configuration->gearman) && isset($configuration->gearman->enabled)) {
-            $useGearman = (bool) $configuration->gearman->enabled;
-        } else {
-            $useGearman = true;
-        }
-        $useGearman = $useGearman && extension_loaded('gearman');
-
-        if ($useGearman) {
-            $workDispatcher = new Core_Work_GearmanDispatcher();
-        } else {
-            $workDispatcher = new Core_Work_SimpleDispatcher();
-        }
-        Zend_Registry::set('workDispatcher', $workDispatcher);
-
-        // Register workers
-        $workDispatcher->registerWorker(new Core_Work_ServiceCall_Worker());
-    }
-
-    /**
-     * Session namespace
-     */
-    protected function _initSessionNamespace()
-    {
-        $auth = Zend_Auth::getInstance();
-        $name = Zend_Registry::get('applicationName');
-        if ($name == '') {
-            $configuration = Zend_Registry::get('configuration');
-            $name = $configuration->sessionStorage->name;
-        }
-        $auth->setStorage(new Zend_Auth_Storage_Session($name));
-    }
-
-    /**
-     * Traductions
-     */
-    protected function _initTranslations()
-    {
-        // Langues
-        $configuration = Zend_Registry::get('configuration');
-        if (isset($configuration->translation)) {
-            $languages = $configuration->translation->languages->toArray();
-        } else {
-            $languages = [];
-        }
-
-        Zend_Registry::set('languages', $languages);
-    }
-
-    /**
-     * Crée l'entity manager utilisé par défaut. Méthode utilise pour recréer un entity manager
-     * si celui-ci se ferme à cause d'une exception
-     * @param mixed $connectionSettings
-     * @return Core_ORM_EntityManager
-     */
-    public function createDefaultEntityManager($connectionSettings = null)
-    {
-        if ($connectionSettings == null) {
-            // Récupération de la configuration de la connexion dans l'application.ini
-            $connectionSettings = Zend_Registry::get('configuration')->doctrine->default->connection;
-        }
-
-        $connectionArray = array(
-            'driver'        => $connectionSettings->driver,
-            'user'          => $connectionSettings->user,
-            'password'      => $connectionSettings->password,
-            'dbname'        => $connectionSettings->dbname,
-            'host'          => $connectionSettings->host,
-            'port'          => $connectionSettings->port,
-            'driverOptions' => array(
-                1002 => 'SET NAMES utf8'
-            ),
-        );
-
-        /* @var $doctrineConfig Doctrine\ORM\Configuration */
-        $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
-
-        // Création de l'EntityManager depuis la configuration de doctrine.
-        $em = Core_ORM_EntityManager::create($connectionArray, $doctrineConfig);
-
-        // Configuration des extensions doctrine
-        $translatableListener = new Gedmo\Translatable\TranslatableListener();
-        $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getId());
-        $translatableListener->setDefaultLocale('fr');
-        $translatableListener->setTranslationFallback(true);
-        Zend_Registry::set('doctrineTranslate', $translatableListener);
-
-        $em->getEventManager()->addEventSubscriber($translatableListener);
-
-        return $em;
     }
 
 }

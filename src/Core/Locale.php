@@ -22,12 +22,6 @@ class Core_Locale
     const registryKey = 'Core_Locale';
 
     /**
-     * ID de la locale
-     * @var string
-     */
-    public $id;
-
-    /**
      * Locale Zend
      * @var Zend_Locale
      */
@@ -44,28 +38,23 @@ class Core_Locale
 
 
     /**
-     * Récupération de la liste des locales
-     *
-     * @return array(Core_Locale)
-     */
-    public static function loadList()
-    {
-        $localelist = Zend_Locale::getLocaleList();
-    }
-
-    /**
      * Récupération de la locale demandée
      *
-     * @param string $id
+     * @param string $localeId
      * @return Core_Locale
      * @throws Core_Exception_InvalidArgument Locale inconnue
      */
-    public static function load($id)
+    public static function load($localeId)
     {
-        if (! Zend_Locale::isLocale($id)) {
-            throw new Core_Exception_InvalidArgument("Locale inconnue : '$id'");
+        if (! Zend_Locale::isLocale($localeId)) {
+            throw new Core_Exception_InvalidArgument("Locale inconnue : '$localeId'");
         }
-        $locale = new Zend_Locale($id);
+
+        $locale = new Zend_Locale($localeId);
+        if (! in_array($locale->getLanguage(), Zend_Registry::get('languages'))) {
+            throw new Core_Exception_InvalidArgument("Locale non supportée : '$localeId'");
+        }
+
         return new self($locale);
     }
 
@@ -76,35 +65,14 @@ class Core_Locale
      */
     public static function loadDefault()
     {
-        $locale = new Zend_Locale();
-        return new self($locale);
-    }
-
-    /**
-     * Définition de la locale par défaut à utiliser si aucune locale ne peut être trouvée
-     * automatiquement pour l'utilisateur.
-     *
-     * @param string $id
-     * @return void
-     * @throws Core_Exception_InvalidArgument Locale inconnue
-     */
-    public static function setLocalDefault($id)
-    {
-        if (! Zend_Locale::isLocale($id)) {
-            throw new Core_Exception_InvalidArgument("Locale inconnue : '$id'");
+        foreach (Zend_Locale::getBrowser() as $localeId => $quality) {
+            $locale = new Zend_Locale($localeId);
+            if (in_array($locale->getLanguage(), Zend_Registry::get('languages'))) {
+                return new self($locale);
+            }
         }
-        Zend_Locale::setDefault($id);
-    }
 
-    /**
-     * Vérifie si l'identifiant proposé correspond bien à une locale
-     *
-     * @param string $id
-     * @return bool
-     */
-    public static function isLocale($id)
-    {
-        return Zend_Locale::isLocale($id);
+        return new self(new Zend_Locale(Zend_Registry::get('configuration')->translation->fallback));
     }
 
     /**
@@ -114,11 +82,24 @@ class Core_Locale
      */
     protected function __construct(Zend_Locale $zendLocale)
     {
-        $this->id = $zendLocale->toString();
         // Lien vers la locale Zend
         $this->zendLocale = $zendLocale;
-        // Chargement de la langue associée
-        $idLangue = $zendLocale->getLanguage();
+    }
+
+    /**
+     * @return string ID de la locale
+     */
+    public function getId()
+    {
+        return $this->zendLocale->toString();
+    }
+
+    /**
+     * @return string ID de la locale
+     */
+    public function getLanguage()
+    {
+        return $this->zendLocale->getLanguage();
     }
 
 
@@ -219,7 +200,7 @@ class Core_Locale
         try {
             return (double) Zend_Locale_Format::getNumber($input, $options);
         } catch (Zend_Locale_Exception $e) {
-            throw new Core_Exception_User("Le nombre saisi n'est pas reconnu comme un nombre.");
+            throw new Core_Exception_InvalidArgument("Le nombre saisi n'est pas reconnu comme un nombre.");
         }
     }
 
@@ -241,7 +222,7 @@ class Core_Locale
         try {
             return Zend_Locale_Format::getInteger($saisie, $options);
         } catch (Zend_Locale_Exception $e) {
-            throw new Core_Exception_User("Le nombre saisi n'est pas reconnu comme un nombre entier.");
+            throw new Core_Exception_InvalidArgument("Le nombre saisi n'est pas reconnu comme un nombre entier.");
         }
     }
 
@@ -295,14 +276,6 @@ class Core_Locale
         );
         $monnaie = new Zend_Currency($this->zendLocale);
         return $monnaie->toCurrency($valeur);
-    }
-
-    /**
-     * @return string ID de la locale
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
 }
