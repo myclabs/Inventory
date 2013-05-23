@@ -40,20 +40,22 @@ class Core_Locale
     /**
      * Récupération de la locale demandée
      *
-     * @param string $id
+     * @param string $localeId
      * @return Core_Locale
      * @throws Core_Exception_InvalidArgument Locale inconnue
      */
-    public static function load($id)
+    public static function load($localeId)
     {
-        if (! Zend_Locale::isLocale($id)) {
-            throw new Core_Exception_InvalidArgument("Locale inconnue : '$id'");
-        }
-        if (! in_array($id, Zend_Registry::get('languages'))) {
-            throw new Core_Exception_InvalidArgument("Locale non supportée : '$id'");
+        if (! Zend_Locale::isLocale($localeId)) {
+            throw new Core_Exception_InvalidArgument("Locale inconnue : '$localeId'");
         }
 
-        return new self(new Zend_Locale($id));
+        $locale = new Zend_Locale($localeId);
+        if (! in_array($locale->getLanguage(), Zend_Registry::get('languages'))) {
+            throw new Core_Exception_InvalidArgument("Locale non supportée : '$localeId'");
+        }
+
+        return new self($locale);
     }
 
     /**
