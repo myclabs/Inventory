@@ -74,7 +74,6 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             }
             $unit = new Unit_API($unitRef);
             $unit->getNormalizedUnit();
-            Core_Tools::dump($unit);
         } catch (Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
         }
