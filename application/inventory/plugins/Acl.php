@@ -21,6 +21,29 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      */
     public function viewProjectsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
+        $isIdentityAbleToEditProjects = $this->editProjectsRule($identity, $request);
+        if ($isIdentityAbleToEditProjects) {
+            return true;
+        }
+
+        $aclQuery = new Core_Model_Query();
+        $aclQuery->aclFilter->enabled = true;
+        $aclQuery->aclFilter->user = $identity;
+        $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+        $isIdentityAbleToSeeManyProjects = (Inventory_Model_Project::countTotal($aclQuery) > 1);
+        if ($isIdentityAbleToSeeManyProjects) {
+            return true;
+        }
+
+        return false;
+    }
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function editProjectsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
         $projectResource = User_Model_Resource_Entity::loadByEntityName('Inventory_Model_Project');
 
         $isIdentityAbleToCreateProjects = $this->aclService->isAllowed(
@@ -28,15 +51,20 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             User_Model_Action_Default::CREATE(),
             $projectResource
         );
+        if ($isIdentityAbleToCreateProjects) {
+            return true;
+        }
+
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
         $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
         $isIdentityAbleToEditProjects = (Inventory_Model_Project::countTotal($aclQuery) > 0);
-        $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-        $isIdentityAbleToSeeManyProjects = (Inventory_Model_Project::countTotal($aclQuery) > 1);
+        if ($isIdentityAbleToEditProjects) {
+            return true;
+        }
 
-        return ($isIdentityAbleToCreateProjects | $isIdentityAbleToEditProjects | $isIdentityAbleToSeeManyProjects);
+        return false;
     }
 
     /**
