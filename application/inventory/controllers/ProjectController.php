@@ -66,9 +66,11 @@ class Inventory_ProjectController extends Core_Controller_Ajax
         } else if ($isConnectedUserAbleToSeeManyCellDataProviders) {
             $projectArray = Inventory_Model_Project::loadList($aclQuery);
             $this->_redirect('inventory/project/cells/idProject/'.$projectArray[0]->getKey()['id']);
-        } else {
+        } else if (count($listCellDataProviderResource) == 1) {
             $cellDataProviderArray = Inventory_Model_CellDataProvider::loadList($aclQuery);
             $this->_redirect('inventory/cell/details/idCell/'.$cellDataProviderArray[0]->getOrgaCell()->getKey()['id']);
+        } else {
+            $this->_redirect('inventory/project/noaccess');
         }
     }
 
@@ -159,5 +161,14 @@ class Inventory_ProjectController extends Core_Controller_Ajax
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
         }
         $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
+    }
+
+    /**
+     * Affiche une vue indiquant l'accès à aucun projet.
+     * @Secure("loggedIn")
+     */
+    public function noaccessAction()
+    {
+
     }
 }

@@ -15,6 +15,9 @@ use Doctrine\Common\Collections\Collection;
  */
 class Inventory_Model_Project extends Core_Model_Entity
 {
+
+    use Core_Model_Entity_Translatable;
+
     /**
      * Identifiant unique du Project.
      *

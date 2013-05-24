@@ -4,6 +4,10 @@ Inventory_Model_Project:
   repositoryClass: Core_Model_Repository
   table: Inventory_Project
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       column: id
@@ -17,6 +21,8 @@ Inventory_Model_Project:
       type: string
       length: 255
       nullable: false
+      gedmo:
+        - translatable
 
   oneToOne:
     orgaCube:

@@ -20,6 +20,7 @@ class Orga_Model_Axis extends Core_Model_Entity
 //        Core_Strategy_Ordered::setPositionInternal as setPositionInternalOrdered;
 //    }
     use Core_Strategy_Ordered;
+    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';

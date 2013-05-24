@@ -1,0 +1,14 @@
+<?php
+/**
+ * @author valentin.claras
+ * @package Inventory
+ * Traduction des Project
+ */
+?>
+    <div class="page-header">
+        <h1><?=__('Inventory', 'project', 'translate')?></h1>
+    </div>
+<?php
+echo $this->translateDatagrid('Inventory_Model_Project', 'label', 'datagrid_translate_projects', 'inventory')->simple()
+    ->addCol(new UI_Datagrid_Col_Link('axes', __('Inventory', 'axis', 'translate')))
+    ->addCol(new UI_Datagrid_Col_Link('members', __('Inventory', 'member', 'translate')));
