@@ -34,7 +34,7 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
         foreach (Classif_Model_Member::loadList($this->request) as $member) {
             $data = array();
             $data['index'] = $member->getRef();
-            $data['identifier'] = $member->getRef();
+            $data['identifier'] = $member->getAxis()->getRef().' | '.$member->getRef();
 
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);

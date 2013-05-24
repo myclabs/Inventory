@@ -34,7 +34,7 @@ class AF_Datagrid_Translate_AfsController extends UI_Controller_Datagrid
         foreach (AF_Model_AF::loadList($this->request) as $aF) {
             $data = array();
             $data['index'] = $aF->getId();
-            $data['identifier'] = $aF->getId();
+            $data['identifier'] = $aF->getRef();
 
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);

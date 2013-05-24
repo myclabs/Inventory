@@ -34,7 +34,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
         foreach (AF_Model_Component::loadList($this->request) as $component) {
             $data = array();
             $data['index'] = $component->getId();
-            $data['identifier'] = $component->getId();
+            $data['identifier'] = $component->getAF()->getRef().' | '.$component->getRef();
 
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);

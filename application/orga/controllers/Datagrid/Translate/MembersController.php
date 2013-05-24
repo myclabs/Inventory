@@ -39,7 +39,7 @@ class Orga_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
         foreach (Orga_Model_Member::loadList($this->request) as $member) {
             $data = array();
             $data['index'] = $member->getCompleteRef();
-            $data['identifier'] = $member->getCompleteRef();
+            $data['identifier'] = $member->getAxis()->getRef().' | '.$member->getCompleteRef();
 
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);
@@ -60,8 +60,6 @@ class Orga_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        Core_Tools::dump(Orga_Model_Cube::load($this->_getParam('idCube')));
-        Core_Tools::dump(Orga_Model_Axis::loadByRefAndCube($this->_getParam('refAxis'), Orga_Model_Cube::load($this->_getParam('idCube'))));
         $member = Orga_Model_Member::loadByCompleteRefAndAxis(
             $this->update['index'],
             Orga_Model_Axis::loadByRefAndCube($this->_getParam('refAxis'), Orga_Model_Cube::load($this->_getParam('idCube')))

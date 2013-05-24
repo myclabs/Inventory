@@ -34,7 +34,7 @@ class Techno_Datagrid_Translate_Families_LabelController extends UI_Controller_D
         foreach (Techno_Model_Family::loadList($this->request) as $family) {
             $data = array();
             $data['index'] = $family->getId();
-            $data['identifier'] = $family->getId();
+            $data['identifier'] = $family->getRef();
 
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);

@@ -34,7 +34,7 @@ class AF_Datagrid_Translate_OptionsController extends UI_Controller_Datagrid
         foreach (AF_Model_Component_Select_Option::loadList($this->request) as $option) {
             $data = array();
             $data['index'] = $option->getId();
-            $data['identifier'] = $option->getId();
+            $data['identifier'] = $option->getSelect()->getAF()->getRef().' | '.$option->getSelect()->getRef().' | '.$option->getRef();
 
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);
