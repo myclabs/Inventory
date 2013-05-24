@@ -227,7 +227,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
             $queryBuilder->setParameter('members_'.$subMembersAlias, $filter->getMembers());
         }
 
-        return $queryBuilder->getQuery()->getResult();
+        return $this->getQueryFromQueryBuilder($queryBuilder)->getResult();
     }
 
     /**

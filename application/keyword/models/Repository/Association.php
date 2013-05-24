@@ -102,7 +102,7 @@ class Keyword_Model_Repository_Association extends Core_Model_Repository
         $queryBuilderLoadByRefs->setParameter($objectBindKey, $objectKeywordRef);
         $queryBuilderLoadByRefs->setParameter($predicateBindKey, $predicateRef);
 
-        $entities = $queryBuilderLoadByRefs->getQuery()->getResult();
+        $entities = $this->getQueryFromQueryBuilder($queryBuilderLoadByRefs)->getResult();
         if (empty($entities)) {
             $criteria = array($subjectKeywordRef, $objectKeywordRef, $predicateRef);
             throw new Core_Exception_NotFound('No "'.$entityName.'" matching '.var_export($criteria, true));
