@@ -8,14 +8,11 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
     $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-    $isConnectedUserAbleToSeeProjects = (Inventory_Model_Project::countTotal($aclQuery) > 0);
 
-    if ($isConnectedUserAbleToSeeProjects) {
-        $leftMenu[1] = [
-            'name' => __('Orga', 'name', 'organization'),
-            'url' => $this->baseUrl('inventory/project/'),
-        ];
-    }
+    $leftMenu[1] = [
+        'name' => __('Orga', 'name', 'organization'),
+        'url' => $this->baseUrl('inventory/project/'),
+    ];
     $leftMenu[3] = [
         'name' => __('Inventory', 'menu', 'simulations'),
         'url' => $this->baseUrl('simulation/set/manage'),
