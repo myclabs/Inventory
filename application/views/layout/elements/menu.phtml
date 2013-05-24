@@ -217,6 +217,123 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         ]
     ];
 
+    $aclQuery = new Core_Model_Query();
+    $aclQuery->aclFilter->enabled = true;
+    $aclQuery->aclFilter->user = $connectedUser;
+    $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
+    $isAllowToEditProjects = (Inventory_Model_Project::countTotal($aclQuery) > 0);
+    if ($isAllowedToEditReferential || $isAllowToEditProjects) {
+        $leftMenu[6] = [
+            'name' => __('Inventory', 'menu', 'translation'),
+            'url' => '#',
+            'submenu' => []
+        ];
+        $subMenuTranslation = &$leftMenu[6]['submenu'];
+
+        if ($isAllowedToEditReferential) {
+            $subMenuTranslation[] = [
+                'name' => __('Classif', 'name', 'translate'),
+                'url' => '#',
+                'submenu' => [
+                    [
+                        'name' => __('Classif', 'translate', 'axes'),
+                        'url' => 'classif/translate/axes'
+                    ],
+                    [
+                        'name' => __('Classif', 'translate', 'members'),
+                        'url' => 'classif/translate/members'
+                    ],
+                    [
+                        'name' => __('Classif', 'translate', 'indicators'),
+                        'url' => 'classif/translate/indicators'
+                    ],
+                    [
+                        'name' => __('Classif', 'translate', 'contexts'),
+                        'url' => 'classif/translate/contexts'
+                    ],
+                ]
+            ];
+
+            $subMenuTranslation[] = [
+                'name' => __('Keyword', 'name', 'translate'),
+                'url' => '#',
+                'submenu' => [
+                    [
+                        'name' => __('Keyword', 'translate', 'predicates'),
+                        'url' => 'keyword/translate/predicates-label'
+                    ],
+                    [
+                        'name' => __('Keyword', 'translate', 'reversepredicates'),
+                        'url' => 'keyword/translate/predicates-reverselabel'
+                    ],
+                    [
+                        'name' => __('Keyword', 'translate', 'keywords'),
+                        'url' => 'keyword/translate/keywords'
+                    ],
+                ]
+            ];
+
+            $subMenuTranslation[] = [
+                'name' => __('Techno', 'name', 'translate'),
+                'url' => '#',
+                'submenu' => [
+                    [
+                        'name' => __('Techno', 'translate', 'categories'),
+                        'url' => 'techno/translate/categories'
+                    ],
+                    [
+                        'name' => __('Techno', 'translate', 'families'),
+                        'url' => 'techno/translate/families-label'
+                    ],
+                    [
+                        'name' => __('Techno', 'translate', 'familiesdocumentation'),
+                        'url' => 'techno/translate/families-documentation'
+                    ],
+                    [
+                        'name' => __('Techno', 'translate', 'elementsdocumentation'),
+                        'url' => 'techno/translate/elements-documentation'
+                    ],
+                ]
+            ];
+
+            $subMenuTranslation[] = [
+                'name' => __('AF', 'name', 'translate'),
+                'url' => '#',
+                'submenu' => [
+                    [
+                        'name' => __('AF', 'translate', 'categories'),
+                        'url' => 'af/translate/categories'
+                    ],
+                    [
+                        'name' => __('AF', 'translate', 'afs'),
+                        'url' => 'af/translate/afs'
+                    ],
+                    [
+                        'name' => __('AF', 'translate', 'components'),
+                        'url' => 'af/translate/components-label'
+                    ],
+                    [
+                        'name' => __('AF', 'translate', 'componentsdocumentation'),
+                        'url' => 'af/translate/components-help'
+                    ],
+                    [
+                        'name' => __('AF', 'translate', 'options'),
+                        'url' => 'af/translate/options'
+                    ],
+                    [
+                        'name' => __('AF', 'translate', 'algos'),
+                        'url' => 'af/translate/algos'
+                    ],
+                ]
+            ];
+
+            $subMenuTranslation[] = [
+                'name' => __('Inventory', 'name', 'project'),
+                'url' => 'inventory/translate/projects',
+            ];
+        }
+    }
+
 } else {
     $leftMenu = array();
     $refer = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();

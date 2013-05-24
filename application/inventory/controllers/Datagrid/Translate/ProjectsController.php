@@ -31,6 +31,10 @@ class Inventory_Datagrid_Translate_ProjectsController extends UI_Controller_Data
      */
     public function getelementsAction()
     {
+        $this->request->aclFilter->enabled = true;
+        $this->request->aclFilter->user = $this->_helper->auth();
+        $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
+
         foreach (Inventory_Model_Project::loadList($this->request) as $project) {
             $data = array();
             $data['index'] = $project->getKey()['id'];
