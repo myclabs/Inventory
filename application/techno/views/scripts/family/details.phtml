@@ -16,37 +16,37 @@ $family = $this->family;
 <?php if (! $this->edit) : ?>
 
     <div class="well">
-            <strong><?=__('UI', 'name', 'category') . __('UI', 'other', ':')?></strong>
-            <?php
-            $category = $family->getCategory();
-            if ($category) {
-                echo $category->getLabel();
-            } else {
-                echo '<span class="muted">'.__('UI', 'other', 'noneFem').'</span>';
-            }
-            ?>
-            | <strong><?=__('UI', 'name', 'type') . __('UI', 'other', ':')?></strong>
-            <?php
-            if ($family instanceof Techno_Model_Family_Coeff) {
-                echo __('Techno', 'name', 'coefficient');
-            } else {
-                echo __('Techno', 'name', 'emissionFactor');
-            }
-            ?>
-            | <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
-            <?=$family->getValueUnit()->getSymbol()?>
-            | <strong><?=__('Techno', 'name', 'tags') . __('UI', 'other', ':')?></strong>
-            <?php
-            $tags = [];
-            foreach ($family->getTags() as $tag) {
-                $tags[] = $tag->getValueLabel();
-            }
-            if (count($tags) > 0) {
-                echo implode(', ', $tags);
-            } else {
-                echo '<span class="muted">'.__('UI', 'other', 'none').'</span>';
-            }
-            ?>
+        <strong><?=__('UI', 'name', 'category') . __('UI', 'other', ':')?></strong>
+        <?php
+        $category = $family->getCategory();
+        if ($category) {
+            echo $category->getLabel();
+        } else {
+            echo '<span class="muted">'.__('UI', 'other', 'noneFem').'</span>';
+        }
+        ?>
+        | <strong><?=__('UI', 'name', 'type') . __('UI', 'other', ':')?></strong>
+        <?php
+        if ($family instanceof Techno_Model_Family_Coeff) {
+            echo __('Techno', 'name', 'coefficient');
+        } else {
+            echo __('Techno', 'name', 'emissionFactor');
+        }
+        ?>
+        | <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
+        <?=$family->getValueUnit()->getSymbol()?>
+        | <strong><?=__('Techno', 'name', 'tags') . __('UI', 'other', ':')?></strong>
+        <?php
+        $tags = [];
+        foreach ($family->getTags() as $tag) {
+            $tags[] = $tag->getValueLabel();
+        }
+        if (count($tags) > 0) {
+            echo implode(', ', $tags);
+        } else {
+            echo '<span class="muted">'.__('UI', 'other', 'none').'</span>';
+        }
+        ?>
     </div>
 
 <?php endif; ?>
