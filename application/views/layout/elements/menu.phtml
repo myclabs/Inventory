@@ -221,7 +221,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
     $isAllowToEditProjects = (Inventory_Model_Project::countTotal($aclQuery) > 0);
     if ($isAllowedToEditReferential || $isAllowToEditProjects) {
         $leftMenu[6] = [
-            'name' => __('Inventory', 'menu', 'translation'),
+            'name' => __('UI', 'name', 'translations'),
             'url' => '#',
             'submenu' => []
         ];
@@ -229,88 +229,28 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
         if ($isAllowedToEditReferential) {
             $subMenuTranslation[] = [
-                'name' => __('Classif', 'name', 'translate'),
-                'url' => '#',
-                'submenu' => [
-                    [
-                        'name' => __('Classif', 'translate', 'axes'),
-                        'url' => 'classif/translate/axes'
-                    ],
-                    [
-                        'name' => __('Classif', 'translate', 'members'),
-                        'url' => 'classif/translate/members'
-                    ],
-                    [
-                        'name' => __('Classif', 'translate', 'indicators'),
-                        'url' => 'classif/translate/indicators'
-                    ],
-                    [
-                        'name' => __('Classif', 'translate', 'contexts'),
-                        'url' => 'classif/translate/contexts'
-                    ],
-                ]
+                'name' => __('Orga', 'name', 'organizations'),
+                'url' => 'inventory/translate/projects',
             ];
 
             $subMenuTranslation[] = [
-                'name' => __('Keyword', 'name', 'translate'),
+                'name' => __('AF', 'name', 'accountingForms'),
                 'url' => '#',
                 'submenu' => [
                     [
-                        'name' => __('Keyword', 'translate', 'predicates'),
-                        'url' => 'keyword/translate/predicates-label'
-                    ],
-                    [
-                        'name' => __('Keyword', 'translate', 'reversepredicates'),
-                        'url' => 'keyword/translate/predicates-reverselabel'
-                    ],
-                    [
-                        'name' => __('Keyword', 'translate', 'keywords'),
-                        'url' => 'keyword/translate/keywords'
-                    ],
-                ]
-            ];
-
-            $subMenuTranslation[] = [
-                'name' => __('Techno', 'name', 'translate'),
-                'url' => '#',
-                'submenu' => [
-                    [
-                        'name' => __('Techno', 'translate', 'categories'),
-                        'url' => 'techno/translate/categories'
-                    ],
-                    [
-                        'name' => __('Techno', 'translate', 'families'),
-                        'url' => 'techno/translate/families-label'
-                    ],
-                    [
-                        'name' => __('Techno', 'translate', 'familiesdocumentation'),
-                        'url' => 'techno/translate/families-documentation'
-                    ],
-                    [
-                        'name' => __('Techno', 'translate', 'elementsdocumentation'),
-                        'url' => 'techno/translate/elements-documentation'
-                    ],
-                ]
-            ];
-
-            $subMenuTranslation[] = [
-                'name' => __('AF', 'name', 'translate'),
-                'url' => '#',
-                'submenu' => [
-                    [
-                        'name' => __('AF', 'translate', 'categories'),
+                        'name' => __('UI', 'name', 'categories'),
                         'url' => 'af/translate/categories'
                     ],
                     [
-                        'name' => __('AF', 'translate', 'afs'),
+                        'name' => __('AF', 'translate', 'accountingFormsLabels'),
                         'url' => 'af/translate/afs'
                     ],
                     [
-                        'name' => __('AF', 'translate', 'components'),
+                        'name' => __('AF', 'translate', 'componentsLabels'),
                         'url' => 'af/translate/components-label'
                     ],
                     [
-                        'name' => __('AF', 'translate', 'componentsdocumentation'),
+                        'name' => __('AF', 'translate', 'componentsHelps'),
                         'url' => 'af/translate/components-help'
                     ],
                     [
@@ -318,15 +258,75 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
                         'url' => 'af/translate/options'
                     ],
                     [
-                        'name' => __('AF', 'translate', 'algos'),
+                        'name' => __('AF', 'translate', 'numericAlgorithmsLabels'),
                         'url' => 'af/translate/algos'
                     ],
                 ]
             ];
 
             $subMenuTranslation[] = [
-                'name' => __('Inventory', 'name', 'project'),
-                'url' => 'inventory/translate/projects',
+                'name' => __('Classif', 'name', 'classification'),
+                'url' => '#',
+                'submenu' => [
+                    [
+                        'name' => __('UI', 'name', 'axes'),
+                        'url' => 'classif/translate/axes'
+                    ],
+                    [
+                        'name' => __('UI', 'name', 'members'),
+                        'url' => 'classif/translate/members'
+                    ],
+                    [
+                        'name' => __('Classif', 'name', 'indicators'),
+                        'url' => 'classif/translate/indicators'
+                    ],
+                    [
+                        'name' => __('Classif', 'name', 'contexts'),
+                        'url' => 'classif/translate/contexts'
+                    ],
+                ]
+            ];
+
+            $subMenuTranslation[] = [
+                'name' => __('Techno', 'name', 'parameters'),
+                'url' => '#',
+                'submenu' => [
+                    [
+                        'name' => __('UI', 'name', 'categories'),
+                        'url' => 'techno/translate/categories'
+                    ],
+                    [
+                        'name' => __('Techno', 'translate', 'familiesLabels'),
+                        'url' => 'techno/translate/families-label'
+                    ],
+                    [
+                        'name' => __('Techno', 'translate', 'familiesDocumentations'),
+                        'url' => 'techno/translate/families-documentation'
+                    ],
+                    [
+                        'name' => __('Techno', 'translate', 'parametersDocumentations'),
+                        'url' => 'techno/translate/elements-documentation'
+                    ],
+                ]
+            ];
+
+            $subMenuTranslation[] = [
+                'name' => __('Keyword', 'menu', 'semanticResources'),
+                'url' => '#',
+                'submenu' => [
+                    [
+                        'name' => __('Keyword', 'name', 'directPredicates'),
+                        'url' => 'keyword/translate/predicates-label'
+                    ],
+                    [
+                        'name' => __('Keyword', 'name', 'reversePredicates'),
+                        'url' => 'keyword/translate/predicates-reverselabel'
+                    ],
+                    [
+                        'name' => __('Keyword', 'name', 'keywords'),
+                        'url' => 'keyword/translate/keywords'
+                    ],
+                ]
             ];
         }
     }

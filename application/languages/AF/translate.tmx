@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="accountingFormsLabels">
+            <tuv xml:lang="fr">
+                <seg>Libellés des formulaires comptables</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Accounting forms labels</seg>
+            </tuv>
+        </tu>
+        <tu tuid="componentsLabels">
+            <tuv xml:lang="fr">
+                <seg>Libellés des composants</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Components labels</seg>
+            </tuv>
+        </tu>
+        <tu tuid="componentsHelps">
+            <tuv xml:lang="fr">
+                <seg>Aides des composants</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Components helps</seg>
+            </tuv>
+        </tu>
+        <tu tuid="options">
+            <tuv xml:lang="fr">
+                <seg>Options des champs de sélection</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Selection fields options</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numericAlgorithmsLabels">
+            <tuv xml:lang="fr">
+                <seg>Libellés des algorithmes numériques</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Numeric algorithm labels</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

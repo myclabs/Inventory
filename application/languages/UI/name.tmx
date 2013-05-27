@@ -51,6 +51,14 @@
                 <seg>Category</seg>
             </tuv>
         </tu>
+        <tu tuid="categories">
+            <tuv xml:lang="fr">
+                <seg>Catégories</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Categories</seg>
+            </tuv>
+        </tu>
         <tu tuid="condition">
             <tuv xml:lang="fr">
                 <seg>Condition</seg>
@@ -505,6 +513,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Total</seg>
+            </tuv>
+        </tu>
+        <tu tuid="translations">
+            <tuv xml:lang="fr">
+                <seg>Traductions</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Translations</seg>
             </tuv>
         </tu>
         <tu tuid="tree">
