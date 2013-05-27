@@ -68,18 +68,6 @@ class Core_Model_Query
      */
     public $rootAlias = null;
 
-    /**
-     * Est-ce qu'on filtre et trie sur les traductions
-     * @var bool
-     */
-    protected $useTranslations = false;
-
-    /**
-     * Locale à utiliser pour les tris et filtrage avec les traductions
-     * @see $useTranslations À mettre à true
-     * @var Core_Locale|null
-     */
-    protected $translationLocale = null;
 
     /**
      * Constructeur
@@ -100,51 +88,6 @@ class Core_Model_Query
         $this->filter = clone $this->filter;
         $this->aclFilter = clone $this->aclFilter;
     }
-
-    /**
-     * Retourne la requête Doctrine
-     *
-     * @param Doctrine\ORM\QueryBuilder $queryBuilder
-     * @return \Doctrine\ORM\Query
-     */
-    public function getQuery(Doctrine\ORM\QueryBuilder $queryBuilder)
-    {
-        $this->parseToQueryBuilderWithLimit($queryBuilder);
-
-        $query = $queryBuilder->getQuery();
-
-        // Traductions
-        if ($this->useTranslations) {
-            $query->setHint(
-                \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-                'Gedmo\Translatable\Query\TreeWalker\TranslationWalker'
-            );
-            if ($this->translationLocale !== null) {
-                $query->setHint(
-                    \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
-                    $this->translationLocale->getId()
-                );
-            }
-        }
-
-        return $query;
-    }
-
-    /**
-     * Retourne la requête Doctrine
-     *
-     * @param Doctrine\ORM\QueryBuilder $queryBuilder
-     * @return \Doctrine\ORM\Query
-     */
-    public function getQueryWithoutLimit(Doctrine\ORM\QueryBuilder $queryBuilder)
-    {
-        $this->parseToQueryBuilderWithoutLimit($queryBuilder);
-
-        $query = $queryBuilder->getQuery();
-
-        return $query;
-    }
-
 
     /**
      * Valide les attributs de la classe.
@@ -236,16 +179,6 @@ class Core_Model_Query
     public function __isset($property)
     {
         return isset($this->parameters[$property]);
-    }
-
-    /**
-     * @param bool        $enable
-     * @param Core_Locale $locale
-     */
-    public function enableTranslations($enable, Core_Locale $locale = null)
-    {
-        $this->useTranslations = $enable;
-        $this->translationLocale = $locale;
     }
 
     /**
@@ -416,7 +349,7 @@ class Core_Model_Query
     protected function addAclFilterToQueryBuilder(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         if ($this->aclFilter->enabled) {
-            $queryBuilder->from('User_Model_ACLFilterEntry', 'acl_cache');
+            $queryBuilder->innerJoin('User_Model_ACLFilterEntry', 'acl_cache');
 
             $queryBuilder->andWhere('acl_cache.idUser = :aclUserId');
             $queryBuilder->andWhere('acl_cache.action = :aclAction');

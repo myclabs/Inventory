@@ -22,6 +22,12 @@ class Core_Locale
     const registryKey = 'Core_Locale';
 
     /**
+     * Locale optionnelle par défaut.
+     * @var Core_Locale
+     */
+    protected static $default = null;
+
+    /**
      * Locale Zend
      * @var Zend_Locale
      */
@@ -72,7 +78,20 @@ class Core_Locale
             }
         }
 
+        if (self::$default !== null) {
+            return self::$default;
+        }
         return new self(new Zend_Locale(Zend_Registry::get('configuration')->translation->fallback));
+    }
+
+    /**
+     * Définition de la la locale par défaut
+     *
+     * @param Core_Locale $defaultLocale
+     */
+    public static function setDefault(Core_Locale $defaultLocale)
+    {
+        self::$default = $defaultLocale;
     }
 
     /**

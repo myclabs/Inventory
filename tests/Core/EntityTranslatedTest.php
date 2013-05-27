@@ -160,23 +160,23 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         $this->assertSame($o1, $list[0]);
         $this->assertSame($o2, $list[1]);
 
-        // Test fr
-        $query = new Core_Model_Query();
-        $query->enableTranslations(true, $french);
-        $query->order->addOrder(Default_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
-        $list = Default_Model_Translated::loadList($query);
-
-        $this->assertSame($o1, $list[0]);
-        $this->assertSame($o2, $list[1]);
-
         // Test en (liste inversée)
+        Core_Locale::setDefault($english);
         $query = new Core_Model_Query();
-        $query->enableTranslations(true, $english);
         $query->order->addOrder(Default_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
         $list = Default_Model_Translated::loadList($query);
 
         $this->assertSame($o2, $list[0]);
         $this->assertSame($o1, $list[1]);
+
+        // Test fr
+        Core_Locale::setDefault($french);
+        $query = new Core_Model_Query();
+        $query->order->addOrder(Default_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
+        $list = Default_Model_Translated::loadList($query);
+
+        $this->assertSame($o1, $list[0]);
+        $this->assertSame($o2, $list[1]);
 
         // Fixtures deletion
         $o1->delete();
@@ -213,23 +213,23 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         $this->assertCount(1, $list);
         $this->assertSame($o1, $list[0]);
 
-        // Test fr
-        $query = new Core_Model_Query();
-        $query->enableTranslations(true, $french);
-        $query->filter->addCondition(Default_Model_Translated::QUERY_NAME, 'A');
-        $list = Default_Model_Translated::loadList($query);
-
-        $this->assertCount(1, $list);
-        $this->assertSame($o1, $list[0]);
-
         // Test en (liste inversée)
+        Core_Locale::setDefault($english);
         $query = new Core_Model_Query();
-        $query->enableTranslations(true, $english);
         $query->filter->addCondition(Default_Model_Translated::QUERY_NAME, 'A');
         $list = Default_Model_Translated::loadList($query);
 
         $this->assertCount(1, $list);
         $this->assertSame($o2, $list[0]);
+
+        // Test fr
+        Core_Locale::setDefault($french);
+        $query = new Core_Model_Query();
+        $query->filter->addCondition(Default_Model_Translated::QUERY_NAME, 'A');
+        $list = Default_Model_Translated::loadList($query);
+
+        $this->assertCount(1, $list);
+        $this->assertSame($o1, $list[0]);
 
         // Fixtures deletion
         $o1->delete();

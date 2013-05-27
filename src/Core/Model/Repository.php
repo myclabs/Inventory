@@ -13,6 +13,29 @@
  */
 class Core_Model_Repository extends Doctrine\ORM\EntityRepository
 {
+    /**
+     * Récupère la requête depuis le query builder et lui applique des paramètres :
+     *  - Ajout des jointures pour les traductions.
+     *
+     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     *
+     * @return \Doctrine\ORM\Query
+     */
+    public function getQueryFromQueryBuilder(\Doctrine\ORM\QueryBuilder $queryBuilder)
+    {
+        $query = $queryBuilder->getQuery();
+        
+        $query->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\Translatable\Query\TreeWalker\TranslationWalker'
+        );
+        $query->setHint(
+            \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+            Core_Locale::loadDefault()->getLanguage()
+        );
+
+        return $query;
+    }
 
     /**
      * Charge une entité en fonction de son id.
@@ -78,12 +101,14 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
         $entityName = $this->getEntityName();
         $entityAlias = $entityName::getAlias();
 
-        $queryBuilderLoadList = $this->createQueryBuilder($entityAlias);
         $queryParameters->rootAlias = $entityAlias;
         $queryParameters->entityName = $entityName;
-        $this->addCustomParametersToQueryBuilder($queryBuilderLoadList, $queryParameters);
 
-        return $queryParameters->getQuery($queryBuilderLoadList)->getResult();
+        $queryBuilderLoadList = $this->createQueryBuilder($entityAlias);
+        $this->addCustomParametersToQueryBuilder($queryBuilderLoadList, $queryParameters);
+        $queryParameters->parseToQueryBuilderWithLimit($queryBuilderLoadList);
+
+        return $this->getQueryFromQueryBuilder($queryBuilderLoadList)->getResult();
     }
 
     /**
@@ -98,13 +123,15 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
         $entityName = $this->getEntityName();
         $entityAlias = $entityName::getAlias();
 
-        $queryBuilderCountTotal = $this->createQueryBuilder($entityAlias);
-        $queryBuilderCountTotal->select($queryBuilderCountTotal->expr()->count($entityAlias));
         $queryParameters->rootAlias = $entityAlias;
         $queryParameters->entityName = $entityName;
-        $this->addCustomParametersToQueryBuilder($queryBuilderCountTotal, $queryParameters);
 
-        return $queryParameters->getQueryWithoutLimit($queryBuilderCountTotal)->getSingleScalarResult();
+        $queryBuilderCountTotal = $this->createQueryBuilder($entityAlias);
+        $queryBuilderCountTotal->select($queryBuilderCountTotal->expr()->count($entityAlias));
+        $this->addCustomParametersToQueryBuilder($queryBuilderCountTotal, $queryParameters);
+        $queryParameters->parseToQueryBuilderWithoutLimit($queryBuilderCountTotal);
+
+        return $this->getQueryFromQueryBuilder($queryBuilderCountTotal)->getSingleScalarResult();
     }
 
     /**

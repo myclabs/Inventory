@@ -34,7 +34,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
         $this->addMembersFiltersToQueryBuilder($queryParameters, $queryBuilder);
         $this->parseArrayMembersToQueryBuilder($arrayMembers, $queryBuilder);
 
-        return $queryBuilder->getQuery()->getResult();
+        return $this->getQueryFromQueryBuilder($queryBuilder)->getResult();
     }
 
     /**
@@ -58,7 +58,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
         $this->addMembersFiltersToQueryBuilder($queryParameters, $queryBuilder);
         $this->parseArrayMembersToQueryBuilder($arrayMembers, $queryBuilder);
 
-        return $queryBuilder->getQuery()->getSingleScalarResult();
+        return $this->getQueryFromQueryBuilder($queryBuilder)->getSingleScalarResult();
     }
 
     /**

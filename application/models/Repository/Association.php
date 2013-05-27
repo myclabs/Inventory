@@ -46,7 +46,7 @@ class Default_Model_Repository_Association extends Core_Model_Repository
                     )
             );
 
-        return $queryBuilder->getQuery()->getResult();
+        return $this->getQueryFromQueryBuilder($queryBuilder)->getResult();
     }
 
     /**
@@ -68,7 +68,7 @@ class Default_Model_Repository_Association extends Core_Model_Repository
                     )
             );
 
-        return $queryBuilderCountTotal->getQuery()->getSingleScalarResult();
+        return $this->getQueryFromQueryBuilder($queryBuilderCountTotal)->getSingleScalarResult();
     }
 
     /**

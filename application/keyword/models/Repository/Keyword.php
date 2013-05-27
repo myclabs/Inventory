@@ -44,7 +44,7 @@ class Keyword_Model_Repository_Keyword extends Core_Model_Repository
                     )
             );
 
-        return $queryBuilderLoadListRoots->getQuery()->getResult();
+        return $this->getQueryFromQueryBuilder($queryBuilderLoadListRoots)->getResult();
     }
 
     /**
@@ -56,18 +56,18 @@ class Keyword_Model_Repository_Keyword extends Core_Model_Repository
      */
     public function loadListMatchingQuery($expressionQuery)
     {
-        $queryBuilderLoadListMAtchingQuery = $this->createQueryBuilder(Keyword_Model_Keyword::getAlias());
-        $queryBuilderLoadListMAtchingQuery->distinct();
+        $queryBuilderLoadListMatchingQuery = $this->createQueryBuilder(Keyword_Model_Keyword::getAlias());
+        $queryBuilderLoadListMatchingQuery->distinct();
 
-        $queryBuilderLoadListMAtchingQuery->where(
-                    $this->executeExpressionQuery($queryBuilderLoadListMAtchingQuery, $expressionQuery)
+        $queryBuilderLoadListMatchingQuery->where(
+                    $this->executeExpressionQuery($queryBuilderLoadListMatchingQuery, $expressionQuery)
                 );
-        $queryBuilderLoadListMAtchingQuery->orderBy(
+        $queryBuilderLoadListMatchingQuery->orderBy(
                 Keyword_Model_Keyword::getAlias().'.'.Keyword_Model_Keyword::QUERY_LABEL,
                 'ASC'
             );
 
-        return $queryBuilderLoadListMAtchingQuery->getQuery()->getResult();
+        return $this->getQueryFromQueryBuilder($queryBuilderLoadListMatchingQuery)->getResult();
     }
 
     /**
