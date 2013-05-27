@@ -26,11 +26,11 @@
     </testsuites>
 
     <logging>
-        <log type="coverage-html" target="data/build/coverage" title="Inventory"
+        <log type="coverage-html" target="data/logs/coverage" title="Inventory"
              charset="UTF-8" yui="true" highlight="true"
              lowUpperBound="35" highLowerBound="70"/>
-        <log type="coverage-clover" target="data/build/logs/clover.xml"/>
-        <log type="junit" target="data/build/logs/junit.xml"
+        <log type="coverage-clover" target="data/logs/clover.xml"/>
+        <log type="junit" target="data/logs/junit.xml"
              logIncompleteSkipped="false"/>
     </logging>
 
