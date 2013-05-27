@@ -752,7 +752,7 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->cube->delete();
+        if ($this->cube) $this->cube->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
     }

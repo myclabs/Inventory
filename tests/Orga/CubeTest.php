@@ -46,7 +46,7 @@ class Orga_Test_CubeTest
      */
     public static function deleteObject($o)
     {
-        $o->delete();
+        if ($o) $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
     }
