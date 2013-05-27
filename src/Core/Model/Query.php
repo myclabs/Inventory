@@ -349,7 +349,7 @@ class Core_Model_Query
     protected function addAclFilterToQueryBuilder(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         if ($this->aclFilter->enabled) {
-            $queryBuilder->from('User_Model_ACLFilterEntry', 'acl_cache');
+            $queryBuilder->innerJoin('User_Model_ACLFilterEntry', 'acl_cache');
 
             $queryBuilder->andWhere('acl_cache.idUser = :aclUserId');
             $queryBuilder->andWhere('acl_cache.action = :aclAction');
