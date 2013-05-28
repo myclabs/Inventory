@@ -1,7 +1,5 @@
 # Inventory
 
-Build status: [![Build Status](http://dev.myc-sense.com:8081/job/Inventory/badge/icon)](http://dev.myc-sense.com:8081/job/Inventory/)
-
 ## Installation
 
 Checkout the project using git or the Github plugin for PhpStorm.
