@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Onglets -->
+
+        <tu tuid="inbox">
+            <tuv xml:lang="fr">
+                <seg>Messages recus</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inbox</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outbox">
+            <tuv xml:lang="fr">
+                <seg>Messages envoyés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Outbox</seg>
+            </tuv>
+        </tu>
+
+        <!-- Inbox, outbox -->
+
+        <tu tuid="sender">
+            <tuv xml:lang="fr">
+                <seg>Expéditeur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sender</seg>
+            </tuv>
+        </tu>
+        <tu tuid="recipient">
+            <tuv xml:lang="fr">
+                <seg>Destinataire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Recipient</seg>
+            </tuv>
+        </tu>
+        <tu tuid="dispatchDate">
+            <tuv xml:lang="fr">
+                <seg>Date d'envoi</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Dispatch date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="object">
+            <tuv xml:lang="fr">
+                <seg>Objet</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Object</seg>
+            </tuv>
+        </tu>
+        <tu tuid="body">
+            <tuv xml:lang="fr">
+                <seg> </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg> </seg>
+            </tuv>
+        </tu>
+        <tu tuid="send">
+            <tuv xml:lang="fr">
+                <seg>Envoyer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Send</seg>
+            </tuv>
+        </tu>
+        <tu tuid="me">
+            <tuv xml:lang="fr">
+                <seg>Moi</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Me</seg>
+            </tuv>
+        </tu>
+ 
+        <!-- Consultation / envoi de messages -->
+
+        <tu tuid="newMessage">
+            <tuv xml:lang="fr">
+                <seg>Nouveau message</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>New message</seg>
+            </tuv>
+        </tu>
+        <tu tuid="from">
+            <tuv xml:lang="fr">
+                <seg>De</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>From</seg>
+            </tuv>
+        </tu>
+        <tu tuid="to">
+            <tuv xml:lang="fr">
+                <seg>À</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>To</seg>
+            </tuv>
+        </tu>
+        <tu tuid="messageSent">
+            <tuv xml:lang="fr">
+                <seg>Message envoyé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Message sent.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outboxDetailMessagePopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Message envoyé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sent message</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inboxDetailMessagePopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Message reçu</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Received message</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>  

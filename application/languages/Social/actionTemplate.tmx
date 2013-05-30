@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="numberOfAssociatedActions">
+            <tuv xml:lang="fr">
+                <seg>Nombre d'actions associées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of associated actions</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un modèle d'action</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an action template</seg>
+            </tuv>
+        </tu>
+        <tu tuid="actionTemplateDetails">
+            <tuv xml:lang="fr">
+                <seg>Détails d'un modèle d'action</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Details of an action template</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deletionForbidden">
+            <tuv xml:lang="fr">
+                <seg>Ce modèle d'action ne peut pas être supprimé, car au moins une action lui est associée.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This action template cannot be deleted, since at leat one action is associated to it.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="documentReferences">
+            <tuv xml:lang="fr">
+                <seg>Références à des documents</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Document references</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>    
