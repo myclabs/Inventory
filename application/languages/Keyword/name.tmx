@@ -4,14 +4,6 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="directPredicates"> <!-- Utilisé pour les menu de traduction -->
-            <tuv xml:lang="fr">
-                <seg>Prédicats directs</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Direct predicates</seg>
-            </tuv>
-        </tu>
         <tu tuid="keyword">
             <tuv xml:lang="fr">
                 <seg>Mot clé</seg>
@@ -50,14 +42,6 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Predicates</seg>
-            </tuv>
-        </tu>
-        <tu tuid="reversePredicates"> <!-- Utilisé pour les menu de traduction -->
-            <tuv xml:lang="fr">
-                <seg>Prédicats inverses</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Reverse predicates</seg>
             </tuv>
         </tu>
         <tu tuid="subject">

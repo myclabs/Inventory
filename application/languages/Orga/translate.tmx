@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+        <tu tuid="organizationalAxes">
+            <tuv xml:lang="fr">
+                <seg>Axes organisationnels</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational axes</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationalMembers">
+            <tuv xml:lang="fr">
+                <seg>Membres des axes organisationnels</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational members</seg>
+            </tuv>
+        </tu>
+    </body>
+</tmx>

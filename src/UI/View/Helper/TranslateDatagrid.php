@@ -68,7 +68,7 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      */
     public function addIdentifierCol()
     {
-        $identifierColumn = new UI_Datagrid_Col_Text('identifier', __('UI', 'translate', 'identifier'));
+        $identifierColumn = new UI_Datagrid_Col_Text('identifier', __('UI', 'name', 'identifier'));
         $identifierColumn->editable = false;
         $this->_datagrid->addCol($identifierColumn);
 
