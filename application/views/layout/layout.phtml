@@ -85,11 +85,11 @@
             if (messageZone.children('div').size() > 2) {
                 setTimeout(eraseFirstMessage, 500, 2);
             }
-        }
+        };
         errorHandler = function (o) {
             response = (typeof(o.responseText) == 'string') ? $.parseJSON(o.responseText) : o;
             addMessage(response.message, response.typeError);
-        }
+        };
         setMask = function (display) {
             if (typeof(indexStackMask) == "undefined") {
                 indexStackMask = 0;
@@ -108,7 +108,7 @@
                     indexStackMask = 0;
                 }
             }
-        }
+        };
     </script>
     <?= $this->headScript()->toString() . "\n" ?>
     <script>
