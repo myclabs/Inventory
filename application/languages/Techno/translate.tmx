@@ -4,28 +4,36 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
-        <tu tuid="familiesLabels">
+        <tu tuid="familyCategories">
             <tuv xml:lang="fr">
-                <seg>Libellés des familles</seg>
+                <seg>Catégories de famille de paramètres</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Families labels</seg>
+                <seg>Family parameters categories</seg>
             </tuv>
         </tu>
-        <tu tuid="familiesDocumentations">
+        <tu tuid="familyLabels">
             <tuv xml:lang="fr">
-                <seg>Documentations des familles</seg>
+                <seg>Libellés de famille de paramètres</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Families documentations</seg>
+                <seg>Parameters family labels</seg>
             </tuv>
         </tu>
-        <tu tuid="parametersDocumentations">
+        <tu tuid="familyDocumentations">
             <tuv xml:lang="fr">
-                <seg>Documentations des paramètres</seg>
+                <seg>Documentations de famille</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Parameters documentations</seg>
+                <seg>Family documentations</seg>
+            </tuv>
+        </tu>
+        <tu tuid="parameterDocumentations">
+            <tuv xml:lang="fr">
+                <seg>Documentations de paramètre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parameter documentations</seg>
             </tuv>
         </tu>
 

@@ -4,41 +4,49 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
-        <tu tuid="accountingFormsLabels">
+        <tu tuid="accountingFormCategories">
             <tuv xml:lang="fr">
-                <seg>Libellés des formulaires comptables</seg>
+                <seg>Catégories de formulaire comptable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Accounting forms categories</seg>
+            </tuv>
+        </tu>
+        <tu tuid="accountingFormLabels">
+            <tuv xml:lang="fr">
+                <seg>Libellés de formulaire comptable</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Accounting forms labels</seg>
             </tuv>
         </tu>
-        <tu tuid="componentsLabels">
+        <tu tuid="componentLabels">
             <tuv xml:lang="fr">
-                <seg>Libellés des composants</seg>
+                <seg>Libellés de composant</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Components labels</seg>
+                <seg>Component labels</seg>
             </tuv>
         </tu>
-        <tu tuid="componentsHelps">
+        <tu tuid="componentHelps">
             <tuv xml:lang="fr">
-                <seg>Aides des composants</seg>
+                <seg>Aides de composant</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Components helps</seg>
+                <seg>Component helps</seg>
             </tuv>
         </tu>
         <tu tuid="options">
             <tuv xml:lang="fr">
-                <seg>Options des champs de sélection</seg>
+                <seg>Options de champ de sélection</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Selection fields options</seg>
+                <seg>Selection field options</seg>
             </tuv>
         </tu>
-        <tu tuid="numericAlgorithmsLabels">
+        <tu tuid="numericAlgorithmLabels">
             <tuv xml:lang="fr">
-                <seg>Libellés des algorithmes numériques</seg>
+                <seg>Libellés d'algorithme numérique</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Numeric algorithm labels</seg>
