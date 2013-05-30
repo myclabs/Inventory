@@ -1,6 +1,4 @@
-<?php
-echo $this->doctype()."\n";
-?>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -11,10 +9,10 @@ echo $this->doctype()."\n";
         $server .= ':' . $_SERVER["SERVER_PORT"];
     }
     ?>
-    <base href="http://<?=$server?><?=$this->baseUrl()?>/" />
+    <base href="http://<?= $server ?><?= $this->baseUrl() ?>/"/>
     <title>My C-Tool</title>
 
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="scripts/ui/jquery-1.7.2.min.js"></script>
     <?php
     // Layout de l'application.
@@ -31,78 +29,92 @@ echo $this->doctype()."\n";
     ?>
 </head>
 <body>
-<?=$this->partial('elements/menu.phtml', array())?>
-<?=$this->partial('elements/breadcrumb.phtml', array())?>
-<div id="messageZone" class="subnav subnav-fixed"><?=UI_Message::renderStatic(false)?></div>
-<div id="loadingMask"></div>
-<div class="container-fluid page">
-    <div class="row-fluid">
-        <div class="span12">
-            <?=$this->layout()->content?>
+    <?= $this->partial('elements/menu.phtml', array()) ?>
+    <?= $this->partial('elements/breadcrumb.phtml', array()) ?>
+
+    <div id="messageZone" class="subnav subnav-fixed"><?= UI_Message::renderStatic(false) ?></div>
+
+    <div id="loadingMask"></div>
+
+    <div class="container-fluid page">
+        <div class="row-fluid">
+            <div class="span12">
+                <?= $this->layout()->content ?>
+            </div>
         </div>
     </div>
-</div>
-<hr />
-<?=$this->partial('elements/footer.phtml', array())?>
-<script type="text/javascript">
-    eraseFirstMessage = function(loop)
-    {
-        loop = typeof loop !== 'undefined' ? loop - 1 : 0;
-        $('#messageZone').children('div:first').alert('close');
-        if (loop > 0) {
-            setTimeout(eraseFirstMessage, 300, (loop - 1));
-        }
-    }
-    addMessage = function(text, type)
-    {
-        var title, divClass;
-        type = typeof type !== 'undefined' ? type : 'alert';
-        switch (type) {
-            case 'info': title = '<?=__('UI', 'message', 'titleInfo')?>'; divClass = ' alert-info'; break;
-            case 'success': title = '<?=__('UI', 'message', 'titleSuccess')?>'; divClass = ' alert-success'; break;
-            case 'error': title = '<?=__('UI', 'message', 'titleError')?>'; divClass = ' alert-error'; break;
-            case 'alert': default : title = '<?=__('UI', 'message', 'titleWarning')?>'; divClass = ''; break;
-        }
-        var messageZone = $('#messageZone');
-        messageZone.append('<div class="alert' + divClass + ' fade in" style="display:none;"></div>');
-        messageZone.children('div:last').append('<button class="close" data-dismiss="alert">×</button>');
-        messageZone.children('div:last').append('<strong>' + title + '</strong> ' + text);
-        messageZone.children('div:last').slideDown(100);
 
-        if ($('#messageZone').children('div').size() > 2) {
-            setTimeout(eraseFirstMessage, 500, 2);
-        }
-    }
-    errorHandler = function(o)
-    {
-        response = (typeof(o.responseText) == 'string') ? $.parseJSON(o.responseText) : o;
-        addMessage(response.message, response.typeError);
-    }
-    setMask = function(display)
-    {
-        if (typeof(indexStackMask) == "undefined") {
-            indexStackMask = 0;
-        }
-        if (display)
-        {
-            indexStackMask++;
-            if ($('#loadingMask').is(':not(:visible)')) {
-                $('#loadingMask').slideDown(100);
+    <hr/>
+    <?= $this->partial('elements/footer.phtml', array()) ?>
+    <script>
+        eraseFirstMessage = function (loop) {
+            loop = typeof loop !== 'undefined' ? loop - 1 : 0;
+            $('#messageZone').children('div:first').alert('close');
+            if (loop > 0) {
+                setTimeout(eraseFirstMessage, 300, (loop - 1));
             }
-        } else {
-            indexStackMask--;
-            if (indexStackMask <= 0) {
-                if ($('#loadingMask').is(':visible')) {
-                    $('#loadingMask').slideUp(100);
-                }
+        };
+        addMessage = function (text, type) {
+            var title, divClass;
+            type = typeof type !== 'undefined' ? type : 'alert';
+            switch (type) {
+                case 'info':
+                    title = '<?=__('UI', 'message', 'titleInfo')?>';
+                    divClass = ' alert-info';
+                    break;
+                case 'success':
+                    title = '<?=__('UI', 'message', 'titleSuccess')?>';
+                    divClass = ' alert-success';
+                    break;
+                case 'error':
+                    title = '<?=__('UI', 'message', 'titleError')?>';
+                    divClass = ' alert-error';
+                    break;
+                case 'alert':
+                default :
+                    title = '<?=__('UI', 'message', 'titleWarning')?>';
+                    divClass = '';
+                    break;
+            }
+            var messageZone = $('#messageZone');
+            messageZone.append('<div class="alert' + divClass + ' fade in" style="display:none;"></div>');
+            messageZone.children('div:last').append('<button class="close" data-dismiss="alert">×</button>');
+            messageZone.children('div:last').append('<strong>' + title + '</strong> ' + text);
+            messageZone.children('div:last').slideDown(100);
+
+            if (messageZone.children('div').size() > 2) {
+                setTimeout(eraseFirstMessage, 500, 2);
+            }
+        }
+        errorHandler = function (o) {
+            response = (typeof(o.responseText) == 'string') ? $.parseJSON(o.responseText) : o;
+            addMessage(response.message, response.typeError);
+        }
+        setMask = function (display) {
+            if (typeof(indexStackMask) == "undefined") {
                 indexStackMask = 0;
             }
+            if (display) {
+                indexStackMask++;
+                if ($('#loadingMask').is(':not(:visible)')) {
+                    $('#loadingMask').slideDown(100);
+                }
+            } else {
+                indexStackMask--;
+                if (indexStackMask <= 0) {
+                    if ($('#loadingMask').is(':visible')) {
+                        $('#loadingMask').slideUp(100);
+                    }
+                    indexStackMask = 0;
+                }
+            }
         }
-    }
-</script>
-<?=$this->headScript()->toString()."\n" ?>
-<script type="text/javascript">
-    $(document).ready(function(){setMask(false);});
-</script>
+    </script>
+    <?= $this->headScript()->toString() . "\n" ?>
+    <script>
+        $(document).ready(function () {
+            setMask(false);
+        });
+    </script>
 </body>
 </html>
