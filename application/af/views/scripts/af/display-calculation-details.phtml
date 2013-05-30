@@ -157,7 +157,13 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
 
     // Expression
     if ($algo instanceof Algo_Model_Numeric_Expression) {
-        $popup = new UI_Popup_Ajax('graph_' . $algo->getId(), 'af/af/popup-expression-graph/id/' . $algo->getId());
+        $url = $view->url([
+                          'module' => 'af',
+                          'controller' => 'af',
+                          'action' => 'popup-expression-graph',
+                          'id' => $algo->getId(),
+                          ]);
+        $popup = new UI_Popup_Ajax('graph_' . $algo->getId(), $url);
         $popup->title = $algo->getRef();
         if ($algo->getLabel()) {
             $popup->title .= ' (' . $algo->getLabel() . ')';

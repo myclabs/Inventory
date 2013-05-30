@@ -76,7 +76,7 @@ SVN revision migrated for each package:
 - Doc: 12202
 - DW: 12222
 - Algo: 12124
-- AF: 12220
+- AF: 12234
 - Social: 12212
 - Orga: 12202
 - Simulation: 12202
