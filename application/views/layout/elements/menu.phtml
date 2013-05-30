@@ -10,7 +10,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
     $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
 
     $leftMenu[1] = [
-        'name' => __('Orga', 'name', 'organization'),
+        'name' => __('UI', 'name', 'home'),
         'url' => $this->baseUrl('inventory/project/'),
     ];
     $leftMenu[3] = [
