@@ -39,7 +39,10 @@
             <directory suffix=".php">src</directory>
             <directory suffix=".php">application</directory>
             <exclude>
-                <file>application/Bootstrap.php</file>
+                <file>Bootstrap.php</file>
+                <directory suffix=".php">controllers</directory>
+                <directory suffix=".php">forms</directory>
+                <directory suffix=".php">plugins</directory>
             </exclude>
         </whitelist>
     </filter>
