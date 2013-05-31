@@ -90,7 +90,7 @@ Orga_Model_Cell:
     cellsGroups:
       targetEntity: Orga_Model_CellsGroup
       mappedBy: containerCell
-      cascade: [ remove ]
+      cascade: [ persist, remove ]
 
   manyToOne:
     granularity:
