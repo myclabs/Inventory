@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="languagefr">
+            <tuv xml:lang="fr">
+                <seg>Français</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>French</seg>
+            </tuv>
+        </tu>
+        <tu tuid="languageen">
+            <tuv xml:lang="fr">
+                <seg>Anglais</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>English</seg>
+            </tuv>
+        </tu>
+        <tu tuid="empty">
+            <tuv xml:lang="fr">
+                <seg>[Vide]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>[Empty]</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

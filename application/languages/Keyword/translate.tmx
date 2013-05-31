@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="directPredicates">
+            <tuv xml:lang="fr">
+                <seg>Prédicats directs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Direct predicates</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reversePredicates">
+            <tuv xml:lang="fr">
+                <seg>Prédicats inverses</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reverse predicates</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="sendMessageTo">
+            <tuv xml:lang="fr">
+                <seg>Envoyer un message à</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Send message to</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>  
