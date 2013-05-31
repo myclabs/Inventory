@@ -275,7 +275,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
     {
         $queryDWCube = new Core_Model_Query();
         $queryDWCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $cell->getGranularity()->getDWCube());
-        foreach (DW_Model_Report::loadList($queryDWCube) as $granularityDWReport) {
+        foreach ($cell->getGranularity()->getDWCube()->getReports() as $granularityDWReport) {
             $granularityReport = Orga_Model_GranularityReport::loadByGranularityDWReport($granularityDWReport);
             $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube());
         }
