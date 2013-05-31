@@ -215,37 +215,45 @@ class DW_Model_Report extends Core_Model_Entity
      */
     public function setCube($cube)
     {
-        $this->cube = $cube;
+        if ($this->cube !== $cube) {
+            if ($this->cube !== null) {
+                $this->cube->removeReport($this);
+            }
+            $this->cube = $cube;
+            if ($cube !== null) {
+                $cube->addReport($this);
 
-        // MAJ des numérateurs
-        if ($this->numerator) {
-            $this->numerator = $this->cube->getIndicatorByRef($this->numerator->getRef());
-        }
-        if ($this->numeratorAxis1) {
-            $this->numeratorAxis1 = $this->cube->getAxisByRef($this->numeratorAxis1->getRef());
-        }
-        if ($this->numeratorAxis2) {
-            $this->numeratorAxis2 = $this->cube->getAxisByRef($this->numeratorAxis2->getRef());
-        }
+                // MAJ des numérateurs
+                if ($this->numerator) {
+                    $this->numerator = $this->cube->getIndicatorByRef($this->numerator->getRef());
+                }
+                if ($this->numeratorAxis1) {
+                    $this->numeratorAxis1 = $this->cube->getAxisByRef($this->numeratorAxis1->getRef());
+                }
+                if ($this->numeratorAxis2) {
+                    $this->numeratorAxis2 = $this->cube->getAxisByRef($this->numeratorAxis2->getRef());
+                }
 
-        // MAJ des dénominateurs
-        if ($this->denominator) {
-            $this->denominator = $this->cube->getIndicatorByRef($this->denominator->getRef());
-        }
-        if ($this->denominatorAxis1) {
-            $this->denominatorAxis1 = $this->cube->getAxisByRef($this->denominatorAxis1->getRef());
-        }
-        if ($this->denominatorAxis2) {
-            $this->denominatorAxis2 = $this->cube->getAxisByRef($this->denominatorAxis2->getRef());
-        }
+                // MAJ des dénominateurs
+                if ($this->denominator) {
+                    $this->denominator = $this->cube->getIndicatorByRef($this->denominator->getRef());
+                }
+                if ($this->denominatorAxis1) {
+                    $this->denominatorAxis1 = $this->cube->getAxisByRef($this->denominatorAxis1->getRef());
+                }
+                if ($this->denominatorAxis2) {
+                    $this->denominatorAxis2 = $this->cube->getAxisByRef($this->denominatorAxis2->getRef());
+                }
 
-        // MAJ des filtres
-        $this->filters = $this->filters->map(function($element) {
-            return clone $element;
-        });
-        foreach ($this->filters as $filter) {
-            /** @var DW_Model_Filter $filter */
-            $filter->setReport($this);
+                // MAJ des filtres
+                $this->filters = $this->filters->map(function($element) {
+                    return clone $element;
+                });
+                foreach ($this->filters as $filter) {
+                    /** @var DW_Model_Filter $filter */
+                    $filter->setReport($this);
+                }
+            }
         }
     }
 

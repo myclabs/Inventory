@@ -82,7 +82,7 @@ class DW_Model_Cube extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un Axis à la collction du Cube.
+     * Ajoute un Axis à la collection du Cube.
      *
      * @param DW_Model_Axis $axis
      */
@@ -274,6 +274,64 @@ class DW_Model_Cube extends Core_Model_Entity
             return $results->first();
         }
         throw new Core_Exception_NotFound("L'indicateur $ref est introuvable dans le cube");
+    }
+
+    /**
+     * Ajoute un Report à la collection du Cube.
+     *
+     * @param DW_Model_Report $report
+     */
+    public function addReport(DW_Model_Report $report)
+    {
+        if (!($this->hasReport($report))) {
+            $this->reports->add($report);
+            $report->setCube($this);
+        }
+    }
+
+    /**
+     * Vérifie si l'Report donné appartient à ceux du Cube.
+     *
+     * @param DW_Model_Report $report
+     *
+     * @return boolean
+     */
+    public function hasReport(DW_Model_Report $report)
+    {
+        return $this->reports->contains($report);
+    }
+
+    /**
+     * Retire un Report de ceux du Cube.
+     *
+     * @param DW_Model_Report $report
+     */
+    public function removeReport($report)
+    {
+        if ($this->hasReport($report)) {
+            $this->reports->removeElement($report);
+            $report->setCube(null);
+        }
+    }
+
+    /**
+     * Vérifie si le Cube ossède au moins un Report.
+     *
+     * @return bool
+     */
+    public function hasReports()
+    {
+        return !$this->reports->isEmpty();
+    }
+
+    /**
+     * Renvoie les Report du Cube.
+     *
+     * @return DW_Model_Report[]
+     */
+    public function getReports()
+    {
+        return $this->reports->toArray();
     }
 
 }
