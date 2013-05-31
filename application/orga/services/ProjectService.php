@@ -50,6 +50,7 @@ class Orga_Service_ProjectService extends Core_Singleton
         try {
             $project = new Orga_Model_Project();
             $project->setLabel($label);
+            $defaultGranularity = new Orga_Model_Granularity($project);
             $project->save();
             $this->entityManager->flush();
 
