@@ -735,11 +735,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes($granularity);
                 $entityManager->flush();
-                foreach ($granularity->getCells() as $orgaCell) {
+                foreach ($granularity->getCells() as $cell) {
                     $entityManager->clear();
-                    $this->resetCellDWCube(
-                        Orga_Model_Cell::loadByOrgaCell($orgaCell)
-                    );
+                    $this->resetCellDWCube($cell);
                     $entityManager->flush();
                     $entityManager->clear();
                 }
@@ -756,7 +754,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
     {
         $this->resetDWCube(
             $granularity->getDWCube(),
-            $granularity->getCube(),
+            $granularity->getProject(),
             array(
                 'axes' => $granularity->getAxes()
             )
