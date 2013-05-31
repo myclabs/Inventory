@@ -117,7 +117,7 @@ class Orga_Model_Cube extends Core_Model_Entity
         );
         $rootAxes = $this->axes->matching($criteria)->toArray();
 
-        uasort(
+        @uasort(
             $rootAxes,
             function ($a, $b) {
                 return $a->getPosition() - $b->getPosition();

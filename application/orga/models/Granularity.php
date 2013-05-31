@@ -492,7 +492,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
         }
 
         $crossedAxesRefs = array_merge($currentAxes, $crossingAxes);
-        uasort($crossedAxesRefs, function ($a, $b) {
+        @uasort($crossedAxesRefs, function ($a, $b) {
             return $a->getGlobalPosition() - $b->getGlobalPosition();
         });
 
@@ -522,7 +522,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             }
         }
 
-        uasort($encompassingAxes, function ($a, $b) {
+        @uasort($encompassingAxes, function ($a, $b) {
             return $a->getGlobalPosition() - $b->getGlobalPosition();
         });
 

@@ -142,7 +142,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function buildParentMembersHashKey($contextualizingParentMembers)
     {
-        uasort(
+        @uasort(
             $contextualizingParentMembers,
             function (Orga_Model_Member $a, Orga_Model_Member $b) {
                 return $a->getAxis()->getGlobalPosition() - $b->getAxis()->getGlobalPosition();

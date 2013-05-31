@@ -229,7 +229,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public static function buildMembersHashKey($listMembers)
     {
-        uasort(
+        @uasort(
             $listMembers,
             function (Orga_Model_Member $a, Orga_Model_Member $b) {
                 return $a->getAxis()->getGlobalPosition() - $b->getAxis()->getGlobalPosition();
