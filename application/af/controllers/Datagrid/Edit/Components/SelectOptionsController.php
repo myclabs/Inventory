@@ -22,7 +22,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
     public function getelementsAction()
     {
         /** @var $selectField AF_Model_Component_Select */
-        $selectField = AF_Model_Component_Select::load($this->_getParam('idSelect'));
+        $selectField = AF_Model_Component_Select::load($this->getParam('idSelect'));
         $options = $selectField->getOptions();
         foreach ($options as $option) {
             $data = [];
@@ -52,7 +52,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
     public function addelementAction()
     {
         /** @var $selectField AF_Model_Component_Select */
-        $selectField = AF_Model_Component_Select::load($this->_getParam('idSelect'));
+        $selectField = AF_Model_Component_Select::load($this->getParam('idSelect'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -123,7 +123,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
             // Ce cas peut se produire uniquement avec les champs de selection multiple
             case 'defaultValue':
                 /** @var $select AF_Model_Component_Select_Multi */
-                $select = AF_Model_Component_Select_Multi::load($this->_getParam('idSelect'));
+                $select = AF_Model_Component_Select_Multi::load($this->getParam('idSelect'));
                 if ($newValue) {
                     $select->addDefaultValue($option);
                 } else {
@@ -169,9 +169,9 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
     public function deleteelementAction()
     {
         /** @var $select AF_Model_Component_Select */
-        $select = AF_Model_Component_Select::load($this->_getParam('idSelect'));
+        $select = AF_Model_Component_Select::load($this->getParam('idSelect'));
         /** @var $option AF_Model_Component_Select_Option */
-        $option = AF_Model_Component_Select_Option::load($this->_getParam('index'));
+        $option = AF_Model_Component_Select_Option::load($this->getParam('index'));
         try {
             $option->delete();
         } catch (Core_ORM_ForeignKeyViolationException $e) {

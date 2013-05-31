@@ -21,7 +21,7 @@ class DW_CubeController extends Core_Controller_Ajax
     public function exportAction()
     {
         set_time_limit(60);
-        $export = new DW_Export_Indicators(DW_Model_Cube::load($this->_getParam('idCube')));
+        $export = new DW_Export_Indicators(DW_Model_Cube::load($this->getParam('idCube')));
         $export->display();
     }
 

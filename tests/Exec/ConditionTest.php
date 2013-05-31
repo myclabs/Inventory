@@ -82,19 +82,19 @@ class Exec_Test_ConditionOthers extends PHPUnit_Framework_TestCase
      */
     function testExecuteComponent()
     {
-        $valueProvider1 = new Default_Model_ValueProviderEntity(array('a' => true, 'b' => false, 'c' => true));
+        $valueProvider1 = new Inventory_Model_ValueProviderEntity(array('a' => true, 'b' => false, 'c' => true));
         $expressionCondition1 = new Exec_Execution_Condition($this->expression1);
         $this->assertTrue($expressionCondition1->executeExpression($valueProvider1));
 
-        $valueProvider2 = new Default_Model_ValueProviderEntity(array('vrai' => true, 'faux' => false));
+        $valueProvider2 = new Inventory_Model_ValueProviderEntity(array('vrai' => true, 'faux' => false));
         $expressionCondition2 = new Exec_Execution_Condition($this->expression2);
         $this->assertFalse($expressionCondition2->executeExpression($valueProvider2));
 
-        $valueProvider3 = new Default_Model_ValueProviderEntity(array('un' => false, 'zero' => true));
+        $valueProvider3 = new Inventory_Model_ValueProviderEntity(array('un' => false, 'zero' => true));
         $expressionCondition3 = new Exec_Execution_Condition($this->expression3);
         $this->assertTrue($expressionCondition3->executeExpression($valueProvider3));
 
-        $valueProvider4 = new Default_Model_ValueProviderEntity(array('a' => true, 'b' => true, 'c' => false));
+        $valueProvider4 = new Inventory_Model_ValueProviderEntity(array('a' => true, 'b' => true, 'c' => false));
         $expressionCondition4 = new Exec_Execution_Condition($this->expression4);
         $this->assertTrue($expressionCondition4->executeExpression($valueProvider4));
     }

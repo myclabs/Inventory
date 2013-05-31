@@ -3,7 +3,7 @@
  * @author valentin.claras
  * @author sidoine.tardieu
  * @package Orga
- * Datagrids des membres d'un cube.
+ * Datagrids des membres d'un project.
  */
 foreach ($this->axes as $axis) {
     /** @var $axis Orga_Model_Axis */
@@ -35,7 +35,7 @@ foreach ($this->axes as $axis) {
     if ($this->idCell !== null) {
         $datagridAxisMembers->addParam('idCell', $this->idCell);
     }
-    $datagridAxisMembers->addParam('idCube', $this->idCube);
+    $datagridAxisMembers->addParam('idProject', $this->idProject);
     $datagridAxisMembers->addParam('refAxis', $axis->getRef());
     $datagridAxisMembers->addParam('idFilterCell', $this->idFilterCell);
     if (!empty($this->idFilterCell)) {

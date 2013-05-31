@@ -22,7 +22,7 @@ class Orga_Datagrid_CellController extends UI_Controller_Datagrid
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
@@ -33,8 +33,8 @@ class Orga_Datagrid_CellController extends UI_Controller_Datagrid
         $this->request->setCustomParameters($this->request->filter->getConditions());
         $this->request->filter->setConditions(array());
 
-        $cell = Orga_Model_Cell::load(array('id' => $this->_getParam('idCell')));
-        $granularity = Orga_Model_Granularity::load(array('id' => $this->_getParam('idGranularity')));
+        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+        $granularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
 
         $this->request->order->addOrder(Orga_Model_Cell::QUERY_MEMBERS_HASHKEY);
         $this->request->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
@@ -45,7 +45,7 @@ class Orga_Datagrid_CellController extends UI_Controller_Datagrid
             foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
-            $data['link'] = $this->cellLink($this->_getParam('outputUrl').'idCell=' . $childCell->getKey()['id'],
+            $data['link'] = $this->cellLink($this->getParam('outputUrl').'idCell=' . $childCell->getKey()['id'],
                 '<i class="icon-share-alt"></i> '.__('UI', 'verb', 'goTo')
                 );
             $this->addLine($data);

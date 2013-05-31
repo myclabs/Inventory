@@ -55,14 +55,14 @@ class DW_ReportController extends Core_Controller_Ajax
     public function detailsAction()
     {
         $report = null;
-        if ($this->_hasParam('hashReport')) {
-            $report = $this->getReportByHash($this->_getParam('hashReport'));
+        if ($this->hasParam('hashReport')) {
+            $report = $this->getReportByHash($this->getParam('hashReport'));
         }
         if (!isset($report) || !($report instanceof DW_Model_Report)) {
-            if ($this->_hasParam('idReport')) {
-                $report = DW_Model_Report::load(array('id' => $this->_getParam('idReport')));
+            if ($this->hasParam('idReport')) {
+                $report = DW_Model_Report::load(array('id' => $this->getParam('idReport')));
             } else {
-                $cube = DW_Model_Cube::load(array('id' => $this->_getParam('idCube')));
+                $cube = DW_Model_Cube::load(array('id' => $this->getParam('idCube')));
                 $report = new DW_Model_Report();
                 $report->setCube($cube);
                 $report->setLabel(__('DW', 'report', 'newReportDefaultLabelPage'));
@@ -73,7 +73,7 @@ class DW_ReportController extends Core_Controller_Ajax
         } else {
             $this->view->isNew = true;
         }
-        $hash = ($this->_hasParam('hashReport')) ? $this->_getParam('hashReport') : (string) spl_object_hash($report);
+        $hash = ($this->hasParam('hashReport')) ? $this->getParam('hashReport') : (string) spl_object_hash($report);
 
         $this->view->headLink()->appendStylesheet('css/dw/report.css');
         $this->view->idCube = $report->getCube()->getKey()['id'];;
@@ -82,8 +82,8 @@ class DW_ReportController extends Core_Controller_Ajax
         require_once (dirname(__FILE__).'/../forms/Configuration.php');
         $this->view->configurationForm = new DW_Form_configuration($report, $hash);
 
-        if ($this->_hasParam('viewConfiguration')) {
-            $this->view->viewConfiguration = $this->_getParam('viewConfiguration');
+        if ($this->hasParam('viewConfiguration')) {
+            $this->view->viewConfiguration = $this->getParam('viewConfiguration');
         } else {
             $this->view->viewConfiguration = new DW_ViewConfiguration();
             $this->view->viewConfiguration->setOutputURL('index/report?idCube='.$report->getCube()->getKey()['id']);
@@ -99,9 +99,9 @@ class DW_ReportController extends Core_Controller_Ajax
      */
     public function applyconfigurationAction()
     {
-        $report = $this->getReportByHash($this->_getParam('hashReport'));
+        $report = $this->getReportByHash($this->getParam('hashReport'));
 
-        $configurationPost = json_decode($this->_getParam($this->_getParam('hashReport')), true);
+        $configurationPost = json_decode($this->getParam($this->getParam('hashReport')), true);
         $errors = array();
 
         // Options de configuration.
@@ -280,7 +280,7 @@ class DW_ReportController extends Core_Controller_Ajax
         }
 
         if (empty($errors)) {
-            $this->setReportByHash($this->_getParam('hashReport'), $report);
+            $this->setReportByHash($this->getParam('hashReport'), $report);
             $this->sendJsonResponse(
                 array(
                     'message' => __('DW', 'report', 'reportConfigurationParsed'),
@@ -309,9 +309,9 @@ class DW_ReportController extends Core_Controller_Ajax
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $report = $this->getReportByHash($this->_getParam('hashReport'));
+        $report = $this->getReportByHash($this->getParam('hashReport'));
 
-        $savePost = json_decode($this->_getParam('saveReportAs'), JSON_OBJECT_AS_ARRAY);
+        $savePost = json_decode($this->getParam('saveReportAs'), JSON_OBJECT_AS_ARRAY);
         $reportLabel = $savePost['saveLabelReport']['value'];
         if (empty($reportLabel)) {
             $this->getResponse()->setHttpResponseCode(400);
@@ -355,9 +355,9 @@ class DW_ReportController extends Core_Controller_Ajax
      */
     public function valuesAction()
     {
-        $report = $this->getReportByHash($this->_getParam('hashReport'));
-        $this->view->idCube = $this->_getParam('idCube');
-        $this->view->hashReport = $this->_getParam('hashReport');
+        $report = $this->getReportByHash($this->getParam('hashReport'));
+        $this->view->idCube = $this->getParam('idCube');
+        $this->view->hashReport = $this->getParam('hashReport');
         $this->view->numeratorAxis1 = $report->getNumeratorAxis1();
         $this->view->numeratorAxis2 = $report->getNumeratorAxis2();
         $this->view->valueUnit = $report->getNumerator()->getUnit()->getSymbol();
@@ -376,7 +376,7 @@ class DW_ReportController extends Core_Controller_Ajax
      */
     public function graphAction()
     {
-        $report = $this->getReportByHash($this->_getParam('hashReport'));
+        $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $this->view->chart = $report->getChart();
         $this->view->valueUnit = $report->getNumerator()->getUnit()->getSymbol();
@@ -395,7 +395,7 @@ class DW_ReportController extends Core_Controller_Ajax
      */
     public function excelAction()
     {
-        $report = $this->getReportByHash($this->_getParam('hashReport'));
+        $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $export = new DW_Export_Report_Excel($report);
 
@@ -411,7 +411,7 @@ class DW_ReportController extends Core_Controller_Ajax
      */
     public function pdfAction()
     {
-        $report = $this->getReportByHash($this->_getParam('hashReport'));
+        $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $export = new DW_Export_Report_Pdf($report);
 
@@ -429,8 +429,8 @@ class DW_ReportController extends Core_Controller_Ajax
     {
         $this->sendJsonResponse(
             file_put_contents(
-                PACKAGE_PATH.'/public/temp/'.$this->_getParam('name').'.png',
-                base64_decode(explode(',', $this->_getParam('image'))[1])
+                PACKAGE_PATH.'/public/temp/'.$this->getParam('name').'.png',
+                base64_decode(explode(',', $this->getParam('image'))[1])
             )
         );
     }

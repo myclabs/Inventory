@@ -20,7 +20,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
             if ($algo instanceof Algo_Model_Selection_TextKey_Expression) {
@@ -46,7 +46,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
     public function addelementAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -130,7 +130,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
     public function deleteelementAction()
     {
         /** @var $algo Algo_Model_Selection_TextKey_Expression */
-        $algo = Algo_Model_Selection_TextKey_Expression::load($this->_getParam('index'));
+        $algo = Algo_Model_Selection_TextKey_Expression::load($this->getParam('index'));
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
@@ -151,7 +151,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
     public function getExpressionAction()
     {
         /** @var $algo Algo_Model_Selection_TextKey_Expression */
-        $algo = Algo_Model_Selection_TextKey_Expression::load($this->_getParam('id'));
+        $algo = Algo_Model_Selection_TextKey_Expression::load($this->getParam('id'));
         $this->data = $algo->getExpression();
         $this->send();
     }

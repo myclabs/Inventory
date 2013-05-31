@@ -1,0 +1,100 @@
+<?php
+/**
+ * @author valentin.claras
+ * @author cyril.perraud
+ * @package Orga
+ * @subpackage View
+ */
+if (!$this->isDWCubeUpToDate) { ?>
+<div id="dWCubeNotUpToDate">
+    <p>
+        <span class="label label-warning"><?=__('UI', 'message', 'titleWarning') ?></span>
+        <?=__('DW', 'rebuild', 'analysisTabRebuildAlert') ?>
+    </p>
+    <?php if ($this->dWCubesCanBeReset) { ?>
+    <p><?=__('DW', 'rebuild', 'analysisDataRebuildWarningMessageOrganization') ?></p>
+    <p><?=__('DW', 'rebuild', 'cellAdministratorWarningMessage') ?></p>
+    <?= $this->button(__('DW', 'rebuild', 'analysisDataRebuildButton'), 'refresh icon-white', array('id' => 'resetDWCube', 'class' => 'btn-primary')) ?>
+    <script type="text/javascript">
+        $('#resetDWCube').click(function() {
+            setMask(true);
+            $.post(
+                    'orga/cell/resetdws/idCell/<?=$this->idCell?>',
+                    function(data, textStatus, jqXHR){
+                        setMask(false);
+                        addMessage(data.message, 'success');
+                        $('#dWCubeNotUpToDate').remove();
+                    }
+            ).error(
+                    function(o) { setMask(false); errorHandler(o); }
+            );
+        });
+    </script>
+    <? } else { ?>
+    <p><?=__('DW', 'rebuild', 'cellNonAdministratorWarningMessage') ?></p>
+    <? } ?>
+    <hr/>
+</div>
+<?php } ?>
+
+<a id="exportAsExcel" href="<?=$this->baseUrl()?>/dw/project/export?idProject=<?=$this->idProject?>" class="btn">
+    <img src="images/dw/xls.png" alt="xls" />
+    <?=__('DW', 'reportList', 'detailedSpreadsheetExport')?>
+</a>
+<div id="exportAsExcelPopup" class="modal hide fade">
+    <div class="modal-body">
+        <p><?=__('Orga', 'dw', 'detailedExcelExportPopup')?></p>
+        <div class="progress progress-striped active">
+            <div class="bar" style="width: 100%;"></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'close')?></button>
+    </div>
+</div>
+
+<script>
+    $("#exportAsExcel").click(function(e) {
+        e.preventDefault();
+        $('#exportAsExcelPopup').modal();
+        window.location = $(this).attr('href');
+    });
+</script>
+
+<hr/>
+
+<?php
+$datagrid = new UI_Datagrid('report', 'datagrid_cell_report', 'orga');
+
+$columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$datagrid->addCol($columnLabel);
+
+$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+$datagrid->addCol($columnDetails);
+
+$datagrid->addParam('idCell', $this->idCell);
+$datagrid->addParam('idProject', $this->idProject);
+$datagrid->pagination = false;
+$datagrid->deleteElements = true;
+
+echo $datagrid->render();
+?>
+<div class="wrapper">
+    <?=$this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link('orga/tab_celldetails/report?idCell='.$this->idCell.'&idProject='.$this->idProject)?>
+</div>
+
+<?php if (count($this->specificExports) > 0) { ?>
+<fieldset class="wrapper">
+    <legend><?=__('Orga', 'dw', 'specificPDFExports')?></legend>
+    <ul>
+        <?php foreach ($this->specificExports as $specificExport) { ?>
+        <li>
+            <a href="<?=$specificExport['link']?>" target="_blank">
+                <img alt="pdf" src="images/dw/pdf.png">
+                <?=$specificExport['label']?>.pdf
+            </a>
+        </li>
+        <? } ?>
+    </ul>
+</fieldset>
+<?php } ?>

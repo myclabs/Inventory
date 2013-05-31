@@ -28,10 +28,10 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
     public function init()
     {
         parent::init();
-        if (!$this->_hasParam('idSet')) {
+        if (!$this->hasParam('idSet')) {
             throw new Core_Exception_InvalidHTTPQuery('L\'id du Set n\'a pas été spécifié.');
         } else {
-            $this->set = Simulation_Model_Set::load($this->_getParam('idSet'));
+            $this->set = Simulation_Model_Set::load($this->getParam('idSet'));
         }
     }
 
@@ -42,7 +42,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
@@ -111,7 +111,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
      *  $this->add['nomDuChamps'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie une message d'information.
      *
@@ -142,7 +142,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
      *  $this->delete.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information.
      *
@@ -171,7 +171,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
      *  $this->update['valeur'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *

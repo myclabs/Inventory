@@ -45,15 +45,15 @@ class Social_ActionController extends Core_Controller_Ajax
     public function genericActionDetailsAction()
     {
         /** @var $genericAction Social_Model_GenericAction */
-        $genericAction = Social_Model_GenericAction::load($this->_getParam('id'));
+        $genericAction = Social_Model_GenericAction::load($this->getParam('id'));
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->genericAction = $genericAction;
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->comments = $genericAction->getComments();
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->title = $this->_getParam('title');
+        $this->view->title = $this->getParam('title');
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->returnUrl = $this->_getParam('returnUrl');
+        $this->view->returnUrl = $this->getParam('returnUrl');
     }
 
     /**
@@ -64,7 +64,7 @@ class Social_ActionController extends Core_Controller_Ajax
     public function genericActionUpdateAction()
     {
         /** @var $genericAction Social_Model_GenericAction */
-        $genericAction = Social_Model_GenericAction::load($this->_getParam('id'));
+        $genericAction = Social_Model_GenericAction::load($this->getParam('id'));
         $formData = $this->getFormData('editGenericAction');
 
         $idTheme = $formData->getValue('theme');
@@ -96,7 +96,7 @@ class Social_ActionController extends Core_Controller_Ajax
     public function genericActionAddCommentAction()
     {
         /** @var $genericAction Social_Model_GenericAction */
-        $genericAction = Social_Model_GenericAction::load($this->_getParam('id'));
+        $genericAction = Social_Model_GenericAction::load($this->getParam('id'));
         $author = $this->_helper->auth();
         $formData = $this->getFormData('addComment');
 
@@ -114,7 +114,7 @@ class Social_ActionController extends Core_Controller_Ajax
             $genericAction->save();
 
             // Retourne la vue du commentaire
-            $this->_forward('comment-added', 'comment', null, ['comment' => $comment]);
+            $this->forward('comment-added', 'comment', null, ['comment' => $comment]);
             return;
         }
         $this->sendFormResponse();
@@ -127,7 +127,7 @@ class Social_ActionController extends Core_Controller_Ajax
     public function popupActionDescriptionAction()
     {
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->action = Social_Model_Action::load($this->_getParam('id'));
+        $this->view->action = Social_Model_Action::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -155,15 +155,15 @@ class Social_ActionController extends Core_Controller_Ajax
     public function contextActionDetailsAction()
     {
         /** @var $action Social_Model_ContextAction */
-        $action = Social_Model_ContextAction::load($this->_getParam('id'));
+        $action = Social_Model_ContextAction::load($this->getParam('id'));
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->contextAction = $action;
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->comments = $action->getComments();
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->title = $this->_getParam('title');
+        $this->view->title = $this->getParam('title');
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->returnUrl = $this->_getParam('returnUrl');
+        $this->view->returnUrl = $this->getParam('returnUrl');
     }
 
     /**
@@ -175,7 +175,7 @@ class Social_ActionController extends Core_Controller_Ajax
     {
         $locale = Core_Locale::loadDefault();
         /** @var $contextAction Social_Model_ContextAction */
-        $contextAction = Social_Model_ContextAction::load($this->_getParam('id'));
+        $contextAction = Social_Model_ContextAction::load($this->getParam('id'));
         $formData = $this->getFormData('editContextAction');
 
         // Validation
@@ -246,7 +246,7 @@ class Social_ActionController extends Core_Controller_Ajax
     public function contextActionAddCommentAction()
     {
         /** @var $contextAction Social_Model_ContextAction */
-        $contextAction = Social_Model_ContextAction::load($this->_getParam('id'));
+        $contextAction = Social_Model_ContextAction::load($this->getParam('id'));
         $author = $this->_helper->auth();
         $formData = $this->getFormData('addComment');
 
@@ -264,7 +264,7 @@ class Social_ActionController extends Core_Controller_Ajax
             $contextAction->save();
 
             // Retourne la vue du commentaire
-            $this->_forward('comment-added', 'comment', null, ['comment' => $comment]);
+            $this->forward('comment-added', 'comment', null, ['comment' => $comment]);
             return;
         }
         $this->sendFormResponse();

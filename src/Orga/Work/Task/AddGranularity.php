@@ -15,7 +15,7 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
     /**
      * @var string
      */
-    private $idCube;
+    private $idProject;
 
     /**
      * @var array
@@ -28,13 +28,13 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
     private $navigability;
 
     /**
-     * @param Orga_Model_Cube $cube
-     * @param Orga_Model_Axis[] $cube
+     * @param Orga_Model_Project $project
+     * @param Orga_Model_Axis[] $project
      * @param bool $navigability
      */
-    public function __construct($cube, $listAxes, $navigability)
+    public function __construct($project, $listAxes, $navigability)
     {
-        $this->idCube = $cube->getKey()['id'];
+        $this->idProject = $project->getKey()['id'];
         foreach ($listAxes as $axis) {
             $this->listAxes[] = $axis->getKey()['id'];
         }
@@ -46,11 +46,12 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
      */
     public function execute()
     {
-        $granularity = new Orga_Model_Granularity();
-        $granularity->setCube(Orga_Model_Cube::load(array('id' => $this->idCube)));
+        $project = Orga_Model_Project::load(array('id' => $this->idProject));
+        $axes = array();
         foreach ($this->listAxes as $idAxis) {
-            $granularity->addAxis(Orga_Model_Axis::load(array('id' => $idAxis)));
+            $axes[] = Orga_Model_Axis::load(array('id' => $idAxis));
         }
+        $granularity = new Orga_Model_Granularity($project, $axes);
         $granularity->setNavigability($this->navigability);
         $granularity->save();
 

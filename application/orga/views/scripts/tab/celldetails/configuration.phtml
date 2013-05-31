@@ -1,0 +1,138 @@
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'configuration', 'granularityTitle')?></legend>
+    <div>
+    <?php
+    $datagridGranularity = new UI_Datagrid('granularity', 'datagrid_cell_granularitydataprovider', 'orga');
+
+    $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+    $datagridGranularity->addCol($columnLabel);
+
+    $columnCellsWithOrgaTab = new UI_Datagrid_Col_Bool('cellsWithOrgaTab', __('Orga', 'configuration', 'cellsWithOrgaTabHeader'));
+    $columnCellsWithOrgaTab->valueTrue = '<i class="icon-ok"></i> ' . __('UI', 'property', 'visible');
+    $columnCellsWithOrgaTab->valueFalse = '<i class="icon-remove"></i> ' . __('UI', 'property', 'masked');
+    $columnCellsWithOrgaTab->textTrue = __('UI', 'property', 'visible');
+    $columnCellsWithOrgaTab->textFalse = __('UI', 'property', 'masked');
+    $columnCellsWithOrgaTab->editable = true;
+    $datagridGranularity->addCol($columnCellsWithOrgaTab);
+
+    $columnCellsWithACL = new UI_Datagrid_Col_Bool('cellsWithACL', __('User', 'name', 'roles'));
+    $columnCellsWithACL->valueTrue = '<i class="icon-ok"></i> ' . __('UI', 'other', 'yes');
+    $columnCellsWithACL->valueFalse = '<i class="icon-remove"></i> ' . __('UI', 'other', 'no');
+    $columnCellsWithACL->textTrue = __('UI', 'other', 'yes');
+    $columnCellsWithACL->textFalse = __('UI', 'other', 'no');
+    $columnCellsWithACL->editable = true;
+    $datagridGranularity->addCol($columnCellsWithACL);
+
+    $columnCellsWithAFConfigTab = new UI_Datagrid_Col_Bool('cellsWithAFConfigTab', __('Orga', 'configuration', 'cellsWithAFConfigTabHeader'));
+    $columnCellsWithAFConfigTab->valueTrue = '<i class="icon-ok"></i> ' . __('UI', 'property', 'visible');
+    $columnCellsWithAFConfigTab->valueFalse = '<i class="icon-remove"></i> ' . __('UI', 'property', 'masked');
+    $columnCellsWithAFConfigTab->textTrue = __('UI', 'property', 'visible');
+    $columnCellsWithAFConfigTab->textFalse = __('UI', 'property', 'masked');
+    $columnCellsWithAFConfigTab->editable = true;
+    $datagridGranularity->addCol($columnCellsWithAFConfigTab);
+
+    $columnCellsGenerateDWCube = new UI_Datagrid_Col_Bool('cellsGenerateDWCube', __('Orga', 'configuration', 'cellsWithDWCubesHeader'));
+    $columnCellsGenerateDWCube->valueTrue = '<i class="icon-ok"></i> ' . __('UI', 'other', 'yes');
+    $columnCellsGenerateDWCube->valueFalse = '<i class="icon-remove"></i> ' . __('UI', 'other', 'no');
+    $columnCellsGenerateDWCube->textTrue = __('UI', 'other', 'yes');
+    $columnCellsGenerateDWCube->textFalse = __('UI', 'other', 'no');
+    $columnCellsGenerateDWCube->editable = true;
+    $datagridGranularity->addCol($columnCellsGenerateDWCube);
+
+    $columnCellsWithSocialGenericActions = new UI_Datagrid_Col_Bool('cellsWithSocialGenericActions', __('Social', 'name', 'actionTemplates'));
+    $columnCellsWithSocialGenericActions->valueTrue = '<i class="icon-ok"></i> ' . __('UI', 'other', 'yes');
+    $columnCellsWithSocialGenericActions->valueFalse = '<i class="icon-remove"></i> ' . __('UI', 'other', 'no');
+    $columnCellsWithSocialGenericActions->textTrue = __('UI', 'other', 'yes');
+    $columnCellsWithSocialGenericActions->textFalse = __('UI', 'other', 'no');
+    $columnCellsWithSocialGenericActions->editable = true;
+    $datagridGranularity->addCol($columnCellsWithSocialGenericActions);
+
+    $columnCellsWithSocialContextActions = new UI_Datagrid_Col_Bool('cellsWithSocialContextActions', __('Social', 'name', 'actions'));
+    $columnCellsWithSocialContextActions->valueTrue = '<i class="icon-ok"></i> ' . __('UI', 'other', 'yes');
+    $columnCellsWithSocialContextActions->valueFalse = '<i class="icon-remove"></i> ' . __('UI', 'other', 'no');
+    $columnCellsWithSocialContextActions->textTrue = __('UI', 'other', 'yes');
+    $columnCellsWithSocialContextActions->textFalse = __('UI', 'other', 'no');
+    $columnCellsWithSocialContextActions->editable = true;
+    $datagridGranularity->addCol($columnCellsWithSocialContextActions);
+
+    $columnCellsWithInputDocs = new UI_Datagrid_Col_Bool('cellsWithInputDocs', __('Doc', 'name', 'documents'));
+    $columnCellsWithInputDocs->valueTrue = '<i class="icon-ok"></i> ' . __('UI', 'other', 'yes');
+    $columnCellsWithInputDocs->valueFalse = '<i class="icon-remove"></i> ' . __('UI', 'other', 'no');
+    $columnCellsWithInputDocs->textTrue = __('UI', 'other', 'yes');
+    $columnCellsWithInputDocs->textFalse = __('UI', 'other', 'no');
+    $columnCellsWithInputDocs->editable = true;
+    $datagridGranularity->addCol($columnCellsWithInputDocs);
+
+    $datagridGranularity->pagination = false;
+    $datagridGranularity->addParam('idProject', $this->idProject);
+    echo $datagridGranularity->render();
+    ?>
+    </div>
+</fieldset>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'configuration', 'AFGranularitiesTitle')?></legend>
+    <div>
+    <?php
+    if ($this->areAFGranularitiesDisplayed) {
+        $datagridAFGranularities = new UI_Datagrid('aFGranularities', 'datagrid_cell_afgranularities', 'orga');
+
+        $columnLabelAFConfigOrgaGranularity = new UI_Datagrid_Col_List('LabelAFConfigOrgaGranularity', __('Orga', 'configuration', 'labelAFConfigOrgaGranularity'));
+        $columnLabelAFConfigOrgaGranularity->list = $this->listOrgaGranularities;
+        $datagridAFGranularities->addCol($columnLabelAFConfigOrgaGranularity);
+
+        $columnLabelAFInputOrgaGranularity = new UI_Datagrid_Col_List('LabelAFInputOrgaGranularity', __('Orga', 'configuration', 'labelAFInputOrgaGranularity'));
+        $columnLabelAFInputOrgaGranularity->list = $this->listOrgaGranularities;
+        $datagridAFGranularities->addCol($columnLabelAFInputOrgaGranularity);
+
+        $datagridAFGranularities->addParam('idProject', $this->idProject);
+        $datagridAFGranularities->pagination = false;
+        $datagridAFGranularities->addElements = true;
+        $datagridAFGranularities->deleteElements = true;
+        echo $datagridAFGranularities->render();
+    } else {
+        echo $this->errorMessageAFGranularities;
+    }
+    ?>
+    </div>
+</fieldset>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'configuration', 'granularityAnalysesTitle')?></legend>
+    <div>
+        <?php
+        foreach ($this->granularitesWithDWCube as $labelGranularity => $granularity) {
+            $datagrid = new UI_Datagrid('granularity'.$granularity->getKey()['id'].'Report', 'datagrid_granularity_report', 'orga');
+
+            $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+            $datagrid->addCol($columnLabel);
+
+            $columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+            $datagrid->addCol($columnDetails);
+
+            $datagrid->addParam('idCell', $this->idCell);
+            $datagrid->addParam('idGranularity', $granularity->getKey()['id']);
+            $datagrid->addParam('idProject', $granularity->getDWCube()->getKey()['id']);
+            $datagrid->pagination = false;
+            $datagrid->deleteElements = true;
+            $datagrid->initialLoading = false;
+
+            $htmlAdd = '<div>';
+            $htmlAdd .= $this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link(
+                'orga/granularity/report?idCell='.$this->idCell.'&idGranularity='.$granularity->getKey()['id'].'&idProject='.$granularity->getDWCube()->getKey()['id']
+            );
+            $htmlAdd .= '</div>';
+            echo $this->collapse('collapse_'.$datagrid->id, $labelGranularity, $datagrid->getHTML().$htmlAdd)->collapsed();
+
+            $script = '';
+            $script .= '$(\'#'.'collapse_'.$datagrid->id.'\').on(\'show\', function(e) {';
+            $script .= 'if ($(e.target).attr(\'id\') == \'collapse_'.$datagrid->id.'_wrapper\') {';
+            $script .= $datagrid->id.'.filter();';
+            $script .= '}';
+            $script .= '});';
+
+            echo '<script type="text/javascript">'.$datagrid->getScript().$script.'</script>';
+        }
+        ?>
+    </div>
+</fieldset>

@@ -20,7 +20,7 @@ class ResourceTest extends Core_Test_TestCase
     {
         User_Service_ACLFilter::getInstance()->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Default_Model_SimpleExample::loadList() as $o) {
+        foreach (Inventory_Model_SimpleExample::loadList() as $o) {
             $o->delete();
         }
         foreach (User_Model_Resource::loadList() as $o) {

@@ -22,7 +22,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
             if ($algo instanceof Algo_Model_Numeric_Parameter) {
@@ -69,7 +69,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     public function addelementAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -164,7 +164,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     public function deleteelementAction()
     {
         /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->_getParam('index'));
+        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('index'));
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
@@ -181,7 +181,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     public function getExpressionAction()
     {
         /** @var $algo Algo_Model_Numeric_Expression */
-        $algo = Algo_Model_Numeric_Expression::load($this->_getParam('id'));
+        $algo = Algo_Model_Numeric_Expression::load($this->getParam('id'));
         $this->data = $algo->getExpression()->getExpression();
         $this->send();
     }

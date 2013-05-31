@@ -20,7 +20,7 @@ class Bootstrap extends Core_Bootstrap
         /** @var Doctrine\ORM\Mapping\Driver\DriverChain $driver */
         $driver = $doctrineConfig->getMetadataDriverImpl();
 
-        $autoloader->addModule('Default', APPLICATION_PATH);
+        $autoloader->addModule('Inventory', APPLICATION_PATH);
 
         $modules = [
             'Unit',
@@ -36,7 +36,6 @@ class Bootstrap extends Core_Bootstrap
             'Social',
             'Orga',
             'Simulation',
-            'Inventory',
         ];
 
         foreach ($modules as $module) {
@@ -57,7 +56,9 @@ class Bootstrap extends Core_Bootstrap
                 $bootstrap = new $bootstrapName($this->_application);
                 $bootstrap->setRun($this->_run);
                 $bootstrap->bootstrap();
-                $this->_run = $bootstrap->getRun();
+                foreach ($bootstrap->getRun() as $run) {
+                    $this->_markRun($run);
+                }
             }
 
             // Doctrine Mappers

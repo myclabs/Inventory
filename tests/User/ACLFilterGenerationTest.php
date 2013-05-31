@@ -48,7 +48,7 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
         foreach (User_Model_SecurityIdentity::loadList() as $o) {
             $o->delete();
         }
-        foreach (Default_Model_SimpleExample::loadList() as $o) {
+        foreach (Inventory_Model_SimpleExample::loadList() as $o) {
             $o->delete();
         }
         $this->entityManager->flush();
@@ -222,7 +222,7 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
         $roleAdmin->save();
         $this->entityManager->flush();
 
-        $entity = new Default_Model_SimpleExample();
+        $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $this->entityManager->flush();
         $resource = new User_Model_Resource_Entity();
@@ -246,7 +246,7 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
     private function fixtureDeletion3()
     {
         $user = User_Model_User::loadByEmail('user');
-        $entity = Default_Model_SimpleExample::loadList()[0];
+        $entity = Inventory_Model_SimpleExample::loadList()[0];
         $resource = User_Model_Resource_Entity::loadByEntity($entity);
         foreach ($user->getRoles() as $role) {
             $this->aclService->disallow($role, User_Model_Action_Default::VIEW(), $resource);
@@ -310,7 +310,7 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
         $roleSuperAdmin->save();
         $this->entityManager->flush();
 
-        $entity = new Default_Model_SimpleExample();
+        $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $this->entityManager->flush();
         $resource = new User_Model_Resource_Entity();
@@ -331,7 +331,7 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
     private function fixtureDeletion4()
     {
         $user = User_Model_User::loadByEmail('user');
-        $entity = Default_Model_SimpleExample::loadList()[0];
+        $entity = Inventory_Model_SimpleExample::loadList()[0];
         $resource = User_Model_Resource_Entity::loadByEntity($entity);
         foreach ($user->getRoles() as $role) {
             $this->aclService->disallow($role, User_Model_Action_Default::VIEW(), $resource);

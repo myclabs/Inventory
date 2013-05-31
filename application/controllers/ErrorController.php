@@ -63,7 +63,7 @@ class ErrorController extends Core_Controller
     public function getError()
     {
         // Récupération de l'erreur.
-        $error = $this->_getParam('error_handler');
+        $error = $this->getParam('error_handler');
 
         $errorInfos = array(
             'error' => $error,

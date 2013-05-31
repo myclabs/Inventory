@@ -31,11 +31,11 @@ class Keyword_GraphController extends Core_Controller_Ajax
      */
     public function gotokeywordAction()
     {
-        $refGoToKeyword = $this->_getParam('keywordGoTo');
+        $refGoToKeyword = $this->getParam('keywordGoTo');
         if (!isset($refGoToKeyword)) {
-            $this->_redirect('keyword/graph/root');
+            $this->redirect('keyword/graph/root');
         }
-        $this->_redirect('keyword/graph/consult?ref='.$refGoToKeyword);
+        $this->redirect('keyword/graph/consult?ref='.$refGoToKeyword);
     }
 
     /**
@@ -45,15 +45,15 @@ class Keyword_GraphController extends Core_Controller_Ajax
      */
     public function consultAction()
     {
-        $refCurrentKeyword = $this->_getParam('ref');
+        $refCurrentKeyword = $this->getParam('ref');
         if (!isset($refCurrentKeyword)) {
-            $this->_redirect('keyword/graph/root');
+            $this->redirect('keyword/graph/root');
         }
         try {
             $this->view->keyword = Keyword_Model_Keyword::loadByRef($refCurrentKeyword);
         } catch (Core_Exception_NotFound $e) {
             UI_Message::addMessageStatic(__('Keyword', 'graph', 'nonExistentKeyword'));
-            $this->_redirect('keyword/graph/root');
+            $this->redirect('keyword/graph/root');
         }
 
         $this->view->subjectKeywords = array();
@@ -84,7 +84,7 @@ class Keyword_GraphController extends Core_Controller_Ajax
     {
         $listKeywords = array();
 
-        $ref = $this->_getParam('q');
+        $ref = $this->getParam('q');
         $queryMatch = new Core_Model_Query();
         $queryMatch->filter->addCondition(Keyword_Model_Keyword::QUERY_LABEL, $ref, Core_Model_Filter::OPERATOR_CONTAINS);
         foreach (Keyword_Model_Keyword::loadList($queryMatch) as $keyword) {

@@ -29,7 +29,7 @@ class ResourceEntityTest
     public static function generateObject()
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
-        $entity = new Default_Model_SimpleExample();
+        $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $entityManagers['default']->flush();
 
@@ -68,7 +68,7 @@ class ResourceEntitySetUpTest extends Core_Test_TestCase
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Default_Model_SimpleExample::loadList() as $o) {
+        foreach (Inventory_Model_SimpleExample::loadList() as $o) {
             $o->delete();
         }
         foreach (User_Model_Resource_Entity::loadList() as $o) {
@@ -84,7 +84,7 @@ class ResourceEntitySetUpTest extends Core_Test_TestCase
      */
     function testConstruct()
     {
-        $entity = new Default_Model_SimpleExample();
+        $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $this->entityManager->flush();
 
@@ -141,7 +141,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
     {
         User_Service_ACLFilter::getInstance()->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Default_Model_SimpleExample::loadList() as $o) {
+        foreach (Inventory_Model_SimpleExample::loadList() as $o) {
             $o->delete();
         }
         foreach (User_Model_Resource_Entity::loadList() as $o) {
@@ -156,7 +156,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
      */
     public function testGetSetEntity()
     {
-        $entity = new Default_Model_SimpleExample();
+        $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $this->entityManager->flush();
 
@@ -175,7 +175,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
      */
     public function testSetEntityNotPersisted()
     {
-        $entity = new Default_Model_SimpleExample();
+        $entity = new Inventory_Model_SimpleExample();
         $resource = new User_Model_Resource_Entity();
         $resource->setEntity($entity);
     }
@@ -194,7 +194,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
      */
     public function testLoadByEntity()
     {
-        $entity = new Default_Model_SimpleExample();
+        $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $this->entityManager->flush();
 
@@ -218,7 +218,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
      */
     public function testLoadByEntityNotFound()
     {
-        $entity = new Default_Model_SimpleExample();
+        $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $this->entityManager->flush();
 

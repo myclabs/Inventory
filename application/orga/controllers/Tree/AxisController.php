@@ -22,18 +22,18 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *  $this->idNode
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * @see addNode
-     * @Secure("viewOrgaCube")
+     * @Secure("viewProject")
      */
     public function getnodesAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
         if ($this->idNode === null) {
-            $axes = $cube->getRootAxes();
+            $axes = $project->getRootAxes();
         } else {
-            $currentAxis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+            $currentAxis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
             $axes = $currentAxis->getDirectBroaders();
         }
         foreach ($axes as $axis) {
@@ -58,11 +58,11 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * @see getAddElementValue
      * @see setAddElementErrorMessage
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function addnodeAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
 
         try {
             Core_Tools::checkRef($this->getAddElementValue('addAxis_ref'));
@@ -70,7 +70,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $this->setAddFormElementErrorMessage('addAxis_ref', $e->getMessage());
         }
         try {
-            $existingAxis = Orga_Model_Axis::loadByRefAndCube($this->getAddElementValue('addAxis_ref'), $cube);
+            $existingAxis = Orga_Model_Axis::loadByRefAndProject($this->getAddElementValue('addAxis_ref'), $project);
             $this->setAddFormElementErrorMessage('addAxis_ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
         } catch (Core_Exception_NotFound $e) {
             // La référence n'est pas utilisée.
@@ -85,9 +85,9 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             } else {
                 $axis->setContextualize(false);
             }
-            $axis->setCube($cube);
+            $axis->setProject($project);
             if ($this->getAddElementValue('addAxis_parent') != null) {
-                $narrower = Orga_Model_Axis::loadByRefAndCube($this->getAddElementValue('addAxis_parent'), $cube);
+                $narrower = Orga_Model_Axis::loadByRefAndProject($this->getAddElementValue('addAxis_parent'), $project);
                 $narrower->addDirectBroader($axis);
             }
             $axis->save();
@@ -117,14 +117,14 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie un tableau contenant les parents possibles de l'élément au format :
      *  array('id' => id, 'label' => label).
-     * @Secure("viewOrgaCube")
+     * @Secure("viewProject")
      */
     public function getlistparentsAction()
     {
         $this->addElementList(null, '');
 
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        foreach ($cube->getFirstOrderedAxes() as $axis) {
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        foreach ($project->getFirstOrderedAxes() as $axis) {
             $this->addElementList($axis->getRef(), ' '.$axis->getLabel());
         }
 
@@ -139,15 +139,15 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie un un tableau contenant la fratrie de l'élément au format :
      *  array('id' => id, 'label' => label).
-     * @Secure("viewOrgaCube")
+     * @Secure("viewProject")
      */
     public function getlistsiblingsAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
 
         if ($axis->getDirectNarrower() === null) {
-            $axes = $cube->getRootAxes();
+            $axes = $project->getRootAxes();
         } else {
             $axes = $axis->getDirectNarrower()->getDirectBroaders();
         }
@@ -173,12 +173,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      * $this->update['idElement'].
      *
      * Renvoie un message d'information.
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function editnodeAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
 
         $newRef = $this->getEditElementValue('ref');
         $newLabel = $this->getEditElementValue('label');
@@ -204,7 +204,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             case 'after':
                 $currentAxisPosition = $axis->getPosition();
                 $refAfter = $this->_form[$this->id.'_changeOrder']['children'][$this->id.'_selectAfter_child']['value'];
-                $newPosition = Orga_Model_Axis::loadByRefAndCube($refAfter, $cube)->getPosition();
+                $newPosition = Orga_Model_Axis::loadByRefAndProject($refAfter, $project)->getPosition();
                 if (($currentAxisPosition > $newPosition)) {
                     $newPosition += 1;
                 }
@@ -216,7 +216,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
         if ($newRef !== $this->idNode) {
             try {
-                $existingAxis = Orga_Model_Axis::loadByRefAndCube($newRef, $cube);
+                $existingAxis = Orga_Model_Axis::loadByRefAndProject($newRef, $project);
                 $this->setEditFormElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
                 // La référence n'est pas utilisée.
@@ -249,22 +249,22 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *  $this->idNode
      *
      * Renvoie une message d'information.
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function deletenodeAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
 
         if ($axis->hasGranularities()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasGranularities',
-                array('AXIS' => $this->_getParam('label')));
+                array('AXIS' => $this->getParam('label')));
         } else if ($axis->hasMembers()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasMembers',
-                    array('AXIS' => $this->_getParam('label')));
+                    array('AXIS' => $this->getParam('label')));
         } else if ($axis->hasDirectBroaders()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasDirectBroaders',
-                    array('AXIS' => $this->_getParam('label')));
+                    array('AXIS' => $this->getParam('label')));
         }
         $axis->delete();
         $this->message = __('UI', 'message', 'deleted', array('AXIS' => $axis->getLabel()));
@@ -274,12 +274,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
     /**
      * Fonction récupérant les informations d'édition pour le formulaire.
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function getinfoeditAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
 
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $axis->getLabel();

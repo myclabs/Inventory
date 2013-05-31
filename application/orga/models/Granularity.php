@@ -6,9 +6,8 @@
  * @package    Orga
  * @subpackage Model
  */
-
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Objet métier Granularité : ensemble d'Axis formant des Cell pour chaque association de Member.
@@ -17,15 +16,12 @@ use Doctrine\Common\Collections\Collection;
  */
 class Orga_Model_Granularity extends Core_Model_Entity
 {
-    use Core_Strategy_Ordered, Core_Event_ObservableTrait;
+    use Core_Strategy_Ordered;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
     const QUERY_POSITION = 'position';
-    const QUERY_CUBE = 'cube';
-    // Constantes d'événement.
-    const EVENT_SAVE = 'orgaGranularitySave';
-    const EVENT_DELETE = 'orgaGranularityDelete';
+    const QUERY_PROJECT = 'project';
 
 
     /**
@@ -36,18 +32,18 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected $id = null;
 
     /**
-     * Référence unique (au sein d'un cube) de la Granularity.
+     * Référence unique (au sein d'un project) de la Granularity.
      *
      * @var string
      */
     protected  $ref = null;
 
     /**
-     * Cube contenant la Granularity.
+     * Project contenant la Granularity.
      *
-     * @var Orga_Model_Cube
+     * @var Orga_Model_Project
      */
-    protected $cube = null;
+    protected $project = null;
 
     /**
      * Collection des Axis de la Granularity.
@@ -70,16 +66,100 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     protected $navigable = true;
 
+    /**
+     * Indique la Granularity configurant cette Granularity de saisie.
+     *
+     * @var Orga_Model_Granularity
+     */
+    protected $inputConfigGranularity = null;
 
     /**
-     * Constructeur de la classe Granularity.
+     * Collection des Granularity de saisie configurées par cette Granularity.
+     *
+     * @var Collection|Orga_Model_Granularity[]
      */
-    public function __construct()
+    protected $inputGranularities = null;
+
+    /**
+     * Défini si les cellules génerent un Project de DW.
+     *
+     * @var bool
+     */
+    protected $cellsGenerateDWCubes = false;
+
+    /**
+     * Project de DW généré par et propre à la Cell.
+     *
+     * @var DW_model_cube
+     */
+    protected $dWCube = null;
+
+    /**
+     * Défini si les cellules de la granularité utilisent les ACL.
+     *
+     * @var bool
+     */
+    protected $cellsWithACL = false;
+
+    /**
+     * Défini si les cellules de la granularité affichent l'onglet d'Orga.
+     *
+     * @var bool
+     */
+    protected $cellsWithOrgaTab = false;
+
+    /**
+     * Défini si les cellules de la granularité affichent l'onglet de configuration des AF.
+     *
+     * @var bool
+     */
+    protected $cellsWithAFConfigTab = false;
+
+    /**
+     * Défini si les cellules de la granularité comportent des GenericAction.
+     *
+     * @var bool
+     */
+    protected $cellsWithSocialGenericActions = false;
+
+    /**
+     * Défini si les cellules de la granularité comportent des ContextAction.
+     *
+     * @var bool
+     */
+    protected $cellsWithSocialContextActions = false;
+
+    /**
+     * Défini si les cellules de la granularité contiennent des documents.
+     *
+     * @var bool
+     */
+    protected $cellsWithInputDocs = false;
+
+
+    /**
+     *
+     * Constructeur de la classe Granularity.
+     *
+     * @param Orga_Model_Project $project
+     * @param Orga_Model_Axis[] $axes
+     */
+    public function __construct(Orga_Model_Project $project, array $axes=array())
     {
         $this->axes = new ArrayCollection();
         $this->cells = new ArrayCollection();
+        $this->inputGranularities = new ArrayCollection();
 
+        $this->project = $project;
+        foreach ($axes as $axis) {
+            if (!($this->hasAxis($axis))) {
+                $this->axes->add($axis);
+                $axis->addGranularity($this);
+            }
+        }
         $this->updateRef();
+        $this->traverseAxesThenCreateCells();
+        $project->addGranularity($this);
     }
 
     /**
@@ -89,7 +169,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     protected function getContext()
     {
-        return array('cube' => $this->cube);
+        return array('project' => $this->project);
     }
 
     /**
@@ -102,8 +182,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
         } catch (Core_Exception_UndefinedAttribute $e) {
             $this->setPosition();
         }
-        $this->launchEvent(self::EVENT_SAVE);
-        $this->generateCells();
     }
 
     /**
@@ -119,9 +197,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function preDelete()
     {
-        $this->launchEvent(self::EVENT_DELETE);
         $this->deletePosition();
-        $this->getCube()->removeGranularity($this);
     }
 
     /**
@@ -133,60 +209,38 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Charge une Granularity en fonction de sa référence et de son Cube.
+     * Charge une Granularity en fonction de sa référence et de son Project.
      *
      * @param string $ref
-     * @param Orga_Model_Cube $cube
+     * @param Orga_Model_Project $project
      *
      * @return Orga_Model_Granularity
      */
-    public static function loadByRefAndCube($ref, $cube)
+    public static function loadByRefAndProject($ref, $project)
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref, 'cube' => $cube));
+        return $project->getGranularityByRef($ref);
     }
 
     /**
-     * Définit le Cube de la Granularity.
+     * Charge le Granularity correspondant à un Project de DW.
      *
-     * @param Orga_Model_Cube $cube
+     * @param DW_model_cube $dWCube
+     *
+     * @return Orga_Model_Granularity
      */
-    public function setCube(Orga_Model_Cube $cube=null)
+    public static function loadByDWCube($dWCube)
     {
-        if ($this->cube !== $cube) {
-            if ($this->cube !== null) {
-                throw new Core_Exception_TooMany('Cube already set, a granularity cannot be move.');
-            }
-            $this->cube = $cube;
-            $cube->addGranularity($this);
-        }
+        return self::getEntityRepository()->loadBy(array('dWCube' => $dWCube));
     }
 
     /**
-     * Renvoie le Cube de la Granularity.
+     * Renvoie le Project de la Granularity.
      *
-     * @return Orga_Model_Cube
+     * @return Orga_Model_Project
      */
-    public function getCube()
+    public function getProject()
     {
-        return $this->cube;
-    }
-
-    /**
-     * Ajoute un Axis à la Granularity.
-     *
-     * @param Orga_Model_Axis $axis
-     */
-    public function addAxis(Orga_Model_Axis $axis)
-    {
-        if (!($this->hasAxis($axis))) {
-            $this->axes->add($axis);
-            $axis->addGranularity($this);
-            $this->updateRef();
-            $this->getCube()->orderGranularities();
-            if ($this->getKey() !== array()) {
-                $this->generateCells();
-            }
-        }
+        return $this->project;
     }
 
     /**
@@ -199,24 +253,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function hasAxis(Orga_Model_Axis $axis)
     {
         return $this->axes->contains($axis);
-    }
-
-    /**
-     * Retire un Axis de ceux utilisés par la Granularity.
-     *
-     * @param Orga_Model_Axis $axis
-     */
-    public function removeAxis($axis)
-    {
-        if ($this->hasAxis($axis)) {
-            $this->axes->removeElement($axis);
-            $axis->removeGranularity($this);
-            $this->updateRef();
-            $this->getCube()->orderGranularities();
-            if ($this->getKey() !== array()) {
-                $this->generateCells();
-            }
-        }
     }
 
     /**
@@ -240,113 +276,14 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Définit la navigabilité de la Granularity.
-     *
-     * @param boolean $navigable
-     */
-    public function setNavigability($navigable)
-    {
-        $this->navigable = $navigable;
-    }
-
-    /**
-     * Indique si la Granularity es navigable.
-     *
-     * @return boolean
-     */
-    public function isNavigable()
-    {
-        return $this->navigable;
-    }
-
-    /**
-     * Ajoute une Cell à la Granularity.
-     *
-     * @param Orga_Model_Cell $cell
-     */
-    public function addCell(Orga_Model_Cell $cell)
-    {
-        if (!($this->hasCell($cell))) {
-            $this->cells->add($cell);
-            $cell->setGranularity($this);
-        }
-    }
-
-    /**
-     * Vérifie si la Granularity possède la Cell donnée.
-     *
-     * @param Orga_Model_Cell $cell
-     *
-     * @return boolean
-     */
-    public function hasCell(Orga_Model_Cell $cell)
-    {
-        return $this->cells->contains($cell);
-    }
-
-    /**
-     * Retire la Cell donnée des Cell de la Granularity.
-     *
-     * @param Orga_Model_Cell $cell
-     */
-    public function removeCell(Orga_Model_Cell $cell)
-    {
-        if ($this->hasCell($cell)) {
-            $this->cells->removeElement($cell);
-            $cell->delete();
-        }
-    }
-
-    /**
-     * Vérifie que la Granularity possède au moins une Cell.
-     *
-     * @return bool
-     */
-    public function hasCells()
-    {
-        return !$this->cells->isEmpty();
-    }
-
-    /**
-     * Renvoie un tableau des Cell de la Granularity.
-     *
-     * @return Orga_Model_Cell[]
-     */
-    public function getCells()
-    {
-        return $this->cells->toArray();
-    }
-
-    /**
-     * Renvoie la cellule correspondant aux membres données.
-     *
-     * @param Orga_Model_Member[] $listMembers
-     *
-     * @return Orga_Model_Cell
-     */
-    public function getCellByMembers($listMembers)
-    {
-        $criteria = \Doctrine\Common\Collections\Criteria::create();
-        $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
-        $criteria->where($criteria->expr()->eq('membersHashKey', $membersHashKey));
-        $matchingCells = $this->cells->matching($criteria);
-
-        if ($matchingCells->isEmpty()) {
-            throw new Core_Exception_NotFound('No "Orga_Model_Cell" matching attributes '.$membersHashKey);
-        } else if (count($matchingCells) > 1) {
-            throw new Core_Exception_TooMany('Too many "Orga_Model_Cell" matching attributes '.$membersHashKey);
-        }
-
-        return $matchingCells->first();
-    }
-
-    /**
      * Permet de mettre à jour la ref Granularity.
      */
     public function updateRef()
     {
         $refParts = array();
-        foreach ($this->getAxes() as $axis) {
+        $axes = $this->getAxes();
+        uasort($axes, function($a, $b) { return $a->getGlobalPosition() - $b->getGlobalPosition(); });
+        foreach ($axes as $axis) {
             $refParts[] = $axis->getRef();
         }
         $this->ref = $this->getRefFromAxesRef($refParts);
@@ -389,7 +326,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $label = __('Orga', 'granularity', 'labelGlobalGranularity');
         } else {
             $labelParts = array();
-            foreach ($this->getAxes() as $axis) {
+            $axes = $this->getAxes();
+            uasort($axes, function($a, $b) { return $a->getGlobalPosition() - $b->getGlobalPosition(); });
+            foreach ($axes as $axis) {
                 $labelParts[] = $axis->getLabel();
             }
             $label = implode(' | ', $labelParts);
@@ -398,9 +337,181 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Indique si la Granularity courante est narrower (ou égale) de la Granularity donnée.
+     * Crée les Cells correspondantes à un Member ajouté à un Axis..
      *
-     * @todo Créer isNarrowerOrEqual() et faire que cette méthode soit une comparaison stricte
+     * @param Orga_Model_Member $member
+     */
+    public function generateCellsFromNewMember(Orga_Model_Member $member)
+    {
+        $this->traverseAxesThenCreateCells(0, array($member), $member->getAxis());
+    }
+
+    /**
+     * Parcours les Axis et crée les Cell..
+     *
+     * @param int $indexCurrentAxis
+     * @param array $selectedMembers
+     * @param Orga_Model_Axis $ignoredAxis
+     */
+    protected function traverseAxesThenCreateCells($indexCurrentAxis = 0, array $selectedMembers = array(),
+        $ignoredAxis = null
+    ) {
+        if ($indexCurrentAxis >= count($this->axes)) {
+            $this->createCell($selectedMembers);
+        } else if ($this->axes[$indexCurrentAxis] === $ignoredAxis) {
+            $this->traverseAxesThenCreateCells($indexCurrentAxis + 1, $selectedMembers, $ignoredAxis);
+        } else {
+            foreach ($this->axes[$indexCurrentAxis]->getMembers() as $currentAxisMember) {
+                $nextSelectedMembers = array_merge($selectedMembers, array($currentAxisMember));
+                $this->traverseAxesThenCreateCells($indexCurrentAxis + 1, $nextSelectedMembers, $ignoredAxis);
+            }
+        }
+    }
+
+    /**
+     * Créer un Cell en fonction d'un tableau de Member.
+     *
+     * @param Orga_Model_Member[] $members
+     */
+    protected function createCell(array $members)
+    {
+        $this->cells->add(new Orga_Model_Cell($this, $members));
+    }
+
+    /**
+     * Renvoie un tableau des Cell de la Granularity.
+     *
+     * @return Orga_Model_Cell[]
+     */
+    public function getCells()
+    {
+        return $this->cells->toArray();
+    }
+
+    /**
+     * Renvoie la cellule correspondant aux membres données.
+     *
+     * @param Orga_Model_Member[] $listMembers
+     *
+     * @throws Core_Exception_NotFound
+     * @throws Core_Exception_TooMany
+     * 
+     * @return Orga_Model_Cell
+     */
+    public function getCellByMembers($listMembers)
+    {
+        $matchingCells = $this->getCellsByMembers($listMembers);
+
+        if (empty($matchingCells)) {
+            $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
+            throw new Core_Exception_NotFound('No "Orga_Model_Cell" matching attributes '.$membersHashKey);
+        } else if (count($matchingCells) > 1) {
+            $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
+            throw new Core_Exception_TooMany('Too many "Orga_Model_Cell" matching attributes '.$membersHashKey);
+        }
+
+        return array_pop($matchingCells);
+    }
+
+    /**
+     * Renvoie les cellule correspondants aux membres données.
+     *
+     * @param Orga_Model_Member[] $listMembers
+     *
+     * @return Orga_Model_Cell[]
+     */
+    public function getCellsByMembers($listMembers)
+    {
+        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        $criteria->where($criteria->expr()->eq('granularity', $this));
+
+        $axisMembers = [];
+        foreach ($this->axes as $indexAxis => $axis) {
+            $axisMembers[$indexAxis] = [];
+            foreach ($listMembers as $member) {
+                if ($axis->hasMember($member)) {
+                    $axisMembers[$indexAxis][] = $member;
+                }
+            }
+            if (empty($axisMembers[$indexAxis])) {
+                $axisMembers[$indexAxis] = $axis->getMembers();
+            }
+        }
+
+        $expressions = [];
+        foreach ($this->traverseMembersThenBuildMembersHashKey($axisMembers) as $membersHashKey) {
+            $expressions[] = $criteria->expr()->eq('membersHashKey', $membersHashKey);
+        }
+        if (count($expressions) > 1) {
+            $criteria->andWhere(
+                new Doctrine\Common\Collections\Expr\CompositeExpression(
+                    Doctrine\Common\Collections\Expr\CompositeExpression::TYPE_OR,
+                    $expressions
+                )
+            );
+        } else if (count($expressions) > 0) {
+            $criteria->andWhere(array_pop($expressions));
+        }
+        $matchingCells = $this->cells->matching($criteria);
+
+        return $matchingCells->toArray();
+    }
+
+    /**
+     * Parcours les Axis et crée les Cell..
+     *
+     * @param array $axisMembers
+     * @param int $indexCurrentAxis
+     * @param Orga_Model_Member[] $selectedMembers
+     *
+     * @return string[]
+     */
+    public function traverseMembersThenBuildMembersHashKey(array $axisMembers, $indexCurrentAxis = 0,
+        array $selectedMembers=array())
+    {
+        $membersHashKeys = array();
+
+        if ($indexCurrentAxis >= count($this->axes)) {
+            return [Orga_Model_Cell::buildMembersHashKey($selectedMembers)];
+        } else {
+            foreach ($axisMembers[$indexCurrentAxis] as $currentAxisMember) {
+                $nextSelectedMembers = array_merge($selectedMembers, array($currentAxisMember));
+                $membersHashKeys = array_merge(
+                    $membersHashKeys,
+                    $this->traverseMembersThenBuildMembersHashKey(
+                        $axisMembers,
+                        $indexCurrentAxis + 1,
+                        $nextSelectedMembers
+                    )
+                );
+            }
+        }
+
+        return $membersHashKeys;
+    }
+
+    /**
+     * Définit la navigabilité de la Granularity.
+     *
+     * @param boolean $navigable
+     */
+    public function setNavigability($navigable)
+    {
+        $this->navigable = $navigable;
+    }
+
+    /**
+     * Indique si la Granularity es navigable.
+     *
+     * @return boolean
+     */
+    public function isNavigable()
+    {
+        return $this->navigable;
+    }
+
+    /**
+     * Indique si la Granularity courante est narrower (ou égale) de la Granularity donnée.
      *
      * @param Orga_Model_Granularity $broaderGranularity
      *
@@ -408,6 +519,10 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function isNarrowerThan($broaderGranularity)
     {
+        if ($broaderGranularity->getRef() === $this->getRef()) {
+            return false;
+        }
+
         foreach ($broaderGranularity->getAxes() as $broaderAxis) {
             foreach ($this->getAxes() as $axis) {
                 if (($axis === $broaderAxis) || ($axis->isNarrowerThan($broaderAxis))) {
@@ -442,8 +557,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         $narrowerGranularities = array();
 
-        foreach ($this->getCube()->getGranularities() as $granularity) {
-            if (($granularity !== $this) && ($granularity->isNarrowerThan($this))) {
+        foreach ($this->getProject()->getGranularities() as $granularity) {
+            if (($granularity->getRef() !== $this->getRef()) && ($granularity->isNarrowerThan($this))) {
                 $narrowerGranularities[] = $granularity;
             }
         }
@@ -460,7 +575,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         $broaderGranularities = array();
 
-        foreach ($this->getCube()->getGranularities() as $granularity) {
+        foreach ($this->getProject()->getGranularities() as $granularity) {
             if (($granularity !== $this) && ($this->isNarrowerThan($granularity))) {
                 $broaderGranularities[] = $granularity;
             }
@@ -491,12 +606,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
             }
         }
 
-        $crossedAxesRefs = array_merge($currentAxes, $crossingAxes);
-        uasort($crossedAxesRefs, function ($a, $b) {
+        $crossedAxes = array_merge($currentAxes, $crossingAxes);
+        uasort($crossedAxes, function ($a, $b) {
             return $a->getGlobalPosition() - $b->getGlobalPosition();
         });
+        $crossedAxesRefs = array();
+        foreach ($crossedAxes as $axis) {
+            $crossedAxesRefs[] = $axis->getRef();
+        }
 
-        return Orga_Model_Granularity::loadByRefAndCube($this->getRefFromAxesRef($crossedAxesRefs), $this->cube);
+        return $this->project->getGranularityByRef($this->getRefFromAxesRef($crossedAxesRefs));
     }
 
     /**
@@ -525,69 +644,386 @@ class Orga_Model_Granularity extends Core_Model_Entity
         uasort($encompassingAxes, function ($a, $b) {
             return $a->getGlobalPosition() - $b->getGlobalPosition();
         });
-
-        return Orga_Model_Granularity::loadByRefAndCube($this->getRefFromAxesRef($encompassingAxes), $this->cube);
-    }
-
-    /**
-     * Génère les Cell de la Granularity en fonction des Member de ces Axis.
-     */
-    public function generateCells()
-    {
-        foreach ($this->cells as $cell) {
-            $this->cells->removeElement($cell);
-            foreach ($cell->getMembers() as $member) {
-                $member->removeCell($cell);
-            }
-            $cell->delete();
+        $encompassingAxesRefs = array();
+        foreach ($encompassingAxes as $axis) {
+            $encompassingAxesRefs[] = $axis->getRef();
         }
-        $this->traverseAxesThenCreateCells();
+
+        return $this->project->getGranularityByRef($this->getRefFromAxesRef($encompassingAxesRefs));
     }
 
     /**
-     * Crée les Cells correspondantes à un Member ajouté à un Axis..
+     * Défini la Granularity utilisé pour configerer cett Granularity de saisie..
      *
-     * @param Orga_Model_Member $member
+     * @param Orga_Model_Granularity $configGranularity
      */
-    public function generateCellsFromNewMember(Orga_Model_Member $member)
+    public function setInputConfigGranularity($configGranularity=null)
     {
-        $this->traverseAxesThenCreateCells(0, array($member), $member->getAxis());
+        if ($this->inputConfigGranularity !== $configGranularity) {
+            if ($this->inputConfigGranularity !== null) {
+                $this->inputConfigGranularity->removeInputGranularity($this);
+            }
+            $this->inputConfigGranularity = $configGranularity;
+            if ($configGranularity !== null) {
+                $configGranularity->addInputGranularity($this);
+            }
+        }
     }
 
     /**
-     * Parcours les Axis et crée les Cell..
+     * Renvoi la Granularity de configuration des saisies.
      *
-     * @param int $indexCurrentAxis
-     * @param array $selectedMembers
-     * @param Orga_Model_Axis $ignoredAxis
+     * @throws Core_Exception_UndefinedAttribute
+     * 
+     * @return Orga_Model_Granularity
      */
-    protected function traverseAxesThenCreateCells($indexCurrentAxis = 0, array $selectedMembers = array(),
-                                                   $ignoredAxis = null
-    ) {
-        if ($indexCurrentAxis >= count($this->axes)) {
-            $this->createCell($selectedMembers);
-        } elseif ($this->axes[$indexCurrentAxis] === $ignoredAxis) {
-            $this->traverseAxesThenCreateCells($indexCurrentAxis + 1, $selectedMembers, $ignoredAxis);
+    public function getInputConfigGranularity()
+    {
+        if ($this->inputConfigGranularity === null) {
+            throw new Core_Exception_UndefinedAttribute(
+                'La Granularity ne possède pas de Granularity de configuration des saises'
+            );
+        }
+        
+        return $this->inputConfigGranularity;
+    }
+
+    /**
+     * Ajoute une Granularity de saisie configurée par cette Granularity.
+     *
+     * @param Orga_Model_Granularity $inputGranularity
+     */
+    public function addInputGranularity(Orga_Model_Granularity $inputGranularity)
+    {
+        if (!($this->hasInputGranularity($inputGranularity))) {
+            $this->inputGranularities->add($inputGranularity);
+            $inputGranularity->setInputConfigGranularity($this);
+
+            foreach ($this->getCells() as $cell) {
+                $cellsGroup = new Orga_Model_CellsGroup($cell, $inputGranularity);
+            }
+            foreach ($inputGranularity->getCells() as $inputCell) {
+                $inputCell->setDocBibliographyForAFInputSetPrimary(new Doc_Model_Bibliography());
+            }
+        }
+    }
+
+    /**
+     * Vérifie si la Granularity possède le Granularity de saisie donnée.
+     *
+     * @param Orga_Model_Granularity $inputGranularity
+     *
+     * @return boolean
+     */
+    public function hasInputGranularity(Orga_Model_Granularity $inputGranularity)
+    {
+        return $this->inputGranularities->contains($inputGranularity);
+    }
+
+    /**
+     * Retire une Granularity de saisie configurée par cette Granularity.
+     *
+     * @param Orga_Model_Granularity $inputGranularity
+     */
+    public function removeInputGranularity($inputGranularity)
+    {
+        if ($this->hasInputGranularity($inputGranularity)) {
+            $this->inputGranularities->removeElement($inputGranularity);
+
+            foreach ($this->getCells() as $cell) {
+                $cellsGroup = $cell->getCellsGroupForInputGranularity($inputGranularity);
+                $cell->removeCellsGroup($cellsGroup);
+            }
+
+            foreach ($inputGranularity->getCells() as $inputCell) {
+                try {
+                    $inputCell->getAFInputSetPrimary()->delete();
+                } catch (Core_Exception_UndefinedAttribute $e) {
+                    // Pas de saisie pour cette cellule.
+                }
+            }
+        }
+    }
+
+    /**
+     * Vérifie que la Granularity possède au moins une Granularity de saisie.
+     *
+     * @return bool
+     */
+    public function hasInputGranularities()
+    {
+        return !$this->inputGranularities->isEmpty();
+    }
+
+    /**
+     * Renvoie un tableau des Granularity de saisie configurées par cette Granularity.
+     *
+     * @return Orga_Model_Granularity[]
+     */
+    public function getInputGranularities()
+    {
+        return $this->inputGranularities->toArray();
+    }
+
+    /**
+     * Défini si les cellules de la granularité génereront des projects de DW.
+     *
+     * @param bool $bool
+     */
+    public function setCellsGenerateDWCubes($bool)
+    {
+        $this->cellsGenerateDWCubes = $bool;
+        if ($this->cellsGenerateDWCubes === true) {
+            $actionToDWCube = 'createDWCube';
         } else {
-            foreach ($this->axes[$indexCurrentAxis]->getMembers() as $currentAxisMember) {
-                $nextSelectedMembers = array_merge($selectedMembers, array($currentAxisMember));
-                $this->traverseAxesThenCreateCells($indexCurrentAxis + 1, $nextSelectedMembers, $ignoredAxis);
-            }
+            $actionToDWCube = 'deleteDWCube';
+        }
+
+        $this->$actionToDWCube();
+        foreach ($this->getCells() as $cell) {
+            $cell->$actionToDWCube();
         }
     }
 
     /**
-     * Créer un Cell en fonction d'un tableau de Member.
+     * Indique si les cellules de la granularité génerent des projects de DW.
      *
-     * @param Orga_Model_Member[] $members
+     * @return bool
      */
-    protected function createCell(array $members)
+    public function getCellsGenerateDWCubes()
     {
-        $cell = new Orga_Model_Cell();
-        $cell->setGranularity($this);
-        foreach ($members as $cellMember) {
-            $cell->addMember($cellMember);
+        return $this->cellsGenerateDWCubes;
+    }
+
+    /**
+     * Créé le Project pour la simulation.
+     *
+     * @return int Identifiant unique du Project.
+     */
+    protected function createDWCube()
+    {
+        if ($this->dWCube === null) {
+            $this->dWCube = new DW_model_cube();
+            $this->dWCube->setLabel($this->getLabel());
+
+            Orga_Service_ETLStructure::getInstance()->populateGranularityDWCube($this);
         }
+    }
+
+    /**
+     * Créé le Project pour la simulation.
+     *
+     * @return int Identifiant unique du Project.
+     */
+    protected function deleteDWCube()
+    {
+        if ($this->dWCube !== null) {
+            $this->dWCube->delete();
+            $this->dWCube = null;
+        }
+    }
+
+    /**
+     * Renvoi le Project de DW spécifique à la Cell.
+     *
+     * @throws Core_Exception_UndefinedAttribute
+     *
+     * @return DW_model_cube
+     */
+    public function getDWCube()
+    {
+        if ($this->cellsGenerateDWCubes) {
+            throw new Core_Exception_UndefinedAttribute('La Granularity de la Cell ne génère pas de DWCube');
+        }
+        return $this->dWCube;
+    }
+
+    /**
+     * Défini si les cellules de la granularité possèdent des droits d'accès.
+     *
+     * @param bool $bool
+     */
+    public function setCellsWithACL($bool)
+    {
+        $this->cellsWithACL = $bool;
+    }
+
+    /**
+     * Indique si les cellules de la granularité possèdent des droits d'accès.
+     *
+     * @return bool
+     */
+    public function getCellsWithACL()
+    {
+        return $this->cellsWithACL;
+    }
+
+    /**
+     * Défini si les cellules de la granularité afficheront le tab d'Orga.
+     *
+     * @param bool $bool
+     */
+    public function setCellsWithOrgaTab($bool)
+    {
+        $this->cellsWithOrgaTab = $bool;
+    }
+
+    /**
+     * Indique si les cellules de la granularité affichent le tab d'Orga.
+     *
+     * @return bool
+     */
+    public function getCellsWithOrgaTab()
+    {
+        return $this->cellsWithOrgaTab;
+    }
+
+    /**
+     * Défini si les cellules de la granularité afficheront le tab de configuration d'AF.
+     *
+     * @param bool $bool
+     */
+    public function setCellsWithAFConfigTab($bool)
+    {
+        $this->cellsWithAFConfigTab = $bool;
+    }
+
+    /**
+     * Indique si les cellules de la granularité affichent le tab de configuration d'AF.
+     *
+     * @return bool
+     */
+    public function getCellsWithAFConfigTab()
+    {
+        return $this->cellsWithAFConfigTab;
+    }
+
+    /**
+     * Défini si les cellules de la granularité posséderont des GenericAction de Social.
+     *
+     * @param bool $bool
+     *
+     * @throws Core_Exception_User
+     */
+    public function setCellsWithSocialGenericActions($bool)
+    {
+        if ($this->cellsWithSocialGenericActions !== $bool) {
+            if ($bool === false) {
+                $cells = [];
+                foreach ($this->getCells() as $cell) {
+                    if ($cell->getDocLibraryForSocialGenericAction()->hasDocuments()) {
+                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialGenericActions');
+                    }
+                    $cells[] = $cell;
+                }
+                foreach ($cells as $cell) {
+                    $cell->setDocLibraryForSocialGenericAction();
+                }
+            } else  {
+                foreach ($this->getCells() as $cell) {
+                    $cell->setDocLibraryForSocialGenericAction(new Doc_Model_Library());
+                }
+            }
+            $this->cellsWithSocialGenericActions = $bool;
+        }
+    }
+
+    /**
+     * Indique si les cellules de la granularité possédent des GenericAction de Social.
+     *
+     * @return bool
+     */
+    public function getCellsWithSocialGenericActions()
+    {
+        return $this->cellsWithSocialGenericActions;
+    }
+
+    /**
+     * Défini si les cellules de la granularité posséderont des GenericAction de Social.
+     *
+     * @param bool $bool
+     *
+     * @throws Core_Exception_User
+     */
+    public function setCellsWithSocialContextActions($bool)
+    {
+        if ($this->cellsWithSocialContextActions !== $bool) {
+            if ($bool === false) {
+                $cells = [];
+                foreach ($this->getCells() as $cell) {
+                    if ($cell->getDocLibraryForSocialContextAction()->hasDocuments()) {
+                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialContextActions');
+                    }
+                    $cells[] = $cell;
+                }
+                foreach ($cells as $cell) {
+                    $cell->setDocLibraryForSocialContextAction();
+                }
+            } else  {
+                foreach ($this->getCells() as $cell) {
+                    $cell->setDocLibraryForSocialContextAction(new Doc_Model_Library());
+                }
+            }
+            $this->cellsWithSocialContextActions = $bool;
+        }
+    }
+
+    /**
+     * Indique si les cellules de la granularité possédent des ContextAction de Social.
+     *
+     * @return bool
+     */
+    public function getCellsWithSocialContextActions()
+    {
+        return $this->cellsWithSocialContextActions;
+    }
+
+    /**
+     * Défini si les cellules de la granularité possèderont des Doc pour l'InputSetPrimary.
+     *
+     * @param bool $bool
+     *
+     * @throws Core_Exception_User
+     */
+    public function setCellsWithInputDocs($bool)
+    {
+        if ($this->cellsWithInputDocs !== $bool) {
+            if ($bool === false) {
+                $cells = [];
+                foreach ($this->getCells() as $cell) {
+                    if ($cell->getDocLibraryForAFInputSetsPrimary()->hasDocuments()) {
+                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithInputDocs');
+                    }
+                    $cells[] = $cell;
+                }
+                foreach ($cells as $cell) {
+                    $cell->setDocLibraryForAFInputSetsPrimary();
+                }
+            } else  {
+                foreach ($this->getCells() as $cell) {
+                    $cell->setDocLibraryForAFInputSetsPrimary(new Doc_Model_Library());
+                }
+            }
+            $this->cellsWithInputDocs = $bool;
+        }
+    }
+
+    /**
+     * Indique si les cellules de la granularité possèdent des Doc pour l'InputSetPrimary.
+     *
+     * @return bool
+     */
+    public function getCellsWithInputDocs()
+    {
+        return $this->cellsWithInputDocs;
+    }
+
+    /**
+     * @return string Représentation textuelle de la Granularity
+     */
+    public function __toString()
+    {
+        return $this->getRef();
     }
 
 }

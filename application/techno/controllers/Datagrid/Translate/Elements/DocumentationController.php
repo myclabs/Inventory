@@ -84,7 +84,7 @@ class Techno_Datagrid_Translate_Elements_DocumentationController extends UI_Cont
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $element = Techno_Model_Element::load($this->_getParam('id'));
+        $element = Techno_Model_Element::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $element->reloadWithLocale($locale);
 
@@ -100,7 +100,7 @@ class Techno_Datagrid_Translate_Elements_DocumentationController extends UI_Cont
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $element = Techno_Model_Element::load($this->_getParam('id'));
+        $element = Techno_Model_Element::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $element->reloadWithLocale($locale);
 

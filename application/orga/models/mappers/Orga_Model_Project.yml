@@ -1,0 +1,50 @@
+# orga\models\mappers\Orga_Model_Project.yml
+Orga_Model_Project:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Orga_Project
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    label:
+      column: label
+      type: string
+      length: 255
+      nullable: false
+      gedmo:
+        - translatable
+
+  oneToOne:
+    granularityForInventoryStatus:
+      targetEntity: Orga_Model_Granularity
+      joinColumn:
+        name: idGranularityForInventoryStatus
+        referencedColumnName: id
+        nullable: true
+        unique: true
+
+  oneToMany:
+    axes:
+      targetEntity: Orga_Model_Axis
+      mappedBy: project
+      orderBy:
+        position: ASC
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+    granularities:
+      targetEntity: Orga_Model_Granularity
+      mappedBy: project
+      orderBy:
+        position: ASC
+      orphanRemoval: true
+      cascade: [ persist, remove ]

@@ -17,21 +17,21 @@ use Core\Annotation\Secure;
 class Orga_AxisController extends Core_Controller
 {
     /**
-     * Controller de la vue des Axis d'un cube.
-     * @Secure("viewOrgaCube")
+     * Controller de la vue des Axis d'un project.
+     * @Secure("viewProject")
      */
     public function manageAction()
     {
-        if ($this->_hasParam('idCell')) {
-            $this->view->idCell = $this->_getParam('idCell');
+        if ($this->hasParam('idCell')) {
+            $this->view->idCell = $this->getParam('idCell');
         } else {
             $this->view->idCell = null;
         }
-        $this->view->idCube = $this->_getParam('idCube');
-        $cube = Orga_Model_Cube::load(array('id' => $this->view->idCube));
-        $this->view->eligibleParents = $cube->getFirstOrderedAxes();
+        $this->view->idProject = $this->getParam('idProject');
+        $project = Orga_Model_Project::load(array('id' => $this->view->idProject));
+        $this->view->eligibleParents = $project->getFirstOrderedAxes();
 
-        if ($this->_hasParam('display') && ($this->_getParam('display') === 'render')) {
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->view->display = false;
         } else {
             $this->view->display = true;

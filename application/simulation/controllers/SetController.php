@@ -19,7 +19,7 @@ class Simulation_SetController extends Core_Controller_Ajax
      */
     public function indexAction()
     {
-        $this->_redirect('simulation/set/manage');
+        $this->redirect('simulation/set/manage');
     }
 
     /**
@@ -45,11 +45,11 @@ class Simulation_SetController extends Core_Controller_Ajax
      */
     public function detailsAction()
     {
-        if (!($this->_hasParam('idSet'))) {
-            $this->_redirect('simulation/set/list');
+        if (!($this->hasParam('idSet'))) {
+            $this->redirect('simulation/set/list');
         }
 
-        $set = Simulation_Model_Set::load(array('id' => $this->_getParam('idSet')));
+        $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
 
         $this->view->idSet = $set->getKey()['id'];
         $this->view->idCube = $set->getDWCube()->getKey()['id'];
@@ -57,7 +57,7 @@ class Simulation_SetController extends Core_Controller_Ajax
         $this->view->aFName = $set->getAF()->getLabel();
         $this->view->isSetDWCubeUpToDate = Simulation_Service_ETLStructure::getInstance()->isSetDWCubeUpToDate($set);
 
-        $this->view->activatedTab = ($this->_hasParam('tab')) ? $this->_getParam('tab') : null;
+        $this->view->activatedTab = ($this->hasParam('tab')) ? $this->getParam('tab') : null;
     }
 
     /**
@@ -67,7 +67,7 @@ class Simulation_SetController extends Core_Controller_Ajax
      */
     public function resetdwAction()
     {
-        $set = Simulation_Model_Set::load(array('id' => $this->_getParam('idSet')));
+        $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
         Simulation_Service_ETLStructure::getInstance()->resetSetDWCube($set);
         $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'confirmationMessage')));
     }
@@ -81,20 +81,20 @@ class Simulation_SetController extends Core_Controller_Ajax
      */
     public function reportAction()
     {
-        $set = Simulation_Model_Set::load(array('id' => $this->_getParam('idSet')));
+        $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$set->getLabel().'</small>');
         $viewConfiguration->setOutputURL('simulation/set/details?idSet='.$set->getKey()['id'].'&tab=analyse');
         $viewConfiguration->setSaveURL('simulation/set/report?idSet='.$set->getKey()['id'].'&');
 
-        if ($this->_hasParam('idReport')) {
-            $this->_forward('details', 'report', 'dw', array(
-                'idReport' => $this->_getParam('idReport'),
+        if ($this->hasParam('idReport')) {
+            $this->forward('details', 'report', 'dw', array(
+                'idReport' => $this->getParam('idReport'),
                 'viewConfiguration' => $viewConfiguration
             ));
-        } else if ($this->_hasParam('idCube')) {
-            $this->_forward('details', 'report', 'dw', array(
-                'idCube' => $this->_getParam('idCube'),
+        } else if ($this->hasParam('idCube')) {
+            $this->forward('details', 'report', 'dw', array(
+                'idCube' => $this->getParam('idCube'),
                 'viewConfiguration' => $viewConfiguration
             ));
         } else {

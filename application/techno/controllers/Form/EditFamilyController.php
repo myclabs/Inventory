@@ -20,7 +20,7 @@ class Techno_Form_EditFamilyController extends Core_Controller_Ajax
      */
     public function submitAction()
     {
-        $idFamily = $this->_getParam('id');
+        $idFamily = $this->getParam('id');
         /** @var $family Techno_Model_Family */
         $family = Techno_Model_Family::load($idFamily);
         // Validation du formulaire

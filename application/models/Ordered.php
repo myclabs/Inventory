@@ -10,7 +10,7 @@
  * @package Core
  * @subpackage Test
  */
-class Default_Model_Ordered extends Core_Model_Entity
+class Inventory_Model_Ordered extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
 

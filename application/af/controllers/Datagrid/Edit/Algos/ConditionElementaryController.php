@@ -23,7 +23,7 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
             if ($algo instanceof Algo_Model_Condition_Elementary) {
@@ -71,7 +71,7 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
     public function addelementAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -155,7 +155,7 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
     public function deleteelementAction()
     {
         /** @var $algo Algo_Model_Condition_Elementary */
-        $algo = Algo_Model_Condition_Elementary::load($this->_getParam('index'));
+        $algo = Algo_Model_Condition_Elementary::load($this->getParam('index'));
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
@@ -172,7 +172,7 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
     public function getFieldListAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $query = new Core_Model_Query();
         $query->filter->addCondition(AF_Model_Component_Field::QUERY_AF, $af);
         /** @var $fieldList AF_Model_Component_Field[] */

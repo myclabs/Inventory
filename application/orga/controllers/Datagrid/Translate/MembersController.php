@@ -27,13 +27,13 @@ class Orga_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function getelementsAction()
     {
         $this->request->filter->addCondition(
             Orga_Model_Member::QUERY_AXIS,
-            Orga_Model_Axis::loadByRefAndCube($this->_getParam('refAxis'), Orga_Model_Cube::load($this->_getParam('idCube')))
+            Orga_Model_Axis::loadByRefAndProject($this->getParam('refAxis'), Orga_Model_Project::load($this->getParam('idProject')))
         );
 
         foreach (Orga_Model_Member::loadList($this->request) as $member) {
@@ -56,13 +56,13 @@ class Orga_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function updateelementAction()
     {
         $member = Orga_Model_Member::loadByCompleteRefAndAxis(
             $this->update['index'],
-            Orga_Model_Axis::loadByRefAndCube($this->_getParam('refAxis'), Orga_Model_Cube::load($this->_getParam('idCube')))
+            Orga_Model_Axis::loadByRefAndProject($this->getParam('refAxis'), Orga_Model_Project::load($this->getParam('idProject')))
         );
         $member->setTranslationLocale(Core_Locale::load($this->update['column']));
         $member->setLabel($this->update['value']);

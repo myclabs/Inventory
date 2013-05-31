@@ -189,7 +189,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrineConfig->setMetadataCacheImpl($doctrineCache);
         // Configuration des Proxies.
         $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
-        $doctrineConfig->setProxyNamespace('Default_Model_Proxies');
+        $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
 
         // Configuration de l'autoloader spécial pour les Proxy

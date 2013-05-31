@@ -12,7 +12,7 @@
  * @package Exec
  * @subpackage Model
  */
-class Default_Model_ValueProviderEntity implements Exec_Interface_ValueProvider
+class Inventory_Model_ValueProviderEntity implements Exec_Interface_ValueProvider
 {
     /**
      * Tableau qui contiendra une liste de ref => bool

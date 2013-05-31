@@ -218,7 +218,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
     $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
-    $isAllowToEditProjects = (Inventory_Model_Project::countTotal($aclQuery) > 0);
+    $isAllowToEditProjects = (Orga_Model_Project::countTotal($aclQuery) > 0);
     if ($isAllowedToEditReferential || $isAllowToEditProjects) {
         $leftMenu[6] = [
             'name' => __('Inventory', 'menu', 'translation'),

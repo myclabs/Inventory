@@ -21,19 +21,19 @@ class Orga_Datagrid_RelevantController extends UI_Controller_Datagrid
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewOrgaCube")
+     * @Secure("viewProject")
      */
     public function getelementsAction()
     {
         $this->request->setCustomParameters($this->request->filter->getConditions());
         $this->request->filter->setConditions(array());
 
-        $cell = Orga_Model_Cell::load(array('id' => $this->_getParam('idCell')));
-        $granularity = Orga_Model_Granularity::load(array('id' => $this->_getParam('idGranularity')));
+        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+        $granularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
 
         $this->request->order->addOrder(Orga_Model_Cell::QUERY_MEMBERS_HASHKEY);
         foreach ($cell->getChildCellsForGranularity($granularity, $this->request) as $childCell) {
@@ -64,11 +64,11 @@ class Orga_Datagrid_RelevantController extends UI_Controller_Datagrid
      *  $this->update['value'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     function updateelementAction()
     {

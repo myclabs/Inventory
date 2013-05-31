@@ -1,0 +1,26 @@
+# inventory\models\mappers\Inventory_Model_Ordered.yml
+Inventory_Model_Ordered:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Inventory_Ordered
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    position:
+      column: position
+      type: integer
+      nullable: false
+    context:
+      column: context
+      type: string
+      length: 25
+      nullable: true
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

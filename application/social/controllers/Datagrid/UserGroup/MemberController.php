@@ -19,7 +19,7 @@ class Social_Datagrid_UserGroup_MemberController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         /** @var $group Social_Model_UserGroup */
-        $group = Social_Model_UserGroup::load($this->_getParam('id'));
+        $group = Social_Model_UserGroup::load($this->getParam('id'));
         $users = $group->getUsers();
 
         foreach ($users as $user) {

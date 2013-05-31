@@ -22,7 +22,7 @@ class User_ProfileController extends Core_Controller_Ajax
      */
     public function indexAction()
     {
-        $this->_redirect('/user/profile/list');
+        $this->redirect('/user/profile/list');
     }
 
     /**
@@ -45,7 +45,7 @@ class User_ProfileController extends Core_Controller_Ajax
      */
     public function seeAction()
     {
-        $this->view->user = User_Model_User::load($this->_getParam('id'));
+        $this->view->user = User_Model_User::load($this->getParam('id'));
         if ($this->getRequest()->isXmlHttpRequest()) {
             $this->_helper->layout->disableLayout();
         }
@@ -58,9 +58,9 @@ class User_ProfileController extends Core_Controller_Ajax
     public function editAction()
     {
         $loggedInUser = $this->_helper->auth();
-        if ($this->_hasParam('id')) {
+        if ($this->hasParam('id')) {
             /** @var $user User_Model_User */
-            $user = User_Model_User::load($this->_getParam('id'));
+            $user = User_Model_User::load($this->getParam('id'));
         } else {
             $user = $loggedInUser;
         }
@@ -88,9 +88,9 @@ class User_ProfileController extends Core_Controller_Ajax
     {
         /** @var $connectedUser User_Model_User */
         $connectedUser = $this->_helper->auth();
-        if ($this->_hasParam('id')) {
+        if ($this->hasParam('id')) {
             /** @var $user User_Model_User */
-            $user = User_Model_User::load($this->_getParam('id'));
+            $user = User_Model_User::load($this->getParam('id'));
         } else {
             $user = $connectedUser;
         }
@@ -135,7 +135,7 @@ class User_ProfileController extends Core_Controller_Ajax
         $userService = User_Service_User::getInstance();
 
         /** @var $user User_Model_User */
-        $user = User_Model_User::load($this->_getParam('id'));
+        $user = User_Model_User::load($this->getParam('id'));
 
         // Désactivation de l'utilisateur
         $user->disable();
@@ -157,9 +157,9 @@ class User_ProfileController extends Core_Controller_Ajax
                                          . __('User', 'editProfile', 'userInformedByEmail'), UI_Message::TYPE_SUCCESS);
 
         if ($user === $connectedUser) {
-            $this->_redirect('user/action/logout');
+            $this->redirect('user/action/logout');
         } else {
-            $this->_redirect('user/profile/edit/id/' . $user->getId());
+            $this->redirect('user/profile/edit/id/' . $user->getId());
         }
     }
 
@@ -173,7 +173,7 @@ class User_ProfileController extends Core_Controller_Ajax
         $userService = User_Service_User::getInstance();
 
         /** @var $user User_Model_User */
-        $user = User_Model_User::load($this->_getParam('id'));
+        $user = User_Model_User::load($this->getParam('id'));
 
         // Activation de l'utilisateur
         $user->enable();
@@ -194,7 +194,7 @@ class User_ProfileController extends Core_Controller_Ajax
         $message = __('User', 'messages', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
         UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
 
-        $this->_redirect('user/profile/edit/id/' . $user->getId());
+        $this->redirect('user/profile/edit/id/' . $user->getId());
     }
 
     /**
@@ -205,7 +205,7 @@ class User_ProfileController extends Core_Controller_Ajax
     {
         $loggedInUser = $this->_helper->auth();
         /** @var $user User_Model_User */
-        $user = User_Model_User::load($this->_getParam('id'));
+        $user = User_Model_User::load($this->getParam('id'));
 
         $editSelfEmail = ($user === $loggedInUser);
 
@@ -292,7 +292,7 @@ class User_ProfileController extends Core_Controller_Ajax
     public function editPasswordAction()
     {
         /** @var $user User_Model_User */
-        $user = User_Model_User::load($this->_getParam('id'));
+        $user = User_Model_User::load($this->getParam('id'));
         $loggedInUser = $this->_helper->auth();
 
         // Est-ce que l'utilisateur peut modifier le mot de passe

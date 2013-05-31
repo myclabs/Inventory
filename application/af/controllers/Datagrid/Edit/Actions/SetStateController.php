@@ -21,7 +21,7 @@ class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         //  Récupère tous les composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(AF_Model_Component::QUERY_AF, $af);
@@ -124,7 +124,7 @@ class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         /** @var $action AF_Model_Action_SetState */
-        $action = AF_Model_Action_SetState::load($this->_getParam('index'));
+        $action = AF_Model_Action_SetState::load($this->getParam('index'));
         $action->delete();
         $action->getTargetComponent()->removeAction($action);
         $action->getTargetComponent()->save();

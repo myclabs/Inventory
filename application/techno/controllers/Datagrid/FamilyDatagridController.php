@@ -44,7 +44,7 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
                 $tags[] = $tag->getValue()->getLabel();
             }
             $data['cellsCommonTags'] = implode(', ', $tags);
-            if ($this->_getParam('mode') == 'edition') {
+            if ($this->getParam('mode') == 'edition') {
                 $data['detail'] = $this->cellLink(
                     $this->_helper->url('edit', 'family', 'techno', ['id' => $family->getId()]));
             } else {

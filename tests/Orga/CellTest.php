@@ -7,7 +7,7 @@
  * @subpackage Test
  */
 
-//require_once dirname(__FILE__).'/CubeTest.php';
+//require_once dirname(__FILE__).'/ProjectTest.php';
 
 /**
  * Creation de la suite de test
@@ -31,16 +31,16 @@ class Orga_Test_CellTest
 
 
 /**
- * Tests de la classe Cube
+ * Tests de la classe Project
  * @package Orga
  * @subpackage Test
  */
 class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Orga_Model_Cube
+     * @var Orga_Model_Project
      */
-    protected $cube;
+    protected $project;
 
     /**
      * @var Orga_Model_Axis
@@ -213,11 +213,11 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Project en base, sinon suppression !
+        if (Orga_Model_Project::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Project restants ont été trouvé avant les tests, suppression en cours !';
+            foreach (Orga_Model_Project::loadList() as $project) {
+                $project->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -231,178 +231,116 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $this->cube = Orga_Test_CubeTest::generateObject();
+        $this->project = Orga_Test_ProjectTest::generateObject();
 
-        $this->axis1 = new Orga_Model_Axis();
+        $this->axis1 = new Orga_Model_Axis($this->project);
         $this->axis1->setRef('RefCell1');
         $this->axis1->setLabel('LabelCell1');
-        $this->axis1->setCube($this->cube);
-        $this->axis1->save();
 
-        $this->axis11 = new Orga_Model_Axis();
+        $this->axis11 = new Orga_Model_Axis($this->project);
         $this->axis11->setRef('RefCell11');
         $this->axis11->setLabel('LabelCell11');
-        $this->axis11->setCube($this->cube);
         $this->axis11->setDirectNarrower($this->axis1);
-        $this->axis11->save();
 
-        $this->axis111 = new Orga_Model_Axis();
+        $this->axis111 = new Orga_Model_Axis($this->project);
         $this->axis111->setRef('RefCell111');
         $this->axis111->setLabel('LabelCell111');
-        $this->axis111->setCube($this->cube);
         $this->axis111->setDirectNarrower($this->axis11);
-        $this->axis111->save();
 
-        $this->axis12 = new Orga_Model_Axis();
+        $this->axis12 = new Orga_Model_Axis($this->project);
         $this->axis12->setRef('RefCell12');
         $this->axis12->setLabel('LabelCell12');
-        $this->axis12->setCube($this->cube);
         $this->axis12->setDirectNarrower($this->axis1);
-        $this->axis12->save();
 
-        $this->axis2 = new Orga_Model_Axis();
+        $this->axis2 = new Orga_Model_Axis($this->project);
         $this->axis2->setRef('RefCell2');
         $this->axis2->setLabel('LabelCell2');
-        $this->axis2->setCube($this->cube);
-        $this->axis2->save();
 
-        $this->axis21 = new Orga_Model_Axis();
+        $this->axis21 = new Orga_Model_Axis($this->project);
         $this->axis21->setRef('RefCell21');
         $this->axis21->setLabel('LabelCell21');
-        $this->axis21->setCube($this->cube);
         $this->axis21->setDirectNarrower($this->axis2);
-        $this->axis21->save();
-        $entityManagers['default']->flush();
 
-        $this->member1A111 = new Orga_Model_Member();
+        $this->member1A111 = new Orga_Model_Member($this->axis111);
         $this->member1A111->setRef('RefCell1A111');
         $this->member1A111->setLabel('LabelCell1A111');
-        $this->member1A111->setAxis($this->axis111);
-        $this->member1A111->save();
 
-        $this->member2A111 = new Orga_Model_Member();
+        $this->member2A111 = new Orga_Model_Member($this->axis111);
         $this->member2A111->setRef('RefCell2A111');
         $this->member2A111->setLabel('LabelCell2A111');
-        $this->member2A111->setAxis($this->axis111);
-        $this->member2A111->save();
 
-        $this->member1A11 = new Orga_Model_Member();
+        $this->member1A11 = new Orga_Model_Member($this->axis11);
         $this->member1A11->setRef('RefCell1A11');
         $this->member1A11->setLabel('LabelCel1Al11');
-        $this->member1A11->setAxis($this->axis11);
-        $this->member1A11->save();
         $this->member1A11->addDirectParent($this->member1A111);
 
-        $this->member2A11 = new Orga_Model_Member();
+        $this->member2A11 = new Orga_Model_Member($this->axis11);
         $this->member2A11->setRef('RefCell2A11');
         $this->member2A11->setLabel('LabelCell2A11');
-        $this->member2A11->setAxis($this->axis11);
-        $this->member2A11->save();
         $this->member2A11->addDirectParent($this->member2A111);
 
-        $this->member3A11 = new Orga_Model_Member();
+        $this->member3A11 = new Orga_Model_Member($this->axis11);
         $this->member3A11->setRef('RefCell3A11');
         $this->member3A11->setLabel('LabelCell3A11');
-        $this->member3A11->setAxis($this->axis11);
-        $this->member3A11->save();
         $this->member3A11->addDirectParent($this->member2A111);
 
-        $this->member1A12 = new Orga_Model_Member();
+        $this->member1A12 = new Orga_Model_Member($this->axis12);
         $this->member1A12->setRef('RefCell1A12');
         $this->member1A12->setLabel('LabelCell1A12');
-        $this->member1A12->setAxis($this->axis12);
-        $this->member1A12->save();
 
-        $this->member1A1 = new Orga_Model_Member();
+        $this->member1A1 = new Orga_Model_Member($this->axis1);
         $this->member1A1->setRef('RefCell1A1');
         $this->member1A1->setLabel('LabelCell1A1');
-        $this->member1A1->setAxis($this->axis1);
-        $this->member1A1->save();
         $this->member1A1->addDirectParent($this->member1A11);
         $this->member1A1->addDirectParent($this->member1A12);
 
-        $this->member2A1 = new Orga_Model_Member();
+        $this->member2A1 = new Orga_Model_Member($this->axis1);
         $this->member2A1->setRef('RefCell2A1');
         $this->member2A1->setLabel('LabelCell2A1');
-        $this->member2A1->setAxis($this->axis1);
-        $this->member2A1->save();
         $this->member2A1->addDirectParent($this->member2A11);
         $this->member2A1->addDirectParent($this->member1A12);
 
-        $this->member1A21 = new Orga_Model_Member();
+        $this->member1A21 = new Orga_Model_Member($this->axis21);
         $this->member1A21->setRef('RefCell1A21');
         $this->member1A21->setLabel('LabelCell1A21');
-        $this->member1A21->setAxis($this->axis21);
-        $this->member1A21->save();
 
-        $this->member2A21 = new Orga_Model_Member();
+        $this->member2A21 = new Orga_Model_Member($this->axis21);
         $this->member2A21->setRef('RefCell2A21');
         $this->member2A21->setLabel('LabelCell2A21');
-        $this->member2A21->setAxis($this->axis21);
-        $this->member2A21->save();
 
-        $this->member1A2 = new Orga_Model_Member();
+        $this->member1A2 = new Orga_Model_Member($this->axis2);
         $this->member1A2->setRef('RefCell1A2');
         $this->member1A2->setLabel('LabelCell1A2');
-        $this->member1A2->setAxis($this->axis2);
-        $this->member1A2->save();
         $this->member1A2->addDirectParent($this->member1A21);
 
-        $this->member2A2 = new Orga_Model_Member();
+        $this->member2A2 = new Orga_Model_Member($this->axis2);
         $this->member2A2->setRef('RefCell2A2');
         $this->member2A2->setLabel('LabelCell2A2');
-        $this->member2A2->setAxis($this->axis2);
-        $this->member2A2->save();
         $this->member2A2->addDirectParent($this->member1A21);
 
-        $this->member3A2 = new Orga_Model_Member();
+        $this->member3A2 = new Orga_Model_Member($this->axis2);
         $this->member3A2->setRef('RefCell3A2');
         $this->member3A2->setLabel('LabelCell3A2');
-        $this->member3A2->setAxis($this->axis2);
-        $this->member3A2->save();
         $this->member3A2->addDirectParent($this->member1A21);
 
-        $this->member4A2 = new Orga_Model_Member();
+        $this->member4A2 = new Orga_Model_Member($this->axis2);
         $this->member4A2->setRef('RefCell4A2');
         $this->member4A2->setLabel('LabelCell4A2');
-        $this->member4A2->setAxis($this->axis2);
-        $this->member4A2->save();
         $this->member4A2->addDirectParent($this->member2A21);
 
-        $this->granularity0 = new Orga_Model_Granularity();
-        $this->granularity0->setCube($this->cube);
-        $this->granularity0->save();
+        $this->granularity0 = new Orga_Model_Granularity($this->project);
 
-        $this->granularity1 = new Orga_Model_Granularity();
-        $this->granularity1->setCube($this->cube);
-        $this->granularity1->addAxis($this->axis111);
-        $this->granularity1->addAxis($this->axis21);
-        $this->granularity1->save();
+        $this->granularity1 = new Orga_Model_Granularity($this->project, [$this->axis111, $this->axis21]);
 
-        $this->granularity2 = new Orga_Model_Granularity();
-        $this->granularity2->setCube($this->cube);
-        $this->granularity2->addAxis($this->axis11);
-        $this->granularity2->addAxis($this->axis21);
-        $this->granularity2->save();
+        $this->granularity2 = new Orga_Model_Granularity($this->project, [$this->axis11, $this->axis21]);
 
-        $this->granularity3 = new Orga_Model_Granularity();
-        $this->granularity3->setCube($this->cube);
-        $this->granularity3->addAxis($this->axis12);
-        $this->granularity3->addAxis($this->axis21);
-        $this->granularity3->save();
+        $this->granularity3 = new Orga_Model_Granularity($this->project, [$this->axis12, $this->axis21]);
 
-        $this->granularity4 = new Orga_Model_Granularity();
-        $this->granularity4->setCube($this->cube);
-        $this->granularity4->addAxis($this->axis11);
-        $this->granularity4->addAxis($this->axis2);
-        $this->granularity4->save();
+        $this->granularity4 = new Orga_Model_Granularity($this->project, [$this->axis11, $this->axis2]);
 
-        $this->granularity5 = new Orga_Model_Granularity();
-        $this->granularity5->setCube($this->cube);
-        $this->granularity5->addAxis($this->axis1);
-        $this->granularity5->addAxis($this->axis2);
-        $this->granularity5->save();
+        $this->granularity5 = new Orga_Model_Granularity($this->project, [$this->axis1, $this->axis2]);
 
+        $this->project->save();
         $entityManagers['default']->flush();
     }
 
@@ -511,65 +449,73 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
         $cell7G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member2A1, $this->member3A2));
         $cell8G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member2A1, $this->member4A2));
 
+        $query = new Core_Model_Query();
+        $query->filter->condition = Core_Model_Filter::CONDITION_OR;
+        foreach ($this->project->getGranularities() as $granularity) {
+            $query->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+        }
+        $this->assertEquals(33, Orga_Model_Cell::countTotal($query));
+
         $this->assertEquals(array(), $cellG0->getParentCells());
         $childCells = array_merge($this->granularity1->getCells(), $this->granularity2->getCells(), $this->granularity3->getCells(), $this->granularity4->getCells(), $this->granularity5->getCells());
-        $this->assertEquals(count($childCells), $cellG0->countTotalChildCells());
+        $this->assertEquals(32, count($cellG0->getChildCells()));
+        $this->assertEquals(32, count($cellG0->loadChildCells()));
         foreach ($cellG0->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $this->assertEquals(array($cellG0), $cell2G1->getParentCells());
         $childCells = array($cell2G2, $cell4G4, $cell4G5);
-        $this->assertEquals(count($childCells), $cell2G1->countTotalChildCells());
+        $this->assertEquals(3, count($cell2G1->getChildCells()));
         foreach ($cell2G1->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $this->assertEquals(array($cellG0), $cell3G1->getParentCells());
-        $childCells = array($cell3G2, $cell5G2, $cell5G4, $cell6G4,$cell7G4, $cell9G4, $cell10G4, $cell11G4, $cell5G5, $cell6G5, $cell7G5);
-        $this->assertEquals(count($childCells), $cell3G1->countTotalChildCells());
+        $childCells = array($cell3G2, $cell5G2, $cell5G4, $cell6G4, $cell7G4, $cell9G4, $cell10G4, $cell11G4, $cell5G5, $cell6G5, $cell7G5);
+        $this->assertEquals(11, count($cell3G1->getChildCells()));
         foreach ($cell3G1->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $this->assertEquals(array($cell4G1, $cellG0), $cell4G2->getParentCells());
         $childCells = array($cell8G4, $cell8G5);
-        $this->assertEquals(count($childCells), $cell4G2->countTotalChildCells());
+        $this->assertEquals(2, count($cell4G2->getChildCells()));
         foreach ($cell4G2->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $this->assertEquals(array($cell4G1, $cellG0), $cell6G2->getParentCells());
         $childCells = array($cell12G4);
-        $this->assertEquals(count($childCells), $cell6G2->countTotalChildCells());
+        $this->assertEquals(1, count($cell6G2->getChildCells()));
         foreach ($cell6G2->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $this->assertEquals(array($cellG0), $cell2G3->getParentCells());
         $childCells = array($cell4G5, $cell8G5);
-        $this->assertEquals(count($childCells), $cell2G3->countTotalChildCells());
+        $this->assertEquals(2, count($cell2G3->getChildCells()));
         foreach ($cell2G3->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $this->assertEquals(array($cell1G2, $cell1G1, $cellG0), $cell2G4->getParentCells());
         $childCells = array($cell2G5);
-        $this->assertEquals(count($childCells), $cell2G4->countTotalChildCells());
+        $this->assertEquals(1, count($cell2G4->getChildCells()));
         foreach ($cell2G4->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $this->assertEquals(array($cell1G2, $cell1G1, $cellG0), $cell3G4->getParentCells());
         $childCells = array($cell3G5);
-        $this->assertEquals(count($childCells), $cell3G4->countTotalChildCells());
+        $this->assertEquals(1, count($cell3G4->getChildCells()));
         foreach ($cell3G4->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $this->assertEquals(array($cell1G4, $cell1G3, $cell1G2, $cell1G1, $cellG0), $cell1G5->getParentCells());
         $childCells = array();
-        $this->assertEquals(count($childCells), $cell1G5->countTotalChildCells());
+        $this->assertEquals(0, count($cell1G5->getChildCells()));
         foreach ($cell1G5->getChildCells() as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
@@ -579,14 +525,125 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
         $this->assertEquals($cell5G2, $cell11G4->getParentCellForGranularity($this->granularity2));
 
         $childCells = array($cell5G5, $cell6G5, $cell7G5);
-        $this->assertEquals(count($childCells), $cell3G2->countTotalChildCellsForGranularity($this->granularity5));
+        $this->assertEquals(3, count($cell3G2->getChildCellsForGranularity($this->granularity5)));
         foreach ($cell3G2->getChildCellsForGranularity($this->granularity5) as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
 
         $childCells = array($cell8G4, $cell12G4);
-        $this->assertEquals(count($childCells), $cell4G1->countTotalChildCellsForGranularity($this->granularity4));
+        $this->assertEquals(2, count($cell4G1->getChildCellsForGranularity($this->granularity4)));
         foreach ($cell4G1->getChildCellsForGranularity($this->granularity4) as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+    }
+
+    /**
+     * Test les méthodes de récupération des cellules enfants et parentes.
+     */
+    public function testLoadChildCells()
+    {
+        $cellG0 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity0, array());
+
+        $cell1G1 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity1, array($this->member1A111, $this->member1A21));
+        $cell2G1 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity1, array($this->member1A111, $this->member2A21));
+        $cell3G1 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity1, array($this->member2A111, $this->member1A21));
+        $cell4G1 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity1, array($this->member2A111, $this->member2A21));
+
+        $cell1G2 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity2, array($this->member1A11, $this->member1A21));
+        $cell2G2 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity2, array($this->member1A11, $this->member2A21));
+        $cell3G2 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity2, array($this->member2A11, $this->member1A21));
+        $cell4G2 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity2, array($this->member2A11, $this->member2A21));
+        $cell5G2 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity2, array($this->member3A11, $this->member1A21));
+        $cell6G2 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity2, array($this->member3A11, $this->member2A21));
+
+        $cell1G3 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity3, array($this->member1A12, $this->member1A21));
+        $cell2G3 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity3, array($this->member1A12, $this->member2A21));
+
+        $cell1G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member1A11, $this->member1A2));
+        $cell2G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member1A11, $this->member2A2));
+        $cell3G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member1A11, $this->member3A2));
+        $cell4G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member1A11, $this->member4A2));
+        $cell5G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member2A11, $this->member1A2));
+        $cell6G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member2A11, $this->member2A2));
+        $cell7G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member2A11, $this->member3A2));
+        $cell8G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member2A11, $this->member4A2));
+        $cell9G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member3A11, $this->member1A2));
+        $cell10G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member3A11, $this->member2A2));
+        $cell11G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member3A11, $this->member3A2));
+        $cell12G4 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity4, array($this->member3A11, $this->member4A2));
+
+        $cell1G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member1A1, $this->member1A2));
+        $cell2G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member1A1, $this->member2A2));
+        $cell3G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member1A1, $this->member3A2));
+        $cell4G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member1A1, $this->member4A2));
+        $cell5G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member2A1, $this->member1A2));
+        $cell6G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member2A1, $this->member2A2));
+        $cell7G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member2A1, $this->member3A2));
+        $cell8G5 = Orga_Model_Cell::loadByGranularityAndListMembers($this->granularity5, array($this->member2A1, $this->member4A2));
+
+        $childCells = array_merge($this->granularity1->getCells(), $this->granularity2->getCells(), $this->granularity3->getCells(), $this->granularity4->getCells(), $this->granularity5->getCells());
+        $this->assertEquals(count($childCells), $cellG0->countTotalChildCells());
+        foreach ($cellG0->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell2G2, $cell4G4, $cell4G5);
+        $this->assertEquals(count($childCells), $cell2G1->countTotalChildCells());
+        foreach ($cell2G1->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell3G2, $cell5G2, $cell5G4, $cell6G4,$cell7G4, $cell9G4, $cell10G4, $cell11G4, $cell5G5, $cell6G5, $cell7G5);
+        $this->assertEquals(count($childCells), $cell3G1->countTotalChildCells());
+        foreach ($cell3G1->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell8G4, $cell8G5);
+        $this->assertEquals(count($childCells), $cell4G2->countTotalChildCells());
+        foreach ($cell4G2->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell12G4);
+        $this->assertEquals(count($childCells), $cell6G2->countTotalChildCells());
+        foreach ($cell6G2->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell4G5, $cell8G5);
+        $this->assertEquals(count($childCells), $cell2G3->countTotalChildCells());
+        foreach ($cell2G3->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell2G5);
+        $this->assertEquals(count($childCells), $cell2G4->countTotalChildCells());
+        foreach ($cell2G4->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell3G5);
+        $this->assertEquals(count($childCells), $cell3G4->countTotalChildCells());
+        foreach ($cell3G4->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array();
+        $this->assertEquals(count($childCells), $cell1G5->countTotalChildCells());
+        foreach ($cell1G5->loadChildCells() as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell5G5, $cell6G5, $cell7G5);
+        $this->assertEquals(count($childCells), $cell3G2->countTotalChildCellsForGranularity($this->granularity5));
+        foreach ($cell3G2->loadChildCellsForGranularity($this->granularity5) as $childCell) {
+            $this->assertTrue(in_array($childCell, $childCells));
+        }
+
+        $childCells = array($cell8G4, $cell12G4);
+        $this->assertEquals(count($childCells), $cell4G1->countTotalChildCellsForGranularity($this->granularity4));
+        foreach ($cell4G1->loadChildCellsForGranularity($this->granularity4) as $childCell) {
             $this->assertTrue(in_array($childCell, $childCells));
         }
     }
@@ -752,9 +809,7 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->cube->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        Orga_Test_ProjectTest::deleteObject($this->project);
     }
 
     /**
@@ -798,11 +853,11 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Project en base, sinon suppression !
+        if (Orga_Model_Project::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Project restants ont été trouvé après les tests, suppression en cours !';
+            foreach (Orga_Model_Project::loadList() as $project) {
+                $project->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();

@@ -21,7 +21,7 @@ class Orga_Tab_CellController extends Core_Controller_Ajax
     /**
      * @var int
      */
-    protected $idCube;
+    protected $idProject;
 
     /**
      * @see Core_Controller::init()
@@ -30,8 +30,8 @@ class Orga_Tab_CellController extends Core_Controller_Ajax
     {
         parent::init();
         $this->_helper->layout()->disableLayout();
-        $this->cell = Orga_Model_Cell::load(array('id' => $this->_getParam('idCell')));
-        $this->idCube = $this->cell->getGranularity()->getCube()->getKey()['id'];
+        $this->cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+        $this->idProject = $this->cell->getGranularity()->getProject()->getKey()['id'];
     }
 
     /**
@@ -40,7 +40,7 @@ class Orga_Tab_CellController extends Core_Controller_Ajax
      */
     public function childcellsAction()
     {
-        $this->_forward('child', 'cell', 'orga', array('idCell' => $this->cell->getKey()['id'], 'display' => 'render'));
+        $this->forward('child', 'cell', 'orga', array('idCell' => $this->cell->getKey()['id'], 'display' => 'render'));
     }
 
     /**
@@ -49,7 +49,7 @@ class Orga_Tab_CellController extends Core_Controller_Ajax
      */
     public function axisAction()
     {
-        $this->_forward('manage', 'axis', 'orga', array('idCube' => $this->idCube, 'display' => 'render'));
+        $this->forward('manage', 'axis', 'orga', array('idProject' => $this->idProject, 'display' => 'render'));
     }
 
     /**
@@ -58,7 +58,7 @@ class Orga_Tab_CellController extends Core_Controller_Ajax
      */
     public function memberAction()
     {
-        $this->view->idCube = $this->idCube;
+        $this->view->idProject = $this->idProject;
         if ($this->cell->getGranularity()->hasAxes()) {
             $axes = array();
             $idAxes = array();
@@ -76,7 +76,7 @@ class Orga_Tab_CellController extends Core_Controller_Ajax
             $this->view->idFilterCell = $this->cell->getKey()['id'];
             $this->view->ambiantGranularity = $this->cell->getGranularity();
         } else {
-            $this->view->axes = $this->cell->getGranularity()->getCube()->getLastOrderedAxes();
+            $this->view->axes = $this->cell->getGranularity()->getProject()->getLastOrderedAxes();
             $this->view->idFilterCell = null;
             $this->view->ambiantGranularity = null;
         }
@@ -92,7 +92,7 @@ class Orga_Tab_CellController extends Core_Controller_Ajax
      */
     public function granularityAction()
     {
-        $this->_forward('manage', 'granularity', 'orga', array('idCube' => $this->idCube, 'display' => 'render'));
+        $this->forward('manage', 'granularity', 'orga', array('idProject' => $this->idProject, 'display' => 'render'));
     }
 
     /**
@@ -101,16 +101,16 @@ class Orga_Tab_CellController extends Core_Controller_Ajax
      */
     public function relevantcellsAction()
     {
-        $this->_forward('relevant', 'cell', 'orga', array('idCell' => $this->cell->getKey()['id'], 'display' => 'render'));
+        $this->forward('relevant', 'cell', 'orga', array('idCell' => $this->cell->getKey()['id'], 'display' => 'render'));
     }
 
     /**
-     * Onglet de la cohérence du cube.
+     * Onglet de la cohérence du project.
      * @Secure("viewCell")
      */
     public function consistencyAction()
     {
-        $this->_forward('consistency', 'cube', 'orga', array('idCube' => $this->idCube, 'display' => 'render'));
+        $this->forward('consistency', 'project', 'orga', array('idProject' => $this->idProject, 'display' => 'render'));
     }
 
 }

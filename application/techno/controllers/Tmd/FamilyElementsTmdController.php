@@ -18,11 +18,11 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller_Ajax
      */
     public function addElementAction()
     {
-        $idFamily = $this->_getParam('id');
+        $idFamily = $this->getParam('id');
         /** @var $family Techno_Model_Family */
         $family = Techno_Model_Family::load($idFamily);
         // Récupère la cellule
-        $coordinates = $this->_getParam('coordinates');
+        $coordinates = $this->getParam('coordinates');
         $members = [];
         $index = 0;
         foreach ($family->getDimensions() as $dimension) {

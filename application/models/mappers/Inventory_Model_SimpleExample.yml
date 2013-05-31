@@ -1,0 +1,10 @@
+Inventory_Model_SimpleExample:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: inventory_simpleexample
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO

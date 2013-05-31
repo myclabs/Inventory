@@ -26,7 +26,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
      *  $this->filter['indexDeLaColonne'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
@@ -57,7 +57,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
      *  $this->add['nomDuChamps'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie une message d'information.
      *
@@ -210,10 +210,10 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
     public function getlistsiblingsAction()
     {
         $axis = Classif_Model_Axis::loadByRef($this->idNode);
-        if (($this->_getParam('idParent') != null) && ($this->_getParam('idParent') !== $this->id.'_root')) {
-            $axisParent = Classif_Model_Axis::loadByRef($this->_getParam('idParent'));
+        if (($this->getParam('idParent') != null) && ($this->getParam('idParent') !== $this->id.'_root')) {
+            $axisParent = Classif_Model_Axis::loadByRef($this->getParam('idParent'));
             $siblingAxes = $axisParent->getDirectBroaders();
-        } else if (($axis->getDirectNarrower() === null) || ($this->_getParam('idParent') === $this->id.'_root')) {
+        } else if (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
             $queryRootAxes = new Core_Model_Query();
             $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
             $queryRootAxes->order->addOrder(Classif_Model_Axis::QUERY_POSITION);

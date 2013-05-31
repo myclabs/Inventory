@@ -1,0 +1,40 @@
+<?php
+// Liste des Project.
+?>
+<div class="page-header">
+    <h1>
+        <?=__('Orga', 'name', 'organizations')?>
+    </h1>
+</div>
+
+<?php
+$datagridProject = new UI_Datagrid('listProjects', 'datagrid_project', 'orga');
+
+$columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$columnLabel->addable = true;
+$columnLabel->editable = true;
+$datagridProject->addCol($columnLabel);
+
+$columnGranularityForInventoryStatus = new UI_Datagrid_Col_List('granularityForInventoryStatus', __('Orga', 'projectList', 'granularityForInventoryStatus'));
+$columnGranularityForInventoryStatus->list = 'orga/datagrid_project/getlistgranularities';
+$columnGranularityForInventoryStatus->dynamicList = true;
+$columnGranularityForInventoryStatus->editable = $this->isConnectedUserAbleToEditProjects;
+$columnGranularityForInventoryStatus->addable = false;
+$datagridProject->addCol($columnGranularityForInventoryStatus);
+
+if ($this->isConnectedUserAbleToEditProjects) {
+    $columnResetDWCubesAndDatasUpToDate = new UI_Datagrid_Col_Popup('resetDWCubesAndDatasUpToDate', __('Orga', 'projectList', 'statusRebuildHeader'));
+    $columnResetDWCubesAndDatasUpToDate->popup->title = __('Orga', 'projectList', 'statusRebuildPopupTitle');
+    $datagridProject->addCol($columnResetDWCubesAndDatasUpToDate);
+}
+
+$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+$columnDetails->addable = false;
+$datagridProject->addCol($columnDetails);
+
+//$datagridProject->deleteElements = $this->isConnectedUserAbleToDeleteProjects;
+$datagridProject->pagination = false;
+$datagridProject->addElements = $this->isConnectedUserAbleToCreateProjects;
+$datagridProject->addPanelTitle = __('Orga', 'projectList', 'addPanelTitle');
+
+$datagridProject->display();

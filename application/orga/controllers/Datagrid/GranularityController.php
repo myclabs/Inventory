@@ -21,16 +21,16 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewOrgaCube")
+     * @Secure("viewProject")
      */
     public function getelementsAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_CUBE, $cube);
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
             $data = array();
@@ -58,11 +58,11 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      * @see getAddElementValue
      * @see setAddElementErrorMessage
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function addelementAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
 
         $refAxes = $this->getAddElementValue('axes');
         $listAxes = array();
@@ -72,7 +72,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         }
         foreach ($this->getAddElementValue('axes') as $refAxis) {
             $refGranularity .= $refAxis . '|';
-            $axis = Orga_Model_Axis::loadByRefAndCube($refAxis, $cube);
+            $axis = Orga_Model_Axis::loadByRefAndProject($refAxis, $project);
             // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
             if (!$axis->isTransverse($listAxes)) {
                 $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'));
@@ -83,7 +83,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         }
         $refGranularity = substr($refGranularity, 0, -1);
         try {
-            Orga_Model_Granularity::loadByRefAndCube($refGranularity, $cube);
+            Orga_Model_Granularity::loadByRefAndProject($refGranularity, $project);
             $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'));
         } catch (Core_Exception_NotFound $e) {
             // La granularité n'existe pas déjà.
@@ -93,7 +93,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $dispatcher = Zend_Registry::get('workDispatcher');
             $dispatcher->runBackground(
                 new Orga_Work_Task_AddGranularity(
-                    $cube,
+                    $project,
                     $listAxes,
                     $this->getAddElementValue('navigable')
                 )
@@ -111,16 +111,16 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *  $this->delete.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function deleteelementAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $granularity = Orga_Model_Granularity::loadByRefAndCube($this->delete, $cube);
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->delete, $project);
 
         $granularity->delete();
 
@@ -149,16 +149,16 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *  $this->update['value'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editProject")
      */
     public function updateelementAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $granularity = Orga_Model_Granularity::loadByRefAndCube($this->update['index'], $cube);
+        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->update['index'], $project);
 
         switch ($this->update['column']) {
             case 'navigable':

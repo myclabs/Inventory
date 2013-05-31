@@ -145,7 +145,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         /** @var $meaning Techno_Model_Meaning */
-        $meaning = Techno_Model_Meaning::load($this->_getParam('index'));
+        $meaning = Techno_Model_Meaning::load($this->getParam('index'));
         try {
             $meaning->delete();
             $entityManagers = Zend_Registry::get('EntityManagers');

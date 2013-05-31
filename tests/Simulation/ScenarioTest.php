@@ -514,49 +514,26 @@ class SimulationMetierTest extends PHPUnit_Framework_TestCase
 //             }
 //         }
 //     }
-
-    /**
-     * Fct testAddAFGranularities
-     *  test l'ajout d'une granularité
-     */
-    function testAddAFGranularities()
-    {
-        $structure = new Orga_Model_Structure();
-        $structure->setLabel('labelstructure');
-        $structure->save();
-
-        $orgaGranularity = new Orga_Model_Granularity();
-        $orgaGranularity->setStructure($structure);
-        $orgaGranularity->save();
-
-        $aFGranularities = new Simulation_Model_AFGranularities();
-        $aFGranularities->setAFConfigGranularity($orgaGranularity);
-        $aFGranularities->setAFInputGranularity($orgaGranularity);
-        $aFGranularities->save();
-
-        $aFGranularities->delete();
-        $structure->delete();
-    }
-
-    /**
-     * Test la méthode set PrimarySet.
-     * @expectedException Core_Exception_UndefinedAttribute
-     */
-    function testGetPrimarySetUndefined()
-    {
-        try {
-            $aFInputSetPrimary = $this->_simulation->getAFInputSetPrimary();
-            $this->fail();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $message = 'Le PrimarySet n\'a pas été défini.';
-            if ($e->getMessage() === $message) {
-                throw $e;
-            } else {
-                $this->fail();
-            }
-        }
-    }
-
+//
+//    /**
+//     * Test la méthode set PrimarySet.
+//     * @expectedException Core_Exception_UndefinedAttribute
+//     */
+//    function testGetPrimarySetUndefined()
+//    {
+//        try {
+//            $aFInputSetPrimary = $this->_simulation->getAFInputSetPrimary();
+//            $this->fail();
+//        } catch (Core_Exception_UndefinedAttribute $e) {
+//            $message = 'Le PrimarySet n\'a pas été défini.';
+//            if ($e->getMessage() === $message) {
+//                throw $e;
+//            } else {
+//                $this->fail();
+//            }
+//        }
+//    }
+//
 //     /**
 //      * Test le chargement en fonction du PrimarySet.
 //      * @return Simulation_Model_Simulation
@@ -614,27 +591,27 @@ class SimulationMetierTest extends PHPUnit_Framework_TestCase
 //         $this->assertEquals($this->_simulation, $simulationLoaded);
 //         $aFInputSetPrimary->delete();
 //     }
-
-    /**
-     * Function testGetTechnoDBVersionUndefined
-     *  Test la méthode set Version de TechnoDB.
-     * @expectedException Core_Exception_UndefinedAttribute
-     */
-    function testGetTechnoDBVersionUndefined()
-    {
-        try {
-            $technoDBVersion = $this->_simulation->getTechnoDBVersion();
-            $this->fail();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $message = 'La Version de TechnoDB n\'a pas été défini.';
-            if ($e->getMessage() === $message) {
-                throw $e;
-            } else {
-                $this->fail();
-            }
-        }
-    }
-
+//
+//    /**
+//     * Function testGetTechnoDBVersionUndefined
+//     *  Test la méthode set Version de TechnoDB.
+//     * @expectedException Core_Exception_UndefinedAttribute
+//     */
+//    function testGetTechnoDBVersionUndefined()
+//    {
+//        try {
+//            $technoDBVersion = $this->_simulation->getTechnoDBVersion();
+//            $this->fail();
+//        } catch (Core_Exception_UndefinedAttribute $e) {
+//            $message = 'La Version de TechnoDB n\'a pas été défini.';
+//            if ($e->getMessage() === $message) {
+//                throw $e;
+//            } else {
+//                $this->fail();
+//            }
+//        }
+//    }
+//
 //     /**
 //      * Function testSetgetTechnoDBVersion
 //      *  Test les méthodes set et get Version de TechnoDB.

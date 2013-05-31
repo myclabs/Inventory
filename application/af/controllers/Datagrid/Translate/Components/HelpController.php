@@ -81,7 +81,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $component = AF_Model_Component::load($this->_getParam('id'));
+        $component = AF_Model_Component::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $component->reloadWithLocale($locale);
 
@@ -97,7 +97,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $component = AF_Model_Component::load($this->_getParam('id'));
+        $component = AF_Model_Component::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $component->reloadWithLocale($locale);
 

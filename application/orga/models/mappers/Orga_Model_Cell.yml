@@ -25,6 +25,72 @@ Orga_Model_Cell:
       column: allParentsRelevant
       type: boolean
       nullable: false
+    inventoryStatus:
+      column: inventoryStatus
+      type: string
+      length: 15
+      nullable: false
+
+  oneToOne:
+    docLibraryForAFInputSetsPrimary:
+      targetEntity: Doc_Model_Library
+      joinColumn:
+        name: idDocLibraryForAFInputSetsPrimary
+        referencedColumnName: id
+        nullable: true
+        unique: true
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+    aFInputSetPrimary:
+      targetEntity: AF_Model_InputSet_Primary
+      joinColumn:
+        name: idAFInputSetPrimary
+        referencedColumnName: id
+        nullable: true
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+    docBibliographyForAFInputSetPrimary:
+      targetEntity: Doc_Model_Bibliography
+      joinColumn:
+        name: idDocBibliographyForAFInputSetPrimary
+        referencedColumnName: id
+        nullable: true
+        unique: true
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+    dWCube:
+      targetEntity: DW_Model_Cube
+      joinColumn:
+        name: idDWCube
+        referencedColumnName: id
+        nullable: true
+        unique: true
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+    docLibraryForSocialGenericActions:
+      targetEntity: Doc_Model_Library
+      joinColumn:
+        name: idDocLibraryForSocialGenericActions
+        referencedColumnName: id
+        nullable: true
+        unique: true
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+    docLibraryForSocialContextActions:
+      targetEntity: Doc_Model_Library
+      joinColumn:
+        name: idDocLibraryForSocialContextActions
+        referencedColumnName: id
+        nullable: true
+        unique: true
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+
+  oneToMany:
+    cellsGroups:
+      targetEntity: Orga_Model_CellsGroup
+      mappedBy: containerCell
+      cascade: [ remove ]
 
   manyToOne:
     granularity:
@@ -46,7 +112,59 @@ Orga_Model_Cell:
         inverseJoinColumns:
           idMember:
             referencedColumnName: id
-
-  lifecycleCallbacks:
-    prePersist: [ preSave ]
-    preRemove: [ preDelete ]
+    socialCommentsForAFInputSetPrimary:
+      targetEntity: Social_Model_Comment
+      joinTable:
+        name: Orga_Cell_AFInputSetPrimaryComments
+        joinColumns:
+          idCell:
+            referencedColumnName: id
+            nullable: false
+        inverseJoinColumns:
+          idSocialComment:
+            referencedColumnName: id
+            nullable: false
+            unique: true
+      cascade: [ persist, remove ]
+    socialGenericActions:
+      targetEntity: Social_Model_GenericAction
+      joinTable:
+        name: Orga_Cell_GenericActions
+        joinColumns:
+          idCell:
+            referencedColumnName: id
+            nullable: false
+        inverseJoinColumns:
+          idSocialGenericAction:
+            referencedColumnName: id
+            nullable: false
+            unique: true
+      cascade: [ persist, remove ]
+    socialContextActions:
+      targetEntity: Social_Model_ContextAction
+      joinTable:
+        name: Orga_Cell_ContextActions
+        joinColumns:
+          idCell:
+            referencedColumnName: id
+            nullable: false
+        inverseJoinColumns:
+          idSocialContextAction:
+            referencedColumnName: id
+            nullable: false
+            unique: true
+      cascade: [ persist, remove ]
+    dWResults:
+      targetEntity: DW_Model_Result
+      joinTable:
+        name: Orga_Cell_DWResults
+        joinColumns:
+          idCell:
+            referencedColumnName: id
+            nullable: false
+        inverseJoinColumns:
+          idDWResult:
+            referencedColumnName: id
+            nullable: false
+            unique: true
+      cascade: [ persist, remove ]
