@@ -1,14 +1,14 @@
 <?php
 /**
  * @author valentin.claras
- * @package Orga
+ * @package Inventory
  * Traduction des Project
  */
 ?>
     <div class="page-header">
-        <h1><?=__('Orga', 'project', 'translate')?></h1>
+        <h1><?=__('Orga', 'name', 'organizations')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
     </div>
 <?php
-echo $this->translateDatagrid('Orga_Model_Project', 'label', 'datagrid_translate_projects', 'orga')->simple()
-    ->addCol(new UI_Datagrid_Col_Link('axes', __('Orga', 'axis', 'translate')))
-    ->addCol(new UI_Datagrid_Col_Link('members', __('Orga', 'member', 'translate')));
+echo $this->translateDatagrid('Inventory_Model_Project', 'label', 'datagrid_translate_projects', 'inventory')->simple()
+    ->addCol(new UI_Datagrid_Col_Link('axes', __('UI', 'name', 'axes')))
+    ->addCol(new UI_Datagrid_Col_Link('members', __('UI', 'name', 'members')));
