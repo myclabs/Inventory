@@ -186,7 +186,7 @@ class Orga_CellController extends Core_Controller
      * Affiche le détail d'une cellule.
      * @Secure("viewCell")
      */
-    public function detailsAction()
+    public function detailsBisAction()
     {
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $orgaCell */
