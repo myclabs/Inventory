@@ -351,12 +351,8 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public static function buildMembersHashKey($listMembers)
     {
-        uasort(
-            $listMembers,
-            function (Orga_Model_Member $a, Orga_Model_Member $b) {
-                return $a->getAxis()->getGlobalPosition() - $b->getAxis()->getGlobalPosition();
-            }
-        );
+        // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
+        @uasort($listMembers, array('Orga_Model_Member', 'orderMembers'));
         $membersRef = [];
 
         foreach ($listMembers as $member) {

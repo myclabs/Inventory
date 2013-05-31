@@ -280,28 +280,29 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function updateRef()
     {
-        $refParts = array();
-        $axes = $this->getAxes();
-        uasort($axes, function($a, $b) { return $a->getGlobalPosition() - $b->getGlobalPosition(); });
-        foreach ($axes as $axis) {
-            $refParts[] = $axis->getRef();
-        }
-        $this->ref = $this->getRefFromAxesRef($refParts);
+        $this->ref = self::buildRefFromAxes($this->getAxes());
     }
 
     /**
      * Renvoi la ref d'une granularité à partir d'un ensemble de ref d'axes.
      *
-     * @param array(string) $axesRef
+     * @param Orga_Model_Axis[] $axes
      *
      * @return string
      */
-    protected function getRefFromAxesRef($axesRef)
+    public static function buildRefFromAxes($axes)
     {
-        if (empty($axesRef)) {
+        $axesRefParts = array();
+        // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
+        @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+        foreach ($axes as $axis) {
+            $axesRefParts[] = $axis->getRef();
+        }
+
+        if (empty($axesRefParts)) {
             return 'global';
         } else {
-            return implode('|', $axesRef);
+            return implode('|', $axesRefParts);
         }
     }
 
@@ -327,7 +328,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
         } else {
             $labelParts = array();
             $axes = $this->getAxes();
-            uasort($axes, function($a, $b) { return $a->getGlobalPosition() - $b->getGlobalPosition(); });
+            // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
+            @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
             foreach ($axes as $axis) {
                 $labelParts[] = $axis->getLabel();
             }
@@ -606,16 +608,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             }
         }
 
-        $crossedAxes = array_merge($currentAxes, $crossingAxes);
-        uasort($crossedAxes, function ($a, $b) {
-            return $a->getGlobalPosition() - $b->getGlobalPosition();
-        });
-        $crossedAxesRefs = array();
-        foreach ($crossedAxes as $axis) {
-            $crossedAxesRefs[] = $axis->getRef();
-        }
-
-        return $this->project->getGranularityByRef($this->getRefFromAxesRef($crossedAxesRefs));
+        return $this->project->getGranularityByRef(self::buildRefFromAxes(array_merge($currentAxes, $crossingAxes)));
     }
 
     /**
@@ -641,15 +634,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             }
         }
 
-        uasort($encompassingAxes, function ($a, $b) {
-            return $a->getGlobalPosition() - $b->getGlobalPosition();
-        });
-        $encompassingAxesRefs = array();
-        foreach ($encompassingAxes as $axis) {
-            $encompassingAxesRefs[] = $axis->getRef();
-        }
-
-        return $this->project->getGranularityByRef($this->getRefFromAxesRef($encompassingAxesRefs));
+        return $this->project->getGranularityByRef(self::buildRefFromAxes($encompassingAxes));
     }
 
     /**
@@ -666,6 +651,10 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $this->inputConfigGranularity = $configGranularity;
             if ($configGranularity !== null) {
                 $configGranularity->addInputGranularity($this);
+
+                foreach ($this->getCells() as $cell) {
+                    $cell->setDocBibliographyForAFInputSetPrimary(new Doc_Model_Bibliography());
+                }
             }
         }
     }
@@ -701,9 +690,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
             foreach ($this->getCells() as $cell) {
                 $cellsGroup = new Orga_Model_CellsGroup($cell, $inputGranularity);
-            }
-            foreach ($inputGranularity->getCells() as $inputCell) {
-                $inputCell->setDocBibliographyForAFInputSetPrimary(new Doc_Model_Bibliography());
             }
         }
     }
@@ -832,7 +818,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getDWCube()
     {
-        if ($this->cellsGenerateDWCubes) {
+        if (!$this->cellsGenerateDWCubes) {
             throw new Core_Exception_UndefinedAttribute('La Granularity de la Cell ne génère pas de DWCube');
         }
         return $this->dWCube;

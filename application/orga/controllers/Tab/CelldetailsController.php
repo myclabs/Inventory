@@ -158,7 +158,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     'datagrid_cell_acls_child',
                     'orga',
                     $orgaCell,
-                    $narrowerGranularity->getOrgaGranularity()
+                    $narrowerGranularity
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 

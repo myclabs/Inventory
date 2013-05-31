@@ -279,6 +279,19 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
+     * Permet d'ordonner des Axis entre eux.
+     *
+     * @param Orga_Model_Axis $a
+     * @param Orga_Model_Axis $b
+     *
+     * @return int 1, 0 ou -1
+     */
+    public static function orderAxes(Orga_Model_Axis $a, Orga_Model_Axis $b)
+    {
+        return $a->getGlobalPosition() - $b->getGlobalPosition();
+    }
+
+    /**
      * Définit l'axe narrower de l'axe courant.
      *
      * @param Orga_Model_Axis $narrowerAxis

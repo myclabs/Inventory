@@ -146,12 +146,8 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function buildParentMembersHashKey($contextualizingParentMembers)
     {
-        uasort(
-            $contextualizingParentMembers,
-            function (Orga_Model_Member $a, Orga_Model_Member $b) {
-                return $a->getAxis()->getGlobalPosition() - $b->getAxis()->getGlobalPosition();
-            }
-        );
+        // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
+        @uasort($contextualizingParentMembers, array('Orga_Model_Member', 'orderMembers'));
         $parentMembersRef = [];
 
         foreach ($contextualizingParentMembers as $parentMember) {
@@ -159,6 +155,19 @@ class Orga_Model_Member extends Core_Model_Entity
         }
 
         return implode('|', $parentMembersRef);
+    }
+
+    /**
+     * Permet d'ordonner des Member entre eux.
+     *
+     * @param Orga_Model_Member $a
+     * @param Orga_Model_Member $b
+     *
+     * @return int 1, 0 ou -1
+     */
+    public static function orderMembers(Orga_Model_Member $a, Orga_Model_Member $b)
+    {
+        return $a->getAxis()->getGlobalPosition() - $b->getAxis()->getGlobalPosition();
     }
 
     /**

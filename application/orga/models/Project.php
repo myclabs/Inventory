@@ -90,7 +90,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un Axis à la collction du Project.
+     * Ajoute un Axis à la collection du Project.
      *
      * @param Orga_Model_Axis $axis
      *
@@ -238,8 +238,6 @@ class Orga_Model_Project extends Core_Model_Entity
      *
      * @param Orga_Model_Axis $askingAxis
      *
-     * @throws Core_Exception_NotFound
-     *
      * @return int
      */
     public function getAxisGlobalPosition(Orga_Model_Axis $askingAxis)
@@ -252,8 +250,6 @@ class Orga_Model_Project extends Core_Model_Entity
             }
             $globalPosition++;
         }
-
-        throw new Core_Exception_NotFound();
     }
 
     /**

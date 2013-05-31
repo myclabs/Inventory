@@ -82,7 +82,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
      */
     public function getInputGranularity()
     {
-        return $this->aFGranularities;
+        return $this->inputGranularity;
     }
 
     /**
