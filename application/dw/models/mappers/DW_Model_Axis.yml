@@ -63,7 +63,7 @@ DW_Model_Axis:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      refUniqueness:
+      axisRefUniquenessInCube:
           columns:
               - ref
               - idCube

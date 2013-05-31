@@ -78,7 +78,7 @@ Orga_Model_Axis:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      refUniqueness:
+      axisRefUniquenessInProject:
           columns:
               - ref
               - idProject

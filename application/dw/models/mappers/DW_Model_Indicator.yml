@@ -53,7 +53,7 @@ DW_Model_Indicator:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      refUniqueness:
+      indicatorRefUniquenessInCube:
           columns:
               - ref
               - idCube

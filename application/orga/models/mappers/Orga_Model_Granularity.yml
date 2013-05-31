@@ -114,7 +114,7 @@ Orga_Model_Granularity:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      refUniqueness:
+      granularityRefUniquenessInProject:
           columns:
               - ref
               - idProject
