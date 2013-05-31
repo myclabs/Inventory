@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="my C-sense" xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation=" http://pmd.sf.net/ruleset_xml_schema.xsd">
+
+    <description>My C-Sense PHP_MD rules</description>
+
+    <!-- Import entire unused code rule set and exclude rules -->
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedFormalParameter" />
+    </rule>
+
+    <!-- Import entire naming rule set and exclude rules -->
+    <rule ref="rulesets/naming.xml">
+        <exclude name="ShortVariable" />
+        <exclude name="LongVariable" />
+        <exclude name="AbstractNaming" />
+        <exclude name="NoPackage" />
+    </rule>
+
+    <!-- Import entire design rule set and exclude rules -->
+    <rule ref="rulesets/design.xml">
+        <exclude name="NumberOfChildren" />
+        <exclude name="DepthOfInheritance" />
+    </rule>
+
+    <!-- Import entire codesize rule set and exclude rules -->
+    <rule ref="rulesets/codesize.xml">
+        <exclude name="CyclomaticComplexity" />
+        <exclude name="TooManyMethods" />
+    </rule>
+
+</ruleset>

@@ -63,7 +63,7 @@ class UI_Form_Action_Custom extends UI_Form_Action
     /**
      * @return bool
      */
-    protected function hasReverseFunctionCalled()
+    protected function hasReverseFunction()
     {
         return ($this->_reverseFunctionCalled !== null);
     }
@@ -71,7 +71,7 @@ class UI_Form_Action_Custom extends UI_Form_Action
     /**
      * @return string
      */
-    protected function getReverseFunction()
+    protected function getReverseFunctionCalled()
     {
         return $this->_reverseFunctionCalled.'()';
     }

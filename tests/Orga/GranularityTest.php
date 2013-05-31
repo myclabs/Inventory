@@ -54,6 +54,9 @@ class Orga_Test_GranularityTest
      */
     public static function deleteObject($o, $deleteCube=true)
     {
+        if ($o === null) {
+            return;
+        }
         if ($deleteCube === true) {
             $o->getCube()->delete();
         } else {

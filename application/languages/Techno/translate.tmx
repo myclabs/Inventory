@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="familyCategories">
+            <tuv xml:lang="fr">
+                <seg>Catégories de famille de paramètres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Family parameters categories</seg>
+            </tuv>
+        </tu>
+        <tu tuid="familyLabels">
+            <tuv xml:lang="fr">
+                <seg>Libellés de famille de paramètres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parameters family labels</seg>
+            </tuv>
+        </tu>
+        <tu tuid="familyDocumentations">
+            <tuv xml:lang="fr">
+                <seg>Documentations de famille</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Family documentations</seg>
+            </tuv>
+        </tu>
+        <tu tuid="parameterDocumentations">
+            <tuv xml:lang="fr">
+                <seg>Documentations de paramètre</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parameter documentations</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

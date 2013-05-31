@@ -117,5 +117,17 @@
             </tuv>
         </tu>
 
+        <!-- L'utilisateur n'a accès à aucune unité organisationnelle -->
+
+        <tu tuid="noAccess">
+            <tuv xml:lang="fr">
+                <seg>Vous ne disposez d'aucun droit d'accès à une unité organisationnelle.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You are not allowed to access any organizational unit.</seg>
+            </tuv>
+        </tu>
+
+
     </body>
 </tmx>

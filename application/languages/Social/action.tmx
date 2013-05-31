@@ -4,54 +4,54 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="keyword">
+        <tu tuid="personInCharge">
             <tuv xml:lang="fr">
-                <seg>Mot clé</seg>
+                <seg>Responsable</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Keyword</seg>
+                <seg>Person in charge</seg>
             </tuv>
         </tu>
-        <tu tuid="keywords">
+        <tu tuid="launchDate">
             <tuv xml:lang="fr">
-                <seg>Mots clés</seg>
+                <seg>Lancement</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Keywords</seg>
+                <seg>Launch date</seg>
             </tuv>
         </tu>
-        <tu tuid="object">
+        <tu tuid="targetDate">
             <tuv xml:lang="fr">
-                <seg>Objet</seg>
+                <seg>Objectif</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Object</seg>
+                <seg>Target date</seg>
             </tuv>
         </tu>
-        <tu tuid="predicate">
+        <tu tuid="plannedFem">
             <tuv xml:lang="fr">
-                <seg>Prédicat</seg>
+                <seg>Planifiée</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Predicate</seg>
+                <seg>Planned</seg>
             </tuv>
         </tu>
-        <tu tuid="predicates">
+        <tu tuid="addPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Prédicats</seg>
+                <seg>Ajout d'une action</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Predicates</seg>
+                <seg>Creation of an action</seg>
             </tuv>
         </tu>
-        <tu tuid="subject">
+        <tu tuid="actionDetails">
             <tuv xml:lang="fr">
-                <seg>Sujet</seg>
+                <seg>Détails d'une action</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Subject</seg>
+                <seg>Details of an action</seg>
             </tuv>
         </tu>
 
     </body>
-</tmx>
+</tmx>  

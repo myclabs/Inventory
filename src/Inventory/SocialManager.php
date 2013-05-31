@@ -10,7 +10,7 @@
  * @subpackage ObserverProvider
  *
  */
-class Inventory_SocialManager implements Core_Singleton_Abstract, Core_Observer_Abstract
+class Inventory_SocialManager implements Core_Singleton_Abstract, Core_Event_ObserverInterface
 {
     /**
      * Instance unique de la classe.

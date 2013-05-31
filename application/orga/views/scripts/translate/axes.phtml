@@ -6,7 +6,7 @@
  */
 ?>
     <div class="page-header">
-        <h1><?=__('Orga', 'axis', 'translate')?></h1>
+        <h1><?=__('Orga', 'translate', 'organizationalAxes')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
     </div>
 <?php
 echo $this->translateDatagrid('Orga_Model_Axis', 'label', 'datagrid_translate_axes', 'orga')->simple()->addParam('idCube', $this->idCube);
