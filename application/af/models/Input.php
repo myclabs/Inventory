@@ -99,14 +99,6 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     }
 
     /**
-     * @param AF_Model_Component $component
-     */
-    public function setComponent(AF_Model_Component $component)
-    {
-        $this->refComponent = $component->getRef();
-    }
-
-    /**
      * @return string
      */
     public function getRefComponent()
