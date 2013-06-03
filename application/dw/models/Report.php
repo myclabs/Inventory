@@ -492,6 +492,7 @@ class DW_Model_Report extends Core_Model_Entity
         if ($this->hasFilter($filter)) {
             $this->filters->removeElement($filter);
             $filter->setReport(null);
+            $filter->delete();
         }
     }
 
