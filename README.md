@@ -81,4 +81,3 @@ SVN revision migrated for each package:
 - Orga: 12202
 - Simulation: 12202
 - Inventory: 12223
-
