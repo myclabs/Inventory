@@ -184,8 +184,8 @@ class AF_EditController extends Core_Controller_Ajax
     public function controlResultsAction()
     {
         $this->view->af = AF_Model_AF::load($this->getParam('id'));
-        /** @var $controlService AF_Service_Validator */
-        $controlService = AF_Service_Validator::getInstance();
+        /** @var $controlService AF_Service_ConfigurationValidator */
+        $controlService = AF_Service_ConfigurationValidator::getInstance();
         $this->view->errors = $controlService->validateAF($this->view->af);
         $this->_helper->layout()->disableLayout();
     }
