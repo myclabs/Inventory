@@ -2,6 +2,7 @@
 
 ## Installation
 
+
 Checkout the project using git or the Github plugin for PhpStorm.
 
 Install [composer](http://getcomposer.org/doc/00-intro.md) and run:
