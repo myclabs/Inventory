@@ -24,6 +24,8 @@ class AF_InputController extends Core_Controller_Ajax
      */
     public function submitAction()
     {
+        $inputService = AF_Service_InputService::getInstance();
+
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
         $this->_setParam('af', $af);
@@ -32,8 +34,6 @@ class AF_InputController extends Core_Controller_Ajax
         if ($this->hasParam('idInputSet')) {
             /** @var $inputSet AF_Model_InputSet_Primary */
             $inputSet = AF_Model_InputSet_Primary::load($this->getParam('idInputSet'));
-            // Vide la saisie
-            $inputSet->clear();
         } else {
             $inputSet = new AF_Model_InputSet_Primary($af);
         }
@@ -43,23 +43,18 @@ class AF_InputController extends Core_Controller_Ajax
         $formData = json_decode($this->getParam($af->getRef()), true);
 
         // MAJ l'InputSet
-        $errorMessages = $this->parseAfSubmit($formData, $inputSet, $af);
-        // MAJ le pourcentage de complétion
-        $inputSet->updateCompletion();
+        $newValues = new AF_Model_InputSet_Primary($af);
+        $errorMessages = $this->parseAfSubmit($formData, $newValues, $af);
+        $inputService->editInputSet($inputSet, $newValues);
 
         // Réponse
         $response = [];
         $response['errorMessages'] = $errorMessages;
 
-        // Vérifie si la saisie est complète
         if ($inputSet->isInputComplete()) {
-            $af->execute($inputSet);
-            // Calcul les totaux
-            $inputSet->getOutputSet()->calculateTotals();
             $response['type'] = UI_Message::TYPE_SUCCESS;
             $response['message'] = __('AF', 'inputInput', 'completeInputSaved');
         } else {
-            $inputSet->clearOutputSet();
             $response['type'] = UI_Message::TYPE_SUCCESS;
             $response['message'] = __('AF', 'inputInput', 'incompleteInputSaved');
         }
@@ -143,34 +138,28 @@ class AF_InputController extends Core_Controller_Ajax
      */
     public function resultsPreviewAction()
     {
+        $inputService = AF_Service_InputService::getInstance();
+
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
 
         // Crée une nouvelle saisie temporaire
         $inputSet = new AF_Model_InputSet_Primary($af);
 
-        // Remplit l'InputSet
+        // Form data
         $formContent = json_decode($this->getParam($af->getRef()), true);
-        $errorMessages = $this->parseAfSubmit($formContent, $inputSet, $af);
 
-        // MAJ le pourcentage de complétion
-        $inputSet->updateCompletion();
+        // Remplit l'InputSet
+        $newValues = new AF_Model_InputSet_Primary($af);
+        $errorMessages = $this->parseAfSubmit($formContent, $newValues, $af);
+        $inputService->editInputSet($inputSet, $newValues);
 
-        // Vérifie si la saisie est complète
-        $isInputComplete = $inputSet->isInputComplete();
-        if ($isInputComplete) {
-            $af->execute($inputSet);
-            // Calcul les totaux
-            $inputSet->getOutputSet()->calculateTotals();
-        } else {
-            $inputSet->clearOutputSet();
-        }
         $this->addFormErrors($errorMessages);
 
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->isInputComplete = $isInputComplete;
+        $this->view->isInputComplete = $inputSet->isInputComplete();
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->af = $af;
         /** @noinspection PhpUndefinedFieldInspection */
