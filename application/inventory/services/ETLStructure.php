@@ -850,6 +850,9 @@ class Inventory_Service_ETLStructure extends Core_Service
         foreach (DW_Model_Report::loadList($queryCube) as $dWReport) {
             /** @var DW_Model_Report $dWReport */
             $dWReportsAsString[] = $dWReport->getAsString();
+            foreach ($dWReport->getFilters() as $dWFilter) {
+                $dWFilter->delete();
+            }
             $emptyDWReportString = '{'.
                 '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWReport->getCube()->getKey()['id'].',"label":"",'.
                 '"refNumerator":null,"refNumeratorAxis1":null,"refNumeratorAxis2":null,'.
