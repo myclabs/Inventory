@@ -54,7 +54,7 @@ class Orga_Service_ETLData extends Core_Singleton
     public function clearDWResultsForCell($cell)
     {
         foreach ($cell->getPopulatingCells() as $populatingCell) {
-            $populatingCell->deleteDWResultsForCube($cell->getDWCube());
+            $populatingCell->deleteDWResultsForDWCube($cell->getDWCube());
         }
     }
 

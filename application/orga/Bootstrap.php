@@ -41,7 +41,7 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
     protected function _initOrgaACLCellResourceTreeTraverser()
     {
         /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
-        $cellResourceTreeTraverser = Inventory_Service_ACLManager::getInstance();
+        $cellResourceTreeTraverser = Orga_Service_ACLManager::getInstance();
         /** @var $aclService User_Service_ACL */
         $aclService = User_Service_ACL::getInstance();
         $aclService->setResourceTreeTraverser("Orga_Model_Cell", $cellResourceTreeTraverser);
@@ -52,18 +52,17 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initOrgaACLManagerListener()
     {
-        if (APPLICATION_ENV != 'testsunitaires') {
-            if (! Zend_Registry::isRegistered('EntityManagers')) {
-                return;
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            /** @var $entityManager Doctrine\ORM\EntityManager */
-            $entityManager = $entityManagers['default'];
-            $events = [
-                Doctrine\ORM\Events::postFlush,
-            ];
-            $entityManager->getEventManager()->addEventListener($events, Inventory_Service_ACLManager::getInstance());
+        if (! Zend_Registry::isRegistered('EntityManagers')) {
+            return;
         }
+        $entityManagers = Zend_Registry::get('EntityManagers');
+        /** @var $entityManager Doctrine\ORM\EntityManager */
+        $entityManager = $entityManagers['default'];
+        $events = [
+            Doctrine\ORM\Events::onFlush,
+            Doctrine\ORM\Events::postFlush,
+        ];
+        $entityManager->getEventManager()->addEventListener($events, Orga_Service_ACLManager::getInstance());
     }
 
 }

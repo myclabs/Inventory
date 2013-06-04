@@ -61,7 +61,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                     $granularityReport = new Orga_Model_GranularityReport($subject);
                     $granularityReport->save();
                 } catch (Core_Exception_NotFound $e) {
-                    // Le Report n'est pas issue d'un Project de Granularity.
+                    // Le Report n'est pas issue d'un Cube de Granularity.
                 }
                 break;
             case DW_Model_Report::EVENT_UPDATED:
@@ -70,7 +70,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                         Orga_Model_GranularityReport::loadByGranularityDWReport($subject)
                     );
                 } catch (Core_Exception_NotFound $e) {
-                    // Le Report n'est pas issue d'un Project de DW de Granularity.
+                    // Le Report n'est pas issue d'un Cube de DW de Granularity.
                 }
                 break;
             case DW_Model_Report::EVENT_DELETE:
@@ -78,7 +78,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                     $granularityReport = Orga_Model_GranularityReport::loadByGranularityDWReport($subject);
                     $granularityReport->delete();
                 } catch (Core_Exception_NotFound $e) {
-                    // Le Report n'est pas issue d'un Project de Granularity.
+                    // Le Report n'est pas issue d'un Cube de Granularity.
                 }
                 break;
         }
@@ -94,6 +94,24 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     public static function loadByGranularityDWReport($dWReport)
     {
         return self::getEntityRepository()->loadBy(array('granularityDWReport' => $dWReport));
+    }
+
+    /**
+     * Vérifie si le DWReport donné est une copie d'un DW Report de Granularity.
+     *
+     * @param DW_Model_Report $dWReport
+     *
+     * @return bool
+     */
+    public static function isDWReportCopiedFromGranularityDWReport(DW_Model_Report $dWReport)
+    {
+        foreach (self::loadList() as $granularityReport) {
+            if ($granularityReport->hasCellDWReport($dWReport)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

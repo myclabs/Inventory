@@ -49,10 +49,8 @@ class DW_Model_Filter extends Core_Model_Entity
 
     /**
      * Constructeur de l'objet
-     *
-     * @param boolean $temp
      */
-    public function __construct($temp = false)
+    public function __construct()
     {
         $this->members = new Doctrine\Common\Collections\ArrayCollection();
     }

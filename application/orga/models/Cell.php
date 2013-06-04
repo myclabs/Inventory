@@ -1181,20 +1181,20 @@ class Orga_Model_Cell extends Core_Model_Entity
         foreach ($this->getAFInputSetPrimary()->getOutputSet()->getElements() as $outputElement) {
             $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getRef();
             try {
-                $dWIndicator = DW_Model_Indicator::loadByRefAndProject('classif_'.$refClassifIndicator, $dWCube);
+                $dWIndicator = DW_Model_Indicator::loadByRefAndCube('classif_'.$refClassifIndicator, $dWCube);
             } catch (Core_Exception_NotFound $e) {
                 // Indexation selon l'indicateur de classif non trouvée. Impossible de créer le résultat.
                 continue;
             }
 
             $dWResult = new DW_Model_Result();
-            $dWResult->setProject($dWCube);
+            $dWResult->setCube($dWCube);
             $dWResult->setIndicator($dWIndicator);
             $dWResult->setValue($outputElement->getValue());
 
             foreach ($outputElement->getIndexes() as $outputIndex) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndProject('classif_'.$outputIndex->getRefAxis(), $dWCube);
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube('classif_'.$outputIndex->getRefAxis(), $dWCube);
                     $dWMember = DW_Model_Member::loadByRefAndAxis('classif_'.$outputIndex->getRefMember(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
@@ -1203,7 +1203,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
                     try {
-                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndProject('classif_'.$classifParentMember->getAxis()->getRef(), $dWCube);
+                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube('classif_'.$classifParentMember->getAxis()->getRef(), $dWCube);
                         $dWParentMember = DW_Model_Member::loadByRefAndAxis('classif_'.$classifParentMember->getRef(), $dWBroaderAxis);
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
@@ -1219,7 +1219,7 @@ class Orga_Model_Cell extends Core_Model_Entity
             }
             foreach ($indexingMembers as $indexingMember) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndProject('orga_'.$indexingMember->getAxis()->getRef(), $dWCube);
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube('orga_'.$indexingMember->getAxis()->getRef(), $dWCube);
                     $dWMember = DW_Model_Member::loadByRefAndAxis('orga_'.$indexingMember->getRef(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
@@ -1247,7 +1247,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @param DW_model_cube $dWCube
      */
-    public function deleteDWResultsForProject(DW_model_cube $dWCube)
+    public function deleteDWResultsForDWCube(DW_model_cube $dWCube)
     {
         // Pas de criteria sur les manyToMany pour le moment.
 //        $criteria = Doctrine\Common\Collections\Criteria::create()->where(
@@ -1255,7 +1255,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 //        );
 //        foreach ($this->dWResults->matching($criteria)->toArray() as $dWResult) {
         foreach ($this->dWResults->toArray() as $dWResult) {
-            if ($dWResult->getProject() === $dWCube) {
+            if ($dWResult->getCube() === $dWCube) {
                 $this->dWResults->removeElement($dWResult);
                 $dWResult->delete();
             }
