@@ -70,4 +70,21 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
         return 0;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function equals(AF_Model_Input $input)
+    {
+        $equals = parent::equals($input);
+        if (! $equals) {
+            return false;
+        }
+
+        if ($input instanceof AF_Model_Input_Select_Single) {
+            return $this->getValue() === $input->getValue();
+        }
+
+        return false;
+    }
+
 }

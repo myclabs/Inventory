@@ -64,4 +64,21 @@ class AF_Model_Input_Numeric extends AF_Model_Input implements Algo_Model_Input_
         $this->value = $value;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function equals(AF_Model_Input $input)
+    {
+        $equals = parent::equals($input);
+        if (! $equals) {
+            return false;
+        }
+
+        if ($input instanceof AF_Model_Input_Numeric) {
+            return $this->getValue()->toCompare($input->getValue(), Calc_UnitValue::RELATION_EQUAL);
+        }
+
+        return false;
+    }
+
 }

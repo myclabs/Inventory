@@ -41,7 +41,7 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     protected $hidden = false;
 
     /**
-     * Indicate if the field is disabled (tru) or not (false).
+     * Indicate if the field is disabled (true) or not (false).
      * @var bool
      */
     protected $disabled = false;
@@ -71,6 +71,19 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
      * @return int Nombre de champs remplis dans le composant
      */
     abstract public function getNbRequiredFieldsCompleted();
+
+    /**
+     * Retourne true si la saisie donnée est égale à la saisie actuelle
+     * @param AF_Model_Input $input
+     * @return boolean
+     */
+    public function equals(AF_Model_Input $input)
+    {
+        return (get_class($this) === get_class($input))
+            && ($this->getRefComponent() === $input->getRefComponent())
+            && ($this->isDisabled() === $input->isDisabled())
+            && ($this->isHidden() === $input->isHidden());
+    }
 
     /**
      * @param AF_Model_InputSet $inputSet

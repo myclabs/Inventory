@@ -30,7 +30,8 @@
 		"netcarver/textile": "3.5.*",
 		"mridgway/zendx_doctrine2": "dev-master",
 		"phpoffice/phpexcel": "1.7.*",
-		"dompdf/dompdf": "dev-master"
+        "dompdf/dompdf": "dev-master",
+        "myclabs/array-comparator": "*"
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,

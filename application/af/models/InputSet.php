@@ -115,6 +115,17 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
     }
 
     /**
+     * Supprime une saisie de composant
+     * @param AF_Model_Input $input
+     */
+    public function removeInput(AF_Model_Input $input)
+    {
+        if ($this->inputs->contains($input)) {
+            $this->inputs->removeElement($input);
+        }
+    }
+
+    /**
      * Returns an input by its ref
      * @param string $ref
      * @return Algo_Model_Input|null
