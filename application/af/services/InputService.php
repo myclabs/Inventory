@@ -7,29 +7,31 @@
 use ArrayComparator\ArrayComparator;
 
 /**
- * Service responsable de la gestion des saisie des AF
+ * Service responsable de la gestion des saisies des AF
+ *
  * @package AF
  */
 class AF_Service_InputService extends Core_Singleton
 {
 
     /**
-     * Edit an AF input
-     * @param AF_Model_InputSet_Primary $inputSet  InputSet to edit
-     * @param AF_Model_InputSet_Primary $newValues
+     * Modifie une saisie
+     *
+     * @param AF_Model_InputSet_Primary $inputSet  InputSet à modifier
+     * @param AF_Model_InputSet_Primary $newValues Nouvelles valeurs pour les saisies
      */
     public function editInputSet(AF_Model_InputSet_Primary $inputSet, AF_Model_InputSet_Primary $newValues)
     {
-        $this->updateInputSet($inputSet, $inputSet->getInputs(), $newValues->getInputs());
+        $this->updateInputSet($inputSet, $newValues);
     }
 
     /**
-     * @param AF_Model_InputSet_Primary $inputSet
-     * @param AF_Model_InputSet_Primary $newValues
+     * @param AF_Model_InputSet $inputSet
+     * @param AF_Model_InputSet $newValues
      */
-    private function updateInputSet(AF_Model_InputSet_Primary $inputSet, AF_Model_InputSet_Primary $newValues)
+    private function updateInputSet(AF_Model_InputSet $inputSet, AF_Model_InputSet $newValues)
     {
-        $comparator = new ArrayComparator($inputSet->getInputs(), $newValues->getInputs());
+        $comparator = new ArrayComparator();
 
         $comparator->setItemIdentityComparator(
             function (AF_Model_Input $input1, AF_Model_Input $input2) {
@@ -41,9 +43,40 @@ class AF_Service_InputService extends Core_Singleton
         $comparator->setItemComparator(
             function (AF_Model_Input $input1, AF_Model_Input $input2) use ($inputSet) {
                 // SubAF
-                if ($input1 instanceof AF_Model_Input_SubAF) {
-                    // TODO
+                if ($input1 instanceof AF_Model_Input_SubAF_NotRepeated
+                    && $input2 instanceof AF_Model_Input_SubAF_NotRepeated
+                ) {
+                    $this->updateInputSet($input1->getValue(), $input2->getValue());
                 }
+                if ($input1 instanceof AF_Model_Input_SubAF_Repeated
+                    && $input2 instanceof AF_Model_Input_SubAF_Repeated
+                ) {
+                    $comparator = new ArrayComparator();
+                    $comparator->setItemComparator(
+                        function () {
+                            // Tous les items avec le même index sont considérés différents
+                            // pour forcer l'appel à whenDifferent et donc la récursivité
+                            return false;
+                        }
+                    );
+                    $comparator->whenDifferent(
+                        function (AF_Model_InputSet_Sub $inputSet1, AF_Model_InputSet_Sub $inputSet2) {
+                            $this->updateInputSet($inputSet1, $inputSet2);
+                        }
+                    );
+                    $comparator->whenMissingRight(
+                        function (AF_Model_InputSet_Sub $inputSet1) use ($input1) {
+                            $input1->removeSubSet($inputSet1);
+                        }
+                    );
+                    $comparator->whenMissingLeft(
+                        function (AF_Model_InputSet_Sub $inputSet2) use ($input1) {
+                            $input1->addSubSet($inputSet2);
+                        }
+                    );
+                    $comparator->compare($input1->getValue(), $input2->getValue());
+                }
+
                 return $input1->equals($input2);
             }
         );
@@ -75,7 +108,7 @@ class AF_Service_InputService extends Core_Singleton
             }
         );
 
-        $comparator->compare();
+        $comparator->compare($inputSet->getInputs(), $newValues->getInputs());
     }
 
 }

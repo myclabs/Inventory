@@ -40,7 +40,7 @@ class AF_Model_Input_SubAF_Repeated extends AF_Model_Input_SubAF
      */
     public function getValue()
     {
-        return $this->value;
+        return $this->value->toArray();
     }
 
     /**
@@ -63,7 +63,19 @@ class AF_Model_Input_SubAF_Repeated extends AF_Model_Input_SubAF
      */
     public function addSubSet(AF_Model_InputSet_Sub $subSet)
     {
-        $this->value->add($subSet);
+        if ($this->value->contains($subSet)) {
+            $this->value->add($subSet);
+        }
+    }
+
+    /**
+     * @param AF_Model_InputSet_Sub $subSet
+     */
+    public function removeSubSet(AF_Model_InputSet_Sub $subSet)
+    {
+        if ($this->value->contains($subSet)) {
+            $this->value->removeElement($subSet);
+        }
     }
 
     /**
