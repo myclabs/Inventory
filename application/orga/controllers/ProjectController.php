@@ -70,8 +70,7 @@ class Orga_ProjectController extends Core_Controller_Ajax
             $projectArray = Orga_Model_Project::loadList($aclQuery);
             $this->redirect('orga/project/cells/idProject/'.$projectArray[0]->getKey()['id']);
         } else if (count($listCellResource) == 1) {
-            $cellArray = Orga_Model_Cell::loadList($aclQuery);
-            $this->redirect('orga/cell/details/idCell/'.$cellArray[0]->getKey()['id']);
+            $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getKey()['id']);
         } else {
             $this->forward('noaccess', 'project', 'orga');
         }

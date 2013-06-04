@@ -43,7 +43,7 @@ if (count($parentCells) > 0) {
 </div>
 <?php
     foreach ($this->cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-        if ($narrowerGranularity->isNavigable() && $narrowerGranularity->hasCells()) {
+        if ($narrowerGranularity->isNavigable()) {
             $form = new UI_Form('navigation_'.$narrowerGranularity->getKey()['id']);
             $form->setAjax(false);
             $form->setAction(
