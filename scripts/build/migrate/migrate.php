@@ -642,7 +642,7 @@ class Inventory_Migrate extends Core_Script_Populate
     protected function migrateDWReports($idGranularity)
     {
         $select = $this->connection->query(
-            "SELECT DW_Report.*, idOrgaGranularity FROM DW_Report JOIN DW_Cube ON DW_Report.idCube = DW_CUbe.id JOIN Inventory_GranularityDataProvider ON DW_Cube.id = Inventory_GranularityDataProvider.idDWCUbe WHERE idOrgaGranularity=$idGranularity"
+            "SELECT DW_Report.*, idOrgaGranularity FROM DW_Report JOIN DW_Cube ON DW_Report.idCube = DW_Cube.id JOIN Inventory_GranularityDataProvider ON DW_Cube.id = Inventory_GranularityDataProvider.idDWCUbe WHERE idOrgaGranularity=$idGranularity"
         );
         /** @noinspection PhpAssignmentInConditionInspection */
         while ($row = $select->fetch()) {

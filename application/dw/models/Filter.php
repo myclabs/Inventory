@@ -76,16 +76,18 @@ class DW_Model_Filter extends Core_Model_Entity
     {
         $this->report = $report;
 
-        $cube = $this->report->getCube();
+        if ($this->report !== null) {
+            $cube = $this->report->getCube();
 
-        // MAJ de l'axis
-        if ($this->axis) {
-            $this->axis = $cube->getAxisByRef($this->axis->getRef());
+            // MAJ de l'axis
+            if ($this->axis) {
+                $this->axis = $cube->getAxisByRef($this->axis->getRef());
+            }
+            // MAJ des membres
+            $this->members = $this->members->map(function(DW_Model_Member $member) use ($cube) {
+                return $this->axis->getMemberByRef($member->getRef());
+            });
         }
-        // MAJ des membres
-        $this->members = $this->members->map(function(DW_Model_Member $member) use ($cube) {
-            return $this->axis->getMemberByRef($member->getRef());
-        });
     }
 
     /**
