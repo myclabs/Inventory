@@ -294,7 +294,7 @@ class Inventory_Service_ETLStructure extends Core_Service
         $clonedReport = clone $granularityReport->getGranularityDataProviderDWReport();
 
         // Déplace le report cloné dans le nouveau cube (et met à jour ses infos)
-        $clonedReport->setCube($dWCube);
+        $clonedReport->moveToCube($dWCube);
 
         $granularityReport->addCellDataProviderDWReport($clonedReport);
     }

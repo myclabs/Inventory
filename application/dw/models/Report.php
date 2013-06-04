@@ -201,7 +201,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoie le label.
      *
-     * @return $_label
+     * @return string
      */
     public function getLabel()
     {
@@ -216,36 +216,48 @@ class DW_Model_Report extends Core_Model_Entity
     public function setCube($cube)
     {
         $this->cube = $cube;
+    }
 
-        // MAJ des numérateurs
-        if ($this->numerator) {
-            $this->numerator = $this->cube->getIndicatorByRef($this->numerator->getRef());
-        }
-        if ($this->numeratorAxis1) {
-            $this->numeratorAxis1 = $this->cube->getAxisByRef($this->numeratorAxis1->getRef());
-        }
-        if ($this->numeratorAxis2) {
-            $this->numeratorAxis2 = $this->cube->getAxisByRef($this->numeratorAxis2->getRef());
-        }
+    /**
+     * Permet de déplacer un rapport dans un autre cube
+     *
+     * @param DW_Model_Cube $cube
+     */
+    public function moveToCube(DW_Model_Cube $cube)
+    {
+        if ($this->cube !== $cube) {
+            $this->cube = $cube;
 
-        // MAJ des dénominateurs
-        if ($this->denominator) {
-            $this->denominator = $this->cube->getIndicatorByRef($this->denominator->getRef());
-        }
-        if ($this->denominatorAxis1) {
-            $this->denominatorAxis1 = $this->cube->getAxisByRef($this->denominatorAxis1->getRef());
-        }
-        if ($this->denominatorAxis2) {
-            $this->denominatorAxis2 = $this->cube->getAxisByRef($this->denominatorAxis2->getRef());
-        }
+            // MAJ des numérateurs
+            if ($this->numerator) {
+                $this->numerator = $this->cube->getIndicatorByRef($this->numerator->getRef());
+            }
+            if ($this->numeratorAxis1) {
+                $this->numeratorAxis1 = $this->cube->getAxisByRef($this->numeratorAxis1->getRef());
+            }
+            if ($this->numeratorAxis2) {
+                $this->numeratorAxis2 = $this->cube->getAxisByRef($this->numeratorAxis2->getRef());
+            }
 
-        // MAJ des filtres
-        $this->filters = $this->filters->map(function($element) {
-            return clone $element;
-        });
-        foreach ($this->filters as $filter) {
-            /** @var DW_Model_Filter $filter */
-            $filter->setReport($this);
+            // MAJ des dénominateurs
+            if ($this->denominator) {
+                $this->denominator = $this->cube->getIndicatorByRef($this->denominator->getRef());
+            }
+            if ($this->denominatorAxis1) {
+                $this->denominatorAxis1 = $this->cube->getAxisByRef($this->denominatorAxis1->getRef());
+            }
+            if ($this->denominatorAxis2) {
+                $this->denominatorAxis2 = $this->cube->getAxisByRef($this->denominatorAxis2->getRef());
+            }
+
+            // MAJ des filtres
+            $this->filters = $this->filters->map(function($element) {
+                    return clone $element;
+                });
+            foreach ($this->filters as $filter) {
+                /** @var DW_Model_Filter $filter */
+                $filter->setReport($this);
+            }
         }
     }
 
@@ -703,7 +715,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoi le rapport sous forme de chaine pour l'enregistrer en session.
      *
-     * return string
+     * @return string
      */
     public function getAsString()
     {
@@ -784,7 +796,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param string $string
      *
-     * return DW_Model_Report
+     * @return DW_Model_Report
      */
     public static function getFromString($string)
     {
