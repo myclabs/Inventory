@@ -219,7 +219,7 @@ class Inventory_Migrate extends Core_Script_Populate
         $count = $connection->exec("DELETE FROM User_Authorization WHERE (idIdentity IN (SELECT id FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))) OR idResource IN (SELECT id FROM User_Resource WHERE entityName='Inventory_Model_Project' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report')");
         if ($count > 0) {
             echo "\t -> $count authorizations éffacées.\n";
-            $count = $connection->exec("DELETE FROM User_Resource WHERE entityName='Inventory_Model_Project' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report'");
+            $count = $connection->exec("DELETE FROM User_Resource WHERE (entityName='Inventory_Model_Project' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report') AND TRIM(entityIdentifier) <> \"\"");
             if ($count > 0) {
                 echo "\t -> $count ressources éffacées.\n";
                 $count = $connection->exec("DELETE FROM User_UserRoles WHERE idRole IN (SELECT id FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))");
