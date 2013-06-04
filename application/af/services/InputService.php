@@ -39,7 +39,7 @@ class AF_Service_InputService extends Core_Singleton
         $comparator = new ArrayComparator();
 
         $comparator->setItemIdentityComparator(
-            function (AF_Model_Input $input1, AF_Model_Input $input2) {
+            function ($key1, $key2, AF_Model_Input $input1, AF_Model_Input $input2) {
                 return $input1->getComponent() === $input2->getComponent();
             }
         );
