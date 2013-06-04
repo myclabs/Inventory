@@ -19,9 +19,14 @@ class AF_Service_InputService extends Core_Singleton
      *
      * @param AF_Model_InputSet_Primary $inputSet  InputSet à modifier
      * @param AF_Model_InputSet_Primary $newValues Nouvelles valeurs pour les saisies
+     * @throws InvalidArgumentException Both InputSets should be for the same AF
      */
     public function editInputSet(AF_Model_InputSet_Primary $inputSet, AF_Model_InputSet_Primary $newValues)
     {
+        if ($inputSet->getAF() !== $newValues->getAF()) {
+            throw new InvalidArgumentException("Both InputSets should be for the same AF");
+        }
+
         $this->updateInputSet($inputSet, $newValues);
     }
 

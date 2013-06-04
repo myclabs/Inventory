@@ -66,7 +66,7 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
      */
     public function getInputs()
     {
-        return $this->inputs;
+        return $this->inputs->toArray();
     }
 
     /**
