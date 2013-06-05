@@ -27,7 +27,7 @@ class AF_Service_InputService extends Core_Singleton
             throw new InvalidArgumentException("Both InputSets should be for the same AF");
         }
 
-        $this->updateInputSet($inputSet, $newValues);
+        $this->compareAndUpdateInputSet($inputSet, $newValues);
 
         // MAJ le pourcentage de complétion
         $inputSet->updateCompletion();
@@ -56,10 +56,12 @@ class AF_Service_InputService extends Core_Singleton
     }
 
     /**
+     * Compare 2 inputSet et met à jour le premier à partir des données du second
+     *
      * @param AF_Model_InputSet $inputSet
      * @param AF_Model_InputSet $newValues
      */
-    private function updateInputSet(AF_Model_InputSet $inputSet, AF_Model_InputSet $newValues)
+    private function compareAndUpdateInputSet(AF_Model_InputSet $inputSet, AF_Model_InputSet $newValues)
     {
         $comparator = new ArrayComparator();
 
@@ -76,7 +78,7 @@ class AF_Service_InputService extends Core_Singleton
                 if ($input1 instanceof AF_Model_Input_SubAF_NotRepeated
                     && $input2 instanceof AF_Model_Input_SubAF_NotRepeated
                 ) {
-                    $this->updateInputSet($input1->getValue(), $input2->getValue());
+                    $this->compareAndUpdateInputSet($input1->getValue(), $input2->getValue());
                 }
                 if ($input1 instanceof AF_Model_Input_SubAF_Repeated
                     && $input2 instanceof AF_Model_Input_SubAF_Repeated
@@ -91,7 +93,7 @@ class AF_Service_InputService extends Core_Singleton
                     );
                     $comparator->whenDifferent(
                         function (AF_Model_InputSet_Sub $inputSet1, AF_Model_InputSet_Sub $inputSet2) {
-                            $this->updateInputSet($inputSet1, $inputSet2);
+                            $this->compareAndUpdateInputSet($inputSet1, $inputSet2);
                         }
                     );
                     $comparator->whenMissingRight(
