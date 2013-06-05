@@ -4,12 +4,14 @@
  * @package User
  */
 
+use MyCLabs\Enum\Enum;
+
 /**
  * Classe représentant les actions pouvant être réalisées sur les ressources
  *
  * @package User
  */
-abstract class User_Model_Action extends Core_Enum
+abstract class User_Model_Action extends Enum
 {
 
     /**

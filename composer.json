@@ -31,7 +31,8 @@
 		"mridgway/zendx_doctrine2": "dev-master",
 		"phpoffice/phpexcel": "1.7.*",
         "dompdf/dompdf": "dev-master",
-        "myclabs/array-comparator": "0.*"
+        "myclabs/array-comparator": "0.*",
+        "myclabs/php-enum": "1.*"
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
