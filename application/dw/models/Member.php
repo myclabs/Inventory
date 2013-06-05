@@ -145,6 +145,7 @@ class DW_Model_Member extends Core_Model_Entity
      *
      * @param string $ref
      * @param DW_Model_Axis $axis
+     * @return DW_Model_Member
      */
     public static function loadByRefAndAxis($ref, $axis)
     {

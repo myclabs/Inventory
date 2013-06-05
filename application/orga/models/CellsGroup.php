@@ -3,6 +3,7 @@
  * @package Orga
  * @subpackage Model
  */
+
 /**
  * Classe permettant de choisir les AF associés aux cellules enfant d'une Cell et d'une Granularity données.
  * @author valentin.claras
@@ -107,9 +108,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     public function getAF()
     {
         if ($this->aF === null) {
-            throw new Core_Exception_UndefinedAttribute(
-                'L\'AF du groupement du cellule n\'a pas été défini.'
-            );
+            throw new Core_Exception_UndefinedAttribute("L'AF du groupement du cellule n'a pas été défini");
         }
         return $this->aF;
     }
