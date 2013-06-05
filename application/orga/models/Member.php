@@ -132,7 +132,7 @@ class Orga_Model_Member extends Core_Model_Entity
      *
      * @return Orga_Model_Member
      */
-    public static function loadByCompleteRefAndAxis($completeRef, $axis)
+    public static function loadByCompleteRefAndAxis($completeRef, Orga_Model_Axis $axis)
     {
         return $axis->getMemberByCompleteRef($completeRef);
     }

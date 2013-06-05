@@ -138,7 +138,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
 
     /**
-     *
      * Constructeur de la classe Granularity.
      *
      * @param Orga_Model_Project $project
