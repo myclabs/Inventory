@@ -10,18 +10,8 @@
  * Service Predicate
  * @package Keyword
  */
-class Keyword_Service_Predicate extends Core_Service
+class Keyword_Service_Predicate extends Core_Singleton
 {
-    /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Keyword_Service_Predicate
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
-
     /**
      * Ajoute un predicat et le renvoie.
      *
@@ -35,7 +25,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @return Keyword_Model_Predicate
      */
-    protected function addService($ref, $label, $reverseRef, $reverseLabel, $description=null)
+    public function add($ref, $label, $reverseRef, $reverseLabel, $description=null)
     {
         $predicate = new Keyword_Model_Predicate();
 
@@ -65,7 +55,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @return Keyword_Model_Predicate
      */
-    protected function updateRefService($predicateRef, $newRef)
+    public function updateRef($predicateRef, $newRef)
     {
         $predicate = Keyword_Model_Predicate::loadByRef($predicateRef);
 
@@ -84,7 +74,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @return Keyword_Model_Predicate
      */
-    protected function updateLabelService($predicateRef, $newLabel)
+    public function updateLabel($predicateRef, $newLabel)
     {
         $predicate = Keyword_Model_Predicate::loadByRef($predicateRef);
 
@@ -103,7 +93,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @return Keyword_Model_Predicate
      */
-    protected function updateReverseRefService($predicateRef, $newReverseRef)
+    public function updateReverseRef($predicateRef, $newReverseRef)
     {
         $predicate = Keyword_Model_Predicate::loadByRef($predicateRef);
 
@@ -122,7 +112,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @return Keyword_Model_Predicate
      */
-    protected function updateReverseLabelService($predicateRef, $newReverseLabel)
+    public function updateReverseLabel($predicateRef, $newReverseLabel)
     {
         $predicate = Keyword_Model_Predicate::loadByRef($predicateRef);
 
@@ -139,7 +129,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @return Keyword_Model_Predicate
      */
-    protected function updateDescriptionService($predicateRef, $newDescription)
+    public function updateDescription($predicateRef, $newDescription)
     {
         $predicate = Keyword_Model_Predicate::loadByRef($predicateRef);
 
@@ -155,7 +145,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @return string Label du Service
      */
-    protected function deleteService($predicateRef)
+    public function delete($predicateRef)
     {
         $predicate = Keyword_Model_Predicate::loadByRef($predicateRef);
 
@@ -234,7 +224,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @throws Core_Exception_User
      */
-    protected function checkPredicateRef($ref)
+    private function checkPredicateRef($ref)
     {
         Core_Tools::checkRef($ref);
         $queryRefUsedAsRef = new Core_Model_Query();
@@ -258,7 +248,7 @@ class Keyword_Service_Predicate extends Core_Service
      *
      * @throws Core_Exception_User
      */
-    protected function checkPredicateReverseRef($reverseRef)
+    private function checkPredicateReverseRef($reverseRef)
     {
         Core_Tools::checkRef($reverseRef);
         $queryRevRefUsedAsRef = new Core_Model_Query();

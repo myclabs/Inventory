@@ -36,7 +36,8 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
     {
         if ($this->idNode === null) {
             $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
+            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+                Core_Model_Filter::OPERATOR_NULL);
             $queryRootAxes->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
             $axes = Classif_Model_Axis::loadList($queryRootAxes);
         } else {
@@ -113,7 +114,8 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
                     $newPosition = $axis->getLastEligiblePosition();
                 } else if ($newParentRef === null) {
                     $queryRootAxis = new Core_Model_Query();
-                    $queryRootAxis->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
+                    $queryRootAxis->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+                        Core_Model_Filter::OPERATOR_NULL);
                     $newPosition = Classif_Model_Axis::countTotal($queryRootAxis) + 1;
                 } else {
                     $newPosition = count(Classif_Model_Axis::loadByRef($this->idNode)->getDirectBroaders()) + 1;
@@ -191,6 +193,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
         $queryOrdered->order->addOrder(Classif_Model_Axis::QUERY_NARROWER);
         $queryOrdered->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
         foreach (Classif_Model_Axis::loadList($queryOrdered) as $axis) {
+            /** @var Classif_Model_Axis $axis */
             $this->addElementList($axis->getRef(), $axis->getLabel());
         }
         $this->send();
@@ -215,7 +218,8 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
             $siblingAxes = $axisParent->getDirectBroaders();
         } else if (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
             $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
+            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+                Core_Model_Filter::OPERATOR_NULL);
             $queryRootAxes->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
             $siblingAxes = Classif_Model_Axis::loadList($queryRootAxes);
         } else {
@@ -256,8 +260,6 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
      */
     public function deletenodeAction()
     {
-        $labelNode = Classif_Service_Axis::getInstance()->delete($this->idNode);
-
         $this->message = __('UI', 'message', 'deleted');
 
         $this->send();

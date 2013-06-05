@@ -21,6 +21,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         foreach (Keyword_Model_Predicate::loadList($this->request) as $predicate) {
+            /** @var Keyword_Model_Predicate $predicate */
             $data = array();
 
             $data['index'] = $predicate->getRef();
