@@ -1,20 +1,24 @@
 <?php
 /**
- * @author matthieu.napoli
- * @package Unit
+ * @author  matthieu.napoli
+ * @package User
  */
 
+namespace User\ACL\TypeMapping;
+
+use Core_Exception_InvalidArgument;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use User_Model_Action;
 
 /**
- * Mapping d'un objet Unit API en champ de BDD
- * @package Unit
+ * Mapping d'un objet Action en champ de BDD
+ * @package User
  */
-class Unit_TypeMapping_UnitAPI extends Type
+class ActionType extends Type
 {
 
-    const TYPE_NAME = 'unit_api';
+    const TYPE_NAME = 'user_action';
 
     /**
      * @return string The name of the type being mapped
@@ -25,7 +29,7 @@ class Unit_TypeMapping_UnitAPI extends Type
     }
 
     /**
-     * @param array $fieldDeclaration
+     * @param array            $fieldDeclaration
      * @param AbstractPlatform $platform
      * @return string
      */
@@ -45,30 +49,30 @@ class Unit_TypeMapping_UnitAPI extends Type
     }
 
     /**
-     * @param string $unitRef
+     * @param string           $value
      * @param AbstractPlatform $platform
-     * @return Unit_API
+     * @throws Core_Exception_InvalidArgument
+     * @return User_Model_Action
      */
-    public function convertToPHPValue($unitRef, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if (empty($unitRef)) {
+        if ($value === null) {
             return null;
         }
-        return new Unit_API($unitRef);
+        return User_Model_Action::importFromString($value);
     }
 
     /**
-     * @param Unit_API $unit
-     * @param AbstractPlatform $platform
+     * @param User_Model_Action $value
+     * @param AbstractPlatform  $platform
      * @return string
      */
-    public function convertToDatabaseValue($unit, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        $ref = $unit->getRef();
-        if (empty($ref)) {
+        if ($value === null) {
             return null;
         }
-        return $ref;
+        return $value->exportToString();
     }
 
 }

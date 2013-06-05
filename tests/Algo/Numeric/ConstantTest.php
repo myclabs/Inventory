@@ -5,6 +5,7 @@
  * @author  yoann.croizer
  * @package Algo
  */
+use Unit\UnitAPI;
 
 /**
  * @package Algo
@@ -67,7 +68,7 @@ class Numeric_ConstantTest
         $value->digitalValue = 2;
         $value->relativeUncertainty = 0.1;
 
-        $unit = new Unit_API('g');
+        $unit = new UnitAPI('g');
 
         $unitValue = new Calc_UnitValue();
         $unitValue->value = $value;
@@ -88,7 +89,7 @@ class Numeric_ConstantTest
         $indicator = new Classif_Model_Indicator();
         $indicator->setRef(Core_Tools::generateString(20));
         $indicator->setLabel('Classif indicator');
-        $indicator->setUnit(new Unit_API('g'));
+        $indicator->setUnit(new UnitAPI('g'));
         $indicator->setRatioUnit($indicator->getUnit());
         $indicator->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -259,7 +260,7 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
         $inputSet = $this->getMockForAbstractClass('Algo_Model_InputSet');
         $result = $numericConstant->execute($inputSet);
         $this->assertTrue($result instanceof Calc_UnitValue);
-        $this->assertTrue($result->unit instanceof Unit_API);
+        $this->assertTrue($result->unit instanceof UnitAPI);
         $this->assertTrue($result->value instanceof Calc_Value);
     }
 

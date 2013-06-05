@@ -8,6 +8,7 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Unit\UnitAPI;
 
 /**
  * @package    Algo
@@ -186,7 +187,7 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
      * Méthode permettant de récupérer l'unité associée à un algorithme.
      * Cette méthode est en particulier utilisée lors du controle de la configuration des algos.
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnit()
     {

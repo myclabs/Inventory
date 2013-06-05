@@ -5,6 +5,7 @@
  */
 
 use Doctrine\DBAL\Types\Type;
+use Unit\TypeMapping\UnitAPIType;
 
 /**
  * Bootstrap
@@ -19,7 +20,7 @@ class Unit_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initUnitTypeMapping()
     {
-        Type::addType(Unit_TypeMapping_UnitAPI::TYPE_NAME, 'Unit_TypeMapping_UnitAPI');
+        Type::addType(UnitAPIType::TYPE_NAME, 'Unit\TypeMapping\UnitAPIType');
     }
 
     /**

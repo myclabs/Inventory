@@ -4,6 +4,8 @@
  * @author valentin.claras
  * @package User
  */
+use User\ACL\EntityManagerListener;
+use User\ACL\TypeMapping\ActionType;
 
 /**
  * Bootstrap
@@ -33,7 +35,7 @@ class User_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initUserTypeMapping()
     {
-        \Doctrine\DBAL\Types\Type::addType(User_TypeMapping_Action::TYPE_NAME, 'User_TypeMapping_Action');
+        \Doctrine\DBAL\Types\Type::addType(ActionType::TYPE_NAME, 'User\ACL\TypeMapping\ActionType');
     }
 
     /**
@@ -64,7 +66,7 @@ class User_Bootstrap extends Core_Package_Bootstrap
             Doctrine\ORM\Events::onFlush,
             Doctrine\ORM\Events::postFlush,
         ];
-        $entityManager->getEventManager()->addEventListener($events, new User_ACLEntityManagerListener());
+        $entityManager->getEventManager()->addEventListener($events, new EntityManagerListener());
     }
 
 }

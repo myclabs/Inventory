@@ -4,6 +4,8 @@
  * @author yoann.croizer
  * @package Calc
  */
+use Unit\IncompatibleUnitsException;
+use Unit\UnitAPI;
 
 /**
  * @package Calc
@@ -67,8 +69,8 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
     {
         //Test multiplication ok
         $unitValue = new Calc_Calculation_UnitValue();
-        $unit1 = new Unit_API('j^2.animal^-1');
-        $unit2 = new Unit_API('t^2');
+        $unit1 = new UnitAPI('j^2.animal^-1');
+        $unit2 = new UnitAPI('t^2');
 
         $value1 = new Calc_Value();
         $value2 = new Calc_Value();
@@ -105,8 +107,8 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
     {
         $unitValue = new Calc_Calculation_UnitValue();
         $unitValue->setOperation(Calc_Calculation::ADD_OPERATION);
-        $unit1  = new Unit_API('kg.j');
-        $unit2  = new Unit_API('g.j');
+        $unit1  = new UnitAPI('kg.j');
+        $unit2  = new UnitAPI('g.j');
         $value1 = new Calc_Value();
         $value2 = new Calc_Value();
         $value1->digitalValue = 4;
@@ -137,8 +139,8 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
         $unitValue2 = new Calc_Calculation_UnitValue();
         $unitValue2->setOperation(Calc_Calculation::ADD_OPERATION);
 
-        $unite3 = new Unit_API('g.animal');
-        $unite4 = new Unit_API('g^2.animal');
+        $unite3 = new UnitAPI('g.animal');
+        $unite4 = new UnitAPI('g^2.animal');
 
         $calcUnitValue3 = new Calc_UnitValue();
         $calcUnitValue4 = new Calc_UnitValue();
@@ -154,7 +156,7 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
 
         try {
              $result = $unitValue2->calculate();
-        } catch (Unit_Exception_IncompatibleUnits $e) {
+        } catch (IncompatibleUnitsException $e) {
              $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
 
@@ -163,8 +165,8 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
         $unitValue3 = new Calc_Calculation_UnitValue();
         $unitValue3->setOperation(Calc_Calculation::ADD_OPERATION);
 
-        $unite5 = new Unit_API('gramme.animal');
-        $unite6 = new Unit_API('g^2.animal');
+        $unite5 = new UnitAPI('gramme.animal');
+        $unite6 = new UnitAPI('g^2.animal');
 
         $calcUnitValue5 = new Calc_UnitValue();
         $calcUnitValue6 = new Calc_UnitValue();

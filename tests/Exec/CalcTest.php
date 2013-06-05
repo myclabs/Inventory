@@ -5,6 +5,7 @@
  * @author yoann.croizer
  * @package Exec
  */
+use Unit\UnitAPI;
 
 /**
  * @package Exec
@@ -125,12 +126,12 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
      */
     function testExecuteExpressionUnit()
     {
-        $unite1 = new Unit_API('g');
-        $unite2 = new Unit_API('j.animal');
-        $unite3 = new Unit_API('kg');
-        $unite4 = new Unit_API('kg.m^2.s^-2.animal');
-        $unite5 = new Unit_API('kg');
-        $unite6 = new Unit_API('g');
+        $unite1 = new UnitAPI('g');
+        $unite2 = new UnitAPI('j.animal');
+        $unite3 = new UnitAPI('kg');
+        $unite4 = new UnitAPI('kg.m^2.s^-2.animal');
+        $unite5 = new UnitAPI('kg');
+        $unite6 = new UnitAPI('g');
 
         $tab = array(
                        "a" => $unite1 ,
@@ -148,7 +149,7 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
 
         $result = $calc->executeExpression($valueProvider);
 
-        $this->assertTrue($result instanceof Unit_API);
+        $this->assertTrue($result instanceof UnitAPI);
         $this->assertEquals('kg', $result->getRef());
     }
 
@@ -157,12 +158,12 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
      */
     function testExecuteExpressionUnitValue()
     {
-        $unite1 = new Unit_API('g');
-        $unite2 = new Unit_API('j.animal');
-        $unite3 = new Unit_API('kg');
-        $unite4 = new Unit_API('kg.m^2.s^-2.animal');
-        $unite5 = new Unit_API('kg');
-        $unite6 = new Unit_API('g');
+        $unite1 = new UnitAPI('g');
+        $unite2 = new UnitAPI('j.animal');
+        $unite3 = new UnitAPI('kg');
+        $unite4 = new UnitAPI('kg.m^2.s^-2.animal');
+        $unite5 = new UnitAPI('kg');
+        $unite6 = new UnitAPI('g');
 
         $value1 = new Calc_Value();
         $value1->digitalValue = 1;
@@ -230,7 +231,7 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
         $result = $calc->executeExpression($valueProvider);
 
         $this->assertTrue($result instanceof Calc_UnitValue);
-        $this->assertTrue($result->unit instanceof Unit_API);
+        $this->assertTrue($result->unit instanceof UnitAPI);
         $this->assertTrue($result->value instanceof Calc_Value);
         $this->assertEquals('kg', $result->unit->getRef());
     }
@@ -241,8 +242,8 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
      */
     function testExecuteExpressionMixed()
     {
-        $unite1 = new Unit_API('g');
-        $unite2 = new Unit_API('j.animal');
+        $unite1 = new UnitAPI('g');
+        $unite2 = new UnitAPI('j.animal');
 
         $value1 = new Calc_Value();
         $value1->digitalValue = 1;
@@ -289,8 +290,8 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
      */
     function testExecuteExpressionCasParticulier()
     {
-        $unite1 = new Unit_API('g');
-        $unite2 = new Unit_API('kg');
+        $unite1 = new UnitAPI('g');
+        $unite2 = new UnitAPI('kg');
 
         $tab = array(
             "o" => $unite2,
@@ -305,7 +306,7 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
 
         $result = $calc->executeExpression($valueProvider);
 
-        $this->assertTrue($result instanceof Unit_API);
+        $this->assertTrue($result instanceof UnitAPI);
         $this->assertEquals('kg', $result->getRef());
     }
 

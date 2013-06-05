@@ -1,19 +1,29 @@
 <?php
 /**
- * Classe Unit_ComposedUnit
- * @author valentin.claras
- * @author hugo.charbonnier
- * @author yoann.croizer
- * @package Unit
+ * @author     valentin.claras
+ * @author     hugo.charbonnier
+ * @author     yoann.croizer
+ * @package    Unit
  * @subpackage Model
  */
 
+namespace Unit;
+
+use Unit_Model_Unit;
+use Unit_Model_Unit_Extended;
+use Unit_Model_PhysicalQuantity;
+use Unit_Model_Unit_Standard;
+use Unit_Model_Unit_Discrete;
+use Core_Model_Query;
+use Core_Exception_NotFound;
+use Unit\IncompatibleUnitsException;
+
 /**
  * Unité Composée
- * @package Unit
+ * @package    Unit
  * @subpackage Model
  */
-class Unit_ComposedUnit
+class ComposedUnit
 {
     /**
      * Référent textuel d'une unité composée.
@@ -34,7 +44,7 @@ class Unit_ComposedUnit
      * Constructeur
      * @param String $ref
      */
-    public function __construct($ref= null)
+    public function __construct($ref = null)
     {
         $this->ref = $ref;
         $this->components = $this->getComponentsByRef($this->ref);
@@ -133,7 +143,7 @@ class Unit_ComposedUnit
             foreach ($this->components as $unitArray) {
                 $ref .= $unitArray['unit']->getRef();
                 if ($unitArray['exponent'] != 1) {
-                    $ref .= '^'.$unitArray['exponent'];
+                    $ref .= '^' . $unitArray['exponent'];
                 }
                 $ref .= '.';
             }
@@ -157,11 +167,13 @@ class Unit_ComposedUnit
         foreach ($this->components as $unitArray) {
             if ($unitArray['unit'] instanceof Unit_Model_Unit_Standard) {
                 $conversionFactor *= pow($unitArray['unit']->getMultiplier(), $unitArray['exponent']);
-            } else if ($unitArray['unit'] instanceof Unit_Model_Unit_Extended) {
-               $conversionFactorUnitStandard = $unitArray['unit']->getStandardUnit()->getMultiplier();
-               $conversionFactorUnitExtension = $unitArray['unit']->getExtension()->getMultiplier();
-               $conversionFactUnit = $conversionFactorUnitStandard * $conversionFactorUnitExtension;
-               $conversionFactor *= pow($conversionFactUnit, $unitArray['exponent']);
+            } else {
+                if ($unitArray['unit'] instanceof Unit_Model_Unit_Extended) {
+                    $conversionFactorUnitStandard = $unitArray['unit']->getStandardUnit()->getMultiplier();
+                    $conversionFactorUnitExtension = $unitArray['unit']->getExtension()->getMultiplier();
+                    $conversionFactUnit = $conversionFactorUnitStandard * $conversionFactorUnitExtension;
+                    $conversionFactor *= pow($conversionFactUnit, $unitArray['exponent']);
+                }
             }
         }
         return $conversionFactor;
@@ -173,7 +185,7 @@ class Unit_ComposedUnit
      */
     public function getSymbol()
     {
-        $leftPart  = '';
+        $leftPart = '';
         $rightPart = '';
         foreach ($this->components as $unitArray) {
             // Pour les exposants positifs on construit le numérateur du symbole de l'unité.
@@ -183,20 +195,21 @@ class Unit_ComposedUnit
                     $leftPart .= $unitArray['exponent'];
                 }
                 $leftPart .= '.';
-            }
-            // Pour les exposants négatifs on construite le dénominateur du symbole de l'unité.
-            else if ($unitArray['exponent'] < 0) {
-                $rightPart .= $unitArray['unit']->getSymbol();
-                if ($unitArray['exponent'] < -1) {
-                    // pour un exposant négatif on prend la valeur absolue de celui ci.
-                    $rightPart .= abs($unitArray['exponent']);
+            } // Pour les exposants négatifs on construite le dénominateur du symbole de l'unité.
+            else {
+                if ($unitArray['exponent'] < 0) {
+                    $rightPart .= $unitArray['unit']->getSymbol();
+                    if ($unitArray['exponent'] < -1) {
+                        // pour un exposant négatif on prend la valeur absolue de celui ci.
+                        $rightPart .= abs($unitArray['exponent']);
+                    }
+                    $rightPart .= '.';
                 }
-                $rightPart .= '.';
             }
         }
         // On supprime le dernier point de séparation à la fin de chaques parties du symbole.
         // Dans le cas ou une des parties est une chaine vide, cela renvoi une chaine vide.
-        $leftPart  = substr($leftPart, 0, -1);
+        $leftPart = substr($leftPart, 0, -1);
         $rightPart = substr($rightPart, 0, -1);
         // Si on a une partie négative on sépare le numérateur et le dénominateur avec un trait de fraction
         if ($rightPart != '') {
@@ -210,10 +223,10 @@ class Unit_ComposedUnit
     /**
      * Cette méthode permet de vérifier que deux unités sont compatibles.
      * Cette méthode sera notamment appelée avant des calculs de sommes.
-     * @param Unit_ComposedUnit $unit
+     * @param \Unit\ComposedUnit $unit
      * @return bool
      */
-    public function isEquivalent(Unit_ComposedUnit $unit)
+    public function isEquivalent(ComposedUnit $unit)
     {
         $unit1 = $this->getNormalizedUnit();
         $unit2 = $unit->getNormalizedUnit();
@@ -229,14 +242,14 @@ class Unit_ComposedUnit
      * On converti une unité composée en produit d'unités de référence des grandeurs
      * physiques de base.
      * Cette méthode regroupe les exposants associés à chaque unité de référence
-     * @return Unit_ComposedUnit $newUnit
+     * @return \Unit\ComposedUnit $newUnit
      */
     public function getNormalizedUnit()
     {
         $tabUnites = array();
         $standardUnits = array();
         $otherUnits = array();
-        $normalizedUnit = new Unit_ComposedUnit();
+        $normalizedUnit = new ComposedUnit();
 
         // On traite chacune des unités de l'unité composé pour récupérer
         // leur décomposition en grandeurs physiques de base auxquelles on
@@ -245,8 +258,10 @@ class Unit_ComposedUnit
             $unit = Unit_Model_Unit::loadByRef($unitArray['unit']->getRef());
             if ($unit instanceof Unit_Model_Unit_Standard) {
                 $standardUnits[] = $unitArray;
-            } else if (($unit instanceof Unit_Model_Unit_Discrete) || ($unit instanceof Unit_Model_Unit_Extended)) {
-                $otherUnits[] = array('unit' => $unit->getReferenceUnit(), 'exponent' => $unitArray['exponent']);
+            } else {
+                if (($unit instanceof Unit_Model_Unit_Discrete) || ($unit instanceof Unit_Model_Unit_Extended)) {
+                    $otherUnits[] = array('unit' => $unit->getReferenceUnit(), 'exponent' => $unitArray['exponent']);
+                }
             }
         }
         // On regroupe les exposant des grandeurs identiques.
@@ -264,7 +279,7 @@ class Unit_ComposedUnit
                     $normalizedUnit->components[] = $unitArray;
                 }
             }
-            usort($normalizedUnit->components, array('Unit_ComposedUnit', 'orderComponents'));
+            usort($normalizedUnit->components, array('Unit\ComposedUnit', 'orderComponents'));
             $normalizedUnit->setRef();
             return $normalizedUnit;
         }
@@ -286,9 +301,9 @@ class Unit_ComposedUnit
         /* @var $physicalQuantity Unit_Model_PhysicalQuantity */
         foreach (Unit_Model_PhysicalQuantity::loadList($queryBasePhysicalQuantity) as $physicalQuantity) {
             $referenceUnits[$physicalQuantity->getReferenceUnit()->getRef()] = array(
-                    'unit' => $physicalQuantity->getReferenceUnit(),
-                    'exponent' => 0,
-                );
+                'unit'     => $physicalQuantity->getReferenceUnit(),
+                'exponent' => 0,
+            );
         }
         // Pour chaque unité standard, on ajoute l'exposant correspondant ) la composante de base.
         foreach ($standardUnits as $unitArray) {
@@ -342,8 +357,10 @@ class Unit_ComposedUnit
         if (($unitArrayA['exponent'] * $unitArrayB['exponent']) < 0) {
             if ($unitArrayA['exponent'] > $unitArrayB['exponent']) {
                 return -1;
-            } else if ($unitArrayA['exponent'] < $unitArrayB['exponent']) {
-                return 1;
+            } else {
+                if ($unitArrayA['exponent'] < $unitArrayB['exponent']) {
+                    return 1;
+                }
             }
         } else {
             $classA = get_class($unitArrayA['unit']);
@@ -353,21 +370,31 @@ class Unit_ComposedUnit
                 $idB = $unitArrayB['unit']->getKey();
                 if ($idA['id'] < $idB['id']) {
                     return -1;
-                } else if ($idA['id'] > $idB['id']) {
-                    return 1;
                 } else {
-                    return 0;
+                    if ($idA['id'] > $idB['id']) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 }
-            } else if ($classA == 'Unit_Model_Unit_Discrete') {
-                return -1;
-            } else if ($classA == 'Unit_Model_Unit_Standard') {
-                return 1;
-            } else if ($classB == 'Unit_Model_Unit_Standard') {
-                return -1;
-            } else if ($classB == 'Unit_Model_Unit_Discrete') {
-                return 1;
             } else {
-                return 0;
+                if ($classA == 'Unit_Model_Unit_Discrete') {
+                    return -1;
+                } else {
+                    if ($classA == 'Unit_Model_Unit_Standard') {
+                        return 1;
+                    } else {
+                        if ($classB == 'Unit_Model_Unit_Standard') {
+                            return -1;
+                        } else {
+                            if ($classB == 'Unit_Model_Unit_Discrete') {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -376,14 +403,14 @@ class Unit_ComposedUnit
      * Méthode qui permet de retourner le produit des unités sous la forme
      *  d'une unité normalisée.
      * @param array $operandes : (API_Unit $unit, int signExponent)
-     * @return Unit_ComposedUnit
+     * @return \Unit\ComposedUnit
      */
     public function multiply(array $operandes)
     {
         $this->components = array();
 
         foreach ($operandes as $unitArray) {
-            $unit = new Unit_ComposedUnit($unitArray['unit']->getRef());
+            $unit = new ComposedUnit($unitArray['unit']->getRef());
             foreach ($unit->getComponents() as $componentUnitArray) {
                 if ($unitArray['signExponent'] == -1) {
                     $componentUnitArray['exponent'] *= -1;
@@ -405,12 +432,12 @@ class Unit_ComposedUnit
     {
         $units = array();
         foreach ($components as $component) {
-            $units[] = new Unit_ComposedUnit($component);
+            $units[] = new ComposedUnit($component);
         }
         foreach ($units as $key => $unit) {
             if (isset($units[$key + 1])) {
                 if (!($unit->isEquivalent($units[$key + 1]))) {
-                    throw new Unit_Exception_IncompatibleUnits('Units for the sum are incompatible');
+                    throw new IncompatibleUnitsException('Units for the sum are incompatible');
                 }
             } else {
                 $unitResult = $unit->getNormalizedUnit();

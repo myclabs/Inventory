@@ -7,6 +7,7 @@
 
 use \Doctrine\Common\Collections\Collection;
 use \Doctrine\Common\Collections\ArrayCollection;
+use Unit\UnitAPI;
 
 /**
  * Classe Component
@@ -30,7 +31,7 @@ abstract class Techno_Model_Component extends Core_Model_Entity
 
     /**
      * Cache
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $baseUnit;
 
@@ -42,7 +43,7 @@ abstract class Techno_Model_Component extends Core_Model_Entity
 
     /**
      * Cache
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $unit;
 
@@ -67,16 +68,16 @@ abstract class Techno_Model_Component extends Core_Model_Entity
     }
 
     /**
-     * @param Unit_API $baseUnit
+     * @param UnitAPI $baseUnit
      */
-    public function setBaseUnit(Unit_API $baseUnit)
+    public function setBaseUnit(UnitAPI $baseUnit)
     {
         $this->refBaseUnit = $baseUnit->getRef();
         $this->baseUnit = $baseUnit;
     }
 
     /**
-     * @return Unit_API
+     * @return UnitAPI
      * @throws Core_Exception_UndefinedAttribute
      */
     public function getBaseUnit()
@@ -86,17 +87,17 @@ abstract class Techno_Model_Component extends Core_Model_Entity
         }
         // Lazy loading
         if ($this->baseUnit === null) {
-            $this->baseUnit = new Unit_API($this->refBaseUnit);
+            $this->baseUnit = new UnitAPI($this->refBaseUnit);
         }
         return $this->baseUnit;
     }
 
     /**
-     * @param Unit_API $unit
+     * @param UnitAPI $unit
      * @throws Core_Exception_UndefinedAttribute
      * @throws Core_Exception_InvalidArgument
      */
-    public function setUnit(Unit_API $unit)
+    public function setUnit(UnitAPI $unit)
     {
         if ($this->refBaseUnit === null) {
             throw new Core_Exception_UndefinedAttribute("A base unit needs to be set for this component");
@@ -111,7 +112,7 @@ abstract class Techno_Model_Component extends Core_Model_Entity
     }
 
     /**
-     * @return Unit_API
+     * @return UnitAPI
      * @throws Core_Exception_UndefinedAttribute
      */
     public function getUnit()
@@ -121,14 +122,14 @@ abstract class Techno_Model_Component extends Core_Model_Entity
         }
         // Lazy loading
         if ($this->unit === null) {
-            $this->unit = new Unit_API($this->refUnit);
+            $this->unit = new UnitAPI($this->refUnit);
         }
         return $this->unit;
     }
 
     /**
      * Retourne l'unité de la valeur de l'élément (!= unité de l'élément)
-     * @return Unit_API
+     * @return UnitAPI
      * @throws Core_Exception_UndefinedAttribute
      */
     public function getValueUnit()

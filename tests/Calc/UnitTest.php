@@ -5,6 +5,8 @@
  * @author yoann.croizer
  * @package Calc
  */
+use Unit\IncompatibleUnitsException;
+use Unit\UnitAPI;
 
 /**
  * @package Calc
@@ -47,7 +49,7 @@ class Calc_Test_Calculation_UnitSetUp extends PHPUnit_Framework_TestCase
         $o = new Calc_UnitValue();
         $this->assertInstanceOf('Calc_UnitValue', $o);
         $this->assertInstanceOf('Calc_Value', $o->value);
-        $this->assertInstanceOf('Unit_API', $o->unit);
+        $this->assertInstanceOf('Unit\UnitAPI', $o->unit);
     }
 
 }
@@ -70,8 +72,8 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
     function testCalculate()
     {
         //Test produit d'unité OK.
-        $unit1 = new Unit_API('j.animal');
-        $unit2 = new Unit_API('g^2.animal');
+        $unit1 = new UnitAPI('j.animal');
+        $unit2 = new UnitAPI('g^2.animal');
 
         $o = new Calc_Calculation_Unit();
         $o->setOperation(Calc_Calculation::MULTIPLY_OPERATION);
@@ -79,12 +81,12 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o->addComponents($unit2, Calc_Calculation::DIVISION);
         $result = $o->calculate();
 
-        $this->assertEquals(true, $result instanceof Unit_API);
+        $this->assertEquals(true, $result instanceof UnitAPI);
         $this->assertEquals('m^2.kg^-1.s^-2', $result->getRef());
 
         //Test somme d'unité OK.
-        $unit1 = new Unit_API('t');
-        $unit2 = new Unit_API('g');
+        $unit1 = new UnitAPI('t');
+        $unit2 = new UnitAPI('g');
 
         $o1 = new Calc_Calculation_Unit();
         $o1->setOperation(Calc_Calculation::ADD_OPERATION);
@@ -92,12 +94,12 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o1->addComponents($unit2, Calc_Calculation::SUM);
         $result = $o1->calculate();
 
-        $this->assertEquals(true, $result instanceof Unit_API);
+        $this->assertEquals(true, $result instanceof UnitAPI);
         $this->assertEquals('kg', $result->getRef());
 
         //Test somme d'unité OK.
-        $unit1 = new Unit_API('j.animal');
-        $unit2 = new Unit_API('animal.m^2.kg^1.s^-2');
+        $unit1 = new UnitAPI('j.animal');
+        $unit2 = new UnitAPI('animal.m^2.kg^1.s^-2');
 
         $o1 = new Calc_Calculation_Unit();
         $o1->setOperation(Calc_Calculation::ADD_OPERATION);
@@ -105,13 +107,13 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o1->addComponents($unit2, Calc_Calculation::SUBSTRACTION);
         $result = $o1->calculate();
 
-        $this->assertEquals(true, $result instanceof Unit_API);
+        $this->assertEquals(true, $result instanceof UnitAPI);
         $this->assertEquals('animal.m^2.kg.s^-2', $result->getRef());
 
 
         //Test somme d'unité non compatible.
-        $unit1 = new Unit_API('g.animal');
-        $unit2 = new Unit_API('g^2.animal');
+        $unit1 = new UnitAPI('g.animal');
+        $unit2 = new UnitAPI('g^2.animal');
 
         $o2 = new Calc_Calculation_Unit();
         $o2->setOperation(Calc_Calculation::ADD_OPERATION);
@@ -119,13 +121,13 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o2->addComponents($unit2, Calc_Calculation::SUBSTRACTION);
         try {
             $result = $o2->calculate();
-        } catch (Unit_Exception_IncompatibleUnits $e) {
+        } catch (IncompatibleUnitsException $e) {
              $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
 
         //Test somme avec unité inéxistante.
-        $unit1 = new Unit_API('gramme.animal');
-        $unit2 = new Unit_API('g^2.animal');
+        $unit1 = new UnitAPI('gramme.animal');
+        $unit2 = new UnitAPI('g^2.animal');
 
         $o3 = new Calc_Calculation_Unit();
         $o3->setOperation(Calc_Calculation::ADD_OPERATION);
@@ -138,8 +140,8 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         }
 
         //Test opération inconnue.
-        $unit1 = new Unit_API('g.animal');
-        $unit2 = new Unit_API('g^2.animal');
+        $unit1 = new UnitAPI('g.animal');
+        $unit2 = new UnitAPI('g^2.animal');
 
         $o = new Calc_Calculation_Unit();
         $o->addComponents($unit1, 1);

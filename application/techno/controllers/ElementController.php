@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * Controleur des éléments
@@ -45,7 +46,7 @@ class Techno_ElementController extends Core_Controller
         $documentation = $formData->getValue('documentation');
         // Modification
         if (! $this->hasFormError()) {
-            $unit = new Unit_API($refUnit);
+            $unit = new UnitAPI($refUnit);
             if ($element->getUnit()->getRef() != $unit->getRef()) {
                 try {
                     $element->setUnit($unit);

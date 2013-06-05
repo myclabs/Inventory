@@ -6,6 +6,7 @@
  * @package    Classif
  * @subpackage Test
  */
+use Unit\UnitAPI;
 
 /**
  * Creation of the Test Suite
@@ -28,8 +29,8 @@ class Classif_Test_IndicatorTest
      *
      * @param string $ref
      * @param string $label
-     * @param Unit_API $unit
-     * @param Unit_API $ratioUnit
+     * @param UnitAPI $unit
+     * @param UnitAPI $ratioUnit
      *
      * @return Classif_Model_Indicator
      */
@@ -88,8 +89,8 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $unit = new Unit_API('IndicatorSetUpTest');
-        $ratioUnit = new Unit_API('RatioIndicatorSetUpTest');
+        $unit = new UnitAPI('IndicatorSetUpTest');
+        $ratioUnit = new UnitAPI('RatioIndicatorSetUpTest');
         $o = new Classif_Model_Indicator();
         $this->assertInstanceOf('Classif_Model_Indicator', $o);
         $o->setRef('RefContextTest');

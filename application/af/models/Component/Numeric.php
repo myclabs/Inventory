@@ -6,6 +6,7 @@
  * @package    AF
  * @subpackage Form
  */
+use Unit\UnitAPI;
 
 /**
  * Classe abstraite AF_Model_Form_Numeric.
@@ -18,7 +19,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
 
     /**
      * L'unité associée à la valeur numérique.
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $unit;
 
@@ -161,7 +162,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
     }
 
     /**
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnit()
     {
@@ -169,9 +170,9 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
     }
 
     /**
-     * @param Unit_API $unit
+     * @param UnitAPI $unit
      */
-    public function setUnit(Unit_API $unit)
+    public function setUnit(UnitAPI $unit)
     {
         $this->unit = $unit;
         // Modifie également l'unité de l'algo associé et l'association entre eux

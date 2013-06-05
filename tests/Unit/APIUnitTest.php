@@ -7,6 +7,8 @@
  * @package Unit
  * @subpackage Test
  */
+use Unit\IncompatibleUnitsException;
+use Unit\UnitAPI;
 
 /**
  * UnitAPITest
@@ -39,8 +41,8 @@ class Unit_Test_UnitAPISetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $o = new Unit_API('m^2.animal^-1.m^-2.g.g_co2e^2');
-        $this->assertInstanceOf('Unit_API', $o);
+        $o = new UnitAPI('m^2.animal^-1.m^-2.g.g_co2e^2');
+        $this->assertInstanceOf('Unit\UnitAPI', $o);
     }
 }
 
@@ -312,7 +314,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     function testGetSymbol()
     {
         //Traitement d'un cas assez complexe utilisant tout les types d'unité (discrète, étendue et standard)
-        $o = new Unit_API('m^2.animal^-1.m^-2.g.g_co2e^2');
+        $o = new UnitAPI('m^2.animal^-1.m^-2.g.g_co2e^2');
         $this->assertSame('m2.g.g equ. CO22/animal.m2', $o->getSymbol());
     }
 
@@ -324,9 +326,9 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     function testGetNormalizedUnit()
     {
         //Traitement d'un cas assez complexe utilisant tout les types d'unité (discrète, étendue et standard)
-        $o = new Unit_API('g.An');
+        $o = new UnitAPI('g.An');
         $result = $o->getNormalizedUnit();
-        $this->assertTrue($result instanceof Unit_API);
+        $this->assertTrue($result instanceof UnitAPI);
         $this->assertSame('kg.s', $result->getRef());
     }
 
@@ -337,23 +339,23 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     function testIsEquivalent()
     {
         //Cas ou l'on mélange plusieurs type d'unité.
-        $unit1 = new Unit_API('m^2.animal^-1.m^-2.kg.m^2.J^-5.kg_co2e^2');
-        $unit2 = new Unit_API('animal^-1.g.m^2.J^-5.g_co2e^2');
+        $unit1 = new UnitAPI('m^2.animal^-1.m^-2.kg.m^2.J^-5.kg_co2e^2');
+        $unit2 = new UnitAPI('animal^-1.g.m^2.J^-5.g_co2e^2');
         $this->assertEquals(true, $unit1->isEquivalent($unit2->getRef()));
 
-        $unit3 = new Unit_API('animal^-1.g.m');
+        $unit3 = new UnitAPI('animal^-1.g.m');
         $this->assertEquals(false, $unit1->isEquivalent($unit3->getRef()));
 
         // Cas ou l'on compare seulement des unités standard
-        $unit4 = new Unit_API('g');
+        $unit4 = new UnitAPI('g');
         $this->assertEquals(true, $unit4->isEquivalent($unit4->getRef()));
 
         // Cas ou l'on compare seulement des unités pas standard.
-        $unit5 = new Unit_API('animal');
+        $unit5 = new UnitAPI('animal');
         $this->assertEquals(true, $unit5->isEquivalent($unit5->getRef()));
 
         // Test de l'expression levée lorsque l'on cherche à comparer une unité qui n'existe pas
-        $unit6 = new Unit_API('');
+        $unit6 = new UnitAPI('');
         try {
             $unit1->isEquivalent($unit6->getRef());
         } catch (Core_Exception_NotFound $e) {
@@ -367,11 +369,11 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
      */
     function testGetConversionFactor()
     {
-        $unit1 = new Unit_API('m^2.animal^-1.m^-2.kg.kg_ce');
+        $unit1 = new UnitAPI('m^2.animal^-1.m^-2.kg.kg_ce');
         $result = $unit1->getConversionFactor();
         $this->assertEquals(true, $result == 3.7);
 
-        $unit1 = new Unit_API('kg^2.g');
+        $unit1 = new UnitAPI('kg^2.g');
         $result = $unit1->getConversionFactor();
         $this->assertEquals(true, $result == 0.001);
 
@@ -380,7 +382,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
 
         $this->_unit7->setExtension($this->extension);
 
-        $unit1 = new Unit_API('kg_co2e');
+        $unit1 = new UnitAPI('kg_co2e');
         try {
             $result = $unit1->getConversionFactor();
         } catch (Core_Exception_UndefinedAttribute $e) {
@@ -390,7 +392,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         //Test de l'exception levée lorsque le coefficient multiplicateur d'une extension est null.
         $this->_unit2->setMultiplier(null);
 
-        $unit1 = new Unit_API('g');
+        $unit1 = new UnitAPI('g');
         try {
             $result = $unit1->getConversionFactor();
         } catch (Core_Exception_UndefinedAttribute $e) {
@@ -407,13 +409,13 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
      */
     function testMultiply()
     {
-        $operande[0]['unit'] = new Unit_API('g.animal^-1.kg.kg_ce');
+        $operande[0]['unit'] = new UnitAPI('g.animal^-1.kg.kg_ce');
         $operande[0]['signExponent'] = 1;
-        $operande[1]['unit'] = new Unit_API('animal.s.an.kg^-1');
+        $operande[1]['unit'] = new UnitAPI('animal.s.an.kg^-1');
         $operande[1]['signExponent'] = -1;
 
-        $result = Unit_API::multiply($operande);
-        $this->assertTrue($result instanceof Unit_API);
+        $result = UnitAPI::multiply($operande);
+        $this->assertTrue($result instanceof UnitAPI);
         $this->assertEquals('kg_co2e.kg^3.animal^-2.s^-2', $result->getRef());
     }
 
@@ -427,11 +429,11 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     {
         $operande[] = 'g.animal^-1.kg.g_co2e';
         $operande[] = 'animal.s.an.kg^-1';
-        $unit = new Unit_API();
+        $unit = new UnitAPI();
 
         try {
             $result = $unit->calculateSum($operande);
-        } catch (Unit_Exception_IncompatibleUnits $e) {
+        } catch (IncompatibleUnitsException $e) {
             $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
 
@@ -441,7 +443,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
 
         $result = $unit->calculateSum($operande);
 
-        $this->assertTrue($result instanceof Unit_API);
+        $this->assertTrue($result instanceof UnitAPI);
         $this->assertEquals('kg^2.s^2.animal^-1', $result->getRef());
     }
 
@@ -452,13 +454,13 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     function testGetSamePhysicalQuantityUnits()
     {
          // Cas ou la méthode fonctionne correctement.
-         $unit1 = new Unit_API('kg');
+         $unit1 = new UnitAPI('kg');
          $results = $unit1->getSamePhysicalQuantityUnits();
          $this->assertTrue(count($results) >= 1);
 
          // Test de l'erreur générée dans le cas ou l'on cherche à récupérer les unités
          // compatibles avec une unité non standard.
-         $unit2 = new Unit_API('kg.s^2');
+         $unit2 = new UnitAPI('kg.s^2');
          $results = $unit2->getSamePhysicalQuantityUnits();
          $this->assertTrue(count($results) == 0);
     }

@@ -4,11 +4,20 @@
  * @package User
  */
 
+namespace User;
+
+use User_Model_User;
+use Core_Exception_NotFound;
+use Zend_Auth_Adapter_Interface;
+use Zend_Auth_Adapter_Exception;
+use Core_Exception_InvalidArgument;
+use Zend_Auth_Result;
+
 /**
  * Adapter pour le système d'authentification Zend_Auth
  * @package User
  */
-class User_AuthAdapter implements Zend_Auth_Adapter_Interface
+class AuthAdapter implements Zend_Auth_Adapter_Interface
 {
 
     protected $login;
@@ -38,10 +47,10 @@ class User_AuthAdapter implements Zend_Auth_Adapter_Interface
             $user = User_Model_User::login($this->login, $this->password);
             if ($user->isEnabled()) {
                 return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user->getId(),
-                                            [__('User', 'login', 'authentificationSuccess')]);
+                    [__('User', 'login', 'authentificationSuccess')]);
             } else {
                 return new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null,
-                                            [__('User', 'login', 'accountDisabled')]);
+                    [__('User', 'login', 'accountDisabled')]);
             }
         } catch (Core_Exception_NotFound $e) {
             return new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, [__('User', 'login', 'unknownEmail')]);

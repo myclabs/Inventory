@@ -4,6 +4,7 @@
  * @package Inventory
  * @subpackage Plugin
  */
+use User\ForbiddenException;
 
 /**
  * Plugin pour la vérification des ACL
@@ -149,7 +150,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             );
         }
 
-        throw new User_Exception_Forbidden();
+        throw new ForbiddenException();
     }
 
     /**
@@ -247,7 +248,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             return Orga_Model_Cell::load(array('id' => $idCell));
         }
 
-        throw new User_Exception_Forbidden();
+        throw new ForbiddenException();
     }
 
     /**
@@ -259,7 +260,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     {
         try {
             return $this->viewCellRule($identity, $request);
-        } catch (User_Exception_Forbidden $e) {
+        } catch (ForbiddenException $e) {
             return $this->viewProjectRule($identity, $request);
         }
     }
@@ -273,7 +274,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     {
         try {
             return $this->editCellRule($identity, $request);
-        } catch (User_Exception_Forbidden $e) {
+        } catch (ForbiddenException $e) {
             return $this->editProjectRule($identity, $request);
         } catch (Core_Exception_NotFound $e) {
             return $this->editProjectRule($identity, $request);
@@ -327,7 +328,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             }
         }
 
-        throw new User_Exception_Forbidden();
+        throw new ForbiddenException();
     }
 
     /**
@@ -374,7 +375,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             return DW_Model_Report::getFromString($zendSessionReport->$hashReport);
         }
 
-        throw new User_Exception_Forbidden();
+        throw new ForbiddenException();
     }
 
     /**
@@ -618,7 +619,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             // Pas de Cell
         }
 
-        throw new User_Exception_Forbidden();
+        throw new ForbiddenException();
     }
 
     /**

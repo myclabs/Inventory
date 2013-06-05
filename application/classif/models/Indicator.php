@@ -7,6 +7,7 @@
  * @package    Classif
  * @subpackage Model
  */
+use Unit\UnitAPI;
 
 /**
  * Permet de gérer un indicateur.
@@ -51,14 +52,14 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Unité dans laquelle est l'indicateur.
      *
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $unit;
 
     /**
      * Unité utilisé pour les ratios.
      *
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $ratioUnit;
 
@@ -160,7 +161,7 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Modifie l'unit de l'indicateur.
      *
-     * @param Unit_API $unit
+     * @param UnitAPI $unit
      */
     public function setUnit($unit)
     {
@@ -170,17 +171,17 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Retourne l'unit de l'indicateur.
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnit()
     {
-        return new Unit_API($this->unit);
+        return new UnitAPI($this->unit);
     }
 
     /**
      * Modifie l'unité de ratio de l'indicateur.
      *
-     * @param Unit_API $ratioUnit
+     * @param UnitAPI $ratioUnit
      */
     public function setRatioUnit($ratioUnit)
     {
@@ -190,11 +191,11 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Retourne l'unité de ratio de l'indicateur
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getRatioUnit()
     {
-        return new Unit_API($this->ratioUnit);
+        return new UnitAPI($this->ratioUnit);
     }
 
     /**

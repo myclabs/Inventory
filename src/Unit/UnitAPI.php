@@ -1,19 +1,25 @@
 <?php
 /**
- * Classe Unit_API
- * @author valentin.claras
- * @author hugo.charbonnier
- * @author yoann.croizer
- * @package Unit
+ * @author     valentin.claras
+ * @author     hugo.charbonnier
+ * @author     yoann.croizer
+ * @package    Unit
  * @subpackage API
  */
 
+namespace Unit;
+
+use Core_Model_Query;
+use Unit\IncompatibleUnitsException;
+use Unit_Model_Unit_Standard;
+use Unit\ComposedUnit;
+
 /**
  * API
- * @package Unit
+ * @package    Unit
  * @subpackage API
  */
-class Unit_API
+class UnitAPI
 {
     /**
      * Référent textuel d'une unité
@@ -56,11 +62,11 @@ class Unit_API
      * sous forme de chaîne de caractères. La variable booléenne $html si elle est à "true" permet de
      * transformer par exemple un exposant de la forme m^2 en m<sup>2</sup>.
      *
-     * @return Unit_API unitSymbol
+     * @return \Unit\UnitAPI unitSymbol
      */
     public function getSymbol()
     {
-        $composedUnit = new Unit_ComposedUnit($this->ref);
+        $composedUnit = new ComposedUnit($this->ref);
         return $composedUnit->getSymbol();
     }
 
@@ -72,8 +78,8 @@ class Unit_API
      */
     public function isEquivalent($ref)
     {
-        $composedUnit = new Unit_ComposedUnit($this->ref);
-        return $composedUnit->isEquivalent(new Unit_ComposedUnit($ref));
+        $composedUnit = new ComposedUnit($this->ref);
+        return $composedUnit->isEquivalent(new ComposedUnit($ref));
     }
 
     /**
@@ -83,25 +89,24 @@ class Unit_API
      *     sont équivalentes)
      *
      * @param string $refUnit
-     * @throws Unit_Exception_IncompatibleUnits
+     * @throws IncompatibleUnitsException
      * @return float Le facteur de conversion.
      */
     public function getConversionFactor($refUnit = null)
     {
-        $unit1   = new Unit_ComposedUnit($this->ref);
+        $unit1 = new ComposedUnit($this->ref);
         $factor1 = $unit1->getConversionFactor();
 
         // Dans le cas ou on veut passer l'unité apellé dans l'unité passée en paramètre
         if (isset($refUnit)) {
             if ($this->isEquivalent($refUnit)) {
-                $unit2   = new Unit_ComposedUnit($refUnit);
+                $unit2 = new ComposedUnit($refUnit);
                 $factor2 = $unit2->getConversionFactor();
-                $result  = $factor2 / $factor1;
+                $result = $factor2 / $factor1;
             } else {
-                throw new Unit_Exception_IncompatibleUnits("Unit {$this->ref} is incompatible with $refUnit");
+                throw new IncompatibleUnitsException("Unit {$this->ref} is incompatible with $refUnit");
             }
-        }
-        // Dans le cas ou on veut récupérer le facteur de conversion de l'unité de base
+        } // Dans le cas ou on veut récupérer le facteur de conversion de l'unité de base
         else {
             $result = $factor1;
         }
@@ -113,13 +118,13 @@ class Unit_API
      *  correspond à une unité composéé d'unités de référence de grandeur
      *   physique de base (univoque).
      * @param array $components
-     * @return Unit_API $api
+     * @return \Unit\UnitAPI $api
      */
     public static function multiply($components)
     {
-        $unit = new Unit_ComposedUnit();
+        $unit = new ComposedUnit();
         $result = $unit->multiply($components);
-        $api = new Unit_API($result->getRef());
+        $api = new UnitAPI($result->getRef());
         return $api;
     }
 
@@ -127,13 +132,13 @@ class Unit_API
      * Sert à ajouter des unités entre elles. Renvoi une unité composée
      *  d'unités de référence de grandeur physique de base.
      * @param array $components
-     * @return Unit_API
+     * @return \Unit\UnitAPI
      */
     public static function calculateSum($components)
     {
-        $unit = new Unit_ComposedUnit();
+        $unit = new ComposedUnit();
         $result = $unit->calculateSum($components);
-        $api = new Unit_API($result->getRef());
+        $api = new UnitAPI($result->getRef());
         return $api;
     }
 
@@ -147,14 +152,14 @@ class Unit_API
 
         $queryCompatibleUnits = new Core_Model_Query();
         $queryCompatibleUnits->filter->addCondition(
-                Unit_Model_Unit_Standard::QUERY_PHYSICALQUANTITY,
-                $unit->getPhysicalQuantity()
-            );
+            Unit_Model_Unit_Standard::QUERY_PHYSICALQUANTITY,
+            $unit->getPhysicalQuantity()
+        );
 
         $refs = array();
 
         foreach (Unit_Model_Unit_Standard::loadList($queryCompatibleUnits) as $standardUnit) {
-            $refs[] = new Unit_API($standardUnit->getRef());
+            $refs[] = new UnitAPI($standardUnit->getRef());
         }
 
         return $refs;
@@ -163,23 +168,23 @@ class Unit_API
 
     /**
      * Renvoie l'unité normalisée associée à une unité.
-     * @return Unit_API
+     * @return \Unit\UnitAPI
      */
     public function getNormalizedUnit()
     {
-        $unit = new Unit_ComposedUnit($this->ref);
-        return new Unit_API($unit->getNormalizedUnit()->getRef());
+        $unit = new ComposedUnit($this->ref);
+        return new UnitAPI($unit->getNormalizedUnit()->getRef());
     }
 
     /**
      * Retourne l'inverse de l'unité
-     * @return Unit_API
+     * @return \Unit\UnitAPI
      */
     public function reverse()
     {
-        $composedUnit = new Unit_ComposedUnit($this->getRef());
+        $composedUnit = new ComposedUnit($this->getRef());
         $composedUnit->reverseUnit();
-        return new Unit_API($composedUnit->getRef());
+        return new UnitAPI($composedUnit->getRef());
     }
 
 }

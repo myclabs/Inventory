@@ -5,6 +5,7 @@
  * @author  yoann.croizer
  * @package Calc
  */
+use Unit\UnitAPI;
 
 /**
  * Opérande de type unité/valeur.
@@ -25,7 +26,7 @@ class Calc_UnitValue
     /**
      * Unité.
      *
-     * @var Unit_API
+     * @var UnitAPI
      */
     public $unit = null;
 
@@ -38,12 +39,12 @@ class Calc_UnitValue
 
 
     /**
-     * @param Unit_API   $unit  Unité, optionnel
+     * @param UnitAPI   $unit  Unité, optionnel
      * @param Calc_Value $value Valeur, optionnel
      */
-    public function __construct(Unit_API $unit = null, Calc_Value $value = null)
+    public function __construct(UnitAPI $unit = null, Calc_Value $value = null)
     {
-        $this->unit = $unit ? : new Unit_API();
+        $this->unit = $unit ? : new UnitAPI();
         $this->value = $value ? : new Calc_Value();
     }
 

@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * @package AF
@@ -76,7 +77,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
             $algo->setLabel($this->getAddElementValue('label'));
             $algo->getUnitValue()->value->digitalValue = $this->getAddElementValue('value');
             $algo->getUnitValue()->value->relativeUncertainty = $this->getAddElementValue('uncertainty');
-            $unit = new Unit_API($this->getAddElementValue('unit'));
+            $unit = new UnitAPI($this->getAddElementValue('unit'));
             $algo->getUnitValue()->unit = $unit;
             $algo->save();
             $af->addAlgo($algo);
@@ -115,7 +116,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 break;
             case 'unit':
                 $unitValue = clone $algo->getUnitValue();
-                $unitValue->unit = new Unit_API($newValue);
+                $unitValue->unit = new UnitAPI($newValue);
                 $algo->setUnitValue($unitValue);
                 $this->data = $unitValue->unit->getRef();
                 break;

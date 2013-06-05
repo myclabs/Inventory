@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * Numeric fields datagrid Controller
@@ -72,7 +73,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             if (empty($unitRef)) {
                 $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
             }
-            $unit = new Unit_API($unitRef);
+            $unit = new UnitAPI($unitRef);
             $unit->getNormalizedUnit();
         } catch (Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
@@ -160,7 +161,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 break;
             case 'unit':
                 try {
-                    $unit = new Unit_API($newValue);
+                    $unit = new UnitAPI($newValue);
                     $unit->getNormalizedUnit();
                 } catch (Core_Exception_NotFound $e) {
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');

@@ -2,6 +2,7 @@
 /**
  * @package Techno
  */
+use Unit\UnitAPI;
 
 /**
  * Test Element Coeff
@@ -28,8 +29,8 @@ class Techno_Test_Element_CoeffTest
         $value = new Calc_Value();
         $value->digitalValue = 10;
         $value->relativeUncertainty = 20;
-        $baseUnit = new Unit_API('m');
-        $unit = new Unit_API('km');
+        $baseUnit = new UnitAPI('m');
+        $unit = new UnitAPI('km');
         $o = new Techno_Model_Element_Coeff();
         $o->setValue($value);
         $o->setBaseUnit($baseUnit);
@@ -98,8 +99,8 @@ class Techno_Test_Element_CoeffSetUp extends PHPUnit_Framework_TestCase
         $value = new Calc_Value();
         $value->digitalValue = 10;
         $value->relativeUncertainty = 20;
-        $baseUnit = new Unit_API('m');
-        $unit = new Unit_API('km');
+        $baseUnit = new UnitAPI('m');
+        $unit = new UnitAPI('km');
 
         $o = new Techno_Model_Element_Coeff();
 

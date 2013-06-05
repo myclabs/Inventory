@@ -4,6 +4,7 @@
  * @package    User
  * @subpackage Plugin
  */
+use User\ForbiddenException;
 
 /**
  * Définition des plugins pour la vérification des ACL
@@ -160,9 +161,9 @@ abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
         $request->setModuleName('default');
         $request->setControllerName('error');
         $request->setActionName('error');
-        // Passage de l'exception User_Exception_Forbidden au controleur d'erreur
+        // Passage de l'exception ForbiddenException au controleur d'erreur
         $errorObject = new ArrayObject(array(), ArrayObject::ARRAY_AS_PROPS);
-        $errorObject->exception = new User_Exception_Forbidden();
+        $errorObject->exception = new ForbiddenException();
         $errorObject->type = Zend_Controller_Plugin_ErrorHandler::EXCEPTION_OTHER;
         $errorObject->request = clone $request;
         $request->setParam('error_handler', $errorObject);

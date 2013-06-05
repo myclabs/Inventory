@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * @package Techno
@@ -86,7 +87,7 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
         if (empty($refUnit)) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
-            $unit = new Unit_API($refUnit);
+            $unit = new UnitAPI($refUnit);
             try {
                 $unit->getNormalizedUnit();
             } catch (Exception $e) {

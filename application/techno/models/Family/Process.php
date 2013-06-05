@@ -5,6 +5,7 @@
  * @package Techno
  * @subpackage Family
  */
+use Unit\UnitAPI;
 
 /**
  * Classe Process
@@ -21,7 +22,7 @@ class Techno_Model_Family_Process extends Techno_Model_Family
     {
         // Retourne kg eq. CO2 divisé par l'unité
         $unitInverse = $this->getUnit()->reverse();
-        return new Unit_API($unitInverse->getRef().'.kg_co2e');
+        return new UnitAPI($unitInverse->getRef().'.kg_co2e');
     }
 
 }

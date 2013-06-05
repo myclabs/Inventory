@@ -1,20 +1,23 @@
 <?php
 /**
- * @author matthieu.napoli
- * @package User
+ * @author  matthieu.napoli
+ * @package Unit
  */
+
+namespace Unit\TypeMapping;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Unit\UnitAPI;
 
 /**
- * Mapping d'un objet Action en champ de BDD
- * @package User
+ * Mapping d'un objet Unit API en champ de BDD
+ * @package Unit
  */
-class User_TypeMapping_Action extends Type
+class UnitAPIType extends Type
 {
 
-    const TYPE_NAME = 'user_action';
+    const TYPE_NAME = 'unit_api';
 
     /**
      * @return string The name of the type being mapped
@@ -25,7 +28,7 @@ class User_TypeMapping_Action extends Type
     }
 
     /**
-     * @param array $fieldDeclaration
+     * @param array            $fieldDeclaration
      * @param AbstractPlatform $platform
      * @return string
      */
@@ -45,30 +48,30 @@ class User_TypeMapping_Action extends Type
     }
 
     /**
-     * @param string           $value
+     * @param string           $unitRef
      * @param AbstractPlatform $platform
-     * @throws Core_Exception_InvalidArgument
-     * @return User_Model_Action
+     * @return UnitAPI
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($unitRef, AbstractPlatform $platform)
     {
-        if ($value === null) {
+        if (empty($unitRef)) {
             return null;
         }
-        return User_Model_Action::importFromString($value);
+        return new UnitAPI($unitRef);
     }
 
     /**
-     * @param User_Model_Action $value
+     * @param UnitAPI          $unit
      * @param AbstractPlatform $platform
      * @return string
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($unit, AbstractPlatform $platform)
     {
-        if ($value === null) {
+        $ref = $unit->getRef();
+        if (empty($ref)) {
             return null;
         }
-        return $value->exportToString();
+        return $ref;
     }
 
 }
