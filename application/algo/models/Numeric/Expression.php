@@ -178,7 +178,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
      */
     public function getExpression()
     {
-        return $this->expression;
+        return $this->tecExpression->getExpression();
     }
 
     /**

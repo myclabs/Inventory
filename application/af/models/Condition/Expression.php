@@ -41,7 +41,7 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
      */
     public function getExpression()
     {
-        return $this->expression;
+        return $this->tecExpression->getExpression();
     }
 
     /**
