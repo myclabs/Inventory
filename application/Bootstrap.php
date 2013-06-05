@@ -104,4 +104,14 @@ class Bootstrap extends Core_Bootstrap
         }
     }
 
+    /**
+     * Initialize the dependency injection container
+     */
+    protected function _initDependencyInjection()
+    {
+        $container = new \DI\Container();
+
+        Zend_Registry::set('container', $container);
+    }
+
 }

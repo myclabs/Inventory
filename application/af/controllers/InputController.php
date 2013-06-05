@@ -24,7 +24,8 @@ class AF_InputController extends Core_Controller_Ajax
      */
     public function submitAction()
     {
-        $inputService = AF_Service_InputService::getInstance();
+        /** @var AF_Service_InputService $inputService */
+        $inputService = $this->get('AF_Service_InputService');
 
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
@@ -138,7 +139,8 @@ class AF_InputController extends Core_Controller_Ajax
      */
     public function resultsPreviewAction()
     {
-        $inputService = AF_Service_InputService::getInstance();
+        /** @var AF_Service_InputService $inputService */
+        $inputService = $this->get('AF_Service_InputService');
 
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));

@@ -9,7 +9,7 @@
  *
  * @package AF
  */
-class AF_Service_InputService extends Core_Singleton
+class AF_Service_InputService
 {
 
     /**

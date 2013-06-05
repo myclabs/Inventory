@@ -35,4 +35,17 @@ abstract class Core_Controller extends Zend_Controller_Action
         $this->redirector = $this->_helper->getHelper('Redirector');
     }
 
+    /**
+     * Get an entry from the container
+     * @param string $name
+     * @return mixed
+     */
+    protected function get($name)
+    {
+        /** @var $container \DI\Container */
+        $container = Zend_Registry::get('container');
+
+        return $container->get($name);
+    }
+
 }

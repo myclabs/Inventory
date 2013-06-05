@@ -67,7 +67,8 @@ class InputServiceTest extends Core_Test_TestCase
     {
         parent::setUp();
 
-        $this->inputService = AF_Service_InputService::getInstance();
+        /** @var AF_Service_InputService $inputService */
+        $this->inputService = $this->get('AF_Service_InputService');
 
         $this->af = new AF_Model_AF('test');
 
