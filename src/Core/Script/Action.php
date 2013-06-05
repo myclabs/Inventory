@@ -14,14 +14,6 @@
 abstract class Core_Script_Action
 {
     /**
-     * Package which own the action.
-     *  This attribute is used by the build script and needed to get the path to the db.sql file.
-     *
-     * @var Core_Package
-     */
-    public $dynamicPackage = null;
-
-    /**
      * Environments in which the action is runned.
      *  This attribute is used by the build script.
      *
