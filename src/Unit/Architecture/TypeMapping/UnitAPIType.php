@@ -4,7 +4,7 @@
  * @package Unit
  */
 
-namespace Unit\TypeMapping;
+namespace Unit\Architecture\TypeMapping;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;

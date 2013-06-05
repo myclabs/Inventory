@@ -7,7 +7,7 @@
 use Doctrine\DBAL\Types\Type;
 use Unit\Domain\Unit;
 use Unit\Domain\PhysicalQuantity;
-use Unit\TypeMapping\UnitAPIType;
+use Unit\Architecture\TypeMapping\UnitAPIType;
 
 /**
  * Bootstrap
@@ -22,7 +22,7 @@ class Unit_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initUnitTypeMapping()
     {
-        Type::addType(UnitAPIType::TYPE_NAME, 'Unit\TypeMapping\UnitAPIType');
+        Type::addType(UnitAPIType::TYPE_NAME, 'Unit\Architecture\TypeMapping\UnitAPIType');
     }
 
     /**
