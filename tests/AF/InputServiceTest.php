@@ -102,4 +102,15 @@ class InputServiceTest extends Core_Test_TestCase
         $this->af->delete();
         $this->entityManager->flush();
     }
+
+    public static function setUpBeforeClass()
+    {
+        if (AF_Model_AF::countTotal() > 0) {
+            foreach (AF_Model_AF::loadList() as $o) {
+                $o->delete();
+            }
+            $entityManagers = Zend_Registry::get('EntityManagers');
+            $entityManagers['default']->flush();
+        }
+    }
 }
