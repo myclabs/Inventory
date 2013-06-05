@@ -138,7 +138,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
 
     /**
-     *
      * Constructeur de la classe Granularity.
      *
      * @param Orga_Model_Project $project
@@ -668,12 +667,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getInputConfigGranularity()
     {
-        if ($this->inputConfigGranularity === null) {
-            throw new Core_Exception_UndefinedAttribute(
-                'La Granularity ne possède pas de Granularity de configuration des saises'
-            );
-        }
-        
         return $this->inputConfigGranularity;
     }
 

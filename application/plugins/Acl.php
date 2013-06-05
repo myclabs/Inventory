@@ -37,6 +37,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
 
         return false;
     }
+
     /**
      * @param User_Model_SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request

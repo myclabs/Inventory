@@ -725,7 +725,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
      *
      * @param Orga_Model_Project $project
      */
-    public function resetProjectDWCubes($project)
+    public function resetProjectDWCubes(Orga_Model_Project $project)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         /** @var EntityManager $entityManager */
@@ -750,7 +750,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
      *
      * @param Orga_Model_Granularity $granularity
      */
-    public function resetGranularityDWCubes($granularity)
+    public function resetGranularityDWCubes(Orga_Model_Granularity $granularity)
     {
         $this->resetDWCube(
             $granularity->getDWCube(),
@@ -767,7 +767,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
      *
      * @param Orga_Model_Cell $cell
      */
-    public function resetCellAndChildrenCalculationsAndDWCubes($cell)
+    public function resetCellAndChildrenCalculationsAndDWCubes(Orga_Model_Cell $cell)
     {
         $this->resetCellAndChildrenDWCubes($cell);
         Orga_Service_ETLData::getInstance()->calculateResultsForCellAndChildren($cell);
@@ -779,7 +779,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
      *
      * @param Orga_Model_Cell $cell
      */
-    public function resetCellAndChildrenDWCubes($cell)
+    public function resetCellAndChildrenDWCubes(Orga_Model_Cell $cell)
     {
         $this->resetCellDWCube($cell);
 
@@ -819,9 +819,11 @@ class Orga_Service_ETLStructure extends Core_Singleton
      * @param Orga_Model_Project $orgaProject
      * @param array $orgaFilter
      */
-    protected function resetDWCube($dWCube, $orgaProject, $orgaFilter)
+    protected function resetDWCube(DW_Model_Cube $dWCube, Orga_Model_Project $orgaProject, array $orgaFilter)
     {
         set_time_limit(0);
+        // Problème de proxie;
+        $dWCube->getLabel();
 
         $queryCube = new Core_Model_Query();
         $queryCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $dWCube);

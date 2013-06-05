@@ -8,6 +8,7 @@
  */
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Definit une cellule organisationnelle.
@@ -172,6 +173,8 @@ class Orga_Model_Cell extends Core_Model_Entity
 
     /**
      * Constructeur de la classe Cell.
+     * @param Orga_Model_Granularity $granularity
+     * @param Orga_Model_Member[]    $members
      */
     public function __construct(Orga_Model_Granularity $granularity, array $members=[])
     {
@@ -227,7 +230,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByAFInputSetPrimary($aFInputSetPrimary)
+    public static function loadByAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary)
     {
         return self::getEntityRepository()->loadBy(array('aFInputSetPrimary' => $aFInputSetPrimary));
     }
@@ -239,7 +242,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByDWCube($dWCube)
+    public static function loadByDWCube(DW_model_cube $dWCube)
     {
         return self::getEntityRepository()->loadBy(array('dWCube' => $dWCube));
     }
@@ -247,11 +250,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Charge la Cell correspondant à une Library de Doc utilisé pour les AFInputSetsPrimary.
      *
-     * @param DW_Model_Library $docLibrary
+     * @param Doc_Model_Library $docLibrary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByDocLibraryForAFInputSetsPrimary($docLibrary)
+    public static function loadByDocLibraryForAFInputSetsPrimary(Doc_Model_Library $docLibrary)
     {
         return self::getEntityRepository()->loadBy(array('docLibraryForAFInputSetsPrimary' => $docLibrary));
     }
@@ -259,11 +262,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Charge la Cell correspondant à une Library de Doc utilisé pour les SocialGenericAction.
      *
-     * @param DW_Model_Library $docLibrary
+     * @param Doc_Model_Library $docLibrary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByDocLibraryForSocialGenericAction($docLibrary)
+    public static function loadByDocLibraryForSocialGenericAction(Doc_Model_Library $docLibrary)
     {
         return self::getEntityRepository()->loadBy(array('docLibraryForSocialGenericAction' => $docLibrary));
     }
@@ -271,11 +274,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Charge la Cell correspondant à une Library de Doc utilisé pour les SocialContextAction.
      *
-     * @param DW_Model_Library $docLibrary
+     * @param Doc_Model_Library $docLibrary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByDocLibraryForSocialContextAction($docLibrary)
+    public static function loadByDocLibraryForSocialContextAction(Doc_Model_Library $docLibrary)
     {
         return self::getEntityRepository()->loadBy(array('docLibraryForSocialContextAction' => $docLibrary));
     }
@@ -365,18 +368,18 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Définit si la Cell est pertinente ou non.
      *
-     * @param bool $accessible
+     * @param bool $relevant
      */
-    public function setRelevant($accessible)
+    public function setRelevant($relevant)
     {
-        if ($accessible != $this->relevant) {
-            $this->relevant = $accessible;
+        if ($relevant != $this->relevant) {
+            $this->relevant = $relevant;
             // Si les cellules supérieures ne sont pas pertinentes,
             //  alors modifier celle-ci n'impactera pas les cellules inférieures.
             if ($this->getAllParentsRelevant() === true) {
                 // Nécessaire pour mettre à jour l'intégralité des cellules filles.
                 foreach ($this->getChildCells() as $childCell) {
-                    $childAccess = $accessible;
+                    $childAccess = $relevant;
                     if ($childAccess) {
                         foreach ($childCell->getParentCells() as $parentCell) {
                             if (!($parentCell->getRelevant())) {
@@ -449,7 +452,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Renvoie le label de la Cell. Basée sur les labels des Member.
      *
-     * @return String
+     * @return string
      */
     public function getLabel()
     {
@@ -468,7 +471,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Renvoie le label étendue de la Cell. Basée sur les labels étendues des Member.
      *
-     * @return String
+     * @return string
      */
     public function getLabelExtended()
     {
@@ -491,7 +494,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @return Orga_Model_Member[]
      */
-    protected function getParentMembersForGranularity($broaderGranularity)
+    protected function getParentMembersForGranularity(Orga_Model_Granularity $broaderGranularity)
     {
         $parentMembers = array();
 
@@ -517,7 +520,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @return Orga_Model_Member[]
      */
-    public function getChildMembersForGranularity($narrowerGranularity)
+    public function getChildMembersForGranularity(Orga_Model_Granularity $narrowerGranularity)
     {
         $childMembers = array();
 
@@ -553,7 +556,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      * @throws Core_Exception_InvalidArgument The given granularity is not broader than the current
      * @return Orga_Model_Cell
      */
-    public function getParentCellForGranularity($broaderGranularity)
+    public function getParentCellForGranularity(Orga_Model_Granularity $broaderGranularity)
     {
         if (!$this->getGranularity()->isNarrowerThan($broaderGranularity)) {
             throw new Core_Exception_InvalidArgument('The given granularity is not broader than the current');
@@ -585,7 +588,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      * @throws Core_Exception_InvalidArgument The given granularity is not narrower than the current
      * @return Orga_Model_Cell[]
      */
-    public function getChildCellsForGranularity($narrowerGranularity)
+    public function getChildCellsForGranularity(Orga_Model_Granularity $narrowerGranularity)
     {
         if (!($this->getGranularity()->isBroaderThan($narrowerGranularity))) {
             throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current');
@@ -599,7 +602,7 @@ class Orga_Model_Cell extends Core_Model_Entity
                 return [];
             }
             if (is_array($childAxisMembersForGranularity)) {
-                foreach($childAxisMembersForGranularity as $childAxisMemberForGranularity) {
+                foreach ($childAxisMembersForGranularity as $childAxisMemberForGranularity) {
                     $childMembersForGranularity[] = $childAxisMemberForGranularity;
                 }
             } else {
@@ -863,7 +866,8 @@ class Orga_Model_Cell extends Core_Model_Entity
             throw new Core_Exception_NotFound("No 'Orga_Model_CellsGroup' for input Granularity " . $inputGranularity);
         } else {
             if (count($cellsGroup) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity " . $inputGranularity);
+                throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity "
+                    . $inputGranularity);
             }
         }
 
@@ -914,9 +918,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         if ($this->aFInputSetPrimary !== $aFInputSetPrimary) {
             if (($this->aFInputSetPrimary !== null) && ($aFInputSetPrimary !== null)) {
-                throw new Core_Exception_Duplicate(
-                    "Impossible de redéfinir l'InputSetPrimary, il a déjà été défini"
-                );
+                throw new Core_Exception_Duplicate("Impossible de redéfinir l'InputSetPrimary, il a déjà été défini");
             }
             if ($this->aFInputSetPrimary !== null) {
                 $this->aFInputSetPrimary->delete();
@@ -935,9 +937,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getAFInputSetPrimary()
     {
         if ($this->aFInputSetPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute(
-                "L'InputSetPrimary n'a pas été défini"
-            );
+            throw new Core_Exception_UndefinedAttribute("L'InputSetPrimary n'a pas été défini");
         }
         return $this->aFInputSetPrimary;
     }
@@ -1181,20 +1181,20 @@ class Orga_Model_Cell extends Core_Model_Entity
         foreach ($this->getAFInputSetPrimary()->getOutputSet()->getElements() as $outputElement) {
             $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getRef();
             try {
-                $dWIndicator = DW_Model_Indicator::loadByRefAndProject('classif_'.$refClassifIndicator, $dWCube);
+                $dWIndicator = DW_Model_Indicator::loadByRefAndCube('classif_'.$refClassifIndicator, $dWCube);
             } catch (Core_Exception_NotFound $e) {
                 // Indexation selon l'indicateur de classif non trouvée. Impossible de créer le résultat.
                 continue;
             }
 
             $dWResult = new DW_Model_Result();
-            $dWResult->setProject($dWCube);
+            $dWResult->setCube($dWCube);
             $dWResult->setIndicator($dWIndicator);
             $dWResult->setValue($outputElement->getValue());
 
             foreach ($outputElement->getIndexes() as $outputIndex) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndProject('classif_'.$outputIndex->getRefAxis(), $dWCube);
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube('classif_'.$outputIndex->getRefAxis(), $dWCube);
                     $dWMember = DW_Model_Member::loadByRefAndAxis('classif_'.$outputIndex->getRefMember(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
@@ -1203,7 +1203,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
                     try {
-                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndProject('classif_'.$classifParentMember->getAxis()->getRef(), $dWCube);
+                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube('classif_'.$classifParentMember->getAxis()->getRef(), $dWCube);
                         $dWParentMember = DW_Model_Member::loadByRefAndAxis('classif_'.$classifParentMember->getRef(), $dWBroaderAxis);
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
@@ -1212,6 +1212,7 @@ class Orga_Model_Cell extends Core_Model_Entity
                 }
             }
 
+            /** @var Orga_Model_Member[] $indexingMembers */
             $indexingMembers = array();
             foreach ($this->getMembers() as $member) {
                 array_push($indexingMembers, $member);
@@ -1219,7 +1220,7 @@ class Orga_Model_Cell extends Core_Model_Entity
             }
             foreach ($indexingMembers as $indexingMember) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndProject('orga_'.$indexingMember->getAxis()->getRef(), $dWCube);
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube('orga_'.$indexingMember->getAxis()->getRef(), $dWCube);
                     $dWMember = DW_Model_Member::loadByRefAndAxis('orga_'.$indexingMember->getRef(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
@@ -1247,7 +1248,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @param DW_model_cube $dWCube
      */
-    public function deleteDWResultsForProject(DW_model_cube $dWCube)
+    public function deleteDWResultsForDWCube(DW_model_cube $dWCube)
     {
         // Pas de criteria sur les manyToMany pour le moment.
 //        $criteria = Doctrine\Common\Collections\Criteria::create()->where(
@@ -1255,7 +1256,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 //        );
 //        foreach ($this->dWResults->matching($criteria)->toArray() as $dWResult) {
         foreach ($this->dWResults->toArray() as $dWResult) {
-            if ($dWResult->getProject() === $dWCube) {
+            if ($dWResult->getCube() === $dWCube) {
                 $this->dWResults->removeElement($dWResult);
                 $dWResult->delete();
             }

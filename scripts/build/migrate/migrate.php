@@ -159,9 +159,10 @@ class Inventory_Migrate extends Core_Script_Populate
         $entityManagers = Zend_Registry::get('EntityManagers');
         $this->em = $entityManagers['default'];
         $events = [
+            Doctrine\ORM\Events::onFlush,
             Doctrine\ORM\Events::postFlush,
         ];
-        $this->em->getEventManager()->addEventListener($events, Inventory_Service_ACLManager::getInstance());
+        $this->em->getEventManager()->addEventListener($events, Orga_Service_ACLManager::getInstance());
 
 
         echo "Début de la migration -->\n";
@@ -191,10 +192,59 @@ class Inventory_Migrate extends Core_Script_Populate
         try {
             $this->init($dbName);
             echo " _ $dbName _\n";
+            $this->cleanUserBDD();
             $this->migrateProjects();
-            //            $this->migrateUserRoles();
+            $this->migrateUserRoles();
         } catch (PDOException $e) {
             echo " - aborting : $dbName _ La base n'existe pas.\n";
+        }
+    }
+
+    /**
+     *
+     */
+    protected function cleanUserBDD()
+    {
+        $connectionSettings = Zend_Registry::get('configuration')->doctrine->default->connection;
+        $host = $connectionSettings->host;
+        $user = $connectionSettings->user;
+        $password = $connectionSettings->password;
+        $dbName = $connectionSettings->dbname;
+        $url = "mysql:host=$host;dbname=$dbName";
+        $options = [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"];
+        $connection = new PDO($url, $user, $password, $options);
+        $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+
+        $count = $connection->exec("DELETE FROM User_Authorization WHERE (idIdentity IN (SELECT id FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))) OR idResource IN (SELECT id FROM User_Resource WHERE entityName='Inventory_Model_Project' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report')");
+        if ($count > 0) {
+            echo "\t -> $count authorizations éffacées.\n";
+            $count = $connection->exec("DELETE FROM User_Resource WHERE entityName='Inventory_Model_Project' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report'");
+            if ($count > 0) {
+                echo "\t -> $count ressources éffacées.\n";
+                $count = $connection->exec("DELETE FROM User_UserRoles WHERE idRole IN (SELECT id FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))");
+                if ($count > 0) {
+                    echo "\t -> $count liens entres User et Role éffacées.\n";
+                    $count = $connection->exec("DELETE FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%')");
+                    if ($count > 0) {
+                        echo "\t -> $count roles éffacés.\n";
+                        $count = $connection->exec("DELETE FROM User_SecurityIdentity WHERE type='role' AND id NOT IN (SELECT id FROM User_Role)");
+                        if ($count > 0) {
+                            echo "\t -> $count securityIdentity éffacés.\n";
+                        } else {
+                            echo print_r($connection->errorInfo(), true);
+                        }
+                    } else {
+                        echo print_r($connection->errorInfo(), true);
+                    }
+                } else {
+                    echo print_r($connection->errorInfo(), true);
+                }
+            } else {
+                echo print_r($connection->errorInfo(), true);
+            }
+        } else {
+            echo print_r($connection->errorInfo(), true);
         }
     }
 
@@ -516,6 +566,10 @@ class Inventory_Migrate extends Core_Script_Populate
             // Pas de granularité des inventaires.
         }
         $this->migrateGranularityCellDataProviders($row['idOrgaGranularity'], $setInventoryStatus);
+
+        if ($granularity->getCellsGenerateDWCubes()) {
+            $this->migrateDWReports($row['idOrgaGranularity']);
+        }
     }
 
     /**
@@ -583,107 +637,157 @@ class Inventory_Migrate extends Core_Script_Populate
     }
 
     /**
-     * Migre les roles liés aux cellules
+     * @param int $idGranularity
      */
-    protected function migrateUserRoles()
+    protected function migrateDWReports($idGranularity)
     {
-        echo "\t User Roles : \n";
-        $cellDataProviders = array();
-
-        $select = $this->connection->query("SELECT * FROM User_User");
-        while ($rowUser = $select->fetch()) {
-            $user = User_Model_User::loadByEmail($rowUser['email']);
-            echo "\t\t " . $user->getName() . "\n";
-
-            $subSelect = $this->connection->query(
-                "SELECT * FROM User_Role JOIN User_RoleUser on User_RoleUser.idRole = User_Role.id WHERE User_RoleUser.idUser = " . $rowUser['id']
-            );
-            while ($rowAssociation = $subSelect->fetch()) {
-                $refRole = $rowAssociation['code'];
-                if (preg_match('#^(observer|admin)[0-9]+$#', $refRole, $matches)) {
-                    $idOrgaCell = explode($matches[1], $matches[0])[1];
-                    if (!isset($cellDataProviders[$idOrgaCell])) {
-                        $cellDataProviders[$idOrgaCell] = $this->getCellDataProvider($idOrgaCell);
-                    }
-                    $role = User_Model_Role::loadByRef(
-                        (($matches[1] === 'admin') ? 'cellDataProviderContributor_' : 'cellDataProviderObserver_') .
-                        $cellDataProviders[$idOrgaCell]->getKey()['id']
-                    );
-                    $user->addRole($role);
-                    echo "\t\t > " . $role->getName() . " for " . $cellDataProviders[$idOrgaCell]->getOrgaCell(
-                        )->getLabel() . "\n";
-                }
-            }
-            $subSelect->closeCursor();
+        $select = $this->connection->query(
+            "SELECT DW_Report.*, idOrgaGranularity FROM DW_Report JOIN DW_Cube ON DW_Report.idCube = DW_Cube.id JOIN Inventory_GranularityDataProvider ON DW_Cube.id = Inventory_GranularityDataProvider.idDWCUbe WHERE idOrgaGranularity=$idGranularity"
+        );
+        /** @noinspection PhpAssignmentInConditionInspection */
+        while ($row = $select->fetch()) {
+            $this->processDWReport($row);
         }
         $select->closeCursor();
-
-        $this->flush();
     }
 
     /**
-     * @param string $idOrgaCell
-     * @return Inventory_Model_CellDataProvider
+     * @param array $row
      */
-    protected function getCellDataProvider($idOrgaCell)
+    protected function processDWReport($row)
     {
-        $select = $this->connection->query("SELECT * FROM Orga_Cell WHERE id = " . $idOrgaCell);
-        $rowCell = $select->fetch();
-        $granularity = $this->getGranularity($rowCell['idGranularity']);
+        $granularity = $this->getGranularity($row['idOrgaGranularity']);
 
-        $listMembers = array();
-        $select = $this->connection->query("SELECT * FROM Orga_MemberCell WHERE idCell = " . $idOrgaCell);
-        while ($rowMember = $select->fetch()) {
-            $listMembers[] = $this->getMember($rowMember['idMember']);
+        $dWReport = new DW_Model_Report();
+        $dWReport->setCube($granularity->getDWCube());
+        $dWReport->setLabel($row['label']);
+        $dWReport->setChartType($row['chartType']);
+        $dWReport->setSortType($row['sortType']);
+        $dWReport->setWithUncertainty($row['withUncertainty']);
+
+        $subSelect = $this->connection->query("SELECT ref FROM DW_Indicator WHERE id=" . $row['idNumerator']);
+        $rowNumerator = $subSelect->fetch();
+        $dWReport->setNumerator(DW_Model_Indicator::loadByRefAndCube($rowNumerator['ref'], $granularity->getDWCube()));
+        $subSelect->closeCursor();
+        if ($row['idNumeratorAxis1'] != null) {
+            $subSelect = $this->connection->query("SELECT ref FROM DW_Axis WHERE id=" . $row['idNumeratorAxis1']);
+            $rowAxis = $subSelect->fetch();
+            $dWReport->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($rowAxis['ref'], $granularity->getDWCube()));
+            $subSelect->closeCursor();
         }
-        $select->closeCursor();
+        if ($row['idNumeratorAxis2'] != null) {
+            $subSelect = $this->connection->query("SELECT ref FROM DW_Axis WHERE id=" . $row['idNumeratorAxis2']);
+            $rowAxis = $subSelect->fetch();
+            $dWReport->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube($rowAxis['ref'], $granularity->getDWCube()));
+            $subSelect->closeCursor();
+        }
+        echo "\t\t\t Report added : " . $dWReport->getLabel() . "\n";
+        
+        if ($row['idDenominator'] != null) {
+            $subSelect = $this->connection->query("SELECT ref FROM DW_Indicator WHERE id=" . $row['idDenominator']);
+            $rowDenominator = $subSelect->fetch();
+            $dWReport->setDenominator(DW_Model_Indicator::loadByRefAndCube($rowDenominator['ref'], $granularity->getDWCube()));
+            $subSelect->closeCursor();
+            if ($row['idDenominatorAxis1'] != null) {
+                $subSelect = $this->connection->query("SELECT ref FROM DW_Axis WHERE id=" . $row['idDenominatorAxis1']);
+                $rowAxis = $subSelect->fetch();
+                $dWReport->setDenominatorAxis1(DW_Model_Axis::loadByRefAndCube($rowAxis['ref'], $granularity->getDWCube()));
+                $subSelect->closeCursor();
+            }
+            if ($row['idDenominatorAxis2'] != null) {
+                $subSelect = $this->connection->query("SELECT ref FROM DW_Axis WHERE id=" . $row['idDenominatorAxis2']);
+                $rowAxis = $subSelect->fetch();
+                $dWReport->setDenominatorAxis2(DW_Model_Axis::loadByRefAndCube($rowAxis['ref'], $granularity->getDWCube()));
+                $subSelect->closeCursor();
+            }
+        }
 
-        return Inventory_Model_CellDataProvider::loadByOrgaCell(
-            Orga_Model_Cell::loadByGranularityAndListMembers(
-                $granularity,
-                $listMembers
-            )
-        );
+        // Filter
+        $subSelectFilter = $this->connection->query("SELECT * FROM DW_Filter WHERE idReport=".$row['id']);
+        /** @noinspection PhpAssignmentInConditionInspection */
+        if ($rowFilter = $subSelectFilter->fetch()) {
+            $dWFilter = new DW_Model_Filter();
+            $dWFilter->setReport($dWReport);
+            $subSelectAxis = $this->connection->query("SELECT ref FROM DW_Axis WHERE id=" . $row['idAxis']);
+            $rowAxis = $subSelectAxis->fetch();
+            $dWFilter->setAxis(DW_Model_Axis::loadByRefAndCube($rowAxis['ref'], $granularity->getDWCube()));
+            $subSelectAxis->closeCursor();
+            echo "\t\t\t\t with filter on axis : " . $rowAxis['ref'] . "\n";
+
+            // Members
+            $subSelectMember = $this->connection->query("SELECT * FROM DW_Filter_Member JOIN DW_Member ON DW_Filter_Member.idMember = DW_Member.id WHERE idFilter=".$rowFilter['id']);
+            /** @noinspection PhpAssignmentInConditionInspection */
+            if ($rowMember = $subSelectMember->fetch()) {
+                $dWFilter->addMember(DW_Model_Member::loadByRefAndAxis($rowMember['ref'], $dWFilter->getAxis()));
+                echo "\t\t\t\t\t for Member : " . $rowMember['ref'] . "\n";
+            }
+            $subSelectMember->closeCursor();
+        }
+        $subSelectFilter->closeCursor();
     }
 
     /**
      *
      */
-    protected function makeAdminProjectAdministrator()
+    protected function migrateUserRoles()
     {
-        $admin = User_Model_User::loadByEmail('contact@myc-sense.com');
-        foreach ($this->mapIdProject as $idOrgaCube) {
-            $project = Inventory_Model_Project::loadByOrgaCube(Orga_model_Cube::load($idOrgaCube));
-            Inventory_Service_ACLManager::getInstance()->addProjectAdministrator($project, $admin);
-            echo "\t\t L'utilisateur 'admin' administre désormais le projet " . $project->getKey()['id'] . "\n";
+        echo "\t User - Roles : \n";
+        $select = $this->connection->query(
+            "SELECT * FROM User_UserRoles JOIN User_Role ON User_UserRoles.idRole = User_Role.id WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%')"
+        );
+        /** @noinspection PhpAssignmentInConditionInspection */
+        while ($row = $select->fetch()) {
+            $this->processUserRole($row);
         }
+        $select->closeCursor();
+
         $this->flush();
     }
 
-
     /**
-     * @param string $table
-     * @param int $id
-     * @return array
+     *
      */
-    private function getById($table, $id)
+    protected function processUserRole($row)
     {
-        $select = $this->connection->query("SELECT * FROM $table WHERE id=$id");
-        $row = $select->fetch();
-        $select->closeCursor();
-        return $row;
-    }
+        $user = User_Model_User::load($row['idUser']);
 
-    /**
-     * @param string $table
-     * @return int
-     */
-    private function getCount($table)
-    {
-        $select = $this->connection->query("SELECT COUNT(*) as 'count' FROM $table");
-        $row = $select->fetch();
-        $select->closeCursor();
-        return $row['count'];
+        list($baseRef, $id) = explode('_', $row['ref']);
+
+        switch ($baseRef) {
+            case 'projectAdministrator':
+                $select = $this->connection->query("SELECT * FROM Inventory_Project WHERE id = ".$id);
+                $rowProject = $select->fetch();
+                $project = $this->getProject($rowProject['idOrgaCube']);
+                $role = User_Model_Role::loadByRef($baseRef.'_'.$project->getKey()['id']);
+
+                $complement = ' for '.$project->getLabel();
+                break;
+            case 'cellDataProviderAdministrator':
+            case 'cellDataProviderContributor':
+            case 'cellDataProviderObserver':
+                $select = $this->connection->query("SELECT Orga_Cell.id, Orga_Cell.idGranularity FROM Inventory_CellDataProvider JOIN Orga_Cell ON Inventory_CellDataProvider.idOrgaCell = Orga_Cell.id WHERE Inventory_CellDataProvider.id = ".$id);
+                $rowCell = $select->fetch();
+                $granularity = $this->getGranularity($rowCell['idGranularity']);
+
+                $listMembers = array();
+                $select = $this->connection->query("SELECT * FROM Orga_Cell_Member WHERE idCell = ".$rowCell['id']);
+                while ($rowMember = $select->fetch()) {
+                    $listMembers[] = $this->getMember($rowMember['idMember']);
+                }
+                $select->closeCursor();
+
+                $cell = Orga_Model_Cell::loadByGranularityAndListMembers($granularity, $listMembers);
+
+                $role = User_Model_Role::loadByRef(str_replace('DataProvider', '', $baseRef).'_'.$cell->getKey()['id']);
+
+                $complement = ' for '.$cell->getLabel();
+                break;
+        }
+
+        $user->addRole($role);
+
+        echo "\t\t User ".$user->getName()." -> Role : ".$role->getName().$complement."\n";
+
     }
 
 }

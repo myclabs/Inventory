@@ -441,7 +441,7 @@ class Orga_Model_Project extends Core_Model_Entity
 
         uasort(
             $inputGranularities,
-            function ($a, $b) {
+            function (Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
                 if (($a->getInputConfigGranularity()) === $b->getInputConfigGranularity()) {
                     return $a->getPosition() - $b->getPosition();
                 }
