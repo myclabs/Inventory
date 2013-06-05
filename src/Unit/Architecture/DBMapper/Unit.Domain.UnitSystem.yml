@@ -1,7 +1,6 @@
-# unit\models\mappers\Unit_Model_Unit_System.yml
-Unit_Model_Unit_System:
+Unit\Domain\UnitSystem:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Unit_UnitSystem
 
   gedmo:

@@ -9,11 +9,11 @@
 
 namespace Unit;
 
-use Unit_Model_Unit;
-use Unit_Model_Unit_Extended;
-use Unit_Model_PhysicalQuantity;
-use Unit_Model_Unit_Standard;
-use Unit_Model_Unit_Discrete;
+use Unit\Domain\Unit;
+use Unit\Domain\Unit\ExtendedUnit;
+use Unit\Domain\PhysicalQuantity;
+use Unit\Domain\Unit\StandardUnit;
+use Unit\Domain\Unit\DiscreteUnit;
 use Core_Model_Query;
 use Core_Exception_NotFound;
 use Unit\IncompatibleUnitsException;
@@ -104,7 +104,7 @@ class ComposedUnit
                     $componentUnits[] = $unitArray;
                     $unitArray = array();
                 }
-                $unitArray['unit'] = Unit_Model_Unit::loadByRef($ref);
+                $unitArray['unit'] = Unit::loadByRef($ref);
             }
         }
         if ($unitArray !== array()) {
@@ -165,10 +165,10 @@ class ComposedUnit
     {
         $conversionFactor = 1;
         foreach ($this->components as $unitArray) {
-            if ($unitArray['unit'] instanceof Unit_Model_Unit_Standard) {
+            if ($unitArray['unit'] instanceof StandardUnit) {
                 $conversionFactor *= pow($unitArray['unit']->getMultiplier(), $unitArray['exponent']);
             } else {
-                if ($unitArray['unit'] instanceof Unit_Model_Unit_Extended) {
+                if ($unitArray['unit'] instanceof ExtendedUnit) {
                     $conversionFactorUnitStandard = $unitArray['unit']->getStandardUnit()->getMultiplier();
                     $conversionFactorUnitExtension = $unitArray['unit']->getExtension()->getMultiplier();
                     $conversionFactUnit = $conversionFactorUnitStandard * $conversionFactorUnitExtension;
@@ -255,11 +255,11 @@ class ComposedUnit
         // leur décomposition en grandeurs physiques de base auxquelles on
         // associe leurs unités de références ainsi que l'exposant
         foreach ($this->components as $unitArray) {
-            $unit = Unit_Model_Unit::loadByRef($unitArray['unit']->getRef());
-            if ($unit instanceof Unit_Model_Unit_Standard) {
+            $unit = Unit::loadByRef($unitArray['unit']->getRef());
+            if ($unit instanceof StandardUnit) {
                 $standardUnits[] = $unitArray;
             } else {
-                if (($unit instanceof Unit_Model_Unit_Discrete) || ($unit instanceof Unit_Model_Unit_Extended)) {
+                if (($unit instanceof DiscreteUnit) || ($unit instanceof ExtendedUnit)) {
                     $otherUnits[] = array('unit' => $unit->getReferenceUnit(), 'exponent' => $unitArray['exponent']);
                 }
             }
@@ -275,7 +275,7 @@ class ComposedUnit
             // On remplit la nouvelle unité composée avec ses composants qui sont
             //  des unités de références des grandeurs physiques de bases.
             foreach (array_merge($standardUnits, $otherUnits) as $unitArray) {
-                if (($unitArray['exponent'] != 0) && ($unitArray['unit'] instanceof Unit_Model_Unit)) {
+                if (($unitArray['exponent'] != 0) && ($unitArray['unit'] instanceof Unit)) {
                     $normalizedUnit->components[] = $unitArray;
                 }
             }
@@ -297,9 +297,9 @@ class ComposedUnit
 
         // On construit un tableau des unités de référence pour chaque grandeur physique de base.
         $queryBasePhysicalQuantity = new Core_Model_Query();
-        $queryBasePhysicalQuantity->filter->addCondition(Unit_Model_PhysicalQuantity::QUERY_ISBASE, true);
-        /* @var $physicalQuantity Unit_Model_PhysicalQuantity */
-        foreach (Unit_Model_PhysicalQuantity::loadList($queryBasePhysicalQuantity) as $physicalQuantity) {
+        $queryBasePhysicalQuantity->filter->addCondition(PhysicalQuantity::QUERY_ISBASE, true);
+        /* @var $physicalQuantity PhysicalQuantity */
+        foreach (PhysicalQuantity::loadList($queryBasePhysicalQuantity) as $physicalQuantity) {
             $referenceUnits[$physicalQuantity->getReferenceUnit()->getRef()] = array(
                 'unit'     => $physicalQuantity->getReferenceUnit(),
                 'exponent' => 0,
@@ -378,16 +378,16 @@ class ComposedUnit
                     }
                 }
             } else {
-                if ($classA == 'Unit_Model_Unit_Discrete') {
+                if ($classA == 'Unit\Domain\DiscreteUnit') {
                     return -1;
                 } else {
-                    if ($classA == 'Unit_Model_Unit_Standard') {
+                    if ($classA == 'Unit\Domain\StandardUnit') {
                         return 1;
                     } else {
-                        if ($classB == 'Unit_Model_Unit_Standard') {
+                        if ($classB == 'Unit\Domain\StandardUnit') {
                             return -1;
                         } else {
-                            if ($classB == 'Unit_Model_Unit_Discrete') {
+                            if ($classB == 'Unit\Domain\DiscreteUnit') {
                                 return 1;
                             } else {
                                 return 0;

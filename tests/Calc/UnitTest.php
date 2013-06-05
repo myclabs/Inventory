@@ -108,7 +108,7 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $result = $o1->calculate();
 
         $this->assertEquals(true, $result instanceof UnitAPI);
-        $this->assertEquals('animal.m^2.kg.s^-2', $result->getRef());
+        $this->assertEquals('m^2.animal.kg.s^-2', $result->getRef());
 
 
         //Test somme d'unité non compatible.
@@ -136,7 +136,7 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         try {
             $result = $o3->calculate();
         } catch (Core_Exception_NotFound $e) {
-            $this->assertEquals("No 'Unit_Model_Unit' matching (ref == gramme)", $e->getMessage());
+            $this->assertEquals("No 'Unit\\Domain\\Unit' matching (ref == gramme)", $e->getMessage());
         }
 
         //Test opération inconnue.

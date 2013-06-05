@@ -1,8 +1,16 @@
-# unit\models\mappers\Unit_Model_Unit_Extension.yml
-Unit_Model_Unit_Extension:
+Unit\Domain\Unit:
   type: entity
-  repositoryClass: Core_Model_Repository
-  table: Unit_UnitExtension
+  repositoryClass: \Core_Model_Repository
+  table: Unit_Unit
+  inheritanceType: JOINED
+  discriminatorColumn:
+    name: unitType
+    type: string
+    length: 8
+  discriminatorMap:
+    standard: Unit\Domain\Unit\StandardUnit
+    extended: Unit\Domain\Unit\ExtendedUnit
+    discrete: Unit\Domain\Unit\DiscreteUnit
 
   gedmo:
     translation:
@@ -10,6 +18,7 @@ Unit_Model_Unit_Extension:
 
   id:
     id:
+      column: id
       type: integer
       generator:
         strategy: AUTO
@@ -27,5 +36,3 @@ Unit_Model_Unit_Extension:
       type: string
       gedmo:
         - translatable
-    multiplier:
-      type: integer

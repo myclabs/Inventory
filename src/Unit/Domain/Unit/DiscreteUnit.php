@@ -1,18 +1,22 @@
 <?php
 /**
- * Classe Unit_Model_Unit_Discrete
- * @author valentin.claras
- * @author hugo.charbonnier
- * @author yoann.croizer
+ * Classe DiscreteUnit
+ * @author  valentin.claras
+ * @author  hugo.charbonnier
+ * @author  yoann.croizer
  * @package Unit
  */
 
+namespace Unit\Domain\Unit;
+
+use Unit\Domain\Unit;
+
 /**
  * Unité Discrete
- * @package Unit
+ * @package    Unit
  * @subpackage Model
  */
-class Unit_Model_Unit_Discrete extends Unit_Model_Unit
+class DiscreteUnit extends Unit
 {
     /**
      * Constructeur
@@ -31,13 +35,13 @@ class Unit_Model_Unit_Discrete extends Unit_Model_Unit
      */
     public static function getActivePoolName()
     {
-        return Unit_Model_Unit::getActivePoolName();
+        return Unit::getActivePoolName();
     }
 
     /**
      * Retourne l'objet Unit à partir de son référent textuel.
      * @param string $ref
-     * @return Unit_Model_Unit_Discrete
+     * @return \Unit\Domain\Unit\DiscreteUnit
      */
     public static function loadByRef($ref)
     {
@@ -46,7 +50,7 @@ class Unit_Model_Unit_Discrete extends Unit_Model_Unit
 
     /**
      * Renvoi l'unité de reference (elle-meme).
-     * @return Unit_Model_Unit_Discrete
+     * @return \Unit\Domain\Unit\DiscreteUnit
      */
     public function getReferenceUnit()
     {
@@ -55,14 +59,14 @@ class Unit_Model_Unit_Discrete extends Unit_Model_Unit
 
     /**
      * Renvoi le facteur de Conversion de l'unité
-     * @param Unit_Model_Unit $unit
-     * @throws Core_Exception_InvalidArgument Units need to be the same
+     * @param Unit $unit
+     * @throws \Core_Exception_InvalidArgument Units need to be the same
      * @return int 1
      */
-    public function getConversionFactor(Unit_Model_Unit $unit)
+    public function getConversionFactor(Unit $unit)
     {
         if ($this->getKey() != $unit->getKey()) {
-            throw new Core_Exception_InvalidArgument('Units need to be the same');
+            throw new \Core_Exception_InvalidArgument('Units need to be the same');
         }
         return 1;
     }

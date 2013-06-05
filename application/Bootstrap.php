@@ -40,6 +40,7 @@ class Bootstrap extends Core_Bootstrap
 
         foreach ($modules as $module) {
             $moduleRoot = APPLICATION_PATH . '/' . strtolower($module);
+            $moduleRoot2 = PACKAGE_PATH . '/src/' . strtolower($module);
 
             // Autoloader
             $autoloader->addModule($module, $moduleRoot);
@@ -63,6 +64,9 @@ class Bootstrap extends Core_Bootstrap
 
             // Doctrine Mappers
             $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
+            if (file_exists($moduleRoot2 . '/Architecture/DBMapper')) {
+                $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot2 . '/Architecture/DBMapper']);
+            }
         }
     }
 

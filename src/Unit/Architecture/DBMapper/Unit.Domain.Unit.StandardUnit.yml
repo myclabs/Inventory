@@ -1,7 +1,6 @@
-# unit\models\mappers\Unit_Model_Unit_Standard.yml
-Unit_Model_Unit_Standard:
+Unit\Domain\Unit\StandardUnit:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Unit_StandardUnit
 
   fields:
@@ -10,12 +9,12 @@ Unit_Model_Unit_Standard:
 
   manyToOne:
     physicalQuantity:
-      targetEntity: Unit_Model_PhysicalQuantity
+      targetEntity: Unit\Domain\PhysicalQuantity
       joinColumn:
         name: idPhysicalQuantity
         referencedColumnName: id
     unitSystem:
-      targetEntity: Unit_Model_Unit_System
+      targetEntity: Unit\Domain\UnitSystem
       joinColumn:
         name: idUnitSystem
         referencedColumnName: id

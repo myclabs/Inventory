@@ -183,7 +183,7 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
         try {
              $result = $unitValue3->calculate();
         } catch (Core_Exception_NotFound $e) {
-            $this->assertEquals("No 'Unit_Model_Unit' matching (ref == gramme)", $e->getMessage());
+            $this->assertEquals("No 'Unit\\Domain\\Unit' matching (ref == gramme)", $e->getMessage());
         }
     }
 

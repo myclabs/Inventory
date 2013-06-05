@@ -1,16 +1,21 @@
 <?php
 /**
- * Classe Unit_Model_PhysicalQuantity_Component
- * @author valentin.claras
+ * Classe Component
+ * @author  valentin.claras
  * @package Unit
  */
 
+namespace Unit\Domain\PhysicalQuantity;
+
+use Core_Model_Entity;
+use Unit\Domain\PhysicalQuantity;
+
 /**
  * Composant des grandeurs physique.
- * @package Unit
+ * @package    Unit
  * @subpackage Model
  */
-class Unit_Model_PhysicalQuantity_Component extends Core_Model_Entity
+class Component extends Core_Model_Entity
 {
     // Constantes de tri et filtres.
     const QUERY_PHYSICALQUANTITY_DERIVED = 'derivedPhysicalQuantity';
@@ -20,13 +25,13 @@ class Unit_Model_PhysicalQuantity_Component extends Core_Model_Entity
 
     /**
      * Grandeur physique possédant la grandeur physique de base.
-     * @var Unit_Model_PhysicalQuantity
+     * @var PhysicalQuantity
      */
     protected $derivedPhysicalQuantity;
 
     /**
      * Grandeur physique de base possédée par la grandeur physique dérivée.
-     * @var Unit_Model_PhysicalQuantity
+     * @var PhysicalQuantity
      */
     protected $basePhysicalQuantity;
 
@@ -43,27 +48,27 @@ class Unit_Model_PhysicalQuantity_Component extends Core_Model_Entity
      *
      * @param string $poolName
      *
-     * @throws Core_Exception_Database
+     * @throws \Core_Exception_Database
      *
-     * @return void
+     * @return string
      */
-    public static function getActivePoolName($poolName='default')
+    public static function getActivePoolName($poolName = 'default')
     {
-        return Unit_Model_PhysicalQuantity::getActivePoolName();
+        return PhysicalQuantity::getActivePoolName();
     }
 
     /**
      * Défini la grandeur physique dérivée.
-     * @param Unit_Model_PhysicalQuantity $derivedPhysicalQuantity
+     * @param PhysicalQuantity $derivedPhysicalQuantity
      */
-    public function setDerivedPhysicalQuantity(Unit_Model_PhysicalQuantity $derivedPhysicalQuantity)
+    public function setDerivedPhysicalQuantity(PhysicalQuantity $derivedPhysicalQuantity)
     {
         $this->derivedPhysicalQuantity = $derivedPhysicalQuantity;
     }
 
     /**
      * Renvoi la grandeur physique dérivée.
-     * @return Unit_Model_PhysicalQuantity
+     * @return PhysicalQuantity
      */
     public function getDerivedPhysicalQuantity()
     {
@@ -72,16 +77,16 @@ class Unit_Model_PhysicalQuantity_Component extends Core_Model_Entity
 
     /**
      * Défini la grandeur physique de base.
-     * @param Unit_Model_PhysicalQuantity $basePhysicalQuantity
+     * @param PhysicalQuantity $basePhysicalQuantity
      */
-    public function setBasePhysicalQuantity(Unit_Model_PhysicalQuantity $basePhysicalQuantity)
+    public function setBasePhysicalQuantity(PhysicalQuantity $basePhysicalQuantity)
     {
         $this->basePhysicalQuantity = $basePhysicalQuantity;
     }
 
     /**
      * Renvoi la grandeur physique de base.
-     * @return Unit_Model_PhysicalQuantity
+     * @return PhysicalQuantity
      */
     public function getBasePhysicalQuantity()
     {

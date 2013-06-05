@@ -6,15 +6,21 @@
  * @package Unit
  */
 
+namespace Unit\Domain;
+
+use Core_Model_Entity;
+use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Unit\Domain\PhysicalQuantity\Component;
+use Unit\Domain\Unit\StandardUnit;
 
 /**
  * Grandeur Physique
  * @package    Unit
  * @subpackage Model
  */
-class Unit_Model_PhysicalQuantity extends Core_Model_Entity
+class PhysicalQuantity extends Core_Model_Entity
 {
 
     use Core_Model_Entity_Translatable;
@@ -61,7 +67,7 @@ class Unit_Model_PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Unité de référence de la grandeur physique.
-     * @var Unit_Model_Unit_Standard
+     * @var StandardUnit
      */
     protected $referenceUnit = null;
 
@@ -105,7 +111,7 @@ class Unit_Model_PhysicalQuantity extends Core_Model_Entity
     /**
      * Charge une Grandeur physique par son Reférent textuel.
      * @param String $ref
-     * @return Unit_Model_PhysicalQuantity
+     * @return \Unit\Domain\PhysicalQuantity
      */
     public static function loadByRef($ref)
     {
@@ -186,16 +192,16 @@ class Unit_Model_PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Change l'unité de référence de la Grandeur Physique.
-     * @param Unit_Model_Unit_Standard $unit La nouvelle unité de la GrandeurPhysiqueBase.
+     * @param StandardUnit $unit La nouvelle unité de la GrandeurPhysiqueBase.
      */
-    public function setReferenceUnit(Unit_Model_Unit_Standard $unit = null)
+    public function setReferenceUnit(StandardUnit $unit = null)
     {
         $this->referenceUnit = $unit;
     }
 
     /**
      * Retourne l'unite de réference associée à la Grandeur Physique.
-     * @return Unit_Model_Unit_Standard
+     * @return StandardUnit
      */
     public function getReferenceUnit()
     {
@@ -204,18 +210,18 @@ class Unit_Model_PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Ajoute une ligne au tableau  $_composedPhysicalQuantities
-     * @param Unit_Model_PhysicalQuantity $basePhysicalQuantity
-     * @param int                         $exponent
+     * @param \Unit\Domain\PhysicalQuantity $basePhysicalQuantity
+     * @param int                                      $exponent
      */
-    public function addPhysicalQuantityComponent(Unit_Model_PhysicalQuantity $basePhysicalQuantity, $exponent)
+    public function addPhysicalQuantityComponent(PhysicalQuantity $basePhysicalQuantity, $exponent)
     {
         if ($this->getKey() === array()) {
-            throw new Core_Exception_NotFound('PhysicalQuantity must be flushed before a Component can be added');
+            throw new \Core_Exception_NotFound('PhysicalQuantity must be flushed before a Component can be added');
         }
         if ($basePhysicalQuantity->isBase() === false) {
-            throw new Core_Exception_InvalidArgument('Only Base PhysicalQuantity can be added as Component');
+            throw new \Core_Exception_InvalidArgument('Only Base PhysicalQuantity can be added as Component');
         }
-        $physicalQuantityComponent = new Unit_Model_PhysicalQuantity_Component();
+        $physicalQuantityComponent = new Component();
         $physicalQuantityComponent->setDerivedPhysicalQuantity($this);
         $physicalQuantityComponent->setBasePhysicalQuantity($basePhysicalQuantity);
         $physicalQuantityComponent->setExponent($exponent);
@@ -226,7 +232,7 @@ class Unit_Model_PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Récupère la composition en grandeurs physiques de base d'une grandeur physique
-     * @return Unit_Model_PhysicalQuantity[]
+     * @return \Unit\Domain\PhysicalQuantity[]
      */
     public function getPhysicalQuantityComponents()
     {

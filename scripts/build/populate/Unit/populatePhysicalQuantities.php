@@ -5,6 +5,8 @@
  * @package Unit
  *
  */
+use Unit\Domain\Unit\StandardUnit;
+use Unit\Domain\PhysicalQuantity;
 
 /**
  * Script de création des tables grandeurphysique et composantGrandeurPhysique
@@ -42,7 +44,7 @@ class Unit_Script_Populate_PhysicalQuantities
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $physicalQuantity = new Unit_Model_PhysicalQuantity();
+        $physicalQuantity = new PhysicalQuantity();
         $physicalQuantity->setRef($element->getAttribute('ref'));
         if ($element->getElementsByTagName('symbol')->item(0)->hasChildNodes()) {
             $physicalQuantity->setSymbol($element->getElementsByTagName('symbol')->item(0)->firstChild->nodeValue);
@@ -98,16 +100,16 @@ class Unit_Script_Populate_PhysicalQuantities
      */
     protected function updateParserQuantity(DOMElement $element)
     {
-        $physicalQuantity = Unit_Model_PhysicalQuantity::loadByRef($element->getAttribute('ref'));
+        $physicalQuantity = PhysicalQuantity::loadByRef($element->getAttribute('ref'));
 
         $unitRef = $element->getElementsByTagName('standardUnitRef')->item(0)->firstChild->nodeValue;
-        $unit = Unit_Model_Unit_Standard::loadByRef($unitRef);
+        $unit = StandardUnit::loadByRef($unitRef);
         $physicalQuantity->setReferenceUnit($unit);
 
         if ($element->getElementsByTagName('isBase')->item(0)->firstChild->nodeValue === 'false') {
             foreach ($element->getElementsByTagName('component') as $component) {
                 $basePhysicalQuantityRef = $component->getElementsByTagName('baseQuantityRef')->item(0)->firstChild->nodeValue;
-                $basePhysicalQuantity = Unit_Model_PhysicalQuantity::loadByRef($basePhysicalQuantityRef);
+                $basePhysicalQuantity = PhysicalQuantity::loadByRef($basePhysicalQuantityRef);
                 $exponent = $component->getElementsByTagName('exponent')->item(0)->firstChild->nodeValue;
                 $physicalQuantity->addPhysicalQuantityComponent($basePhysicalQuantity, $exponent);
             }

@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\Unit\StandardUnit;
 
 /**
  * @package    Unit
@@ -19,8 +20,8 @@ class Unit_Datagrids_Translate_StandardUnitSymbolController extends UI_Controlle
      */
     public function getelementsAction()
     {
-        foreach (Unit_Model_Unit_Standard::loadList($this->request) as $unit) {
-            /** @var Unit_Model_Unit_Standard $unit */
+        foreach (StandardUnit::loadList($this->request) as $unit) {
+            /** @var \Unit\Domain\Unit\StandardUnit $unit */
             $data = [];
 
             $data['identifier'] = $unit->getRef();
@@ -32,7 +33,7 @@ class Unit_Datagrids_Translate_StandardUnitSymbolController extends UI_Controlle
             }
             $this->addline($data);
         }
-        $this->totalElements = Unit_Model_Unit_Standard::countTotal($this->request);
+        $this->totalElements = StandardUnit::countTotal($this->request);
 
         $this->send();
     }

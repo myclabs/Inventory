@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\Unit\DiscreteUnit;
 
 /**
  * @package    Unit
@@ -19,8 +20,8 @@ class Unit_Datagrids_Translate_DiscreteUnitNameController extends UI_Controller_
      */
     public function getelementsAction()
     {
-        foreach (Unit_Model_Unit_Discrete::loadList($this->request) as $unit) {
-            /** @var Unit_Model_Unit_Discrete $unit */
+        foreach (DiscreteUnit::loadList($this->request) as $unit) {
+            /** @var \Unit\Domain\Unit\DiscreteUnit $unit */
             $data = [];
 
             $data['identifier'] = $unit->getRef();
@@ -32,7 +33,7 @@ class Unit_Datagrids_Translate_DiscreteUnitNameController extends UI_Controller_
             }
             $this->addline($data);
         }
-        $this->totalElements = Unit_Model_Unit_Discrete::countTotal($this->request);
+        $this->totalElements = DiscreteUnit::countTotal($this->request);
 
         $this->send();
     }

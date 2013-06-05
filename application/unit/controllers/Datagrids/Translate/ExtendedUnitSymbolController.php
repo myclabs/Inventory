@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\Unit\ExtendedUnit;
 
 /**
  * @package    Unit
@@ -19,8 +20,8 @@ class Unit_Datagrids_Translate_ExtendedUnitSymbolController extends UI_Controlle
      */
     public function getelementsAction()
     {
-        foreach (Unit_Model_Unit_Extended::loadList($this->request) as $unit) {
-            /** @var Unit_Model_Unit_Extended $unit */
+        foreach (ExtendedUnit::loadList($this->request) as $unit) {
+            /** @var ExtendedUnit $unit */
             $data = [];
 
             $data['identifier'] = $unit->getRef();
@@ -32,7 +33,7 @@ class Unit_Datagrids_Translate_ExtendedUnitSymbolController extends UI_Controlle
             }
             $this->addline($data);
         }
-        $this->totalElements = Unit_Model_Unit_Extended::countTotal($this->request);
+        $this->totalElements = ExtendedUnit::countTotal($this->request);
 
         $this->send();
     }

@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\Unit\StandardUnit;
 
 /**
  * Unit_Tableau_ListeunitsController
@@ -28,8 +29,8 @@ class Unit_Datagrids_StandardunitsController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        /* @var $standardUnit Unit_Model_Unit_Standard */
-        foreach (Unit_Model_Unit_Standard::loadList($this->request) as $standardUnit) {
+        /* @var $standardUnit \Unit\Domain\Unit\StandardUnit */
+        foreach (StandardUnit::loadList($this->request) as $standardUnit) {
             $element = array();
             $idStandardUnit = $standardUnit->getKey();
             $element['index'] = $idStandardUnit['id'];
@@ -43,7 +44,7 @@ class Unit_Datagrids_StandardunitsController extends UI_Controller_Datagrid
             $element['unitSystem'] = $this->cellList($idUnitSystem['id']);
             $this->addLine($element);
         }
-        $this->totalElements = Unit_Model_Unit_Standard::countTotal($this->request);
+        $this->totalElements = StandardUnit::countTotal($this->request);
         $this->send();
     }
 

@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\Unit\ExtendedUnit;
 
 /**
  * Unit_Tableau_ListeunitesetenduesController
@@ -28,8 +29,8 @@ class Unit_Datagrids_ExtendedunitsController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        /* @var $extendedUnit Unit_Model_Unit_Extended */
-        foreach (Unit_Model_Unit_Extended::loadList($this->request) as $extendedUnit) {
+        /* @var $extendedUnit ExtendedUnit */
+        foreach (ExtendedUnit::loadList($this->request) as $extendedUnit) {
             $element = array();
             $idExtendedUnit = $extendedUnit->getKey();
             $element['index'] = $idExtendedUnit['id'];
@@ -39,7 +40,7 @@ class Unit_Datagrids_ExtendedunitsController extends UI_Controller_Datagrid
             $element['multiplier'] = Core_Locale::loadDefault()->formatNumber($extendedUnit->getMultiplier(), 10);
             $this->addLine($element);
         }
-        $this->totalElements = Unit_Model_Unit_Extended::countTotal($this->request);
+        $this->totalElements = ExtendedUnit::countTotal($this->request);
         $this->send();
     }
 

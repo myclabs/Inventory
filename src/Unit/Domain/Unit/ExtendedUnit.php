@@ -1,19 +1,23 @@
 <?php
 /**
- * Classe Unit_Model_Unit_Extended
- * @author valentin.claras
- * @author hugo.charbonniere
- * @author yoann.croizer
+ * @author  valentin.claras
+ * @author  hugo.charbonniere
+ * @author  yoann.croizer
  * @package Unit
  */
+
+namespace Unit\Domain\Unit;
+
+use Unit\Domain\Unit;
+use Unit\Domain\UnitExtension;
 
 /**
  * Unité Étendue
  * Une unité étendue est formée d'une unité standard plus une extension.
- * @package Unit
+ * @package    Unit
  * @subpackage Model
  */
-class Unit_Model_Unit_Extended extends Unit_Model_Unit
+class ExtendedUnit extends Unit
 {
     // Constantes de tri et filtres.
     const QUERY_EXTENSION = 'extension';
@@ -30,13 +34,13 @@ class Unit_Model_Unit_Extended extends Unit_Model_Unit
 
     /**
      * Extension associée à l'unité étendue.
-     * @var Unit_Model_Unit_Extension
+     * @var UnitExtension
      */
     protected $extension;
 
     /**
      * Unité standard associée à l'unité étendue.
-     * @var Unit_Model_Unit_Standard
+     * @var StandardUnit
      */
     protected $standardUnit;
 
@@ -49,13 +53,13 @@ class Unit_Model_Unit_Extended extends Unit_Model_Unit
      */
     public static function getActivePoolName()
     {
-        return Unit_Model_Unit::getActivePoolName();
+        return Unit::getActivePoolName();
     }
 
     /**
      * Retourne l'objet Unit à partir de son référent textuel.
      * @param string $ref
-     * @return Unit_Model_Unit_Extended
+     * @return \Unit\Domain\Unit\ExtendedUnit
      */
     public static function loadByRef($ref)
     {
@@ -73,29 +77,29 @@ class Unit_Model_Unit_Extended extends Unit_Model_Unit
 
     /**
      * Renvoie le coefficient multiplicateur.
-     * @throws Core_Exception_UndefinedAttribute
+     * @throws \Core_Exception_UndefinedAttribute
      * @return int
      */
     public function getMultiplier()
     {
         if ($this->multiplier === null) {
-            throw new Core_Exception_UndefinedAttribute('Multiplier has not be defined');
+            throw new \Core_Exception_UndefinedAttribute('Multiplier has not be defined');
         }
         return $this->multiplier;
     }
 
     /**
      * Défini l'extension rattaché à cette Grandeur Physique.
-     * @param Unit_Model_Unit_Extension $unitExtension
+     * @param UnitExtension $unitExtension
      */
-    public function setExtension(Unit_Model_Unit_Extension $unitExtension)
+    public function setExtension(UnitExtension $unitExtension)
     {
         $this->extension = $unitExtension;
     }
 
     /**
      * Renvoi l'extension rattaché à cette Grandeur Physique.
-     * @return Unit_Model_Unit_Extension
+     * @return UnitExtension
      */
     public function getExtension()
     {
@@ -104,16 +108,16 @@ class Unit_Model_Unit_Extended extends Unit_Model_Unit
 
     /**
      * Défini l'unité standard associée à une unité étendue.
-     * @param Unit_Model_Unit_Standard $standardUnit
+     * @param StandardUnit $standardUnit
      */
-    public function setStandardUnit(Unit_Model_Unit_Standard $standardUnit)
+    public function setStandardUnit(StandardUnit $standardUnit)
     {
         $this->standardUnit = $standardUnit;
     }
 
     /**
      * Défini l'unité standard associée à une unité étendue.
-     * @return Unit_Model_Unit_Standard
+     * @return StandardUnit
      */
     public function getStandardUnit()
     {
@@ -122,35 +126,35 @@ class Unit_Model_Unit_Extended extends Unit_Model_Unit
 
     /**
      * Renvoi le facteur de Conversion de l'unité
-     * @param Unit_Model_Unit $unit
+     * @param Unit $unit
      * @return int
      */
-    public function getConversionFactor(Unit_Model_Unit $unit)
+    public function getConversionFactor(Unit $unit)
     {
         return $this->multiplier;
     }
 
-     /**
-      * Récupère l'unité de référence d'une unité étendue.
-      * Il s'agit de l'unité de référence de l'unité standard suivi du suffixe 'equCO2'
-      * @return Unit_Model_Unit_Extended
-      */
-     public function getReferenceUnit()
-     {
+    /**
+     * Récupère l'unité de référence d'une unité étendue.
+     * Il s'agit de l'unité de référence de l'unité standard suivi du suffixe 'equCO2'
+     * @return \Unit\Domain\Unit\ExtendedUnit
+     */
+    public function getReferenceUnit()
+    {
         $standardUnit = $this->getStandardUnit()->getReferenceUnit();
 
-        $extendedReferenceUnit = new Unit_Model_Unit_Extended();
-        $extendedReferenceUnit->setRef($standardUnit->getRef().'_co2e');
-        $extendedReferenceUnit->setName('('.$standardUnit->getName().' equivalent CO2)');
-        $extendedReferenceUnit->setSymbol('('.$standardUnit->getSymbol().'.equCO2)');
+        $extendedReferenceUnit = new ExtendedUnit();
+        $extendedReferenceUnit->setRef($standardUnit->getRef() . '_co2e');
+        $extendedReferenceUnit->setName('(' . $standardUnit->getName() . ' equivalent CO2)');
+        $extendedReferenceUnit->setSymbol('(' . $standardUnit->getSymbol() . '.equCO2)');
         $extendedReferenceUnit->setStandardUnit($standardUnit);
         $extendedReferenceUnit->setExtension($this->getExtension());
 
         // L'unité étendue servant uniquement de proxy, elle est supprimée de l'entité manager.
-        $entityManagers = Zend_Registry::get('EntityManagers');
+        $entityManagers = \Zend_Registry::get('EntityManagers');
         $entityManagers['unit']->detach($extendedReferenceUnit);
 
         return $extendedReferenceUnit;
-     }
+    }
 
 }

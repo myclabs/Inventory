@@ -1,18 +1,23 @@
 <?php
 /**
- * Classe Unit_Model_Unit_System
- * @author valentin.claras
- * @author hugo.charbonnier
- * @author yoann.croizer
+ * Classe UnitSystem
+ * @author  valentin.claras
+ * @author  hugo.charbonnier
+ * @author  yoann.croizer
  * @package Unit
  */
 
+namespace Unit\Domain;
+
+use Core_Model_Entity;
+use Core_Model_Entity_Translatable;
+
 /**
  * Système d'unité
- * @package Unit
+ * @package    Unit
  * @subpackage Model
  */
-class Unit_Model_Unit_System extends Core_Model_Entity
+class UnitSystem extends Core_Model_Entity
 {
 
     use Core_Model_Entity_Translatable;
@@ -49,13 +54,13 @@ class Unit_Model_Unit_System extends Core_Model_Entity
      */
     public static function getActivePoolName()
     {
-        return Unit_Model_Unit::getActivePoolName();
+        return Unit::getActivePoolName();
     }
 
     /**
      * Retourne l'objet Unit à partir de son référent textuel.
      * @param string $ref
-     * @return Unit_Model_Unit_System
+     * @return \Unit\Domain\UnitSystem
      */
     public static function loadByRef($ref)
     {

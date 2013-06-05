@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\PhysicalQuantity;
 
 /**
  * Unit_Datagrids_PhysicalQuantitiesController
@@ -30,11 +31,11 @@ class Unit_Datagrids_PhysicalquantitiesController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $queryBasePhyscialQuantity = new Core_Model_Query();
-        $queryBasePhyscialQuantity->filter->addCondition(Unit_Model_PhysicalQuantity::QUERY_ISBASE, true);
-        $basePhyscialQuantities = Unit_Model_PhysicalQuantity::loadList($queryBasePhyscialQuantity);
+        $queryBasePhyscialQuantity->filter->addCondition(PhysicalQuantity::QUERY_ISBASE, true);
+        $basePhyscialQuantities = PhysicalQuantity::loadList($queryBasePhyscialQuantity);
 
-        /* @var $physicalQuantity Unit_Model_PhysicalQuantity */
-        foreach (Unit_Model_PhysicalQuantity::loadList($this->request) as $physicalQuantity) {
+        /* @var $physicalQuantity PhysicalQuantity */
+        foreach (PhysicalQuantity::loadList($this->request) as $physicalQuantity) {
             $element = array();
             $idPhysicalQuantity = $physicalQuantity->getKey();
             $element['index'] = $idPhysicalQuantity['id'];
@@ -50,7 +51,7 @@ class Unit_Datagrids_PhysicalquantitiesController extends UI_Controller_Datagrid
             }
             $this->addLine($element);
         }
-        $this->totalElements = Unit_Model_PhysicalQuantity::countTotal($this->request);
+        $this->totalElements = PhysicalQuantity::countTotal($this->request);
         $this->send();
     }
 

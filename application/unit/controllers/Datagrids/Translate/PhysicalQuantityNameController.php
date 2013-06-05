@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\PhysicalQuantity;
 
 /**
  * @package    Unit
@@ -19,8 +20,8 @@ class Unit_Datagrids_Translate_PhysicalQuantityNameController extends UI_Control
      */
     public function getelementsAction()
     {
-        foreach (Unit_Model_PhysicalQuantity::loadList($this->request) as $physicalQuantity) {
-            /** @var Unit_Model_PhysicalQuantity $physicalQuantity */
+        foreach (PhysicalQuantity::loadList($this->request) as $physicalQuantity) {
+            /** @var PhysicalQuantity $physicalQuantity */
             $data = [];
 
             $data['identifier'] = $physicalQuantity->getRef();
@@ -32,7 +33,7 @@ class Unit_Datagrids_Translate_PhysicalQuantityNameController extends UI_Control
             }
             $this->addline($data);
         }
-        $this->totalElements = Unit_Model_PhysicalQuantity::countTotal($this->request);
+        $this->totalElements = PhysicalQuantity::countTotal($this->request);
 
         $this->send();
     }

@@ -1,18 +1,21 @@
 <?php
 /**
- * Classe Unit_Model_Unit
- * @author valentin.claras
- * @author hugo.charbonniere
- * @author yoann.croizer
+ * @author  valentin.claras
+ * @author  hugo.charbonniere
+ * @author  yoann.croizer
  * @package Unit
  */
+
+namespace Unit\Domain;
+
+use Core_Model_Entity;
+use Core_Model_Entity_Translatable;
 
 /**
  * Unité
  * @package Unit
- * @subpackage Model
  */
-abstract class Unit_Model_Unit extends Core_Model_Entity
+abstract class Unit extends Core_Model_Entity
 {
 
     use Core_Model_Entity_Translatable;
@@ -52,7 +55,7 @@ abstract class Unit_Model_Unit extends Core_Model_Entity
     /**
      * Retourne l'objet Unit à partir de son référent textuel.
      * @param string $ref
-     * @return Unit_Model_Unit
+     * @return \Unit\Domain\Unit
      */
     public static function loadByRef($ref)
     {
@@ -120,8 +123,8 @@ abstract class Unit_Model_Unit extends Core_Model_Entity
 
     /**
      * Renvoi le facteur de Conversion de l'unité
-     * @param Unit_Model_Unit $unit
+     * @param \Unit\Domain\Unit $unit
      */
-    abstract public function getConversionFactor(Unit_Model_Unit $unit);
+    abstract public function getConversionFactor(Unit $unit);
 
 }

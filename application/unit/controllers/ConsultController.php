@@ -6,6 +6,9 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\Unit\StandardUnit;
+use Unit\Domain\PhysicalQuantity;
+use Unit\Domain\UnitSystem;
 
 /**
  * Unit_ConsultController
@@ -16,26 +19,26 @@ class Unit_ConsultController extends Core_Controller
 {
 
     /**
-     * Liste les Unit_Model_PhysicalQuantity.
+     * Liste les PhysicalQuantity.
      *
      * @Secure("viewUnit")
      */
     public function physicalquantitiesAction()
     {
         $this->view->listStandardUnits = array();
-        /* @var $standardUnit Unit_Model_Unit_Standard */
-        foreach (Unit_Model_Unit_Standard::loadList() as $standardUnit) {
+        /* @var $standardUnit StandardUnit */
+        foreach (StandardUnit::loadList() as $standardUnit) {
             $idStandardUnit = $standardUnit->getKey();
             $this->view->listStandardUnits[$idStandardUnit['id']] = $standardUnit->getName();
         }
 
         $queryBasePhyscialQuantity = new Core_Model_Query();
-        $queryBasePhyscialQuantity->filter->addCondition(Unit_Model_PhysicalQuantity::QUERY_ISBASE, true);
-        $this->view->basePhyscialQuantities = Unit_Model_PhysicalQuantity::loadList($queryBasePhyscialQuantity);
+        $queryBasePhyscialQuantity->filter->addCondition(PhysicalQuantity::QUERY_ISBASE, true);
+        $this->view->basePhyscialQuantities = PhysicalQuantity::loadList($queryBasePhyscialQuantity);
     }
 
     /**
-     * Liste les Unit_Model_Unit_System.
+     * Liste les UnitSystem.
      *
      * @Secure("viewUnit")
      */
@@ -44,7 +47,7 @@ class Unit_ConsultController extends Core_Controller
     }
 
     /**
-     * Liste les Unit_Model_Unit_Discrete.
+     * Liste les DiscreteUnit.
      *
      * @Secure("viewUnit")
      */
@@ -53,7 +56,7 @@ class Unit_ConsultController extends Core_Controller
     }
 
     /**
-     * Liste les Unit_Model_Unit_Discrete.
+     * Liste les DiscreteUnit.
      *
      * @Secure("viewUnit")
      */
@@ -62,22 +65,22 @@ class Unit_ConsultController extends Core_Controller
     }
 
     /**
-     * Liste les Unit_Model_Unit_Discrete.
+     * Liste les DiscreteUnit.
      *
      * @Secure("viewUnit")
      */
     public function standardunitsAction()
     {
         $this->view->listPhysicalQuantities = array();
-        /* @var $physicalQuantity Unit_Model_PhysicalQuantity */
-        foreach (Unit_Model_PhysicalQuantity::loadList() as $physicalQuantity) {
+        /* @var $physicalQuantity PhysicalQuantity */
+        foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
             $idPhysicalQuantity = $physicalQuantity->getKey();
             $this->view->listPhysicalQuantities[$idPhysicalQuantity['id']] = $physicalQuantity->getName();
         }
 
         $this->view->listUnitSystems = array();
-        /* @var $idUnitSystem Unit_Model_Unit_System */
-        foreach (Unit_Model_Unit_System::loadList() as $unitSystem) {
+        /* @var $idUnitSystem UnitSystem */
+        foreach (UnitSystem::loadList() as $unitSystem) {
             $idUnitSystem = $unitSystem->getKey();
             $this->view->listUnitSystems[$idUnitSystem['id']] = $unitSystem->getName();
         }

@@ -1,18 +1,24 @@
 <?php
 /**
- * Classe Unit_Model_Unit_Extension
- * @author valentin.claras
- * @author hugo.charbonnier
- * @author yoann.croizer
+ * Classe UnitExtension
+ * @author  valentin.claras
+ * @author  hugo.charbonnier
+ * @author  yoann.croizer
  * @package Unit
  */
 
+namespace Unit\Domain;
+
+use Core_Model_Entity;
+use Core_Model_Entity_Translatable;
+use Unit\Domain\Unit;
+
 /**
  * Extension
- * @package Unit
+ * @package    Unit
  * @subpackage Model
  */
-class Unit_Model_Unit_Extension extends Core_Model_Entity
+class UnitExtension extends Core_Model_Entity
 {
 
     use Core_Model_Entity_Translatable;
@@ -60,13 +66,13 @@ class Unit_Model_Unit_Extension extends Core_Model_Entity
      */
     public static function getActivePoolName()
     {
-        return Unit_Model_Unit::getActivePoolName();
+        return Unit::getActivePoolName();
     }
 
     /**
      * Retourne l'objet Unit à partir de son référent textuel.
      * @param string $ref
-     * @return Unit_Model_Unit
+     * @return Unit
      */
     public static function loadByRef($ref)
     {
@@ -138,13 +144,13 @@ class Unit_Model_Unit_Extension extends Core_Model_Entity
 
     /**
      * Renvoie le coefficient multiplicateur.
-     * @throws Core_Exception_UndefinedAttribute
+     * @throws \Core_Exception_UndefinedAttribute
      * @return int
      */
     public function getMultiplier()
     {
         if ($this->multiplier == null) {
-            throw new Core_Exception_UndefinedAttribute('Multiplier has not be defined');
+            throw new \Core_Exception_UndefinedAttribute('Multiplier has not be defined');
         }
         return $this->multiplier;
     }

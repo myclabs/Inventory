@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\Domain\UnitSystem;
 
 /**
  * Unit_Tableau_ListeSystemeUnitsController
@@ -28,8 +29,8 @@ class Unit_Datagrids_UnitsystemsController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        /* @var $unitSystem Unit_Model_Unit_System */
-        foreach (Unit_Model_Unit_System::loadList($this->request) as $unitSystem) {
+        /* @var $unitSystem UnitSystem */
+        foreach (UnitSystem::loadList($this->request) as $unitSystem) {
             $element = array();
             $idUnitSystem = $unitSystem->getKey();
             $element['index'] = $idUnitSystem['id'];
@@ -37,7 +38,7 @@ class Unit_Datagrids_UnitsystemsController extends UI_Controller_Datagrid
             $element['ref'] = $unitSystem->getRef();
             $this->addLine($element);
         }
-        $this->totalElements = Unit_Model_Unit_System::countTotal($this->request);
+        $this->totalElements = UnitSystem::countTotal($this->request);
         $this->send();
     }
 

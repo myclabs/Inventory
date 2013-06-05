@@ -5,6 +5,8 @@
  */
 
 use Doctrine\DBAL\Types\Type;
+use Unit\Domain\Unit;
+use Unit\Domain\PhysicalQuantity;
 use Unit\TypeMapping\UnitAPIType;
 
 /**
@@ -61,9 +63,9 @@ class Unit_Bootstrap extends Core_Package_Bootstrap
         Zend_Registry::set('EntityManagers', $entityManagers);
 
         // Désignation des PoolName spécifique à UI.
-        //  Les Objets du sous-package Unit utilisent le PoolsNames de Unit_Model_Unit.
-        Unit_Model_Unit::setActivePoolName('unit');
-        Unit_Model_PhysicalQuantity::setActivePoolName('unit');
+        //  Les Objets du sous-package Unit utilisent le PoolsNames de Unit.
+        Unit::setActivePoolName('unit');
+        PhysicalQuantity::setActivePoolName('unit');
     }
 
 }

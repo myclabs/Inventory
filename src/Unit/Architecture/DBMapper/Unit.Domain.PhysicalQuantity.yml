@@ -1,7 +1,6 @@
-# unit\models\mappers\Unit_Model_PhysicalQuantity.yml
-Unit_Model_PhysicalQuantity:
+Unit\Domain\PhysicalQuantity:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Unit_PhysicalQuantity
 
   gedmo:
@@ -31,7 +30,7 @@ Unit_Model_PhysicalQuantity:
 
   manyToOne:
     referenceUnit:
-      targetEntity: Unit_Model_Unit_Standard
+      targetEntity: Unit\Domain\Unit\StandardUnit
       joinColumn:
         name: idReferenceUnit
         referencedColumnName: id
@@ -39,7 +38,7 @@ Unit_Model_PhysicalQuantity:
 
   oneToMany:
     physicalQuantityComponents:
-      targetEntity: Unit_Model_PhysicalQuantity_Component
+      targetEntity: Unit\Domain\PhysicalQuantity\Component
       mappedBy: derivedPhysicalQuantity
 
   lifecycleCallbacks:

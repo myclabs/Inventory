@@ -11,7 +11,7 @@ namespace Unit;
 
 use Core_Model_Query;
 use Unit\IncompatibleUnitsException;
-use Unit_Model_Unit_Standard;
+use Unit\Domain\Unit\StandardUnit;
 use Unit\ComposedUnit;
 
 /**
@@ -24,14 +24,14 @@ class UnitAPI
     /**
      * Référent textuel d'une unité
      *  si le référent contient un "." c'et qu'il s'agit d'une unité composée.
-     * @var String
+     * @var string
      */
     protected $ref;
 
 
     /**
      * Constructeur.
-     * @param String $ref
+     * @param string $ref
      */
     public function __construct($ref = null)
     {
@@ -62,7 +62,7 @@ class UnitAPI
      * sous forme de chaîne de caractères. La variable booléenne $html si elle est à "true" permet de
      * transformer par exemple un exposant de la forme m^2 en m<sup>2</sup>.
      *
-     * @return \Unit\UnitAPI unitSymbol
+     * @return UnitAPI unitSymbol
      */
     public function getSymbol()
     {
@@ -118,7 +118,7 @@ class UnitAPI
      *  correspond à une unité composéé d'unités de référence de grandeur
      *   physique de base (univoque).
      * @param array $components
-     * @return \Unit\UnitAPI $api
+     * @return UnitAPI $api
      */
     public static function multiply($components)
     {
@@ -132,7 +132,7 @@ class UnitAPI
      * Sert à ajouter des unités entre elles. Renvoi une unité composée
      *  d'unités de référence de grandeur physique de base.
      * @param array $components
-     * @return \Unit\UnitAPI
+     * @return UnitAPI
      */
     public static function calculateSum($components)
     {
@@ -148,17 +148,17 @@ class UnitAPI
      */
     public function getSamePhysicalQuantityUnits()
     {
-        $unit = Unit_Model_Unit_Standard::loadByRef($this->getRef());
+        $unit = StandardUnit::loadByRef($this->getRef());
 
         $queryCompatibleUnits = new Core_Model_Query();
         $queryCompatibleUnits->filter->addCondition(
-            Unit_Model_Unit_Standard::QUERY_PHYSICALQUANTITY,
+            StandardUnit::QUERY_PHYSICALQUANTITY,
             $unit->getPhysicalQuantity()
         );
 
         $refs = array();
 
-        foreach (Unit_Model_Unit_Standard::loadList($queryCompatibleUnits) as $standardUnit) {
+        foreach (StandardUnit::loadList($queryCompatibleUnits) as $standardUnit) {
             $refs[] = new UnitAPI($standardUnit->getRef());
         }
 
@@ -168,7 +168,7 @@ class UnitAPI
 
     /**
      * Renvoie l'unité normalisée associée à une unité.
-     * @return \Unit\UnitAPI
+     * @return UnitAPI
      */
     public function getNormalizedUnit()
     {
@@ -178,7 +178,7 @@ class UnitAPI
 
     /**
      * Retourne l'inverse de l'unité
-     * @return \Unit\UnitAPI
+     * @return UnitAPI
      */
     public function reverse()
     {

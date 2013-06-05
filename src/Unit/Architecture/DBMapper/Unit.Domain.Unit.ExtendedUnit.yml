@@ -1,7 +1,6 @@
-# unit\models\mappers\Unit_Model_Unit_Extended.yml
-Unit_Model_Unit_Extended:
+Unit\Domain\Unit\ExtendedUnit:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Unit_ExtendedUnit
 
   fields:
@@ -10,12 +9,12 @@ Unit_Model_Unit_Extended:
 
   manyToOne:
     extension:
-      targetEntity: Unit_Model_Unit_Extension
+      targetEntity: Unit\Domain\UnitExtension
       joinColumn:
         name: idExtentedUnit
         referencedColumnName: id
     standardUnit:
-      targetEntity: Unit_Model_Unit_Standard
+      targetEntity: StandardUnit
       joinColumn:
         name: idStandardUnit
         referencedColumnName: id

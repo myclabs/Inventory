@@ -1,7 +1,6 @@
-# unit\models\mappers\Unit_Model_PhysicalQuantity_Component.yml
-Unit_Model_PhysicalQuantity_Component:
+Unit\Domain\PhysicalQuantity\Component:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Unit_PhysicalQuantityComponent
 
   id:
@@ -17,13 +16,13 @@ Unit_Model_PhysicalQuantity_Component:
 
   manyToOne:
     derivedPhysicalQuantity:
-      targetEntity: Unit_Model_PhysicalQuantity
+      targetEntity: Unit\Domain\PhysicalQuantity
       inversedBy: physicalQuantityComponents
       joinColumns:
         idDerivedPhysicalQuantity:
           referencedColumnName: id
     basePhysicalQuantity:
-      targetEntity: Unit_Model_PhysicalQuantity
+      targetEntity: Unit\Domain\PhysicalQuantity
       joinColumn:
         name: idBasePhysicalQuantity
         referencedColumnName: id
