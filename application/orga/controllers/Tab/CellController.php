@@ -11,7 +11,7 @@ use Core\Annotation\Secure;
  * Classe de gestion des onglets
  * @package Orga
  */
-class Orga_Tab_CellController extends Core_Controller_Ajax
+class Orga_Tab_CellController extends Core_Controller
 {
     /**
      * @var Orga_Model_Cell

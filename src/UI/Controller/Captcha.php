@@ -12,7 +12,7 @@
  * @package    UI
  * @subpackage Controller
  */
-class UI_Controller_Captcha extends Core_Controller_Ajax
+class UI_Controller_Captcha extends Core_Controller
 {
     /**
      * Fonction qui permet de générer une nouvelle captcha

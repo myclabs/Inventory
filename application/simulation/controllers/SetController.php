@@ -10,7 +10,7 @@ use Core\Annotation\Secure;
  * @author valentin.claras
  * @package Simulation
  */
-class Simulation_SetController extends Core_Controller_Ajax
+class Simulation_SetController extends Core_Controller
 {
     /**
      * Redirection sur la liste.

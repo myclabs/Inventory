@@ -12,7 +12,7 @@ use Core\Annotation\Secure;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_Forms_NavigationController extends Core_Controller_Ajax
+class Orga_Forms_NavigationController extends Core_Controller
 {
     /**
      * accéder à une cellule par le volet de navigation

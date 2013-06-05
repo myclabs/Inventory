@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 /**
  * @package Techno
  */
-class Techno_Form_EditFamilyController extends Core_Controller_Ajax
+class Techno_Form_EditFamilyController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;

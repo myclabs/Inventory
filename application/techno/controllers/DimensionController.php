@@ -10,7 +10,7 @@ use Core\Annotation\Secure;
  * Controleur des dimensions
  * @package Techno
  */
-class Techno_DimensionController extends Core_Controller_Ajax
+class Techno_DimensionController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;

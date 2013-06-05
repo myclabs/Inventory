@@ -14,7 +14,7 @@ use Core\Annotation\Secure;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_ProjectController extends Core_Controller_Ajax
+class Orga_ProjectController extends Core_Controller
 {
     /**
      * Redirection sur la liste.

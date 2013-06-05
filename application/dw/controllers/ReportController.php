@@ -12,7 +12,7 @@ use Core\Annotation\Secure;
  * Classe du controler de Data Warehouse
  * @package DW
  */
-class DW_ReportController extends Core_Controller_Ajax
+class DW_ReportController extends Core_Controller
 {
     /**
      * Récupère un report enregistré en session par son hash.
