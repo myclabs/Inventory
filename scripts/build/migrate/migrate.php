@@ -195,6 +195,9 @@ class Inventory_Migrate extends Core_Script_Populate
             $this->cleanUserBDD();
             $this->migrateProjects();
             $this->migrateUserRoles();
+            echo " - regénération du cache des ACLs…\n";
+            User_Service_ACLFilter::getInstance()->generate();
+            echo "\t …done !\n";
         } catch (PDOException $e) {
             echo " - aborting : $dbName _ La base n'existe pas.\n";
         }
