@@ -40,55 +40,48 @@ DW_Model_Report:
         name: idCube
         referencedColumnName: id
         nullable: false
-      fetch: EAGER
     numerator:
       targetEntity: DW_Model_Indicator
       joinColumn:
         name: idNumerator
         referencedColumnName: id
         nullable: true
-      fetch: EAGER
     numeratorAxis1:
       targetEntity: DW_Model_Axis
       joinColumn:
         name: idNumeratorAxis1
         referencedColumnName: id
         nullable: true
-      fetch: EAGER
     numeratorAxis2:
       targetEntity: DW_Model_Axis
       joinColumn:
         name: idNumeratorAxis2
         referencedColumnName: id
         nullable: true
-      fetch: EAGER
     denominator:
       targetEntity: DW_Model_Indicator
       joinColumn:
         name: idDenominator
         referencedColumnName: id
         nullable: true
-      fetch: EAGER
     denominatorAxis1:
       targetEntity: DW_Model_Axis
       joinColumn:
         name: idDenominatorAxis1
         referencedColumnName: id
         nullable: true
-      fetch: EAGER
     denominatorAxis2:
       targetEntity: DW_Model_Axis
       joinColumn:
         name: idDenominatorAxis2
         referencedColumnName: id
         nullable: true
-      fetch: EAGER
 
   oneToMany:
     filters:
       targetEntity: DW_Model_Filter
       mappedBy: report
-      fetch: EAGER
+      orphanRemoval: true
       cascade: [ persist, remove ]
 
   lifecycleCallbacks:

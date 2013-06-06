@@ -52,12 +52,12 @@ DW_Model_Axis:
     members:
       targetEntity: DW_Model_Member
       mappedBy: axis
+      orphanRemoval: true
       cascade: [ persist, remove ]
       orderBy:
         position: ASC
 
   lifecycleCallbacks:
-    prePersist: [ preSave ]
     preUpdate: [ preUpdate ]
     preRemove: [ preDelete ]
     postLoad: [ postLoad ]
