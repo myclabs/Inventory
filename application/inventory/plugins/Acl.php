@@ -288,11 +288,16 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     {
         $idReport = $request->getParam('idReport');
         if ($idReport !== null) {
-            return $this->aclService->isAllowed(
+            $isAllowed = $this->aclService->isAllowed(
                 $identity,
                 User_Model_Action_Default::VIEW(),
                 User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load(array('id' => $idReport)))
             );
+            if ($isAllowed) {
+                return $isAllowed;
+            } else {
+                return $this->viewCellRule($identity, $request);
+            }
         }
 
         $idCube = $request->getParam('idCube');
