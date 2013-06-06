@@ -70,7 +70,7 @@ class Inventory_ProjectController extends Core_Controller_Ajax
             $cellDataProviderArray = Inventory_Model_CellDataProvider::loadList($aclQuery);
             $this->_redirect('inventory/cell/details/idCell/'.$cellDataProviderArray[0]->getOrgaCell()->getKey()['id']);
         } else {
-            $this->_forward('inventory/project/noaccess');
+            $this->_forward('noaccess', 'project', 'inventory');
         }
     }
 
