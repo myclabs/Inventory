@@ -246,6 +246,9 @@ class Inventory_Migrate extends Core_Script_Populate
         } else {
             echo print_r($connection->errorInfo(), true);
         }
+
+        $count = $connection->exec("UPDATE User_Resource SET entityName = 'Orga_Model_Project' WHERE entityName = 'Inventory_Model_Project'");
+        echo "\t -> $count resources changées de 'Inventory_Model_Project' à 'Orga_Model_Project'\n";
     }
 
     /**
