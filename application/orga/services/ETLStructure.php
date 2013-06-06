@@ -718,17 +718,16 @@ class Orga_Service_ETLStructure extends Core_Singleton
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         /** @var EntityManager $entityManager */
-//        $entityManager = $entityManagers['default'];
+        $entityManager = $entityManagers['default'];
 
         foreach ($project->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes($granularity);
-//                $entityManager->flush();
+                $entityManager->flush();
                 foreach ($granularity->getCells() as $cell) {
-//                    $entityManager->clear();
-                    $this->resetCellDWCube($cell);
-//                    $entityManager->flush();
-//                    $entityManager->clear();
+                    $entityManager->clear();
+                    $this->resetCellDWCube(Orga_Model_Cell::load($cell->getKey()));
+                    $entityManager->flush();
                 }
             }
         }
