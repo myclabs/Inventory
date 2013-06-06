@@ -121,10 +121,9 @@ class Simulation_Model_Scenario extends Core_Model_Entity
      */
     protected function createAssociatedDWMember()
     {
-        $this->dWMember = new DW_Model_Member();
+        $this->dWMember = new DW_Model_Member($this->getSet()->getDWAxis());
         $this->dWMember->setRef(Core_Tools::refactor($this->label));
         $this->dWMember->setLabel($this->label);
-        $this->dWMember->setAxis($this->getSet()->getDWAxis());
     }
 
     /**
@@ -239,9 +238,7 @@ class Simulation_Model_Scenario extends Core_Model_Entity
         $refClassifIndicator = $output->getContextIndicator()->getIndicator()->getRef();
         $dWIndicator = DW_Model_Indicator::loadByRefAndCube($refClassifIndicator, $dWCube);
 
-        $dWResult = new DW_Model_Result();
-        $dWResult->setCube($dWCube);
-        $dWResult->setIndicator($dWIndicator);
+        $dWResult = new DW_Model_Result($dWIndicator);
         $dWResult->setValue($output->getValue());
 
         $dWResult->addMember($this->dWMember);

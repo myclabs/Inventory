@@ -54,12 +54,11 @@ class Simulation_Service_ETLStructure extends Core_Service
      */
     protected function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
     {
-        $dWIndicator = new DW_Model_Indicator();
+        $dWIndicator = new DW_Model_Indicator($dWCube);
         $dWIndicator->setLabel($classifIndicator->getLabel());
         $dWIndicator->setRef($classifIndicator->getRef());
         $dWIndicator->setUnit($classifIndicator->getUnit());
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
-        $dWIndicator->setCube($dWCube);
     }
 
     /*
@@ -71,10 +70,9 @@ class Simulation_Service_ETLStructure extends Core_Service
      */
     protected function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
     {
-        $dWAxis = new DW_Model_Axis();
+        $dWAxis = new DW_Model_Axis($dwCube);
         $dWAxis->setLabel($classifAxis->getLabel());
         $dWAxis->setRef($classifAxis->getRef());
-        $dWAxis->setCube($dwCube);
         $associationArray['axes'][$classifAxis->getKey()['id']] = $dWAxis;
         $classifNarrowerAxis = $classifAxis->getDirectNarrower();
         if ($classifNarrowerAxis !== null) {
@@ -82,10 +80,9 @@ class Simulation_Service_ETLStructure extends Core_Service
         }
 
         foreach ($classifAxis->getMembers() as $classifMember) {
-            $dWMember = new DW_Model_Member();
+            $dWMember = new DW_Model_Member($dWAxis);
             $dWMember->setLabel($classifMember->getLabel());
             $dWMember->setRef($classifMember->getRef());
-            $dWMember->setAxis($dWAxis);
             $dWMember->setPosition($classifMember->getPosition());
             $associationArray['members'][$classifMember->getKey()['id']] = $dWMember;
             foreach ($classifMember->getDirectChildren() as $classifNarrowerMember) {

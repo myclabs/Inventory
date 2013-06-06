@@ -1187,9 +1187,7 @@ class Orga_Model_Cell extends Core_Model_Entity
                 continue;
             }
 
-            $dWResult = new DW_Model_Result();
-            $dWResult->setCube($dWCube);
-            $dWResult->setIndicator($dWIndicator);
+            $dWResult = new DW_Model_Result($dWIndicator);
             $dWResult->setValue($outputElement->getValue());
 
             foreach ($outputElement->getIndexes() as $outputIndex) {
