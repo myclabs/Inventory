@@ -127,7 +127,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initAcl()
     {
-        Zend_Registry::set('activerAcl', true);
+        Zend_Registry::set('activerAcl', false);
     }
 
     /**
