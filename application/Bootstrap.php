@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 
 /**
  * Application bootstrap
@@ -67,7 +68,13 @@ class Bootstrap extends Core_Bootstrap
                 $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
             }
             if (file_exists($moduleRoot2 . '/Architecture/DBMapper')) {
-                $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot2 . '/Architecture/DBMapper']);
+                $yamlDriver = new SimplifiedYamlDriver(
+                    [
+                        $moduleRoot2 . '/Architecture/DBMapper' => $module . '\Domain',
+                    ],
+                    '.yml'
+                );
+                $driver->addDriver($yamlDriver, $module . '\Domain');
             }
         }
     }
