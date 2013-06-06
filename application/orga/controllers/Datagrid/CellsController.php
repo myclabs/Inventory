@@ -46,11 +46,11 @@ class Orga_Datagrid_CellsController extends UI_Controller_Datagrid
         }
 
         foreach ($listCellResource as $cellResource) {
-            $orgaCell = $cellResource->getEntity()->getOrgaCell();
+            $cell = $cellResource->getEntity();
             $data = array();
-            $data['index'] = $orgaCell->getKey()['id'];
-            $data['label'] = $orgaCell->getLabel();
-            $data['granularity'] = $orgaCell->getGranularity()->getRef();
+            $data['index'] = $cell->getKey()['id'];
+            $data['label'] = $cell->getLabel();
+            $data['granularity'] = $cell->getGranularity()->getRef();
 
             $access = array();
             foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {
@@ -60,7 +60,7 @@ class Orga_Datagrid_CellsController extends UI_Controller_Datagrid
             }
             $data['access'] = $this->cellList($access);
 
-            $data['details'] = $this->cellLink('orga/cell/details/idCell/'.$orgaCell->getKey()['id']);
+            $data['details'] = $this->cellLink('orga/cell/details/idCell/'.$cell->getKey()['id']);
             $this->addLine($data);
         }
 

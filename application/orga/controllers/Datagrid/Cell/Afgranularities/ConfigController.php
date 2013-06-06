@@ -57,11 +57,9 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
             Orga_Model_Cell::getAlias()
         );
         foreach ($cell->getChildCellsForGranularity($aFConfigOrgaGranularity, $this->request) as $childCell) {
-            $childOrgaCell = $childCell->getOrgaCell();
-
             $data = array();
-            $data['index'] = $childOrgaCell->getKey()['id'];
-            foreach ($childOrgaCell->getMembers() as $member) {
+            $data['index'] = $childCell->getKey()['id'];
+            foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
             try {

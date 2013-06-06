@@ -64,8 +64,7 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
                 $data['details'] = $this->cellLink('orga/project/cells/idProject/'.$project->getKey()['id']);
             } else {
                 $cellWithAccess = Orga_Model_Cell::loadList($aclProjectQuery);
-                $orgaCell = $cellWithAccess[0]->getOrgaCell();
-                $data['details'] = $this->cellLink('orga/cell/details/idCell/'.$orgaCell->getKey()['id']);
+                $data['details'] = $this->cellLink('orga/cell/details/idCell/'.$cellWithAccess[0]->getKey()['id']);
             }
             $this->addLine($data);
         }
