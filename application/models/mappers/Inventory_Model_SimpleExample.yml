@@ -1,7 +1,7 @@
 Inventory_Model_SimpleExample:
   type: entity
   repositoryClass: Core_Model_Repository
-  table: inventory_simpleexample
+  table: Inventory_SimpleExample
 
   id:
     id:
