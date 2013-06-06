@@ -10,7 +10,7 @@ use Core\Annotation\Secure;
 /**
  * @package Social
  */
-class Social_ActionController extends Core_Controller_Ajax
+class Social_ActionController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;

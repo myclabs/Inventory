@@ -17,7 +17,7 @@
  * @package    UI
  * @subpackage Datagrid
  */
-abstract class UI_Controller_Datagrid extends Core_Controller_Ajax
+abstract class UI_Controller_Datagrid extends Core_Controller
 {
     /**
      * Identifiant de la Datagrid.

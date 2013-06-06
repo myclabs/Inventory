@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 /**
  * @package AF
  */
-class AF_Edit_ActionsController extends Core_Controller_Ajax
+class AF_Edit_ActionsController extends Core_Controller
 {
 
     /**

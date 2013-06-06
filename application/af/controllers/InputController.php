@@ -10,7 +10,7 @@ use Core\Annotation\Secure;
  * Saisie des AF
  * @package AF
  */
-class AF_InputController extends Core_Controller_Ajax
+class AF_InputController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;

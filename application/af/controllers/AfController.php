@@ -12,7 +12,7 @@ use Core\Annotation\Secure;
  * Countroleur des AF
  * @package AF
  */
-class AF_AfController extends Core_Controller_Ajax
+class AF_AfController extends Core_Controller
 {
 
     /**

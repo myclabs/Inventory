@@ -17,7 +17,7 @@
  * @package    UI
  * @subpackage Controller
  */
-abstract class UI_Controller_Tree extends Core_Controller_Ajax
+abstract class UI_Controller_Tree extends Core_Controller
 {
     /**
      * Identifiant du Tree.

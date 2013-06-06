@@ -11,7 +11,7 @@ use Core\Annotation\Secure;
  * @package    User
  * @subpackage Controller
  */
-class User_ProfileController extends Core_Controller_Ajax
+class User_ProfileController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;

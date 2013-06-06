@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 /**
  * @package Techno
  */
-class Techno_Tmd_FamilyElementsTmdController extends Core_Controller_Ajax
+class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
 {
 
     /**
