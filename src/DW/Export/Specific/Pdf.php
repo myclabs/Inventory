@@ -321,8 +321,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
      */
     protected function getReportFromXML($xmlReport, $cube, $isSum)
     {
-        $report = new DW_Model_Report();
-        $report->setCube($cube);
+        $report = new DW_Model_Report($cube);
 
         if ($isSum) {
             $xmlIndicators = $xmlReport->getElementsByTagName('sumIndicator');
