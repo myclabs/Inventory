@@ -194,27 +194,27 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $listDatagridConfiguration = array();
-        $listAFGranularities = $project->getAFGranularities();
+        $listInputGranularities = $project->getInputGranularities();
         uasort(
-            $listAFGranularities,
-            function($a, $b) {
-                if ($a->getAFConfigOrgaGranularity() === $b->getAFConfigOrgaGranularity()) {
-                    return $a->getAFInputOrgaGranularity()->getPosition() - $b->getAFInputOrgaGranularity()->getPosition();
+            $listInputGranularities,
+            function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
+                if ($a->getInputConfigGranularity() === $b->getInputConfigGranularity()) {
+                    return $a->getPosition() - $b->getPosition();
                 }
-                return $a->getAFConfigOrgaGranularity()->getPosition() - $b->getAFConfigOrgaGranularity()->getPosition();
+                return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
             }
         );
-        foreach ($listAFGranularities as $aFGranularities) {
-            if ($cell->getGranularity()->isBroaderThan($aFGranularities->getAFConfigOrgaGranularity())) {
+        foreach ($listInputGranularities as $inputGranularity) {
+            if ($cell->getGranularity()->isBroaderThan($inputGranularity->getInputConfigGranularity())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
-                    'aFGranularityConfig'.$aFGranularities->getAFInputOrgaGranularity()->getKey()['id'],
+                    'aFGranularityConfig'.$inputGranularity->getKey()['id'],
                     'datagrid_cell_afgranularities_config',
                     'orga',
                     $cell,
-                    $aFGranularities->getAFConfigOrgaGranularity()
+                    $inputGranularity->getInputConfigGranularity()
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
-                $idInputGranularity = $aFGranularities->getAFInputOrgaGranularity()->getKey()['id'];
+                $idInputGranularity = $inputGranularity->getKey()['id'];
                 $datagridConfiguration->datagrid->addParam('idInputGranularity', $idInputGranularity);
 
                 $columnAF = new UI_Datagrid_Col_List('aF', __('AF', 'name', 'accountingForm'));
@@ -223,8 +223,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $columnAF->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
                 $datagridConfiguration->datagrid->addCol($columnAF);
 
-                $labelDatagrid = $aFGranularities->getAFConfigOrgaGranularity()->getLabel()
-                    . ' <small>' . $aFGranularities->getAFInputOrgaGranularity()->getLabel() . '</small>';
+                $labelDatagrid = $inputGranularity->getInputConfigGranularity()->getLabel()
+                    . ' <small>' . $inputGranularity->getLabel() . '</small>';
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
             }
         }
@@ -308,21 +308,24 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $project = $cell->getGranularity()->getProject();
 
         $listDatagridConfiguration = array();
-        $listAFGranularities = $project->getAFGranularities();
+        $listInputGranularities = $project->getInputGranularities();
         uasort(
-            $listAFGranularities,
-            function($a, $b) {
-                return $a->getAFInputOrgaGranularity()->getPosition() - $b->getAFInputOrgaGranularity()->getPosition();
+            $listInputGranularities,
+            function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
+                if ($a->getInputConfigGranularity() === $b->getInputConfigGranularity()) {
+                    return $a->getPosition() - $b->getPosition();
+                }
+                return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
             }
         );
-        foreach ($listAFGranularities as $aFGranularities) {
-            if ($cell->getGranularity()->isBroaderThan($aFGranularities->getAFInputOrgaGranularity())) {
+        foreach ($listInputGranularities as $aFGranularities) {
+            if ($cell->getGranularity()->isBroaderThan($aFGranularities)) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
-                    'aFGranularity'.$idCell.'Input'.$aFGranularities->getAFInputOrgaGranularity()->getKey()['id'],
+                    'aFGranularity'.$idCell.'Input'.$aFGranularities->getKey()['id'],
                     'datagrid_cell_afgranularities_input',
                     'orga',
                     $cell,
-                    $aFGranularities->getAFInputOrgaGranularity()
+                    $aFGranularities
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
@@ -366,7 +369,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $colLinkEdit = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'details'));
                 $datagridConfiguration->datagrid->addCol($colLinkEdit);
 
-                $labelDatagrid = $aFGranularities->getAFInputOrgaGranularity()->getLabel();
+                $labelDatagrid = $aFGranularities->getLabel();
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
             }
         }

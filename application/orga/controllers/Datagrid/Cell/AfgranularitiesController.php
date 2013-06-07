@@ -31,11 +31,11 @@ class Orga_Datagrid_Cell_AfgranularitiesController extends UI_Controller_Datagri
     function getelementsAction()
     {
         $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
-        foreach ($project->getAFGranularities() as $aFGranularities) {
+        foreach ($project->getInputGranularities() as $inputGranularity) {
             $data = array();
-            $data['index'] = $aFGranularities->getKey()['id'];
-            $data['LabelAFConfigOrgaGranularity'] = $aFGranularities->getAFConfigOrgaGranularity()->getRef();
-            $data['LabelAFInputOrgaGranularity'] = $aFGranularities->getAFInputOrgaGranularity()->getRef();
+            $data['index'] = $inputGranularity->getKey()['id'];
+            $data['LabelAFConfigOrgaGranularity'] = $inputGranularity->getInputConfigGranularity()->getLabel();
+            $data['LabelAFInputOrgaGranularity'] = $inputGranularity->getLabel();
             $this->addLine($data);
         }
         $this->send();
