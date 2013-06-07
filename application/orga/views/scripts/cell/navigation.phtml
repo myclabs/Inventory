@@ -21,8 +21,9 @@ if (count($parentCells) > 0) {
         if ($parentCell->getGranularity()->isNavigable()) {
 ?>
         <li class="navigationParent">
-            <?php if ($this->configuration->isParentCellALink($parentCell)) { ?>
-            <a href="<?=$this->configuration->getOutputUrl()?>idCell=<?=$parentCell->getKey()['id']?>">
+            <?php if ((!(isset($this->isParentCellReachable[$parentCell->getMembersHashKey()])))
+                || ($this->isParentCellReachable[$parentCell->getMembersHashKey()] !== false)) { ?>
+            <a href="<?=$this->outputUrl?>idCell=<?=$parentCell->getKey()['id']?>">
                 <?= $parentCell->getLabel()?>
             </a>
             <?php } else { ?>
@@ -50,7 +51,7 @@ if (count($parentCells) > 0) {
                 'orga/forms_navigation/gotocell?'.
                 'idCell='.$this->cell->getKey()['id'].'&'.
                 'idGranularity='.$narrowerGranularity->getKey()['id'].'&'.
-                'url='.urlencode($this->configuration->getOutputUrl())
+                'url='.urlencode($this->outputUrl)
             );
 
             $idAddedAxes = array();

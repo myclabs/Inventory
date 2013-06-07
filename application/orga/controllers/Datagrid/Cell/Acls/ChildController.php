@@ -34,16 +34,15 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
         $this->request->filter->setConditions(array());
 
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
+        $cell = Orga_Model_Cell::load($idCell);
         $granularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
 
-        foreach ($orgaCell->getChildCellsForGranularity($granularity, $this->request) as $childOrgaCell) {
-            $childCell = Orga_Model_Cell::loadByOrgaCell($childOrgaCell);
+        foreach ($cell->getChildCellsForGranularity($granularity, $this->request) as $childCell) {
             $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
 
             $data = array();
-            $data['index'] = $childOrgaCell->getKey()['id'];
-            foreach ($childOrgaCell->getMembers() as $member) {
+            $data['index'] = $childCell->getKey()['id'];
+            foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
 
@@ -72,7 +71,7 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
 
             $this->addLine($data);
         }
-        $this->totalElements = $orgaCell->countTotalChildCellsForGranularity($granularity, $this->request);
+        $this->totalElements = $cell->countTotalChildCellsForGranularity($granularity, $this->request);
 
         $this->send();
     }
@@ -86,9 +85,7 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
     {
         $this->view->idCell = $this->getParam('idCell');
         $cellACLResource = User_Model_Resource_Entity::loadByEntity(
-            Orga_Model_Cell::loadByOrgaCell(
-                Orga_Model_Cell::load($this->view->idCell)
-            )
+            Orga_Model_Cell::load($this->view->idCell)
         );
 
         $this->view->listRoles = array();

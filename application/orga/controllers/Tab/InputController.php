@@ -27,8 +27,7 @@ class Orga_Tab_InputController extends Core_Controller_Ajax
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $this->view->idCell = $idCell;
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         $this->view->idCell = $idCell;
         $this->view->comments = $cell->getSocialCommentsForInputSetPrimary();
@@ -49,8 +48,7 @@ class Orga_Tab_InputController extends Core_Controller_Ajax
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $this->view->idCell = $idCell;
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         $author = $this->_helper->auth();
         $formData = $this->getFormData('addComment');
@@ -85,21 +83,15 @@ class Orga_Tab_InputController extends Core_Controller_Ajax
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $this->view->idCell = $idCell;
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         $this->view->documentLibrary = null;
         if ($cell->getGranularity()->getCellsWithInputDocs()) {
             $this->view->documentLibrary = $cell->getDocLibraryForAFInputSetsPrimary();
         } else {
-            foreach ($orgaCell->getGranularity()->getBroaderGranularities() as $granularity) {
-                $granularity = Orga_Model_Granularity::loadByOrgaGranularity(
-                    $granularity
-                );
+            foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
                 if ($granularity->getCellsWithInputDocs()) {
-                    $parentCell = Orga_Model_Cell::loadByOrgaCell(
-                        $orgaCell->getParentCellForGranularity($granularity)
-                    );
+                    $parentCell = $cell->getParentCellForGranularity($granularity);
                     $this->view->documentLibrary = $parentCell->getDocLibraryForAFInputSetsPrimary();
                     break;
                 }

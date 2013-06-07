@@ -32,8 +32,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
         $this->request->filter->setConditions($filterConditions);
 
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         $aFConfigOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
         $aFInputOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idInputGranularity')));
@@ -90,8 +89,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
         $aFInputOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idInputGranularity')));
         $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity($aFInputOrgaGranularity);
 
-        $childOrgaCell = Orga_Model_Cell::load($this->update['index']);
-        $childCell = Orga_Model_Cell::loadByOrgaCell($childOrgaCell);
+        $childCell = Orga_Model_Cell::load($this->update['index']);
 
         $aFRef = $this->update['value'];
         if (empty($aFRef)) {

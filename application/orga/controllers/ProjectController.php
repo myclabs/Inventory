@@ -60,9 +60,6 @@ class Orga_ProjectController extends Core_Controller_Ajax
             }
         }
         $isConnectedUserAbleToSeeManyCells = (count($listCellResource) > 1);
-        Core_Tools::dump($isConnectedUserAbleToCreateProjects);
-        Core_Tools::dump($isConnectedUserAbleToEditProjects);
-        Core_Tools::dump($isConnectedUserAbleToSeeManyProjects);
 
         if (($isConnectedUserAbleToCreateProjects)
             || ($isConnectedUserAbleToEditProjects)
@@ -122,9 +119,9 @@ class Orga_ProjectController extends Core_Controller_Ajax
         }
 
         $this->view->listAccess = array(
-            'cellDataProviderAdministrator' => __('Orga', 'role', 'cellAdministrator'),
-            'cellDataProviderContributor' => __('Orga', 'role', 'cellContributor'),
-            'cellDataProviderObserver' => __('Orga', 'role', 'cellObserver'),
+            'cellAdministrator' => __('Orga', 'role', 'cellAdministrator'),
+            'cellContributor' => __('Orga', 'role', 'cellContributor'),
+            'cellObserver' => __('Orga', 'role', 'cellObserver'),
         );
     }
 

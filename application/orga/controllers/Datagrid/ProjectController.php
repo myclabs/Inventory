@@ -134,11 +134,11 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
             case 'granularityForInventoryStatus':
                 $granularity = Orga_Model_Granularity::loadByRefAndProject(
                     $this->update['value'],
-                    $project->getOrgaProject()
+                    $project
                 );
-                foreach ($project->getAFGranularities() as $aFGranularities) {
-                    if (!($aFGranularities->getAFInputOrgaGranularity()->isNarrowerThan($granularity))) {
-                        throw new Core_Exception_User('Orga', 'projectList', 'InputGranularityNotNarrowerThanNewOrgaGranularity');
+                foreach ($project->getInputGranularities() as $inputGranularity) {
+                    if ($inputGranularity->isNarrowerThan($granularity)) {
+                        throw new Core_Exception_User('Orga', 'projectList', 'InputGranularityNotNarrowerThanNewGranularity');
                     }
                 }
                 $project->setGranularityForInventoryStatus($granularity);
@@ -162,8 +162,8 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
     public function getlistgranularitiesAction()
     {
         $project = Orga_Model_Project::load(array('id' => $this->getParam('index')));
-        foreach ($project->getGranularities() as $orgaGranularities) {
-            $this->addElementList($orgaGranularities->getRef(), $orgaGranularities->getLabel());
+        foreach ($project->getGranularities() as $granularity) {
+            $this->addElementList($granularity->getRef(), $granularity->getLabel());
         }
         $this->send();
     }

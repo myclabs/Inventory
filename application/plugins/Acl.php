@@ -190,9 +190,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         return $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::ALLOW(),
-            Orga_Model_Cell::loadByOrgaCell(
-                Orga_Model_Cell::load(array('id' => $request->getParam('idCell')))
-            )
+            Orga_Model_Cell::load(array('id' => $request->getParam('idCell')))
         );
     }
 
@@ -240,7 +238,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         }
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
-            return Orga_Model_Cell::loadByOrgaCell(Orga_Model_Cell::load(array('id' => $idCell)));
+            return Orga_Model_Cell::load(array('id' => $idCell));
         }
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {

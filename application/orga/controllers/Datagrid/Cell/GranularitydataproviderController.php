@@ -30,12 +30,9 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
     public function getelementsAction()
     {
         $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
-        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project->getOrgaProject());
+        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
-            $granularity = Orga_Model_Granularity::loadByOrgaGranularity(
-                $granularity
-            );
             $data = array();
             $data['index'] = $granularity->getRef();
             $data['label'] = $granularity->getLabel();
@@ -73,8 +70,7 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
     public function updateelementAction()
     {
         $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
-        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->update['index'], $project->getOrgaProject());
-        $granularity = Orga_Model_Granularity::loadByOrgaGranularity($granularity);
+        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->update['index'], $project);
 
         switch ($this->update['column']) {
             case 'cellsWithACL':

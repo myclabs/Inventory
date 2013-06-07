@@ -574,7 +574,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         $parentCells = array();
         foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-            $parentCells[] = $this->getParentCellForGranularity($broaderGranularity);
+            try {
+                $parentCells[] = $this->getParentCellForGranularity($broaderGranularity);
+            } catch (Core_Exception_NotFound $e) {
+                // Pas de cellule parente pour cette granularité.
+            }
         }
 
         return $parentCells;

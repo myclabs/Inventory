@@ -87,11 +87,10 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
 
                 $totalChildInputCells = 0;
                 foreach (Orga_Model_AFGranularities::loadList() as $aFGranularities) {
-                    $aFInputOrgaGranularity = $aFGranularities->getAFInputOrgaGranularity();
-                    if ($aFInputOrgaGranularity->isNarrowerThan($childCell->getGranularity())) {
-                        $inputCells = $childCell->getChildCellsForGranularity($aFInputOrgaGranularity);
+                    $aFInputGranularity = $aFGranularities->getAFInputOrgaGranularity();
+                    if ($aFInputGranularity->isNarrowerThan($childCell->getGranularity())) {
+                        $inputCells = $childCell->getChildCellsForGranularity($aFInputGranularity);
                         foreach ($inputCells as $inputCell) {
-                            $inputCell = Orga_Model_Cell::loadByOrgaCell($inputCell);
                             try {
                                 $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
                                 if ($childAfInputSetPrimary->isInputComplete()) {
@@ -146,8 +145,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             parent::updateelementAction();
         }
 
-        $childOrgaCell = Orga_Model_Cell::load($this->update['index']);
-        $childCell = Orga_Model_Cell::loadByOrgaCell($childOrgaCell);
+        $childCell = Orga_Model_Cell::load($this->update['index']);
         $childCell->setInventoryStatus($this->update['value']);
         $this->data = $childCell->getInventoryStatus();
         $this->message = __('UI', 'message', 'updated');

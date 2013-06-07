@@ -58,33 +58,32 @@ class Orga_Datagrid_Cell_AfgranularitiesController extends UI_Controller_Datagri
     {
         $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
 
-        $aFConfigOrgaGranularityRef = $this->getAddElementValue('LabelAFConfigOrgaGranularity');
-        if (empty($aFConfigOrgaGranularityRef)) {
+        $aFConfigGranularityRef = $this->getAddElementValue('LabelAFConfigOrgaGranularity');
+        if (empty($aFConfigGranularityRef)) {
             $this->setAddElementErrorMessage('LabelAFConfigOrgaGranularity', __('UI', 'exceptions', 'requiredField'));
         } else {
-            $aFConfigOrgaGranularity = Orga_Model_Granularity::loadByRefAndProject($aFConfigOrgaGranularityRef, $project->getOrgaProject());
+            $aFConfigGranularity = Orga_Model_Granularity::loadByRefAndProject($aFConfigGranularityRef, $project);
         }
 
-        $aFInputOrgaGranularityRef = $this->getAddElementValue('LabelAFInputOrgaGranularity');
-        if (empty($aFInputOrgaGranularityRef)) {
+        $aFInputGranularityRef = $this->getAddElementValue('LabelAFInputOrgaGranularity');
+        if (empty($aFInputGranularityRef)) {
             $this->setAddElementErrorMessage('LabelAFInputOrgaGranularity', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
-            $aFInputOrgaGranularity = Orga_Model_Granularity::loadByRefAndProject($aFInputOrgaGranularityRef, $project->getOrgaProject());
+            $aFInputGranularity = Orga_Model_Granularity::loadByRefAndProject($aFInputGranularityRef, $project);
         }
-        if (!($aFInputOrgaGranularity->isNarrowerThan($aFConfigOrgaGranularity))) {
+        if (!($aFInputGranularity->isNarrowerThan($aFConfigGranularity))) {
             $this->setAddElementErrorMessage('LabelAFInputOrgaGranularity', __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanConfigGranularity'));
-        } else if (!($aFInputOrgaGranularity->isNarrowerThan($project->getGranularityForInventoryStatus()))) {
+        } else if (!($aFInputGranularity->isNarrowerThan($project->getGranularityForInventoryStatus()))) {
             $this->setAddElementErrorMessage('LabelAFInputOrgaGranularity', __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanOrgaGranularity'));
         }
 
         if (empty($this->_addErrorMessages)) {
             $aFGranularities = new Orga_Model_AFGranularities();
             $aFGranularities->setProject($project);
-            $aFGranularities->setAFConfigOrgaGranularity($aFConfigOrgaGranularity);
-            $aFGranularities->setAFInputOrgaGranularity($aFInputOrgaGranularity);
+            $aFGranularities->setAFConfigOrgaGranularity($aFConfigGranularity);
+            $aFGranularities->setAFInputOrgaGranularity($aFInputGranularity);
             $aFGranularities->save();
-            foreach ($aFInputOrgaGranularity->getCells() as $orgaCell) {
-                $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+            foreach ($aFInputGranularity->getCells() as $cell) {
                 $cell->setDocBibliographyForAFInputSetPrimary(new Doc_Model_Bibliography());
                 $cell->save();
             }
@@ -111,8 +110,7 @@ class Orga_Datagrid_Cell_AfgranularitiesController extends UI_Controller_Datagri
     {
         $aFGranularities = Orga_Model_AFGranularities::load(array('id' => $this->delete));
         $aFGranularities->delete();
-        foreach ($aFGranularities->getAFInputOrgaGranularity()->getCells() as $orgaCell) {
-            $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        foreach ($aFGranularities->getAFInputOrgaGranularity()->getCells() as $cell) {
             $cell->getDocBibliographyForAFInputSetPrimary()->delete();
             $cell->setDocBibliographyForAFInputSetPrimary(null);
             try {
