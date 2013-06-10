@@ -1,4 +1,7 @@
 <?php
+/**
+ * Bootstrap
+ */
 
 use Doctrine\DBAL\Types\Type;
 
@@ -66,7 +69,10 @@ class Bootstrap extends Core_Bootstrap
         }
     }
 
-    protected function _initPackage()
+    /**
+     * Locale et traductions
+     */
+    protected function _initI18n()
     {
         Zend_Registry::set(Core_Translate::registryKey, new Core_Translate());
         Zend_Registry::set(Core_Locale::registryKey, Core_Locale::loadDefault());
@@ -102,16 +108,6 @@ class Bootstrap extends Core_Bootstrap
             $front->registerPlugin(new Inventory_Plugin_Acl());
             Zend_Registry::set('pluginAcl', 'User_Plugin_Acl');
         }
-    }
-
-    /**
-     * Initialize the dependency injection container
-     */
-    protected function _initDependencyInjection()
-    {
-        $container = new \DI\Container();
-
-        Zend_Registry::set('container', $container);
     }
 
 }
