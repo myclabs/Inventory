@@ -547,6 +547,8 @@ class Orga_Model_Member extends Core_Model_Entity
      * Ajoute une Cell à celles utilisant le Member courant.
      *
      * @param Orga_Model_Cell $cell
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function addCell(Orga_Model_Cell $cell)
     {

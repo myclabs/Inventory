@@ -58,9 +58,12 @@ class DW_Model_Result extends Core_Model_Entity
     /**
      * Constructeur de la classe Result.
      */
-    public function __construct()
+    public function __construct(DW_Model_Indicator $indicator)
     {
         $this->members = new Doctrine\Common\Collections\ArrayCollection();
+
+        $this->cube = $indicator->getCube();
+        $this->indicator = $indicator;
     }
 
     /**
@@ -83,19 +86,6 @@ class DW_Model_Result extends Core_Model_Entity
         );
 
         return self::getEntityRepository()->loadOneByMembers($members);
-    }
-
-    /**
-     * Définit la Cube de le Result
-     *
-     * @param DW_Model_Cube $cube
-     */
-    public function setCube(DW_Model_Cube $cube=null)
-    {
-        if ($this->cube !== $cube) {
-            $this->cube = $cube;
-        }
-
     }
 
     /**
@@ -179,19 +169,6 @@ class DW_Model_Result extends Core_Model_Entity
             }
         }
         return null;
-    }
-
-    /**
-     * Définit l'Indicator de le Result
-     *
-     * @param DW_Model_Indicator $indicator
-     */
-    public function setIndicator(DW_Model_Indicator $indicator=null)
-    {
-        if ($this->indicator !== $indicator) {
-            $this->indicator = $indicator;
-        }
-
     }
 
     /**

@@ -12,7 +12,7 @@ use Core\Annotation\Secure;
  * Controller des datagrid des cellules
  * @package Orga
  */
-class Orga_Datagrid_CellController extends UI_Controller_Datagrid
+class Orga_Datagrid_ChildcellsController extends UI_Controller_Datagrid
 {
 
     /**

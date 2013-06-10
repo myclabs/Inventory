@@ -7,11 +7,11 @@
 ?>
 
 <div class="page-header">
-    <h1><?=$this->configuration->getPageTitle()?></h1>
+    <h1><?=$this->pageTitle?></h1>
 </div>
 <div class="row-fluid">
     <div class="well span" id="navigationPanel">
-<?= $this->partial('cell/navigation.phtml', array('cell' => $this->cell, 'configuration' => $this->configuration))?>
+<?= $this->partial('cell/navigation.phtml', array('cell' => $this->cell, 'outputURL' =>$this->outputURL, 'configuration' => $this->configuration))?>
     </div>
     <div id="navigationClose" class="span">
         <i class="icon-indent-right"> </i>
@@ -19,32 +19,7 @@
     <div id="navigationContent" class="span">
 <?php
 
-$tabView = new UI_Tab_View('container');
-
-$baseTabs = array();
-// ONGLET ORGANISATION
-$baseTabs[Orga_ViewConfiguration::TAB_ORGANISATION] = new UI_Tab('structure');
-$baseTabs[Orga_ViewConfiguration::TAB_ORGANISATION]->label = __('Orga', 'name', 'structure');
-$baseTabs[Orga_ViewConfiguration::TAB_ORGANISATION]->cacheData  = true;
-$baseTabs[Orga_ViewConfiguration::TAB_ORGANISATION]->dataSource = 'orga/cell/organisation?'.
-    'idCell='.$this->idCell.'&'.
-    'tab='.$this->activatedTab.'&'.
-    'outputUrl='.urlencode($this->configuration->getOutputURL()).'&'.
-    'display=render';
-$organisationTabs = array('axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency', '');
-if (in_array($this->activatedTab, $organisationTabs)) {
-    $baseTabs[Orga_ViewConfiguration::TAB_ORGANISATION]->active = true;
-}
-if ($this->configuration->getTabs() != null ) {
-    foreach ($this->configuration->getTabs() as $tab) {
-        if ($tab instanceof UI_Tab) {
-            $tabView->addTab($tab);
-        } else {
-            $tabView->addTab($baseTabs[$tab]);
-        }
-    }
-}
-$tabView->display();
+$this->tabView->display();
 
 $script = '';
 $script .= '$(\'#navigationClose\').click(';

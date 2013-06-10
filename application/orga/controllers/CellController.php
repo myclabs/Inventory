@@ -17,6 +17,231 @@ use Core\Annotation\Secure;
 class Orga_CellController extends Core_Controller
 {
     /**
+     * Affiche le détail d'une cellule.
+     * @Secure("viewCell")
+     */
+    public function detailsAction()
+    {
+        $this->view->headLink()->appendStylesheet('css/orga/navigation.css');
+        UI_Datagrid::addHeader();
+        UI_Tree::addHeader();
+
+        $idCell = $this->getParam('idCell');
+        $this->view->idCell = $idCell;
+        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+        $granularity = $cell->getGranularity();
+        $project = $granularity->getProject();
+        $idProject = $project->getKey()['id'];
+
+        $this->view->cell = $cell;
+
+        $connectedUser = $this->_helper->auth();
+        $aclService = User_Service_ACL::getInstance();
+
+        if ($this->hasParam('tab')) {
+            $tab = $this->getParam('tab');
+        } else {
+            $tab = 'inputs';
+        }
+
+
+        $this->view->tabView = new UI_Tab_View('container');
+        $viewConfiguration = new Orga_ViewConfiguration();
+        $this->view->outputURL = 'orga/cell/details?';
+        $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$project->getLabel().'</small>';
+        $this->view->isParentCellReachable = array();
+        foreach ($cell->getParentCells() as $parentCell) {
+            $isUserAllowedToViewParentCell = $aclService->isAllowed(
+                $connectedUser,
+                User_Model_Action_Default::VIEW(),
+                $parentCell
+            );
+            if (!$isUserAllowedToViewParentCell) {
+                $this->view->isParentCellReachable[$parentCell->getMembersHashKey()] = false;
+            }
+        }
+
+
+        // TAB PROJECT.
+        $isUserAllowedToEditProject = $aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $project
+        );
+        if (($granularity->getRef() === 'global') && ($isUserAllowedToEditProject)) {
+            $projectTab = new UI_Tab('project');
+            if ($tab === 'project') {
+                $projectTab->active = true;
+            }
+            $projectTab->label = __('UI', 'name', 'project');
+            $projectTab->dataSource = 'orga/tab_celldetails/project/idProject/'.$idProject.'/idCell/'.$idCell;
+            $projectTab->useCache = false;
+            $this->view->tabView->addTab($projectTab);
+        }
+
+
+        // TAB STRUCTURE.
+        $isUserAllowedToEditCell = $aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $cell
+        );
+        if (($granularity->getCellsWithOrgaTab() === true) && ($isUserAllowedToEditCell === true)) {
+            $structureTab = new UI_Tab('structure');
+            $structureTab->label = __('Orga', 'name', 'structure');
+            $structureTab->cacheData  = true;
+            $structureTab->dataSource = 'orga/cell/organisation?'.
+                'idCell='.$idCell.'&'.
+                'tab='.$tab.'&'.
+                'outputUrl='.urlencode($this->view->outputURL).'&'.
+                'display=render';
+            $structureSubTabs = array('axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
+            if (in_array($tab, $structureSubTabs)) {
+                $structureTab->active = true;
+            }
+            $this->view->tabView->addTab($structureTab);
+        }
+
+
+        // TAB ACL
+        $isUserAllowedToAllowAuthorizations = $aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::ALLOW(),
+            $cell
+        );
+        if (($isUserAllowedToAllowAuthorizations === true) && ($granularity->getCellsWithACL() === false)) {
+            foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
+                if ($narrowerGranularity->getCellsWithACL()) {
+                    $isUserAllowedToAllowAuthorizations = ($isUserAllowedToAllowAuthorizations && true);
+                    break;
+                }
+            }
+        }
+        if ($isUserAllowedToAllowAuthorizations) {
+            $aclsTab = new UI_Tab('acls');
+            if ($tab === 'acls') {
+                $aclsTab->active = true;
+            }
+            $aclsTab->label = __('User', 'name', 'roles');
+            $aclsTab->dataSource = 'orga/tab_celldetails/acls/idCell/'.$idCell;
+            $aclsTab->useCache = !$isUserAllowedToEditProject;
+            $viewConfiguration->addTab($aclsTab);
+        }
+
+
+        // TAB AF CONFIGURATION
+        if (($isUserAllowedToEditCell) && ($granularity->getCellsWithAFConfigTab() === true)) {
+            $aFConfigurationTab = new UI_Tab('aFConfiguration');
+            if ($tab === 'aFConfig') {
+                $aFConfigurationTab->active = true;
+            }
+            $aFConfigurationTab->label = __('UI', 'name', 'forms');
+            $aFConfigurationTab->dataSource = 'orga/tab_celldetails/afsconfig/idCell/'.$idCell;
+            $aFConfigurationTab->useCache = !$isUserAllowedToEditProject;
+            $viewConfiguration->addTab($aFConfigurationTab);
+        }
+
+
+        // TAB INVENTORIES
+        $inventoriesTab = new UI_Tab('inventories');
+        try {
+            $granularityForInventoryStatus = $project->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = null;
+        }
+        if ($granularityForInventoryStatus=== null) {
+            $inventoriesTab->disabled = true;
+        } else if ($tab === 'inventories') {
+            $inventoriesTab->active = true;
+        }
+        $inventoriesTab->label = __('Orga', 'name', 'inventories');
+        $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
+        $viewConfiguration->addTab($inventoriesTab);
+
+
+        // TAB INPUTS
+        $inputsTab = new UI_Tab('inputs');
+        if ($tab === 'inputs') {
+            $inputsTab->active = true;
+        }
+        $inputsTab->label = __('UI', 'name', 'inputs');
+        $inputsTab->dataSource = 'orga/tab_celldetails/afsinputs/idCell/'.$idCell;
+        $inputsTab->useCache = !$isUserAllowedToEditProject;
+        $viewConfiguration->addTab($inputsTab);
+
+
+        // TAB ANALYSIS
+        if ($granularity->getCellsGenerateDWCubes() === true) {
+            $analysisTab = new UI_Tab('analysis');
+            if ($tab === 'analysis') {
+                $analysisTab->active = true;
+            }
+            $analysisTab->label = __('DW', 'name', 'analysis');
+            $analysisTab->dataSource = 'orga/tab_celldetails/analysis/idCell/'.$idCell;
+            $analysisTab->useCache = true;
+            $viewConfiguration->addTab($analysisTab);
+        }
+
+
+        // TAB GENERIC ACTIONS
+        if ($granularity->getCellsWithSocialGenericActions() === true) {
+            $genericActionsTab = new UI_Tab('genericActions');
+            if ($tab === 'genericActions') {
+                $genericActionsTab->active = true;
+            }
+            $genericActionsTab->label = __('Social', 'name', 'actionTemplates');
+            $genericActionsTab->dataSource = 'orga/tab_celldetails/genericactions?idCell='.$idCell;
+            $viewConfiguration->addTab($genericActionsTab);
+        }
+
+
+        // TAB CONTEXT ACTIONS
+        if ($granularity->getCellsWithSocialContextActions() === true) {
+            $contextActionsTab = new UI_Tab('contextActions');
+            if ($tab === 'contextActions') {
+                $contextActionsTab->active = true;
+            }
+            $contextActionsTab->label = __('Social', 'name', 'actions');
+            $contextActionsTab->dataSource = 'orga/tab_celldetails/contextactions?idCell='.$idCell;
+            $viewConfiguration->addTab($contextActionsTab);
+        }
+
+
+        // TAB DOCUMENTS
+        $isUserAllowedToInputCell = $aclService->isAllowed(
+            $connectedUser,
+            Orga_Action_Cell::INPUT(),
+            User_Model_Resource_Entity::loadByEntity($cell)
+        );
+        if (($isUserAllowedToInputCell)
+            && (($granularity->getCellsWithSocialContextActions() === true)
+                || ($granularity->getCellsWithSocialGenericActions() === true)
+                || ($granularity->getCellsWithInputDocs() === true)
+            )
+        ) {
+            $documentsTab = new UI_Tab('documents');
+            if ($tab === 'documents') {
+                $documentsTab->active = true;
+            }
+            $documentsTab->label = __('Doc', 'name', 'documents');
+            $documentsTab->dataSource = 'orga/tab_celldetails/documents?idCell='.$idCell;
+            $viewConfiguration->addTab($documentsTab);
+        }
+
+
+        // TAB ADMINISTRATION
+        if ($isUserAllowedToEditProject) {
+            $administrationTab = new UI_Tab('administration');
+            if ($tab === 'administration') {
+                $administrationTab->active = true;
+            }
+            $administrationTab->label = __('DW', 'rebuild', 'dataRebuildTab');
+            $administrationTab->dataSource = 'orga/tab_celldetails/administration?idCell='.$idCell;
+            $viewConfiguration->addTab($administrationTab);
+        }
+    }
+
+    /**
      * Action pour l'organisation général de la cellule.
      * @Secure("viewProject")
      */
@@ -77,7 +302,7 @@ class Orga_CellController extends Core_Controller
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
                     'child_c'.$cell->getKey()['id'].'_g'.$narrowerGranularity->getKey()['id'],
-                    'datagrid_cell',
+                    'datagrid_childcells',
                     'orga',
                     $cell,
                     $narrowerGranularity
@@ -153,249 +378,16 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
-     *
-     * @Secure("viewCell")
-     */
-    public function detailsAction()
-    {
-        $this->view->headLink()->appendStylesheet('css/orga/navigation.css');
-        $this->view->idCell = $this->getParam('idCell');
-        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
-        $this->view->cell = $cell;
-        $this->view->activatedTab = $this->getParam('tab');
-
-        if ($this->hasParam('viewConfiguration')) {
-            $viewConfiguration = $this->getParam('viewConfiguration');
-            if (!($viewConfiguration instanceof Orga_ViewConfiguration)) {
-                throw new Core_Exception_InvalidArgument('The view configuration must be an Orga_ViewConfiguration.');
-            }
-        } else {
-            $viewConfiguration = new Orga_ViewConfiguration();
-            $viewConfiguration->setOutputURL('orga/cell/details?tab='.$this->view->activatedTab.'&');
-            $viewConfiguration->setPageTitle($cell->getLabelExtended());
-            $viewConfiguration->addBaseTabs();
-        }
-        $this->view->configuration = $viewConfiguration;
-
-        UI_Datagrid::addHeader();
-        if ($cell->getGranularity()->getRef() === 'global') {
-            UI_Tree::addHeader();
-        }
-    }
-    /**
-     * Affiche le détail d'une cellule.
-     * @Secure("viewCell")
-     */
-    public function detailsBisAction()
-    {
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $orgaCell */
-        $orgaCell = Orga_Model_Cell::load(array('id' => $idCell));
-        $granularity = $orgaCell->getGranularity();
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
-        $granularity = Orga_Model_Granularity::loadByOrgaGranularity($granularity);
-        $project = Orga_Model_Project::loadByOrgaProject($granularity->getProject());
-        $idProject = $project->getKey()['id'];
-        $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
-
-        if ($this->hasParam('tab')) {
-            $tab = $this->getParam('tab');
-        } else {
-            $tab = 'inputs';
-        }
-
-
-        $viewConfiguration = new Orga_ViewConfiguration();
-        $viewConfiguration->setOutputURL('orga/cell/details?');
-        $viewConfiguration->setPageTitle(
-            $orgaCell->getLabelExtended().' <small>'.$cell->getProject()->getLabel().'</small>'
-        );
-        foreach ($orgaCell->getParentCells() as $parentOrgaCell) {
-            $viewConfiguration->setParentCellIsALink(
-                $parentOrgaCell,
-                $aclService->isAllowed(
-                    $connectedUser,
-                    User_Model_Action_Default::VIEW(),
-                    Orga_Model_Cell::loadByOrgaCell($parentOrgaCell)
-                )
-            );
-        }
-
-
-        $isUserAllowedToEditCell = $aclService->isAllowed(
-            $connectedUser,
-            User_Model_Action_Default::EDIT(),
-            $cell
-        );
-        if (($granularity->getCellsWithOrgaTab() === true) && ($isUserAllowedToEditCell === true)) {
-            $viewConfiguration->addBaseTabs();
-        }
-
-
-        $isUserAllowedToConfigureProject = $aclService->isAllowed(
-            $connectedUser,
-            User_Model_Action_Default::EDIT(),
-            $project
-        );
-        if (($granularity->getRef() === 'global') && ($isUserAllowedToConfigureProject)) {
-            $tabConfiguration = new UI_Tab('configuration');
-            if ($tab === 'configuration') {
-                $tabConfiguration->active = true;
-            }
-            $tabConfiguration->label = __('UI', 'name', 'configuration');
-            $tabConfiguration->dataSource = 'orga/tab_celldetails/configuration/idProject/'.$idProject
-                .'/idCell/'.$idCell;
-            $tabConfiguration->useCache = false;
-            $viewConfiguration->addTab($tabConfiguration);
-        }
-
-
-        $isUserAllowedToSeeACLTab = $aclService->isAllowed(
-            $connectedUser,
-            User_Model_Action_Default::ALLOW(),
-            $cell
-        );
-        if (($isUserAllowedToSeeACLTab === true) && ($granularity->getCellsWithACL() === false)) {
-            foreach ($granularity->getNarrowerGranularities() as $orgaNarrowerGranularity) {
-                $narrowerGranularity = Orga_Model_Granularity::loadByOrgaGranularity(
-                    $orgaNarrowerGranularity
-                );
-                if ($narrowerGranularity->getCellsWithACL()) {
-                    $isUserAllowedToSeeACLTab = ($isUserAllowedToSeeACLTab && true);
-                    break;
-                }
-            }
-        }
-        if ($isUserAllowedToSeeACLTab) {
-            $tabACLs = new UI_Tab('acls');
-            if ($tab === 'acls') {
-                $tabACLs->active = true;
-            }
-            $tabACLs->label = __('User', 'name', 'roles');
-            $tabACLs->dataSource = 'orga/tab_celldetails/acls/idCell/'.$idCell;
-            $tabACLs->useCache = !$isUserAllowedToConfigureProject;
-            $viewConfiguration->addTab($tabACLs);
-        }
-
-
-        if (($isUserAllowedToEditCell) && ($granularity->getCellsWithAFConfigTab() === true)) {
-            $tabAFConfig = new UI_Tab('aFConfig');
-            if ($tab === 'aFConfig') {
-                $tabAFConfig->active = true;
-            }
-            $tabAFConfig->label = __('UI', 'name', 'forms');
-            $tabAFConfig->dataSource = 'orga/tab_celldetails/afgranularitiesconfigs/idCell/'.$idCell;
-            $tabAFConfig->useCache = !$isUserAllowedToConfigureProject;
-            $viewConfiguration->addTab($tabAFConfig);
-        }
-
-        $tabInventories = new UI_Tab('inventories');
-        try {
-            $granularity = $cell->getProject()->getGranularityForInventoryStatus();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $granularity = null;
-        }
-        if ($granularity === null) {
-            $tabInventories->disabled = true;
-        } else if ($tab === 'inventories') {
-            $tabInventories->active = true;
-        }
-        $tabInventories->label = __('Orga', 'name', 'inventories');
-        $tabInventories->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
-        $viewConfiguration->addTab($tabInventories);
-
-        $tabInputs = new UI_Tab('inputs');
-        if ($tab === 'inputs') {
-            $tabInputs->active = true;
-        }
-        $tabInputs->label = __('UI', 'name', 'inputs');
-        $tabInputs->dataSource = 'orga/tab_celldetails/afgranularitiesinputs/idCell/'.$idCell;
-        $tabInputs->useCache = !$isUserAllowedToConfigureProject;
-        $viewConfiguration->addTab($tabInputs);
-
-        if ($granularity->getCellsGenerateDWCubes() === true) {
-            $tabAnalyses = new UI_Tab('reports');
-            if ($tab === 'reports') {
-                $tabAnalyses->active = true;
-            }
-            $tabAnalyses->label = __('DW', 'name', 'analyses');
-            $tabAnalyses->dataSource = 'orga/tab_celldetails/report/idCell/'.$idCell;
-            $tabAnalyses->useCache = true;
-            $viewConfiguration->addTab($tabAnalyses);
-        }
-
-        if ($granularity->getCellsWithSocialGenericActions() === true) {
-            $tabGenericActions = new UI_Tab('genericActions');
-            if ($tab === 'genericActions') {
-                $tabGenericActions->active = true;
-            }
-            $tabGenericActions->label = __('Social', 'name', 'actionTemplates');
-            $tabGenericActions->dataSource = 'orga/tab_celldetails/genericactions?idCell='.$idCell;
-            $viewConfiguration->addTab($tabGenericActions);
-        }
-
-        if ($granularity->getCellsWithSocialContextActions() === true) {
-            $tabContextActions = new UI_Tab('contextActions');
-            if ($tab === 'contextActions') {
-                $tabContextActions->active = true;
-            }
-            $tabContextActions->label = __('Social', 'name', 'actions');
-            $tabContextActions->dataSource = 'orga/tab_celldetails/contextactions?idCell='.$idCell;
-            $viewConfiguration->addTab($tabContextActions);
-        }
-
-        $isUserAllowedToSeeDocTab = $aclService->isAllowed(
-            $connectedUser,
-            Orga_Action_Cell::INPUT(),
-            User_Model_Resource_Entity::loadByEntity($cell)
-        );
-        if (($isUserAllowedToSeeDocTab)
-            && (($granularity->getCellsWithSocialContextActions() === true)
-                || ($granularity->getCellsWithSocialGenericActions() === true)
-                || ($granularity->getCellsWithInputDocs() === true)
-            )
-        ) {
-            $tabDocuments = new UI_Tab('documents');
-            if ($tab === 'documents') {
-                $tabDocuments->active = true;
-            }
-            $tabDocuments->label = __('Doc', 'name', 'documents');
-            $tabDocuments->dataSource = 'orga/tab_celldetails/documents?idCell='.$idCell;
-            $viewConfiguration->addTab($tabDocuments);
-        }
-
-        if ($isUserAllowedToConfigureProject) {
-            $tabAdministration = new UI_Tab('administration');
-            if ($tab === 'administration') {
-                $tabAdministration->active = true;
-            }
-            $tabAdministration->label = __('DW', 'rebuild', 'dataRebuildTab');
-            $tabAdministration->dataSource = 'orga/tab_celldetails/administration?idCell='.$idCell;
-            $viewConfiguration->addTab($tabAdministration);
-        }
-
-        $this->forward('details', 'cell', 'orga', array(
-                'idCell' => $idCell,
-                'tab' => $tab,
-                'viewConfiguration' => $viewConfiguration
-            ));
-    }
-
-    /**
      * Action redirigeant vers AF.
      * @Secure("viewCell")
      */
     public function inputAction()
     {
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
-        $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity($orgaCell->getGranularity());
+        $cell = Orga_Model_Cell::load($idCell);
+        $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity($cell->getGranularity());
         $cellsGroupDataProvider = $aFGranularities->getCellsGroupDataProviderForContainerCell(
-            Orga_Model_Cell::loadByOrgaCell(
-                $orgaCell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
-            )
+            $cell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
         );
 
         $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
@@ -410,7 +402,7 @@ class Orga_CellController extends Core_Controller
         } else {
             $viewConfiguration->setMode(AF_ViewConfiguration::MODE_READ);
         }
-        $viewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$orgaCell->getLabel().'</small>');
+        $viewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $viewConfiguration->addToActionStack('inputsave', 'cell', 'orga', array('idCell' => $idCell));
         $viewConfiguration->setExitUrl('orga/cell/details?idCell='.$this->getParam('fromIdCell'));
         $viewConfiguration->addUrlParam('idCell', $idCell);
@@ -446,9 +438,7 @@ class Orga_CellController extends Core_Controller
      */
     public function inputsaveAction()
     {
-        $cell = Orga_Model_Cell::loadByOrgaCell(
-            Orga_Model_Cell::load($this->getParam('idCell'))
-        );
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $inputSet = $this->getParam('inputSet');
 
         $cell->setAFInputSetPrimary($inputSet);
@@ -470,9 +460,7 @@ class Orga_CellController extends Core_Controller
         /** @var Core_Work_Dispatcher $workDispatcher */
         $workDispatcher = Zend_Registry::get('workDispatcher');
 
-        $cell = Orga_Model_Cell::loadByOrgaCell(
-            Orga_Model_Cell::load(array('id' => $this->getParam('idCell')))
-        );
+        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
 
         try {
             // Lance la tache en arrière plan
@@ -498,9 +486,7 @@ class Orga_CellController extends Core_Controller
         /** @var Core_Work_Dispatcher $workDispatcher */
         $workDispatcher = Zend_Registry::get('workDispatcher');
 
-        $cell = Orga_Model_Cell::loadByOrgaCell(
-            Orga_Model_Cell::load(array('id' => $this->getParam('idCell')))
-        );
+        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
 
         try {
             // Lance la tache en arrière plan
@@ -525,8 +511,7 @@ class Orga_CellController extends Core_Controller
     {
         $idCell = $this->getParam('idCell');
         $this->view->idCell = $idCell;
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
         $this->view->documentLibrary = $cell->getDocLibraryForSocialGenericAction();
 
         $this->forward('generic-action-details', 'action', 'social', array(
@@ -544,8 +529,7 @@ class Orga_CellController extends Core_Controller
     {
         $idCell = $this->getParam('idCell');
         $this->view->idCell = $idCell;
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
         $this->view->documentLibrary = $cell->getDocLibraryForSocialContextAction();
 
         $this->forward('context-action-details', 'action', 'social', array(
@@ -562,8 +546,7 @@ class Orga_CellController extends Core_Controller
     public function specificexportAction()
     {
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         if (!($this->hasParam('display') && ($this->getParam('display') == true))) {
             $exportUrl = 'orga/cell/specificexport/'.
@@ -574,7 +557,7 @@ class Orga_CellController extends Core_Controller
 
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
             $cell->getProject()->getKey()['id'].'/'.
-            str_replace('|', '_', $orgaCell->getGranularity()->getRef()).'/';
+            str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
             $specificReportsDirectoryPath.$this->getParam('export').'.xml',
             $cell->getDWCube(),

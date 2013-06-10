@@ -77,7 +77,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         }
 
         if (empty($this->_formErrorMessages)) {
-            $axis = new Orga_Model_Axis();
+            $axis = new Orga_Model_Axis($project);
             $axis->setRef($this->getAddElementValue('addAxis_ref'));
             $axis->setLabel($this->getAddElementValue('addAxis_label'));
             if ($this->getAddElementValue('addAxis_contextualizing') === 'contextualizing') {
@@ -85,7 +85,6 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             } else {
                 $axis->setContextualize(false);
             }
-            $axis->setProject($project);
             if ($this->getAddElementValue('addAxis_parent') != null) {
                 $narrower = Orga_Model_Axis::loadByRefAndProject($this->getAddElementValue('addAxis_parent'), $project);
                 $narrower->addDirectBroader($axis);
@@ -189,11 +188,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $this->setEditFormElementErrorMessage('ref', $e->getMessage());
         }
 
-        if ($this->getEditElementValue('contextualizing') === 'contextualizing') {
-            $contextualizing = true;
-        } else {
-            $contextualizing = false;
-        }
+//        if ($this->getEditElementValue('contextualizing') === 'contextualizing') {
+//            $contextualizing = true;
+//        } else {
+//            $contextualizing = false;
+//        }
+        $contextualizing = false;
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;

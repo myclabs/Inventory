@@ -20,10 +20,7 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        // TODO droits désactivés
-        // @see http://dev.myc-sense.com:3000/issues/5721
-//        $this->request->aclFilter->enabled = true;
-        $this->request->aclFilter->enabled = false;
+        $this->request->aclFilter->enabled = true;
         $this->request->aclFilter->user = $this->_helper->auth();
         $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
 
@@ -36,16 +33,14 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
             $urlDetails = 'orga/tab_celldetails/report?idCell='.$this->getParam('idCell').'&idReport='.$data['index'];
             $data['details'] = $this->cellLink($urlDetails, __('UI', 'name', 'details'), 'share-alt');
 
-            // TODO droits désactivés
-            // @see http://dev.myc-sense.com:3000/issues/5721
-//            $isUserAllowedToDeleteReport = User_Service_ACL::getInstance()->isAllowed(
-//                $this->_helper->auth(),
-//                User_Model_Action_Default::DELETE(),
-//                $report
-//            );
-//            if (!$isUserAllowedToDeleteReport) {
-//                $data['delete'] = false;
-//            }
+            $isUserAllowedToDeleteReport = User_Service_ACL::getInstance()->isAllowed(
+                $this->_helper->auth(),
+                User_Model_Action_Default::DELETE(),
+                $report
+            );
+            if (!$isUserAllowedToDeleteReport) {
+                $data['delete'] = false;
+            }
 
             $this->addline($data);
         }

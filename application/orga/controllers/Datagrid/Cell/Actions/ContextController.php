@@ -20,8 +20,7 @@ class Orga_Datagrid_Cell_Actions_ContextController extends UI_Controller_Datagri
     public function getelementsAction()
     {
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         foreach ($cell->getSocialContextActions() as $contextAction) {
             $data = [];
@@ -65,8 +64,7 @@ class Orga_Datagrid_Cell_Actions_ContextController extends UI_Controller_Datagri
     public function addelementAction()
     {
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         $locale = Core_Locale::loadDefault();
 
@@ -176,8 +174,7 @@ class Orga_Datagrid_Cell_Actions_ContextController extends UI_Controller_Datagri
     function deleteelementAction()
     {
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         /** @var $contextAction Social_Model_ContextAction */
         $contextAction = Social_Model_ContextAction::load($this->delete);
