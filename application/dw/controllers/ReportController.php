@@ -62,9 +62,7 @@ class DW_ReportController extends Core_Controller
             if ($this->hasParam('idReport')) {
                 $report = DW_Model_Report::load(array('id' => $this->getParam('idReport')));
             } else {
-                $cube = DW_Model_Cube::load(array('id' => $this->getParam('idCube')));
-                $report = new DW_Model_Report();
-                $report->setCube($cube);
+                $report = new DW_Model_Report(DW_Model_Cube::load(array('id' => $this->getParam('idCube'))));
                 $report->setLabel(__('DW', 'report', 'newReportDefaultLabelPage'));
             }
         }
@@ -246,14 +244,12 @@ class DW_ReportController extends Core_Controller
         foreach ($configurationPost['filters']['elements'] as $filterArray) {
             $filterAxisRef = $filterArray['elements']['refAxis']['hiddenValues']['refAxis'];
             if ($filterArray['elements']['filterAxis'.$filterAxisRef.'NumberMembers']['value'] !== 'all') {
-                $filter = new DW_Model_Filter();
-
                 try {
                     $filterAxis = DW_Model_Axis::loadByRefAndCube($filterAxisRef, $report->getCube());
                 } catch (Core_Exception_NotFound $e) {
                     $errors['filterAxis'.$filterAxisRef.'NumberMembers'] = __('DW', 'configValidation', 'filterAxisInvalid');
                 }
-                $filter->setAxis($filterAxis);
+                $filter = new DW_Model_Filter($report, $filterAxis);
 
                 if ($filterArray['elements']['filterAxis'.$filterAxisRef.'NumberMembers']['value'] === 'some') {
                     $filterMemberRefs = $filterArray['elements']['selectAxis'.$filterAxisRef.'MembersFilter']['value'];

@@ -31,7 +31,7 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
     /**
      * Ensemble des nouveaux Project.
      *
-     * @var array
+     * @var Orga_Model_Project[]
      */
     protected $newProjects = [];
 
@@ -45,14 +45,14 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
     /**
      * Ensemble des nouveaux Report.
      *
-     * @var array
+     * @var DW_Model_Report[]
      */
     protected $newReports = [];
 
     /**
      * Ensemble des anciennes Resource Project.
      *
-     * @var array
+     * @var Orga_Model_Project[]
      */
     protected $oldProjectResources = [];
 
@@ -66,7 +66,7 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
     /**
      * Ensemble des anciennes Resource  Report.
      *
-     * @var array
+     * @var DW_Model_Report[]
      */
     protected $oldReportResources = [];
 
@@ -80,16 +80,9 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
     /**
      * Ensemble des nouveaux Role.
      *
-     * @var array
+     * @var User_Model_Role[]
      */
     protected $newRoles = [];
-
-    /**
-     * Ensemble des liens entre ressource qui viennent d'être créée.
-     *
-     * @var array
-     */
-    protected $associativeCellDtaProviderParentResources = [];
 
 
     /**
@@ -200,6 +193,7 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $eventArgs->getEntityManager()->flush();
 
         $this->newResources = array('project' => array(), 'cell' => array(), 'report' => array());
+        $this->newRoles = array();
         self::$changesDetected=false;
         self::$processing = false;
     }
@@ -567,9 +561,7 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
     {
         $user->addRole(User_Model_Role::loadByRef('projectAdministrator_'.$project->getKey()['id']));
 
-        $globalCell = Orga_Model_Cell::loadByOrgaCell(
-            Orga_Model_Granularity::loadByRefAndCube('global', $project->getOrgaCube())->getCells()[0]
-        );
+        $globalCell = Orga_Model_Granularity::loadByRefAndProject('global', $project)->getCells()[0];
         $user->addRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getKey()['id'])
         );
@@ -585,9 +577,7 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
     {
         $user->removeRole(User_Model_Role::loadByRef('projectAdministrator_'.$project->getKey()['id']));
 
-        $globalCell = Orga_Model_Cell::loadByOrgaCell(
-            Orga_Model_Granularity::loadByRefAndCube('global', $project->getOrgaCube())->getCells()[0]
-        );
+        $globalCell = Orga_Model_Granularity::loadByRefAndProject('global', $project)->getCells()[0];
         $user->removeRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getKey()['id'])
         );

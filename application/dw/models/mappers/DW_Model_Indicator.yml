@@ -47,7 +47,6 @@ DW_Model_Indicator:
         nullable: false
 
   lifecycleCallbacks:
-    prePersist: [ preSave ]
     preUpdate: [ preUpdate ]
     preRemove: [ preDelete ]
     postLoad: [ postLoad ]

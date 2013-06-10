@@ -98,10 +98,9 @@ class Simulation_Model_Set extends Core_Model_Entity
     {
         $this->dWCube = new DW_Model_Cube();
         $this->dWCube->setLabel($this->label);
-        $this->dWAxis = new DW_Model_Axis();
+        $this->dWAxis = new DW_Model_Axis($this->dWCube);
         $this->dWAxis->setRef('set');
         $this->dWAxis->setLabel(__('Simulation', 'name', 'scenario'));
-        $this->dWAxis->setCube($this->dWCube);
         $this->dWAxis->setPosition();
 
         Simulation_Service_ETLStructure::getInstance()->populateDWCubeWithClassif($this->dWCube);

@@ -58,6 +58,8 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
         switch ($event) {
             case DW_Model_Report::EVENT_SAVE:
                 try {
+                    // Nécessaire pour détecter d'où est issu le Report
+                    $granularity = Orga_Model_Granularity::loadByDWCube($subject->getCube());
                     $granularityReport = new Orga_Model_GranularityReport($subject);
                     $granularityReport->save();
                 } catch (Core_Exception_NotFound $e) {

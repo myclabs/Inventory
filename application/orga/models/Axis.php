@@ -109,7 +109,7 @@ class Orga_Model_Axis extends Core_Model_Entity
 
         $this->project = $project;
         $this->setPosition();
-        $project->addAxis($this);
+        $this->project->addAxis($this);
     }
 
     /**
@@ -486,7 +486,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      * @throws Core_Exception_NotFound
      * @throws Core_Exception_TooMany
      *
-     * @return Orga_Model_Member[]
+     * @return Orga_Model_Member
      */
     public function getMemberByCompleteRef($completeRef)
     {

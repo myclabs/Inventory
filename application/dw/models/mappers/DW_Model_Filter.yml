@@ -19,14 +19,12 @@ DW_Model_Filter:
         name: idReport
         referencedColumnName: id
       nullable: false
-      fetch: EAGER
     axis:
       targetEntity: DW_Model_Axis
       joinColumn:
         name: idAxis
         referencedColumnName: id
       nullable: false
-      fetch: EAGER
 
   manyToMany:
     members:
@@ -39,4 +37,3 @@ DW_Model_Filter:
         inverseJoinColumns:
           idMember:
             referencedColumnName: id
-      fetch: EAGER

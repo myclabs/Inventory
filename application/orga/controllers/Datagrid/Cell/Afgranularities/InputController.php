@@ -53,8 +53,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $this->request->filter->setConditions($filterConditions);
 
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         $aFInputOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
 
@@ -78,11 +77,11 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
         foreach ($cell->getChildCellsForGranularity($aFInputOrgaGranularity, $this->request)
                  as $childCell) {
-            $childOrgaCell = $childCell->getOrgaCell();
+            $childCell = $childCell->getOrgaCell();
 
             $data = array();
-            $data['index'] = $childOrgaCell->getKey()['id'];
-            foreach ($childOrgaCell->getMembers() as $member) {
+            $data['index'] = $childCell->getKey()['id'];
+            foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
 
@@ -133,12 +132,10 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                 try {
                     // Vérification qu'un AF est défini.
                     $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity(
-                        $childOrgaCell->getGranularity()
+                        $childCell->getGranularity()
                     );
                     $cellsGroupDataProvider = $aFGranularities->getCellsGroupDataProviderForContainerCell(
-                        Orga_Model_Cell::loadByOrgaCell(
-                            $childOrgaCell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
-                        )
+                        $childCell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
                     );
 
                     $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
@@ -153,7 +150,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                     }
                     if (($isUserAllowedToInputCell) || ($inputSetPrimary !== null)) {
                         $data['link'] = $this->cellLink(
-                            'orga/cell/input/idCell/'.$childOrgaCell->getKey()['id'].'/fromIdCell/'.$idCell
+                            'orga/cell/input/idCell/'.$childCell->getKey()['id'].'/fromIdCell/'.$idCell
                         );
                     }
                 } catch (Core_Exception_NotFound $e) {

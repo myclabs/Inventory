@@ -574,7 +574,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         $parentCells = array();
         foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-            $parentCells[] = $this->getParentCellForGranularity($broaderGranularity);
+            try {
+                $parentCells[] = $this->getParentCellForGranularity($broaderGranularity);
+            } catch (Core_Exception_NotFound $e) {
+                // Pas de cellule parente pour cette granularité.
+            }
         }
 
         return $parentCells;
@@ -1187,9 +1191,7 @@ class Orga_Model_Cell extends Core_Model_Entity
                 continue;
             }
 
-            $dWResult = new DW_Model_Result();
-            $dWResult->setCube($dWCube);
-            $dWResult->setIndicator($dWIndicator);
+            $dWResult = new DW_Model_Result($dWIndicator);
             $dWResult->setValue($outputElement->getValue());
 
             foreach ($outputElement->getIndexes() as $outputIndex) {

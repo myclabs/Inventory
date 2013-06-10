@@ -75,9 +75,6 @@ class Orga_Service_ProjectService extends Core_Singleton
      */
     public function deleteProject(Orga_Model_Project $project)
     {
-        foreach ($project->getAFGranularities() as $aFGranularities) {
-            $project->deleteAFGranularities($aFGranularities);
-        }
         $project->setGranularityForInventoryStatus(null);
 
         $project->delete();

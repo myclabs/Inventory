@@ -31,11 +31,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     function getelementsAction()
     {
         $idCell = $this->getParam('idCell');
-        $cellACLResource = User_Model_Resource_Entity::loadByEntity(
-            Orga_Model_Cell::loadByOrgaCell(
-                Orga_Model_Cell::load($idCell)
-            )
-        );
+        $cellACLResource = User_Model_Resource_Entity::loadByEntity(Orga_Model_Cell::load($idCell));
 
         foreach ($cellACLResource->getLinkedSecurityIdentities() as $linkedIdentity) {
             if ($linkedIdentity instanceof User_Model_Role) {
@@ -65,7 +61,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
      */
     function addelementAction()
     {
-        $orgaCell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
 
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
@@ -90,7 +86,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                         $user,
                         __('User', 'email', 'subjectAccessRightsChange'),
                         __('Orga', 'email', 'userRoleAdded', array(
-                            'CELL' => $orgaCell->getLabelExtended(),
+                            'CELL' => $cell->getLabelExtended(),
                             'ROLE' => $userRole->getName()
                         ))
                     );
@@ -100,7 +96,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                 $user = User_Service_User::getInstance()->inviteUser(
                     $userEmail,
                     __('Orga', 'email', 'userRoleGivenAtCreation', array(
-                        'CELL' => $orgaCell->getLabelExtended(),
+                        'CELL' => $cell->getLabelExtended(),
                         'ROLE' => $userRole->getName()
                     ))
                 );
@@ -130,14 +126,14 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         list($userRoleRef, $userId) = explode('#', $this->delete);
         $user = User_Model_User::load(array('id' => $userId));
         $userRole = User_Model_Role::loadByRef($userRoleRef);
-        $orgaCell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
 
         $user->removeRole($userRole);
         User_Service_User::getInstance()->sendEmail(
             $user,
             __('User', 'email', 'subjectAccessRightsChange'),
             __('Orga', 'email', 'userRoleRemoved', array(
-                'CELL' => $orgaCell->getLabelExtended(),
+                'CELL' => $cell->getLabelExtended(),
                 'ROLE' => $userRole->getName()
             ))
         );

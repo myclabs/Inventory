@@ -67,6 +67,16 @@ class DW_Model_Indicator extends Core_Model_Entity
 
 
     /**
+     * Constructeur de la classe Indicator.
+     */
+    public function __construct(DW_Model_Cube $cube)
+    {
+        $this->cube = $cube;
+        $this->setPosition();
+        $this->cube->addIndicator($this);
+    }
+
+    /**
      * Renvoi les valeurs du contexte pour l'objet.
      * .
      * @return array
@@ -74,18 +84,6 @@ class DW_Model_Indicator extends Core_Model_Entity
     protected function getContext()
     {
         return array('cube' => $this->cube);
-    }
-
-    /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
-     */
-    public function preSave()
-    {
-        try {
-            $this->checkHasPosition();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->setPosition();
-        }
     }
 
     /**
@@ -120,9 +118,9 @@ class DW_Model_Indicator extends Core_Model_Entity
      *
      * @return DW_Model_Indicator
      */
-    public static function loadByRefAndCube($ref, $cube)
+    public static function loadByRefAndCube($ref, DW_Model_Cube $cube)
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref, 'cube' => $cube));
+        return $cube->getIndicatorByRef($ref);
     }
 
     /**
@@ -163,22 +161,6 @@ class DW_Model_Indicator extends Core_Model_Entity
     public function getLabel()
     {
         return $this->label;
-    }
-
-    /**
-     * Définit le Cube de l'Indicator.
-     *
-     * @param DW_Model_Cube $cube
-     */
-    public function setCube(DW_Model_Cube $cube=null)
-    {
-        if ($this->cube !== $cube) {
-            if ($this->cube !== null) {
-                throw new Core_Exception_TooMany('Cube already set, an indicator cannot be move.');
-            }
-            $this->cube = $cube;
-            $cube->addIndicator($this);
-        }
     }
 
     /**

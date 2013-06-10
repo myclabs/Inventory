@@ -136,12 +136,10 @@ class Orga_Model_Project extends Core_Model_Entity
         $criteria->where($criteria->expr()->eq('ref', $ref));
         $axis = $this->axes->matching($criteria)->toArray();
 
-        if (empty($axis)) {
+        if (count($axis) === 0) {
             throw new Core_Exception_NotFound("No 'Orga_Model_Axis' matching " . $ref);
-        } else {
-            if (count($axis) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_Axis' matching " . $ref);
-            }
+        } else if (count($axis) > 1) {
+            throw new Core_Exception_TooMany("Too many 'Orga_Model_Axis' matching " . $ref);
         }
 
         return array_pop($axis);
