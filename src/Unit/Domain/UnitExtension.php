@@ -11,7 +11,7 @@ namespace Unit\Domain;
 
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
-use Unit\Domain\Unit;
+use Unit\Domain\Unit\Unit;
 
 /**
  * Extension
@@ -72,7 +72,7 @@ class UnitExtension extends Core_Model_Entity
     /**
      * Retourne l'objet Unit à partir de son référent textuel.
      * @param string $ref
-     * @return Unit
+     * @return \Unit\Domain\Unit\Unit
      */
     public static function loadByRef($ref)
     {

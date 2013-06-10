@@ -2,7 +2,7 @@
 /**
  * @package Unit
  */
-use Unit\Domain\Unit;
+use Unit\Domain\Unit\Unit;
 use Unit\Domain\PhysicalQuantity;
 
 require_once 'populatePhysicalQuantities.php';

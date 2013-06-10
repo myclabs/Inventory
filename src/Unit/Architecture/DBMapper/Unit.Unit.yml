@@ -1,4 +1,4 @@
-Unit\Domain\Unit:
+Unit\Domain\Unit\Unit:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: Unit_Unit

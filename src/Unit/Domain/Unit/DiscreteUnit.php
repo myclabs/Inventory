@@ -9,8 +9,6 @@
 
 namespace Unit\Domain\Unit;
 
-use Unit\Domain\Unit;
-
 /**
  * Unité Discrete
  * @package    Unit

@@ -136,7 +136,7 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         try {
             $result = $o3->calculate();
         } catch (Core_Exception_NotFound $e) {
-            $this->assertEquals("No 'Unit\\Domain\\Unit' matching (ref == gramme)", $e->getMessage());
+            $this->assertEquals("No 'Unit\\Domain\\Unit\\Unit' matching (ref == gramme)", $e->getMessage());
         }
 
         //Test opération inconnue.

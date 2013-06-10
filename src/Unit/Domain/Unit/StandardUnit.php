@@ -8,7 +8,6 @@
 
 namespace Unit\Domain\Unit;
 
-use Unit\Domain\Unit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\PhysicalQuantity\Component;
 use Unit\Domain\UnitSystem;

@@ -11,6 +11,7 @@ namespace Unit\Domain;
 
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
+use Unit\Domain\Unit\Unit;
 
 /**
  * Système d'unité

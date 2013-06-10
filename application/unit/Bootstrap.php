@@ -5,7 +5,7 @@
  */
 
 use Doctrine\DBAL\Types\Type;
-use Unit\Domain\Unit;
+use Unit\Domain\Unit\Unit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Architecture\TypeMapping\UnitAPIType;
 

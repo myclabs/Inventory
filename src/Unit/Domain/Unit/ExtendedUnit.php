@@ -8,7 +8,6 @@
 
 namespace Unit\Domain\Unit;
 
-use Unit\Domain\Unit;
 use Unit\Domain\UnitExtension;
 
 /**

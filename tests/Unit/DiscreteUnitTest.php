@@ -7,7 +7,7 @@
  * @package Unit
  * @subpackage Test
  */
-use Unit\Domain\Unit;
+use Unit\Domain\Unit\Unit;
 use Unit\Domain\Unit\DiscreteUnit;
 
 /**

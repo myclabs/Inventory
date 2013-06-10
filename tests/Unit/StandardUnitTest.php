@@ -7,7 +7,7 @@
  * @package Unit
  * @subpackage Test
  */
-use Unit\Domain\Unit;
+use Unit\Domain\Unit\Unit;
 use Unit\Domain\Unit\StandardUnit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\UnitSystem;

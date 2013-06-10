@@ -14,7 +14,7 @@ use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\UnitSystem;
 use Unit\Domain\UnitExtension;
 use Unit\IncompatibleUnitsException;
-use Unit\Domain\Unit;
+use Unit\Domain\Unit\Unit;
 use Unit\UnitAPI;
 
 /**

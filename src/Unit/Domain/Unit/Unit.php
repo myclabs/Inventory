@@ -6,7 +6,7 @@
  * @package Unit
  */
 
-namespace Unit\Domain;
+namespace Unit\Domain\Unit;
 
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
@@ -55,7 +55,7 @@ abstract class Unit extends Core_Model_Entity
     /**
      * Retourne l'objet Unit à partir de son référent textuel.
      * @param string $ref
-     * @return \Unit\Domain\Unit
+     * @return Unit
      */
     public static function loadByRef($ref)
     {
@@ -123,7 +123,7 @@ abstract class Unit extends Core_Model_Entity
 
     /**
      * Renvoi le facteur de Conversion de l'unité
-     * @param \Unit\Domain\Unit $unit
+     * @param Unit $unit
      */
     abstract public function getConversionFactor(Unit $unit);
 
