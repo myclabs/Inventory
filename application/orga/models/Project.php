@@ -432,6 +432,8 @@ class Orga_Model_Project extends Core_Model_Entity
      */
     public function getInputGranularities()
     {
+        //@todo Supprimer getGranularities quand il sera possible de filtrer isNotNull sur une collection non initialisée.
+        $this->getGranularities();
         $criteria = Doctrine\Common\Collections\Criteria::create()->where(
             Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null)
         );

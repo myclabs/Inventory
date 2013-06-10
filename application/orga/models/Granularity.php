@@ -647,12 +647,23 @@ class Orga_Model_Granularity extends Core_Model_Entity
             if ($this->inputConfigGranularity !== null) {
                 $this->inputConfigGranularity->removeInputGranularity($this);
             }
+
             $this->inputConfigGranularity = $configGranularity;
+
             if ($configGranularity !== null) {
                 $configGranularity->addInputGranularity($this);
 
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocBibliographyForAFInputSetPrimary(new Doc_Model_Bibliography());
+                }
+            } else {
+                foreach ($this->getCells() as $cell) {
+                    $cell->setDocBibliographyForAFInputSetPrimary();
+                    try {
+                        $cell->setAFInputSetPrimary();;
+                    } catch (Core_Exception_UndefinedAttribute $e) {
+                        // Pas de saisie pour cette cellule.
+                    }
                 }
             }
         }
@@ -712,14 +723,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
             foreach ($this->getCells() as $cell) {
                 $cellsGroup = $cell->getCellsGroupForInputGranularity($inputGranularity);
                 $cell->removeCellsGroup($cellsGroup);
-            }
-
-            foreach ($inputGranularity->getCells() as $inputCell) {
-                try {
-                    $inputCell->getAFInputSetPrimary()->delete();
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    // Pas de saisie pour cette cellule.
-                }
             }
         }
     }

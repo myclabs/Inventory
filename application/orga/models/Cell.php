@@ -991,7 +991,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         if ($this->docBibliographyForAFInputSetPrimary !== $docBibliography) {
             if ($this->docBibliographyForAFInputSetPrimary !== null) {
-                $this->docLibraryForAFInputSetsPrimary->delete();
+                $this->docBibliographyForAFInputSetPrimary->delete();
             }
             $this->docBibliographyForAFInputSetPrimary = $docBibliography;
         }
