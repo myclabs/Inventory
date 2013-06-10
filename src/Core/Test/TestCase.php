@@ -48,4 +48,17 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
         $this->entityManager = $entityManagers['default'];
     }
 
+    /**
+     * Get an entry from the container
+     * @param string $name
+     * @return mixed
+     */
+    protected function get($name)
+    {
+        /** @var $container \DI\Container */
+        $container = Zend_Registry::get('container');
+
+        return $container->get($name);
+    }
+
 }

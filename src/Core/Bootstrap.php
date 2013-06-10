@@ -5,6 +5,8 @@
  * @subpackage Bootstrap
  */
 
+use DI\Container;
+use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\ORM\Tools\Setup;
 
 /**
@@ -29,7 +31,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $resources = array(
                 'Autoloader',
                 'UTF8',
-                'Configuration',
+                'Container',
                 'Translations',
                 'ErrorLog',
                 'ErrorHandler',
@@ -69,16 +71,21 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Récupère la configuration de l'application
+     * Initialize the dependency injection container
      */
-    protected function _initConfiguration()
+    protected function _initContainer()
     {
+        $container = new Container();
+
         // Récupère la configuration
         $configuration = new Zend_Config($this->getOptions());
-        // La place dans le registry
         Zend_Registry::set('configuration', $configuration);
-        // Place également le nom de l'application
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
+        Zend_Registry::set('container', $container);
+
+        $container->set('applicationName', $configuration->get('applicationName', ''));
+
+        $container->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
     }
 
     /**
@@ -234,6 +241,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * Crée l'entity manager utilisé par défaut. Méthode utilise pour recréer un entity manager
      * si celui-ci se ferme à cause d'une exception
+     * @param null $connectionSettings
      * @return Core_ORM_EntityManager
      */
     public function createDefaultEntityManager($connectionSettings = null)
