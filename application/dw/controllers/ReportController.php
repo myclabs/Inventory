@@ -84,7 +84,7 @@ class DW_ReportController extends Core_Controller_Ajax
             $this->view->viewConfiguration = $this->getParam('viewConfiguration');
         } else {
             $this->view->viewConfiguration = new DW_ViewConfiguration();
-            $this->view->viewConfiguration->setOutputURL('index/report?idCube='.$report->getCube()->getId());
+            $this->view->viewConfiguration->setOutputUrl('index/report?idCube='.$report->getCube()->getId());
             $this->view->viewConfiguration->setSaveURL('dw/report/details?');
         }
 
