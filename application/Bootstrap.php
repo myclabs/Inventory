@@ -105,7 +105,7 @@ class Bootstrap extends Core_Bootstrap
     {
         $front = Zend_Controller_Front::getInstance();
         // Plugin des Acl
-        if (Zend_Registry::isRegistered('activerAcl') && Zend_Registry::get('activerAcl')) {
+        if ($this->container->get('enableAcl')) {
             $front->registerPlugin($this->container->get('Inventory_Plugin_Acl'));
             Zend_Registry::set('pluginAcl', 'User_Plugin_Acl');
         }

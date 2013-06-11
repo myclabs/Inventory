@@ -138,14 +138,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Active la prise en compte des droits d'accès
-     */
-    protected function _initAcl()
-    {
-        Zend_Registry::set('activerAcl', false);
-    }
-
-    /**
      * Initialise Doctrine pour utiliser l'autoloader de Zend.
      */
     protected function _initDoctrine()
