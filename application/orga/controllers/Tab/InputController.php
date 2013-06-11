@@ -86,11 +86,11 @@ class Orga_Tab_InputController extends Core_Controller_Ajax
         $cell = Orga_Model_Cell::load($idCell);
 
         $this->view->documentLibrary = null;
-        if ($cell->getGranularity()->getCellsWithInputDocs()) {
+        if ($cell->getGranularity()->getCellsWithInputDocuments()) {
             $this->view->documentLibrary = $cell->getDocLibraryForAFInputSetsPrimary();
         } else {
             foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
-                if ($granularity->getCellsWithInputDocs()) {
+                if ($granularity->getCellsWithInputDocuments()) {
                     $parentCell = $cell->getParentCellForGranularity($granularity);
                     $this->view->documentLibrary = $parentCell->getDocLibraryForAFInputSetsPrimary();
                     break;

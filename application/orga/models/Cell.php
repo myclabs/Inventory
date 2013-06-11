@@ -205,8 +205,16 @@ class Orga_Model_Cell extends Core_Model_Entity
             && ($granularity->isNarrowerThan($granularityForInventoryStatus))
         ) {
             // Cherche la cellule parent dans la granularité de définition des statut des inventaires
-            $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
-            $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
+            try {
+                $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
+                $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
+            } catch (Core_Exception_NotFound $e) {
+                // Il n'y a pas de cellules parentes pour l'instant.
+            }
+        }
+        // Création du CellsGroup.
+        foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
+            $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);
         }
     }
 

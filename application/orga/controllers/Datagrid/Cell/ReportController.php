@@ -28,9 +28,9 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
         $this->request->order->addOrder(DW_Model_Report::QUERY_LABEL);
         foreach (DW_Model_Report::loadList($this->request) as $report) {
             $data = array();
-            $data['index'] = $report->getKey()['id'];
+            $data['index'] = $report->getId();
             $data['label'] = $report->getLabel();
-            $urlDetails = 'orga/tab_celldetails/report?idCell='.$this->getParam('idCell').'&idReport='.$data['index'];
+            $urlDetails = 'orga/tab_celldetails/report/idCell='.$this->getParam('idCell').'&idReport='.$data['index'];
             $data['details'] = $this->cellLink($urlDetails, __('UI', 'name', 'details'), 'share-alt');
 
             $isUserAllowedToDeleteReport = User_Service_ACL::getInstance()->isAllowed(
@@ -53,7 +53,7 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        DW_Model_Report::load(array('id' => $this->delete))->delete();
+        DW_Model_Report::load($this->delete)->delete();
         $this->message = __('UI', 'messages', 'deleted');
         $this->send();
     }

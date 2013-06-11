@@ -29,7 +29,7 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
@@ -69,7 +69,7 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
      */
     public function updateelementAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         $granularity = Orga_Model_Granularity::loadByRefAndProject($this->update['index'], $project);
 
         switch ($this->update['column']) {
@@ -108,8 +108,8 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
                 $this->data = $granularity->getCellsWithSocialContextActions();
                 break;
             case 'cellsWithInputDocs':
-                $granularity->setCellsWithInputDocs((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithInputDocs();
+                $granularity->setCellsWithInputDocuments((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithInputDocuments();
                 break;
             default:
                 parent::updateelementAction();

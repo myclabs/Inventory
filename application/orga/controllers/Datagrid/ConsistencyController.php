@@ -30,7 +30,7 @@ class Orga_Datagrid_ConsistencyController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         $consistency = Orga_ProjectConsistency::getInstance()->check($project);
 
         $data['index'] = 1;

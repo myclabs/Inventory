@@ -30,10 +30,10 @@ class Orga_Datagrid_Project_InputgranularitiesController extends UI_Controller_D
      */
     function getelementsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         foreach ($project->getInputGranularities() as $inputGranularity) {
             $data = array();
-            $data['index'] = $inputGranularity->getKey()['id'];
+            $data['index'] = $inputGranularity->getId();
             $data['inputConfigGranularity'] = $this->cellList($inputGranularity->getInputConfigGranularity()->getRef());
             $data['inputGranularity'] = $this->cellList($inputGranularity->getRef());
             $this->addLine($data);
@@ -56,7 +56,7 @@ class Orga_Datagrid_Project_InputgranularitiesController extends UI_Controller_D
      */
     function addelementAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
 
         $inputConfigGranularityRef = $this->getAddElementValue('inputConfigGranularity');
         if (empty($inputConfigGranularityRef)) {

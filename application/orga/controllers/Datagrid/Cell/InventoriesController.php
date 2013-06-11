@@ -68,9 +68,9 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             Core_Model_Order::ORDER_ASC,
             Orga_Model_Cell::getAlias()
         );
-        foreach ($cell->getChildCellsForGranularity($crossedGranularity, $this->request) as $childCell) {
+        foreach ($cell->loadChildCellsForGranularity($crossedGranularity, $this->request) as $childCell) {
             $data = array();
-            $data['index'] = $childCell->getKey()['id'];
+            $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }

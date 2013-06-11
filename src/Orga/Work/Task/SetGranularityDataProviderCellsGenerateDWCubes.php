@@ -28,7 +28,7 @@ class Orga_Work_Task_SetGranularityCellsGenerateDWCubes extends Core_Work_Task
      */
     public function __construct($granularity, $newValue)
     {
-        $this->idGranularity = $granularity->getKey()['id'];
+        $this->idGranularity = $granularity->getId();
         $this->newValue = (bool) $newValue;
     }
 

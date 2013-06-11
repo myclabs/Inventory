@@ -37,8 +37,8 @@ class Orga_Datagrid_Translate_ProjectsController extends UI_Controller_Datagrid
 
         foreach (Orga_Model_Project::loadList($this->request) as $project) {
             $data = array();
-            $data['index'] = $project->getKey()['id'];
-            $data['identifier'] = $project->getKey()['id'];
+            $data['index'] = $project->getId();
+            $data['identifier'] = $project->getId();
 
             foreach (Zend_Registry::get('languages') as $language) {
                 $locale = Core_Locale::load($language);
@@ -46,8 +46,8 @@ class Orga_Datagrid_Translate_ProjectsController extends UI_Controller_Datagrid
                 $data[$language] = $project->getLabel();
             }
 
-            $data['axes'] = $this->cellLink('orga/translate/axes/idProject/'.$project->getKey()['id']);
-            $data['members'] = $this->cellLink('orga/translate/members/idProject/'.$project->getKey()['id']);
+            $data['axes'] = $this->cellLink('orga/translate/axes/idProject/'.$project->getId());
+            $data['members'] = $this->cellLink('orga/translate/members/idProject/'.$project->getId());
             $this->addline($data);
         }
         $this->totalElements = Orga_Model_Project::countTotal($this->request);

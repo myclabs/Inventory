@@ -24,7 +24,7 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
 
         foreach (Orga_Model_Project::loadList($this->request) as $project) {
             $data = array();
-            $data['index'] = $project->getKey()['id'];
+            $data['index'] = $project->getId();
             $data['label'] = $project->getLabel();
             $rootAxesLabel = array();
             foreach ($project->getRootAxes() as $rootAxis) {
@@ -57,10 +57,10 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
                 }
             }
             if ($isConnectedUserAbleToSeeManyCells) {
-                $data['details'] = $this->cellLink('orga/project/cells/idProject/'.$project->getKey()['id']);
+                $data['details'] = $this->cellLink('orga/project/cells/idProject/'.$project->getId());
             } else {
                 $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
-                $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getKey()['id']);
+                $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getId());
             }
 
             $isConnectedUserAbleToDeleteProject = User_Service_ACL::getInstance()->isAllowed(
@@ -111,7 +111,7 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
         /** @var Core_Work_Dispatcher $workDispatcher */
         $workDispatcher = Zend_Registry::get('workDispatcher');
 
-        $project = Orga_Model_Project::load(array('id' => $this->delete));
+        $project = Orga_Model_Project::load($this->delete);
 
         $workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(

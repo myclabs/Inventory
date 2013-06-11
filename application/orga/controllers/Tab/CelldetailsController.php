@@ -19,32 +19,32 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      * Confguration du projet.
      * @Secure("editProject")
      */
-    public function projectAction()
+    public function orgaAction()
     {
-        // Désactivation du layout.
-        $this->_helper->layout()->disableLayout();
-        $this->view->idCell = $this->getParam('idCell');
-        $this->view->idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load(array('id' => $this->view->idProject));
+        $idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($idCell);
+        $granularity = $cell->getGranularity();
+        $project = $granularity->getProject();
 
-        try {
-            // Vérification que la granularité des inventaires a bien été défini.
-            $granularityForInventoryStatus = $project->getGranularityForInventoryStatus();
-            $this->view->areAFGranularitiesDisplayed = true;
-            $this->view->listOrgaGranularities = array();
-            foreach ($project->getGranularities() as $orgaGranularities) {
-                $this->view->listOrgaGranularities[$orgaGranularities->getRef()] = $orgaGranularities->getLabel();
-            }
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->view->areAFGranularitiesDisplayed = false;
-            $this->view->errorMessageAFGranularities = __('Orga', 'configuration', 'granularityForInventoryStatusNotDefined');
+        $this->view->idCell = $idCell;
+        $this->view->idProject = $project->getId();
+        if ($granularity->getRef() === 'global') {
+            $this->view->isGlobal = true;
+        } else {
+            $this->view->isGlobal = false;
         }
+        $this->view->hasChildCells = ($cell->countTotalChildCells() > 0);
 
-        $this->view->granularitesWithDWCube = array();
-        foreach ($project->getGranularities() as $granularity) {
-            if ($granularity->getCellsGenerateDWCubes()) {
-                $this->view->granularitesWithDWCube[$granularity->getLabel()] = $granularity;
-            }
+        $this->view->tab = $this->getParam('tab');
+
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
+            $this->view->display = false;
+        } else {
+            $this->view->display = true;
+            UI_Datagrid::addHeader();
+            UI_Tab_View::addHeader();
+            UI_Tree::addHeader();
         }
     }
 
@@ -76,13 +76,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
         if ($isUserAllowedToEditProject) {
             $datagridConfiguration = new Orga_DatagridConfiguration(
-                'projectACL'.$project->getKey()['id'],
+                'projectACL'.$project->getId(),
                 'datagrid_cell_acls_project',
                 'orga',
                 $cell,
                 $granularity
             );
-            $datagridConfiguration->datagrid->addParam('idProject', $project->getKey()['id']);
+            $datagridConfiguration->datagrid->addParam('idProject', $project->getId());
             $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
             $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'name', 'firstName'));
@@ -107,7 +107,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         if ($granularity->getCellsWithACL()) {
             $datagridConfiguration = new Orga_DatagridConfiguration(
-                'granularityACL'.$granularity->getKey()['id'],
+                'granularityACL'.$granularity->getId(),
                 'datagrid_cell_acls_current',
                 'orga',
                 $cell,
@@ -147,7 +147,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
             if ($narrowerGranularity->getCellsWithACL()) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
-                    'granularityACL'.$narrowerGranularity->getKey()['id'],
+                    'granularityACL'.$narrowerGranularity->getId(),
                     'datagrid_cell_acls_child',
                     'orga',
                     $cell,
@@ -180,7 +180,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      * Action renvoyant le tab.
      * @Secure("editCell")
      */
-    public function afgranularitiesconfigsAction()
+    public function afconfigurationAction()
     {
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
@@ -207,14 +207,14 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         foreach ($listInputGranularities as $inputGranularity) {
             if ($cell->getGranularity()->isBroaderThan($inputGranularity->getInputConfigGranularity())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
-                    'aFGranularityConfig'.$inputGranularity->getKey()['id'],
+                    'aFGranularityConfig'.$inputGranularity->getId(),
                     'datagrid_cell_afgranularities_config',
                     'orga',
                     $cell,
                     $inputGranularity->getInputConfigGranularity()
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
-                $idInputGranularity = $inputGranularity->getKey()['id'];
+                $idInputGranularity = $inputGranularity->getId();
                 $datagridConfiguration->datagrid->addParam('idInputGranularity', $idInputGranularity);
 
                 $columnAF = new UI_Datagrid_Col_List('aF', __('AF', 'name', 'accountingForm'));
@@ -248,17 +248,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        $granularity = $cell->getProject()->getGranularityForInventoryStatus();
+        $granularity = $cell->getGranularity()->getProject()->getGranularityForInventoryStatus();
         $crossedOrgaGranularity = $granularity->getCrossedGranularity($cell->getGranularity());
 
         $datagridConfiguration = new Orga_DatagridConfiguration(
-            'inventories'.$granularity->getKey()['id'],
+            'inventories'.$granularity->getId(),
             'datagrid_cell_inventories',
             'orga',
             $cell,
             $crossedOrgaGranularity
         );
-        $datagridConfiguration->datagrid->addParam('idCell', $cell->getKey()['id']);
+        $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
 
         // Column Statut
         $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('UI', 'name', 'status'));
@@ -321,7 +321,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         foreach ($listInputGranularities as $aFGranularities) {
             if ($cell->getGranularity()->isBroaderThan($aFGranularities)) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
-                    'aFGranularity'.$idCell.'Input'.$aFGranularities->getKey()['id'],
+                    'aFGranularity'.$idCell.'Input'.$aFGranularities->getId(),
                     'datagrid_cell_afgranularities_input',
                     'orga',
                     $cell,
@@ -393,7 +393,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         if (($this->hasParam('idReport')) || ($this->hasParam('idProject'))) {
             if ($this->hasParam('idReport')) {
                 $reportResource = User_Model_Resource_Entity::loadByEntity(
-                    DW_Model_Report::load(array('id' => $this->getParam('idReport')))
+                    DW_Model_Report::load($this->getParam('idReport'))
                 );
                 $reportCanBeUpdated = User_Service_ACL::getInstance()->isAllowed(
                     $this->_helper->auth(),
@@ -410,8 +410,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             );
             $viewConfiguration = new DW_ViewConfiguration();
             $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getLabelExtended().'</small>');
-            $viewConfiguration->setOutputURL('orga/cell/details?idCell='.$cell->getKey()['id'].'&tab=reports');
-            $viewConfiguration->setSaveURL('orga/tab_celldetails/report?idCell='.$cell->getKey()['id'].'&');
+            $viewConfiguration->setOutputUrl('orga/cell/details?idCell='.$cell->getId().'&tab=reports');
+            $viewConfiguration->setSaveURL('orga/tab_celldetails/report?idCell='.$cell->getId().'&');
             $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
             $viewConfiguration->setCanBeSavedAs($reportCanBeSaveAs);
             if ($this->hasParam('idReport')) {
@@ -430,8 +430,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $this->_helper->layout()->disableLayout();
         }
 
-        $this->view->idCell = $cell->getKey()['id'];
-        $this->view->idProject = $cell->getDWCube()->getKey()['id'];
+        $this->view->idCell = $cell->getId();
+        $this->view->idProject = $cell->getDWCube()->getId();
         $this->view->isDWCubeUpToDate = Orga_Service_ETLStructure::getInstance()->isCellDWCubeUpToDate(
             $cell
         );
@@ -443,7 +443,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->specificExports = array();
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getProject()->getKey()['id'].'/'.
+            $cell->getProject()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         if (is_dir($specificReportsDirectoryPath)) {
             $specificReportsDirectory = dir($specificReportsDirectoryPath);
@@ -510,7 +510,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
         $granularity = $cell->getGranularity();
 
-        if ($granularity->getCellsWithInputDocs()) {
+        if ($granularity->getCellsWithInputDocuments()) {
             $this->view->docLibraryForAFInputSetPrimary = $cell->getDocLibraryForAFInputSetsPrimary();
         } else {
             $this->view->docLibraryForAFInputSetPrimary = null;

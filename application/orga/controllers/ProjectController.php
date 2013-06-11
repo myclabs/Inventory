@@ -70,9 +70,9 @@ class Orga_ProjectController extends Core_Controller_Ajax
             $this->redirect('orga/project/manage');
         } else if ($isConnectedUserAbleToSeeManyCells) {
             $projectArray = Orga_Model_Project::loadList($aclQuery);
-            $this->redirect('orga/project/cells/idProject/'.array_pop($projectArray)->getKey()['id']);
+            $this->redirect('orga/project/cells/idProject/'.array_pop($projectArray)->getId());
         } else if (count($listCellResource) == 1) {
-            $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getKey()['id']);
+            $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getId());
         } else {
             $this->forward('noaccess', 'project', 'orga');
         }
@@ -179,7 +179,7 @@ class Orga_ProjectController extends Core_Controller_Ajax
         $this->_helper->layout()->disableLayout();
         $this->view->idProject = $this->getParam('idProject');
         $this->view->areProjectDWCubesUpToDate = Orga_Service_ETLStructure::getInstance()->areProjectDWCubesUpToDate(
-            Orga_Model_Project::load(array('id' => $this->view->idProject))
+            Orga_Model_Project::load($this->view->idProject)
         );
     }
 
@@ -192,7 +192,7 @@ class Orga_ProjectController extends Core_Controller_Ajax
         /** @var Core_Work_Dispatcher $workDispatcher */
         $workDispatcher = Zend_Registry::get('workDispatcher');
 
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
 
         try {
             // Lance la tache en arrière plan
@@ -236,7 +236,7 @@ class Orga_ProjectController extends Core_Controller_Ajax
      */
     public function cellsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
 
         $this->view->idProject = $this->getParam('idProject');
 

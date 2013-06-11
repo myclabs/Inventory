@@ -55,7 +55,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        $aFInputOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
+        $aFInputOrgaGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
         $this->request->filter->addCondition(
             Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
@@ -75,12 +75,12 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
             Orga_Model_Cell::getAlias()
         );
 
-        foreach ($cell->getChildCellsForGranularity($aFInputOrgaGranularity, $this->request)
+        foreach ($cell->loadChildCellsForGranularity($aFInputOrgaGranularity, $this->request)
                  as $childCell) {
             $childCell = $childCell->getOrgaCell();
 
             $data = array();
-            $data['index'] = $childCell->getKey()['id'];
+            $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
@@ -150,7 +150,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                     }
                     if (($isUserAllowedToInputCell) || ($inputSetPrimary !== null)) {
                         $data['link'] = $this->cellLink(
-                            'orga/cell/input/idCell/'.$childCell->getKey()['id'].'/fromIdCell/'.$idCell
+                            'orga/cell/input/idCell/'.$childCell->getId().'/fromIdCell/'.$idCell
                         );
                     }
                 } catch (Core_Exception_NotFound $e) {

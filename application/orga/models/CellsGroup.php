@@ -54,7 +54,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     public function __construct(Orga_Model_Cell $containerCell, Orga_Model_Granularity $inputGranularity)
     {
         $this->containerCell = $containerCell;
-        $containerCell->addCellsGroup($this);
+        $this->containerCell->addCellsGroup($this);
         $this->inputGranularity = $inputGranularity;
     }
 
@@ -101,7 +101,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
      *
      * @param AF_Model_AF $aF
      */
-    public function setAF(AF_Model_AF $aF)
+    public function setAF(AF_Model_AF $aF=null)
     {
         if ($this->aF !== $aF) {
             $this->aF = $aF;

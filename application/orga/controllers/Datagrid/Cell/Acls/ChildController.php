@@ -35,13 +35,13 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
 
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $granularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
+        $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
-        foreach ($cell->getChildCellsForGranularity($granularity, $this->request) as $childCell) {
+        foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
             $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
 
             $data = array();
-            $data['index'] = $childCell->getKey()['id'];
+            $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
@@ -52,8 +52,8 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
                 if ($linkedIdentity instanceof User_Model_Role) {
                     $userNumber = 0;
                     foreach ($linkedIdentity->getUsers() as $user) {
-                        if ($linkedIdentity->getRef() === 'cellDataProviderAdministrator_'.$childCell->getKey()['id']
-                            || $linkedIdentity->getRef() === 'cellDataProviderContributor_'.$childCell->getKey()['id']) {
+                        if ($linkedIdentity->getRef() === 'cellDataProviderAdministrator_'.$childCell->getId()
+                            || $linkedIdentity->getRef() === 'cellDataProviderContributor_'.$childCell->getId()) {
                             $listAdministrator[] = $user->getName();
                         }
                         $userNumber ++;
@@ -64,7 +64,7 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
 
             $data['administrators'] = implode(' | ', $listAdministrator);
             $data['details'] = $this->cellPopup(
-                'orga/datagrid_cell_acls_child/list/?idCell='.$data['index'],
+                'orga/datagrid_cell_acls_child/list/idCell/'.$data['index'],
                 implode(' | ', $listLinkedUser),
                 'zoom-in'
             );
