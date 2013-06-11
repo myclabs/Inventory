@@ -180,6 +180,16 @@ class DW_Model_Report extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Report.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Définit le label.
      *
      * @param string $label
@@ -593,16 +603,16 @@ class DW_Model_Report extends Core_Model_Entity
                 $seriesAxisLabel = array();
                 $seriesValues = array();
                 foreach ($this->getValues() as $value) {
-                    $numeratorAxis1MembersUsed[$value['members'][0]->getKey()['id']] = $value['members'][0];
-                    $numeratorAxis2MembersUsed[$value['members'][1]->getKey()['id']] = $value['members'][1];
+                    $numeratorAxis1MembersUsed[$value['members'][0]->getId()] = $value['members'][0];
+                    $numeratorAxis2MembersUsed[$value['members'][1]->getId()] = $value['members'][1];
 
-                    $seriesAxisLabel[$value['members'][0]->getKey()['id']] = $value['members'][0]->getLabel();
+                    $seriesAxisLabel[$value['members'][0]->getId()] = $value['members'][0]->getLabel();
 
-                    $serieValueId = 'serieValue'.$value['members'][1]->getKey()['id'];
+                    $serieValueId = 'serieValue'.$value['members'][1]->getId();
                     if (!isset($seriesValues[$serieValueId])) {
                         $seriesValues[$serieValueId] = array();
                     }
-                    $seriesValues[$serieValueId][$value['members'][0]->getKey()['id']] = $value;
+                    $seriesValues[$serieValueId][$value['members'][0]->getId()] = $value;
                 }
 
                 // Complément des paires de membres sans résultats et tris des valeurs.
@@ -675,7 +685,7 @@ class DW_Model_Report extends Core_Model_Entity
 
         // Cube.
         if ($this->cube !== null) {
-            $stdReport->idCube = $this->cube->getKey()['id'];
+            $stdReport->idCube = $this->cube->getId();
         } else {
             $stdReport->idCube = null;
         }
@@ -870,7 +880,7 @@ class DW_Model_Report extends Core_Model_Entity
     {
         $reportAsString = preg_replace(
             '#^(\{"id":)(null|[0-9]+)(,"idCube":)([0-9]+)(,.+\})$#',
-            '${1}null${3}'.$cube->getKey()['id'].'${5}',
+            '${1}null${3}'.$cube->getId().'${5}',
             $this->getAsString()
         );
         return DW_Model_Report::getFromString($reportAsString);

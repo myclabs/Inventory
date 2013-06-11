@@ -66,6 +66,16 @@ class DW_Model_Filter extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Filter.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Récupération du Report.
      *
      * @return DW_Model_Report

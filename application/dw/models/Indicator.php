@@ -124,6 +124,16 @@ class DW_Model_Indicator extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id de l'Indicator.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Modifie le ref de l'Indicator.
      *
      * @param string $ref
