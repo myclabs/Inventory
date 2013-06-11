@@ -82,6 +82,9 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $this->container = new Container();
 
+        // Auto-register, waiting for https://github.com/mnapoli/PHP-DI/issues/71
+        $this->container->set('DI\Container', $this->container);
+
         // Récupère la configuration
         $configuration = new Zend_Config($this->getOptions());
         Zend_Registry::set('configuration', $configuration);
@@ -310,7 +313,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('workDispatcher', $workDispatcher);
 
         // Register workers
-        $workDispatcher->registerWorker(new Core_Work_ServiceCall_Worker());
+        $workDispatcher->registerWorker($this->container->get('Core_Work_ServiceCall_Worker'));
     }
 
     /**

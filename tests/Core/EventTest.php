@@ -6,33 +6,12 @@
  */
 
 /**
- * Creation of the Test Suite.
- *
- * @package    Core
- * @subpackage Event
- */
-class Core_Test_EventTest
-{
-    /**
-     * Déclaration de la suite de test à éffectuer.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Core_Test_EventSetUp');
-        $suite->addTestSuite('Core_Test_EventMetier');
-        return $suite;
-    }
-
-}
-
-/**
  * Test des fonctionnalités de l'objet métier Core_Model_List.
  *
  * @package Core
  * @subpackage Event
  */
-class Core_Test_EventMetier extends Core_Test_TestCase
+class Core_Test_EventTest extends Core_Test_TestCase
 {
     // Attributs des Tests.
     protected $subject1;
