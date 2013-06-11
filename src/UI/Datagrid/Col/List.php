@@ -176,14 +176,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
      */
     protected function getUrlDynamicList($datagrid, $source)
     {
-        if (strpos($this->list, '?') === false) {
-            $baseUrl = $this->list . '?';
-        } else if (preg_match('#[^?&]$#', $this->list) !== 0) {
-            $baseUrl = $this->list . '&';
-        } else {
-            $baseUrl = $this->list;
-        }
-        return $baseUrl . $datagrid->encodeParameters() . 'source=' . $source;
+        return $this->list . $datagrid->encodeParameters() . '/source/' . $source;
     }
 
     /**
