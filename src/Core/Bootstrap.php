@@ -19,6 +19,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
 
     /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
      * Lance en priorité nos méthodes "_init", puis ensuite celles des classes filles.
      * @param null|string|array $resource
      */
@@ -75,17 +80,17 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initContainer()
     {
-        $container = new Container();
+        $this->container = new Container();
 
         // Récupère la configuration
         $configuration = new Zend_Config($this->getOptions());
         Zend_Registry::set('configuration', $configuration);
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
-        Zend_Registry::set('container', $container);
+        Zend_Registry::set('container', $this->container);
 
-        $container->set('applicationName', $configuration->get('applicationName', ''));
+        $this->container->set('applicationName', $configuration->get('applicationName', ''));
 
-        $container->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
+        $this->container->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
     }
 
     /**
@@ -236,6 +241,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Les prochains devront être ajouté au tableau.
         $entityManagers = array('default' => $entityManager);
         Zend_Registry::set('EntityManagers', $entityManagers);
+
+        $this->container->set('Doctrine\ORM\EntityManager', $entityManager);
     }
 
     /**

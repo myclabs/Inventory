@@ -56,6 +56,11 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
      */
     function addelementAction()
     {
+        /** @var User_Service_User $userService */
+        $userService = $this->get('User_Service_User');
+        /** @var Orga_Service_ACLManager $aclManager */
+        $aclManager = $this->get('Orga_Service_ACLManager');
+
         $idProject = $this->getParam('idProject');
         $projectAdministratorRole = User_Model_Role::loadByRef('projectAdministrator_'.$idProject);
         $project = Orga_Model_Project::load(array('id' => $idProject));
@@ -78,7 +83,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                     try {
                         $entityManagers['default']->flush();
 
-                        Orga_Service_ACLManager::getInstance()->addProjectAdministrator(
+                        $aclManager->addProjectAdministrator(
                             $project,
                             $user
                         );
@@ -91,7 +96,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
 
                         throw $e;
                     }
-                    User_Service_User::getInstance()->sendEmail(
+                    $userService->sendEmail(
                         $user,
                         __('User', 'email', 'subjectAccessRightsChange'),
                         __('Orga', 'email', 'userProjectAdministratorRoleAdded', array(
@@ -101,7 +106,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                     $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
                 }
             } else {
-                $user = User_Service_User::getInstance()->inviteUser(
+                $user = $userService->inviteUser(
                     $userEmail,
                     __('Orga', 'email', 'userProjectAdministratorRoleGivenAtCreation', array(
                         'PROJECT' => $project->getLabel(),
@@ -115,7 +120,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                 try {
                     $entityManagers['default']->flush();
 
-                    Orga_Service_ACLManager::getInstance()->addProjectAdministrator(
+                    $aclManager->addProjectAdministrator(
                         $project,
                         $user
                     );
@@ -148,6 +153,11 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
      */
     function deleteelementAction()
     {
+        /** @var User_Service_User $userService */
+        $userService = $this->get('User_Service_User');
+        /** @var Orga_Service_ACLManager $aclManager */
+        $aclManager = $this->get('Orga_Service_ACLManager');
+
         $idProject = $this->getParam('idProject');
         $project = Orga_Model_Project::load(array('id' => $idProject));
         $user = User_Model_User::load(array('id' => $this->delete));
@@ -158,7 +168,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
         try {
             $entityManagers['default']->flush();
 
-            Orga_Service_ACLManager::getInstance()->removeProjectAdministrator(
+            $aclManager->removeProjectAdministrator(
                 $project,
                 $user
             );
@@ -172,7 +182,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
             throw $e;
         }
 
-        User_Service_User::getInstance()->sendEmail(
+        $userService->sendEmail(
             $user,
             __('User', 'email', 'subjectAccessRightsChange'),
             __('Orga', 'email', 'userProjectAdministratorRoleRemoved', array(

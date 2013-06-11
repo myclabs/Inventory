@@ -46,16 +46,19 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
+        /** @var Keyword_Service_Keyword $keywordService */
+        $keywordService = $this->get('Keyword_Service_Keyword');
+
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
 
-        $refErrors = Keyword_Service_Keyword::getInstance()->getErrorMessageForNewRef($ref);
+        $refErrors = $keywordService->getErrorMessageForNewRef($ref);
         if ($refErrors != null) {
             $this->setAddElementErrorMessage('ref', $refErrors);
         }
 
         if (empty($this->_addErrorMessages)) {
-            $keyword = Keyword_Service_Keyword::getInstance()->add($ref, $label);
+            $keyword = $keywordService->add($ref, $label);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -68,7 +71,10 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $keywordLabel = Keyword_Service_Keyword::getInstance()->delete($this->delete);
+        /** @var Keyword_Service_Keyword $keywordService */
+        $keywordService = $this->get('Keyword_Service_Keyword');
+
+        $keywordService->delete($this->delete);
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
@@ -81,15 +87,18 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
+        /** @var Keyword_Service_Keyword $keywordService */
+        $keywordService = $this->get('Keyword_Service_Keyword');
+
         $keywordRef = $this->update['index'];
         $newValue = $this->update['value'];
 
         switch ($this->update['column']) {
             case 'label':
-                $keyword = Keyword_Service_Keyword::getInstance()->updateLabel($keywordRef, $newValue);
+                $keywordService->updateLabel($keywordRef, $newValue);
                 break;
             case 'ref':
-                $keyword = Keyword_Service_Keyword::getInstance()->updateRef($keywordRef, $newValue);
+                $keywordService->updateRef($keywordRef, $newValue);
                 break;
             default:
         }

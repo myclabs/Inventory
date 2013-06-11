@@ -51,6 +51,9 @@ class Social_MessageController extends Core_Controller
      */
     public function newAction()
     {
+        /** @var Social_Service_Message $messageService */
+        $messageService = $this->get('Social_Service_Message');
+
         if ($this->_request->isPost()) {
             $formData = $this->getFormData('newMessage');
             $title = $formData->getValue('title');
@@ -70,8 +73,6 @@ class Social_MessageController extends Core_Controller
                     $recipient = Social_Model_UserGroup::load($recipientId);
                 }
                 $author = $this->_helper->auth();
-                /** @var $messageService Social_Service_Message */
-                $messageService = Social_Service_Message::getInstance();
                 $messageService->sendNewMessage($author, [$recipient], $title, $content);
                 UI_Message::addMessageStatic(__('Social', 'message', 'messageSent'), UI_Message::TYPE_SUCCESS);
             }

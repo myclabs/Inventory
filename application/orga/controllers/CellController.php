@@ -36,7 +36,8 @@ class Orga_CellController extends Core_Controller
         $this->view->cell = $cell;
 
         $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
+        /** @var User_Service_ACL $aclService */
+        $aclService = $this->get('User_Service_ACL');
 
         if ($this->hasParam('tab')) {
             $tab = $this->getParam('tab');
@@ -390,7 +391,9 @@ class Orga_CellController extends Core_Controller
             $cell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
         );
 
-        $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
+        /** @var User_Service_ACL $aclService */
+        $aclService = $this->get('User_Service_ACL');
+        $isUserAllowedToInputCell = $aclService->isAllowed(
             $this->_helper->auth(),
             Orga_Action_Cell::INPUT(),
             $cell
@@ -438,14 +441,17 @@ class Orga_CellController extends Core_Controller
      */
     public function inputsaveAction()
     {
+        /** @var Orga_Service_ETLData $etlDataService */
+        $etlDataService = $this->get('Orga_Service_ETLData');
+
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $inputSet = $this->getParam('inputSet');
 
         $cell->setAFInputSetPrimary($inputSet);
 
         if ($inputSet->isInputComplete()) {
-            Orga_Service_ETLData::getInstance()->clearDWResultsFromCell($cell);
-            Orga_Service_ETLData::getInstance()->populateDWResultsFromCell($cell);
+            $etlDataService->clearDWResultsFromCell($cell);
+            $etlDataService->populateDWResultsFromCell($cell);
         }
 
         $this->_helper->viewRenderer->setNoRender(true);

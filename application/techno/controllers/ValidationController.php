@@ -18,7 +18,7 @@ class Techno_ValidationController extends Core_Controller
     public function resultsAction()
     {
         /** @var $validationService Techno_Service_Validator */
-        $validationService = Techno_Service_Validator::getInstance();
+        $validationService = $this->get('Techno_Service_Validator');
 
         $this->view->keywordMeaningsErrors = $validationService->validateMeaningsKeywords();
         $this->view->keywordFamilyTagsErrors = $validationService->validateFamilyTagsKeywords();

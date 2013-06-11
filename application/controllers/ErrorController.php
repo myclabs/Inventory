@@ -62,6 +62,9 @@ class ErrorController extends Core_Controller
      */
     public function getError()
     {
+        /** @var Core_Error_Log $log */
+        $log = $this->get('Core_Error_Log');
+
         // Récupération de l'erreur.
         $error = $this->getParam('error_handler');
 
@@ -73,7 +76,7 @@ class ErrorController extends Core_Controller
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
                 // 404 Not found
-                Core_Error_Log::getInstance()->logException($error->exception);
+                $log->logException($error->exception);
                 $errorInfos['code'] = 404;
                 $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'pageNotFound');
                 break;
@@ -88,12 +91,12 @@ class ErrorController extends Core_Controller
                     $errorInfos['message'] = $error->exception->getMessage();
                     // 404 Not found
                 } elseif ($error->exception instanceof Core_Exception_NotFound) {
-                    Core_Error_Log::getInstance()->logException($error->exception);
+                    $log->logException($error->exception);
                     $errorInfos['code'] = 404;
                     $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'pageNotFound');
                     // 500 Server error
                 } else {
-                    Core_Error_Log::getInstance()->logException($error->exception);
+                    $log->logException($error->exception);
                     $errorInfos['code'] = 500;
                     $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'applicationError');
                 }

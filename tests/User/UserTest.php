@@ -290,7 +290,7 @@ class UserMetierTest extends Core_Test_TestCase
     function testInviteUser()
     {
         /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
+        $userService = $this->get('User_Service_User');
         $_SERVER['SERVER_NAME'] = 'http://127.0.0.1';
         $email = 'inviteUser@mail.fr';
         $o = $userService->inviteUser($email);
@@ -315,7 +315,7 @@ class UserMetierTest extends Core_Test_TestCase
     function testInviteExistingUser()
     {
         /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
+        $userService = $this->get('User_Service_User');
         $userService->inviteUser($this->user->getEmail());
     }
 

@@ -138,7 +138,9 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                         $childCell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
                     );
 
-                    $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
+                    /** @var User_Service_ACL $aclService */
+                    $aclService = $this->get('User_Service_ACL');
+                    $isUserAllowedToInputCell = $aclService->isAllowed(
                         $this->_helper->auth(),
                         Orga_Action_Cell::INPUT(),
                         $childCell

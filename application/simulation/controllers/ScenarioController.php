@@ -61,14 +61,17 @@ class Simulation_ScenarioController extends Core_Controller
      */
     public function saveAction()
     {
+        /** @var Simulation_Service_ETLData $etlDataService */
+        $etlDataService = $this->get('Simulation_Service_ETLData');
+
         $scenario = Simulation_Model_Scenario::load($this->getParam('idScenario'));
         $inputSet = $this->getParam('inputSet');
 
         $scenario->setAFInputSetPrimary($inputSet);
 
         if ($inputSet->isInputComplete()) {
-            Simulation_Service_ETLData::getInstance()->clearDWResultsFromScenario($scenario);
-            Simulation_Service_ETLData::getInstance()->populateDWResultsFromScenario($scenario);
+            $etlDataService->clearDWResultsFromScenario($scenario);
+            $etlDataService->populateDWResultsFromScenario($scenario);
         }
 
         $this->_helper->viewRenderer->setNoRender(true);

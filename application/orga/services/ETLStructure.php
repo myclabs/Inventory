@@ -12,19 +12,8 @@ use Doctrine\ORM\EntityManager;
  * @package Orga
  * @subpackage Service
  */
-class Orga_Service_ETLStructure extends Core_Singleton
+class Orga_Service_ETLStructure
 {
-    /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Orga_Service_ETLStructure
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
-
-
     /**
      * Peuple le cube de DW avec les données issues de Classif et Orga.
      *
@@ -757,8 +746,11 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function resetCellAndChildrenCalculationsAndDWCubes(Orga_Model_Cell $cell)
     {
+        /** @var Orga_Service_ETLData $etlDataService */
+        $etlDataService = $this->get('Orga_Service_ETLData');
+
         $this->resetCellAndChildrenDWCubes($cell);
-        Orga_Service_ETLData::getInstance()->calculateResultsForCellAndChildren($cell);
+        $etlDataService->calculateResultsForCellAndChildren($cell);
     }
 
     /**
@@ -784,8 +776,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+            /** @var Orga_Service_ETLData $etlDataService */
+            $etlDataService = $this->get('Orga_Service_ETLData');
 
-            Orga_Service_ETLData::getInstance()->clearDWResultsForCell($cell);
+            $etlDataService->clearDWResultsForCell($cell);
 
             $this->resetDWCube(
                 $cell->getDWCube(),
@@ -796,7 +790,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
                 )
             );
 
-            Orga_Service_ETLData::getInstance()->populateDWResultsForCell($cell);
+            $etlDataService->populateDWResultsForCell($cell);
         }
     }
 

@@ -26,7 +26,12 @@ trait Core_Event_ObservableTrait
      */
     protected function launchEvent($event, $arguments=array())
     {
-        Core_EventDispatcher::getInstance()->launch($this, $event, $arguments);
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var Core_EventDispatcher $eventDispatcher */
+        $eventDispatcher = $container->get('Core_EventDispatcher');
+
+        $eventDispatcher->launch($this, $event, $arguments);
     }
 
 }

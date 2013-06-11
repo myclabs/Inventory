@@ -32,8 +32,8 @@ class User_ProfileController extends Core_Controller
     public function listAction()
     {
         $loggedInUser = $this->_helper->auth();
-        /** @var $aclService User_Service_ACL */
-        $aclService = User_Service_ACL::getInstance();
+        /** @var User_Service_ACL $aclService */
+        $aclService = $this->get('User_Service_ACL');
         $resourceAllUsers = User_Model_Resource_Entity::loadByEntityName('User_Model_User');
         $this->view->canCreateUsers = $aclService->isAllowed($loggedInUser,
                                                              User_Model_Action_Default::CREATE(),
@@ -69,8 +69,8 @@ class User_ProfileController extends Core_Controller
         $this->view->canEditPassword = ($user === $loggedInUser);
 
         // Est-ce que l'utilisateur peut désactiver le compte
-        /** @var $aclService User_Service_ACL */
-        $aclService = User_Service_ACL::getInstance();
+        /** @var User_Service_ACL $aclService */
+        $aclService = $this->get('User_Service_ACL');
         $this->view->canDisable = $aclService->isAllowed($loggedInUser, User_Model_Action_Default::DELETE(), $user);
         $this->view->canEnable = $aclService->isAllowed($loggedInUser, User_Model_Action_Default::UNDELETE(), $user);
 
@@ -94,8 +94,8 @@ class User_ProfileController extends Core_Controller
         } else {
             $user = $connectedUser;
         }
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
+        /** @var User_Service_User $userService */
+        $userService = $this->get('User_Service_User');
 
         $formData = $this->getFormData('userProfile');
         $user->setFirstName($formData->getValue('firstName'));
@@ -131,8 +131,8 @@ class User_ProfileController extends Core_Controller
     public function disableAction()
     {
         $connectedUser = $this->_helper->auth();
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
+        /** @var User_Service_User $userService */
+        $userService = $this->get('User_Service_User');
 
         /** @var $user User_Model_User */
         $user = User_Model_User::load($this->getParam('id'));
@@ -169,8 +169,8 @@ class User_ProfileController extends Core_Controller
      */
     public function enableAction()
     {
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
+        /** @var User_Service_User $userService */
+        $userService = $this->get('User_Service_User');
 
         /** @var $user User_Model_User */
         $user = User_Model_User::load($this->getParam('id'));
@@ -238,8 +238,8 @@ class User_ProfileController extends Core_Controller
             }
 
             if (!$this->hasFormError()) {
-                /** @var $userService User_Service_User */
-                $userService = User_Service_User::getInstance();
+                /** @var User_Service_User $userService */
+                $userService = $this->get('User_Service_User');
 
                 $subject = __('User', 'email', 'subjectEmailModified');
                 $config = Zend_Registry::get('configuration');

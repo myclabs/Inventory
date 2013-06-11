@@ -33,7 +33,9 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
             $urlDetails = 'orga/tab_celldetails/report?idCell='.$this->getParam('idCell').'&idReport='.$data['index'];
             $data['details'] = $this->cellLink($urlDetails, __('UI', 'name', 'details'), 'share-alt');
 
-            $isUserAllowedToDeleteReport = User_Service_ACL::getInstance()->isAllowed(
+            /** @var User_Service_ACL $aclService */
+            $aclService = $this->get('User_Service_ACL');
+            $isUserAllowedToDeleteReport = $aclService->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::DELETE(),
                 $report

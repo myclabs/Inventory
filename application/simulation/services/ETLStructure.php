@@ -10,8 +10,21 @@
  * @package Simulation
  * @subpackage Service
  */
-class Simulation_Service_ETLStructure extends Core_Singleton
+class Simulation_Service_ETLStructure
 {
+    /**
+     * @var Simulation_Service_ETLData
+     */
+    private $etlDataService;
+
+    /**
+     * @param Simulation_Service_ETLData $etlDataService
+     */
+    public function __construct(Simulation_Service_ETLData $etlDataService)
+    {
+        $this->etlDataService = $etlDataService;
+    }
+
     /**
      * Peuple le cube de DW avec les données issues de Classif.
      *
@@ -306,13 +319,13 @@ class Simulation_Service_ETLStructure extends Core_Singleton
         $scenarios = $set->getScenarios();
 
         foreach ($scenarios as $scenario) {
-            Simulation_Service_ETLData::getInstance()->clearDWResultsFromScenario($scenario);
+            $this->etlDataService->clearDWResultsFromScenario($scenario);
         }
 
         $this->resetDWCube($set->getDWCube());
 
         foreach ($scenarios as $scenario) {
-            Simulation_Service_ETLData::getInstance()->populateDWResultsFromScenario($scenario);
+            $this->etlDataService->populateDWResultsFromScenario($scenario);
         }
     }
 

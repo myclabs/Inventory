@@ -29,8 +29,8 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
     public function init()
     {
         parent::init();
-        $this->userService = User_Service_User::getInstance();
-        $this->aclService = User_Service_ACL::getInstance();
+        $this->userService = $this->get('User_Service_User');
+        $this->aclService = $this->get('User_Service_ACL');
     }
 
     /**

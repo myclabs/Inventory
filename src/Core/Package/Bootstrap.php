@@ -5,6 +5,8 @@
  * @subpackage Bootstrap
  */
 
+use DI\Container;
+
 /**
  * Classe de bootstrap : initialisation de l'application.
  *
@@ -13,6 +15,11 @@
  */
 abstract class Core_Package_Bootstrap extends Zend_Application_Module_Bootstrap
 {
+
+    /**
+     * @var Container
+     */
+    public $container;
 
     /**
      * Renvoie la liste des méthodes ayant été lancé.

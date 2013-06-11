@@ -1078,11 +1078,14 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function createDWCube()
     {
         if (($this->dWCube === null) && ($this->getGranularity()->getCellsGenerateDWCubes())) {
+            /** @var Orga_Service_ETLStructure $etlStructureService */
+            $etlStructureService = $this->get('Orga_Service_ETLStructure');
+
             $this->dWCube = new DW_model_cube();
             $this->dWCube->setLabel($this->getLabel());
 
-            Orga_Service_ETLStructure::getInstance()->populateCellDWCube($this);
-            Orga_Service_ETLStructure::getInstance()->addGranularityDWReportsToCellDWCube($this);
+            $etlStructureService->populateCellDWCube($this);
+            $etlStructureService->addGranularityDWReportsToCellDWCube($this);
         }
     }
 
@@ -1124,7 +1127,12 @@ class Orga_Model_Cell extends Core_Model_Entity
         $populatedDWCubes = array();
 
         if ($this->getGranularity()->getCellsGenerateDWCubes()) {
-            if (Orga_Service_ETLStructure::getInstance()->isCellDWCubeUpToDate($this)) {
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
+            /** @var Orga_Service_ETLStructure $etlStructureService */
+            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+
+            if ($etlStructureService->isCellDWCubeUpToDate($this)) {
                 $populatedDWCubes[] = $this->getDWCube();
             }
         }

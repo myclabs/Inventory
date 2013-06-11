@@ -21,8 +21,9 @@ class Social_Datagrid_Message_InboxController extends UI_Controller_Datagrid
     {
         $currentUser = $this->_helper->auth();
 
-        /** @var $messageService Social_Service_Message */
-        $messageService = Social_Service_Message::getInstance();
+        /** @var Social_Service_Message $messageService */
+        $messageService = $this->get('Social_Service_Message');
+
         $messages = $messageService->getUserInbox($currentUser, $this->request->totalElements);
         $this->totalElements = $messageService->getUserInboxSize($currentUser);
 

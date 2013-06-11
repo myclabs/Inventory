@@ -11,7 +11,7 @@
  * @package    Classif
  * @subpackage Service
  */
-class Classif_Service_Axis extends Core_Singleton
+class Classif_Service_Axis
 {
     /**
      * Ajoute un Axis et le renvoie.

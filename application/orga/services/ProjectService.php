@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
  * @package Orga
  * @subpackage Service
  */
-class Orga_Service_ProjectService extends Core_Singleton
+class Orga_Service_ProjectService
 {
 
     /**
@@ -25,14 +25,13 @@ class Orga_Service_ProjectService extends Core_Singleton
     private $aclManager;
 
     /**
-     * Constructeur
+     * @param EntityManager           $entityManager
+     * @param Orga_Service_ACLManager $aclManager
      */
-    protected function __construct()
+    public function __construct(EntityManager $entityManager, Orga_Service_ACLManager $aclManager)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-
-        $this->aclManager = Orga_Service_ACLManager::getInstance();
+        $this->entityManager = $entityManager;
+        $this->aclManager = $aclManager;
     }
 
     /**

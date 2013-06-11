@@ -14,11 +14,27 @@
  */
 abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
 {
+    /**
+     * @var User_Service_ControllerSecurity
+     */
+    protected $controllerSecurityService;
 
     /**
      * @var User_Service_ACL
      */
     protected $aclService;
+
+    /**
+     * @param User_Service_ControllerSecurity $controllerSecurityService
+     * @param User_Service_ACL                $aclService
+     */
+    public function __construct(
+        User_Service_ControllerSecurity $controllerSecurityService,
+        User_Service_ACL $aclService
+    ) {
+        $this->controllerSecurityService = $controllerSecurityService;
+        $this->aclService = $aclService;
+    }
 
     /**
      * Méthode appelée avant qu'une action ne soit distribuée par le distributeur.
@@ -32,8 +48,6 @@ abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
      */
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $this->aclService = User_Service_ACL::getInstance();
-
         $module = $request->getModuleName();
         $controller = $request->getControllerName();
         $action = $request->getActionName();
@@ -84,10 +98,8 @@ abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
      */
     private function isAuthorized($user, $module, $controller, $action, Zend_Controller_Request_Abstract $request)
     {
-        /** @var $controllerSecurityService User_Service_ControllerSecurity */
-        $controllerSecurityService = User_Service_ControllerSecurity::getInstance();
         try {
-            $securityRule = $controllerSecurityService->getSecurityRule($module, $controller, $action);
+            $securityRule = $this->controllerSecurityService->getSecurityRule($module, $controller, $action);
         } catch (Exception $e) {
             // En cas d'erreur, on loggue et on refuse l'accès.
             Core_Error_Log::getInstance()->logException($e);

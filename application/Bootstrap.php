@@ -57,6 +57,7 @@ class Bootstrap extends Core_Bootstrap
                 $bootstrapName = $module . '_Bootstrap';
                 /** @var $bootstrap Core_Package_Bootstrap */
                 $bootstrap = new $bootstrapName($this->_application);
+                $bootstrap->container = $this->container;
                 $bootstrap->setRun($this->_run);
                 $bootstrap->bootstrap();
                 foreach ($bootstrap->getRun() as $run) {
@@ -105,7 +106,7 @@ class Bootstrap extends Core_Bootstrap
         $front = Zend_Controller_Front::getInstance();
         // Plugin des Acl
         if (Zend_Registry::isRegistered('activerAcl') && Zend_Registry::get('activerAcl')) {
-            $front->registerPlugin(new Inventory_Plugin_Acl());
+            $front->registerPlugin($this->container->get('Inventory_Plugin_Acl'));
             Zend_Registry::set('pluginAcl', 'User_Plugin_Acl');
         }
     }

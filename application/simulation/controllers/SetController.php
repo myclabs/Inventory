@@ -46,6 +46,9 @@ class Simulation_SetController extends Core_Controller
      */
     public function detailsAction()
     {
+        /** @var Simulation_Service_ETLStructure $etlStructureService */
+        $etlStructureService = $this->get('Simulation_Service_ETLStructure');
+
         if (!($this->hasParam('idSet'))) {
             $this->redirect('simulation/set/list');
         }
@@ -56,7 +59,7 @@ class Simulation_SetController extends Core_Controller
         $this->view->idCube = $set->getDWCube()->getKey()['id'];
         $this->view->setName = $set->getLabel();
         $this->view->aFName = $set->getAF()->getLabel();
-        $this->view->isSetDWCubeUpToDate = Simulation_Service_ETLStructure::getInstance()->isSetDWCubeUpToDate($set);
+        $this->view->isSetDWCubeUpToDate = $etlStructureService->isSetDWCubeUpToDate($set);
 
         $this->view->activatedTab = ($this->hasParam('tab')) ? $this->getParam('tab') : null;
     }
@@ -68,8 +71,11 @@ class Simulation_SetController extends Core_Controller
      */
     public function resetdwAction()
     {
+        /** @var Simulation_Service_ETLStructure $etlStructureService */
+        $etlStructureService = $this->get('Simulation_Service_ETLStructure');
+
         $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
-        Simulation_Service_ETLStructure::getInstance()->resetSetDWCube($set);
+        $etlStructureService->resetSetDWCube($set);
         $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'confirmationMessage')));
     }
 

@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
  * @package    User
  * @subpackage Service
  */
-class User_Service_ACL extends Core_Singleton
+class User_Service_ACL
 {
 
     /**

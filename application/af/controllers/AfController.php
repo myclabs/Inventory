@@ -98,7 +98,7 @@ class AF_AfController extends Core_Controller
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
             /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
+            $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
             // Récupère la saisie en session
             $inputSet = $sessionStorage->getInputSet($af, false);
         }
@@ -155,7 +155,7 @@ class AF_AfController extends Core_Controller
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
             /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
+            $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
             // Récupère la saisie en session
             $inputSet = $sessionStorage->getInputSet($af, false);
         }
@@ -181,7 +181,7 @@ class AF_AfController extends Core_Controller
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
             /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
+            $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
             // Récupère la saisie en session
             $inputSet = $sessionStorage->getInputSet($af, false);
         }

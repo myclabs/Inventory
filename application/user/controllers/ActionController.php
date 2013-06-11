@@ -143,8 +143,8 @@ class User_ActionController extends UI_Controller_Captcha
             }
 
             if (! $this->hasFormError()) {
-                /** @var $userService User_Service_User */
-                $userService = User_Service_User::getInstance();
+                /** @var User_Service_User $userService */
+                $userService = $this->get('User_Service_User');
 
                 $user = User_Model_User::loadByEmail($email);
                 $user->generateKeyEmail();
@@ -203,8 +203,8 @@ class User_ActionController extends UI_Controller_Captcha
             throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été définit !');
         }
 
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
+        /** @var User_Service_User $userService */
+        $userService = $this->get('User_Service_User');
 
         $user->eraseEmailKey();
         $password = $user->setRandomPassword();

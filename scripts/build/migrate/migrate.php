@@ -156,13 +156,17 @@ class Inventory_Migrate extends Core_Script_Populate
      */
     protected function populateEnvironment($environment)
     {
+        $container = Zend_Registry::get('container');
+        /** @var Orga_Service_ACLManager $aclManager */
+        $aclManager = $container->get('Orga_Service_ACLManager');
+
         $entityManagers = Zend_Registry::get('EntityManagers');
         $this->em = $entityManagers['default'];
         $events = [
             Doctrine\ORM\Events::onFlush,
             Doctrine\ORM\Events::postFlush,
         ];
-        $this->em->getEventManager()->addEventListener($events, Orga_Service_ACLManager::getInstance());
+        $this->em->getEventManager()->addEventListener($events, $aclManager);
 
 
         echo "Début de la migration -->\n";
@@ -189,6 +193,8 @@ class Inventory_Migrate extends Core_Script_Populate
      */
     protected function processBDD($dbName)
     {
+        $container = Zend_Registry::get('container');
+        $aclFilterService = $container->get('User_Service_ACLFilter');
         try {
             $this->init($dbName);
             echo " _ $dbName _\n";
@@ -196,7 +202,7 @@ class Inventory_Migrate extends Core_Script_Populate
             $this->migrateProjects();
             $this->migrateUserRoles();
             echo " - regénération du cache des ACLs…\n";
-            User_Service_ACLFilter::getInstance()->generate();
+            $aclFilterService->generate();
             echo "\t …done !\n";
         } catch (PDOException $e) {
             echo " - aborting : $dbName _ La base n'existe pas.\n";

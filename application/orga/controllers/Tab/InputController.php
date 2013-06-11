@@ -29,9 +29,12 @@ class Orga_Tab_InputController extends Core_Controller
         $this->view->idCell = $idCell;
         $cell = Orga_Model_Cell::load($idCell);
 
+        /** @var User_Service_ACL $aclService */
+        $aclService = $this->get('User_Service_ACL');
+
         $this->view->idCell = $idCell;
         $this->view->comments = $cell->getSocialCommentsForInputSetPrimary();
-        $this->view->isUserAbleToComment = User_Service_ACL::getInstance()->isAllowed(
+        $this->view->isUserAbleToComment = $aclService->isAllowed(
             $this->_helper->auth(),
             Orga_Action_Cell::INPUT(),
             $cell

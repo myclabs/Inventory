@@ -127,7 +127,7 @@ class AF_InputController extends Core_Controller
     public function submitTestAction()
     {
         /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-        $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
+        $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
         $sessionStorage->saveInputSet($this->getParam('af'), $this->getParam('inputSet'));
         $this->_helper->viewRenderer->setNoRender(true);
     }
@@ -194,7 +194,7 @@ class AF_InputController extends Core_Controller
             $entityManagers['default']->flush();
         } else {
             /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
+            $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
             // Récupère la saisie en session
             $inputSet = $sessionStorage->getInputSet($af, false);
             if ($inputSet === null) {

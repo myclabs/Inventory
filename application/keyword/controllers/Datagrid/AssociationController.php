@@ -47,11 +47,13 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
+        /** @var Keyword_Service_Association $associationService */
+        $associationService = $this->get('Keyword_Service_Association');
+
         $refSubject = $this->getAddElementValue('subject');
         $refObject = $this->getAddElementValue('object');
         $refPredicate = $this->getAddElementValue('predicate');
 
-        $associationService = Keyword_Service_Association::getInstance();
         $subjectError = $associationService->getErrorMessageForAddSubject($refSubject);
         if ($subjectError != null) {
             $this->setAddElementErrorMessage('subject', $subjectError);
@@ -72,7 +74,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            $association = Keyword_Service_Association::getInstance()->add($refSubject, $refObject, $refPredicate);
+            $associationService->add($refSubject, $refObject, $refPredicate);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -87,12 +89,15 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
+        /** @var Keyword_Service_Association $associationService */
+        $associationService = $this->get('Keyword_Service_Association');
+
         if ($this->update['column'] !== 'predicate') {
             parent::updateelementAction();
         }
         list($refSubject, $refObject, $refPredicate) = explode('#', $this->update['index']);
         $newPredicate = $this->update['value'];
-        Keyword_Service_Association::getInstance()->updatePredicate($refSubject, $refObject, $refPredicate, $newPredicate);
+        $associationService->updatePredicate($refSubject, $refObject, $refPredicate, $newPredicate);
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -105,8 +110,11 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
+        /** @var Keyword_Service_Association $associationService */
+        $associationService = $this->get('Keyword_Service_Association');
+
         list($refSubject, $refObject, $refPredicate) = explode('#', $this->delete);
-        Keyword_Service_Association::getInstance()->delete($refSubject, $refObject, $refPredicate);
+        $associationService->delete($refSubject, $refObject, $refPredicate);
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

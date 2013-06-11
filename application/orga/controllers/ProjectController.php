@@ -23,7 +23,8 @@ class Orga_ProjectController extends Core_Controller
     public function indexAction()
     {
         $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
+        /** @var User_Service_ACL $aclService */
+        $aclService = $this->get('User_Service_ACL');
 
         $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
         $isConnectedUserAbleToCreateProjects = $aclService->isAllowed(
@@ -83,7 +84,8 @@ class Orga_ProjectController extends Core_Controller
     public function manageAction()
     {
         $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
+        /** @var User_Service_ACL $aclService */
+        $aclService = $this->get('User_Service_ACL');
 
         $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
         $this->view->isConnectedUserAbleToCreateProjects = $aclService->isAllowed(
@@ -131,11 +133,14 @@ class Orga_ProjectController extends Core_Controller
      */
     public function dwcubesstateAction()
     {
+        /** @var Orga_Service_ETLStructure $etlStructureService */
+        $etlStructureService = $this->get('Orga_Service_ETLStructure');
+
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
         $this->view->idProject = $this->getParam('idProject');
-        $this->view->areProjectDWCubesUpToDate = Orga_Service_ETLStructure::getInstance()->areProjectDWCubesUpToDate(
-                Orga_Model_Project::load(array('id' => $this->view->idProject))
+        $this->view->areProjectDWCubesUpToDate = $etlStructureService->areProjectDWCubesUpToDate(
+            Orga_Model_Project::load(array('id' => $this->view->idProject))
         );
     }
 

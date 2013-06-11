@@ -185,7 +185,8 @@ class AF_EditController extends Core_Controller
     {
         $this->view->af = AF_Model_AF::load($this->getParam('id'));
         /** @var $controlService AF_Service_ConfigurationValidator */
-        $controlService = AF_Service_ConfigurationValidator::getInstance();
+        $controlService = $this->get('AF_Service_ConfigurationValidator');
+
         $this->view->errors = $controlService->validateAF($this->view->af);
         $this->_helper->layout()->disableLayout();
     }

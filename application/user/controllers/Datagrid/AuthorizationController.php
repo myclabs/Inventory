@@ -24,7 +24,7 @@ class User_Datagrid_AuthorizationController extends UI_Controller_Datagrid
     public function init()
     {
         parent::init();
-        $this->aclService = User_Service_ACL::getInstance();
+        $this->aclService = $this->get('User_Service_ACL');
     }
 
     /**
