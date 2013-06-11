@@ -248,8 +248,8 @@ class Orga_Service_ETLStructure extends Core_Singleton
         $entityManagers = Zend_Registry::get('EntityManagers');
         $granularityReportAsString = $granularityReport->getGranularityDWReport()->getAsString();
         foreach ($granularityReport->getCellDWReports() as $cellDWReport) {
-            $cellDWReportId = $cellDWReport->getKey()['id'];
-            $cellDWReportDWCubeId = $cellDWReport->getCube()->getKey()['id'];
+            $cellDWReportId = $cellDWReport->getId();
+            $cellDWReportDWCubeId = $cellDWReport->getCube()->getId();
             $cellDWReport = DW_Model_Report::getFromString(
                 preg_replace(
                     '#^(\{"id":)([0-9]+)(,"idCube":)([0-9]+)(,.+\})$#',
