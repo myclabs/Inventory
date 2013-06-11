@@ -41,7 +41,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'ErrorLog',
                 'ErrorHandler',
                 'FrontController',
-                'Acl',
                 'Doctrine',
                 'DefaultEntityManager',
                 'WorkDispatcher',
