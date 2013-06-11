@@ -238,6 +238,16 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Member.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Définit la référence du Member.
      *
      * @param string $ref

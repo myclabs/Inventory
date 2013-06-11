@@ -233,6 +233,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id de la Granularity.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Renvoie le Project de la Granularity.
      *
      * @return Orga_Model_Project
@@ -967,7 +977,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @throws Core_Exception_User
      */
-    public function setCellsWithInputDocs($bool)
+    public function setCellsWithInputDocuments($bool)
     {
         if ($this->cellsWithInputDocs !== $bool) {
             if ($bool === false) {
@@ -995,7 +1005,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @return bool
      */
-    public function getCellsWithInputDocs()
+    public function getCellsWithInputDocuments()
     {
         return $this->cellsWithInputDocs;
     }

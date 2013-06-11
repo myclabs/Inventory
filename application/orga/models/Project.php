@@ -65,6 +65,16 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Project.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Spécifie le label du Project.
      *
      * @param string $label

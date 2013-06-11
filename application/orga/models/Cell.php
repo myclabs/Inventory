@@ -284,6 +284,16 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id de la Cell.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Renvoie la Granularity de la Cell.
      *
      * @return Orga_Model_Granularity

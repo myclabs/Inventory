@@ -67,6 +67,16 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du CellGroup.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Renvoie le Cell container utilisé.
      *
      * @return Orga_Model_Cell

@@ -117,6 +117,16 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     }
 
     /**
+     * Renvoie l'id du GranularityReport.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Renvoie le Report de DW.
      *
      * @return DW_Model_Report

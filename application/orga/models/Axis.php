@@ -168,6 +168,16 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id de l'Axis.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Définit la référence de l'axe. Ne peut pas être "global".
      *
      * @param string $ref
