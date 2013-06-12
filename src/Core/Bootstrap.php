@@ -333,7 +333,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initSessionNamespace()
     {
         $auth = Zend_Auth::getInstance();
-        $name = Zend_Registry::get('applicationName');
+        $name = $this->container->get('application.name');
         if ($name == '') {
             $configuration = Zend_Registry::get('configuration');
             $name = $configuration->sessionStorage->name;
@@ -347,16 +347,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initBootstrapInRegistry()
     {
         Zend_Registry::set('bootstrap', $this);
-    }
-
-    /**
-     * Définition du doctype du document.
-     */
-    protected function _initDocType()
-    {
-        $this->bootstrap('View');
-        $view = $this->getResource('View');
-        $view->doctype('HTML5');
     }
 
     /**
