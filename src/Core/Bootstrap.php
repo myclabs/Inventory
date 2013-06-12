@@ -145,9 +145,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 //                 $doctrineCache = new Doctrine\Common\Cache\ApcCache();
 //                 $doctrineCache = new Doctrine\Common\Cache\MemcachedCache();
                 $doctrineCache = new Doctrine\Common\Cache\ArrayCache();
-//                $doctrineAutoGenerateProxy = false;
-                // Temporaire refs #5641
-                $doctrineAutoGenerateProxy = true;
+                $doctrineAutoGenerateProxy = false;
                 break;
             default:
                 $doctrineCache = new Doctrine\Common\Cache\ArrayCache();
