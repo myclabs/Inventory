@@ -3,6 +3,7 @@
  * @author  matthieu.napoli
  * @package Core
  */
+
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -14,7 +15,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 {
 
     /**
-     * @var GearmanClient|null
+     * @var GearmanClient
      */
     private $client;
 
@@ -23,6 +24,28 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private $worker;
 
+    /**
+     * @var string
+     */
+    private $applicationName;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @Inject({"applicationName" = "application.name"})
+     * @param string        $applicationName
+     * @param EntityManager $entityManager
+     * @param GearmanClient $client
+     */
+    public function __construct($applicationName, EntityManager $entityManager, GearmanClient $client)
+    {
+        $this->applicationName = $applicationName;
+        $this->client = $client;
+        $this->entityManager =$entityManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -32,7 +55,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
-        return $this->getGearmanClient()->doNormal($taskType, $workload);
+        return $this->client->doNormal($taskType, $workload);
     }
 
     /**
@@ -43,9 +66,9 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
-        $this->getGearmanClient()->doBackground($taskType, $workload);
+        $this->client->doBackground($taskType, $workload);
 
-        if ($this->getGearmanClient()->returnCode() != GEARMAN_SUCCESS) {
+        if ($this->client->returnCode() != GEARMAN_SUCCESS) {
             throw new Core_Exception("Gearman error: " . $this->client->returnCode());
         }
     }
@@ -70,10 +93,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     public function work()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-        $entityManager->getConnection()->close();
+        $this->entityManager->getConnection()->close();
 
         Core_Error_Log::getInstance()->info("Worker started");
 
@@ -102,41 +122,24 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private function executeWorker(Core_Work_Worker $worker, GearmanJob $job)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
         Core_Error_Log::getInstance()->info("Executing task " . $worker->getTaskType());
 
         // Connexion BDD et transaction
-        $entityManager->getConnection()->connect();
-        $entityManager->beginTransaction();
+        $this->entityManager->getConnection()->connect();
+        $this->entityManager->beginTransaction();
 
         $task = unserialize($job->workload());
         $result = $worker->execute($task);
 
         // Flush et vide l'entity manager
-        $entityManager->flush();
-        $entityManager->commit();
-        $entityManager->clear();
-        $entityManager->getConnection()->close();
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+        $this->entityManager->clear();
+        $this->entityManager->getConnection()->close();
 
         Core_Error_Log::getInstance()->info("Task executed");
 
         return $result;
-    }
-
-    /**
-     * @return GearmanClient
-     */
-    private function getGearmanClient()
-    {
-        if (!$this->client) {
-            $this->client = new GearmanClient();
-            $this->client->addServer();
-            $this->client->setTimeout(2000);
-        }
-        return $this->client;
     }
 
     /**
@@ -157,7 +160,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private function prefixTaskType($taskType)
     {
-        return Zend_Registry::get('applicationName') . '::' . $taskType;
+        return $this->applicationName . '::' . $taskType;
     }
 
 }

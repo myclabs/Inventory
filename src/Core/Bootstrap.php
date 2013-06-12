@@ -90,7 +90,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
         Zend_Registry::set('container', $this->container);
 
-        $this->container->set('applicationName', $configuration->get('applicationName', ''));
+        $this->container->set('application.name', $configuration->get('applicationName', ''));
 
         $this->container->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
 
@@ -303,9 +303,9 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $useGearman = $useGearman && extension_loaded('gearman');
 
         if ($useGearman) {
-            $workDispatcher = new Core_Work_GearmanDispatcher();
+            $workDispatcher = $this->container->get('Core_Work_GearmanDispatcher');
         } else {
-            $workDispatcher = new Core_Work_SimpleDispatcher();
+            $workDispatcher = $this->container->get('Core_Work_SimpleDispatcher');
         }
         Zend_Registry::set('workDispatcher', $workDispatcher);
 
