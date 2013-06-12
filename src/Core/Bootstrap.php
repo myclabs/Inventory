@@ -303,10 +303,13 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $useGearman = $useGearman && extension_loaded('gearman');
 
         if ($useGearman) {
-            $workDispatcher = $this->container->get('Core_Work_GearmanDispatcher');
+            $this->container->set('Core_Work_Dispatcher')
+                            ->bindTo('Core_Work_GearmanDispatcher');
         } else {
-            $workDispatcher = $this->container->get('Core_Work_SimpleDispatcher');
+            $this->container->set('Core_Work_Dispatcher')
+                            ->bindTo('Core_Work_SimpleDispatcher');
         }
+        $workDispatcher = $this->container->get('Core_Work_Dispatcher');
         Zend_Registry::set('workDispatcher', $workDispatcher);
 
         // Register workers

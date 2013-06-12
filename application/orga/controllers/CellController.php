@@ -30,6 +30,12 @@ class Orga_CellController extends Core_Controller
     private $etlDataService;
 
     /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
+    /**
      * Affiche le détail d'une cellule.
      * @Secure("viewCell")
      */
@@ -405,14 +411,11 @@ class Orga_CellController extends Core_Controller
      */
     public function resetdwsAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         try {
             // Lance la tache en arrière plan
-            $workDispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenDWCubes',
@@ -431,14 +434,11 @@ class Orga_CellController extends Core_Controller
      */
     public function calculateinputsAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         try {
             // Lance la tache en arrière plan
-            $workDispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenCalculationsAndDWCubes',

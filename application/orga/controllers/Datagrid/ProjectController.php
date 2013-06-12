@@ -20,6 +20,12 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
     private $aclService;
 
     /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
+    /**
      * Methode appelee pour remplir le tableau.
      * @Secure("viewProjects")
      */
@@ -92,13 +98,10 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $administrator = $this->_helper->auth();
         $label = $this->getAddElementValue('label');
 
-        $workDispatcher->runBackground(
+        $this->workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ProjectService',
                 'createProject',
@@ -116,12 +119,9 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $project = Orga_Model_Project::load($this->delete);
 
-        $workDispatcher->runBackground(
+        $this->workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ProjectService',
                 'deleteProject',

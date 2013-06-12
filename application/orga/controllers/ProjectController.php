@@ -32,6 +32,12 @@ class Orga_ProjectController extends Core_Controller
     private $etlStructureService;
 
     /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
+    /**
      * Redirection sur la liste.
      * @Secure("loggedIn")
      */
@@ -201,14 +207,11 @@ class Orga_ProjectController extends Core_Controller
      */
     public function resetdwcubesAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $project = Orga_Model_Project::load($this->getParam('idProject'));
 
         try {
             // Lance la tache en arrière plan
-            $workDispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetProjectDWCubes',

@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Datagrid de granularity
@@ -13,6 +14,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -100,9 +107,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            /**@var Core_Work_Dispatcher $dispatcher */
-            $dispatcher = Zend_Registry::get('workDispatcher');
-            $dispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Orga_Work_Task_AddGranularity(
                     $project,
                     $listAxes,
