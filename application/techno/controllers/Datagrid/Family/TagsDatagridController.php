@@ -76,8 +76,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
             $family = Techno_Model_Family::load($this->getParam('idFamily'));
             $family->addTag($tag);
             $family->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();
@@ -106,8 +105,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
                 break;
         }
         $tag->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -124,8 +122,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
         /** @var $tag Techno_Model_Tag */
         $tag = Techno_Model_Tag::load($this->getParam('index'));
         $family->removeTag($tag);
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

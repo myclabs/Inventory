@@ -153,8 +153,7 @@ class Techno_FamilyController extends Core_Controller
         $formData = $this->getFormData('documentationForm');
         $family->setDocumentation($formData->getValue('documentation'));
         $family->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->setFormMessage(__('UI', 'message', 'updated'));
         $this->sendFormResponse();
     }
@@ -173,8 +172,7 @@ class Techno_FamilyController extends Core_Controller
             throw new Core_Exception_User('Techno', 'familyDetail', 'cantDeleteFamily');
         }
         $family->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         UI_Message::getInstance()->addMessage(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
         $this->sendJsonResponse([
                                 'message' => __('UI', 'message', 'deleted'),

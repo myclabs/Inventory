@@ -87,8 +87,7 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
                 break;
         }
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }

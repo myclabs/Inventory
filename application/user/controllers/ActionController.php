@@ -153,8 +153,7 @@ class User_ActionController extends UI_Controller_Captcha
                 $user = User_Model_User::loadByEmail($email);
                 $user->generateKeyEmail();
                 $user->save();
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
 
                 // On envoie le mail à l'utilisateur
                 $url = 'http://' . $_SERVER["SERVER_NAME"]
@@ -210,8 +209,7 @@ class User_ActionController extends UI_Controller_Captcha
         $user->eraseEmailKey();
         $password = $user->setRandomPassword();
         $user->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $subject = __('User', 'email', 'subjectNewPassword',
                     array(

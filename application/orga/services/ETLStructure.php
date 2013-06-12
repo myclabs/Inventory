@@ -15,6 +15,19 @@ use Doctrine\ORM\EntityManager;
 class Orga_Service_ETLStructure
 {
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * Peuple le cube de DW avec les données issues de Classif et Orga.
      *
      * @param Orga_Model_Cell $cell
@@ -234,7 +247,6 @@ class Orga_Service_ETLStructure
      */
     public function updateCellsDWReportFromGranularityReport($granularityReport)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
         $granularityReportAsString = $granularityReport->getGranularityDWReport()->getAsString();
         foreach ($granularityReport->getCellDWReports() as $cellDWReport) {
             $cellDWReportId = $cellDWReport->getId();
@@ -246,7 +258,7 @@ class Orga_Service_ETLStructure
                     $granularityReportAsString
                 )
             );
-            $entityManagers['default']->flush($cellDWReport);
+            $this->entityManager->flush($cellDWReport);
         }
     }
 
@@ -705,18 +717,14 @@ class Orga_Service_ETLStructure
      */
     public function resetProjectDWCubes(Orga_Model_Project $project)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
         foreach ($project->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes($granularity);
-                $entityManager->flush();
+                $this->entityManager->flush();
                 foreach ($granularity->getCells() as $cell) {
-                    $entityManager->clear();
+                    $this->entityManager->clear();
                     $this->resetCellDWCube(Orga_Model_Cell::load($cell->getKey()));
-                    $entityManager->flush();
+                    $this->entityManager->flush();
                 }
             }
         }
@@ -804,7 +812,6 @@ class Orga_Service_ETLStructure
     protected function resetDWCube(DW_Model_Cube $dWCube, Orga_Model_Project $orgaProject, array $orgaFilter)
     {
         set_time_limit(0);
-        $entityManagers = Zend_Registry::get('EntityManagers');
 
         // Problème de proxie;
 //        $dWCube->getLabel();
@@ -832,12 +839,12 @@ class Orga_Service_ETLStructure
             $dWRootAxis->delete();
         }
 
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->populateDWCubeWithClassifAndOrgaProject($dWCube, $orgaProject, $orgaFilter);
         $dWCube->save();
 
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Copie des Reports.
         foreach ($dWReportsAsString as $dWReportString) {
@@ -849,7 +856,7 @@ class Orga_Service_ETLStructure
             }
         }
 
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
     }
 
 }

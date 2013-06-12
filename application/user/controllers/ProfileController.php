@@ -118,8 +118,7 @@ class User_ProfileController extends Core_Controller
         $user->setFirstName($formData->getValue('firstName'));
         $user->setLastName($formData->getValue('lastName'));
         $user->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $config = Zend_Registry::get('configuration');
         if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
@@ -155,8 +154,7 @@ class User_ProfileController extends Core_Controller
         // Désactivation de l'utilisateur
         $user->disable();
         $user->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Envoi d'un email d'alerte
         $config = Zend_Registry::get('configuration');
@@ -190,8 +188,7 @@ class User_ProfileController extends Core_Controller
         // Activation de l'utilisateur
         $user->enable();
         $user->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Envoi d'un email d'alerte
         $config = Zend_Registry::get('configuration');
@@ -275,8 +272,7 @@ class User_ProfileController extends Core_Controller
                 $this->userService->sendEmail($user, $subject, $content);
 
                 $user->setEmail($email);
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
 
                 // Envoi de l'email à la nouvelle adresse
                 $this->userService->sendEmail($user, $subject, $content);
@@ -334,8 +330,7 @@ class User_ProfileController extends Core_Controller
 
             if (! $this->hasFormError()) {
                 $user->setPassword($password);
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
                 UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
             }
 

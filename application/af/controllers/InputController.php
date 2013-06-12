@@ -195,8 +195,7 @@ class AF_InputController extends Core_Controller
             $inputSet = AF_Model_InputSet_Primary::load($this->getParam('idInputSet'));
             $inputSet->markAsFinished($this->getParam('value'));
             $inputSet->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } else {
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);

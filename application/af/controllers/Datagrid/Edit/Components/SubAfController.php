@@ -128,9 +128,8 @@ class AF_Datagrid_Edit_Components_SubAfController extends UI_Controller_Datagrid
 
             $subAF->save();
             $af->getRootGroup()->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -191,8 +190,7 @@ class AF_Datagrid_Edit_Components_SubAfController extends UI_Controller_Datagrid
                 break;
         }
         $subAF->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -207,8 +205,7 @@ class AF_Datagrid_Edit_Components_SubAfController extends UI_Controller_Datagrid
         /** @var $subAF AF_Model_Component_SubAF */
         $subAF = AF_Model_Component_SubAF::load($this->getParam('index'));
         $subAF->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

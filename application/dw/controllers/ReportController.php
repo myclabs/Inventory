@@ -42,8 +42,7 @@ class DW_ReportController extends Core_Controller
         $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
         $zendSessionReport = new Zend_Session_Namespace($sessionName);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $zendSessionReport->$hash = $report->getAsString();
     }
@@ -285,8 +284,7 @@ class DW_ReportController extends Core_Controller
             );
         } else {
             $this->getResponse()->setHttpResponseCode(400);
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->clear();
+            $this->entityManager->flush();
             $this->sendJsonResponse(
                 array(
                     'errorMessages' => $errors,
@@ -303,8 +301,6 @@ class DW_ReportController extends Core_Controller
      */
     public function saveAction()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $savePost = json_decode($this->getParam('saveReportAs'), JSON_OBJECT_AS_ARRAY);
@@ -324,13 +320,13 @@ class DW_ReportController extends Core_Controller
                 && ($savePost['saveType']['value'] == 'saveAs')
             ) {
                 $clonedReport = clone $report;
-                $entityManagers['default']->refresh($report);
+                $this->entityManager->refresh($report);
                 $report = $clonedReport;
             }
 
             $report->setLabel($reportLabel);
             $report->save();
-            $entityManagers['default']->flush($report);
+            $this->entityManager->flush($report);
 
             $this->sendJsonResponse(
                 array(
@@ -340,7 +336,7 @@ class DW_ReportController extends Core_Controller
                 )
             );
 
-            $entityManagers['default']->clear();
+            $this->entityManager->clear();
         }
 
     }
@@ -362,8 +358,7 @@ class DW_ReportController extends Core_Controller
         }
         $this->_helper->layout()->disableLayout();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
     }
 
     /**
@@ -381,8 +376,7 @@ class DW_ReportController extends Core_Controller
         }
         $this->_helper->layout()->disableLayout();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
     }
 
     /**
@@ -395,8 +389,7 @@ class DW_ReportController extends Core_Controller
 
         $export = new DW_Export_Report_Excel($report);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $export->display();
     }
@@ -411,8 +404,7 @@ class DW_ReportController extends Core_Controller
 
         $export = new DW_Export_Report_Pdf($report);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $export->display();
     }

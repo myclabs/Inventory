@@ -78,8 +78,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
             $meaning->setKeyword($keyword);
             try {
                 $meaning->save();
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (DBALException $e) {
                 throw new Core_Exception_User('Techno', 'meaning', 'cantInsertMeaning');
             }
@@ -131,8 +130,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
                 break;
         }
         $meaning->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -148,8 +146,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
         $meaning = Techno_Model_Meaning::load($this->getParam('index'));
         try {
             $meaning->delete();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (DBALException $e) {
             throw new Core_Exception_User('Techno', 'meaning', 'cantDeleteMeaning');
         }

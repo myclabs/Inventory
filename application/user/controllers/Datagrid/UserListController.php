@@ -98,27 +98,12 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
             $user->addRole($role);
 
             $user->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
             $this->message = __('User', 'list', 'accountCreated');
         }
 
         $this->send();
-    }
-
-    /**
-     * (non-PHPdoc)
-     */
-    public function updateelementAction()
-    {
-    }
-
-    /**
-     * (non-PHPdoc)
-     */
-    public function deleteelementAction()
-    {
     }
 
 }

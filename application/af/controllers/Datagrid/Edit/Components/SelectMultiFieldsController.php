@@ -92,9 +92,8 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
 
             $selectField->save();
             $af->getRootGroup()->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -150,8 +149,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
                 break;
         }
         $selectField->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -174,9 +172,8 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
         }
         // Supprime le champ
         $field->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Condition_Elementary')) {
                 throw new Core_Exception_User('AF', 'configComponentMessage',

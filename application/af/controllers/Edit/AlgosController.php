@@ -83,8 +83,7 @@ class AF_Edit_AlgosController extends Core_Controller
                 break;
         }
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/traitement');
     }
 

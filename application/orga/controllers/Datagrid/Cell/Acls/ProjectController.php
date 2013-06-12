@@ -79,8 +79,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->getConnection()->beginTransaction();
+            $this->entityManager->beginTransaction();
 
             if (User_Model_User::isEmailUsed($userEmail)) {
                 $user = User_Model_User::loadByEmail($userEmail);
@@ -89,18 +88,18 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                 } else {
                     set_time_limit(0);
                     try {
-                        $entityManagers['default']->flush();
+                        $this->entityManager->flush();
 
                         $this->aclManager->addProjectAdministrator(
                             $project,
                             $user
                         );
-                        $entityManagers['default']->flush();
+                        $this->entityManager->flush();
 
-                        $entityManagers['default']->getConnection()->commit();
+                        $this->entityManager->commit();
                     } catch (Exception $e) {
-                        $entityManagers['default']->getConnection()->rollback();
-                        $entityManagers['default']->clear();
+                        $this->entityManager->rollback();
+                        $this->entityManager->clear();
 
                         throw $e;
                     }
@@ -126,18 +125,18 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
 
                 set_time_limit(0);
                 try {
-                    $entityManagers['default']->flush();
+                    $this->entityManager->flush();
 
                     $this->aclManager->addProjectAdministrator(
                         $project,
                         $user
                     );
-                    $entityManagers['default']->flush();
+                    $this->entityManager->flush();
 
-                    $entityManagers['default']->getConnection()->commit();
+                    $this->entityManager->commit();
                 } catch (Exception $e) {
-                    $entityManagers['default']->getConnection()->rollback();
-                    $entityManagers['default']->clear();
+                    $this->entityManager->rollback();
+                    $this->entityManager->clear();
 
                     throw $e;
                 }
@@ -166,21 +165,20 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
         $user = User_Model_User::load($this->delete);
 
         set_time_limit(0);
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->getConnection()->beginTransaction();
+        $this->entityManager->beginTransaction();
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
             $this->aclManager->removeProjectAdministrator(
                 $project,
                 $user
             );
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
-            $entityManagers['default']->getConnection()->commit();
+            $this->entityManager->commit();
         } catch (Exception $e) {
-            $entityManagers['default']->getConnection()->rollback();
-            $entityManagers['default']->clear();
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
 
             throw $e;
         }

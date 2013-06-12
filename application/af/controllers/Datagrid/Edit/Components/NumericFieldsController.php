@@ -57,9 +57,6 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
      */
     public function addelementAction()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $entityManagers['default'];
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
@@ -107,7 +104,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $numericField->save();
             $af->getRootGroup()->save();
             try {
-                $em->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -190,9 +187,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 break;
         }
         $numericField->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_DuplicateEntryException $e) {
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
@@ -222,9 +218,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
         $field->delete();
         $field->getGroup()->removeSubComponent($field);
         $af->removeComponent($field);
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Condition_Elementary')) {
                 throw new Core_Exception_User('AF', 'configComponentMessage',

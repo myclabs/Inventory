@@ -4,6 +4,8 @@
  * @subpackage Service
  */
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * Classe permettant de construire DW
  * @author valentin.claras
@@ -18,11 +20,18 @@ class Simulation_Service_ETLStructure
     private $etlDataService;
 
     /**
-     * @param Simulation_Service_ETLData $etlDataService
+     * @var EntityManager
      */
-    public function __construct(Simulation_Service_ETLData $etlDataService)
+    private $entityManager;
+
+    /**
+     * @param Simulation_Service_ETLData $etlDataService
+     * @param EntityManager              $entityManager
+     */
+    public function __construct(Simulation_Service_ETLData $etlDataService, EntityManager $entityManager)
     {
         $this->etlDataService = $etlDataService;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -368,14 +377,12 @@ class Simulation_Service_ETLStructure
                 $dWRootAxis->delete();
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->populateDWCubeWithClassif($dWCube);
         $dWCube->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Copie des Reports.
         foreach ($dWReportsAsString as $dWReportString) {
@@ -387,8 +394,7 @@ class Simulation_Service_ETLStructure
             }
         }
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
     }
 
 }

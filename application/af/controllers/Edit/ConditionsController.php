@@ -73,8 +73,7 @@ class AF_Edit_ConditionsController extends Core_Controller
                 break;
         }
         $condition->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->redirect('/af/edit/menu/id/' . $condition->getAf()->getId() . '/onglet/interaction');
     }
 

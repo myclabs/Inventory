@@ -123,9 +123,8 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $family->setUnit($unit);
             $family->setCategory($category);
             $family->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
                 $this->message = __('UI', 'message', 'added');
             } catch (Exception $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));

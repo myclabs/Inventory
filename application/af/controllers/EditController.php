@@ -74,9 +74,8 @@ class AF_EditController extends Core_Controller
             $af->setLabel($formData->getValue('label'));
             $af->setDocumentation($formData->getValue('documentation'));
             $af->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
                 $this->setFormMessage(__('UI', 'message', 'updated'));
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->addFormError('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
@@ -166,8 +165,7 @@ class AF_EditController extends Core_Controller
             }
             if (!$this->hasFormError()) {
                 $af->save();
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
                 $this->setFormMessage(__('UI', 'message', 'updated'));
             }
         }
