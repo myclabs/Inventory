@@ -93,6 +93,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->container->set('applicationName', $configuration->get('applicationName', ''));
 
         $this->container->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
+
+        // Configuration pour injecter dans les controleurs (intégration ZF1)
+        $dispatcher = new \DI\ZendFramework1\Dispatcher();
+        $dispatcher->setContainer($this->container);
+        $frontController = Zend_Controller_Front::getInstance();
+        $frontController->setDispatcher($dispatcher);
     }
 
     /**
