@@ -72,8 +72,8 @@ class Orga_CellController extends Core_Controller
             $cell
         );
         if ($isUserAllowedToEditProject || ($isUserAllowedToEditCell && $granularity->getCellsWithOrgaTab())) {
-            $projectTab = new UI_Tab('project');
-            $projectTab->label = __('UI', 'name', 'project');
+            $projectTab = new UI_Tab('orga');
+            $projectTab->label = __('UI', 'name', 'orga');
             $projectSubTabs = array('project', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
             if (in_array($tab, $projectSubTabs)) {
                 $projectTab->active = true;
