@@ -283,12 +283,4 @@ class User_Service_ACL
         return $childResources;
     }
 
-    /**
-     * @return User_Service_ACL
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
-
 }

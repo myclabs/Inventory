@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controller de projet
@@ -12,6 +13,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
     /**
      * Methode appelee pour remplir le tableau.
      * @Secure("viewProjects")
@@ -23,6 +30,7 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
         $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
 
         foreach (Orga_Model_Project::loadList($this->request) as $project) {
+            /** @var Orga_Model_Project $project */
             $data = array();
             $data['index'] = $project->getId();
             $data['label'] = $project->getLabel();
@@ -63,7 +71,7 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
                 $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getId());
             }
 
-            $isConnectedUserAbleToDeleteProject = User_Service_ACL::getInstance()->isAllowed(
+            $isConnectedUserAbleToDeleteProject = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::DELETE(),
                 $project
