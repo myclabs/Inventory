@@ -124,7 +124,8 @@ class AF_Datagrid_Edit_Components_SubAfController extends UI_Controller_Datagrid
             if ($subAF instanceof AF_Model_Component_SubAF_Repeated) {
                 $subAF->setWithFreeLabel($this->getAddElementValue('hasFreeLabel'));
             }
-            $af->getRootGroup($subAF);
+            $af->getRootGroup()->addSubComponent($subAF);
+            $af->addComponent($subAF);
 
             $subAF->save();
             $af->getRootGroup()->save();
