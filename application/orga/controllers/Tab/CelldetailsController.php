@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controlleur des onglets des détails d'une cellule.
@@ -15,6 +16,18 @@ use Core\Annotation\Secure;
  */
 class Orga_Tab_CelldetailsController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ETLStructure
+     */
+    private $etlStructureService;
+
     /**
      * Confguration du projet.
      * @Secure("editProject")
@@ -54,9 +67,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      */
     public function aclsAction()
     {
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
-
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
@@ -69,7 +79,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $listDatagridConfiguration = array();
 
         if (count($granularity->getAxes()) === 0) {
-            $isUserAllowedToEditProject = $aclService->isAllowed(
+            $isUserAllowedToEditProject = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::EDIT(),
                 $projectResource
@@ -267,10 +277,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('UI', 'name', 'status'));
         $columnStateOrga->withEmptyElement = false;
 
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
-
-        $isUserAllowedToInputInventoryStatus = $aclService->isAllowed(
+        $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
             $this->_helper->auth(),
             Orga_Action_Cell::INPUT(),
             $cell
@@ -393,11 +400,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      */
     public function reportAction()
     {
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
-        /** @var Orga_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $this->get('Orga_Service_ETLStructure');
-
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
@@ -406,7 +408,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $reportResource = User_Model_Resource_Entity::loadByEntity(
                     DW_Model_Report::load(array('id' => $this->getParam('idReport')))
                 );
-                $reportCanBeUpdated = $aclService->isAllowed(
+                $reportCanBeUpdated = $this->aclService->isAllowed(
                     $this->_helper->auth(),
                     User_Model_Action_Default::EDIT(),
                     $reportResource
@@ -414,7 +416,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             } else {
                 $reportCanBeUpdated = false;
             }
-            $reportCanBeSaveAs = $aclService->isAllowed(
+            $reportCanBeSaveAs = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::VIEW(),
                 User_Model_Resource_Entity::loadByEntity($cell)
@@ -443,10 +445,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->idCell = $cell->getKey()['id'];
         $this->view->idProject = $cell->getDWCube()->getKey()['id'];
-        $this->view->isDWCubeUpToDate = $etlStructureService->isCellDWCubeUpToDate(
+        $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate(
             $cell
         );
-        $this->view->dWCubesCanBeReset = $aclService->isAllowed(
+        $this->view->dWCubesCanBeReset = $this->aclService->isAllowed(
             $this->_helper->auth(),
             User_Model_Action_Default::EDIT(),
             $cell
@@ -544,9 +546,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      */
     public function administrationAction()
     {
-        /** @var Orga_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $this->get('Orga_Service_ETLStructure');
-
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
@@ -555,7 +554,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $granularity = $cell->getGranularity();
 
         if ($granularity->getCellsGenerateDWCubes()) {
-            $this->view->isDWCubeUpToDate = $etlStructureService->isCellDWCubeUpToDate(
+            $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate(
                 $cell
             );
         }

@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 
 /**
@@ -17,17 +18,28 @@ use Core\Annotation\Secure;
 class Orga_ProjectController extends Core_Controller
 {
     /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ETLStructure
+     */
+    private $etlStructureService;
+
+    /**
      * Redirection sur la liste.
      * @Secure("loggedIn")
      */
     public function indexAction()
     {
+        /** @var User_Model_User $connectedUser */
         $connectedUser = $this->_helper->auth();
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
 
         $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
-        $isConnectedUserAbleToCreateProjects = $aclService->isAllowed(
+        $isConnectedUserAbleToCreateProjects = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $projectResource
@@ -84,11 +96,9 @@ class Orga_ProjectController extends Core_Controller
     public function manageAction()
     {
         $connectedUser = $this->_helper->auth();
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
 
         $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
-        $this->view->isConnectedUserAbleToCreateProjects = $aclService->isAllowed(
+        $this->view->isConnectedUserAbleToCreateProjects = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $projectResource
@@ -133,13 +143,10 @@ class Orga_ProjectController extends Core_Controller
      */
     public function dwcubesstateAction()
     {
-        /** @var Orga_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $this->get('Orga_Service_ETLStructure');
-
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
         $this->view->idProject = $this->getParam('idProject');
-        $this->view->areProjectDWCubesUpToDate = $etlStructureService->areProjectDWCubesUpToDate(
+        $this->view->areProjectDWCubesUpToDate = $this->etlStructureService->areProjectDWCubesUpToDate(
             Orga_Model_Project::load(array('id' => $this->view->idProject))
         );
     }

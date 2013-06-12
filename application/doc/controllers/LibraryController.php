@@ -45,9 +45,7 @@ class Doc_LibraryController extends Core_Controller
             $result = false;
             $messages = [$e->getMessage()];
         } catch (Exception $e) {
-            /** @var Core_Error_Log $log */
-            $log = $this->get('Core_Error_Log');
-            $log->logException($e);
+            Core_Error_Log::getInstance()->logException($e);
             $result = false;
             $messages = [__('Core', 'exception', 'applicationError')];
         }

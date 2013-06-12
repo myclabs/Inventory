@@ -50,18 +50,5 @@ abstract class Core_Controller extends Zend_Controller_Action
         $json->sendJson($reponse);
         Zend_Wildfire_Channel_HttpHeaders::getInstance()->flush();
     }
-    
-    /**
-     * Get an entry from the container
-     * @param string $name
-     * @return mixed
-     */
-    protected function get($name)
-    {
-        /** @var $container \DI\Container */
-        $container = Zend_Registry::get('container');
-
-        return $container->get($name);
-    }
 
 }

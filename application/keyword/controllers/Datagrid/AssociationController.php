@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Classe controleur de la datagrid de Association.
@@ -14,6 +15,12 @@ use Core\Annotation\Secure;
  */
 class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var Keyword_Service_Association
+     */
+    private $associationService;
+
     /**
      * Methode appelee pour remplir le tableau.
      *
@@ -47,34 +54,31 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        /** @var Keyword_Service_Association $associationService */
-        $associationService = $this->get('Keyword_Service_Association');
-
         $refSubject = $this->getAddElementValue('subject');
         $refObject = $this->getAddElementValue('object');
         $refPredicate = $this->getAddElementValue('predicate');
 
-        $subjectError = $associationService->getErrorMessageForAddSubject($refSubject);
+        $subjectError = $this->associationService->getErrorMessageForAddSubject($refSubject);
         if ($subjectError != null) {
             $this->setAddElementErrorMessage('subject', $subjectError);
         }
-        $objectError = $associationService->getErrorMessageForAddObject($refObject);
+        $objectError = $this->associationService->getErrorMessageForAddObject($refObject);
         if ($objectError != null) {
             $this->setAddElementErrorMessage('object', $objectError);
         }
-        $predicateError = $associationService->getErrorMessageForAddPredicate($refPredicate);
+        $predicateError = $this->associationService->getErrorMessageForAddPredicate($refPredicate);
         if ($predicateError != null) {
             $this->setAddElementErrorMessage('predicate', $predicateError);
         }
         if (empty($this->_addErrorMessages)) {
-            $allError = $associationService->getErrorMessageForAdd($refSubject, $refObject, $refPredicate);
+            $allError = $this->associationService->getErrorMessageForAdd($refSubject, $refObject, $refPredicate);
             if ($allError != null) {
                 $this->setAddElementErrorMessage('predicate', $allError);
             }
         }
 
         if (empty($this->_addErrorMessages)) {
-            $associationService->add($refSubject, $refObject, $refPredicate);
+            $this->associationService->add($refSubject, $refObject, $refPredicate);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -89,15 +93,12 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        /** @var Keyword_Service_Association $associationService */
-        $associationService = $this->get('Keyword_Service_Association');
-
         if ($this->update['column'] !== 'predicate') {
             parent::updateelementAction();
         }
         list($refSubject, $refObject, $refPredicate) = explode('#', $this->update['index']);
         $newPredicate = $this->update['value'];
-        $associationService->updatePredicate($refSubject, $refObject, $refPredicate, $newPredicate);
+        $this->associationService->updatePredicate($refSubject, $refObject, $refPredicate, $newPredicate);
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -110,11 +111,8 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var Keyword_Service_Association $associationService */
-        $associationService = $this->get('Keyword_Service_Association');
-
         list($refSubject, $refObject, $refPredicate) = explode('#', $this->delete);
-        $associationService->delete($refSubject, $refObject, $refPredicate);
+        $this->associationService->delete($refSubject, $refObject, $refPredicate);
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

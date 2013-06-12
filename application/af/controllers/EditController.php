@@ -8,6 +8,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * CompleteEdition Controller
@@ -17,6 +18,12 @@ class AF_EditController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var AF_Service_ConfigurationValidator
+     */
+    private $afConfigurationValidator;
 
     /**
      * Permet l'affichage du menu dans un tabView avec différents onglets
@@ -184,10 +191,8 @@ class AF_EditController extends Core_Controller
     public function controlResultsAction()
     {
         $this->view->af = AF_Model_AF::load($this->getParam('id'));
-        /** @var $controlService AF_Service_ConfigurationValidator */
-        $controlService = $this->get('AF_Service_ConfigurationValidator');
 
-        $this->view->errors = $controlService->validateAF($this->view->af);
+        $this->view->errors = $this->afConfigurationValidator->validateAF($this->view->af);
         $this->_helper->layout()->disableLayout();
     }
 

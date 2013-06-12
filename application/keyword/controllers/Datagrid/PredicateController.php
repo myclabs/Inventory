@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Classe controleur de la datagrid de Predicate.
@@ -12,6 +13,12 @@ use Core\Annotation\Secure;
  */
 class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var Keyword_Service_Predicate
+     */
+    private $predicateService;
+
     /**
      * (non-PHPdoc)
      * @see UI_Controller_Datagrid::getelementsAction()
@@ -49,20 +56,17 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        /** @var Keyword_Service_Predicate $predicateService */
-        $predicateService = $this->get('Keyword_Service_Predicate');
-
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
         $revRef = $this->getAddElementValue('reverseRef');
         $revLabel = $this->getAddElementValue('reverseLabel');
         $description = $this->getAddElementValue('description');
 
-        $refErrors = $predicateService->getErrorMessageForNewRef($ref);
+        $refErrors = $this->predicateService->getErrorMessageForNewRef($ref);
         if ($refErrors != null) {
             $this->setAddElementErrorMessage('ref', $refErrors);
         }
-        $revRefErrors = $predicateService->getErrorMessageForNewReverseRef($revRef);
+        $revRefErrors = $this->predicateService->getErrorMessageForNewReverseRef($revRef);
         if ($revRefErrors != null) {
             $this->setAddElementErrorMessage('reverseRef', $revRefErrors);
         }
@@ -72,7 +76,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            $predicate = $predicateService->add($ref, $label, $revRef, $revLabel, $description);
+            $this->predicateService->add($ref, $label, $revRef, $revLabel, $description);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -87,10 +91,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var Keyword_Service_Predicate $predicateService */
-        $predicateService = $this->get('Keyword_Service_Predicate');
-
-        $predicateService->delete($this->delete);
+        $this->predicateService->delete($this->delete);
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
@@ -103,27 +104,24 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        /** @var Keyword_Service_Predicate $predicateService */
-        $predicateService = $this->get('Keyword_Service_Predicate');
-
         $predicateRef = $this->update['index'];
         $newValue = $this->update['value'];
 
         switch ($this->update['column']) {
             case 'label':
-                $predicateService->updateLabel($predicateRef, $newValue);
+                $this->predicateService->updateLabel($predicateRef, $newValue);
                 break;
             case 'reverseLabel':
-                $predicateService->updateReverseLabel($predicateRef, $newValue);
+                $this->predicateService->updateReverseLabel($predicateRef, $newValue);
                 break;
             case 'ref':
-                $predicateService->updateRef($predicateRef, $newValue);
+                $this->predicateService->updateRef($predicateRef, $newValue);
                 break;
             case 'reverseRef':
-                $predicateService->updateReverseRef($predicateRef, $newValue);
+                $this->predicateService->updateReverseRef($predicateRef, $newValue);
                 break;
             case 'description':
-                $predicateService->updateDescription($predicateRef, $newValue);
+                $this->predicateService->updateDescription($predicateRef, $newValue);
                 break;
             default:
                 break;

@@ -8,6 +8,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Classe controleur de cell.
@@ -16,6 +17,18 @@ use Core\Annotation\Secure;
  */
 class Orga_CellController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ETLData
+     */
+    private $etlDataService;
+
     /**
      * Affiche le détail d'une cellule.
      * @Secure("viewCell")
@@ -36,8 +49,6 @@ class Orga_CellController extends Core_Controller
         $this->view->cell = $cell;
 
         $connectedUser = $this->_helper->auth();
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
 
         if ($this->hasParam('tab')) {
             $tab = $this->getParam('tab');
@@ -52,7 +63,7 @@ class Orga_CellController extends Core_Controller
         $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$project->getLabel().'</small>';
         $this->view->isParentCellReachable = array();
         foreach ($cell->getParentCells() as $parentCell) {
-            $isUserAllowedToViewParentCell = $aclService->isAllowed(
+            $isUserAllowedToViewParentCell = $this->aclService->isAllowed(
                 $connectedUser,
                 User_Model_Action_Default::VIEW(),
                 $parentCell
@@ -64,7 +75,7 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB PROJECT.
-        $isUserAllowedToEditProject = $aclService->isAllowed(
+        $isUserAllowedToEditProject = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
             $project
@@ -82,7 +93,7 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB STRUCTURE.
-        $isUserAllowedToEditCell = $aclService->isAllowed(
+        $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
             $cell
@@ -105,7 +116,7 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB ACL
-        $isUserAllowedToAllowAuthorizations = $aclService->isAllowed(
+        $isUserAllowedToAllowAuthorizations = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::ALLOW(),
             $cell
@@ -209,7 +220,7 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB DOCUMENTS
-        $isUserAllowedToInputCell = $aclService->isAllowed(
+        $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $connectedUser,
             Orga_Action_Cell::INPUT(),
             User_Model_Resource_Entity::loadByEntity($cell)
@@ -391,9 +402,7 @@ class Orga_CellController extends Core_Controller
             $cell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
         );
 
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
-        $isUserAllowedToInputCell = $aclService->isAllowed(
+        $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
             Orga_Action_Cell::INPUT(),
             $cell
@@ -441,17 +450,14 @@ class Orga_CellController extends Core_Controller
      */
     public function inputsaveAction()
     {
-        /** @var Orga_Service_ETLData $etlDataService */
-        $etlDataService = $this->get('Orga_Service_ETLData');
-
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $inputSet = $this->getParam('inputSet');
 
         $cell->setAFInputSetPrimary($inputSet);
 
         if ($inputSet->isInputComplete()) {
-            $etlDataService->clearDWResultsFromCell($cell);
-            $etlDataService->populateDWResultsFromCell($cell);
+            $this->etlDataService->clearDWResultsFromCell($cell);
+            $this->etlDataService->populateDWResultsFromCell($cell);
         }
 
         $this->_helper->viewRenderer->setNoRender(true);

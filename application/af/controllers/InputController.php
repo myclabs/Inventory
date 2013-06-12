@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Saisie des AF
@@ -16,6 +17,18 @@ class AF_InputController extends Core_Controller
     use UI_Controller_Helper_Form;
 
     /**
+     * @Inject
+     * @var AF_Service_InputService
+     */
+    private $inputService;
+
+    /**
+     * @Inject
+     * @var AF_Service_InputSetSessionStorage
+     */
+    private $inputSetSessionStorage;
+
+    /**
      * Soumission d'un AF
      * AJAX
      * - id ID d'AF
@@ -24,9 +37,6 @@ class AF_InputController extends Core_Controller
      */
     public function submitAction()
     {
-        /** @var AF_Service_InputService $inputService */
-        $inputService = $this->get('AF_Service_InputService');
-
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
         $this->_setParam('af', $af);
@@ -46,7 +56,7 @@ class AF_InputController extends Core_Controller
         // MAJ l'InputSet
         $newValues = new AF_Model_InputSet_Primary($af);
         $errorMessages = $this->parseAfSubmit($formData, $newValues, $af);
-        $inputService->editInputSet($inputSet, $newValues);
+        $this->inputService->editInputSet($inputSet, $newValues);
 
         // Réponse
         $response = [];
@@ -126,9 +136,7 @@ class AF_InputController extends Core_Controller
      */
     public function submitTestAction()
     {
-        /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-        $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
-        $sessionStorage->saveInputSet($this->getParam('af'), $this->getParam('inputSet'));
+        $this->inputSetSessionStorage->saveInputSet($this->getParam('af'), $this->getParam('inputSet'));
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
@@ -139,9 +147,6 @@ class AF_InputController extends Core_Controller
      */
     public function resultsPreviewAction()
     {
-        /** @var AF_Service_InputService $inputService */
-        $inputService = $this->get('AF_Service_InputService');
-
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
 
@@ -154,7 +159,7 @@ class AF_InputController extends Core_Controller
         // Remplit l'InputSet
         $newValues = new AF_Model_InputSet_Primary($af);
         $errorMessages = $this->parseAfSubmit($formContent, $newValues, $af);
-        $inputService->editInputSet($inputSet, $newValues);
+        $this->inputService->editInputSet($inputSet, $newValues);
 
         $this->addFormErrors($errorMessages);
 
@@ -193,15 +198,13 @@ class AF_InputController extends Core_Controller
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         } else {
-            /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
             // Récupère la saisie en session
-            $inputSet = $sessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
             if ($inputSet === null) {
                 throw new Core_Exception_User("AF", "message", "inputSetDoesntExist");
             }
             $inputSet->markAsFinished($this->getParam('value'));
-            $sessionStorage->saveInputSet($af, $inputSet);
+            $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
         }
         $this->sendJsonResponse(__("AF", "inputInput", "progressStatusUpdated"));
 

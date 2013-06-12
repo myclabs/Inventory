@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package    User
@@ -14,24 +15,16 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
 {
 
     /**
+     * @Inject
      * @var User_Service_User
      */
     private $userService;
 
     /**
+     * @Inject
      * @var User_Service_ACL
      */
     private $aclService;
-
-    /**
-     * (non-PHPdoc)
-     */
-    public function init()
-    {
-        parent::init();
-        $this->userService = $this->get('User_Service_User');
-        $this->aclService = $this->get('User_Service_ACL');
-    }
 
     /**
      * @Secure("viewAllUsers")

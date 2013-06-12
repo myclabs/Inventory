@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Contrôleur de gestion des utilisateurs
@@ -15,6 +16,18 @@ class User_ProfileController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
+
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
 
     /**
      * Par défaut : redirige vers la liste des utilisateurs
@@ -32,12 +45,12 @@ class User_ProfileController extends Core_Controller
     public function listAction()
     {
         $loggedInUser = $this->_helper->auth();
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
         $resourceAllUsers = User_Model_Resource_Entity::loadByEntityName('User_Model_User');
-        $this->view->canCreateUsers = $aclService->isAllowed($loggedInUser,
-                                                             User_Model_Action_Default::CREATE(),
-                                                             $resourceAllUsers);
+        $this->view->canCreateUsers = $this->aclService->isAllowed(
+            $loggedInUser,
+            User_Model_Action_Default::CREATE(),
+            $resourceAllUsers
+        );
     }
 
     /**
@@ -69,10 +82,16 @@ class User_ProfileController extends Core_Controller
         $this->view->canEditPassword = ($user === $loggedInUser);
 
         // Est-ce que l'utilisateur peut désactiver le compte
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
-        $this->view->canDisable = $aclService->isAllowed($loggedInUser, User_Model_Action_Default::DELETE(), $user);
-        $this->view->canEnable = $aclService->isAllowed($loggedInUser, User_Model_Action_Default::UNDELETE(), $user);
+        $this->view->canDisable = $this->aclService->isAllowed(
+            $loggedInUser,
+            User_Model_Action_Default::DELETE(),
+            $user
+        );
+        $this->view->canEnable = $this->aclService->isAllowed(
+            $loggedInUser,
+            User_Model_Action_Default::UNDELETE(),
+            $user
+        );
 
         // Est-ce que l'utilisateur se modifie lui-même
         $this->view->editSelf = ($user === $loggedInUser);
@@ -94,8 +113,6 @@ class User_ProfileController extends Core_Controller
         } else {
             $user = $connectedUser;
         }
-        /** @var User_Service_User $userService */
-        $userService = $this->get('User_Service_User');
 
         $formData = $this->getFormData('userProfile');
         $user->setFirstName($formData->getValue('firstName'));
@@ -115,7 +132,7 @@ class User_ProfileController extends Core_Controller
                           array(
                                'APPLICATION_NAME' => $config->emails->noreply->name
                           ));
-            $userService->sendEmail($user, $subject, $content);
+            $this->userService->sendEmail($user, $subject, $content);
             $message = __('UI', 'message', 'updated') . __('User', 'editProfile', 'userInformedByEmail');
         } else {
             $message = __('UI', 'message', 'updated');
@@ -131,8 +148,6 @@ class User_ProfileController extends Core_Controller
     public function disableAction()
     {
         $connectedUser = $this->_helper->auth();
-        /** @var User_Service_User $userService */
-        $userService = $this->get('User_Service_User');
 
         /** @var $user User_Model_User */
         $user = User_Model_User::load($this->getParam('id'));
@@ -151,7 +166,7 @@ class User_ProfileController extends Core_Controller
                            'APPLICATION_NAME' => $config->emails->noreply->name
                       )
         );
-        $userService->sendEmail($user, $subject, $content);
+        $this->userService->sendEmail($user, $subject, $content);
 
         UI_Message::addMessageStatic(__('User', 'editProfile', 'accountDeactivated') . ' '
                                          . __('User', 'editProfile', 'userInformedByEmail'), UI_Message::TYPE_SUCCESS);
@@ -169,9 +184,6 @@ class User_ProfileController extends Core_Controller
      */
     public function enableAction()
     {
-        /** @var User_Service_User $userService */
-        $userService = $this->get('User_Service_User');
-
         /** @var $user User_Model_User */
         $user = User_Model_User::load($this->getParam('id'));
 
@@ -189,7 +201,7 @@ class User_ProfileController extends Core_Controller
                            'APPLICATION_NAME' => $config->emails->noreply->name
                       )
         );
-        $userService->sendEmail($user, $subject, $content);
+        $this->userService->sendEmail($user, $subject, $content);
 
         $message = __('User', 'messages', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
         UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
@@ -238,9 +250,6 @@ class User_ProfileController extends Core_Controller
             }
 
             if (!$this->hasFormError()) {
-                /** @var User_Service_User $userService */
-                $userService = $this->get('User_Service_User');
-
                 $subject = __('User', 'email', 'subjectEmailModified');
                 $config = Zend_Registry::get('configuration');
                 if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
@@ -263,14 +272,14 @@ class User_ProfileController extends Core_Controller
                 }
 
                 // Envoi de l'email à l'ancienne adresse
-                $userService->sendEmail($user, $subject, $content);
+                $this->userService->sendEmail($user, $subject, $content);
 
                 $user->setEmail($email);
                 $entityManagers = Zend_Registry::get('EntityManagers');
                 $entityManagers['default']->flush();
 
                 // Envoi de l'email à la nouvelle adresse
-                $userService->sendEmail($user, $subject, $content);
+                $this->userService->sendEmail($user, $subject, $content);
 
                 if ($user === $this->_helper->auth()) {
                     $message = __('UI', 'message', 'updated');

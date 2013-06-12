@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controlleur du Datagrid listant les Roles du projet d'une cellule.
@@ -15,6 +16,18 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ACLManager
+     */
+    private $aclManager;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -56,11 +69,6 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
      */
     function addelementAction()
     {
-        /** @var User_Service_User $userService */
-        $userService = $this->get('User_Service_User');
-        /** @var Orga_Service_ACLManager $aclManager */
-        $aclManager = $this->get('Orga_Service_ACLManager');
-
         $idProject = $this->getParam('idProject');
         $projectAdministratorRole = User_Model_Role::loadByRef('projectAdministrator_'.$idProject);
         $project = Orga_Model_Project::load(array('id' => $idProject));
@@ -83,7 +91,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                     try {
                         $entityManagers['default']->flush();
 
-                        $aclManager->addProjectAdministrator(
+                        $this->aclManager->addProjectAdministrator(
                             $project,
                             $user
                         );
@@ -96,7 +104,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
 
                         throw $e;
                     }
-                    $userService->sendEmail(
+                    $this->userService->sendEmail(
                         $user,
                         __('User', 'email', 'subjectAccessRightsChange'),
                         __('Orga', 'email', 'userProjectAdministratorRoleAdded', array(
@@ -106,7 +114,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                     $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
                 }
             } else {
-                $user = $userService->inviteUser(
+                $user = $this->userService->inviteUser(
                     $userEmail,
                     __('Orga', 'email', 'userProjectAdministratorRoleGivenAtCreation', array(
                         'PROJECT' => $project->getLabel(),
@@ -120,7 +128,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                 try {
                     $entityManagers['default']->flush();
 
-                    $aclManager->addProjectAdministrator(
+                    $this->aclManager->addProjectAdministrator(
                         $project,
                         $user
                     );
@@ -153,11 +161,6 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
      */
     function deleteelementAction()
     {
-        /** @var User_Service_User $userService */
-        $userService = $this->get('User_Service_User');
-        /** @var Orga_Service_ACLManager $aclManager */
-        $aclManager = $this->get('Orga_Service_ACLManager');
-
         $idProject = $this->getParam('idProject');
         $project = Orga_Model_Project::load(array('id' => $idProject));
         $user = User_Model_User::load(array('id' => $this->delete));
@@ -168,7 +171,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
         try {
             $entityManagers['default']->flush();
 
-            $aclManager->removeProjectAdministrator(
+            $this->aclManager->removeProjectAdministrator(
                 $project,
                 $user
             );
@@ -182,7 +185,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
             throw $e;
         }
 
-        $userService->sendEmail(
+        $this->userService->sendEmail(
             $user,
             __('User', 'email', 'subjectAccessRightsChange'),
             __('Orga', 'email', 'userProjectAdministratorRoleRemoved', array(

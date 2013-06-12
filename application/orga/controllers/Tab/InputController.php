@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controlleur des onglets de la saisie d'une cellule.
@@ -16,6 +17,12 @@ use Core\Annotation\Secure;
 class Orga_Tab_InputController extends Core_Controller
 {
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
 
     /**
      * Action fournissant la vue des documents pour l'input.
@@ -29,12 +36,9 @@ class Orga_Tab_InputController extends Core_Controller
         $this->view->idCell = $idCell;
         $cell = Orga_Model_Cell::load($idCell);
 
-        /** @var User_Service_ACL $aclService */
-        $aclService = $this->get('User_Service_ACL');
-
         $this->view->idCell = $idCell;
         $this->view->comments = $cell->getSocialCommentsForInputSetPrimary();
-        $this->view->isUserAbleToComment = $aclService->isAllowed(
+        $this->view->isUserAbleToComment = $this->aclService->isAllowed(
             $this->_helper->auth(),
             Orga_Action_Cell::INPUT(),
             $cell

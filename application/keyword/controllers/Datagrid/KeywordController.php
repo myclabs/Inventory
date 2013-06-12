@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Classe controleur de la datagrid de Keyword.
@@ -14,6 +15,12 @@ use Core\Annotation\Secure;
  */
 class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var Keyword_Service_Keyword
+     */
+    private $keywordService;
+
     /**
      * (non-PHPdoc)
      * @see UI_Controller_Datagrid::getelementsAction()
@@ -23,6 +30,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         foreach (Keyword_Model_Keyword::loadList($this->request) as $keyword) {
+            /** @var Keyword_Model_Keyword $keyword */
             $data = array();
 
             $data['index'] = $keyword->getRef();
@@ -46,19 +54,16 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        /** @var Keyword_Service_Keyword $keywordService */
-        $keywordService = $this->get('Keyword_Service_Keyword');
-
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
 
-        $refErrors = $keywordService->getErrorMessageForNewRef($ref);
+        $refErrors = $this->keywordService->getErrorMessageForNewRef($ref);
         if ($refErrors != null) {
             $this->setAddElementErrorMessage('ref', $refErrors);
         }
 
         if (empty($this->_addErrorMessages)) {
-            $keyword = $keywordService->add($ref, $label);
+            $this->keywordService->add($ref, $label);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -71,10 +76,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var Keyword_Service_Keyword $keywordService */
-        $keywordService = $this->get('Keyword_Service_Keyword');
-
-        $keywordService->delete($this->delete);
+        $this->keywordService->delete($this->delete);
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
@@ -87,18 +89,15 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        /** @var Keyword_Service_Keyword $keywordService */
-        $keywordService = $this->get('Keyword_Service_Keyword');
-
         $keywordRef = $this->update['index'];
         $newValue = $this->update['value'];
 
         switch ($this->update['column']) {
             case 'label':
-                $keywordService->updateLabel($keywordRef, $newValue);
+                $this->keywordService->updateLabel($keywordRef, $newValue);
                 break;
             case 'ref':
-                $keywordService->updateRef($keywordRef, $newValue);
+                $this->keywordService->updateRef($keywordRef, $newValue);
                 break;
             default:
         }

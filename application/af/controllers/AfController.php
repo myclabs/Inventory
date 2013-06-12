@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Countroleur des AF
@@ -14,6 +15,12 @@ use Core\Annotation\Secure;
  */
 class AF_AfController extends Core_Controller
 {
+
+    /**
+     * @Inject
+     * @var AF_Service_InputSetSessionStorage
+     */
+    private $inputSetSessionStorage;
 
     /**
      * Liste des AF
@@ -97,10 +104,8 @@ class AF_AfController extends Core_Controller
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
-            /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
             // Récupère la saisie en session
-            $inputSet = $sessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->af = $af;
@@ -154,10 +159,8 @@ class AF_AfController extends Core_Controller
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
-            /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
             // Récupère la saisie en session
-            $inputSet = $sessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
@@ -180,10 +183,8 @@ class AF_AfController extends Core_Controller
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
-            /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = $this->get('AF_Service_InputSetSessionStorage');
             // Récupère la saisie en session
-            $inputSet = $sessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;

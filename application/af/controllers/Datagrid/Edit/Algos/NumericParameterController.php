@@ -7,12 +7,19 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package AF
  */
 class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Techno_Service_Techno
+     */
+    private $technoService;
 
     /**
      * (non-PHPdoc)
@@ -68,9 +75,6 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
      */
     public function addelementAction()
     {
-        /** @var Techno_Service_Techno $technoService */
-        $technoService = $this->get('Techno_Service_Techno');
-
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
@@ -82,7 +86,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
             $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $family = $technoService->getFamily($familyRef);
+            $family = $this->technoService->getFamily($familyRef);
         } catch (Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('family', __('AF', 'configTreatmentMessage', 'unrecognizedFamily'));
         }
@@ -122,9 +126,6 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
      */
     public function updateelementAction()
     {
-        /** @var Techno_Service_Techno $technoService */
-        $technoService = $this->get('Techno_Service_Techno');
-
         /** @var $algo Algo_Model_Numeric_Parameter */
         $algo = Algo_Model_Numeric_Parameter::load($this->update['index']);
         $newValue = $this->update['value'];
@@ -139,7 +140,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 break;
             case 'family':
                 try {
-                    $family = $technoService->getFamily($newValue);
+                    $family = $this->technoService->getFamily($newValue);
                 } catch (Core_Exception_NotFound $e) {
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'unrecognizedFamily');
                 }

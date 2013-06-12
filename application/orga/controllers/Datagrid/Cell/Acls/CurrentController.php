@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.
@@ -15,6 +16,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -76,16 +83,13 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            /** @var User_Service_User $userService */
-            $userService = $this->get('User_Service_User');
-
             if (User_Model_User::isEmailUsed($userEmail)) {
                 $user = User_Model_User::loadByEmail($userEmail);
                 if ($user->hasRole($userRole)) {
                     $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
                 } else {
                     $user->addRole($userRole);
-                    $userService->sendEmail(
+                    $this->userService->sendEmail(
                         $user,
                         __('User', 'email', 'subjectAccessRightsChange'),
                         __('Orga', 'email', 'userRoleAdded', array(
@@ -96,7 +100,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                     $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
                 }
             } else {
-                $user = $userService->inviteUser(
+                $user = $this->userService->inviteUser(
                     $userEmail,
                     __('Orga', 'email', 'userRoleGivenAtCreation', array(
                         'CELL' => $cell->getLabelExtended(),
@@ -126,16 +130,13 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
      */
     function deleteelementAction()
     {
-        /** @var User_Service_User $userService */
-        $userService = $this->get('User_Service_User');
-
         list($userRoleRef, $userId) = explode('#', $this->delete);
         $user = User_Model_User::load(array('id' => $userId));
         $userRole = User_Model_Role::loadByRef($userRoleRef);
         $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
 
         $user->removeRole($userRole);
-        $userService->sendEmail(
+        $this->userService->sendEmail(
             $user,
             __('User', 'email', 'subjectAccessRightsChange'),
             __('Orga', 'email', 'userRoleRemoved', array(

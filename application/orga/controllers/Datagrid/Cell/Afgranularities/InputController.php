@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controller du datagrid des saisies des formulaires des cellules.
@@ -12,6 +13,11 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
 
     /**
      * Methode appelee pour remplir le tableau.
@@ -138,9 +144,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                         $childCell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
                     );
 
-                    /** @var User_Service_ACL $aclService */
-                    $aclService = $this->get('User_Service_ACL');
-                    $isUserAllowedToInputCell = $aclService->isAllowed(
+                    $isUserAllowedToInputCell = $this->aclService->isAllowed(
                         $this->_helper->auth(),
                         Orga_Action_Cell::INPUT(),
                         $childCell

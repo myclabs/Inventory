@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package    Orga
@@ -14,6 +15,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      * @Secure("viewReport")
@@ -33,9 +40,7 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
             $urlDetails = 'orga/tab_celldetails/report?idCell='.$this->getParam('idCell').'&idReport='.$data['index'];
             $data['details'] = $this->cellLink($urlDetails, __('UI', 'name', 'details'), 'share-alt');
 
-            /** @var User_Service_ACL $aclService */
-            $aclService = $this->get('User_Service_ACL');
-            $isUserAllowedToDeleteReport = $aclService->isAllowed(
+            $isUserAllowedToDeleteReport = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::DELETE(),
                 $report

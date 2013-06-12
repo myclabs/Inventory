@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package Social
@@ -14,6 +15,12 @@ class Social_MessageController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var Social_Service_Message
+     */
+    private $messageService;
 
     /**
      * Liste des messages
@@ -51,9 +58,6 @@ class Social_MessageController extends Core_Controller
      */
     public function newAction()
     {
-        /** @var Social_Service_Message $messageService */
-        $messageService = $this->get('Social_Service_Message');
-
         if ($this->_request->isPost()) {
             $formData = $this->getFormData('newMessage');
             $title = $formData->getValue('title');
@@ -73,7 +77,7 @@ class Social_MessageController extends Core_Controller
                     $recipient = Social_Model_UserGroup::load($recipientId);
                 }
                 $author = $this->_helper->auth();
-                $messageService->sendNewMessage($author, [$recipient], $title, $content);
+                $this->messageService->sendNewMessage($author, [$recipient], $title, $content);
                 UI_Message::addMessageStatic(__('Social', 'message', 'messageSent'), UI_Message::TYPE_SUCCESS);
             }
             $this->sendFormResponse();

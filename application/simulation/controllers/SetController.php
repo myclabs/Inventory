@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @author valentin.claras
@@ -12,6 +13,12 @@ use Core\Annotation\Secure;
  */
 class Simulation_SetController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var Simulation_Service_ETLStructure
+     */
+    private $etlStructureService;
+
     /**
      * Redirection sur la liste.
      *
@@ -46,9 +53,6 @@ class Simulation_SetController extends Core_Controller
      */
     public function detailsAction()
     {
-        /** @var Simulation_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $this->get('Simulation_Service_ETLStructure');
-
         if (!($this->hasParam('idSet'))) {
             $this->redirect('simulation/set/list');
         }
@@ -59,7 +63,7 @@ class Simulation_SetController extends Core_Controller
         $this->view->idCube = $set->getDWCube()->getKey()['id'];
         $this->view->setName = $set->getLabel();
         $this->view->aFName = $set->getAF()->getLabel();
-        $this->view->isSetDWCubeUpToDate = $etlStructureService->isSetDWCubeUpToDate($set);
+        $this->view->isSetDWCubeUpToDate = $this->etlStructureService->isSetDWCubeUpToDate($set);
 
         $this->view->activatedTab = ($this->hasParam('tab')) ? $this->getParam('tab') : null;
     }
@@ -71,11 +75,8 @@ class Simulation_SetController extends Core_Controller
      */
     public function resetdwAction()
     {
-        /** @var Simulation_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $this->get('Simulation_Service_ETLStructure');
-
         $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
-        $etlStructureService->resetSetDWCube($set);
+        $this->etlStructureService->resetSetDWCube($set);
         $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'confirmationMessage')));
     }
 

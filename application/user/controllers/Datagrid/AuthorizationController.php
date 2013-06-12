@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package    User
@@ -14,18 +15,10 @@ class User_Datagrid_AuthorizationController extends UI_Controller_Datagrid
 {
 
     /**
+     * @Inject
      * @var User_Service_ACL
      */
     private $aclService;
-
-    /**
-     * (non-PHPdoc)
-     */
-    public function init()
-    {
-        parent::init();
-        $this->aclService = $this->get('User_Service_ACL');
-    }
 
     /**
      * @Secure("editUser")
