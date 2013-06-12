@@ -11,7 +11,7 @@ use DI\Container;
  * @package    Core
  * @subpackage Test
  */
-class Core_Test_Work_GearmanDispatcherTest extends PHPUnit_Framework_TestCase
+class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
 {
 
     public function testRunServiceCall()
@@ -19,7 +19,7 @@ class Core_Test_Work_GearmanDispatcherTest extends PHPUnit_Framework_TestCase
         if (!extension_loaded('gearman')) {
             $this->markTestSkipped('Extension Gearman non installée');
         }
-        $dispatcher = new Core_Work_GearmanDispatcher();
+        $dispatcher = $this->get('Core_Work_GearmanDispatcher');
         $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container()));
 
         $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
