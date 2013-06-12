@@ -4,6 +4,7 @@
  * @package Core
  */
 
+use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
 
 /**
