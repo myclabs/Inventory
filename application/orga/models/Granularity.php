@@ -633,7 +633,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
         foreach ($this->getAxes() as $currentIndex => $currentAxis) {
             if (!($currentAxis->isTransverse($crossingGranularity->getAxes()))) {
-                foreach ($crossingGranularity->getAxes() as $crossingIndex => $crossingAxis) {
+                foreach ($crossingGranularity->getAxes() as $crossingAxis) {
                     if ($currentAxis->isNarrowerThan($crossingAxis)) {
                         $encompassingAxes[$currentIndex] = $crossingAxis;
                     } else {
@@ -901,14 +901,12 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         if ($this->cellsWithSocialGenericActions !== $bool) {
             if ($bool === false) {
-                $cells = [];
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForSocialGenericAction()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialGenericActions');
                     }
-                    $cells[] = $cell;
                 }
-                foreach ($cells as $cell) {
+                foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForSocialGenericAction();
                 }
             } else  {
@@ -941,14 +939,12 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         if ($this->cellsWithSocialContextActions !== $bool) {
             if ($bool === false) {
-                $cells = [];
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForSocialContextAction()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialContextActions');
                     }
-                    $cells[] = $cell;
                 }
-                foreach ($cells as $cell) {
+                foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForSocialContextAction();
                 }
             } else  {
@@ -981,14 +977,12 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         if ($this->cellsWithInputDocs !== $bool) {
             if ($bool === false) {
-                $cells = [];
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForAFInputSetsPrimary()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithInputDocs');
                     }
-                    $cells[] = $cell;
                 }
-                foreach ($cells as $cell) {
+                foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForAFInputSetsPrimary();
                 }
             } else  {

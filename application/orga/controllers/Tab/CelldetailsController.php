@@ -545,48 +545,4 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
     }
 
-//    /**
-//     * Action appelé pour l'affichage du fichier d'import
-//     */
-//    public function importxlsAction()
-//    {
-//        $ok = false;
-//        $validPicture = new UI_HTML_Image('ui/accept.png', 'validPicture');
-//        $invalidPicture = new UI_HTML_Image('doc/exclamation.png', 'invalidPicture');
-//        require_once (Core_Package_Manager::getPackage('Orga')->getPath().'/application/orga/forms/Import/ImportXls.php');
-//        $addForm = new importForm('ImportXls', $this->_getAllParams());
-//
-//        $config = new Zend_Config_Ini(
-//                Core_Package_Manager::getCurrentPackage()->getPath().'/application/configs/application.ini',
-//                APPLICATION_ENV);
-//        $basePath = $config->export->path;
-//
-//        if (!isset($basePath)) {
-//            UI_Message::addMessageStatic(__('Orga', 'errors', 'pathConfigUnfindable'), $invalidPicture);
-//        }
-//        if ($this->getRequest()->isPost()) {
-//            $post = $this->getRequest()->getPost();
-//            if ((isset($_FILES['fileElementForm']['tmp_name'])&&($_FILES['fileElementForm']['error'] == UPLOAD_ERR_OK))) {
-//                $chemindestination = $basePath;
-//                if (move_uploaded_file($_FILES['fileElementForm']['tmp_name'], $chemindestination.$_FILES['fileElementForm']['name'])) {
-//                    $xlsPath = $chemindestination.$_FILES['fileElementForm']['name'];
-//                    $ok = true;
-//                } else {
-//                    UI_Message::addMessageStatic(__('Orga', 'errors', 'uploadFail'), $invalidPicture);
-//                }
-//            }
-//        }
-//        if ($ok) {
-//            try {
-//                $importxls = new Orga_ImportXls($xlsPath);
-//                $importxls->ImportAndSaveObject($this->getParam('idCell'));
-//                UI_Message::addMessageStatic(__('Orga', 'messages', 'uploadOk'), $validPicture);
-//            } catch (Exception $e) {
-//                UI_Message::addMessageStatic(__('Orga', 'errors', 'importFail'), $invalidPicture);
-//            }
-//        }
-//
-//         $this->redirect($_SERVER['HTTP_REFERER']);
-//    }
-
 }

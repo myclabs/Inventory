@@ -191,30 +191,27 @@ class Orga_Model_Cell extends Core_Model_Entity
             $member->addCell($this);
         }
         $this->updateMembersHashKey();
-        $this->updateAllParentsRelevant();
+        $this->updateHierarchy();
 
-        try {
-            $granularityForInventoryStatus = $granularity->getProject()->getGranularityForInventoryStatus();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            // La granularité des inventaires n'a pas encoré été créée
-            $granularityForInventoryStatus = null;
-        }
-        // Définition du statut de l'inventaire
-        if (($granularityForInventoryStatus)
-            && ($granularity !== $granularityForInventoryStatus)
-            && ($granularity->isNarrowerThan($granularityForInventoryStatus))
-        ) {
-            // Cherche la cellule parent dans la granularité de définition des statut des inventaires
-            try {
-                $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
-                $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
-            } catch (Core_Exception_NotFound $e) {
-                // Il n'y a pas de cellules parentes pour l'instant.
-            }
-        }
         // Création du CellsGroup.
         foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
             $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);
+        }
+        // Création de la Bibliography des Input.
+        if ($this->granularity->getInputConfigGranularity() !== null) {
+            $this->docBibliographyForAFInputSetPrimary = new Doc_Model_Bibliography();
+        }
+        // Création de la Library des Input.
+        if ($this->granularity->getCellsWithInputDocuments()) {
+            $this->docLibraryForAFInputSetsPrimary = new Doc_Model_Library();
+        }
+        // Création de la Library des GenericAction.
+        if ($this->granularity->getCellsWithSocialGenericActions()) {
+            $this->docLibraryForSocialGenericActions = new Doc_Model_Library();
+        }
+        // Création de la Library des ContextAction.
+        if ($this->granularity->getCellsWithInputDocuments()) {
+            $this->docLibraryForSocialContextActions = new Doc_Model_Library();
         }
     }
 
@@ -425,8 +422,9 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Met à jour l'attribut allParentsRelevant.
      */
-    public function updateAllParentsRelevant()
+    public function updateHierarchy()
     {
+        // Mise à jour de la pertinence.
         $access = true;
         foreach ($this->getParentCells() as $parentCell) {
             if (!($parentCell->getRelevant())) {
@@ -435,6 +433,27 @@ class Orga_Model_Cell extends Core_Model_Entity
             }
         }
         $this->setAllParentsRelevant($access);
+
+        // Mise à jour du status de l'inventaire.
+        try {
+            $granularityForInventoryStatus = $this->granularity->getProject()->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            // La granularité des inventaires n'a pas encoré été créée.
+            $granularityForInventoryStatus = null;
+        }
+        // Définition du statut de l'inventaire.
+        if (($granularityForInventoryStatus)
+            && ($this->granularity !== $granularityForInventoryStatus)
+            && ($this->granularity->isNarrowerThan($granularityForInventoryStatus))
+        ) {
+            // Cherche la cellule parent dans la granularité de définition des statut des inventaires
+            try {
+                $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
+                $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
+            } catch (Core_Exception_NotFound $e) {
+                // Il n'y a pas de cellules parentes pour l'instant.
+            }
+        }
     }
 
     /**
