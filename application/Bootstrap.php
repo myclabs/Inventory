@@ -86,6 +86,7 @@ class Bootstrap extends Core_Bootstrap
     {
         $this->bootstrap('View');
         $view = $this->getResource('view');
+        $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
     }
 

@@ -359,18 +359,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Enregistre les helpers de Core.
-     */
-    protected function _initViewHelperCore()
-    {
-        $this->bootstrap('View');
-        // Exceptionellement, les helpers de vue de Core sont dans la librairie.
-        //  Car Core n'est pas un module.
-        $view = $this->getResource('view');
-        $view->addHelperPath(PACKAGE_PATH.'/src/View/Helper', 'Core_View_Helper');
-    }
-
-    /**
      * Envoi de mail.
      */
     protected function _initMail()
