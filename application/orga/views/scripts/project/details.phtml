@@ -104,7 +104,7 @@
 
             $htmlAdd = '<div>';
             $htmlAdd .= $this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link(
-                'orga/granularity/report?idCell='.$this->idCell.'&idGranularity='.$granularity->getId().'&idProject='.$granularity->getDWCube()->getId()
+                'orga/granularity/report/idCell/'.$this->idCell.'/idGranularity/'.$granularity->getId().'/idCube/'.$granularity->getDWCube()->getId()
             );
             $htmlAdd .= '</div>';
             echo $this->collapse('collapse_'.$datagridGranularityReport->id, $labelGranularity, $datagridGranularityReport->getHTML().$htmlAdd)->collapsed();

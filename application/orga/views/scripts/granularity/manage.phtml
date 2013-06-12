@@ -11,6 +11,7 @@ $columnAxis = new UI_Datagrid_Col_List('axes', __('UI', 'name', 'axes'));
 $columnAxis->list = $this->listAxes;
 $columnAxis->multiple = true;
 $columnAxis->addable = true;
+$columnAxis->withEmptyElement = false;
 $columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $datagrid->addCol($columnAxis);
 
@@ -105,3 +106,9 @@ if ($this->display === false) {
 } else {
     $datagrid->display();
 }
+?>
+<script type="text/javascript">
+    $('#granularity_addPanel').on('hide', function() {
+        $('#granularity_axes_addForm').val([]).trigger('change');
+    });
+</script>
