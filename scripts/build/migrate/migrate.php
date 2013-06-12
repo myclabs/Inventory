@@ -554,7 +554,7 @@ class Inventory_Migrate extends Core_Script_Populate
         $granularity->setCellsWithACL($row['cellsWithACL']);
         $granularity->setCellsWithSocialGenericActions((bool)$row['cellsWithSocialGenericActions']);
         $granularity->setCellsWithSocialContextActions((bool)$row['cellsWithSocialContextActions']);
-        $granularity->setCellsWithInputDocs((bool)$row['cellsWithInputDocs']);
+        $granularity->setCellsWithInputDocuments((bool)$row['cellsWithInputDocs']);
         $granularity->save();
 
         echo "\t\t GranularityDataProvider : " . $row['ref'] . " updated\n";
@@ -568,7 +568,7 @@ class Inventory_Migrate extends Core_Script_Populate
             . " Social Generic actions\n";
         echo "\t\t\t > " . (($granularity->getCellsWithSocialContextActions()) ? "with" : "without")
             . " Social Context actions\n";
-        echo "\t\t\t > " . (($granularity->getCellsWithInputDocs()) ? "with" : "without") . " Input docs\n";
+        echo "\t\t\t > " . (($granularity->getCellsWithInputDocuments()) ? "with" : "without") . " Input docs\n";
 
         $project = $granularity->getProject();
         try {

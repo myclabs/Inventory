@@ -61,7 +61,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        $aFInputOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
+        $inputGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
         $this->request->filter->addCondition(
             Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
@@ -81,12 +81,9 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
             Orga_Model_Cell::getAlias()
         );
 
-        foreach ($cell->getChildCellsForGranularity($aFInputOrgaGranularity, $this->request)
-                 as $childCell) {
-            $childCell = $childCell->getOrgaCell();
-
+        foreach ($cell->loadChildCellsForGranularity($inputGranularity, $this->request) as $childCell) {
             $data = array();
-            $data['index'] = $childCell->getKey()['id'];
+            $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
@@ -137,12 +134,9 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
                 try {
                     // Vérification qu'un AF est défini.
-                    $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity(
-                        $childCell->getGranularity()
-                    );
-                    $cellsGroupDataProvider = $aFGranularities->getCellsGroupDataProviderForContainerCell(
-                        $childCell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
-                    );
+                    $cellsGroup = $childCell->getParentCellForGranularity($inputGranularity->getInputConfigGranularity())
+                        ->getCellsGroupForInputGranularity($inputGranularity);
+                    $cellsGroup->getAF();
 
                     $isUserAllowedToInputCell = $this->aclService->isAllowed(
                         $this->_helper->auth(),
@@ -155,11 +149,9 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                         $inputSetPrimary = null;
                     }
                     if (($isUserAllowedToInputCell) || ($inputSetPrimary !== null)) {
-                        $data['link'] = $this->cellLink(
-                            'orga/cell/input/idCell/'.$childCell->getKey()['id'].'/fromIdCell/'.$idCell
-                        );
+                        $data['link'] = $this->cellLink('orga/cell/input/idCell/'.$childCell->getId().'/fromIdCell/'.$idCell);
                     }
-                } catch (Core_Exception_NotFound $e) {
+                } catch (Core_Exception_UndefinedAttribute $e) {
                     // Pas d'AF configuré, donc pas de lien vers la saisie.
                 }
             } else {
@@ -171,8 +163,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
             $this->addLine($data);
         }
-        $this->totalElements = $cell->countTotalChildCellsForGranularity($aFInputOrgaGranularity,
-                                                                                     $this->request);
+        $this->totalElements = $cell->countTotalChildCellsForGranularity($inputGranularity, $this->request);
 
         $this->send();
     }

@@ -29,7 +29,7 @@
         foreach ($axis->getDirectBroaders() as $broaderAxis) {
             // Construction de la liste de membres.
             $columnBroader = new UI_Datagrid_Col_List('broader'.$broaderAxis->getRef(), $broaderAxis->getLabel());
-            $columnBroader->list = 'classif/datagrid_member/getparents?refParentAxis='.$broaderAxis->getRef().'&';
+            $columnBroader->list = 'classif/datagrid_member/getparents/refParentAxis/'.$broaderAxis->getRef();
             $columnBroader->dynamicList = true;
             $columnBroader->editable = true;
             $datagridAxis->addCol($columnBroader);

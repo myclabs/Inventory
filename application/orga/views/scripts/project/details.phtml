@@ -1,0 +1,124 @@
+<?php
+/**
+ * Vue générale d'un project
+ * @author valentin.claras
+ * @package Orga
+ */
+?>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'project', 'configuration')?></legend>
+    <div>
+        <?php
+        $projectForm = new UI_Form('projectDetails');
+        $projectForm->setAction('orga/project/edit/idProject/'.$this->idProject);
+
+        $labelElementForm = new UI_Form_Element_Text('label');
+        $labelElementForm->setLabel(__('Orga', 'name', 'label'));
+        $labelElementForm->setValue($this->projectLabel);
+        $projectForm->addElement($labelElementForm);
+
+        if (!empty($this->granularities)) {
+            $granularityForInventoryStatusElementForm = new UI_Form_Element_Select('granularityForInventoryStatus');
+            $granularityForInventoryStatusElementForm->setLabel(__('Orga', 'name', 'granularityForInventoryStatus'));
+            $granularityForInventoryStatusElementForm->setValue($this->granularityRefForInventoryStatus);
+            $projectForm->addElement($granularityForInventoryStatusElementForm);
+
+            foreach ($this->granularities as $granularity) {
+                $granularityOption = new UI_Form_Element_Option(
+                    $granularity->getId(),
+                    $granularity->getRef(),
+                    $granularity->getLabel()
+                );
+                $granularityForInventoryStatusElementForm->addOption($granularityOption);
+            }
+        }
+
+        $projectForm->addSubmitButton();
+
+        if ($this->display) {
+            $projectForm->display();
+        } else {
+            echo $projectForm->render();
+        }
+        ?>
+    </div>
+</fieldset>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'project', 'inputGranularities')?></legend>
+    <div>
+        <?php
+        if ($this->granularityRefForInventoryStatus !== null) {
+            $colListGranularities = array();
+            foreach ($this->granularities as $granularity) {
+                $colListGranularities[$granularity->getRef()] = $granularity->getLabel();
+            }
+
+            $datagridInputGranularities = new UI_Datagrid('inputGranularities', 'datagrid_project_inputgranularities', 'orga');
+
+            $columnInputConfigGranularity = new UI_Datagrid_Col_List('inputConfigGranularity', __('Orga', 'configuration', 'inputConfigGranularity'));
+            $columnInputConfigGranularity->list = $colListGranularities;
+            $datagridInputGranularities->addCol($columnInputConfigGranularity);
+
+            $columnInputGranularity = new UI_Datagrid_Col_List('inputGranularity', __('Orga', 'configuration', 'inputGranularity'));
+            $columnInputGranularity->list = $colListGranularities;
+            $datagridInputGranularities->addCol($columnInputGranularity);
+
+            $datagridInputGranularities->addParam('idProject', $this->idProject);
+            $datagridInputGranularities->pagination = false;
+            $datagridInputGranularities->addElements = true;
+            $datagridInputGranularities->deleteElements = true;
+
+            if ($this->display) {
+                $datagridInputGranularities->display();
+            } else {
+                echo $datagridInputGranularities->render();
+            }
+        } else {
+            echo __('Orga', 'exceptions', 'errorMessageInputGranularities');;
+        }
+        ?>
+    </div>
+</fieldset>
+
+<?php if (!empty($this->granularitiesWithDWCube)) { ?>
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'configuration', 'granularityAnalysesTitle')?></legend>
+    <div>
+        <?php
+        foreach ($this->granularitiesWithDWCube as $labelGranularity => $granularity) {
+            $datagridGranularityReport = new UI_Datagrid('granularity'.$granularity->getId().'Report', 'datagrid_granularity_report', 'orga');
+
+            $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+            $datagridGranularityReport->addCol($columnLabel);
+
+            $columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+            $datagridGranularityReport->addCol($columnDetails);
+
+            $datagridGranularityReport->addParam('idGranularity', $granularity->getId());
+            $datagridGranularityReport->addParam('idCube', $granularity->getDWCube()->getId());
+            $datagridGranularityReport->pagination = false;
+            $datagridGranularityReport->deleteElements = true;
+            $datagridGranularityReport->initialLoading = false;
+
+            $htmlAdd = '<div>';
+            $htmlAdd .= $this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link(
+                'orga/granularity/report?idCell='.$this->idCell.'&idGranularity='.$granularity->getId().'&idProject='.$granularity->getDWCube()->getId()
+            );
+            $htmlAdd .= '</div>';
+            echo $this->collapse('collapse_'.$datagridGranularityReport->id, $labelGranularity, $datagridGranularityReport->getHTML().$htmlAdd)->collapsed();
+
+            $script = '';
+            $script .= '$(\'#'.'collapse_'.$datagridGranularityReport->id.'\').on(\'show\', function(e) {';
+            $script .= 'if ($(e.target).attr(\'id\') == \'collapse_'.$datagridGranularityReport->id.'_wrapper\') {';
+            $script .= $datagridGranularityReport->id.'.filter();';
+            $script .= '}';
+            $script .= '});';
+
+            echo '<script type="text/javascript">'.$datagridGranularityReport->getScript().$script.'</script>';
+        }
+        ?>
+    </div>
+</fieldset>
+<?php } ?>

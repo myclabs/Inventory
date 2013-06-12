@@ -40,11 +40,11 @@ class Orga_Work_Task_AddMember extends Core_Work_Task
      */
     public function __construct($axis, $ref, $label, $broaderMembers)
     {
-        $this->idAxis = $axis->getKey()['id'];
+        $this->idAxis = $axis->getId();
         $this->ref = $ref;
         $this->label = $label;
         foreach ($broaderMembers as $broaderMember) {
-            $this->listBroaderMembers[] = $broaderMember->getKey()['id'];
+            $this->listBroaderMembers[] = $broaderMember->getId();
         }
     }
 

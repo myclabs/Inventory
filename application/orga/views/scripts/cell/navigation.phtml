@@ -23,7 +23,7 @@ if (count($parentCells) > 0) {
         <li class="navigationParent">
             <?php if ((!(isset($this->isParentCellReachable[$parentCell->getMembersHashKey()])))
                 || ($this->isParentCellReachable[$parentCell->getMembersHashKey()] !== false)) { ?>
-            <a href="<?=$this->outputUrl?>idCell=<?=$parentCell->getKey()['id']?>">
+            <a href="orga/cell/details/idCell/<?=$parentCell->getId()?>">
                 <?= $parentCell->getLabel()?>
             </a>
             <?php } else { ?>
@@ -45,13 +45,10 @@ if (count($parentCells) > 0) {
 <?php
     foreach ($this->cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
         if ($narrowerGranularity->isNavigable()) {
-            $form = new UI_Form('navigation_'.$narrowerGranularity->getKey()['id']);
+            $form = new UI_Form('navigation_'.$narrowerGranularity->getId());
             $form->setAjax(false);
             $form->setAction(
-                'orga/forms_navigation/gotocell?'.
-                'idCell='.$this->cell->getKey()['id'].'&'.
-                'idGranularity='.$narrowerGranularity->getKey()['id'].'&'.
-                'url='.urlencode($this->outputUrl)
+                'orga/forms_navigation/gotocell/idCell/'.$this->cell->getId().'/idGranularity/'.$narrowerGranularity->getId()
             );
 
             $idAddedAxes = array();
@@ -90,7 +87,7 @@ if (count($parentCells) > 0) {
 ?>
     <hr />
     <?php
-        $submit = new UI_Form_Element_Submit('goTo'.$narrowerGranularity->getKey()['id']);
+        $submit = new UI_Form_Element_Submit('goTo'.$narrowerGranularity->getId());
         $submit->setLabel(__('UI', 'verb', 'goTo'));
         $form->addElement($submit);
         $form->display();

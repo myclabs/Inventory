@@ -89,6 +89,16 @@ class DW_Model_Result extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Result.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Renvoie la Cube de le Result.
      *
      * @return DW_Model_Cube

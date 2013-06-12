@@ -32,8 +32,8 @@ class Orga_DatagridConfiguration
     public function __construct($id, $controller, $module, $cell, $granularity)
     {
         $this->datagrid= new UI_Datagrid($id, $controller, $module);
-        $this->datagrid->addParam('idCell', $cell->getKey()['id']);
-        $this->datagrid->addParam('idGranularity', $granularity->getKey()['id']);
+        $this->datagrid->addParam('idCell', $cell->getId());
+        $this->datagrid->addParam('idGranularity', $granularity->getId());
         $this->addAxes($cell, $granularity);
     }
 
@@ -86,6 +86,7 @@ class Orga_DatagridConfiguration
             $columnAxis->withEmptyElement = false;
             $columnAxis->multipleFilters = true;
             $columnAxis->multipleListSize = $sizeFilter;
+            $columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
         }
         $this->datagrid->addCol($columnAxis);
     }

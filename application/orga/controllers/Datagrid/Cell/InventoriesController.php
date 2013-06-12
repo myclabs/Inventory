@@ -68,9 +68,9 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             Core_Model_Order::ORDER_ASC,
             Orga_Model_Cell::getAlias()
         );
-        foreach ($cell->getChildCellsForGranularity($crossedGranularity, $this->request) as $childCell) {
+        foreach ($cell->loadChildCellsForGranularity($crossedGranularity, $this->request) as $childCell) {
             $data = array();
-            $data['index'] = $childCell->getKey()['id'];
+            $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
@@ -86,10 +86,9 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                 $data['advancementFinishedInput'] = 0;
 
                 $totalChildInputCells = 0;
-                foreach (Orga_Model_AFGranularities::loadList() as $aFGranularities) {
-                    $aFInputGranularity = $aFGranularities->getAFInputOrgaGranularity();
-                    if ($aFInputGranularity->isNarrowerThan($childCell->getGranularity())) {
-                        $inputCells = $childCell->getChildCellsForGranularity($aFInputGranularity);
+                foreach ($project->getInputGranularities() as $inputGranularity) {
+                    if ($inputGranularity->isNarrowerThan($childCell->getGranularity())) {
+                        $inputCells = $childCell->getChildCellsForGranularity($inputGranularity);
                         foreach ($inputCells as $inputCell) {
                             try {
                                 $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
@@ -102,7 +101,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                             } catch (Core_Exception_UndefinedAttribute $e) {
                                 // Pas de saisie pour l'instant = pas d'avancement.
                             }
-
                             $totalChildInputCells ++;
                         }
                     }

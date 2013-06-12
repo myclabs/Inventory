@@ -62,6 +62,16 @@ class DW_Model_Cube extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Cube.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Définit le label du Cube.
      *
      * @param String $label

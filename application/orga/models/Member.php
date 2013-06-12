@@ -203,12 +203,12 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Met à jour la pertinence des cellules du membre et de leurs cellules enfants.
      */
-    protected function updateCellsAllParentsRelevant()
+    protected function updateCellsHierarchy()
     {
         foreach ($this->cells as $cell) {
-            $cell->updateAllParentsRelevant();
+            $cell->updateHierarchy();
             foreach ($cell->getChildCells() as $childCell) {
-                $childCell->updateAllParentsRelevant();
+                $childCell->updateHierarchy();
             }
         }
     }
@@ -235,6 +235,16 @@ class Orga_Model_Member extends Core_Model_Entity
         foreach ($this->getCells() as $cell) {
             $cell->updateMembersHashKey();
         }
+    }
+
+    /**
+     * Renvoie l'id du Member.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -340,7 +350,7 @@ class Orga_Model_Member extends Core_Model_Entity
             $this->directParents->add($parentMember);
             $parentMember->addDirectChild($this);
             $this->updateParentMembersHashKey();
-            $this->updateCellsAllParentsRelevant();
+            $this->updateCellsHierarchy();
         }
     }
 

@@ -92,7 +92,7 @@ class Simulation_SetController extends Core_Controller
         $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$set->getLabel().'</small>');
-        $viewConfiguration->setOutputURL('simulation/set/details?idSet='.$set->getKey()['id'].'&tab=analyse');
+        $viewConfiguration->setOutputUrl('simulation/set/details?idSet='.$set->getKey()['id'].'&tab=analyse');
         $viewConfiguration->setSaveURL('simulation/set/report?idSet='.$set->getKey()['id'].'&');
 
         if ($this->hasParam('idReport')) {

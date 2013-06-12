@@ -27,7 +27,7 @@ class DW_Form_configuration extends UI_Form
         $denominatorAxis2 = $report->getDenominatorAxis2();
 
         parent::__construct($hash);
-        $idCube = $report->getCube()->getKey()['id'];
+        $idCube = $report->getCube()->getId();
         $this->setAction('dw/report/applyconfiguration/idCube/'.$idCube.'/hashReport/'.$hash);
         $this->setAjax(null, 'parseConfigurationForm');
 

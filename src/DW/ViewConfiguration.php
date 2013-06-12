@@ -23,7 +23,7 @@ class DW_ViewConfiguration
      *
      * @var string
      */
-    protected $outputURL;
+    protected $outputUrl;
 
     /**
      * Url de destination du boutonn sauvegarder.
@@ -72,9 +72,9 @@ class DW_ViewConfiguration
      *
      * @param string $url
      */
-    public function setOutputURL($url)
+    public function setOutputUrl($url)
     {
-        $this->outputURL = $url;
+        $this->outputUrl = $url;
     }
 
     /**
@@ -102,9 +102,9 @@ class DW_ViewConfiguration
      *
      * @return string
      */
-    public function getOutputURL()
+    public function getOutputUrl()
     {
-        return $this->outputURL;
+        return $this->outputUrl;
     }
 
     /**

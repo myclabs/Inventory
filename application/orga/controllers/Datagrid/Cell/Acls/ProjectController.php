@@ -48,7 +48,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
 
         foreach ($projectAdministratorRole->getUsers() as $user) {
             $data = array();
-            $data['index'] = $user->getKey()['id'];
+            $data['index'] = $user->getId();
             $data['userFirstName'] = $user->getFirstName();
             $data['userLastName'] = $user->getLastName();
             $data['userEmail'] = $user->getEmail();
@@ -71,7 +71,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
     {
         $idProject = $this->getParam('idProject');
         $projectAdministratorRole = User_Model_Role::loadByRef('projectAdministrator_'.$idProject);
-        $project = Orga_Model_Project::load(array('id' => $idProject));
+        $project = Orga_Model_Project::load($idProject);
 
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
@@ -162,8 +162,8 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
     function deleteelementAction()
     {
         $idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load(array('id' => $idProject));
-        $user = User_Model_User::load(array('id' => $this->delete));
+        $project = Orga_Model_Project::load($idProject);
+        $user = User_Model_User::load($this->delete);
 
         set_time_limit(0);
         $entityManagers = Zend_Registry::get('EntityManagers');

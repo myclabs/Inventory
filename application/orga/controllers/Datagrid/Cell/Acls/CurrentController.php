@@ -44,7 +44,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             if ($linkedIdentity instanceof User_Model_Role) {
                 foreach ($linkedIdentity->getUsers() as $user) {
                     $data = array();
-                    $data['index'] = $linkedIdentity->getRef().'#'.$user->getKey()['id'];
+                    $data['index'] = $linkedIdentity->getRef().'#'.$user->getId();
                     $data['userFirstName'] = $user->getFirstName();
                     $data['userLastName'] = $user->getLastName();
                     $data['userEmail'] = $user->getEmail();
@@ -68,7 +68,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
      */
     function addelementAction()
     {
-        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
@@ -131,9 +131,9 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     function deleteelementAction()
     {
         list($userRoleRef, $userId) = explode('#', $this->delete);
-        $user = User_Model_User::load(array('id' => $userId));
+        $user = User_Model_User::load($userId);
         $userRole = User_Model_Role::loadByRef($userRoleRef);
-        $cell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $user->removeRole($userRole);
         $this->userService->sendEmail(

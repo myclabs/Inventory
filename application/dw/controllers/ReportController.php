@@ -74,7 +74,7 @@ class DW_ReportController extends Core_Controller
         $hash = ($this->hasParam('hashReport')) ? $this->getParam('hashReport') : (string) spl_object_hash($report);
 
         $this->view->headLink()->appendStylesheet('css/dw/report.css');
-        $this->view->idCube = $report->getCube()->getKey()['id'];;
+        $this->view->idCube = $report->getCube()->getId();;
         $this->view->hashReport = $hash;
         $this->view->reportLabel = $report->getLabel();
         require_once (dirname(__FILE__).'/../forms/Configuration.php');
@@ -84,7 +84,7 @@ class DW_ReportController extends Core_Controller
             $this->view->viewConfiguration = $this->getParam('viewConfiguration');
         } else {
             $this->view->viewConfiguration = new DW_ViewConfiguration();
-            $this->view->viewConfiguration->setOutputURL('index/report?idCube='.$report->getCube()->getKey()['id']);
+            $this->view->viewConfiguration->setOutputUrl('index/report?idCube='.$report->getCube()->getId());
             $this->view->viewConfiguration->setSaveURL('dw/report/details?');
         }
 
@@ -336,7 +336,7 @@ class DW_ReportController extends Core_Controller
                 array(
                     'message'  => __('UI', 'message', 'updated'),
                     'type'     => 'success',
-                    'idReport' => $report->getKey()['id']
+                    'idReport' => $report->getId()
                 )
             );
 

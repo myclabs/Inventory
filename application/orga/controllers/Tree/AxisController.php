@@ -29,7 +29,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      */
     public function getnodesAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         if ($this->idNode === null) {
             $axes = $project->getRootAxes();
         } else {
@@ -62,7 +62,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      */
     public function addnodeAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
 
         try {
             Core_Tools::checkRef($this->getAddElementValue('addAxis_ref'));
@@ -122,7 +122,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
     {
         $this->addElementList(null, '');
 
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         foreach ($project->getFirstOrderedAxes() as $axis) {
             $this->addElementList($axis->getRef(), ' '.$axis->getLabel());
         }
@@ -142,7 +142,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      */
     public function getlistsiblingsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
 
         if ($axis->getDirectNarrower() === null) {
@@ -278,7 +278,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      */
     public function getinfoeditAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
 
         $this->data['ref'] = $axis->getRef();

@@ -21,7 +21,7 @@ class Orga_Forms_NavigationController extends Core_Controller
     public function gotocellAction()
     {
         if ($this->getRequest()->isPost()) {
-            $departureCell = Orga_Model_Cell::load(array('id' => $this->getParam('idCell')));
+            $departureCell = Orga_Model_Cell::load($this->getParam('idCell'));
             $narrowerGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
             $listMembers = array();
@@ -54,11 +54,11 @@ class Orga_Forms_NavigationController extends Core_Controller
                     __('Orga', 'navigation', 'irrelevantCell',
                         array('cell' => $arrivalCell->getLabel()))
                 );
-                $idCell = $departureCell->getKey()['id'];
+                $idCell = $departureCell->getId();
             } else {
-                $idCell = $arrivalCell->getKey()['id'];
+                $idCell = $arrivalCell->getId();
             }
-            $this->redirect(urldecode($this->getParam('url')).'idCell='.$idCell);
+            $this->redirect('org/cell/details/idCell/'.$idCell);
         }
     }
 }
