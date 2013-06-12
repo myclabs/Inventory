@@ -1,7 +1,2 @@
 # Activation des ACL
 enable.acl: true
-
-GearmanClient:
-  methods:
-    addServer:
-    setTimeout: 2000

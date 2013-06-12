@@ -4,7 +4,6 @@
  * @package Core
  */
 
-use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -16,7 +15,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 {
 
     /**
-     * @var GearmanClient
+     * @var GearmanClient|null
      */
     private $client;
 
@@ -39,12 +38,10 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      * @Inject({"applicationName" = "application.name"})
      * @param string        $applicationName
      * @param EntityManager $entityManager
-     * @param GearmanClient $client
      */
-    public function __construct($applicationName, EntityManager $entityManager, GearmanClient $client)
+    public function __construct($applicationName, EntityManager $entityManager)
     {
         $this->applicationName = $applicationName;
-        $this->client = $client;
         $this->entityManager =$entityManager;
     }
 
@@ -56,7 +53,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
-        return $this->client->doNormal($taskType, $workload);
+        return $this->getGearmanClient()->doNormal($taskType, $workload);
     }
 
     /**
@@ -67,10 +64,10 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
-        $this->client->doBackground($taskType, $workload);
+        $this->getGearmanClient()->doBackground($taskType, $workload);
 
-        if ($this->client->returnCode() != GEARMAN_SUCCESS) {
-            throw new Core_Exception("Gearman error: " . $this->client->returnCode());
+        if ($this->getGearmanClient()->returnCode() != GEARMAN_SUCCESS) {
+            throw new Core_Exception("Gearman error: " . $this->getGearmanClient()->returnCode());
         }
     }
 
@@ -141,6 +138,19 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         Core_Error_Log::getInstance()->info("Task executed");
 
         return $result;
+    }
+
+    /**
+     * @return GearmanClient
+     */
+    private function getGearmanClient()
+    {
+        if (!$this->client) {
+            $this->client = new GearmanClient();
+            $this->client->addServer();
+            $this->client->setTimeout(2000);
+        }
+        return $this->client;
     }
 
     /**
