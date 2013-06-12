@@ -37,8 +37,7 @@ class User_AuthAdapter implements Zend_Auth_Adapter_Interface
         try {
             $user = User_Model_User::login($this->login, $this->password);
             if ($user->isEnabled()) {
-                return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user->getId(),
-                                            [__('User', 'login', 'authentificationSuccess')]);
+                return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user->getId());
             } else {
                 return new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null,
                                             [__('User', 'login', 'accountDisabled')]);
