@@ -151,14 +151,14 @@ class Orga_CellController extends Core_Controller
         $this->view->tabView->addTab($inputsTab);
 
 
-        // TAB ANALYSIS
+        // TAB ANALYSES
         if ($granularity->getCellsGenerateDWCubes() === true) {
-            $analysisTab = new UI_Tab('analysis');
-            if ($tab === 'analysis') {
+            $analysisTab = new UI_Tab('analyses');
+            if ($tab === 'analyses') {
                 $analysisTab->active = true;
             }
-            $analysisTab->label = __('DW', 'name', 'analysis');
-            $analysisTab->dataSource = 'orga/tab_celldetails/analysis/idCell/'.$idCell;
+            $analysisTab->label = __('DW', 'name', 'analyses');
+            $analysisTab->dataSource = 'orga/tab_celldetails/analyses/idCell/'.$idCell;
             $analysisTab->useCache = true;
             $this->view->tabView->addTab($analysisTab);
         }

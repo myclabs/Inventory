@@ -80,7 +80,7 @@ $datagrid->deleteElements = true;
 echo $datagrid->render();
 ?>
 <div class="wrapper">
-    <?=$this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link('orga/tab_celldetails/report?idCell='.$this->idCell.'&idProject='.$this->idProject)?>
+    <?=$this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link('orga/tab_celldetails/analyses/idCell/'.$this->idCell.'/idCube/'.$this->idCube)?>
 </div>
 
 <?php if (count($this->specificExports) > 0) { ?>

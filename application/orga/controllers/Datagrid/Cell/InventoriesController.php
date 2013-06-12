@@ -86,10 +86,9 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                 $data['advancementFinishedInput'] = 0;
 
                 $totalChildInputCells = 0;
-                foreach (Orga_Model_AFGranularities::loadList() as $aFGranularities) {
-                    $aFInputGranularity = $aFGranularities->getAFInputOrgaGranularity();
-                    if ($aFInputGranularity->isNarrowerThan($childCell->getGranularity())) {
-                        $inputCells = $childCell->getChildCellsForGranularity($aFInputGranularity);
+                foreach ($project->getInputGranularities() as $inputGranularity) {
+                    if ($inputGranularity->isNarrowerThan($childCell->getGranularity())) {
+                        $inputCells = $childCell->getChildCellsForGranularity($inputGranularity);
                         foreach ($inputCells as $inputCell) {
                             try {
                                 $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
@@ -102,7 +101,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                             } catch (Core_Exception_UndefinedAttribute $e) {
                                 // Pas de saisie pour l'instant = pas d'avancement.
                             }
-
                             $totalChildInputCells ++;
                         }
                     }

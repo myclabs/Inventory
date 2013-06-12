@@ -299,7 +299,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      * Action renvoyant le tab.
      * @Secure("viewCell")
      */
-    public function afgranularitiesinputsAction()
+    public function afinputsAction()
     {
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
@@ -318,14 +318,14 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
             }
         );
-        foreach ($listInputGranularities as $aFGranularities) {
-            if ($cell->getGranularity()->isBroaderThan($aFGranularities)) {
+        foreach ($listInputGranularities as $inputGranularity) {
+            if ($cell->getGranularity()->isBroaderThan($inputGranularity)) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
-                    'aFGranularity'.$idCell.'Input'.$aFGranularities->getId(),
+                    'aFGranularity'.$idCell.'Input'.$inputGranularity->getId(),
                     'datagrid_cell_afgranularities_input',
                     'orga',
                     $cell,
-                    $aFGranularities
+                    $inputGranularity
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
@@ -369,7 +369,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $colLinkEdit = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'details'));
                 $datagridConfiguration->datagrid->addCol($colLinkEdit);
 
-                $labelDatagrid = $aFGranularities->getLabel();
+                $labelDatagrid = $inputGranularity->getLabel();
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
             }
         }
@@ -385,12 +385,12 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      * Action fournissant la vue d'anaylse.
      * @Secure("viewCell")
      */
-    public function reportAction()
+    public function analysesAction()
     {
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        if (($this->hasParam('idReport')) || ($this->hasParam('idProject'))) {
+        if (($this->hasParam('idReport')) || ($this->hasParam('idCube'))) {
             if ($this->hasParam('idReport')) {
                 $reportResource = User_Model_Resource_Entity::loadByEntity(
                     DW_Model_Report::load($this->getParam('idReport'))
@@ -410,8 +410,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             );
             $viewConfiguration = new DW_ViewConfiguration();
             $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getLabelExtended().'</small>');
-            $viewConfiguration->setOutputUrl('orga/cell/details?idCell='.$cell->getId().'&tab=reports');
-            $viewConfiguration->setSaveURL('orga/tab_celldetails/report?idCell='.$cell->getId().'&');
+            $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$cell->getId().'/tab/reports');
+            $viewConfiguration->setSaveURL('orga/tab_celldetails/report/idCell/'.$cell->getId().'&');
             $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
             $viewConfiguration->setCanBeSavedAs($reportCanBeSaveAs);
             if ($this->hasParam('idReport')) {
@@ -431,10 +431,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $this->view->idCell = $cell->getId();
-        $this->view->idProject = $cell->getDWCube()->getId();
-        $this->view->isDWCubeUpToDate = Orga_Service_ETLStructure::getInstance()->isCellDWCubeUpToDate(
-            $cell
-        );
+        $this->view->idCube = $cell->getDWCube()->getId();
+        $this->view->isDWCubeUpToDate = Orga_Service_ETLStructure::getInstance()->isCellDWCubeUpToDate($cell);
         $this->view->dWCubesCanBeReset = User_Service_ACL::getInstance()->isAllowed(
             $this->_helper->auth(),
             User_Model_Action_Default::EDIT(),
@@ -443,7 +441,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->specificExports = array();
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getProject()->getId().'/'.
+            $cell->getGranularity()->getProject()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         if (is_dir($specificReportsDirectoryPath)) {
             $specificReportsDirectory = dir($specificReportsDirectoryPath);
