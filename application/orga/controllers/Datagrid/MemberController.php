@@ -99,7 +99,6 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             $formFieldRef = 'broader'.$directBroaderAxis->getRef();
             $refBroaderMember = $this->getAddElementValue($formFieldRef);
             if (empty($refBroaderMember)) {
-                $this->setAddElementErrorMessage($formFieldRef, __('UI', 'formValidation', 'emptyRequiredField'));
                 continue;
             } else {
                 try {
