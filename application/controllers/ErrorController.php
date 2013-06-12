@@ -62,8 +62,7 @@ class ErrorController extends Core_Controller
      */
     public function getError()
     {
-        /** @var Core_Error_Log $log */
-        $log = $this->get('Core_Error_Log');
+        $log = Core_Error_Log::getInstance();
 
         // Récupération de l'erreur.
         $error = $this->getParam('error_handler');
