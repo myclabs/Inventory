@@ -153,9 +153,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Définition du cache en fonction de l'environement.
         switch (APPLICATION_ENV) {
             case 'production':
-                //@todo Voir avec Benjamin quel cache on utilise.
-//                 $doctrineCache = new Doctrine\Common\Cache\ApcCache();
-//                 $doctrineCache = new Doctrine\Common\Cache\MemcachedCache();
                 $doctrineCache = new Doctrine\Common\Cache\ArrayCache();
 //                $doctrineAutoGenerateProxy = false;
                 // Temporaire refs #5641
