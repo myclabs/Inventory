@@ -717,6 +717,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                 $addFormElement = new UI_Form_Element_Pattern_AjaxAutocomplete($this->getAddFormElementId($datagrid));
                 $addFormElement->getAutocomplete()->source = $this->getUrlDynamicList($datagrid, 'add');
                 $addFormElement->getAutocomplete()->multiple = $this->multiple;
+                $addFormElement->setLabel($this->getAddFormElementLabel());
             } else {
                 if ($this->multiple) {
                     $addFormElement = new UI_Form_Element_MultiSelect($this->getAddFormElementId($datagrid));

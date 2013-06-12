@@ -154,9 +154,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         switch (APPLICATION_ENV) {
             case 'production':
                 $doctrineCache = new Doctrine\Common\Cache\ArrayCache();
-//                $doctrineAutoGenerateProxy = false;
-                // Temporaire refs #5641
-                $doctrineAutoGenerateProxy = true;
+                $doctrineAutoGenerateProxy = false;
                 break;
             default:
                 $doctrineCache = new Doctrine\Common\Cache\ArrayCache();

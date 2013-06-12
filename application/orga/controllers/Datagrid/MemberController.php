@@ -242,11 +242,18 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             }
         }
 
-        if (($this->hasParam('source')) && ($this->getParam('source') === 'add') && (count($members) > 1)) {
-            $this->addElementList('', '');
+        $query = $this->getParam('q');
+        if (!empty($query)) {
+            foreach ($members as $indexMember => $member) {
+                if (strpos($member->getLabel(), $query) === false) {
+                    unset($members[$indexMember]);
+                }
+            }
         }
+
+        $this->addElementAutocompleteList('', '');
         foreach ($members as $eligibleParentMember) {
-            $this->addElementList($eligibleParentMember->getCompleteRef(), $eligibleParentMember->getLabel());
+            $this->addElementAutocompleteList($eligibleParentMember->getCompleteRef(), $eligibleParentMember->getLabel());
         }
 
         $this->send();

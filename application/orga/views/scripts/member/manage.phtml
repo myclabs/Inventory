@@ -27,6 +27,7 @@ foreach ($this->axes as $axis) {
         $columnBroader->list = 'orga/datagrid_member/getparents/refParentAxis/'.$broaderAxis->getRef();
         $columnBroader->dynamicList = true;
         $columnBroader->editable = true;
+        $columnBroader->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
         $datagridAxisMembers->addCol($columnBroader);
     }
 
