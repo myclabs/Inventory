@@ -49,7 +49,7 @@ class DW_Export_Report_Excel extends Export_Excel
         if ($report->getDenominator() === null) {
             $valueUnit = $report->getNumerator()->getUnit()->getSymbol();
             $sheetData[] = array(
-                __('Classif', 'name', 'indicator'),
+                __('Classif', 'indicator', 'indicator'),
                 $report->getNumerator()->getLabel() . ' (' . $valueUnit . ')'
             );
             if ($numeratorAxis1 !== null) {

@@ -4,7 +4,7 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-         <!-- Exports PDF composés -->
+        <!-- Exports PDF composés -->
         
         <tu tuid="specificPDFExports">
             <tuv xml:lang="fr">
@@ -25,6 +25,6 @@
                 <seg>File generation in progress. Download window should appear within a few seconds, thank you for your patience.</seg>
             </tuv>
         </tu>
-        
+
     </body>
 </tmx>

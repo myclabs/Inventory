@@ -7,20 +7,20 @@
 ?>
 
 <fieldset class="wrapper">
-    <legend style="cursor:default"><?=__('Orga', 'project', 'configuration')?></legend>
+    <legend style="cursor:default"><?=__('UI', 'name', 'general')?></legend>
     <div>
         <?php
         $projectForm = new UI_Form('projectDetails');
         $projectForm->setAction('orga/project/edit/idProject/'.$this->idProject);
 
         $labelElementForm = new UI_Form_Element_Text('label');
-        $labelElementForm->setLabel(__('Orga', 'name', 'label'));
+        $labelElementForm->setLabel(__('UI', 'name', 'label'));
         $labelElementForm->setValue($this->projectLabel);
         $projectForm->addElement($labelElementForm);
 
         if (!empty($this->granularities)) {
             $granularityForInventoryStatusElementForm = new UI_Form_Element_Select('granularityForInventoryStatus');
-            $granularityForInventoryStatusElementForm->setLabel(__('Orga', 'name', 'granularityForInventoryStatus'));
+            $granularityForInventoryStatusElementForm->setLabel(__('Orga', 'configuration', 'granularityForInventoryStatus'));
             $granularityForInventoryStatusElementForm->setValue($this->granularityRefForInventoryStatus);
             $projectForm->addElement($granularityForInventoryStatusElementForm);
 
@@ -46,7 +46,7 @@
 </fieldset>
 
 <fieldset class="wrapper">
-    <legend style="cursor:default"><?=__('Orga', 'project', 'inputGranularities')?></legend>
+    <legend style="cursor:default"><?=__('Orga', 'configuration', 'inputGranularities')?></legend>
     <div>
         <?php
         if ($this->granularityRefForInventoryStatus !== null) {

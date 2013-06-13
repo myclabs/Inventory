@@ -85,11 +85,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $datagridConfiguration->datagrid->addParam('idProject', $project->getId());
             $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'name', 'firstName'));
+            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
             $columnUserFirstName->addable = false;
             $datagridConfiguration->datagrid->addCol($columnUserFirstName);
 
-            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'name', 'lastName'));
+            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
             $columnUserLastName->addable = false;
             $datagridConfiguration->datagrid->addCol($columnUserLastName);
 
@@ -115,18 +115,18 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             );
             $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'name', 'firstName'));
+            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
             $columnUserFirstName->addable = false;
             $datagridConfiguration->datagrid->addCol($columnUserFirstName);
 
-            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'name', 'lastName'));
+            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
             $columnUserLastName->addable = false;
             $datagridConfiguration->datagrid->addCol($columnUserLastName);
 
             $columnUserEmail = new UI_Datagrid_Col_Text('userEmail', __('UI', 'name', 'emailAddress'));
             $datagridConfiguration->datagrid->addCol($columnUserEmail);
 
-            $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'name', 'role'));
+            $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
             $columnRole->list = array();
             foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
                 if ($role instanceof User_Model_Role) {
@@ -273,7 +273,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $columnStateOrga->editable = $cell->getGranularity()->isBroaderThan($granularity);
         }
         $columnStateOrga->list = array(
-                Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'orga', 'notLaunched'),
+                Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
                 Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
                 Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
         );
@@ -282,10 +282,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
         $datagridConfiguration->datagrid->addCol($columnStateOrga);
 
-        $columnAdvencementInputs = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'orga', 'completeInputPercentageHeader'));
+        $columnAdvencementInputs = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'inventory', 'completeInputPercentageHeader'));
         $datagridConfiguration->datagrid->addCol($columnAdvencementInputs);
 
-        $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'orga', 'finishedInputPercentageHeader'));
+        $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'inventory', 'finishedInputPercentageHeader'));
         $datagridConfiguration->datagrid->addCol($columnAdvencementFinishedInputs);
 
         $this->forward('child', 'cell', 'orga', array(
@@ -329,10 +329,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-                $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'name', 'orga'));
+                $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'organization', 'organization'));
                 $columnStateOrga->withEmptyElement = false;
                 $columnStateOrga->list = array(
-                    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'orga', 'notLaunched'),
+                    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
                     Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
                     Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'));
                 $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_BOX;

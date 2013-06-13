@@ -4,12 +4,20 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="pageTitle">
+        <tu tuid="myCells">
             <tuv xml:lang="fr">
                 <seg>Mes unités organisationnelles</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>My organizational units</seg>
+            </tuv>
+        </tu>
+        <tu tuid="subCells">
+            <tuv xml:lang="fr">
+                <seg>Sous-unités</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sub-units</seg>
             </tuv>
         </tu>
 

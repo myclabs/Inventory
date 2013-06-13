@@ -3,7 +3,7 @@
 ?>
 <div class="page-header">
     <h1>
-        <?=__('Orga', 'name', 'project')?>
+        <?=__('Orga', 'organization', 'organizations')?>
     </h1>
 </div>
 
@@ -14,11 +14,11 @@ $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $columnLabel->addable = true;
 $datagridProject->addCol($columnLabel);
 
-$columnRootAxes = new UI_Datagrid_Col_Text('rootAxes', __('Orga', 'name', 'rootAxes'));
+$columnRootAxes = new UI_Datagrid_Col_Text('rootAxes', __('Orga', 'axis', 'rootAxes'));
 $columnRootAxes->addable = false;
 $datagridProject->addCol($columnRootAxes);
 
-$columnGranularityForInventoryStatus = new UI_Datagrid_Col_Text('granularityForInventoryStatus', __('Orga', 'projectList', 'granularityForInventoryStatus'));
+$columnGranularityForInventoryStatus = new UI_Datagrid_Col_Text('granularityForInventoryStatus', __('Orga', 'inventory', 'inventories'));
 $columnGranularityForInventoryStatus->addable = false;
 $datagridProject->addCol($columnGranularityForInventoryStatus);
 
@@ -29,6 +29,6 @@ $datagridProject->addCol($columnDetails);
 $datagridProject->deleteElements = $this->isConnectedUserAbleToDeleteProjects;
 $datagridProject->pagination = false;
 $datagridProject->addElements = $this->isConnectedUserAbleToCreateProjects;
-$datagridProject->addPanelTitle = __('Orga', 'projectList', 'addPanelTitle');
+$datagridProject->addPanelTitle = __('Orga', 'organization', 'addPanelTitle');
 
 $datagridProject->display();

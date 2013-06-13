@@ -6,7 +6,7 @@
 ?>
 
 <div class="page-header">
-    <h1><?=__('User', 'name', 'connection')?></h1>
+    <h1><?=__('User', 'login', 'connection')?></h1>
 </div>
 
 <?php
@@ -33,7 +33,7 @@ if ($this->user) {
     $form->addElement($email);
 
     $password = new UI_Form_Element_Password('password');
-    $password->setLabel(__('User', 'name', 'password'));
+    $password->setLabel(__('User', 'login', 'password'));
     $form->addElement($password);
 
     $forgotPassword = new UI_Form_Element_HTML('forgotPasswordLogin');
@@ -43,7 +43,7 @@ if ($this->user) {
         . '</a>';
     $form->addElement($forgotPassword);
 
-    $form->addSubmitButton(__('User', 'name', 'connection'));
+    $form->addSubmitButton(__('User', 'login', 'connection'));
     $form->display();
 }
 
