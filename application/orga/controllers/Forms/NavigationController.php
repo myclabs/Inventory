@@ -58,7 +58,7 @@ class Orga_Forms_NavigationController extends Core_Controller
             } else {
                 $idCell = $arrivalCell->getId();
             }
-            $this->redirect('org/cell/details/idCell/'.$idCell);
+            $this->redirect('orga/cell/details/idCell/'.$idCell);
         }
     }
 }

@@ -58,7 +58,7 @@ if (count($parentCells) > 0) {
                     if (!$this->cell->getGranularity()->hasAxis($narrowerAxis)) {
                         $select = new UI_Form_Element_Select($narrowerAxis->getRef());
                         $select->setLabel($narrowerAxis->getLabel());
-                        foreach ($childMembers as $childMember) {
+                        foreach ($childMembers[$narrowerAxis->getRef()] as $childMember) {
                             $option = new UI_Form_Element_Option(
                                 $childMember->getCompleteRef(),
                                 $childMember->getCompleteRef(),

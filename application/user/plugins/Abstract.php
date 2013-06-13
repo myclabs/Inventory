@@ -109,7 +109,6 @@ abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
         if ($securityRule == null) {
             return false;
         }
-        Core_Tools::dump($securityRule);
 
         // Exception pour la règle "public"
         if ($securityRule == 'public') {

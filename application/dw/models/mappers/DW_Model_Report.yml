@@ -83,6 +83,7 @@ DW_Model_Report:
       mappedBy: report
       orphanRemoval: true
       cascade: [ persist, remove ]
+      orphanRemoval: true
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

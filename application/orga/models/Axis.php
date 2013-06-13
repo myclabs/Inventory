@@ -389,7 +389,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     {
         $directBroaders = $this->directBroaders->toArray();
 
-        uasort(
+        @uasort(
             $directBroaders,
             function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
         );

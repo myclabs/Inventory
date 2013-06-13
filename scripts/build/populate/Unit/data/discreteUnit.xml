@@ -16,7 +16,7 @@
     <discreteUnit ref="appareil">
         <name>
             <fr>appareil</fr>
-            <en>appareil</en>
+            <en>device</en>
         </name>
     </discreteUnit>
 
