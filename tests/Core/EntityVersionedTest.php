@@ -16,21 +16,6 @@ use Gedmo\Loggable\Entity\LogEntry;
 class Core_Test_EntityVersionedTest extends Core_Test_TestCase
 {
 
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
-        if (Inventory_Model_Versioned::countTotal() > 0) {
-            foreach (Inventory_Model_Versioned::loadList() as $o) {
-                $o->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
-
     public function setUp()
     {
         parent::setUp();
