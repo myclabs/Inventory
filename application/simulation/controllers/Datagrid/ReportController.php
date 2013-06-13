@@ -41,7 +41,7 @@ class Simulation_Datagrid_ReportController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        DW_Model_Report::load(array('id' => $this->delete))->delete();
+        DW_Model_Report::load($this->delete)->delete();
         $this->message = __('UI', 'messages', 'deleted');
         $this->send();
     }

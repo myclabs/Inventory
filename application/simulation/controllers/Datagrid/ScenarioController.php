@@ -150,8 +150,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
      */
     function deleteelementAction()
     {
-        $scenario = Simulation_Model_Scenario::load(array('id' => $this->delete));
-//        $scenario->getAFInputSetPrimary()->delete();
+        $scenario = Simulation_Model_Scenario::load($this->delete);
         $scenario->delete();
 
         $this->message = __('UI', 'message', 'deleted');
@@ -179,7 +178,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
      */
     function updateelementAction()
     {
-        $scenario = Simulation_Model_Scenario::load(array('id' => $this->update['index']));
+        $scenario = Simulation_Model_Scenario::load($this->update['index']);
         switch ($this->update['column']) {
             case 'labelScenario':
                 $scenario->setLabel($this->update['value']);

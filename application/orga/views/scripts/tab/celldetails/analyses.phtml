@@ -73,14 +73,14 @@ $columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details')
 $datagrid->addCol($columnDetails);
 
 $datagrid->addParam('idCell', $this->idCell);
-$datagrid->addParam('idProject', $this->idProject);
+$datagrid->addParam('idCube', $this->idCube);
 $datagrid->pagination = false;
 $datagrid->deleteElements = true;
 
 echo $datagrid->render();
 ?>
 <div class="wrapper">
-    <?=$this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link('orga/tab_celldetails/analyses/idCell/'.$this->idCell.'/idCube/'.$this->idCube)?>
+    <?=$this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link('orga/tab_celldetails/report/idCell/'.$this->idCell.'/idCube/'.$this->idCube)?>
 </div>
 
 <?php if (count($this->specificExports) > 0) { ?>

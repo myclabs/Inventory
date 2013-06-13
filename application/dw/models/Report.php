@@ -625,14 +625,14 @@ class DW_Model_Report extends Core_Model_Entity
                         }
                     }
                     uksort($seriesValues[$serieValueId], function($a, $b) {
-                        $memberA = DW_Model_Member::load(array('id' => $a));
-                        $memberB = DW_Model_Member::load(array('id' => $b));
+                        $memberA = DW_Model_Member::load($a);
+                        $memberB = DW_Model_Member::load($b);
                         return $memberA->getPosition() - $memberB->getPosition();
                     });
                 }
                 uksort($seriesAxisLabel, function($a, $b) {
-                    $memberA = DW_Model_Member::load(array('id' => $a));
-                    $memberB = DW_Model_Member::load(array('id' => $b));
+                    $memberA = DW_Model_Member::load($a);
+                    $memberB = DW_Model_Member::load($b);
                     return $memberA->getPosition() - $memberB->getPosition();
                 });
 
@@ -765,9 +765,9 @@ class DW_Model_Report extends Core_Model_Entity
         $stdReport = json_decode($string);
 
         if ($stdReport->id !== null) {
-            $report = DW_Model_Report::load(array('id' => $stdReport->id));
+            $report = DW_Model_Report::load($stdReport->id);
         } else {
-            $report = new DW_Model_Report(DW_Model_Cube::load(array('id' => $stdReport->idCube)));
+            $report = new DW_Model_Report(DW_Model_Cube::load($stdReport->idCube));
         }
 
         // Label.

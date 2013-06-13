@@ -126,27 +126,22 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
 
     /**
      * @param Zend_Controller_Request_Abstract $request
+     * @throws User_Exception_Forbidden
      * @return Orga_Model_Project
      */
     protected function getProject(Zend_Controller_Request_Abstract $request)
     {
         $idProject = $request->getParam('idProject');
         if ($idProject !== null) {
-            return Orga_Model_Project::load(array('id' => $idProject));
-        }
-        $idCube = $request->getParam('idCube');
-        if ($idCube !== null) {
-            return Orga_Model_Project::loadByOrgaCube(Orga_Model_Project::load(array('id' => $idCube)));
+            return Orga_Model_Project::load($idProject);
         }
         $index = $request->getParam('index');
         if ($index !== null) {
-            return Orga_Model_Project::load(array('id' => $index));
+            return Orga_Model_Project::load($index);
         }
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
-            return Orga_Model_Project::loadByOrgaCube(
-                Orga_Model_Cell::load(array('id' => $idCell))->getGranularity()->getCube()
-            );
+            return Orga_Model_Cell::load($idCell)->getGranularity()->getProject();
         }
 
         throw new User_Exception_Forbidden();
@@ -190,7 +185,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         return $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::ALLOW(),
-            Orga_Model_Cell::load(array('id' => $request->getParam('idCell')))
+            Orga_Model_Cell::load($request->getParam('idCell'))
         );
     }
 
@@ -224,6 +219,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
 
     /**
      * @param Zend_Controller_Request_Abstract $request
+     * @throws User_Exception_Forbidden
      * @return Orga_Model_Cell
      */
     protected function getCell(Zend_Controller_Request_Abstract $request)
@@ -231,18 +227,18 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         $index = $request->getParam('index');
         if ($index !== null) {
             try {
-                return Orga_Model_Cell::load(array('id' => $index));
+                return Orga_Model_Cell::load($index);
             } catch (Core_Exception_NotFound $e) {
                 // Pas une cellule.
             }
         }
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
-            return Orga_Model_Cell::load(array('id' => $idCell));
+            return Orga_Model_Cell::load($idCell);
         }
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
-            return Orga_Model_Cell::load(array('id' => $idCell));
+            return Orga_Model_Cell::load($idCell);
         }
 
         throw new User_Exception_Forbidden();
@@ -290,19 +286,17 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             return $this->aclService->isAllowed(
                 $identity,
                 User_Model_Action_Default::VIEW(),
-                User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load(array('id' => $idReport)))
+                User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load($idReport))
             );
         }
 
         $idCube = $request->getParam('idCube');
         if ($idCube !== null) {
-            $dWCube = DW_Model_Cube::load(array('id' => $idCube));
+            $dWCube = DW_Model_Cube::load($idCube);
             // Si le DWCube est d'un Granularity, vérification que l'utilisateur peut configurer le projet.
             try {
-                $granularity = Inventory_Model_Granularity::loadByDWCube($dWCube);
-                $project = Orga_Model_Project::loadByOrgaCube(
-                    $granularity->getCube()
-                );
+                $granularity = Orga_Model_Granularity::loadByDWCube($dWCube);
+                $project = $granularity->getProject();
                 $request->setParam('idProject', $project->getKey()['id']);
                 return $this->editProjectRule($identity, $request);
             } catch (Core_Exception_NotFound $e) {
@@ -323,6 +317,11 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un SimulationSet.
             }
+        }
+
+        $idCell = $request->getParam('idCube');
+        if ($idCell !== null) {
+
         }
 
         throw new User_Exception_Forbidden();
@@ -349,7 +348,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         return $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::DELETE(),
-            User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load(array('id' => $idReport)))
+            User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load($idReport))
         );
     }
 
@@ -361,7 +360,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     {
         $idReport = $request->getParam('idReport');
         if ($idReport !== null) {
-            return DW_Model_Report::load(array('id' => $idReport));
+            return DW_Model_Report::load($idReport);
         }
         $hashReport = $request->getParam('hashReport');
         if ($hashReport !== null) {
@@ -446,7 +445,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         $idScenario = $request->getParam('idScenario');
         if ($idScenario !== null) {
             /* @var Simulation_Model_Scenario $scenario */
-            $scenario = Simulation_Model_Scenario::load(array('id' => $idScenario));
+            $scenario = Simulation_Model_Scenario::load($idScenario);
             return ($scenario->getSet()->getUser() === $identity);
         }
 
@@ -598,7 +597,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     protected function getCellFromLibrary(Zend_Controller_Request_Abstract $request)
     {
         $idLibrary = $request->getParam('id');
-        $library = Doc_Model_Library::load(array('id' => $idLibrary));
+        $library = Doc_Model_Library::load($idLibrary);
 
         try {
             return Orga_Model_Cell::loadByDocLibraryForAFInputSetsPrimary($library);

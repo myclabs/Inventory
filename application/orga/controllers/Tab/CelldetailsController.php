@@ -395,53 +395,15 @@ class Orga_Tab_CelldetailsController extends Core_Controller
     }
 
     /**
-     * Action fournissant la vue d'anaylse.
+     * Action fournissant la vue des anaylses.
      * @Secure("viewCell")
      */
     public function analysesAction()
     {
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-
-        if (($this->hasParam('idReport')) || ($this->hasParam('idCube'))) {
-            if ($this->hasParam('idReport')) {
-                $reportResource = User_Model_Resource_Entity::loadByEntity(
-                    DW_Model_Report::load($this->getParam('idReport'))
-                );
-                $reportCanBeUpdated = $this->aclService->isAllowed(
-                    $this->_helper->auth(),
-                    User_Model_Action_Default::EDIT(),
-                    $reportResource
-                );
-            } else {
-                $reportCanBeUpdated = false;
-            }
-            $reportCanBeSaveAs = $this->aclService->isAllowed(
-                $this->_helper->auth(),
-                User_Model_Action_Default::VIEW(),
-                User_Model_Resource_Entity::loadByEntity($cell)
-            );
-            $viewConfiguration = new DW_ViewConfiguration();
-            $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getLabelExtended().'</small>');
-            $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$cell->getId().'/tab/reports');
-            $viewConfiguration->setSaveURL('orga/tab_celldetails/report/idCell/'.$cell->getId().'&');
-            $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
-            $viewConfiguration->setCanBeSavedAs($reportCanBeSaveAs);
-            if ($this->hasParam('idReport')) {
-                $this->forward('details', 'report', 'dw', array(
-                    'idReport' => $this->getParam('idReport'),
-                    'viewConfiguration' => $viewConfiguration
-                ));
-            } else {
-                $this->forward('details', 'report', 'dw', array(
-                    'idProject' => $this->getParam('idProject'),
-                    'viewConfiguration' => $viewConfiguration
-                ));
-            }
-        } else {
-            // Désactivation du layout.
-            $this->_helper->layout()->disableLayout();
-        }
 
         $this->view->idCell = $cell->getId();
         $this->view->idCube = $cell->getDWCube()->getId();
@@ -469,6 +431,51 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Action fournissant la vue d'un Report
+     * @Secure("viewReport")
+     */
+    public function reportAction()
+    {
+        $idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($idCell);
+
+        if ($this->hasParam('idReport')) {
+            $reportResource = User_Model_Resource_Entity::loadByEntity(
+                DW_Model_Report::load($this->getParam('idReport'))
+            );
+            $reportCanBeUpdated = User_Service_ACL::getInstance()->isAllowed(
+                $this->_helper->auth(),
+                User_Model_Action_Default::EDIT(),
+                $reportResource
+            );
+        } else {
+            $reportCanBeUpdated = false;
+        }
+        $reportCanBeSaveAs = User_Service_ACL::getInstance()->isAllowed(
+            $this->_helper->auth(),
+            User_Model_Action_Default::VIEW(),
+            User_Model_Resource_Entity::loadByEntity($cell)
+        );
+        $viewConfiguration = new DW_ViewConfiguration();
+        $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getLabelExtended().'</small>');
+        $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$cell->getId().'/tab/analyses');
+        $viewConfiguration->setSaveURL('orga/tab_celldetails/report/idCell/'.$cell->getId());
+        $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
+        $viewConfiguration->setCanBeSavedAs($reportCanBeSaveAs);
+        if ($this->hasParam('idReport')) {
+            $this->forward('details', 'report', 'dw', array(
+                    'idReport' => $this->getParam('idReport'),
+                    'viewConfiguration' => $viewConfiguration
+                ));
+        } else {
+            $this->forward('details', 'report', 'dw', array(
+                    'idProject' => $this->getParam('idProject'),
+                    'viewConfiguration' => $viewConfiguration
+                ));
         }
     }
 

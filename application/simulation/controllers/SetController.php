@@ -57,7 +57,7 @@ class Simulation_SetController extends Core_Controller
             $this->redirect('simulation/set/list');
         }
 
-        $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
+        $set = Simulation_Model_Set::load($this->getParam('idSet'));
 
         $this->view->idSet = $set->getKey()['id'];
         $this->view->idCube = $set->getDWCube()->getKey()['id'];
@@ -75,7 +75,7 @@ class Simulation_SetController extends Core_Controller
      */
     public function resetdwAction()
     {
-        $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
+        $set = Simulation_Model_Set::load($this->getParam('idSet'));
         $this->etlStructureService->resetSetDWCube($set);
         $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'confirmationMessage')));
     }
@@ -89,7 +89,7 @@ class Simulation_SetController extends Core_Controller
      */
     public function reportAction()
     {
-        $set = Simulation_Model_Set::load(array('id' => $this->getParam('idSet')));
+        $set = Simulation_Model_Set::load($this->getParam('idSet'));
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$set->getLabel().'</small>');
         $viewConfiguration->setOutputUrl('simulation/set/details?idSet='.$set->getKey()['id'].'&tab=analyse');
