@@ -574,7 +574,7 @@ class Orga_Model_Cell extends Core_Model_Entity
                         );
                     }
                 } else if ($member->getAxis() === $narrowerAxis) {
-                    $childMembers[$refNarrowerAxis] = $member;
+                    $childMembers[$refNarrowerAxis] = array($member);
                 }
             }
             if (!isset($childMembers[$refNarrowerAxis])) {
@@ -638,16 +638,12 @@ class Orga_Model_Cell extends Core_Model_Entity
         $childMembersByAxisForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
         $childMembersForGranularity = [];
         // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
-        foreach ($childMembersByAxisForGranularity as $a => $childAxisMembersForGranularity) {
+        foreach ($childMembersByAxisForGranularity as $childAxisMembersForGranularity) {
             if (empty($childAxisMembersForGranularity)) {
                 return [];
             }
-            if (is_array($childAxisMembersForGranularity)) {
-                foreach ($childAxisMembersForGranularity as $childAxisMemberForGranularity) {
-                    $childMembersForGranularity[] = $childAxisMemberForGranularity;
-                }
-            } else {
-                $childMembersForGranularity[] = $childAxisMembersForGranularity;
+            foreach ($childAxisMembersForGranularity as $childAxisMemberForGranularity) {
+                $childMembersForGranularity[] = $childAxisMemberForGranularity;
             }
         }
 
