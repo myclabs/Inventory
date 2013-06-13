@@ -587,7 +587,10 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
 
         $filterFormElement->setLabel($this->getFilterFormLabel());
         if ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
-            $filterFormElement->useAutocomplete = true;
+            // Nécessaire pour éviter le bug de select2 miltiple avec des appnd/prepend.
+            if ($this->isFilterFieldMultiple() !== true) {
+                $filterFormElement->useAutocomplete = true;
+            }
         }
         foreach ($this->list as $idElement => $element) {
             $option = new UI_Form_Element_Option($idElement, $idElement, $element);

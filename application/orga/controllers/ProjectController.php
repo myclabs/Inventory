@@ -149,8 +149,10 @@ class Orga_ProjectController extends Core_Controller
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
             $this->view->display = false;
+            $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idCell/'.$this->getParam('idCell');
         } else {
             $this->view->display = true;
+            $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idProject/'.$idProject;
         }
     }
 

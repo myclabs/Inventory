@@ -52,7 +52,11 @@ class Orga_GranularityController extends Core_Controller
 
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$granularity->getLabel().'</small>');
-        $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$this->getParam('idCell').'/tab/configuration');
+        if ($this->hasParam('idCell')) {
+            $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$this->getParam('idCell').'/tab/project');
+        } else {
+            $viewConfiguration->setOutputUrl('orga/project/details/idProject/'.$this->getParam('idProject'));
+        }
         $viewConfiguration->setSaveURL('orga/granularity/report/idGranularity/'.$granularity->getId().'/idCell/'.$this->getParam('idCell'));
         if ($this->hasParam('idReport')) {
             $this->forward('details', 'report', 'dw', array(

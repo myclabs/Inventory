@@ -500,9 +500,12 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getMemberByCompleteRef($completeRef)
     {
+        $refParts = explode('#', $completeRef);
+        $baseRef = (isset($refParts[0]) ? $refParts[0] : '');
+        $parentMembersHashKey = (isset($refParts[1]) ? $refParts[1] : null);
         $criteria = \Doctrine\Common\Collections\Criteria::create();
-        $criteria->where($criteria->expr()->eq('ref', explode('#', $completeRef)[0]));
-        $criteria->andWhere($criteria->expr()->eq('parentMembersHashKey', explode('#', $completeRef)[1]));
+        $criteria->where($criteria->expr()->eq('ref', $baseRef));
+        $criteria->andWhere($criteria->expr()->eq('parentMembersHashKey', $parentMembersHashKey));
         $member = $this->members->matching($criteria)->toArray();
 
         if (empty($member)) {

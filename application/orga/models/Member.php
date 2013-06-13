@@ -376,6 +376,8 @@ class Orga_Model_Member extends Core_Model_Entity
         if ($this->hasDirectParent($parentMember)) {
             $this->directParents->removeElement($parentMember);
             $parentMember->removeDirectChild($this);
+            $this->updateParentMembersHashKey();
+            $this->updateCellsHierarchy();
         }
     }
 

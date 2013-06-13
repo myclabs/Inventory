@@ -28,21 +28,6 @@ class UI_Form_Decorator_Line extends Zend_Form_Decorator_Abstract
             'id'    => $this->getElement()->getId().'-line'
         );
 
-        $withdrawal = -1;
-        /* @var $currentElement UI_Form_Element */
-        $currentElement = $this->getElement()->getElement();
-        while ($currentElement->parent !== null) {
-            $currentZendElement = $currentElement->parent;
-            $currentElement = $currentElement->parent->getElement();
-            $hasDecorator = ($currentZendElement->getDecorator('Group') !== false) ? true : false;
-            if ($hasDecorator) {
-                $withdrawal++;
-            }
-        }
-        if ($withdrawal > 0) {
-            $options['class'] .= ' withdraw'.$withdrawal;
-        }
-
         if (count($this->getElement()->getMessages()) > 0) {
             $options['class'] .= ' warning';
         }
