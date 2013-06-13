@@ -9,7 +9,7 @@ $tabView = new UI_Tab_View('orga');
 if ($this->isGlobal) {
     $projectTab = new UI_Tab('project');
     $projectTab->label = __('Orga', 'tab', 'project');
-    $projectTab->dataSource = 'orga/project/details/idProject/'.$this->idProject.'/display/render';
+    $projectTab->dataSource = 'orga/project/details/idProject/'.$this->idProject.'/idCell/'.$this->idCell.'/display/render';
     $projectTab->useCache = false;
     $tabView->addTab($projectTab);
 
