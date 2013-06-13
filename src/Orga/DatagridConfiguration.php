@@ -86,7 +86,7 @@ class Orga_DatagridConfiguration
             $columnAxis->withEmptyElement = false;
             $columnAxis->multipleFilters = true;
             $columnAxis->multipleListSize = $sizeFilter;
-            $columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
+            $columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
         }
         $this->datagrid->addCol($columnAxis);
     }
