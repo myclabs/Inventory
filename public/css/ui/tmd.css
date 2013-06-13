@@ -7,5 +7,6 @@ table.tmd.table th { text-align: center; width: auto; }
 /* Les headers correspondant aux index sont mis en italique */
 table.tmd.table th.indexValue { font-style: italic; font-weight: normal; }
 /* Élargissement des liens et alignement des icônes dans les tables */
+table.tmd.table td { text-align: right; }
 table.tmd.table td a { display: inline-block; width: 100%; height: 100%; text-align: right; }
 table.tmd.table td i { vertical-align: text-bottom; }
