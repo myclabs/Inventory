@@ -337,7 +337,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
     $refer = preg_replace('#'.Zend_Controller_Front::getInstance()->getBaseUrl().'/#', '', $refer, 1);
     $refer = urlencode($refer);
     $connection = array(
-        'name'    => __('User', 'name', 'connection'),
+        'name'    => __('User', 'login', 'connection'),
         'icon'    => 'off',
         'url'     => 'user/action/login?refer='.$refer,
         'submenu' => null,
