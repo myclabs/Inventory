@@ -24,7 +24,7 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
         $this->request->aclFilter->user = $this->_helper->auth();
         $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
 
-        $this->request->filter->addCondition(DW_Model_Report::QUERY_CUBE, $this->getParam('idProject'));
+        $this->request->filter->addCondition(DW_Model_Report::QUERY_CUBE, $this->getParam('idCube'));
         $this->request->order->addOrder(DW_Model_Report::QUERY_LABEL);
         foreach (DW_Model_Report::loadList($this->request) as $report) {
             $data = array();

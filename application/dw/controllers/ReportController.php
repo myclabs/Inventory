@@ -60,9 +60,9 @@ class DW_ReportController extends Core_Controller_Ajax
         }
         if (!isset($report) || !($report instanceof DW_Model_Report)) {
             if ($this->hasParam('idReport')) {
-                $report = DW_Model_Report::load(array('id' => $this->getParam('idReport')));
+                $report = DW_Model_Report::load($this->getParam('idReport'));
             } else {
-                $report = new DW_Model_Report(DW_Model_Cube::load(array('id' => $this->getParam('idCube'))));
+                $report = new DW_Model_Report(DW_Model_Cube::load($this->getParam('idCube')));
                 $report->setLabel(__('DW', 'report', 'newReportDefaultLabelPage'));
             }
         }
@@ -84,8 +84,8 @@ class DW_ReportController extends Core_Controller_Ajax
             $this->view->viewConfiguration = $this->getParam('viewConfiguration');
         } else {
             $this->view->viewConfiguration = new DW_ViewConfiguration();
-            $this->view->viewConfiguration->setOutputUrl('index/report?idCube='.$report->getCube()->getId());
-            $this->view->viewConfiguration->setSaveURL('dw/report/details?');
+            $this->view->viewConfiguration->setOutputUrl('index/report/idCube/'.$report->getCube()->getId());
+            $this->view->viewConfiguration->setSaveURL('dw/report/details');
         }
 
         $this->setReportByHash($hash, $report);

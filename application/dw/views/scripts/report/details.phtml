@@ -303,7 +303,7 @@
         // Surcharge de la fonction de sounission du formulaire de sauvegarde.
         $script .= '$.fn.parseSaveForm = function(response) {';
         $script .= '$(\'#'.$this->hashReport.'\').parseFormValidation(response);';
-        $script .= 'window.location.replace(\''.$this->viewConfiguration->getSaveURL().'idReport=\'+response.idReport);';
+        $script .= 'window.location.replace(\''.$this->viewConfiguration->getSaveURL().'/idReport/\'+response.idReport);';
         $script .= '};';
 
         // Fonction de récupération de l'image.

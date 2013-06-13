@@ -95,10 +95,10 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
      */
     public function execute()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->idProject));
+        $project = Orga_Model_Project::load($this->idProject);
         $axes = array();
         foreach ($this->listAxes as $idAxis) {
-            $axes[] = Orga_Model_Axis::load(array('id' => $idAxis));
+            $axes[] = Orga_Model_Axis::load($idAxis);
         }
         $granularity = new Orga_Model_Granularity($project, $axes);
         $granularity->setNavigability($this->navigability);

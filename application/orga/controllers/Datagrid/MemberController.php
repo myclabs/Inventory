@@ -38,7 +38,6 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $members = Orga_Model_Member::loadList($this->request);
 
         $idCell = $this->getParam('idCell');
-        Core_Tools::dump($idCell);
         if (!empty($idCell)) {
             $cell = Orga_Model_Cell::load($idCell);
             foreach ($cell->getMembers() as $cellMember) {
