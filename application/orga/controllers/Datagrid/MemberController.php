@@ -188,23 +188,25 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 }
                 break;
             default:
+                $refBroaderAxis = substr($this->update['column'], 7);
                 try {
-                    $refBroaderAxis = substr($this->update['column'], 7);
                     $broaderAxis = Orga_Model_Axis::loadByRefAndProject($refBroaderAxis, $project);
-                    foreach ($member->getDirectParents() as $parentMember) {
-                        if (($parentMember->getAxis()->getRef() === $refBroaderAxis)
-                                && ($parentMember->getRef() === $this->update['value'])) {
-                            break 2;
-                        } else if ($parentMember->getAxis()->getRef() === $refBroaderAxis) {
-                            $member->removeDirectParent($parentMember);
-                        }
+                } catch (Core_Exception_NotFound $e) {
+                    parent::updateelementAction();
+                }
+                foreach ($member->getDirectParents() as $parentMember) {
+                    if (($parentMember->getAxis()->getRef() === $refBroaderAxis)
+                        && ($parentMember->getRef() === $this->update['value'])) {
+                        break 2;
+                    } else if ($parentMember->getAxis()->getRef() === $refBroaderAxis) {
+                        $member->removeDirectParent($parentMember);
                     }
+                }
+                if (!empty($this->update['value'])) {
                     $parentMember = Orga_Model_Member::loadByCompleteRefAndAxis($this->update['value'], $broaderAxis);
                     $member->addDirectParent($parentMember);
-                    $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
-                } catch (Core_Exception_NotFound $e) {
-                   parent::updateelementAction();
                 }
+                $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
                 break;
         }
         $this->data = $this->update['value'];

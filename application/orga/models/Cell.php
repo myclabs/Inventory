@@ -438,7 +438,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         try {
             $granularityForInventoryStatus = $this->granularity->getProject()->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
-            // La granularité des inventaires n'a pas encoré été créée.
+            // La granularité des inventaires n'a pas encoré été choisie.
             $granularityForInventoryStatus = null;
         }
         // Définition du statut de l'inventaire.
@@ -451,7 +451,8 @@ class Orga_Model_Cell extends Core_Model_Entity
                 $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
                 $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
             } catch (Core_Exception_NotFound $e) {
-                // Il n'y a pas de cellules parentes pour l'instant.
+                // Il n'y a pas de cellules parentes.
+                $this->setInventoryStatus(self::STATUS_NOTLAUNCHED);
             }
         }
     }
