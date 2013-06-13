@@ -827,7 +827,15 @@ class Orga_Service_ETLStructure extends Core_Singleton
         foreach (DW_Model_Report::loadList($queryCube) as $dWReport) {
             /** @var DW_Model_Report $dWReport */
             $dWReportsAsString[] = $dWReport->getAsString();
-            $dWReport->reset();
+            $emptyDWReportString = '{'.
+                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWReport->getCube()->getKey()['id'].',"label":"",'.
+                '"refNumerator":null,"refNumeratorAxis1":null,"refNumeratorAxis2":null,'.
+                '"refDenominator":null,"refDenominatorAxis1":null,"refDenominatorAxis2":null,'.
+                '"chartType":null,"sortType":"orderResultByDecreasingValue","withUncertainty":false,'.
+                '"filters":[]'.
+            '}';
+            $dWReportReset = DW_Model_Report::getFromString($emptyDWReportString);
+            $dWReportReset->save();
         }
 
         // Suppression des axes et indicateurs.

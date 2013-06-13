@@ -342,7 +342,7 @@ AF.Input.prototype = {
 	 */
 	onChange: function(handler) {
 		// Pour tous les input du formulaire (utilise "on()" pour des raisons de performances)
-		this.form.on("change", ":input", handler);
+		this.form.on("change keyup", ":input", handler);
 		this.form.on("click", ".addSubAF", handler);
 		this.form.on("click", ".removeSubAF", handler);
 	}

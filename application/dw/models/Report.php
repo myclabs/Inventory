@@ -675,7 +675,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoi le rapport sous forme de chaine pour l'enregistrer en session.
      *
-     * return string
+     * @return string
      */
     public function getAsString()
     {
@@ -755,8 +755,6 @@ class DW_Model_Report extends Core_Model_Entity
      * Renvoi le rapport récupéré à partir de la chaine depuis l'enregistrer en session.
      *
      * @param string $string
-     *
-     * return DW_Model_Report
      *
      * @return DW_Model_Report
      */

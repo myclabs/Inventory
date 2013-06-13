@@ -37,12 +37,11 @@ class Techno_Form_AddNode extends UI_Form
         $parentSelection = new UI_Form_Element_Select('setParents');
         $parentSelection->setLabel(__('UI', 'name', 'parentCategory'));
         $parentSelection->addNullOption('');
-        $allNodes = Tree_Model_Composite::loadAll('Techno_Model_Category');
-        foreach ($allNodes as $node) {
-            /** @var $nodeEntity Techno_Model_Category */
-            $nodeEntity = $node->getEntity();
-            $option = new UI_Form_Element_Option('parentSelection_' . $node->getId(),
-                                                 $node->getId(), $nodeEntity->getLabel());
+        /** @var Techno_Model_Category[] $categories */
+        $categories = Techno_Model_Category::loadList();
+        foreach ($categories as $category) {
+            $option = new UI_Form_Element_Option('parentSelection_' . $category->getId(),
+                $category->getId(), $category->getLabel());
             $parentSelection->addOption($option);
         }
 
@@ -58,15 +57,13 @@ class Techno_Form_AddNode extends UI_Form
         $position->addOption($optionAfter);
 
         $brothers = new UI_Form_Element_Select('brothers');
-        $rootNodes = Tree_Model_Composite::loadRootComposites('Techno_Model_Category');
+        $rootCategories = Techno_Model_Category::loadRootCategories();
         $brothers->addNullOption('', null);
         $brothers->addNullOption('', null);
-        foreach ($rootNodes as $node) {
-            if ($node instanceof Tree_Model_Composite) {
-                $option = new UI_Form_Element_Option($node->getId(), $node->getId(),
-                                                     $node->getEntity()->getLabel());
-                $brothers->addOption($option);
-            }
+        foreach ($rootCategories as $rootCategory) {
+            $option = new UI_Form_Element_Option($rootCategory->getId(), $rootCategory->getId(),
+                $rootCategory->getLabel());
+            $brothers->addOption($option);
         }
 
         //Condition si le parent selectionné change

@@ -184,10 +184,10 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                                 $unit .= ' / '.$report->getDenominator()->getUnit()->getSymbol();
                             }
                             $this->html .= $report->getLabel().' : '.
-                                $locale->formatNumber($results[0]['value'], 3).
-                                // On n'affiche pas l'incertitude
-                                //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                                ' '.$unit;
+                            $locale->formatNumber(array_pop($results)['value'], 3).
+                            // On n'affiche pas l'incertitude
+                            //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
+                            ' '.$unit;
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
