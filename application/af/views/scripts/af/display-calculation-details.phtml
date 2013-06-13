@@ -117,7 +117,7 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
     $locale = Core_Locale::loadDefault();
     $title = $algo->getRef();
     if ($algo instanceof Algo_Model_Numeric) {
-        $title .= " (" . $algo->getLabel() . ")";
+        $title .= " <small>" . $algo->getLabel() . "</small>";
     }
     $collapse = new UI_HTML_Collapse($refPrefix . $algo->getRef(), $title);
     $collapse->foldedByDefault = true;

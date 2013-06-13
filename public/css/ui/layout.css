@@ -48,6 +48,11 @@ footer .feedback-form {
 .wrapper + .wrapper { margin-top : 15px; }
 .wrapper .wrapper { margin-left: 15px; }
 /*fieldset fieldset { margin-left: 15px; }*/
+/** Collapse dans collapse */
+.wrapper .wrapper legend {
+    font-size: 18px;
+    line-height: 30px;
+}
 
 /* Différente tailles de Modaux */
 .modal.large { width: 850px; margin-left: -425px; }
