@@ -6,16 +6,12 @@
  */
 
 /**
- * Test des champs traduits
+ * Test des champs versionnés
  * @package    Core
  * @subpackage Test
  */
-class Inventory_Model_Translated extends Core_Model_Entity
+class Inventory_Model_Versioned extends Core_Model_Entity
 {
-
-    use Core_Model_Entity_Translatable;
-
-    const QUERY_NAME = 'name';
 
     /**
      * @var integer
