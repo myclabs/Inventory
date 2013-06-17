@@ -161,7 +161,7 @@ class Orga_ProjectController extends Core_Controller_Ajax
             }
         }
 
-        $label = $formData->getValue('label');
+        $label = (string) $formData->getValue('label');
         if ($project->getLabel() !== $label) {
             $project->setLabel($label);
         }
