@@ -6,22 +6,6 @@
 
 		<!-- Datagrid -->
 		
-        <tu tuid="orgaGranularityForInventoryStatus">
-            <tuv xml:lang="fr">
-                <seg>Niveau organisationnel des inventaires</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Inventories organizational level</seg>
-            </tuv>
-        </tu>
-        <tu tuid="addPanelTitle">
-            <tuv xml:lang="fr">
-                <seg>Ajout d'une organisation</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Organization creation</seg>
-            </tuv>
-        </tu>
         <tu tuid="InputGranularityNotNarrowerThanNewInventoryGranularity">
             <tuv xml:lang="fr">
                 <seg>La modification n'a pas pu être effectuée, car le niveau indiqué est strictement plus fin qu'au moins un des niveaux de saisie de l'organisation.</seg>

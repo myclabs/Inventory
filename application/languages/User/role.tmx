@@ -4,12 +4,20 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="title">
+        <tu tuid="role">
             <tuv xml:lang="fr">
-                <seg>My C-Tool</seg>
+                <seg>Rôle</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>My C-Tool</seg>
+                <seg>Role</seg>
+            </tuv>
+        </tu>
+        <tu tuid="roles">
+            <tuv xml:lang="fr">
+                <seg>Rôles</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Roles</seg>
             </tuv>
         </tu>
 

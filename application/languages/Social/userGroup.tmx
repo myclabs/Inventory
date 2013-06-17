@@ -4,14 +4,14 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="title">
+        <tu tuid="userGroups">
             <tuv xml:lang="fr">
-                <seg>My C-Tool</seg>
+                <seg>Groupes d'utilisateurs</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>My C-Tool</seg>
+                <seg>User groups</seg>
             </tuv>
         </tu>
 
     </body>
-</tmx>
+</tmx>    

@@ -4,17 +4,36 @@
 		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
 	<body>
 
-		<!-- Titres -->
+        <!-- Général -->
 
-        <tu tuid="granularityDataProviderTitle">
+        <tu tuid="granularityForInventoryStatus">
             <tuv xml:lang="fr">
-                <seg>Propriétés des niveaux organisationnels (hors choix des formulaires et saisie)</seg>
+                <seg>Niveau organisationnel des inventaires</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organizational levels properties (besides forms choice and input)</seg>
+                <seg>Inventories organizational level</seg>
             </tuv>
         </tu>
-        <tu tuid="AFGranularitiesTitle">
+        <tu tuid="inputGranularityNeedsToBeNarrowerThanConfigGranularity">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le choix des formulaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select for input an organizational level narrower than or equal to the one selected for form choice.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputGranularityNeedsToBeNarrowerThanInventoryGranularity">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le statut des inventaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select for input an organizational level narrower than or equal to the one selected for inventory status.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Niveaux organisationnels de choix des formulaires et de saisie -->
+
+        <tu tuid="inputGranularities">
             <tuv xml:lang="fr">
                 <seg>Niveaux organisationnels de choix des formulaires et de saisie</seg>
             </tuv>
@@ -22,6 +41,25 @@
                 <seg>Organizational levels for forms choice and input</seg>
             </tuv>
         </tu>
+        <tu tuid="inputConfigGranularity">
+            <tuv xml:lang="fr">
+                <seg>Choix des formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Form choice</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputGranularity">
+            <tuv xml:lang="fr">
+                <seg>Saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input</seg>
+            </tuv>
+        </tu>
+
+        <!-- Configuration des analyses préconfigurées -->
+
         <tu tuid="granularityAnalysesTitle">
             <tuv xml:lang="fr">
                 <seg>Configuration des analyses préconfigurées</seg>
@@ -31,7 +69,15 @@
             </tuv>
         </tu>
 
-        <!-- Datagrid « granularityDataProvider » -->
+
+
+
+
+
+
+
+
+        <!-- Autres -->
         
         <tu tuid="cellsWithOrgaTabHeader">
             <tuv xml:lang="fr">
@@ -66,38 +112,6 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>In order to access this interface, please first choose the organizational level where inventory status will be assigned.</seg>
-            </tuv>
-        </tu>
-        <tu tuid="labelAFConfigOrgaGranularity">
-            <tuv xml:lang="fr">
-                <seg>Choix des formulaires</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Form choice</seg>
-            </tuv>
-        </tu>
-        <tu tuid="labelAFInputOrgaGranularity">
-            <tuv xml:lang="fr">
-                <seg>Saisie</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Input</seg>
-            </tuv>
-        </tu>
-        <tu tuid="inputGranularityNeedsToBeNarrowerThanConfigGranularity">
-            <tuv xml:lang="fr">
-                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le choix des formulaires.</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Please select for input an organizational level narrower than or equal to the one selected for form choice.</seg>
-            </tuv>
-        </tu>
-        <tu tuid="inputGranularityNeedsToBeNarrowerThanInventoryGranularity">
-            <tuv xml:lang="fr">
-                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le statut des inventaires.</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Please select for input an organizational level narrower than or equal to the one selected for inventory status.</seg>
             </tuv>
         </tu>
 

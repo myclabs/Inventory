@@ -4,7 +4,26 @@
 		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
 	<body>
 
-		<!-- Datagrid -->
+        <tu tuid="granularity">
+            <tuv xml:lang="fr">
+                <seg>Niveau</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="granularities">
+            <tuv xml:lang="fr">
+                <seg>Niveaux</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Levels</seg>
+            </tuv>
+        </tu>
+
+        <!-- Datagrid -->
+
+        <!-- Colonne "Navigable ?" -->
 
 		<tu tuid="navigableHeader">
 			<tuv xml:lang="fr">
@@ -30,7 +49,10 @@
 				<seg>Not navigable</seg>
 			</tuv>
 		</tu>
-		<tu tuid="labelGlobalGranularity">
+
+        <!-- Colonne "Organisation" -->
+
+        <tu tuid="labelGlobalGranularity">
 			<tuv xml:lang="fr">
 				<seg>Niveau organisationnel global</seg>
 			</tuv>
@@ -81,6 +103,36 @@
             <tuv xml:lang="en">
                 <seg>This organizational level cannot be deleted, since it is used for the general configuration
                 of this organization (inventory status, accounting form selection, inputs).</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deleteGranularityInventory">
+            <tuv xml:lang="fr">
+                <seg>Ce niveau organisationnel ne peut pas être supprimé, car il a été choisi comme niveau de
+                    définition du statut des inventaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This organizational level cannot be deleted, since it has been chosen as the level
+                    where inventory status are defined.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deleteGranularityConfigAF">
+            <tuv xml:lang="fr">
+                <seg>Ce niveau organisationnel ne peut pas être supprimé, car il a été sélectionné pour y effectuer
+                    le choix de formulaires comptables (voir l'onglet « Configuration »).</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This organizational level cannot be deleted, since it has been selected for the choice of
+                    accounting forms (see "Configuration" tab).</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deleteGranularityInputAF">
+            <tuv xml:lang="fr">
+                <seg>Ce niveau organisationnel ne peut pas être supprimé, car il a été sélectionné pour y effectuer
+                    des saisies (voir l'onglet « Configuration »).</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This organizational level cannot be deleted, since it has been selected for input processing (see
+                    "Configuration" tab).</seg>
             </tuv>
         </tu>
 

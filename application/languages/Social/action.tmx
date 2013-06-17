@@ -4,6 +4,17 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="actions">
+            <tuv xml:lang="fr">
+                <seg>Actions</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Actions</seg>
+            </tuv>
+        </tu>
+
+        <!-- Attributs -->
+
         <tu tuid="personInCharge">
             <tuv xml:lang="fr">
                 <seg>Responsable</seg>

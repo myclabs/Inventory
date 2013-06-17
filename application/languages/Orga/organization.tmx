@@ -4,30 +4,38 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="docLibraryForAFInputSetPrimary">
+        <tu tuid="addPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Documents des saisies</seg>
+                <seg>Ajout d'une organisation</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Documents of inputs</seg>
+                <seg>Organization creation</seg>
             </tuv>
         </tu>
-        <tu tuid="docLibraryForSocialTemplateAction">
+        <tu tuid="organization">
             <tuv xml:lang="fr">
-                <seg>Documents des modèles d'action</seg>
+                <seg>Organisation</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Documents of action templates</seg>
+                <seg>Organization</seg>
             </tuv>
         </tu>
-        <tu tuid="docLibraryForSocialAction">
+        <tu tuid="organizations">
             <tuv xml:lang="fr">
-                <seg>Documents des actions</seg>
+                <seg>Organisations</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Documents of actions</seg>
+                <seg>Organizations</seg>
+            </tuv>
+        </tu>
+        <tu tuid="structure">
+            <tuv xml:lang="fr">
+                <seg>Structure</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Structure</seg>
             </tuv>
         </tu>
 
     </body>
-</tmx>    
+</tmx>

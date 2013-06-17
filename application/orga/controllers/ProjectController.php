@@ -166,7 +166,7 @@ class Orga_ProjectController extends Core_Controller_Ajax
             $project->setLabel($label);
         }
 
-        $this->setFormMessage(__('Orga', 'project', 'updated'));
+        $this->setFormMessage(__('UI', 'message', 'updated'));
 
         $this->sendFormResponse();
     }

@@ -4,38 +4,6 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="level">
-            <tuv xml:lang="fr">
-                <seg>Niveau</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Level</seg>
-            </tuv>
-        </tu>
-        <tu tuid="levels">
-            <tuv xml:lang="fr">
-                <seg>Niveaux</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Levels</seg>
-            </tuv>
-        </tu>
-        <tu tuid="organization">
-            <tuv xml:lang="fr">
-                <seg>Organisation</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Organization</seg>
-            </tuv>
-        </tu>
-        <tu tuid="organizations">
-            <tuv xml:lang="fr">
-                <seg>Organisations</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Organizations</seg>
-            </tuv>
-        </tu>
         <tu tuid="relevance">
             <tuv xml:lang="fr">
                 <seg>Pertinence</seg>
@@ -44,20 +12,44 @@
                 <seg>Relevance</seg>
             </tuv>
         </tu>
-        <tu tuid="structure">
+        <tu tuid="irrelevantFem">
             <tuv xml:lang="fr">
-                <seg>Structure</seg>
+                <seg>Non pertinente</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Structure</seg>
+                <seg>Irrelevant</seg>
             </tuv>
         </tu>
-        <tu tuid="subUnits">
+        <tu tuid="relevantFem">
             <tuv xml:lang="fr">
-                <seg>Sous-unités</seg>
+                <seg>Pertinente</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Sub-units</seg>
+                <seg>Relevant</seg>
+            </tuv>
+        </tu>
+        <tu tuid="parentCellsRelevanceHeader">
+            <tuv xml:lang="fr">
+                <seg>Pertinence des unités parentes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parent units relevance</seg>
+            </tuv>
+        </tu>
+        <tu tuid="allParentCellsRelevantProperty">
+            <tuv xml:lang="fr">
+                <seg>Toutes pertinentes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All relevant</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notAllParentCellsRelevantProperty">
+            <tuv xml:lang="fr">
+                <seg>Non toutes pertinentes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not all relevant</seg>
             </tuv>
         </tu>
 

@@ -4,22 +4,31 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="inventories">
+        <tu tuid="firstName">
             <tuv xml:lang="fr">
-                <seg>Inventaires</seg>
+                <seg>Prénom</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inventories</seg>
+                <seg>First name</seg>
             </tuv>
         </tu>
-        <tu tuid="inventory">
+        <tu tuid="lastName">
             <tuv xml:lang="fr">
-                <seg>Inventaire</seg>
+                <seg>Nom</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inventorie</seg>
+                <seg>Last name</seg>
             </tuv>
         </tu>
+        <tu tuid="users">
+            <tuv xml:lang="fr">
+                <seg>Utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users</seg>
+            </tuv>
+        </tu>
+
 
     </body>
 </tmx>
