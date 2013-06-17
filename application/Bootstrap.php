@@ -80,9 +80,9 @@ class Bootstrap extends Core_Bootstrap
     }
 
     /**
-     * Enregistre les helpers de UI.
+     * Enregistre les helpers de vue
      */
-    protected function _initViewHelperUI()
+    protected function _initViewHelpers()
     {
         $this->bootstrap('View');
         $view = $this->getResource('view');
