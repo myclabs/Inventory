@@ -50,9 +50,9 @@ class AF_Service_InputService
             // Calcule les résultats
             $inputSet->getAF()->execute($inputSet);
             $inputSet->getOutputSet()->calculateTotals();
+        } else {
+            $inputSet->clearOutputSet();
         }
-
-        $inputSet->clearOutputSet();
     }
 
 }
