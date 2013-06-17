@@ -559,10 +559,10 @@ class UI_Datagrid extends UI_Generic
         $url = '';
         // Ajout du nom du module.
         if ($this->_module !== null) {
-            $url .= $this->_module.'/';
+            $url .= $this->_module . '/';
         }
         // Ajout du contrôleur.
-        $url .= $this->_controller.'/';
+        $url .= $this->_controller . '/';
 
         return $url;
     }
@@ -576,9 +576,9 @@ class UI_Datagrid extends UI_Generic
     {
         $url = '';
 
-        $url .= 'idDatagrid=' . $this->id . '&';
+        $url .= '/idDatagrid/' . $this->id ;
         foreach ($this->_parameters as $option => $valeur) {
-            $url .= $option . '=' . addslashes($valeur) . '&';
+            $url .= '/' . $option . '/' . addslashes($valeur);
         }
 
         return $url;
@@ -593,7 +593,7 @@ class UI_Datagrid extends UI_Generic
      */
     public function getActionUrl($action)
     {
-        return $this->encodeUrl() . $action . '?' . $this->encodeParameters();
+        return $this->encodeUrl() . $action . $this->encodeParameters();
     }
 
     /**
@@ -1003,13 +1003,13 @@ class UI_Datagrid extends UI_Generic
             $datagridScript .= 'filter = filter.substr(0, filter.length-1);';
         }
         $datagridScript .= 'filter += "}";';
-        $datagridScript .= 'return "getelements?';
+        $datagridScript .= 'return "getelements';
         $datagridScript .= $this->encodeParameters();
-        $datagridScript .= 'sortColumn=" + sort + "';
-        $datagridScript .= '&sortDirection=" + dir + "';
-        $datagridScript .= '&nbElements=" + results + "';
-        $datagridScript .= '&startIndex=" + startIndex + "';
-        $datagridScript .= '&filters=" + encodeURIComponent(filter);';
+        $datagridScript .= '/sortColumn/" + sort + "';
+        $datagridScript .= '/sortDirection/" + dir + "';
+        $datagridScript .= '/nbElements/" + results + "';
+        $datagridScript .= '/startIndex/" + startIndex + "';
+        $datagridScript .= '/filters/" + encodeURIComponent(filter);';
         $datagridScript .= '};';
 
         // Création d'une variable permettant de savoir si la requête Initiale a déjà été envoyé.
@@ -1164,38 +1164,38 @@ class UI_Datagrid extends UI_Generic
             }
             $datagridScript .= '},';
             if ($this->pagination === true) {
-                $datagridScript .= 'initialRequest : "getelements?';
+                $datagridScript .= 'initialRequest : "getelements';
                 $datagridScript .= $this->encodeParameters();
-                $datagridScript .= 'nbElements='.$datagridSession['nbElements'];
-                $datagridScript .= '&startIndex='.$startIndexInitial;
-                $datagridScript .= '&sortColumn='.$defaultSortName;
-                $datagridScript .= '&sortDirection='.$initialSortRequest;
-                $datagridScript .= '&filters='.addslashes($initialFilter).'",';
+                $datagridScript .= '/nbElements/'.$datagridSession['nbElements'];
+                $datagridScript .= '/startIndex/'.$startIndexInitial;
+                $datagridScript .= '/sortColumn/'.$defaultSortName;
+                $datagridScript .= '/sortDirection/'.$initialSortRequest;
+                $datagridScript .= '/filters/'.addslashes($initialFilter).'",';
             } else {
-                $datagridScript .= 'initialRequest : "getelements?';
+                $datagridScript .= 'initialRequest : "getelements';
                 $datagridScript .= $this->encodeParameters();
-                $datagridScript .= 'nbElements=null';
-                $datagridScript .= '&startIndex=0';
-                $datagridScript .= '&sortColumn='.$defaultSortName;
-                $datagridScript .= '&sortDirection='.$initialSortRequest;
-                $datagridScript .= '&filters='.addslashes($initialFilter).'",';
+                $datagridScript .= '/nbElements/null';
+                $datagridScript .= '/startIndex/0';
+                $datagridScript .= '/sortColumn/'.$defaultSortName;
+                $datagridScript .= '/sortDirection/'.$initialSortRequest;
+                $datagridScript .= '/filters/'.addslashes($initialFilter).'",';
             }
         } else if ($this->pagination === true) {
-            $datagridScript .= 'initialRequest : "getelements?';
+            $datagridScript .= 'initialRequest : "getelements';
             $datagridScript .= $this->encodeParameters();
-            $datagridScript .= 'nbElements='.$datagridSession['nbElements'];
-            $datagridScript .= '&startIndex='.$startIndexInitial;
-            $datagridScript .= '&sortColumn=null';
-            $datagridScript .= '&sortDirection=false';
-            $datagridScript .= '&filters='.addslashes($initialFilter).'",';
+            $datagridScript .= '/nbElements/'.$datagridSession['nbElements'];
+            $datagridScript .= '/startIndex/'.$startIndexInitial;
+            $datagridScript .= '/sortColumn/null';
+            $datagridScript .= '/sortDirection/false';
+            $datagridScript .= '/filters/'.addslashes($initialFilter).'",';
         } else {
-            $datagridScript .= 'initialRequest : "getelements?';
+            $datagridScript .= 'initialRequest : "getelements';
             $datagridScript .= $this->encodeParameters();
-            $datagridScript .= 'nbElements=null';
-            $datagridScript .= '&startIndex=0';
-            $datagridScript .= '&sortColumn=null';
-            $datagridScript .= '&sortDirection=false';
-            $datagridScript .= '&filters='.addslashes($initialFilter).'",';
+            $datagridScript .= '/nbElements/null';
+            $datagridScript .= '/startIndex/0';
+            $datagridScript .= '/sortColumn/null';
+            $datagridScript .= '/sortDirection/false';
+            $datagridScript .= '/filters/'.addslashes($initialFilter).'",';
         }
         if ($this->initialLoading === true) {
             $datagridScript .= 'initialLoad: true,';

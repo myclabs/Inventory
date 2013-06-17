@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Datagrid de granularity
@@ -13,6 +14,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -29,18 +36,26 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
+        /**@var Orga_Model_Granularity $granularity */
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
             $data = array();
-            $data['index'] = $granularity->getRef();
+            $data['index'] = $granularity->getId();
             $listAxes = array();
             foreach ($granularity->getAxes() as $axis) {
                 $listAxes[] = $axis->getRef();
             }
             $data['axes'] = $this->cellList($listAxes);
             $data['navigable'] = $granularity->isNavigable();
+            $data['orgaTab'] = $granularity->getCellsWithOrgaTab();
+            $data['aCL'] = $granularity->getCellsWithACL();
+            $data['aFTab'] = $granularity->getCellsWithAFConfigTab();
+            $data['dW'] = $granularity->getCellsGenerateDWCubes();
+            $data['genericActions'] = $granularity->getCellsWithSocialGenericActions();
+            $data['contextActions'] = $granularity->getCellsWithSocialContextActions();
+            $data['inputDocuments'] = $granularity->getCellsWithInputDocuments();
             if (!($granularity->hasAxes())) {
                 $this->editableCell($data['navigable'], false);
                 $data['delete'] = false;
@@ -62,15 +77,16 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
 
-        $refAxes = $this->getAddElementValue('axes');
+        $refAxes = explode(',', $this->getAddElementValue('axes'));
         $listAxes = array();
         $refGranularity = '';
         if (empty($refAxes)) {
             $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'emptyGranularity'));
         }
-        foreach ($this->getAddElementValue('axes') as $refAxis) {
+
+        foreach ($refAxes as $refAxis) {
             $refGranularity .= $refAxis . '|';
             $axis = Orga_Model_Axis::loadByRefAndProject($refAxis, $project);
             // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
@@ -82,20 +98,27 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             }
         }
         $refGranularity = substr($refGranularity, 0, -1);
+
         try {
             Orga_Model_Granularity::loadByRefAndProject($refGranularity, $project);
             $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'));
         } catch (Core_Exception_NotFound $e) {
             // La granularité n'existe pas déjà.
         }
+
         if (empty($this->_addErrorMessages)) {
-            /**@var Core_Work_Dispatcher $dispatcher */
-            $dispatcher = Zend_Registry::get('workDispatcher');
-            $dispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Orga_Work_Task_AddGranularity(
                     $project,
                     $listAxes,
-                    $this->getAddElementValue('navigable')
+                    $this->getAddElementValue('navigable'),
+                    $this->getAddElementValue('orgaTab'),
+                    $this->getAddElementValue('aCL'),
+                    $this->getAddElementValue('aFTab'),
+                    $this->getAddElementValue('dW'),
+                    $this->getAddElementValue('genericActions'),
+                    $this->getAddElementValue('contextActions'),
+                    $this->getAddElementValue('inputDocuments')
                 )
             );
             $this->message = __('UI', 'message', 'addedLater');
@@ -119,14 +142,12 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
-        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->delete, $project);
+        $granularity = Orga_Model_Granularity::load($this->delete);
 
         $granularity->delete();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
         }
@@ -157,19 +178,47 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
-        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->update['index'], $project);
+        $granularity = Orga_Model_Granularity::load($this->update['index']);
 
         switch ($this->update['column']) {
             case 'navigable':
                 $granularity->setNavigability((bool) $this->update['value']);
-                $this->message = __('UI', 'message', 'updated', array('GRANULARITY' => $granularity->getLabel()));
+                $this->data = $granularity->isNavigable();
+                break;
+            case 'orgaTab':
+                $granularity->setCellsWithOrgaTab((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithOrgaTab();
+                break;
+            case 'aCL':
+                $granularity->setCellsWithACL((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithACL();
+                break;
+            case 'aFTab':
+                $granularity->setCellsWithAFConfigTab((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithAFConfigTab();
+                break;
+            case 'dW':
+                $granularity->setCellsGenerateDWCubes((bool) $this->update['value']);
+                $this->data = $granularity->getCellsGenerateDWCubes();
+                break;
+            case 'genericActions':
+                $granularity->setCellsWithSocialGenericActions((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithSocialGenericActions();
+                break;
+            case 'contextActions':
+                $granularity->setCellsWithSocialContextActions((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithSocialContextActions();
+                break;
+            case 'inputDocuments':
+                $granularity->setCellsWithInputDocuments((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithInputDocuments();
                 break;
             default:
                 parent::updateelementAction();
                 break;
         }
-        $this->data = $granularity->isNavigable();
+        $granularity->save();
+        $this->message = __('UI', 'message', 'updated', array('GRANULARITY' => $granularity->getLabel()));
 
         $this->send();
     }

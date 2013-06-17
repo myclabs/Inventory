@@ -49,8 +49,12 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
             $dimensionRef = $parameterCoordinate->getDimension()->getMeaning()->getKeyword()->getRef();
             $coordinates[$dimensionRef] = $parameterCoordinate->getMemberKeyword($inputSet);
         }
-        /** @var $technoService Techno_Service_Techno */
-        $technoService = Techno_Service_Techno::getInstance();
+
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var Techno_Service_Techno $technoService */
+        $technoService = $container->get('Techno_Service_Techno');
+
         return $technoService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
     }
 
@@ -61,7 +65,10 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
     {
         $errors = parent::checkConfig();
 
-        $technoService = Techno_Service_Techno::getInstance();
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var Techno_Service_Techno $technoService */
+        $technoService = $container->get('Techno_Service_Techno');
 
         // Vérifie que la famille liée est bien trouvable
         try {
@@ -130,8 +137,11 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
      */
     public function getFamily()
     {
-        /** @var $technoService Techno_Service_Techno */
-        $technoService = Techno_Service_Techno::getInstance();
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var Techno_Service_Techno $technoService */
+        $technoService = $container->get('Techno_Service_Techno');
+
         return $technoService->getFamily($this->familyRef);
     }
 

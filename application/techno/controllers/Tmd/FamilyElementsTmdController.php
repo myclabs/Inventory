@@ -47,8 +47,7 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $element->save();
         $cell->setChosenElement($element);
         $cell->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->sendJsonResponse([
                                 'message' => 'Un élément vide a été créé.',
                                 'type'    => 'success',

@@ -2,6 +2,10 @@
 if (Zend_Auth::getInstance()->hasIdentity()) {
     $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
 
+    $container = Zend_Registry::get('container');
+    /** @var User_Service_ACL $aclService */
+    $aclService = $container->get('User_Service_ACL');
+
     $leftMenu = [];
 
     $aclQuery = new Core_Model_Query();
@@ -11,7 +15,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
     $leftMenu[1] = [
         'name' => __('UI', 'name', 'home'),
-        'url' => $this->baseUrl('inventory/project/'),
+        'url' => $this->baseUrl('orga/project/'),
     ];
     $leftMenu[3] = [
         'name' => __('Inventory', 'menu', 'simulations'),
@@ -23,7 +27,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         'submenu' => []
     ];
 
-    $isAllowedToViewAllUser = User_Service_ACL::getInstance()->isAllowed(
+    $isAllowedToViewAllUser = $aclService->isAllowed(
         $connectedUser,
         User_Model_Action_Default::VIEW(),
         User_Model_Resource_Entity::loadByEntityName('User_Model_User')
@@ -62,7 +66,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
     $subMenuReferencial = &$leftMenu[4]['submenu'];
 
-    $isAllowedToEditReferential = User_Service_ACL::getInstance()->isAllowed(
+    $isAllowedToEditReferential = $aclService->isAllowed(
         $connectedUser,
         User_Model_Action_Default::EDIT(),
         User_Model_Resource_Named::loadByName('referential')

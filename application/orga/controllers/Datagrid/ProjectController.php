@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controller de projet
@@ -12,6 +13,18 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
     /**
      * Methode appelee pour remplir le tableau.
      * @Secure("viewProjects")
@@ -23,50 +36,56 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
         $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
 
         foreach (Orga_Model_Project::loadList($this->request) as $project) {
+            /** @var Orga_Model_Project $project */
             $data = array();
-            $data['index'] = $project->getKey()['id'];
+            $data['index'] = $project->getId();
             $data['label'] = $project->getLabel();
+            $rootAxesLabel = array();
+            foreach ($project->getRootAxes() as $rootAxis) {
+                $rootAxesLabel[] = $rootAxis->getLabel();
+            }
+            $data['rootAxes'] = implode(', ', $rootAxesLabel);
             try {
-                $data['granularityForInventoryStatus'] = $this->cellList(
-                    $project->getGranularityForInventoryStatus()->getRef(),
-                    $project->getGranularityForInventoryStatus()->getLabel()
-                );
+                $data['granularityForInventoryStatus'] = $project->getGranularityForInventoryStatus()->getLabel();
             } catch (Core_Exception_UndefinedAttribute $e) {
-                $data['granularityForInventoryStatus'] = $this->cellList(null, '');
+                $data['granularityForInventoryStatus'] = '';
             };
-            $data['resetDWCubesAndDatasUpToDate'] = $this->cellPopup(
-                'orga/project/dwcubesstate/idProject/'.$data['index'],
-                __('Orga', 'projectList', 'statusRebuildColumnLink'),
-                'zoom-in'
-            );
 
-            $userIsAbleToSeeManyCells = false;
+            $isConnectedUserAbleToSeeManyCells = false;
             foreach ($project->getGranularities() as $granularity) {
-                $aclProjectQuery = new Core_Model_Query();
-                $aclProjectQuery->aclFilter->enabled = true;
-                $aclProjectQuery->aclFilter->user = $this->_helper->auth();
-                $aclProjectQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-                $aclProjectQuery->filter->addCondition(
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $this->_helper->auth();
+                $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+                $aclCellQuery->filter->addCondition(
                     Orga_Model_Cell::QUERY_GRANULARITY,
                     $granularity,
-                    Core_Model_Filter::OPERATOR_EQUAL,
-                    Orga_Model_Cell::getAlias()
+                    Core_Model_Filter::OPERATOR_EQUAL
                 );
-                $numberCellUserCanSee = Orga_Model_Cell::countTotal($aclProjectQuery);
+                $numberCellUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
                 if ($numberCellUserCanSee > 1) {
-                    $userIsAbleToSeeManyCells = true;
+                    $isConnectedUserAbleToSeeManyCells = true;
                     break;
                 } else if ($numberCellUserCanSee == 1) {
                     break;
                 }
             }
-            if ($userIsAbleToSeeManyCells) {
-                $data['details'] = $this->cellLink('orga/project/cells/idProject/'.$project->getKey()['id']);
+            if ($isConnectedUserAbleToSeeManyCells) {
+                $data['details'] = $this->cellLink('orga/project/cells/idProject/'.$project->getId());
             } else {
-                $cellWithAccess = Orga_Model_Cell::loadList($aclProjectQuery);
-                $orgaCell = $cellWithAccess[0]->getOrgaCell();
-                $data['details'] = $this->cellLink('orga/cell/details/idCell/'.$orgaCell->getKey()['id']);
+                $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
+                $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getId());
             }
+
+            $isConnectedUserAbleToDeleteProject = $this->aclService->isAllowed(
+                $this->_helper->auth(),
+                User_Model_Action_Default::DELETE(),
+                $project
+            );
+            if (!$isConnectedUserAbleToDeleteProject) {
+                $data['delete'] = false;
+            }
+
             $this->addLine($data);
         }
 
@@ -79,13 +98,10 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $administrator = $this->_helper->auth();
         $label = $this->getAddElementValue('label');
 
-        $workDispatcher->runBackground(
+        $this->workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ProjectService',
                 'createProject',
@@ -103,12 +119,9 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
+        $project = Orga_Model_Project::load($this->delete);
 
-        $project = Orga_Model_Project::load(array('id' => $this->delete));
-
-        $workDispatcher->runBackground(
+        $this->workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ProjectService',
                 'deleteProject',
@@ -117,55 +130,6 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
         );
 
         $this->message = __('UI', 'message', 'deletedLater');
-        $this->send();
-    }
-
-    /**
-     * Met à jour un element.
-     * @Secure("editProject")
-     */
-    public function updateelementAction()
-    {
-        $project = Orga_Model_Project::load(array('id' => $this->update['index']));
-        switch ($this->update['column']) {
-            case 'label':
-                $project->setLabel($this->update['value']);
-                $this->data = $project->getLabel();
-                break;
-            case 'granularityForInventoryStatus':
-                $granularity = Orga_Model_Granularity::loadByRefAndProject(
-                    $this->update['value'],
-                    $project->getOrgaProject()
-                );
-                foreach ($project->getAFGranularities() as $aFGranularities) {
-                    if (!($aFGranularities->getAFInputOrgaGranularity()->isNarrowerThan($granularity))) {
-                        throw new Core_Exception_User('Orga', 'projectList', 'InputGranularityNotNarrowerThanNewOrgaGranularity');
-                    }
-                }
-                $project->setGranularityForInventoryStatus($granularity);
-                $this->data = $this->cellList(
-                    $project->getGranularityForInventoryStatus()->getRef(),
-                    $project->getGranularityForInventoryStatus()->getLabel()
-                );
-                break;
-            default:
-                parent::updateelementAction();
-
-        }
-        $this->message = __('UI', 'message', 'updated');
-        $this->send();
-    }
-
-    /**
-     * List des granularité d'un projet.
-     * @Secure("editProject")
-     */
-    public function getlistgranularitiesAction()
-    {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('index')));
-        foreach ($project->getGranularities() as $orgaGranularities) {
-            $this->addElementList($orgaGranularities->getRef(), $orgaGranularities->getLabel());
-        }
         $this->send();
     }
 

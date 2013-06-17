@@ -28,13 +28,14 @@ class Orga_GranularityController extends Core_Controller
             $this->view->idCell = null;
         }
         $this->view->idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load(array('id' => $this->view->idProject));
+        $project = Orga_Model_Project::load($this->view->idProject);
         $this->view->listAxes = array();
         foreach ($project->getFirstOrderedAxes() as $axis) {
             $this->view->listAxes[$axis->getRef()] = $axis->getLabel();
         }
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
             $this->view->display = false;
         } else {
             $this->view->display = true;
@@ -47,12 +48,16 @@ class Orga_GranularityController extends Core_Controller
      */
     public function reportAction()
     {
-        $granularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
+        $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$granularity->getLabel().'</small>');
-        $viewConfiguration->setOutputURL('orga/cell/details?idCell='.$this->getParam('idCell').'&tab=configuration');
-        $viewConfiguration->setSaveURL('orga/granularity/report?idGranularity='.$granularity->getKey()['id'].'&idCell='.$this->getParam('idCell').'&');
+        if ($this->hasParam('idCell')) {
+            $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$this->getParam('idCell').'/tab/project');
+        } else {
+            $viewConfiguration->setOutputUrl('orga/project/details/idProject/'.$this->getParam('idProject'));
+        }
+        $viewConfiguration->setSaveURL('orga/granularity/report/idGranularity/'.$granularity->getId().'/idCell/'.$this->getParam('idCell'));
         if ($this->hasParam('idReport')) {
             $this->forward('details', 'report', 'dw', array(
                     'idReport' => $this->getParam('idReport'),

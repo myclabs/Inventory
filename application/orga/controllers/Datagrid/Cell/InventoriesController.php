@@ -45,12 +45,11 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $this->request->filter->setConditions($filterConditions);
 
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
-        $granularity = $orgaCell->getGranularity();
-        $project = Orga_Model_Project::loadByOrgaProject($granularity->getProject());
+        $cell = Orga_Model_Cell::load($idCell);
+        $granularity = $cell->getGranularity();
+        $project = $granularity->getProject();
         $granularityForInventoryStatus = $project->getGranularityForInventoryStatus();
-        $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($granularity);
+        $crossedGranularity = $granularityForInventoryStatus->getCrossedGranularity($granularity);
 
         $this->request->filter->addCondition(
             Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
@@ -69,21 +68,17 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             Core_Model_Order::ORDER_ASC,
             Orga_Model_Cell::getAlias()
         );
-        foreach ($cell->getChildCellsForGranularity($crossedOrgaGranularity, $this->request) as $childCell) {
-            $childOrgaCell = $childCell->getOrgaCell();
-
+        foreach ($cell->loadChildCellsForGranularity($crossedGranularity, $this->request) as $childCell) {
             $data = array();
-            $data['index'] = $childOrgaCell->getKey()['id'];
-            foreach ($childOrgaCell->getMembers() as $member) {
+            $data['index'] = $childCell->getId();
+            foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
 
-            if ($crossedOrgaGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
-                $cellInventoryStatus = Orga_Model_Cell::loadByOrgaCell($childOrgaCell);
+            if ($crossedGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
+                $cellInventoryStatus = $childCell;
             } else {
-                $cellInventoryStatus = Orga_Model_Cell::loadByOrgaCell(
-                    $childOrgaCell->getParentCellForGranularity($granularityForInventoryStatus)
-                );
+                $cellInventoryStatus = $childCell->getParentCellForGranularity($granularityForInventoryStatus);
             }
             $data['inventoryStatus'] = $cellInventoryStatus->getInventoryStatus();
             if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
@@ -91,12 +86,10 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                 $data['advancementFinishedInput'] = 0;
 
                 $totalChildInputCells = 0;
-                foreach (Orga_Model_AFGranularities::loadList() as $aFGranularities) {
-                    $aFInputOrgaGranularity = $aFGranularities->getAFInputOrgaGranularity();
-                    if ($aFInputOrgaGranularity->isNarrowerThan($childOrgaCell->getGranularity())) {
-                        $inputCells = $childOrgaCell->getChildCellsForGranularity($aFInputOrgaGranularity);
+                foreach ($project->getInputGranularities() as $inputGranularity) {
+                    if ($inputGranularity->isNarrowerThan($childCell->getGranularity())) {
+                        $inputCells = $childCell->getChildCellsForGranularity($inputGranularity);
                         foreach ($inputCells as $inputCell) {
-                            $inputCell = Orga_Model_Cell::loadByOrgaCell($inputCell);
                             try {
                                 $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
                                 if ($childAfInputSetPrimary->isInputComplete()) {
@@ -108,7 +101,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                             } catch (Core_Exception_UndefinedAttribute $e) {
                                 // Pas de saisie pour l'instant = pas d'avancement.
                             }
-
                             $totalChildInputCells ++;
                         }
                     }
@@ -121,7 +113,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
 
             $this->addLine($data);
         }
-        $this->totalElements = $cell->countTotalChildCellsForGranularity($crossedOrgaGranularity, $this->request);
+        $this->totalElements = $cell->countTotalChildCellsForGranularity($crossedGranularity, $this->request);
 
         $this->send();
     }
@@ -151,8 +143,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             parent::updateelementAction();
         }
 
-        $childOrgaCell = Orga_Model_Cell::load($this->update['index']);
-        $childCell = Orga_Model_Cell::loadByOrgaCell($childOrgaCell);
+        $childCell = Orga_Model_Cell::load($this->update['index']);
         $childCell->setInventoryStatus($this->update['value']);
         $this->data = $childCell->getInventoryStatus();
         $this->message = __('UI', 'message', 'updated');

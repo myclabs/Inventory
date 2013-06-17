@@ -175,8 +175,7 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
         }
 
         $category->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->message = __('UI', 'message', 'added');
         $this->send();
@@ -236,8 +235,7 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
         }
 
         $node->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->message = __('UI', 'message', 'updated');
         $this->send();
@@ -252,9 +250,8 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
         $node = $this->fromTreeId($this->idNode);
         $node->delete();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             throw new Core_Exception_User('Techno', 'familyTree', 'categoryHasChild');
         }

@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controller du datagrid des saisies des formulaires des cellules.
@@ -12,6 +13,11 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
 
     /**
      * Methode appelee pour remplir le tableau.
@@ -53,10 +59,9 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $this->request->filter->setConditions($filterConditions);
 
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
-        $aFInputOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
+        $inputGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
         $this->request->filter->addCondition(
             Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
@@ -76,13 +81,10 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
             Orga_Model_Cell::getAlias()
         );
 
-        foreach ($cell->getChildCellsForGranularity($aFInputOrgaGranularity, $this->request)
-                 as $childCell) {
-            $childOrgaCell = $childCell->getOrgaCell();
-
+        foreach ($cell->loadChildCellsForGranularity($inputGranularity, $this->request) as $childCell) {
             $data = array();
-            $data['index'] = $childOrgaCell->getKey()['id'];
-            foreach ($childOrgaCell->getMembers() as $member) {
+            $data['index'] = $childCell->getId();
+            foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
 
@@ -132,16 +134,11 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
                 try {
                     // Vérification qu'un AF est défini.
-                    $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity(
-                        $childOrgaCell->getGranularity()
-                    );
-                    $cellsGroupDataProvider = $aFGranularities->getCellsGroupDataProviderForContainerCell(
-                        Orga_Model_Cell::loadByOrgaCell(
-                            $childOrgaCell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
-                        )
-                    );
+                    $cellsGroup = $childCell->getParentCellForGranularity($inputGranularity->getInputConfigGranularity())
+                        ->getCellsGroupForInputGranularity($inputGranularity);
+                    $cellsGroup->getAF();
 
-                    $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
+                    $isUserAllowedToInputCell = $this->aclService->isAllowed(
                         $this->_helper->auth(),
                         Orga_Action_Cell::INPUT(),
                         $childCell
@@ -152,11 +149,9 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                         $inputSetPrimary = null;
                     }
                     if (($isUserAllowedToInputCell) || ($inputSetPrimary !== null)) {
-                        $data['link'] = $this->cellLink(
-                            'orga/cell/input/idCell/'.$childOrgaCell->getKey()['id'].'/fromIdCell/'.$idCell
-                        );
+                        $data['link'] = $this->cellLink('orga/cell/input/idCell/'.$childCell->getId().'/fromIdCell/'.$idCell);
                     }
-                } catch (Core_Exception_NotFound $e) {
+                } catch (Core_Exception_UndefinedAttribute $e) {
                     // Pas d'AF configuré, donc pas de lien vers la saisie.
                 }
             } else {
@@ -168,8 +163,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
             $this->addLine($data);
         }
-        $this->totalElements = $cell->countTotalChildCellsForGranularity($aFInputOrgaGranularity,
-                                                                                     $this->request);
+        $this->totalElements = $cell->countTotalChildCellsForGranularity($inputGranularity, $this->request);
 
         $this->send();
     }

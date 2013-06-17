@@ -24,10 +24,10 @@ foreach ($this->axes as $axis) {
     foreach ($axis->getDirectBroaders() as $broaderAxis) {
         // Construction de la liste de membres.
         $columnBroader = new UI_Datagrid_Col_List('broader'.$broaderAxis->getRef(), $broaderAxis->getLabel());
-        $columnBroader->list = 'orga/datagrid_member/getparents?refParentAxis='.$broaderAxis->getRef().'&';
-        $columnBroader->list .= 'idFilterCell='.$this->idFilterCell.'&';
+        $columnBroader->list = 'orga/datagrid_member/getparents/refParentAxis/'.$broaderAxis->getRef();
         $columnBroader->dynamicList = true;
         $columnBroader->editable = true;
+        $columnBroader->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
         $datagridAxisMembers->addCol($columnBroader);
     }
 
@@ -37,8 +37,7 @@ foreach ($this->axes as $axis) {
     }
     $datagridAxisMembers->addParam('idProject', $this->idProject);
     $datagridAxisMembers->addParam('refAxis', $axis->getRef());
-    $datagridAxisMembers->addParam('idFilterCell', $this->idFilterCell);
-    if (!empty($this->idFilterCell)) {
+    if (!empty($this->idCell)) {
         $datagridAxisMembers->pagination = false;
     }
     $datagridAxisMembers->initialLoading = false;

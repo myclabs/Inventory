@@ -10,7 +10,7 @@
  * @package Simulation
  * @subpackage Service
  */
-class Simulation_Service_ETLData extends Core_Singleton
+class Simulation_Service_ETLData
 {
     /**
      * Supprime l'ensemble des résultats du scenario donné.

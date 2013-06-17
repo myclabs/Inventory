@@ -87,9 +87,8 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
 
             $checkboxField->save();
             $af->getRootGroup()->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -142,8 +141,7 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
                 break;
         }
         $checkboxField->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -166,9 +164,8 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
         }
         // Supprime le champ
         $field->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Condition_Elementary')) {
                 throw new Core_Exception_User('AF', 'configComponentMessage',

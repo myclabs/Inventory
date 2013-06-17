@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Classe controleur de la datagrid de Keyword.
@@ -14,6 +15,12 @@ use Core\Annotation\Secure;
  */
 class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var Keyword_Service_Keyword
+     */
+    private $keywordService;
+
     /**
      * (non-PHPdoc)
      * @see UI_Controller_Datagrid::getelementsAction()
@@ -23,6 +30,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         foreach (Keyword_Model_Keyword::loadList($this->request) as $keyword) {
+            /** @var Keyword_Model_Keyword $keyword */
             $data = array();
 
             $data['index'] = $keyword->getRef();
@@ -49,13 +57,13 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
 
-        $refErrors = Keyword_Service_Keyword::getInstance()->getErrorMessageForNewRef($ref);
+        $refErrors = $this->keywordService->getErrorMessageForNewRef($ref);
         if ($refErrors != null) {
             $this->setAddElementErrorMessage('ref', $refErrors);
         }
 
         if (empty($this->_addErrorMessages)) {
-            $keyword = Keyword_Service_Keyword::getInstance()->add($ref, $label);
+            $this->keywordService->add($ref, $label);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -68,7 +76,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $keywordLabel = Keyword_Service_Keyword::getInstance()->delete($this->delete);
+        $this->keywordService->delete($this->delete);
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
@@ -86,10 +94,10 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
 
         switch ($this->update['column']) {
             case 'label':
-                $keyword = Keyword_Service_Keyword::getInstance()->updateLabel($keywordRef, $newValue);
+                $this->keywordService->updateLabel($keywordRef, $newValue);
                 break;
             case 'ref':
-                $keyword = Keyword_Service_Keyword::getInstance()->updateRef($keywordRef, $newValue);
+                $this->keywordService->updateRef($keywordRef, $newValue);
                 break;
             default:
         }

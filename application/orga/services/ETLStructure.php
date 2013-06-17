@@ -12,18 +12,20 @@ use Doctrine\ORM\EntityManager;
  * @package Orga
  * @subpackage Service
  */
-class Orga_Service_ETLStructure extends Core_Singleton
+class Orga_Service_ETLStructure
 {
     /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Orga_Service_ETLStructure
+     * @var EntityManager
      */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
+    private $entityManager;
 
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * Peuple le cube de DW avec les données issues de Classif et Orga.
@@ -105,12 +107,11 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     protected function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
     {
-        $dWIndicator = new DW_Model_Indicator();
+        $dWIndicator = new DW_Model_Indicator($dWCube);
         $dWIndicator->setLabel($classifIndicator->getLabel());
         $dWIndicator->setRef('classif_'.$classifIndicator->getRef());
         $dWIndicator->setUnit($classifIndicator->getUnit());
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
-        $dWIndicator->setCube($dWCube);
     }
 
     /**
@@ -122,10 +123,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     protected function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
     {
-        $dWAxis = new DW_Model_Axis();
+        $dWAxis = new DW_Model_Axis($dwCube);
         $dWAxis->setLabel($classifAxis->getLabel());
         $dWAxis->setRef('classif_'.$classifAxis->getRef());
-        $dWAxis->setCube($dwCube);
         $associationArray['axes'][$classifAxis->getRef()] = $dWAxis;
         $narrowerAxis = $classifAxis->getDirectNarrower();
         if ($narrowerAxis !== null) {
@@ -133,10 +133,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
         }
 
         foreach ($classifAxis->getMembers() as $classifMember) {
-            $dWMember = new DW_Model_Member();
+            $dWMember = new DW_Model_Member($dWAxis);
             $dWMember->setLabel($classifMember->getLabel());
             $dWMember->setRef('classif_'.$classifMember->getRef());
-            $dWMember->setAxis($dWAxis);
             $dWMember->setPosition($classifMember->getPosition());
             $memberIdentifier = $classifMember->getAxis()->getRef().'_'.$classifMember->getRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
@@ -186,10 +185,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
         }
 
-        $dWAxis = new DW_Model_Axis();
+        $dWAxis = new DW_Model_Axis($dwCube);
         $dWAxis->setLabel($orgaAxis->getLabel());
         $dWAxis->setRef('orga_'.$orgaAxis->getRef());
-        $dWAxis->setCube($dwCube);
         $associationArray['axes'][$orgaAxis->getRef()] = $dWAxis;
         $narrowerAxis = $orgaAxis->getDirectNarrower();
         if ($narrowerAxis !== null) {
@@ -210,10 +208,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
                 }
             }
 
-            $dWMember = new DW_Model_Member();
+            $dWMember = new DW_Model_Member($dWAxis);
             $dWMember->setLabel($orgaMember->getLabel());
             $dWMember->setRef('orga_'.$orgaMember->getRef());
-            $dWMember->setAxis($dWAxis);
             $memberIdentifier = $orgaMember->getAxis()->getRef().'_'.$orgaMember->getCompleteRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
             foreach ($orgaMember->getDirectChildren() as $narrowerClassifMember) {
@@ -250,11 +247,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function updateCellsDWReportFromGranularityReport($granularityReport)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
         $granularityReportAsString = $granularityReport->getGranularityDWReport()->getAsString();
         foreach ($granularityReport->getCellDWReports() as $cellDWReport) {
-            $cellDWReportId = $cellDWReport->getKey()['id'];
-            $cellDWReportDWCubeId = $cellDWReport->getCube()->getKey()['id'];
+            $cellDWReportId = $cellDWReport->getId();
+            $cellDWReportDWCubeId = $cellDWReport->getCube()->getId();
             $cellDWReport = DW_Model_Report::getFromString(
                 preg_replace(
                     '#^(\{"id":)([0-9]+)(,"idCube":)([0-9]+)(,.+\})$#',
@@ -262,7 +258,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
                     $granularityReportAsString
                 )
             );
-            $entityManagers['default']->flush($cellDWReport);
+            $this->entityManager->flush($cellDWReport);
         }
     }
 
@@ -289,12 +285,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     protected function copyGranularityReportToCellDWCube($granularityReport, $dWCube)
     {
-        $clonedReport = clone $granularityReport->getGranularityDWReport();
-
-        // Déplace le report cloné dans le nouveau cube (et met à jour ses infos)
-        $clonedReport->setCube($dWCube);
-
-        $granularityReport->addCellDWReport($clonedReport);
+        $granularityReport->addCellDWReport($granularityReport->getGranularityDWReport()->copyToCube($dWCube));
     }
 
     /**
@@ -359,7 +350,6 @@ class Orga_Service_ETLStructure extends Core_Singleton
             )
         );
     }
-
 
     /**
      * Indique les différences entre un cube de DW donné el les données de Classif et Orga.
@@ -727,19 +717,14 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function resetProjectDWCubes(Orga_Model_Project $project)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
         foreach ($project->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes($granularity);
-                $entityManager->flush();
+                $this->entityManager->flush();
                 foreach ($granularity->getCells() as $cell) {
-                    $entityManager->clear();
-                    $this->resetCellDWCube($cell);
-                    $entityManager->flush();
-                    $entityManager->clear();
+                    $this->entityManager->clear();
+                    $this->resetCellDWCube(Orga_Model_Cell::load($cell->getKey()));
+                    $this->entityManager->flush();
                 }
             }
         }
@@ -769,8 +754,11 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function resetCellAndChildrenCalculationsAndDWCubes(Orga_Model_Cell $cell)
     {
+        /** @var Orga_Service_ETLData $etlDataService */
+        $etlDataService = $this->get('Orga_Service_ETLData');
+
         $this->resetCellAndChildrenDWCubes($cell);
-        Orga_Service_ETLData::getInstance()->calculateResultsForCellAndChildren($cell);
+        $etlDataService->calculateResultsForCellAndChildren($cell);
     }
 
     /**
@@ -796,8 +784,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+            /** @var Orga_Service_ETLData $etlDataService */
+            $etlDataService = $this->get('Orga_Service_ETLData');
 
-            Orga_Service_ETLData::getInstance()->clearDWResultsForCell($cell);
+            $etlDataService->clearDWResultsForCell($cell);
 
             $this->resetDWCube(
                 $cell->getDWCube(),
@@ -808,7 +798,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
                 )
             );
 
-            Orga_Service_ETLData::getInstance()->populateDWResultsForCell($cell);
+            $etlDataService->populateDWResultsForCell($cell);
         }
     }
 
@@ -822,8 +812,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function resetDWCube(DW_Model_Cube $dWCube, Orga_Model_Project $orgaProject, array $orgaFilter)
     {
         set_time_limit(0);
+
         // Problème de proxie;
-        $dWCube->getLabel();
+//        $dWCube->getLabel();
 
         $queryCube = new Core_Model_Query();
         $queryCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $dWCube);
@@ -856,14 +847,12 @@ class Orga_Service_ETLStructure extends Core_Singleton
             $dWRootAxis->delete();
         }
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->populateDWCubeWithClassifAndOrgaProject($dWCube, $orgaProject, $orgaFilter);
         $dWCube->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Copie des Reports.
         foreach ($dWReportsAsString as $dWReportString) {
@@ -875,8 +864,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
         }
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
     }
 
 }

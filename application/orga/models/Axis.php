@@ -109,7 +109,7 @@ class Orga_Model_Axis extends Core_Model_Entity
 
         $this->project = $project;
         $this->setPosition();
-        $project->addAxis($this);
+        $this->project->addAxis($this);
     }
 
     /**
@@ -165,6 +165,16 @@ class Orga_Model_Axis extends Core_Model_Entity
                 $cell->updateMembersHashKey();
             }
         }
+    }
+
+    /**
+     * Renvoie l'id de l'Axis.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -379,7 +389,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     {
         $directBroaders = $this->directBroaders->toArray();
 
-        uasort(
+        @uasort(
             $directBroaders,
             function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
         );
@@ -486,13 +496,16 @@ class Orga_Model_Axis extends Core_Model_Entity
      * @throws Core_Exception_NotFound
      * @throws Core_Exception_TooMany
      *
-     * @return Orga_Model_Member[]
+     * @return Orga_Model_Member
      */
     public function getMemberByCompleteRef($completeRef)
     {
+        $refParts = explode('#', $completeRef);
+        $baseRef = (isset($refParts[0]) ? $refParts[0] : '');
+        $parentMembersHashKey = (isset($refParts[1]) ? $refParts[1] : null);
         $criteria = \Doctrine\Common\Collections\Criteria::create();
-        $criteria->where($criteria->expr()->eq('ref', explode('#', $completeRef)[0]));
-        $criteria->andWhere($criteria->expr()->eq('parentMembersHashKey', explode('#', $completeRef)[1]));
+        $criteria->where($criteria->expr()->eq('ref', $baseRef));
+        $criteria->andWhere($criteria->expr()->eq('parentMembersHashKey', $parentMembersHashKey));
         $member = $this->members->matching($criteria)->toArray();
 
         if (empty($member)) {

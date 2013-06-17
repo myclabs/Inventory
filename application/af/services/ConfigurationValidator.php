@@ -9,7 +9,7 @@
  * Classe responsable de la vérification de la configuration des AF
  * @package AF
  */
-class AF_Service_ConfigurationValidator extends Core_Singleton
+class AF_Service_ConfigurationValidator
 {
 
     /**

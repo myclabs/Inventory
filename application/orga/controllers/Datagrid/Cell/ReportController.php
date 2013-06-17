@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package    Orga
@@ -15,37 +16,38 @@ use Core\Annotation\Secure;
 class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
 {
     /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      * @Secure("viewReport")
      */
     public function getelementsAction()
     {
-        // TODO droits désactivés
-        // @see http://dev.myc-sense.com:3000/issues/5721
-//        $this->request->aclFilter->enabled = true;
-        $this->request->aclFilter->enabled = false;
+        $this->request->aclFilter->enabled = true;
         $this->request->aclFilter->user = $this->_helper->auth();
         $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
 
-        $this->request->filter->addCondition(DW_Model_Report::QUERY_PROJECT, $this->getParam('idProject'));
+        $this->request->filter->addCondition(DW_Model_Report::QUERY_CUBE, DW_Model_Cube::load($this->getParam('idCube')));
         $this->request->order->addOrder(DW_Model_Report::QUERY_LABEL);
         foreach (DW_Model_Report::loadList($this->request) as $report) {
             $data = array();
-            $data['index'] = $report->getKey()['id'];
+            $data['index'] = $report->getId();
             $data['label'] = $report->getLabel();
-            $urlDetails = 'orga/tab_celldetails/report?idCell='.$this->getParam('idCell').'&idReport='.$data['index'];
+            $urlDetails = 'orga/tab_celldetails/report/idCell/'.$this->getParam('idCell').'/idReport/'.$data['index'];
             $data['details'] = $this->cellLink($urlDetails, __('UI', 'name', 'details'), 'share-alt');
 
-            // TODO droits désactivés
-            // @see http://dev.myc-sense.com:3000/issues/5721
-//            $isUserAllowedToDeleteReport = User_Service_ACL::getInstance()->isAllowed(
-//                $this->_helper->auth(),
-//                User_Model_Action_Default::DELETE(),
-//                $report
-//            );
-//            if (!$isUserAllowedToDeleteReport) {
-//                $data['delete'] = false;
-//            }
+            $isUserAllowedToDeleteReport = $this->aclService->isAllowed(
+                $this->_helper->auth(),
+                User_Model_Action_Default::DELETE(),
+                $report
+            );
+            if (!$isUserAllowedToDeleteReport) {
+                $data['delete'] = false;
+            }
 
             $this->addline($data);
         }
@@ -58,7 +60,7 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        DW_Model_Report::load(array('id' => $this->delete))->delete();
+        DW_Model_Report::load($this->delete)->delete();
         $this->message = __('UI', 'messages', 'deleted');
         $this->send();
     }

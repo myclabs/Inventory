@@ -233,6 +233,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id de la Granularity.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Renvoie le Project de la Granularity.
      *
      * @return Orga_Model_Project
@@ -623,7 +633,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
         foreach ($this->getAxes() as $currentIndex => $currentAxis) {
             if (!($currentAxis->isTransverse($crossingGranularity->getAxes()))) {
-                foreach ($crossingGranularity->getAxes() as $crossingIndex => $crossingAxis) {
+                foreach ($crossingGranularity->getAxes() as $crossingAxis) {
                     if ($currentAxis->isNarrowerThan($crossingAxis)) {
                         $encompassingAxes[$currentIndex] = $crossingAxis;
                     } else {
@@ -647,12 +657,23 @@ class Orga_Model_Granularity extends Core_Model_Entity
             if ($this->inputConfigGranularity !== null) {
                 $this->inputConfigGranularity->removeInputGranularity($this);
             }
+
             $this->inputConfigGranularity = $configGranularity;
+
             if ($configGranularity !== null) {
                 $configGranularity->addInputGranularity($this);
 
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocBibliographyForAFInputSetPrimary(new Doc_Model_Bibliography());
+                }
+            } else {
+                foreach ($this->getCells() as $cell) {
+                    $cell->setDocBibliographyForAFInputSetPrimary();
+                    try {
+                        $cell->setAFInputSetPrimary();;
+                    } catch (Core_Exception_UndefinedAttribute $e) {
+                        // Pas de saisie pour cette cellule.
+                    }
                 }
             }
         }
@@ -712,14 +733,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
             foreach ($this->getCells() as $cell) {
                 $cellsGroup = $cell->getCellsGroupForInputGranularity($inputGranularity);
                 $cell->removeCellsGroup($cellsGroup);
-            }
-
-            foreach ($inputGranularity->getCells() as $inputCell) {
-                try {
-                    $inputCell->getAFInputSetPrimary()->delete();
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    // Pas de saisie pour cette cellule.
-                }
             }
         }
     }
@@ -785,7 +798,12 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $this->dWCube = new DW_model_cube();
             $this->dWCube->setLabel($this->getLabel());
 
-            Orga_Service_ETLStructure::getInstance()->populateGranularityDWCube($this);
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
+            /** @var Orga_Service_ETLStructure $etlStructureService */
+            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+
+            $etlStructureService->populateGranularityDWCube($this);
         }
     }
 
@@ -888,14 +906,12 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         if ($this->cellsWithSocialGenericActions !== $bool) {
             if ($bool === false) {
-                $cells = [];
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForSocialGenericAction()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialGenericActions');
                     }
-                    $cells[] = $cell;
                 }
-                foreach ($cells as $cell) {
+                foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForSocialGenericAction();
                 }
             } else  {
@@ -928,14 +944,12 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         if ($this->cellsWithSocialContextActions !== $bool) {
             if ($bool === false) {
-                $cells = [];
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForSocialContextAction()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialContextActions');
                     }
-                    $cells[] = $cell;
                 }
-                foreach ($cells as $cell) {
+                foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForSocialContextAction();
                 }
             } else  {
@@ -964,18 +978,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @throws Core_Exception_User
      */
-    public function setCellsWithInputDocs($bool)
+    public function setCellsWithInputDocuments($bool)
     {
         if ($this->cellsWithInputDocs !== $bool) {
             if ($bool === false) {
-                $cells = [];
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForAFInputSetsPrimary()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithInputDocs');
                     }
-                    $cells[] = $cell;
                 }
-                foreach ($cells as $cell) {
+                foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForAFInputSetsPrimary();
                 }
             } else  {
@@ -992,7 +1004,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @return bool
      */
-    public function getCellsWithInputDocs()
+    public function getCellsWithInputDocuments()
     {
         return $this->cellsWithInputDocs;
     }

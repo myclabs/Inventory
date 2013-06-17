@@ -42,7 +42,7 @@ class Orga_TranslateController extends Core_Controller
     public function membersAction()
     {
         $this->view->idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load(array('id' => $this->view->idProject));
+        $project = Orga_Model_Project::load($this->view->idProject);
         $this->view->axes = $project->getLastOrderedAxes();
     }
 

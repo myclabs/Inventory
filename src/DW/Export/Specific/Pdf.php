@@ -184,10 +184,10 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                                 $unit .= ' / '.$report->getDenominator()->getUnit()->getSymbol();
                             }
                             $this->html .= $report->getLabel().' : '.
-                                $locale->formatNumber($results[0]['value'], 3).
-                                // On n'affiche pas l'incertitude
-                                //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                                ' '.$unit;
+                            $locale->formatNumber(array_pop($results)['value'], 3).
+                            // On n'affiche pas l'incertitude
+                            //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
+                            ' '.$unit;
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
@@ -321,8 +321,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
      */
     protected function getReportFromXML($xmlReport, $cube, $isSum)
     {
-        $report = new DW_Model_Report();
-        $report->setCube($cube);
+        $report = new DW_Model_Report($cube);
 
         if ($isSum) {
             $xmlIndicators = $xmlReport->getElementsByTagName('sumIndicator');
@@ -425,13 +424,11 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $prefix = $xmlFilter->getAttribute('source').'_';
 
             /* @var DOMNode $xmlFilter */
-            $filter = new DW_Model_Filter();
-            $filter->setAxis(
-                DW_Model_Axis::loadByRefAndCube(
-                    $prefix.$xmlFilter->getElementsByTagName('refAxis')->item(0)->firstChild->nodeValue,
-                    $report->getCube()
-                )
+            $axis = DW_Model_Axis::loadByRefAndCube(
+                $prefix.$xmlFilter->getElementsByTagName('refAxis')->item(0)->firstChild->nodeValue,
+                $report->getCube()
             );
+            $filter = new DW_Model_Filter($report, $axis);
             foreach ($xmlFilter->getElementsByTagName('refMember') as $xmlMember) {
                 /* @var DOMNode $xmlMember */
                 $filter->addMember(

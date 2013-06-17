@@ -37,12 +37,16 @@ class InputServiceTest extends Core_Test_TestCase
         $input1 = new AF_Model_Input_Checkbox($inputSet1, $this->comp2);
         $input3 = new AF_Model_Input_Numeric($inputSet1, $this->comp3);
         $input3->getValue()->value->digitalValue = 1;
+        $input3->setHidden(false);
+        $input3->setDisabled(false);
 
         $inputSet2 = new AF_Model_InputSet_Primary($this->af);
         $input2 = new AF_Model_Input_Numeric($inputSet2, $this->comp1);
         $input2->getValue()->value->digitalValue = 10;
         $input32 = new AF_Model_Input_Numeric($inputSet2, $this->comp3);
         $input32->getValue()->value->digitalValue = 2;
+        $input32->setHidden(true);
+        $input32->setDisabled(true);
 
         $this->inputService->editInputSet($inputSet1, $inputSet2);
 
@@ -60,6 +64,8 @@ class InputServiceTest extends Core_Test_TestCase
         $newInputForComp3 = $inputSet1->getInputForComponent($this->comp3);
         $this->assertNotNull($newInputForComp3);
         $this->assertEquals(2, $newInputForComp3->getValue()->value->digitalValue);
+        $this->assertTrue($newInputForComp3->isHidden());
+        $this->assertTrue($newInputForComp3->isDisabled());
 
         $this->assertCount(2, $inputSet1->getInputs());
     }
@@ -68,7 +74,8 @@ class InputServiceTest extends Core_Test_TestCase
     {
         parent::setUp();
 
-        $this->inputService = AF_Service_InputService::getInstance();
+        /** @var AF_Service_InputService $inputService */
+        $this->inputService = $this->get('AF_Service_InputService');
 
         $this->af = new AF_Model_AF('test');
 

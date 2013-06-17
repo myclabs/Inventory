@@ -111,9 +111,8 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -141,8 +140,7 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
                 break;
         }
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -159,8 +157,7 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

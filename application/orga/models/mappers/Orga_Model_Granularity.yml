@@ -67,7 +67,7 @@ Orga_Model_Granularity:
       targetEntity: Orga_Model_Granularity
       inversedBy: inputGranularities
       joinColumn:
-        name: idConfigGranularity
+        name: idInputConfigGranularity
         referencedColumnName: id
         nullable: true
 

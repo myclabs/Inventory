@@ -3,6 +3,8 @@
  * @author  matthieu.napoli
  * @package Core
  */
+
+use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -23,6 +25,26 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private $worker;
 
+    /**
+     * @var string
+     */
+    private $applicationName;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @Inject({"applicationName" = "application.name"})
+     * @param string        $applicationName
+     * @param EntityManager $entityManager
+     */
+    public function __construct($applicationName, EntityManager $entityManager)
+    {
+        $this->applicationName = $applicationName;
+        $this->entityManager =$entityManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -46,7 +68,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $this->getGearmanClient()->doBackground($taskType, $workload);
 
         if ($this->getGearmanClient()->returnCode() != GEARMAN_SUCCESS) {
-            throw new Core_Exception("Gearman error: " . $this->client->returnCode());
+            throw new Core_Exception("Gearman error: " . $this->getGearmanClient()->returnCode());
         }
     }
 
@@ -70,10 +92,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     public function work()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-        $entityManager->getConnection()->close();
+        $this->entityManager->getConnection()->close();
 
         Core_Error_Log::getInstance()->info("Worker started");
 
@@ -102,24 +121,20 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private function executeWorker(Core_Work_Worker $worker, GearmanJob $job)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
         Core_Error_Log::getInstance()->info("Executing task " . $worker->getTaskType());
 
         // Connexion BDD et transaction
-        $entityManager->getConnection()->connect();
-        $entityManager->beginTransaction();
+        $this->entityManager->getConnection()->connect();
+        $this->entityManager->beginTransaction();
 
         $task = unserialize($job->workload());
         $result = $worker->execute($task);
 
         // Flush et vide l'entity manager
-        $entityManager->flush();
-        $entityManager->commit();
-        $entityManager->clear();
-        $entityManager->getConnection()->close();
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+        $this->entityManager->clear();
+        $this->entityManager->getConnection()->close();
 
         Core_Error_Log::getInstance()->info("Task executed");
 
@@ -157,7 +172,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private function prefixTaskType($taskType)
     {
-        return Zend_Registry::get('applicationName') . '::' . $taskType;
+        return $this->applicationName . '::' . $taskType;
     }
 
 }

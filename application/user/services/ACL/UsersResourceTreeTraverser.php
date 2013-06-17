@@ -10,8 +10,7 @@
  * @package    User
  * @subpackage Service
  */
-class User_Service_ACL_UsersResourceTreeTraverser extends Core_Singleton
-    implements User_Service_ACL_ResourceTreeTraverser
+class User_Service_ACL_UsersResourceTreeTraverser implements User_Service_ACL_ResourceTreeTraverser
 {
 
     /**

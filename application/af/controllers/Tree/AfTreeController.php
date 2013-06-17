@@ -165,8 +165,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         $category->setLabel($label);
         $category->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->message = __('UI', 'message', 'added');
         $this->send();
@@ -221,8 +220,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         }
 
         $node->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->message = __('UI', 'message', 'updated');
         $this->send();
@@ -237,9 +235,8 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         $node = $this->fromTreeId($this->idNode);
         $node->delete();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             throw new Core_Exception_User('AF', 'formTree', 'categoryHasChild');
         }

@@ -40,11 +40,11 @@ class Orga_Work_Task_AddMember extends Core_Work_Task
      */
     public function __construct($axis, $ref, $label, $broaderMembers)
     {
-        $this->idAxis = $axis->getKey()['id'];
+        $this->idAxis = $axis->getId();
         $this->ref = $ref;
         $this->label = $label;
         foreach ($broaderMembers as $broaderMember) {
-            $this->listBroaderMembers[] = $broaderMember->getKey()['id'];
+            $this->listBroaderMembers[] = $broaderMember->getId();
         }
     }
 
@@ -53,11 +53,11 @@ class Orga_Work_Task_AddMember extends Core_Work_Task
      */
     public function execute()
     {
-        $member = new Orga_Model_Member(Orga_Model_Axis::load(array('id' => $this->idAxis)));
+        $member = new Orga_Model_Member(Orga_Model_Axis::load($this->idAxis));
         $member->setRef($this->ref);
         $member->setLabel($this->label);
         foreach ($this->listBroaderMembers as $idBroaderMember) {
-            $member->addDirectParent(Orga_Model_Member::load(array('id' => $idBroaderMember)));
+            $member->addDirectParent(Orga_Model_Member::load($idBroaderMember));
         }
         $member->save();
 

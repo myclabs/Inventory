@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controlleur du Datagrid listant les Roles du projet d'une cellule.
@@ -15,6 +16,18 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ACLManager
+     */
+    private $aclManager;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -35,7 +48,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
 
         foreach ($projectAdministratorRole->getUsers() as $user) {
             $data = array();
-            $data['index'] = $user->getKey()['id'];
+            $data['index'] = $user->getId();
             $data['userFirstName'] = $user->getFirstName();
             $data['userLastName'] = $user->getLastName();
             $data['userEmail'] = $user->getEmail();
@@ -58,7 +71,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
     {
         $idProject = $this->getParam('idProject');
         $projectAdministratorRole = User_Model_Role::loadByRef('projectAdministrator_'.$idProject);
-        $project = Orga_Model_Project::load(array('id' => $idProject));
+        $project = Orga_Model_Project::load($idProject);
 
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
@@ -66,8 +79,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->getConnection()->beginTransaction();
+            $this->entityManager->beginTransaction();
 
             if (User_Model_User::isEmailUsed($userEmail)) {
                 $user = User_Model_User::loadByEmail($userEmail);
@@ -76,22 +88,22 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                 } else {
                     set_time_limit(0);
                     try {
-                        $entityManagers['default']->flush();
+                        $this->entityManager->flush();
 
-                        Orga_Service_ACLManager::getInstance()->addProjectAdministrator(
+                        $this->aclManager->addProjectAdministrator(
                             $project,
                             $user
                         );
-                        $entityManagers['default']->flush();
+                        $this->entityManager->flush();
 
-                        $entityManagers['default']->getConnection()->commit();
+                        $this->entityManager->commit();
                     } catch (Exception $e) {
-                        $entityManagers['default']->getConnection()->rollback();
-                        $entityManagers['default']->clear();
+                        $this->entityManager->rollback();
+                        $this->entityManager->clear();
 
                         throw $e;
                     }
-                    User_Service_User::getInstance()->sendEmail(
+                    $this->userService->sendEmail(
                         $user,
                         __('User', 'email', 'subjectAccessRightsChange'),
                         __('Orga', 'email', 'userProjectAdministratorRoleAdded', array(
@@ -101,7 +113,7 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
                     $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
                 }
             } else {
-                $user = User_Service_User::getInstance()->inviteUser(
+                $user = $this->userService->inviteUser(
                     $userEmail,
                     __('Orga', 'email', 'userProjectAdministratorRoleGivenAtCreation', array(
                         'PROJECT' => $project->getLabel(),
@@ -113,18 +125,18 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
 
                 set_time_limit(0);
                 try {
-                    $entityManagers['default']->flush();
+                    $this->entityManager->flush();
 
-                    Orga_Service_ACLManager::getInstance()->addProjectAdministrator(
+                    $this->aclManager->addProjectAdministrator(
                         $project,
                         $user
                     );
-                    $entityManagers['default']->flush();
+                    $this->entityManager->flush();
 
-                    $entityManagers['default']->getConnection()->commit();
+                    $this->entityManager->commit();
                 } catch (Exception $e) {
-                    $entityManagers['default']->getConnection()->rollback();
-                    $entityManagers['default']->clear();
+                    $this->entityManager->rollback();
+                    $this->entityManager->clear();
 
                     throw $e;
                 }
@@ -149,30 +161,29 @@ class Orga_Datagrid_Cell_Acls_ProjectController extends UI_Controller_Datagrid
     function deleteelementAction()
     {
         $idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load(array('id' => $idProject));
-        $user = User_Model_User::load(array('id' => $this->delete));
+        $project = Orga_Model_Project::load($idProject);
+        $user = User_Model_User::load($this->delete);
 
         set_time_limit(0);
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->getConnection()->beginTransaction();
+        $this->entityManager->beginTransaction();
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
-            Orga_Service_ACLManager::getInstance()->removeProjectAdministrator(
+            $this->aclManager->removeProjectAdministrator(
                 $project,
                 $user
             );
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
-            $entityManagers['default']->getConnection()->commit();
+            $this->entityManager->commit();
         } catch (Exception $e) {
-            $entityManagers['default']->getConnection()->rollback();
-            $entityManagers['default']->clear();
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
 
             throw $e;
         }
 
-        User_Service_User::getInstance()->sendEmail(
+        $this->userService->sendEmail(
             $user,
             __('User', 'email', 'subjectAccessRightsChange'),
             __('Orga', 'email', 'userProjectAdministratorRoleRemoved', array(

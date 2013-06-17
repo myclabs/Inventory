@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 
 /**
@@ -16,17 +17,37 @@ use Core\Annotation\Secure;
  */
 class Orga_ProjectController extends Core_Controller
 {
+    use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ETLStructure
+     */
+    private $etlStructureService;
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
     /**
      * Redirection sur la liste.
      * @Secure("loggedIn")
      */
     public function indexAction()
     {
+        /** @var User_Model_User $connectedUser */
         $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
 
         $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
-        $isConnectedUserAbleToCreateProjects = $aclService->isAllowed(
+        $isConnectedUserAbleToCreateProjects = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $projectResource
@@ -35,8 +56,8 @@ class Orga_ProjectController extends Core_Controller
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
-        $isConnectedUserAbleToEditProjects = (Orga_Model_Project::countTotal($aclQuery) > 0);
+        $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
+        $isConnectedUserAbleToDeleteProjects = (Orga_Model_Project::countTotal($aclQuery) > 0);
         $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
         $isConnectedUserAbleToSeeManyProjects = (Orga_Model_Project::countTotal($aclQuery) > 1);
 
@@ -62,16 +83,15 @@ class Orga_ProjectController extends Core_Controller
         $isConnectedUserAbleToSeeManyCells = (count($listCellResource) > 1);
 
         if (($isConnectedUserAbleToCreateProjects)
-            || ($isConnectedUserAbleToEditProjects)
+            || ($isConnectedUserAbleToDeleteProjects)
             || ($isConnectedUserAbleToSeeManyProjects)
         ) {
             $this->redirect('orga/project/manage');
         } else if ($isConnectedUserAbleToSeeManyCells) {
             $projectArray = Orga_Model_Project::loadList($aclQuery);
-            $this->redirect('orga/project/cells/idProject/'.$projectArray[0]->getKey()['id']);
+            $this->redirect('orga/project/cells/idProject/'.array_pop($projectArray)->getId());
         } else if (count($listCellResource) == 1) {
-            $cellArray = Orga_Model_Cell::loadList($aclQuery);
-            $this->redirect('orga/cell/details/idCell/'.$cellArray[0]->getKey()['id']);
+            $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getId());
         } else {
             $this->forward('noaccess', 'project', 'orga');
         }
@@ -84,10 +104,9 @@ class Orga_ProjectController extends Core_Controller
     public function manageAction()
     {
         $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
 
         $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
-        $this->view->isConnectedUserAbleToCreateProjects = $aclService->isAllowed(
+        $this->view->isConnectedUserAbleToCreateProjects = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $projectResource
@@ -103,27 +122,71 @@ class Orga_ProjectController extends Core_Controller
     }
 
     /**
-     * Liste des cellules d'un projet.
-     * @Secure("viewProject")
+     * Action de détails d'un project.
+     * @Secure("editProject")
      */
-    public function cellsAction()
+    public function detailsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $idProject = $this->getParam('idProject');
+        $project = Orga_Model_Project::load($idProject);
 
-        $this->view->idProject = $this->getParam('idProject');
-
-        $this->view->listGranularities = array();
+        $this->view->idProject = $idProject;
+        $this->view->projectLabel = $project->getLabel();
+        $this->view->granularities = $project->getGranularities();
+        try {
+            $this->view->granularityRefForInventoryStatus = $project->getGranularityForInventoryStatus()->getRef();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->view->granularityRefForInventoryStatus = null;
+        }
+        $this->view->granularitiesWithDWCube = array();
         foreach ($project->getGranularities() as $granularity) {
-            if ($granularity->isNavigable()) {
-                $this->view->listGranularities[$granularity->getRef()] = $granularity->getLabel();
+            if ($granularity->getCellsGenerateDWCubes()) {
+                $this->view->granularitiesWithDWCube[] = $granularity;
             }
         }
 
-        $this->view->listAccess = array(
-            'cellDataProviderAdministrator' => __('Orga', 'role', 'cellAdministrator'),
-            'cellDataProviderContributor' => __('Orga', 'role', 'cellContributor'),
-            'cellDataProviderObserver' => __('Orga', 'role', 'cellObserver'),
-        );
+
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
+            $this->view->display = false;
+            $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idCell/'.$this->getParam('idCell');
+        } else {
+            $this->view->display = true;
+            $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idProject/'.$idProject;
+        }
+    }
+
+    /**
+     * Action de détails d'un project.
+     * @Secure("editProject")
+     */
+    public function editAction()
+    {
+        $idProject = $this->getParam('idProject');
+        $project = Orga_Model_Project::load($idProject);
+        $formData = $this->getFormData('projectDetails');
+
+        $refGranularityForInventoryStatus = $formData->getValue('granularityForInventoryStatus');
+        if (!empty($refGranularityForInventoryStatus)) {
+            $granularityForInventoryStatus = Orga_Model_Granularity::loadByRefAndProject(
+                $refGranularityForInventoryStatus,
+                $project
+            );
+            try {
+                $project->setGranularityForInventoryStatus($granularityForInventoryStatus);
+            } catch (Core_Exception_InvalidArgument $e) {
+                $this->addFormError('granularityForInventoryStatus', __('Orga', 'exception', 'broaderInputGranularity'));
+            }
+        }
+
+        $label = $formData->getValue('label');
+        if ($project->getLabel() !== $label) {
+            $project->setLabel($label);
+        }
+
+        $this->setFormMessage(__('Orga', 'project', 'updated'));
+
+        $this->sendFormResponse();
     }
 
     /**
@@ -135,8 +198,8 @@ class Orga_ProjectController extends Core_Controller
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
         $this->view->idProject = $this->getParam('idProject');
-        $this->view->areProjectDWCubesUpToDate = Orga_Service_ETLStructure::getInstance()->areProjectDWCubesUpToDate(
-                Orga_Model_Project::load(array('id' => $this->view->idProject))
+        $this->view->areProjectDWCubesUpToDate = $this->etlStructureService->areProjectDWCubesUpToDate(
+            Orga_Model_Project::load($this->view->idProject)
         );
     }
 
@@ -146,14 +209,11 @@ class Orga_ProjectController extends Core_Controller
      */
     public function resetdwcubesAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
 
         try {
             // Lance la tache en arrière plan
-            $workDispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetProjectDWCubes',
@@ -164,15 +224,6 @@ class Orga_ProjectController extends Core_Controller
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
         }
         $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
-    }
-
-    /**
-     * Affiche une vue indiquant l'accès à aucun projet.
-     * @Secure("loggedIn")
-     */
-    public function noaccessAction()
-    {
-
     }
 
     /**
@@ -189,9 +240,43 @@ class Orga_ProjectController extends Core_Controller
         $this->view->idProject = $this->getParam('idProject');
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
             $this->view->display = false;
         } else {
             $this->view->display = true;
         }
+    }
+
+    /**
+     * Liste des cellules d'un projet.
+     * @Secure("viewProject")
+     */
+    public function cellsAction()
+    {
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
+
+        $this->view->idProject = $this->getParam('idProject');
+
+        $this->view->listGranularities = array();
+        foreach ($project->getGranularities() as $granularity) {
+            if ($granularity->isNavigable()) {
+                $this->view->listGranularities[$granularity->getRef()] = $granularity->getLabel();
+            }
+        }
+
+        $this->view->listAccess = array(
+            'cellAdministrator' => __('Orga', 'role', 'cellAdministrator'),
+            'cellContributor' => __('Orga', 'role', 'cellContributor'),
+            'cellDataProviderObserver' => __('Orga', 'role', 'cellObserver'),
+        );
+    }
+
+    /**
+     * Affiche une vue indiquant l'accès à aucun projet.
+     * @Secure("loggedIn")
+     */
+    public function noaccessAction()
+    {
+
     }
 }

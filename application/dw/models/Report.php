@@ -5,8 +5,9 @@
  * @package DW
  * @subpackage Model
  */
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Permet de gérer un report
@@ -82,7 +83,6 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Ordre des résultats.
      *
-     * @todo Créer des constantes de classe.
      * @var null
      */
     protected $sortType = self::SORT_VALUE_DECREASING;
@@ -147,21 +147,12 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Constructeur de l'objet
      */
-    public function __construct()
+    public function __construct(DW_Model_Cube $cube)
     {
         $this->filters = new ArrayCollection();
-    }
 
-    /**
-     * Clone le Filter.
-     *
-     * @return DW_Model_Report
-     */
-    public function __clone()
-    {
-        if ($this->id) {
-            $this->id = null;
-        }
+        $this->cube = $cube;
+        $this->cube->addReport($this);
     }
 
     /**
@@ -189,6 +180,16 @@ class DW_Model_Report extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Report.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Définit le label.
      *
      * @param string $label
@@ -201,60 +202,11 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoie le label.
      *
-     * @return $_label
+     * @return string
      */
     public function getLabel()
     {
         return $this->label;
-    }
-
-    /**
-     * Définit le Cube du Report.
-     *
-     * @param DW_Model_Cube $cube
-     */
-    public function setCube($cube)
-    {
-        if ($this->cube !== $cube) {
-            if ($this->cube !== null) {
-                $this->cube->removeReport($this);
-            }
-            $this->cube = $cube;
-            if ($cube !== null) {
-                $cube->addReport($this);
-
-                // MAJ des numérateurs
-                if ($this->numerator) {
-                    $this->numerator = $this->cube->getIndicatorByRef($this->numerator->getRef());
-                }
-                if ($this->numeratorAxis1) {
-                    $this->numeratorAxis1 = $this->cube->getAxisByRef($this->numeratorAxis1->getRef());
-                }
-                if ($this->numeratorAxis2) {
-                    $this->numeratorAxis2 = $this->cube->getAxisByRef($this->numeratorAxis2->getRef());
-                }
-
-                // MAJ des dénominateurs
-                if ($this->denominator) {
-                    $this->denominator = $this->cube->getIndicatorByRef($this->denominator->getRef());
-                }
-                if ($this->denominatorAxis1) {
-                    $this->denominatorAxis1 = $this->cube->getAxisByRef($this->denominatorAxis1->getRef());
-                }
-                if ($this->denominatorAxis2) {
-                    $this->denominatorAxis2 = $this->cube->getAxisByRef($this->denominatorAxis2->getRef());
-                }
-
-                // MAJ des filtres
-                $this->filters = $this->filters->map(function($element) {
-                    return clone $element;
-                });
-                foreach ($this->filters as $filter) {
-                    /** @var DW_Model_Filter $filter */
-                    $filter->setReport($this);
-                }
-            }
-        }
     }
 
     /**
@@ -271,6 +223,8 @@ class DW_Model_Report extends Core_Model_Entity
      * Définit le type de UI_Chart utilisé.
      *
      * @param const $chartType
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function setChartType($chartType)
     {
@@ -294,6 +248,8 @@ class DW_Model_Report extends Core_Model_Entity
      * Définit si le Report prend en compte les incertitudes.
      *
      * @param const $sortType
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function setSortType($sortType)
     {
@@ -341,7 +297,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param DW_Model_Indicator $indicator
      */
-    public function setNumerator($indicator)
+    public function setNumerator(DW_Model_Indicator $indicator=null)
     {
         $this->numerator = $indicator;
     }
@@ -361,7 +317,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param DW_Model_Axis $axis
      */
-    public function setNumeratorAxis1($axis)
+    public function setNumeratorAxis1(DW_Model_Axis $axis=null)
     {
         $this->numeratorAxis1 = $axis;
     }
@@ -380,8 +336,10 @@ class DW_Model_Report extends Core_Model_Entity
      * Définit l'Axis 2 au numérateur du Report.
      *
      * @param DW_Model_Axis $axis
+     *
+     * @throws Core_Exception_InvalidArgument
      */
-    public function setNumeratorAxis2($axis)
+    public function setNumeratorAxis2(DW_Model_Axis $axis=null)
     {
         if (($axis !== null) && ($this->numeratorAxis1 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 1 for numerator need to be set first');
@@ -404,7 +362,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param DW_Model_Indicator $indicator
      */
-    public function setDenominator($indicator)
+    public function setDenominator(DW_Model_Indicator $indicator=null)
     {
         $this->denominator = $indicator;
     }
@@ -423,8 +381,10 @@ class DW_Model_Report extends Core_Model_Entity
      * Définit l'Axis 1 au dénominateur du Report.
      *
      * @param DW_Model_Axis $axis
+     *
+     * @throws Core_Exception_InvalidArgument
      */
-    public function setDenominatorAxis1($axis)
+    public function setDenominatorAxis1(DW_Model_Axis $axis=null)
     {
         if (($axis !== null) && ($this->numeratorAxis1 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 1 for numerator need to be set first');
@@ -446,8 +406,10 @@ class DW_Model_Report extends Core_Model_Entity
      * Définit l'Axis 2 au dénominateur du Report.
      *
      * @param DW_Model_Axis $axis
+     *
+     * @throws Core_Exception_InvalidArgument
      */
-    public function setDenominatorAxis2($axis)
+    public function setDenominatorAxis2(DW_Model_Axis $axis=null)
     {
         if (($axis !== null) && ($this->numeratorAxis2 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 2 for numerator need to be set first');
@@ -474,7 +436,6 @@ class DW_Model_Report extends Core_Model_Entity
     {
         if (!($this->hasFilter($filter))) {
             $this->filters->add($filter);
-            $filter->setReport($this);
         }
     }
 
@@ -499,7 +460,6 @@ class DW_Model_Report extends Core_Model_Entity
     {
         if ($this->hasFilter($filter)) {
             $this->filters->removeElement($filter);
-            $filter->setReport(null);
         }
     }
 
@@ -528,6 +488,8 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param DW_Model_Axis $axis
      *
+     * @throws Core_Exception_TooMany
+     *
      * @return DW_Model_Filter
      */
     public function getFilterForAxis($axis)
@@ -536,6 +498,7 @@ class DW_Model_Report extends Core_Model_Entity
             Doctrine\Common\Collections\Criteria::expr()->eq('axis', $axis)
         );
         $filterArray = $this->filters->matching($criteria)->toArray();
+
         if (empty($filterArray)) {
             return null;
         } else if (count($filterArray) > 1) {
@@ -559,6 +522,8 @@ class DW_Model_Report extends Core_Model_Entity
      * Renvoi le chart généré par le report.
      *
      * @param string $idChart
+     *
+     * @throws Core_Exception_InvalidArgument
      *
      * @return UI_Chart_Bar|UI_Chart_Pie
      */
@@ -638,16 +603,16 @@ class DW_Model_Report extends Core_Model_Entity
                 $seriesAxisLabel = array();
                 $seriesValues = array();
                 foreach ($this->getValues() as $value) {
-                    $numeratorAxis1MembersUsed[$value['members'][0]->getKey()['id']] = $value['members'][0];
-                    $numeratorAxis2MembersUsed[$value['members'][1]->getKey()['id']] = $value['members'][1];
+                    $numeratorAxis1MembersUsed[$value['members'][0]->getId()] = $value['members'][0];
+                    $numeratorAxis2MembersUsed[$value['members'][1]->getId()] = $value['members'][1];
 
-                    $seriesAxisLabel[$value['members'][0]->getKey()['id']] = $value['members'][0]->getLabel();
+                    $seriesAxisLabel[$value['members'][0]->getId()] = $value['members'][0]->getLabel();
 
-                    $serieValueId = 'serieValue'.$value['members'][1]->getKey()['id'];
+                    $serieValueId = 'serieValue'.$value['members'][1]->getId();
                     if (!isset($seriesValues[$serieValueId])) {
                         $seriesValues[$serieValueId] = array();
                     }
-                    $seriesValues[$serieValueId][$value['members'][0]->getKey()['id']] = $value;
+                    $seriesValues[$serieValueId][$value['members'][0]->getId()] = $value;
                 }
 
                 // Complément des paires de membres sans résultats et tris des valeurs.
@@ -660,14 +625,14 @@ class DW_Model_Report extends Core_Model_Entity
                         }
                     }
                     uksort($seriesValues[$serieValueId], function($a, $b) {
-                        $memberA = DW_Model_Member::load(array('id' => $a));
-                        $memberB = DW_Model_Member::load(array('id' => $b));
+                        $memberA = DW_Model_Member::load($a);
+                        $memberB = DW_Model_Member::load($b);
                         return $memberA->getPosition() - $memberB->getPosition();
                     });
                 }
                 uksort($seriesAxisLabel, function($a, $b) {
-                    $memberA = DW_Model_Member::load(array('id' => $a));
-                    $memberB = DW_Model_Member::load(array('id' => $b));
+                    $memberA = DW_Model_Member::load($a);
+                    $memberB = DW_Model_Member::load($b);
                     return $memberA->getPosition() - $memberB->getPosition();
                 });
 
@@ -710,7 +675,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoi le rapport sous forme de chaine pour l'enregistrer en session.
      *
-     * return string
+     * @return string
      */
     public function getAsString()
     {
@@ -720,7 +685,7 @@ class DW_Model_Report extends Core_Model_Entity
 
         // Cube.
         if ($this->cube !== null) {
-            $stdReport->idCube = $this->cube->getKey()['id'];
+            $stdReport->idCube = $this->cube->getId();
         } else {
             $stdReport->idCube = null;
         }
@@ -791,25 +756,16 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param string $string
      *
-     * return DW_Model_Report
+     * @return DW_Model_Report
      */
     public static function getFromString($string)
     {
         $stdReport = json_decode($string);
 
         if ($stdReport->id !== null) {
-            $report = DW_Model_Report::load(array('id' => $stdReport->id));
+            $report = DW_Model_Report::load($stdReport->id);
         } else {
-            $report = new DW_Model_Report();
-        }
-
-        // Cube.
-        if ($stdReport->idCube !== null) {
-            $report->setCube(
-                DW_Model_Cube::load(array('id' => $stdReport->idCube))
-            );
-        } else {
-            $report->setCube(null);
+            $report = new DW_Model_Report(DW_Model_Cube::load($stdReport->idCube));
         }
 
         // Label.
@@ -821,7 +777,7 @@ class DW_Model_Report extends Core_Model_Entity
                 DW_Model_Indicator::loadByRefAndCube($stdReport->refNumerator, $report->getCube())
             );
         } else {
-            $report->setNumerator(null);
+            $report->setNumerator();
         }
 
         // Numerator axes.
@@ -830,14 +786,14 @@ class DW_Model_Report extends Core_Model_Entity
                 DW_Model_Axis::loadByRefAndCube($stdReport->refNumeratorAxis1, $report->getCube())
             );
         } else {
-            $report->setNumeratorAxis1(null);
+            $report->setNumeratorAxis1();
         }
         if ($stdReport->refNumeratorAxis2 != null) {
             $report->setNumeratorAxis2(
                 DW_Model_Axis::loadByRefAndCube($stdReport->refNumeratorAxis2, $report->getCube())
             );
         } else {
-            $report->setNumeratorAxis2(null);
+            $report->setNumeratorAxis2();
         }
 
         // Denominator Indicator.
@@ -846,7 +802,7 @@ class DW_Model_Report extends Core_Model_Entity
                 DW_Model_Indicator::loadByRefAndCube($stdReport->refDenominator, $report->getCube())
             );
         } else {
-            $report->setDenominator(null);
+            $report->setDenominator();
         }
 
         // Denominator Axes.
@@ -855,14 +811,14 @@ class DW_Model_Report extends Core_Model_Entity
                 DW_Model_Axis::loadByRefAndCube($stdReport->refDenominatorAxis1, $report->getCube())
             );
         } else {
-            $report->setDenominatorAxis1(null);
+            $report->setDenominatorAxis1();
         }
         if ($stdReport->refDenominatorAxis2 != null) {
             $report->setDenominatorAxis2(
                 DW_Model_Axis::loadByRefAndCube($stdReport->refDenominatorAxis2, $report->getCube())
             );
         } else {
-            $report->setDenominatorAxis2(null);
+            $report->setDenominatorAxis2();
         }
 
         // Attributes.
@@ -877,22 +833,55 @@ class DW_Model_Report extends Core_Model_Entity
         // Filters.
         foreach ($report->getFilters() as $reportFilter) {
             $report->removeFilter($reportFilter);
-            $reportFilter->delete();
         }
         foreach ($stdReport->filters as $stdFilter) {
-            $filter = new DW_Model_Filter();
-            $filter->setAxis(
-                DW_Model_Axis::loadByRefAndCube($stdFilter->refAxis, $report->getCube())
-            );
+            $axis = DW_Model_Axis::loadByRefAndCube($stdFilter->refAxis, $report->getCube());
+            $filter = new DW_Model_Filter($report, $axis);
             foreach ($stdFilter->refMembers as $filterRefMember) {
                 $filter->addMember(
                     DW_Model_Member::loadByRefAndAxis($filterRefMember, $filter->getAxis())
                 );
             }
-            $report->addFilter($filter);
         }
 
         return $report;
+    }
+
+    /**
+     * Réinitialise le rapport.
+     *
+     * @return DW_Model_Report
+     */
+    public function reset()
+    {
+        $this->label = null;
+        $this->chartType = null;
+        $this->sortType = self::SORT_VALUE_DECREASING;
+        $this->withUncertainty = false;
+        $this->numerator = null;
+        $this->numeratorAxis1 = null;
+        $this->numeratorAxis2 = null;
+        $this->denominator = null;
+        $this->denominatorAxis1 = null;
+        $this->denominatorAxis2 = null;
+        $this->filters->clear();
+    }
+
+    /**
+     * Copie le rapport dans un autre Cube.
+     *
+     * @param DW_Model_Cube $cube
+     *
+     * @return DW_Model_Report
+     */
+    public function copyToCube(DW_Model_Cube $cube)
+    {
+        $reportAsString = preg_replace(
+            '#^(\{"id":)(null|[0-9]+)(,"idCube":)([0-9]+)(,.+\})$#',
+            '${1}null${3}'.$cube->getId().'${5}',
+            $this->getAsString()
+        );
+        return DW_Model_Report::getFromString($reportAsString);
     }
 
 }

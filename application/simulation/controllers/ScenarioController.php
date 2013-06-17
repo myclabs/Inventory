@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @author valentin.claras
@@ -12,6 +13,12 @@ use Core\Annotation\Secure;
  */
 class Simulation_ScenarioController extends Core_Controller
 {
+
+    /**
+     * @Inject
+     * @var Simulation_Service_ETLData
+     */
+    private $etlDataService;
 
     /**
      * Génération du formulaire d'une Simulation.
@@ -67,8 +74,8 @@ class Simulation_ScenarioController extends Core_Controller
         $scenario->setAFInputSetPrimary($inputSet);
 
         if ($inputSet->isInputComplete()) {
-            Simulation_Service_ETLData::getInstance()->clearDWResultsFromScenario($scenario);
-            Simulation_Service_ETLData::getInstance()->populateDWResultsFromScenario($scenario);
+            $this->etlDataService->clearDWResultsFromScenario($scenario);
+            $this->etlDataService->populateDWResultsFromScenario($scenario);
         }
 
         $this->_helper->viewRenderer->setNoRender(true);

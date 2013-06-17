@@ -1,4 +1,7 @@
 <?php
+/**
+ * Bootstrap
+ */
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
@@ -56,6 +59,7 @@ class Bootstrap extends Core_Bootstrap
                 $bootstrapName = $module . '_Bootstrap';
                 /** @var $bootstrap Core_Package_Bootstrap */
                 $bootstrap = new $bootstrapName($this->_application);
+                $bootstrap->container = $this->container;
                 $bootstrap->setRun($this->_run);
                 $bootstrap->bootstrap();
                 foreach ($bootstrap->getRun() as $run) {
@@ -79,19 +83,23 @@ class Bootstrap extends Core_Bootstrap
         }
     }
 
-    protected function _initPackage()
+    /**
+     * Locale et traductions
+     */
+    protected function _initI18n()
     {
         Zend_Registry::set(Core_Translate::registryKey, new Core_Translate());
         Zend_Registry::set(Core_Locale::registryKey, Core_Locale::loadDefault());
     }
 
     /**
-     * Enregistre les helpers de UI.
+     * Enregistre les helpers de vue
      */
-    protected function _initViewHelperUI()
+    protected function _initViewHelpers()
     {
         $this->bootstrap('View');
         $view = $this->getResource('view');
+        $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
     }
 
@@ -111,8 +119,8 @@ class Bootstrap extends Core_Bootstrap
     {
         $front = Zend_Controller_Front::getInstance();
         // Plugin des Acl
-        if (Zend_Registry::isRegistered('activerAcl') && Zend_Registry::get('activerAcl')) {
-            $front->registerPlugin(new Inventory_Plugin_Acl());
+        if ($this->container->get('enable.acl')) {
+            $front->registerPlugin($this->container->get('Inventory_Plugin_Acl'));
             Zend_Registry::set('pluginAcl', 'User_Plugin_Acl');
         }
     }

@@ -9,7 +9,7 @@
  * Service Keyword.
  * @package Keyword
  */
-class Keyword_Service_Association extends Core_Singleton
+class Keyword_Service_Association
 {
     /**
      * Ajoute une Association et le renvoie.

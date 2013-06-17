@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Datagrid de granularity
@@ -13,6 +14,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -29,13 +36,11 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
-        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project->getOrgaProject());
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
-            $granularity = Orga_Model_Granularity::loadByOrgaGranularity(
-                $granularity
-            );
+            /** @var Orga_Model_Granularity $granularity */
             $data = array();
             $data['index'] = $granularity->getRef();
             $data['label'] = $granularity->getLabel();
@@ -72,9 +77,8 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
      */
     public function updateelementAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
-        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->update['index'], $project->getOrgaProject());
-        $granularity = Orga_Model_Granularity::loadByOrgaGranularity($granularity);
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->update['index'], $project);
 
         switch ($this->update['column']) {
             case 'cellsWithACL':
@@ -82,9 +86,7 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
                 $this->data = $granularity->getCellsWithACL();
                 break;
             case 'cellsGenerateDWCube':
-                /**@var Core_Work_Dispatcher $dispatcher */
-                $dispatcher = Zend_Registry::get('workDispatcher');
-                $dispatcher->runBackground(
+                $this->workDispatcher->runBackground(
                     new Orga_Work_Task_SetGranularityCellsGenerateDWCubes(
                         $granularity,
                         $this->update['value']
@@ -112,8 +114,8 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
                 $this->data = $granularity->getCellsWithSocialContextActions();
                 break;
             case 'cellsWithInputDocs':
-                $granularity->setCellsWithInputDocs((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithInputDocs();
+                $granularity->setCellsWithInputDocuments((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithInputDocuments();
                 break;
             default:
                 parent::updateelementAction();

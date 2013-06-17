@@ -20,8 +20,7 @@ class Orga_Datagrid_Cell_Actions_GenericController extends UI_Controller_Datagri
     public function getelementsAction()
     {
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         foreach ($cell->getSocialGenericActions() as $genericAction) {
             $theme = $genericAction->getTheme();
@@ -51,8 +50,7 @@ class Orga_Datagrid_Cell_Actions_GenericController extends UI_Controller_Datagri
     public function addelementAction()
     {
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         $idTheme = $this->getAddElementValue('theme');
         if (empty($idTheme)) {
@@ -110,8 +108,7 @@ class Orga_Datagrid_Cell_Actions_GenericController extends UI_Controller_Datagri
     function deleteelementAction()
     {
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
         /** @var $genericAction Social_Model_GenericAction */
         $genericAction = Social_Model_GenericAction::load($this->delete);

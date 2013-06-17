@@ -29,7 +29,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      */
     public function getnodesAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         if ($this->idNode === null) {
             $axes = $project->getRootAxes();
         } else {
@@ -62,7 +62,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      */
     public function addnodeAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
 
         try {
             Core_Tools::checkRef($this->getAddElementValue('addAxis_ref'));
@@ -77,7 +77,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         }
 
         if (empty($this->_formErrorMessages)) {
-            $axis = new Orga_Model_Axis();
+            $axis = new Orga_Model_Axis($project);
             $axis->setRef($this->getAddElementValue('addAxis_ref'));
             $axis->setLabel($this->getAddElementValue('addAxis_label'));
             if ($this->getAddElementValue('addAxis_contextualizing') === 'contextualizing') {
@@ -85,7 +85,6 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             } else {
                 $axis->setContextualize(false);
             }
-            $axis->setProject($project);
             if ($this->getAddElementValue('addAxis_parent') != null) {
                 $narrower = Orga_Model_Axis::loadByRefAndProject($this->getAddElementValue('addAxis_parent'), $project);
                 $narrower->addDirectBroader($axis);
@@ -123,7 +122,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
     {
         $this->addElementList(null, '');
 
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         foreach ($project->getFirstOrderedAxes() as $axis) {
             $this->addElementList($axis->getRef(), ' '.$axis->getLabel());
         }
@@ -143,7 +142,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      */
     public function getlistsiblingsAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
 
         if ($axis->getDirectNarrower() === null) {
@@ -189,11 +188,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $this->setEditFormElementErrorMessage('ref', $e->getMessage());
         }
 
-        if ($this->getEditElementValue('contextualizing') === 'contextualizing') {
-            $contextualizing = true;
-        } else {
-            $contextualizing = false;
-        }
+//        if ($this->getEditElementValue('contextualizing') === 'contextualizing') {
+//            $contextualizing = true;
+//        } else {
+//            $contextualizing = false;
+//        }
+        $contextualizing = false;
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;
@@ -278,7 +278,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      */
     public function getinfoeditAction()
     {
-        $project = Orga_Model_Project::load(array('id' => $this->getParam('idProject')));
+        $project = Orga_Model_Project::load($this->getParam('idProject'));
         $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
 
         $this->data['ref'] = $axis->getRef();

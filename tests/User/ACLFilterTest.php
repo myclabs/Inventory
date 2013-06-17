@@ -80,10 +80,15 @@ class ACLFilterTest extends Core_Test_TestCase
      */
     public static function setUpBeforeClass()
     {
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var User_Service_ACLFilter $aclFilterService */
+        $aclFilterService = $container->get('User_Service_ACLFilter');
+
         /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
-        User_Service_ACLFilter::getInstance()->clean();
-        User_Service_ACLFilter::getInstance()->enabled = false;
+        $aclFilterService->clean();
+        $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (User_Model_Authorization::loadList() as $o) {
             $o->delete();
@@ -104,8 +109,8 @@ class ACLFilterTest extends Core_Test_TestCase
     {
         parent::setUp();
         // Service des ACL
-        $this->aclService = User_Service_ACL::getInstance();
-        $this->cacheService = User_Service_ACLFilter::getInstance();
+        $this->aclService = $this->get('User_Service_ACL');
+        $this->cacheService = $this->get('User_Service_ACLFilter');
         $this->cacheService->enabled = true;
         try {
             // Création du role invité

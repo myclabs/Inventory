@@ -32,12 +32,10 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
         $this->request->filter->setConditions($filterConditions);
 
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $cell = Orga_Model_Cell::loadByOrgaCell($orgaCell);
+        $cell = Orga_Model_Cell::load($idCell);
 
-        $aFConfigOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
-        $aFInputOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idInputGranularity')));
-        $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity($aFInputOrgaGranularity);
+        $aFConfigOrgaGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
+        $aFInputOrgaGranularity = Orga_Model_Granularity::load($this->getParam('idInputGranularity'));
 
         $this->request->filter->addCondition(
             Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
@@ -56,20 +54,16 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
             Core_Model_Order::ORDER_ASC,
             Orga_Model_Cell::getAlias()
         );
-        foreach ($cell->getChildCellsForGranularity($aFConfigOrgaGranularity, $this->request) as $childCell) {
-            $childOrgaCell = $childCell->getOrgaCell();
-
+        foreach ($cell->loadChildCellsForGranularity($aFConfigOrgaGranularity, $this->request) as $configChildCell) {
             $data = array();
-            $data['index'] = $childOrgaCell->getKey()['id'];
-            foreach ($childOrgaCell->getMembers() as $member) {
+            $data['index'] = $configChildCell->getId();
+            foreach ($configChildCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
             try {
-                $cellsGroupDataProvider = $aFGranularities->getCellsGroupDataProviderForContainerCell(
-                    $childCell
-                );
+                $cellsGroupDataProvider = $configChildCell->getCellsGroupForInputGranularity($aFInputOrgaGranularity);
                 $data['aF'] = $this->cellList($cellsGroupDataProvider->getAF()->getRef());
-            } catch (Core_Exception_NotFound $e) {
+            } catch (Core_Exception_UndefinedAttribute $e) {
                 // Aucun AF n'a encore été spécifié pour cette cellule et granularité.
             }
             $this->addLine($data);
@@ -89,11 +83,9 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
             parent::updateelementAction();
         }
 
-        $aFInputOrgaGranularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idInputGranularity')));
-        $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity($aFInputOrgaGranularity);
+        $inputGranularity = Orga_Model_Granularity::load($this->getParam('idInputGranularity'));
 
-        $childOrgaCell = Orga_Model_Cell::load($this->update['index']);
-        $childCell = Orga_Model_Cell::loadByOrgaCell($childOrgaCell);
+        $configCell = Orga_Model_Cell::load($this->update['index']);
 
         $aFRef = $this->update['value'];
         if (empty($aFRef)) {
@@ -102,26 +94,13 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
             $aF = AF_Model_AF::loadByRef($aFRef);
         }
 
-        try {
-            $cellsGroupDataProvider = $aFGranularities->getCellsGroupDataProviderForContainerCell(
-                $childCell
-            );
-            if ($aF !== null) {
-                $cellsGroupDataProvider->setAF($aF);
-                $this->data = $this->cellList($aF->getRef());
-            } else {
-                $cellsGroupDataProvider->delete();
-            }
-        } catch (Core_Exception_NotFound $e) {
-            // Aucun AF n'a encore été spécifié pour cette cellule et granularité.
-            if ($aF !== null) {
-                $cellsGroupDataProvider = new Orga_Model_CellsGroupDataProvider();
-                $cellsGroupDataProvider->setContainerCell($childCell);
-                $cellsGroupDataProvider->setAFGranularities($aFGranularities);
-                $cellsGroupDataProvider->setAF($aF);
-                $cellsGroupDataProvider->save();
-            }
+        $cellsGroupDataProvider = $configCell->getCellsGroupForInputGranularity($inputGranularity);
+        if ($aF !== null) {
+            $cellsGroupDataProvider->setAF($aF);
+        } else {
+            $cellsGroupDataProvider->setAF();
         }
+        $this->data = $this->cellList($aF);
 
         if ($aF !== null) {
             $this->data = $this->cellList($aF->getRef());

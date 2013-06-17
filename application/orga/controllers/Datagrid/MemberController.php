@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Enter description here ...
@@ -14,6 +15,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -37,10 +44,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $this->request->order->addOrder(Orga_Model_Member::QUERY_REF);
         $members = Orga_Model_Member::loadList($this->request);
 
-        $idFilterCell = $this->getParam('idFilterCell');
-        if (!empty($idFilterCell)) {
-            $filterCell = Orga_Model_Cell::load(array('id' => $idFilterCell));
-            foreach ($filterCell->getMembers() as $cellMember) {
+        $idCell = $this->getParam('idCell');
+        if (!empty($idCell)) {
+            $cell = Orga_Model_Cell::load($idCell);
+            foreach ($cell->getMembers() as $cellMember) {
                 $cellMember->getAxis()->getRef();
                 if ($cellMember->getAxis()->isBroaderThan($axis)) {
                     $members = array_intersect($members, $cellMember->getChildrenForAxis($axis));
@@ -51,7 +58,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         foreach ($members as $member) {
             $data = array();
             /** @var $member Orga_Model_Member */
-            $data['index'] = $member->getCompleteRef();
+            $data['index'] = $member->getId();
             $data['label'] = $this->cellText($member->getLabel());
             $data['ref'] = $this->cellText($member->getRef());
             $parentMembers = $member->getDirectParents();
@@ -66,7 +73,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             }
             $this->addLine($data);
         }
-        if (empty($idFilterCell)) {
+        if (empty($idCell)) {
             $this->totalElements = Orga_Model_Member::countTotal($this->request);
         }
 
@@ -98,7 +105,6 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             $formFieldRef = 'broader'.$directBroaderAxis->getRef();
             $refBroaderMember = $this->getAddElementValue($formFieldRef);
             if (empty($refBroaderMember)) {
-                $this->setAddElementErrorMessage($formFieldRef, __('UI', 'formValidation', 'emptyRequiredField'));
                 continue;
             } else {
                 try {
@@ -126,9 +132,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 );
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                /**@var Core_Work_Dispatcher $dispatcher */
-                $dispatcher = Zend_Registry::get('workDispatcher');
-                $dispatcher->runBackground(
+                $this->workDispatcher->runBackground(
                     new Orga_Work_Task_AddMember(
                         $axis,
                         $ref,
@@ -149,9 +153,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->getParam('refAxis'), $project);
-        $member = Orga_Model_Member::loadByCompleteRefAndAxis($this->delete, $axis);
+        $member = Orga_Model_Member::load($this->delete);
 
         if ($member->hasDirectChildren()) {
             throw new Core_Exception_User('Orga', 'member', 'memberHasChild');
@@ -170,7 +172,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
     {
         $project = Orga_Model_Project::load($this->getParam('idProject'));
         $axis = Orga_Model_Axis::loadByRefAndProject($this->getParam('refAxis'), $project);
-        $member = Orga_Model_Member::loadByCompleteRefAndAxis($this->update['index'], $axis);
+        $member = Orga_Model_Member::load($this->update['index']);
 
         switch ($this->update['column']) {
             case 'label':
@@ -191,23 +193,25 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 }
                 break;
             default:
+                $refBroaderAxis = substr($this->update['column'], 7);
                 try {
-                    $refBroaderAxis = substr($this->update['column'], 7);
                     $broaderAxis = Orga_Model_Axis::loadByRefAndProject($refBroaderAxis, $project);
-                    foreach ($member->getDirectParents() as $parentMember) {
-                        if (($parentMember->getAxis()->getRef() === $refBroaderAxis)
-                                && ($parentMember->getRef() === $this->update['value'])) {
-                            break 2;
-                        } else if ($parentMember->getAxis()->getRef() === $refBroaderAxis) {
-                            $member->removeDirectParent($parentMember);
-                        }
+                } catch (Core_Exception_NotFound $e) {
+                    parent::updateelementAction();
+                }
+                foreach ($member->getDirectParents() as $parentMember) {
+                    if (($parentMember->getAxis()->getRef() === $refBroaderAxis)
+                        && ($parentMember->getRef() === $this->update['value'])) {
+                        break 2;
+                    } else if ($parentMember->getAxis()->getRef() === $refBroaderAxis) {
+                        $member->removeDirectParent($parentMember);
                     }
+                }
+                if (!empty($this->update['value'])) {
                     $parentMember = Orga_Model_Member::loadByCompleteRefAndAxis($this->update['value'], $broaderAxis);
                     $member->addDirectParent($parentMember);
-                    $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
-                } catch (Core_Exception_NotFound $e) {
-                   parent::updateelementAction();
                 }
+                $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
                 break;
         }
         $this->data = $this->update['value'];
@@ -225,10 +229,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $broaderAxis = Orga_Model_Axis::loadByRefAndProject($this->getParam('refParentAxis'), $project);
 
         $members = $broaderAxis->getMembers();
-        $idFilterCell = $this->getParam('idFilterCell');
-        if (!empty($idFilterCell)) {
-            $filterCell = Orga_Model_Cell::load(array('id' => $idFilterCell));
-            foreach ($filterCell->getMembers() as $cellMember) {
+        $idCell = $this->getParam('idCell');
+        if (!empty($idCell)) {
+            $cell = Orga_Model_Cell::load($idCell);
+            foreach ($cell->getMembers() as $cellMember) {
                 $cellMember->getAxis()->getRef();
                 if ($cellMember->getAxis()->isBroaderThan($broaderAxis)) {
                     $members = array_intersect($members, $cellMember->getChildrenForAxis($broaderAxis));
@@ -239,11 +243,18 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             }
         }
 
-        if (($this->hasParam('source')) && ($this->getParam('source') === 'add') && (count($members) > 1)) {
-            $this->addElementList('', '');
+        $query = $this->getParam('q');
+        if (!empty($query)) {
+            foreach ($members as $indexMember => $member) {
+                if (strpos($member->getLabel(), $query) === false) {
+                    unset($members[$indexMember]);
+                }
+            }
         }
+
+        $this->addElementAutocompleteList('', '');
         foreach ($members as $eligibleParentMember) {
-            $this->addElementList($eligibleParentMember->getCompleteRef(), $eligibleParentMember->getLabel());
+            $this->addElementAutocompleteList($eligibleParentMember->getCompleteRef(), $eligibleParentMember->getLabel());
         }
 
         $this->send();

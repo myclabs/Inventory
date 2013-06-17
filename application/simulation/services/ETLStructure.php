@@ -4,14 +4,36 @@
  * @subpackage Service
  */
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * Classe permettant de construire DW
  * @author valentin.claras
  * @package Simulation
  * @subpackage Service
  */
-class Simulation_Service_ETLStructure extends Core_Singleton
+class Simulation_Service_ETLStructure
 {
+    /**
+     * @var Simulation_Service_ETLData
+     */
+    private $etlDataService;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @param Simulation_Service_ETLData $etlDataService
+     * @param EntityManager              $entityManager
+     */
+    public function __construct(Simulation_Service_ETLData $etlDataService, EntityManager $entityManager)
+    {
+        $this->etlDataService = $etlDataService;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * Peuple le cube de DW avec les données issues de Classif.
      *
@@ -42,12 +64,11 @@ class Simulation_Service_ETLStructure extends Core_Singleton
      */
     private function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
     {
-        $dWIndicator = new DW_Model_Indicator();
+        $dWIndicator = new DW_Model_Indicator($dWCube);
         $dWIndicator->setLabel($classifIndicator->getLabel());
         $dWIndicator->setRef($classifIndicator->getRef());
         $dWIndicator->setUnit($classifIndicator->getUnit());
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
-        $dWIndicator->setCube($dWCube);
     }
 
     /**
@@ -59,10 +80,9 @@ class Simulation_Service_ETLStructure extends Core_Singleton
      */
     private function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
     {
-        $dWAxis = new DW_Model_Axis();
+        $dWAxis = new DW_Model_Axis($dwCube);
         $dWAxis->setLabel($classifAxis->getLabel());
         $dWAxis->setRef($classifAxis->getRef());
-        $dWAxis->setCube($dwCube);
         $associationArray['axes'][$classifAxis->getKey()['id']] = $dWAxis;
         $classifNarrowerAxis = $classifAxis->getDirectNarrower();
         if ($classifNarrowerAxis !== null) {
@@ -70,10 +90,9 @@ class Simulation_Service_ETLStructure extends Core_Singleton
         }
 
         foreach ($classifAxis->getMembers() as $classifMember) {
-            $dWMember = new DW_Model_Member();
+            $dWMember = new DW_Model_Member($dWAxis);
             $dWMember->setLabel($classifMember->getLabel());
             $dWMember->setRef($classifMember->getRef());
-            $dWMember->setAxis($dWAxis);
             $dWMember->setPosition($classifMember->getPosition());
             $associationArray['members'][$classifMember->getKey()['id']] = $dWMember;
             foreach ($classifMember->getDirectChildren() as $classifNarrowerMember) {
@@ -309,13 +328,13 @@ class Simulation_Service_ETLStructure extends Core_Singleton
         $scenarios = $set->getScenarios();
 
         foreach ($scenarios as $scenario) {
-            Simulation_Service_ETLData::getInstance()->clearDWResultsFromScenario($scenario);
+            $this->etlDataService->clearDWResultsFromScenario($scenario);
         }
 
         $this->resetDWCube($set->getDWCube());
 
         foreach ($scenarios as $scenario) {
-            Simulation_Service_ETLData::getInstance()->populateDWResultsFromScenario($scenario);
+            $this->etlDataService->populateDWResultsFromScenario($scenario);
         }
     }
 
@@ -358,14 +377,12 @@ class Simulation_Service_ETLStructure extends Core_Singleton
                 $dWRootAxis->delete();
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->populateDWCubeWithClassif($dWCube);
         $dWCube->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Copie des Reports.
         foreach ($dWReportsAsString as $dWReportString) {
@@ -377,8 +394,7 @@ class Simulation_Service_ETLStructure extends Core_Singleton
             }
         }
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
     }
 
 }

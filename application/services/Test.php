@@ -7,7 +7,7 @@
  * Test fixture
  * @subpackage Test
  */
-class Inventory_Service_Test extends Core_Singleton
+class Inventory_Service_Test
 {
 
     /**

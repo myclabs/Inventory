@@ -9,7 +9,7 @@
  * @package    Techno
  * @subpackage Service
  */
-class Techno_Service_Techno extends Core_Singleton
+class Techno_Service_Techno
 {
 
     /**

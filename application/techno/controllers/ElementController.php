@@ -60,8 +60,7 @@ class Techno_ElementController extends Core_Controller
             $element->setValue($value);
             $element->setDocumentation($documentation);
             $element->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
             $this->setFormMessage(__('UI', 'message', 'updated'));
         } else {
             $this->setFormMessage('Erreur de validation du formulaire.');

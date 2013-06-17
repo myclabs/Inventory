@@ -28,10 +28,11 @@ class Orga_AxisController extends Core_Controller
             $this->view->idCell = null;
         }
         $this->view->idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load(array('id' => $this->view->idProject));
+        $project = Orga_Model_Project::load($this->view->idProject);
         $this->view->eligibleParents = $project->getFirstOrderedAxes();
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
             $this->view->display = false;
         } else {
             $this->view->display = true;

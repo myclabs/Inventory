@@ -4,13 +4,28 @@
  * @package AF
  */
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 /**
  * Service responsable de la gestion des saisies des AF
  *
  * @package AF
  */
-class AF_Service_InputService extends Core_Singleton
+class AF_Service_InputService
 {
+
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
+     * @param EventDispatcher $eventDispatcher
+     */
+    public function __construct(EventDispatcher $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
 
     /**
      * Modifie une saisie et recalcule les résultats si la saisie est complète
@@ -34,6 +49,10 @@ class AF_Service_InputService extends Core_Singleton
 
         // Met à jour les résultats
         $this->updateResults($inputSet);
+
+        // Lance l'évènement
+        $event = new AF_Service_InputEditedEvent($inputSet);
+        $this->eventDispatcher->dispatch(AF_Service_InputEditedEvent::NAME, $event);
     }
 
     /**
@@ -50,9 +69,9 @@ class AF_Service_InputService extends Core_Singleton
             // Calcule les résultats
             $inputSet->getAF()->execute($inputSet);
             $inputSet->getOutputSet()->calculateTotals();
+        } else {
+            $inputSet->clearOutputSet();
         }
-
-        $inputSet->clearOutputSet();
     }
 
 }

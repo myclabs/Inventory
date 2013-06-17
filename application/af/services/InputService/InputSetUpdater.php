@@ -94,11 +94,35 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
      */
     protected function whenDifferentHandler(AF_Model_Input $input1, AF_Model_Input $input2)
     {
-        // Prend la nouvelle saisie pour remplacer l'actuelle
-        $this->inputSet->removeInput($input1);
-        $input1->delete();
-        $this->inputSet->setInputForComponent($input2->getComponent(), $input2);
-        $input2->setInputSet($this->inputSet);
+        // Si les saisies ne sont pas du même type (le type du champ a changé entre les 2 saisies)
+        if (get_class($input1) !== get_class($input2)) {
+            // Prend la nouvelle saisie pour remplacer l'actuelle
+            $this->inputSet->removeInput($input1);
+            $input1->delete();
+            $this->inputSet->setInputForComponent($input2->getComponent(), $input2);
+            $input2->setInputSet($this->inputSet);
+            return;
+        }
+
+        // Si les saisies sont du même type
+        if ($input1 instanceof AF_Model_Input_Numeric) {
+            /** @var AF_Model_Input_Numeric $input2 */
+            $input1->setValue($input2->getValue());
+        }
+        if ($input1 instanceof AF_Model_Input_Checkbox) {
+            /** @var AF_Model_Input_Checkbox $input2 */
+            $input1->setValue($input2->getValue());
+        }
+        if ($input1 instanceof AF_Model_Input_Select_Single) {
+            /** @var AF_Model_Input_Select_Single $input2 */
+            $input1->setValueFrom($input2);
+        }
+        if ($input1 instanceof AF_Model_Input_Select_Multi) {
+            /** @var AF_Model_Input_Select_Multi $input2 */
+            $input1->setValueFrom($input2);
+        }
+        $input1->setDisabled($input2->isDisabled());
+        $input1->setHidden($input2->isHidden());
     }
 
     /**

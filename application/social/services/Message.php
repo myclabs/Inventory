@@ -5,12 +5,33 @@
  * @subpackage Service
  */
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * @package    Social
  * @subpackage Service
  */
-class Social_Service_Message extends Core_Singleton
+class Social_Service_Message
 {
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var User_Service_User
+     */
+    private $userService;
+
+    /**
+     * @param EntityManager     $entityManager
+     * @param User_Service_User $userService
+     */
+    public function __construct(EntityManager $entityManager, User_Service_User $userService)
+    {
+        $this->entityManager = $entityManager;
+        $this->userService = $userService;
+    }
 
     /**
      * Envoie un nouveau message
@@ -24,9 +45,6 @@ class Social_Service_Message extends Core_Singleton
      */
     public function sendNewMessage(User_Model_User $author, array $recipients, $title, $text)
     {
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
-
         // Création du message
         $message = new Social_Model_Message($author, $title);
         $message->setText($text);
@@ -63,12 +81,12 @@ class Social_Service_Message extends Core_Singleton
 
             if ($recipient instanceof User_Model_User) {
                 $subject = $message->getTitle();
-                $userService->sendEmail($recipient, $subject, $content);
+                $this->userService->sendEmail($recipient, $subject, $content);
 
             } elseif ($recipient instanceof Social_Model_UserGroup) {
                 $subject = '[' . $recipient->getLabel() . '] ' . $message->getTitle();
                 foreach ($recipient->getUsers() as $user) {
-                    $userService->sendEmail($user, $subject, $content);
+                    $this->userService->sendEmail($user, $subject, $content);
                 }
             }
         }
@@ -86,11 +104,7 @@ class Social_Service_Message extends Core_Singleton
      */
     public function getUserInbox(User_Model_User $user, $count)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $entityManagers['default'];
-
-        $query = $em->createQuery("SELECT m FROM Social_Model_Message m
+        $query = $this->entityManager->createQuery("SELECT m FROM Social_Model_Message m
             LEFT JOIN m.userRecipients user
             LEFT JOIN m.groupRecipients userGroup
             WHERE m.sent = true
@@ -113,11 +127,7 @@ class Social_Service_Message extends Core_Singleton
      */
     public function getUserInboxSize(User_Model_User $user)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $entityManagers['default'];
-
-        $query = $em->createQuery("SELECT COUNT(m) FROM Social_Model_Message m
+        $query = $this->entityManager->createQuery("SELECT COUNT(m) FROM Social_Model_Message m
             LEFT JOIN m.userRecipients user
             LEFT JOIN m.groupRecipients userGroup
             WHERE m.sent = true
@@ -145,8 +155,7 @@ class Social_Service_Message extends Core_Singleton
         $query->filter->addCondition(Social_Model_Message::QUERY_AUTHOR, $user);
         $query->totalElements = $count;
 
-        $messages = Social_Model_Message::loadList($query);
-        return $messages;
+        return Social_Model_Message::loadList($query);
     }
 
     /**

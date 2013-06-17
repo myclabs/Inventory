@@ -23,22 +23,42 @@ class Orga_MemberController extends Core_Controller
     public function manageAction()
     {
         if ($this->hasParam('idCell')) {
-            $this->view->idCell = $this->getParam('idCell');
+            $idCell = $this->getParam('idCell');
+            $this->view->idCell = $idCell;
+            $cell = Orga_Model_Cell::load($idCell);
         } else {
             $this->view->idCell = null;
+            $cell = null;
         }
-        $this->view->idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load(array('id' => $this->view->idProject));
-        $this->view->axes = $project->getLastOrderedAxes();
+
+        $idProject = $this->getParam('idProject');
+        $this->view->idProject = $idProject;
+        $project = Orga_Model_Project::load($idProject);
+
+        if (($cell !== null) && ($cell->getGranularity()->hasAxes())) {
+            $axes = array();
+            $idAxes = array();
+            foreach ($cell->getMembers() as $members) {
+                $axis = $members->getAxis()->getDirectNarrower();
+                while ($axis !== null) {
+                    if (!(in_array($axis->getId(), $idAxes))) {
+                        $axes[] = $axis;
+                        $idAxes[] = $axis->getId();
+                    }
+                    $axis = $axis->getDirectNarrower();
+                }
+            }
+            $this->view->axes = $axes;
+        } else {
+            $this->view->axes = $project->getLastOrderedAxes();
+        }
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
             $this->view->display = false;
         } else {
             $this->view->display = true;
         }
-
-        $this->view->idFilterCell = null;
-        $this->view->ambiantGranularity = null;
     }
 
 }

@@ -10,7 +10,7 @@
  * Service Keyword.
  * @package Keyword
  */
-class Keyword_Service_Keyword extends Core_Singleton
+class Keyword_Service_Keyword
 {
     /**
      * Ajoute un Keyword et le renvoie.

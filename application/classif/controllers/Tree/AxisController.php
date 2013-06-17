@@ -8,6 +8,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Classe controlleur de tree des axes.
@@ -16,6 +17,12 @@ use Core\Annotation\Secure;
  */
 class Classif_Tree_AxisController extends UI_Controller_Tree
 {
+    /**
+     * @Inject
+     * @var Classif_Service_Axis
+     */
+    private $axisService;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -70,13 +77,13 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
         $label = $this->getAddElementValue('label');
         $refParent = $this->getAddElementValue('refParent');
 
-        $refErrors = Classif_Service_Axis::getInstance()->getErrorMessageForNewRef($ref);
+        $refErrors = $this->axisService->getErrorMessageForNewRef($ref);
         if ($refErrors != null) {
             $this->setAddFormElementErrorMessage('ref', $refErrors);
         }
 
         if (empty($this->_formErrorMessages)) {
-            $axis = Classif_Service_Axis::getInstance()->add($ref, $label, $refParent);
+            $this->axisService->add($ref, $label, $refParent);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -135,7 +142,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
         }
 
         if ($newRef !== $this->idNode) {
-            $refErrors = Classif_Service_Axis::getInstance()->getErrorMessageForNewRef($newRef);
+            $refErrors = $this->axisService->getErrorMessageForNewRef($newRef);
             if ($refErrors != null) {
                 $this->setEditFormElementErrorMessage('ref', $refErrors);
             }
@@ -144,16 +151,16 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
         if (empty($this->_formErrorMessages)) {
             $label = null;
             if (($axis->getRef() !== $newRef) && ($axis->getLabel() !== $newLabel)) {
-                $label = Classif_Service_Axis::getInstance()->updateRefAndLabel($this->idNode, $newRef, $newLabel);
+                $label = $this->axisService->updateRefAndLabel($this->idNode, $newRef, $newLabel);
             } else if ($axis->getLabel() !== $newLabel) {
-                $label = Classif_Service_Axis::getInstance()->updateLabel($this->idNode, $newLabel);
+                $label = $this->axisService->updateLabel($this->idNode, $newLabel);
             } else if ($axis->getRef() !== $newRef) {
-                $label = Classif_Service_Axis::getInstance()->updateRef($this->idNode, $newRef);
+                $label = $this->axisService->updateRef($this->idNode, $newRef);
             }
             if ($newParentRef !== '') {
-                $label = Classif_Service_Axis::getInstance()->updateParent($this->idNode, $newParentRef, $newPosition);
+                $label = $this->axisService->updateParent($this->idNode, $newParentRef, $newPosition);
             } else if (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
-                $label = Classif_Service_Axis::getInstance()->updatePosition($this->idNode, $newPosition);
+                $label = $this->axisService->updatePosition($this->idNode, $newPosition);
             }
             if ($label !== null) {
                 $this->message = __('UI', 'message', 'updated');

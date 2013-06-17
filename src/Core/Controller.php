@@ -5,6 +5,9 @@
  * @subpackage Controller
  */
 
+use DI\Annotation\Inject;
+use Doctrine\ORM\EntityManager;
+
 /**
  * Classe abstraite de contrôleur.
  *
@@ -15,6 +18,13 @@
  */
 abstract class Core_Controller extends Zend_Controller_Action
 {
+
+    /**
+     * @Inject
+     * @var EntityManager
+     */
+    protected $entityManager;
+
     /**
      * Helper pour les redirections.
      *
@@ -50,4 +60,5 @@ abstract class Core_Controller extends Zend_Controller_Action
         $json->sendJson($reponse);
         Zend_Wildfire_Channel_HttpHeaders::getInstance()->flush();
     }
+
 }

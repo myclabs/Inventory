@@ -10,7 +10,7 @@
  * Service Predicate
  * @package Keyword
  */
-class Keyword_Service_Predicate extends Core_Singleton
+class Keyword_Service_Predicate
 {
     /**
      * Ajoute un predicat et le renvoie.

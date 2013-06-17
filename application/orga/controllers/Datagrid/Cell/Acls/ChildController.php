@@ -34,16 +34,15 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
         $this->request->filter->setConditions(array());
 
         $idCell = $this->getParam('idCell');
-        $orgaCell = Orga_Model_Cell::load($idCell);
-        $granularity = Orga_Model_Granularity::load(array('id' => $this->getParam('idGranularity')));
+        $cell = Orga_Model_Cell::load($idCell);
+        $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
-        foreach ($orgaCell->getChildCellsForGranularity($granularity, $this->request) as $childOrgaCell) {
-            $childCell = Orga_Model_Cell::loadByOrgaCell($childOrgaCell);
+        foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
             $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
 
             $data = array();
-            $data['index'] = $childOrgaCell->getKey()['id'];
-            foreach ($childOrgaCell->getMembers() as $member) {
+            $data['index'] = $childCell->getId();
+            foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
 
@@ -53,8 +52,8 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
                 if ($linkedIdentity instanceof User_Model_Role) {
                     $userNumber = 0;
                     foreach ($linkedIdentity->getUsers() as $user) {
-                        if ($linkedIdentity->getRef() === 'cellDataProviderAdministrator_'.$childCell->getKey()['id']
-                            || $linkedIdentity->getRef() === 'cellDataProviderContributor_'.$childCell->getKey()['id']) {
+                        if ($linkedIdentity->getRef() === 'cellDataProviderAdministrator_'.$childCell->getId()
+                            || $linkedIdentity->getRef() === 'cellDataProviderContributor_'.$childCell->getId()) {
                             $listAdministrator[] = $user->getName();
                         }
                         $userNumber ++;
@@ -65,14 +64,14 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
 
             $data['administrators'] = implode(' | ', $listAdministrator);
             $data['details'] = $this->cellPopup(
-                'orga/datagrid_cell_acls_child/list/?idCell='.$data['index'],
+                'orga/datagrid_cell_acls_child/list/idCell/'.$data['index'],
                 implode(' | ', $listLinkedUser),
                 'zoom-in'
             );
 
             $this->addLine($data);
         }
-        $this->totalElements = $orgaCell->countTotalChildCellsForGranularity($granularity, $this->request);
+        $this->totalElements = $cell->countTotalChildCellsForGranularity($granularity, $this->request);
 
         $this->send();
     }
@@ -86,9 +85,7 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
     {
         $this->view->idCell = $this->getParam('idCell');
         $cellACLResource = User_Model_Resource_Entity::loadByEntity(
-            Orga_Model_Cell::loadByOrgaCell(
-                Orga_Model_Cell::load($this->view->idCell)
-            )
+            Orga_Model_Cell::load($this->view->idCell)
         );
 
         $this->view->listRoles = array();

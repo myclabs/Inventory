@@ -65,6 +65,16 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Project.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Spécifie le label du Project.
      *
      * @param string $label
@@ -136,12 +146,10 @@ class Orga_Model_Project extends Core_Model_Entity
         $criteria->where($criteria->expr()->eq('ref', $ref));
         $axis = $this->axes->matching($criteria)->toArray();
 
-        if (empty($axis)) {
+        if (count($axis) === 0) {
             throw new Core_Exception_NotFound("No 'Orga_Model_Axis' matching " . $ref);
-        } else {
-            if (count($axis) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_Axis' matching " . $ref);
-            }
+        } else if (count($axis) > 1) {
+            throw new Core_Exception_TooMany("Too many 'Orga_Model_Axis' matching " . $ref);
         }
 
         return array_pop($axis);
@@ -434,6 +442,8 @@ class Orga_Model_Project extends Core_Model_Entity
      */
     public function getInputGranularities()
     {
+        //@todo Supprimer getGranularities quand il sera possible de filtrer isNotNull sur une collection non initialisée.
+        $this->getGranularities();
         $criteria = Doctrine\Common\Collections\Criteria::create()->where(
             Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null)
         );

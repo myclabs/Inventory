@@ -191,22 +191,27 @@ class Orga_Model_Cell extends Core_Model_Entity
             $member->addCell($this);
         }
         $this->updateMembersHashKey();
-        $this->updateAllParentsRelevant();
+        $this->updateHierarchy();
 
-        try {
-            $granularityForInventoryStatus = $granularity->getProject()->getGranularityForInventoryStatus();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            // La granularité des inventaires n'a pas encoré été créée
-            $granularityForInventoryStatus = null;
+        // Création du CellsGroup.
+        foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
+            $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);
         }
-        // Définition du statut de l'inventaire
-        if (($granularityForInventoryStatus)
-            && ($granularity !== $granularityForInventoryStatus)
-            && ($granularity->isNarrowerThan($granularityForInventoryStatus))
-        ) {
-            // Cherche la cellule parent dans la granularité de définition des statut des inventaires
-            $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
-            $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
+        // Création de la Bibliography des Input.
+        if ($this->granularity->getInputConfigGranularity() !== null) {
+            $this->docBibliographyForAFInputSetPrimary = new Doc_Model_Bibliography();
+        }
+        // Création de la Library des Input.
+        if ($this->granularity->getCellsWithInputDocuments()) {
+            $this->docLibraryForAFInputSetsPrimary = new Doc_Model_Library();
+        }
+        // Création de la Library des GenericAction.
+        if ($this->granularity->getCellsWithSocialGenericActions()) {
+            $this->docLibraryForSocialGenericActions = new Doc_Model_Library();
+        }
+        // Création de la Library des ContextAction.
+        if ($this->granularity->getCellsWithInputDocuments()) {
+            $this->docLibraryForSocialContextActions = new Doc_Model_Library();
         }
     }
 
@@ -281,6 +286,16 @@ class Orga_Model_Cell extends Core_Model_Entity
     public static function loadByDocLibraryForSocialContextAction(Doc_Model_Library $docLibrary)
     {
         return self::getEntityRepository()->loadBy(array('docLibraryForSocialContextAction' => $docLibrary));
+    }
+
+    /**
+     * Renvoie l'id de la Cell.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -407,8 +422,9 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Met à jour l'attribut allParentsRelevant.
      */
-    public function updateAllParentsRelevant()
+    public function updateHierarchy()
     {
+        // Mise à jour de la pertinence.
         $access = true;
         foreach ($this->getParentCells() as $parentCell) {
             if (!($parentCell->getRelevant())) {
@@ -417,6 +433,28 @@ class Orga_Model_Cell extends Core_Model_Entity
             }
         }
         $this->setAllParentsRelevant($access);
+
+        // Mise à jour du status de l'inventaire.
+        try {
+            $granularityForInventoryStatus = $this->granularity->getProject()->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            // La granularité des inventaires n'a pas encoré été choisie.
+            $granularityForInventoryStatus = null;
+        }
+        // Définition du statut de l'inventaire.
+        if (($granularityForInventoryStatus)
+            && ($this->granularity !== $granularityForInventoryStatus)
+            && ($this->granularity->isNarrowerThan($granularityForInventoryStatus))
+        ) {
+            // Cherche la cellule parent dans la granularité de définition des statut des inventaires
+            try {
+                $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
+                $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
+            } catch (Core_Exception_NotFound $e) {
+                // Il n'y a pas de cellules parentes.
+                $this->setInventoryStatus(self::STATUS_NOTLAUNCHED);
+            }
+        }
     }
 
     /**
@@ -537,7 +575,7 @@ class Orga_Model_Cell extends Core_Model_Entity
                         );
                     }
                 } else if ($member->getAxis() === $narrowerAxis) {
-                    $childMembers[$refNarrowerAxis] = $member;
+                    $childMembers[$refNarrowerAxis] = array($member);
                 }
             }
             if (!isset($childMembers[$refNarrowerAxis])) {
@@ -574,7 +612,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         $parentCells = array();
         foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-            $parentCells[] = $this->getParentCellForGranularity($broaderGranularity);
+            try {
+                $parentCells[] = $this->getParentCellForGranularity($broaderGranularity);
+            } catch (Core_Exception_NotFound $e) {
+                // Pas de cellule parente pour cette granularité.
+            }
         }
 
         return $parentCells;
@@ -597,16 +639,12 @@ class Orga_Model_Cell extends Core_Model_Entity
         $childMembersByAxisForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
         $childMembersForGranularity = [];
         // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
-        foreach ($childMembersByAxisForGranularity as $a => $childAxisMembersForGranularity) {
+        foreach ($childMembersByAxisForGranularity as $childAxisMembersForGranularity) {
             if (empty($childAxisMembersForGranularity)) {
                 return [];
             }
-            if (is_array($childAxisMembersForGranularity)) {
-                foreach ($childAxisMembersForGranularity as $childAxisMemberForGranularity) {
-                    $childMembersForGranularity[] = $childAxisMemberForGranularity;
-                }
-            } else {
-                $childMembersForGranularity[] = $childAxisMembersForGranularity;
+            foreach ($childAxisMembersForGranularity as $childAxisMemberForGranularity) {
+                $childMembersForGranularity[] = $childAxisMemberForGranularity;
             }
         }
 
@@ -987,7 +1025,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         if ($this->docBibliographyForAFInputSetPrimary !== $docBibliography) {
             if ($this->docBibliographyForAFInputSetPrimary !== null) {
-                $this->docLibraryForAFInputSetsPrimary->delete();
+                $this->docBibliographyForAFInputSetPrimary->delete();
             }
             $this->docBibliographyForAFInputSetPrimary = $docBibliography;
         }
@@ -1074,11 +1112,14 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function createDWCube()
     {
         if (($this->dWCube === null) && ($this->getGranularity()->getCellsGenerateDWCubes())) {
+            /** @var Orga_Service_ETLStructure $etlStructureService */
+            $etlStructureService = $this->get('Orga_Service_ETLStructure');
+
             $this->dWCube = new DW_model_cube();
             $this->dWCube->setLabel($this->getLabel());
 
-            Orga_Service_ETLStructure::getInstance()->populateCellDWCube($this);
-            Orga_Service_ETLStructure::getInstance()->addGranularityDWReportsToCellDWCube($this);
+            $etlStructureService->populateCellDWCube($this);
+            $etlStructureService->addGranularityDWReportsToCellDWCube($this);
         }
     }
 
@@ -1120,7 +1161,12 @@ class Orga_Model_Cell extends Core_Model_Entity
         $populatedDWCubes = array();
 
         if ($this->getGranularity()->getCellsGenerateDWCubes()) {
-            if (Orga_Service_ETLStructure::getInstance()->isCellDWCubeUpToDate($this)) {
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
+            /** @var Orga_Service_ETLStructure $etlStructureService */
+            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+
+            if ($etlStructureService->isCellDWCubeUpToDate($this)) {
                 $populatedDWCubes[] = $this->getDWCube();
             }
         }
@@ -1187,9 +1233,7 @@ class Orga_Model_Cell extends Core_Model_Entity
                 continue;
             }
 
-            $dWResult = new DW_Model_Result();
-            $dWResult->setCube($dWCube);
-            $dWResult->setIndicator($dWIndicator);
+            $dWResult = new DW_Model_Result($dWIndicator);
             $dWResult->setValue($outputElement->getValue());
 
             foreach ($outputElement->getIndexes() as $outputIndex) {

@@ -42,8 +42,7 @@ class DW_ReportController extends Core_Controller
         $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
         $zendSessionReport = new Zend_Session_Namespace($sessionName);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $zendSessionReport->$hash = $report->getAsString();
     }
@@ -60,11 +59,9 @@ class DW_ReportController extends Core_Controller
         }
         if (!isset($report) || !($report instanceof DW_Model_Report)) {
             if ($this->hasParam('idReport')) {
-                $report = DW_Model_Report::load(array('id' => $this->getParam('idReport')));
+                $report = DW_Model_Report::load($this->getParam('idReport'));
             } else {
-                $cube = DW_Model_Cube::load(array('id' => $this->getParam('idCube')));
-                $report = new DW_Model_Report();
-                $report->setCube($cube);
+                $report = new DW_Model_Report(DW_Model_Cube::load($this->getParam('idCube')));
                 $report->setLabel(__('DW', 'report', 'newReportDefaultLabelPage'));
             }
         }
@@ -76,7 +73,7 @@ class DW_ReportController extends Core_Controller
         $hash = ($this->hasParam('hashReport')) ? $this->getParam('hashReport') : (string) spl_object_hash($report);
 
         $this->view->headLink()->appendStylesheet('css/dw/report.css');
-        $this->view->idCube = $report->getCube()->getKey()['id'];;
+        $this->view->idCube = $report->getCube()->getId();;
         $this->view->hashReport = $hash;
         $this->view->reportLabel = $report->getLabel();
         require_once (dirname(__FILE__).'/../forms/Configuration.php');
@@ -86,8 +83,8 @@ class DW_ReportController extends Core_Controller
             $this->view->viewConfiguration = $this->getParam('viewConfiguration');
         } else {
             $this->view->viewConfiguration = new DW_ViewConfiguration();
-            $this->view->viewConfiguration->setOutputURL('index/report?idCube='.$report->getCube()->getKey()['id']);
-            $this->view->viewConfiguration->setSaveURL('dw/report/details?');
+            $this->view->viewConfiguration->setOutputUrl('index/report/idCube/'.$report->getCube()->getId());
+            $this->view->viewConfiguration->setSaveURL('dw/report/details');
         }
 
         $this->setReportByHash($hash, $report);
@@ -246,14 +243,12 @@ class DW_ReportController extends Core_Controller
         foreach ($configurationPost['filters']['elements'] as $filterArray) {
             $filterAxisRef = $filterArray['elements']['refAxis']['hiddenValues']['refAxis'];
             if ($filterArray['elements']['filterAxis'.$filterAxisRef.'NumberMembers']['value'] !== 'all') {
-                $filter = new DW_Model_Filter();
-
                 try {
                     $filterAxis = DW_Model_Axis::loadByRefAndCube($filterAxisRef, $report->getCube());
                 } catch (Core_Exception_NotFound $e) {
                     $errors['filterAxis'.$filterAxisRef.'NumberMembers'] = __('DW', 'configValidation', 'filterAxisInvalid');
                 }
-                $filter->setAxis($filterAxis);
+                $filter = new DW_Model_Filter($report, $filterAxis);
 
                 if ($filterArray['elements']['filterAxis'.$filterAxisRef.'NumberMembers']['value'] === 'some') {
                     $filterMemberRefs = $filterArray['elements']['selectAxis'.$filterAxisRef.'MembersFilter']['value'];
@@ -289,8 +284,7 @@ class DW_ReportController extends Core_Controller
             );
         } else {
             $this->getResponse()->setHttpResponseCode(400);
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->clear();
+            $this->entityManager->flush();
             $this->sendJsonResponse(
                 array(
                     'errorMessages' => $errors,
@@ -307,8 +301,6 @@ class DW_ReportController extends Core_Controller
      */
     public function saveAction()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $savePost = json_decode($this->getParam('saveReportAs'), JSON_OBJECT_AS_ARRAY);
@@ -328,23 +320,23 @@ class DW_ReportController extends Core_Controller
                 && ($savePost['saveType']['value'] == 'saveAs')
             ) {
                 $clonedReport = clone $report;
-                $entityManagers['default']->refresh($report);
+                $this->entityManager->refresh($report);
                 $report = $clonedReport;
             }
 
             $report->setLabel($reportLabel);
             $report->save();
-            $entityManagers['default']->flush($report);
+            $this->entityManager->flush($report);
 
             $this->sendJsonResponse(
                 array(
                     'message'  => __('UI', 'message', 'updated'),
                     'type'     => 'success',
-                    'idReport' => $report->getKey()['id']
+                    'idReport' => $report->getId()
                 )
             );
 
-            $entityManagers['default']->clear();
+            $this->entityManager->clear();
         }
 
     }
@@ -366,8 +358,7 @@ class DW_ReportController extends Core_Controller
         }
         $this->_helper->layout()->disableLayout();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
     }
 
     /**
@@ -385,8 +376,7 @@ class DW_ReportController extends Core_Controller
         }
         $this->_helper->layout()->disableLayout();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
     }
 
     /**
@@ -399,8 +389,7 @@ class DW_ReportController extends Core_Controller
 
         $export = new DW_Export_Report_Excel($report);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $export->display();
     }
@@ -415,8 +404,7 @@ class DW_ReportController extends Core_Controller
 
         $export = new DW_Export_Report_Pdf($report);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $export->display();
     }

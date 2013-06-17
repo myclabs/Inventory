@@ -39,8 +39,7 @@ class Techno_DimensionController extends Core_Controller
         $dimension = Techno_Model_Family_Dimension::load($idDimension);
         $dimension->setQuery($formData->getValue('query'));
         $dimension->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->setFormMessage(__('UI', 'message', 'updated'));
         $this->sendFormResponse();

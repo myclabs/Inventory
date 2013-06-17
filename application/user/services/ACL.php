@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
  * @package    User
  * @subpackage Service
  */
-class User_Service_ACL extends Core_Singleton
+class User_Service_ACL
 {
 
     /**
@@ -281,14 +281,6 @@ class User_Service_ACL extends Core_Singleton
             }
         }
         return $childResources;
-    }
-
-    /**
-     * @return User_Service_ACL
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
     }
 
 }

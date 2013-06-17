@@ -25,17 +25,10 @@ class User_Bootstrap extends Core_Package_Bootstrap
     /**
      * Initialise le mapping des types en BDD
      */
-    protected function _initLocaleTypeMapping()
-    {
-        \Doctrine\DBAL\Types\Type::addType(Core_TypeMapping_Locale::TYPE_NAME, 'Core_TypeMapping_Locale');
-    }
-
-    /**
-     * Initialise le mapping des types en BDD
-     */
     protected function _initUserTypeMapping()
     {
-        \Doctrine\DBAL\Types\Type::addType(ActionType::TYPE_NAME, 'User\ACL\TypeMapping\ActionType');
+        \Doctrine\DBAL\Types\Type::addType(Core_TypeMapping_Locale::TYPE_NAME, 'Core_TypeMapping_Locale');
+        \Doctrine\DBAL\Types\Type::addType(ActionType::TYPE_NAME, 'User_TypeMapping_Action');
     }
 
     /**
@@ -44,9 +37,10 @@ class User_Bootstrap extends Core_Package_Bootstrap
     protected function _initACLUserResourceTreeTraverser()
     {
         /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
-        $usersResourceTreeTraverser = User_Service_ACL_UsersResourceTreeTraverser::getInstance();
+        $usersResourceTreeTraverser = $this->container->get('User_Service_ACL_UsersResourceTreeTraverser');
+
         /** @var $aclService User_Service_ACL */
-        $aclService = User_Service_ACL::getInstance();
+        $aclService = $this->container->get('User_Service_ACL');
         $aclService->setResourceTreeTraverser("User_Model_User", $usersResourceTreeTraverser);
         $aclService->setResourceTreeTraverser("User_Model_Role", $usersResourceTreeTraverser);
     }
@@ -66,7 +60,11 @@ class User_Bootstrap extends Core_Package_Bootstrap
             Doctrine\ORM\Events::onFlush,
             Doctrine\ORM\Events::postFlush,
         ];
-        $entityManager->getEventManager()->addEventListener($events, new EntityManagerListener());
+
+        /** @var EntityManagerListener $aclEntityManagerListener */
+        $aclEntityManagerListener = $this->container->get('User\ACL\EntityManagerListener');
+
+        $entityManager->getEventManager()->addEventListener($events, $aclEntityManagerListener);
     }
 
 }

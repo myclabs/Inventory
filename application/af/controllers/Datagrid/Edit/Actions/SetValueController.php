@@ -140,8 +140,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
             }
             $action->save();
             $targetComponent->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();
@@ -170,8 +169,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
                 break;
         }
         $action->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -188,8 +186,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
         $action->delete();
         $action->getTargetComponent()->removeAction($action);
         $action->getTargetComponent()->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
