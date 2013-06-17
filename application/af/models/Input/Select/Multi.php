@@ -56,6 +56,17 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
     }
 
     /**
+     * @param AF_Model_Input_Select_Multi $input
+     */
+    public function setValueFrom(AF_Model_Input_Select_Multi $input)
+    {
+        $this->value->clear();
+        foreach ($input->value as $ref) {
+            $this->value->add($ref);
+        }
+    }
+
+    /**
      * @return int Nombre de champs remplis dans le composant
      */
     public function getNbRequiredFieldsCompleted()

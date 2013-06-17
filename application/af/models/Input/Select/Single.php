@@ -32,16 +32,21 @@ class AF_Model_Input_Select_Single extends AF_Model_Input implements Algo_Model_
     /**
      * @param AF_Model_Component_Select_Option $value
      */
-    public function setValue($value)
+    public function setValue(AF_Model_Component_Select_Option $value = null)
     {
-        if ($value instanceof AF_Model_Component_Select_Option) {
+        if ($value) {
             $this->value = $value->getRef();
-        } elseif (null === $value) {
-            $this->value = null;
         } else {
-            throw new Core_Exception_InvalidArgument('The value parameter must be an instance of '
-                                                         . 'AF_Model_Component_Select_Option');
+            $this->value = null;
         }
+    }
+
+    /**
+     * @param AF_Model_Input_Select_Single $input
+     */
+    public function setValueFrom(AF_Model_Input_Select_Single $input)
+    {
+        $this->value = $input->value;
     }
 
     /**
