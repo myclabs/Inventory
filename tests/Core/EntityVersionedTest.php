@@ -26,7 +26,7 @@ class Core_Test_EntityVersionedTest extends Core_Test_TestCase
     }
 
 
-    public function testRepositoryTranslate()
+    public function testSimpleField()
     {
         /** @var $repository \Gedmo\Loggable\Entity\Repository\LogEntryRepository */
         $repository = $this->entityManager->getRepository('Gedmo\Loggable\Entity\LogEntry');
