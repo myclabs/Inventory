@@ -58,6 +58,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initAutoloader()
     {
+        /** @noinspection PhpIncludeInspection */
         require PACKAGE_PATH . '/vendor/autoload.php';
         Core_Autoloader::getInstance()->register();
     }
@@ -236,8 +237,16 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Les prochains devront être ajouté au tableau.
         $entityManagers = array('default' => $entityManager);
         Zend_Registry::set('EntityManagers', $entityManagers);
-
         $this->container->set('Doctrine\ORM\EntityManager', $entityManager);
+    }
+
+    /**
+     * Plugin qui configure l'extension Doctrine Loggable
+     */
+    protected function _initLoggableExtension()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin($this->container->get('Inventory_Plugin_LoggableExtensionConfigurator'));
     }
 
     /**
@@ -250,6 +259,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         if ($connectionSettings == null) {
             // Récupération de la configuration de la connexion dans l'application.ini
+            /** @var mixed $connectionSettings */
             $connectionSettings = Zend_Registry::get('configuration')->doctrine->default->connection;
         }
 
