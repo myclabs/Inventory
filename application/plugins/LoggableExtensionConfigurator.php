@@ -36,7 +36,7 @@ class Inventory_Plugin_LoggableExtensionConfigurator extends Zend_Controller_Plu
      */
     public function routeStartup(Zend_Controller_Request_Abstract $request)
     {
-        $userId = $this->getLoggedInUserId();
+        $userId = (string) $this->getLoggedInUserId();
 
         if ($userId) {
             $this->loggableListener->setUsername($userId);

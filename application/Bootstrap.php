@@ -4,6 +4,7 @@
  */
 
 use Doctrine\DBAL\Types\Type;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Application bootstrap
@@ -110,6 +111,19 @@ class Bootstrap extends Core_Bootstrap
             $front->registerPlugin($this->container->get('Inventory_Plugin_Acl'));
             Zend_Registry::set('pluginAcl', 'User_Plugin_Acl');
         }
+    }
+
+    /**
+     * Event listeners
+     */
+    protected function _initEventListeners()
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container->get('Symfony\Component\EventDispatcher\EventDispatcher');
+
+        // AuditTrail
+        $listener = $this->container->get('AuditTrail\Application\EventListener', true);
+        $eventDispatcher->addListener(AF_Service_InputEditedEvent::NAME, [$listener, 'onInputEdited']);
     }
 
 }

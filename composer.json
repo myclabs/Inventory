@@ -15,7 +15,8 @@
 			"Algo": "src/",
 			"AF": "src/",
 			"Orga": "src/",
-			"Inventory": "src/"
+			"Inventory": "src/",
+            "AuditTrail": "src/"
 		}
 	},
 	"require": {

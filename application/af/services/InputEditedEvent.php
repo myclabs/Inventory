@@ -13,20 +13,20 @@ class AF_Service_InputEditedEvent extends Event
     const NAME = 'af.inputEdited';
 
     /**
-     * @var AF_Model_InputSet
+     * @var AF_Model_InputSet_Primary
      */
     private $inputSet;
 
     /**
-     * @param AF_Model_InputSet $inputSet
+     * @param AF_Model_InputSet_Primary $inputSet
      */
-    public function __construct(AF_Model_InputSet $inputSet)
+    public function __construct(AF_Model_InputSet_Primary $inputSet)
     {
         $this->inputSet = $inputSet;
     }
 
     /**
-     * @return AF_Model_InputSet
+     * @return AF_Model_InputSet_Primary
      */
     public function getInputSet()
     {
