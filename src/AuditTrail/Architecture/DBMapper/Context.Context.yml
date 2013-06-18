@@ -1,5 +1,5 @@
 AuditTrail\Domain\Context\Context:
-  type: mappedSuperClass
+  type: mappedSuperclass
 
   id:
     id:

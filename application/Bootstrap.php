@@ -4,6 +4,7 @@
  */
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -40,34 +41,70 @@ class Bootstrap extends Core_Bootstrap
             'Social',
             'Orga',
             'Simulation',
+            'AuditTrail',
         ];
 
         foreach ($modules as $module) {
             $moduleRoot = APPLICATION_PATH . '/' . strtolower($module);
+            $moduleRoot2 = PACKAGE_PATH . '/src/' . $module;
 
-            // Autoloader
-            $autoloader->addModule($module, $moduleRoot);
+            if (file_exists($moduleRoot)) {
+                // Autoloader
+                $autoloader->addModule($module, $moduleRoot);
 
-            // Controllers
-            $frontController->addControllerDirectory($moduleRoot . '/controllers', strtolower($module));
+                // Controllers
+                $frontController->addControllerDirectory($moduleRoot . '/controllers', strtolower($module));
 
-            // Bootstrap
-            $bootstrapFile = $moduleRoot . '/Bootstrap.php';
-            if (file_exists($bootstrapFile)) {
-                require_once $bootstrapFile;
-                $bootstrapName = $module . '_Bootstrap';
-                /** @var $bootstrap Core_Package_Bootstrap */
-                $bootstrap = new $bootstrapName($this->_application);
-                $bootstrap->container = $this->container;
-                $bootstrap->setRun($this->_run);
-                $bootstrap->bootstrap();
-                foreach ($bootstrap->getRun() as $run) {
-                    $this->_markRun($run);
+                // Bootstrap
+                $bootstrapFile = $moduleRoot . '/Bootstrap.php';
+                if (file_exists($bootstrapFile)) {
+                    require_once $bootstrapFile;
+                    $bootstrapName = $module . '_Bootstrap';
+                    /** @var $bootstrap Core_Package_Bootstrap */
+                    $bootstrap = new $bootstrapName($this->_application);
+                    $bootstrap->container = $this->container;
+                    $bootstrap->setRun($this->_run);
+                    $bootstrap->bootstrap();
+                    foreach ($bootstrap->getRun() as $run) {
+                        $this->_markRun($run);
+                    }
                 }
+
+                // Doctrine Mappers
+                $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
             }
 
-            // Doctrine Mappers
-            $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
+            if (file_exists($moduleRoot2)) {
+                if (file_exists($moduleRoot2 . '/Application/Controller')) {
+                    // Controllers
+                    $frontController->addControllerDirectory($moduleRoot2 . '/Application/Controller',
+                        strtolower($module));
+                }
+
+                // Bootstrap
+                $bootstrapFile = $moduleRoot2 . '/Application/Bootstrap.php';
+                if (file_exists($bootstrapFile)) {
+                    require_once $bootstrapFile;
+                    $bootstrapName = $module . '\Application\Bootstrap';
+                    /** @var $bootstrap Core_Package_Bootstrap */
+                    $bootstrap = new $bootstrapName($this->_application);
+                    $bootstrap->container = $this->container;
+                    $bootstrap->setRun($this->_run);
+                    $bootstrap->bootstrap();
+                    foreach ($bootstrap->getRun() as $run) {
+                        $this->_markRun($run);
+                    }
+                }
+
+                // Doctrine Mappers
+                if (file_exists($moduleRoot2 . '/Architecture/DBMapper')) {
+                    $yamlDriver = new SimplifiedYamlDriver(
+                        [$moduleRoot2 . '/Architecture/DBMapper' => $module . '\Domain'],
+                        '.yml'
+                    );
+                    $driver->addDriver($yamlDriver, $module . '\Domain');
+                }
+            }
         }
     }
 

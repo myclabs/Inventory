@@ -2,12 +2,6 @@ AuditTrail\Domain\Context\OrganizationContext:
   type: entity
   table: AuditTrail_OrganizationContext
 
-  fields:
-    date:
-      type: DateTime
-    eventName:
-      type: string
-
   oneToOne:
     organization:
-      targetEntity: Orga_Model_Project
+      targetEntity: \Orga_Model_Project

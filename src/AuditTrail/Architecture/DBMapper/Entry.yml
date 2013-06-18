@@ -11,7 +11,7 @@ AuditTrail\Domain\Entry:
 
   fields:
     date:
-      type: DateTime
+      type: datetime
     eventName:
       type: string
 

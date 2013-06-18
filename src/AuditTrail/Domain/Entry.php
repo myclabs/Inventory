@@ -14,6 +14,11 @@ use DateTime;
 class Entry
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var DateTime
      */
     private $date;
@@ -37,6 +42,14 @@ class Entry
         $this->date = new DateTime();
         $this->eventName = $eventName;
         $this->context = $context;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
