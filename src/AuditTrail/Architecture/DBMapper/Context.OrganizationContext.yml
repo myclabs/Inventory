@@ -2,6 +2,6 @@ AuditTrail\Domain\Context\OrganizationContext:
   type: entity
   table: AuditTrail_OrganizationContext
 
-  oneToOne:
+  manyToOne:
     organization:
       targetEntity: \Orga_Model_Project

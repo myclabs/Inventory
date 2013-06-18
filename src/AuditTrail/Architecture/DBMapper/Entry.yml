@@ -18,3 +18,4 @@ AuditTrail\Domain\Entry:
   oneToOne:
     context:
       targetEntity: AuditTrail\Domain\Context\Context
+      cascade: [ all ]
