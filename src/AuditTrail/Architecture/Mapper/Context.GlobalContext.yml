@@ -1,0 +1,9 @@
+AuditTrail\Domain\Context\GlobalContext:
+  type: entity
+  table: AuditTrail_GlobalContext
+
+  fields:
+    date:
+      type: DateTime
+    eventName:
+      type: string

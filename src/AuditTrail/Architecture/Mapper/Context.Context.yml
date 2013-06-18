@@ -1,0 +1,8 @@
+AuditTrail\Domain\Context\Context:
+  type: mappedSuperClass
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO

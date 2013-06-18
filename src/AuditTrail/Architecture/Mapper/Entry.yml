@@ -1,0 +1,20 @@
+AuditTrail\Domain\Entry:
+  type: entity
+  repositoryClass: AuditTrail\Architecture\DoctrineEntryRepository
+  table: AuditTrail_Entry
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    date:
+      type: DateTime
+    eventName:
+      type: string
+
+  oneToOne:
+    context:
+      targetEntity: AuditTrail\Domain\Context\Context

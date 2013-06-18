@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phpunit colors="true"
+         backupGlobals="false"
          bootstrap="./tests/init.php">
 
     <testsuites>

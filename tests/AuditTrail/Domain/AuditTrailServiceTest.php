@@ -16,10 +16,9 @@ class AuditTrail_AuditTrailServiceTest extends Core_Test_TestCase
     {
         /** @var Context $context */
         $context = $this->getMockForAbstractClass('AuditTrail\Domain\Context\Context');
-        $metadata = $this->getMock('Doctrine\ORM\Mapping\ClassMetadata', [], ['AuditTrail\Domain\Entry']);
 
         /** @var PHPUnit_Framework_MockObject_MockObject|EntryRepository $repository */
-        $repository = $this->getMock('AuditTrail\Domain\EntryRepository', [], [null, $metadata]);
+        $repository = $this->getMockForAbstractClass('AuditTrail\Domain\EntryRepository');
         $repository->expects($this->once())
             ->method('add')
             ->with($this->attributeEqualTo('eventName', 'foo'));

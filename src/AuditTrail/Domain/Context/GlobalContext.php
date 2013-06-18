@@ -10,5 +10,4 @@ namespace AuditTrail\Domain\Context;
  */
 class GlobalContext extends Context
 {
-
 }
