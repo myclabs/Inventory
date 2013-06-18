@@ -4,14 +4,6 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="notLaunched">
-            <tuv xml:lang="fr">
-                <seg>Non lancé</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Not launched</seg>
-            </tuv>
-        </tu>
         <tu tuid="completeInputPercentageHeader">
             <tuv xml:lang="fr">
                 <seg>% saisies complètes</seg>
@@ -28,6 +20,30 @@
                 <seg>% finished inputs</seg>
             </tuv>
         </tu>
+        <tu tuid="inventories">
+            <tuv xml:lang="fr">
+                <seg>Inventaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventories</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventory">
+            <tuv xml:lang="fr">
+                <seg>Inventaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventorie</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notLaunched">
+            <tuv xml:lang="fr">
+                <seg>Non lancé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not launched</seg>
+            </tuv>
+        </tu>
 
     </body>
-</tmx>    
+</tmx>

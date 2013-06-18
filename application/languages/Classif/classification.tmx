@@ -4,12 +4,12 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="title">
+        <tu tuid="classification">
             <tuv xml:lang="fr">
-                <seg>My C-Tool</seg>
+                <seg>Classification</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>My C-Tool</seg>
+                <seg>Classification</seg>
             </tuv>
         </tu>
 

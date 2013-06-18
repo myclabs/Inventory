@@ -41,7 +41,7 @@ $form = new UI_Form('editGenericAction');
 $form->setAction('social/action/generic-action-update/id/' . $genericAction->getId());
 
 $themeField = new UI_Form_Element_Select('theme');
-$themeField->setLabel(__('Social', 'name', 'actionTheme'));
+$themeField->setLabel(__('Social', 'actionTheme', 'actionTheme'));
 $query = new Core_Model_Query();
 $query->order->addOrder(Social_Model_Theme::QUERY_LABEL);
 foreach (Social_Model_Theme::loadList($query) as $theme) {
@@ -80,7 +80,7 @@ echo $this->partial('bibliography/view.phtml',
 ?>
 
 
-<h2><?=__('Social', 'name', 'comments')?></h2>
+<h2><?=__('Social', 'comment', 'comments')?></h2>
 
 <?php
 echo $this->partial('comment/list.phtml',

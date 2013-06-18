@@ -4,6 +4,23 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="indicator">
+            <tuv xml:lang="fr">
+                <seg>Indicateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Indicator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="indicators">
+            <tuv xml:lang="fr">
+                <seg>Indicateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Indicators</seg>
+            </tuv>
+        </tu>
+
         <!-- Popup d'ajout -->
 
         <tu tuid="addPanelTitle">

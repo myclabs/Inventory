@@ -33,7 +33,7 @@ $datagrid->addCol($inputColumn);
 $datagrid->addCol(new UI_Datagrid_Col_Text('unit', __('Unit', 'name', 'unit')));
 
 // Context indicator
-$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classif', 'name', 'indicator'));
+$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classif', 'indicator', 'indicator'));
 $contextIndicatorColumn->editable = true;
 $contextIndicatorColumn->dynamicList = true;
 $contextIndicatorColumn->list = $this->baseUrl(

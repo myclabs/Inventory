@@ -4,38 +4,30 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="applicationName">
+        <tu tuid="docLibraryForAFInputSetPrimary">
             <tuv xml:lang="fr">
-                <seg>My C-Tool</seg>
+                <seg>Documents des saisies</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>My C-Tool</seg>
+                <seg>Documents of inputs</seg>
             </tuv>
         </tu>
-        <tu tuid="simulations">
+        <tu tuid="docLibraryForSocialTemplateAction">
             <tuv xml:lang="fr">
-                <seg>Simulations</seg>
+                <seg>Documents des modèles d'action</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Simulations</seg>
+                <seg>Documents of action templates</seg>
             </tuv>
         </tu>
-        <tu tuid="referentials">
+        <tu tuid="docLibraryForSocialAction">
             <tuv xml:lang="fr">
-                <seg>Référentiels</seg>
+                <seg>Documents des actions</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Reference data</seg>
-            </tuv>
-        </tu>
-        <tu tuid="administration">
-            <tuv xml:lang="fr">
-                <seg>Administration</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Administration</seg>
+                <seg>Documents of actions</seg>
             </tuv>
         </tu>
 
     </body>
-</tmx>    
+</tmx>

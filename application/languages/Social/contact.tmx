@@ -4,6 +4,14 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="contacts">
+            <tuv xml:lang="fr">
+                <seg>Contacts</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Contacts</seg>
+            </tuv>
+        </tu>
         <tu tuid="sendMessageTo">
             <tuv xml:lang="fr">
                 <seg>Envoyer un message à</seg>

@@ -8,8 +8,8 @@ $tabView = new UI_Tab_View('orga');
 
 if ($this->isGlobal) {
     $projectTab = new UI_Tab('project');
-    $projectTab->label = __('Orga', 'tab', 'project');
-    $projectTab->dataSource = 'orga/project/details/idProject/'.$this->idProject.'/idCell/'.$this->idCell.'/display/render';
+    $projectTab->label = __('UI', 'name', 'configuration');
+    $projectTab->dataSource = 'orga/project/details/idProject/'.$this->idProject.'/display/render';
     $projectTab->useCache = false;
     $tabView->addTab($projectTab);
 
@@ -20,7 +20,7 @@ if ($this->isGlobal) {
     $tabView->addTab($axisTab);
 
     $granularityTab = new UI_Tab('granularities');
-    $granularityTab->label = __('Orga', 'name', 'levels');
+    $granularityTab->label = __('Orga', 'granularity', 'granularities');
     $granularityTab->dataSource = 'orga/granularity/manage/idProject/'.$this->idProject.'/idCell/'.$this->idCell.'/display/render';
     $granularityTab->useCache = false;
     $tabView->addTab($granularityTab);
@@ -34,13 +34,13 @@ $tabView->addTab($membersTab);
 
 if ($this->hasChildCells) {
     $childCellsTab = new UI_Tab('childCells');
-    $childCellsTab->label = __('Orga', 'name', 'subUnits');
+    $childCellsTab->label = __('Orga', 'cell', 'subCells');
     $childCellsTab->dataSource = 'orga/cell/child/idCell/'.$this->idCell.'/display/render';
     $childCellsTab->useCache = false;
     $tabView->addTab($childCellsTab);
 
     $relevanceTab = new UI_Tab('relevant');
-    $relevanceTab->label = __('Orga', 'name', 'relevance');
+    $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');
     $relevanceTab->dataSource = 'orga/cell/relevant/idCell/'.$this->idCell.'/display/render';
     $relevanceTab->useCache = false;
     $tabView->addTab($relevanceTab);

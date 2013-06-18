@@ -4,6 +4,14 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="comments">
+            <tuv xml:lang="fr">
+                <seg>Commentaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Comments</seg>
+            </tuv>
+        </tu>
         <tu tuid="noComment">
             <tuv xml:lang="fr">
                 <seg>Aucun commentaire</seg>

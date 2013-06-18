@@ -5,7 +5,7 @@ $labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $labelColumn->editable = true;
 $datagrid->addCol($labelColumn);
 
-$themeColumn = new UI_Datagrid_Col_List('theme', __('Social', 'name', 'actionTheme'));
+$themeColumn = new UI_Datagrid_Col_List('theme', __('Social', 'actionTheme', 'actionTheme'));
 $themeColumn->list = [];
 foreach ($this->themes as $theme) {
     /** @var $theme Social_Model_Theme */

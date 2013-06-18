@@ -52,8 +52,16 @@
             <tuv xml:lang="en">
                 <seg>Not contextualizing</seg>
             </tuv>
-        </tu>    
-    
+        </tu>
+        <tu tuid="rootAxes">
+            <tuv xml:lang="fr">
+                <seg>Axes racine</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Root axes</seg>
+            </tuv>
+        </tu>
+
         <!-- Messages -->
         
         <tu tuid="axisHasDirectBroaders">
