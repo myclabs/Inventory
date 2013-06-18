@@ -1,6 +1,6 @@
 AuditTrail\Domain\Entry:
   type: entity
-  repositoryClass: AuditTrail\Architecture\DoctrineEntryRepository
+  repositoryClass: AuditTrail\Architecture\Repository\DoctrineEntryRepository
   table: AuditTrail_Entry
 
   id:

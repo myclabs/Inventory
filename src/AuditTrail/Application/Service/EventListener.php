@@ -3,7 +3,7 @@
  * @author matthieu.napoli
  */
 
-namespace AuditTrail\Application;
+namespace AuditTrail\Application\Service;
 
 use AF_Service_InputEditedEvent;
 use AuditTrail\Domain\AuditTrailService;

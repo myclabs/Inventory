@@ -3,7 +3,7 @@
  * @author matthieu.napoli
  */
 
-namespace AuditTrail\Architecture;
+namespace AuditTrail\Architecture\Repository;
 
 use AuditTrail\Domain\EntryRepository;
 use Core\Model\EntityRepository;

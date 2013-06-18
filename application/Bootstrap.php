@@ -159,7 +159,7 @@ class Bootstrap extends Core_Bootstrap
         $eventDispatcher = $this->container->get('Symfony\Component\EventDispatcher\EventDispatcher');
 
         // AuditTrail
-        $listener = $this->container->get('AuditTrail\Application\EventListener', true);
+        $listener = $this->container->get('AuditTrail\Application\Service\EventListener', true);
         $eventDispatcher->addListener(AF_Service_InputEditedEvent::NAME, [$listener, 'onInputEdited']);
     }
 
