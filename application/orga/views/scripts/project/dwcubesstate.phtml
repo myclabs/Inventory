@@ -2,7 +2,7 @@
 // Popup de reset des Project.
 ?>
 <p>
-    <?=__('Orga', 'projectList', 'analysisDataStatus').__('UI', 'other', ':')?>
+    <?=__('Orga', 'organizationList', 'analysisDataStatus').__('UI', 'other', ':')?>
     <?php
     if ($this->areProjectDWCubesUpToDate) {
         echo '<i class="icon-ok"></i> '.__('UI', 'property', 'upToDate');
@@ -12,10 +12,10 @@
     ?>
 </p>
 <p>
-    <?=__('Orga', 'projectList', 'projectRebuildWarningMessage')?>
+    <?=__('Orga', 'organizationList', 'projectRebuildWarningMessage')?>
 </p>
 
-<?= $this->button(__('Orga', 'projectList', 'projectRebuildButton'), 'ok icon-white', array('id' => 'resetDWCubes', 'class' => 'btn-primary')) ?>
+<?= $this->button(__('Orga', 'organizationList', 'projectRebuildButton'), 'ok icon-white', array('id' => 'resetDWCubes', 'class' => 'btn-primary')) ?>
 
 <script type="text/javascript">
     $('#resetDWCubes').click(function() {
