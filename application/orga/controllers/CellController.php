@@ -321,10 +321,8 @@ class Orga_CellController extends Core_Controller
     {
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity($cell->getGranularity());
-        $cellsGroupDataProvider = $aFGranularities->getCellsGroupDataProviderForContainerCell(
-            $cell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
-        );
+        $inputConfigCell = $cell->getParentCellForGranularity($cell->getGranularity()->getInputConfigGranularity());
+        $aF = $inputConfigCell->getCellsGroupForInputGranularity($cell->getGranularity())->getAF();
 
         $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
             $this->_helper->auth(),
@@ -363,7 +361,7 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->addTab($tabDocs);
 
         $this->forward('display', 'af', 'af', array(
-                'id' => $cellsGroupDataProvider->getAF()->getId(),
+                'id' => $aF->getId(),
                 'viewConfiguration' => $aFViewConfiguration
             ));
     }

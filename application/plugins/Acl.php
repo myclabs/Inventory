@@ -198,7 +198,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     {
         return $this->aclService->isAllowed(
             $identity,
-            Inventory_Action_Cell::INPUT(),
+            Orga_Action_Cell::INPUT(),
             $this->getCell($request)
         );
     }
@@ -212,7 +212,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     {
         return $this->aclService->isAllowed(
             $identity,
-            Inventory_Action_Cell::COMMENT(),
+            Orga_Action_Cell::COMMENT(),
             $this->getCell($request)
         );
     }

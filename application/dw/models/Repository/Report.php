@@ -303,7 +303,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
      */
     protected function orderResultByMember($a, $b)
     {
-
+        if ($a['members'][0] === $b['members'][0]) {
+            return $a['members'][1]->getPosition() - $b['members'][1]->getPosition();
+        }
         return $a['members'][0]->getPosition() - $b['members'][0]->getPosition();
     }
 
