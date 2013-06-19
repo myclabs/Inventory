@@ -12,7 +12,7 @@ $entries = $this->entries;
     <h1>Historique</h1>
 </div>
 
-<ul>
+<dl class="dl-horizontal">
     <?php foreach ($entries as $entry) : ?>
 
         <?php
@@ -21,18 +21,23 @@ $entries = $this->entries;
             continue;
         }
         $entryCell = $context->getCell();
+        $user = $entry->getUser();
+        if (!$entryCell || !$user) {
+            continue;
+        }
+
+        $inputUrl = $this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/');
+        $inputLink = "<a href='$inputUrl''>{$entryCell->getLabel()}</a>";
+
+        $text = __('AF', 'auditTrail', $entry->getEventName(), [
+                                                               'INPUT' => $inputLink,
+                                                               'USER' => $user->getName(),
+                                                               ]);
         ?>
 
-        <li>
-            <?=$locale->formatDate($entry->getDate())?> -
-            <?=$entry->getEventName()?>
-            <?php if ($entryCell) : ?>
-                <a href="<?=$this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/')?>">
-                    <?=$entryCell->getLabel()?></a>
-            <?php else : ?>
-                (unknown)
-            <?php endif; ?>
-        </li>
+        <dt><?=$locale->formatDateTime($entry->getDate())?></dt>
+
+        <dd><?=$text?></dd>
 
     <?php endforeach; ?>
-</ul>
+</dl>
