@@ -12,4 +12,9 @@ use Core\Model\EntityRepositoryInterface;
  */
 interface EntryRepository extends EntityRepositoryInterface
 {
+    /**
+     * @param int $count
+     * @return Entry[]
+     */
+    public function findLatest($count);
 }
