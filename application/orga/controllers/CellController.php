@@ -36,6 +36,12 @@ class Orga_CellController extends Core_Controller
     private $workDispatcher;
 
     /**
+     * @Inject
+     * @var Orga_Service_InputService
+     */
+    private $inputService;
+
+    /**
      * Affiche le détail d'une cellule.
      * @Secure("viewCell")
      */
@@ -390,15 +396,11 @@ class Orga_CellController extends Core_Controller
      */
     public function inputsaveAction()
     {
+        /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $inputSet = $this->getParam('inputSet');
 
-        $cell->setAFInputSetPrimary($inputSet);
-
-        if ($inputSet->isInputComplete()) {
-            $this->etlDataService->clearDWResultsFromCell($cell);
-            $this->etlDataService->populateDWResultsFromCell($cell);
-        }
+        $this->inputService->editInput($cell, $inputSet);
 
         $this->_helper->viewRenderer->setNoRender(true);
     }

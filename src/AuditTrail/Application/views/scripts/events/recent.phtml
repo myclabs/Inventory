@@ -29,10 +29,12 @@ $entries = $this->entries;
         $inputUrl = $this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/');
         $inputLink = "<a href='$inputUrl''>{$entryCell->getLabel()}</a>";
 
-        $text = __('AF', 'auditTrail', $entry->getEventName(), [
-                                                               'INPUT' => $inputLink,
-                                                               'USER' => $user->getName(),
-                                                               ]);
+        $text = __('Inventory', 'auditTrail', $entry->getEventName(),
+            [
+            'INPUT' => $inputLink,
+            'USER'  => $user->getName(),
+            ]
+        );
         ?>
 
         <dt><?=$locale->formatDateTime($entry->getDate())?></dt>

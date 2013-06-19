@@ -161,11 +161,13 @@ class Bootstrap extends Core_Bootstrap
 
         // User events (plus prioritaire)
         $userEventListener = $this->container->get('User\Event\EventListener', true);
-        $eventDispatcher->addListener(AF_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
+        $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
+        $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
 
         // AuditTrail
         $auditTrailListener = $this->container->get('AuditTrail\Application\Service\EventListener', true);
-        $eventDispatcher->addListener(AF_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
+        $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
+        $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }
 
 }

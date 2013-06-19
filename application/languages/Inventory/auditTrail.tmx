@@ -4,12 +4,21 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="af.inputEdited">
+        <tu tuid="orga.inputCreated">
+            <tuv xml:lang="fr">
+                <seg>La saisie [INPUT] a été enregistrée pour la première fois par [USER].</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The input [INPUT] was edited for the first time by [USER].</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="orga.inputEdited">
             <tuv xml:lang="fr">
                 <seg>La saisie [INPUT] a été modifiée par [USER].</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The input was edited.</seg>
+                <seg>The input [INPUT] was edited by [USER].</seg>
             </tuv>
         </tu>
 
