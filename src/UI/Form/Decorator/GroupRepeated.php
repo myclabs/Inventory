@@ -135,7 +135,9 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
             // Delete
             $elements .= $htmlElementTagDecorator->render($deleteButton->render());
 
+            $htmlElementsRowTagDecorator->setOption('id', $this->getElement()->getId().$occurrenceSeparator.$occurrence);
             $elementsRow .= $htmlElementsRowTagDecorator->render($elements);
+            $htmlElementsRowTagDecorator->removeOption('id');
             $occurrence++;
         }
 

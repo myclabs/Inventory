@@ -59,7 +59,7 @@ $.fn.parseFormGroup = function ()
         var rows = $(this).children('div').children('table').children('tbody').children('tr:not(:first)');
         for(var key = 0; key < rows.length; key++) {
             var row = $(rows[key]);
-            elements += '"' + (key + 1) + '": ' + row.parseFormGroupRepeatedRow() + ', ';
+            elements += '"' + row.attr('id') + '": ' + row.parseFormGroupRepeatedRow() + ', ';
         }
     } else {
         var childElements = $(this).children('div').children();
