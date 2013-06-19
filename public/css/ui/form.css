@@ -32,6 +32,14 @@
 }
 
 .form textarea { width: auto; height: auto; }
+
+.form .repeatedGroup > div { padding-left: 40px; }
+.form .repeatedGroup table.repeatedGroup { margin-bottom: 5px; }
+.form .repeatedGroup table.repeatedGroup .controls { margin-left: 0px; }
+.form .repeatedGroup table.repeatedGroup .controls > div { margin-right: 0px; }
+.form .repeatedGroup table.repeatedGroup .controls > div:first-child { width: auto; }
+.form .repeatedGroup table.repeatedGroup .controls .input +.input { margin-left: 5px; }
+
 /* Redéfinition du champs markItUp */
 .form .markItUp { width: auto; border: none; }
 .form .markItUp .markItUpContainer { width: 760px; padding: 0px; border: inherit; background: none; }

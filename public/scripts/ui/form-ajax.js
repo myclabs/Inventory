@@ -55,16 +55,24 @@ $.fn.parseFormGroup = function ()
 	group += '"name": "' + $(this).attr('id') + '", ';
 	group += '"hidden": ' + ($(this).hasClass('hide') ? 'true' : 'false') + ', ';
 	group += '"folded": ' + (($(this).children('div').hasClass('collapse') && !$(this).children('div.collapse').hasClass('in')) ? 'true' : 'false') + ', ';
-	var childElements = $(this).children('div').children();
-	for(var key = 0; key < childElements.length; key++) {
-		var child = $(childElements[key]);
-		if (child.hasClass('control-group')) {
-			elements += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
-		} else if (child.hasClass('subGroup')) {
-			elements += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';
-		}
-	}
-	
+	if ($(this).hasClass('repeatedGroup')) {
+        var rows = $(this).children('div').children('table').children('tbody').children('tr:not(:first)');
+        for(var key = 0; key < rows.length; key++) {
+            var row = $(rows[key]);
+            elements += '"' + (key + 1) + '": ' + row.parseFormGroupRepeatedRow() + ', ';
+        }
+    } else {
+        var childElements = $(this).children('div').children();
+        for(var key = 0; key < childElements.length; key++) {
+            var child = $(childElements[key]);
+            if (child.hasClass('control-group')) {
+                elements += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
+            } else if (child.hasClass('subGroup')) {
+                elements += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';
+            }
+        }
+    }
+
 	if (elements !== '{') {
 		elements = elements.slice(0, -2);
 	}
@@ -73,6 +81,24 @@ $.fn.parseFormGroup = function ()
 	group += '}';
 
 	return group;
+};
+
+$.fn.parseFormGroupRepeatedRow = function ()
+{
+    var row = '{';
+
+    var elements = $(this).children('td:not(:last)');
+    for(var key = 0; key < elements.length; key++) {
+        var element = $(elements[key]);
+        row += '"' + element.attr('id').replace('-line', '') + '": ' + element.parseFormLine() + ', '
+    }
+
+    if (row !== '{') {
+        row = row.slice(0, -2);
+    }
+    row += '}';
+
+    return row;
 };
 
 $.fn.parseFormLine = function ()
