@@ -39,7 +39,7 @@ class AF_InputController extends Core_Controller
     {
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
-        $this->_setParam('af', $af);
+        $this->setParam('af', $af);
 
         // InputSet
         if ($this->hasParam('idInputSet')) {
@@ -48,7 +48,7 @@ class AF_InputController extends Core_Controller
         } else {
             $inputSet = new AF_Model_InputSet_Primary($af);
         }
-        $this->_setParam('inputSet', $inputSet);
+        $this->setParam('inputSet', $inputSet);
 
         // Form data
         $formData = json_decode($this->getParam($af->getRef()), true);
