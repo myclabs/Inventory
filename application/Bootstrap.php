@@ -5,7 +5,6 @@
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
-use MyProject\Proxies\__CG__\stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**

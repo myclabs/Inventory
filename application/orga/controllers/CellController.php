@@ -398,9 +398,16 @@ class Orga_CellController extends Core_Controller
     {
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
-        $inputSet = $this->getParam('inputSet');
+        $inputSetContainer = $this->getParam('inputSetContainer');
+        /** @var $newInputSet AF_Model_InputSet_Primary */
+        $newInputSet = $inputSetContainer->inputSet;
 
-        $this->inputService->editInput($cell, $inputSet);
+        $this->inputService->editInput($cell, $newInputSet);
+
+        $this->entityManager->flush();
+
+        // Remplace l'input set temporaire par celui de la cellule
+        $inputSetContainer->inputSet = $cell->getAFInputSetPrimary();
 
         $this->_helper->viewRenderer->setNoRender(true);
     }

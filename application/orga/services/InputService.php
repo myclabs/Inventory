@@ -72,6 +72,10 @@ class Orga_Service_InputService
         // Création de la saisie
         if (!$inputSet) {
             $inputSet = $newValues;
+
+            // Sauvegarde et attache à la cellule
+            $inputSet->save();
+            $cell->setAFInputSetPrimary($inputSet);
             $this->afInputService->updateResults($inputSet);
 
             // Lance l'évènement

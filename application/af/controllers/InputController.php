@@ -42,33 +42,12 @@ class AF_InputController extends Core_Controller
         $this->setParam('af', $af);
 
         // InputSet
-        if ($this->hasParam('idInputSet')) {
-            /** @var $inputSet AF_Model_InputSet_Primary */
-            $inputSet = AF_Model_InputSet_Primary::load($this->getParam('idInputSet'));
-        } else {
-            $inputSet = new AF_Model_InputSet_Primary($af);
-        }
-        $this->setParam('inputSet', $inputSet);
+        $inputSet = new AF_Model_InputSet_Primary($af);
 
         // Form data
         $formData = json_decode($this->getParam($af->getRef()), true);
 
-        // MAJ l'InputSet
-        $newValues = new AF_Model_InputSet_Primary($af);
-        $errorMessages = $this->parseAfSubmit($formData, $newValues, $af);
-        $this->inputService->editInputSet($inputSet, $newValues);
-
-        // Réponse
-        $response = [];
-        $response['errorMessages'] = $errorMessages;
-
-        if ($inputSet->isInputComplete()) {
-            $response['type'] = UI_Message::TYPE_SUCCESS;
-            $response['message'] = __('AF', 'inputInput', 'completeInputSaved');
-        } else {
-            $response['type'] = UI_Message::TYPE_SUCCESS;
-            $response['message'] = __('AF', 'inputInput', 'incompleteInputSaved');
-        }
+        $errorMessages = $this->parseAfSubmit($formData, $inputSet, $af);
 
         // Fait suivre aux actions de processing
         $actions = json_decode($this->getParam('actionStack'), true);
@@ -77,8 +56,13 @@ class AF_InputController extends Core_Controller
             'action'     => 'submit-send-response',
             'controller' => 'input',
             'module'     => 'af',
-            'params'     => ['response' => $response],
+            'params'     => ['errorMessages' => $errorMessages],
         ];
+
+        // On est obligé de construire un "container" pour que les sous-actions puissent remplacer l'inputset
+        $inputSetContainer = new \stdClass();
+        $inputSetContainer->inputSet = $inputSet;
+
         // Reverse car l'action stack est une pile (last in first out)
         $actions = array_reverse($actions);
         foreach ($actions as $action) {
@@ -89,6 +73,7 @@ class AF_InputController extends Core_Controller
             if (isset($action['params'])) {
                 $request->setParams($action['params']);
             }
+            $request->setParam('inputSetContainer', $inputSetContainer);
             $this->_helper->actionStack($request);
         }
 
@@ -102,18 +87,16 @@ class AF_InputController extends Core_Controller
      */
     public function submitSendResponseAction()
     {
+        $inputSetContainer = $this->getParam('inputSetContainer');
         /** @var $inputSet AF_Model_InputSet_Primary */
-        $inputSet = $this->getParam('inputSet');
-        $response = $this->getParam('response');
+        $inputSet = $inputSetContainer->inputSet;
 
-        if (isset($response['errorMessages'])) {
-            $this->addFormErrors($response['errorMessages']);
-        }
+        $this->addFormErrors($this->getParam('errorMessages', []));
 
-        if (isset($response['message']) && isset($response['type'])) {
-            $this->setFormMessage($response['message'], $response['type']);
-        } elseif (isset($response['message'])) {
-            $this->setFormMessage($response['message']);
+        if ($inputSet->isInputComplete()) {
+            $this->setFormMessage(__('AF', 'inputInput', 'completeInputSaved'), UI_Message::TYPE_SUCCESS);
+        } else {
+            $this->setFormMessage(__('AF', 'inputInput', 'incompleteInputSaved'), UI_Message::TYPE_SUCCESS);
         }
 
         $data = [
@@ -136,7 +119,11 @@ class AF_InputController extends Core_Controller
      */
     public function submitTestAction()
     {
-        $this->inputSetSessionStorage->saveInputSet($this->getParam('af'), $this->getParam('inputSet'));
+        $inputSetContainer = $this->getParam('inputSetContainer');
+        /** @var $inputSet AF_Model_InputSet_Primary */
+        $inputSet = $inputSetContainer->inputSet;
+
+        $this->inputSetSessionStorage->saveInputSet($this->getParam('af'), $inputSet);
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
