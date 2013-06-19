@@ -10,6 +10,7 @@ use AuditTrail\Domain\AuditTrailService;
 use AuditTrail\Domain\Context\OrganizationContext;
 use Core_Exception_NotFound;
 use Orga_Model_Cell;
+use User_Model_User;
 
 /**
  * Event listener
@@ -22,9 +23,17 @@ class EventListener
     private $auditTrailService;
 
     /**
-     * @param AuditTrailService $auditTrailService
+     * Utilisateur connecté
+     *
+     * @var User_Model_User|null
      */
-    public function __construct(AuditTrailService $auditTrailService)
+    private $user;
+
+    /**
+     * @param AuditTrailService $auditTrailService
+     * @param User_Model_User|null $user
+     */
+    public function __construct(AuditTrailService $auditTrailService, $user)
     {
         $this->auditTrailService = $auditTrailService;
     }
@@ -42,7 +51,8 @@ class EventListener
         }
 
         $context = new OrganizationContext($cell->getGranularity()->getProject());
+        $context->setCell($cell);
 
-        $this->auditTrailService->addEntry($event->getName(), $context);
+        $this->auditTrailService->addEntry($event->getName(), $context, $this->user);
     }
 }

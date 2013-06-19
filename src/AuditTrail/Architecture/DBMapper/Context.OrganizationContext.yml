@@ -5,3 +5,7 @@ AuditTrail\Domain\Context\OrganizationContext:
   manyToOne:
     organization:
       targetEntity: \Orga_Model_Project
+    cell:
+      targetEntity: \Orga_Model_Cell
+      joinColumn:
+        nullable: true

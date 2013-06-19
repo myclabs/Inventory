@@ -19,3 +19,9 @@ AuditTrail\Domain\Entry:
     context:
       targetEntity: AuditTrail\Domain\Context\Context
       cascade: [ all ]
+
+  manyToOne:
+    user:
+      targetEntity: \User_Model_User
+      joinColumn:
+        nullable: true

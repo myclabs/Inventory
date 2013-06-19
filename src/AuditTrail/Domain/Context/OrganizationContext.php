@@ -5,10 +5,11 @@
 
 namespace AuditTrail\Domain\Context;
 
+use Orga_Model_Cell;
 use Orga_Model_Project;
 
 /**
- * Context global de l'application
+ * Contexte d'une organisation
  */
 class OrganizationContext extends Context
 {
@@ -16,6 +17,11 @@ class OrganizationContext extends Context
      * @var Orga_Model_Project
      */
     private $organization;
+
+    /**
+     * @var Orga_Model_Cell|null
+     */
+    private $cell;
 
     /**
      * @param Orga_Model_Project $organization
@@ -31,5 +37,21 @@ class OrganizationContext extends Context
     public function getOrganization()
     {
         return $this->organization;
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     */
+    public function setCell(Orga_Model_Cell $cell)
+    {
+        $this->cell = $cell;
+    }
+
+    /**
+     * @return Orga_Model_Cell|null
+     */
+    public function getCell()
+    {
+        return $this->cell;
     }
 }

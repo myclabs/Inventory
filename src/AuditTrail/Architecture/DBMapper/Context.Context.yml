@@ -1,5 +1,13 @@
 AuditTrail\Domain\Context\Context:
-  type: mappedSuperclass
+  type: entity
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_context
+    type: string
+  discriminatorMap:
+    global: AuditTrail\Domain\Context\GlobalContext
+    organization: AuditTrail\Domain\Context\OrganizationContext
 
   id:
     id:

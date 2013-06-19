@@ -1,0 +1,38 @@
+<?php
+use AuditTrail\Domain\Context\OrganizationContext;
+use AuditTrail\Domain\Entry;
+
+$locale = Core_Locale::loadDefault();
+
+/** @var Entry[] $entries */
+$entries = $this->entries;
+?>
+
+<div class="page-header">
+    <h1>Historique</h1>
+</div>
+
+<ul>
+    <?php foreach ($entries as $entry) : ?>
+
+        <?php
+        $context = $entry->getContext();
+        if (!$context instanceof OrganizationContext) {
+            continue;
+        }
+        $entryCell = $context->getCell();
+        ?>
+
+        <li>
+            <?=$locale->formatDate($entry->getDate())?> -
+            <?=$entry->getEventName()?>
+            <?php if ($entryCell) : ?>
+                <a href="<?=$this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/')?>">
+                    <?=$entryCell->getLabel()?></a>
+            <?php else : ?>
+                (unknown)
+            <?php endif; ?>
+        </li>
+
+    <?php endforeach; ?>
+</ul>

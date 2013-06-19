@@ -5,6 +5,7 @@
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
+use MyProject\Proxies\__CG__\stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -161,6 +162,15 @@ class Bootstrap extends Core_Bootstrap
         // AuditTrail
         $listener = $this->container->get('AuditTrail\Application\Service\EventListener', true);
         $eventDispatcher->addListener(AF_Service_InputEditedEvent::NAME, [$listener, 'onInputEdited']);
+    }
+
+    /**
+     * Place l'utilisateur connecté dans le container
+     */
+    protected function _initLoggedInUser()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin($this->container->get('Inventory_Plugin_LoggedInUserConfigurator'));
     }
 
 }

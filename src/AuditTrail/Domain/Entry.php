@@ -7,6 +7,7 @@ namespace AuditTrail\Domain;
 
 use AuditTrail\Domain\Context\Context;
 use DateTime;
+use User_Model_User;
 
 /**
  * Audit trail entry
@@ -22,6 +23,11 @@ class Entry
      * @var DateTime
      */
     private $date;
+
+    /**
+     * @var User_Model_User|null
+     */
+    private $user;
 
     /**
      * @var string
@@ -74,5 +80,21 @@ class Entry
     public function getContext()
     {
         return $this->context;
+    }
+
+    /**
+     * @param User_Model_User $user
+     */
+    public function setUser(User_Model_User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return User_Model_User|null
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

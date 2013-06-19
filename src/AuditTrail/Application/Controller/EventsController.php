@@ -28,5 +28,8 @@ class AuditTrail_EventsController extends Core_Controller
      */
     public function recentAction()
     {
+        $entries = $this->entryRepository->findAll();
+
+        $this->view->assign('entries', $entries);
     }
 }

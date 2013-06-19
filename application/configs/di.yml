@@ -1,2 +1,10 @@
 # Activation des ACL
 enable.acl: true
+
+# Utilisateur connecté (sera défini dans Inventory_Plugin_LoggedInUserConfigurator)
+loggedInUser: null
+
+# AuditTrail EventListener
+AuditTrail\Application\Service\EventListener:
+  constructor:
+    user: loggedInUser
