@@ -123,7 +123,12 @@ class AF_InputController extends Core_Controller
         /** @var $inputSet AF_Model_InputSet_Primary */
         $inputSet = $inputSetContainer->inputSet;
 
+        // Met à jour les résultats
+        $this->inputService->updateResults($inputSet);
+
+        // Sauvegarde en session
         $this->inputSetSessionStorage->saveInputSet($this->getParam('af'), $inputSet);
+
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
