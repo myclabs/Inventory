@@ -159,18 +159,13 @@ class Bootstrap extends Core_Bootstrap
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container->get('Symfony\Component\EventDispatcher\EventDispatcher');
 
-        // AuditTrail
-        $listener = $this->container->get('AuditTrail\Application\Service\EventListener', true);
-        $eventDispatcher->addListener(AF_Service_InputEditedEvent::NAME, [$listener, 'onInputEdited']);
-    }
+        // User events (plus prioritaire)
+        $userEventListener = $this->container->get('User\Event\EventListener', true);
+        $eventDispatcher->addListener(AF_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
 
-    /**
-     * Place l'utilisateur connecté dans le container
-     */
-    protected function _initLoggedInUser()
-    {
-        $front = Zend_Controller_Front::getInstance();
-        $front->registerPlugin($this->container->get('Inventory_Plugin_LoggedInUserConfigurator'));
+        // AuditTrail
+        $auditTrailListener = $this->container->get('AuditTrail\Application\Service\EventListener', true);
+        $eventDispatcher->addListener(AF_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }
 
 }

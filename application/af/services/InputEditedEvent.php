@@ -3,13 +3,17 @@
  * @author matthieu.napoli
  */
 
+use User\Event\UserEvent;
+use User\Event\UserEventTrait;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event: an input was edited
  */
-class AF_Service_InputEditedEvent extends Event
+class AF_Service_InputEditedEvent extends Event implements UserEvent
 {
+    use UserEventTrait;
+
     const NAME = 'af.inputEdited';
 
     /**

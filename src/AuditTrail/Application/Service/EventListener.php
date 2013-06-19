@@ -23,17 +23,9 @@ class EventListener
     private $auditTrailService;
 
     /**
-     * Utilisateur connecté
-     *
-     * @var User_Model_User|null
-     */
-    private $user;
-
-    /**
      * @param AuditTrailService $auditTrailService
-     * @param User_Model_User|null $user
      */
-    public function __construct(AuditTrailService $auditTrailService, $user)
+    public function __construct(AuditTrailService $auditTrailService)
     {
         $this->auditTrailService = $auditTrailService;
     }
@@ -53,6 +45,6 @@ class EventListener
         $context = new OrganizationContext($cell->getGranularity()->getProject());
         $context->setCell($cell);
 
-        $this->auditTrailService->addEntry($event->getName(), $context, $this->user);
+        $this->auditTrailService->addEntry($event->getName(), $context, $event->getUser());
     }
 }
