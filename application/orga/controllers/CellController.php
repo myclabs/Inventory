@@ -14,7 +14,7 @@ use Core\Annotation\Secure;
  * @package    Orga
  * @subpackage Controller
  */
-class Orga_CellController extends Core_Controller
+class Orga_CellController extends Core_Controller_Ajax
 {
     /**
      * Affiche le détail d'une cellule.
