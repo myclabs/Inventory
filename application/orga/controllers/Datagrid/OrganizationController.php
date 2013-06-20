@@ -10,11 +10,11 @@ use Core\Annotation\Secure;
  * Controller de projet
  * @package Orga
  */
-class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
+class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
 {
     /**
      * Methode appelee pour remplir le tableau.
-     * @Secure("viewProjects")
+     * @Secure("viewOrganizations")
      */
     public function getelementsAction()
     {
@@ -22,23 +22,23 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
         $this->request->aclFilter->user = $this->_helper->auth();
         $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
 
-        foreach (Orga_Model_Project::loadList($this->request) as $project) {
+        foreach (Orga_Model_Organization::loadList($this->request) as $organization) {
             $data = array();
-            $data['index'] = $project->getId();
-            $data['label'] = $project->getLabel();
+            $data['index'] = $organization->getId();
+            $data['label'] = $organization->getLabel();
             $rootAxesLabel = array();
-            foreach ($project->getRootAxes() as $rootAxis) {
+            foreach ($organization->getRootAxes() as $rootAxis) {
                 $rootAxesLabel[] = $rootAxis->getLabel();
             }
             $data['rootAxes'] = implode(', ', $rootAxesLabel);
             try {
-                $data['granularityForInventoryStatus'] = $project->getGranularityForInventoryStatus()->getLabel();
+                $data['granularityForInventoryStatus'] = $organization->getGranularityForInventoryStatus()->getLabel();
             } catch (Core_Exception_UndefinedAttribute $e) {
                 $data['granularityForInventoryStatus'] = '';
             };
 
             $isConnectedUserAbleToSeeManyCells = false;
-            foreach ($project->getGranularities() as $granularity) {
+            foreach ($organization->getGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $this->_helper->auth();
@@ -57,18 +57,18 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
                 }
             }
             if ($isConnectedUserAbleToSeeManyCells) {
-                $data['details'] = $this->cellLink('orga/project/cells/idProject/'.$project->getId());
+                $data['details'] = $this->cellLink('orga/organization/cells/idOrganization/'.$organization->getId());
             } else {
                 $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
                 $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getId());
             }
 
-            $isConnectedUserAbleToDeleteProject = User_Service_ACL::getInstance()->isAllowed(
+            $isConnectedUserAbleToDeleteOrganization = User_Service_ACL::getInstance()->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::DELETE(),
-                $project
+                $organization
             );
-            if (!$isConnectedUserAbleToDeleteProject) {
+            if (!$isConnectedUserAbleToDeleteOrganization) {
                 $data['delete'] = false;
             }
 
@@ -80,7 +80,7 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
 
     /**
      * Ajoute un nouvel element.
-     * @Secure("createProject")
+     * @Secure("createOrganization")
      */
     public function addelementAction()
     {
@@ -92,8 +92,8 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
 
         $workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
-                'Orga_Service_ProjectService',
-                'createProject',
+                'Orga_Service_OrganizationService',
+                'createOrganization',
                 [$administrator, $label]
             )
         );
@@ -104,20 +104,20 @@ class Orga_Datagrid_ProjectController extends UI_Controller_Datagrid
 
     /**
      * Supprime un element.
-     * @Secure("deleteProject")
+     * @Secure("deleteOrganization")
      */
     public function deleteelementAction()
     {
         /** @var Core_Work_Dispatcher $workDispatcher */
         $workDispatcher = Zend_Registry::get('workDispatcher');
 
-        $project = Orga_Model_Project::load($this->delete);
+        $organization = Orga_Model_Organization::load($this->delete);
 
         $workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
-                'Orga_Service_ProjectService',
-                'deleteProject',
-                [$project]
+                'Orga_Service_OrganizationService',
+                'deleteOrganization',
+                [$organization]
             )
         );
 

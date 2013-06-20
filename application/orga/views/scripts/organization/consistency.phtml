@@ -21,7 +21,7 @@ $datagrid->addCol($columnDiag);
 $datagrid->addCol($columnEchec);
 
 $datagrid->pagination = false;
-$datagrid->addParam('idProject', $this->idProject);
+$datagrid->addParam('idOrganization', $this->idOrganization);
 if ($this->display === false) {
     echo $datagrid->render();
 } else {

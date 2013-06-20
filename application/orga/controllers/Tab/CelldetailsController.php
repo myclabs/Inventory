@@ -17,17 +17,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 {
     /**
      * Confguration du projet.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function orgaAction()
     {
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $granularity = $cell->getGranularity();
-        $project = $granularity->getProject();
+        $organization = $granularity->getOrganization();
 
         $this->view->idCell = $idCell;
-        $this->view->idProject = $project->getId();
+        $this->view->idOrganization = $organization->getId();
         if ($granularity->getRef() === 'global') {
             $this->view->isGlobal = true;
         } else {
@@ -60,29 +60,29 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
         $cellACLResource = User_Model_Resource_Entity::loadByEntity($cell);
         $granularity = $cell->getGranularity();
-        $project = $granularity->getProject();
-        $projectResource = User_Model_Resource_Entity::loadByEntity($project);
+        $organization = $granularity->getOrganization();
+        $organizationResource = User_Model_Resource_Entity::loadByEntity($organization);
 
         $listDatagridConfiguration = array();
 
         if (count($granularity->getAxes()) === 0) {
-            $isUserAllowedToEditProject = User_Service_ACL::getInstance()->isAllowed(
+            $isUserAllowedToEditOrganization = User_Service_ACL::getInstance()->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::EDIT(),
-                $projectResource
+                $organizationResource
             );
         } else {
-            $isUserAllowedToEditProject = false;
+            $isUserAllowedToEditOrganization = false;
         }
-        if ($isUserAllowedToEditProject) {
+        if ($isUserAllowedToEditOrganization) {
             $datagridConfiguration = new Orga_DatagridConfiguration(
-                'projectACL'.$project->getId(),
-                'datagrid_cell_acls_project',
+                'organizationACL'.$organization->getId(),
+                'datagrid_cell_acls_organization',
                 'orga',
                 $cell,
                 $granularity
             );
-            $datagridConfiguration->datagrid->addParam('idProject', $project->getId());
+            $datagridConfiguration->datagrid->addParam('idOrganization', $organization->getId());
             $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
             $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
@@ -101,7 +101,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addAdministratorPanelTitle');
             $datagridConfiguration->datagrid->deleteElements = true;
 
-            $labelDatagrid = __('Orga', 'role', 'projectAdministrators');
+            $labelDatagrid = __('Orga', 'role', 'organizationAdministrators');
             $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
         }
 
@@ -186,7 +186,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $project = $cell->getGranularity()->getProject();
+        $organization = $cell->getGranularity()->getOrganization();
 
         $listAFs = array();
         foreach (AF_Model_AF::loadList() as $aF) {
@@ -194,7 +194,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $listDatagridConfiguration = array();
-        $listInputGranularities = $project->getInputGranularities();
+        $listInputGranularities = $organization->getInputGranularities();
         uasort(
             $listInputGranularities,
             function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
@@ -248,7 +248,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        $granularity = $cell->getGranularity()->getProject()->getGranularityForInventoryStatus();
+        $granularity = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
         $crossedOrgaGranularity = $granularity->getCrossedGranularity($cell->getGranularity());
 
         $datagridConfiguration = new Orga_DatagridConfiguration(
@@ -305,10 +305,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $project = $cell->getGranularity()->getProject();
+        $organization = $cell->getGranularity()->getOrganization();
 
         $listDatagridConfiguration = array();
-        $listInputGranularities = $project->getInputGranularities();
+        $listInputGranularities = $organization->getInputGranularities();
         uasort(
             $listInputGranularities,
             function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
@@ -397,7 +397,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->specificExports = array();
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getGranularity()->getProject()->getId().'/'.
+            $cell->getGranularity()->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         if (is_dir($specificReportsDirectoryPath)) {
             $specificReportsDirectory = dir($specificReportsDirectoryPath);
@@ -454,7 +454,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 ));
         } else {
             $this->forward('details', 'report', 'dw', array(
-                    'idProject' => $this->getParam('idProject'),
+                    'idOrganization' => $this->getParam('idOrganization'),
                     'viewConfiguration' => $viewConfiguration
                 ));
         }
@@ -528,7 +528,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
     /**
      * Action fournissant la vue d'administration d'une cellule.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function administrationAction()
     {

@@ -56,11 +56,11 @@ Orga_Model_Granularity:
       nullable: false
 
   manyToOne:
-    project:
-      targetEntity: Orga_Model_Project
+    organization:
+      targetEntity: Orga_Model_Organization
       inversedBy: granularities
       joinColumn:
-        name: idProject
+        name: idOrganization
         referencedColumnName: id
         nullable: false
     inputConfigGranularity:
@@ -114,7 +114,7 @@ Orga_Model_Granularity:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      granularityRefUniquenessInProject:
+      granularityRefUniquenessInOrganization:
           columns:
               - ref
-              - idProject
+              - idOrganization

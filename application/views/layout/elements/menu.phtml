@@ -11,7 +11,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
     $leftMenu[1] = [
         'name' => __('UI', 'name', 'home'),
-        'url' => $this->baseUrl('orga/project/'),
+        'url' => $this->baseUrl('orga/organization/'),
     ];
     $leftMenu[3] = [
         'name' => __('Inventory', 'menu', 'simulations'),
@@ -218,8 +218,8 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
     $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
-    $isAllowToEditProjects = (Orga_Model_Project::countTotal($aclQuery) > 0);
-    if ($isAllowedToEditReferential || $isAllowToEditProjects) {
+    $isAllowToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
+    if ($isAllowedToEditReferential || $isAllowToEditOrganizations) {
         $leftMenu[6] = [
             'name' => __('UI', 'name', 'translations'),
             'url' => '#',
@@ -230,7 +230,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         if ($isAllowedToEditReferential) {
             $subMenuTranslation[] = [
                 'name' => __('Orga', 'organization', 'organizations'),
-                'url' => 'orga/translate/projects',
+                'url' => 'orga/translate/organizations',
             ];
 
             $subMenuTranslation[] = [

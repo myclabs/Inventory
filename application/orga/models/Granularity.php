@@ -21,7 +21,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
     const QUERY_POSITION = 'position';
-    const QUERY_PROJECT = 'project';
+    const QUERY_ORGANIZATION = 'organization';
 
 
     /**
@@ -32,18 +32,18 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected $id = null;
 
     /**
-     * Référence unique (au sein d'un project) de la Granularity.
+     * Référence unique (au sein d'un organization) de la Granularity.
      *
      * @var string
      */
     protected  $ref = null;
 
     /**
-     * Project contenant la Granularity.
+     * Organization contenant la Granularity.
      *
-     * @var Orga_Model_Project
+     * @var Orga_Model_Organization
      */
-    protected $project = null;
+    protected $organization = null;
 
     /**
      * Collection des Axis de la Granularity.
@@ -81,14 +81,14 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected $inputGranularities = null;
 
     /**
-     * Défini si les cellules génerent un Project de DW.
+     * Défini si les cellules génerent un Organization de DW.
      *
      * @var bool
      */
     protected $cellsGenerateDWCubes = false;
 
     /**
-     * Project de DW généré par et propre à la Cell.
+     * Organization de DW généré par et propre à la Cell.
      *
      * @var DW_model_cube
      */
@@ -140,16 +140,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Constructeur de la classe Granularity.
      *
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      * @param Orga_Model_Axis[] $axes
      */
-    public function __construct(Orga_Model_Project $project, array $axes=array())
+    public function __construct(Orga_Model_Organization $organization, array $axes=array())
     {
         $this->axes = new ArrayCollection();
         $this->cells = new ArrayCollection();
         $this->inputGranularities = new ArrayCollection();
 
-        $this->project = $project;
+        $this->organization = $organization;
         foreach ($axes as $axis) {
             if (!($this->hasAxis($axis))) {
                 $this->axes->add($axis);
@@ -158,7 +158,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
         }
         $this->updateRef();
         $this->traverseAxesThenCreateCells();
-        $project->addGranularity($this);
+        $organization->addGranularity($this);
     }
 
     /**
@@ -168,7 +168,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     protected function getContext()
     {
-        return array('project' => $this->project);
+        return array('organization' => $this->organization);
     }
 
     /**
@@ -208,20 +208,20 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Charge une Granularity en fonction de sa référence et de son Project.
+     * Charge une Granularity en fonction de sa référence et de son Organization.
      *
      * @param string $ref
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      *
      * @return Orga_Model_Granularity
      */
-    public static function loadByRefAndProject($ref, $project)
+    public static function loadByRefAndOrganization($ref, $organization)
     {
-        return $project->getGranularityByRef($ref);
+        return $organization->getGranularityByRef($ref);
     }
 
     /**
-     * Charge le Granularity correspondant à un Project de DW.
+     * Charge le Granularity correspondant à un Organization de DW.
      *
      * @param DW_model_cube $dWCube
      *
@@ -243,13 +243,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Renvoie le Project de la Granularity.
+     * Renvoie le Organization de la Granularity.
      *
-     * @return Orga_Model_Project
+     * @return Orga_Model_Organization
      */
-    public function getProject()
+    public function getOrganization()
     {
-        return $this->project;
+        return $this->organization;
     }
 
     /**
@@ -568,7 +568,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         $narrowerGranularities = array();
 
-        foreach ($this->getProject()->getGranularities() as $granularity) {
+        foreach ($this->getOrganization()->getGranularities() as $granularity) {
             if (($granularity->getRef() !== $this->getRef()) && ($granularity->isNarrowerThan($this))) {
                 $narrowerGranularities[] = $granularity;
             }
@@ -586,7 +586,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         $broaderGranularities = array();
 
-        foreach ($this->getProject()->getGranularities() as $granularity) {
+        foreach ($this->getOrganization()->getGranularities() as $granularity) {
             if (($granularity !== $this) && ($this->isNarrowerThan($granularity))) {
                 $broaderGranularities[] = $granularity;
             }
@@ -617,7 +617,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             }
         }
 
-        return $this->project->getGranularityByRef(self::buildRefFromAxes(array_merge($currentAxes, $crossingAxes)));
+        return $this->organization->getGranularityByRef(self::buildRefFromAxes(array_merge($currentAxes, $crossingAxes)));
     }
 
     /**
@@ -643,7 +643,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             }
         }
 
-        return $this->project->getGranularityByRef(self::buildRefFromAxes($encompassingAxes));
+        return $this->organization->getGranularityByRef(self::buildRefFromAxes($encompassingAxes));
     }
 
     /**
@@ -758,7 +758,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Défini si les cellules de la granularité génereront des projects de DW.
+     * Défini si les cellules de la granularité génereront des organizations de DW.
      *
      * @param bool $bool
      */
@@ -778,7 +778,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Indique si les cellules de la granularité génerent des projects de DW.
+     * Indique si les cellules de la granularité génerent des organizations de DW.
      *
      * @return bool
      */
@@ -788,9 +788,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Créé le Project pour la simulation.
+     * Créé le Organization pour la simulation.
      *
-     * @return int Identifiant unique du Project.
+     * @return int Identifiant unique du Organization.
      */
     protected function createDWCube()
     {
@@ -803,9 +803,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Créé le Project pour la simulation.
+     * Créé le Organization pour la simulation.
      *
-     * @return int Identifiant unique du Project.
+     * @return int Identifiant unique du Organization.
      */
     protected function deleteDWCube()
     {
@@ -816,7 +816,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Renvoi le Project de DW spécifique à la Cell.
+     * Renvoi le Organization de DW spécifique à la Cell.
      *
      * @throws Core_Exception_UndefinedAttribute
      *

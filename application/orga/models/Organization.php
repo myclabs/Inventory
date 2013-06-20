@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe Orga_Model_Project
+ * Classe Orga_Model_Organization
  * @author     valentin.claras
  * @author     maxime.fourt
  * @package    Orga
@@ -10,38 +10,38 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Project organisationnel.
+ * Organization organisationnel.
  * @package    Orga
  * @subpackage Model
  */
-class Orga_Model_Project extends Core_Model_Entity
+class Orga_Model_Organization extends Core_Model_Entity
 {
 
     use Core_Model_Entity_Translatable;
 
     /**
-     * Identifiant unique du Project.
+     * Identifiant unique du Organization.
      *
      * @var string
      */
     protected $id = null;
 
     /**
-     * Label du Project.
+     * Label du Organization.
      *
      * @var string
      */
     protected $label = '';
 
     /**
-     * Collection des Axis du Project.
+     * Collection des Axis du Organization.
      *
      * @var Collection|Orga_Model_Axis[]
      */
     protected $axes = null;
 
     /**
-     * Collection des Granularity du Project.
+     * Collection des Granularity du Organization.
      *
      * @var Collection|Orga_Model_Granularity[]
      */
@@ -56,7 +56,7 @@ class Orga_Model_Project extends Core_Model_Entity
 
 
     /**
-     * Constructeur de la classe Project.
+     * Constructeur de la classe Organization.
      */
     public function __construct()
     {
@@ -65,7 +65,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Renvoie l'id du Project.
+     * Renvoie l'id du Organization.
      *
      * @return string
      */
@@ -75,7 +75,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Spécifie le label du Project.
+     * Spécifie le label du Organization.
      *
      * @param string $label
      *
@@ -84,7 +84,7 @@ class Orga_Model_Project extends Core_Model_Entity
     public function setLabel($label)
     {
         if (!is_string($label)) {
-            throw new Core_Exception_InvalidArgument("Le label d'un Project doit être une chaîne de caractères");
+            throw new Core_Exception_InvalidArgument("Le label d'un Organization doit être une chaîne de caractères");
         }
         $this->label = $label;
     }
@@ -100,7 +100,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un Axis à la collection du Project.
+     * Ajoute un Axis à la collection du Organization.
      *
      * @param Orga_Model_Axis $axis
      *
@@ -108,7 +108,7 @@ class Orga_Model_Project extends Core_Model_Entity
      */
     public function addAxis(Orga_Model_Axis $axis)
     {
-        if ($axis->getProject() !== $this) {
+        if ($axis->getOrganization() !== $this) {
             throw new Core_Exception_InvalidArgument();
         }
 
@@ -119,7 +119,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si l'Axis donné appartient à ceux du Project.
+     * Vérifie si l'Axis donné appartient à ceux du Organization.
      *
      * @param Orga_Model_Axis $axis
      *
@@ -131,7 +131,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Retourne un Axis du project en fonction de la ref donnée.
+     * Retourne un Axis du organization en fonction de la ref donnée.
      *
      * @param string $ref
      *
@@ -156,7 +156,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Retire un Axis de ceux du Project.
+     * Retire un Axis de ceux du Organization.
      *
      * @param Orga_Model_Axis $axis
      */
@@ -168,7 +168,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si le Project ossède au moins un Axis.
+     * Vérifie si le Organization ossède au moins un Axis.
      *
      * @return bool
      */
@@ -178,7 +178,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Renvoie les Axis du Project.
+     * Renvoie les Axis du Organization.
      *
      * @return Orga_Model_Axis[]
      */
@@ -188,7 +188,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Retourne un tableau contenant les Axis racines du Project.
+     * Retourne un tableau contenant les Axis racines du Organization.
      *
      * @return Orga_Model_Axis[]
      */
@@ -208,7 +208,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Retourne un tableau contenant les Axis du Project ordonnés par première exploration.
+     * Retourne un tableau contenant les Axis du Organization ordonnés par première exploration.
      *
      * @return Orga_Model_Axis[]
      */
@@ -225,7 +225,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Retourne un tableau contenant les Axis du Project ordonnés par dernière exploration.
+     * Retourne un tableau contenant les Axis du Organization ordonnés par dernière exploration.
      *
      * @return Orga_Model_Axis[]
      */
@@ -242,7 +242,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Indique la position globale d'un Axis donnés dans le Project.
+     * Indique la position globale d'un Axis donnés dans le Organization.
      *
      * @param Orga_Model_Axis $askingAxis
      *
@@ -261,7 +261,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Ajoute une Granularity au Project
+     * Ajoute une Granularity au Organization
      *
      * @param Orga_Model_Granularity $granularity
      *
@@ -269,7 +269,7 @@ class Orga_Model_Project extends Core_Model_Entity
      */
     public function addGranularity(Orga_Model_Granularity $granularity)
     {
-        if ($granularity->getProject() !== $this) {
+        if ($granularity->getOrganization() !== $this) {
             throw new Core_Exception_InvalidArgument();
         }
 
@@ -281,7 +281,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Vérifie que la Granularity donnée appartient à celles du Project.
+     * Vérifie que la Granularity donnée appartient à celles du Organization.
      *
      * @param Orga_Model_Granularity $granularity
      *
@@ -293,7 +293,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Retourne une Granularity du project en fonction de la ref donnée.
+     * Retourne une Granularity du organization en fonction de la ref donnée.
      *
      * @param string $ref
      *
@@ -320,7 +320,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Retire la Granularity donnée de celles du Project.
+     * Retire la Granularity donnée de celles du Organization.
      *
      * @param Orga_Model_Granularity $granularity
      */
@@ -332,7 +332,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Vérifie que le Project possède au moins une Granularity.
+     * Vérifie que le Organization possède au moins une Granularity.
      *
      * @return bool
      */
@@ -342,7 +342,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Renvoie un tableau des Granularity du Project.
+     * Renvoie un tableau des Granularity du Organization.
      *
      * @return Orga_Model_Granularity[]
      */
@@ -352,7 +352,7 @@ class Orga_Model_Project extends Core_Model_Entity
     }
 
     /**
-     * Ordonne les Granularity dans le Project.
+     * Ordonne les Granularity dans le Organization.
      *
      * @return array
      */

@@ -1,5 +1,5 @@
 <?php
-// Liste des Project.
+// Liste des Organization.
 ?>
 <div class="page-header">
     <h1>
@@ -8,27 +8,27 @@
 </div>
 
 <?php
-$datagridProject = new UI_Datagrid('projects', 'datagrid_project', 'orga');
+$datagridOrganization = new UI_Datagrid('organizations', 'datagrid_organization', 'orga');
 
 $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $columnLabel->addable = true;
-$datagridProject->addCol($columnLabel);
+$datagridOrganization->addCol($columnLabel);
 
 $columnRootAxes = new UI_Datagrid_Col_Text('rootAxes', __('Orga', 'axis', 'rootAxes'));
 $columnRootAxes->addable = false;
-$datagridProject->addCol($columnRootAxes);
+$datagridOrganization->addCol($columnRootAxes);
 
 $columnGranularityForInventoryStatus = new UI_Datagrid_Col_Text('granularityForInventoryStatus', __('Orga', 'inventory', 'inventories'));
 $columnGranularityForInventoryStatus->addable = false;
-$datagridProject->addCol($columnGranularityForInventoryStatus);
+$datagridOrganization->addCol($columnGranularityForInventoryStatus);
 
 $columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
 $columnDetails->addable = false;
-$datagridProject->addCol($columnDetails);
+$datagridOrganization->addCol($columnDetails);
 
-$datagridProject->deleteElements = $this->isConnectedUserAbleToDeleteProjects;
-$datagridProject->pagination = false;
-$datagridProject->addElements = $this->isConnectedUserAbleToCreateProjects;
-$datagridProject->addPanelTitle = __('Orga', 'organization', 'addPanelTitle');
+$datagridOrganization->deleteElements = $this->isConnectedUserAbleToDeleteOrganizations;
+$datagridOrganization->pagination = false;
+$datagridOrganization->addElements = $this->isConnectedUserAbleToCreateOrganizations;
+$datagridOrganization->addPanelTitle = __('Orga', 'organization', 'addPanelTitle');
 
-$datagridProject->display();
+$datagridOrganization->display();

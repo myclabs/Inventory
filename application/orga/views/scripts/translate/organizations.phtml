@@ -2,13 +2,13 @@
 /**
  * @author valentin.claras
  * @package Inventory
- * Traduction des Project
+ * Traduction des Organization
  */
 ?>
     <div class="page-header">
         <h1><?=__('Orga', 'organization', 'organizations')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
     </div>
 <?php
-echo $this->translateDatagrid('Orga_Model_Project', 'label', 'datagrid_translate_projects', 'orga')->simple()
+echo $this->translateDatagrid('Orga_Model_Organization', 'label', 'datagrid_translate_organizations', 'orga')->simple()
     ->addCol(new UI_Datagrid_Col_Link('axes', __('UI', 'name', 'axes')))
     ->addCol(new UI_Datagrid_Col_Link('members', __('UI', 'name', 'members')));

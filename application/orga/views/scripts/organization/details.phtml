@@ -1,6 +1,6 @@
 <?php
 /**
- * Vue générale d'un project
+ * Vue générale d'un organization
  * @author valentin.claras
  * @package Orga
  */
@@ -10,19 +10,19 @@
     <legend style="cursor:default"><?=__('UI', 'name', 'general')?></legend>
     <div>
         <?php
-        $projectForm = new UI_Form('projectDetails');
-        $projectForm->setAction('orga/project/edit/idProject/'.$this->idProject);
+        $organizationForm = new UI_Form('organizationDetails');
+        $organizationForm->setAction('orga/organization/edit/idOrganization/'.$this->idOrganization);
 
         $labelElementForm = new UI_Form_Element_Text('label');
         $labelElementForm->setLabel(__('UI', 'name', 'label'));
-        $labelElementForm->setValue($this->projectLabel);
-        $projectForm->addElement($labelElementForm);
+        $labelElementForm->setValue($this->organizationLabel);
+        $organizationForm->addElement($labelElementForm);
 
         if (!empty($this->granularities)) {
             $granularityForInventoryStatusElementForm = new UI_Form_Element_Select('granularityForInventoryStatus');
             $granularityForInventoryStatusElementForm->setLabel(__('Orga', 'configuration', 'granularityForInventoryStatus'));
             $granularityForInventoryStatusElementForm->setValue($this->granularityRefForInventoryStatus);
-            $projectForm->addElement($granularityForInventoryStatusElementForm);
+            $organizationForm->addElement($granularityForInventoryStatusElementForm);
 
             foreach ($this->granularities as $granularity) {
                 $granularityOption = new UI_Form_Element_Option(
@@ -34,12 +34,12 @@
             }
         }
 
-        $projectForm->addSubmitButton();
+        $organizationForm->addSubmitButton();
 
         if ($this->display) {
-            $projectForm->display();
+            $organizationForm->display();
         } else {
-            echo $projectForm->render();
+            echo $organizationForm->render();
         }
         ?>
     </div>
@@ -55,7 +55,7 @@
                 $colListGranularities[$granularity->getRef()] = $granularity->getLabel();
             }
 
-            $datagridInputGranularities = new UI_Datagrid('inputGranularities', 'datagrid_project_inputgranularities', 'orga');
+            $datagridInputGranularities = new UI_Datagrid('inputGranularities', 'datagrid_organization_inputgranularities', 'orga');
 
             $columnInputConfigGranularity = new UI_Datagrid_Col_List('inputConfigGranularity', __('Orga', 'configuration', 'inputConfigGranularity'));
             $columnInputConfigGranularity->list = $colListGranularities;
@@ -65,7 +65,7 @@
             $columnInputGranularity->list = $colListGranularities;
             $datagridInputGranularities->addCol($columnInputGranularity);
 
-            $datagridInputGranularities->addParam('idProject', $this->idProject);
+            $datagridInputGranularities->addParam('idOrganization', $this->idOrganization);
             $datagridInputGranularities->pagination = false;
             $datagridInputGranularities->addElements = true;
             $datagridInputGranularities->deleteElements = true;

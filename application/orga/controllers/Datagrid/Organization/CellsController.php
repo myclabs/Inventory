@@ -11,15 +11,15 @@ use Core\Annotation\Secure;
  * Controller de cells
  * @package Orga
  */
-class Orga_Datagrid_Project_CellsController extends UI_Controller_Datagrid
+class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
 {
     /**
      * Methode appelee pour remplir le tableau.
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         /* @var User_Model_User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
@@ -27,7 +27,7 @@ class Orga_Datagrid_Project_CellsController extends UI_Controller_Datagrid
         foreach ($connectedUser->getLinkedResources() as $cellResource) {
             if (($cellResource instanceof User_Model_Resource_Entity)
                 && ($cellResource->getEntity() instanceof Orga_Model_Cell)
-                && ($cellResource->getEntity()->getGranularity()->getProject() === $project)
+                && ($cellResource->getEntity()->getGranularity()->getOrganization() === $organization)
                 && (!in_array($cellResource, $listCellResource))
             ) {
                 $listCellResource[] = $cellResource;
@@ -37,7 +37,7 @@ class Orga_Datagrid_Project_CellsController extends UI_Controller_Datagrid
             foreach ($userRole->getLinkedResources() as $cellResource) {
                 if (($cellResource instanceof User_Model_Resource_Entity)
                     && ($cellResource->getEntity() instanceof Orga_Model_Cell)
-                    && ($cellResource->getEntity()->getGranularity()->getProject() === $project)
+                    && ($cellResource->getEntity()->getGranularity()->getOrganization() === $organization)
                     && (!in_array($cellResource, $listCellResource))
                 ) {
                     $listCellResource[] = $cellResource;

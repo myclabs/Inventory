@@ -25,12 +25,12 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_ORGANIZATION, $organization);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         /**@var Orga_Model_Granularity $granularity */
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
@@ -66,11 +66,11 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      * @see getAddElementValue
      * @see setAddElementErrorMessage
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function addelementAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $refAxes = explode(',', $this->getAddElementValue('axes'));
         $listAxes = array();
@@ -81,7 +81,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 
         foreach ($refAxes as $refAxis) {
             $refGranularity .= $refAxis . '|';
-            $axis = Orga_Model_Axis::loadByRefAndProject($refAxis, $project);
+            $axis = Orga_Model_Axis::loadByRefAndOrganization($refAxis, $organization);
             // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
             if (!$axis->isTransverse($listAxes)) {
                 $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'));
@@ -93,7 +93,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         $refGranularity = substr($refGranularity, 0, -1);
 
         try {
-            Orga_Model_Granularity::loadByRefAndProject($refGranularity, $project);
+            Orga_Model_Granularity::loadByRefAndOrganization($refGranularity, $organization);
             $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'));
         } catch (Core_Exception_NotFound $e) {
             // La granularité n'existe pas déjà.
@@ -104,7 +104,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $dispatcher = Zend_Registry::get('workDispatcher');
             $dispatcher->runBackground(
                 new Orga_Work_Task_AddGranularity(
-                    $project,
+                    $organization,
                     $listAxes,
                     $this->getAddElementValue('navigable'),
                     $this->getAddElementValue('orgaTab'),
@@ -133,7 +133,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *
      * Renvoie un message d'information.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function deleteelementAction()
     {
@@ -170,7 +170,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function updateelementAction()
     {

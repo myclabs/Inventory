@@ -9,4 +9,4 @@
         <h1><?=__('Orga', 'translate', 'organizationalAxes')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
     </div>
 <?php
-echo $this->translateDatagrid('Orga_Model_Axis', 'label', 'datagrid_translate_axes', 'orga')->simple()->addParam('idProject', $this->idProject);
+echo $this->translateDatagrid('Orga_Model_Axis', 'label', 'datagrid_translate_axes', 'orga')->simple()->addParam('idOrganization', $this->idOrganization);

@@ -30,8 +30,8 @@ class Orga_CellController extends Core_Controller
         $this->view->idCell = $idCell;
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = $cell->getGranularity();
-        $project = $granularity->getProject();
-        $idProject = $project->getId();
+        $organization = $granularity->getOrganization();
+        $idOrganization = $organization->getId();
 
         $this->view->cell = $cell;
 
@@ -46,7 +46,7 @@ class Orga_CellController extends Core_Controller
 
 
         $this->view->tabView = new UI_Tab_View('container');
-        $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$project->getLabel().'</small>';
+        $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$organization->getLabel().'</small>';
         $this->view->isParentCellReachable = array();
         foreach ($cell->getParentCells() as $parentCell) {
             $isUserAllowedToViewParentCell = $aclService->isAllowed(
@@ -61,26 +61,26 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB ORGA.
-        $isUserAllowedToEditProject = $aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
-            $project
+            $organization
         );
         $isUserAllowedToEditCell = $aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
             $cell
         );
-        if ($isUserAllowedToEditProject || ($isUserAllowedToEditCell && $granularity->getCellsWithOrgaTab())) {
-            $projectTab = new UI_Tab('orga');
-            $projectTab->label = __('Orga', 'organization', 'organization');
-            $projectSubTabs = array('project', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
-            if (in_array($tab, $projectSubTabs)) {
-                $projectTab->active = true;
+        if ($isUserAllowedToEditOrganization || ($isUserAllowedToEditCell && $granularity->getCellsWithOrgaTab())) {
+            $organizationTab = new UI_Tab('orga');
+            $organizationTab->label = __('Orga', 'organization', 'organization');
+            $organizationSubTabs = array('organization', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
+            if (in_array($tab, $organizationSubTabs)) {
+                $organizationTab->active = true;
             }
-            $projectTab->dataSource = 'orga/tab_celldetails/orga/idCell/'.$idCell.'/tab/'.$tab.'/display/render';
-            $projectTab->useCache = true;
-            $this->view->tabView->addTab($projectTab);
+            $organizationTab->dataSource = 'orga/tab_celldetails/orga/idCell/'.$idCell.'/tab/'.$tab.'/display/render';
+            $organizationTab->useCache = true;
+            $this->view->tabView->addTab($organizationTab);
         }
 
 
@@ -98,14 +98,14 @@ class Orga_CellController extends Core_Controller
                 }
             }
         }
-        if ($isUserAllowedToEditProject || $isUserAllowedToAllowAuthorizations) {
+        if ($isUserAllowedToEditOrganization || $isUserAllowedToAllowAuthorizations) {
             $aclsTab = new UI_Tab('acls');
             if ($tab === 'acls') {
                 $aclsTab->active = true;
             }
             $aclsTab->label = __('User', 'role', 'roles');
             $aclsTab->dataSource = 'orga/tab_celldetails/acls/idCell/'.$idCell;
-            $aclsTab->useCache = !$isUserAllowedToEditProject;
+            $aclsTab->useCache = !$isUserAllowedToEditOrganization;
             $this->view->tabView->addTab($aclsTab);
         }
 
@@ -118,7 +118,7 @@ class Orga_CellController extends Core_Controller
             }
             $aFConfigurationTab->label = __('UI', 'name', 'forms');
             $aFConfigurationTab->dataSource = 'orga/tab_celldetails/afconfiguration/idCell/'.$idCell;
-            $aFConfigurationTab->useCache = !$isUserAllowedToEditProject;
+            $aFConfigurationTab->useCache = !$isUserAllowedToEditOrganization;
             $this->view->tabView->addTab($aFConfigurationTab);
         }
 
@@ -126,7 +126,7 @@ class Orga_CellController extends Core_Controller
         // TAB INVENTORIES
         $inventoriesTab = new UI_Tab('inventories');
         try {
-            $granularityForInventoryStatus = $project->getGranularityForInventoryStatus();
+            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
             $granularityForInventoryStatus = null;
         }
@@ -147,7 +147,7 @@ class Orga_CellController extends Core_Controller
         }
         $inputsTab->label = __('UI', 'name', 'inputs');
         $inputsTab->dataSource = 'orga/tab_celldetails/afinputs/idCell/'.$idCell;
-        $inputsTab->useCache = !$isUserAllowedToEditProject;
+        $inputsTab->useCache = !$isUserAllowedToEditOrganization;
         $this->view->tabView->addTab($inputsTab);
 
 
@@ -211,7 +211,7 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB ADMINISTRATION
-        if ($isUserAllowedToEditProject) {
+        if ($isUserAllowedToEditOrganization) {
             $administrationTab = new UI_Tab('administration');
             if ($tab === 'administration') {
                 $administrationTab->active = true;
@@ -275,7 +275,7 @@ class Orga_CellController extends Core_Controller
 
     /**
      * Action pour la pertinence des cellules enfants.
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function relevantAction()
     {
@@ -490,7 +490,7 @@ class Orga_CellController extends Core_Controller
         }
 
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getProject()->getId().'/'.
+            $cell->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
             $specificReportsDirectoryPath.$this->getParam('export').'.xml',

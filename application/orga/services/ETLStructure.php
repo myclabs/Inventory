@@ -32,9 +32,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function populateCellDWCube(Orga_Model_Cell $cell)
     {
-        $this->populateDWCubeWithClassifAndOrgaProject(
+        $this->populateDWCubeWithClassifAndOrgaOrganization(
             $cell->getDWCube(),
-            $cell->getGranularity()->getProject(),
+            $cell->getGranularity()->getOrganization(),
             array(
                 'axes' => $cell->getGranularity()->getAxes(),
                 'members' => $cell->getMembers()
@@ -49,9 +49,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function populateGranularityDWCube(Orga_Model_Granularity $granularity)
     {
-        $this->populateDWCubeWithClassifAndOrgaProject(
+        $this->populateDWCubeWithClassifAndOrgaOrganization(
             $granularity->getDWCube(),
-            $granularity->getProject(),
+            $granularity->getOrganization(),
             array(
                 'axes' => $granularity->getAxes()
             )
@@ -62,12 +62,12 @@ class Orga_Service_ETLStructure extends Core_Singleton
      * Peuple le cube de DW avec les données issues de Classif et Orga.
      *
      * @param DW_Model_Cube $dWCube
-     * @param Orga_Model_Project $orgaProject
+     * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      */
-    protected function populateDWCubeWithClassifAndOrgaProject($dWCube, $orgaProject, $orgaFilters)
+    protected function populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters)
     {
-        $this->populateDWCubeWithOrgaProject($dWCube, $orgaProject, $orgaFilters);
+        $this->populateDWCubeWithOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters);
         $this->populateDWCubeWithClassif($dWCube);
     }
 
@@ -152,12 +152,12 @@ class Orga_Service_ETLStructure extends Core_Singleton
      * Peuple le cube de DW avec les données issues de Classif.
      *
      * @param DW_Model_Cube $dWCube
-     * @param Orga_Model_Project $orgaProject
+     * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      */
-    protected function populateDWCubeWithOrgaProject($dWCube, $orgaProject, $orgaFilters)
+    protected function populateDWCubeWithOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters)
     {
-        foreach ($orgaProject->getRootAxes() as $orgaAxis) {
+        foreach ($orgaOrganization->getRootAxes() as $orgaAxis) {
             $this->copyAxisAndMembersFromOrgaToDW($orgaAxis, $dWCube, $orgaFilters);
         }
     }
@@ -290,13 +290,13 @@ class Orga_Service_ETLStructure extends Core_Singleton
     /**
      * Indique si les cubes de DW d'un projt donné est à jour vis à vis de données de Classif et Orga.
      *
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      *
      * @return bool
      */
-    public function areProjectDWCubesUpToDate($project)
+    public function areOrganizationDWCubesUpToDate($organization)
     {
-        foreach ($project->getGranularities() as $granularity) {
+        foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 if (!($this->isGranularityDWCubeUpToDate($granularity))) {
                     return false;
@@ -324,7 +324,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
     {
         return $this->isDWCubeUpToDate(
             $granularity->getDWCube(),
-            $granularity->getProject(),
+            $granularity->getOrganization(),
             array(
                 'axes' => $granularity->getAxes()
             )
@@ -342,7 +342,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
     {
         return $this->isDWCubeUpToDate(
             $cell->getDWCube(),
-            $cell->getGranularity()->getProject(),
+            $cell->getGranularity()->getOrganization(),
             array(
                 'axes' => $cell->getGranularity()->getAxes(),
                 'members' => $cell->getMembers()
@@ -354,16 +354,16 @@ class Orga_Service_ETLStructure extends Core_Singleton
      * Indique les différences entre un cube de DW donné el les données de Classif et Orga.
      *
      * @param DW_Model_Cube $dWCube
-     * @param Orga_Model_Project $orgaProject
+     * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      *
      * @return bool
      */
-    protected function isDWCubeUpToDate($dWCube, $orgaProject, $orgaFilters)
+    protected function isDWCubeUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
         return !(
             $this->areDWIndicatorsDifferentFromClassif($dWCube)
-            || $this->areDWAxesDifferentFromClassifAndOrga($dWCube, $orgaProject, $orgaFilters)
+            || $this->areDWAxesDifferentFromClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
         );
     }
 
@@ -421,12 +421,12 @@ class Orga_Service_ETLStructure extends Core_Singleton
      * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
      *
      * @param DW_Model_Cube $dWCube
-     * @param Orga_Model_Project $orgaProject
+     * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      *
      * @return bool
      */
-    protected function areDWAxesDifferentFromClassifAndOrga($dWCube, $orgaProject, $orgaFilters)
+    protected function areDWAxesDifferentFromClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
     {
         $queryClassifRootAxes = new Core_Model_Query();
         $queryClassifRootAxes->filter->addCondition(
@@ -447,9 +447,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
         }
 
-        $orgaRootAxes = $orgaProject->getRootAxes();
+        $orgaRootAxes = $orgaOrganization->getRootAxes();
 
-        foreach ($orgaProject->getRootAxes() as $orgaIndex => $orgaAxis) {
+        foreach ($orgaOrganization->getRootAxes() as $orgaIndex => $orgaAxis) {
             foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
                 if (!($this->isDWAxisDifferentFromOrga($dWAxis, $orgaAxis, $orgaFilters))) {
                     unset($orgaRootAxes[$orgaIndex]);
@@ -712,15 +712,15 @@ class Orga_Service_ETLStructure extends Core_Singleton
     /**
      * Réinitialise les cubes de DW des Cell d'un projet donné.
      *
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      */
-    public function resetProjectDWCubes(Orga_Model_Project $project)
+    public function resetOrganizationDWCubes(Orga_Model_Organization $organization)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         /** @var EntityManager $entityManager */
         $entityManager = $entityManagers['default'];
 
-        foreach ($project->getGranularities() as $granularity) {
+        foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes($granularity);
                 $entityManager->flush();
@@ -742,7 +742,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
     {
         $this->resetDWCube(
             $granularity->getDWCube(),
-            $granularity->getProject(),
+            $granularity->getOrganization(),
             array(
                 'axes' => $granularity->getAxes()
             )
@@ -789,7 +789,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
 
             $this->resetDWCube(
                 $cell->getDWCube(),
-                $cell->getGranularity()->getProject(),
+                $cell->getGranularity()->getOrganization(),
                 array(
                     'axes' => $cell->getGranularity()->getAxes(),
                     'members' => $cell->getMembers()
@@ -804,10 +804,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
      * Réinitialise un cube de DW donné.
      *
      * @param DW_Model_Cube $dWCube
-     * @param Orga_Model_Project $orgaProject
+     * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilter
      */
-    protected function resetDWCube(DW_Model_Cube $dWCube, Orga_Model_Project $orgaProject, array $orgaFilter)
+    protected function resetDWCube(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization, array $orgaFilter)
     {
         set_time_limit(0);
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -848,7 +848,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
 
         $entityManagers['default']->flush();
 
-        $this->populateDWCubeWithClassifAndOrgaProject($dWCube, $orgaProject, $orgaFilter);
+        $this->populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilter);
         $dWCube->save();
 
         $entityManagers['default']->flush();

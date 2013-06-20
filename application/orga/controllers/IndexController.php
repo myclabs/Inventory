@@ -19,6 +19,6 @@ class Orga_IndexController extends Core_Controller
      */
     public function indexAction()
     {
-        $this->redirect('orga/project/');
+        $this->redirect('orga/organization/');
     }
 }

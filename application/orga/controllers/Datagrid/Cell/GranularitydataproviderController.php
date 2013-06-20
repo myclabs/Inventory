@@ -25,12 +25,12 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_PROJECT, $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_ORGANIZATION, $organization);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
             $data = array();
@@ -65,12 +65,12 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function updateelementAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $granularity = Orga_Model_Granularity::loadByRefAndProject($this->update['index'], $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $granularity = Orga_Model_Granularity::loadByRefAndOrganization($this->update['index'], $organization);
 
         switch ($this->update['column']) {
             case 'cellsWithACL':

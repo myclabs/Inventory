@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe Orga_ProjectController
+ * Classe Orga_OrganizationController
  * @author valentin.claras
  * @package Orga
  * @subpackage Controller
@@ -14,7 +14,7 @@ use Core\Annotation\Secure;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_ProjectController extends Core_Controller_Ajax
+class Orga_OrganizationController extends Core_Controller_Ajax
 {
     use UI_Controller_Helper_Form;
 
@@ -27,20 +27,20 @@ class Orga_ProjectController extends Core_Controller_Ajax
         $connectedUser = $this->_helper->auth();
         $aclService = User_Service_ACL::getInstance();
 
-        $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
-        $isConnectedUserAbleToCreateProjects = $aclService->isAllowed(
+        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
+        $isConnectedUserAbleToCreateOrganizations = $aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
-            $projectResource
+            $organizationResource
         );
 
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $connectedUser;
         $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
-        $isConnectedUserAbleToDeleteProjects = (Orga_Model_Project::countTotal($aclQuery) > 0);
+        $isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
         $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-        $isConnectedUserAbleToSeeManyProjects = (Orga_Model_Project::countTotal($aclQuery) > 1);
+        $isConnectedUserAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
 
         $listCellResource = array();
         foreach ($connectedUser->getLinkedResources() as $cellResource) {
@@ -63,65 +63,65 @@ class Orga_ProjectController extends Core_Controller_Ajax
         }
         $isConnectedUserAbleToSeeManyCells = (count($listCellResource) > 1);
 
-        if (($isConnectedUserAbleToCreateProjects)
-            || ($isConnectedUserAbleToDeleteProjects)
-            || ($isConnectedUserAbleToSeeManyProjects)
+        if (($isConnectedUserAbleToCreateOrganizations)
+            || ($isConnectedUserAbleToDeleteOrganizations)
+            || ($isConnectedUserAbleToSeeManyOrganizations)
         ) {
-            $this->redirect('orga/project/manage');
+            $this->redirect('orga/organization/manage');
         } else if ($isConnectedUserAbleToSeeManyCells) {
-            $projectArray = Orga_Model_Project::loadList($aclQuery);
-            $this->redirect('orga/project/cells/idProject/'.array_pop($projectArray)->getId());
+            $organizationArray = Orga_Model_Organization::loadList($aclQuery);
+            $this->redirect('orga/organization/cells/idOrganization/'.array_pop($organizationArray)->getId());
         } else if (count($listCellResource) == 1) {
             $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getId());
         } else {
-            $this->forward('noaccess', 'project', 'orga');
+            $this->forward('noaccess', 'organization', 'orga');
         }
     }
 
     /**
      * Liste des projets.
-     * @Secure("viewProjects")
+     * @Secure("viewOrganizations")
      */
     public function manageAction()
     {
         $connectedUser = $this->_helper->auth();
         $aclService = User_Service_ACL::getInstance();
 
-        $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
-        $this->view->isConnectedUserAbleToCreateProjects = $aclService->isAllowed(
+        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
+        $this->view->isConnectedUserAbleToCreateOrganizations = $aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
-            $projectResource
+            $organizationResource
         );
 
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $connectedUser;
         $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
-        $this->view->isConnectedUserAbleToEditProjects = (Orga_Model_Project::countTotal($aclQuery) > 0);
+        $this->view->isConnectedUserAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
         $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
-        $this->view->isConnectedUserAbleToDeleteProjects = (Orga_Model_Project::countTotal($aclQuery) > 0);
+        $this->view->isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
     }
 
     /**
-     * Action de détails d'un project.
-     * @Secure("editProject")
+     * Action de détails d'un organization.
+     * @Secure("editOrganization")
      */
     public function detailsAction()
     {
-        $idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load($idProject);
+        $idOrganization = $this->getParam('idOrganization');
+        $organization = Orga_Model_Organization::load($idOrganization);
 
-        $this->view->idProject = $idProject;
-        $this->view->projectLabel = $project->getLabel();
-        $this->view->granularities = $project->getGranularities();
+        $this->view->idOrganization = $idOrganization;
+        $this->view->organizationLabel = $organization->getLabel();
+        $this->view->granularities = $organization->getGranularities();
         try {
-            $this->view->granularityRefForInventoryStatus = $project->getGranularityForInventoryStatus()->getRef();
+            $this->view->granularityRefForInventoryStatus = $organization->getGranularityForInventoryStatus()->getRef();
         } catch (Core_Exception_UndefinedAttribute $e) {
             $this->view->granularityRefForInventoryStatus = null;
         }
         $this->view->granularitiesWithDWCube = array();
-        foreach ($project->getGranularities() as $granularity) {
+        foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->view->granularitiesWithDWCube[] = $granularity;
             }
@@ -134,36 +134,36 @@ class Orga_ProjectController extends Core_Controller_Ajax
             $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idCell/'.$this->getParam('idCell');
         } else {
             $this->view->display = true;
-            $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idProject/'.$idProject;
+            $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
         }
     }
 
     /**
-     * Action de détails d'un project.
-     * @Secure("editProject")
+     * Action de détails d'un organization.
+     * @Secure("editOrganization")
      */
     public function editAction()
     {
-        $idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load($idProject);
-        $formData = $this->getFormData('projectDetails');
+        $idOrganization = $this->getParam('idOrganization');
+        $organization = Orga_Model_Organization::load($idOrganization);
+        $formData = $this->getFormData('organizationDetails');
 
         $refGranularityForInventoryStatus = $formData->getValue('granularityForInventoryStatus');
         if (!empty($refGranularityForInventoryStatus)) {
-            $granularityForInventoryStatus = Orga_Model_Granularity::loadByRefAndProject(
+            $granularityForInventoryStatus = Orga_Model_Granularity::loadByRefAndOrganization(
                 $refGranularityForInventoryStatus,
-                $project
+                $organization
             );
             try {
-                $project->setGranularityForInventoryStatus($granularityForInventoryStatus);
+                $organization->setGranularityForInventoryStatus($granularityForInventoryStatus);
             } catch (Core_Exception_InvalidArgument $e) {
                 $this->addFormError('granularityForInventoryStatus', __('Orga', 'exception', 'broaderInputGranularity'));
             }
         }
 
         $label = (string) $formData->getValue('label');
-        if ($project->getLabel() !== $label) {
-            $project->setLabel($label);
+        if ($organization->getLabel() !== $label) {
+            $organization->setLabel($label);
         }
 
         $this->setFormMessage(__('UI', 'message', 'updated'));
@@ -172,37 +172,37 @@ class Orga_ProjectController extends Core_Controller_Ajax
     }
 
     /**
-     * Affiche le popup propopsant de regénérer les projects et données de DW.
-     * @Secure("editProject")
+     * Affiche le popup propopsant de regénérer les organizations et données de DW.
+     * @Secure("editOrganization")
      */
     public function dwcubesstateAction()
     {
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
-        $this->view->idProject = $this->getParam('idProject');
-        $this->view->areProjectDWCubesUpToDate = Orga_Service_ETLStructure::getInstance()->areProjectDWCubesUpToDate(
-            Orga_Model_Project::load($this->view->idProject)
+        $this->view->idOrganization = $this->getParam('idOrganization');
+        $this->view->areOrganizationDWCubesUpToDate = Orga_Service_ETLStructure::getInstance()->areOrganizationDWCubesUpToDate(
+            Orga_Model_Organization::load($this->view->idOrganization)
         );
     }
 
     /**
-     * Réinitialise les DW Projects du Project donné.
-     * @Secure("editProject")
+     * Réinitialise les DW Organizations du Organization donné.
+     * @Secure("editOrganization")
      */
     public function resetdwcubesAction()
     {
         /** @var Core_Work_Dispatcher $workDispatcher */
         $workDispatcher = Zend_Registry::get('workDispatcher');
 
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         try {
             // Lance la tache en arrière plan
             $workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
-                    'resetProjectDWCubes',
-                    [$project]
+                    'resetOrganizationDWCubes',
+                    [$organization]
                 )
             );
         } catch (Core_Exception_NotFound $e) {
@@ -212,8 +212,8 @@ class Orga_ProjectController extends Core_Controller_Ajax
     }
 
     /**
-     * Controller de la vue de la cohérence d'un project.
-     * @Secure("viewProject")
+     * Controller de la vue de la cohérence d'un organization.
+     * @Secure("viewOrganization")
      */
     public function consistencyAction()
     {
@@ -222,7 +222,7 @@ class Orga_ProjectController extends Core_Controller_Ajax
         } else {
             $this->view->idCell = null;
         }
-        $this->view->idProject = $this->getParam('idProject');
+        $this->view->idOrganization = $this->getParam('idOrganization');
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
@@ -234,16 +234,16 @@ class Orga_ProjectController extends Core_Controller_Ajax
 
     /**
      * Liste des cellules d'un projet.
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function cellsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        $this->view->idProject = $this->getParam('idProject');
+        $this->view->idOrganization = $this->getParam('idOrganization');
 
         $this->view->listGranularities = array();
-        foreach ($project->getGranularities() as $granularity) {
+        foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->isNavigable()) {
                 $this->view->listGranularities[$granularity->getRef()] = $granularity->getLabel();
             }

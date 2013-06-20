@@ -27,13 +27,13 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function getelementsAction()
     {
         $this->request->filter->addCondition(
-            Orga_Model_Axis::QUERY_PROJECT,
-            Orga_Model_Project::load($this->getParam('idProject'))
+            Orga_Model_Axis::QUERY_ORGANIZATION,
+            Orga_Model_Organization::load($this->getParam('idOrganization'))
         );
 
         foreach (Orga_Model_Axis::loadList($this->request) as $axis) {
@@ -56,11 +56,11 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function updateelementAction()
     {
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->update['index'], Orga_Model_Project::load($this->getParam('idProject')));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->update['index'], Orga_Model_Organization::load($this->getParam('idOrganization')));
         $axis->setTranslationLocale(Core_Locale::load($this->update['column']));
         $axis->setLabel($this->update['value']);
         $this->data = $axis->getLabel();
