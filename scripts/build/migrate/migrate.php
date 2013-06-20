@@ -219,16 +219,16 @@ class Inventory_Migrate extends Core_Script_Populate
         $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 
-        $count = $connection->exec("DELETE FROM User_Authorization WHERE (idIdentity IN (SELECT id FROM User_Role WHERE (ref LIKE 'organizationAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))) OR idResource IN (SELECT id FROM User_Resource WHERE (entityName='Inventory_Model_Organization' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report') AND TRIM(entityIdentifier) <> \"\")");
+        $count = $connection->exec("DELETE FROM User_Authorization WHERE (idIdentity IN (SELECT id FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))) OR idResource IN (SELECT id FROM User_Resource WHERE (entityName='Inventory_Model_Organization' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report') AND TRIM(entityIdentifier) <> \"\")");
         if ($count > 0) {
             echo "\t -> $count authorizations éffacées.\n";
-            $count = $connection->exec("DELETE FROM User_Resource WHERE (entityName='Inventory_Model_Organization' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report') AND TRIM(entityIdentifier) <> \"\"");
+            $count = $connection->exec("DELETE FROM User_Resource WHERE (entityName='Inventory_Model_Project' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report') AND TRIM(entityIdentifier) <> \"\"");
             if ($count > 0) {
                 echo "\t -> $count ressources éffacées.\n";
-                $count = $connection->exec("DELETE FROM User_UserRoles WHERE idRole IN (SELECT id FROM User_Role WHERE (ref LIKE 'organizationAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))");
+                $count = $connection->exec("DELETE FROM User_UserRoles WHERE idRole IN (SELECT id FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))");
                 if ($count > 0) {
                     echo "\t -> $count liens entres User et Role éffacées.\n";
-                    $count = $connection->exec("DELETE FROM User_Role WHERE (ref LIKE 'organizationAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%')");
+                    $count = $connection->exec("DELETE FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%')");
                     if ($count > 0) {
                         echo "\t -> $count roles éffacés.\n";
                         $count = $connection->exec("DELETE FROM User_SecurityIdentity WHERE type='role' AND id NOT IN (SELECT id FROM User_Role)");
@@ -250,7 +250,7 @@ class Inventory_Migrate extends Core_Script_Populate
             echo print_r($connection->errorInfo(), true);
         }
 
-        $count = $connection->exec("UPDATE User_Resource SET entityName = 'Orga_Model_Organization' WHERE entityName = 'Inventory_Model_Organization'");
+        $count = $connection->exec("UPDATE User_Resource SET entityName = 'Orga_Model_Organization' WHERE entityName = 'Inventory_Model_Project'");
         echo "\t -> $count resources changées de 'Inventory_Model_Organization' à 'Orga_Model_Organization'\n";
     }
 
@@ -259,7 +259,7 @@ class Inventory_Migrate extends Core_Script_Populate
      */
     protected function migrateOrganizations()
     {
-        $select = $this->connection->query("SELECT * FROM Inventory_Organization");
+        $select = $this->connection->query("SELECT * FROM Inventory_Project");
         /** @noinspection PhpAssignmentInConditionInspection */
         while ($row = $select->fetch()) {
             $this->processOrganization($row);
@@ -500,7 +500,7 @@ class Inventory_Migrate extends Core_Script_Populate
     protected function migrateOrganizationAFConfig($idCube)
     {
         $select = $this->connection->query(
-            "SELECT * FROM Inventory_AFGranularities JOIN Inventory_Organization ON Inventory_AFGranularities.idOrganization = Inventory_Organization.id WHERE idOrgaCube=$idCube"
+            "SELECT * FROM Inventory_AFGranularities JOIN Inventory_Project ON Inventory_AFGranularities.idProject = Inventory_Project.id WHERE idOrgaCube=$idCube"
         );
         /** @noinspection PhpAssignmentInConditionInspection */
         while ($row = $select->fetch()) {
@@ -743,7 +743,7 @@ class Inventory_Migrate extends Core_Script_Populate
     {
         echo "\t User - Roles : \n";
         $select = $this->connection->query(
-            "SELECT * FROM User_UserRoles JOIN User_Role ON User_UserRoles.idRole = User_Role.id WHERE (ref LIKE 'organizationAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%')"
+            "SELECT * FROM User_UserRoles JOIN User_Role ON User_UserRoles.idRole = User_Role.id WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%')"
         );
         /** @noinspection PhpAssignmentInConditionInspection */
         while ($row = $select->fetch()) {
@@ -764,11 +764,11 @@ class Inventory_Migrate extends Core_Script_Populate
         list($baseRef, $id) = explode('_', $row['ref']);
 
         switch ($baseRef) {
-            case 'organizationAdministrator':
-                $select = $this->connection->query("SELECT * FROM Inventory_Organization WHERE id = ".$id);
+            case 'projectAdministrator':
+                $select = $this->connection->query("SELECT * FROM Inventory_Project WHERE id = ".$id);
                 $rowOrganization = $select->fetch();
                 $organization = $this->getOrganization($rowOrganization['idOrgaCube']);
-                $role = User_Model_Role::loadByRef($baseRef.'_'.$organization->getKey()['id']);
+                $role = User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getKey()['id']);
 
                 $complement = ' for '.$organization->getLabel();
                 break;
