@@ -5,6 +5,7 @@
 
 namespace AuditTrail\Domain;
 
+use AuditTrail\Domain\Context\OrganizationContext;
 use Core\Model\EntityRepositoryInterface;
 
 /**
@@ -17,4 +18,11 @@ interface EntryRepository extends EntityRepositoryInterface
      * @return Entry[]
      */
     public function findLatest($count);
+
+    /**
+     * @param OrganizationContext $context
+     * @param int                 $count
+     * @return Entry[]
+     */
+    public function findLatestForOrganizationContext(OrganizationContext $context, $count);
 }

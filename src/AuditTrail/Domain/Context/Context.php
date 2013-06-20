@@ -7,6 +7,8 @@ namespace AuditTrail\Domain\Context;
 
 /**
  * Classe abstraite d'un contexte
+ *
+ * Value Object
  */
 abstract class Context
 {

@@ -5,6 +5,8 @@
  * @subpackage Controller
  */
 
+use AuditTrail\Domain\Context\OrganizationContext;
+use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 
@@ -27,6 +29,12 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      * @var Orga_Service_ETLStructure
      */
     private $etlStructureService;
+
+    /**
+     * @Inject
+     * @var EntryRepository
+     */
+    private $entryRepository;
 
     /**
      * Confguration du projet.
@@ -545,9 +553,18 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      */
     public function historyAction()
     {
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+
+        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+        $context->setCell($cell);
+
+        $entries = $this->entryRepository->findLatestForOrganizationContext($context, 100);
+
+        $this->view->assign('idCell', $this->getParam('idCell'));
+        $this->view->assign('entries', $entries);
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
-        $this->view->idCell = $this->getParam('idCell');
     }
 
     /**

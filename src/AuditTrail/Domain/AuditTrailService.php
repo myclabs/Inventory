@@ -30,9 +30,14 @@ class AuditTrailService
      * @param string               $eventName
      * @param Context              $context
      * @param User_Model_User|null $user
+     *
+     * @return Entry
      */
     public function addEntry($eventName, Context $context, User_Model_User $user = null)
     {
+        // Value object -> clone
+        $context = clone $context;
+
         $entry = new Entry($eventName, $context);
 
         if ($user) {
@@ -40,5 +45,7 @@ class AuditTrailService
         }
 
         $this->entryRepository->add($entry);
+
+        return $entry;
     }
 }

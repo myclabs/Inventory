@@ -2,6 +2,7 @@
 echo $this->partial('events/recent.phtml',
     'audit-trail',
     array(
-        'idCell' => $this->idCell,
+         'idCell' => $this->idCell,
+         'entries' => $this->entries,
     )
 );

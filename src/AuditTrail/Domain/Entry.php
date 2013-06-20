@@ -35,6 +35,7 @@ class Entry
     private $eventName;
 
     /**
+     * Value Object
      * @var Context
      */
     private $context;
