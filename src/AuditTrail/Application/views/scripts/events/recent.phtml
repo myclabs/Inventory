@@ -4,13 +4,11 @@ use AuditTrail\Domain\Entry;
 
 $locale = Core_Locale::loadDefault();
 
+$idCell = isset($this->idCell) ? $this->idCell : null;
+
 /** @var Entry[] $entries */
 $entries = $this->entries;
 ?>
-
-<div class="page-header">
-    <h1>Historique</h1>
-</div>
 
 <dl class="dl-horizontal">
     <?php foreach ($entries as $entry) : ?>
@@ -49,7 +47,7 @@ $entries = $this->entries;
             continue;
         }
 
-        $inputUrl = $this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/');
+        $inputUrl = $this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/' . $idCell);
         $inputLink = "<a href='$inputUrl''>{$entryCell->getLabel()}</a>";
 
         $text = __('Inventory', 'auditTrail', $entry->getEventName(),

@@ -234,6 +234,16 @@ class Orga_CellController extends Core_Controller
         }
 
 
+        // TAB HISTORIQUE
+        $historyTab = new UI_Tab('history');
+        if ($tab === 'history') {
+            $historyTab->active = true;
+        }
+        $historyTab->label = __('Orga', '', 'history');
+        $historyTab->dataSource = 'orga/tab_celldetails/history?idCell='.$idCell;
+        $this->view->tabView->addTab($historyTab);
+
+
         // TAB ADMINISTRATION
         if ($isUserAllowedToEditOrganization) {
             $administrationTab = new UI_Tab('administration');

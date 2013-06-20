@@ -540,6 +540,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
     }
 
     /**
+     * Action fournissant la vue de l'historique de la cellule.
+     * @Secure("viewCell")
+     */
+    public function historyAction()
+    {
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+        $this->view->idCell = $this->getParam('idCell');
+    }
+
+    /**
      * Action fournissant la vue d'administration d'une cellule.
      * @Secure("editOrganization")
      */
