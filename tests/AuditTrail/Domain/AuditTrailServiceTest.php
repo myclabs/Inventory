@@ -24,6 +24,9 @@ class AuditTrail_AuditTrailServiceTest extends Core_Test_TestCase
             ->with($this->attributeEqualTo('eventName', 'foo'));
 
         $service = new AuditTrailService($repository);
-        $service->addEntry('foo', $context);
+        $entry = $service->addEntry('foo', $context);
+
+        $this->assertInstanceOf('AuditTrail\Domain\Entry', $entry);
+        $this->assertEquals('foo', $entry->getEventName());
     }
 }
