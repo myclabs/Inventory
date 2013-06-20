@@ -105,25 +105,9 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                     }
                     $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
                     $data['stateInput'] = $aFInputSetPrimary->getStatus();
-                    $gesIndicator = Classif_Model_Indicator::loadByRef('ges');
-                    if ($aFInputSetPrimary->getOutputSet()) {
-                        $output = $aFInputSetPrimary->getOutputSet()->getTotalByIndicator($gesIndicator);
-                    } else {
-                        $output = null;
-                    }
-                    if ($output === null) {
-                        $data['totalValueGESInput'] = $this->cellNumber(0);
-                        $data['totalUncertaintyGESInput'] = $this->cellNumber(0, null, 0);
-                    } else {
-                        $value = $output->getValue();
-                        $data['totalValueGESInput'] = $this->cellNumber($value->digitalValue);
-                        $data['totalUncertaintyGESInput'] = $this->cellNumber($value->relativeUncertainty, null, 0);
-                    }
                 } catch (Core_Exception_UndefinedAttribute $e) {
                     $data['advancementInput'] = $this->cellPercent(0, 'danger');
                     $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
-                    $data['totalValueGESInput'] = $this->cellNumber(0);
-                    $data['totalUncertaintyGESInput'] = $this->cellNumber(0);
                 }
 
                 try {
@@ -151,8 +135,6 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
             } else {
                 $data['advancementInput'] = null;
                 $data['stateInput'] = null;
-                $data['totalValueGESInput'] = null;
-                $data['totalUncertaintyGESInput'] = null;
             }
 
             $this->addLine($data);

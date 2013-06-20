@@ -360,12 +360,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 );
                 $datagridConfiguration->datagrid->addCol($columnStateInput);
 
-                $columnValIndic = new UI_Datagrid_Col_Number('totalValueGESInput', __('AF', 'inputList', 'GESTotalValueHeader'));
-                $datagridConfiguration->datagrid->addCol($columnValIndic);
-
-                $columnIncert = new UI_Datagrid_Col_Number('totalUncertaintyGESInput', '&#177; (%)');
-                $datagridConfiguration->datagrid->addCol($columnIncert);
-
                 $colLinkEdit = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'details'));
                 $datagridConfiguration->datagrid->addCol($colLinkEdit);
 
