@@ -27,7 +27,7 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editOrgaProject")
+     * @Secure("editProject")
      */
     public function getelementsAction()
     {
@@ -56,7 +56,7 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editOrgaProject")
+     * @Secure("editProject")
      */
     public function updateelementAction()
     {
