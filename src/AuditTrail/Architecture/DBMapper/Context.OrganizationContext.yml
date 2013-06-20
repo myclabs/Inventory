@@ -4,7 +4,7 @@ AuditTrail\Domain\Context\OrganizationContext:
 
   manyToOne:
     organization:
-      targetEntity: \Orga_Model_Project
+      targetEntity: \Orga_Model_Organization
     cell:
       targetEntity: \Orga_Model_Cell
       joinColumn:

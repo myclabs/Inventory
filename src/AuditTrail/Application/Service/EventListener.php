@@ -38,7 +38,7 @@ class EventListener
     {
         $cell = $event->getCell();
 
-        $context = new OrganizationContext($cell->getGranularity()->getProject());
+        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
         $context->setCell($cell);
 
         $this->auditTrailService->addEntry($event->getName(), $context, $event->getUser());
@@ -51,7 +51,7 @@ class EventListener
     {
         $cell = $event->getCell();
 
-        $context = new OrganizationContext($cell->getGranularity()->getProject());
+        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
         $context->setCell($cell);
 
         $this->auditTrailService->addEntry($event->getName(), $context, $event->getUser());
