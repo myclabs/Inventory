@@ -24,6 +24,9 @@
             $granularityForInventoryStatusElementForm->setValue($this->granularityRefForInventoryStatus);
             $organizationForm->addElement($granularityForInventoryStatusElementForm);
 
+            if (empty($this->granularityRefForInventoryStatus)) {
+                $granularityForInventoryStatusElementForm->addNullOption('');
+            }
             foreach ($this->granularities as $granularity) {
                 $granularityOption = new UI_Form_Element_Option(
                     $granularity->getId(),
