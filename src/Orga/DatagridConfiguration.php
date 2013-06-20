@@ -45,7 +45,7 @@ class Orga_DatagridConfiguration
      */
     protected function addAxes($cell, $granularity)
     {
-        foreach ($granularity->getProject()->getFirstOrderedAxes() as $axis) {
+        foreach ($granularity->getOrganization()->getFirstOrderedAxes() as $axis) {
             if ($granularity->hasAxis($axis) && !$cell->getGranularity()->hasAxis($axis)) {
                 $this->addAxis($axis, $cell);
             }

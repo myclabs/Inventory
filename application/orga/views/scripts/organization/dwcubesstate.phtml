@@ -1,10 +1,10 @@
 <?php
-// Popup de reset des Project.
+// Popup de reset des Organization.
 ?>
 <p>
-    <?=__('Orga', 'projectList', 'analysisDataStatus').__('UI', 'other', ':')?>
+    <?=__('Orga', 'organizationList', 'analysisDataStatus').__('UI', 'other', ':')?>
     <?php
-    if ($this->areProjectDWCubesUpToDate) {
+    if ($this->areOrganizationDWCubesUpToDate) {
         echo '<i class="icon-ok"></i> '.__('UI', 'property', 'upToDate');
     } else {
         echo '<i class="icon-remove"></i> '.__('UI', 'property', 'notUpToDate');
@@ -12,17 +12,17 @@
     ?>
 </p>
 <p>
-    <?=__('Orga', 'projectList', 'projectRebuildWarningMessage')?>
+    <?=__('Orga', 'organizationList', 'organizationRebuildWarningMessage')?>
 </p>
 
-<?= $this->button(__('Orga', 'projectList', 'projectRebuildButton'), 'ok icon-white', array('id' => 'resetDWCubes', 'class' => 'btn-primary')) ?>
+<?= $this->button(__('Orga', 'organizationList', 'organizationRebuildButton'), 'ok icon-white', array('id' => 'resetDWCubes', 'class' => 'btn-primary')) ?>
 
 <script type="text/javascript">
     $('#resetDWCubes').click(function() {
-        $('#listProjects_resetDWCubesAndDatasUpToDate_popup').modal('hide');
+        $('#listOrganizations_resetDWCubesAndDatasUpToDate_popup').modal('hide');
         setMask(true);
         $.post(
-            'orga/project/resetdwcubes/idProject/<?=$this->idProject?>',
+            'orga/organization/resetdwcubes/idOrganization/<?=$this->idOrganization?>',
             function(data, textStatus, jqXHR){
                 setMask(false);
                 addMessage(data.message, 'success');

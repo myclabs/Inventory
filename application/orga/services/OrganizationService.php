@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
  * @package Orga
  * @subpackage Service
  */
-class Orga_Service_ProjectService
+class Orga_Service_OrganizationService
 {
 
     /**
@@ -40,25 +40,25 @@ class Orga_Service_ProjectService
      * @param User_Model_User $administrator
      * @param string $label
      * @throws Exception
-     * @return Orga_Model_Project
+     * @return Orga_Model_Organization
      */
-    public function createProject(User_Model_User $administrator, $label)
+    public function createOrganization(User_Model_User $administrator, $label)
     {
         $this->entityManager->beginTransaction();
 
         try {
-            $project = new Orga_Model_Project();
-            $project->setLabel($label);
-            $defaultGranularity = new Orga_Model_Granularity($project);
-            $project->save();
+            $organization = new Orga_Model_Organization();
+            $organization->setLabel($label);
+            $defaultGranularity = new Orga_Model_Granularity($organization);
+            $organization->save();
             $this->entityManager->flush();
 
-            $this->aclManager->addProjectAdministrator($project, $administrator);
+            $this->aclManager->addOrganizationAdministrator($organization, $administrator);
             $this->entityManager->flush();
 
             $this->entityManager->commit();
 
-            return $project;
+            return $organization;
         } catch (Exception $e) {
             $this->entityManager->rollback();
             $this->entityManager->clear();
@@ -70,13 +70,13 @@ class Orga_Service_ProjectService
     /**
      * Supprime un projet
      *
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      */
-    public function deleteProject(Orga_Model_Project $project)
+    public function deleteOrganization(Orga_Model_Organization $organization)
     {
-        $project->setGranularityForInventoryStatus(null);
+        $organization->setGranularityForInventoryStatus(null);
 
-        $project->delete();
+        $organization->delete();
     }
 
 }

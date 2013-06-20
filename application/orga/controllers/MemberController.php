@@ -17,8 +17,8 @@ use Core\Annotation\Secure;
 class Orga_MemberController extends Core_Controller
 {
     /**
-     * Controller de la vue des Member d'un project.
-     * @Secure("viewProject")
+     * Controller de la vue des Member d'un organization.
+     * @Secure("viewOrganization")
      */
     public function manageAction()
     {
@@ -31,9 +31,9 @@ class Orga_MemberController extends Core_Controller
             $cell = null;
         }
 
-        $idProject = $this->getParam('idProject');
-        $this->view->idProject = $idProject;
-        $project = Orga_Model_Project::load($idProject);
+        $idOrganization = $this->getParam('idOrganization');
+        $this->view->idOrganization = $idOrganization;
+        $organization = Orga_Model_Organization::load($idOrganization);
 
         if (($cell !== null) && ($cell->getGranularity()->hasAxes())) {
             $axes = array();
@@ -50,7 +50,7 @@ class Orga_MemberController extends Core_Controller
             }
             $this->view->axes = $axes;
         } else {
-            $this->view->axes = $project->getLastOrderedAxes();
+            $this->view->axes = $organization->getLastOrderedAxes();
         }
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {

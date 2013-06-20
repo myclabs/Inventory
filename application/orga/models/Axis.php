@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Objet métier définissant un axe organisationnel au sein d'un project.
+ * Objet métier définissant un axe organisationnel au sein d'un organization.
  * @package    Orga
  * @subpackage Model
  */
@@ -29,7 +29,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     const QUERY_LABEL = 'label';
     const QUERY_POSITION = 'position';
     const QUERY_NARROWER = 'directNarrower';
-    const QUERY_PROJECT = 'project';
+    const QUERY_ORGANIZATION = 'organization';
 
 
     /**
@@ -40,7 +40,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     protected  $id = null;
 
     /**
-     * Référence unique (au sein d'un project) de l'axe.
+     * Référence unique (au sein d'un organization) de l'axe.
      *
      * @var string
      */
@@ -54,11 +54,11 @@ class Orga_Model_Axis extends Core_Model_Entity
     protected $label = null;
 
     /**
-     * Project contenant l'axe.
+     * Organization contenant l'axe.
      *
-     * @var Orga_Model_Project
+     * @var Orga_Model_Organization
      */
-    protected $project = null;
+    protected $organization = null;
 
     /**
      * Axe narrower de l'axe courant.
@@ -99,17 +99,17 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Constructeur de la classe Axis.
      *
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      */
-    public function __construct(Orga_Model_Project $project)
+    public function __construct(Orga_Model_Organization $organization)
     {
         $this->directBroaders = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->granularities = new ArrayCollection();
 
-        $this->project = $project;
+        $this->organization = $organization;
         $this->setPosition();
-        $this->project->addAxis($this);
+        $this->organization->addAxis($this);
     }
 
     /**
@@ -119,7 +119,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     protected function getContext()
     {
-        return array('project' => $this->project, 'directNarrower' => $this->directNarrower);
+        return array('organization' => $this->organization, 'directNarrower' => $this->directNarrower);
     }
 
     /**
@@ -139,16 +139,16 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Charge un Axis en fonction de sa référence et son project.
+     * Charge un Axis en fonction de sa référence et son organization.
      *
      * @param string $ref
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      *
      * @return Orga_Model_Axis
      */
-    public static function loadByRefAndProject($ref, $project)
+    public static function loadByRefAndOrganization($ref, $organization)
     {
-        return $project->getAxisByRef($ref);
+        return $organization->getAxisByRef($ref);
     }
 
     /**
@@ -227,13 +227,13 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Renvoie le project de l'axe.
+     * Renvoie le organization de l'axe.
      *
-     * @return Orga_Model_Project
+     * @return Orga_Model_Organization
      */
-    public function getProject()
+    public function getOrganization()
     {
-        return $this->project;
+        return $this->organization;
     }
 
     /**
@@ -268,7 +268,7 @@ class Orga_Model_Axis extends Core_Model_Entity
             }
         }
 
-        $this->getProject()->orderGranularities();
+        $this->getOrganization()->orderGranularities();
     }
 
     /**
@@ -286,7 +286,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getGlobalPosition()
     {
-        return $this->getProject()->getAxisGlobalPosition($this);
+        return $this->getOrganization()->getAxisGlobalPosition($this);
     }
 
     /**

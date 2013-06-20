@@ -36,6 +36,14 @@
                 <seg>Structure</seg>
             </tuv>
         </tu>
+        <tu tuid="errorMessageInputGranularities">
+            <tuv xml:lang="fr">
+                <seg>Aucun niveau organisationnel associé à des saisies n'a été configuré pour le moment.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No organizational level for inputs has been chosen yet.</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>

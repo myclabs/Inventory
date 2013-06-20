@@ -9,12 +9,12 @@
  * Controller du datagrid de coherence
  * @package Orga
  */
-class Orga_ProjectConsistency extends Core_Model_Entity_Singleton
+class Orga_OrganizationConsistency extends Core_Model_Entity_Singleton
 {
     /**
      * Methode qui vérifie la cohérence d'un cube.
      *
-     * @param Orga_Model_Project $cube
+     * @param Orga_Model_Organization $cube
      * @return array();
      */
     public function check($cube)

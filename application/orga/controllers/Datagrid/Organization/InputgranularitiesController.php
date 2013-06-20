@@ -13,7 +13,7 @@ use Core\Annotation\Secure;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_Datagrid_Project_InputgranularitiesController extends UI_Controller_Datagrid
+class Orga_Datagrid_Organization_InputgranularitiesController extends UI_Controller_Datagrid
 {
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -26,12 +26,12 @@ class Orga_Datagrid_Project_InputgranularitiesController extends UI_Controller_D
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     function getelementsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        foreach ($project->getInputGranularities() as $inputGranularity) {
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        foreach ($organization->getInputGranularities() as $inputGranularity) {
             $data = array();
             $data['index'] = $inputGranularity->getId();
             $data['inputConfigGranularity'] = $this->cellList($inputGranularity->getInputConfigGranularity()->getRef());
@@ -52,24 +52,24 @@ class Orga_Datagrid_Project_InputgranularitiesController extends UI_Controller_D
      *
      * Renvoie une message d'information.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     function addelementAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $inputConfigGranularityRef = $this->getAddElementValue('inputConfigGranularity');
         if (empty($inputConfigGranularityRef)) {
             $this->setAddElementErrorMessage('inputConfigGranularity', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
-            $inputConfigGranularity = Orga_Model_Granularity::loadByRefAndProject($inputConfigGranularityRef, $project);
+            $inputConfigGranularity = Orga_Model_Granularity::loadByRefAndOrganization($inputConfigGranularityRef, $organization);
         }
 
         $inputGranularityRef = $this->getAddElementValue('inputGranularity');
         if (empty($inputGranularityRef)) {
             $this->setAddElementErrorMessage('inputGranularity', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
-            $inputGranularity = Orga_Model_Granularity::loadByRefAndProject($inputGranularityRef, $project);
+            $inputGranularity = Orga_Model_Granularity::loadByRefAndOrganization($inputGranularityRef, $organization);
         }
 
 
@@ -84,7 +84,7 @@ class Orga_Datagrid_Project_InputgranularitiesController extends UI_Controller_D
                     'inputGranularity',
                     __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanInputConfigGranularity')
                 );
-            } else if (!($inputGranularity->isNarrowerThan($project->getGranularityForInventoryStatus()))) {
+            } else if (!($inputGranularity->isNarrowerThan($organization->getGranularityForInventoryStatus()))) {
                 $this->setAddElementErrorMessage(
                     'inputGranularity',
                     __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanGranularityForInventoryStatus')
@@ -94,7 +94,7 @@ class Orga_Datagrid_Project_InputgranularitiesController extends UI_Controller_D
 
         if (empty($this->_addErrorMessages)) {
             $inputGranularity->setInputConfigGranularity($inputConfigGranularity);
-            $project->save();
+            $organization->save();
         }
 
         $this->message = __('UI', 'message', 'added');
@@ -112,7 +112,7 @@ class Orga_Datagrid_Project_InputgranularitiesController extends UI_Controller_D
      *
      * Renvoie un message d'information.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     function deleteelementAction()
     {

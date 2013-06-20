@@ -69,7 +69,7 @@ class Orga_Service_ETLData
     {
         $granularity = $cell->getGranularity();
 
-        foreach ($cell->getGranularity()->getProject()->getInputGranularities() as $inputGranularity) {
+        foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
             if ($inputGranularity === $cell->getGranularity()) {
                 try {
                     $inputSet = $cell->getAFInputSetPrimary();

@@ -1,5 +1,5 @@
 <?php
-// Liste des Cellules d'un Project (auquel l'utilisateur à accès).
+// Liste des Cellules d'un Organization (auquel l'utilisateur à accès).
 ?>
 <div class="page-header">
     <h1>
@@ -8,7 +8,7 @@
 </div>
 
 <?php
-$datagridCells = new UI_Datagrid('listCells', 'datagrid_project_cells', 'orga');
+$datagridCells = new UI_Datagrid('listCells', 'datagrid_organization_cells', 'orga');
 
 $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $datagridCells->addCol($columnLabel);
@@ -25,7 +25,7 @@ $datagridCells->addCol($columnAccess);
 $columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
 $datagridCells->addCol($columnDetails);
 
-$datagridCells->addParam('idProject', $this->idProject);
+$datagridCells->addParam('idOrganization', $this->idOrganization);
 $datagridCells->pagination = false;
 
 $datagridCells->display();

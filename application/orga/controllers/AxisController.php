@@ -17,8 +17,8 @@ use Core\Annotation\Secure;
 class Orga_AxisController extends Core_Controller
 {
     /**
-     * Controller de la vue des Axis d'un project.
-     * @Secure("viewProject")
+     * Controller de la vue des Axis d'un organization.
+     * @Secure("viewOrganization")
      */
     public function manageAction()
     {
@@ -27,9 +27,9 @@ class Orga_AxisController extends Core_Controller
         } else {
             $this->view->idCell = null;
         }
-        $this->view->idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load($this->view->idProject);
-        $this->view->eligibleParents = $project->getFirstOrderedAxes();
+        $this->view->idOrganization = $this->getParam('idOrganization');
+        $organization = Orga_Model_Organization::load($this->view->idOrganization);
+        $this->view->eligibleParents = $organization->getFirstOrderedAxes();
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();

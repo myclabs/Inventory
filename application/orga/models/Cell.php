@@ -129,7 +129,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     protected $docBibliographyForAFInputSetPrimary = null;
 
     /**
-     * Project de DW généré par et propre à la Cell.
+     * Organization de DW généré par et propre à la Cell.
      *
      * @var DW_model_cube
      */
@@ -241,7 +241,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Charge la Cell correspondant à un Project de DW.
+     * Charge la Cell correspondant à un Organization de DW.
      *
      * @param DW_model_cube $dWCube
      *
@@ -436,7 +436,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 
         // Mise à jour du status de l'inventaire.
         try {
-            $granularityForInventoryStatus = $this->granularity->getProject()->getGranularityForInventoryStatus();
+            $granularityForInventoryStatus = $this->granularity->getOrganization()->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
             // La granularité des inventaires n'a pas encoré été choisie.
             $granularityForInventoryStatus = null;
@@ -1105,9 +1105,9 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Créé le Project pour la simulation.
+     * Créé le Organization pour la simulation.
      *
-     * @return int Identifiant unique du Project.
+     * @return int Identifiant unique du Organization.
      */
     public function createDWCube()
     {
@@ -1124,9 +1124,9 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Créé le Project pour la simulation.
+     * Créé le Organization pour la simulation.
      *
-     * @return int Identifiant unique du Project.
+     * @return int Identifiant unique du Organization.
      */
     public function deleteDWCube()
     {
@@ -1137,7 +1137,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Renvoi le Project de DW spécifique à la Cell.
+     * Renvoi le Organization de DW spécifique à la Cell.
      *
      * @throws Core_Exception_UndefinedAttribute
      *
@@ -1152,7 +1152,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Récupère l'ensemble des projects de DW peuplés par la Cell.
+     * Récupère l'ensemble des organizations de DW peuplés par la Cell.
      *
      * @return DW_model_cube[]
      */
@@ -1187,12 +1187,12 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public function getPopulatingCells()
     {
-        // Renvoie une exception si la cellule ne possède pas de project.
+        // Renvoie une exception si la cellule ne possède pas de organization.
         $this->getDWCube();
 
         $populatingCells = [];
 
-        foreach ($this->getGranularity()->getProject()->getInputGranularities() as $inputGranularity) {
+        foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
             if ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
                     $populatingCells[] = $inputChildCell;
@@ -1204,7 +1204,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Créer les Result de DW issues de l'AF et les ajoute aux projects peuplés par la cellule.
+     * Créer les Result de DW issues de l'AF et les ajoute aux organizations peuplés par la cellule.
      */
     public function createDWResults()
     {
@@ -1214,7 +1214,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Créer l'ensemble des résultats pour un project de DW donné.
+     * Créer l'ensemble des résultats pour un organization de DW donné.
      *
      * @param DW_model_cube $dWCube
      */
@@ -1277,7 +1277,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Supprime l'ensemble des résultats de l'InputSet de la cellule dans les project de DW peuplés par la cellule.
+     * Supprime l'ensemble des résultats de l'InputSet de la cellule dans les organization de DW peuplés par la cellule.
      */
     public function deleteDWResults()
     {
@@ -1288,7 +1288,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Supprime l'ensemble des résultats de l'InputSet de la cellule dans le project de DW donné.
+     * Supprime l'ensemble des résultats de l'InputSet de la cellule dans le organization de DW donné.
      *
      * @param DW_model_cube $dWCube
      */

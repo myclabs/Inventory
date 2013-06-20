@@ -38,11 +38,11 @@ Orga_Model_Axis:
       nullable: false
 
   manyToOne:
-    project:
-      targetEntity: Orga_Model_Project
+    organization:
+      targetEntity: Orga_Model_Organization
       inversedBy: axes
       joinColumn:
-        name: idProject
+        name: idOrganization
         referencedColumnName: id
         nullable: false
     directNarrower:
@@ -78,8 +78,8 @@ Orga_Model_Axis:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      axisRefUniquenessInProject:
+      axisRefUniquenessInOrganization:
           columns:
               - ref
-              - idProject
+              - idOrganization
       

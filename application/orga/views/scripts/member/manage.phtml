@@ -3,7 +3,7 @@
  * @author valentin.claras
  * @author sidoine.tardieu
  * @package Orga
- * Datagrids des membres d'un project.
+ * Datagrids des membres d'un organization.
  */
 foreach ($this->axes as $axis) {
     /** @var $axis Orga_Model_Axis */
@@ -35,7 +35,7 @@ foreach ($this->axes as $axis) {
     if ($this->idCell !== null) {
         $datagridAxisMembers->addParam('idCell', $this->idCell);
     }
-    $datagridAxisMembers->addParam('idProject', $this->idProject);
+    $datagridAxisMembers->addParam('idOrganization', $this->idOrganization);
     $datagridAxisMembers->addParam('refAxis', $axis->getRef());
     if (!empty($this->idCell)) {
         $datagridAxisMembers->pagination = false;

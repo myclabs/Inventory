@@ -15,7 +15,7 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
     /**
      * @var string
      */
-    private $idProject;
+    private $idOrganization;
 
     /**
      * @var array
@@ -63,7 +63,7 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
     private $inputDocuments;
 
     /**
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      * @param Orga_Model_Axis[] $listAxes
      * @param bool $navigability
      * @param bool $orgaTab
@@ -74,9 +74,9 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
      * @param bool $contextActions
      * @param bool $inputDocuments
      */
-    public function __construct($project, $listAxes, $navigability, $orgaTab, $aCL, $aFTab, $dW, $genericActions, $contextActions, $inputDocuments)
+    public function __construct($organization, $listAxes, $navigability, $orgaTab, $aCL, $aFTab, $dW, $genericActions, $contextActions, $inputDocuments)
     {
-        $this->idProject = $project->getId();
+        $this->idOrganization = $organization->getId();
         foreach ($listAxes as $axis) {
             $this->listAxes[] = $axis->getId();
         }
@@ -95,12 +95,12 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
      */
     public function execute()
     {
-        $project = Orga_Model_Project::load($this->idProject);
+        $organization = Orga_Model_Organization::load($this->idOrganization);
         $axes = array();
         foreach ($this->listAxes as $idAxis) {
             $axes[] = Orga_Model_Axis::load($idAxis);
         }
-        $granularity = new Orga_Model_Granularity($project, $axes);
+        $granularity = new Orga_Model_Granularity($organization, $axes);
         $granularity->setNavigability($this->navigability);
         $granularity->setCellsWithOrgaTab($this->orgaTab);
         $granularity->setCellsWithACL($this->aCL);

@@ -21,7 +21,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     protected $id = null;
 
     /**
-     * Report du Project de DW concerné.
+     * Report du Organization de DW concerné.
      *
      * @var DW_Model_Report
      */

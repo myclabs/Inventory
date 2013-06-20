@@ -47,8 +47,8 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $granularity = $cell->getGranularity();
-        $project = $granularity->getProject();
-        $granularityForInventoryStatus = $project->getGranularityForInventoryStatus();
+        $organization = $granularity->getOrganization();
+        $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
         $crossedGranularity = $granularityForInventoryStatus->getCrossedGranularity($granularity);
 
         $this->request->filter->addCondition(
@@ -86,7 +86,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                 $data['advancementFinishedInput'] = 0;
 
                 $totalChildInputCells = 0;
-                foreach ($project->getInputGranularities() as $inputGranularity) {
+                foreach ($organization->getInputGranularities() as $inputGranularity) {
                     if ($inputGranularity->isNarrowerThan($childCell->getGranularity())) {
                         $inputCells = $childCell->getChildCellsForGranularity($inputGranularity);
                         foreach ($inputCells as $inputCell) {
