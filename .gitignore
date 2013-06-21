@@ -5,5 +5,7 @@ vendor/*
 composer.phar
 composer.lock
 
+behat/selenium-server-standalone.jar
+
 application/configs/application.ini
 public/.htaccess

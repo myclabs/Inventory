@@ -32,6 +32,12 @@
 		"phpoffice/phpexcel": "1.7.*",
 		"dompdf/dompdf": "dev-master"
 	},
+    "require-dev": {
+        "behat/behat": "2.4.*@stable",
+        "behat/mink": "1.4.*@stable",
+        "behat/mink-extension": "*",
+        "behat/mink-selenium2-driver": "*"
+    },
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"repositories": [
