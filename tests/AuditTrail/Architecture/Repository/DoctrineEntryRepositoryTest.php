@@ -3,12 +3,10 @@
  * @author matthieu.napoli
  */
 
-use AuditTrail\Domain\AuditTrailService;
-use AuditTrail\Domain\Context\Context;
+use AuditTrail\Architecture\Repository\DoctrineEntryRepository;
 use AuditTrail\Domain\Context\GlobalContext;
 use AuditTrail\Domain\Context\OrganizationContext;
-use AuditTrail\Domain\EntryRepository;
-use Doctrine\ORM\EntityManager;
+use AuditTrail\Domain\Entry;
 
 /**
  * EntryRepositoryTest tests
@@ -16,41 +14,54 @@ use Doctrine\ORM\EntityManager;
 class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
 {
     /**
-     * @var AuditTrailService
-     */
-    private $auditTrailService;
-    /**
-     * @var EntryRepository
+     * @var DoctrineEntryRepository
      */
     private $entryRepository;
 
     public function testFindLatest()
     {
-        $context = new GlobalContext();
+        $this->markTestIncomplete("TODO");
+        $entry1 = new Entry('foo', new GlobalContext());
+        $entry2 = new Entry('bar', new GlobalContext());
 
-        $entry1 = $this->auditTrailService->addEntry('foo', $context);
-        $entry2 = $this->auditTrailService->addEntry('bar', $context);
+        $this->entryRepository->add($entry1);
+        $this->entryRepository->add($entry2);
+        $this->entityManager->flush();
 
         $entries = $this->entryRepository->findLatest(1);
 
+        $this->entryRepository->remove($entry1);
+        $this->entryRepository->remove($entry2);
+        $this->entityManager->flush();
+
         $this->assertCount(1, $entries);
-        $this->assertContains($entry2, $entries);
+        $this->assertSame($entry2, current($entries));
     }
 
-    public function testFindLatestForOrganizationContext()
+    public function testFindLatestForOrganization()
     {
+        $this->markTestIncomplete("TODO");
         $organization = new Orga_Model_Organization();
-        $organizationContext = new OrganizationContext($organization);
-        $globalContext = new GlobalContext();
+        $organization->save();
 
-        $entry1 = $this->auditTrailService->addEntry('foo', $organizationContext);
-        $entry2 = $this->auditTrailService->addEntry('bar', $organizationContext);
-        $entry3 = $this->auditTrailService->addEntry('bam', $globalContext);
+        $entry1 = new Entry('foo', new OrganizationContext($organization));
+        $entry2 = new Entry('bar', new OrganizationContext($organization));
+        $entry3 = new Entry('bam', new GlobalContext());
 
-        $entries = $this->entryRepository->findLatestForOrganizationContext($organizationContext, 1);
+        $this->entryRepository->add($entry1);
+        $this->entryRepository->add($entry2);
+        $this->entryRepository->add($entry3);
+        $this->entityManager->flush();
+
+        $entries = $this->entryRepository->findLatestForOrganizationContext(new OrganizationContext($organization), 1);
+
+        $this->entryRepository->remove($entry1);
+        $this->entryRepository->remove($entry2);
+        $this->entryRepository->remove($entry3);
+        $this->entityManager->flush();
 
         $this->assertCount(1, $entries);
-        $this->assertContains($entry2, $entries);
+        $this->assertSame($entry2, current($entries));
     }
 
 
@@ -58,7 +69,6 @@ class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
     {
         parent::setUp();
 
-        $this->auditTrailService = $this->get('AuditTrail\Domain\AuditTrailService');
         $this->entryRepository = $this->get('AuditTrail\Domain\EntryRepository');
 
         // Vide la table si elle contient d'anciennes entrées

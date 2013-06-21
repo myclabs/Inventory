@@ -121,20 +121,9 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
      */
     public function testCells1()
     {
-        $keyword1 = new Keyword_Model_Keyword();
-        $keyword1->setLabel('Label test');
-        $keyword1->setRef(Core_Tools::generateString(10));
-        $keyword1->save();
-        $keyword2 = new Keyword_Model_Keyword();
-        $keyword2->setLabel('Label test');
-        $keyword2->setRef(Core_Tools::generateString(10));
-        $keyword2->save();
         /** @var $o Techno_Model_Family */
         $o = $this->getMockForAbstractClass('Techno_Model_Family');
         $o->getCell(['foo', 'bar']);
-        $keyword1->delete();
-        $keyword2->delete();
-        $this->entityManager->flush();
     }
 
     /**
@@ -145,7 +134,6 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         /** @var $o Techno_Model_Family */
         $o = $this->getMockForAbstractClass('Techno_Model_Family');
         $o->getCell([]);
-        $this->entityManager->flush();
     }
 
     /**
