@@ -377,8 +377,8 @@ class Orga_CellController extends Core_Controller_Ajax
 
         $cell->setAFInputSetPrimary($inputSet);
 
+        Orga_Service_ETLData::getInstance()->clearDWResultsFromCell($cell);
         if ($inputSet->isInputComplete()) {
-            Orga_Service_ETLData::getInstance()->clearDWResultsFromCell($cell);
             Orga_Service_ETLData::getInstance()->populateDWResultsFromCell($cell);
         }
 
