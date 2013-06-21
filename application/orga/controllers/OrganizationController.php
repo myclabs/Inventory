@@ -99,8 +99,6 @@ class Orga_OrganizationController extends Core_Controller_Ajax
         $aclQuery->aclFilter->user = $connectedUser;
         $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
         $this->view->isConnectedUserAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
-        $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
-        $this->view->isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
     }
 
     /**
