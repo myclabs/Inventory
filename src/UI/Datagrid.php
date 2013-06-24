@@ -303,7 +303,7 @@ class UI_Datagrid extends UI_Generic
     /**
      * Tableau des colonnes de la datagrid.
      *
-     * @var   array
+     * @var UI_Datagrid_Col_Generic[]
      *
      * @see ajouterColonne
      * @see UI_Datagrid_Col_Generic
