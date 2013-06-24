@@ -10,7 +10,7 @@ Feature: Identification
     Given I am on "/user/action/login"
     When I fill in "email" with "admin"
     And I fill in "password" with "blahblah"
-    And I press "Connexion"
+    And I press "connection"
     And I wait for page to finish loading
     Then I should see "Attention ! Le mot de passe indiqué est invalide."
 
@@ -19,6 +19,6 @@ Feature: Identification
     Given I am on "/user/action/login"
     When I fill in "email" with "admin"
     And I fill in "password" with "myc-53n53"
-    And I press "Connexion"
+    And I press "connection"
     And I wait for page to finish loading
     Then I should see "Organisations"
