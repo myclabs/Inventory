@@ -267,6 +267,7 @@ class AF_InputController extends Core_Controller
      * @param AF_Model_Component $component
      * @param AF_Model_InputSet  $inputSet
      * @param array              $inputContent
+     * @throws InvalidArgumentException
      * @return array Error messages indexed by the field name
      */
     private function createInputFromComponent($fullRef, AF_Model_Component $component, AF_Model_InputSet $inputSet,
