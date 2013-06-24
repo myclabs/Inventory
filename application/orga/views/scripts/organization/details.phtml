@@ -85,6 +85,51 @@
     </div>
 </fieldset>
 
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'organization', 'organizationDWCubesState')?></legend>
+    <div>
+        <?=
+        $this->button('<span>'.__('Orga', 'organization', 'dWCubesState').'</span>', 'leaf', array('id' => 'organizationDWCubesState'));
+        ?>
+        <script type="text/javascript">
+            $('#container_orga').on('click', '#organizationDWCubesState', function() {
+                $.get(
+                    'orga/organization/dwcubesstate/idOrganization/<?=$this->idOrganization?>',
+                    function (response) {
+                        if (response.organizationDWCubesState) {
+                            var button = $('#organizationDWCubesState');
+                            button.attr('class', 'btn btn-success')
+                            button.children('i').attr('class', 'icon-leaf icon-white');
+                            button.children('span').html('<?=__('Orga', 'organization', 'organizationDWCubesUpToDate')?>');
+                            addMessage('<?=__('Orga', 'organization', 'organizationDWCubesUpToDate')?>', 'success');
+                        } else {
+                            var button = $('#organizationDWCubesState');
+                            button.attr('class', 'btn btn-danger')
+                            button.children('i').prop('class', 'icon-refresh icon-white');
+                            button.children('span').html('<?=__('Orga', 'organization', 'organizationDWCubesOutDated')?>');
+                            addMessage('<?=__('Orga', 'organization', 'organizationDWCubesOutDated')?>', 'error');
+                            button.prop('id', 'organizationDWCubesReset');
+                        }
+                    }
+                ).fail(errorHandler);
+            });
+            $('#container_orga').on('click', '#organizationDWCubesReset', function() {
+                $.get(
+                    'orga/organization/resetdwcubes/idOrganization/<?=$this->idOrganization?>',
+                    function (response) {
+                        var button = $('#organizationDWCubesReset');
+                        button.attr('class', 'btn');
+                        button.children('i').attr('class', 'icon-leaf');
+                        button.children('span').html('<?=addslashes(__('Orga', 'organization', 'dWCubesState'))?>');
+                        addMessage('<?=addslashes(__('UI', 'message', 'operationInProgress'))?>', 'warning');
+                        button.attr('id', 'organizationDWCubesState');
+                    }
+                ).fail(errorHandler);
+            });
+        </script>
+    </div>
+</fieldset>
+
 <?php if (!empty($this->granularitiesWithDWCube)) { ?>
 <fieldset class="wrapper">
     <legend style="cursor:default"><?=__('Orga', 'configuration', 'granularityAnalysesTitle')?></legend>

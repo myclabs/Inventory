@@ -175,11 +175,12 @@ class Orga_OrganizationController extends Core_Controller_Ajax
      */
     public function dwcubesstateAction()
     {
-        // Désactivation du layout.
-        $this->_helper->layout()->disableLayout();
-        $this->view->idOrganization = $this->getParam('idOrganization');
-        $this->view->areOrganizationDWCubesUpToDate = Orga_Service_ETLStructure::getInstance()->areOrganizationDWCubesUpToDate(
-            Orga_Model_Organization::load($this->view->idOrganization)
+        $this->sendJsonResponse(
+            array(
+                'organizationDWCubesState' => Orga_Service_ETLStructure::getInstance()->areOrganizationDWCubesUpToDate(
+                    Orga_Model_Organization::load($this->getParam('idOrganization'))
+                )
+            )
         );
     }
 
@@ -206,7 +207,7 @@ class Orga_OrganizationController extends Core_Controller_Ajax
         } catch (Core_Exception_NotFound $e) {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
         }
-        $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
+        $this->sendJsonResponse(array());
     }
 
     /**
