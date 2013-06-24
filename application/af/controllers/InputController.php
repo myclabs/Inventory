@@ -306,6 +306,12 @@ class AF_InputController extends Core_Controller
             }
             $calcValue->unit = $component->getUnit();
             $input->setValue($calcValue);
+        } elseif ($component instanceof AF_Model_Component_Text) {
+            // Champ texte
+            $input = new AF_Model_Input_Text($inputSet, $component);
+            if (isset($inputContent['value'])) {
+                $input->setValue($inputContent['value']);
+            }
         } elseif ($component instanceof AF_Model_Component_Checkbox) {
             // Champ checkbox
             $input = new AF_Model_Input_Checkbox($inputSet, $component);

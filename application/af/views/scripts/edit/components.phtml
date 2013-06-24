@@ -111,4 +111,20 @@ $('#checkboxFields').on('show', function(e) {
 JS;
 
 
+// Text
+$textFields = new UI_HTML_Collapse('textFields');
+$textFields->foldedByDefault = true;
+$textFields->title = __('AF', 'configComponentCollapse', 'textFieldCollapse');
+$textFields->body = $this->partial('edit/components/text-fields.phtml', array('af' => $this->af));
+echo $textFields->render();
+
+$script .= <<<JS
+$('#textFields').on('show', function(e) {
+    if ($(e.target).attr('id') == 'textFields_wrapper') {
+        textFieldDatagrid.filter();
+    }
+});
+JS;
+
+
 echo '<script type="text/javascript">/*<![CDATA[*/'.$script.'/*]]>*/</script>';
