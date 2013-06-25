@@ -69,7 +69,7 @@
         </tu>
         <tu tuid="organizationDWCubesStateComment">
             <tuv xml:lang="fr">
-                <seg>Pour tester si la structure (indcateurs, axes et membres de classification, axes et
+                <seg>Pour tester si la structure (indicateurs, axes et membres de classification, axes et
                     membres organisationnels) des données d'analyse de l'organisation est ou non à jour,
                     merci de cliquer sur le bouton ci-dessous.</seg>
             </tuv>
