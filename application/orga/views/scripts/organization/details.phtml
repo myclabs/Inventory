@@ -89,43 +89,46 @@
     <legend style="cursor:default"><?=__('Orga', 'organization', 'organizationDWCubesState')?></legend>
     <div>
         <?=
-        $this->button('<span>'.__('Orga', 'organization', 'dWCubesState').'</span>', 'leaf', array('id' => 'organizationDWCubesState'));
+        $this->button('<span>'.__('Orga', 'organization', 'dWCubesState').'</span>', 'leaf', array('id' => 'organizationDWCubes'));
         ?>
         <script type="text/javascript">
-            $('#container_orga').on('click', '#organizationDWCubesState', function() {
+            var checkOrganizationDWCubesState = function() {
                 $.get(
                     'orga/organization/dwcubesstate/idOrganization/<?=$this->idOrganization?>',
                     function (response) {
+                        var button = $('#organizationDWCubes');
+                        console.log(button);
                         if (response.organizationDWCubesState) {
-                            var button = $('#organizationDWCubesState');
                             button.attr('class', 'btn btn-success')
                             button.children('i').attr('class', 'icon-leaf icon-white');
                             button.children('span').html('<?=__('Orga', 'organization', 'organizationDWCubesUpToDate')?>');
                             addMessage('<?=__('Orga', 'organization', 'organizationDWCubesUpToDate')?>', 'success');
                         } else {
-                            var button = $('#organizationDWCubesState');
                             button.attr('class', 'btn btn-danger')
                             button.children('i').prop('class', 'icon-refresh icon-white');
                             button.children('span').html('<?=__('Orga', 'organization', 'organizationDWCubesOutDated')?>');
                             addMessage('<?=__('Orga', 'organization', 'organizationDWCubesOutDated')?>', 'error');
-                            button.prop('id', 'organizationDWCubesReset');
+                            button.unbind('click');
+                            button.bind('click', resetOrganizationDWCubes);
                         }
                     }
                 ).fail(errorHandler);
-            });
-            $('#container_orga').on('click', '#organizationDWCubesReset', function() {
+            };
+            var resetOrganizationDWCubes = function() {
                 $.get(
                     'orga/organization/resetdwcubes/idOrganization/<?=$this->idOrganization?>',
                     function (response) {
-                        var button = $('#organizationDWCubesReset');
+                        var button = $('#organizationDWCubes');
                         button.attr('class', 'btn');
                         button.children('i').attr('class', 'icon-leaf');
                         button.children('span').html('<?=addslashes(__('Orga', 'organization', 'dWCubesState'))?>');
                         addMessage('<?=addslashes(__('UI', 'message', 'operationInProgress'))?>', 'warning');
-                        button.attr('id', 'organizationDWCubesState');
+                        button.unbind('click');
+                        button.bind('click', checkOrganizationDWCubesState);
                     }
                 ).fail(errorHandler);
-            });
+            };
+            $('#organizationDWCubes').unbind('click').bind('click', checkOrganizationDWCubesState);
         </script>
     </div>
 </fieldset>
