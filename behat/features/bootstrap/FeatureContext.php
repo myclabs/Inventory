@@ -36,7 +36,7 @@ class FeatureContext extends MinkContext
     public function waitForPageToFinishLoading()
     {
         $jqueryOK = '0 === jQuery.active';
-        $yuiOK = '$(".yui-dt-data>tr").length > 0';
+        $yuiOK = '($(".yui-dt").length == 0) || ($(".yui-dt-data>tr").length > 0)';
 
         // Timeout de 6 secondes
         $this->getSession()->wait(6000, "($jqueryOK) && ($yuiOK)");
