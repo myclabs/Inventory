@@ -58,6 +58,53 @@
             </tuv>
         </tu>
 
+        <!-- Statut et régénération des données d'analyse -->
+        <tu tuid="organizationDWCubesState">
+            <tuv xml:lang="fr">
+                <seg>Statut et régénération des données d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Status and rebuild of analysis data</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationDWCubesStateComment">
+            <tuv xml:lang="fr">
+                <seg>Pour tester si la structure (indcateurs, axes et membres de classification, axes et
+                    membres organisationnels) des données d'analyse de l'organisation est ou non à jour,
+                    merci de cliquer sur le bouton ci-dessous.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>To test whether the structure (indicators, classification axes and members, organizational
+                axes and members) is up to date, please press the button below.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="dWCubesState">
+            <tuv xml:lang="fr">
+                <seg>Tester si la structure des données d'analyse est à jour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Test whether or not analysis data are up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationDWCubesUpToDate">
+            <tuv xml:lang="fr">
+                <seg>La structure des données d'analyse de l'organisation sont à jour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data structure of organization is up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationDWCubesOutDated">
+            <tuv xml:lang="fr">
+                <seg>La structure des données d'analyse de l'organisation n'est pas à jour.
+                    Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez les mettre à jour.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data structure of organization si not up to date.
+                    Please press this button again if you want to update them.</seg>
+            </tuv>
+        </tu>
+
         <!-- Configuration des analyses préconfigurées -->
 
         <tu tuid="granularityAnalysesTitle">
@@ -68,14 +115,6 @@
                 <seg>Configuration of preconfigured analyses</seg>
             </tuv>
         </tu>
-
-
-
-
-
-
-
-
 
         <!-- Autres -->
         

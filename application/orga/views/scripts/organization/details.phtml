@@ -86,10 +86,11 @@
 </fieldset>
 
 <fieldset class="wrapper">
-    <legend style="cursor:default"><?=__('Orga', 'organization', 'organizationDWCubesState')?></legend>
+    <legend style="cursor:default"><?=__('Orga', 'configuration', 'organizationDWCubesState')?></legend>
+    <p><?=__('Orga', 'configuration', 'organizationDWCubesStateComment')?></p>
     <div>
         <?=
-        $this->button('<span>'.__('Orga', 'organization', 'dWCubesState').'</span>', 'leaf', array('id' => 'organizationDWCubes'));
+        $this->button('<span>'.__('Orga', 'configuration', 'dWCubesState').'</span>', 'info-sign', array('id' => 'organizationDWCubes'));
         ?>
         <script type="text/javascript">
             var checkOrganizationDWCubesState = function() {
@@ -99,14 +100,12 @@
                         var button = $('#organizationDWCubes');
                         if (response.organizationDWCubesState) {
                             button.attr('class', 'btn btn-success')
-                            button.children('i').attr('class', 'icon-leaf icon-white');
-                            button.children('span').html('<?=__('Orga', 'organization', 'organizationDWCubesUpToDate')?>');
-                            addMessage('<?=__('Orga', 'organization', 'organizationDWCubesUpToDate')?>', 'success');
+                            button.children('i').attr('class', 'icon-info-sign icon-white');
+                            button.children('span').html('<?=__('Orga', 'configuration', 'organizationDWCubesUpToDate')?>');
                         } else {
                             button.attr('class', 'btn btn-danger')
                             button.children('i').prop('class', 'icon-refresh icon-white');
-                            button.children('span').html('<?=__('Orga', 'organization', 'organizationDWCubesOutDated')?>');
-                            addMessage('<?=__('Orga', 'organization', 'organizationDWCubesOutDated')?>', 'error');
+                            button.children('span').html('<?=__('Orga', 'configuration', 'organizationDWCubesOutDated')?>');
                             button.unbind('click');
                             button.bind('click', resetOrganizationDWCubes);
                         }
@@ -120,8 +119,8 @@
                         var button = $('#organizationDWCubes');
                         button.attr('class', 'btn');
                         button.children('i').attr('class', 'icon-leaf');
-                        button.children('span').html('<?=addslashes(__('Orga', 'organization', 'dWCubesState'))?>');
-                        addMessage('<?=addslashes(__('UI', 'message', 'operationInProgress'))?>', 'warning');
+                        button.children('span').html('<?=addslashes(__('Orga', 'configuration', 'dWCubesState'))?>');
+                        addMessage('<?=addslashes(__('UI', 'message', 'operationInProgress'))?>', 'success');
                         button.unbind('click');
                         button.bind('click', checkOrganizationDWCubesState);
                     }
