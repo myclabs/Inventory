@@ -106,14 +106,14 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 new Orga_Work_Task_AddGranularity(
                     $organization,
                     $listAxes,
-                    $this->getAddElementValue('navigable'),
-                    $this->getAddElementValue('orgaTab'),
-                    $this->getAddElementValue('aCL'),
-                    $this->getAddElementValue('aFTab'),
-                    $this->getAddElementValue('dW'),
-                    $this->getAddElementValue('genericActions'),
-                    $this->getAddElementValue('contextActions'),
-                    $this->getAddElementValue('inputDocuments')
+                    (bool) $this->getAddElementValue('navigable'),
+                    (bool) $this->getAddElementValue('orgaTab'),
+                    (bool) $this->getAddElementValue('aCL'),
+                    (bool) $this->getAddElementValue('aFTab'),
+                    (bool) $this->getAddElementValue('dW'),
+                    (bool) $this->getAddElementValue('genericActions'),
+                    (bool) $this->getAddElementValue('contextActions'),
+                    (bool) $this->getAddElementValue('inputDocuments')
                 )
             );
             $this->message = __('UI', 'message', 'addedLater');
