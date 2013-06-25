@@ -722,11 +722,11 @@ class Orga_Service_ETLStructure extends Core_Singleton
 
         foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
-                $this->resetGranularityDWCubes($granularity);
+                $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
                 $entityManager->flush();
                 foreach ($granularity->getCells() as $cell) {
                     $entityManager->clear();
-                    $this->resetCellDWCube(Orga_Model_Cell::load($cell->getKey()));
+                    $this->resetCellDWCube(Orga_Model_Cell::load($cell->getId()));
                     $entityManager->flush();
                 }
             }
