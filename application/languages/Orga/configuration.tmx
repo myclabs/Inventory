@@ -96,12 +96,10 @@
         </tu>
         <tu tuid="organizationDWCubesOutDated">
             <tuv xml:lang="fr">
-                <seg>La structure des données d'analyse de l'organisation n'est pas à jour.
-                    Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez les mettre à jour.</seg>
+                <seg>La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez les mettre à jour.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Analysis data structure of organization si not up to date.
-                    Please press this button again if you want to update them.</seg>
+                <seg>Analysis data structure of organization si not up to date. Please press this button again if you want to update them.</seg>
             </tuv>
         </tu>
 
