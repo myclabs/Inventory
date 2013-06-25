@@ -67,6 +67,31 @@ class FeatureContext extends MinkContext
         }
 
         $this->assertSession()->elementContains('css', '.modal .modal-header', $popup);
+
+        // Petite pause pour l'animation du popup
+        $this->getSession()->wait(300);
+    }
+
+    /**
+     * @Then /^the field "(?P<field>[^"]*)" should have error: "(?P<error>[^"]*)"$/
+     */
+    public function assertFieldHasError($field, $error)
+    {
+        $field = $this->fixStepArgument($field);
+        $error = $this->fixStepArgument($error);
+
+        $node = $this->assertSession()->fieldExists($field);
+        $fieldId = $node->getAttribute('id');
+
+        $expression = '$("#' . $fieldId . '").parents(".controls").children(".errorMessage").text()';
+
+        $errorMessage = $this->getSession()->evaluateScript("return $expression;");
+
+        if ($errorMessage != $error) {
+            throw new ExpectationException("No error message '$error' for field '$field'.\n"
+                . "Error message found: '$errorMessage'.\n"
+                . "Javascript expression: '$expression'.", $this->getSession());
+        }
     }
 
     /**

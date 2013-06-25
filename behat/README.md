@@ -40,6 +40,9 @@ Given I am logged in
 Given I wait for [the] page to finish loading
 When I wait [for] 5 seconds
 
+# Form
+Then the field "field" should have error: "Some error"
+
 # Popup
 Then I should see the popup "Popup title"
 

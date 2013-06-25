@@ -15,10 +15,10 @@ Feature: Users
       | Administrateur | admin | Éditer      |
 
   @javascript
-  Scenario: Adding user
+  Scenario: Adding user with empty form
     Given I am on "user/profile/list"
     When I follow "Ajouter"
-    Then I should see the popup "utilisateur"
+    Then I should see the popup "Ajout d'un compte utilisateur"
     When I press "Valider"
     And I wait for the page to finish loading
-    Then I should see "Merci de renseigner ce champ."
+    Then the field "users_email_addForm" should have error: "Merci de renseigner ce champ."
