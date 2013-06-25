@@ -97,7 +97,6 @@
                     'orga/organization/dwcubesstate/idOrganization/<?=$this->idOrganization?>',
                     function (response) {
                         var button = $('#organizationDWCubes');
-                        console.log(button);
                         if (response.organizationDWCubesState) {
                             button.attr('class', 'btn btn-success')
                             button.children('i').attr('class', 'icon-leaf icon-white');
