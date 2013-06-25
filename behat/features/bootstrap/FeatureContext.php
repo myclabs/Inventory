@@ -6,6 +6,7 @@
 use Behat\Behat\Context\Step;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\ElementTextException;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
@@ -34,8 +35,11 @@ class FeatureContext extends MinkContext
      */
     public function waitForPageToFinishLoading()
     {
+        $jqueryOK = '0 === jQuery.active';
+        $yuiOK = '$(".yui-dt-data>tr").length > 0';
+
         // Timeout de 6 secondes
-        $this->getSession()->wait(6000, '(0 === jQuery.active)');
+        $this->getSession()->wait(6000, "($jqueryOK) && ($yuiOK)");
     }
 
     /**
@@ -44,6 +48,25 @@ class FeatureContext extends MinkContext
     public function wait($seconds)
     {
         $this->getSession()->wait($seconds * 1000);
+    }
+
+    /**
+     * @Then /^(?:|I )should see the popup "(?P<popup>[^"]*)"$/
+     */
+    public function assertPopupVisible($popup)
+    {
+        $jsCondition = '$(".modal:contains(\"' . $popup . '\"):visible").length > 0';
+
+        // Timeout de 2 secondes
+        $this->getSession()->wait(2000, $jsCondition);
+
+        // Test that a popup is visible
+        $return = $this->getSession()->evaluateScript("return $jsCondition;");
+        if ($return == false) {
+            throw new ExpectationException("No popup with title '$popup' is visible", $this->getSession());
+        }
+
+        $this->assertSession()->elementContains('css', '.modal .modal-header', $popup);
     }
 
     /**
