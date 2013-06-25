@@ -49,7 +49,7 @@
                 <seg>Status of organization analysis data</seg>
             </tuv>
         </tu>
-        <tu tuid="projectRebuildWarningMessage">
+        <tu tuid="organizationRebuildWarningMessage">
             <tuv xml:lang="fr">
                 <seg>Vous pouvez régénérer l'ensemble des données d'analyse de cette organisation en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
             </tuv>
@@ -57,7 +57,7 @@
                 <seg>You can rebuild the whole analysis data of this organization by clicking on the button below. This may take time.</seg>
             </tuv>
         </tu>
-        <tu tuid="projectRebuildButton">
+        <tu tuid="organizationRebuildButton">
             <tuv xml:lang="fr">
                 <seg>Régénérer l'ensemble des données d'analyse de l'organisation</seg>
             </tuv>
