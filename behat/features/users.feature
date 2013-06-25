@@ -17,7 +17,8 @@ Feature: Users
   @javascript
   Scenario: Adding user
     Given I am on "user/profile/list"
-    And I wait for the page to finish loading
     When I follow "Ajouter"
-    And I wait 1 seconds
     Then I should see the popup "utilisateur"
+    When I press "Valider"
+    And I wait for the page to finish loading
+    Then I should see "Merci de renseigner ce champ."
