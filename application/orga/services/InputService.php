@@ -83,8 +83,8 @@ class Orga_Service_InputService
             $this->eventDispatcher->dispatch($event::NAME, $event);
         }
 
+        $this->etlDataService->clearDWResultsFromCell($cell);
         if ($inputSet->isInputComplete()) {
-            $this->etlDataService->clearDWResultsFromCell($cell);
             $this->etlDataService->populateDWResultsFromCell($cell);
         }
     }
