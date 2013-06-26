@@ -17,13 +17,13 @@ class Calc_Value
      * Valeur digitale.
      * @var float|null
      */
-    public $digitalValue;
+    private $digitalValue;
 
     /**
      * Incertitude relative.
      * @var float|null
      */
-    public $relativeUncertainty;
+    private $relativeUncertainty;
 
     /**
      * @param float|null $digitalValue

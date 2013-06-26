@@ -73,9 +73,14 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
         $calcValue = new Calc_Calculation_Value();
         $calcValue->operation = Calc_Calculation::ADD_OPERATION;
         foreach ($this->components as $component) {
-            $value = clone $component['operand']->value;
+            /** @var Calc_UnitValue $unitValue */
+            $unitValue = $component['operand'];
+
             // Multiplication des valeurs par leur facteur de Conversion.
-            $value->digitalValue *= $component['operand']->unit->getConversionFactor();
+            $newDigitalValue = $unitValue->getDigitalValue() * $unitValue->getUnit()->getConversionFactor();
+
+            $value = new Calc_Value($newDigitalValue, $unitValue->getRelativeUncertainty());
+
             $calcValue->addComponents($value, $component['signExponent']);
         }
         // On calcul la somme des valeurs.

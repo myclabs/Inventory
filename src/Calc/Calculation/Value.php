@@ -30,6 +30,7 @@ class Calc_Calculation_Value extends Calc_Calculation
     /**
      * Effectue une somme ou un produit de valeurs.
      *
+     * @throws Core_Exception_InvalidArgument Unknow operation
      * @return Calc_Value $result
      */
     public function calculate()
@@ -115,7 +116,7 @@ class Calc_Calculation_Value extends Calc_Calculation
         $digitalValue = 1;
 
         foreach ($this->components as $value) {
-            $digitalValue *= pow($value['operand']->digitalValue, $value['signExponent']);
+            $digitalValue *= pow($value['operand']->getDigitalValue(), $value['signExponent']);
         }
 
         return new Calc_Value($digitalValue, $this->productUncertaintyCalculation());
