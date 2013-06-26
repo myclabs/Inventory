@@ -1,3 +1,4 @@
+@dbEmpty
 Feature: Identification
   The login form authenticates users.
 
@@ -17,7 +18,7 @@ Feature: Identification
     Then I should see "Attention ! Le mot de passe indiqué est invalide."
 
   @javascript
-  Scenario: Logging in correcly
+  Scenario: Logging in correctly
     Given I am on the homepage
     When I fill in "email" with "admin"
     And I fill in "password" with "myc-53n53"

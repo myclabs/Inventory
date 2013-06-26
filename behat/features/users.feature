@@ -1,3 +1,4 @@
+@dbEmpty
 Feature: Users
   User management.
 

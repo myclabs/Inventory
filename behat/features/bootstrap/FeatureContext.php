@@ -4,18 +4,36 @@
  */
 
 use Behat\Behat\Context\Step;
-use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Exception\ElementTextException;
+use Behat\Behat\Event\FeatureEvent;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 
-require_once __DIR__ . '/../../../vendor/autoload.php';
+define('APPLICATION_ENV', 'developpement');
+define('RUN', false);
+
+require_once __DIR__ . '/../../../application/init.php';
+
+require_once 'DatabaseFeatureContext.php';
+require_once 'DatagridFeatureContext.php';
+require_once 'PopupFeatureContext.php';
 
 /**
  * Features context.
  */
 class FeatureContext extends MinkContext
 {
+    use DatabaseFeatureContext;
+    use DatagridFeatureContext;
+    use PopupFeatureContext;
+
+    /**
+     * @BeforeFeature @dbEmpty
+     */
+    public static function loadDatabase(FeatureEvent $featureEvent)
+    {
+        self::loadFileToDatabase('base.sql');
+    }
+
     /**
      * @Given /^(?:|I )am logged in$/
      */
@@ -51,28 +69,6 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Then /^(?:|I )should see the popup "(?P<popup>[^"]*)"$/
-     */
-    public function assertPopupVisible($popup)
-    {
-        $jsCondition = '$(".modal:contains(\"' . $popup . '\"):visible").length > 0';
-
-        // Timeout de 2 secondes
-        $this->getSession()->wait(2000, $jsCondition);
-
-        // Test that a popup is visible
-        $return = $this->getSession()->evaluateScript("return $jsCondition;");
-        if ($return == false) {
-            throw new ExpectationException("No popup with title '$popup' is visible", $this->getSession());
-        }
-
-        $this->assertSession()->elementContains('css', '.modal .modal-header', $popup);
-
-        // Petite pause pour l'animation du popup
-        $this->getSession()->wait(300);
-    }
-
-    /**
      * @Then /^the field "(?P<field>[^"]*)" should have error: "(?P<error>[^"]*)"$/
      */
     public function assertFieldHasError($field, $error)
@@ -92,62 +88,5 @@ class FeatureContext extends MinkContext
                 . "Error message found: '$errorMessage'.\n"
                 . "Javascript expression: '$expression'.", $this->getSession());
         }
-    }
-
-    /**
-     * @Then /^(?:|I )should see the "(?P<datagrid>[^"]*)" datagrid$/
-     */
-    public function assertDatagridVisible($datagrid)
-    {
-        $this->assertSession()->elementExists('css', $this->getDatagridSelector($datagrid));
-    }
-
-    /**
-     * @Then /^the "(?P<datagrid>[^"]*)" datagrid should contain (?P<num>\d+) row$/
-     */
-    public function assertDatagridNumRows($datagrid, $num)
-    {
-        $rowSelector = $this->getDatagridSelector($datagrid) . ' .yui-dt-data tr';
-
-        $this->assertSession()->elementsCount('css', $rowSelector, $num);
-    }
-
-    /**
-     * @Then /^the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should contain:$/
-     */
-    public function assertDatagridRowContains($row, $datagrid, TableNode $fields)
-    {
-        foreach ($fields->getHash() as $line) {
-            foreach ($line as $column => $content) {
-                $this->assertDatagridCellContains($column, $row, $datagrid, $content);
-            }
-        }
-    }
-
-    /**
-     * @Then /^the column "(?P<column>[^"]*)" of the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should contain "(?P<content>[^"]*)"$/
-     */
-    public function assertDatagridCellContains($column, $row, $datagrid, $content)
-    {
-        $cellSelector = $this->getDatagridSelector($datagrid)
-            . " .yui-dt-data tr:nth-child($row)"
-            . " .yui-dt-col-$column";
-
-        try {
-            $this->assertElementContainsText($cellSelector, $content);
-        } catch (ElementTextException $e) {
-            $message = sprintf("The text '%s' was not found at line %s and column '%s'. \n\nOriginal message: %s",
-                $content, $row, $column, $e->getMessage());
-            throw new \Exception($message);
-        }
-    }
-
-    /**
-     * @param string $name Datagrid name
-     * @return string
-     */
-    private function getDatagridSelector($name)
-    {
-        return "#{$name}_container.yui-dt";
     }
 }
