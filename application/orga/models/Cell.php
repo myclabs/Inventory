@@ -1128,6 +1128,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function deleteDWCube()
     {
         if ($this->dWCube !== null) {
+            Orga_Service_ETLData::getInstance()->clearDWResultsForCell($this);
             $this->dWCube->delete();
             $this->dWCube = null;
         }
