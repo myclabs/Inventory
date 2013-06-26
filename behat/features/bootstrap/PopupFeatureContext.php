@@ -5,12 +5,13 @@
 
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Session;
+use Behat\Mink\WebAssert;
 
 trait PopupFeatureContext
 {
     /**
-     * @param null $name
-     * @return mixed
+     * @param string|null $name
+     * @return WebAssert
      */
     public abstract function assertSession($name = null);
     /**

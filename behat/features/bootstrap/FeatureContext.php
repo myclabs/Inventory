@@ -4,12 +4,16 @@
  */
 
 use Behat\Behat\Context\Step;
-use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Exception\ElementTextException;
+use Behat\Behat\Event\FeatureEvent;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 
-require_once __DIR__ . '/../../../vendor/autoload.php';
+define('APPLICATION_ENV', 'developpement');
+define('RUN', false);
+
+require_once __DIR__ . '/../../../application/init.php';
+
+require_once 'DatabaseFeatureContext.php';
 require_once 'DatagridFeatureContext.php';
 require_once 'PopupFeatureContext.php';
 
@@ -18,14 +22,16 @@ require_once 'PopupFeatureContext.php';
  */
 class FeatureContext extends MinkContext
 {
+    use DatabaseFeatureContext;
     use DatagridFeatureContext;
     use PopupFeatureContext;
 
     /**
-     * @Given /^the database is "(?P<db>[^"]*)"$/
+     * @BeforeFeature @dbEmpty
      */
-    public function assertDatabase($db)
+    public static function loadDatabase(FeatureEvent $featureEvent)
     {
+        self::loadFileToDatabase('base.sql');
     }
 
     /**
