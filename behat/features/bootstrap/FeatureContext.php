@@ -4,7 +4,6 @@
  */
 
 use Behat\Behat\Context\Step;
-use Behat\Behat\Event\FeatureEvent;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 
@@ -25,14 +24,6 @@ class FeatureContext extends MinkContext
     use DatabaseFeatureContext;
     use DatagridFeatureContext;
     use PopupFeatureContext;
-
-    /**
-     * @BeforeFeature @dbEmpty
-     */
-    public static function loadDatabase(FeatureEvent $featureEvent)
-    {
-        self::loadFileToDatabase('base.sql');
-    }
 
     /**
      * @Given /^(?:|I )am logged in$/
