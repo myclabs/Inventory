@@ -42,8 +42,8 @@ ob_start()
     $formExpression->addElement($input);
 
 
-    $formExpression->addActionElement(new UI_Form_Element_Submit(__('UI', 'verb', 'interpret')));
-    $formExpression->addActionElement(new UI_Form_Element_Reset(__('UI', 'verb', 'reset')));
+    $formExpression->addSubmitButton(__('UI', 'verb', 'interpret'));
+    $formExpression->addResetButton(__('UI', 'verb', 'reset'));
 ?>
   	<h1><?=__('TEC', 'interpreter', 'pageTitle')?></h1>
   	<?=$this->collapse('help', __('UI', 'name', 'help'), $helpContent)->collapsed();?>

@@ -6,7 +6,7 @@
 
         <!-- Libellés des différents rôles -->
 
-        <tu tuid="projectAdministrator">
+        <tu tuid="organizationAdministrator">
             <tuv xml:lang="fr">
                 <seg>Administrateur d'organisation</seg>
             </tuv>
@@ -14,7 +14,7 @@
                 <seg>Organization administrator</seg>
             </tuv>
         </tu>
-        <tu tuid="projectAdministrators">
+        <tu tuid="organizationAdministrators">
             <tuv xml:lang="fr">
                 <seg>Administrateurs d'organisation</seg>
             </tuv>

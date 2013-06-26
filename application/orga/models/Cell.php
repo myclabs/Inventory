@@ -1112,14 +1112,19 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function createDWCube()
     {
         if (($this->dWCube === null) && ($this->getGranularity()->getCellsGenerateDWCubes())) {
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
             /** @var Orga_Service_ETLStructure $etlStructureService */
-            $etlStructureService = $this->get('Orga_Service_ETLStructure');
+            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+            /** @var Orga_Service_ETLData $etlDataService */
+            $etlDataService = $container->get('Orga_Service_ETLData');
 
             $this->dWCube = new DW_model_cube();
             $this->dWCube->setLabel($this->getLabel());
 
             $etlStructureService->populateCellDWCube($this);
             $etlStructureService->addGranularityDWReportsToCellDWCube($this);
+            $etlDataService->populateDWResultsForCell($this);
         }
     }
 
@@ -1131,6 +1136,12 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function deleteDWCube()
     {
         if ($this->dWCube !== null) {
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
+            /** @var Orga_Service_ETLData $etlDataService */
+            $etlDataService = $container->get('Orga_Service_ETLData');
+
+            $etlDataService->clearDWResultsForCell($this);
             $this->dWCube->delete();
             $this->dWCube = null;
         }
@@ -1209,7 +1220,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function createDWResults()
     {
         foreach ($this->getPopulatedDWCubes() as $dWCube) {
-            $this->createDWResultsForCube($dWCube);
+            $this->createDWResultsForDWCube($dWCube);
         }
     }
 
@@ -1218,7 +1229,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @param DW_model_cube $dWCube
      */
-    public function createDWResultsForCube(DW_model_cube $dWCube)
+    public function createDWResultsForDWCube(DW_model_cube $dWCube)
     {
         if (($this->aFInputSetPrimary === null) || ($this->aFInputSetPrimary->getOutputSet() === null)) {
             return;

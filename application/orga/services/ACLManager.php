@@ -178,7 +178,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Création du rôle administrateur du projet donné.
         $organizationAdministrator = new User_Model_Role();
         $organizationAdministrator->setRef('organizationAdministrator_'.$organization->getId());
-        $organizationAdministrator->setName(__('Orga', 'role', 'organizationAdministrator'));
+        $organizationAdministrator->setName('organizationAdministrator');
         $organizationAdministrator->save();
         $this->newRoles[$organizationAdministrator->getRef()] = $organizationAdministrator;
 
@@ -225,7 +225,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Création du rôle administrateur de la cellule donnée.
         $cellAdministrator = new User_Model_Role();
         $cellAdministrator->setRef('cellAdministrator_'.$cell->getId());
-        $cellAdministrator->setName(__('Orga', 'role', 'cellAdministrator'));
+        $cellAdministrator->setName('cellAdministrator');
         $cellAdministrator->save();
         $this->newRoles[$cellAdministrator->getRef()] = $cellAdministrator;
 
@@ -265,7 +265,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Création du rôle contributeur de la cellule donnée.
         $cellContributor = new User_Model_Role();
         $cellContributor->setRef('cellContributor_'.$cell->getId());
-        $cellContributor->setName(__('Orga', 'role', 'cellContributor'));
+        $cellContributor->setName('cellContributor');
         $cellContributor->save();
         $this->newRoles[$cellContributor->getRef()] = $cellContributor;
 
@@ -295,7 +295,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Création du rôle observateur de la cellule donnée.
         $cellObserver = new User_Model_Role();
         $cellObserver->setRef('cellObserver_'.$cell->getId());
-        $cellObserver->setName(__('Orga', 'role', 'cellObserver'));
+        $cellObserver->setName('cellObserver');
         $cellObserver->save();
         $this->newRoles[$cellObserver->getRef()] = $cellObserver;
 

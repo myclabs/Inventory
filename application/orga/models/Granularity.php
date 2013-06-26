@@ -508,7 +508,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setNavigability($navigable)
     {
-        $this->navigable = $navigable;
+        $this->navigable = (bool) $navigable;
     }
 
     /**
@@ -764,7 +764,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsGenerateDWCubes($bool)
     {
-        $this->cellsGenerateDWCubes = $bool;
+        $this->cellsGenerateDWCubes = (bool) $bool;
         if ($this->cellsGenerateDWCubes === true) {
             $actionToDWCube = 'createDWCube';
         } else {
@@ -842,7 +842,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsWithACL($bool)
     {
-        $this->cellsWithACL = $bool;
+        $this->cellsWithACL = (bool) $bool;
     }
 
     /**
@@ -862,7 +862,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsWithOrgaTab($bool)
     {
-        $this->cellsWithOrgaTab = $bool;
+        $this->cellsWithOrgaTab = (bool) $bool;
     }
 
     /**
@@ -882,7 +882,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsWithAFConfigTab($bool)
     {
-        $this->cellsWithAFConfigTab = $bool;
+        $this->cellsWithAFConfigTab = (bool) $bool;
     }
 
     /**
@@ -904,8 +904,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsWithSocialGenericActions($bool)
     {
-        if ($this->cellsWithSocialGenericActions !== $bool) {
-            if ($bool === false) {
+        if ($this->cellsWithSocialGenericActions !== (bool) $bool) {
+            $this->cellsWithSocialGenericActions = (bool) $bool;
+            if ($this->cellsWithSocialGenericActions === false) {
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForSocialGenericAction()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialGenericActions');
@@ -919,7 +920,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
                     $cell->setDocLibraryForSocialGenericAction(new Doc_Model_Library());
                 }
             }
-            $this->cellsWithSocialGenericActions = $bool;
         }
     }
 
@@ -942,8 +942,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsWithSocialContextActions($bool)
     {
-        if ($this->cellsWithSocialContextActions !== $bool) {
-            if ($bool === false) {
+        if ($this->cellsWithSocialContextActions !== (bool) $bool) {
+            $this->cellsWithSocialContextActions = (bool) $bool;
+            if ($this->cellsWithSocialContextActions === false) {
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForSocialContextAction()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialContextActions');
@@ -957,7 +958,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
                     $cell->setDocLibraryForSocialContextAction(new Doc_Model_Library());
                 }
             }
-            $this->cellsWithSocialContextActions = $bool;
         }
     }
 
@@ -980,8 +980,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsWithInputDocuments($bool)
     {
-        if ($this->cellsWithInputDocs !== $bool) {
-            if ($bool === false) {
+        if ($this->cellsWithInputDocs !== (bool) $bool) {
+            $this->cellsWithInputDocs = (bool) $bool;
+            if ($this->cellsWithInputDocs === false) {
                 foreach ($this->getCells() as $cell) {
                     if ($cell->getDocLibraryForAFInputSetsPrimary()->hasDocuments()) {
                         throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithInputDocs');
@@ -995,7 +996,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
                     $cell->setDocLibraryForAFInputSetsPrimary(new Doc_Model_Library());
                 }
             }
-            $this->cellsWithInputDocs = $bool;
         }
     }
 

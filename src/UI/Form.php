@@ -203,25 +203,27 @@ class UI_Form extends Zend_Form
     /**
      * Add a submit button to the form.
      * @param string $label Button caption
+     * @param string $ref
      */
-    public function addSubmitButton($label = null)
+    public function addSubmitButton($label=null, $ref=null)
     {
         if ($label == null) {
             $label = __('UI', 'verb', 'save');
         }
-        $this->addActionElement(new UI_Form_Element_Submit($label));
+        $this->addActionElement(new UI_Form_Element_Submit((($ref === null) ? $label : $ref), $label));
     }
 
     /**
      * Add a reset button to the form.
      * @param string $label Button caption
+     * @param string $ref
      */
-    public function addResetButton($label = null)
+    public function addResetButton($label=null, $ref=null)
     {
         if ($label == null) {
             $label = __('UI', 'verb', 'reset');
         }
-        $this->addActionElement(new UI_Form_Element_Reset($label));
+        $this->addActionElement(new UI_Form_Element_Reset((($ref === null) ? $label : $ref), $label));
     }
 
     /**

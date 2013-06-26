@@ -15,7 +15,7 @@ use DI\Annotation\Inject;
  * @package    Orga
  * @subpackage Controller
  */
-class Orga_CellController extends Core_Controller
+class Orga_CellController extends Core_Controller_Ajax
 {
     /**
      * @Inject

@@ -117,8 +117,6 @@ class Orga_OrganizationController extends Core_Controller
         $aclQuery->aclFilter->user = $connectedUser;
         $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
         $this->view->isConnectedUserAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
-        $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
-        $this->view->isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
     }
 
     /**
@@ -195,11 +193,12 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function dwcubesstateAction()
     {
-        // Désactivation du layout.
-        $this->_helper->layout()->disableLayout();
-        $this->view->idOrganization = $this->getParam('idOrganization');
-        $this->view->areOrganizationDWCubesUpToDate = $this->etlStructureService->areOrganizationDWCubesUpToDate(
-            Orga_Model_Organization::load($this->view->idOrganization)
+        $this->sendJsonResponse(
+            array(
+                'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
+                    Orga_Model_Organization::load($this->getParam('idOrganization'))
+                )
+            )
         );
     }
 
@@ -223,7 +222,7 @@ class Orga_OrganizationController extends Core_Controller
         } catch (Core_Exception_NotFound $e) {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
         }
-        $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
+        $this->sendJsonResponse(array());
     }
 
     /**

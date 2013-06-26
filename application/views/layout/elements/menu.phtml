@@ -50,6 +50,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
     $refer = urlencode($refer);
     $connection = array(
         'name'    => $connectedUser->getName() . ' ',
+        'id'      => 'currentUserButton',
         'icon'    => 'off',
         'url'     => 'user/action/logout?refer='.$refer,
         'submenu' => array(
@@ -58,8 +59,9 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
                 'url'  => 'user/profile/edit/',
             ),
             array(
-                'name' => __('User', 'menu', 'logout'),
-                'url'  => 'user/action/logout?refer='.$refer,
+                'name'  => __('User', 'menu', 'logout'),
+                'id'    => 'logoutButton',
+                'url'   => 'user/action/logout?refer=' . $refer,
             ),
         ),
     );
@@ -342,6 +344,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
     $refer = urlencode($refer);
     $connection = array(
         'name'    => __('User', 'login', 'connection'),
+        'id'      => 'loginButton',
         'icon'    => 'off',
         'url'     => 'user/action/login?refer='.$refer,
         'submenu' => null,
@@ -446,20 +449,36 @@ $rightMenu = [ $connection ];
             <div class="btn-group pull-right">
                 <?php foreach ($rightMenu as $node) {
                     if (isset($node['submenu']) && (is_array($node['submenu'])) && (count($node['submenu']) > 0)) {
+                        $linkId = '';
+                        if (isset($node['id'])) {
+                            $linkId = $node['id'];
+                        }
                         ?>
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <a id="<?=$linkId?>" class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <?php       foreach ($node['submenu'] as $submenu) { ?>
-                                <li><a href="<?=$submenu['url']?>"><?=$submenu['name']?></a></li>
+                            <?php foreach ($node['submenu'] as $submenu) { ?>
+                                <?php
+                                $linkId = '';
+                                if (isset($submenu['id'])) {
+                                    $linkId = $submenu['id'];
+                                }
+                                ?>
+                                <li><a id="<?=$linkId?>" href="<?=$submenu['url']?>"><?=$submenu['name']?></a></li>
                                 <?php if ($submenu != end($node['submenu'])) { ?>
                                     <li class="divider"></li>
                                 <?php } ?>
                             <?php } ?>
                         </ul>
                     <?php } else { ?>
-                        <a class="btn" href="<?=$node['url']?>"><i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?>
+                        <?php
+                        $linkId = '';
+                        if (isset($node['id'])) {
+                            $linkId = $node['id'];
+                        }
+                        ?>
+                        <a id="<?=$linkId?>" class="btn" href="<?=$node['url']?>"><i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?>
                         </a>
                     <?php } ?>
                 <?php } ?>

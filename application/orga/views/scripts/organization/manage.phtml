@@ -26,7 +26,7 @@ $columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details')
 $columnDetails->addable = false;
 $datagridOrganization->addCol($columnDetails);
 
-$datagridOrganization->deleteElements = $this->isConnectedUserAbleToDeleteOrganizations;
+$datagridOrganization->deleteElements = $this->isConnectedUserAbleToCreateOrganizations;
 $datagridOrganization->pagination = false;
 $datagridOrganization->addElements = $this->isConnectedUserAbleToCreateOrganizations;
 $datagridOrganization->addPanelTitle = __('Orga', 'organization', 'addPanelTitle');

@@ -719,11 +719,11 @@ class Orga_Service_ETLStructure
     {
         foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
-                $this->resetGranularityDWCubes($granularity);
+                $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
                 $this->entityManager->flush();
                 foreach ($granularity->getCells() as $cell) {
                     $this->entityManager->clear();
-                    $this->resetCellDWCube(Orga_Model_Cell::load($cell->getKey()));
+                    $this->resetCellDWCube(Orga_Model_Cell::load($cell->getId()));
                     $this->entityManager->flush();
                 }
             }

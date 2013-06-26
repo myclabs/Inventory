@@ -73,6 +73,8 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
     /**
      * (non-PHPdoc)
      * @see UI_Controller_Datagrid::deleteelementAction()
+     *
+     * @Secure("deleteKeyword")
      */
     public function deleteelementAction()
     {
