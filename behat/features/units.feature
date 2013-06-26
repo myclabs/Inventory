@@ -16,8 +16,8 @@ Feature: Units
     And I should see "ℓ"
   # Séparateur de décimale
     And the row 7 of the "ListStandardUnits" datagrid should contain:
-    | name     | ref | symbol | physicalQuantity | multiplier   | unitSystem
-    | gramme   | g   | g      | Masse            | 0,001        | International
+    | name     | ref | symbol | physicalQuantity | multiplier   | unitSystem|
+    | gramme   | g   | g      | Masse            | 0,001        | International|
 
   @javascript
   Scenario: Extended units
@@ -27,5 +27,5 @@ Feature: Units
     And I should see the "ListExtendedUnit" datagrid
     # Multiplicateur (A MODIFIER CAR POUR L'INSTANT BUG)
     And the row 1 of the "ListExtendedUnit" datagrid should contain:
-      | name                  | ref     | symbol     | multiplier
-      | gramme équivalent CO2 | g_co2e  | g équ. CO2 | 0
+      | name                  | ref     | symbol     | multiplier|
+      | gramme équivalent CO2 | g_co2e  | g équ. CO2 | 0         |
