@@ -542,6 +542,16 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
+    protected function deleteKeywordRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->editReferential($identity);
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
     protected function viewUnitRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);

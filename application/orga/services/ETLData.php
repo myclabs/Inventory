@@ -66,7 +66,7 @@ class Orga_Service_ETLData extends Core_Singleton
     public function populateDWResultsForCell($cell)
     {
         foreach ($cell->getPopulatingCells() as $populatingCell) {
-            $populatingCell->createDWResultsForCube($cell->getDWCube());
+            $populatingCell->createDWResultsForDWCube($cell->getDWCube());
         }
     }
 

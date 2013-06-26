@@ -1117,6 +1117,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 
             Orga_Service_ETLStructure::getInstance()->populateCellDWCube($this);
             Orga_Service_ETLStructure::getInstance()->addGranularityDWReportsToCellDWCube($this);
+            Orga_Service_ETLData::getInstance()->populateDWResultsForCell($this);
         }
     }
 
@@ -1128,6 +1129,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function deleteDWCube()
     {
         if ($this->dWCube !== null) {
+            Orga_Service_ETLData::getInstance()->clearDWResultsForCell($this);
             $this->dWCube->delete();
             $this->dWCube = null;
         }
@@ -1201,7 +1203,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function createDWResults()
     {
         foreach ($this->getPopulatedDWCubes() as $dWCube) {
-            $this->createDWResultsForCube($dWCube);
+            $this->createDWResultsForDWCube($dWCube);
         }
     }
 
@@ -1210,7 +1212,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @param DW_model_cube $dWCube
      */
-    public function createDWResultsForCube(DW_model_cube $dWCube)
+    public function createDWResultsForDWCube(DW_model_cube $dWCube)
     {
         if (($this->aFInputSetPrimary === null) || ($this->aFInputSetPrimary->getOutputSet() === null)) {
             return;
