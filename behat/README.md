@@ -19,15 +19,18 @@ Update composer if needed
 
 Launch the Selenium server:
 
-    java -jar behat/selenium-server-standalone.jar
+    cd behat/
+    ./start-selenium.sh
 
 In another console, launch the tests:
 
-    vendor/behat/behat/bin/behat --config behat/behat.yml --ansi
+    cd behat/
+    ./tests.sh
 
 You can launch a specific "Feature" or "Scenario" by its name:
 
-    vendor/behat/behat/bin/behat --config behat/behat.yml --ansi --name "Login redirection"
+    cd behat/
+    ../vendor/behat/behat/bin/behat --config behat.yml --ansi --name "Login redirection"
 
 ## Write the tests
 
