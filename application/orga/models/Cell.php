@@ -1117,6 +1117,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 
             Orga_Service_ETLStructure::getInstance()->populateCellDWCube($this);
             Orga_Service_ETLStructure::getInstance()->addGranularityDWReportsToCellDWCube($this);
+            Orga_Service_ETLData::getInstance()->populateDWResultsForCell($this);
         }
     }
 
