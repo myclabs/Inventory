@@ -62,8 +62,8 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
         /** @var Techno_Model_Element_Coeff|Techno_Model_Element_Process $chosenElement */
         return [
             'url'         => $this->baseUrl('techno/element/details/id/' . $chosenElement->getId()),
-            'value'       => $locale->formatNumber($chosenElement->getValue()->digitalValue, 3),
-            'uncertainty' => $locale->formatUncertainty($chosenElement->getValue()->relativeUncertainty),
+            'value'       => $locale->formatNumber($chosenElement->getValue()->getDigitalValue(), 3),
+            'uncertainty' => $locale->formatUncertainty($chosenElement->getValue()->getRelativeUncertainty()),
             'unit'        => $chosenElement->getUnit()->getSymbol(),
         ];
     }

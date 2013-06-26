@@ -52,20 +52,18 @@ class Calc_Calculation_Value extends Calc_Calculation
      */
     protected function calculateSum()
     {
-        $result = new Calc_Value();
-        $result->digitalValue = 0;
+        $digitalValue = 0;
 
         foreach ($this->components as $value) {
             // Selon le signe du calcul on additionne ou on soustrait.
             if ($value['signExponent'] == Calc_Calculation::SUBSTRACTION) {
-                $result->digitalValue += - $value['operand']->digitalValue;
+                $digitalValue -= $value['operand']->getDigitalValue();
             } else {
-                $result->digitalValue += $value['operand']->digitalValue;
+                $digitalValue += $value['operand']->getDigitalValue();
             }
         }
-        $result->relativeUncertainty = $this->sumUncertaintyCalculation();
 
-        return $result;
+        return new Calc_Value($digitalValue, $this->sumUncertaintyCalculation());
     }
 
     /**
@@ -82,7 +80,7 @@ class Calc_Calculation_Value extends Calc_Calculation
 
         // On regarde si les incertitudes sont vide ou non
         foreach ($this->components as $value) {
-            if ($value['operand']->relativeUncertainty !== null) {
+            if ($value['operand']->getRelativeUncertainty() !== null) {
                 $emptyUncertainty = false;
                 break;
             }
@@ -93,8 +91,8 @@ class Calc_Calculation_Value extends Calc_Calculation
         } else {
             // Sinon on calcul les incertitudes
             foreach ($this->components as $value) {
-                $squareSum  += pow($value['operand']->digitalValue * $value['operand']->relativeUncertainty, 2);
-                $valueSum += $value['operand']->digitalValue;
+                $squareSum  += pow($value['operand']->getDigitalValue() * $value['operand']->getRelativeUncertainty(), 2);
+                $valueSum += $value['operand']->getDigitalValue();
             }
             if (abs($valueSum) * sqrt($squareSum) == 0) {
                 $result = 0;
@@ -114,15 +112,13 @@ class Calc_Calculation_Value extends Calc_Calculation
      */
     protected function calculateProduct()
     {
-        $result = new Calc_Value();
-        $result->digitalValue = 1;
+        $digitalValue = 1;
 
         foreach ($this->components as $value) {
-            $result->digitalValue *= pow($value['operand']->digitalValue, $value['signExponent']);
+            $digitalValue *= pow($value['operand']->digitalValue, $value['signExponent']);
         }
-        $result->relativeUncertainty = $this->productUncertaintyCalculation();
 
-        return $result;
+        return new Calc_Value($digitalValue, $this->productUncertaintyCalculation());
     }
 
 
@@ -138,7 +134,7 @@ class Calc_Calculation_Value extends Calc_Calculation
 
         // On regarde si les incertitudes sont vides ou non
         foreach ($this->components as $value) {
-            if ($value['operand']->relativeUncertainty !== null) {
+            if ($value['operand']->getRelativeUncertainty() !== null) {
                 $emptyUncertainty = false;
                 break;
             }
@@ -150,10 +146,10 @@ class Calc_Calculation_Value extends Calc_Calculation
             // Sinon on calcul l'incertitude
             foreach ($this->components as $value) {
                 // Si une valeur est null on ne calcul pas l'incertitude relative mais on renvoi 0
-                if ($value['operand']->digitalValue == 0) {
+                if ($value['operand']->getDigitalValue() == 0) {
                     return 0;
                 }
-                $result += pow($value['operand']->relativeUncertainty, 2);
+                $result += pow($value['operand']->getRelativeUncertainty(), 2);
             }
             $result = sqrt($result);
 

@@ -31,13 +31,13 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
      * Calcul une somme ou un produit de valeurs associées à leurs unités
      * en fonction de l'operation spécifiée.
      *
-     * @return Calc_Calculation_UnitValue
+     * @throws Core_Exception_InvalidArgument
+     * @return Calc_UnitValue
      */
     public function calculate()
     {
         $this->checkComponent();
 
-        $result = new Calc_UnitValue();
         if ($this->operation == Calc_Calculation::ADD_OPERATION) {
             return $this->calculateSum();
         } elseif ($this->operation == Calc_Calculation::MULTIPLY_OPERATION) {
@@ -82,11 +82,11 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
         $calculationValue = $calcValue->calculate();
 
         // On rempli une unitValue avec avec la valeur et l' unité calculées.
-        $unitValue = new Calc_UnitValue();
-        $unitValue->unit  = $calculationUnit;
-        $unitValue->value = $calculationValue;
-
-        return $unitValue;
+        return new Calc_UnitValue(
+            $calculationUnit,
+            $calculationValue->getDigitalValue(),
+            $calculationValue->getRelativeUncertainty()
+        );
     }
 
     /**
@@ -132,14 +132,14 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
         // On calcul la somme des valeurs.
         $calculationValue = $calcValue->calculate();
         // On multpilie le resultat par le facteur de conversion.
-        $calculationValue->digitalValue *= $facteurConversion;
+        $calculationDigitalValue = $calculationValue->getDigitalValue() * $facteurConversion;
 
-        // On rempli une unitValue avec avec la valeur et l' unité calculées.
-        $unitValue = new Calc_UnitValue();
-        $unitValue->unit  = $calculationUnit;
-        $unitValue->value = $calculationValue;
-
-        return $unitValue;
+        // On rempli une unitValue avec avec la valeur et l'unité calculée
+        return new Calc_UnitValue(
+            $calculationUnit,
+            $calculationDigitalValue,
+            $calculationValue->getRelativeUncertainty()
+        );
     }
 
 }

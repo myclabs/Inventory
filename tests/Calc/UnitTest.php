@@ -46,8 +46,6 @@ class Calc_Test_Calculation_UnitSetUp extends PHPUnit_Framework_TestCase
     {
         $o = new Calc_UnitValue();
         $this->assertInstanceOf('Calc_UnitValue', $o);
-        $this->assertInstanceOf('Calc_Value', $o->value);
-        $this->assertInstanceOf('Unit_API', $o->unit);
     }
 
 }

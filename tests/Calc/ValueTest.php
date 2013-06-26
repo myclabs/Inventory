@@ -32,25 +32,14 @@ class Calc_Test_ValueTest
 class Calc_Test_Calculation_ValueSetUp extends PHPUnit_Framework_TestCase
 {
     /**
-     * Test du constructeur d'un Calc_Calculation_Value.
-     */
-    function testConstructCalculation()
-    {
-        $o = new Calc_Calculation_Value();
-        $this->assertInstanceOf('Calc_Calculation_Value', $o);
-    }
-
-    /**
      * Test du constructeur d'une Calc_Value.
      */
     function testConstructValue()
     {
         $o = new Calc_Value();
-        $this->assertInstanceOf('Calc_Value', $o);
-        $this->assertEquals($o->digitalValue, 0);
-        $this->assertEquals($o->relativeUncertainty, null);
+        $this->assertEquals($o->getDigitalValue(), 0);
+        $this->assertEquals($o->getRelativeUncertainty(), null);
     }
-
 }
 
 /**
@@ -66,13 +55,9 @@ class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
     function testCalculate()
     {
          // Test somme OK
-         $value1 = new Calc_Value();
-         $value1->digitalValue = 2;
-         $value1->relativeUncertainty = 0.1;
+         $value1 = new Calc_Value(2, 0.1);
 
-         $value2 = new Calc_Value();
-         $value2->digitalValue = 5;
-         $value2->relativeUncertainty = 0.3;
+         $value2 = new Calc_Value(5, 0.3);
 
          $calcValue = new Calc_Calculation_Value();
          $calcValue->setOperation(Calc_Calculation::ADD_OPERATION);
@@ -80,7 +65,7 @@ class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
          $calcValue->addComponents($value2, Calc_Calculation::SUBSTRACTION);
 
          $result = $calcValue->calculate();
-         $this->assertEquals(-3, $result->digitalValue);
+         $this->assertEquals(-3, $result->getDigitalValue());
 
          // Test multiplication OK
          $calcValue1 = new Calc_Calculation_Value();
@@ -90,7 +75,7 @@ class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
 
          $result = $calcValue1->calculate();
 
-         $this->assertEquals(0.4, $result->digitalValue);
+         $this->assertEquals(0.4, $result->getDigitalValue());
     }
 
     /**
