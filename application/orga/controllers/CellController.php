@@ -15,19 +15,13 @@ use DI\Annotation\Inject;
  * @package    Orga
  * @subpackage Controller
  */
-class Orga_CellController extends Core_Controller_Ajax
+class Orga_CellController extends Core_Controller
 {
     /**
      * @Inject
      * @var User_Service_ACL
      */
     private $aclService;
-
-    /**
-     * @Inject
-     * @var Orga_Service_ETLData
-     */
-    private $etlDataService;
 
     /**
      * @Inject
