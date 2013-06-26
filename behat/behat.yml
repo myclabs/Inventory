@@ -6,5 +6,5 @@ default:
       base_url: http://localhost/inventory
       default_session: selenium2
       selenium2:
-        browser: 'chrome'
+        browser: 'firefox'
         wd_host: 'http://localhost:4444/wd/hub'
