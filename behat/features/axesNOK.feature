@@ -1,4 +1,4 @@
-Feature: Organizational axes
+Feature: OrgaAxesNOK
 
   Background:
     Given I am logged in

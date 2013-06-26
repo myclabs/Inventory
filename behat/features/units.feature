@@ -7,6 +7,8 @@ Feature: Units
   @javascript
   Scenario: Standard units
     Given I am on "unit/consult/standardunits"
+  #  When I follow "Unités"
+  #  And I follow "Unités standards"
     And I wait for the page to finish loading
     Then I should see "Unités standards"
     And I should see the "ListStandardUnits" datagrid
@@ -29,3 +31,23 @@ Feature: Units
     And the row 1 of the "ListExtendedUnit" datagrid should contain:
       | name                  | ref     | symbol     | multiplier|
       | gramme équivalent CO2 | g_co2e  | g équ. CO2 | 0         |
+
+  @javascript
+  Scenario: Discrete units
+    Given I am on "unit/consult/discreteunits"
+    And I wait for the page to finish loading
+    Then I should see "Unités discrètes"
+    And I should see the "ListDiscreteUnit" datagrid
+    And the row 1 of the "ListDiscreteUnit" datagrid should contain:
+      | name    | ref     |
+      | animal  | animal  |
+
+  @javascript
+  Scenario: Physical quantities
+    Given I am on "unit/consult/physicalquantities"
+    And I wait for the page to finish loading
+    Then I should see "Grandeurs physiques"
+    And I should see the "ListPhysicalQuantity" datagrid
+    And the row 2 of the "ListPhysicalQuantity" datagrid should contain:
+      | name    | referenceUnit  | l | m | t | numeraire |
+      | Longueur  | mètre        | 1 | 0 | 0 | 0         |
