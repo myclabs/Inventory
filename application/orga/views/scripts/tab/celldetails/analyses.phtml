@@ -37,7 +37,7 @@ if (!$this->isDWCubeUpToDate) { ?>
 </div>
 <?php } ?>
 
-<a id="exportAsExcel" href="<?=$this->baseUrl()?>/dw/organization/export?idOrganization=<?=$this->idOrganization?>" class="btn">
+<a id="exportAsExcel" href="dw/cube/export/idCube/<?=$this->idCube?>" class="btn">
     <img src="images/dw/xls.png" alt="xls" />
     <?=__('DW', 'reportList', 'detailedSpreadsheetExport')?>
 </a>
