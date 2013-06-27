@@ -61,7 +61,7 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Then /^the field "(?P<field>[^"]*)" should have error: "(?P<error>[^"]*)"$/
+     * @Then /^the field "(?P<field>[^"]*)" should have error: "(?P<error>(?:[^"]|\\")*)"$/
      */
     public function assertFieldHasError($field, $error)
     {
