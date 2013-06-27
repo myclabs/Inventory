@@ -11,7 +11,7 @@ Feature: OrgaAxesNOK
     And I open tab "Organisation"
     And I open tab "Axes"
     # Ajout d'un axe, identifiant vide
-    And I follow "Ajouter"
+    And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I press "Valider"
     And I wait for the page to finish loading

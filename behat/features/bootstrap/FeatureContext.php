@@ -7,6 +7,7 @@ use Behat\Behat\Context\Step;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
+use WebDriver\Exception;
 
 define('APPLICATION_ENV', 'developpement');
 define('RUN', false);
@@ -47,9 +48,10 @@ class FeatureContext extends MinkContext
     {
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
+        $maskOK = '$("#loadingMask:visible").length == 0';
 
         // Timeout de 6 secondes
-        $this->getSession()->wait(6000, "($jqueryOK) && ($datagridOK)");
+        $this->getSession()->wait(6000, "($jqueryOK) && ($datagridOK) && ($maskOK)");
     }
 
     /**
@@ -135,16 +137,40 @@ class FeatureContext extends MinkContext
      *
      * @param string $locator link id, title, text or image alt
      *
+     * @throws ExpectationException Not found
      * @return NodeElement|null
      */
     private function findLinkOrButton($locator)
     {
-        return $this->getSession()->getPage()->find(
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll(
             'named',
             array(
                  'link_or_button',
                  $this->getSession()->getSelectorsHandler()->xpathLiteral($locator)
             )
         );
+
+        if (count($nodes) === 0) {
+            throw new ExpectationException("No link or button with text, id or title '$locator' found.",
+                $this->getSession());
+        }
+
+        array_filter($nodes, function(NodeElement $node) {
+                return $node->isVisible();
+            });
+
+        if (count($nodes) === 0) {
+            throw new ExpectationException("No link or button with text, id or title '$locator' is visible.",
+                $this->getSession());
+        }
+
+        if (count($nodes) > 1) {
+            $nb = count($nodes);
+            throw new ExpectationException("Too many ($nb) links or buttons with text, id or title '$locator' are visible.",
+                $this->getSession());
+        }
+
+        return current($nodes);
     }
 }
