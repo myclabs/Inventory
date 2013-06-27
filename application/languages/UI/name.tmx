@@ -475,6 +475,14 @@
                 <seg>Results</seg>
             </tuv>
         </tu>
+        <tu tuid="roundedValue">
+            <tuv xml:lang="fr">
+                <seg>Valeur arrondie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Rounded value</seg>
+            </tuv>
+        </tu>
         <tu tuid="root">
             <tuv xml:lang="fr">
                 <seg>Racine</seg>
