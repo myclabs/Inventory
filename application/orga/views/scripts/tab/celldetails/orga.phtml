@@ -9,7 +9,7 @@ $tabView = new UI_Tab_View('orga');
 if ($this->isGlobal) {
     $organizationTab = new UI_Tab('organization');
     $organizationTab->label = __('UI', 'name', 'configuration');
-    $organizationTab->dataSource = 'orga/organization/details/idOrganization/'.$this->idOrganization.'/display/render';
+    $organizationTab->dataSource = 'orga/organization/details/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
     $organizationTab->useCache = false;
     $tabView->addTab($organizationTab);
 
