@@ -9,7 +9,7 @@ Feature: Keyword
     Given I am on "keyword/predicate/manage"
     # Ajout d'une paire prédicat/prédicat inverse, messages d'erreur
     When I follow "Ajouter"
-    Then I should see the popup "Ajout"
+    Then I should see the popup "Ajout d'une paire prédicat / prédicat inverse"
     When I fill in "predicates_ref_addForm" with "bépo"
     And I press "Valider"
     And I wait for the page to finish loading

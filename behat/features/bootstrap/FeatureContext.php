@@ -46,7 +46,7 @@ class FeatureContext extends MinkContext
     public function waitForPageToFinishLoading()
     {
         $jqueryOK = '0 === jQuery.active';
-        $datagridOK = '$(".yui-dt-message:visible").length == 0';
+        $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
 
         // Timeout de 6 secondes
         $this->getSession()->wait(6000, "($jqueryOK) && ($datagridOK)");

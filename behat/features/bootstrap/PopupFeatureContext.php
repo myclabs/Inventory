@@ -25,18 +25,13 @@ trait PopupFeatureContext
      */
     public function assertPopupVisible($popup)
     {
-        $jsCondition = '$(".modal:contains(\"' . $popup . '\"):visible").length > 0';
+        $jsCondition = '$(".modal .modal-header:contains(\"' . $popup . '\"):visible").length > 0';
 
         // Timeout de 2 secondes
         $this->getSession()->wait(2000, $jsCondition);
 
         // Test that a popup is visible
-        $return = $this->getSession()->evaluateScript("return $jsCondition;");
-        if ($return == false) {
-            throw new ExpectationException("No popup with title '$popup' is visible", $this->getSession());
-        }
-
-        $this->assertSession()->elementContains('css', '.modal .modal-header', $popup);
+        $this->assertSession()->elementExists('css', ".modal .modal-header:contains(\"$popup\")");
 
         // Petite pause pour l'animation du popup
         $this->getSession()->wait(300);
