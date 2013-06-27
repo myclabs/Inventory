@@ -4,7 +4,7 @@ Feature: OrgaMembersNOK
   Background:
     Given I am logged in
 
-  @javascript
+  # @javascript
   Scenario: OrgaMembersNOKScenario
     # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
