@@ -15,12 +15,15 @@ trait DatagridFeatureContext
      */
     public abstract function assertSession($name = null);
     public abstract function assertElementContainsText($element, $text);
+    public abstract function waitForPageToFinishLoading();
 
     /**
      * @Then /^(?:|I )should see the "(?P<datagrid>[^"]*)" datagrid$/
      */
     public function assertDatagridVisible($datagrid)
     {
+        $this->waitForPageToFinishLoading();
+
         $this->assertSession()->elementExists('css', $this->getDatagridSelector($datagrid));
     }
 

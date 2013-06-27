@@ -92,6 +92,8 @@ class FeatureContext extends MinkContext
         $name = $this->fixStepArgument($name);
         $node = $this->findLinkOrButton($name);
         $node->click();
+
+        $this->waitForPageToFinishLoading();
     }
 
     /**
@@ -99,14 +101,33 @@ class FeatureContext extends MinkContext
      *
      * @When /^(?:|I )open collapse "(?P<collapse>(?:[^"]|\\")*)"$/
      */
-    public function openCollapse($collapse)
+    public function openCollapse($label)
     {
-        $collapse = $this->fixStepArgument($collapse);
+        $label = $this->fixStepArgument($label);
         $node = $this->getSession()->getPage()->find(
             'css',
-            'legend:contains("' . $collapse . '")'
+            'legend:contains("' . $label . '")'
         );
         $node->click();
+
+        $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * Open a collapse with specified text.
+     *
+     * @When /^(?:|I )open tab "(?P<label>(?:[^"]|\\")*)"$/
+     */
+    public function openTab($label)
+    {
+        $label = $this->fixStepArgument($label);
+        $node = $this->getSession()->getPage()->find(
+            'css',
+            '.nav-tabs a:contains("' . $label . '")'
+        );
+        $node->click();
+
+        $this->waitForPageToFinishLoading();
     }
 
     /**

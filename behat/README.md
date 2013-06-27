@@ -44,7 +44,8 @@ Given I wait for [the] page to finish loading
 When I wait [for] 5 seconds
 
 When I click "button/link"
-When I open collapse "label/id"
+When I open collapse "label"
+When I open tab "label"
 
 # Form
 Then the field "field" should have error: "Some error"
