@@ -31,8 +31,8 @@ class Calc_Value
      */
     public function __construct($digitalValue = null, $relativeUncertainty = null)
     {
-        $this->digitalValue = $digitalValue;
-        $this->relativeUncertainty = $relativeUncertainty;
+        $this->digitalValue = is_numeric($digitalValue) ? floatval($digitalValue) : null;
+        $this->relativeUncertainty = is_numeric($relativeUncertainty) ? floatval($relativeUncertainty) : null;
     }
 
     /**
@@ -69,5 +69,33 @@ class Calc_Value
     public function getRelativeUncertainty()
     {
         return $this->relativeUncertainty;
+    }
+
+    /**
+     * Export the object to a string representation
+     * @see Calc_Value::createFromString
+     * @return string
+     */
+    public function exportToString()
+    {
+        return $this->digitalValue . ';' . $this->relativeUncertainty;
+    }
+
+    /**
+     * Creates a Value from a string representation
+     * @see Calc_Value::exportToString
+     * @param string $str
+     * @throws InvalidArgumentException Invalid string
+     * @return Calc_Value
+     */
+    public static function createFromString($str)
+    {
+        if (strpos($str, ';') === false) {
+            throw new InvalidArgumentException("Invalid string");
+        }
+
+        list($digitalValue, $relativeUncertainty) = explode(';', $str);
+
+        return new static($digitalValue, $relativeUncertainty);
     }
 }

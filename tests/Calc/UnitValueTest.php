@@ -117,4 +117,52 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @dataProvider valueProvider
+     * @param Calc_UnitValue $value
+     */
+    public function testExportToString(Calc_UnitValue $value)
+    {
+        $str = $value->exportToString();
+
+        $unserialized = Calc_UnitValue::createFromString($str);
+
+        $this->assertInstanceOf('Calc_UnitValue', $unserialized);
+        $this->assertEquals($value->getUnit()->getRef(), $unserialized->getUnit()->getRef(), "String: '$str'");
+        $this->assertSame($value->getDigitalValue(), $unserialized->getDigitalValue(), "String: '$str'");
+        $this->assertSame($value->getRelativeUncertainty(), $unserialized->getRelativeUncertainty(), "String: '$str'");
+    }
+
+    public function valueProvider()
+    {
+        return [
+            [new Calc_UnitValue(new Unit_API('g'), 0, 0)],
+            [new Calc_UnitValue()],
+            [new Calc_UnitValue(new Unit_API('g'))],
+            [new Calc_UnitValue(new Unit_API('g'), 0)],
+            [new Calc_UnitValue(new Unit_API())],
+            [new Calc_UnitValue(new Unit_API('g'), '0.1', '0.1')],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidStrings
+     * @expectedException InvalidArgumentException
+     * @param string $str
+     */
+    public function testCreateFromStringInvalid($str)
+    {
+        Calc_UnitValue::createFromString($str);
+    }
+
+    public function invalidStrings()
+    {
+        return [
+            [''],
+            ['foo'],
+            [';'],
+            ['|'],
+        ];
+    }
+
 }

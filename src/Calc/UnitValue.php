@@ -27,14 +27,14 @@ class Calc_UnitValue
      *
      * @var Unit_API
      */
-    public $unit;
+    private $unit;
 
     /**
      * Value.
      *
      * @var Calc_Value
      */
-    public $value;
+    private $value;
 
 
     /**
@@ -141,6 +141,36 @@ class Calc_UnitValue
     public function getRelativeUncertainty()
     {
         return $this->value->getRelativeUncertainty();
+    }
+
+    /**
+     * Export the object to a string representation
+     * @see Calc_UnitValue::createFromString
+     * @return string
+     */
+    public function exportToString()
+    {
+        return $this->value->exportToString() . '|' . $this->unit->getRef();
+    }
+
+    /**
+     * Creates a UnitValue from a string representation
+     * @see Calc_UnitValue::exportToString
+     * @param string $str
+     * @throws InvalidArgumentException Invalid string
+     * @return Calc_UnitValue
+     */
+    public static function createFromString($str)
+    {
+        if (strpos($str, '|') === false) {
+            throw new InvalidArgumentException("Invalid string");
+        }
+
+        list($strValue, $unitRef) = explode('|', $str);
+
+        $value = Calc_Value::createFromString($strValue);
+
+        return new static(new Unit_API($unitRef), $value->getDigitalValue(), $value->getRelativeUncertainty());
     }
 
 }

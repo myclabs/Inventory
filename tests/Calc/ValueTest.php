@@ -96,4 +96,81 @@ class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function testFloatAndNullValues()
+    {
+        $value = new Calc_Value(0, 0);
+        $this->assertEquals(0, $value->getDigitalValue());
+        $this->assertSame(0., $value->getDigitalValue());
+        $this->assertEquals(0, $value->getRelativeUncertainty());
+        $this->assertSame(0., $value->getRelativeUncertainty());
+
+        $value = new Calc_Value('0', '0');
+        $this->assertEquals(0, $value->getDigitalValue());
+        $this->assertSame(0., $value->getDigitalValue());
+        $this->assertEquals(0, $value->getRelativeUncertainty());
+        $this->assertSame(0., $value->getRelativeUncertainty());
+
+        $value = new Calc_Value();
+        $this->assertSame(null, $value->getDigitalValue());
+        $this->assertSame(null, $value->getRelativeUncertainty());
+
+        $value = new Calc_Value('', '');
+        $this->assertSame(null, $value->getDigitalValue());
+        $this->assertSame(null, $value->getRelativeUncertainty());
+    }
+
+    /**
+     * @dataProvider valueProvider
+     * @param Calc_Value $value
+     */
+    public function testExportToString(Calc_Value $value)
+    {
+        $str = $value->exportToString();
+
+        $unserialized = Calc_Value::createFromString($str);
+
+        $this->assertInstanceOf('Calc_Value', $unserialized);
+        $this->assertSame($value->getDigitalValue(), $unserialized->getDigitalValue(), "String: '$str'");
+        $this->assertSame($value->getRelativeUncertainty(), $unserialized->getRelativeUncertainty(), "String: '$str'");
+    }
+
+    public function valueProvider()
+    {
+        return [
+            [new Calc_Value(0, 0)],
+            [new Calc_Value(0., 0.)],
+            [new Calc_Value(1, 10)],
+            [new Calc_Value(1.0, 10.0)],
+            [new Calc_Value(1., 10.)],
+            [new Calc_Value(0.1, 0.1)],
+            [new Calc_Value(5, null)],
+            [new Calc_Value(null, null)],
+            [new Calc_Value(null, 20)],
+            [new Calc_Value(2)],
+            [new Calc_Value()],
+            [new Calc_Value('', '')],
+            [new Calc_Value(' ', ' ')],
+            [new Calc_Value('1', '12')],
+            [new Calc_Value('1.0', '12.0')],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidStrings
+     * @expectedException InvalidArgumentException
+     * @param string $str
+     */
+    public function testCreateFromStringInvalid($str)
+    {
+        Calc_Value::createFromString($str);
+    }
+
+    public function invalidStrings()
+    {
+        return [
+            [''],
+            ['foo'],
+        ];
+    }
+
 }
