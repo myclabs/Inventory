@@ -61,7 +61,7 @@ class DW_Export_Indicators extends Export_Excel
                 $sheetHeader[] = $axis->getLabel();
             }
             $sheetHeader[] = __('UI', 'name', 'value') . ' (' . $indicator->getUnit()->getSymbol() . ')';
-            $sheetHeader[] = __('UI', 'name', 'roundedvalue') . ' (' . $indicator->getUnit()->getSymbol() . ')';
+            $sheetHeader[] = __('UI', 'name', 'roundedValue') . ' (' . $indicator->getUnit()->getSymbol() . ')';
             $sheetHeader[] = __('UI', 'name', 'uncertainty') . ' (%)';
 
             $sheets[$sheetLabels[$indicator->getRef()]] = array($sheetHeader);
