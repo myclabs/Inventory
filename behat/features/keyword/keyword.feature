@@ -37,7 +37,7 @@ Feature: Keyword
     And I fill in "predicates_reverseRef_addForm" with "est_plus_specifique_que"
     And I click "Valider"
     Then the "#messageZone" element should contain "Ajout effectué."
-    # When I click "×"
+    And I click element "#messageZone button.close"
     # Then I should not see "Ok : Ajout effectué."
   # Ajout d'un prédicat dont l'identifiant existe déjà
     When I click "Ajouter"
@@ -57,7 +57,7 @@ Feature: Keyword
     And I fill in "predicates_reverseRef_addForm" with "inverse_a_supprimer"
     And I click "Valider"
     Then the "#messageZone" element should contain "Ajout effectué."
-    # When I click "×"
+    And I click element "#messageZone button.close"
     # Then I should not see "Ok : Ajout effectué."
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"

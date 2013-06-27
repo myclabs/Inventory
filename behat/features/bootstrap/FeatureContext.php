@@ -99,6 +99,19 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * Clicks an element found using CSS selectors.
+     *
+     * @When /^(?:|I )click element "(?P<selector>(?:[^"]|\\")*)"$/
+     */
+    public function clickElement($selector)
+    {
+        $node = $this->findElement($selector);
+        $node->click();
+
+        $this->waitForPageToFinishLoading();
+    }
+
+    /**
      * Open a collapse with specified text.
      *
      * @When /^(?:|I )open collapse "(?P<collapse>(?:[^"]|\\")*)"$/
@@ -133,7 +146,7 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * Finds link with specified locator.
+     * Finds link or button with specified locator.
      *
      * @param string $locator link id, title, text or image alt
      *
@@ -168,6 +181,42 @@ class FeatureContext extends MinkContext
         if (count($nodes) > 1) {
             $nb = count($nodes);
             throw new ExpectationException("Too many ($nb) links or buttons with text, id or title '$locator' are visible.",
+                $this->getSession());
+        }
+
+        return current($nodes);
+    }
+
+    /**
+     * Finds element with specified selector.
+     *
+     * @param string $selector
+     *
+     * @throws Behat\Mink\Exception\ExpectationException
+     * @return NodeElement|null
+     */
+    private function findElement($selector)
+    {
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', $selector);
+
+        if (count($nodes) === 0) {
+            throw new ExpectationException("No element matches selector '$selector'.",
+                $this->getSession());
+        }
+
+        array_filter($nodes, function(NodeElement $node) {
+                return $node->isVisible();
+            });
+
+        if (count($nodes) === 0) {
+            throw new ExpectationException("No element matching '$selector' is visible.",
+                $this->getSession());
+        }
+
+        if (count($nodes) > 1) {
+            $nb = count($nodes);
+            throw new ExpectationException("Too many ($nb) elements matching '$selector' are visible.",
                 $this->getSession());
         }
 
