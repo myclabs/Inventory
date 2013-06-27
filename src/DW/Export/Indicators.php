@@ -51,8 +51,10 @@ class DW_Export_Indicators extends Export_Excel
         $sheetLabels = array();
         foreach ($cube->getIndicators() as $indicator) {
             $cleanLabel = $this->clean($indicator->getLabel());
-            $sheetLabels[$indicator->getRef()] = $indicator->getPosition() . ' - '
-                . substr($cleanLabel, 0, strrpos(substr($cleanLabel, 0, 30), ' '));
+            if (strlen($cleanLabel) > 25) {
+                $cleanLabel = substr($cleanLabel, 0, 25) . '…';
+            }
+            $sheetLabels[$indicator->getRef()] = $indicator->getPosition() . ' - ' . $cleanLabel;
 
             $sheetHeader = array();
             foreach ($cube->getAxes() as $axis) {
