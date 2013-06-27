@@ -60,8 +60,8 @@ class DW_Export_Indicators extends Export_Excel
             foreach ($cube->getAxes() as $axis) {
                 $sheetHeader[] = $axis->getLabel();
             }
-            $sheetHeader[] = __('UI', 'name', 'roundedValue') . ' (' . $indicator->getUnit()->getSymbol() . ')';
             $sheetHeader[] = __('UI', 'name', 'value') . ' (' . $indicator->getUnit()->getSymbol() . ')';
+            $sheetHeader[] = __('UI', 'name', 'roundedValue') . ' (' . $indicator->getUnit()->getSymbol() . ')';
             $sheetHeader[] = __('UI', 'name', 'uncertainty') . ' (%)';
 
             $sheets[$sheetLabels[$indicator->getRef()]] = array($sheetHeader);
@@ -79,11 +79,11 @@ class DW_Export_Indicators extends Export_Excel
                 $row[] = $labelAxisMember = ($axisMember === null) ? '' : $axisMember->getLabel();
             }
 
+            $row[] = $cubeResult->getValue()->digitalValue;
             $row[] = round(
                 $cubeResult->getValue()->digitalValue,
                 floor(3 - log10(abs($cubeResult->getValue()->digitalValue)))
             );
-            $row[] = $cubeResult->getValue()->digitalValue;
             $row[] = round($cubeResult->getValue()->relativeUncertainty);
 
             $sheets[$sheetLabels[$cubeResult->getIndicator()->getRef()]][] = $row;
