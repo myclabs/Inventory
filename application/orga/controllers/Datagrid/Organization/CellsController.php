@@ -55,7 +55,7 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
             $access = array();
             foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {
                 if (($securityIdentity instanceof User_Model_Role) && ($connectedUser->hasRole($securityIdentity))) {
-                    $access[] = explode('_', $securityIdentity->getRef())[0];
+                    $access[] = $securityIdentity->getName();
                 }
             }
             $data['access'] = $this->cellList($access);

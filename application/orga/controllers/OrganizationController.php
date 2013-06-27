@@ -251,7 +251,7 @@ class Orga_OrganizationController extends Core_Controller_Ajax
         $this->view->listAccess = array(
             'cellAdministrator' => __('Orga', 'role', 'cellAdministrator'),
             'cellContributor' => __('Orga', 'role', 'cellContributor'),
-            'cellDataProviderObserver' => __('Orga', 'role', 'cellObserver'),
+            'cellObserver' => __('Orga', 'role', 'cellObserver'),
         );
     }
 

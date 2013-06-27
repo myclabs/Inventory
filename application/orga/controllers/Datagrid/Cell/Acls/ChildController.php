@@ -91,7 +91,7 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
         $this->view->listRoles = array();
         foreach ($cellACLResource->getLinkedSecurityIdentities() as $linkedIdentity) {
             if ($linkedIdentity instanceof User_Model_Role) {
-                $this->view->listRoles[$linkedIdentity->getRef()] = __('Orga', 'roles', $linkedIdentity->getName());
+                $this->view->listRoles[$linkedIdentity->getRef()] = __('Orga', 'role', $linkedIdentity->getName());
             }
         }
     }
