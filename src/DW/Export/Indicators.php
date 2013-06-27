@@ -76,10 +76,11 @@ class DW_Export_Indicators extends Export_Excel
                 $row[] = $labelAxisMember = ($axisMember === null) ? '' : $axisMember->getLabel();
             }
 
-            $row[] = round(
-                $cubeResult->getValue()->digitalValue,
-                floor(3 - log10(abs($cubeResult->getValue()->digitalValue)))
-            );
+//            $row[] = round(
+//                $cubeResult->getValue()->digitalValue,
+//                floor(3 - log10(abs($cubeResult->getValue()->digitalValue)))
+//            );
+            $row[] = $cubeResult->getValue()->digitalValue;
             $row[] = round($cubeResult->getValue()->relativeUncertainty);
 
             $sheets[$sheetLabels[$cubeResult->getIndicator()->getRef()]][] = $row;
