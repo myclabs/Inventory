@@ -4,6 +4,7 @@
  */
 
 use Behat\Behat\Context\Step;
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 
@@ -45,10 +46,10 @@ class FeatureContext extends MinkContext
     public function waitForPageToFinishLoading()
     {
         $jqueryOK = '0 === jQuery.active';
-        $yuiOK = '($(".yui-dt").length == 0) || ($(".yui-dt-data>tr").length > 0)';
+        $datagridOK = '$(".yui-dt-message:visible").length == 0';
 
         // Timeout de 6 secondes
-        $this->getSession()->wait(6000, "($jqueryOK) && ($yuiOK)");
+        $this->getSession()->wait(6000, "($jqueryOK) && ($datagridOK)");
     }
 
     /**
@@ -79,5 +80,50 @@ class FeatureContext extends MinkContext
                 . "Error message found: '$errorMessage'.\n"
                 . "Javascript expression: '$expression'.", $this->getSession());
         }
+    }
+
+    /**
+     * Clicks a button or link with specified id|title|alt|text.
+     *
+     * @When /^(?:|I )click "(?P<name>(?:[^"]|\\")*)"$/
+     */
+    public function click($name)
+    {
+        $name = $this->fixStepArgument($name);
+        $node = $this->findLinkOrButton($name);
+        $node->click();
+    }
+
+    /**
+     * Open a collapse with specified text.
+     *
+     * @When /^(?:|I )open collapse "(?P<collapse>(?:[^"]|\\")*)"$/
+     */
+    public function openCollapse($collapse)
+    {
+        $collapse = $this->fixStepArgument($collapse);
+        $node = $this->getSession()->getPage()->find(
+            'css',
+            'legend:contains("' . $collapse . '")'
+        );
+        $node->click();
+    }
+
+    /**
+     * Finds link with specified locator.
+     *
+     * @param string $locator link id, title, text or image alt
+     *
+     * @return NodeElement|null
+     */
+    private function findLinkOrButton($locator)
+    {
+        return $this->getSession()->getPage()->find(
+            'named',
+            array(
+                 'link_or_button',
+                 $this->getSession()->getSelectorsHandler()->xpathLiteral($locator)
+            )
+        );
     }
 }

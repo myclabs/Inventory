@@ -51,3 +51,16 @@ Feature: Units
     And the row 2 of the "ListPhysicalQuantity" datagrid should contain:
       | name    | referenceUnit  | l | m | t | numeraire |
       | Longueur  | mètre        | 1 | 0 | 0 | 0         |
+
+  @javascript
+  Scenario: Standard units filter
+    Given I am on "unit/consult/standardunits"
+    And I wait for the page to finish loading
+    And I open collapse "Filtres"
+    And I fill in "ListStandardUnits_name_filterForm" with "pourcent"
+    And I click "Filtrer"
+    And I wait for the page to finish loading
+    Then the "ListStandardUnits" datagrid should contain 1 row
+    And the row 1 of the "ListStandardUnits" datagrid should contain:
+      | name     |
+      | pourcent |

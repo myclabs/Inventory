@@ -43,6 +43,9 @@ Given I am logged in
 Given I wait for [the] page to finish loading
 When I wait [for] 5 seconds
 
+When I click "button/link"
+When I open collapse "label/id"
+
 # Form
 Then the field "field" should have error: "Some error"
 
