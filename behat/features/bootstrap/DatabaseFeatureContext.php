@@ -12,6 +12,20 @@ trait DatabaseFeatureContext
     {
         self::loadFileToDatabase('base.sql');
     }
+    /**
+     * @BeforeFeature @dbOneOrganization
+     */
+    public static function loadOneOrganizationDatabase()
+    {
+        self::loadFileToDatabase('oneOrganization.sql');
+    }
+    /**
+     * @BeforeFeature @dbOneOrganizationWithAxes
+     */
+    public static function loadOneOrganizationWithAxesDatabase()
+    {
+        self::loadFileToDatabase('oneOrganizationWithAxes.sql');
+    }
 
     private static function loadFileToDatabase($fileName)
     {
