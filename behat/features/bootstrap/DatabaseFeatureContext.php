@@ -3,11 +3,16 @@
  * @author matthieu.napoli
  */
 
-use Behat\Mink\Exception\ExpectationException;
-use Behat\Mink\Session;
-
 trait DatabaseFeatureContext
 {
+    /**
+     * @BeforeFeature @dbEmpty
+     */
+    public static function loadEmptyDatabase()
+    {
+        self::loadFileToDatabase('base.sql');
+    }
+
     private static function loadFileToDatabase($fileName)
     {
         $environment = 'developpement';

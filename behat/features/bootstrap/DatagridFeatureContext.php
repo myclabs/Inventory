@@ -57,7 +57,7 @@ trait DatagridFeatureContext
 
         try {
             $this->assertElementContainsText($cellSelector, $content);
-        } catch (ElementTextException $e) {
+        } catch (\Exception $e) {
             $message = sprintf("The text '%s' was not found at line %s and column '%s'. \n\nOriginal message: %s",
                 $content, $row, $column, $e->getMessage());
             throw new \Exception($message);

@@ -88,7 +88,7 @@
         </tu>
         <tu tuid="organizationDWCubesUpToDate">
             <tuv xml:lang="fr">
-                <seg>La structure des données d'analyse de l'organisation sont à jour</seg>
+                <seg>La structure des données d'analyse de l'organisation est à jour</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Analysis data structure of organization is up to date</seg>
