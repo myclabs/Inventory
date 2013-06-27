@@ -5,7 +5,7 @@ Feature: OrgaMembersNOK
     Given I am logged in
 
   @javascript
-  Scenario OrgaMembersNOKScenario
+  Scenario: OrgaMembersNOKScenario
     # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
