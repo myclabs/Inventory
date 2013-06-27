@@ -1,5 +1,5 @@
 @dbOneOrganization
-Feature: OrgaAxesNOK
+Feature: OrgaAxes
 
   Background:
     Given I am logged in

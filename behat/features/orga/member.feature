@@ -1,5 +1,5 @@
 @dbOneOrganizationWithAxes
-Feature: OrgaMembersNOK
+Feature: OrgaMembers
 
   Background:
     Given I am logged in
@@ -8,9 +8,8 @@ Feature: OrgaMembersNOK
   Scenario: OrgaMembersNOKScenario
     # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-    And I follow "Organisation"
-    And I follow "Membres"
+    And I open tab "Organisation"
+    And I open tab "Membres"
     Then I should see "Année"
     # Déplier un volet
     When I follow "Année"
@@ -25,7 +24,7 @@ Feature: OrgaMembersNOK
     When I fill in "Identifiant" with "bépo"
     And I press "Valider"
     And I wait for the page to finish loading
-    Then the field "listMembersannee_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : "a..z", "0..9", et "_"."
+    Then the field "listMembersannee_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
     # Ajout d'un membre, saisie correcte
     When I fill in "Libellé" with "À supprimer"
     And I fill in "Identifiant" with "a_supprimer"
