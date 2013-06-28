@@ -68,7 +68,7 @@ Feature: Units
     When I fill in "ListStandardUnits_name_filterForm" with ""
     And I fill in "ListStandardUnits_symbol_filterForm" with "€"
     And I click "Filtrer"
-    And I wait 5 seconds
+    And I wait 5 seconds
     Then the "ListStandardUnits" datagrid should contain 2 row
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name     |
@@ -90,4 +90,4 @@ Feature: Units
       | name     |
       | nœud |
     When I click "Réinitialiser"
-    Then I should see "pourcent"
+    Then I should see "pourcent"
