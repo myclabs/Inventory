@@ -1,11 +1,11 @@
 @dbOneOrganizationWithAxes
-Feature: OrgaMembers
+Feature: OrgaMember
 
   Background:
     Given I am logged in
 
-  # @javascript
-  Scenario: OrgaMembersNOKScenario
+  @javascript
+  Scenario: OrgaMemberEdit1
     # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
