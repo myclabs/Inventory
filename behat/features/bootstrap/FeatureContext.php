@@ -42,6 +42,19 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @Then /^the following message is shown and closed: "(?P<message>(?:[^"]|\\")*)"$/
+     */
+    public function assertMessageShown($message)
+    {
+        return [
+            new Step\Then('the "#messageZone" element should contain "' . $message . '"'),
+            new Step\Then('I click element "#messageZone button.close"'),
+            new Step\Then('I wait for 0.5 seconds'),
+            new Step\Then('the "#messageZone" element should not contain "' . $message . '"'),
+        ];
+    }
+
+    /**
      * @When /^(?:|I )wait for (?:|the )page to finish loading$/
      */
     public function waitForPageToFinishLoading()

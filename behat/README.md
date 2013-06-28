@@ -48,6 +48,9 @@ When I click element "css selector"
 When I open collapse "label"
 When I open tab "label"
 
+# Message (alerts)
+Then the following message is shown and closed: "Ajout effectué"
+
 # Form
 Then the field "field" should have error: "Some error"
 
