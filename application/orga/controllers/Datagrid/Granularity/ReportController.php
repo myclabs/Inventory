@@ -19,13 +19,15 @@ class Orga_Datagrid_Granularity_ReportController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        $granuarityReportBaseUrl = str_replace('-', '/', $this->getParam('linkToReport'));
+
         $this->request->filter->addCondition(DW_Model_Report::QUERY_CUBE, DW_Model_Cube::load($this->getParam('idCube')));
         $this->request->order->addOrder(DW_Model_Report::QUERY_LABEL);
         foreach (DW_Model_Report::loadList($this->request) as $report) {
             $data = array();
             $data['index'] = $report->getId();
             $data['label'] = $report->getLabel();
-            $urlDetails = 'orga/granularity/report/idGranularity/'.$this->getParam('idGranularity').'/idReport/'.$data['index'];
+            $urlDetails = $granuarityReportBaseUrl.'/idGranularity/'.$this->getParam('idGranularity').'/idReport/'.$data['index'];
             $data['details'] = $this->cellLink($urlDetails, __('UI', 'name', 'details'), 'share-alt');
             $this->addline($data);
         }

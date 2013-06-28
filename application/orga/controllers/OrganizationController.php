@@ -129,10 +129,10 @@ class Orga_OrganizationController extends Core_Controller_Ajax
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
             $this->view->display = false;
-            $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idCell/'.$this->getParam('idCell');
+            $this->view->granularityReportBaseUrl = 'orga/granularity/report/idCell/'.$this->getParam('idCell');
         } else {
             $this->view->display = true;
-            $this->view->granularityReportAddBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
+            $this->view->granularityReportBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
         }
     }
 
