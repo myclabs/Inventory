@@ -449,7 +449,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $reportResource = User_Model_Resource_Entity::loadByEntity(
                 DW_Model_Report::load($this->getParam('idReport'))
             );
-            $reportCanBeUpdated = User_Service_ACL::getInstance()->isAllowed(
+            $reportCanBeUpdated = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::EDIT(),
                 $reportResource
@@ -457,7 +457,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         } else {
             $reportCanBeUpdated = false;
         }
-        $reportCanBeSaveAs = User_Service_ACL::getInstance()->isAllowed(
+        $reportCanBeSaveAs = $this->aclService->isAllowed(
             $this->_helper->auth(),
             User_Model_Action_Default::VIEW(),
             User_Model_Resource_Entity::loadByEntity($cell)
