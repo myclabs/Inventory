@@ -35,7 +35,7 @@
         "dompdf/dompdf": "dev-master",
         "myclabs/array-comparator": "0.*",
         "myclabs/php-enum": "1.*",
-        "mnapoli/php-di": "3.0.*",
+        "mnapoli/php-di": "3.1.*",
         "mnapoli/php-di-zf1": "*"
 	},
     "require-dev": {
