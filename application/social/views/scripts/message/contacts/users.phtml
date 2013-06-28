@@ -3,12 +3,12 @@ $datagrid = new UI_Datagrid('users', 'datagrid_message_contact_user', 'social');
 $datagrid->pagination = true;
 
 // Prénom
-$firstNameColumn = new UI_Datagrid_Col_Text('firstName', __('User', 'name', 'firstName'));
+$firstNameColumn = new UI_Datagrid_Col_Text('firstName', __('User', 'user', 'firstName'));
 $firstNameColumn->filterName = User_Model_User::QUERY_FIRSTNAME;
 $datagrid->addCol($firstNameColumn);
 
 // Nom
-$lastNameColumn = new UI_Datagrid_Col_Text('lastName', __('User', 'name', 'lastName'));
+$lastNameColumn = new UI_Datagrid_Col_Text('lastName', __('User', 'user', 'lastName'));
 $lastNameColumn->filterName = User_Model_User::QUERY_LASTNAME;
 $datagrid->addCol($lastNameColumn);
 

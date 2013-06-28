@@ -3,7 +3,7 @@
  * @author valentin.claras
  * @author sidoine.tardieu
  * @package Orga
- * Arbre des axes d'un project.
+ * Arbre des axes d'un organization.
  */
 $editLabelField = new UI_Form_Element_Text('editAxis_label');
 $editLabelField->setLabel(__('UI', 'name', 'label'));
@@ -51,7 +51,7 @@ $treeManage = new UI_Tree('editAxis', 'tree_axis', 'orga');
 if ($this->idCell !== null) {
     $treeManage->addParam('idCell', $this->idCell);
 }
-$treeManage->addParam('idProject', $this->idProject);
+$treeManage->addParam('idOrganization', $this->idOrganization);
 $treeManage->addNode = true;
 $treeManage->addPanelForm = $addForm;
 $treeManage->addPanelTitle = __('Orga', 'axis', 'addPanelTitle');
@@ -70,7 +70,7 @@ $script = '';
 $script .= '$(\'#editAxis_element\').change(function(e) {';
 $script .= 'var idNode = $(this).val();';
 $script .= '$.get(';
-$script .= '\'orga/tree_axis/getinfoedit?idProject='.$this->idProject.'&idNode=\' + idNode, ';
+$script .= '\'orga/tree_axis/getinfoedit?idOrganization='.$this->idOrganization.'&idNode=\' + idNode, ';
 $script .= 'function(o){';
 $script .= '$(\'#editAxis_label\').val(o.label);';
 $script .= '$(\'#editAxis_ref\').val(o.ref);';
@@ -88,7 +88,7 @@ $script .= '});';
 $script .= '});';
 $script .= '$(\'#editAxis_addPanel\').on(\'show\', function(e) {';
 $script .= '$.get(';
-$script .= '\'orga/tree_axis/getlistparents?idProject='.$this->idProject.'&idNode=\', ';
+$script .= '\'orga/tree_axis/getlistparents?idOrganization='.$this->idOrganization.'&idNode=\', ';
 $script .= 'function(o){';
 $script .= '$(\'#addAxis_parent\').formActionSetOptions(o);';
 $script .= '}';

@@ -15,7 +15,7 @@ use DI\Annotation\Inject;
  * @package    Orga
  * @subpackage Controller
  */
-class Orga_CellController extends Core_Controller
+class Orga_CellController extends Core_Controller_Ajax
 {
     /**
      * @Inject
@@ -49,8 +49,8 @@ class Orga_CellController extends Core_Controller
         $this->view->idCell = $idCell;
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = $cell->getGranularity();
-        $project = $granularity->getProject();
-        $idProject = $project->getId();
+        $organization = $granularity->getOrganization();
+        $idOrganization = $organization->getId();
 
         $this->view->cell = $cell;
 
@@ -64,7 +64,7 @@ class Orga_CellController extends Core_Controller
 
 
         $this->view->tabView = new UI_Tab_View('container');
-        $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$project->getLabel().'</small>';
+        $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$organization->getLabel().'</small>';
         $this->view->isParentCellReachable = array();
         foreach ($cell->getParentCells() as $parentCell) {
             $isUserAllowedToViewParentCell = $this->aclService->isAllowed(
@@ -79,26 +79,26 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB ORGA.
-        $isUserAllowedToEditProject = $this->aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
-            $project
+            $organization
         );
         $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
             $cell
         );
-        if ($isUserAllowedToEditProject || ($isUserAllowedToEditCell && $granularity->getCellsWithOrgaTab())) {
-            $projectTab = new UI_Tab('orga');
-            $projectTab->label = __('UI', 'name', 'orga');
-            $projectSubTabs = array('project', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
-            if (in_array($tab, $projectSubTabs)) {
-                $projectTab->active = true;
+        if ($isUserAllowedToEditOrganization || ($isUserAllowedToEditCell && $granularity->getCellsWithOrgaTab())) {
+            $organizationTab = new UI_Tab('orga');
+            $organizationTab->label = __('Orga', 'organization', 'organization');
+            $organizationSubTabs = array('organization', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
+            if (in_array($tab, $organizationSubTabs)) {
+                $organizationTab->active = true;
             }
-            $projectTab->dataSource = 'orga/tab_celldetails/orga/idCell/'.$idCell.'/tab/'.$tab.'/display/render';
-            $projectTab->useCache = true;
-            $this->view->tabView->addTab($projectTab);
+            $organizationTab->dataSource = 'orga/tab_celldetails/orga/idCell/'.$idCell.'/tab/'.$tab.'/display/render';
+            $organizationTab->useCache = true;
+            $this->view->tabView->addTab($organizationTab);
         }
 
 
@@ -116,14 +116,14 @@ class Orga_CellController extends Core_Controller
                 }
             }
         }
-        if ($isUserAllowedToEditProject || $isUserAllowedToAllowAuthorizations) {
+        if ($isUserAllowedToEditOrganization || $isUserAllowedToAllowAuthorizations) {
             $aclsTab = new UI_Tab('acls');
             if ($tab === 'acls') {
                 $aclsTab->active = true;
             }
-            $aclsTab->label = __('User', 'name', 'roles');
+            $aclsTab->label = __('User', 'role', 'roles');
             $aclsTab->dataSource = 'orga/tab_celldetails/acls/idCell/'.$idCell;
-            $aclsTab->useCache = !$isUserAllowedToEditProject;
+            $aclsTab->useCache = !$isUserAllowedToEditOrganization;
             $this->view->tabView->addTab($aclsTab);
         }
 
@@ -136,7 +136,7 @@ class Orga_CellController extends Core_Controller
             }
             $aFConfigurationTab->label = __('UI', 'name', 'forms');
             $aFConfigurationTab->dataSource = 'orga/tab_celldetails/afconfiguration/idCell/'.$idCell;
-            $aFConfigurationTab->useCache = !$isUserAllowedToEditProject;
+            $aFConfigurationTab->useCache = !$isUserAllowedToEditOrganization;
             $this->view->tabView->addTab($aFConfigurationTab);
         }
 
@@ -144,7 +144,7 @@ class Orga_CellController extends Core_Controller
         // TAB INVENTORIES
         $inventoriesTab = new UI_Tab('inventories');
         try {
-            $granularityForInventoryStatus = $project->getGranularityForInventoryStatus();
+            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
             $granularityForInventoryStatus = null;
         }
@@ -153,7 +153,7 @@ class Orga_CellController extends Core_Controller
         } else if ($tab === 'inventories') {
             $inventoriesTab->active = true;
         }
-        $inventoriesTab->label = __('Orga', 'name', 'inventories');
+        $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
         $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
         $this->view->tabView->addTab($inventoriesTab);
 
@@ -165,7 +165,7 @@ class Orga_CellController extends Core_Controller
         }
         $inputsTab->label = __('UI', 'name', 'inputs');
         $inputsTab->dataSource = 'orga/tab_celldetails/afinputs/idCell/'.$idCell;
-        $inputsTab->useCache = !$isUserAllowedToEditProject;
+        $inputsTab->useCache = !$isUserAllowedToEditOrganization;
         $this->view->tabView->addTab($inputsTab);
 
 
@@ -188,7 +188,7 @@ class Orga_CellController extends Core_Controller
             if ($tab === 'genericActions') {
                 $genericActionsTab->active = true;
             }
-            $genericActionsTab->label = __('Social', 'name', 'actionTemplates');
+            $genericActionsTab->label = __('Social', 'actionTemplate', 'actionTemplates');
             $genericActionsTab->dataSource = 'orga/tab_celldetails/genericactions?idCell='.$idCell;
             $this->view->tabView->addTab($genericActionsTab);
         }
@@ -200,7 +200,7 @@ class Orga_CellController extends Core_Controller
             if ($tab === 'contextActions') {
                 $contextActionsTab->active = true;
             }
-            $contextActionsTab->label = __('Social', 'name', 'actions');
+            $contextActionsTab->label = __('Social', 'action', 'actions');
             $contextActionsTab->dataSource = 'orga/tab_celldetails/contextactions?idCell='.$idCell;
             $this->view->tabView->addTab($contextActionsTab);
         }
@@ -229,7 +229,7 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB ADMINISTRATION
-        if ($isUserAllowedToEditProject) {
+        if ($isUserAllowedToEditOrganization) {
             $administrationTab = new UI_Tab('administration');
             if ($tab === 'administration') {
                 $administrationTab->active = true;
@@ -293,7 +293,7 @@ class Orga_CellController extends Core_Controller
 
     /**
      * Action pour la pertinence des cellules enfants.
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function relevantAction()
     {
@@ -311,19 +311,19 @@ class Orga_CellController extends Core_Controller
             );
             $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
             $columnRelevant = new UI_Datagrid_Col_Bool('relevant');
-            $columnRelevant->label = __('Orga', 'name', 'relevance');
+            $columnRelevant->label = __('Orga', 'cellRelevance', 'relevance');
             $columnRelevant->editable = true;
-            $columnRelevant->textTrue = __('Orga', 'property', 'relevantFem');
-            $columnRelevant->textFalse = __('Orga', 'property', 'irrelevantFem');
-            $columnRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'property', 'relevantFem');
-            $columnRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'property', 'irrelevantFem');
+            $columnRelevant->textTrue = __('Orga', 'cellRelevance', 'relevantFem');
+            $columnRelevant->textFalse = __('Orga', 'cellRelevance', 'irrelevantFem');
+            $columnRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'relevantFem');
+            $columnRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
             $datagridConfiguration->datagrid->addCol($columnRelevant);
 
             $columnAllParentsRelevant = new UI_Datagrid_Col_Bool('allParentsRelevant');
-            $columnAllParentsRelevant->label = __('Orga', 'relevance', 'parentCellsRelevanceHeader');
+            $columnAllParentsRelevant->label = __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader');
             $columnAllParentsRelevant->editable = false;
-            $columnAllParentsRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'relevance', 'allParentCellsRelevantProperty');
-            $columnAllParentsRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'relevance', 'notAllParentCellsRelevantProperty');
+            $columnAllParentsRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'allParentCellsRelevantProperty');
+            $columnAllParentsRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'notAllParentCellsRelevantProperty');
             $datagridConfiguration->datagrid->addCol($columnAllParentsRelevant);
             $listDatagridConfiguration[$narrowerGranularity->getLabel()] = $datagridConfiguration;
         }
@@ -339,10 +339,8 @@ class Orga_CellController extends Core_Controller
     {
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $aFGranularities = Orga_Model_AFGranularities::loadByAFInputOrgaGranularity($cell->getGranularity());
-        $cellsGroupDataProvider = $aFGranularities->getCellsGroupDataProviderForContainerCell(
-            $cell->getParentCellForGranularity($aFGranularities->getAFConfigOrgaGranularity())
-        );
+        $inputConfigCell = $cell->getParentCellForGranularity($cell->getGranularity()->getInputConfigGranularity());
+        $aF = $inputConfigCell->getCellsGroupForInputGranularity($cell->getGranularity())->getAF();
 
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
@@ -369,7 +367,7 @@ class Orga_CellController extends Core_Controller
         }
 
         $tabComments = new UI_Tab('inputComments');
-        $tabComments->label = __('Social', 'name', 'comments');
+        $tabComments->label = __('Social', 'comment', 'comments');
         $tabComments->dataSource = 'orga/tab_input/comments/idCell/'.$idCell;
         $tabComments->cacheData = true;
         $aFViewConfiguration->addTab($tabComments);
@@ -381,7 +379,7 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->addTab($tabDocs);
 
         $this->forward('display', 'af', 'af', array(
-                'id' => $cellsGroupDataProvider->getAF()->getId(),
+                'id' => $aF->getId(),
                 'viewConfiguration' => $aFViewConfiguration
             ));
     }
@@ -397,9 +395,11 @@ class Orga_CellController extends Core_Controller
 
         $cell->setAFInputSetPrimary($inputSet);
 
+        Orga_Service_ETLData::getInstance()->clearDWResultsFromCell($cell);
         if ($inputSet->isInputComplete()) {
             $this->etlDataService->clearDWResultsFromCell($cell);
             $this->etlDataService->populateDWResultsFromCell($cell);
+            Orga_Service_ETLData::getInstance()->populateDWResultsFromCell($cell);
         }
 
         $this->_helper->viewRenderer->setNoRender(true);
@@ -504,7 +504,7 @@ class Orga_CellController extends Core_Controller
         }
 
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getProject()->getId().'/'.
+            $cell->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
             $specificReportsDirectoryPath.$this->getParam('export').'.xml',

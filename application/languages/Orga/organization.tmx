@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization creation</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organization">
+            <tuv xml:lang="fr">
+                <seg>Organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizations">
+            <tuv xml:lang="fr">
+                <seg>Organisations</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizations</seg>
+            </tuv>
+        </tu>
+        <tu tuid="structure">
+            <tuv xml:lang="fr">
+                <seg>Structure</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Structure</seg>
+            </tuv>
+        </tu>
+        <tu tuid="errorMessageInputGranularities">
+            <tuv xml:lang="fr">
+                <seg>Aucun niveau organisationnel associé à des saisies n'a été configuré pour le moment.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No organizational level for inputs has been chosen yet.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

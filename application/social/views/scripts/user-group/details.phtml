@@ -8,11 +8,11 @@ $datagrid = new UI_Datagrid('members', 'datagrid_user-group_member', 'social');
 $datagrid->addParam('id', $group->getId());
 
 // Prénom
-$colFirstName = new UI_Datagrid_Col_Text('prenom', __('User', 'name', 'firstName'));
+$colFirstName = new UI_Datagrid_Col_Text('prenom', __('User', 'user', 'firstName'));
 $datagrid->addCol($colFirstName);
 
 // Nom
-$colLastName = new UI_Datagrid_Col_Text('nom', __('User', 'name', 'lastName'));
+$colLastName = new UI_Datagrid_Col_Text('nom', __('User', 'user', 'lastName'));
 $datagrid->addCol($colLastName);
 
 // Email

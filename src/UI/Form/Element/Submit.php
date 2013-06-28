@@ -24,16 +24,16 @@ class UI_Form_Element_Submit extends Zend_Form_Element_Submit
     /**
      * Constructor
      *
-     * @param string $name
-     *
-     * @throws Core_Exception_InvalidArgument if $name is not valid.
+     * @param array|string|Zend_Config $ref
+     * @param string $label
+     * @throws Core_Exception_InvalidArgument
      */
-    public function __construct($name)
+    public function __construct($ref, $label=null)
     {
-        if (!(is_string($name))) {
+        if (!(is_string($ref))) {
             throw new Core_Exception_InvalidArgument('Name is required for the Element');
         }
-        parent::__construct($name);
+        parent::__construct($ref, $label);
         $this->_element = new UI_Form_Element($this);
 
         $this->setAttrib('class', 'btn btn-primary');

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+	<header adminlang="en" creationtool="locale4j"
+		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+	<body>
+
+        <!-- Général -->
+
+        <tu tuid="granularityForInventoryStatus">
+            <tuv xml:lang="fr">
+                <seg>Niveau organisationnel des inventaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventories organizational level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputGranularityNeedsToBeNarrowerThanConfigGranularity">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le choix des formulaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select for input an organizational level narrower than or equal to the one selected for form choice.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputGranularityNeedsToBeNarrowerThanInventoryGranularity">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le statut des inventaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select for input an organizational level narrower than or equal to the one selected for inventory status.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Niveaux organisationnels de choix des formulaires et de saisie -->
+
+        <tu tuid="inputGranularities">
+            <tuv xml:lang="fr">
+                <seg>Niveaux organisationnels de choix des formulaires et de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational levels for forms choice and input</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputConfigGranularity">
+            <tuv xml:lang="fr">
+                <seg>Choix des formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Form choice</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputGranularity">
+            <tuv xml:lang="fr">
+                <seg>Saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input</seg>
+            </tuv>
+        </tu>
+
+        <!-- Statut et régénération des données d'analyse -->
+        <tu tuid="organizationDWCubesState">
+            <tuv xml:lang="fr">
+                <seg>Statut et régénération des données d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Status and rebuild of analysis data</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationDWCubesStateComment">
+            <tuv xml:lang="fr">
+                <seg>Pour tester si la structure (indicateurs, axes et membres de classification, axes et
+                    membres organisationnels) des données d'analyse de l'organisation est ou non à jour,
+                    merci de cliquer sur le bouton ci-dessous.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>To test whether the structure (indicators, classification axes and members, organizational
+                axes and members) is up to date, please press the button below.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="dWCubesState">
+            <tuv xml:lang="fr">
+                <seg>Tester si la structure des données d'analyse est à jour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Test whether or not analysis data are up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationDWCubesUpToDate">
+            <tuv xml:lang="fr">
+                <seg>La structure des données d'analyse de l'organisation est à jour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data structure of organization is up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationDWCubesOutDated">
+            <tuv xml:lang="fr">
+                <seg>La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez les mettre à jour.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data structure of organization si not up to date. Please press this button again if you want to update them.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Configuration des analyses préconfigurées -->
+
+        <tu tuid="granularityAnalysesTitle">
+            <tuv xml:lang="fr">
+                <seg>Configuration des analyses préconfigurées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Configuration of preconfigured analyses</seg>
+            </tuv>
+        </tu>
+
+        <!-- Autres -->
+        
+        <tu tuid="cellsWithOrgaTabHeader">
+            <tuv xml:lang="fr">
+                <seg>Onglet « Structure »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>"Structure" tab</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellsWithAFConfigTabHeader">
+            <tuv xml:lang="fr">
+                <seg>Onglet « Formulaires »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>"Forms" tab</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellsWithDWCubesHeader">
+            <tuv xml:lang="fr">
+                <seg>Cubes d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis cubes</seg>
+            </tuv>
+        </tu>
+        
+        <!-- Datagrid « AFGranularities » -->
+        
+        <tu tuid="orgaGranularityForInventoryStatusNotDefined">
+            <tuv xml:lang="fr">
+                <seg>Pour accéder à cette interface, merci de renseigner au préalable le niveau organisationnel d'assignation du statut des inventaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>In order to access this interface, please first choose the organizational level where inventory status will be assigned.</seg>
+            </tuv>
+        </tu>
+
+
+	</body>
+</tmx>    

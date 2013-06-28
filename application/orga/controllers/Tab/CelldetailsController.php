@@ -30,17 +30,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
     /**
      * Confguration du projet.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function orgaAction()
     {
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $granularity = $cell->getGranularity();
-        $project = $granularity->getProject();
+        $organization = $granularity->getOrganization();
 
         $this->view->idCell = $idCell;
-        $this->view->idProject = $project->getId();
+        $this->view->idOrganization = $organization->getId();
         if ($granularity->getRef() === 'global') {
             $this->view->isGlobal = true;
         } else {
@@ -73,36 +73,36 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
         $cellACLResource = User_Model_Resource_Entity::loadByEntity($cell);
         $granularity = $cell->getGranularity();
-        $project = $granularity->getProject();
-        $projectResource = User_Model_Resource_Entity::loadByEntity($project);
+        $organization = $granularity->getOrganization();
+        $organizationResource = User_Model_Resource_Entity::loadByEntity($organization);
 
         $listDatagridConfiguration = array();
 
         if (count($granularity->getAxes()) === 0) {
-            $isUserAllowedToEditProject = $this->aclService->isAllowed(
+            $isUserAllowedToEditOrganization = User_Service_ACL::getInstance()->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::EDIT(),
-                $projectResource
+                $organizationResource
             );
         } else {
-            $isUserAllowedToEditProject = false;
+            $isUserAllowedToEditOrganization = false;
         }
-        if ($isUserAllowedToEditProject) {
+        if ($isUserAllowedToEditOrganization) {
             $datagridConfiguration = new Orga_DatagridConfiguration(
-                'projectACL'.$project->getId(),
-                'datagrid_cell_acls_project',
+                'organizationACL'.$organization->getId(),
+                'datagrid_cell_acls_organization',
                 'orga',
                 $cell,
                 $granularity
             );
-            $datagridConfiguration->datagrid->addParam('idProject', $project->getId());
+            $datagridConfiguration->datagrid->addParam('idOrganization', $organization->getId());
             $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'name', 'firstName'));
+            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
             $columnUserFirstName->addable = false;
             $datagridConfiguration->datagrid->addCol($columnUserFirstName);
 
-            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'name', 'lastName'));
+            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
             $columnUserLastName->addable = false;
             $datagridConfiguration->datagrid->addCol($columnUserLastName);
 
@@ -114,7 +114,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addAdministratorPanelTitle');
             $datagridConfiguration->datagrid->deleteElements = true;
 
-            $labelDatagrid = __('Orga', 'role', 'projectAdministrators');
+            $labelDatagrid = __('Orga', 'role', 'organizationAdministrators');
             $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
         }
 
@@ -128,22 +128,22 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             );
             $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'name', 'firstName'));
+            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
             $columnUserFirstName->addable = false;
             $datagridConfiguration->datagrid->addCol($columnUserFirstName);
 
-            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'name', 'lastName'));
+            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
             $columnUserLastName->addable = false;
             $datagridConfiguration->datagrid->addCol($columnUserLastName);
 
             $columnUserEmail = new UI_Datagrid_Col_Text('userEmail', __('UI', 'name', 'emailAddress'));
             $datagridConfiguration->datagrid->addCol($columnUserEmail);
 
-            $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'name', 'role'));
+            $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
             $columnRole->list = array();
             foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
                 if ($role instanceof User_Model_Role) {
-                    $columnRole->list[$role->getRef()] = $role->getName();
+                    $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
                 }
             }
             $datagridConfiguration->datagrid->addCol($columnRole);
@@ -199,7 +199,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $project = $cell->getGranularity()->getProject();
+        $organization = $cell->getGranularity()->getOrganization();
 
         $listAFs = array();
         foreach (AF_Model_AF::loadList() as $aF) {
@@ -207,7 +207,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $listDatagridConfiguration = array();
-        $listInputGranularities = $project->getInputGranularities();
+        $listInputGranularities = $organization->getInputGranularities();
         uasort(
             $listInputGranularities,
             function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
@@ -261,7 +261,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        $granularity = $cell->getGranularity()->getProject()->getGranularityForInventoryStatus();
+        $granularity = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
         $crossedOrgaGranularity = $granularity->getCrossedGranularity($cell->getGranularity());
 
         $datagridConfiguration = new Orga_DatagridConfiguration(
@@ -286,7 +286,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $columnStateOrga->editable = $cell->getGranularity()->isBroaderThan($granularity);
         }
         $columnStateOrga->list = array(
-                Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'orga', 'notLaunched'),
+                Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
                 Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
                 Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
         );
@@ -295,10 +295,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
         $datagridConfiguration->datagrid->addCol($columnStateOrga);
 
-        $columnAdvencementInputs = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'orga', 'completeInputPercentageHeader'));
+        $columnAdvencementInputs = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'inventory', 'completeInputPercentageHeader'));
         $datagridConfiguration->datagrid->addCol($columnAdvencementInputs);
 
-        $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'orga', 'finishedInputPercentageHeader'));
+        $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'inventory', 'finishedInputPercentageHeader'));
         $datagridConfiguration->datagrid->addCol($columnAdvencementFinishedInputs);
 
         $this->forward('child', 'cell', 'orga', array(
@@ -318,10 +318,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $project = $cell->getGranularity()->getProject();
+        $organization = $cell->getGranularity()->getOrganization();
 
         $listDatagridConfiguration = array();
-        $listInputGranularities = $project->getInputGranularities();
+        $listInputGranularities = $organization->getInputGranularities();
         uasort(
             $listInputGranularities,
             function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
@@ -342,10 +342,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-                $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'name', 'orga'));
+                $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'organization', 'organization'));
                 $columnStateOrga->withEmptyElement = false;
                 $columnStateOrga->list = array(
-                    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'orga', 'notLaunched'),
+                    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
                     Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
                     Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'));
                 $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_BOX;
@@ -372,12 +372,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
                 );
                 $datagridConfiguration->datagrid->addCol($columnStateInput);
-
-                $columnValIndic = new UI_Datagrid_Col_Number('totalValueGESInput', __('AF', 'inputList', 'GESTotalValueHeader'));
-                $datagridConfiguration->datagrid->addCol($columnValIndic);
-
-                $columnIncert = new UI_Datagrid_Col_Number('totalUncertaintyGESInput', '&#177; (%)');
-                $datagridConfiguration->datagrid->addCol($columnIncert);
 
                 $colLinkEdit = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'details'));
                 $datagridConfiguration->datagrid->addCol($colLinkEdit);
@@ -416,7 +410,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->specificExports = array();
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getGranularity()->getProject()->getId().'/'.
+            $cell->getGranularity()->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         if (is_dir($specificReportsDirectoryPath)) {
             $specificReportsDirectory = dir($specificReportsDirectoryPath);
@@ -473,7 +467,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 ));
         } else {
             $this->forward('details', 'report', 'dw', array(
-                    'idProject' => $this->getParam('idProject'),
+                    'idOrganization' => $this->getParam('idOrganization'),
                     'viewConfiguration' => $viewConfiguration
                 ));
         }
@@ -547,7 +541,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
     /**
      * Action fournissant la vue d'administration d'une cellule.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function administrationAction()
     {

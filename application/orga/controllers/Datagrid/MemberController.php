@@ -33,12 +33,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->getParam('refAxis'), $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
 
         $this->request->filter->addCondition(Orga_Model_Member::QUERY_AXIS, $axis);
         $this->request->order->addOrder(Orga_Model_Member::QUERY_REF);
@@ -83,12 +83,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Ajoute un nouvel element.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function addelementAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->getParam('refAxis'), $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
 
         $label = $this->getAddElementValue('label');
         $ref = $this->getAddElementValue('ref');
@@ -149,7 +149,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Supprime un element.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function deleteelementAction()
     {
@@ -166,12 +166,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Modifie les valeurs d'un element.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function updateelementAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->getParam('refAxis'), $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
         $member = Orga_Model_Member::load($this->update['index']);
 
         switch ($this->update['column']) {
@@ -195,7 +195,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             default:
                 $refBroaderAxis = substr($this->update['column'], 7);
                 try {
-                    $broaderAxis = Orga_Model_Axis::loadByRefAndProject($refBroaderAxis, $project);
+                    $broaderAxis = Orga_Model_Axis::loadByRefAndOrganization($refBroaderAxis, $organization);
                 } catch (Core_Exception_NotFound $e) {
                     parent::updateelementAction();
                 }
@@ -221,12 +221,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Renvoie la liste des parents éligibles pour un membre.
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getparentsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $broaderAxis = Orga_Model_Axis::loadByRefAndProject($this->getParam('refParentAxis'), $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $broaderAxis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refParentAxis'), $organization);
 
         $members = $broaderAxis->getMembers();
         $idCell = $this->getParam('idCell');

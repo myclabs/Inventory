@@ -25,7 +25,7 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
@@ -68,7 +68,7 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     function updateelementAction()
     {

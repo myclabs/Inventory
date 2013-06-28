@@ -37,7 +37,9 @@ class Orga_Work_Task_SetGranularityCellsGenerateDWCubes extends Core_Work_Task
      */
     public function execute()
     {
-        Orga_Model_Granularity::load($this->idGranularity)->setCellsGenerateDWCubes($this->newValue);
+        $granularity = Orga_Model_Granularity::load($this->idGranularity);
+        $granularity->setCellsGenerateDWCubes($this->newValue);
+        $granularity->save();
 
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();

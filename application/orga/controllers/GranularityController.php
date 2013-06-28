@@ -17,8 +17,8 @@ use Core\Annotation\Secure;
 class Orga_GranularityController extends Core_Controller
 {
     /**
-     * Controller de la vue des Granularity d'un project.
-     * @Secure("viewProject")
+     * Controller de la vue des Granularity d'un organization.
+     * @Secure("viewOrganization")
      */
     public function manageAction()
     {
@@ -27,10 +27,10 @@ class Orga_GranularityController extends Core_Controller
         } else {
             $this->view->idCell = null;
         }
-        $this->view->idProject = $this->getParam('idProject');
-        $project = Orga_Model_Project::load($this->view->idProject);
+        $this->view->idOrganization = $this->getParam('idOrganization');
+        $organization = Orga_Model_Organization::load($this->view->idOrganization);
         $this->view->listAxes = array();
-        foreach ($project->getFirstOrderedAxes() as $axis) {
+        foreach ($organization->getFirstOrderedAxes() as $axis) {
             $this->view->listAxes[$axis->getRef()] = $axis->getLabel();
         }
 
@@ -53,9 +53,9 @@ class Orga_GranularityController extends Core_Controller
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$granularity->getLabel().'</small>');
         if ($this->hasParam('idCell')) {
-            $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$this->getParam('idCell').'/tab/project');
+            $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$this->getParam('idCell').'/tab/organization');
         } else {
-            $viewConfiguration->setOutputUrl('orga/project/details/idProject/'.$this->getParam('idProject'));
+            $viewConfiguration->setOutputUrl('orga/organization/details/idOrganization/'.$this->getParam('idOrganization'));
         }
         $viewConfiguration->setSaveURL('orga/granularity/report/idGranularity/'.$granularity->getId().'/idCell/'.$this->getParam('idCell'));
         if ($this->hasParam('idReport')) {
@@ -65,7 +65,7 @@ class Orga_GranularityController extends Core_Controller
                 ));
         } else {
             $this->forward('details', 'report', 'dw', array(
-                    'idProject' => $this->getParam('idProject'),
+                    'idOrganization' => $this->getParam('idOrganization'),
                     'viewConfiguration' => $viewConfiguration
                 ));
         }

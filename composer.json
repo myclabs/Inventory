@@ -36,6 +36,12 @@
         "mnapoli/php-di": "3.0.*",
         "mnapoli/php-di-zf1": "*"
 	},
+    "require-dev": {
+        "behat/behat": "2.4.*@stable",
+        "behat/mink": "1.4.*@stable",
+        "behat/mink-extension": "*",
+        "behat/mink-selenium2-driver": "*"
+    },
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"repositories": [

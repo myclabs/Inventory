@@ -12,16 +12,6 @@
                 <seg>My C-Tool</seg>
             </tuv>
         </tu>
-        <!--
-        <tu tuid="myPerimeter">
-            <tuv xml:lang="fr">
-                <seg>Mon périmètre</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>My perimeter</seg>
-            </tuv>
-        </tu>
-        -->
         <tu tuid="simulations">
             <tuv xml:lang="fr">
                 <seg>Simulations</seg>

@@ -25,15 +25,15 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *  $this->getParam('nomArgument').
      *
      * @see addNode
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getnodesAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         if ($this->idNode === null) {
-            $axes = $project->getRootAxes();
+            $axes = $organization->getRootAxes();
         } else {
-            $currentAxis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
+            $currentAxis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
             $axes = $currentAxis->getDirectBroaders();
         }
         foreach ($axes as $axis) {
@@ -58,11 +58,11 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * @see getAddElementValue
      * @see setAddElementErrorMessage
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function addnodeAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         try {
             Core_Tools::checkRef($this->getAddElementValue('addAxis_ref'));
@@ -70,14 +70,14 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $this->setAddFormElementErrorMessage('addAxis_ref', $e->getMessage());
         }
         try {
-            $existingAxis = Orga_Model_Axis::loadByRefAndProject($this->getAddElementValue('addAxis_ref'), $project);
+            $existingAxis = Orga_Model_Axis::loadByRefAndOrganization($this->getAddElementValue('addAxis_ref'), $organization);
             $this->setAddFormElementErrorMessage('addAxis_ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
         } catch (Core_Exception_NotFound $e) {
             // La référence n'est pas utilisée.
         }
 
         if (empty($this->_formErrorMessages)) {
-            $axis = new Orga_Model_Axis($project);
+            $axis = new Orga_Model_Axis($organization);
             $axis->setRef($this->getAddElementValue('addAxis_ref'));
             $axis->setLabel($this->getAddElementValue('addAxis_label'));
             if ($this->getAddElementValue('addAxis_contextualizing') === 'contextualizing') {
@@ -86,7 +86,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
                 $axis->setContextualize(false);
             }
             if ($this->getAddElementValue('addAxis_parent') != null) {
-                $narrower = Orga_Model_Axis::loadByRefAndProject($this->getAddElementValue('addAxis_parent'), $project);
+                $narrower = Orga_Model_Axis::loadByRefAndOrganization($this->getAddElementValue('addAxis_parent'), $organization);
                 $narrower->addDirectBroader($axis);
             }
             $axis->save();
@@ -116,14 +116,14 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie un tableau contenant les parents possibles de l'élément au format :
      *  array('id' => id, 'label' => label).
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getlistparentsAction()
     {
         $this->addElementList(null, '');
 
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        foreach ($project->getFirstOrderedAxes() as $axis) {
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        foreach ($organization->getFirstOrderedAxes() as $axis) {
             $this->addElementList($axis->getRef(), ' '.$axis->getLabel());
         }
 
@@ -138,15 +138,15 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie un un tableau contenant la fratrie de l'élément au format :
      *  array('id' => id, 'label' => label).
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getlistsiblingsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
 
         if ($axis->getDirectNarrower() === null) {
-            $axes = $project->getRootAxes();
+            $axes = $organization->getRootAxes();
         } else {
             $axes = $axis->getDirectNarrower()->getDirectBroaders();
         }
@@ -172,12 +172,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      * $this->update['idElement'].
      *
      * Renvoie un message d'information.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function editnodeAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
 
         $newRef = $this->getEditElementValue('ref');
         $newLabel = $this->getEditElementValue('label');
@@ -204,7 +204,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             case 'after':
                 $currentAxisPosition = $axis->getPosition();
                 $refAfter = $this->_form[$this->id.'_changeOrder']['children'][$this->id.'_selectAfter_child']['value'];
-                $newPosition = Orga_Model_Axis::loadByRefAndProject($refAfter, $project)->getPosition();
+                $newPosition = Orga_Model_Axis::loadByRefAndOrganization($refAfter, $organization)->getPosition();
                 if (($currentAxisPosition > $newPosition)) {
                     $newPosition += 1;
                 }
@@ -216,7 +216,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
         if ($newRef !== $this->idNode) {
             try {
-                $existingAxis = Orga_Model_Axis::loadByRefAndProject($newRef, $project);
+                $existingAxis = Orga_Model_Axis::loadByRefAndOrganization($newRef, $organization);
                 $this->setEditFormElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
                 // La référence n'est pas utilisée.
@@ -249,12 +249,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *  $this->idNode
      *
      * Renvoie une message d'information.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function deletenodeAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
 
         if ($axis->hasGranularities()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasGranularities',
@@ -274,12 +274,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
     /**
      * Fonction récupérant les informations d'édition pour le formulaire.
-     * @Secure("editProject")
+     * @Secure("editOrganization")
      */
     public function getinfoeditAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $axis = Orga_Model_Axis::loadByRefAndProject($this->idNode, $project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
 
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $axis->getLabel();

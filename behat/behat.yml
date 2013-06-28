@@ -1,0 +1,10 @@
+default:
+  paths:
+    features: features
+  extensions:
+    Behat\MinkExtension\Extension:
+      base_url: http://localhost/inventory
+      default_session: selenium2
+      selenium2:
+        browser: 'chrome'
+        wd_host: 'http://localhost:4444/wd/hub'

@@ -19,26 +19,26 @@ class Inventory_Migrate extends Core_Script_Populate
      */
     private $connection;
 
-    private $mapIdProject = array();
+    private $mapIdOrganization = array();
     private $mapIdAxes = array();
     private $mapIdMembers = array();
     private $mapIdGranularities = array();
 
 
     /**
-     * @param string $idProject
-     * @return Orga_Model_Project
+     * @param string $idOrganization
+     * @return Orga_Model_Organization
      * @throws Core_Exception_NotFound
      */
-    protected function getProject($idProject)
+    protected function getOrganization($idOrganization)
     {
-        if (!isset($this->mapIdProject[$idProject])) {
+        if (!isset($this->mapIdOrganization[$idOrganization])) {
             throw new Core_Exception_NotFound();
         }
-        if (!($this->mapIdProject[$idProject] instanceof Orga_Model_Project)) {
-            $this->mapIdProject[$idProject] = Orga_Model_Project::load($this->mapIdProject[$idProject]);
+        if (!($this->mapIdOrganization[$idOrganization] instanceof Orga_Model_Organization)) {
+            $this->mapIdOrganization[$idOrganization] = Orga_Model_Organization::load($this->mapIdOrganization[$idOrganization]);
         }
-        return $this->mapIdProject[$idProject];
+        return $this->mapIdOrganization[$idOrganization];
     }
 
     /**
@@ -108,7 +108,7 @@ class Inventory_Migrate extends Core_Script_Populate
         $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
         $this->em->clear();
-        $this->mapIdProject = array();
+        $this->mapIdOrganization = array();
         $this->mapIdAxes = array();
         $this->mapIdMembers = array();
         $this->mapIdGranularities = array();
@@ -123,9 +123,9 @@ class Inventory_Migrate extends Core_Script_Populate
 
         $this->em->flush();
 
-        foreach ($this->mapIdProject as $idCube => $cube) {
-            if ($cube instanceof Orga_Model_Project) {
-                $this->mapIdProject[$idCube] = $cube->getKey();
+        foreach ($this->mapIdOrganization as $idCube => $cube) {
+            if ($cube instanceof Orga_Model_Organization) {
+                $this->mapIdOrganization[$idCube] = $cube->getKey();
             }
         }
         foreach ($this->mapIdAxes as $idAxis => $axis) {
@@ -199,7 +199,7 @@ class Inventory_Migrate extends Core_Script_Populate
             $this->init($dbName);
             echo " _ $dbName _\n";
             $this->cleanUserBDD();
-            $this->migrateProjects();
+            $this->migrateOrganizations();
             $this->migrateUserRoles();
             echo " - regénération du cache des ACLs…\n";
             $aclFilterService->generate();
@@ -225,7 +225,7 @@ class Inventory_Migrate extends Core_Script_Populate
         $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 
-        $count = $connection->exec("DELETE FROM User_Authorization WHERE (idIdentity IN (SELECT id FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))) OR idResource IN (SELECT id FROM User_Resource WHERE (entityName='Inventory_Model_Project' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report') AND TRIM(entityIdentifier) <> \"\")");
+        $count = $connection->exec("DELETE FROM User_Authorization WHERE (idIdentity IN (SELECT id FROM User_Role WHERE (ref LIKE 'projectAdministrator_%') OR (ref LIKE 'cellDataProviderAdministrator_%') OR (ref LIKE 'cellDataProviderContributor_%') OR (ref LIKE 'cellDataProviderObserver_%'))) OR idResource IN (SELECT id FROM User_Resource WHERE (entityName='Inventory_Model_Organization' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report') AND TRIM(entityIdentifier) <> \"\")");
         if ($count > 0) {
             echo "\t -> $count authorizations éffacées.\n";
             $count = $connection->exec("DELETE FROM User_Resource WHERE (entityName='Inventory_Model_Project' OR entityName='Inventory_Model_CellDataProvider' OR entityName='DW_Model_Report') AND TRIM(entityIdentifier) <> \"\"");
@@ -256,19 +256,19 @@ class Inventory_Migrate extends Core_Script_Populate
             echo print_r($connection->errorInfo(), true);
         }
 
-        $count = $connection->exec("UPDATE User_Resource SET entityName = 'Orga_Model_Project' WHERE entityName = 'Inventory_Model_Project'");
-        echo "\t -> $count resources changées de 'Inventory_Model_Project' à 'Orga_Model_Project'\n";
+        $count = $connection->exec("UPDATE User_Resource SET entityName = 'Orga_Model_Organization' WHERE entityName = 'Inventory_Model_Project'");
+        echo "\t -> $count resources changées de 'Inventory_Model_Organization' à 'Orga_Model_Organization'\n";
     }
 
     /**
      *
      */
-    protected function migrateProjects()
+    protected function migrateOrganizations()
     {
         $select = $this->connection->query("SELECT * FROM Inventory_Project");
         /** @noinspection PhpAssignmentInConditionInspection */
         while ($row = $select->fetch()) {
-            $this->processProject($row);
+            $this->processOrganization($row);
         }
         $select->closeCursor();
     }
@@ -276,24 +276,24 @@ class Inventory_Migrate extends Core_Script_Populate
     /**
      * @param array $row
      */
-    protected function processProject($row)
+    protected function processOrganization($row)
     {
-        echo "\t Project : " . $row['id'] . "\n";
-        $project = new Orga_Model_Project();
-        $project->setLabel($row['label']);
-        $project->save();
+        echo "\t Organization : " . $row['id'] . "\n";
+        $organization = new Orga_Model_Organization();
+        $organization->setLabel($row['label']);
+        $organization->save();
 
-        $this->mapIdProject[$row['idOrgaCube']] = $project;
+        $this->mapIdOrganization[$row['idOrgaCube']] = $organization;
         $this->flush();
 
-        $this->migrateProjectAxes($row['idOrgaCube']);
+        $this->migrateOrganizationAxes($row['idOrgaCube']);
 
-        $this->migrateProjectGranularities($row['idOrgaCube']);
+        $this->migrateOrganizationGranularities($row['idOrgaCube']);
 
         // Nécessaire à cause des clear.
-        $project = $this->getProject($row['idOrgaCube']);
+        $organization = $this->getOrganization($row['idOrgaCube']);
         if ($row['idOrgaGranularityForInventoryStatus'] != null) {
-            $project->setGranularityForInventoryStatus(
+            $organization->setGranularityForInventoryStatus(
                 $this->getGranularity($row['idOrgaGranularityForInventoryStatus'])
             );
             echo "\t\t > granularité des inventaires : " . $this->getGranularity(
@@ -304,12 +304,12 @@ class Inventory_Migrate extends Core_Script_Populate
             echo "\t\t > pas de granularité des inventaires \n";
         }
 
-        $this->migrateProjectAFConfig($row['idOrgaCube']);
+        $this->migrateOrganizationAFConfig($row['idOrgaCube']);
 
-        $this->migrateProjectGranularityDataProviders($row['idOrgaCube']);
+        $this->migrateOrganizationGranularityDataProviders($row['idOrgaCube']);
 
 //        echo "\t\t > regénération des données des cubes\n";
-//        Orga_Service_ETLStructure::getInstance()->resetProjectDWCubes($this->getProject($row['idOrgaCube']));
+//        Orga_Service_ETLStructure::getInstance()->resetOrganizationDWCubes($this->getOrganization($row['idOrgaCube']));
         $this->flush();
     }
 
@@ -317,7 +317,7 @@ class Inventory_Migrate extends Core_Script_Populate
     /**
      * @param int $idCube
      */
-    protected function migrateProjectAxes($idCube)
+    protected function migrateOrganizationAxes($idCube)
     {
         $select = $this->connection->query(
             "SELECT * FROM Orga_Axis WHERE idCube=$idCube AND idDirectNarrower IS NULL ORDER BY id"
@@ -335,7 +335,7 @@ class Inventory_Migrate extends Core_Script_Populate
      */
     protected function processAxis($row)
     {
-        $axis = new Orga_Model_Axis($this->getProject($row['idCube']));
+        $axis = new Orga_Model_Axis($this->getOrganization($row['idCube']));
         $axis->setRef($row['ref']);
         $axis->setLabel($row['label']);
         if ($row['idDirectNarrower'] != null) {
@@ -427,7 +427,7 @@ class Inventory_Migrate extends Core_Script_Populate
     /**
      * @param int $idCube
      */
-    protected function migrateProjectGranularities($idCube)
+    protected function migrateOrganizationGranularities($idCube)
     {
         $select = $this->connection->query("SELECT * FROM Orga_Granularity WHERE idCube=$idCube");
         /** @noinspection PhpAssignmentInConditionInspection */
@@ -452,7 +452,7 @@ class Inventory_Migrate extends Core_Script_Populate
         }
         $subSelect->closeCursor();
 
-        $granularity = new Orga_Model_Granularity($this->getProject($row['idCube']), $axes);
+        $granularity = new Orga_Model_Granularity($this->getOrganization($row['idCube']), $axes);
         $granularity->setNavigability((bool)$row['navigable']);
         $granularity->save();
 
@@ -503,7 +503,7 @@ class Inventory_Migrate extends Core_Script_Populate
     /**
      * @param int $idCube
      */
-    protected function migrateProjectAFConfig($idCube)
+    protected function migrateOrganizationAFConfig($idCube)
     {
         $select = $this->connection->query(
             "SELECT * FROM Inventory_AFGranularities JOIN Inventory_Project ON Inventory_AFGranularities.idProject = Inventory_Project.id WHERE idOrgaCube=$idCube"
@@ -530,7 +530,7 @@ class Inventory_Migrate extends Core_Script_Populate
     /**
      * @param int $idCube
      */
-    protected function migrateProjectGranularityDataProviders($idCube)
+    protected function migrateOrganizationGranularityDataProviders($idCube)
     {
         $select = $this->connection->query(
             "SELECT * FROM Orga_Granularity JOIN Inventory_GranularityDataProvider ON Orga_Granularity.id = Inventory_GranularityDataProvider.idOrgaGranularity WHERE idCube=$idCube"
@@ -570,9 +570,9 @@ class Inventory_Migrate extends Core_Script_Populate
             . " Social Context actions\n";
         echo "\t\t\t > " . (($granularity->getCellsWithInputDocuments()) ? "with" : "without") . " Input docs\n";
 
-        $project = $granularity->getProject();
+        $organization = $granularity->getOrganization();
         try {
-            $setInventoryStatus = ($project->getGranularityForInventoryStatus() === $granularity);
+            $setInventoryStatus = ($organization->getGranularityForInventoryStatus() === $granularity);
         } catch (Core_Exception_UndefinedAttribute $e) {
             // Pas de granularité des inventaires.
         }
@@ -772,11 +772,11 @@ class Inventory_Migrate extends Core_Script_Populate
         switch ($baseRef) {
             case 'projectAdministrator':
                 $select = $this->connection->query("SELECT * FROM Inventory_Project WHERE id = ".$id);
-                $rowProject = $select->fetch();
-                $project = $this->getProject($rowProject['idOrgaCube']);
-                $role = User_Model_Role::loadByRef($baseRef.'_'.$project->getKey()['id']);
+                $rowOrganization = $select->fetch();
+                $organization = $this->getOrganization($rowOrganization['idOrgaCube']);
+                $role = User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getKey()['id']);
 
-                $complement = ' for '.$project->getLabel();
+                $complement = ' for '.$organization->getLabel();
                 break;
             case 'cellDataProviderAdministrator':
             case 'cellDataProviderContributor':

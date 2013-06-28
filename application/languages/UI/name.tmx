@@ -427,14 +427,6 @@
                 <seg>Progress</seg>
             </tuv>
         </tu>
-        <tu tuid="projects">
-            <tuv xml:lang="fr">
-                <seg>Projets</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Projects</seg>
-            </tuv>
-        </tu>
         <tu tuid="query">
             <tuv xml:lang="fr">
                 <seg>Requête</seg>
@@ -481,6 +473,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Results</seg>
+            </tuv>
+        </tu>
+        <tu tuid="roundedValue">
+            <tuv xml:lang="fr">
+                <seg>Valeur arrondie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Rounded value</seg>
             </tuv>
         </tu>
         <tu tuid="root">

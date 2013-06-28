@@ -7,7 +7,7 @@
  * @subpackage Test
  */
 
-//require_once dirname(__FILE__).'/ProjectTest.php';
+//require_once dirname(__FILE__).'/OrganizationTest.php';
 
 /**
  * Creation de la suite de test sur les Axis.
@@ -31,15 +31,15 @@ class Orga_Test_AxisTest
      * Generation de l'objet de test.
      * @param string $refAxis
      * @param string $labelAxis
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      * @return Orga_Model_Axis
      */
-    public static function generateObject($refAxis='RefTestAxis', $labelAxis='LabelTestAxis', $project=null)
+    public static function generateObject($refAxis='RefTestAxis', $labelAxis='LabelTestAxis', $organization=null)
     {
-        if ($project === null) {
-            $project = Orga_Test_ProjectTest::generateObject();
+        if ($organization === null) {
+            $organization = Orga_Test_OrganizationTest::generateObject();
         }
-        $o = new Orga_Model_Axis($project);
+        $o = new Orga_Model_Axis($organization);
         $o->setRef($refAxis);
         $o->setLabel($labelAxis);
         $o->save();
@@ -51,13 +51,13 @@ class Orga_Test_AxisTest
     /**
      * Suppression d'un objet cree avec generateObject
      * @param Orga_Model_Axis $o
-     * @param bool $deleteProject
+     * @param bool $deleteOrganization
      * @depends generateObject
      */
-    public static function deleteObject($o, $deleteProject=true)
+    public static function deleteObject($o, $deleteOrganization=true)
     {
-        if ($deleteProject === true) {
-            $o->getProject()->delete();
+        if ($deleteOrganization === true) {
+            $o->getOrganization()->delete();
         } else {
             $o->delete();
         }
@@ -87,11 +87,11 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Project en base, sinon suppression !
-        if (Orga_Model_Project::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Project restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Project::loadList() as $project) {
-                $project->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -105,8 +105,8 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $project = Orga_Test_ProjectTest::generateObject();
-        $o = new Orga_Model_Axis($project);
+        $organization = Orga_Test_OrganizationTest::generateObject();
+        $o = new Orga_Model_Axis($organization);
         $o->setRef('RefTestAxis');
         $o->setLabel('LabalTestAxis');
         $o->setContextualize(true);
@@ -131,7 +131,7 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
          $this->assertEquals($oLoaded->getRef(), $o->getRef());
          $this->assertEquals($oLoaded->getLabel(), $o->getLabel());
          $this->assertEquals($oLoaded->isContextualizing(), $o->isContextualizing());
-         $this->assertSame($oLoaded->getProject(), $o->getProject());
+         $this->assertSame($oLoaded->getOrganization(), $o->getOrganization());
          return $oLoaded;
     }
 
@@ -145,7 +145,7 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
         $this->assertEquals(array(), $o->getKey());
-        Orga_Test_ProjectTest::deleteObject($o->getProject());
+        Orga_Test_OrganizationTest::deleteObject($o->getOrganization());
     }
 
     /**
@@ -162,11 +162,11 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Project en base, sinon suppression !
-        if (Orga_Model_Project::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Project restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Project::loadList() as $project) {
-                $project->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -175,16 +175,16 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
 }
 
 /**
- * Tests de la classe Project
+ * Tests de la classe Organization
  * @package Orga
  * @subpackage Test
  */
 class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Orga_Model_Project
+     * @var Orga_Model_Organization
      */
-    protected $project;
+    protected $organization;
 
     /**
      * @var Orga_Model_Axis
@@ -214,11 +214,11 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Project en base, sinon suppression !
-        if (Orga_Model_Project::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Project restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Project::loadList() as $project) {
-                $project->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -232,15 +232,15 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
     {
         // Crée un objet de test
         $this->axis = Orga_Test_AxisTest::generateObject();
-        $this->project = $this->axis->getProject();
+        $this->organization = $this->axis->getOrganization();
     }
 
     /**
      * Test de loadbyref
      */
-    public function testLoadByRefAndProject()
+    public function testLoadByRefAndOrganization()
     {
-        $o = Orga_Model_Axis::loadByRefAndProject($this->axis->getRef(), $this->project);
+        $o = Orga_Model_Axis::loadByRefAndOrganization($this->axis->getRef(), $this->organization);
         $this->assertSame($this->axis, $o);
     }
 
@@ -249,12 +249,12 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
      */
     public function testManagerBroaders()
     {
-        $axis1 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders1', 'LabelAxisManageBroaders1', $this->project);
-        $axis11 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders11', 'LabelAxisManageBroaders11', $this->project);
-        $axis2 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders2', 'LabelAxisManageBroaders2', $this->project);
-        $axis21 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders21', 'LabelAxisManageBroaders21', $this->project);
-        $axis22 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders22', 'LabelAxisManageBroaders22', $this->project);
-        $axis3 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders3', 'LabelAxisManageBroaders3', $this->project);
+        $axis1 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders1', 'LabelAxisManageBroaders1', $this->organization);
+        $axis11 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders11', 'LabelAxisManageBroaders11', $this->organization);
+        $axis2 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders2', 'LabelAxisManageBroaders2', $this->organization);
+        $axis21 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders21', 'LabelAxisManageBroaders21', $this->organization);
+        $axis22 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders22', 'LabelAxisManageBroaders22', $this->organization);
+        $axis3 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders3', 'LabelAxisManageBroaders3', $this->organization);
 
         $this->assertFalse($this->axis->hasDirectBroaders());
         $this->assertEmpty($this->axis->getDirectBroaders());
@@ -392,7 +392,7 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-       Orga_Test_ProjectTest::deleteObject($this->project);
+       Orga_Test_OrganizationTest::deleteObject($this->organization);
     }
 
     /**
@@ -418,11 +418,11 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Project en base, sinon suppression !
-        if (Orga_Model_Project::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Project restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Project::loadList() as $project) {
-                $project->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
