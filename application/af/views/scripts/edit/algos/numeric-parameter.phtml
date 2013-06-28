@@ -57,3 +57,9 @@ $resultIndexColumn->popup->addAttribute('class', 'large');
 $datagrid->addCol($resultIndexColumn);
 
 echo $datagrid->render();
+?>
+<script type="text/javascript">
+    $('#algoNumericParameter_addPanel').on('hidden', function() {
+        $('#algoNumericParameter_family_addForm').val('').trigger('change');
+    });
+</script>

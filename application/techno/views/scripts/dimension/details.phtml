@@ -67,3 +67,9 @@ $datagrid->addElements = true;
 $datagrid->addPanelTitle = __('Techno', 'dimension', 'addPanelTitle');
 
 $datagrid->display();
+?>
+<script type="text/javascript">
+    $('#membersDatagrid_addPanel').on('hidden', function(){
+            $('#membersDatagrid_refKeyword_addForm').val('').trigger('change');
+        });
+</script>
