@@ -43,6 +43,14 @@ Given I am logged in
 Given I wait for [the] page to finish loading
 When I wait [for] 5 seconds
 
+When I click "button/link"
+When I click element "css selector"
+When I open collapse "label"
+When I open tab "label"
+
+# Message (alerts)
+Then the following message is shown and closed: "Ajout effectué"
+
 # Form
 Then the field "field" should have error: "Some error"
 
@@ -56,4 +64,5 @@ Then the row 1 of the "users" datagrid should contain:
   | nom            | email | detailsUser |
   | Administrateur | admin | Éditer      |
 Then the column "name" of the row 2 of the "users" datagrid should contain "Bob"
+When I click "Supprimer" in the row 5 of the "users" datagrid
 ```

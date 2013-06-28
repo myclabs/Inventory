@@ -1,5 +1,5 @@
 @dbOneOrganization
-Feature: OrganizationsNOK
+Feature: Organizations
 
   Background:
     Given I am logged in
@@ -20,14 +20,13 @@ Feature: OrganizationsNOK
   Scenario: OrgaEdit
     Then I should see the "organizations" datagrid
     # Lien "Détails"
-    When I follow "Détails"
-    And I wait for the page to finish loading
+    When I click "Détails"
     # Affichage onglet "Configuration"
-    When I follow "Organisation"
-    And I follow "Configuration"
+    When I open tab "Organisation"
+    And I open tab "Configuration"
     # Modification du libellé
     And I fill in "Libellé" with "Organisation test modifiee"
-    And I press "Enregistrer"
+    And I click "Enregistrer"
     Then I should see "Ok : Modification effectuée."
     When I press "x"
     Then I should not see "Ok : Modification effectuée."

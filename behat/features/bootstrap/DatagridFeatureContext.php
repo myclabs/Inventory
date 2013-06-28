@@ -15,12 +15,16 @@ trait DatagridFeatureContext
      */
     public abstract function assertSession($name = null);
     public abstract function assertElementContainsText($element, $text);
+    public abstract function waitForPageToFinishLoading();
+    public abstract function clickElement($selector);
 
     /**
      * @Then /^(?:|I )should see the "(?P<datagrid>[^"]*)" datagrid$/
      */
     public function assertDatagridVisible($datagrid)
     {
+        $this->waitForPageToFinishLoading();
+
         $this->assertSession()->elementExists('css', $this->getDatagridSelector($datagrid));
     }
 
@@ -62,6 +66,18 @@ trait DatagridFeatureContext
                 $content, $row, $column, $e->getMessage());
             throw new \Exception($message);
         }
+    }
+
+    /**
+     * @When /^(?:|I )click "(?P<link>[^"]*)" in the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
+     */
+    public function clickInRow($link, $row, $datagrid)
+    {
+        $linkSelector = $this->getDatagridSelector($datagrid)
+            . " .yui-dt-data tr:nth-child($row)"
+            . " a:contains('$link')";
+
+        $this->clickElement($linkSelector);
     }
 
     /**

@@ -8,7 +8,6 @@ Feature: Users
   @javascript
   Scenario: User list
     Given I am on "user/profile/list"
-    And I wait for the page to finish loading
     Then I should see the "users" datagrid
     And the "users" datagrid should contain 1 row
     And the row 1 of the "users" datagrid should contain:

@@ -1,5 +1,5 @@
 @dbOneOrganization
-Feature: OrgaAxesNOK
+Feature: OrgaAxes
 
   Background:
     Given I am logged in
@@ -8,11 +8,10 @@ Feature: OrgaAxesNOK
   Scenario: OrgaAxesEdit
     # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-    And I follow "Organisation"
-    And I follow "Axes"
+    And I open tab "Organisation"
+    And I open tab "Axes"
     # Ajout d'un axe, identifiant vide
-    And I follow "Ajouter"
+    And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I press "Valider"
     And I wait for the page to finish loading
