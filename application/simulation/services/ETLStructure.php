@@ -127,7 +127,7 @@ class Simulation_Service_ETLStructure
      */
     private function isDWCubeUpToDate($dWCube)
     {
-        return !($this->areDWIndicatorsDifferentFromClassif($dWCube) || $this->areDWAxesDifferentFromClassif($dWCube));
+        return !($this->areDWIndicatorsUpToDate($dWCube) || $this->areDWAxesUpToDate($dWCube));
     }
 
     /**
@@ -137,7 +137,7 @@ class Simulation_Service_ETLStructure
      *
      * @return bool
      */
-    private function areDWIndicatorsDifferentFromClassif($dWCube)
+    private function areDWIndicatorsUpToDate($dWCube)
     {
         $classifIndicators = Classif_Model_Indicator::loadList();
         $dWIndicators = $dWCube->getIndicators();
@@ -151,7 +151,7 @@ class Simulation_Service_ETLStructure
             }
         }
 
-        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 1)) {
+        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 0)) {
             return true;
         }
 
@@ -186,7 +186,7 @@ class Simulation_Service_ETLStructure
      *
      * @return bool
      */
-    private function areDWAxesDifferentFromClassif($dWCube)
+    private function areDWAxesUpToDate($dWCube)
     {
         $queryClassifRootAxes = new Core_Model_Query();
         $queryClassifRootAxes->filter->addCondition(

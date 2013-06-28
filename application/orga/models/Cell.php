@@ -1283,6 +1283,13 @@ class Orga_Model_Cell extends Core_Model_Entity
                 }
             }
 
+            $inputStatusDWAxis = $dWCube->getAxisByRef('inputStatus');
+            if ($this->getAFInputSetPrimary()->isFinished()) {
+                $dWResult->addMember($inputStatusDWAxis->getMemberByRef('finished'));
+            } else {
+                $dWResult->addMember($inputStatusDWAxis->getMemberByRef('completed'));
+            }
+
             $this->dWResults->add($dWResult);
         }
     }

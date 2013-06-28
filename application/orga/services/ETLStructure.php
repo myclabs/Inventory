@@ -18,13 +18,19 @@ class Orga_Service_ETLStructure
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var Orga_Service_ETLData
+     */
+    private $etlDataService;
 
     /**
      * @param EntityManager $entityManager
+     * @param Orga_Service_ETLData $etlDataService
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, Orga_Service_ETLData $etlDataService)
     {
         $this->entityManager = $entityManager;
+        $this->etlDataService = $etlDataService;
     }
 
     /**
@@ -69,8 +75,29 @@ class Orga_Service_ETLStructure
      */
     protected function populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters)
     {
+        $this->populateDWCubeWithAF($dWCube);
         $this->populateDWCubeWithOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters);
         $this->populateDWCubeWithClassif($dWCube);
+    }
+
+    /**
+     * Peuple le cube de DW avec les données issues de Classif.
+     *
+     * @param DW_Model_Cube $dWCube
+     */
+    protected function populateDWCubeWithAF(DW_Model_Cube $dWCube)
+    {
+        $inputStatusDWAxis = new DW_Model_Axis($dWCube);
+        $inputStatusDWAxis->setRef('inputStatus');
+        $inputStatusDWAxis->setLabel('Status des saisies');
+
+        $finishedDWMember = new DW_Model_Member($inputStatusDWAxis);
+        $finishedDWMember->setRef('finished');
+        $finishedDWMember->setLabel('terminée');
+
+        $completedDWMember = new DW_Model_Member($inputStatusDWAxis);
+        $completedDWMember->setRef('completed');
+        $completedDWMember->setLabel('complete');
     }
 
     /**
@@ -363,8 +390,8 @@ class Orga_Service_ETLStructure
     protected function isDWCubeUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
         return !(
-            $this->areDWIndicatorsDifferentFromClassif($dWCube)
-            || $this->areDWAxesDifferentFromClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
+            $this->areDWIndicatorsUpToDate($dWCube)
+            || $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
         );
     }
 
@@ -375,7 +402,7 @@ class Orga_Service_ETLStructure
      *
      * @return bool
      */
-    protected function areDWIndicatorsDifferentFromClassif($dWCube)
+    protected function areDWIndicatorsUpToDate($dWCube)
     {
         $classifIndicators = Classif_Model_Indicator::loadList();
         $dWIndicators = $dWCube->getIndicators();
@@ -390,7 +417,7 @@ class Orga_Service_ETLStructure
             }
         }
 
-        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 1)) {
+        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 0)) {
             return true;
         }
 
@@ -427,7 +454,7 @@ class Orga_Service_ETLStructure
      *
      * @return bool
      */
-    protected function areDWAxesDifferentFromClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
+    protected function areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
         $queryClassifRootAxes = new Core_Model_Query();
         $queryClassifRootAxes->filter->addCondition(
@@ -435,9 +462,10 @@ class Orga_Service_ETLStructure
             null,
             Core_Model_Filter::OPERATOR_NULL
         );
-        $classifRootAxes = Classif_Model_Axis::loadList($queryClassifRootAxes);
         $dWRootAxes = $dWCube->getRootAxes();
 
+        // Classif.
+        $classifRootAxes = Classif_Model_Axis::loadList($queryClassifRootAxes);
         foreach (Classif_Model_Axis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
             /** @var Classif_Model_Axis $classifAxis */
             foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
@@ -448,8 +476,8 @@ class Orga_Service_ETLStructure
             }
         }
 
+        // Orga.
         $orgaRootAxes = $orgaOrganization->getRootAxes();
-
         foreach ($orgaOrganization->getRootAxes() as $orgaIndex => $orgaAxis) {
             foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
                 if (!($this->isDWAxisDifferentFromOrga($dWAxis, $orgaAxis, $orgaFilters))) {
@@ -784,10 +812,7 @@ class Orga_Service_ETLStructure
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            /** @var Orga_Service_ETLData $etlDataService */
-            $etlDataService = $this->get('Orga_Service_ETLData');
-
-            $etlDataService->clearDWResultsForCell($cell);
+            $this->etlDataService->clearDWResultsForCell($cell);
 
             $this->resetDWCube(
                 $cell->getDWCube(),
@@ -798,7 +823,7 @@ class Orga_Service_ETLStructure
                 )
             );
 
-            $etlDataService->populateDWResultsForCell($cell);
+            $this->etlDataService->populateDWResultsForCell($cell);
         }
     }
 
