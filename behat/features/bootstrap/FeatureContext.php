@@ -68,7 +68,7 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @When /^(?:|I )wait (?:|for )(?P<seconds>\d+) seconds$/
+     * @When /^(?:|I )wait (?:|for )(?P<seconds>[\d\.]+) seconds$/
      */
     public function wait($seconds)
     {
