@@ -4,6 +4,8 @@
  */
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Application bootstrap
@@ -39,34 +41,70 @@ class Bootstrap extends Core_Bootstrap
             'Social',
             'Orga',
             'Simulation',
+            'AuditTrail',
         ];
 
         foreach ($modules as $module) {
             $moduleRoot = APPLICATION_PATH . '/' . strtolower($module);
+            $moduleRoot2 = PACKAGE_PATH . '/src/' . $module;
 
-            // Autoloader
-            $autoloader->addModule($module, $moduleRoot);
+            if (file_exists($moduleRoot)) {
+                // Autoloader
+                $autoloader->addModule($module, $moduleRoot);
 
-            // Controllers
-            $frontController->addControllerDirectory($moduleRoot . '/controllers', strtolower($module));
+                // Controllers
+                $frontController->addControllerDirectory($moduleRoot . '/controllers', strtolower($module));
 
-            // Bootstrap
-            $bootstrapFile = $moduleRoot . '/Bootstrap.php';
-            if (file_exists($bootstrapFile)) {
-                require_once $bootstrapFile;
-                $bootstrapName = $module . '_Bootstrap';
-                /** @var $bootstrap Core_Package_Bootstrap */
-                $bootstrap = new $bootstrapName($this->_application);
-                $bootstrap->container = $this->container;
-                $bootstrap->setRun($this->_run);
-                $bootstrap->bootstrap();
-                foreach ($bootstrap->getRun() as $run) {
-                    $this->_markRun($run);
+                // Bootstrap
+                $bootstrapFile = $moduleRoot . '/Bootstrap.php';
+                if (file_exists($bootstrapFile)) {
+                    require_once $bootstrapFile;
+                    $bootstrapName = $module . '_Bootstrap';
+                    /** @var $bootstrap Core_Package_Bootstrap */
+                    $bootstrap = new $bootstrapName($this->_application);
+                    $bootstrap->container = $this->container;
+                    $bootstrap->setRun($this->_run);
+                    $bootstrap->bootstrap();
+                    foreach ($bootstrap->getRun() as $run) {
+                        $this->_markRun($run);
+                    }
                 }
+
+                // Doctrine Mappers
+                $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
             }
 
-            // Doctrine Mappers
-            $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
+            if (file_exists($moduleRoot2)) {
+                if (file_exists($moduleRoot2 . '/Application/Controller')) {
+                    // Controllers
+                    $frontController->addControllerDirectory($moduleRoot2 . '/Application/Controller',
+                        strtolower($module));
+                }
+
+                // Bootstrap
+                $bootstrapFile = $moduleRoot2 . '/Application/Bootstrap.php';
+                if (file_exists($bootstrapFile)) {
+                    require_once $bootstrapFile;
+                    $bootstrapName = $module . '\Application\Bootstrap';
+                    /** @var $bootstrap Core_Package_Bootstrap */
+                    $bootstrap = new $bootstrapName($this->_application);
+                    $bootstrap->container = $this->container;
+                    $bootstrap->setRun($this->_run);
+                    $bootstrap->bootstrap();
+                    foreach ($bootstrap->getRun() as $run) {
+                        $this->_markRun($run);
+                    }
+                }
+
+                // Doctrine Mappers
+                if (file_exists($moduleRoot2 . '/Architecture/DBMapper')) {
+                    $yamlDriver = new SimplifiedYamlDriver(
+                        [$moduleRoot2 . '/Architecture/DBMapper' => $module . '\Domain'],
+                        '.yml'
+                    );
+                    $driver->addDriver($yamlDriver, $module . '\Domain');
+                }
+            }
         }
     }
 
@@ -80,9 +118,9 @@ class Bootstrap extends Core_Bootstrap
     }
 
     /**
-     * Enregistre les helpers de UI.
+     * Enregistre les helpers de vue
      */
-    protected function _initViewHelperUI()
+    protected function _initViewHelpers()
     {
         $this->bootstrap('View');
         $view = $this->getResource('view');
@@ -110,6 +148,25 @@ class Bootstrap extends Core_Bootstrap
             $front->registerPlugin($this->container->get('Inventory_Plugin_Acl'));
             Zend_Registry::set('pluginAcl', 'User_Plugin_Acl');
         }
+    }
+
+    /**
+     * Event listeners
+     */
+    protected function _initEventListeners()
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container->get('Symfony\Component\EventDispatcher\EventDispatcher');
+
+        // User events (plus prioritaire)
+        $userEventListener = $this->container->get('User\Event\EventListener', true);
+        $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
+        $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
+
+        // AuditTrail
+        $auditTrailListener = $this->container->get('AuditTrail\Application\Service\EventListener', true);
+        $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
+        $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }
 
 }

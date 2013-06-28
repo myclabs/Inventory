@@ -15,7 +15,7 @@ use DI\Annotation\Inject;
  * @package    Orga
  * @subpackage Controller
  */
-class Orga_CellController extends Core_Controller_Ajax
+class Orga_CellController extends Core_Controller
 {
     /**
      * @Inject
@@ -25,15 +25,15 @@ class Orga_CellController extends Core_Controller_Ajax
 
     /**
      * @Inject
-     * @var Orga_Service_ETLData
-     */
-    private $etlDataService;
-
-    /**
-     * @Inject
      * @var Core_Work_Dispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject
+     * @var Orga_Service_InputService
+     */
+    private $inputService;
 
     /**
      * Affiche le détail d'une cellule.
@@ -79,7 +79,7 @@ class Orga_CellController extends Core_Controller_Ajax
 
 
         // TAB ORGA.
-        $isUserAllowedToEditOrganization = $aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
             $organization
@@ -226,6 +226,16 @@ class Orga_CellController extends Core_Controller_Ajax
             $documentsTab->dataSource = 'orga/tab_celldetails/documents?idCell='.$idCell;
             $this->view->tabView->addTab($documentsTab);
         }
+
+
+        // TAB HISTORIQUE
+        $historyTab = new UI_Tab('history');
+        if ($tab === 'history') {
+            $historyTab->active = true;
+        }
+        $historyTab->label = __('Orga', '', 'history');
+        $historyTab->dataSource = 'orga/tab_celldetails/history?idCell='.$idCell;
+        $this->view->tabView->addTab($historyTab);
 
 
         // TAB ADMINISTRATION
@@ -390,17 +400,18 @@ class Orga_CellController extends Core_Controller_Ajax
      */
     public function inputsaveAction()
     {
+        /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
-        $inputSet = $this->getParam('inputSet');
+        $inputSetContainer = $this->getParam('inputSetContainer');
+        /** @var $newInputSet AF_Model_InputSet_Primary */
+        $newInputSet = $inputSetContainer->inputSet;
 
-        $cell->setAFInputSetPrimary($inputSet);
+        $this->inputService->editInput($cell, $newInputSet);
 
-        Orga_Service_ETLData::getInstance()->clearDWResultsFromCell($cell);
-        if ($inputSet->isInputComplete()) {
-            $this->etlDataService->clearDWResultsFromCell($cell);
-            $this->etlDataService->populateDWResultsFromCell($cell);
-            Orga_Service_ETLData::getInstance()->populateDWResultsFromCell($cell);
-        }
+        $this->entityManager->flush();
+
+        // Remplace l'input set temporaire par celui de la cellule
+        $inputSetContainer->inputSet = $cell->getAFInputSetPrimary();
 
         $this->_helper->viewRenderer->setNoRender(true);
     }

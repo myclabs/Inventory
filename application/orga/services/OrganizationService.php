@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
  * @package Orga
  * @subpackage Service
  */
-class Orga_Service_OrganizationService extends Core_Singleton
+class Orga_Service_OrganizationService
 {
 
     /**

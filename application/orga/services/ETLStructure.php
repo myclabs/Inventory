@@ -717,18 +717,14 @@ class Orga_Service_ETLStructure
      */
     public function resetOrganizationDWCubes(Orga_Model_Organization $organization)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
         foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
-                $entityManager->flush();
+                $this->entityManager->flush();
                 foreach ($granularity->getCells() as $cell) {
-                    $entityManager->clear();
+                    $this->entityManager->clear();
                     $this->resetCellDWCube(Orga_Model_Cell::load($cell->getId()));
-                    $entityManager->flush();
+                    $this->entityManager->flush();
                 }
             }
         }

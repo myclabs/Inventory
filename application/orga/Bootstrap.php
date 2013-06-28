@@ -67,9 +67,11 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
             Doctrine\ORM\Events::postFlush,
         ];
 
-        $aclManager = $this->container->get('Orga_Service_ACLManager');
+        if (APPLICATION_ENV != 'testsunitaires') {
+            $aclManager = $this->container->get('Orga_Service_ACLManager');
 
-        $entityManager->getEventManager()->addEventListener($events, $aclManager);
+            $entityManager->getEventManager()->addEventListener($events, $aclManager);
+        }
     }
 
 }

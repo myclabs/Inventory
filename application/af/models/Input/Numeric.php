@@ -7,7 +7,7 @@
  */
 
 /**
- * Inpunt Element for numerics fields
+ * Input Element for numerics fields
  * @package    AF
  * @subpackage Input
  */

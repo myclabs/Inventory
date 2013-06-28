@@ -164,47 +164,18 @@ class UserSetUpTest extends Core_Test_TestCase
 class UserMetierTest extends Core_Test_TestCase
 {
 
-    private $defaultPassword = 'test';
-
-    /**
-     * @var User_Model_User
-     */
-    protected $user;
-
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (User_Model_User::countTotal() > 0) {
-            foreach (User_Model_User::loadList() as $o) {
-                $o->delete();
-            }
-        }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-    }
-
     /**
      * Méthode appelée avant l'exécution des tests
      */
     public function setUp()
     {
         parent::setUp();
-        try {
-            // Création d'un utilisateur
-            $this->user = new User_Model_User();
-            // Applique les attributs
-            $this->user->setFirstName('Georges');
-            $this->user->setLastName('Moustaki');
-            $this->user->setEmail(Core_Tools::generateString(20));
-            $this->user->setPassword($this->defaultPassword);
-            $this->user->save();
-            $this->entityManager->flush();
-        } catch (Exception $e) {
-            $this->fail($e);
+
+        // Vérification qu'il ne reste aucun objet en base, sinon suppression
+        foreach (User_Model_User::loadList() as $o) {
+            $o->delete();
         }
+        $this->entityManager->flush();
     }
 
     /**
@@ -212,10 +183,19 @@ class UserMetierTest extends Core_Test_TestCase
      */
     function testLogin()
     {
-        $o = User_Model_User::login($this->user->getEmail(), $this->defaultPassword);
+        $user = new User_Model_User();
+        $user->setEmail(Core_Tools::generateString(20));
+        $user->setPassword('test');
+        $user->save();
+        $this->entityManager->flush();
+
+        $o = User_Model_User::login($user->getEmail(), 'test');
         $this->assertNotNull($o);
         $this->assertTrue($o instanceof User_Model_User);
-        $this->assertEquals($o->getId(), $this->user->getId());
+        $this->assertEquals($o->getId(), $user->getId());
+
+        $user->delete();
+        $this->entityManager->flush();
     }
 
     /**
@@ -224,7 +204,19 @@ class UserMetierTest extends Core_Test_TestCase
      */
     function testWrongPassword()
     {
-        User_Model_User::login($this->user->getEmail(), 'mauvais-password');
+        $user = new User_Model_User();
+        $user->setEmail(Core_Tools::generateString(20));
+        $user->setPassword('test');
+        $user->save();
+        $this->entityManager->flush();
+
+        try {
+            User_Model_User::login($user->getEmail(), 'mauvais-password');
+        } catch (Core_Exception_InvalidArgument $e) {
+            $user->delete();
+            $this->entityManager->flush();
+            throw $e;
+        }
     }
 
     /**
@@ -233,7 +225,19 @@ class UserMetierTest extends Core_Test_TestCase
      */
     function testWrongLogin()
     {
-        User_Model_User::login('foo', $this->defaultPassword);
+        $user = new User_Model_User();
+        $user->setEmail(Core_Tools::generateString(20));
+        $user->setPassword('test');
+        $user->save();
+        $this->entityManager->flush();
+
+        try {
+            User_Model_User::login('foo', 'test');
+        } catch (Core_Exception_NotFound $e) {
+            $user->delete();
+            $this->entityManager->flush();
+            throw $e;
+        }
     }
 
     /**
@@ -241,12 +245,15 @@ class UserMetierTest extends Core_Test_TestCase
      */
     function testTestPassword()
     {
-        $this->user->setPassword('password1');
-        $this->assertTrue($this->user->testPassword('password1'));
-        $this->assertFalse($this->user->testPassword('mauvais_password'));
-        $this->user->setPassword('password2');
-        $this->assertTrue($this->user->testPassword('password2'));
-        $this->assertFalse($this->user->testPassword('password1'));
+        $user = new User_Model_User();
+
+        $user->setPassword('password1');
+        $this->assertTrue($user->testPassword('password1'));
+        $this->assertFalse($user->testPassword('mauvais_password'));
+
+        $user->setPassword('password2');
+        $this->assertTrue($user->testPassword('password2'));
+        $this->assertFalse($user->testPassword('password1'));
     }
 
     /**
@@ -254,8 +261,17 @@ class UserMetierTest extends Core_Test_TestCase
      */
     function testMailUtilise()
     {
-        $this->assertTrue(User_Model_User::isEmailUsed($this->user->getEmail()));
+        $user = new User_Model_User();
+        $user->setEmail(Core_Tools::generateString(20));
+        $user->setPassword('test');
+        $user->save();
+        $this->entityManager->flush();
+
+        $this->assertTrue(User_Model_User::isEmailUsed($user->getEmail()));
         $this->assertFalse(User_Model_User::isEmailUsed('emailNotUsed'));
+
+        $user->delete();
+        $this->entityManager->flush();
     }
 
     /**
@@ -263,24 +279,17 @@ class UserMetierTest extends Core_Test_TestCase
      */
     function testLoadByEmailKey()
     {
-        $this->user->generateKeyEmail();
-        $this->user->save();
+        $user = new User_Model_User();
+        $user->setEmail(Core_Tools::generateString(20));
+        $user->setPassword('test');
+        $user->generateKeyEmail();
+        $user->save();
         $this->entityManager->flush();
 
-        $user = $this->user->loadByEmailKey($this->user->getEmailKey());
-        $this->assertEquals($user->getId(), $this->user->getId());
-    }
+        $o = User_Model_User::loadByEmailKey($user->getEmailKey());
+        $this->assertEquals($user->getId(), $o->getId());
 
-    /**
-     * Test du mail unique
-     * @expectedException Core_ORM_DuplicateEntryException
-     */
-    function testNewUserMailUsed()
-    {
-        $o = new User_Model_User();
-        $o->setEmail($this->user->getEmail());
-        $o->setPassword($this->defaultPassword);
-        $o->save();
+        $user->delete();
         $this->entityManager->flush();
     }
 
@@ -306,17 +315,6 @@ class UserMetierTest extends Core_Test_TestCase
         // Suppression
         $userService->deleteUser($o);
         $this->entityManager->flush();
-    }
-
-    /**
-     * Test de inviteUser avec un utilisateur existant
-     * @expectedException Core_Exception_Duplicate
-     */
-    function testInviteExistingUser()
-    {
-        /** @var $userService User_Service_User */
-        $userService = $this->get('User_Service_User');
-        $userService->inviteUser($this->user->getEmail());
     }
 
     /**
@@ -353,15 +351,23 @@ class UserMetierTest extends Core_Test_TestCase
     function testSetLocale()
     {
         $locale = Core_Locale::load('fr_FR');
-        $this->user->setLocale($locale);
-        $this->user->save();
+
+        $user = new User_Model_User();
+        $user->setEmail(Core_Tools::generateString(20));
+        $user->setPassword('test');
+        $user->setLocale($locale);
+        $user->save();
         $this->entityManager->flush();
+
         $this->entityManager->clear();
 
         /** @var $user User_Model_User */
-        $user = User_Model_User::load($this->user->getId());
+        $user = User_Model_User::load($user->getId());
         $locale2 = $user->getLocale();
         $this->assertEquals($locale, $locale2);
+
+        $user->delete();
+        $this->entityManager->flush();
     }
 
     /**
@@ -369,18 +375,25 @@ class UserMetierTest extends Core_Test_TestCase
      */
     function testUtilisateurRole()
     {
+        $user = new User_Model_User();
+        $user->setEmail(Core_Tools::generateString(20));
+        $user->setPassword('test');
+        $user->save();
+        $this->entityManager->flush();
+
         // L'utilisateur n'a pas de rôle
-        $this->assertCount(0, $this->user->getRoles());
+        $this->assertCount(0, $user->getRoles());
+
         // Ajoute le role à l'utilisateur
         $role = RoleTest::generateObject();
-        $this->user->addRole($role);
+        $user->addRole($role);
         // Sauvegarde et recharge
-        $this->user->save();
+        $user->save();
         $this->entityManager->flush();
         $this->entityManager->clear();
 
         /** @var $user User_Model_User */
-        $user = User_Model_User::load($this->user->getId());
+        $user = User_Model_User::load($user->getId());
         /** @var $role User_Model_Role */
         $role = User_Model_Role::load($role->getId());
         // Vérifie le lien
@@ -392,24 +405,9 @@ class UserMetierTest extends Core_Test_TestCase
         $this->assertCount(0, $user->getRoles());
 
         RoleTest::deleteObject($role);
-    }
 
-
-    /**
-     * Méthode appelée à la fin des test
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-        try {
-            // Au cas où une exception ait fermé l'entitymanager
-            $this->user = $this->entityManager->merge($this->user);
-            // Suppression de l'utilisateur
-            $this->user->delete();
-            $this->entityManager->flush();
-        } catch (Exception $e) {
-            $this->fail($e);
-        }
+        $user->delete();
+        $this->entityManager->flush();
     }
 
 }

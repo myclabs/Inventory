@@ -1,0 +1,3 @@
+AuditTrail\Domain\Context\GlobalContext:
+  type: entity
+  table: AuditTrail_GlobalContext

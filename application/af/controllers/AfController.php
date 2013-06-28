@@ -121,7 +121,7 @@ class AF_AfController extends Core_Controller
         // URL de submit
         $params = ['id' => $af->getId(), 'actionStack' => json_encode($actionStack)];
         // Ajoute les paramètres personnalisés qu'il peut y'avoir dans l'URL
-        $urlParams = $this->_getAllParams();
+        $urlParams = $this->getAllParams();
         unset(
             $urlParams['module'],
             $urlParams['controller'],

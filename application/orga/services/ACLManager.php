@@ -183,17 +183,17 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         $this->newRoles[$organizationAdministrator->getRef()] = $organizationAdministrator;
 
         // Ajout des autorisations du rôle administrateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::EDIT(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::DELETE(),
             $organizationResource

@@ -90,7 +90,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                     try {
                         $this->entityManager->flush();
 
-                        $this->aclManager->addProjectAdministrator(
+                        $this->aclManager->addOrganizationAdministrator(
                             $organization,
                             $user
                         );
@@ -127,7 +127,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 try {
                     $this->entityManager->flush();
 
-                    $this->aclManager->addProjectAdministrator(
+                    $this->aclManager->addOrganizationAdministrator(
                         $organization,
                         $user
                     );
@@ -169,7 +169,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         try {
             $this->entityManager->flush();
 
-            $this->aclManager->removeProjectAdministrator(
+            $this->aclManager->removeOrganizationAdministrator(
                 $organization,
                 $user
             );

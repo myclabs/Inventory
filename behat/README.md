@@ -7,6 +7,10 @@ and save it in this directory as:
 
     selenium-server-standalone.jar
 
+Download the [Chrome driver](https://code.google.com/p/selenium/wiki/ChromeDriver) into your path, for example for Windows:
+
+    C:\cygwin\usr\local\bin
+
 Install PHP curl extension and enable it in php.ini:
 
     extension=php_curl.dll

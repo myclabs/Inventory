@@ -10,6 +10,7 @@ AF_Model_Input:
   discriminatorMap:
     group: AF_Model_Input_Group
     numeric: AF_Model_Input_Numeric
+    text: AF_Model_Input_Text
     checkbox: AF_Model_Input_Checkbox
     select_single: AF_Model_Input_Select_Single
     select_multi: AF_Model_Input_Select_Multi

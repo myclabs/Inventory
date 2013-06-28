@@ -15,7 +15,7 @@ use DI\Annotation\Inject;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_OrganizationController extends Core_Controller_Ajax
+class Orga_OrganizationController extends Core_Controller
 {
     use UI_Controller_Helper_Form;
 
@@ -47,7 +47,7 @@ class Orga_OrganizationController extends Core_Controller_Ajax
         $connectedUser = $this->_helper->auth();
 
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
-        $isConnectedUserAbleToCreateOrganizations = $aclService->isAllowed(
+        $isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $organizationResource
@@ -106,7 +106,7 @@ class Orga_OrganizationController extends Core_Controller_Ajax
         $connectedUser = $this->_helper->auth();
 
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
-        $this->view->isConnectedUserAbleToCreateOrganizations = $aclService->isAllowed(
+        $this->view->isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $organizationResource
@@ -195,7 +195,7 @@ class Orga_OrganizationController extends Core_Controller_Ajax
     {
         $this->sendJsonResponse(
             array(
-                'organizationDWCubesState' => Orga_Service_ETLStructure::getInstance()->areOrganizationDWCubesUpToDate(
+                'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
                     Orga_Model_Organization::load($this->getParam('idOrganization'))
                 )
             )
@@ -208,9 +208,6 @@ class Orga_OrganizationController extends Core_Controller_Ajax
      */
     public function resetdwcubesAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         try {

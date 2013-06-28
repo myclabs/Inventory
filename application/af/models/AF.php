@@ -320,6 +320,7 @@ class AF_Model_AF extends Core_Model_Entity
     /**
      * Retourne un module par son référent textuel
      * @param string $ref
+     * @throws Core_Exception_NotFound
      * @return AF_Model_AF
      */
     public static function loadByRef($ref)

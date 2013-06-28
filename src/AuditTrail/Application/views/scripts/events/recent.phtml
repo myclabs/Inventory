@@ -1,0 +1,70 @@
+<?php
+use AuditTrail\Domain\Context\OrganizationContext;
+use AuditTrail\Domain\Entry;
+
+$locale = Core_Locale::loadDefault();
+
+$idCell = isset($this->idCell) ? $this->idCell : null;
+
+/** @var Entry[] $entries */
+$entries = $this->entries;
+?>
+
+<dl class="dl-horizontal">
+    <?php foreach ($entries as $entry) : ?>
+
+        <?php
+        if (! isset($dayIterator)) {
+            $dayIterator = null;
+        }
+        $currentDay = clone $entry->getDate();
+        $currentDay->setTime(0, 0, 0);
+
+        if ($dayIterator != $currentDay) {
+            $showDay = true;
+            $dayIterator = $currentDay;
+        } else {
+            $showDay = false;
+        }
+        ?>
+
+        <?php if ($showDay) : ?>
+            <div class="page-header">
+                <h4>
+                    <?=$locale->formatDate($currentDay)?>
+                </h4>
+            </div>
+        <?php endif; ?>
+
+        <?php
+        $context = $entry->getContext();
+        if (!$context instanceof OrganizationContext) {
+            continue;
+        }
+        $entryCell = $context->getCell();
+        $user = $entry->getUser();
+        if (!$entryCell || !$user) {
+            continue;
+        }
+
+        $inputUrl = $this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/' . $idCell);
+        $inputLink = "<a href='$inputUrl''>{$entryCell->getLabel()}</a>";
+
+        $text = __('Inventory', 'auditTrail', $entry->getEventName(),
+            [
+            'INPUT' => $inputLink,
+            'USER'  => $user->getName(),
+            ]
+        );
+        ?>
+
+        <dt>
+            <span class="badge badge-info"><?=$locale->formatTime($entry->getDate())?></span>
+        </dt>
+
+        <dd>
+            <?=$text?>
+        </dd>
+
+    <?php endforeach; ?>
+</dl>
