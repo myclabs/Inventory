@@ -62,9 +62,10 @@ class FeatureContext extends MinkContext
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
         $maskOK = '$("#loadingMask:visible").length == 0';
+        $popupOK = '$(".modal-backdrop:visible").length == 0';
 
         // Timeout de 6 secondes
-        $this->getSession()->wait(6000, "($jqueryOK) && ($datagridOK) && ($maskOK)");
+        $this->getSession()->wait(6000, "($jqueryOK) && ($datagridOK) && ($maskOK) && ($popupOK)");
     }
 
     /**
