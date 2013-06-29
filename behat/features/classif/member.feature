@@ -1,8 +1,8 @@
 @dbEmpty
-Feature: classifAxis
+Feature: classifMember
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: classifAxis1
+  Scenario: classifMember1
