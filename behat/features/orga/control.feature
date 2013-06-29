@@ -1,11 +1,11 @@
 @dbOneOrganizationWithAxes
-Feature: Control
+Feature: orgaControl
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Control1
+  Scenario: orgaControl1
   # Accès à l'onglet "Contrôle"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"

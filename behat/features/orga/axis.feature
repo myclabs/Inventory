@@ -5,7 +5,7 @@ Feature: OrgaAxis
     Given I am logged in
 
   @javascript
-  Scenario: OrgaAxisEdit1
+  Scenario: OrgaAxis1
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
@@ -61,7 +61,7 @@ Feature: OrgaAxis
     Then the following message is shown and closed: "Suppression effectuée."
 
   @javascript
-  Scenario: OrgaAxisEdit2
+  Scenario: OrgaAxis2
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
@@ -103,7 +103,7 @@ Feature: OrgaAxis
     Then I should see the "granularity" datagrid
     When I click element "#orga_granularities a.btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un niveau organisationnel"
-    When I fill in "s2id_autogen1" with "Année"
+    When I select "Axe test" from "granularity_axes_addForm"
     And I click element "#granularity_addPanel button.btn:contains('Valider')"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Tentative de suppression de l'axe
@@ -116,7 +116,7 @@ Feature: OrgaAxis
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il intervient dans la définition de (au moins) un niveau organisationnel."
 
   @javascript
-  Scenario: OrgaAxisEdit3
+  Scenario: OrgaAxis3
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"

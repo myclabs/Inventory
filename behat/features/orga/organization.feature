@@ -1,49 +1,46 @@
-@dbOneOrganization
-Feature: Organizations
+@dbEmpty
+Feature: orgaOrga
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: OrgaLink
-    # Affichage et contenu du datagrid
+  Scenario: orgaOrga1
+  # Ajout d'une organisation
     Then I should see the "organizations" datagrid
-    # Then I wait for 10 seconds
-    Then the row 1 of the "organizations" datagrid should contain:
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'une organisation"
+    When I fill in "Libellé" with "Organisation test"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    And the row 1 of the "organizations" datagrid should contain:
       | label      | details   | delete |
       | Organisation test   | Détails   | Supprimer  |
-    When I follow "Détails"
-    And I wait for the page to finish loading
-    Then I should see "Unité organisationnelle globale Organisation test"
-
-  @javascript
-  Scenario: OrgaEdit
-    Then I should see the "organizations" datagrid
-    # Lien "Détails"
+  # Lien "Détails"
     When I click "Détails"
-    # Affichage onglet "Configuration"
+    Then I should see "Unité organisationnelle globale Organisation test"
+  # Accès à l'onglet "Configuration"
     When I open tab "Organisation"
     And I open tab "Configuration"
-    # Modification du libellé
-    And I fill in "Libellé" with "Organisation test modifiee"
+    Then I should see "Niveau organisationnel des inventaires"
+    And I should see "Aucun niveau organisationnel associé à des saisies n'a été configuré pour le moment."
+  # Modification du libellé
+    When I fill in "Libellé" with "Organisation test modifiee"
     And I click "Enregistrer"
-    Then I should see "Ok : Modification effectuée."
-    When I press "x"
-    Then I should not see "Ok : Modification effectuée."
-    And I should see "Unité organisationnelle globale Organisation test modifiee"
-    # Test bouton statut données d'analyse (données vides)
-    When I press "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse est à jour"
-    # Retour à la page des organisations
-    When I press "Accueil"
-    And I wait for the page to finish loading
+    Then the following message is shown and closed: "Modification effectuée."
+  # Test bouton statut données d'analyse (données vides)
+    When I click "Tester si la structure des données d'analyse est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation est à jour"
+  # Retour à la page d'accueil
+    # When I click "Accueil"
+    # When I click "ul.nav a:contains('Accueil')"
+    When I am on "orga/organization/manage"
     Then I should see the "organizations" datagrid
-    # Ajout d'une organisation
-    When I follow "Ajouter"
-    Then I should see the popup "Ajout d'une organisation"
-    When I fill in "Libellé" with "Organisation-a-supprimer"
-    When I press "Valider"
-    And I wait for the page to finish loading
-    Then I should see "Ok : Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
-    When I press "x"
-    Then I should not see "Ok : Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps."
+    And the row 1 of the "organizations" datagrid should contain:
+      | label      | details   | delete |
+      | Organisation test modifiee  | Détails   | Supprimer  |
+  # Suppression d'une organisation (vide)
+    When I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+  # Pour l'instant la suppression ne fonctionne pas

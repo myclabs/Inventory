@@ -1,11 +1,11 @@
 @dbEmpty
-Feature: Units
+Feature: unit
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: StandardUnitsPage
+  Scenario: standardUnitPage
     Given I am on "unit/consult/standardunits"
   # Tentative d'utiliser le menu de haut de page
     # When I click element ".navbar a:contains('Référentiels')"
@@ -23,7 +23,7 @@ Feature: Units
     | gramme   | g   | g      | Masse            | 0,001        | International |
 
   @javascript
-  Scenario: ExtendedUnits
+  Scenario: extendedUnit
     Given I am on "unit/consult/extendedunits"
     And I wait for the page to finish loading
     Then I should see "Unités étendues"
@@ -34,7 +34,7 @@ Feature: Units
       | gramme équivalent CO2 | g_co2e  | g équ. CO2 | 0          |
 
   @javascript
-  Scenario: DiscreteUnits
+  Scenario: discreteUnit
     Given I am on "unit/consult/discreteunits"
     And I wait for the page to finish loading
     Then I should see "Unités discrètes"
@@ -44,7 +44,7 @@ Feature: Units
       | animal  | animal  |
 
   @javascript
-  Scenario: PhysicalQuantities
+  Scenario: physicalQuantity
     Given I am on "unit/consult/physicalquantities"
     And I wait for the page to finish loading
     Then I should see "Grandeurs physiques"
@@ -54,7 +54,7 @@ Feature: Units
       | Longueur  | mètre        | 1 | 0 | 0 | 0         |
 
   @javascript
-  Scenario: StandardUnitsFilter
+  Scenario: standardUnitFilter
     Given I am on "unit/consult/standardunits"
     And I wait for the page to finish loading
   # Filtre sur le libellé
