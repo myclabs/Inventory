@@ -19,7 +19,7 @@ Feature: keywordPredicate
     Then the field "predicates_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
     Then the field "predicates_reverseRef_addForm" should have error: "Merci de renseigner ce champ."
   # Identifiant requis pour le prédicat direct
-  # Caractères autorisés pour l'identifiant du prédicat inverse
+  # Caractères non autorisés pour l'identifiant du prédicat inverse
     When I fill in "predicates_ref_addForm" with ""
     And I fill in "predicates_reverseRef_addForm" with "bépo"
     And I click "Valider"
