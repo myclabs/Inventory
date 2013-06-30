@@ -95,15 +95,15 @@ Feature: classifAxis
   # Ajout de l'axe "Sens du déplacement" (avec parent "Poste article 75" provisoirement)
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
-    When I fill in "label" with "Sens du déplacement"
-    And I fill in "ref" with "sens_deplacement"
+    When I fill in "label" with "Périmètre du fret"
+    And I fill in "ref" with "perimetre_fret"
     And I select "Poste article 75" from "refParent"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Déplacement à la racine de l'axe "Sens du déplacement"
+  # Déplacement à la racine de l'axe "Périmètre du fret"
   # On attend 1 seconde que l'arbre se déplie
     When I wait 1 seconds
-    When I click "Sens du déplacement"
+    When I click "Périmètre du fret"
     Then I should see the popup "Édition d'un axe"
     When I select "Aucun" from "editAxis_changeParent"
     And I click element "#editAxis_editPanel button:contains('Confirmer')"

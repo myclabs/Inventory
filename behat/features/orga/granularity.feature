@@ -31,6 +31,7 @@ Feature: orgaGranularity
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I select "Année" from "granularity_axes_addForm"
     And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    # TODO identifier le champ pour tester le message d'erreur
     # Then the field "s2id_granularity_axes_addForm" should have error: "Il existe déjà un niveau organisationnel correspondant à cette combinaison d'axes."
     When I click element "#granularity_addPanel a.btn:contains('Annuler')"
   # Suppression d'une granularité

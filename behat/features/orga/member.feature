@@ -18,7 +18,6 @@ Feature: orgaMember
     When I click element "#membersannee_wrapper a.btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un membre à l'axe « Année »"
     When I click element "#listMembersannee_addPanel button:contains('Valider')"
-    And I wait for the page to finish loading
     Then the field "listMembersannee_ref_addForm" should have error: "Merci de renseigner ce champ."
   # Ajout d'un membre, identifiant avec caractères non autorisés
     When I fill in "listMembersannee_ref_addForm" with "bépo"
@@ -38,8 +37,8 @@ Feature: orgaMember
     And I fill in "listMembersannee_ref_addForm" with "a_supprimer"
     And I click element "#listMembersannee_addPanel button:contains('Valider')"
     Then the field "listMembersannee_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-    When I click element "#listMembersannee_addPanel a.btn:contains('Annuler')"
   # Suppression d'un membre, sans obstacle
+    When I click element "#listMembersannee_addPanel a.btn:contains('Annuler')"
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click element "#listMembersannee_deletePanel a.btn:contains('Confirmer')"
