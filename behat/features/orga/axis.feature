@@ -7,7 +7,7 @@ Feature: orgaAxis
   @javascript
   Scenario: orgaAxis1
   # TODO : modification sans effet
-  # TODO : affichage libellé + identifiant
+  # TODO : affichage libellé + identifiant
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
@@ -22,7 +22,7 @@ Feature: orgaAxis
     When I click "Valider"
     Then the field "addAxis_ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout d'un axe, saisie correcte
-    When I fill in "addAxis_label" with "À modifier"
+    When I fill in "addAxis_label" with "À modifier"
     And I fill in "addAxis_ref" with "a_modifier"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
@@ -36,7 +36,7 @@ Feature: orgaAxis
   # Modification du libellé et de l'identifiant d'un axe
     When I click "a_modifier"
     Then I should see the popup "Édition d'un axe"
-    When I fill in "editAxis_label" with "À supprimer !"
+    When I fill in "editAxis_label" with "À supprimer !"
     And I fill in "editAxis_ref" with "a_supprimer"
     And I click element "#editAxis_editPanel button:contains('Confirmer')"
     Then the following message is shown and closed: "Modification effectuée."
@@ -50,7 +50,7 @@ Feature: orgaAxis
     When I fill in "editAxis_ref" with "bépo_supprimer"
     And I click element "#editAxis_editPanel button:contains('Confirmer')"
     Then the field "editAxis_ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Suppression d'un axe (sans axe parent)
+  # Suppression d'un axe (sans axe parent)
     When I click element "#editAxis_editPanel a.btn:contains('Annuler')"
     And I click "a_supprimer"
     Then I should see the popup "Édition d'un axe"
@@ -102,7 +102,7 @@ Feature: orgaAxis
     Then I should see the "granularity" datagrid
     When I click element "#orga_granularities a.btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un niveau organisationnel"
-    When I additionnally select "Axe test" from "granularity_axes_addForm"
+    When I additionally select "Axe test" from "granularity_axes_addForm"
     And I click element "#granularity_addPanel button.btn:contains('Valider')"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Tentative de suppression de l'axe
