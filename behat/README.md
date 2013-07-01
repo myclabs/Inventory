@@ -52,6 +52,7 @@ When I open tab "label"
 Then the following message is shown and closed: "Ajout effectué"
 
 # Form
+When I select "Oui" in radio "Activé"
 Then the field "field" should have error: "Some error"
 
 # Popup

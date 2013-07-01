@@ -126,6 +126,45 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * Clicks a button or link with specified id|title|alt|text.
+     *
+     * @When /^(?:|I )select "(?P<value>(?:[^"]|\\")*)" in radio "(?P<label>(?:[^"]|\\")*)"$/
+     */
+    public function selectRadio($value, $label)
+    {
+        $value = $this->fixStepArgument($value);
+
+        $selector = ".control-group:contains(\"$label\") .input label:contains(\"$value\")>input";
+
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', $selector);
+
+        if (count($nodes) === 0) {
+            throw new ExpectationException("No radio with label '$label' and value '$value' found.",
+                $this->getSession());
+        }
+
+        array_filter($nodes, function(NodeElement $node) {
+                return $node->isVisible();
+            });
+
+        if (count($nodes) === 0) {
+            throw new ExpectationException("No radio with label '$label' and value '$value' is visible.",
+                $this->getSession());
+        }
+
+        if (count($nodes) > 1) {
+            $nb = count($nodes);
+            throw new ExpectationException("Too many ($nb) radio with label '$label' and value '$value' are visible.",
+                $this->getSession());
+        }
+
+        /** @var NodeElement $node */
+        $node = current($nodes);
+        $node->check();
+    }
+
+    /**
      * Open a collapse with specified text.
      *
      * @When /^(?:|I )open collapse "(?P<collapse>(?:[^"]|\\")*)"$/
