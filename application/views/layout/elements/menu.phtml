@@ -351,11 +351,12 @@ $rightMenu = [ $connection ];
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
-            <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse" type="button">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+
             <a class="brand" href="index"><?=__('Inventory', 'menu', 'applicationName')?></a>
 
             <div class="btn-group pull-right">
@@ -395,7 +396,8 @@ $rightMenu = [ $connection ];
                     <?php } ?>
                 <?php } ?>
             </div>
-            <div class="nav-collapse">
+
+            <div class="nav-collapse collapse">
                 <ul class="nav">
                     <?php foreach ($leftMenu as $node) {
                         $liClasses = array();
