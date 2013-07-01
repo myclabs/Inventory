@@ -7,6 +7,7 @@ Feature: orgaOrga
   @javascript
   Scenario: orgaOrga1
   # Ajout d'une organisation
+    When I am on "orga/organization/manage"
     Then I should see the "organizations" datagrid
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une organisation"
@@ -43,4 +44,4 @@ Feature: orgaOrga
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-  # Pour l'instant la suppression ne fonctionne pas
+  # Pour l'instant la suppression ne fonctionne pas
