@@ -33,7 +33,7 @@ class FeatureContext extends MinkContext
     public function assertLoggedIn()
     {
         return [
-            new Step\Given('I am on the homepage'),
+            new Step\Given('I am on "user/action/login?refer=index%2Faccueil"'),
             new Step\Given('I fill in "email" with "admin"'),
             new Step\Given('I fill in "password" with "myc-53n53"'),
             new Step\Given('I press "connection"'),
