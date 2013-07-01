@@ -59,13 +59,17 @@ class FeatureContext extends MinkContext
      */
     public function waitForPageToFinishLoading()
     {
+        // Animations JS
+        $popupOK = '$(".modal-backdrop:visible").length == 0';
+        // Timeout de 600 ms
+        $this->getSession()->wait(600, "($popupOK)");
+
+        // Chargements AJAX
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
         $maskOK = '$("#loadingMask:visible").length == 0';
-        $popupOK = '$(".modal-backdrop:visible").length == 0';
-
-        // Timeout de 6 secondes
-        $this->getSession()->wait(6000, "($jqueryOK) && ($datagridOK) && ($maskOK) && ($popupOK)");
+        // Timeout de 5 secondes
+        $this->getSession()->wait(5000, "($jqueryOK) && ($datagridOK) && ($maskOK)");
     }
 
     /**
