@@ -81,6 +81,67 @@ trait DatagridFeatureContext
     }
 
     /**
+     * @Then /^(?:|I )open the cellEditor for column "(?P<column>[^"]*)" in the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
+     */
+    public function openCellEditor($column, $row, $datagrid)
+    {
+        $cellSelector = $this->getDatagridSelector($datagrid)
+            . " .yui-dt-data tr:nth-child($row) td.yui-dt-col-$column";
+
+        $cellNode = $this->findElement($cellSelector);
+        $cellNode->doubleClick();
+
+        // Timeout de 2 secondes.
+        $jsCondition = '$(".yui-dt-editor:visible").length > 0';
+        $this->wait(2000, $jsCondition);
+    }
+
+    /**
+     * @Then /^(?:|I )fill "(?P<value>[^"]*)" in the cellEditor$/
+     */
+    public function fillInCellEditor($value)
+    {
+        $this->testCellEditorExists();
+
+        // Saisie de la valeur.
+        $expression = "$('body > .yui-dt-editor:visible > input').val('$value')";
+        $this->evaluateScript("return $expression");
+    }
+
+    /**
+     * @Then /^(?:|I )select "(?P<value>[^"]*)" in the cellEditor$/
+     */
+    public function selectInCellEditor($value)
+    {
+        $this->testCellEditorExists();
+
+        // Saisie de la valeur.
+        $expression = "$('body > .yui-dt-editor:visible > select').val('$value')";
+        $this->evaluateScript("return $expression");
+    }
+
+    /**
+     * @Then /^(?:|I )save and close the cellEditor$/
+     */
+    public function saveCellEditor()
+    {
+        $this->testCellEditorExists();
+
+        $saveSelector = "body > .yui-dt-editor:visible > yui-dt-button button.yui-dt-default";
+
+        $saveNode = $this->findElement($saveSelector);
+        $saveNode->click();
+    }
+
+    /**
+     *
+     */
+    private function testCellEditorExists()
+    {
+        $this->elementExists('css', ".yui-dt-editor:visible");
+    }
+
+    /**
      * @param string $name Datagrid name
      * @return string
      */

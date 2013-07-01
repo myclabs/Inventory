@@ -65,5 +65,9 @@ Then the row 1 of the "users" datagrid should contain:
   | nom            | email | detailsUser |
   | Administrateur | admin | Éditer      |
 Then the column "name" of the row 2 of the "users" datagrid should contain "Bob"
+Then I open cellEditor for column "name" in the row 2 of the "users" datagrid
+Then I fill(|select) "Bob updated" in the cellEditor
+Then I save and close the cellEditor
+Then the column "name" of the row 2 of the "users" datagrid should contain "Bob updated"
 When I click "Supprimer" in the row 5 of the "users" datagrid
 ```
