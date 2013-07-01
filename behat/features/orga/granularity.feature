@@ -19,7 +19,6 @@ Feature: orgaGranularity
     Then I should see the popup "Ajout d'un niveau organisationnel"
     # When I fill in "s2id_autogen1" with "Année"
     When I select "Année" from "granularity_axes_addForm"
-    And I wait 50 seconds
     # When I select "Pays" from "granularity_axes_addForm"
     # And I check "Navigable"
     And I click element "#granularity_addPanel .btn:contains('Valider')"
