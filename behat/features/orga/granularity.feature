@@ -80,7 +80,7 @@ Feature: orgaGranularity
     # And I select "Oui" in radio "granularity_orgaTab_addForm"
     # And I check "Navigable"
     # And I select "Navigable" in radio "granularity_navigable_addForm"
-    And I select "Navigable" in radio "Navigable ?"
+    And I select "Navigable" in radio "Navigable"
     And I select "Oui" in radio "Organisation"
     And I select "Oui" in radio "Rôles"
     And I select "Oui" in radio "Formulaires"
