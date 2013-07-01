@@ -15,28 +15,28 @@ Feature: orgaGranularity
       | axes  | navigable  | orgaTab |
       |       | Navigable  | Non     |
   # Ajout d'une granularité
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click element "#orga_granularities .btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     # When I fill in "s2id_autogen1" with "Année"
-    When I select "Année" from "granularity_axes_addForm"
-    # When I select "Pays" from "granularity_axes_addForm"
+    When I additionally select "Année" from "granularity_axes_addForm"
+    When I additionally select "Pays" from "granularity_axes_addForm"
     # And I check "Navigable"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click element "#granularity_addPanel .btn:contains('Valider')"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
     And the row 2 of the "granularity" datagrid should contain:
       | axes  | navigable  | orgaTab |
       | Année | Non navigable  | Non     |
   # Ajout d'une granularité déjà existante
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click element "#orga_granularities .btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I select "Année" from "granularity_axes_addForm"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click element "#granularity_addPanel .btn:contains('Valider')"
     # TODO identifier le champ pour tester le message d'erreur
     # Then the field "s2id_granularity_axes_addForm" should have error: "Il existe déjà un niveau organisationnel correspondant à cette combinaison d'axes."
-    When I click element "#granularity_addPanel a.btn:contains('Annuler')"
+    When I click element "#granularity_addPanel .btn:contains('Annuler')"
   # Suppression d'une granularité
     And I click "Supprimer" in the row 2 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
-    When I click element "#granularity_deletePanel a.btn:contains('Confirmer')"
+    When I click element "#granularity_deletePanel .btn:contains('Confirmer')"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "granularity" datagrid should contain 1 row
