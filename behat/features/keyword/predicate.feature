@@ -32,12 +32,12 @@ Feature: keywordPredicate
     Then the field "predicates_ref_addForm" should have error: "Merci de saisir des identifiants différents pour les prédicats direct et inverse."
     Then the field "predicates_reverseRef_addForm" should have error: "Merci de saisir des identifiants différents pour les prédicats direct et inverse."
   # Suppression d'un prédicat non utilisé dans une relation
-  # On commence par l'ajouter
+  # On commence par l'ajouter
     When I fill in "predicates_ref_addForm" with "direct_a_supprimer"
     And I fill in "predicates_reverseRef_addForm" with "inverse_a_supprimer"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Puis on le supprime
+  # Puis on le supprime
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"

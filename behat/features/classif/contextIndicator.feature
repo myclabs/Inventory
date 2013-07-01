@@ -8,7 +8,7 @@ Feature: classifContextIndicator
   Scenario: classifContextIndicator1
     When I am on "classif/contextindicator/manage"
     Then I should see the "editContextIndicators" datagrid
-  # Ajout d'un indicateur contextualisé, Contexte et indicateurs vides
+  # Ajout d'un indicateur contextualisé, Contexte et indicateurs vides
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un indicateur contextualisé"
     When I click "Valider"
@@ -54,7 +54,7 @@ Feature: classifContextIndicator
   Scenario: classifContextIndicator2
     When I am on "classif/contextindicator/manage"
     Then I should see the "editContextIndicators" datagrid
-  # Ajout d'un indicateur contextualisé
+  # Ajout d'un indicateur contextualisé
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un indicateur contextualisé"
     When I select "Général" from "editContextIndicators_context_addForm"

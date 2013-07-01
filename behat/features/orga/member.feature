@@ -51,4 +51,30 @@ Feature: orgaMember
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
     And I open tab "Membres"
+  # Ajout membre axe Pays, zone non renseignée
+    When I open collapse "Pays"
+    Then I should see the "listMemberspays" datagrid
+    When I click element "#memberspays_wrapper a.btn:contains('Ajouter')"
+    Then I should see the popup "Ajout d'un membre à l'axe « Pays »"
+    When I fill in "listMemberspays_label_addForm" with "France"
+    And I fill in "listMemberspays_ref_addForm" with "france"
+    And I click element "#listMemberspays_addPanel button:contains('Valider')"
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+  # Ajout membre axe Site, pays renseigné
+    When I open collapse "Site"
+    Then I should see the "listMemberssite" datagrid
+    When I click element "#memberssite_wrapper a.btn:contains('Ajouter')"
+    Then I should see the popup "Ajout d'un membre à l'axe « Site »"
+    When I fill in "listMemberssite_label_addForm" with "Annecy"
+    And I fill in "listMemberssite_ref_addForm" with "annecy"
+    And I select "France" from "listMemberssite_broaderpays_addForm"
+    And I click element "#listMemberssite_addPanel button:contains('Valider')"
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+  # Tentative de suppression du pays "France"
+    When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click element "#listMemberspays_deletePanel a.btn:contains('Confirmer')"
+    # And I wait 10 seconds
+    # Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il joue le rôle de parent direct pour au moins un autre membre."
+
 

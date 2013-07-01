@@ -17,9 +17,9 @@ Feature: classifIndicator
     When I fill in "editIndicators_ref_addForm" with "bépo"
     And I click "Valider"
     Then the field "editIndicators_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # TODO : tester la validité des unités, une fois la fonctionnalité implémentée
+  # TODO : tester la validité des unités, une fois la fonctionnalité implémentée
   # Ajout d'un indicateur, saisie correcte
-    When I fill in "editIndicators_label_addForm" with "À supprimer"
+    When I fill in "editIndicators_label_addForm" with "À supprimer"
     And I fill in "editIndicators_ref_addForm" with "a_supprimer"
     And I fill in "editIndicators_unit_addForm" with "t_co2e"
     And I fill in "editIndicators_ratioUnit_addForm" with "kg_co2e"

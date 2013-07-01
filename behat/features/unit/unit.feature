@@ -7,9 +7,9 @@ Feature: unit
   @javascript
   Scenario: standardUnitPage
     Given I am on "unit/consult/standardunits"
-  # Tentative d'utiliser le menu de haut de page
+  # Tentative d'utiliser le menu de haut de page
     # When I click element ".navbar a:contains('Référentiels')"
-    # And I click element ".nav-collapse a:contains('Unités standards')"
+    # And I click element ".nav-collapse a:contains('Unités standards')"
     And I wait for the page to finish loading
     Then I should see "Unités standards"
     And I should see the "ListStandardUnits" datagrid
@@ -28,7 +28,7 @@ Feature: unit
     And I wait for the page to finish loading
     Then I should see "Unités étendues"
     And I should see the "ListExtendedUnit" datagrid
-    # Multiplicateur (A MODIFIER CAR POUR L'INSTANT BUG)
+    # Multiplicateur (A MODIFIER CAR POUR L'INSTANT BUG)
     And the row 1 of the "ListExtendedUnit" datagrid should contain:
       | name                  | ref     | symbol     | multiplier |
       | gramme équivalent CO2 | g_co2e  | g équ. CO2 | 0          |
@@ -57,7 +57,7 @@ Feature: unit
   Scenario: standardUnitFilter
     Given I am on "unit/consult/standardunits"
     And I wait for the page to finish loading
-  # Filtre sur le libellé
+  # Filtre sur le libellé
     And I open collapse "Filtres"
     And I fill in "ListStandardUnits_name_filterForm" with "heure"
     And I click "Filtrer"
@@ -65,7 +65,7 @@ Feature: unit
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name  |
       | heure |
-  # Filtre sur le symbole
+  # Filtre sur le symbole
     When I fill in "ListStandardUnits_name_filterForm" with ""
     And I fill in "ListStandardUnits_symbol_filterForm" with "km"
     And I click "Filtrer"
@@ -74,7 +74,7 @@ Feature: unit
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name      |
       | kilomètre |
-  # Filtre sur la grandeur physique
+  # Filtre sur la grandeur physique
     When I fill in "ListStandardUnits_symbol_filterForm" with ""
     And I select "Vitesse" from "ListStandardUnits_physicalQuantity_filterForm"
     And I click "Filtrer"
@@ -82,7 +82,7 @@ Feature: unit
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name              |
       | mètre par seconde |
-  # Filtre sur le système d'unités
+  # Filtre sur le système d'unités
     When I select "" from "ListStandardUnits_physicalQuantity_filterForm"
     And I select "Anglo-saxon" from "ListStandardUnits_unitSystem_filterForm"
     And I click "Filtrer"
@@ -99,7 +99,7 @@ Feature: unit
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name |
       | nœud |
-  # Lien "Réinitialiser"
+  # Lien "Réinitialiser"
     When I open collapse "Filtres"
     And I click "Réinitialiser"
     Then I should see "pourcent"

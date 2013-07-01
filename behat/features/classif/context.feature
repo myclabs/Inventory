@@ -18,7 +18,7 @@ Feature: classifContext
     And I click "Valider"
     Then the field "editContexts_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout d'un contexte, saisie correcte
-    When I fill in "editContexts_label_addForm" with "À supprimer"
+    When I fill in "editContexts_label_addForm" with "À supprimer"
     And I fill in "editContexts_ref_addForm" with "a_supprimer"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
