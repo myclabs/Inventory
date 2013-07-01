@@ -109,8 +109,6 @@ trait DatagridFeatureContext
         $submitNode->click();
 
         $this->waitForPageToFinishLoading();
-
-        return [new Step\Then('the following message is shown and closed: "Modification effectuée."')];
     }
 
     /**
