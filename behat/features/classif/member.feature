@@ -36,7 +36,6 @@ Feature: classifMember
     Then the field "membersgaz_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Suppression d'un membre, sans obstacle
     When I click element "#membersgaz_addPanel a.btn:contains('Annuler')"
-    # And I click "Supprimer"
     And I click "Supprimer" in the row 1 of the "membersgaz" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click element "#membersgaz_deletePanel a.btn:contains('Confirmer')"
@@ -92,8 +91,9 @@ Feature: classifMember
     Then the field "membersposte_article_75_broaderscope_addForm" should have error: "Merci de renseigner ce champ."
   # Tentative de suppression d'un membre possédant un membre enfant
     When I click element "#membersposte_article_75_addPanel a.btn:contains('Annuler')"
-    # Then I should see the "membersscope" datagrid
+    And I open collapse "Scope"
+    Then I should see the "membersscope" datagrid
     And I click "Supprimer" in the row 1 of the "membersscope" datagrid
     Then I should see the popup "Demande de confirmation"
-    When I click element "#membersgaz_deletePanel a.btn:contains('Confirmer')"
+    When I click element "#membersscope_deletePanel a.btn:contains('Confirmer')"
     Then the following message is shown and closed: "Suppression effectuée."

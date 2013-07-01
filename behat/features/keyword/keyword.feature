@@ -101,3 +101,15 @@ Feature: keywordKeyword
     When I fill in "keywords_ref_filterForm" with "a"
     And I click "Filtrer"
     Then the "keywords" datagrid should contain 1 row
+
+  @javascript
+  Scenario: keywordKeyword4
+    Given I am on "keyword/keyword/manage"
+    Then I should see the "keywords" datagrid
+  # Ajout d'un mot clé
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un mot clé"
+    When I fill in "keywords_label_addForm" with "AAA"
+    And I fill in "keywords_ref_addForm" with "aaa"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."

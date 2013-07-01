@@ -102,7 +102,7 @@ Feature: orgaAxis
     Then I should see the "granularity" datagrid
     When I click element "#orga_granularities a.btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un niveau organisationnel"
-    When I select "Axe test" from "granularity_axes_addForm"
+    When I additionnally select "Axe test" from "granularity_axes_addForm"
     And I click element "#granularity_addPanel button.btn:contains('Valider')"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Tentative de suppression de l'axe
