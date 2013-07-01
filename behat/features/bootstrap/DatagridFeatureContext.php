@@ -3,8 +3,9 @@
  * @author matthieu.napoli
  */
 
+use Behat\Behat\Context\Step;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Exception\ElementTextException;
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\WebAssert;
 
 trait DatagridFeatureContext
@@ -17,6 +18,12 @@ trait DatagridFeatureContext
     public abstract function assertElementContainsText($element, $text);
     public abstract function waitForPageToFinishLoading();
     public abstract function clickElement($selector);
+    public abstract function fillField($field, $value);
+    /**
+     * @param string $cssSelector
+     * @return NodeElement
+     */
+    protected abstract function findElement($cssSelector);
 
     /**
      * @Then /^(?:|I )should see the "(?P<datagrid>[^"]*)" datagrid$/
@@ -51,7 +58,7 @@ trait DatagridFeatureContext
     }
 
     /**
-     * @Then /^the column "(?P<column>[^"]*)" of the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should contain "(?P<content>[^"]*)"$/
+     * @Then /^(?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should contain "(?P<content>[^"]*)"$/
      */
     public function assertDatagridCellContains($column, $row, $datagrid, $content)
     {
@@ -71,7 +78,7 @@ trait DatagridFeatureContext
     /**
      * @When /^(?:|I )click "(?P<link>[^"]*)" in the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
      */
-    public function clickInRow($link, $row, $datagrid)
+    public function clickLinkInRow($link, $row, $datagrid)
     {
         $linkSelector = $this->getDatagridSelector($datagrid)
             . " .yui-dt-data tr:nth-child($row)"
@@ -81,64 +88,29 @@ trait DatagridFeatureContext
     }
 
     /**
-     * @Then /^(?:|I )open the cellEditor for column "(?P<column>[^"]*)" in the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
+     * @Then /^(?:|I )set "(?P<content>[^"]*)" for (?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
      */
-    public function openCellEditor($column, $row, $datagrid)
+    public function setCellContent($content, $column, $row, $datagrid)
     {
         $cellSelector = $this->getDatagridSelector($datagrid)
-            . " .yui-dt-data tr:nth-child($row) td.yui-dt-col-$column";
+            . " .yui-dt-data tr:nth-child($row)"
+            . " .yui-dt-col-$column";
 
+        // Double-click
         $cellNode = $this->findElement($cellSelector);
         $cellNode->doubleClick();
 
-        // Timeout de 2 secondes.
-        $jsCondition = '$(".yui-dt-editor:visible").length > 0';
-        $this->wait(2000, $jsCondition);
-    }
+        // Fill in field
+        $inputNode = $this->findElement('.yui-dt-editor input');
+        $inputNode->setValue($content);
 
-    /**
-     * @Then /^(?:|I )fill "(?P<value>[^"]*)" in the cellEditor$/
-     */
-    public function fillInCellEditor($value)
-    {
-        $this->testCellEditorExists();
+        // Submit
+        $submitNode = $this->findElement('.yui-dt-editor .yui-dt-button .yui-dt-default');
+        $submitNode->click();
 
-        // Saisie de la valeur.
-        $expression = "$('body > .yui-dt-editor:visible > input').val('$value')";
-        $this->evaluateScript("return $expression");
-    }
+        $this->waitForPageToFinishLoading();
 
-    /**
-     * @Then /^(?:|I )select "(?P<value>[^"]*)" in the cellEditor$/
-     */
-    public function selectInCellEditor($value)
-    {
-        $this->testCellEditorExists();
-
-        // Saisie de la valeur.
-        $expression = "$('body > .yui-dt-editor:visible > select').val('$value')";
-        $this->evaluateScript("return $expression");
-    }
-
-    /**
-     * @Then /^(?:|I )save and close the cellEditor$/
-     */
-    public function saveCellEditor()
-    {
-        $this->testCellEditorExists();
-
-        $saveSelector = "body > .yui-dt-editor:visible > yui-dt-button button.yui-dt-default";
-
-        $saveNode = $this->findElement($saveSelector);
-        $saveNode->click();
-    }
-
-    /**
-     *
-     */
-    private function testCellEditorExists()
-    {
-        $this->elementExists('css', ".yui-dt-editor:visible");
+        return [new Step\Then('the following message is shown and closed: "Modification effectuée."')];
     }
 
     /**

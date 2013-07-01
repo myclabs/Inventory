@@ -247,18 +247,18 @@ class FeatureContext extends MinkContext
     /**
      * Finds element with specified selector.
      *
-     * @param string $selector
+     * @param string $cssSelector
      *
      * @throws Behat\Mink\Exception\ExpectationException
-     * @return NodeElement|null
+     * @return NodeElement
      */
-    private function findElement($selector)
+    protected function findElement($cssSelector)
     {
         /** @var NodeElement[] $nodes */
-        $nodes = $this->getSession()->getPage()->findAll('css', $selector);
+        $nodes = $this->getSession()->getPage()->findAll('css', $cssSelector);
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No element matches selector '$selector'.",
+            throw new ExpectationException("No element matches selector '$cssSelector'.",
                 $this->getSession());
         }
 
@@ -267,13 +267,13 @@ class FeatureContext extends MinkContext
             });
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No element matching '$selector' is visible.",
+            throw new ExpectationException("No element matching '$cssSelector' is visible.",
                 $this->getSession());
         }
 
         if (count($nodes) > 1) {
             $nb = count($nodes);
-            throw new ExpectationException("Too many ($nb) elements matching '$selector' are visible.",
+            throw new ExpectationException("Too many ($nb) elements matching '$cssSelector' are visible.",
                 $this->getSession());
         }
 

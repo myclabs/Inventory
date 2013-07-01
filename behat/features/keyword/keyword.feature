@@ -117,8 +117,5 @@ Feature: keywordKeyword
       | label       | ref         | nbRelations |
       | AAA | aaa | 0           |
   # Modification du libellé d'un mot clé
-    Then I open the cellEditor for column "label" in the row 1 of the "keywords" datagrid
-    Then I fill "aaa_modifie" in the cellEditor
-    Then I save and close the cellEditor
-    Then the following message is shown and closed: "Modification effectuée."
-    And the column "name" of the row 2 of the "users" datagrid should contain "aaa_modifie"
+    Then I set "aaa_modifie" for column "label" of row 1 of the "keywords" datagrid
+    And the column "label" of the row 1 of the "keywords" datagrid should contain "aaa_modifie"
