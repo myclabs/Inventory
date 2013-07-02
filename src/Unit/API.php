@@ -51,7 +51,7 @@ class Unit_API
         try {
             $this->getNormalizedUnit();
             return !empty($this->ref);
-        } catch (Core_Exception_InvalidArgument $e) {
+        } catch (Core_Exception $e) {
             return false;
         }
     }

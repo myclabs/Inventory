@@ -27,8 +27,8 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
             $data['index'] = $indicator->getRef();
             $data['label'] = $this->cellText($indicator->getLabel());
             $data['ref'] = $this->cellText($indicator->getRef());
-            $data['unit'] = $this->cellText($indicator->getUnit()->getSymbol());
-            $data['ratioUnit'] = $this->cellText($indicator->getRatioUnit()->getSymbol());
+            $data['unit'] = $this->cellText($indicator->getUnit()->getRef(), $indicator->getUnit()->getSymbol());
+            $data['ratioUnit'] = $this->cellText($indicator->getRatioUnit()->getRef(), $indicator->getRatioUnit()->getSymbol());
             $canUp = !($indicator->getPosition() === 1);
             $canDown = !($indicator->getPosition() === $indicator->getLastEligiblePosition());
             $data['position'] = $this->cellPosition($indicator->getPosition(), $canUp, $canDown);
