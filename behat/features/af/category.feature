@@ -52,7 +52,7 @@ Feature: afCategory
   # Tentative de suppression catégorie 1
     # When I click "Catégorie 2"
     # And I click "Supprimer"
-    # Then I should see the popup "Demande de confirmation"
+    # Then I should see the popup "Demande de confirmation"
     # When I click element "#afTree_deletePanel button:contains('Confirmer')"
     # Then the following message is shown and closed: "Suppression effectuée."
     # TODO : interdire la suppression d'une catégorie contenant une autre catégorie

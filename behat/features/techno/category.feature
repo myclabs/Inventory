@@ -19,7 +19,7 @@ Feature: technoCategory
   # Modification du libellé d'une catégorie
     When I click "À supprimer"
     Then I should see the popup "Édition d'une catégorie"
-    # TODO : modification libellé vide
+    # TODO : modification libellé vide
     # When I fill in "familyTree_labelEdit" with ""
     # And I click element "#familyTree_editPanel button:contains('Confirmer')"
     # Then the field "familyTree_labelEdit" should have error: "Merci de renseigner ce champ."
@@ -56,7 +56,7 @@ Feature: technoCategory
   # Tentative de suppression catégorie 1
   # When I click "Catégorie 2"
   # And I click "Supprimer"
-  # Then I should see the popup "Demande de confirmation"
+  # Then I should see the popup "Demande de confirmation"
   # When I click element "#technoTree_deletePanel button:contains('Confirmer')"
   # Then the following message is shown and closed: "Suppression effectuée."
   # TODO : interdire la suppression d'une catégorie contenant une autre catégorie

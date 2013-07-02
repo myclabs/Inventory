@@ -6,7 +6,7 @@ Feature: classifAxis
 
   @javascript
   Scenario: classifAxis1
-  # TODO : affichage libellé + identifiant
+  # TODO : affichage libellé + identifiant
     Given I am on "classif/axis/manage"
     Then I should see "Axes de classification"
   # Ajout d'un axe, identifiant vide
@@ -19,7 +19,7 @@ Feature: classifAxis
     When I click "Valider"
     Then the field "ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout d'un axe, saisie correcte
-    When I fill in "label" with "À modifier"
+    When I fill in "label" with "À modifier"
     And I fill in "ref" with "a_modifier"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
@@ -31,19 +31,19 @@ Feature: classifAxis
     Then the field "ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
     When I click element "#editAxis_addPanel a.btn:contains('Annuler')"
   # Modification "sans effet" d'un axe
-    When I click "À modifier"
+    When I click "À modifier"
     Then I should see the popup "Édition d'un axe"
     When I click element "#editAxis_editPanel button:contains('Confirmer')"
     Then the following message is shown and closed: "Cette action n'a entraîné aucune modification."
   # Modification du libellé et de l'identifiant d'un axe
-    When I click "À modifier"
+    When I click "À modifier"
     Then I should see the popup "Édition d'un axe"
-    When I fill in "editAxis_label" with "À supprimer"
+    When I fill in "editAxis_label" with "À supprimer"
     And I fill in "editAxis_ref" with "a_supprimer"
     And I click element "#editAxis_editPanel button:contains('Confirmer')"
     Then the following message is shown and closed: "Modification effectuée."
   # Modification de l'identifiant d'un axe, identifiant vide
-    When I click "À supprimer"
+    When I click "À supprimer"
     Then I should see the popup "Édition d'un axe"
     When I fill in "editAxis_ref" with ""
     And I click element "#editAxis_editPanel button:contains('Confirmer')"
@@ -52,9 +52,9 @@ Feature: classifAxis
     When I fill in "editAxis_ref" with "bépo"
     And I click element "#editAxis_editPanel button:contains('Confirmer')"
     Then the field "editAxis_ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Suppression d'un axe (sans axe parent)
+  # Suppression d'un axe (sans axe parent)
     When I click element "#editAxis_editPanel a.btn:contains('Annuler')"
-    And I click "À supprimer"
+    And I click "À supprimer"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
@@ -101,7 +101,7 @@ Feature: classifAxis
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Déplacement à la racine de l'axe "Périmètre du fret"
-  # On attend 1 seconde que l'arbre se déplie
+  # On attend 1 seconde que l'arbre se déplie
     When I wait 1 seconds
     When I click "Périmètre du fret"
     Then I should see the popup "Édition d'un axe"
