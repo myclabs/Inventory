@@ -78,7 +78,8 @@ class Orga_Datagrid_Organization_InputgranularitiesController extends UI_Control
                     'inputGranularity',
                     __('Orga', 'configuration', 'granularityIsAlreadyAnInputGranularity')
                 );
-            } else if (!($inputGranularity->isNarrowerThan($inputConfigGranularity))) {
+            } else if (!($inputGranularity->isNarrowerThan($inputConfigGranularity))
+                && ($inputGranularity !== $inputConfigGranularity)) {
                 $this->setAddElementErrorMessage(
                     'inputGranularity',
                     __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanInputConfigGranularity')
