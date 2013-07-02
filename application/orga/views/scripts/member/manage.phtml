@@ -43,9 +43,6 @@ foreach ($this->axes as $axis) {
     }
     $datagridAxisMembers->addParam('idOrganization', $this->idOrganization);
     $datagridAxisMembers->addParam('refAxis', $axis->getRef());
-    if (!empty($this->idCell)) {
-        $datagridAxisMembers->pagination = false;
-    }
     $datagridAxisMembers->initialLoading = false;
     $datagridAxisMembers->addElements = true;
     $datagridAxisMembers->addPanelTitle = __('Orga', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));

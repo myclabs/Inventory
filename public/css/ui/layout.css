@@ -46,6 +46,7 @@ footer .feedback-form {
 .wrapper legend { cursor: pointer; border-style: solid none none; border-width: 1px 0 0; border-color: #E5E5E5; margin-bottom: 18px; }
 /* Espacement des wrapper successifs */
 .wrapper + .wrapper { margin-top : 15px; }
+.wrapper + script + .wrapper { margin-top : 15px; }
 .wrapper .wrapper { margin-left: 15px; }
 /*fieldset fieldset { margin-left: 15px; }*/
 /** Collapse dans collapse */
