@@ -106,8 +106,8 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
     public function editnodeAction()
     {
         $axis = Classif_Model_Axis::loadByRef($this->idNode);
-        $newRef = $this->getEditElementValue('ref');
         $newLabel = $this->getEditElementValue('label');
+        $newRef = $this->getEditElementValue('ref');
         $newParentRef = $this->getEditElementValue('changeParent');
         if ($newParentRef !== '') {
             $newParentRef = ($newParentRef === ($this->id.'_root')) ? null : $newParentRef;
