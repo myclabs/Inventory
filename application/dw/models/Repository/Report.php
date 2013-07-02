@@ -76,9 +76,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                     $membersLink[$identifierValue] = $parentMembersId;
                 }
             }
-            $values[$identifierValue]['value'] += $result->getValue()->digitalValue;
+            $values[$identifierValue]['value'] += $result->getValue()->getDigitalValue();
             $values[$identifierValue]['uncertainty'] += pow(
-                ($result->getValue()->relativeUncertainty * $result->getValue()->digitalValue),
+                ($result->getValue()->getRelativeUncertainty() * $result->getValue()->getDigitalValue()),
                 2
             );
         }
@@ -114,9 +114,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                 if (!isset($ratioValues[$identifierValue])) {
                     $ratioValues[$identifierValue] = array('value' => 0, 'uncertainty' => 0);
                 }
-                $ratioValues[$identifierValue]['value'] += $result->getValue()->digitalValue;
+                $ratioValues[$identifierValue]['value'] += $result->getValue()->getDigitalValue();
                 $ratioValues[$identifierValue]['uncertainty'] += pow(
-                    ($result->getValue()->relativeUncertainty * $result->getValue()->digitalValue),
+                    ($result->getValue()->getRelativeUncertainty() * $result->getValue()->getDigitalValue()),
                     2
                 );
             }

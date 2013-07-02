@@ -31,13 +31,13 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
      * Calcul une somme ou un produit de valeurs associées à leurs unités
      * en fonction de l'operation spécifiée.
      *
-     * @return Calc_Calculation_UnitValue
+     * @throws Core_Exception_InvalidArgument
+     * @return Calc_UnitValue
      */
     public function calculate()
     {
         $this->checkComponent();
 
-        $result = new Calc_UnitValue();
         if ($this->operation == Calc_Calculation::ADD_OPERATION) {
             return $this->calculateSum();
         } elseif ($this->operation == Calc_Calculation::MULTIPLY_OPERATION) {
@@ -64,7 +64,7 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
         $calcUnit->operation = Calc_Calculation::ADD_OPERATION;
         foreach ($this->components as $component) {
             // On ajoute les composants de la somme.
-            $calcUnit->addComponents($component['operand']->unit, $component['signExponent']);
+            $calcUnit->addComponents($component['operand']->getUnit(), $component['signExponent']);
         }
         // On calcul la somme des unités.
         $calculationUnit = $calcUnit->calculate();
@@ -73,20 +73,25 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
         $calcValue = new Calc_Calculation_Value();
         $calcValue->operation = Calc_Calculation::ADD_OPERATION;
         foreach ($this->components as $component) {
-            $value = clone $component['operand']->value;
+            /** @var Calc_UnitValue $unitValue */
+            $unitValue = $component['operand'];
+
             // Multiplication des valeurs par leur facteur de Conversion.
-            $value->digitalValue *= $component['operand']->unit->getConversionFactor();
+            $newDigitalValue = $unitValue->getDigitalValue() * $unitValue->getUnit()->getConversionFactor();
+
+            $value = new Calc_Value($newDigitalValue, $unitValue->getRelativeUncertainty());
+
             $calcValue->addComponents($value, $component['signExponent']);
         }
         // On calcul la somme des valeurs.
         $calculationValue = $calcValue->calculate();
 
         // On rempli une unitValue avec avec la valeur et l' unité calculées.
-        $unitValue = new Calc_UnitValue();
-        $unitValue->unit  = $calculationUnit;
-        $unitValue->value = $calculationValue;
-
-        return $unitValue;
+        return new Calc_UnitValue(
+            $calculationUnit,
+            $calculationValue->getDigitalValue(),
+            $calculationValue->getRelativeUncertainty()
+        );
     }
 
     /**
@@ -111,13 +116,13 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
             // Si il s'agit d'une division.
             if ($component['signExponent'] == Calc_Calculation::DIVISION) {
                 // On prend l'inverse du facteur de conversion.
-                $facteurConversion /= $component['operand']->unit->getConversionFactor();
+                $facteurConversion /= $component['operand']->getUnit()->getConversionFactor();
             } elseif ($component['signExponent'] == Calc_Calculation::PRODUCT) {
                 // Sinon on prend le facteur de conversion.
-                $facteurConversion *= $component['operand']->unit->getConversionFactor();
+                $facteurConversion *= $component['operand']->getUnit()->getConversionFactor();
             }
             // On ajoute les composants du produit.
-            $calcUnit->addComponents($component['operand']->unit, $component['signExponent']);
+            $calcUnit->addComponents($component['operand']->getUnit(), $component['signExponent']);
         }
         // On calcul le produit des unités.
         $calculationUnit = $calcUnit->calculate();
@@ -126,20 +131,22 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
         $calcValue = new Calc_Calculation_Value();
         $calcValue->operation = Calc_Calculation::MULTIPLY_OPERATION;
         foreach ($this->components as $component) {
-            $value = clone $component['operand']->value;
+            /** @var Calc_UnitValue $unitValue */
+            $unitValue = $component['operand'];
+            $value = new Calc_Value($unitValue->getDigitalValue(), $unitValue->getRelativeUncertainty());
             $calcValue->addComponents($value, $component['signExponent']);
         }
         // On calcul la somme des valeurs.
         $calculationValue = $calcValue->calculate();
         // On multpilie le resultat par le facteur de conversion.
-        $calculationValue->digitalValue *= $facteurConversion;
+        $calculationDigitalValue = $calculationValue->getDigitalValue() * $facteurConversion;
 
-        // On rempli une unitValue avec avec la valeur et l' unité calculées.
-        $unitValue = new Calc_UnitValue();
-        $unitValue->unit  = $calculationUnit;
-        $unitValue->value = $calculationValue;
-
-        return $unitValue;
+        // On rempli une unitValue avec avec la valeur et l'unité calculée
+        return new Calc_UnitValue(
+            $calculationUnit,
+            $calculationDigitalValue,
+            $calculationValue->getRelativeUncertainty()
+        );
     }
 
 }

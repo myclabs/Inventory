@@ -32,13 +32,13 @@ $editForm->addElement($unitField);
 // Valeur
 $digitalValueField = new UI_Form_Element_Text('digitalValue');
 $digitalValueField->setLabel(__('UI', 'name', 'value'));
-$digitalValueField->setValue($element->getValue()->digitalValue);
+$digitalValueField->setValue($element->getValue()->getDigitalValue());
 $editForm->addElement($digitalValueField);
 
 // Incertitude
 $uncertaintyField = new UI_Form_Element_Text('uncertainty');
 $uncertaintyField->setLabel(__('UI', 'name', 'uncertainty'));
-$uncertaintyField->setValue($element->getValue()->relativeUncertainty);
+$uncertaintyField->setValue($element->getValue()->getRelativeUncertainty());
 $editForm->addElement($uncertaintyField);
 
 // Documentation

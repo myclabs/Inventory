@@ -45,23 +45,31 @@ class Calc_TypeMapping_Value extends Type
     }
 
     /**
-     * @param string $value
+     * @param string|null $value
      * @param AbstractPlatform $platform
-     * @return Calc_Value
+     * @return Calc_Value|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return unserialize($value);
+        if ($value === null) {
+            return null;
+        }
+
+        return Calc_Value::createFromString($value);
     }
 
     /**
-     * @param Calc_Value $value
+     * @param Calc_Value|null $value
      * @param AbstractPlatform $platform
-     * @return string
+     * @return string|null
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return serialize($value);
+        if ($value === null) {
+            return null;
+        }
+
+        return $value->exportToString();
     }
 
 }

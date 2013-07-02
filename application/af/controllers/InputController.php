@@ -280,7 +280,8 @@ class AF_InputController extends Core_Controller
         } elseif ($component instanceof AF_Model_Component_Numeric) {
             // Champ numérique
             $input = new AF_Model_Input_Numeric($inputSet, $component);
-            $calcValue = new Calc_UnitValue();
+            $inputDigitalValue = null;
+            $inputUncertainty = null;
             if ($inputContent['value'] !== '') {
                 $value = str_replace(',', '.', $inputContent['value']);
                 $relativeUncertainty = 0;
@@ -296,16 +297,17 @@ class AF_InputController extends Core_Controller
                 } elseif (!is_numeric($relativeUncertainty) || ($relativeUncertainty < 0)) {
                     $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
                 } else {
-                    $calcValue->value->digitalValue = $value;
+                    $inputDigitalValue = $value;
                     if ($component->getWithUncertainty()) {
-                        $calcValue->value->relativeUncertainty = $relativeUncertainty;
+                        $inputUncertainty = $relativeUncertainty;
                     }
                 }
             } elseif ($component->getRequired()) {
                 $errorMessages[$fullRef] = __("UI", "formValidation", "emptyRequiredField");
             }
-            $calcValue->unit = $component->getUnit();
-            $input->setValue($calcValue);
+            $input->setValue(
+                new Calc_UnitValue($component->getUnit(), $inputDigitalValue, $inputUncertainty)
+            );
         } elseif ($component instanceof AF_Model_Component_Text) {
             // Champ texte
             $input = new AF_Model_Input_Text($inputSet, $component);

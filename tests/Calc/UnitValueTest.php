@@ -10,55 +10,6 @@
  */
 class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * Lance les autre classe de tests.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Calc_Test_Calculation_UnitValueSetUp');
-        $suite->addTestSuite('Calc_Test_Calculation_UnitValueOthers');
-        return $suite;
-    }
-
-}
-
-/**
- * UnitValueSetUpTest
- * @package Calc
- */
-class Calc_Test_Calculation_UnitValueSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * test du constructeur
-     */
-    public function testConstruct()
-    {
-         $o = new Calc_Calculation_UnitValue();
-         $this->assertEquals(true, $o instanceof Calc_Calculation_UnitValue);
-    }
-
-}
-
-/**
- * UnitValueLogiqueMetierTest
- * @package Calc
- */
-class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
-    public static function setUpBeforeClass()
-    {
-    }
-
-    /**
-     * fontion apellée avant chaque méthode de test
-     */
-    function setUp()
-    {
-    }
 
     /**
      * Test de la fonction calculateProduct()
@@ -70,21 +21,8 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
         $unit1 = new Unit_API('j^2.animal^-1');
         $unit2 = new Unit_API('t^2');
 
-        $value1 = new Calc_Value();
-        $value2 = new Calc_Value();
-        $value1->digitalValue = 3;
-        $value1->relativeUncertainty = 10;
-        $value2->digitalValue = 4;
-        $value2->relativeUncertainty = 0.08;
-
-        $calcUnitValue1 = new Calc_UnitValue();
-        $calcUnitValue2 = new Calc_UnitValue();
-
-        $calcUnitValue1->unit = $unit1;
-        $calcUnitValue1->value = $value1;
-
-        $calcUnitValue2->unit = $unit2;
-        $calcUnitValue2->value = $value2;
+        $calcUnitValue1 = new Calc_UnitValue($unit1, 3, 10);
+        $calcUnitValue2 = new Calc_UnitValue($unit2, 4, 0.08);
 
         $unitValue->addComponents($calcUnitValue1, Calc_Calculation::PRODUCT);
         $unitValue->addComponents($calcUnitValue2, Calc_Calculation::DIVISION);
@@ -93,8 +31,8 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
         $unitValue->calculate();
         $result = $unitValue->calculate();
 
-        $this->assertEquals(0.00000075, $result->value->digitalValue);
-        $this->assertEquals('m^4.animal^-1.s^-4', $result->unit->getRef());
+        $this->assertEquals(0.00000075, $result->getDigitalValue());
+        $this->assertEquals('m^4.animal^-1.s^-4', $result->getUnit()->getRef());
 
     }
 
@@ -107,29 +45,17 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
         $unitValue->setOperation(Calc_Calculation::ADD_OPERATION);
         $unit1  = new Unit_API('kg.j');
         $unit2  = new Unit_API('g.j');
-        $value1 = new Calc_Value();
-        $value2 = new Calc_Value();
-        $value1->digitalValue = 4;
-        $value1->relativeUncertainty = 0.04;
-        $value2->digitalValue = 1500;
-        $value2->relativeUncertainty = 0.05;
 
-        $calcUnitValue1 = new Calc_UnitValue();
-        $calcUnitValue2 = new Calc_UnitValue();
-
-        $calcUnitValue1->unit  = $unit1;
-        $calcUnitValue1->value = $value1;
-
-        $calcUnitValue2->unit  = $unit2;
-        $calcUnitValue2->value = $value2;
+        $calcUnitValue1 = new Calc_UnitValue($unit1, 4, 0.04);
+        $calcUnitValue2 = new Calc_UnitValue($unit2, 1500, 0.05);
 
         $unitValue->addComponents($calcUnitValue1, Calc_Calculation::SUM);
         $unitValue->addComponents($calcUnitValue2, Calc_Calculation::SUBSTRACTION);
 
         $result = $unitValue->calculate();
 
-        $this->assertEquals(2.5, $result->value->digitalValue);
-        $this->assertEquals('m^2.kg^2.s^-2', $result->unit->getRef());
+        $this->assertEquals(2.5, $result->getDigitalValue());
+        $this->assertEquals('m^2.kg^2.s^-2', $result->getUnit()->getRef());
 
 
          //Test somme d'unité non compatible.
@@ -140,20 +66,14 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
         $unite3 = new Unit_API('g.animal');
         $unite4 = new Unit_API('g^2.animal');
 
-        $calcUnitValue3 = new Calc_UnitValue();
-        $calcUnitValue4 = new Calc_UnitValue();
-
-        $calcUnitValue3->unit = $unite3;
-        $calcUnitValue3->value = $value1;
-
-        $calcUnitValue4->unit = $unite4;
-        $calcUnitValue4->value = $value2;
+        $calcUnitValue3 = new Calc_UnitValue($unite3, 4, 0.04);
+        $calcUnitValue4 = new Calc_UnitValue($unite4, 1500, 0.05);
 
         $unitValue2->addComponents($calcUnitValue3, Calc_Calculation::SUM);
         $unitValue2->addComponents($calcUnitValue4, Calc_Calculation::SUBSTRACTION);
 
         try {
-             $result = $unitValue2->calculate();
+             $unitValue2->calculate();
         } catch (Unit_Exception_IncompatibleUnits $e) {
              $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
@@ -166,20 +86,14 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
         $unite5 = new Unit_API('gramme.animal');
         $unite6 = new Unit_API('g^2.animal');
 
-        $calcUnitValue5 = new Calc_UnitValue();
-        $calcUnitValue6 = new Calc_UnitValue();
-
-        $calcUnitValue5->unit = $unite5;
-        $calcUnitValue5->value = $value1;
-
-        $calcUnitValue6->unit = $unite6;
-        $calcUnitValue6->value = $value2;
+        $calcUnitValue5 = new Calc_UnitValue($unite5, 4, 0.04);
+        $calcUnitValue6 = new Calc_UnitValue($unite6, 1500, 0.05);
 
         $unitValue3->addComponents($calcUnitValue5, Calc_Calculation::SUM);
         $unitValue3->addComponents($calcUnitValue6, Calc_Calculation::SUBSTRACTION);
 
         try {
-             $result = $unitValue3->calculate();
+             $unitValue3->calculate();
         } catch (Core_Exception_NotFound $e) {
             $this->assertEquals("No 'Unit_Model_Unit' matching (ref == gramme)", $e->getMessage());
         }
@@ -192,7 +106,7 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
     {
         $unitValue = new Calc_Calculation_UnitValue();
         try {
-            $result = $unitValue->calculate();
+            $unitValue->calculate();
         } catch (Core_Exception_InvalidArgument $e) {
             $this->assertEquals('Unknow operation', $e->getMessage());
         }
@@ -204,17 +118,51 @@ class Calc_Test_Calculation_UnitValueOthers extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * fonction apellée après chaque méthode de test
+     * @dataProvider valueProvider
+     * @param Calc_UnitValue $value
      */
-    function tearDown()
+    public function testExportToString(Calc_UnitValue $value)
     {
+        $str = $value->exportToString();
+
+        $unserialized = Calc_UnitValue::createFromString($str);
+
+        $this->assertInstanceOf('Calc_UnitValue', $unserialized);
+        $this->assertEquals($value->getUnit()->getRef(), $unserialized->getUnit()->getRef(), "String: '$str'");
+        $this->assertSame($value->getDigitalValue(), $unserialized->getDigitalValue(), "String: '$str'");
+        $this->assertSame($value->getRelativeUncertainty(), $unserialized->getRelativeUncertainty(), "String: '$str'");
+    }
+
+    public function valueProvider()
+    {
+        return [
+            [new Calc_UnitValue(new Unit_API('g'), 0, 0)],
+            [new Calc_UnitValue()],
+            [new Calc_UnitValue(new Unit_API('g'))],
+            [new Calc_UnitValue(new Unit_API('g'), 0)],
+            [new Calc_UnitValue(new Unit_API())],
+            [new Calc_UnitValue(new Unit_API('g'), '0.1', '0.1')],
+        ];
     }
 
     /**
-     * Méthode appelée à la fin de la classe de test
+     * @dataProvider invalidStrings
+     * @expectedException InvalidArgumentException
+     * @param string $str
      */
-    public static function tearDownAfterClass()
+    public function testCreateFromStringInvalid($str)
     {
+        Calc_UnitValue::createFromString($str);
+    }
+
+    public function invalidStrings()
+    {
+        return [
+            [''],
+            ['foo'],
+            [';'],
+            ['|'],
+        ];
     }
 
 }

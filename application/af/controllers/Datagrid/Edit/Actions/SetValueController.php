@@ -49,10 +49,10 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
                     switch (get_class($action)) {
                         case 'AF_Model_Action_SetValue_Numeric':
                             /** @var $action AF_Model_Action_SetValue_Numeric */
-                            $data['value'] = $action->getValue()->digitalValue;
-                            if (null !== $action->getValue()->relativeUncertainty) {
+                            $data['value'] = $action->getValue()->getDigitalValue();
+                            if (null !== $action->getValue()->getRelativeUncertainty()) {
                                 $data['value'] .= ' &#177; '; // Symbole +-
-                                $data['value'] .= $action->getValue()->relativeUncertainty;
+                                $data['value'] .= $action->getValue()->getRelativeUncertainty();
                                 $data['value'] .= ' %';
                             }
                             break;
