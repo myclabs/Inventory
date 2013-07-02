@@ -449,10 +449,10 @@ class Orga_Model_Cell extends Core_Model_Entity
             // Cherche la cellule parent dans la granularité de définition des statut des inventaires
             try {
                 $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
-                $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
+                $this->updateInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
             } catch (Core_Exception_NotFound $e) {
                 // Il n'y a pas de cellules parentes.
-                $this->setInventoryStatus(self::STATUS_NOTLAUNCHED);
+                $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
             }
         }
     }
@@ -819,6 +819,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @param string $inventoryStatus
      *
+     * @throws Core_Exception
      * @throws Core_Exception_InvalidArgument
      *
      * @see self::STATUS_ACTIVE
@@ -827,6 +828,12 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public function setInventoryStatus($inventoryStatus)
     {
+        if ($this->getGranularity() !== $this->getGranularity()->getOrganization()->getGranularityForInventoryStatus()) {
+            throw new Core_Exception(
+                "Le status de l'inventaire ne peut être défini que pour les cellules de la granularité des inventaires."
+            );
+        }
+
         if ($this->inventoryStatus !== $inventoryStatus) {
             $acceptedStatus = [self::STATUS_ACTIVE, self::STATUS_CLOSED, self::STATUS_NOTLAUNCHED];
             if (! in_array($inventoryStatus, $acceptedStatus)) {
@@ -838,9 +845,19 @@ class Orga_Model_Cell extends Core_Model_Entity
             $this->inventoryStatus = $inventoryStatus;
 
             foreach ($this->getChildCells() as $childCell) {
-                $childCell->setInventoryStatus($this->inventoryStatus);
+                $childCell->updateInventoryStatus($this->inventoryStatus);
             }
         }
+    }
+
+    /**
+     * Mets à jour [interne] la statut de l'inventaire de la cellule.
+     *
+     * @param string $inventoryStatus
+     */
+    private function updateInventoryStatus($inventoryStatus)
+    {
+        $this->inventoryStatus = $inventoryStatus;
     }
 
     /**

@@ -403,12 +403,6 @@ class Orga_Model_Organization extends Core_Model_Entity
     public function setGranularityForInventoryStatus(Orga_Model_Granularity $granularity)
     {
         if ($this->granularityForInventoryStatus !== $granularity) {
-            foreach ($this->getInputGranularities() as $inputGranularity) {
-                if (!($inputGranularity->isNarrowerThan($granularity))) {
-                    throw new Core_Exception_InvalidArgument();
-                }
-            }
-
             if ($this->granularityForInventoryStatus !== null) {
                 foreach ($this->granularityForInventoryStatus->getCells() as $cell) {
                     $cell->setInventoryStatus(Orga_Model_Cell::STATUS_NOTLAUNCHED);
