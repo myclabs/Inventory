@@ -1,3 +1,23 @@
 #!/bin/sh
 
-../vendor/behat/behat/bin/behat --config behat.yml --ansi
+trap 'killall' INT
+
+killall() {
+    trap '' INT TERM     # ignore INT and TERM while shutting down
+    echo "**** Shutting down... ****"     # added double quotes
+    kill -TERM 0         # fixed order, send TERM not INT
+    wait
+    echo DONE
+}
+
+# Start virtual display
+Xvfb :99 -ac > /dev/null 2>&1 &
+export DISPLAY=:99
+
+# Start selenium server
+java -jar selenium-server-standalone.jar > /dev/null 2>&1 &
+
+sleep 2
+
+# Behat
+php ../vendor/behat/behat/bin/behat --config behat.yml --name "Logging in correctly"

@@ -26,6 +26,13 @@ trait DatabaseFeatureContext
     {
         self::loadFileToDatabase('oneOrganizationWithAxes.sql');
     }
+    /**
+     * @BeforeFeature @dbWithClassifAxesIndicatorsContexts
+     */
+    public static function loadWithClassifAxesIndicatorsContextsDatabase()
+    {
+        self::loadFileToDatabase('withClassifAxesIndicatorsContexts.sql');
+    }
 
     private static function loadFileToDatabase($fileName)
     {
