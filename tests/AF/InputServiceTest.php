@@ -35,15 +35,15 @@ class InputServiceTest extends Core_Test_TestCase
         $inputSet1 = new AF_Model_InputSet_Primary($this->af);
         $input1 = new AF_Model_Input_Checkbox($inputSet1, $this->comp2);
         $input3 = new AF_Model_Input_Numeric($inputSet1, $this->comp3);
-        $input3->getValue()->value->digitalValue = 1;
+        $input3->setValue($input3->getValue()->copyWithNewValue(1));
         $input3->setHidden(false);
         $input3->setDisabled(false);
 
         $inputSet2 = new AF_Model_InputSet_Primary($this->af);
         $input2 = new AF_Model_Input_Numeric($inputSet2, $this->comp1);
-        $input2->getValue()->value->digitalValue = 10;
+        $input2->setValue($input2->getValue()->copyWithNewValue(10));
         $input32 = new AF_Model_Input_Numeric($inputSet2, $this->comp3);
-        $input32->getValue()->value->digitalValue = 2;
+        $input32->setValue($input32->getValue()->copyWithNewValue(2));
         $input32->setHidden(true);
         $input32->setDisabled(true);
 
@@ -53,7 +53,7 @@ class InputServiceTest extends Core_Test_TestCase
         /** @var AF_Model_Input_Numeric $newInputForComp1 */
         $newInputForComp1 = $inputSet1->getInputForComponent($this->comp1);
         $this->assertNotNull($newInputForComp1);
-        $this->assertEquals(10, $newInputForComp1->getValue()->value->digitalValue);
+        $this->assertEquals(10, $newInputForComp1->getValue()->getDigitalValue());
 
         // La saisie pour le composant 2 a été supprimée
         $this->assertNull($inputSet1->getInputForComponent($this->comp2));
@@ -62,7 +62,7 @@ class InputServiceTest extends Core_Test_TestCase
         /** @var AF_Model_Input_Numeric $newInputForComp3 */
         $newInputForComp3 = $inputSet1->getInputForComponent($this->comp3);
         $this->assertNotNull($newInputForComp3);
-        $this->assertEquals(2, $newInputForComp3->getValue()->value->digitalValue);
+        $this->assertEquals(2, $newInputForComp3->getValue()->getDigitalValue());
         $this->assertTrue($newInputForComp3->isHidden());
         $this->assertTrue($newInputForComp3->isDisabled());
 

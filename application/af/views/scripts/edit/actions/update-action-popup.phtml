@@ -16,12 +16,12 @@ if ($action instanceof AF_Model_Action_SetValue_Numeric) {
     // Valeur numerique
     $numericValue = new UI_Form_Element_Text('numericValue');
     $numericValue->setLabel(__('AF', 'configInteractionDatagrid', 'valueToBeAssignedLabel'));
-    $numericValue->setValue($action->getValue()->digitalValue);
+    $numericValue->setValue($action->getValue()->getDigitalValue());
     $form->addElement($numericValue);
     // Incertitude
     $numericUncertainty = new UI_Form_Element_Text('numericUncertainty');
     $numericUncertainty->setLabel(__('AF', 'configInteractionDatagrid', 'uncertaintyToBeAssignedLabel'));
-    $numericUncertainty->setValue($action->getValue()->relativeUncertainty);
+    $numericUncertainty->setValue($action->getValue()->getRelativeUncertainty());
     $form->addElement($numericUncertainty);
 }
 
