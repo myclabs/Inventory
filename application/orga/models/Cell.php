@@ -452,7 +452,7 @@ class Orga_Model_Cell extends Core_Model_Entity
                 $this->updateInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
             } catch (Core_Exception_NotFound $e) {
                 // Il n'y a pas de cellules parentes.
-                $this->setInventoryStatus(self::STATUS_NOTLAUNCHED);
+                $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
             }
         }
     }
