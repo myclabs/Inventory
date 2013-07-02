@@ -3,8 +3,9 @@
  * @author matthieu.napoli
  */
 
+use Behat\Behat\Context\Step;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Exception\ElementTextException;
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\WebAssert;
 
 trait DatagridFeatureContext
@@ -17,6 +18,12 @@ trait DatagridFeatureContext
     public abstract function assertElementContainsText($element, $text);
     public abstract function waitForPageToFinishLoading();
     public abstract function clickElement($selector);
+    public abstract function fillField($field, $value);
+    /**
+     * @param string $cssSelector
+     * @return NodeElement
+     */
+    protected abstract function findElement($cssSelector);
 
     /**
      * @Then /^(?:|I )should see the "(?P<datagrid>[^"]*)" datagrid$/
@@ -51,7 +58,7 @@ trait DatagridFeatureContext
     }
 
     /**
-     * @Then /^the column "(?P<column>[^"]*)" of the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should contain "(?P<content>[^"]*)"$/
+     * @Then /^(?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should contain "(?P<content>[^"]*)"$/
      */
     public function assertDatagridCellContains($column, $row, $datagrid, $content)
     {
@@ -71,13 +78,37 @@ trait DatagridFeatureContext
     /**
      * @When /^(?:|I )click "(?P<link>[^"]*)" in the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
      */
-    public function clickInRow($link, $row, $datagrid)
+    public function clickLinkInRow($link, $row, $datagrid)
     {
         $linkSelector = $this->getDatagridSelector($datagrid)
             . " .yui-dt-data tr:nth-child($row)"
             . " a:contains('$link')";
 
         $this->clickElement($linkSelector);
+    }
+
+    /**
+     * @Then /^(?:|I )set "(?P<content>[^"]*)" for (?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
+     */
+    public function setCellContent($content, $column, $row, $datagrid)
+    {
+        $cellSelector = $this->getDatagridSelector($datagrid)
+            . " .yui-dt-data tr:nth-child($row)"
+            . " .yui-dt-col-$column";
+
+        // Double-click
+        $cellNode = $this->findElement($cellSelector);
+        $cellNode->doubleClick();
+
+        // Fill in field
+        $inputNode = $this->findElement('.yui-dt-editor input');
+        $inputNode->setValue($content);
+
+        // Submit
+        $submitNode = $this->findElement('.yui-dt-editor .yui-dt-button .yui-dt-default');
+        $submitNode->click();
+
+        $this->waitForPageToFinishLoading();
     }
 
     /**

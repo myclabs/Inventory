@@ -56,6 +56,7 @@ When I open tab "label"
 Then the following message is shown and closed: "Ajout effectué"
 
 # Form
+When I select "Oui" in radio "Activé"
 Then the field "field" should have error: "Some error"
 
 # Popup
@@ -67,6 +68,7 @@ Then the "users" datagrid should contain 1 row
 Then the row 1 of the "users" datagrid should contain:
   | nom            | email | detailsUser |
   | Administrateur | admin | Éditer      |
-Then the column "name" of the row 2 of the "users" datagrid should contain "Bob"
+Then [the] column "name" of [the] row 2 of the "users" datagrid should contain "Bob"
+Then I set "value" for [the] column "label" of [the] row 1 of the "keywords" datagrid
 When I click "Supprimer" in the row 5 of the "users" datagrid
 ```

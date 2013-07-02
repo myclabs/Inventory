@@ -1,0 +1,138 @@
+@dbEmpty
+Feature: classifAxis
+
+  Background:
+    Given I am logged in
+
+  @javascript
+  Scenario: classifAxis1
+  # TODO : affichage libellé + identifiant
+    Given I am on "classif/axis/manage"
+    Then I should see "Axes de classification"
+  # Ajout d'un axe, identifiant vide
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+    When I click "Valider"
+    Then the field "ref" should have error: "Merci de renseigner ce champ."
+  # Ajout d'un axe, identifiant avec des caractères non autorisés
+    When I fill in "ref" with "bépo"
+    When I click "Valider"
+    Then the field "ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Ajout d'un axe, saisie correcte
+    When I fill in "label" with "À modifier"
+    And I fill in "ref" with "a_modifier"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Ajout d'un axe, identifiant déjà utilisé
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+    When I fill in "ref" with "a_modifier"
+    And I click "Valider"
+    Then the field "ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+    When I click element "#editAxis_addPanel a.btn:contains('Annuler')"
+  # Modification "sans effet" d'un axe
+    When I click "À modifier"
+    Then I should see the popup "Édition d'un axe"
+    When I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Cette action n'a entraîné aucune modification."
+  # Modification du libellé et de l'identifiant d'un axe
+    When I click "À modifier"
+    Then I should see the popup "Édition d'un axe"
+    When I fill in "editAxis_label" with "À supprimer"
+    And I fill in "editAxis_ref" with "a_supprimer"
+    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Modification effectuée."
+  # Modification de l'identifiant d'un axe, identifiant vide
+    When I click "À supprimer"
+    Then I should see the popup "Édition d'un axe"
+    When I fill in "editAxis_ref" with ""
+    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the field "editAxis_ref" should have error: "Merci de renseigner ce champ."
+  # Modification de l'identifiant d'un axe, identifiant avec des caractères non autorisés
+    When I fill in "editAxis_ref" with "bépo"
+    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the field "editAxis_ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Suppression d'un axe (sans axe parent)
+    When I click element "#editAxis_editPanel a.btn:contains('Annuler')"
+    And I click "À supprimer"
+    Then I should see the popup "Édition d'un axe"
+    When I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    When I click element "#editAxis_deletePanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Suppression effectuée."
+
+  @javascript
+  Scenario: classifAxis2
+    Given I am on "classif/axis/manage"
+    Then I should see "Axes de classification"
+  # Ajout de l'axe "Gaz"
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+    When I fill in "label" with "Gaz"
+    And I fill in "ref" with "gaz"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Ajout de l'axe "Scope"
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+    When I fill in "label" with "Scope"
+    And I fill in "ref" with "scope"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Ajout de l'axe "Poste article 75"
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+    When I fill in "label" with "Poste article 75"
+    And I fill in "ref" with "poste_article_75"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Assignation de l'axe "Poste article 75" comme axe plus fin direct de l'axe "Scope"
+    When I click "Scope"
+    Then I should see the popup "Édition d'un axe"
+    When I select "Poste article 75" from "editAxis_changeParent"
+    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Modification effectuée."
+  # Ajout de l'axe "Sens du déplacement" (avec parent "Poste article 75" provisoirement)
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+    When I fill in "label" with "Périmètre du fret"
+    And I fill in "ref" with "perimetre_fret"
+    And I select "Poste article 75" from "refParent"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Déplacement à la racine de l'axe "Périmètre du fret"
+  # On attend 1 seconde que l'arbre se déplie
+    When I wait 1 seconds
+    When I click "Périmètre du fret"
+    Then I should see the popup "Édition d'un axe"
+    When I select "Aucun" from "editAxis_changeParent"
+    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Modification effectuée."
+  # Déplacement "en dernier" de l'axe "Gaz"
+    When I click "Gaz"
+    Then I should see the popup "Édition d'un axe"
+    When I check "Dernier"
+    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Modification effectuée."
+  # Déplacement de l'axe "Gaz" après l'axe "Poste article 75"
+    When I click "Gaz"
+    Then I should see the popup "Édition d'un axe"
+    When I check "Après"
+    And I select "Poste article 75" from "editAxis_selectAfter"
+    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Modification effectuée."
+  # Déplacement "en premier" de l'axe "Gaz"
+    When I click "Gaz"
+    Then I should see the popup "Édition d'un axe"
+    When I check "Premier"
+    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Modification effectuée."
+  # Tentative de suppression de l'axe "Poste article 75"
+    When I click "Poste article 75"
+    Then I should see the popup "Édition d'un axe"
+    When I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    When I click element "#editAxis_deletePanel button:contains('Confirmer')"
+    Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
+
+

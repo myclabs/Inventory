@@ -59,9 +59,17 @@ class Techno_Service_Techno
         }
         // TODO passer $value dans Techno_Model_Element pour éviter ça
         if ($element instanceof Techno_Model_Element_Process) {
-            return new Calc_UnitValue($element->getValueUnit(), $element->getValue());
+            return new Calc_UnitValue(
+                $element->getValueUnit(),
+                $element->getValue()->getDigitalValue(),
+                $element->getValue()->getRelativeUncertainty()
+            );
         } elseif ($element instanceof Techno_Model_Element_Coeff) {
-            return new Calc_UnitValue($element->getValueUnit(), $element->getValue());
+            return new Calc_UnitValue(
+                $element->getValueUnit(),
+                $element->getValue()->getDigitalValue(),
+                $element->getValue()->getRelativeUncertainty()
+            );
         }
         return null;
     }

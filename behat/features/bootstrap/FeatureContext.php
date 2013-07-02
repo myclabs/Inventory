@@ -33,7 +33,7 @@ class FeatureContext extends MinkContext
     public function assertLoggedIn()
     {
         return [
-            new Step\Given('I am on the homepage'),
+            new Step\Given('I am on "user/action/login?refer=index%2Faccueil"'),
             new Step\Given('I fill in "email" with "admin"'),
             new Step\Given('I fill in "password" with "myc-53n53"'),
             new Step\Given('I press "connection"'),
@@ -59,16 +59,21 @@ class FeatureContext extends MinkContext
      */
     public function waitForPageToFinishLoading()
     {
+        // Chargements AJAX
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
         $maskOK = '$("#loadingMask:visible").length == 0';
+        // Timeout de 5 secondes
+        $this->getSession()->wait(5000, "($jqueryOK) && ($datagridOK) && ($maskOK)");
 
-        // Timeout de 6 secondes
-        $this->getSession()->wait(6000, "($jqueryOK) && ($datagridOK) && ($maskOK)");
+        // Animations JS
+        $popupOK = '$(".modal-backdrop:visible").length == 0';
+        // Timeout de 1 s
+        $this->getSession()->wait(1000, "($popupOK)");
     }
 
     /**
-     * @When /^(?:|I )wait (?:|for )(?P<seconds>\d+) seconds$/
+     * @When /^(?:|I )wait (?:|for )(?P<seconds>[\d\.]+) seconds$/
      */
     public function wait($seconds)
     {
@@ -122,6 +127,45 @@ class FeatureContext extends MinkContext
         $node->click();
 
         $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * Clicks a button or link with specified id|title|alt|text.
+     *
+     * @When /^(?:|I )select "(?P<value>(?:[^"]|\\")*)" in radio "(?P<label>(?:[^"]|\\")*)"$/
+     */
+    public function selectRadio($value, $label)
+    {
+        $value = $this->fixStepArgument($value);
+
+        $selector = ".control-group:contains(\"$label\") .input label:contains(\"$value\")>input";
+
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', $selector);
+
+        if (count($nodes) === 0) {
+            throw new ExpectationException("No radio with label '$label' and value '$value' found.",
+                $this->getSession());
+        }
+
+        array_filter($nodes, function(NodeElement $node) {
+                return $node->isVisible();
+            });
+
+        if (count($nodes) === 0) {
+            throw new ExpectationException("No radio with label '$label' and value '$value' is visible.",
+                $this->getSession());
+        }
+
+        if (count($nodes) > 1) {
+            $nb = count($nodes);
+            throw new ExpectationException("Too many ($nb) radio with label '$label' and value '$value' are visible.",
+                $this->getSession());
+        }
+
+        /** @var NodeElement $node */
+        $node = current($nodes);
+        $node->check();
     }
 
     /**
@@ -203,18 +247,18 @@ class FeatureContext extends MinkContext
     /**
      * Finds element with specified selector.
      *
-     * @param string $selector
+     * @param string $cssSelector
      *
      * @throws Behat\Mink\Exception\ExpectationException
-     * @return NodeElement|null
+     * @return NodeElement
      */
-    private function findElement($selector)
+    protected function findElement($cssSelector)
     {
         /** @var NodeElement[] $nodes */
-        $nodes = $this->getSession()->getPage()->findAll('css', $selector);
+        $nodes = $this->getSession()->getPage()->findAll('css', $cssSelector);
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No element matches selector '$selector'.",
+            throw new ExpectationException("No element matches selector '$cssSelector'.",
                 $this->getSession());
         }
 
@@ -223,13 +267,13 @@ class FeatureContext extends MinkContext
             });
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No element matching '$selector' is visible.",
+            throw new ExpectationException("No element matching '$cssSelector' is visible.",
                 $this->getSession());
         }
 
         if (count($nodes) > 1) {
             $nb = count($nodes);
-            throw new ExpectationException("Too many ($nb) elements matching '$selector' are visible.",
+            throw new ExpectationException("Too many ($nb) elements matching '$cssSelector' are visible.",
                 $this->getSession());
         }
 

@@ -13,8 +13,7 @@ Feature: Identification
     Given I am on the homepage
     When I fill in "email" with "admin"
     And I fill in "password" with "blahblah"
-    And I press "connection"
-    And I wait for page to finish loading
+    And I click "connection"
     Then I should see "Attention ! Le mot de passe indiqué est invalide."
 
   @javascript
@@ -22,14 +21,16 @@ Feature: Identification
     Given I am on the homepage
     When I fill in "email" with "admin"
     And I fill in "password" with "myc-53n53"
-    And I press "connection"
-    And I wait for page to finish loading
+    And I click "connection"
     Then I should see "Organisations"
 
   @javascript
   Scenario: Logging out
     Given I am logged in
-    When I follow "currentUserButton"
-    And I follow "logoutButton"
-    Then I should see "Vous n'êtes pas connecté"
+    And I am on the homepage
+    When I click "currentUserButton"
+    And I click "logoutButton"
+    # On est redirigé vers la page d'accueil
+    Then the following message is shown and closed: "Vous n'êtes pas connecté."
+    And I should see "Vous n'êtes pas connecté"
     And I should see "Connexion"

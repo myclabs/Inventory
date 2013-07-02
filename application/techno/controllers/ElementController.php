@@ -53,10 +53,7 @@ class Techno_ElementController extends Core_Controller
                     throw new Core_Exception_User('Techno', 'element', 'incompatibleUnit');
                 }
             }
-            $value = new Calc_Value();
-            $value->digitalValue = $digitalValue;
-            $value->relativeUncertainty = $uncertainty;
-            $element->setValue($value);
+            $element->setValue(new Calc_Value($digitalValue, $uncertainty));
             $element->setDocumentation($documentation);
             $element->save();
             $this->entityManager->flush();
