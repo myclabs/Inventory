@@ -31,6 +31,7 @@ Feature: Identification
     Given I am logged in
     When I click "currentUserButton"
     And I click "logoutButton"
+    # TODO
     And I wait 10 seconds
     # On est redirigé vers la page d'accueil
     # Then the following message is shown and closed: "Vous n'êtes pas connecté."

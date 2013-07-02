@@ -9,7 +9,7 @@ apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php5
 apt-get update
 
-apt-get install -y bash-completion curl lynx
+apt-get install -y bash-completion curl lynx unzip
 
 # SCM
 apt-get install -y git
@@ -60,11 +60,22 @@ cd gearman-1.0.3
 phpize
 ./configure
 make
-sudo make install
+make install
 
 # PHPUnit
 pear config-set auto_discover 1
 pear install pear.phpunit.de/PHPUnit
 
+# Behat & Selenium
+add-apt-repository -y ppa:mozillateam/firefox-stable
+apt-get install -y xvfb xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic
+apt-get install -y default-jre-headless
+apt-get install -y firefox
+echo 'user_pref("intl.accept_languages", "fr, fr-fr, en-us, en");' >> /etc/firefox/syspref.js
+#apt-get install -y chromium-browser
+#wget -O /tmp/chromedriver.zip https://chromedriver.googlecode.com/files/chromedriver_linux32_2.0.zip
+#unzip /tmp/chromedriver.zip -d /tmp
+#mv /tmp/chromedriver /usr/local/bin/
+
 # Data
-php /vagrant/scripts/build/build.php create update populate
+php /vagrant/scripts/build/build.php create update
