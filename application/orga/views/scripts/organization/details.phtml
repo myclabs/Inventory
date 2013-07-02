@@ -52,34 +52,30 @@
     <legend style="cursor:default"><?=__('Orga', 'configuration', 'inputGranularities')?></legend>
     <div>
         <?php
-        if ($this->granularityRefForInventoryStatus !== null) {
-            $colListGranularities = array();
-            foreach ($this->granularities as $granularity) {
-                $colListGranularities[$granularity->getRef()] = $granularity->getLabel();
-            }
+        $colListGranularities = array();
+        foreach ($this->granularities as $granularity) {
+            $colListGranularities[$granularity->getRef()] = $granularity->getLabel();
+        }
 
-            $datagridInputGranularities = new UI_Datagrid('inputGranularities', 'datagrid_organization_inputgranularities', 'orga');
+        $datagridInputGranularities = new UI_Datagrid('inputGranularities', 'datagrid_organization_inputgranularities', 'orga');
 
-            $columnInputConfigGranularity = new UI_Datagrid_Col_List('inputConfigGranularity', __('Orga', 'configuration', 'inputConfigGranularity'));
-            $columnInputConfigGranularity->list = $colListGranularities;
-            $datagridInputGranularities->addCol($columnInputConfigGranularity);
+        $columnInputConfigGranularity = new UI_Datagrid_Col_List('inputConfigGranularity', __('Orga', 'configuration', 'inputConfigGranularity'));
+        $columnInputConfigGranularity->list = $colListGranularities;
+        $datagridInputGranularities->addCol($columnInputConfigGranularity);
 
-            $columnInputGranularity = new UI_Datagrid_Col_List('inputGranularity', __('Orga', 'configuration', 'inputGranularity'));
-            $columnInputGranularity->list = $colListGranularities;
-            $datagridInputGranularities->addCol($columnInputGranularity);
+        $columnInputGranularity = new UI_Datagrid_Col_List('inputGranularity', __('Orga', 'configuration', 'inputGranularity'));
+        $columnInputGranularity->list = $colListGranularities;
+        $datagridInputGranularities->addCol($columnInputGranularity);
 
-            $datagridInputGranularities->addParam('idOrganization', $this->idOrganization);
-            $datagridInputGranularities->pagination = false;
-            $datagridInputGranularities->addElements = true;
-            $datagridInputGranularities->deleteElements = true;
+        $datagridInputGranularities->addParam('idOrganization', $this->idOrganization);
+        $datagridInputGranularities->pagination = false;
+        $datagridInputGranularities->addElements = true;
+        $datagridInputGranularities->deleteElements = true;
 
-            if ($this->display) {
-                $datagridInputGranularities->display();
-            } else {
-                echo $datagridInputGranularities->render();
-            }
+        if ($this->display) {
+            $datagridInputGranularities->display();
         } else {
-            echo __('Orga', 'organization', 'errorMessageInputGranularities');;
+            echo $datagridInputGranularities->render();
         }
         ?>
     </div>

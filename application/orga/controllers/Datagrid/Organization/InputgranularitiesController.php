@@ -72,7 +72,6 @@ class Orga_Datagrid_Organization_InputgranularitiesController extends UI_Control
             $inputGranularity = Orga_Model_Granularity::loadByRefAndOrganization($inputGranularityRef, $organization);
         }
 
-
         if (empty($this->_addErrorMessages)) {
             if ($inputGranularity->getInputConfigGranularity() !== null) {
                 $this->setAddElementErrorMessage(
@@ -83,11 +82,6 @@ class Orga_Datagrid_Organization_InputgranularitiesController extends UI_Control
                 $this->setAddElementErrorMessage(
                     'inputGranularity',
                     __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanInputConfigGranularity')
-                );
-            } else if (!($inputGranularity->isNarrowerThan($organization->getGranularityForInventoryStatus()))) {
-                $this->setAddElementErrorMessage(
-                    'inputGranularity',
-                    __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanGranularityForInventoryStatus')
                 );
             }
         }

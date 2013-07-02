@@ -130,7 +130,7 @@ class Orga_CellController extends Core_Controller_Ajax
         } catch (Core_Exception_UndefinedAttribute $e) {
             $granularityForInventoryStatus = null;
         }
-        if ($granularityForInventoryStatus=== null) {
+        if ($granularityForInventoryStatus === null) {
             $inventoriesTab->disabled = true;
         } else if ($tab === 'inventories') {
             $inventoriesTab->active = true;
