@@ -161,10 +161,17 @@ class Classif_Model_Indicator extends Core_Model_Entity
      * Modifie l'unit de l'indicateur.
      *
      * @param Unit_API $unit
+     * @throws Unit_Exception_IncompatibleUnits
      */
-    public function setUnit($unit)
+    public function setUnit(Unit_API $unit)
     {
-        $this->unit = $unit;
+        if ($this->ratioUnit != null) {
+            if (!$this->getRatioUnit()->isEquivalent($unit)) {
+                throw new Unit_Exception_IncompatibleUnits('Unit ant RatioUnit should be equivalent.');
+            }
+        }
+
+        $this->unit = (string) $unit;
     }
 
     /**
@@ -181,10 +188,17 @@ class Classif_Model_Indicator extends Core_Model_Entity
      * Modifie l'unité de ratio de l'indicateur.
      *
      * @param Unit_API $ratioUnit
+     * @throws Unit_Exception_IncompatibleUnits
      */
-    public function setRatioUnit($ratioUnit)
+    public function setRatioUnit(Unit_API $ratioUnit)
     {
-        $this->ratioUnit = $ratioUnit;
+        if ($this->unit != null) {
+            if (!$this->getUnit()->isEquivalent($ratioUnit)) {
+                throw new Unit_Exception_IncompatibleUnits('Unit ant RatioUnit should be equivalent.');
+            }
+        }
+
+        $this->ratioUnit = (string) $ratioUnit;
     }
 
     /**

@@ -42,6 +42,21 @@ class Unit_API
     }
 
     /**
+     * Vérifie l'existence de l'unité
+     *
+     * @return bool
+     */
+    public function exists()
+    {
+        try {
+            $this->getNormalizedUnit();
+            return !empty($this->ref);
+        } catch (Core_Exception_InvalidArgument $e) {
+            return false;
+        }
+    }
+
+    /**
      * Renvoi le référent textuel de l'API.
      * @return string
      */
@@ -68,7 +83,7 @@ class Unit_API
     /**
      * Vérifie qu'une ref est compatible avec l'unité.
      * @param string $ref
-     * @return bool $equivalent;
+     * @return bool
      */
     public function isEquivalent($ref)
     {

@@ -48,8 +48,18 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
     {
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
-        $unit = $this->getAddElementValue('unit');
-        $ratioUnit = $this->getAddElementValue('ratioUnit');
+        $unit = new Unit_API($this->getAddElementValue('unit'));
+        if (!$unit->exists()) {
+            $this->setAddElementErrorMessage('unit', __('Unit', 'exception', 'unitDoesNotExist'));
+        }
+        $ratioUnit = new Unit_API($this->getAddElementValue('ratioUnit'));
+        if (!$ratioUnit->exists()) {
+            $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'exception', 'unitDoesNotExist'));
+        }
+        if (!$unit->isEquivalent($ratioUnit)) {
+            $this->setAddElementErrorMessage('unit', __('Unit', 'exception', 'incompatibleUnits'));
+            $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'exception', 'incompatibleUnits'));
+        }
 
         try {
             Core_Tools::checkRef($ref);
@@ -60,13 +70,16 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 $indicator = new Classif_Model_Indicator();
                 $indicator->setRef($ref);
                 $indicator->setLabel($label);
-                $indicator->setUnit($unit);
-                $indicator->setRatioUnit($ratioUnit);
-                $indicator->save();
-                $this->message = __('UI', 'message', 'added');
             }
         } catch (Core_Exception_User $e) {
             $this->setAddElementErrorMessage('ref', $e->getMessage());
+        }
+
+        if (empty($this->_addErrorMessages)) {
+            $indicator->setUnit($unit);
+            $indicator->setRatioUnit($ratioUnit);
+            $indicator->save();
+            $this->message = __('UI', 'message', 'added');
         }
 
         $this->send();
@@ -117,12 +130,30 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 }
                 break;
             case 'unit':
-                $indicator->setUnit($this->update['value']);
-                $this->message = __('UI', 'message', 'updated');
+                $unit = new Unit_API($this->update['value']);
+                if ($unit->exists()) {
+                    try {
+                        $indicator->setUnit($unit);
+                    } catch (Unit_Exception_IncompatibleUnits $e) {
+                        throw new Core_Exception_User('Unit', 'exceptions', 'incompatibleUnits');
+                    }
+                    $this->message = __('UI', 'message', 'updated');
+                } else {
+                    throw new Core_Exception_User('Unit', 'exception', 'unitDoesNotExist');
+                }
                 break;
             case 'ratioUnit':
-                $indicator->setRatioUnit($this->update['value']);
-                $this->message = __('UI', 'message', 'updated');
+                $ratioUnit = new Unit_API($this->update['value']);
+                if ($ratioUnit->exists()) {
+                    try {
+                        $indicator->setRatioUnit($ratioUnit);
+                    } catch (Unit_Exception_IncompatibleUnits $e) {
+                        throw new Core_Exception_User('Unit', 'exceptions', 'incompatibleUnits');
+                    }
+                    $this->message = __('UI', 'message', 'updated');
+                } else {
+                    throw new Core_Exception_User('Unit', 'exception', 'unitDoesNotExist');
+                }
                 break;
             case 'position' :
                 switch ($this->update['value']) {
