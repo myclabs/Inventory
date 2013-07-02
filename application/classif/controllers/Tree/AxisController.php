@@ -51,7 +51,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
             $axes = Classif_Model_Axis::loadByRef($this->idNode)->getDirectBroaders();
         }
         foreach ($axes as $axis) {
-            $axisLabel = ($axis->getLabel() == '') ? $axis->getRef() : $axis->getLabel();
+            $axisLabel = '<b>' . $axis->getLabel() . '</b> <i>('.$axis->getRef().')</i>';
             $this->addNode($axis->getRef(), $axisLabel, (!$axis->hasdirectBroaders()), null, false, true, true);
         }
 
