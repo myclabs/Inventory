@@ -116,6 +116,29 @@ Feature: keywordKeyword
     And the row 1 of the "keywords" datagrid should contain:
       | label       | ref         | nbRelations |
       | AAA | aaa | 0           |
+  # Modification de l'identifiant d'un mot clé, saisie correcte
+    When I set "aaa_modifie" for column "ref" of row 1 of the "keywords" datagrid
+    Then the following message is shown and closed: "Modification effectuée."
+    And the row 1 of the "keywords" datagrid should contain:
+      | label       | ref         | nbRelations |
+      | AAA  | aaa_modifie | 0           |
   # Modification du libellé d'un mot clé
-    Then I set "aaa_modifie" for column "label" of row 1 of the "keywords" datagrid
-    And the column "label" of the row 1 of the "keywords" datagrid should contain "aaa_modifie"
+    When I set "AAA modifié" for column "label" of row 1 of the "keywords" datagrid
+    Then the following message is shown and closed: "Modification effectuée."
+    And I wait 10 seconds
+  # Modification de l'identifiant d'un mot clé, identifiant vide
+    When I set "" for column "ref" of row 1 of the "keywords" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant d'un mot clé, identifiant avec des caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "keywords" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Ajout d'un mot clé pour test modification identifiant déjà utilisé
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un mot clé"
+    When I fill in "keywords_label_addForm" with "BBB"
+    And I fill in "keywords_ref_addForm" with "bbb"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Modification de l'identifiant d'un mot clé, identifiant déjà utilisé
+    When I set "bbb" for column "ref" of row 1 of the "keywords" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."

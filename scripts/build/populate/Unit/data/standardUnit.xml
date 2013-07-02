@@ -361,8 +361,8 @@
             <en>cubic metre</en>
         </name>
         <symbol>
-            <fr>m3</fr>
-            <en>m3</en>
+            <fr>m³</fr>
+            <en>m³</en>
         </symbol>
         <quantityRef>l3</quantityRef>
         <multiplier>1</multiplier>
