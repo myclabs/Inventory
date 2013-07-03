@@ -33,6 +33,33 @@ class Orga_Service_ETLStructure
         $this->etlDataService = $etlDataService;
     }
 
+
+    /**
+     * Traduit les labels des objets originaux dans DW.
+     *
+     * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
+     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     */
+    protected function translateEntity($dWEntity, $originalEntity)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
+        $originalTranslations = $translationRepository->findTranslations($originalEntity);
+
+        foreach (Zend_Registry::get('languages') as $locale) {
+            if (isset($originalTranslations[$locale->getId()]['label'])) {
+                $translationRepository->translate(
+                    $dWEntity,
+                    'label',
+                    $locale->getId(),
+                    $originalTranslations[$locale->getId()]['label']
+                );
+            }
+        }
+    }
+
+
     /**
      * Peuple le cube de DW avec les données issues de Classif et Orga.
      *
@@ -87,17 +114,41 @@ class Orga_Service_ETLStructure
      */
     protected function populateDWCubeWithAF(DW_Model_Cube $dWCube)
     {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
         $inputStatusDWAxis = new DW_Model_Axis($dWCube);
         $inputStatusDWAxis->setRef('inputStatus');
-        $inputStatusDWAxis->setLabel('Status des saisies');
 
         $finishedDWMember = new DW_Model_Member($inputStatusDWAxis);
         $finishedDWMember->setRef('finished');
-        $finishedDWMember->setLabel('terminée');
 
         $completedDWMember = new DW_Model_Member($inputStatusDWAxis);
         $completedDWMember->setRef('completed');
-        $completedDWMember->setLabel('complete');
+
+        foreach (Zend_Registry::get('languages') as $localeId) {
+            switch ($localeId) {
+                case 'fr':
+                    $inputStatusLabel = 'Status des saisies';
+                    $finishedLabel = 'terminée';
+                    $completedLabel = 'complète';
+                    break;
+                case 'en':
+                    $inputStatusLabel = 'Input status';
+                    $finishedLabel = 'finished';
+                    $completedLabel = 'completed';
+                    break;
+                default:
+                    $inputStatusLabel = '';
+                    $finishedLabel = '';
+                    $completedLabel = '';
+                    break;
+            }
+
+            $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $inputStatusLabel);
+            $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $finishedLabel);
+            $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $completedLabel);
+        }
     }
 
     /**
@@ -135,10 +186,11 @@ class Orga_Service_ETLStructure
     protected function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
     {
         $dWIndicator = new DW_Model_Indicator($dWCube);
-        $dWIndicator->setLabel($classifIndicator->getLabel());
         $dWIndicator->setRef('classif_'.$classifIndicator->getRef());
         $dWIndicator->setUnit($classifIndicator->getUnit());
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
+
+        $this->translateEntity($dWIndicator, $classifIndicator);
     }
 
     /**
@@ -153,6 +205,9 @@ class Orga_Service_ETLStructure
         $dWAxis = new DW_Model_Axis($dwCube);
         $dWAxis->setLabel($classifAxis->getLabel());
         $dWAxis->setRef('classif_'.$classifAxis->getRef());
+
+        $this->translateEntity($dWAxis, $classifAxis);
+
         $associationArray['axes'][$classifAxis->getRef()] = $dWAxis;
         $narrowerAxis = $classifAxis->getDirectNarrower();
         if ($narrowerAxis !== null) {
@@ -164,6 +219,9 @@ class Orga_Service_ETLStructure
             $dWMember->setLabel($classifMember->getLabel());
             $dWMember->setRef('classif_'.$classifMember->getRef());
             $dWMember->setPosition($classifMember->getPosition());
+
+            $this->translateEntity($dWMember, $classifMember);
+
             $memberIdentifier = $classifMember->getAxis()->getRef().'_'.$classifMember->getRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
             foreach ($classifMember->getDirectChildren() as $narrowerClassifMember) {
@@ -215,6 +273,9 @@ class Orga_Service_ETLStructure
         $dWAxis = new DW_Model_Axis($dwCube);
         $dWAxis->setLabel($orgaAxis->getLabel());
         $dWAxis->setRef('orga_'.$orgaAxis->getRef());
+
+        $this->translateEntity($dWAxis, $orgaAxis);
+
         $associationArray['axes'][$orgaAxis->getRef()] = $dWAxis;
         $narrowerAxis = $orgaAxis->getDirectNarrower();
         if ($narrowerAxis !== null) {
@@ -238,6 +299,9 @@ class Orga_Service_ETLStructure
             $dWMember = new DW_Model_Member($dWAxis);
             $dWMember->setLabel($orgaMember->getLabel());
             $dWMember->setRef('orga_'.$orgaMember->getRef());
+
+            $this->translateEntity($dWMember, $orgaMember);
+
             $memberIdentifier = $orgaMember->getAxis()->getRef().'_'.$orgaMember->getCompleteRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
             foreach ($orgaMember->getDirectChildren() as $narrowerClassifMember) {
