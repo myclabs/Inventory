@@ -114,14 +114,14 @@ Feature: keywordKeyword
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 1 of the "keywords" datagrid should contain:
-      | label       | ref         | nbRelations |
-      | AAA | aaa | 0           |
+      | label | ref | nbRelations |
+      | AAA   | aaa | 0           |
   # Modification de l'identifiant d'un mot clé, saisie correcte
     When I set "aaa_modifie" for column "ref" of row 1 of the "keywords" datagrid
     Then the following message is shown and closed: "Modification effectuée."
     And the row 1 of the "keywords" datagrid should contain:
-      | label       | ref         | nbRelations |
-      | AAA  | aaa_modifie | 0           |
+      | label | ref         | nbRelations |
+      | AAA   | aaa_modifie | 0           |
   # Modification du libellé d'un mot clé
     When I set "AAA modifié" for column "label" of row 1 of the "keywords" datagrid
     Then the following message is shown and closed: "Modification effectuée."
