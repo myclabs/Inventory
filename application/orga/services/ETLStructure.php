@@ -47,6 +47,11 @@ class Orga_Service_ETLStructure
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
+        // Pour l'instant seule moyen de traduire la langue par défaut.
+        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
+        //@todo Corriger le problème de langue par défaut et de non traduction de cette même languek
+        $dWEntity->setLabel($originalEntity->getLabel());
+        // Traductions
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
                 $translationRepository->translate(
@@ -86,8 +91,6 @@ class Orga_Service_ETLStructure
             } else {
                 $dWLabel = '';
             }
-            Core_Tools::dump($originalLabel);
-            Core_Tools::dump($dWLabel);
 
             if($originalLabel != $dWLabel) {
                 return true;
@@ -225,10 +228,8 @@ class Orga_Service_ETLStructure
     {
         $dWIndicator = new DW_Model_Indicator($dWCube);
         $dWIndicator->setRef('classif_'.$classifIndicator->getRef());
-        $dWIndicator->setLabel($classifIndicator->getLabel());
         $dWIndicator->setUnit($classifIndicator->getUnit());
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
-
         $this->translateEntity($classifIndicator, $dWIndicator);
     }
 
@@ -242,9 +243,7 @@ class Orga_Service_ETLStructure
     protected function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
     {
         $dWAxis = new DW_Model_Axis($dwCube);
-        $dWAxis->setLabel($classifAxis->getLabel());
         $dWAxis->setRef('classif_'.$classifAxis->getRef());
-
         $this->translateEntity($classifAxis, $dWAxis);
 
         $associationArray['axes'][$classifAxis->getRef()] = $dWAxis;
@@ -255,10 +254,8 @@ class Orga_Service_ETLStructure
 
         foreach ($classifAxis->getMembers() as $classifMember) {
             $dWMember = new DW_Model_Member($dWAxis);
-            $dWMember->setLabel($classifMember->getLabel());
             $dWMember->setRef('classif_'.$classifMember->getRef());
             $dWMember->setPosition($classifMember->getPosition());
-
             $this->translateEntity($classifMember, $dWMember);
 
             $memberIdentifier = $classifMember->getAxis()->getRef().'_'.$classifMember->getRef();
@@ -310,9 +307,7 @@ class Orga_Service_ETLStructure
         }
 
         $dWAxis = new DW_Model_Axis($dwCube);
-        $dWAxis->setLabel($orgaAxis->getLabel());
         $dWAxis->setRef('orga_'.$orgaAxis->getRef());
-
         $this->translateEntity($orgaAxis, $dWAxis);
 
         $associationArray['axes'][$orgaAxis->getRef()] = $dWAxis;
@@ -336,9 +331,7 @@ class Orga_Service_ETLStructure
             }
 
             $dWMember = new DW_Model_Member($dWAxis);
-            $dWMember->setLabel($orgaMember->getLabel());
             $dWMember->setRef('orga_'.$orgaMember->getRef());
-
             $this->translateEntity($orgaMember, $dWMember);
 
             $memberIdentifier = $orgaMember->getAxis()->getRef().'_'.$orgaMember->getCompleteRef();
