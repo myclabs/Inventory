@@ -74,12 +74,12 @@ Feature: orgaMember
       | label  | ref      | broaderpays    |
       | Annecy | annecy   | France         |
   # Modification du membre parent suivant l'axe "Pays" (modification de "France" à "vide")
-    When I set "" for column "Pays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
     Then the row 1 of the "listMemberssite" datagrid should contain:
       | label  | ref      | broaderpays    |
       | Annecy | annecy   |          |
   # Modification du membre parent suivant l'axe "Pays" (modification de "vide" à "France")
-    When I set "France" for column "Pays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "France" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
     Then the row 1 of the "listMemberssite" datagrid should contain:
       | label  | ref      | broaderpays    |
       | Annecy | annecy   | France         |
