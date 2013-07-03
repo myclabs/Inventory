@@ -47,13 +47,13 @@ class Orga_Service_ETLStructure
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
-        foreach (Zend_Registry::get('languages') as $locale) {
-            if (isset($originalTranslations[$locale->getId()]['label'])) {
+        foreach (Zend_Registry::get('languages') as $localeId) {
+            if (isset($originalTranslations[$localeId]['label'])) {
                 $translationRepository->translate(
                     $dWEntity,
                     'label',
-                    $locale->getId(),
-                    $originalTranslations[$locale->getId()]['label']
+                    $localeId,
+                    $originalTranslations[$localeId]['label']
                 );
             }
         }
@@ -146,8 +146,8 @@ class Orga_Service_ETLStructure
             }
 
             $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $inputStatusLabel);
-            $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $finishedLabel);
-            $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $completedLabel);
+            $translationRepository->translate($finishedDWMember, 'label', $localeId, $finishedLabel);
+            $translationRepository->translate($completedDWMember, 'label', $localeId, $completedLabel);
         }
     }
 
