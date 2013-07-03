@@ -37,6 +37,7 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
         $cell = Orga_Model_Cell::load($idCell);
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
+        $this->request->order->addOrder(Orga_Model_Cell::QUERY_MEMBERS_HASHKEY);
         foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
             $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
 
