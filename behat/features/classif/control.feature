@@ -10,7 +10,7 @@ Feature: classifControl
     Then I should see the "coherence" datagrid
     And the row 1 of the "coherence" datagrid should contain:
       | control       | diag         | fail    |
-      | Axe sans membre | NOT OK | gaz, scope, poste_article_75, perimetre_fret, vecteur_energetique  |
+      | Axe sans membre | NOT OK | gaz, poste_article_75, scope, perimetre_fret, vecteur_energetique  |
     And the row 2 of the "coherence" datagrid should contain:
       | control       | diag         | fail    |
       | Membre sans enfant d'un axe non situé à la racine | OK |   |

@@ -93,3 +93,12 @@ Feature: orgaGranularity
     And the row 2 of the "granularity" datagrid should contain:
       | axes          | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
       | Zone, Marque  | Navigable  | Oui     | Oui | Oui   | Oui | Oui            | Oui            | Oui            |
+
+  @javascript
+  Scenario: orgaGranularity3
+    Given I am on "orga/cell/details/idCell/1"
+    And I open tab "Organisation"
+    And I open tab "Niveaux"
+    Then I should see the "granularity" datagrid
+  # Édition des options de la granularité globale dans le datagrid des granularités
+    When I set "Oui" for column "orgaTab" of row 1 of the "granularity" datagrid
