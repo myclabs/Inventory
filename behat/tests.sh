@@ -23,4 +23,4 @@ sleep 2
 #export NODE_PATH=/usr/local/lib/node_modules
 
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml
+php ../vendor/behat/behat/bin/behat --config behat.yml --name "Identification"
