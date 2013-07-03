@@ -125,7 +125,6 @@ Feature: keywordKeyword
   # Modification du libellé d'un mot clé
     When I set "AAA modifié" for column "label" of row 1 of the "keywords" datagrid
     Then the following message is shown and closed: "Modification effectuée."
-    And I wait 10 seconds
   # Modification de l'identifiant d'un mot clé, identifiant vide
     When I set "" for column "ref" of row 1 of the "keywords" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
