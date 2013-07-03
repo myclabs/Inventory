@@ -21,9 +21,9 @@
     $this->headScript()->prependFile('scripts/ui/jquery.confirm.js', 'text/javascript');
     $this->headScript()->appendFile('scripts/bootbox.min.js', 'text/javascript');
     $this->headScript()->appendFile('scripts/ui/feedback-form.js', 'text/javascript');
+    $this->headLink()->prependStylesheet('css/ui/layout.css');
     $this->headLink()->prependStylesheet('bootstrap/css/bootstrap-responsive.css');
     $this->headLink()->prependStylesheet('bootstrap/css/bootstrap.css');
-    $this->headLink()->prependStylesheet('css/ui/layout.css');
     // Ajout des link, et des Styles dynamiques. //  Les scripts sont ajoutés à la fin.
     echo "\n" . $this->headLink()->toString(8) . "\n" . $this->headStyle()->toString(8) . "\n";
     ?>
