@@ -112,6 +112,16 @@ trait DatagridFeatureContext
     }
 
     /**
+     * @Then /^(?:|I )set "(?P<content>[^"]*)" for (?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid with a confirmation message$/
+     */
+    public function setCellContentConfirmationMessage($content, $column, $row, $datagrid)
+    {
+        $this->setCellContent($content, $column, $row, $datagrid);
+
+        return [new Step\Then('the following message is shown and closed: "Modification effectuée."')];
+    }
+
+    /**
      * @param string $name Datagrid name
      * @return string
      */

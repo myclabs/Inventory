@@ -24,7 +24,6 @@ Feature: orgaOrga
     When I open tab "Organisation"
     And I open tab "Configuration"
     Then I should see "Niveau organisationnel des inventaires"
-    And I should see "Aucun niveau organisationnel associé à des saisies n'a été configuré pour le moment."
   # Modification du libellé
     When I fill in "Libellé" with "Organisation test modifiee"
     And I click "Enregistrer"

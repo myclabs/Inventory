@@ -262,7 +262,7 @@ class FeatureContext extends MinkContext
                 $this->getSession());
         }
 
-        array_filter($nodes, function(NodeElement $node) {
+        $nodes = array_filter($nodes, function(NodeElement $node) {
                 return $node->isVisible();
             });
 
