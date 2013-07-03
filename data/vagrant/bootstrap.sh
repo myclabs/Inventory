@@ -32,7 +32,7 @@ apt-get install -y php5 php5-curl php5-cli php5-gd php5-mcrypt php5-dev php5-mys
 
 # Apache
 apt-get install -y apache2
-ln -fs /vagrant/public /var/www/inventory
+ln -s /vagrant/public /var/www/inventory
 cp ${BASEDIR}/php.ini /etc/php5/apache2/
 cp ${BASEDIR}/php.ini /etc/php5/cli/
 cp ${BASEDIR}/apache-000-default /etc/apache2/sites-enabled/000-default
