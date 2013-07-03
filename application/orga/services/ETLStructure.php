@@ -49,7 +49,7 @@ class Orga_Service_ETLStructure
 
         // Pour l'instant seule moyen de traduire la langue par défaut.
         //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même languek
+        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
         $dWEntity->setLabel($originalEntity->getLabel());
         // Traductions
         foreach (Zend_Registry::get('languages') as $localeId) {
@@ -80,6 +80,13 @@ class Orga_Service_ETLStructure
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
         $dWTranslations = $translationRepository->findTranslations($dWEntity);
 
+        // Pour l'instant seule moyen de comparer la langue par défaut.
+        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
+        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
+        if ($originalEntity->getLabel() !== $dWEntity->getLabel()) {
+            return true;
+        }
+        // Traductions
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId])) {
                 $originalLabel = $originalTranslations[$localeId]['label'];
@@ -531,7 +538,6 @@ class Orga_Service_ETLStructure
     protected function isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator)
     {
         if (('classif_'.$classifIndicator->getRef() !== $dWIndicator->getRef())
-            || ($classifIndicator->getLabel() !== $dWIndicator->getLabel())
             || ($classifIndicator->getUnit()->getRef() !== $dWIndicator->getUnit()->getRef())
             || ($classifIndicator->getRatioUnit()->getRef() !== $dWIndicator->getRatioUnit()->getRef())
             || ($this->areTranslationsDifferent($classifIndicator, $dWIndicator))
@@ -602,7 +608,6 @@ class Orga_Service_ETLStructure
     protected function isDWAxisDifferentFromClassif($dWAxis, $classifAxis)
     {
         if (('classif_'.$classifAxis->getRef() !== $dWAxis->getRef())
-            || ($classifAxis->getLabel() !== $dWAxis->getLabel())
             || ((($classifAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($classifAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
                 || ('classif_'.$classifAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
@@ -671,7 +676,6 @@ class Orga_Service_ETLStructure
     protected function isDWMemberDifferentFromClassif($dWMember, $classifMember)
     {
         if (('classif_'.$classifMember->getRef() !== $dWMember->getRef())
-            || ($classifMember->getLabel() !== $dWMember->getLabel())
             || ($this->areTranslationsDifferent($classifMember, $dWMember))
         ) {
             return true;
@@ -712,7 +716,6 @@ class Orga_Service_ETLStructure
         }
 
         if (('orga_'.$orgaAxis->getRef() !== $dWAxis->getRef())
-            || ($orgaAxis->getLabel() !== $dWAxis->getLabel())
             || ((($orgaAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($orgaAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
                 || ('orga_'.$orgaAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
@@ -809,7 +812,6 @@ class Orga_Service_ETLStructure
     protected function isDWMemberDifferentFromOrga($dWMember, $orgaMember, $orgaFilters)
     {
         if (('orga_'.$orgaMember->getRef() !== $dWMember->getRef())
-            || ($orgaMember->getLabel() !== $dWMember->getLabel())
             || ($this->areTranslationsDifferent($dWMember, $orgaMember))
         ) {
             return true;
