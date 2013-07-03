@@ -70,6 +70,19 @@ Feature: orgaMember
     And I select "France" from "listMemberssite_broaderpays_addForm"
     And I click element "#listMemberssite_addPanel button:contains('Valider')"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    And the row 1 of the "listMemberssite" datagrid should contain:
+      | label  | ref      | broaderpays    |
+      | Annecy | annecy   | France         |
+  # Modification du membre parent suivant l'axe "Pays" (modification de "France" à "vide")
+    When I set "" for column "Pays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    Then the row 1 of the "listMemberssite" datagrid should contain:
+      | label  | ref      | broaderpays    |
+      | Annecy | annecy   |          |
+  # Modification du membre parent suivant l'axe "Pays" (modification de "vide" à "France")
+    When I set "France" for column "Pays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    Then the row 1 of the "listMemberssite" datagrid should contain:
+      | label  | ref      | broaderpays    |
+      | Annecy | annecy   | France         |
   # Tentative de suppression du pays "France"
     When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
     Then I should see the popup "Demande de confirmation"

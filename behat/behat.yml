@@ -10,4 +10,3 @@ default:
       selenium2:
         browser: 'firefox'
         wd_host: 'http://localhost:4444/wd/hub'
-      zombie: ~
