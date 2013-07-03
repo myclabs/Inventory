@@ -117,14 +117,12 @@ Feature: keywordKeyword
       | label | ref | nbRelations |
       | AAA   | aaa | 0           |
   # Modification de l'identifiant d'un mot clé, saisie correcte
-    When I set "aaa_modifie" for column "ref" of row 1 of the "keywords" datagrid
-    Then the following message is shown and closed: "Modification effectuée."
+    When I set "aaa_modifie" for column "ref" of row 1 of the "keywords" datagrid with a confirmation message
     And the row 1 of the "keywords" datagrid should contain:
       | label | ref         | nbRelations |
       | AAA   | aaa_modifie | 0           |
   # Modification du libellé d'un mot clé
-    When I set "AAA modifié" for column "label" of row 1 of the "keywords" datagrid
-    Then the following message is shown and closed: "Modification effectuée."
+    When I set "AAA modifié" for column "label" of row 1 of the "keywords" datagrid with a confirmation message
   # Modification de l'identifiant d'un mot clé, identifiant vide
     When I set "" for column "ref" of row 1 of the "keywords" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
