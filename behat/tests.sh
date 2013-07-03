@@ -19,5 +19,8 @@ java -jar selenium-server-standalone.jar > /dev/null 2>&1 &
 
 sleep 2
 
+# Zombie.js
+#export NODE_PATH=/usr/local/lib/node_modules
+
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml --name "Logging in correctly"
+php ../vendor/behat/behat/bin/behat --config behat.yml --name "Identification"
