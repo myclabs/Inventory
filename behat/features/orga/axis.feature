@@ -116,6 +116,7 @@ Feature: orgaAxis
 
   @javascript
   Scenario: orgaAxis3
+  # Scénario qui permet de reconstituer la base "oneOrganizationWithAxes"
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
