@@ -37,10 +37,10 @@ class Orga_Service_ETLStructure
     /**
      * Traduit les labels des objets originaux dans DW.
      *
-     * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      */
-    protected function translateEntity($dWEntity, $originalEntity)
+    protected function translateEntity($originalEntity, $dWEntity)
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
@@ -57,6 +57,44 @@ class Orga_Service_ETLStructure
                 );
             }
         }
+    }
+
+    /**
+     * Vérifie que les traductions sont à jour entre les objets originaux et ceux de DW.
+     *
+     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
+     *
+     * @return bool
+     */
+    protected function areTranslationsDifferent($originalEntity, $dWEntity)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
+        $originalTranslations = $translationRepository->findTranslations($originalEntity);
+        $dWTranslations = $translationRepository->findTranslations($dWEntity);
+
+        foreach (Zend_Registry::get('languages') as $localeId) {
+            if (isset($originalTranslations[$localeId])) {
+                $originalLabel = $originalTranslations[$localeId]['label'];
+            } else {
+                $originalLabel = '';
+            }
+            if (isset($dWTranslations[$localeId])) {
+                $dWLabel = $dWTranslations[$localeId]['label'];
+            } else {
+                $dWLabel = '';
+            }
+            Core_Tools::dump($originalLabel);
+            Core_Tools::dump($dWLabel);
+
+            if($originalLabel != $dWLabel) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -187,10 +225,11 @@ class Orga_Service_ETLStructure
     {
         $dWIndicator = new DW_Model_Indicator($dWCube);
         $dWIndicator->setRef('classif_'.$classifIndicator->getRef());
+        $dWIndicator->setLabel($classifIndicator->getLabel());
         $dWIndicator->setUnit($classifIndicator->getUnit());
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
 
-        $this->translateEntity($dWIndicator, $classifIndicator);
+        $this->translateEntity($classifIndicator, $dWIndicator);
     }
 
     /**
@@ -206,7 +245,7 @@ class Orga_Service_ETLStructure
         $dWAxis->setLabel($classifAxis->getLabel());
         $dWAxis->setRef('classif_'.$classifAxis->getRef());
 
-        $this->translateEntity($dWAxis, $classifAxis);
+        $this->translateEntity($classifAxis, $dWAxis);
 
         $associationArray['axes'][$classifAxis->getRef()] = $dWAxis;
         $narrowerAxis = $classifAxis->getDirectNarrower();
@@ -220,7 +259,7 @@ class Orga_Service_ETLStructure
             $dWMember->setRef('classif_'.$classifMember->getRef());
             $dWMember->setPosition($classifMember->getPosition());
 
-            $this->translateEntity($dWMember, $classifMember);
+            $this->translateEntity($classifMember, $dWMember);
 
             $memberIdentifier = $classifMember->getAxis()->getRef().'_'.$classifMember->getRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
@@ -274,7 +313,7 @@ class Orga_Service_ETLStructure
         $dWAxis->setLabel($orgaAxis->getLabel());
         $dWAxis->setRef('orga_'.$orgaAxis->getRef());
 
-        $this->translateEntity($dWAxis, $orgaAxis);
+        $this->translateEntity($orgaAxis, $dWAxis);
 
         $associationArray['axes'][$orgaAxis->getRef()] = $dWAxis;
         $narrowerAxis = $orgaAxis->getDirectNarrower();
@@ -300,7 +339,7 @@ class Orga_Service_ETLStructure
             $dWMember->setLabel($orgaMember->getLabel());
             $dWMember->setRef('orga_'.$orgaMember->getRef());
 
-            $this->translateEntity($dWMember, $orgaMember);
+            $this->translateEntity($orgaMember, $dWMember);
 
             $memberIdentifier = $orgaMember->getAxis()->getRef().'_'.$orgaMember->getCompleteRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
@@ -502,6 +541,7 @@ class Orga_Service_ETLStructure
             || ($classifIndicator->getLabel() !== $dWIndicator->getLabel())
             || ($classifIndicator->getUnit()->getRef() !== $dWIndicator->getUnit()->getRef())
             || ($classifIndicator->getRatioUnit()->getRef() !== $dWIndicator->getRatioUnit()->getRef())
+            || ($this->areTranslationsDifferent($classifIndicator, $dWIndicator))
         ) {
             return true;
         }
@@ -573,6 +613,7 @@ class Orga_Service_ETLStructure
             || ((($classifAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($classifAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
                 || ('classif_'.$classifAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
+            || ($this->areTranslationsDifferent($classifAxis, $dWAxis))
             || ($this->areDWMembersDifferentFromClassif($dWAxis, $classifAxis))
         ) {
             return true;
@@ -638,6 +679,7 @@ class Orga_Service_ETLStructure
     {
         if (('classif_'.$classifMember->getRef() !== $dWMember->getRef())
             || ($classifMember->getLabel() !== $dWMember->getLabel())
+            || ($this->areTranslationsDifferent($classifMember, $dWMember))
         ) {
             return true;
         } else {
@@ -681,6 +723,7 @@ class Orga_Service_ETLStructure
             || ((($orgaAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($orgaAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
                 || ('orga_'.$orgaAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
+            || ($this->areTranslationsDifferent($orgaAxis, $dWAxis))
             || ($this->areDWMembersDifferentFromOrga($dWAxis, $orgaAxis, $orgaFilters))
         ) {
             return true;
@@ -774,6 +817,7 @@ class Orga_Service_ETLStructure
     {
         if (('orga_'.$orgaMember->getRef() !== $dWMember->getRef())
             || ($orgaMember->getLabel() !== $dWMember->getLabel())
+            || ($this->areTranslationsDifferent($dWMember, $orgaMember))
         ) {
             return true;
         } else {
