@@ -49,7 +49,7 @@
 </fieldset>
 
 <fieldset class="wrapper">
-    <legend style="cursor:default"><?=__('Orga', 'configuration', 'inputGranularities')?></legend>
+    <legend style="cursor:default"><?=__('Orga', 'inputGranularities', 'inputGranularities')?></legend>
     <div>
         <?php
         $colListGranularities = array();
@@ -59,17 +59,18 @@
 
         $datagridInputGranularities = new UI_Datagrid('inputGranularities', 'datagrid_organization_inputgranularities', 'orga');
 
-        $columnInputConfigGranularity = new UI_Datagrid_Col_List('inputConfigGranularity', __('Orga', 'configuration', 'inputConfigGranularity'));
-        $columnInputConfigGranularity->list = $colListGranularities;
-        $datagridInputGranularities->addCol($columnInputConfigGranularity);
-
-        $columnInputGranularity = new UI_Datagrid_Col_List('inputGranularity', __('Orga', 'configuration', 'inputGranularity'));
+        $columnInputGranularity = new UI_Datagrid_Col_List('inputGranularity', __('Orga', 'inputGranularities', 'inputGranularity'));
         $columnInputGranularity->list = $colListGranularities;
         $datagridInputGranularities->addCol($columnInputGranularity);
+
+        $columnInputConfigGranularity = new UI_Datagrid_Col_List('inputConfigGranularity', __('Orga', 'inputGranularities', 'inputConfigGranularity'));
+        $columnInputConfigGranularity->list = $colListGranularities;
+        $datagridInputGranularities->addCol($columnInputConfigGranularity);
 
         $datagridInputGranularities->addParam('idOrganization', $this->idOrganization);
         $datagridInputGranularities->pagination = false;
         $datagridInputGranularities->addElements = true;
+        $datagridInputGranularities->addPanelTitle = __('Orga', 'inputGranularities', 'addPanelTitle');
         $datagridInputGranularities->deleteElements = true;
 
         if ($this->display) {
