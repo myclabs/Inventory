@@ -11,8 +11,8 @@ killall() {
 }
 
 # Start virtual display
-Xvfb :99 -ac > /dev/null 2>&1 &
-export DISPLAY=:99
+#Xvfb :99 -ac > /dev/null 2>&1 &
+#export DISPLAY=:99
 
 # Start selenium server
 java -jar selenium-server-standalone.jar > /dev/null 2>&1 &
