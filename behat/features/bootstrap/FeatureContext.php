@@ -28,6 +28,14 @@ class FeatureContext extends MinkContext
     use PopupFeatureContext;
 
     /**
+     * @BeforeScenario
+     */
+    public function setLanguage()
+    {
+//        $this->getSession()->setRequestHeader('Accept-Language', 'fr');
+    }
+
+    /**
      * @Given /^(?:|I )am logged in$/
      */
     public function assertLoggedIn()
@@ -63,8 +71,8 @@ class FeatureContext extends MinkContext
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
         $maskOK = '$("#loadingMask:visible").length == 0';
-        // Timeout de 5 secondes
-        $this->getSession()->wait(5000, "($jqueryOK) && ($datagridOK) && ($maskOK)");
+        // Timeout de 10 secondes
+        $this->getSession()->wait(10000, "($jqueryOK) && ($datagridOK) && ($maskOK)");
 
         // Animations JS
         $popupOK = '$(".modal-backdrop:visible").length == 0';
@@ -278,5 +286,24 @@ class FeatureContext extends MinkContext
         }
 
         return current($nodes);
+    }
+
+    /**
+     * Finds elements with specified selector.
+     *
+     * @param string $cssSelector
+     *
+     * @return NodeElement[]
+     */
+    protected function findAllElements($cssSelector)
+    {
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', $cssSelector);
+
+        $nodes = array_filter($nodes, function(NodeElement $node) {
+                return $node->isVisible();
+            });
+
+        return $nodes;
     }
 }
