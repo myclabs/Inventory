@@ -87,7 +87,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                         __('User', 'email', 'subjectAccessRightsChange'),
                         __('Orga', 'email', 'userRoleAdded', array(
                             'CELL' => $cell->getLabelExtended(),
-                            'ROLE' => $userRole->getName()
+                            'ROLE' => __('Orga', 'role', $userRole->getName())
                         ))
                     );
                     $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
@@ -97,7 +97,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                     $userEmail,
                     __('Orga', 'email', 'userRoleGivenAtCreation', array(
                         'CELL' => $cell->getLabelExtended(),
-                        'ROLE' => $userRole->getName()
+                        'ROLE' => __('Orga', 'role', $userRole->getName())
                     ))
                 );
                 $this->message = __('Orga', 'role', 'userCreatedFromRessource');
@@ -134,7 +134,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             __('User', 'email', 'subjectAccessRightsChange'),
             __('Orga', 'email', 'userRoleRemoved', array(
                 'CELL' => $cell->getLabelExtended(),
-                'ROLE' => $userRole->getName()
+                'ROLE' => __('Orga', 'role', $userRole->getName())
             ))
         );
 
