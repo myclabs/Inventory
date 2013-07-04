@@ -39,7 +39,7 @@ Feature: orgaOrga
     And the row 1 of the "organizations" datagrid should contain:
       | label      | details   | delete |
       | Organisation test modifiee  | Détails   | Supprimer  |
-  # Suppression d'une organisation (vide)
+  # Suppression d'une organisation (organisation vide)
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
