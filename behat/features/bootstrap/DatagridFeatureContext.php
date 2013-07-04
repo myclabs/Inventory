@@ -6,25 +6,11 @@
 use Behat\Behat\Context\Step;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Session;
 use Behat\Mink\WebAssert;
 
 trait DatagridFeatureContext
 {
-    /**
-     * @param string|null $name
-     * @return WebAssert
-     */
-    public abstract function assertSession($name = null);
-    public abstract function assertElementContainsText($element, $text);
-    public abstract function waitForPageToFinishLoading();
-    public abstract function clickElement($selector);
-    public abstract function fillField($field, $value);
-    /**
-     * @param string $cssSelector
-     * @return NodeElement
-     */
-    protected abstract function findElement($cssSelector);
-
     /**
      * @Then /^(?:|I )should see the "(?P<datagrid>[^"]*)" datagrid$/
      */
@@ -100,9 +86,22 @@ trait DatagridFeatureContext
         $cellNode = $this->findElement($cellSelector);
         $cellNode->doubleClick();
 
-        // Fill in field
-        $inputNode = $this->findElement('.yui-dt-editor input');
-        $inputNode->setValue($content);
+        // Text field
+        $inputNodes = $this->findAllElements('.yui-dt-editor input');
+        if (count($inputNodes) === 1) {
+            $inputNode = current($inputNodes);
+            $inputNode->setValue($content);
+        } else {
+            // Radio
+            $inputNodes = $this->findAllElements('.yui-dt-editor input[type="radio"]');
+            if (count($inputNodes) > 0) {
+                $js = <<<JS
+var inputId = $('.yui-dt-editor:visible label:contains("$content")').attr('for');
+$("#" + inputId).prop('checked', true);
+JS;
+                $this->getSession()->executeScript($js);
+            }
+        }
 
         // Submit
         $submitNode = $this->findElement('.yui-dt-editor .yui-dt-button .yui-dt-default');
@@ -129,4 +128,29 @@ trait DatagridFeatureContext
     {
         return "#{$name}_container.yui-dt";
     }
+
+    /**
+     * @param string|null $name
+     * @return WebAssert
+     */
+    public abstract function assertSession($name = null);
+    public abstract function assertElementContainsText($element, $text);
+    public abstract function waitForPageToFinishLoading();
+    public abstract function clickElement($selector);
+    public abstract function fillField($field, $value);
+    /**
+     * @param string $cssSelector
+     * @return NodeElement
+     */
+    protected abstract function findElement($cssSelector);
+    /**
+     * @param string $cssSelector
+     * @return NodeElement[]
+     */
+    protected abstract function findAllElements($cssSelector);
+    /**
+     * @param string|null $name
+     * @return Session
+     */
+    public abstract function getSession($name = null);
 }

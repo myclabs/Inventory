@@ -287,4 +287,23 @@ class FeatureContext extends MinkContext
 
         return current($nodes);
     }
+
+    /**
+     * Finds elements with specified selector.
+     *
+     * @param string $cssSelector
+     *
+     * @return NodeElement[]
+     */
+    protected function findAllElements($cssSelector)
+    {
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', $cssSelector);
+
+        $nodes = array_filter($nodes, function(NodeElement $node) {
+                return $node->isVisible();
+            });
+
+        return $nodes;
+    }
 }
