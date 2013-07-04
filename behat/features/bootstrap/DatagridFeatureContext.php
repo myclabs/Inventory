@@ -85,26 +85,38 @@ trait DatagridFeatureContext
         // Double-click
         $cellNode = $this->findElement($cellSelector);
         $cellNode->doubleClick();
+        $this->waitForPageToFinishLoading();
+
+        $popupSelector = '.yui-dt-editor:not([style*="display: none"])';
 
         // Text field
-        $inputNodes = $this->findAllElements('.yui-dt-editor input');
+        $inputNodes = $this->findAllElements("$popupSelector input");
         if (count($inputNodes) === 1) {
             $inputNode = current($inputNodes);
             $inputNode->setValue($content);
         } else {
             // Radio
-            $inputNodes = $this->findAllElements('.yui-dt-editor input[type="radio"]');
+            $inputNodes = $this->findAllElements($popupSelector . ' input[type="radio"]');
             if (count($inputNodes) > 0) {
                 $js = <<<JS
 var inputId = $('.yui-dt-editor:visible label:contains("$content")').attr('for');
 $("#" + inputId).prop('checked', true);
 JS;
                 $this->getSession()->executeScript($js);
+            } else {
+                // Select2
+                $inputNodes = $this->findAllElements("$popupSelector .select2-container");
+                if (count($inputNodes) === 1) {
+                    $inputNode = $this->findElement("$popupSelector input.select2-offscreen:not(.select2-focusser)");
+                    $inputNode->setValue($content);
+                } else {
+                    throw new \Exception("Unable to set cell value in datagrid");
+                }
             }
         }
 
         // Submit
-        $submitNode = $this->findElement('.yui-dt-editor .yui-dt-button .yui-dt-default');
+        $submitNode = $this->findElement("$popupSelector .yui-dt-button .yui-dt-default");
         $submitNode->click();
 
         $this->waitForPageToFinishLoading();
