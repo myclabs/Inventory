@@ -44,3 +44,22 @@ Feature: orgaOrga
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
   # Pour l'instant la suppression ne fonctionne pas
+
+  @javascript
+  Scenario: orgaOrga2
+  # Ajout d'une organisation
+    When I am on "orga/organization/manage"
+    Then I should see the "organizations" datagrid
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'une organisation"
+    When I fill in "Libellé" with "Organisation test"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+  # Accès au sous-onglet "Granularités"
+    When I click "Détails"
+    And I open tab "Organisation"
+    And I open tab "Niveaux"
+    Then I should see the "granularity" datagrid
+    And the row 1 of the "granularity" datagrid should contain:
+      | axes  | navigable  | orgaTab | aCL | aFTab | dW  |
+      |       | Navigable  | Oui     | Oui | Oui   | Oui |
