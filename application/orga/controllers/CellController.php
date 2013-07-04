@@ -71,7 +71,7 @@ class Orga_CellController extends Core_Controller_Ajax
             User_Model_Action_Default::EDIT(),
             $cell
         );
-        if ($isUserAllowedToEditOrganization || ($isUserAllowedToEditCell && $granularity->getCellsWithOrgaTab())) {
+        if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && $granularity->getCellsWithOrgaTab()) {
             $organizationTab = new UI_Tab('orga');
             $organizationTab->label = __('Orga', 'organization', 'organization');
             $organizationSubTabs = array('organization', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
@@ -98,7 +98,7 @@ class Orga_CellController extends Core_Controller_Ajax
                 }
             }
         }
-        if ($isUserAllowedToEditOrganization || $isUserAllowedToAllowAuthorizations) {
+        if ($isUserAllowedToAllowAuthorizations) {
             $aclsTab = new UI_Tab('acls');
             if ($tab === 'acls') {
                 $aclsTab->active = true;
