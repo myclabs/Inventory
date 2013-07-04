@@ -6,30 +6,30 @@
 trait DatabaseFeatureContext
 {
     /**
-     * @BeforeFeature @dbEmpty
+     * @BeforeScenario @dbEmpty
      */
-    public static function loadEmptyDatabase()
+    public function loadEmptyDatabase()
     {
         self::loadFileToDatabase('base.sql');
     }
     /**
-     * @BeforeFeature @dbOneOrganization
+     * @BeforeScenario @dbOneOrganization
      */
-    public static function loadOneOrganizationDatabase()
+    public function loadOneOrganizationDatabase()
     {
         self::loadFileToDatabase('oneOrganization.sql');
     }
     /**
-     * @BeforeFeature @dbOneOrganizationWithAxes
+     * @BeforeScenario @dbOneOrganizationWithAxes
      */
-    public static function loadOneOrganizationWithAxesDatabase()
+    public function loadOneOrganizationWithAxesDatabase()
     {
         self::loadFileToDatabase('oneOrganizationWithAxes.sql');
     }
     /**
-     * @BeforeFeature @dbWithClassifAxesIndicatorsContexts
+     * @BeforeScenario @dbWithClassifAxesIndicatorsContexts
      */
-    public static function loadWithClassifAxesIndicatorsContextsDatabase()
+    public function loadWithClassifAxesIndicatorsContextsDatabase()
     {
         self::loadFileToDatabase('withClassifAxesIndicatorsContexts.sql');
     }
