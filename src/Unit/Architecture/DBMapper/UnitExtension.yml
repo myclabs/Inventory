@@ -27,4 +27,4 @@ Unit\Domain\UnitExtension:
       gedmo:
         - translatable
     multiplier:
-      type: integer
+      type: float

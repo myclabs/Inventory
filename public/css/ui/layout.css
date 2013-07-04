@@ -1,5 +1,7 @@
 /* On décale le contenu de la page pour qu'elle soit en dessous du menu */
-body { padding-top: 40px; padding-bottom: 40px; }
+@media (min-width: 1200px) {
+    body { padding-top: 40px; padding-bottom: 40px; }
+}
 
 /* On supprime l'espace en dessous des bandeaux d'alerte pour qu'ils soient collés les uns en dessous des autres */
 #messageZone { left: 0; margin-bottom: 0; position: fixed; right: 0; z-index: 50; top: 40px; }
@@ -30,11 +32,8 @@ footer input, footer label {
 footer ul { display: inline-block; }
 footer ul li { float: left; margin-right: 30px; }
 footer ul li:last-child { margin-right: 0px; }
-footer .feedback-form {
-    text-align: left;
-    width: 500px;
-    margin: auto;
-}
+footer .feedback-form { width: 500px; margin: auto; }
+footer .feedback-form div { text-align: left; }
 
 /* Fil d'ariane */
 .breadcrumb { margin-bottom: 0px; }
@@ -46,6 +45,7 @@ footer .feedback-form {
 .wrapper legend { cursor: pointer; border-style: solid none none; border-width: 1px 0 0; border-color: #E5E5E5; margin-bottom: 18px; }
 /* Espacement des wrapper successifs */
 .wrapper + .wrapper { margin-top : 15px; }
+.wrapper + script + .wrapper { margin-top : 15px; }
 .wrapper .wrapper { margin-left: 15px; }
 /*fieldset fieldset { margin-left: 15px; }*/
 /** Collapse dans collapse */

@@ -26,12 +26,12 @@ class Orga_Datagrid_ConsistencyController extends UI_Controller_Datagrid
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewProject")
+     * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
-        $project = Orga_Model_Project::load($this->getParam('idProject'));
-        $consistency = Orga_ProjectConsistency::getInstance()->check($project);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $consistency = Orga_OrganizationConsistency::getInstance()->check($organization);
 
         $data['index'] = 1;
         $data['diagnostic'] = $consistency['okAxis'];

@@ -39,9 +39,7 @@ class AF_Edit_ActionsController extends Core_Controller
         switch (get_class($action)) {
             case 'AF_Model_Action_SetValue_Numeric':
                 /** @var $action AF_Model_Action_SetValue_Numeric */
-                $calcValue = new Calc_Value();
-                $calcValue->digitalValue = $this->getParam('numericValue');
-                $calcValue->relativeUncertainty = $this->getParam('numericUncertainty');
+                $calcValue = new Calc_Value($this->getParam('numericValue'), $this->getParam('numericUncertainty'));
                 $action->setValue($calcValue);
                 break;
             case 'AF_Model_Action_SetValue_Checkbox':

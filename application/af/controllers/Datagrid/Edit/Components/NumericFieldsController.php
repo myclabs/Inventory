@@ -43,8 +43,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['required'] = $numericField->getRequired();
             $data['unit'] = $numericField->getUnit()->getRef();
             $data['withUncertainty'] = $numericField->getWithUncertainty();
-            $data['digitalValue'] = $numericField->getDefaultValue()->digitalValue;
-            $data['relativeUncertainty'] = $numericField->getDefaultValue()->relativeUncertainty;
+            $data['digitalValue'] = $numericField->getDefaultValue()->getDigitalValue();
+            $data['relativeUncertainty'] = $numericField->getDefaultValue()->getRelativeUncertainty();
             $data['defaultValueReminder'] = $numericField->getDefaultValueReminder();
             $this->addLine($data);
         }
@@ -94,10 +94,11 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $numericField->setWithUncertainty($this->getAddElementValue('withUncertainty'));
             /** @noinspection PhpUndefinedVariableInspection */
             $numericField->setUnit($unit);
-            $value = new Calc_Value();
-            $value->digitalValue = $this->getAddElementValue('digitalValue');
-            $value->relativeUncertainty = $this->getAddElementValue('relativeUncertainty');
-            $numericField->setDefaultValue($value);
+            $defaultValue = new Calc_Value(
+                $this->getAddElementValue('digitalValue'),
+                $this->getAddElementValue('relativeUncertainty')
+            );
+            $numericField->setDefaultValue($defaultValue);
             $numericField->setDefaultValueReminder($this->getAddElementValue('defaultValueReminder'));
             $af->getRootGroup()->addSubComponent($numericField);
             $af->addComponent($numericField);
@@ -171,16 +172,14 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 $this->data = $numericField->getWithUncertainty();
                 break;
             case 'digitalValue':
-                $value = clone $numericField->getDefaultValue();
-                $value->digitalValue = $newValue;
+                $value = $numericField->getDefaultValue()->copyWithNewValue($newValue);
                 $numericField->setDefaultValue($value);
-                $this->data = $numericField->getDefaultValue()->digitalValue;
+                $this->data = $numericField->getDefaultValue()->getDigitalValue();
                 break;
             case 'relativeUncertainty':
-                $value = clone $numericField->getDefaultValue();
-                $value->relativeUncertainty = $newValue;
+                $value = $numericField->getDefaultValue()->copyWithNewUncertainty($newValue);
                 $numericField->setDefaultValue($value);
-                $this->data = $numericField->getDefaultValue()->relativeUncertainty;
+                $this->data = $numericField->getDefaultValue()->getRelativeUncertainty();
                 break;
             case 'defaultValueReminder':
                 $numericField->setDefaultValueReminder($newValue);

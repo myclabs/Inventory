@@ -80,14 +80,19 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
                 $contextIndicator = new Classif_Model_ContextIndicator();
                 $contextIndicator->setContext($context);
                 $contextIndicator->setIndicator($indicator);
-                $contextIndicator->save();
-                $this->message = __('UI', 'message', 'added');
 
-                if ($this->getAddElementValue('axes') != null) {
-                    foreach (explode(',', $this->getAddElementValue('axes')) as $refAxis) {
-                        $axis = Classif_Model_Axis::loadByRef($refAxis);
-                        $contextIndicator->addAxis($axis);
+                try {
+                    if ($this->getAddElementValue('axes') != null) {
+                        foreach (explode(',', $this->getAddElementValue('axes')) as $refAxis) {
+                            $axis = Classif_Model_Axis::loadByRef($refAxis);
+                            $contextIndicator->addAxis($axis);
+                        }
                     }
+
+                    $contextIndicator->save();
+                    $this->message = __('UI', 'message', 'added');
+                } catch (Core_Exception_InvalidArgument $e) {
+                    $this->setAddElementErrorMessage('axes', __('Classif', 'contextIndicator', 'AxesMustBeTransverse'));
                 }
             }
         }
@@ -149,7 +154,11 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
                 }
                 foreach ($listRefAxes as $refAxis) {
                     $axis = Classif_Model_Axis::loadByRef($refAxis);
-                    $contextIndicator->addAxis($axis);
+                    try {
+                        $contextIndicator->addAxis($axis);
+                    } catch (Core_Exception_InvalidArgument $e) {
+                        throw new Core_Exception_User('Classif', 'contextIndicator', 'AxesMustBeTransverse');
+                    }
                 }
                 break;
             default:

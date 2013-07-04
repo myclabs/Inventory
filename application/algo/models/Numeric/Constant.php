@@ -48,16 +48,16 @@ class Algo_Model_Numeric_Constant extends Algo_Model_Numeric
         $errors = parent::checkConfig();
         // On vérifie que l'unité associée à cet algorithme existe bien.
         try {
-            $this->unitValue->unit->getNormalizedUnit();
+            $this->unitValue->getUnit()->getNormalizedUnit();
         } catch (Core_Exception_NotFound $e) {
             $configError = new Algo_ConfigError();
             $configError->isFatal(true);
-            $configError->setMessage("L'unité '" . $this->unitValue->unit->getRef() . "' associée à l'algorithme '"
+            $configError->setMessage("L'unité '" . $this->unitValue->getUnit()->getRef() . "' associée à l'algorithme '"
                                          . $this->ref . "', n'existe pas.");
             $errors[] = $configError;
         }
         // On vérifie que la valeur associée à cet algorithme existe bien
-        if (!isset($this->unitValue->value)) {
+        if (!is_numeric($this->unitValue->getDigitalValue())) {
             $configError = new Algo_ConfigError();
             $configError->isFatal(true);
             $configError->setMessage("Aucune valeur n'est associée à l'algorithme '" . $this->ref);
@@ -74,7 +74,7 @@ class Algo_Model_Numeric_Constant extends Algo_Model_Numeric
      */
     public function getUnit()
     {
-        return $this->unitValue->unit;
+        return $this->unitValue->getUnit();
     }
 
     /**

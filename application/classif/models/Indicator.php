@@ -7,6 +7,8 @@
  * @package    Classif
  * @subpackage Model
  */
+
+use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
@@ -162,10 +164,17 @@ class Classif_Model_Indicator extends Core_Model_Entity
      * Modifie l'unit de l'indicateur.
      *
      * @param UnitAPI $unit
+     * @throws IncompatibleUnitsException
      */
-    public function setUnit($unit)
+    public function setUnit(UnitAPI $unit)
     {
-        $this->unit = $unit;
+        if ($this->ratioUnit != null) {
+            if (!$this->getRatioUnit()->isEquivalent($unit)) {
+                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
+            }
+        }
+
+        $this->unit = (string) $unit;
     }
 
     /**
@@ -182,10 +191,17 @@ class Classif_Model_Indicator extends Core_Model_Entity
      * Modifie l'unité de ratio de l'indicateur.
      *
      * @param UnitAPI $ratioUnit
+     * @throws IncompatibleUnitsException
      */
-    public function setRatioUnit($ratioUnit)
+    public function setRatioUnit(UnitAPI $ratioUnit)
     {
-        $this->ratioUnit = $ratioUnit;
+        if ($this->unit != null) {
+            if (!$this->getUnit()->isEquivalent($ratioUnit)) {
+                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
+            }
+        }
+
+        $this->ratioUnit = (string) $ratioUnit;
     }
 
     /**

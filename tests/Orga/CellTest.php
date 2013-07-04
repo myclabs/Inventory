@@ -7,7 +7,7 @@
  * @subpackage Test
  */
 
-//require_once dirname(__FILE__).'/ProjectTest.php';
+//require_once dirname(__FILE__).'/OrganizationTest.php';
 
 /**
  * Creation de la suite de test
@@ -31,16 +31,16 @@ class Orga_Test_CellTest
 
 
 /**
- * Tests de la classe Project
+ * Tests de la classe Organization
  * @package Orga
  * @subpackage Test
  */
 class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Orga_Model_Project
+     * @var Orga_Model_Organization
      */
-    protected $project;
+    protected $organization;
 
     /**
      * @var Orga_Model_Axis
@@ -213,11 +213,11 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Project en base, sinon suppression !
-        if (Orga_Model_Project::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Project restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Project::loadList() as $project) {
-                $project->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -231,32 +231,32 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $this->project = Orga_Test_ProjectTest::generateObject();
+        $this->organization = Orga_Test_OrganizationTest::generateObject();
 
-        $this->axis1 = new Orga_Model_Axis($this->project);
+        $this->axis1 = new Orga_Model_Axis($this->organization);
         $this->axis1->setRef('RefCell1');
         $this->axis1->setLabel('LabelCell1');
 
-        $this->axis11 = new Orga_Model_Axis($this->project);
+        $this->axis11 = new Orga_Model_Axis($this->organization);
         $this->axis11->setRef('RefCell11');
         $this->axis11->setLabel('LabelCell11');
         $this->axis11->setDirectNarrower($this->axis1);
 
-        $this->axis111 = new Orga_Model_Axis($this->project);
+        $this->axis111 = new Orga_Model_Axis($this->organization);
         $this->axis111->setRef('RefCell111');
         $this->axis111->setLabel('LabelCell111');
         $this->axis111->setDirectNarrower($this->axis11);
 
-        $this->axis12 = new Orga_Model_Axis($this->project);
+        $this->axis12 = new Orga_Model_Axis($this->organization);
         $this->axis12->setRef('RefCell12');
         $this->axis12->setLabel('LabelCell12');
         $this->axis12->setDirectNarrower($this->axis1);
 
-        $this->axis2 = new Orga_Model_Axis($this->project);
+        $this->axis2 = new Orga_Model_Axis($this->organization);
         $this->axis2->setRef('RefCell2');
         $this->axis2->setLabel('LabelCell2');
 
-        $this->axis21 = new Orga_Model_Axis($this->project);
+        $this->axis21 = new Orga_Model_Axis($this->organization);
         $this->axis21->setRef('RefCell21');
         $this->axis21->setLabel('LabelCell21');
         $this->axis21->setDirectNarrower($this->axis2);
@@ -328,19 +328,19 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
         $this->member4A2->setLabel('LabelCell4A2');
         $this->member4A2->addDirectParent($this->member2A21);
 
-        $this->granularity0 = new Orga_Model_Granularity($this->project);
+        $this->granularity0 = new Orga_Model_Granularity($this->organization);
 
-        $this->granularity1 = new Orga_Model_Granularity($this->project, [$this->axis111, $this->axis21]);
+        $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111, $this->axis21]);
 
-        $this->granularity2 = new Orga_Model_Granularity($this->project, [$this->axis11, $this->axis21]);
+        $this->granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis21]);
 
-        $this->granularity3 = new Orga_Model_Granularity($this->project, [$this->axis12, $this->axis21]);
+        $this->granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis12, $this->axis21]);
 
-        $this->granularity4 = new Orga_Model_Granularity($this->project, [$this->axis11, $this->axis2]);
+        $this->granularity4 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis2]);
 
-        $this->granularity5 = new Orga_Model_Granularity($this->project, [$this->axis1, $this->axis2]);
+        $this->granularity5 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
 
-        $this->project->save();
+        $this->organization->save();
         $entityManagers['default']->flush();
     }
 
@@ -451,7 +451,7 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
 
         $query = new Core_Model_Query();
         $query->filter->condition = Core_Model_Filter::CONDITION_OR;
-        foreach ($this->project->getGranularities() as $granularity) {
+        foreach ($this->organization->getGranularities() as $granularity) {
             $query->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
         }
         $this->assertEquals(33, Orga_Model_Cell::countTotal($query));
@@ -804,12 +804,13 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
         $this->assertTrue($cell8G5->isRelevant());
     }
 
-    /**
-     * Fonction appelee apres tous chaques test
-     */
     protected function tearDown()
     {
-        Orga_Test_ProjectTest::deleteObject($this->project);
+        try {
+            Orga_Test_OrganizationTest::deleteObject($this->organization);
+        } catch (Exception $e) {
+            $this->fail($e);
+        }
     }
 
     /**
@@ -853,11 +854,11 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Project en base, sinon suppression !
-        if (Orga_Model_Project::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Project restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Project::loadList() as $project) {
-                $project->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();

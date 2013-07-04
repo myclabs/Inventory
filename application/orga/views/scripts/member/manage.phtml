@@ -3,8 +3,10 @@
  * @author valentin.claras
  * @author sidoine.tardieu
  * @package Orga
- * Datagrids des membres d'un project.
+ * Datagrids des membres d'un organization.
  */
+
+$resetSelectParentFieldScript = '';
 foreach ($this->axes as $axis) {
     /** @var $axis Orga_Model_Axis */
 
@@ -29,17 +31,18 @@ foreach ($this->axes as $axis) {
         $columnBroader->editable = true;
         $columnBroader->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
         $datagridAxisMembers->addCol($columnBroader);
+
+        $resetSelectParentFieldScript .= '$(\'#listMembers'.$axis->getRef().'_addPanel\').on(\'hide\', function() {';
+        $resetSelectParentFieldScript .= '$(\'#listMembers'.$axis->getRef().'_broader'.$broaderAxis->getRef().'_addForm\').select2(\'data\', {id: \'\', text: \'\'});';
+        $resetSelectParentFieldScript .= '});';
     }
 
     $datagridAxisMembers->deleteElements = true;
     if ($this->idCell !== null) {
         $datagridAxisMembers->addParam('idCell', $this->idCell);
     }
-    $datagridAxisMembers->addParam('idProject', $this->idProject);
+    $datagridAxisMembers->addParam('idOrganization', $this->idOrganization);
     $datagridAxisMembers->addParam('refAxis', $axis->getRef());
-    if (!empty($this->idCell)) {
-        $datagridAxisMembers->pagination = false;
-    }
     $datagridAxisMembers->initialLoading = false;
     $datagridAxisMembers->addElements = true;
     $datagridAxisMembers->addPanelTitle = __('Orga', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
@@ -58,5 +61,9 @@ foreach ($this->axes as $axis) {
     } else {
         UI_Datagrid::addHeader($datagridAxisMembers);
         $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+    }
+
+    if ($resetSelectParentFieldScript !== '') {
+        echo '<script type="text/javascript">'.$resetSelectParentFieldScript.'</script>';
     }
 }

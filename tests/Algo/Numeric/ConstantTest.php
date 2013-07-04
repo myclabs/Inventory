@@ -5,6 +5,7 @@
  * @author  yoann.croizer
  * @package Algo
  */
+
 use Unit\UnitAPI;
 
 /**
@@ -64,17 +65,7 @@ class Numeric_ConstantTest
      */
     public static function generateUnitValue()
     {
-        $value = new Calc_Value();
-        $value->digitalValue = 2;
-        $value->relativeUncertainty = 0.1;
-
-        $unit = new UnitAPI('g');
-
-        $unitValue = new Calc_UnitValue();
-        $unitValue->value = $value;
-        $unitValue->unit = $unit;
-
-        return $unitValue;
+        return new Calc_UnitValue(new UnitAPI('g'), 2, 0.1);
     }
 
     /**
@@ -170,7 +161,7 @@ class Numeric_ConstantSetUpTest extends Core_Test_TestCase
         $o->save();
         $this->entityManager->flush();
 
-        $this->assertSame($unitValue->unit, $o->getUnit());
+        $this->assertSame($unitValue->getUnit(), $o->getUnit());
 
         return $o;
     }
@@ -260,7 +251,7 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
         $inputSet = $this->getMockForAbstractClass('Algo_Model_InputSet');
         $result = $numericConstant->execute($inputSet);
         $this->assertTrue($result instanceof Calc_UnitValue);
-        $this->assertTrue($result->unit instanceof UnitAPI);
+        $this->assertTrue($result->unit instanceof Unit_API);
         $this->assertTrue($result->value instanceof Calc_Value);
     }
 

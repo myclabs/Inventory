@@ -5,6 +5,7 @@
  * @author yoann.croizer
  * @package Calc
  */
+
 use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
@@ -48,8 +49,6 @@ class Calc_Test_Calculation_UnitSetUp extends PHPUnit_Framework_TestCase
     {
         $o = new Calc_UnitValue();
         $this->assertInstanceOf('Calc_UnitValue', $o);
-        $this->assertInstanceOf('Calc_Value', $o->value);
-        $this->assertInstanceOf('Unit\UnitAPI', $o->unit);
     }
 
 }
@@ -152,20 +151,6 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         } catch (Core_Exception_InvalidArgument $e) {
             $this->assertEquals('Unknow operation', $e->getMessage());
         }
-    }
-
-    /**
-     * fonction apellée après chaque méthode de test
-     */
-    function tearDown()
-    {
-    }
-
-    /**
-     * Méthode appelée à la fin de la classe de test
-     */
-    public static function tearDownAfterClass()
-    {
     }
 
 }

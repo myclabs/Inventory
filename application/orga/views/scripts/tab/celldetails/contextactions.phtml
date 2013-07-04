@@ -5,7 +5,7 @@ $labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $labelColumn->editable = true;
 $datagrid->addCol($labelColumn);
 
-$genericActionColumn = new UI_Datagrid_Col_List('genericAction', __('Social', 'name', 'actionTemplate'));
+$genericActionColumn = new UI_Datagrid_Col_List('genericAction', __('Social', 'actionTemplate', 'actionTemplate'));
 $genericActionColumn->list = [];
 foreach ($this->genericActions as $genericAction) {
     /** @var $genericAction Social_Model_GenericAction */
@@ -14,7 +14,7 @@ foreach ($this->genericActions as $genericAction) {
 $genericActionColumn->sortName = Social_Model_ContextAction::QUERY_GENERIC_ACTION;
 $datagrid->addCol($genericActionColumn);
 
-$themeColumn = new UI_Datagrid_Col_List('theme', __('Social', 'name', 'actionTheme'));
+$themeColumn = new UI_Datagrid_Col_List('theme', __('Social', 'actionTheme', 'actionTheme'));
 $themeColumn->addable = false;
 $themeColumn->list = [];
 foreach ($this->themes as $theme) {

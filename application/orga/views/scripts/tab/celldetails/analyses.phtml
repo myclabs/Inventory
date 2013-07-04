@@ -37,13 +37,13 @@ if (!$this->isDWCubeUpToDate) { ?>
 </div>
 <?php } ?>
 
-<a id="exportAsExcel" href="<?=$this->baseUrl()?>/dw/project/export?idProject=<?=$this->idProject?>" class="btn">
+<a id="exportAsExcel" href="dw/cube/export/idCube/<?=$this->idCube?>" class="btn">
     <img src="images/dw/xls.png" alt="xls" />
     <?=__('DW', 'reportList', 'detailedSpreadsheetExport')?>
 </a>
 <div id="exportAsExcelPopup" class="modal hide fade">
     <div class="modal-body">
-        <p><?=__('Orga', 'dw', 'detailedExcelExportPopup')?></p>
+        <p><?=__('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
         <div class="progress progress-striped active">
             <div class="bar" style="width: 100%;"></div>
         </div>
@@ -85,7 +85,7 @@ echo $datagrid->render();
 
 <?php if (count($this->specificExports) > 0) { ?>
 <fieldset class="wrapper">
-    <legend><?=__('Orga', 'dw', 'specificPDFExports')?></legend>
+    <legend><?=__('Orga', 'analysis', 'specificPDFExports')?></legend>
     <ul>
         <?php foreach ($this->specificExports as $specificExport) { ?>
         <li>

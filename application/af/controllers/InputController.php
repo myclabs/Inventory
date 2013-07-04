@@ -39,36 +39,15 @@ class AF_InputController extends Core_Controller
     {
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
-        $this->_setParam('af', $af);
+        $this->setParam('af', $af);
 
         // InputSet
-        if ($this->hasParam('idInputSet')) {
-            /** @var $inputSet AF_Model_InputSet_Primary */
-            $inputSet = AF_Model_InputSet_Primary::load($this->getParam('idInputSet'));
-        } else {
-            $inputSet = new AF_Model_InputSet_Primary($af);
-        }
-        $this->_setParam('inputSet', $inputSet);
+        $inputSet = new AF_Model_InputSet_Primary($af);
 
         // Form data
         $formData = json_decode($this->getParam($af->getRef()), true);
 
-        // MAJ l'InputSet
-        $newValues = new AF_Model_InputSet_Primary($af);
-        $errorMessages = $this->parseAfSubmit($formData, $newValues, $af);
-        $this->inputService->editInputSet($inputSet, $newValues);
-
-        // Réponse
-        $response = [];
-        $response['errorMessages'] = $errorMessages;
-
-        if ($inputSet->isInputComplete()) {
-            $response['type'] = UI_Message::TYPE_SUCCESS;
-            $response['message'] = __('AF', 'inputInput', 'completeInputSaved');
-        } else {
-            $response['type'] = UI_Message::TYPE_SUCCESS;
-            $response['message'] = __('AF', 'inputInput', 'incompleteInputSaved');
-        }
+        $errorMessages = $this->parseAfSubmit($formData, $inputSet, $af);
 
         // Fait suivre aux actions de processing
         $actions = json_decode($this->getParam('actionStack'), true);
@@ -77,8 +56,13 @@ class AF_InputController extends Core_Controller
             'action'     => 'submit-send-response',
             'controller' => 'input',
             'module'     => 'af',
-            'params'     => ['response' => $response],
+            'params'     => ['errorMessages' => $errorMessages],
         ];
+
+        // On est obligé de construire un "container" pour que les sous-actions puissent remplacer l'inputset
+        $inputSetContainer = new \stdClass();
+        $inputSetContainer->inputSet = $inputSet;
+
         // Reverse car l'action stack est une pile (last in first out)
         $actions = array_reverse($actions);
         foreach ($actions as $action) {
@@ -89,6 +73,7 @@ class AF_InputController extends Core_Controller
             if (isset($action['params'])) {
                 $request->setParams($action['params']);
             }
+            $request->setParam('inputSetContainer', $inputSetContainer);
             $this->_helper->actionStack($request);
         }
 
@@ -102,18 +87,16 @@ class AF_InputController extends Core_Controller
      */
     public function submitSendResponseAction()
     {
+        $inputSetContainer = $this->getParam('inputSetContainer');
         /** @var $inputSet AF_Model_InputSet_Primary */
-        $inputSet = $this->getParam('inputSet');
-        $response = $this->getParam('response');
+        $inputSet = $inputSetContainer->inputSet;
 
-        if (isset($response['errorMessages'])) {
-            $this->addFormErrors($response['errorMessages']);
-        }
+        $this->addFormErrors($this->getParam('errorMessages', []));
 
-        if (isset($response['message']) && isset($response['type'])) {
-            $this->setFormMessage($response['message'], $response['type']);
-        } elseif (isset($response['message'])) {
-            $this->setFormMessage($response['message']);
+        if ($inputSet->isInputComplete()) {
+            $this->setFormMessage(__('AF', 'inputInput', 'completeInputSaved'), UI_Message::TYPE_SUCCESS);
+        } else {
+            $this->setFormMessage(__('AF', 'inputInput', 'incompleteInputSaved'), UI_Message::TYPE_SUCCESS);
         }
 
         $data = [
@@ -136,7 +119,16 @@ class AF_InputController extends Core_Controller
      */
     public function submitTestAction()
     {
-        $this->inputSetSessionStorage->saveInputSet($this->getParam('af'), $this->getParam('inputSet'));
+        $inputSetContainer = $this->getParam('inputSetContainer');
+        /** @var $inputSet AF_Model_InputSet_Primary */
+        $inputSet = $inputSetContainer->inputSet;
+
+        // Met à jour les résultats
+        $this->inputService->updateResults($inputSet);
+
+        // Sauvegarde en session
+        $this->inputSetSessionStorage->saveInputSet($this->getParam('af'), $inputSet);
+
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
@@ -275,6 +267,7 @@ class AF_InputController extends Core_Controller
      * @param AF_Model_Component $component
      * @param AF_Model_InputSet  $inputSet
      * @param array              $inputContent
+     * @throws InvalidArgumentException
      * @return array Error messages indexed by the field name
      */
     private function createInputFromComponent($fullRef, AF_Model_Component $component, AF_Model_InputSet $inputSet,
@@ -287,7 +280,8 @@ class AF_InputController extends Core_Controller
         } elseif ($component instanceof AF_Model_Component_Numeric) {
             // Champ numérique
             $input = new AF_Model_Input_Numeric($inputSet, $component);
-            $calcValue = new Calc_UnitValue();
+            $inputDigitalValue = null;
+            $inputUncertainty = null;
             if ($inputContent['value'] !== '') {
                 $value = str_replace(',', '.', $inputContent['value']);
                 $relativeUncertainty = 0;
@@ -303,16 +297,23 @@ class AF_InputController extends Core_Controller
                 } elseif (!is_numeric($relativeUncertainty) || ($relativeUncertainty < 0)) {
                     $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
                 } else {
-                    $calcValue->value->digitalValue = $value;
+                    $inputDigitalValue = $value;
                     if ($component->getWithUncertainty()) {
-                        $calcValue->value->relativeUncertainty = $relativeUncertainty;
+                        $inputUncertainty = $relativeUncertainty;
                     }
                 }
             } elseif ($component->getRequired()) {
                 $errorMessages[$fullRef] = __("UI", "formValidation", "emptyRequiredField");
             }
-            $calcValue->unit = $component->getUnit();
-            $input->setValue($calcValue);
+            $input->setValue(
+                new Calc_UnitValue($component->getUnit(), $inputDigitalValue, $inputUncertainty)
+            );
+        } elseif ($component instanceof AF_Model_Component_Text) {
+            // Champ texte
+            $input = new AF_Model_Input_Text($inputSet, $component);
+            if (isset($inputContent['value'])) {
+                $input->setValue($inputContent['value']);
+            }
         } elseif ($component instanceof AF_Model_Component_Checkbox) {
             // Champ checkbox
             $input = new AF_Model_Input_Checkbox($inputSet, $component);

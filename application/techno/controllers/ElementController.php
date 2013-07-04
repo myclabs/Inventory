@@ -22,6 +22,7 @@ class Techno_ElementController extends Core_Controller
      */
     public function detailsAction()
     {
+        $this->_helper->layout()->disableLayout();
         $idElement = $this->getParam('id');
         $this->view->element = Techno_Model_Element::load($idElement);
     }
@@ -32,7 +33,7 @@ class Techno_ElementController extends Core_Controller
      */
     public function editSubmitAction()
     {
-        $formData = $this->getFormData('editElement');
+        $formData = $this->getFormData('element_editForm');
         $idElement = $formData->getValue('id');
         /** @var $element Techno_Model_Element_Process|Techno_Model_Element_Coeff */
         $element = Techno_Model_Element::load($idElement);
@@ -54,10 +55,7 @@ class Techno_ElementController extends Core_Controller
                     throw new Core_Exception_User('Techno', 'element', 'incompatibleUnit');
                 }
             }
-            $value = new Calc_Value();
-            $value->digitalValue = $digitalValue;
-            $value->relativeUncertainty = $uncertainty;
-            $element->setValue($value);
+            $element->setValue(new Calc_Value($digitalValue, $uncertainty));
             $element->setDocumentation($documentation);
             $element->save();
             $this->entityManager->flush();
@@ -65,7 +63,13 @@ class Techno_ElementController extends Core_Controller
         } else {
             $this->setFormMessage('Erreur de validation du formulaire.');
         }
-        $this->sendFormResponse();
+        $this->sendFormResponse(
+            [
+                'elementId' => $element->getId(),
+                'value' => $element->getValue()->getDigitalValue(),
+                'uncertainty' => $element->getValue()->getRelativeUncertainty()
+            ]
+        );
     }
 
 }

@@ -1,0 +1,11 @@
+AuditTrail\Domain\Context\OrganizationContext:
+  type: entity
+  table: AuditTrail_OrganizationContext
+
+  manyToOne:
+    organization:
+      targetEntity: \Orga_Model_Organization
+    cell:
+      targetEntity: \Orga_Model_Cell
+      joinColumn:
+        nullable: true

@@ -283,6 +283,38 @@ class Core_Locale
     }
 
     /**
+     * Formate une date en fonction de la locale
+     *
+     * @param DateTime|null $date
+     *
+     * @return string
+     */
+    public function formatDateTime(DateTime $date = null)
+    {
+        if ($date) {
+            return $date->format('d/m/Y H:i');
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Formate une date en fonction de la locale
+     *
+     * @param DateTime|null $date
+     *
+     * @return string
+     */
+    public function formatTime(DateTime $date = null)
+    {
+        if ($date) {
+            return $date->format('H \h i');
+        } else {
+            return '';
+        }
+    }
+
+    /**
      * Formate un nombre entier pour l'affichage
      * @param int $valeur
      * @return string

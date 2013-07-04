@@ -15,7 +15,8 @@
 			"Algo": "src/",
 			"AF": "src/",
 			"Orga": "src/",
-			"Inventory": "src/"
+			"Inventory": "src/",
+            "AuditTrail": "src/"
 		}
 	},
 	"require": {
@@ -34,9 +35,16 @@
         "dompdf/dompdf": "dev-master",
         "myclabs/array-comparator": "0.*",
         "myclabs/php-enum": "1.*",
-        "mnapoli/php-di": "3.0.*",
+        "mnapoli/php-di": "3.1.*",
         "mnapoli/php-di-zf1": "*"
 	},
+    "require-dev": {
+        "behat/behat": "2.4.*",
+        "behat/mink": "1.5.*",
+        "behat/mink-extension": "*",
+        "behat/mink-selenium2-driver": "*",
+        "behat/mink-zombie-driver": "dev-RequestHeaders"
+    },
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"repositories": [
@@ -44,9 +52,13 @@
 			"type": "git",
 			"url": "git://github.com/myclabs/common.git"
 		},
-		{
-			"type": "git",
-			"url": "git://github.com/mridgway/ZendX_Doctrine2.git"
-		}
+        {
+            "type": "git",
+            "url": "git://github.com/mridgway/ZendX_Doctrine2.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/mnapoli/MinkZombieDriver.git"
+        }
 	]
 }

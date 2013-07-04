@@ -129,7 +129,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     protected $docBibliographyForAFInputSetPrimary = null;
 
     /**
-     * Project de DW généré par et propre à la Cell.
+     * Organization de DW généré par et propre à la Cell.
      *
      * @var DW_model_cube
      */
@@ -241,7 +241,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Charge la Cell correspondant à un Project de DW.
+     * Charge la Cell correspondant à un Organization de DW.
      *
      * @param DW_model_cube $dWCube
      *
@@ -436,7 +436,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 
         // Mise à jour du status de l'inventaire.
         try {
-            $granularityForInventoryStatus = $this->granularity->getProject()->getGranularityForInventoryStatus();
+            $granularityForInventoryStatus = $this->granularity->getOrganization()->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
             // La granularité des inventaires n'a pas encoré été choisie.
             $granularityForInventoryStatus = null;
@@ -449,10 +449,10 @@ class Orga_Model_Cell extends Core_Model_Entity
             // Cherche la cellule parent dans la granularité de définition des statut des inventaires
             try {
                 $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
-                $this->setInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
+                $this->updateInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
             } catch (Core_Exception_NotFound $e) {
                 // Il n'y a pas de cellules parentes.
-                $this->setInventoryStatus(self::STATUS_NOTLAUNCHED);
+                $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
             }
         }
     }
@@ -819,6 +819,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @param string $inventoryStatus
      *
+     * @throws Core_Exception
      * @throws Core_Exception_InvalidArgument
      *
      * @see self::STATUS_ACTIVE
@@ -827,6 +828,12 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public function setInventoryStatus($inventoryStatus)
     {
+        if ($this->getGranularity() !== $this->getGranularity()->getOrganization()->getGranularityForInventoryStatus()) {
+            throw new Core_Exception(
+                "Le status de l'inventaire ne peut être défini que pour les cellules de la granularité des inventaires."
+            );
+        }
+
         if ($this->inventoryStatus !== $inventoryStatus) {
             $acceptedStatus = [self::STATUS_ACTIVE, self::STATUS_CLOSED, self::STATUS_NOTLAUNCHED];
             if (! in_array($inventoryStatus, $acceptedStatus)) {
@@ -838,9 +845,19 @@ class Orga_Model_Cell extends Core_Model_Entity
             $this->inventoryStatus = $inventoryStatus;
 
             foreach ($this->getChildCells() as $childCell) {
-                $childCell->setInventoryStatus($this->inventoryStatus);
+                $childCell->updateInventoryStatus($this->inventoryStatus);
             }
         }
+    }
+
+    /**
+     * Mets à jour [interne] la statut de l'inventaire de la cellule.
+     *
+     * @param string $inventoryStatus
+     */
+    private function updateInventoryStatus($inventoryStatus)
+    {
+        $this->inventoryStatus = $inventoryStatus;
     }
 
     /**
@@ -1105,39 +1122,50 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Créé le Project pour la simulation.
+     * Créé le Organization pour la simulation.
      *
-     * @return int Identifiant unique du Project.
+     * @return int Identifiant unique du Organization.
      */
     public function createDWCube()
     {
         if (($this->dWCube === null) && ($this->getGranularity()->getCellsGenerateDWCubes())) {
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
             /** @var Orga_Service_ETLStructure $etlStructureService */
-            $etlStructureService = $this->get('Orga_Service_ETLStructure');
+            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+            /** @var Orga_Service_ETLData $etlDataService */
+            $etlDataService = $container->get('Orga_Service_ETLData');
 
             $this->dWCube = new DW_model_cube();
             $this->dWCube->setLabel($this->getLabel());
 
             $etlStructureService->populateCellDWCube($this);
             $etlStructureService->addGranularityDWReportsToCellDWCube($this);
+            $etlDataService->populateDWResultsForCell($this);
         }
     }
 
     /**
-     * Créé le Project pour la simulation.
+     * Créé le Organization pour la simulation.
      *
-     * @return int Identifiant unique du Project.
+     * @return int Identifiant unique du Organization.
      */
     public function deleteDWCube()
     {
         if ($this->dWCube !== null) {
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
+            /** @var Orga_Service_ETLData $etlDataService */
+            $etlDataService = $container->get('Orga_Service_ETLData');
+
+            $etlDataService->clearDWResultsForCell($this);
             $this->dWCube->delete();
             $this->dWCube = null;
         }
     }
 
     /**
-     * Renvoi le Project de DW spécifique à la Cell.
+     * Renvoi le Organization de DW spécifique à la Cell.
      *
      * @throws Core_Exception_UndefinedAttribute
      *
@@ -1152,7 +1180,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Récupère l'ensemble des projects de DW peuplés par la Cell.
+     * Récupère l'ensemble des organizations de DW peuplés par la Cell.
      *
      * @return DW_model_cube[]
      */
@@ -1187,12 +1215,12 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public function getPopulatingCells()
     {
-        // Renvoie une exception si la cellule ne possède pas de project.
+        // Renvoie une exception si la cellule ne possède pas de organization.
         $this->getDWCube();
 
         $populatingCells = [];
 
-        foreach ($this->getGranularity()->getProject()->getInputGranularities() as $inputGranularity) {
+        foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
             if ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
                     $populatingCells[] = $inputChildCell;
@@ -1204,21 +1232,21 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Créer les Result de DW issues de l'AF et les ajoute aux projects peuplés par la cellule.
+     * Créer les Result de DW issues de l'AF et les ajoute aux organizations peuplés par la cellule.
      */
     public function createDWResults()
     {
         foreach ($this->getPopulatedDWCubes() as $dWCube) {
-            $this->createDWResultsForCube($dWCube);
+            $this->createDWResultsForDWCube($dWCube);
         }
     }
 
     /**
-     * Créer l'ensemble des résultats pour un project de DW donné.
+     * Créer l'ensemble des résultats pour un organization de DW donné.
      *
      * @param DW_model_cube $dWCube
      */
-    public function createDWResultsForCube(DW_model_cube $dWCube)
+    public function createDWResultsForDWCube(DW_model_cube $dWCube)
     {
         if (($this->aFInputSetPrimary === null) || ($this->aFInputSetPrimary->getOutputSet() === null)) {
             return;
@@ -1272,12 +1300,19 @@ class Orga_Model_Cell extends Core_Model_Entity
                 }
             }
 
+            $inputStatusDWAxis = $dWCube->getAxisByRef('inputStatus');
+            if ($this->getAFInputSetPrimary()->isFinished()) {
+                $dWResult->addMember($inputStatusDWAxis->getMemberByRef('finished'));
+            } else {
+                $dWResult->addMember($inputStatusDWAxis->getMemberByRef('completed'));
+            }
+
             $this->dWResults->add($dWResult);
         }
     }
 
     /**
-     * Supprime l'ensemble des résultats de l'InputSet de la cellule dans les project de DW peuplés par la cellule.
+     * Supprime l'ensemble des résultats de l'InputSet de la cellule dans les organization de DW peuplés par la cellule.
      */
     public function deleteDWResults()
     {
@@ -1288,7 +1323,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Supprime l'ensemble des résultats de l'InputSet de la cellule dans le project de DW donné.
+     * Supprime l'ensemble des résultats de l'InputSet de la cellule dans le organization de DW donné.
      *
      * @param DW_model_cube $dWCube
      */

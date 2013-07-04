@@ -11,13 +11,13 @@ if ($this->canCreateUsers) {
 }
 
 // Prénom
-$colFirstName = new UI_Datagrid_Col_Text('prenom', __('User', 'name', 'firstName'));
+$colFirstName = new UI_Datagrid_Col_Text('prenom', __('User', 'user', 'firstName'));
 $colFirstName->filterName = User_Model_User::QUERY_FIRSTNAME;
 $colFirstName->sortName = User_Model_User::QUERY_FIRSTNAME;
 $datagrid->addCol($colFirstName);
 
 // Nom
-$colLastName = new UI_Datagrid_Col_Text('nom', __('User', 'name', 'lastName'));
+$colLastName = new UI_Datagrid_Col_Text('nom', __('User', 'user', 'lastName'));
 $colLastName->filterName = User_Model_User::QUERY_LASTNAME;
 $colLastName->sortName = User_Model_User::QUERY_LASTNAME;
 $datagrid->addCol($colLastName);
@@ -50,7 +50,7 @@ $colEnabled->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'd
 $datagrid->addCol($colEnabled);
 
 // Rôles
-$colRoles = new UI_Datagrid_Col_Text('roles', __('User', 'name', 'roles'));
+$colRoles = new UI_Datagrid_Col_Text('roles', __('User', 'role', 'roles'));
 $colRoles->addable = false;
 $datagrid->addCol($colRoles);
 

@@ -44,15 +44,8 @@ class AF_Service_InputService
         $updater = new AF_Service_InputService_InputSetUpdater($inputSet, $newValues);
         $updater->run();
 
-        // MAJ le pourcentage de complétion
-        $inputSet->updateCompletion();
-
         // Met à jour les résultats
         $this->updateResults($inputSet);
-
-        // Lance l'évènement
-        $event = new AF_Service_InputEditedEvent($inputSet);
-        $this->eventDispatcher->dispatch(AF_Service_InputEditedEvent::NAME, $event);
     }
 
     /**
@@ -64,6 +57,9 @@ class AF_Service_InputService
      */
     public function updateResults(AF_Model_InputSet_Primary $inputSet)
     {
+        // MAJ le pourcentage de complétion
+        $inputSet->updateCompletion();
+
         // Si la saisie est complète
         if ($inputSet->isInputComplete()) {
             // Calcule les résultats

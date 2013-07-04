@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="role">
+            <tuv xml:lang="fr">
+                <seg>Rôle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Role</seg>
+            </tuv>
+        </tu>
+        <tu tuid="roles">
+            <tuv xml:lang="fr">
+                <seg>Rôles</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Roles</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

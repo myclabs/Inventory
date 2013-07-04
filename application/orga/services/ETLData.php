@@ -56,7 +56,7 @@ class Orga_Service_ETLData
     public function populateDWResultsForCell($cell)
     {
         foreach ($cell->getPopulatingCells() as $populatingCell) {
-            $populatingCell->createDWResultsForCube($cell->getDWCube());
+            $populatingCell->createDWResultsForDWCube($cell->getDWCube());
         }
     }
 
@@ -69,7 +69,7 @@ class Orga_Service_ETLData
     {
         $granularity = $cell->getGranularity();
 
-        foreach ($cell->getGranularity()->getProject()->getInputGranularities() as $inputGranularity) {
+        foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
             if ($inputGranularity === $cell->getGranularity()) {
                 try {
                     $inputSet = $cell->getAFInputSetPrimary();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phpunit colors="false"
+         backupGlobals="false"
          bootstrap="./tests/init.php">
 
     <testsuites>
@@ -20,6 +21,7 @@
             <directory>./tests/Social</directory>
             <directory>./tests/Orga</directory>
             <directory>./tests/Simulation</directory>
+            <directory>./tests/AuditTrail</directory>
             <exclude>./tests/Unit</exclude>
         </testsuite>
 
@@ -47,6 +49,10 @@
                 <directory suffix=".php">application/af/controllers</directory>
                 <directory suffix=".php">application/af/forms</directory>
                 <directory suffix=".php">application/af/views</directory>
+                <!-- AuditTrail -->
+                <directory suffix=".php">src/AuditTrail/Application/Controller</directory>
+                <directory suffix=".php">src/AuditTrail/Application/views</directory>
+                <file>src/AuditTrail/Application/Bootstrap.php</file>
                 <!-- Classif -->
                 <directory suffix=".php">application/classif/controllers</directory>
                 <!-- Doc -->

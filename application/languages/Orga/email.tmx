@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+    
+       <!-- Rôle relatif à une cellule -->
+
+        <tu tuid="userRoleGivenAtCreation">
+            <tuv xml:lang="fr">
+                <seg>
+Le rôle « [ROLE] » relatif à l'unité organisationnelle « [CELL] » vous a été attribué.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+The role "[ROLE]" for the organizational unit "[CELL]" has been assigned to you.
+                </seg>
+            </tuv>
+        </tu>        
+        <tu tuid="userRoleAdded">
+            <tuv xml:lang="fr">
+                <seg>
+Le rôle « [ROLE] » relatif à l'unité organisationnelle « [CELL] » vous a été attribué par un administrateur de l'application.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+The role "[ROLE]" for the organizational unit "[CELL]" has been assigned to you by an application administrator.
+                </seg>
+            </tuv>
+        </tu>        
+        <tu tuid="userRoleRemoved">
+            <tuv xml:lang="fr">
+                <seg>
+Le rôle « [ROLE] » relatif à l'unité organisationnelle « [CELL] » vous a été retiré par un administrateur de l'application.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+The role "[ROLE]" for the organizational unit "[CELL]" has been removed from your access rights by an application administrator.
+                </seg>
+            </tuv>
+        </tu>        
+    
+       <!-- Rôle relatif à une organisation -->
+
+        <tu tuid="userOrganizationAdministratorRoleGivenAtCreation">
+            <tuv xml:lang="fr">
+                <seg>
+Le rôle d'administrateur de l'organisation « [ORGANIZATION] » vous a été attribué.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+The role administrator of organization "[ORGANIZATION]" has been assigned to you.
+                </seg>
+            </tuv>
+        </tu>        
+        <tu tuid="userOrganizationAdministratorRoleAdded">
+            <tuv xml:lang="fr">
+                <seg>
+Le rôle d'administrateur de l'organisation « [ORGANIZATION] » vous a été attribué par un administrateur de l'application.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+The role administrator of organization "[ORGANIZATION]" has been assigned to you by an application administrator.
+                </seg>
+            </tuv>
+        </tu>        
+        <tu tuid="userOrganizationAdministratorRoleRemoved">
+            <tuv xml:lang="fr">
+                <seg>
+Le rôle d'administrateur de l'organisation « [ORGANIZATION] » vous a été retiré par un administrateur de l'application.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+The role administrator of organization "[ORGANIZATION]" has been removed from your access rights by an application administrator.
+                </seg>
+            </tuv>
+        </tu>        
+    
+    </body>
+</tmx>    

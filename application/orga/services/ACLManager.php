@@ -34,11 +34,11 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     protected static $processing = false;
 
     /**
-     * Ensemble des nouveaux Project.
+     * Ensemble des nouveaux Organization.
      *
-     * @var Orga_Model_Project[]
+     * @var Orga_Model_Organization[]
      */
-    protected $newProjects = [];
+    protected $newOrganizations = [];
 
     /**
      * Ensemble des nouveaux Cell.
@@ -59,7 +59,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      *
      * @var array
      */
-    protected $newResources = [ 'project' => [], 'cell' => [], 'report' => [] ];
+    protected $newResources = [ 'organization' => [], 'cell' => [], 'report' => [] ];
 
     /**
      * Ensemble des nouveaux Role.
@@ -91,9 +91,9 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
         // Créations
         foreach ($unitOfWork->getScheduledEntityInsertions() as $entity) {
-            // Project
-            if ($entity instanceof Orga_Model_Project) {
-                $this->newProjects[] = $entity;
+            // Organization
+            if ($entity instanceof Orga_Model_Organization) {
+                $this->newOrganizations[] = $entity;
             }
             // Cell
             if ($entity instanceof Orga_Model_Cell) {
@@ -107,9 +107,9 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
         // Suppressions
         foreach ($unitOfWork->getScheduledEntityDeletions() as $entity) {
-            // Project
-            if ($entity instanceof Orga_Model_Project) {
-                $this->processOldProject(User_Model_Resource_Entity::loadByEntity($entity));
+            // Organization
+            if ($entity instanceof Orga_Model_Organization) {
+                $this->processOldOrganization(User_Model_Resource_Entity::loadByEntity($entity));
             }
             // Cell
             if ($entity instanceof Orga_Model_Cell) {
@@ -121,7 +121,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
             }
         }
 
-        if (!empty($this->newProjects) || !empty($this->newCells) || !empty($this->newReports)) {
+        if (!empty($this->newOrganizations) || !empty($this->newCells) || !empty($this->newReports)) {
             self::$changesDetected = true;
         }
     }
@@ -137,10 +137,10 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         self::$processing = true;
 
 
-        foreach ($this->newProjects as $project) {
-            $this->processNewProject($project);
+        foreach ($this->newOrganizations as $organization) {
+            $this->processNewOrganization($organization);
         }
-        $this->newProjects = array();
+        $this->newOrganizations = array();
 
         foreach ($this->newCells as $cell) {
             $this->processNewCell($cell);
@@ -155,7 +155,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
         $eventArgs->getEntityManager()->flush();
 
-        $this->newResources = array('project' => array(), 'cell' => array(), 'report' => array());
+        $this->newResources = array('organization' => array(), 'cell' => array(), 'report' => array());
         $this->newRoles = array();
 
         self::$changesDetected = false;
@@ -163,40 +163,40 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     }
 
     /**
-     * Créer la ressource et roles d'un Project et génère les authorisations.
+     * Créer la ressource et roles d'un Organization et génère les authorisations.
      *
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      */
-    protected function processNewProject(Orga_Model_Project $project)
+    protected function processNewOrganization(Orga_Model_Organization $organization)
     {
         // Création de la ressource projet donné.
-        $projectResource = new User_Model_Resource_Entity();
-        $projectResource->setEntity($project);
-        $projectResource->save();
-        $this->newResources['project'][$project->getId()] = $projectResource;
+        $organizationResource = new User_Model_Resource_Entity();
+        $organizationResource->setEntity($organization);
+        $organizationResource->save();
+        $this->newResources['organization'][$organization->getId()] = $organizationResource;
 
         // Création du rôle administrateur du projet donné.
-        $projectAdministrator = new User_Model_Role();
-        $projectAdministrator->setRef('projectAdministrator_'.$project->getId());
-        $projectAdministrator->setName(__('Orga', 'role', 'projectAdministrator'));
-        $projectAdministrator->save();
-        $this->newRoles[$projectAdministrator->getRef()] = $projectAdministrator;
+        $organizationAdministrator = new User_Model_Role();
+        $organizationAdministrator->setRef('organizationAdministrator_'.$organization->getId());
+        $organizationAdministrator->setName('organizationAdministrator');
+        $organizationAdministrator->save();
+        $this->newRoles[$organizationAdministrator->getRef()] = $organizationAdministrator;
 
         // Ajout des autorisations du rôle administrateur sur la ressource.
         $this->aclService->allow(
-            $projectAdministrator,
+            $organizationAdministrator,
             User_Model_Action_Default::VIEW(),
-            $projectResource
+            $organizationResource
         );
         $this->aclService->allow(
-            $projectAdministrator,
+            $organizationAdministrator,
             User_Model_Action_Default::EDIT(),
-            $projectResource
+            $organizationResource
         );
         $this->aclService->allow(
-            $projectAdministrator,
+            $organizationAdministrator,
             User_Model_Action_Default::DELETE(),
-            $projectResource
+            $organizationResource
         );
     }
 
@@ -207,12 +207,12 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     protected function processNewCell(Orga_Model_Cell $cell)
     {
-        $project = $cell->getGranularity()->getProject();
+        $organization = $cell->getGranularity()->getOrganization();
 
-        if (isset($this->newResources['project'][$project->getId()])) {
-            $projectResource = $this->newResources['project'][$project->getId()];
+        if (isset($this->newResources['organization'][$organization->getId()])) {
+            $organizationResource = $this->newResources['organization'][$organization->getId()];
         } else {
-            $projectResource = User_Model_Resource_Entity::loadByEntity($project);
+            $organizationResource = User_Model_Resource_Entity::loadByEntity($organization);
         }
 
         // Création de la ressource cellule donnée.
@@ -225,7 +225,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Création du rôle administrateur de la cellule donnée.
         $cellAdministrator = new User_Model_Role();
         $cellAdministrator->setRef('cellAdministrator_'.$cell->getId());
-        $cellAdministrator->setName(__('Orga', 'role', 'cellAdministrator'));
+        $cellAdministrator->setName('cellAdministrator');
         $cellAdministrator->save();
         $this->newRoles[$cellAdministrator->getRef()] = $cellAdministrator;
 
@@ -233,7 +233,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::VIEW(),
-            $projectResource
+            $organizationResource
         );
         $this->aclService->allow(
             $cellAdministrator,
@@ -265,7 +265,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Création du rôle contributeur de la cellule donnée.
         $cellContributor = new User_Model_Role();
         $cellContributor->setRef('cellContributor_'.$cell->getId());
-        $cellContributor->setName(__('Orga', 'role', 'cellContributor'));
+        $cellContributor->setName('cellContributor');
         $cellContributor->save();
         $this->newRoles[$cellContributor->getRef()] = $cellContributor;
 
@@ -273,7 +273,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         $this->aclService->allow(
             $cellContributor,
             User_Model_Action_Default::VIEW(),
-            $projectResource
+            $organizationResource
         );
         $this->aclService->allow(
             $cellContributor,
@@ -295,7 +295,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Création du rôle observateur de la cellule donnée.
         $cellObserver = new User_Model_Role();
         $cellObserver->setRef('cellObserver_'.$cell->getId());
-        $cellObserver->setName(__('Orga', 'role', 'cellObserver'));
+        $cellObserver->setName('cellObserver');
         $cellObserver->save();
         $this->newRoles[$cellObserver->getRef()] = $cellObserver;
 
@@ -303,7 +303,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         $this->aclService->allow(
             $cellObserver,
             User_Model_Action_Default::VIEW(),
-            $projectResource
+            $organizationResource
         );
         $this->aclService->allow(
             $cellObserver,
@@ -379,11 +379,11 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         try {
             Orga_Model_GranularityReport::loadByGranularityDWReport($dWReport);
             $granularity = Orga_Model_Granularity::loadByDWCube($dWReport->getCube());
-            $projectAdministratorRoleRef = 'projectAdministrator_'.$granularity->getProject()->getId();
-            if (isset($this->newRoles[$projectAdministratorRoleRef])) {
-                $identity = $this->newRoles[$projectAdministratorRoleRef];
+            $organizationAdministratorRoleRef = 'organizationAdministrator_'.$granularity->getOrganization()->getId();
+            if (isset($this->newRoles[$organizationAdministratorRoleRef])) {
+                $identity = $this->newRoles[$organizationAdministratorRoleRef];
             } else {
-                $identity = User_Model_Role::loadByRef($projectAdministratorRoleRef);
+                $identity = User_Model_Role::loadByRef($organizationAdministratorRoleRef);
             }
         } catch (Core_Exception_NotFound $e) {
             // Le Report n'est pas issue d'un Cube de DW de Granularity.
@@ -408,18 +408,18 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     }
 
     /**
-     * Supprime la ressource et roles d'un Project.
+     * Supprime la ressource et roles d'un Organization.
      *
-     * @param User_Model_Resource_Entity $projectResource
+     * @param User_Model_Resource_Entity $organizationResource
      */
-    protected function processOldProject(User_Model_Resource_Entity $projectResource)
+    protected function processOldOrganization(User_Model_Resource_Entity $organizationResource)
     {
-        $idProject = $projectResource->getEntityIdentifier();
+        $idOrganization = $organizationResource->getEntityIdentifier();
 
-        $projectResource->delete();
+        $organizationResource->delete();
 
-        $projectAdministrator = User_Model_Role::loadByRef('projectAdministrator_'.$idProject);
-        $projectAdministrator->delete();
+        $organizationAdministrator = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
+        $organizationAdministrator->delete();
     }
 
     /**
@@ -522,14 +522,14 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     /**
      * Ajoute au projet donné, l'utilisateur comme administrateur.
      *
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      * @param User_Model_User $user
      */
-    public function addProjectAdministrator($project, $user)
+    public function addOrganizationAdministrator($organization, $user)
     {
-        $user->addRole(User_Model_Role::loadByRef('projectAdministrator_'.$project->getId()));
+        $user->addRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
-        $globalCell = Orga_Model_Granularity::loadByRefAndProject('global', $project)->getCells()[0];
+        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
         $user->addRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
@@ -538,14 +538,14 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     /**
      * Retire au projet donné, l'utilisateur comme administrateur.
      *
-     * @param Orga_Model_Project $project
+     * @param Orga_Model_Organization $organization
      * @param User_Model_User $user
      */
-    public function removeProjectAdministrator($project, $user)
+    public function removeOrganizationAdministrator($organization, $user)
     {
-        $user->removeRole(User_Model_Role::loadByRef('projectAdministrator_'.$project->getId()));
+        $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
-        $globalCell = Orga_Model_Granularity::loadByRefAndProject('global', $project)->getCells()[0];
+        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
         $user->removeRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );

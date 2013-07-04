@@ -6,6 +6,7 @@
  * @package    Classif
  * @subpackage Test
  */
+
 use Unit\UnitAPI;
 
 /**
@@ -34,13 +35,13 @@ class Classif_Test_IndicatorTest
      *
      * @return Classif_Model_Indicator
      */
-    public static function generateObject($ref=null, $label=null, $unit=null, $ratioUnit=null)
+    public static function generateObject($ref=null, $label=null, Unit_API $unit=null, Unit_API $ratioUnit=null)
     {
         $o = new Classif_Model_Indicator();
         $o->setRef(($ref === null) ? 'ref' : $ref);
         $o->setLabel(($label === null) ? 'label' : $label);
-        $o->setUnit(($unit === null) ? $o->getRef().'unit' : $unit);
-        $o->setRatioUnit(($ratioUnit === null) ? $o->getUnit() : $ratioUnit);
+        $o->setUnit(($unit === null) ? new Unit_API('m') : $unit);
+        $o->setRatioUnit(($ratioUnit === null) ? new Unit_API('m') : $ratioUnit);
         $o->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
@@ -89,8 +90,8 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $unit = new UnitAPI('IndicatorSetUpTest');
-        $ratioUnit = new UnitAPI('RatioIndicatorSetUpTest');
+        $unit = new UnitAPI('m');
+        $ratioUnit = new UnitAPI('km');
         $o = new Classif_Model_Indicator();
         $this->assertInstanceOf('Classif_Model_Indicator', $o);
         $o->setRef('RefContextTest');

@@ -15,7 +15,7 @@ class IndexController extends Core_Controller
     {
         $auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity()) {
-            $this->redirect("orga/project/");
+            $this->redirect("orga/organization/");
         }
         $this->redirect("user/action/login");
     }

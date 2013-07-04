@@ -5,7 +5,7 @@ Unit\Domain\Unit\ExtendedUnit:
 
   fields:
     multiplier:
-      type: integer
+      type: float
 
   manyToOne:
     extension:

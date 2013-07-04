@@ -79,14 +79,12 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             $uiElement->getElement()->disabled = $input->isDisabled();
             $uiElement->getElement()->hidden = $input->isHidden();
             // Valeur
-            $value = $input->getValue()->value;
-            $uiElement->setValue([$value->digitalValue, $value->relativeUncertainty]);
+            $uiElement->setValue([$input->getValue()->getDigitalValue(), $input->getValue()->getRelativeUncertainty()]);
         } else {
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;
             // Valeur
-            $value = $this->defaultValue;
-            $uiElement->setValue([$value->digitalValue, $value->relativeUncertainty]);
+            $uiElement->setValue([$this->defaultValue->getDigitalValue(), $this->defaultValue->getRelativeUncertainty()]);
         }
         // Unité
         if ($this->unit !== null) {
@@ -100,9 +98,9 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
         if ($this->getDefaultValueReminder()) {
             $locale = Core_Locale::loadDefault();
             $uiElement->setDescription(sprintf("Valeur par défaut : %s %s ± %d%%",
-                                               $locale->formatNumber((float) $this->defaultValue->digitalValue),
+                                               $locale->formatNumber((float) $this->defaultValue->getDigitalValue()),
                                                $this->unit->getSymbol(),
-                                               (float) $value->relativeUncertainty));
+                                               (float) $this->defaultValue->getRelativeUncertainty()));
         }
         return $uiElement;
     }

@@ -25,7 +25,7 @@ foreach ($this->axes as $axis) {
         $datagrid->addCol($languageColumn);
     }
 
-    $datagrid->addParam('idProject', $this->idProject);
+    $datagrid->addParam('idOrganization', $this->idOrganization);
     $datagrid->addParam('refAxis', $axis->getRef());
     $datagrid->initialLoading = false;
 

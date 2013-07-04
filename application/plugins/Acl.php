@@ -4,6 +4,7 @@
  * @package Inventory
  * @subpackage Plugin
  */
+
 use User\ForbiddenException;
 
 /**
@@ -20,10 +21,10 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function viewProjectsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function viewOrganizationsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
-        $isIdentityAbleToEditProjects = $this->editProjectsRule($identity, $request);
-        if ($isIdentityAbleToEditProjects) {
+        $isIdentityAbleToEditOrganizations = $this->editOrganizationsRule($identity, $request);
+        if ($isIdentityAbleToEditOrganizations) {
             return true;
         }
 
@@ -31,8 +32,8 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
         $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-        $isIdentityAbleToSeeManyProjects = (Orga_Model_Project::countTotal($aclQuery) > 1);
-        if ($isIdentityAbleToSeeManyProjects) {
+        $isIdentityAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
+        if ($isIdentityAbleToSeeManyOrganizations) {
             return true;
         }
 
@@ -44,16 +45,16 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function editProjectsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function editOrganizationsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
-        $projectResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project');
+        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
 
-        $isIdentityAbleToCreateProjects = $this->aclService->isAllowed(
+        $isIdentityAbleToCreateOrganizations = $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::CREATE(),
-            $projectResource
+            $organizationResource
         );
-        if ($isIdentityAbleToCreateProjects) {
+        if ($isIdentityAbleToCreateOrganizations) {
             return true;
         }
 
@@ -61,8 +62,8 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
         $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
-        $isIdentityAbleToEditProjects = (Orga_Model_Project::countTotal($aclQuery) > 0);
-        if ($isIdentityAbleToEditProjects) {
+        $isIdentityAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
+        if ($isIdentityAbleToEditOrganizations) {
             return true;
         }
 
@@ -74,12 +75,12 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function createProjectRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function createOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::CREATE(),
-            User_Model_Resource_Entity::loadByEntityName('Orga_Model_Project')
+            User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization')
         );
     }
 
@@ -88,12 +89,12 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewProjectRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::VIEW(),
-            $this->getProject($request)
+            $this->getOrganization($request)
         );
     }
 
@@ -102,12 +103,12 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editProjectRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::EDIT(),
-            $this->getProject($request)
+            $this->getOrganization($request)
         );
     }
 
@@ -116,33 +117,33 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function deleteProjectRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function deleteOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::DELETE(),
-            $this->getProject($request)
+            $this->getOrganization($request)
         );
     }
 
     /**
      * @param Zend_Controller_Request_Abstract $request
      * @throws User_Exception_Forbidden
-     * @return Orga_Model_Project
+     * @return Orga_Model_Organization
      */
-    protected function getProject(Zend_Controller_Request_Abstract $request)
+    protected function getOrganization(Zend_Controller_Request_Abstract $request)
     {
-        $idProject = $request->getParam('idProject');
-        if ($idProject !== null) {
-            return Orga_Model_Project::load($idProject);
+        $idOrganization = $request->getParam('idOrganization');
+        if ($idOrganization !== null) {
+            return Orga_Model_Organization::load($idOrganization);
         }
         $index = $request->getParam('index');
         if ($index !== null) {
-            return Orga_Model_Project::load($index);
+            return Orga_Model_Organization::load($index);
         }
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
-            return Orga_Model_Cell::load($idCell)->getGranularity()->getProject();
+            return Orga_Model_Cell::load($idCell)->getGranularity()->getOrganization();
         }
 
         throw new ForbiddenException();
@@ -199,7 +200,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     {
         return $this->aclService->isAllowed(
             $identity,
-            Inventory_Action_Cell::INPUT(),
+            Orga_Action_Cell::INPUT(),
             $this->getCell($request)
         );
     }
@@ -213,7 +214,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     {
         return $this->aclService->isAllowed(
             $identity,
-            Inventory_Action_Cell::COMMENT(),
+            Orga_Action_Cell::COMMENT(),
             $this->getCell($request)
         );
     }
@@ -255,7 +256,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         try {
             return $this->viewCellRule($identity, $request);
         } catch (ForbiddenException $e) {
-            return $this->viewProjectRule($identity, $request);
+            return $this->viewOrganizationRule($identity, $request);
         }
     }
 
@@ -269,9 +270,9 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         try {
             return $this->editCellRule($identity, $request);
         } catch (ForbiddenException $e) {
-            return $this->editProjectRule($identity, $request);
+            return $this->editOrganizationRule($identity, $request);
         } catch (Core_Exception_NotFound $e) {
-            return $this->editProjectRule($identity, $request);
+            return $this->editOrganizationRule($identity, $request);
         }
     }
 
@@ -302,9 +303,9 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             // Si le DWCube est d'un Granularity, vérification que l'utilisateur peut configurer le projet.
             try {
                 $granularity = Orga_Model_Granularity::loadByDWCube($dWCube);
-                $project = $granularity->getProject();
-                $request->setParam('idProject', $project->getKey()['id']);
-                return $this->editProjectRule($identity, $request);
+                $organization = $granularity->getOrganization();
+                $request->setParam('idOrganization', $organization->getKey()['id']);
+                return $this->editOrganizationRule($identity, $request);
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un Granularity.
             }
@@ -534,6 +535,16 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @return bool
      */
     protected function editKeywordRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->editReferential($identity);
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    protected function deleteKeywordRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->editReferential($identity);
     }

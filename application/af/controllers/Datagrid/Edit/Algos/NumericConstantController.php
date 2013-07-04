@@ -31,9 +31,9 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
                 $data['label'] = $algo->getLabel();
-                $data['unit'] = $algo->getUnitValue()->unit->getRef();
-                $data['value'] = $this->cellNumber($algo->getUnitValue()->value->digitalValue);
-                $data['uncertainty'] = $this->cellNumber($algo->getUnitValue()->value->relativeUncertainty);
+                $data['unit'] = $algo->getUnit()->getRef();
+                $data['value'] = $this->cellNumber($algo->getUnitValue()->getDigitalValue());
+                $data['uncertainty'] = $this->cellNumber($algo->getUnitValue()->getRelativeUncertainty());
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
                     $ref = $contextIndicator->getContext()->getRef()
@@ -75,10 +75,11 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 return;
             }
             $algo->setLabel($this->getAddElementValue('label'));
-            $algo->getUnitValue()->value->digitalValue = $this->getAddElementValue('value');
-            $algo->getUnitValue()->value->relativeUncertainty = $this->getAddElementValue('uncertainty');
-            $unit = new UnitAPI($this->getAddElementValue('unit'));
-            $algo->getUnitValue()->unit = $unit;
+            $algo->setUnitValue(new Calc_UnitValue(
+                    new UnitAPI($this->getAddElementValue('unit')),
+                    $this->getAddElementValue('value'),
+                    $this->getAddElementValue('uncertainty')
+                ));
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
@@ -114,22 +115,22 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $this->data = $algo->getLabel();
                 break;
             case 'unit':
-                $unitValue = clone $algo->getUnitValue();
-                $unitValue->unit = new UnitAPI($newValue);
-                $algo->setUnitValue($unitValue);
-                $this->data = $unitValue->unit->getRef();
+                $algo->setUnitValue(new Calc_UnitValue(
+                        new UnitAPI($newValue),
+                        $algo->getUnitValue()->getDigitalValue(),
+                        $algo->getUnitValue()->getRelativeUncertainty()
+                    ));
+                $this->data = $algo->getUnit()->getRef();
                 break;
             case 'value':
-                $unitValue = clone $algo->getUnitValue();
-                $unitValue->value->digitalValue = $newValue;
+                $unitValue = $algo->getUnitValue()->copyWithNewValue($newValue);
                 $algo->setUnitValue($unitValue);
-                $this->data = $unitValue->value->digitalValue;
+                $this->data = $unitValue->getDigitalValue();
                 break;
             case 'uncertainty':
-                $unitValue = clone $algo->getUnitValue();
-                $unitValue->value->relativeUncertainty = $newValue;
+                $unitValue = $algo->getUnitValue()->copyWithNewUncertainty($newValue);
                 $algo->setUnitValue($unitValue);
-                $this->data = $unitValue->value->relativeUncertainty;
+                $this->data = $unitValue->getRelativeUncertainty();
                 break;
             case 'contextIndicator':
                 if ($newValue) {

@@ -181,9 +181,9 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
     // Valeur
     if ($algo instanceof Algo_Model_Numeric) {
         $value = $algo->execute($inputSet);
-        $stringValue = $locale->formatNumber($value->value->digitalValue, 20)
-            . ' <strong>' . $value->unit->getSymbol() . '</strong> ± '
-            . $locale->formatNumber($value->value->relativeUncertainty) . ' <strong>%</strong>';
+        $stringValue = $locale->formatNumber($value->value->getDigitalValue(), 20)
+            . ' <strong>' . $value->getUnit()->getSymbol() . '</strong> ± '
+            . $locale->formatNumber($value->getRelativeUncertainty()) . ' <strong>%</strong>';
         $collapse->body .= "<p><strong>" . __('UI', 'name', 'value') . __('UI', 'other', ':')
             . "</strong> $stringValue</p>";
     }

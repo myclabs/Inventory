@@ -2,6 +2,7 @@
 /**
  * @package Techno
  */
+
 use Unit\UnitAPI;
 
 /**
@@ -26,9 +27,7 @@ class Techno_Test_Element_ProcessTest
      */
     public static function generateObject()
     {
-        $value = new Calc_Value();
-        $value->digitalValue = 10;
-        $value->relativeUncertainty = 20;
+        $value = new Calc_Value(10, 20);
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
         $o = new Techno_Model_Element_Process();
@@ -96,9 +95,7 @@ class Techno_Test_Element_ProcessSetUp extends PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         // Fixtures
-        $value = new Calc_Value();
-        $value->digitalValue = 10;
-        $value->relativeUncertainty = 20;
+        $value = new Calc_Value(10, 20);
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
 

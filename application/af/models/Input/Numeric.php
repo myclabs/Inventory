@@ -7,7 +7,7 @@
  */
 
 /**
- * Inpunt Element for numerics fields
+ * Input Element for numerics fields
  * @package    AF
  * @subpackage Input
  */
@@ -38,7 +38,7 @@ class AF_Model_Input_Numeric extends AF_Model_Input implements Algo_Model_Input_
         if (!$this->isHidden()) {
             /** @var $component AF_Model_Component_Numeric */
             $component = $this->getComponent();
-            if ($component->getRequired() && $this->value->value->digitalValue != null) {
+            if ($component->getRequired() && $this->value->getDigitalValue() != null) {
                 return 1;
             }
         }
