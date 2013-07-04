@@ -28,7 +28,7 @@ class User_Bootstrap extends Core_Package_Bootstrap
     protected function _initUserTypeMapping()
     {
         \Doctrine\DBAL\Types\Type::addType(Core_TypeMapping_Locale::TYPE_NAME, 'Core_TypeMapping_Locale');
-        \Doctrine\DBAL\Types\Type::addType(ActionType::TYPE_NAME, 'User_TypeMapping_Action');
+        \Doctrine\DBAL\Types\Type::addType(ActionType::TYPE_NAME, 'User\ACL\TypeMapping\ActionType');
     }
 
     /**

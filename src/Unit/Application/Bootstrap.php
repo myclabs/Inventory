@@ -4,17 +4,22 @@
  * @package Unit
  */
 
+namespace Unit\Application;
+
+use Core_Package_Bootstrap;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\EntityManager;
 use Unit\Domain\Unit\Unit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Architecture\TypeMapping\UnitAPIType;
+use Zend_Registry;
 
 /**
  * Bootstrap
  * @author valentin.claras
  * @package Unit
  */
-class Unit_Bootstrap extends Core_Package_Bootstrap
+class Bootstrap extends Core_Package_Bootstrap
 {
 
     /**
@@ -50,10 +55,10 @@ class Unit_Bootstrap extends Core_Package_Bootstrap
             );
 
             // Création de l'EntityManager depuis la configuration de doctrine.
-            /* @var $doctrineConfig Doctrine\ORM\Configuration */
+            /* @var $doctrineConfig \Doctrine\ORM\Configuration */
             $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
             // Création de l'EntityManager spécifique.
-            $unitEntityManager = Doctrine\ORM\EntityManager::create($unitConnectionArray, $doctrineConfig);
+            $unitEntityManager = EntityManager::create($unitConnectionArray, $doctrineConfig);
         } else {
             // Utilisation de l'EntityManager par défaut.
             $unitEntityManager = $entityManagers['default'];

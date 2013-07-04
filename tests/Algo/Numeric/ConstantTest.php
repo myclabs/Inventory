@@ -251,8 +251,6 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
         $inputSet = $this->getMockForAbstractClass('Algo_Model_InputSet');
         $result = $numericConstant->execute($inputSet);
         $this->assertTrue($result instanceof Calc_UnitValue);
-        $this->assertTrue($result->unit instanceof Unit_API);
-        $this->assertTrue($result->value instanceof Calc_Value);
     }
 
 }
