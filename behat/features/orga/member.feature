@@ -54,27 +54,94 @@ Feature: orgaMember
   # Ajout membre axe Pays, zone non renseignée
     When I open collapse "Pays"
     Then I should see the "listMemberspays" datagrid
-    When I click element "#memberspays_wrapper a.btn:contains('Ajouter')"
+    When I click element "#memberspays_wrapper .btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un membre à l'axe « Pays »"
     When I fill in "listMemberspays_label_addForm" with "France"
     And I fill in "listMemberspays_ref_addForm" with "france"
-    And I click element "#listMemberspays_addPanel button:contains('Valider')"
+    And I click element "#listMemberspays_addPanel .btn:contains('Valider')"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Ajout membre axe Site, pays renseigné
     When I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
-    When I click element "#memberssite_wrapper a.btn:contains('Ajouter')"
+    When I click element "#memberssite_wrapper .btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un membre à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "Annecy"
     And I fill in "listMemberssite_ref_addForm" with "annecy"
-    And I select "France" from "listMemberssite_broaderpays_addForm"
-    And I click element "#listMemberssite_addPanel button:contains('Valider')"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france#"
+    And I click element "#listMemberssite_addPanel .btn:contains('Valider')"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    And the row 1 of the "listMemberssite" datagrid should contain:
+      | label  | ref      | broaderpays    |
+      | Annecy | annecy   | France         |
+  # Modification du membre parent suivant l'axe "Pays" (modification de "France" à "vide")
+    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    Then the row 1 of the "listMemberssite" datagrid should contain:
+      | label  | ref      | broaderpays    |
+      | Annecy | annecy   |                |
+  # Modification du membre parent suivant l'axe "Pays" (modification de "vide" à "France")
+    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    Then the row 1 of the "listMemberssite" datagrid should contain:
+      | label  | ref      | broaderpays    |
+      | Annecy | annecy   | France         |
   # Tentative de suppression du pays "France"
     When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
     Then I should see the popup "Demande de confirmation"
-    When I click element "#listMemberspays_deletePanel a.btn:contains('Confirmer')"
+    When I click element "#listMemberspays_deletePanel .btn:contains('Confirmer')"
     # And I wait 10 seconds
     # Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il joue le rôle de parent direct pour au moins un autre membre."
 
-
+    @javascript
+  Scenario: orgaMember3
+  # Accès à l'onglet "Membres"
+    Given I am on "orga/cell/details/idCell/1"
+    And I open tab "Organisation"
+    And I open tab "Membres"
+  # Ajout membre axe Pays, zone non renseignée
+    When I open collapse "Pays"
+    Then I should see the "listMemberspays" datagrid
+    When I click element "#memberspays_wrapper .btn:contains('Ajouter')"
+    Then I should see the popup "Ajout d'un membre à l'axe « Pays »"
+    When I fill in "listMemberspays_label_addForm" with "France"
+    And I fill in "listMemberspays_ref_addForm" with "france"
+    And I click element "#listMemberspays_addPanel .btn:contains('Valider')"
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+  # Modification du libellé d'un membre
+    When I set "France modifiée" for column "label" of row 1 of the "listMemberspays" datagrid with a confirmation message
+    Then the row 1 of the "listMemberspays" datagrid should contain:
+      | label  |
+      | France modifiée |
+  # Modification de l'identifiant d'un membre, saisie correcte
+    When I set "france_modifie" for column "ref" of row 1 of the "listMemberspays" datagrid with a confirmation message
+    Then the row 1 of the "listMemberspays" datagrid should contain:
+      | ref  |
+      | france_modifie |
+  # Modification de l'identifiant d'un membre, identifiant vide
+    When I set "" for column "ref" of row 1 of the "listMemberspays" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+    And the row 1 of the "listMemberspays" datagrid should contain:
+      | ref  |
+      | france_modifie |
+  # Modification de l'identifiant d'un membre, identifiant avec caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "listMemberspays" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+    And the row 1 of the "listMemberspays" datagrid should contain:
+      | ref  |
+      | france_modifie |
+  # Ajout second membre axe pays
+    When I click element "#memberspays_wrapper .btn:contains('Ajouter')"
+    Then I should see the popup "Ajout d'un membre à l'axe « Pays »"
+    When I fill in "listMemberspays_label_addForm" with "Test"
+    And I fill in "listMemberspays_ref_addForm" with "test"
+    And I click element "#listMemberspays_addPanel .btn:contains('Valider')"
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+  # Modification de l'identifiant d'un membre, identifiant déjà utilisé
+    When I set "test" for column "ref" of row 1 of the "listMemberspays" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+    And the row 1 of the "listMemberspays" datagrid should contain:
+      | ref  |
+      | france_modifie |
+  # Modification de l'identifiant d'un membre, test affichage ordre alphabétique des identifiants
+    When I set "xxx" for column "ref" of row 1 of the "listMemberspays" datagrid with a confirmation message
+    Then the row 1 of the "listMemberspays" datagrid should contain:
+      | label  | ref      |
+      | Test | test   |

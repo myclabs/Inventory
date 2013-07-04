@@ -117,7 +117,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                     $userEmail,
                     __('Orga', 'email', 'userOrganizationAdministratorRoleGivenAtCreation', array(
                         'ORGANIZATION' => $organization->getLabel(),
-                        'ROLE' => $organizationAdministratorRole->getName()
+                        'ROLE' => __('Orga', 'role', $organizationAdministratorRole->getName())
                     ))
                 );
                 $this->message = __('Orga', 'role', 'userCreatedFromRessource');

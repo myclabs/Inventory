@@ -6,25 +6,11 @@
 use Behat\Behat\Context\Step;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Session;
 use Behat\Mink\WebAssert;
 
 trait DatagridFeatureContext
 {
-    /**
-     * @param string|null $name
-     * @return WebAssert
-     */
-    public abstract function assertSession($name = null);
-    public abstract function assertElementContainsText($element, $text);
-    public abstract function waitForPageToFinishLoading();
-    public abstract function clickElement($selector);
-    public abstract function fillField($field, $value);
-    /**
-     * @param string $cssSelector
-     * @return NodeElement
-     */
-    protected abstract function findElement($cssSelector);
-
     /**
      * @Then /^(?:|I )should see the "(?P<datagrid>[^"]*)" datagrid$/
      */
@@ -99,16 +85,51 @@ trait DatagridFeatureContext
         // Double-click
         $cellNode = $this->findElement($cellSelector);
         $cellNode->doubleClick();
+        $this->waitForPageToFinishLoading();
 
-        // Fill in field
-        $inputNode = $this->findElement('.yui-dt-editor input');
-        $inputNode->setValue($content);
+        $popupSelector = '.yui-dt-editor:not([style*="display: none"])';
+
+        // Text field
+        $inputNodes = $this->findAllElements("$popupSelector input");
+        if (count($inputNodes) === 1) {
+            $inputNode = current($inputNodes);
+            $inputNode->setValue($content);
+        } else {
+            // Radio
+            $inputNodes = $this->findAllElements($popupSelector . ' input[type="radio"]');
+            if (count($inputNodes) > 0) {
+                $js = <<<JS
+var inputId = $('.yui-dt-editor:visible label:contains("$content")').attr('for');
+$("#" + inputId).prop('checked', true);
+JS;
+                $this->getSession()->executeScript($js);
+            } else {
+                // Select2
+                $inputNodes = $this->findAllElements("$popupSelector .select2-container");
+                if (count($inputNodes) === 1) {
+                    $inputNode = $this->findElement("$popupSelector input.select2-offscreen:not(.select2-focusser)");
+                    $inputNode->setValue($content);
+                } else {
+                    throw new \Exception("Unable to set cell value in datagrid");
+                }
+            }
+        }
 
         // Submit
-        $submitNode = $this->findElement('.yui-dt-editor .yui-dt-button .yui-dt-default');
+        $submitNode = $this->findElement("$popupSelector .yui-dt-button .yui-dt-default");
         $submitNode->click();
 
         $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * @Then /^(?:|I )set "(?P<content>[^"]*)" for (?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid with a confirmation message$/
+     */
+    public function setCellContentConfirmationMessage($content, $column, $row, $datagrid)
+    {
+        $this->setCellContent($content, $column, $row, $datagrid);
+
+        return [new Step\Then('the following message is shown and closed: "Modification effectuée."')];
     }
 
     /**
@@ -119,4 +140,29 @@ trait DatagridFeatureContext
     {
         return "#{$name}_container.yui-dt";
     }
+
+    /**
+     * @param string|null $name
+     * @return WebAssert
+     */
+    public abstract function assertSession($name = null);
+    public abstract function assertElementContainsText($element, $text);
+    public abstract function waitForPageToFinishLoading();
+    public abstract function clickElement($selector);
+    public abstract function fillField($field, $value);
+    /**
+     * @param string $cssSelector
+     * @return NodeElement
+     */
+    protected abstract function findElement($cssSelector);
+    /**
+     * @param string $cssSelector
+     * @return NodeElement[]
+     */
+    protected abstract function findAllElements($cssSelector);
+    /**
+     * @param string|null $name
+     * @return Session
+     */
+    public abstract function getSession($name = null);
 }

@@ -89,7 +89,7 @@ class Orga_CellController extends Core_Controller
             User_Model_Action_Default::EDIT(),
             $cell
         );
-        if ($isUserAllowedToEditOrganization || ($isUserAllowedToEditCell && $granularity->getCellsWithOrgaTab())) {
+        if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && $granularity->getCellsWithOrgaTab()) {
             $organizationTab = new UI_Tab('orga');
             $organizationTab->label = __('Orga', 'organization', 'organization');
             $organizationSubTabs = array('organization', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
@@ -116,7 +116,7 @@ class Orga_CellController extends Core_Controller
                 }
             }
         }
-        if ($isUserAllowedToEditOrganization || $isUserAllowedToAllowAuthorizations) {
+        if ($isUserAllowedToAllowAuthorizations) {
             $aclsTab = new UI_Tab('acls');
             if ($tab === 'acls') {
                 $aclsTab->active = true;
@@ -148,7 +148,7 @@ class Orga_CellController extends Core_Controller
         } catch (Core_Exception_UndefinedAttribute $e) {
             $granularityForInventoryStatus = null;
         }
-        if ($granularityForInventoryStatus=== null) {
+        if ($granularityForInventoryStatus === null) {
             $inventoriesTab->disabled = true;
         } else if ($tab === 'inventories') {
             $inventoriesTab->active = true;

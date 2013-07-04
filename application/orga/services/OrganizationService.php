@@ -50,6 +50,11 @@ class Orga_Service_OrganizationService
             $organization = new Orga_Model_Organization();
             $organization->setLabel($label);
             $defaultGranularity = new Orga_Model_Granularity($organization);
+            $defaultGranularity->setNavigability(true);
+            $defaultGranularity->setCellsWithOrgaTab(true);
+            $defaultGranularity->setCellsWithACL(true);
+            $defaultGranularity->setCellsWithAFConfigTab(true);
+            $defaultGranularity->setCellsGenerateDWCubes(true);
             $organization->save();
             $this->entityManager->flush();
 

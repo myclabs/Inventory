@@ -11,18 +11,20 @@ Feature: orgaGranularity
     And I open tab "Organisation"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
+  # Valeurs par défaut des attributs de la granularité globale
     And the row 1 of the "granularity" datagrid should contain:
-      | axes  | navigable  | orgaTab |
-      |       | Navigable  | Non     |
+      | axes  | navigable  | orgaTab | aCL | aFTab | dW  |
+      |       | Navigable  | Oui     | Oui | Oui   | Oui |
   # Ajout d'une granularité avec un axe, non navigable
     When I click element "#orga_granularities a.btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Année" from "granularity_axes_addForm"
     And I click element "#granularity_addPanel button.btn:contains('Valider')"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    # Valeurs par défaut des attributs d'une granularité non globale
     And the row 2 of the "granularity" datagrid should contain:
-      | axes  | navigable  | orgaTab |
-      | Année | Non navigable  | Non     |
+      | axes  | navigable  | orgaTab | aCL | aFTab | dW  |
+      | Année | Non navigable  | Non | Non | Non | Non |
   # Ajout d'une granularité avec un axe, navigable
     When I click element "#orga_granularities a.btn:contains('Ajouter')"
     Then I should see the popup "Ajout d'un niveau organisationnel"
@@ -93,3 +95,15 @@ Feature: orgaGranularity
     And the row 2 of the "granularity" datagrid should contain:
       | axes          | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
       | Zone, Marque  | Navigable  | Oui     | Oui | Oui   | Oui | Oui            | Oui            | Oui            |
+
+  @javascript
+  Scenario: orgaGranularity3
+    Given I am on "orga/cell/details/idCell/1"
+    And I open tab "Organisation"
+    And I open tab "Niveaux"
+    Then I should see the "granularity" datagrid
+  # Édition des options de la granularité globale dans le datagrid des granularités
+    When I set "Oui" for column "orgaTab" of row 1 of the "granularity" datagrid with a confirmation message
+    Then the row 1 of the "granularity" datagrid should contain:
+      | orgaTab |
+      | Oui     |

@@ -269,11 +269,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        $granularity = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
-        $crossedOrgaGranularity = $granularity->getCrossedGranularity($cell->getGranularity());
+        $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+        $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
 
         $datagridConfiguration = new Orga_DatagridConfiguration(
-            'inventories'.$granularity->getId(),
+            'inventories'.$granularityForInventoryStatus->getId(),
             'datagrid_cell_inventories',
             'orga',
             $cell,
@@ -290,9 +290,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             Orga_Action_Cell::INPUT(),
             $cell
         );
-        if ($isUserAllowedToInputInventoryStatus) {
-            $columnStateOrga->editable = $cell->getGranularity()->isBroaderThan($granularity);
-        }
+        $columnStateOrga->editable = ($isUserAllowedToInputInventoryStatus
+            && (($cell->getGranularity()->isBroaderThan($granularityForInventoryStatus))
+                || ($cell->getGranularity() === $granularityForInventoryStatus))
+        );
         $columnStateOrga->list = array(
                 Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
                 Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),

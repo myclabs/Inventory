@@ -35,7 +35,7 @@ Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](h
 vagrant up
 ```
 
-The website is accessible at [http://localhost:8000/](http://localhost:8000/).
+The website is accessible at [http://localhost:8000/inventory/](http://localhost:8000/inventory/).
 
 PhpMyAdmin is accessible at [http://localhost:8000/phpmyadmin/](http://localhost:8000/phpmyadmin/).
 

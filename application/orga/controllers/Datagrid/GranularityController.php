@@ -58,6 +58,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $data['inputDocuments'] = $granularity->getCellsWithInputDocuments();
             if (!($granularity->hasAxes())) {
                 $this->editableCell($data['navigable'], false);
+                $this->editableCell($data['orgaTab'], false);
                 $data['delete'] = false;
             }
             $this->addLine($data);

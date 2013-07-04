@@ -5,6 +5,8 @@ default:
     Behat\MinkExtension\Extension:
       base_url: http://localhost/inventory
       default_session: selenium2
+      javascript_session: selenium2
+      show_cmd: '"C:\Program Files (x86)\Mozilla Firefox\firefox.exe" %s'
       selenium2:
         browser: 'chrome'
         wd_host: 'http://localhost:4444/wd/hub'
