@@ -6,6 +6,7 @@ Feature: orgaGranularity
 
   @javascript
   Scenario: orgaGranularity1
+  # Valeurs par défaut granularité globale, granularité ajoutée, ajout/suppression d'une granularité
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
@@ -55,6 +56,7 @@ Feature: orgaGranularity
 
   @javascript
   Scenario: orgaGranularity2
+  # Ajout granularité existante, ajout granularité avec toutes les options cochées
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
@@ -78,10 +80,6 @@ Feature: orgaGranularity
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Zone" from "granularity_axes_addForm"
     And I additionally select "Marque" from "granularity_axes_addForm"
-    # And I select "Navigable" in radio "granularity_axes_addForm"
-    # And I select "Oui" in radio "granularity_orgaTab_addForm"
-    # And I check "Navigable"
-    # And I select "Navigable" in radio "granularity_navigable_addForm"
     And I select "Navigable" in radio "Navigable"
     And I select "Oui" in radio "Organisation"
     And I select "Oui" in radio "Rôles"
@@ -98,12 +96,16 @@ Feature: orgaGranularity
 
   @javascript
   Scenario: orgaGranularity3
+  # Édition d'une granularité
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Édition des options de la granularité globale dans le datagrid des granularités
-    When I set "Oui" for column "orgaTab" of row 1 of the "granularity" datagrid with a confirmation message
+    When I set "Non" for column "aCL" of row 1 of the "granularity" datagrid with a confirmation message
+    And I set "Non" for column "aFTab" of row 1 of the "granularity" datagrid with a confirmation message
+    And I set "Non" for column "dW" of row 1 of the "granularity" datagrid with a confirmation message
+    And I set "Oui" for column "inputDocuments" of row 1 of the "granularity" datagrid with a confirmation message
     Then the row 1 of the "granularity" datagrid should contain:
-      | orgaTab |
-      | Oui     |
+      | aCL | aFTab | dW  | inputDocuments |
+      | Non | Non   | Non | Oui            |

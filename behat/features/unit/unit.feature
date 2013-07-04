@@ -28,7 +28,8 @@ Feature: unit
     And I wait for the page to finish loading
     Then I should see "Unités étendues"
     And I should see the "ListExtendedUnit" datagrid
-    # Multiplicateur (A MODIFIER CAR POUR L'INSTANT BUG)
+  # Multiplicateur
+  # TODO À MODIFIER CAR POUR L'INSTANT BUG
     And the row 1 of the "ListExtendedUnit" datagrid should contain:
       | name                  | ref     | symbol     | multiplier |
       | gramme équivalent CO2 | g_co2e  | g équ. CO2 | 0          |
