@@ -14,14 +14,14 @@ if ($element instanceof Techno_Model_Element_Process) {
 }
 ?>
 
-<div class="page-header">
-    <h1><?=$title?></h1>
-</div>
+<script type="text/javascript">
+    $('#element_edit').children('div.modal-header').children('h3').html('<?=$title?>');
+</script>
 
 <?php
-$editForm = new UI_Form('editElement');
-$editForm->setAction($this->baseUrl('techno/element/edit-submit'));
-$editForm->setAjax(true);
+$editForm = new UI_Form('element_editForm');
+$editForm->setAction('techno/element/edit-submit');
+$editForm->setAjax(true, 'elementEditSuccess');
 
 // Unité
 $unitField = new UI_Form_Element_Text('unit');
@@ -52,7 +52,4 @@ $editForm->addElement($documentationField);
 $elementIdField = new UI_Form_Element_Hidden('id');
 $elementIdField->setValue($element->getId());
 $editForm->addElement($elementIdField);
-
-$editForm->addSubmitButton();
-$editForm->addResetButton();
-$editForm->display();
+echo $editForm->render();

@@ -22,12 +22,11 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         /** @var $family Techno_Model_Family */
         $family = Techno_Model_Family::load($idFamily);
         // Récupère la cellule
-        $coordinates = $this->getParam('coordinates');
+        $coordinates = explode('#', $this->getParam('coordinates'));
         $members = [];
         $index = 0;
         foreach ($family->getDimensions() as $dimension) {
-            $dimensionMembers = $dimension->getMembers();
-            $members[] = $dimensionMembers[$coordinates[$index]];
+            $members[] = $dimension->getMember(Keyword_Model_Keyword::loadByRef($coordinates[$index]));
             $index++;
         }
         $cell = $family->getCell($members);
@@ -48,10 +47,13 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $cell->setChosenElement($element);
         $cell->save();
         $this->entityManager->flush();
-        $this->sendJsonResponse([
-                                'message' => 'Un élément vide a été créé.',
-                                'type'    => 'success',
-                                ]);
+        $this->sendJsonResponse(
+            [
+                'elementId' => $element->getId(),
+                'message' => 'Un élément vide a été créé.',
+                'type'    => 'success',
+            ]
+        );
     }
 
 }
