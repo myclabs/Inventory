@@ -359,7 +359,7 @@ class AF_InputController extends Core_Controller
                         // La répétition existe déjà
                         $subInputSet = $subInputSets[$number];
                         // Free label
-                        foreach ($elements['elements'] as $subRef => $subInputContent) {
+                        foreach ($elements as $subRef => $subInputContent) {
                             $refComponents = explode(UI_Generic::REF_SEPARATOR, $subRef);
                             if ($refComponents[count($refComponents) - 1] == 'freeLabel') {
                                 $subInputSet->setFreeLabel($subInputContent['value']);
@@ -373,14 +373,14 @@ class AF_InputController extends Core_Controller
                         // On crée une nouvelle répétition
                         $subInputSet = new AF_Model_InputSet_Sub($component->getCalledAF());
                         // Free label
-                        foreach ($elements['elements'] as $subRef => $subInputContent) {
+                        foreach ($elements as $subRef => $subInputContent) {
                             $refComponents = explode(UI_Generic::REF_SEPARATOR, $subRef);
                             if ($refComponents[count($refComponents) - 1] == 'freeLabel') {
                                 $subInputSet->setFreeLabel($subInputContent['value']);
                                 break;
                             }
                         }
-                        $errorMessages += $this->parseAfSubmit($elements['elements'],
+                        $errorMessages += $this->parseAfSubmit($elements,
                                                                $subInputSet,
                                                                $component->getCalledAF());
                         $input->addSubSet($subInputSet);
