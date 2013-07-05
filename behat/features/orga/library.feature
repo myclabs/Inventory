@@ -20,9 +20,4 @@ Feature: orgaLibrary
     Then I should see the popup "Ajout d'un document"
     When I click element "#library1_add .btn:contains('Ajouter')"
     Then I should see "L'adresse indiquée est vide ou invalide."
-    And I click element "#library1_add .btn:contains('Annuler')"
-
-
-
-
-
+    And I click "Annuler"
