@@ -32,31 +32,31 @@ Feature: orgaAxis
     When I fill in "addAxis_ref" with "a_modifier"
     And I click "Valider"
     Then the field "addAxis_ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-    When I click element "#editAxis_addPanel a.btn:contains('Annuler')"
+    When I click "Annuler"
   # Modification du libellé et de l'identifiant d'un axe
     When I click "a_modifier"
     Then I should see the popup "Édition d'un axe"
     When I fill in "editAxis_label" with "À supprimer !"
     And I fill in "editAxis_ref" with "a_supprimer"
-    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Modification de l'identifiant d'un axe, identifiant vide
     When I click "a_supprimer"
     Then I should see the popup "Édition d'un axe"
     When I fill in "editAxis_ref" with ""
-    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    And I click "Confirmer"
     Then the field "editAxis_ref" should have error: "Merci de renseigner ce champ."
   # Modification de l'identifiant d'un axe, identifiant avec des caractères non autorisés
     When I fill in "editAxis_ref" with "bépo_supprimer"
-    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    And I click "Confirmer"
     Then the field "editAxis_ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Suppression d'un axe (sans axe parent)
-    When I click element "#editAxis_editPanel a.btn:contains('Annuler')"
+    When I click "Annuler"
     And I click "a_supprimer"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click element "#editAxis_deletePanel button:contains('Confirmer')"
+    When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
 
   @javascript
@@ -76,18 +76,18 @@ Feature: orgaAxis
     When I open tab "Membres"
     And I open collapse "Axe test"
     Then I should see the "listMembersaxe_test" datagrid
-    When I click element "#membersaxe_test a.btn:contains('Ajouter')"
+    When I click "Ajouter"
     Then I should see the popup "Ajout d'un membre à l'axe « Axe test »"
     When I fill in "listMembersaxe_test_ref_addForm" with "membre_test"
-    And I click element "#listMembersaxe_test_addPanel button:contains('Valider')"
+    And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Tentative de suppression de l'axe
     When I open tab "Axes"
     And I click "axe_test"
     Then I should see the popup "Édition d'un axe"
-    When I click element "#editAxis_editPanel a.btn:contains('Supprimer')"
+    When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click element "#editAxis_deletePanel button:contains('Confirmer')"
+    When I click "Confirmer"
     Then the following message is shown and closed: "Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses membres."
   # Suppression du membre
     When I open tab "Membres"
@@ -95,23 +95,23 @@ Feature: orgaAxis
     Then I should see the "listMembersaxe_test" datagrid
     When I click "Supprimer" in the row 1 of the "listMembersaxe_test" datagrid
     Then I should see the popup "Demande de confirmation"
-    When I click element "#listMembersaxe_test_deletePanel a.btn:contains('Confirmer')"
+    When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
   # Ajout d'une granularité
     When I open tab "Niveaux"
     Then I should see the "granularity" datagrid
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Axe test" from "granularity_axes_addForm"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Tentative de suppression de l'axe
     When I open tab "Axes"
     And I click "axe_test"
     Then I should see the popup "Édition d'un axe"
-    When I click element "#editAxis_editPanel a.btn:contains('Supprimer')"
+    When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click element "#editAxis_deletePanel button:contains('Confirmer')"
+    When I click "Confirmer"
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il intervient dans la définition de (au moins) un niveau organisationnel."
 
   @javascript
@@ -164,7 +164,7 @@ Feature: orgaAxis
     And I click "activite"
     Then I should see the popup "Édition d'un axe"
     When I check "Premier"
-    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement de l'axe activité après l'axe Pays
     When I wait 3 seconds
@@ -172,14 +172,14 @@ Feature: orgaAxis
     Then I should see the popup "Édition d'un axe"
     When I check "Après"
     And I select "Pays" from "editAxis_selectAfter"
-    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement de l'axe "Activité" en dernier
     When I wait 3 seconds
     And I click "activite"
     Then I should see the popup "Édition d'un axe"
     When I check "Dernier"
-    And I click element "#editAxis_editPanel button:contains('Confirmer')"
+    And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
     And I wait 3 seconds
   # Tentative de suppression de l'axe "Site"
@@ -187,7 +187,7 @@ Feature: orgaAxis
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click element "#editAxis_deletePanel button:contains('Confirmer')"
+    When I click "Confirmer"
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
   # Ajout de l'axe "Zone"
     When I click "Ajouter"
@@ -196,6 +196,7 @@ Feature: orgaAxis
     When I fill in "addAxis_ref" with "zone"
     And I select "Pays" from "addAxis_parent"
     And I click "Valider"
+    When I wait 2 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout de l'axe "Marque"
     When I click "Ajouter"
@@ -204,6 +205,7 @@ Feature: orgaAxis
     When I fill in "addAxis_ref" with "marque"
     And I select "Société" from "addAxis_parent"
     And I click "Valider"
+    When I wait 2 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout de l'axe "Catégorie"
     When I click "Ajouter"
