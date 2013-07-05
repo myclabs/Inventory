@@ -8,6 +8,7 @@ Feature: orgaMember
   Scenario: orgaMember1
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Membres"
     Then I should see "Année"
@@ -49,6 +50,7 @@ Feature: orgaMember
   Scenario: orgaMember2
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Membres"
   # Ajout membre axe Pays, zone non renseignée
@@ -94,6 +96,7 @@ Feature: orgaMember
   Scenario: orgaMember3
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Membres"
   # Ajout membre axe Pays, zone non renseignée
