@@ -49,7 +49,7 @@ class UI_Form_Element_Pattern_Value extends UI_Form_Element_Numeric
                 $this->_percent->setValue($value[1]);
             }
         } else {
-            // Permett l'affichage des valeurs en fonction de la locale du navigateur
+            // Permet l'affichage des valeurs en fonction de la locale du navigateur
             parent::setValue($value);
         }
     }
