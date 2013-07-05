@@ -5,7 +5,7 @@ Feature: granularityDw
     Given I am logged in
 
   @javascript
-  Scenario: granularityDw1
+  Scenario: Trying to launch an analysis when configuration is not complete
   # Affichage des messages d'erreur lorsque des champs ne sont pas remplis
   # Accès à l'onglet "Configuration"
     Given I am on "orga/cell/details/idCell/1"
@@ -35,7 +35,7 @@ Feature: granularityDw
     Then I should see "Unité organisationnelle globale Organisation test"
 
   @javascript
-  Scenario: granularityDw2
+  Scenario: Display of the status of analysis configuration
   # Affichage du cartouche indiquant le statut de la configuration
     Given I am on "orga/granularity/report/idCell/1/idGranularity/1/idCube/1"
   # Nouvelle analyse
@@ -75,9 +75,10 @@ Feature: granularityDw
     And I should not see "Modifications en cours"
   # Édition d'un filtre
     When I open collapse "Filtres"
-    And I click element "#filterAxisorga_anneeNumberMembers_one"
-    Then I should not see "Nouvelle configuration"
-    And I should see "Modifications en cours"
+    # Besoin que le dw comprenne les axes organisationnels
+    # And I click element "#filterAxisorga_anneeNumberMembers_one"
+    # Then I should not see "Nouvelle configuration"
+    # And I should see "Modifications en cours"
 
 
 
