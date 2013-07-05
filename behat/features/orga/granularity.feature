@@ -63,20 +63,20 @@ Feature: orgaGranularity
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Ajout d'une granularité
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Année" from "granularity_axes_addForm"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Ajout d'une granularité déjà existante
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Année" from "granularity_axes_addForm"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click "Valider"
     Then the field "granularity_axes_addForm" should have error: "Il existe déjà un niveau organisationnel correspondant à cette combinaison d'axes."
-    When I click element "#granularity_addPanel a.btn:contains('Annuler')"
+    When I click "Annuler"
   # Ajout d'une granularité avec toutes les options cochées
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Zone" from "granularity_axes_addForm"
     And I additionally select "Marque" from "granularity_axes_addForm"
@@ -88,7 +88,7 @@ Feature: orgaGranularity
     And I select "Oui" in radio "Modèles d'action"
     And I select "Oui" in radio "Actions"
     And I select "Oui" in radio "Documents"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
     And the row 2 of the "granularity" datagrid should contain:
       | axes          | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
