@@ -6,6 +6,7 @@ Feature: granularityDw
 
   @javascript
   Scenario: granularityDw1
+  # Affichage des messages d'erreur lorsque des champs ne sont pas remplis
   # Accès à l'onglet "Configuration"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
@@ -15,20 +16,68 @@ Feature: granularityDw
     Then I should see the "granularity1Report" datagrid
   # Nouvelle analyse
     When I click "Nouvelle analyse"
-    Then I should see "Nouvelle configuration"
   # Tentative de lancement, sans avoir rien saisi
-    When I click "Lancer"
+    And I click "Lancer"
     Then the field "indicatorRatio" should have error: "Merci de préciser la nature des valeurs à fournir."
     And the field "chartType" should have error: "Merci de préciser le type de graphique à afficher."
-  # Modification et test d'affichage du cartouche indiquant la modification en cours
+  # Tentative de lancement sans avoir précisé l'indicateur
     When I click element "#indicatorRatio_indicator"
-    Then I should see "Modifications en cours"
-    When I click "Lancer"
+    And I select "Camembert" from "chartType"
+    And I click "Lancer"
     Then the field "indicator" should have error: "Merci de sélectionner un indicateur."
+  # Sélection "Ratio"
+    When I click element "#indicatorRatio_ratio"
+    And I click "Lancer"
+    Then the field "numerator" should have error: "Merci de sélectionner un indicateur pour le numérateur."
+    And the field "denominator" should have error: "Merci de sélectionner un indicateur pour le dénominateur."
   # Retour
     When I click "Retour"
     Then I should see "Unité organisationnelle globale Organisation test"
 
+  @javascript
+  Scenario: granularityDw2
+  # Affichage du cartouche indiquant le statut de la configuration
+    Given I am on "orga/granularity/report/idCell/1/idGranularity/1/idCube/1"
+  # Nouvelle analyse
+    Then I should see "Nouvelle configuration"
+    And I should not see "Modifications en cours"
+  # Clic sur "Indicateur"
+    When I click element "#indicatorRatio_indicator"
+    Then I should not see "Nouvelle configuration"
+    And I should see "Modifications en cours"
+  # Réinitialisation
+    When I click element "#resetReportConfiguration"
+    Then I should see "Nouvelle configuration"
+    And I should not see "Modifications en cours"
+  # Clic sur "Ratio"
+    When I click element "#indicatorRatio_indicator"
+    Then I should not see "Nouvelle configuration"
+    And I should see "Modifications en cours"
+  # Réinitialisation
+    When I click element "#resetReportConfiguration"
+    Then I should see "Nouvelle configuration"
+    And I should not see "Modifications en cours"
+  # Sélection du type de graphique
+    When I select "Camembert" from "chartType"
+    Then I should not see "Nouvelle configuration"
+    And I should see "Modifications en cours"
+  # Réinitialisation
+    When I click element "#resetReportConfiguration"
+    Then I should see "Nouvelle configuration"
+    And I should not see "Modifications en cours"
+  # Clic sur la case à cocher "Afficher l'incertitude"
+    When I click element "#withUncertainty"
+    Then I should not see "Nouvelle configuration"
+    And I should see "Modifications en cours"
+  # Réinitialisation
+    When I click element "#resetReportConfiguration"
+    Then I should see "Nouvelle configuration"
+    And I should not see "Modifications en cours"
+  # Édition d'un filtre
+    When I open collapse "Filtres"
+    And I click element "#filterAxisorga_anneeNumberMembers_one"
+    Then I should not see "Nouvelle configuration"
+    And I should see "Modifications en cours"
 
 
 
