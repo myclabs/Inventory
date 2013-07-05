@@ -21,11 +21,14 @@ Feature: granularityDw
     Then the field "indicatorRatio" should have error: "Merci de préciser la nature des valeurs à fournir."
     And the field "chartType" should have error: "Merci de préciser le type de graphique à afficher."
   # Modification et test d'affichage du cartouche indiquant la modification en cours
-    When I check "Indicateur"
-    # Then I should see "Modifications en cours"
+    When I click element "#indicatorRatio_indicator"
+    Then I should see "Modifications en cours"
+    When I click "Lancer"
+    Then the field "indicator" should have error: "Merci de sélectionner un indicateur."
   # Retour
     When I click "Retour"
     Then I should see "Unité organisationnelle globale Organisation test"
+
 
 
 
