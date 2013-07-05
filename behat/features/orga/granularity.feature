@@ -17,40 +17,40 @@ Feature: orgaGranularity
       | axes  | navigable  | orgaTab | aCL | aFTab | dW  |
       |       | Navigable  | Oui     | Oui | Oui   | Oui |
   # Ajout d'une granularité avec un axe, non navigable
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Année" from "granularity_axes_addForm"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
     # Valeurs par défaut des attributs d'une granularité non globale
     And the row 2 of the "granularity" datagrid should contain:
-      | axes  | navigable  | orgaTab | aCL | aFTab | dW  |
-      | Année | Non navigable  | Non | Non | Non | Non |
+      | axes  | navigable     | orgaTab | aCL | aFTab | dW  |
+      | Année | Non navigable | Non     | Non | Non   | Non |
   # Ajout d'une granularité avec un axe, navigable
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Site" from "granularity_axes_addForm"
     And I check "Navigable"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
     And the row 2 of the "granularity" datagrid should contain:
-      | axes  | navigable  | orgaTab |
-      | Site | Navigable  | Non     |
+      | axes | navigable | orgaTab |
+      | Site | Navigable | Non     |
   # Ajout d'une granularité avec deux axes, navigable
-    When I click element "#orga_granularities a.btn:contains('Ajouter')"
+    When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Zone" from "granularity_axes_addForm"
     And I additionally select "Marque" from "granularity_axes_addForm"
     And I check "Navigable"
-    And I click element "#granularity_addPanel button.btn:contains('Valider')"
+    And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
     And the row 2 of the "granularity" datagrid should contain:
-      | axes  | navigable  | orgaTab |
-      | Zone, Marque | Navigable  | Non |
+      | axes         | navigable  | orgaTab |
+      | Zone, Marque | Navigable  | Non     |
   # Suppression d'une granularité
     And I click "Supprimer" in the row 2 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
-    When I click element "#granularity_deletePanel a.btn:contains('Confirmer')"
+    When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "granularity" datagrid should contain 3 row
 
