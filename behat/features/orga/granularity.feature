@@ -9,6 +9,7 @@ Feature: orgaGranularity
   # Valeurs par défaut granularité globale, granularité ajoutée, ajout/suppression d'une granularité
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
@@ -59,6 +60,7 @@ Feature: orgaGranularity
   # Ajout granularité existante, ajout granularité avec toutes les options cochées
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
@@ -98,6 +100,7 @@ Feature: orgaGranularity
   Scenario: orgaGranularity3
   # Édition d'une granularité
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid

@@ -8,6 +8,7 @@ Feature: orgaConfiguration
   Scenario: orgaConfiguration1
   # Accès au datagrid des granularités de saisie
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Configuration"
     Then I should see the "inputGranularities" datagrid

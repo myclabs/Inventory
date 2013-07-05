@@ -10,6 +10,7 @@ Feature: orgaRole
   # TODO : tester format email lors de l'ajout
   # Accès à l'onglet "Rôles"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Rôles"
     And I open collapse "Administrateurs d'organisation"
     Then I should see the "organizationACL1" datagrid
@@ -54,6 +55,7 @@ Feature: orgaRole
   # TODO : tester format email lors de l'ajout
   # Accès au datagrid et au popup
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Rôles"
     And I open collapse "Niveau organisationnel global"
     Then I should see the "granularityACL1" datagrid

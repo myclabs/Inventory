@@ -8,6 +8,7 @@ Feature: orgaOrga
   Scenario: orgaOrga1
   # Ajout d'une organisation
     When I am on "orga/organization/manage"
+    And I wait for the page to finish loading
     Then I should see the "organizations" datagrid
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une organisation"
@@ -49,6 +50,7 @@ Feature: orgaOrga
   Scenario: orgaOrga2
   # Ajout d'une organisation
     When I am on "orga/organization/manage"
+    And I wait for the page to finish loading
     Then I should see the "organizations" datagrid
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une organisation"

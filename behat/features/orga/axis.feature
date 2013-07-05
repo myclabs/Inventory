@@ -10,6 +10,7 @@ Feature: orgaAxis
   # TODO : affichage libellé + identifiant
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Axes"
   # Ajout d'un axe, identifiant vide
@@ -63,6 +64,7 @@ Feature: orgaAxis
   Scenario: orgaAxis2
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Axes"
   # Ajout de l'axe "Test"
@@ -119,6 +121,7 @@ Feature: orgaAxis
   # Scénario qui permet de reconstituer la base "oneOrganizationWithAxes"
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Axes"
   # Ajout de l'axe "Année"
