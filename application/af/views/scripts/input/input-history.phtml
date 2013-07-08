@@ -23,7 +23,7 @@ if (empty($entries)) : ?>
                 $shownValue = $value;
             }
             if (is_bool($value)) {
-                $shownValue = $value ? __('AF', 'inputInput', 'valueChecked') :  __('AF', 'inputInput', 'valueUnchecked');
+                $shownValue = $value ? __('UI', 'property', 'checked') :  __('UI', 'property', 'unchecked');
             }
             if ($value instanceof Calc_UnitValue) {
                 $shownValue = $locale->formatNumber($value->getDigitalValue())
