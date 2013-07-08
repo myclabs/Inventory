@@ -91,7 +91,11 @@ class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
 
         $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
 
-        $this->assertEquals('foo', $dispatcher->run($task));
+        $result = $dispatcher->run($task);
+
+        $this->assertInternalType('array', $result);
+        $this->assertEquals('foo', $result['value']);
+        $this->assertEquals(Core_Locale::loadDefault()->getId(), $result['locale']);
     }
 
 }
