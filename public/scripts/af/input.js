@@ -128,7 +128,7 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
 
 	// Handler appelé quand la saisie a été sauvegardée avec succès
 	$.fn.inputSavedHandler = function(data, textStatus, jqXHR) {
-		that.inputSavedHandler(data, textStatus, jqXHR);
+        that.inputSavedHandler(data, textStatus, jqXHR);
 	};
 
     // Handler pour l'historique d'une valeur
@@ -137,7 +137,7 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
         title: __('AF', 'inputInput', 'valueHistory'),
         html: true,
         content: '<img src="images/ui/ajax-loader.gif">'
-    }).click(function(event) {
+    }).click(function() {
             var inputId = $(this).data('input-id');
             that.loadInputHistory(inputId, $(this));
         });
@@ -258,7 +258,9 @@ AF.Input.prototype = {
 		// Définit une nouvelle URL pour le submit
 		var url = "af/input/results-preview/id/" + this.id;
 		for (var key in this.urlParams) {
-			url += '/' + key + '/' + this.urlParams[key];
+            if (this.urlParams.hasOwnProperty(key)) {
+			    url += '/' + key + '/' + this.urlParams[key];
+            }
 		}
 		this.form.prop("action", url);
 		// Définit le handler de retour à utiliser
@@ -312,7 +314,9 @@ AF.Input.prototype = {
 
 		var url = "af/input/get-sub-af/id/" + idAFOwner + "/refComponent/" + refComponent + "/number/" + number;
 		for (var key in this.urlParams) {
-			url += '/' + key + '/' + this.urlParams[key];
+            if (this.urlParams.hasOwnProperty(key)) {
+                url += '/' + key + '/' + this.urlParams[key];
+            }
 		}
 
 		$.get(url,
