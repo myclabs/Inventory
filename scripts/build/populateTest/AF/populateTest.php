@@ -29,7 +29,6 @@ class AF_PopulateTest extends Core_Script_Action
 
         // Création des af.
         // Params : Category, ref, label
-        // OptionalParams : [Member] parents=[]
         $aF1 = $this->createAF($category1, 'ref1', 'Label 1');
 
         // Création des composants.
@@ -39,13 +38,14 @@ class AF_PopulateTest extends Core_Script_Action
         //  + createNumericInput : refUnit
         //  + createSelectInput List|Radio|Multi|Boxes : [refOtion => labelOption]
         //  + createBooleanInput : -
-        // OptionalParams : help=null, visible=true,
+        // OptionalParams :
         //  + createGroup : foldaway=true
         //  + createSubAF : foldaway=true
         //  + createSubAFRepeated : foldaway=true, minimumRepetition=0, freeLabel=false
         //  + createNumericInput : defaultValue=null, defaultUncertainty=null, defaultReminder=true, required=true, enabled=true
         //  + createSelectInput List|Radio|Multi|Boxes : required=true, enabled=true
         //  + createBooleanInput : defaultValue=true
+        //  help=null, visible=true
         $group1 = $this->createGroup($aF1, $aF1->getRootGroup(), 'refg1', 'Label Group 1');
         $numericInput = $this->createNumericInput($aF1, $group1, 'refn1', 'Label Numeric 1', 'm', 25, 10, true);
         $selectInputList = $this->createSelectInputList($aF1, $group1, 'refs1', 'Label Select 1', ['o1' => 'Option 1', 'o2' => 'Option 2']);

@@ -24,22 +24,22 @@ class Keyword_PopulateTest extends Core_Script_Action
         // Création des prédicats.
         // Params : ref, label, reverseRef, reverseLabel
         // OptionalParams : description=null
-        $predicate1 = $this->createPredicate('ref1', 'Label 1', 'reverseRef1', 'Reverse Label 1');
-        $predicate2 = $this->createPredicate('ref2', 'Label 2', 'reverseRef2', 'Reverse Label 2', 'description');
+        $predicate_est_plus_general_que = $this->createPredicate('est_plus_general_que', 'est plus général que', 'est_plus_specifique_que', 'est plus spécifique que');
+        $predicate_contient = $this->createPredicate('contient', 'contient', 'fait_partie_de', 'fait partie de', 'Blabla');
 
         // Création des mot-clefs.
         // Params : ref, label
-        $keyword1 = $this->createKeyword('ref1', 'Label 1');
-        $keyword2 = $this->createKeyword('ref2', 'Label 2');
-        $keyword3 = $this->createKeyword('ref3', 'Label 3');
-        $keyword4 = $this->createKeyword('ref4', 'Label 4');
-        $keyword4 = $this->createKeyword('ref5', 'Label 4');
-        $keyword4 = $this->createKeyword('ref6', 'Label 4');
+        $keyword_combustible = $this->createKeyword('combustible', 'combustible');
+        $keyword_gaz_naturel_ = $this->createKeyword('gaz_naturel', 'gaz naturel');
+        $keyword_charbon = $this->createKeyword('charbon', 'charbon');
+        $keyword_processus = $this->createKeyword('processus', 'processus');
+        $keyword_amont_combustion = $this->createKeyword('amont_combustion', 'amont_combustion');
+        $keyword_combustion = $this->createKeyword('combustion', 'combustion');
 
         // Création des associations.
         // Params : Keyword object, Predicate, Keyword subject
-        $this->createAssociation($keyword1, $predicate1, $keyword2);
-        $this->createAssociation($keyword3, $predicate2, $keyword4);
+        $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_gaz_naturel_);
+        $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_charbon);
 
 
         $entityManager->flush();

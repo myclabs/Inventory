@@ -10,7 +10,14 @@ trait DatabaseFeatureContext
      */
     public function loadEmptyDatabase()
     {
-        self::loadFileToDatabase('base.sql');
+        self::loadFileToDatabase('emptyOneUser.sql');
+    }
+    /**
+     * @BeforeScenario @dbFull
+     */
+    public function loadFilledDatabase()
+    {
+        self::loadFileToDatabase('full.sql');
     }
     /**
      * @BeforeScenario @dbOneOrganization
