@@ -198,10 +198,14 @@ class Core_Locale
      *                                     Incompatible Avec les chiffres significatifs.
      *
      * @return float
-     * @throws Core_Exception_User Le nombre saisi n'est pas reconnu comme un nombre
+     * @throws Core_Exception_InvalidArgument Le nombre saisi n'est pas reconnu comme un nombre
      */
-    public function retrieveNumber($input, $significantFigures = null, $numberDecimal = null)
+    public function readNumber($input, $significantFigures = null, $numberDecimal = null)
     {
+        if (trim($input) === '') {
+            return null;
+        }
+
         $options = array(
             'locale' => $this->zendLocale
         );
@@ -217,7 +221,7 @@ class Core_Locale
         }
 
         try {
-            return (double) Zend_Locale_Format::getNumber($input, $options);
+            return (float) Zend_Locale_Format::getNumber($input, $options);
         } catch (Zend_Locale_Exception $e) {
             throw new Core_Exception_InvalidArgument("Le nombre saisi n'est pas reconnu comme un nombre.");
         }
@@ -226,20 +230,22 @@ class Core_Locale
     /**
      * Récupère la valeur numérique entière d'une chaine de caractère
      *
-     * Peut être utilisé par exemple pour récupérer le nombre entier saisi par
-     * un utilisateur dans un champ de formulaire.
-     *
-     * @param string $saisie
-     * @return int
-     * @throws Core_Exception_User Le nombre saisi n'est pas reconnu comme un nombre entier
+     * @param string $input
+     * @return int|null
+     * @throws Core_Exception_InvalidArgument Le nombre saisi n'est pas reconnu comme un nombre entier
      */
-    public function retrieveInteger($saisie)
+    public function readInteger($input)
     {
-        $options = array(
+        if (trim($input) === '') {
+            return null;
+        }
+
+        $options = [
             'locale' => $this->zendLocale,
-        );
+        ];
+
         try {
-            return Zend_Locale_Format::getInteger($saisie, $options);
+            return Zend_Locale_Format::getInteger($input, $options);
         } catch (Zend_Locale_Exception $e) {
             throw new Core_Exception_InvalidArgument("Le nombre saisi n'est pas reconnu comme un nombre entier.");
         }
