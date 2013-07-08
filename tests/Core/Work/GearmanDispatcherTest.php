@@ -41,7 +41,7 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
         $dispatcher = $this->get('Core_Work_GearmanDispatcher');
         $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container()));
 
-        $locale = Core_Locale::load('fr');
+        $locale = Core_Locale::load('en');
         Core_Locale::setDefault($locale);
 
         $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
