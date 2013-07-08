@@ -129,11 +129,22 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     {
         Core_Error_Log::getInstance()->info("Executing task " . $worker->getTaskType());
 
+        /** @var Core_Work_Task $task */
+        $task = unserialize($job->workload());
+
+        // Change la locale
+        if ($task->getContext() && $task->getContext()->getUserLocale()) {
+            $oldDefaultLocale = Core_Locale::loadDefault();
+            Core_Locale::setDefault($task->getContext()->getUserLocale());
+        } else {
+            $oldDefaultLocale = null;
+        }
+
         // Connexion BDD et transaction
         $this->entityManager->getConnection()->connect();
         $this->entityManager->beginTransaction();
 
-        $task = unserialize($job->workload());
+        // Exécute la tâche
         $result = $worker->execute($task);
 
         // Flush et vide l'entity manager
@@ -141,6 +152,11 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $this->entityManager->commit();
         $this->entityManager->clear();
         $this->entityManager->getConnection()->close();
+
+        // Rétablit la locale
+        if ($oldDefaultLocale) {
+            Core_Locale::setDefault($oldDefaultLocale);
+        }
 
         Core_Error_Log::getInstance()->info("Task executed");
 
