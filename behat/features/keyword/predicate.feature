@@ -1,5 +1,6 @@
 @dbFull
-Feature: keywordPredicate
+Feature: Predicates datagrid
+  # TODO Tester les filtres sur les prédicats
 
   Background:
     Given I am logged in
@@ -56,6 +57,34 @@ Feature: keywordPredicate
     Then the field "predicates_reverseRef_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
+  Scenario: Edition of a predicate
+    Given I am on "keyword/predicate/manage"
+    Then I should see the "predicates" datagrid
+  # Modification des libellés et identifiants(direct et inverse)
+    When I set "contient modifié" for column "label" of row 1 of the "predicates" datagrid with a confirmation message
+    And I set "contient_modifie" for column "ref" of row 1 of the "predicates" datagrid with a confirmation message
+    And I set "fait partie de modifié" for column "reverseLabel" of row 1 of the "predicates" datagrid with a confirmation message
+    And I set "fait_partie_de_modifie" for column "reverseRef" of row 1 of the "predicates" datagrid with a confirmation message
+    Then the row 1 of the "predicates" datagrid should contain:
+      | label    | ref      | reverseLabel | reverseRef |
+      | contient modifié | contient_modifie | fait partie de modifié | fait_partie_de_modifie |
+  # Modification des identifiants, identifiants vides
+    When I set "" for column "ref" of row 1 of the "predicates" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+    When I set "" for column "reverseRef" of row 1 of the "predicates" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification des identifiants, caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "predicates" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+    When I set "bépo" for column "reverseRef" of row 1 of the "predicates" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification des identifiants, identifiants déjà utilisés
+    When I set "est_plus_general_que" for column "ref" of row 1 of the "predicates" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+    When I set "est_plus_general_que" for column "reverseRef" of row 1 of the "predicates" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+
+  @javascript
   Scenario: Suppression of a predicate
     Given I am on "keyword/predicate/manage"
     Then I should see the "predicates" datagrid
@@ -75,3 +104,4 @@ Feature: keywordPredicate
     And the row 1 of the "predicates" datagrid should contain:
       | label    | ref      | reverseLabel | reverseRef |
       | est plus général que | est_plus_general_que | est plus spécifique que | est_plus_specifique_que |
+

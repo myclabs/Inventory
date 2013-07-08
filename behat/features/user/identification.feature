@@ -1,5 +1,5 @@
 @dbEmpty
-Feature: Identification
+Feature: Identification feature
   The login form authenticates users.
 
   Scenario: Login redirection
