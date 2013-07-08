@@ -54,8 +54,10 @@ function displayAF(AF_Model_AF $af, AF_Model_InputSet $inputSet, $title, $refPre
     foreach (getSubAFInputSets($inputSet) as $array) {
         /** @var $subInputSet AF_Model_InputSet_Sub */
         $subInputSet = $array['subInputSet'];
+        $componentRef = $array['componentRef'];
 
-        $newRefPrefix = $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR;
+        $newRefPrefix = $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR
+            . $componentRef . UI_Generic::REF_SEPARATOR;
         if (isset($array['number'])) {
             $newRefPrefix .= $array['number'] . UI_Generic::REF_SEPARATOR;
         }
@@ -79,8 +81,9 @@ function getSubAFInputSets(AF_Model_InputSet $inputSet)
         if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
             $subInputSet = $input->getValue();
             $subAFInputSets[] = array(
-                'title'       => $input->getComponent()->getLabel(),
-                'subInputSet' => $subInputSet,
+                'title'        => $input->getComponent()->getLabel(),
+                'subInputSet'  => $subInputSet,
+                'componentRef' => $input->getRef(),
             );
             $subAFInputSets = array_merge($subAFInputSets, getSubAFInputSets($subInputSet));
         }
@@ -92,9 +95,10 @@ function getSubAFInputSets(AF_Model_InputSet $inputSet)
                     $title .= " - " . $subInputSet->getFreeLabel();
                 }
                 $subAFInputSets[] = array(
-                    'title'       => $title,
-                    'subInputSet' => $subInputSet,
-                    'number'      => $number,
+                    'title'        => $title,
+                    'subInputSet'  => $subInputSet,
+                    'number'       => $number,
+                    'componentRef' => $input->getRef(),
                 );
                 $subAFInputSets = array_merge($subAFInputSets, getSubAFInputSets($subInputSet));
             }
