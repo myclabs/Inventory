@@ -1,32 +1,49 @@
 <?php
 
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Loggable\Entity\LogEntry;
 
-/** @var LogEntry[] $logEntries */
-$logEntries = $this->logEntries;
+/** @var AF_Model_Component $component */
+$component = $this->component;
+/** @var AF_Service_InputHistoryService_Entry[] $entries */
+$entries = $this->entries;
 
 $locale = Core_Locale::loadDefault();
 
-if (empty($logEntries)) : ?>
+if (empty($entries)) : ?>
     <p class="muted"><?=__('AF', 'inputInput', 'noHistory')?></p>
 <?php else : ?>
     <ul class="unstyled">
         <?php
-        foreach ($logEntries as $logEntry) {
-            $user = User_Model_User::load($logEntry->getUsername());
-            $data = $logEntry->getData();
-            $value = $data['value'];
+        foreach ($entries as $entry) {
+            $value = $entry->getValue();
+
+            $shownValue = '';
+            if (is_string($value)) {
+                $shownValue = $value;
+            }
+            if (is_bool($value)) {
+                $shownValue = $value ? __('AF', 'inputInput', 'valueChecked') :  __('AF', 'inputInput', 'valueUnchecked');
+            }
             if ($value instanceof Calc_UnitValue) {
                 $shownValue = $locale->formatNumber($value->getDigitalValue())
-                    . ' ' . $value->getUnit()->getSymbol();
-            } else {
-                $shownValue = '';
+                    . ' ' . $value->getUnit()->getSymbol()
+                    . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty());
+            }
+            if ($value instanceof AF_Model_Component_Select_Option) {
+                $shownValue = $value->getLabel();
+            }
+            if (is_array($value)) {
+                $labels = array_map(function(AF_Model_Component_Select_Option $option) {
+                        return $option->getLabel();
+                    }, $value);
+                $shownValue = implode(', ', $labels);
             }
             ?>
             <li>
-                <strong><?=$shownValue?></strong>
+                <code><?=$shownValue?></code>
                 -
-                <?=$locale->formatShortDate($logEntry->getLoggedAt())?>
+                <?=$locale->formatDate($entry->getLoggedAt())?>
             </li>
             <?php
         }

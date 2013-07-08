@@ -30,6 +30,12 @@ class AF_InputController extends Core_Controller
     private $inputSetSessionStorage;
 
     /**
+     * @Inject
+     * @var AF_Service_InputHistoryService
+     */
+    private $inputHistoryService;
+
+    /**
      * Soumission d'un AF
      * AJAX
      * - id ID d'AF
@@ -234,11 +240,12 @@ class AF_InputController extends Core_Controller
         /** @var $input AF_Model_Input */
         $input = AF_Model_Input::load($this->getParam('idInput'));
 
-        /** @var LogEntryRepository $repository */
-        $repository = $this->entityManager->getRepository('Gedmo\Loggable\Entity\LogEntry');
-        $logEntries = $repository->getLogEntries($input);
+        $entries = $this->inputHistoryService->getInputHistory($input);
 
-        $this->view->assign('logEntries', $logEntries);
+        Core_Tools::dump($entries);
+
+        $this->view->assign('component', $input->getComponent());
+        $this->view->assign('entries', $entries);
         $this->_helper->layout->disableLayout();
     }
 

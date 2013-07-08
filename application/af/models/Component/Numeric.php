@@ -84,12 +84,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
                 );
             }
             // Historique de la valeur
-            $historyButton = new UI_HTML_Button('<i class="icon-time"></i>');
-            $historyButton->addAttribute('title', __('AF', 'inputInput', 'valueHistory'));
-            $historyButton->addAttribute('class', 'input-history');
-            $historyButton->addAttribute('data-input-id', $input->getId());
-            $history = new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
-            $uiElement->getElement()->addElement($history);
+            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
         } else {
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;

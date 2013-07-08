@@ -335,4 +335,19 @@ abstract class AF_Model_Component extends Core_Model_Entity
         return __CLASS__;
     }
 
+    /**
+     * Retourne le composant UI pour l'historique des valeurs de la saisie
+     * @param AF_Model_Input $input
+     * @return UI_Form_Element_HTML
+     */
+    protected function getHistoryComponent(AF_Model_Input $input)
+    {
+        $historyButton = new UI_HTML_Button('<i class="icon-time"></i>');
+        $historyButton->addAttribute('title', __('AF', 'inputInput', 'valueHistory'));
+        $historyButton->addAttribute('class', 'input-history');
+        $historyButton->addAttribute('data-input-id', $input->getId());
+
+        return new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
+    }
+
 }
