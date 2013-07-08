@@ -41,11 +41,11 @@ class Orga_PopulateTest extends Core_Script_Action
         $member2a = $this->createMember($axis2, 'ref2a', 'Label 2 A');
 
         // Création des granularité.
-        // Params : Organization, [Axis], navigable
-        // OptionalParams : orgaTab=false, aCL=false, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
+        // Params : Organization, axes[Axis], navigable
+        // OptionalParams : orgaTab=false, aCL=true, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
         $granularityGlobal = $this->createGranularity($organization, [], true, true);
         $granularity11 = $this->createGranularity($organization, [$axis11], false);
-        $granularity12 = $this->createGranularity($organization, [$axis1, $axis2], true, false, false, false, true);
+        $granularity12 = $this->createGranularity($organization, [$axis1, $axis2], true, false, true, false, true);
 
         // Création des utilisateurs orga.
         $this->createUser('email1');
@@ -132,7 +132,7 @@ class Orga_PopulateTest extends Core_Script_Action
      * @return Orga_Model_Granularity
      */
     protected function createGranularity(Orga_Model_Organization $organization, array $axes=[], $navigable,
-        $orgaTab=false, $aCL=false, $aFTab=false, $dWCubes=false, $genericAction=false, $contextAction=false, $inputDocs=false)
+        $orgaTab=false, $aCL=true, $aFTab=false, $dWCubes=false, $genericAction=false, $contextAction=false, $inputDocs=false)
     {
         $granularity = new Orga_Model_Granularity($organization, $axes);
         $granularity->setNavigability($navigable);
@@ -182,7 +182,7 @@ class Orga_PopulateTest extends Core_Script_Action
      */
     protected function addCellContributor($email, Orga_Model_Granularity $granularity, array $members)
     {
-        $this->addUserToCell('administrator', $email, $granularity, $members);
+        $this->addUserToCell('contributor', $email, $granularity, $members);
     }
 
     /**
@@ -192,7 +192,7 @@ class Orga_PopulateTest extends Core_Script_Action
      */
     protected function addCellObserver($email, Orga_Model_Granularity $granularity, array $members)
     {
-        $this->addUserToCell('administrator', $email, $granularity, $members);
+        $this->addUserToCell('observer', $email, $granularity, $members);
     }
 
     /**
