@@ -24,7 +24,30 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
 
         $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
 
-        $this->assertEquals('foo', $dispatcher->run($task));
+        $result = $dispatcher->run($task);
+
+        $this->assertEquals('foo', $result['value']);
+    }
+
+    /**
+     * @test
+     */
+    public function defaultLocaleShouldBeTheSame()
+    {
+        if (!extension_loaded('gearman')) {
+            $this->markTestSkipped('Extension Gearman non installée');
+        }
+        $dispatcher = $this->get('Core_Work_GearmanDispatcher');
+        $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container()));
+
+        $locale = Core_Locale::load('it');
+        Core_Locale::setDefault($locale);
+
+        $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
+
+        $result = $dispatcher->run($task);
+
+        $this->assertEquals($locale->getId(), $result['locale']);
     }
 
 }

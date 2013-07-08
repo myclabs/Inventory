@@ -51,6 +51,8 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     public function run(Core_Work_Task $task)
     {
+        $this->saveContextInTask($task);
+
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
@@ -62,6 +64,8 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     public function runBackground(Core_Work_Task $task)
     {
+        $this->saveContextInTask($task);
+
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
@@ -173,6 +177,17 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     private function prefixTaskType($taskType)
     {
         return $this->applicationName . '::' . $taskType;
+    }
+
+    /**
+     * @param Core_Work_Task $task
+     */
+    private function saveContextInTask(Core_Work_Task $task)
+    {
+        $context = new Core_Work_TaskContext();
+        $context->setUserLocale(Core_Locale::loadDefault());
+
+        $task->setContext($context);
     }
 
 }
