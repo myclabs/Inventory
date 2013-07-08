@@ -43,6 +43,7 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
 
     /**
      * @param AF_Model_Component_Select_Option[] $value Array of selected options
+     * @throws Core_Exception_InvalidArgument Value must be an array of AF_Model_Component_Select_Option
      */
     public function setValue($value)
     {
