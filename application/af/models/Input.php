@@ -104,11 +104,15 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     }
 
     /**
-     * @return AF_Model_Component
+     * @return AF_Model_Component|null
      */
     public function getComponent()
     {
-        return AF_Model_Component::loadByRef($this->refComponent, $this->inputSet->getAf());
+        try {
+            return AF_Model_Component::loadByRef($this->refComponent, $this->inputSet->getAf());
+        } catch (Core_Exception_NotFound $e) {
+            return null;
+        }
     }
 
     /**
@@ -149,6 +153,14 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     public function setDisabled($isDisabled)
     {
         $this->disabled = (bool) $isDisabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
 }

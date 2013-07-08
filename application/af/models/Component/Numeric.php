@@ -78,7 +78,18 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             $uiElement->getElement()->disabled = $input->isDisabled();
             $uiElement->getElement()->hidden = $input->isHidden();
             // Valeur
-            $uiElement->setValue([$input->getValue()->getDigitalValue(), $input->getValue()->getRelativeUncertainty()]);
+            if ($input->getValue()) {
+                $uiElement->setValue(
+                    [$input->getValue()->getDigitalValue(), $input->getValue()->getRelativeUncertainty()]
+                );
+            }
+            // Historique de la valeur
+            $historyButton = new UI_HTML_Button('<i class="icon-time"></i>');
+            $historyButton->addAttribute('title', __('AF', 'inputInput', 'valueHistory'));
+            $historyButton->addAttribute('class', 'input-history');
+            $historyButton->addAttribute('data-input-id', $input->getId());
+            $history = new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
+            $uiElement->getElement()->addElement($history);
         } else {
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;

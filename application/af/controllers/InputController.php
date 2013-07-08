@@ -6,6 +6,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
 
 /**
  * Saisie des AF
@@ -221,6 +222,24 @@ class AF_InputController extends Core_Controller
         $uiElement = $component->getSingleSubAFUIElement($generationHelper, $this->getParam('number'), null);
         $html = $uiElement->render() . "<script>" . $uiElement->getScript() . "</script>";
         $this->sendJsonResponse($html);
+    }
+
+    /**
+     * Retourne l'historique des valeurs d'une saisie
+     * AJAX
+     * @Secure("editInputAF")
+     */
+    public function inputHistoryAction()
+    {
+        /** @var $input AF_Model_Input */
+        $input = AF_Model_Input::load($this->getParam('idInput'));
+
+        /** @var LogEntryRepository $repository */
+        $repository = $this->entityManager->getRepository('Gedmo\Loggable\Entity\LogEntry');
+        $logEntries = $repository->getLogEntries($input);
+
+        $this->view->assign('logEntries', $logEntries);
+        $this->_helper->layout->disableLayout();
     }
 
 

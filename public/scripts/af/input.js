@@ -130,6 +130,17 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
 	$.fn.inputSavedHandler = function(data, textStatus, jqXHR) {
 		that.inputSavedHandler(data, textStatus, jqXHR);
 	};
+
+    // Handler pour l'historique d'une valeur
+    $(".input-history").popover({
+        placement: 'bottom',
+        title: __('AF', 'inputInput', 'valueHistory'),
+        html: true,
+        content: '<img src="images/ui/ajax-loader.gif">'
+    }).click(function(event) {
+            var inputId = $(this).data('input-id');
+            that.loadInputHistory(inputId, $(this));
+        });
 };
 
 AF.Input.prototype = {
@@ -335,16 +346,30 @@ AF.Input.prototype = {
 		}).remove();
 	},
 
-	/**
-	 * Ajoute un handler à l'évènement "change" de la saisie
-	 * Ne supprime pas les handlers précédents
-	 * @param {Function} handler Callback
-	 */
-	onChange: function(handler) {
-		// Pour tous les input du formulaire (utilise "on()" pour des raisons de performances)
-		this.form.on("change keyup", ":input", handler);
-		this.form.on("click", ".addSubAF", handler);
-		this.form.on("click", ".removeSubAF", handler);
-	}
+    /**
+     * Ajoute un handler à l'évènement "change" de la saisie
+     * Ne supprime pas les handlers précédents
+     * @param {Function} handler Callback
+     */
+    onChange: function(handler) {
+        // Pour tous les input du formulaire (utilise "on()" pour des raisons de performances)
+        this.form.on("change keyup", ":input", handler);
+        this.form.on("click", ".addSubAF", handler);
+        this.form.on("click", ".removeSubAF", handler);
+    },
+
+    /**
+     * Charge l'historique des valeurs d'une saisie
+     * @param inputId {int}
+     * @param button
+     */
+    loadInputHistory: function(inputId, button) {
+        $.get("af/input/input-history/id/" + this.id + "/idInputSet/" + this.idInputSet + "/idInput/" + inputId,
+            function (html) {
+                button.data('popover').options.content = html;
+                button.popover('show');
+            }
+        );
+    }
 
 };

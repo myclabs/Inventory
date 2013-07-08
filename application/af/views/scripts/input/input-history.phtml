@@ -1,0 +1,35 @@
+<?php
+
+use Gedmo\Loggable\Entity\LogEntry;
+
+/** @var LogEntry[] $logEntries */
+$logEntries = $this->logEntries;
+
+$locale = Core_Locale::loadDefault();
+
+if (empty($logEntries)) : ?>
+    <p class="muted"><?=__('AF', 'inputInput', 'noHistory')?></p>
+<?php else : ?>
+    <ul class="unstyled">
+        <?php
+        foreach ($logEntries as $logEntry) {
+            $user = User_Model_User::load($logEntry->getUsername());
+            $data = $logEntry->getData();
+            $value = $data['value'];
+            if ($value instanceof Calc_UnitValue) {
+                $shownValue = $locale->formatNumber($value->getDigitalValue())
+                    . ' ' . $value->getUnit()->getSymbol();
+            } else {
+                $shownValue = '';
+            }
+            ?>
+            <li>
+                <strong><?=$shownValue?></strong>
+                -
+                <?=$locale->formatShortDate($logEntry->getLoggedAt())?>
+            </li>
+            <?php
+        }
+        ?>
+    </ul>
+<?php endif; ?>

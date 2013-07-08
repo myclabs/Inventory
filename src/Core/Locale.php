@@ -289,10 +289,42 @@ class Core_Locale
      *
      * @return string
      */
+    public function formatShortDate(DateTime $date = null)
+    {
+        if ($date) {
+            return $date->format('j M');
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Formate une date en fonction de la locale
+     *
+     * @param DateTime|null $date
+     *
+     * @return string
+     */
     public function formatDateTime(DateTime $date = null)
     {
         if ($date) {
             return $date->format('d/m/Y H:i');
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Formate une date en fonction de la locale
+     *
+     * @param DateTime|null $date
+     *
+     * @return string
+     */
+    public function formatShortDateTime(DateTime $date = null)
+    {
+        if ($date) {
+            return $date->format('j M H:i');
         } else {
             return '';
         }
