@@ -78,6 +78,7 @@ abstract class AF_Model_Component_Select extends AF_Model_Component_Field
     /**
      * Retourne l'option qui correspond au ref donné
      * @param string $ref
+     * @throws Core_Exception_NotFound
      * @return AF_Model_Component_Select_Option
      */
     public function getOptionByRef($ref)
