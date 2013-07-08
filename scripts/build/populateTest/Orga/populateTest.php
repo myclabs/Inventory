@@ -48,6 +48,7 @@ class Orga_PopulateTest extends Core_Script_Action
         $granularity12 = $this->createGranularity($organization, [$axis1, $axis2], true, false, true, false, true);
 
         // Création des utilisateurs orga.
+        // Params : email
         $this->createUser('email1');
         $this->createUser('email2');
 
@@ -55,8 +56,11 @@ class Orga_PopulateTest extends Core_Script_Action
         $entityManager->flush();
 
 
-        // Ajout d'un role à un utilisateur existant.
+        // Ajout d'un role sun une organisation à un utilisateur existant.
+        // Params : email, Organization
         $this->addOrganizationAdministrator('admin', $organization);
+        // Ajout d'un role sur une cellule à un utilisateur existant.
+        // Params : email, Granularity, [Member]
         $this->addCellAdministrator('email1', $granularity11, [$member11a]);
         $this->addCellContributor('email2', $granularity11, [$member11a]);
         $this->addCellObserver('email1', $granularity12, [$member1a, $member2a]);
