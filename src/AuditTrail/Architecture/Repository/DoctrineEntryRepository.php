@@ -37,20 +37,22 @@ class DoctrineEntryRepository extends EntityRepository implements EntryRepositor
     public function findLatestForOrganizationContext(OrganizationContext $context, $count)
     {
         $qb = $this->createQueryBuilder('e');
-        $qb->join('e.context', 'c')
-            ->where('c INSTANCE OF AuditTrail\Domain\Context\OrganizationContext')
-            ->addOrderBy('e.date', 'DESC')
+        $qb->addOrderBy('e.date', 'DESC')
             ->setMaxResults($count);
 
         if ($context->getCell()) {
-            $cellsId = $this->getAllChildCellsId($context->getCell());
-            $cellsId[] = $context->getCell()->getId();
+            $cells = $this->getAllChildCells($context->getCell());
+            $cells[] = $context->getCell();
 
-            $qb->where('c.cell.id IN :cellsId');
-            $qb->setParameter('cellsId', $cellsId);
+            // Requete moche à cause de limitation Doctrine avec CTI
+            // @see http://stackoverflow.com/questions/14851602/where-ing-in-discriminated-tables/14854067#14854067
+            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\OrganizationContext c WHERE c.cell IN (:cells))');
+            $qb->setParameter('cells', $cells);
         } else {
-            $qb->where('c.organization = :organization');
-            $qb->setParameter('organization', $context->getOrganization());
+            $qb->join('e.context', 'c')
+                ->andWhere('c INSTANCE OF AuditTrail\Domain\Context\OrganizationContext')
+                ->andWhere('c.organization = :organization')
+                ->setParameter('organization', $context->getOrganization());
         }
 
         return $qb->getQuery()->getResult();
@@ -58,17 +60,17 @@ class DoctrineEntryRepository extends EntityRepository implements EntryRepositor
 
     /**
      * @param Orga_Model_Cell $cell
-     * @return int[]
+     * @return Orga_Model_Cell[]
      */
-    private function getAllChildCellsId(Orga_Model_Cell $cell)
+    private function getAllChildCells(Orga_Model_Cell $cell)
     {
-        $childCellsId = [];
+        $childCells = [];
 
         foreach ($cell->getChildCells() as $childCell) {
-            $childCellsId[] = $childCell->getId();
-            $childCellsId = array_merge($childCellsId, $this->getAllChildCellsId($childCell));
+            $childCells[] = $childCell;
+            $childCells = array_merge($childCells, $this->getAllChildCells($childCell));
         }
 
-        return $childCellsId;
+        return $childCells;
     }
 }
