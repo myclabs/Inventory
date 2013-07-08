@@ -10,7 +10,6 @@
  */
 class Orga_PopulateTest extends Core_Script_Action
 {
-
     /**
      * {@inheritdoc}
      */
@@ -30,7 +29,7 @@ class Orga_PopulateTest extends Core_Script_Action
         // OptionalParams : Axis parent=null
         $axis1 = $this->createAxis($organization, 'ref1', 'Label 1');
         $axis11 = $this->createAxis($organization, 'ref11', 'Label 11', $axis1);
-        $axis2 = $this->createAxis($organization, 'ref11', 'Label 11', $axis1);
+        $axis2 = $this->createAxis($organization, 'ref2', 'Label 11', $axis1);
 
         // Création des membres.
         // Params : Axis, ref, label
@@ -48,10 +47,24 @@ class Orga_PopulateTest extends Core_Script_Action
         $granularity11 = $this->createGranularity($organization, [$axis11], false);
         $granularity12 = $this->createGranularity($organization, [$axis1, $axis2], true, false, false, false, true);
 
+        // Création des utilisateurs orga.
+        $this->createUser('email1');
+        $this->createUser('email2');
+
 
         $entityManager->flush();
 
-        echo "\t\tOrganzation created".PHP_EOL;
+
+        // Ajout d'un role à un utilisateur existant.
+        $this->addOrganizationAdministrator('admin', $organization);
+        $this->addCellAdministrator('email1', $granularity11, [$member11a]);
+        $this->addCellContributor('email2', $granularity11, [$member11a]);
+        $this->addCellObserver('email1', $granularity12, [$member1a, $member2a]);
+
+
+        $entityManager->flush();
+
+        echo "\t\tOrganization created".PHP_EOL;
     }
 
     /**
@@ -132,6 +145,68 @@ class Orga_PopulateTest extends Core_Script_Action
         $granularity->setCellsWithInputDocuments($inputDocs);
         $granularity->save();
         return $granularity;
+    }
+
+    protected function createUser($email)
+    {
+        $user = new User_Model_User();
+        $user->setEmail($email);
+        $user->setPassword($email);
+        $user->save();
+    }
+
+    /**
+     * @param $email
+     * @param Orga_Model_Organization $organization
+     */
+    protected function addOrganizationAdministrator($email, Orga_Model_Organization $organization)
+    {
+        $user = User_Model_User::loadByEmail($email);
+        Orga_Service_ACLManager::getInstance()->addOrganizationAdministrator($organization, $user);
+    }
+
+    /**
+     * @param $email
+     * @param Orga_Model_Granularity $granularity
+     * @param array $members
+     */
+    protected function addCellAdministrator($email, Orga_Model_Granularity $granularity, array $members)
+    {
+        $this->addUserToCell('administrator', $email, $granularity, $members);
+    }
+
+    /**
+     * @param $email
+     * @param Orga_Model_Granularity $granularity
+     * @param array $members
+     */
+    protected function addCellContributor($email, Orga_Model_Granularity $granularity, array $members)
+    {
+        $this->addUserToCell('administrator', $email, $granularity, $members);
+    }
+
+    /**
+     * @param $email
+     * @param Orga_Model_Granularity $granularity
+     * @param array $members
+     */
+    protected function addCellObserver($email, Orga_Model_Granularity $granularity, array $members)
+    {
+        $this->addUserToCell('administrator', $email, $granularity, $members);
+    }
+
+    /**
+     * @param $role
+     * @param $email
+     * @param Orga_Model_Granularity $granularity
+     * @param array $members
+     */
+    protected function addUserToCell($role, $email, Orga_Model_Granularity $granularity, array $members)
+    {
+        $cell = $granularity->getCellByMembers($members);
+
+        $user = User_Model_User::loadByEmail($email);
+        $user->addRole(User_Model_Role::loadByRef('cell'.ucfirst(strtolower($role)).'_'.$cell->getId()));
     }
 
 }

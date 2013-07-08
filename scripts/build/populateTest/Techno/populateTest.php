@@ -24,42 +24,62 @@ class Techno_PopulateTest extends Core_Script_Action
         // Création des catégories.
         // Params : ref
         // OptionalParams : Category parent=null
-        $category1 = $this->createPredicate('Label 1');
-        $category2 = $this->createPredicate('Label 2', $category1);
+        $category1 = $this->createCategory('Label 1');
+        $category2 = $this->createCategory('Label 2', $category1);
 
         // Création des familles (Coef ou Process).
-        // Params : Category, ref, label, refUnit, refBaseUnit
-        $family1 = $this->createFamilyCoef($category1, 'ref1', 'Label 1', 'km', 'm');
-        $family2 = $this->createFamilyProcess($category2, 'ref2', 'Label 2', 'l', 'm³');
-
-        // Création des dimensions.
-        // Params : Family, refKeyword, refKeywordMembers[]
-        $this->createVerticalDimension($family1, 'ref1', ['ref2']);
-        $this->createHorizontalDimension($family1, 'ref3', ['ref4']);
-        $this->createVerticalDimension($family2, 'ref1', ['ref2']);
-        $this->createHorizontalDimension($family2, 'ref3', ['ref4']);
-
-        // Création des paramètres.
-        // Params : Family, refKeywordMembers[], value
-        // OptionalParams : uncertainty=0
-        $this->createParameter($family1, ['ref2', 'ref4'], 18);
-        $this->createParameter($family2, ['ref2', 'ref4'], 25, 20);
+        // Params : Category, ref, label, refBaseUnit, refUnit
+        $family1 = $this->createFamilyCoef($category1, 'ref1', 'Label 1', 'm', 'km');
+        $family2 = $this->createFamilyProcess($category2, 'ref2', 'Label 2', 'm³', 'l');
 
 
         $entityManager->flush();
 
-        echo "\t\tTechnonzation created".PHP_EOL;
+
+        // Création des dimensions.
+        // Params : Family, refKeyword, refKeywordMembers[]
+        $this->createVerticalDimension($family1, 'ref1', ['ref5']);
+        $this->createHorizontalDimension($family1, 'ref2', ['ref6']);
+        $this->createVerticalDimension($family2, 'ref3', ['ref5']);
+        $this->createHorizontalDimension($family2, 'ref4', ['ref6']);
+
+        // Création des paramètres.
+        // Params : Family, refKeywordMembers[], value
+        // OptionalParams : uncertainty=0
+        $this->createParameter($family1, ['ref5', 'ref6'], 18);
+        $this->createParameter($family2, ['ref5', 'ref6'], 25, 20);
+
+
+        $entityManager->flush();
+
+        echo "\t\tTechno created".PHP_EOL;
+    }
+
+    /**
+     * @param string $label
+     * @param Techno_Model_Category $parent
+     * @return Techno_Model_Category
+     */
+    protected function createCategory($label, Techno_Model_Category $parent=null)
+    {
+        $category = new Techno_Model_Category();
+        $category->setLabel($label);
+        if ($parent !== null) {
+            $category->setParentCategory($parent);
+        }
+        $category->save();
+        return $category;
     }
 
     /**
      * @param Techno_Model_Category $category
      * @param $ref
      * @param $label
-     * @param $refUnit
      * @param $refBaseUnit
+     * @param $refUnit
      * @return Techno_Model_Family
      */
-    protected function createFamilyProcess(Techno_Model_Category $category, $ref, $label, $refUnit, $refBaseUnit)
+    protected function createFamilyProcess(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit)
     {
         $family = new Techno_Model_Family_Process();
         return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit);
@@ -69,11 +89,11 @@ class Techno_PopulateTest extends Core_Script_Action
      * @param Techno_Model_Category $category
      * @param $ref
      * @param $label
-     * @param $refUnit
      * @param $refBaseUnit
+     * @param $refUnit
      * @return Techno_Model_Family
      */
-    protected function createFamilyCoef(Techno_Model_Category $category, $ref, $label, $refUnit, $refBaseUnit)
+    protected function createFamilyCoef(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit)
     {
         $family = new Techno_Model_Family_Coeff();
         return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit);
@@ -84,17 +104,17 @@ class Techno_PopulateTest extends Core_Script_Action
      * @param Techno_Model_Category $category
      * @param $ref
      * @param $label
-     * @param $refUnit
      * @param $refBaseUnit
+     * @param $refUnit
      * @return Techno_Model_Family
      */
-    protected function createFamily(Techno_Model_Family $family, Techno_Model_Category $category, $ref, $label, $refUnit, $refBaseUnit)
+    protected function createFamily(Techno_Model_Family $family, Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit)
     {
         $family->setCategory($category);
         $family->setRef($ref);
         $family->setLabel($label);
-        $family->setUnit(new Unit_API($refUnit));
         $family->setBaseUnit(new Unit_API($refBaseUnit));
+        $family->setUnit(new Unit_API($refUnit));
         $family->save();
         return $family;
     }

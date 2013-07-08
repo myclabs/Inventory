@@ -26,7 +26,7 @@ class Classif_PopulateTest extends Core_Script_Action
         // OptionalParams : Axis parent=null
         $axis1 = $this->createAxis('ref1', 'Label 1');
         $axis11 = $this->createAxis('ref11', 'Label 11', $axis1);
-        $axis2 = $this->createAxis('ref11', 'Label 11', $axis1);
+        $axis2 = $this->createAxis('ref2', 'Label 2', $axis1);
 
         // Création des membres.
         // Params : Axis, ref, label
@@ -47,6 +47,10 @@ class Classif_PopulateTest extends Core_Script_Action
         // Params : ref, label
         $context1 = $this->createContext('ref1', 'Label 1');
         $context2 = $this->createContext('ref2', 'Label 2');
+
+
+        $entityManager->flush();
+
 
         // Création des contexte-indicateurs.
         // Params : Context, Indicator

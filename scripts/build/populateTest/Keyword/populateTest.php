@@ -33,6 +33,8 @@ class Keyword_PopulateTest extends Core_Script_Action
         $keyword2 = $this->createKeyword('ref2', 'Label 2');
         $keyword3 = $this->createKeyword('ref3', 'Label 3');
         $keyword4 = $this->createKeyword('ref4', 'Label 4');
+        $keyword4 = $this->createKeyword('ref5', 'Label 4');
+        $keyword4 = $this->createKeyword('ref6', 'Label 4');
 
         // Création des associations.
         // Params : Keyword object, Predicate, Keyword subject
@@ -42,7 +44,7 @@ class Keyword_PopulateTest extends Core_Script_Action
 
         $entityManager->flush();
 
-        echo "\t\tKeywordnzation created".PHP_EOL;
+        echo "\t\tKeyword created".PHP_EOL;
     }
 
     /**
