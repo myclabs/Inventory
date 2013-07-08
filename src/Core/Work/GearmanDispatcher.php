@@ -123,7 +123,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      * Execute a job
      * @param Core_Work_Worker $worker
      * @param GearmanJob       $job
-     * @return mixed Job result
+     * @return string Serialized job result
      */
     private function executeWorker(Core_Work_Worker $worker, GearmanJob $job)
     {
@@ -144,7 +144,8 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 
         Core_Error_Log::getInstance()->info("Task executed");
 
-        return $result;
+        // Retourne le résultat sérialisé
+        return serialize($result);
     }
 
     /**
