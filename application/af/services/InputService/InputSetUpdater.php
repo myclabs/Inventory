@@ -121,6 +121,10 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
             /** @var AF_Model_Input_Select_Multi $input2 */
             $input1->setValueFrom($input2);
         }
+        if ($input1 instanceof AF_Model_Input_Text) {
+            /** @var AF_Model_Input_Text $input2 */
+            $input1->setValue($input2->getValue());
+        }
         $input1->setDisabled($input2->isDisabled());
         $input1->setHidden($input2->isHidden());
     }
