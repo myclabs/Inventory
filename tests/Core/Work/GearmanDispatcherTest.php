@@ -26,6 +26,7 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
 
         $result = $dispatcher->run($task);
 
+        $this->assertInternalType('array', $result);
         $this->assertEquals('foo', $result['value']);
     }
 
@@ -47,6 +48,7 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
 
         $result = $dispatcher->run($task);
 
+        $this->assertInternalType('array', $result);
         $this->assertEquals($locale->getId(), $result['locale']);
     }
 

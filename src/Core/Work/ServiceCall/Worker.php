@@ -53,7 +53,7 @@ class Core_Work_ServiceCall_Worker extends Core_Work_Worker
         // Appelle la méthode du service
         $return = call_user_func_array(array($service, $methodName), $parameters);
 
-        return $return;
+        return serialize($return);
     }
 
 }

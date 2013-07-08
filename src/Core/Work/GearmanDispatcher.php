@@ -56,7 +56,9 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
-        return $this->getGearmanClient()->doNormal($taskType, $workload);
+        $return = $this->getGearmanClient()->doNormal($taskType, $workload);
+
+        return unserialize($return);
     }
 
     /**
