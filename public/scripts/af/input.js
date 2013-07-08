@@ -132,14 +132,21 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
 	};
 
     // Handler pour l'historique d'une valeur
+    var popoverDefaultContent = '<p class="text-center"><img src="images/ui/ajax-loader.gif"></p>';
     $(".input-history").popover({
         placement: 'bottom',
         title: __('AF', 'inputInput', 'valueHistory'),
         html: true,
-        content: '<img src="images/ui/ajax-loader.gif">'
+        content: popoverDefaultContent
     }).click(function() {
-            var inputId = $(this).data('input-id');
-            that.loadInputHistory(inputId, $(this));
+            var button = $(this);
+            // Si visible (merci Bootstrap pour cette merde)
+            if (button.data('popover').tip().hasClass('in')) {
+                that.loadInputHistory(button.data('input-id'), button);
+            } else {
+                // Rétablit le chargement ajax
+                button.data('popover').options.content = popoverDefaultContent;
+            }
         });
 };
 
@@ -370,8 +377,11 @@ AF.Input.prototype = {
     loadInputHistory: function(inputId, button) {
         $.get("af/input/input-history/id/" + this.id + "/idInputSet/" + this.idInputSet + "/idInput/" + inputId,
             function (html) {
-                button.data('popover').options.content = html;
-                button.popover('show');
+                // Si visible (merci Bootstrap pour cette merde)
+                if (button.data('popover').tip().hasClass('in')) {
+                    button.data('popover').options.content = html;
+                    button.popover('show');
+                }
             }
         );
     }

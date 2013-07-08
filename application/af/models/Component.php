@@ -346,6 +346,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
         $historyButton->addAttribute('title', __('AF', 'inputInput', 'valueHistory'));
         $historyButton->addAttribute('class', 'input-history');
         $historyButton->addAttribute('data-input-id', $input->getId());
+        $historyButton->addAttribute('data-toggle', 'button');
 
         return new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
     }

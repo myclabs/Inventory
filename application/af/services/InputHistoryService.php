@@ -53,7 +53,7 @@ class AF_Service_InputHistoryService
                 continue;
             }
             // Filtre les sélections simples
-            if ($input instanceof AF_Model_Input_Select_Single && !is_string($value)) {
+            if ($input instanceof AF_Model_Input_Select_Single && !(is_string($value) || is_null($value))) {
                 continue;
             }
             // Filtre les sélections multiples
@@ -65,10 +65,12 @@ class AF_Service_InputHistoryService
             if ($input instanceof AF_Model_Input_Select_Single) {
                 /** @var AF_Model_Component_Select_Single $component */
                 $component = $input->getComponent();
-                try {
-                    $value = $component->getOptionByRef($value);
-                } catch (Core_Exception_NotFound $e) {
-                    continue;
+                if ($value) {
+                    try {
+                        $value = $component->getOptionByRef($value);
+                    } catch (Core_Exception_NotFound $e) {
+                        continue;
+                    }
                 }
             }
 

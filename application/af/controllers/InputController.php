@@ -242,8 +242,6 @@ class AF_InputController extends Core_Controller
 
         $entries = $this->inputHistoryService->getInputHistory($input);
 
-        Core_Tools::dump($entries);
-
         $this->view->assign('component', $input->getComponent());
         $this->view->assign('entries', $entries);
         $this->_helper->layout->disableLayout();

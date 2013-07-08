@@ -18,7 +18,7 @@ if (empty($entries)) : ?>
         foreach ($entries as $entry) {
             $value = $entry->getValue();
 
-            $shownValue = '';
+            $shownValue = '&nbsp;';
             if (is_string($value)) {
                 $shownValue = $value;
             }
