@@ -51,10 +51,14 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     public function run(Core_Work_Task $task)
     {
+        $this->saveContextInTask($task);
+
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
-        return $this->getGearmanClient()->doNormal($taskType, $workload);
+        $return = $this->getGearmanClient()->doNormal($taskType, $workload);
+
+        return unserialize($return);
     }
 
     /**
@@ -62,6 +66,8 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     public function runBackground(Core_Work_Task $task)
     {
+        $this->saveContextInTask($task);
+
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
@@ -117,17 +123,28 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      * Execute a job
      * @param Core_Work_Worker $worker
      * @param GearmanJob       $job
-     * @return mixed Job result
+     * @return string Serialized job result
      */
     private function executeWorker(Core_Work_Worker $worker, GearmanJob $job)
     {
         Core_Error_Log::getInstance()->info("Executing task " . $worker->getTaskType());
 
+        /** @var Core_Work_Task $task */
+        $task = unserialize($job->workload());
+
+        // Change la locale
+        if ($task->getContext() && $task->getContext()->getUserLocale()) {
+            $oldDefaultLocale = Core_Locale::loadDefault();
+            Core_Locale::setDefault($task->getContext()->getUserLocale());
+        } else {
+            $oldDefaultLocale = null;
+        }
+
         // Connexion BDD et transaction
         $this->entityManager->getConnection()->connect();
         $this->entityManager->beginTransaction();
 
-        $task = unserialize($job->workload());
+        // Exécute la tâche
         $result = $worker->execute($task);
 
         // Flush et vide l'entity manager
@@ -136,9 +153,15 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $this->entityManager->clear();
         $this->entityManager->getConnection()->close();
 
+        // Rétablit la locale
+        if ($oldDefaultLocale) {
+            Core_Locale::setDefault($oldDefaultLocale);
+        }
+
         Core_Error_Log::getInstance()->info("Task executed");
 
-        return $result;
+        // Retourne le résultat sérialisé
+        return serialize($result);
     }
 
     /**
@@ -173,6 +196,17 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     private function prefixTaskType($taskType)
     {
         return $this->applicationName . '::' . $taskType;
+    }
+
+    /**
+     * @param Core_Work_Task $task
+     */
+    private function saveContextInTask(Core_Work_Task $task)
+    {
+        $context = new Core_Work_TaskContext();
+        $context->setUserLocale(Core_Locale::loadDefault());
+
+        $task->setContext($context);
     }
 
 }

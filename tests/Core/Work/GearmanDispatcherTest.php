@@ -22,9 +22,20 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
         $dispatcher = $this->get('Core_Work_GearmanDispatcher');
         $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container()));
 
+        $oldDefaultLocale = Core_Locale::loadDefault();
+        $locale = Core_Locale::load('en');
+        Core_Locale::setDefault($locale);
+
         $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
 
-        $this->assertEquals('foo', $dispatcher->run($task));
+        $result = $dispatcher->run($task);
+
+        $this->assertInternalType('array', $result);
+        $this->assertEquals('foo', $result['value']);
+        $this->assertEquals($locale->getId(), $result['locale']);
+
+        // Restaure la locale par défaut
+        Core_Locale::setDefault($oldDefaultLocale);
     }
 
 }
