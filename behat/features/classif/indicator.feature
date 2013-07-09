@@ -81,7 +81,7 @@ Feature: Classification indicator feature
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
-  Scenario: Suppression of a classification indicator
+  Scenario:  Deletion of a classification indicator
     Given I am on "classif/indicator/manage"
     Then I should see the "editIndicators" datagrid
     And the row 3 of the "editIndicators" datagrid should contain:

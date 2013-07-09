@@ -91,7 +91,7 @@ Feature: Keywords datagrid
     Then the following message is shown and closed: "Merci de ne pas choisir « this » comme identifiant de mot clé, ce terme est réservé pour l'écriture des requêtes sémantiques."
 
   @javascript
-  Scenario: Suppression of a keyword
+  Scenario:  Deletion of a keyword
     Given I am on "keyword/keyword/manage"
     Then I should see the "keywords" datagrid
     And the row 1 of the "keywords" datagrid should contain:

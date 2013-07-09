@@ -53,7 +53,7 @@ Feature: Classification context indicator feature
       | Général       | GES               | Poste article 75, Scope |
 
   @javascript
-  Scenario: Suppression of a classification context indicator
+  Scenario:  Deletion of a classification context indicator
     When I am on "classif/contextindicator/manage"
     Then I should see the "editContextIndicators" datagrid
     When I click "Supprimer" in the row 1 of the "editContextIndicators" datagrid

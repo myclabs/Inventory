@@ -57,7 +57,7 @@ Feature: Classification context feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
-  Scenario: Suppression of a classification context
+  Scenario:  Deletion of a classification context
     Given I am on "classif/context/manage"
     Then I should see the "editContexts" datagrid
     And the row 3 of the "editContexts" datagrid should contain:

@@ -24,12 +24,14 @@ class AF_PopulateTest extends Core_Script_Action
         // Création des catégories.
         // Params : ref
         // OptionalParams : Category parent=null
-        $category1 = $this->createCategory('Label 1');
-        $category2 = $this->createCategory('Label 2', $category1);
+        $category_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
+        $category_sous_categorie = $this->createCategory('Sous-catégorie', $category_contenant_sous_categorie);
+        $category_contenant_formulaire = $this->createCategory('Catégorie contenant un formulaire');
+        $category_vide = $this->createCategory('Catégorie vide');
 
         // Création des af.
         // Params : Category, ref, label
-        $aF1 = $this->createAF($category1, 'ref1', 'Label 1');
+        $aF1 = $this->createAF($category_contenant_formulaire, 'ref1', 'Label 1');
 
         // Création des composants.
         // Params : AF, Group, ref, label
