@@ -1,0 +1,16 @@
+sheets:
+
+  - label: "{{ indicatorSheetLabel }}"
+
+    tables:
+      - lines:
+          foreach: indicators as indicator
+        columns:
+          - label: "{{ indicatorColumnLabel }}"
+            cellContent: "{{ indicator.label }}"
+          - label: "{{ indicatorColumnRef }}"
+            cellContent: "{{ indicator.ref }}"
+          - label: "{{ indicatorColumnUnit }}"
+            cellContent: "{{ indicator.unit }}"
+          - label: "{{ indicatorColumnRatioUnit }}"
+            cellContent: "{{ indicator.rationUnit }}

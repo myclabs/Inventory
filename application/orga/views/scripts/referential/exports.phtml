@@ -4,9 +4,8 @@
  * @author valentin.claras
  * @package Orga
  */
-?>
 
-<?php foreach ($this->exports as $exportArray) { ?>
+foreach ($this->exports as $exportArray) { ?>
 <fieldset class="wrapper">
     <legend style="cursor:default"><?=$exportArray['label']?></legend>
     <div>
@@ -34,4 +33,5 @@
         </form>
     </div>
 </fieldset>
-<?php } ?>
+<?php
+}

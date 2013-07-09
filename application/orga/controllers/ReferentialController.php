@@ -76,4 +76,25 @@ class Orga_ReferentialController extends Core_Controller
         ];
     }
 
+    /**
+     * @Secure("loggedIn")
+     */
+    public function exportAction()
+    {
+        $filename = 'test.xls';
+
+        $contentType = "Content-type: application/vnd.ms-excel";
+//        $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        header($contentType);
+        header('Content-Disposition:attachement;filename='.$filename);
+        header('Cache-Control: max-age=0');
+
+        // Affichage, proposition de télécharger sous le nom donné.
+        Zend_Layout::getMvcInstance()->disableLayout();
+        Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
+
+        $classifService = new Classif_Service_Classif();
+        $classifService->export('xls');
+    }
+
 }
