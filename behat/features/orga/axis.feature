@@ -1,4 +1,4 @@
-@dbOneOrganization
+@dbFull
 Feature: orgaAxis
 
   Background:

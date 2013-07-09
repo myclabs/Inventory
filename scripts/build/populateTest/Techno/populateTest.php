@@ -38,16 +38,14 @@ class Techno_PopulateTest extends Core_Script_Action
 
         // Création des dimensions.
         // Params : Family, refKeyword, refKeywordMembers[]
-        $this->createVerticalDimension($family1, 'ref1', ['ref5']);
-        $this->createHorizontalDimension($family1, 'ref2', ['ref6']);
-        $this->createVerticalDimension($family2, 'ref3', ['ref5']);
-        $this->createHorizontalDimension($family2, 'ref4', ['ref6']);
+        $this->createVerticalDimension($family1, 'combustible', ['charbon', 'gaz_naturel']);
+        $this->createHorizontalDimension($family1, 'processus', ['amont_combustion', 'combustion']);
 
         // Création des paramètres.
         // Params : Family, refKeywordMembers[], value
         // OptionalParams : uncertainty=0
-        $this->createParameter($family1, ['ref5', 'ref6'], 18);
-        $this->createParameter($family2, ['ref5', 'ref6'], 25, 20);
+        $this->createParameter($family1, ['charbon', 'amont_combustion'], 18);
+        $this->createParameter($family1, ['charbon', 'combustion'], 25, 20);
 
 
         $entityManager->flush();

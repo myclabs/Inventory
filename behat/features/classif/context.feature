@@ -1,4 +1,4 @@
-@dbEmpty
+@dbFull
 Feature: classifContext
 
   Background:

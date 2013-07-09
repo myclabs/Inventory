@@ -1,4 +1,4 @@
-@dbOneOrganizationWithAxes
+@dbFull
 Feature: orgaConfiguration
 
   Background:

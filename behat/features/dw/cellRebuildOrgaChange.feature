@@ -1,4 +1,4 @@
-@dbOneOrganizationWithAxes
+@dbFull
 Feature: Régénération des données d'analyse
 
   Background:

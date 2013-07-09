@@ -1,4 +1,4 @@
-@dbOneOrganization
+@dbFull
 Feature: orgaLibrary
 
   Background:
