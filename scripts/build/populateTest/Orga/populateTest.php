@@ -36,7 +36,6 @@ class Orga_PopulateTest extends Core_Script_Action
         $axis_categorie = $this->createAxis($organization, 'categorie', 'Catégorie');
         $axis_vide = $this->createAxis($organization, 'axe_vide', 'Axe vide');
 
-
         // Création des membres.
         // Params : Axis, ref, label
         // OptionalParams : [Member] parents=[]
@@ -61,6 +60,12 @@ class Orga_PopulateTest extends Core_Script_Action
         $granularity_annee_site = $this->createGranularity($organization, [$axis_annee, $axis_site],                            false, false, false, false,  false, false, false, false);
         $granularity_annee_site_categorie = $this->createGranularity($organization, [$axis_annee, $axis_site, $axis_categorie], false, false, false, false,  false, false, false, false);
 
+        // Granularité des inventaires
+        $organization->setGranularityForInventoryStatus($granularity_annee_zone_marque);
+
+        // Granularités de saisie
+        $granularity_annee_site_categorie->setInputConfigGranularity($granularity_annee_categorie);
+
         // Création des utilisateurs orga.
         // Params : email
         $this->createUser('administrateur.organisation@toto.com');
@@ -79,6 +84,7 @@ class Orga_PopulateTest extends Core_Script_Action
 
         // Ajout d'un role sun une organisation à un utilisateur existant.
         // Params : email, Organization
+        $this->addOrganizationAdministrator('admin', $organization);
         $this->addOrganizationAdministrator('administrateur.organisation@toto.com', $organization);
         // Ajout d'un role sur une cellule à un utilisateur existant.
         // Params : email, Granularity, [Member]

@@ -24,15 +24,15 @@ class Techno_PopulateTest extends Core_Script_Action
         // Création des catégories.
         // Params : ref
         // OptionalParams : Category parent=null
-        $category_1 = $this->createCategory('Catégorie 1');
-        $category_2 = $this->createCategory('Catégorie 2');
-        $category_1_1 = $this->createCategory('Catégorie 1_1', $category_1);
+        $category_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
+        $category_sous_categorie = $this->createCategory('Sous-catégorie', $category_contenant_sous_categorie);
+        $category_contenant_famille = $this->createCategory('Catégorie contenant une famille');
         $category_vide = $this->createCategory('Catégorie vide');
 
         // Création des familles (Coef ou Process).
         // Params : Category, ref, label, refBaseUnit, refUnit
-        $family1 = $this->createFamilyCoef($category_1, 'ref1', 'Label 1', 'm', 'km');
-        $family2 = $this->createFamilyProcess($category_1, 'ref2', 'Label 2', 'm³', 'l');
+        $family1 = $this->createFamilyCoef($category_contenant_famille, 'ref1', 'Label 1', 'm', 'km');
+        $family2 = $this->createFamilyProcess($category_contenant_famille, 'ref2', 'Label 2', 'm³', 'l');
 
 
         $entityManager->flush();
