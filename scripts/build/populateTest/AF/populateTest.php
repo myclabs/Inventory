@@ -51,6 +51,23 @@ class AF_PopulateTest extends Core_Script_Action
         $selectInputList = $this->createSelectInputList($aF1, $group1, 'refs1', 'Label Select 1', ['o1' => 'Option 1', 'o2' => 'Option 2']);
         $booleanInput = $this->createBooleanInput($aF1, $group1, 'refb1', 'Label Select 1', true);
 
+        // Création des Algos.
+        // Param : AF
+        //  + createAlgoNumericExpression : ref, label, expression, refUnit
+        //  + createAlgoNumericParameter : ref, label, refFamily
+        //  + createAlgoNumericExpression : ref, label, value, uncertainty, refUnit
+        //  + createAlgoNumericInput : Component input, refContext, refIndicator
+        //  + createAlgoSelectTextkeyExpression : ref, expression
+        //  + createAlgoConditionElementary : Component input, ref, expression
+        //  + createAlgoConditionExpression : ref, expression
+        // OptionalParams : -
+        $aF1->getMainAlgo()->setExpression('expression');
+        $this->createAlgoNumericConstant($aF1, 'refa1', 'Label 1', 10, 5, 'm');
+        $this->createAlgoNumericInput($aF1, $numericInput, 'ref1', 'ref1');
+        $this->createAlgoSelectTextkeyExpression($aF1, 'refa2', 'expression');
+        $this->createAlgoConditionElementary($aF1, $booleanInput, 'refa3', 'expression');
+        $this->createAlgoConditionExpression($aF1, 'refa4', 'expression');
+
 
         $entityManager->flush();
 
@@ -328,6 +345,132 @@ class AF_PopulateTest extends Core_Script_Action
         $component->setVisible($visible);
         $component->save();
         return $component;
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string $ref
+     * @param string $label
+     * @param string $expression
+     * @param string $refUnit
+     */
+    protected function createAlgoNumericExpression(AF_Model_AF $aF, $ref, $label, $expression, $refUnit)
+    {
+        $numericExpression = new Algo_Model_Numeric_Expression();
+        $numericExpression->setExpression($expression);
+        $numericExpression->setUnit(new Unit_API($refUnit));
+        $this->createAlgoNumeric($aF, $numericExpression, $ref, $label);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string $ref
+     * @param string $label
+     * @param string $refFamily
+     */
+    protected function createAlgoNumericParameter(AF_Model_AF $aF, $ref, $label, $refFamily)
+    {
+        $numericParameter = new Algo_Model_Numeric_Parameter();
+        $numericParameter->setFamily(Techno_Model_Family::loadByRef($refFamily));
+        $this->createAlgoNumeric($aF, $numericParameter, $ref, $label);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string $ref
+     * @param string $label
+     * @param int $value
+     * @param int $uncertainty
+     * @param string $refUnit
+     */
+    protected function createAlgoNumericConstant(AF_Model_AF $aF, $ref, $label, $value, $uncertainty, $refUnit)
+    {
+        $numericExpression = new Algo_Model_Numeric_Constant();
+        $unitValue = new Calc_UnitValue();
+        $unitValue->value->digitalValue = $value;
+        $unitValue->value->relativeUncertainty = $uncertainty;
+        $unitValue->unit = new Unit_API($refUnit);
+        $numericExpression->setUnitValue($unitValue);
+        $this->createAlgoNumeric($aF, $numericExpression, $ref, $label);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param Algo_Model_Numeric $numeric
+     * @param string $ref
+     * @param string $label
+     */
+    protected function createAlgoNumeric(AF_Model_AF $aF, Algo_Model_Numeric $numeric, $ref, $label)
+    {
+        $numeric->setRef($ref);
+        $numeric->setLabel($label);
+        $numeric->save();
+        $aF->addAlgo($numeric);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param AF_Model_Component $input
+     * @param string $refContext
+     * @param string $refIndicator
+     */
+    protected function createAlgoNumericInput(AF_Model_AF $aF, AF_Model_Component $input, $refContext, $refIndicator)
+    {
+        /* @var Algo_Model_Numeric_Input $numericInput */
+        $numericInput = $aF->getAlgoByRef($input->getRef());
+        $numericInput->setContextIndicator(Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator));
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string $ref
+     * @param string $expression
+     */
+    protected function createAlgoSelectTextkeyExpression(AF_Model_AF $aF, $ref, $expression)
+    {
+        $selectTextkeyExpression = new Algo_Model_Selection_TextKey_Expression();
+        $selectTextkeyExpression->setRef($ref);
+        $selectTextkeyExpression->setExpression($expression);
+        $selectTextkeyExpression->save();
+        $aF->addAlgo($selectTextkeyExpression);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string $ref
+     * @param string $expression
+     */
+    protected function createAlgoConditionExpression(AF_Model_AF $aF, $ref, $expression)
+    {
+        $conditionExpression = new Algo_Model_Condition_Expression();
+        $conditionExpression->setRef($ref);
+        $conditionExpression->setExpression($expression);
+        $conditionExpression->save();
+        $aF->addAlgo($conditionExpression);
+    }
+
+    protected function createAlgoConditionElementary(AF_Model_AF $aF, AF_Model_Component $component, $ref, $expression)
+    {
+        switch (get_class($component)) {
+            case 'AF_Model_Component_Numeric':
+                $conditionElementary = new Algo_Model_Condition_Elementary_Numeric();
+                break;
+            case 'AF_Model_Component_Checkbox':
+                $conditionElementary = new Algo_Model_Condition_Elementary_Boolean();
+                break;
+            case 'AF_Model_Component_Select_Single':
+                $conditionElementary = new Algo_Model_Condition_Elementary_Select_Single();
+                break;
+            case 'AF_Model_Component_Select_Multi':
+                $conditionElementary = new Algo_Model_Condition_Elementary_Select_Multi();
+                break;
+            default:
+                throw new Core_Exception("Unhandled field type");
+        }
+        $conditionElementary->setRef($ref);
+        $conditionElementary->setInputRef($component->getRef());
+        $conditionElementary->save();
+        $aF->addAlgo($conditionElementary);
     }
 
 }
