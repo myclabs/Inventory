@@ -20,44 +20,53 @@ class Classif_PopulateTest extends Core_Script_Action
         /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = $entityManagers['default'];
 
-
         // Création des axes.
         // Params : ref, label
         // OptionalParams : Axis parent=null
-        $axis1 = $this->createAxis('ref1', 'Label 1');
-        $axis11 = $this->createAxis('ref11', 'Label 11', $axis1);
-        $axis2 = $this->createAxis('ref2', 'Label 2', $axis1);
+
+        $axis_gaz = $this->createAxis('gaz', 'Gaz');
+        $axis_poste_article_75 = $this->createAxis('poste_article_75', 'Poste article 75');
+        $axis_scope = $this->createAxis('scope', 'Scope', $axis_poste_article_75);
+        $axis_type_deplacement = $this->createAxis('type_deplacement', 'Type de déplacement');
+        $axis_axe_vide = $this->createAxis('axe_vide', 'Axe vide');
 
         // Création des membres.
         // Params : Axis, ref, label
         // OptionalParams : [Member] parents=[]
-        $member11a = $this->createMember($axis11, 'ref11a', 'Label 11 A');
-        $member11b = $this->createMember($axis11, 'ref11b', 'Label 11 B');
-        $member1a = $this->createMember($axis1, 'ref1a', 'Label 1 A', [$member11a]);
-        $member1b = $this->createMember($axis1, 'ref1b', 'Label 1 B', [$member11b]);
-        $member2a = $this->createMember($axis2, 'ref2a', 'Label 2 A');
+
+        $member_gaz_co2 = $this->createMember($axis_gaz, 'co2', 'CO2');
+        $member_gaz_ch4 = $this->createMember($axis_gaz, 'ch4', 'CH4');
+
+        $member_scope_1 = $this->createMember($axis_scope, '1', '1');
+        $member_scope_2 = $this->createMember($axis_scope, '2', '2');
+        $member_scope_3 = $this->createMember($axis_scope, '3', '3');
+
+        $member_poste_article_75_source_fixe_combustion = $this->createMember($axis_poste_article_75, 'source_fixe_combustion', '1 - Sources fixes de combustion', [$member_scope_1]);
+        $member_poste_article_75_electricite = $this->createMember($axis_poste_article_75, 'membre_sans_parent', 'Membre sans parent');
+
+        $member_deplacement = $this->createMember($axis_type_deplacement, 'domicile_travail', 'Domicile - travail');
+        $member_deplacement = $this->createMember($axis_type_deplacement, 'professionnel', 'Professionnel');
 
         // Création des indicateurs.
         // Params : ref, label, unitRef
         // OptionalParams : ratioUnitRef=unitRef
-        $indicator1 = $this->createIndicator('ref1', 'Label 1', 'l');
-        $indicator2 = $this->createIndicator('ref2', 'Label 2', 'm', 'km');
+
+        $indicator_ges = $this->createIndicator('ges', 'GES', 't_co2e', 'kg_co2e');
+        $indicator_chiffre_affaire = $this->createIndicator('chiffre_affaire', 'Chiffre d\'affaires', 'k€', '€');
 
         // Création des contextes.
         // Params : ref, label
-        $context1 = $this->createContext('ref1', 'Label 1');
-        $context2 = $this->createContext('ref2', 'Label 2');
-
+        $context_general = $this->createContext('general', 'Général');
+        $context_deplacement = $this->createContext('deplacement', 'Déplacements');
 
         $entityManager->flush();
-
 
         // Création des contexte-indicateurs.
         // Params : Context, Indicator
         // OptionalParams : [Axis]=[]
-        $contextIndicator1 = $this->createContextIndicator($context1, $indicator1);
-        $contextIndicator2 = $this->createContextIndicator($context2, $indicator2, [$axis1, $axis2]);
-
+        $contextIndicator_ges_general = $this->createContextIndicator($context_general, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
+        $contextIndicator_ges_deplacement = $this->createContextIndicator($context_deplacement, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
+        $contextIndicator_chiffre_affaire_general = $this->createContextIndicator($context_general, $indicator_chiffre_affaire, [$axis_gaz, $axis_poste_article_75, $axis_type_deplacement]);
 
         $entityManager->flush();
 

@@ -1,4 +1,4 @@
-@dbEmpty
+@dbFull
 Feature: Identification feature
   The login form authenticates users.
 

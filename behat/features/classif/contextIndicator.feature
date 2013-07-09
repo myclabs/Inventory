@@ -1,4 +1,4 @@
-@dbWithClassifAxesIndicatorsContexts
+@dbFull
 Feature: classifContextIndicator
 
   Background:

@@ -1,4 +1,4 @@
-@dbEmpty
+@dbFull
 Feature: classifIndicator
 
   Background:
