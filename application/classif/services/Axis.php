@@ -11,18 +11,8 @@
  * @package    Classif
  * @subpackage Service
  */
-class Classif_Service_Axis extends Core_Service
+class Classif_Service_Axis
 {
-    /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Classif_Service_Axis
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
-
     /**
      * Ajoute un Axis et le renvoie.
      *
@@ -32,7 +22,7 @@ class Classif_Service_Axis extends Core_Service
      *
      * @return Classif_Model_Axis
      */
-    public function addService($ref, $label, $refParent=null)
+    public function add($ref, $label, $refParent=null)
     {
         $axis = new Classif_Model_Axis();
 
@@ -60,7 +50,7 @@ class Classif_Service_Axis extends Core_Service
      *
      * @return string
      */
-    public function updateRefService($axisRef, $newRef)
+    public function updateRef($axisRef, $newRef)
     {
         $axis = Classif_Model_Axis::loadByRef($axisRef);
 
@@ -79,7 +69,7 @@ class Classif_Service_Axis extends Core_Service
      *
      * @return string
      */
-    public function updateLabelService($axisRef, $newLabel)
+    public function updateLabel($axisRef, $newLabel)
     {
         $axis = Classif_Model_Axis::loadByRef($axisRef);
 
@@ -97,7 +87,7 @@ class Classif_Service_Axis extends Core_Service
      *
      * @return string
      */
-    public function updateRefAndLabelService($axisRef, $newRef, $newLabel)
+    public function updateRefAndLabel($axisRef, $newRef, $newLabel)
     {
         $axis = Classif_Model_Axis::loadByRef($axisRef);
 
@@ -118,7 +108,7 @@ class Classif_Service_Axis extends Core_Service
      *
      * @return string
      */
-    public function updateParentService($axisRef, $newParentRef, $newPosition=null)
+    public function updateParent($axisRef, $newParentRef, $newPosition=null)
     {
         $axis = Classif_Model_Axis::loadByRef($axisRef);
 
@@ -142,7 +132,7 @@ class Classif_Service_Axis extends Core_Service
      *
      * @return string
      */
-    public function updatePositionService($axisRef, $newPosition)
+    public function updatePosition($axisRef, $newPosition)
     {
         $axis = Classif_Model_Axis::loadByRef($axisRef);
 
@@ -156,9 +146,10 @@ class Classif_Service_Axis extends Core_Service
      *
      * @param string $axisRef Ref du axis
      *
+     * @throws Core_Exception_User
      * @return string Le label du Axis.
      */
-    public function deleteService($axisRef)
+    public function delete($axisRef)
     {
         $axis = Classif_Model_Axis::loadByRef($axisRef);
 
@@ -169,6 +160,7 @@ class Classif_Service_Axis extends Core_Service
             throw new Core_Exception_User('Classif', 'axis', 'axisHasMembers');
         }
         foreach (Classif_Model_ContextIndicator::loadList() as $contextIndicator) {
+            /** @var Classif_Model_ContextIndicator $contextIndicator */
             if ($contextIndicator->hasAxis($axis)) {
                 throw new Core_Exception_User('Classif', 'axis', 'axisIsUsedInContextIndicator');
             }
@@ -209,7 +201,7 @@ class Classif_Service_Axis extends Core_Service
      *
      * @throws Core_Exception_User
      */
-    protected function checkAxisRef($ref)
+    private function checkAxisRef($ref)
     {
         Core_Tools::checkRef($ref);
         $queryRefUsed = new Core_Model_Query();

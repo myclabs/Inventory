@@ -5,16 +5,29 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Contrôleur de gestion des utilisateurs
  * @package    User
  * @subpackage Controller
  */
-class User_ProfileController extends Core_Controller_Ajax
+class User_ProfileController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
+
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
 
     /**
      * Par défaut : redirige vers la liste des utilisateurs
@@ -32,12 +45,12 @@ class User_ProfileController extends Core_Controller_Ajax
     public function listAction()
     {
         $loggedInUser = $this->_helper->auth();
-        /** @var $aclService User_Service_ACL */
-        $aclService = User_Service_ACL::getInstance();
         $resourceAllUsers = User_Model_Resource_Entity::loadByEntityName('User_Model_User');
-        $this->view->canCreateUsers = $aclService->isAllowed($loggedInUser,
-                                                             User_Model_Action_Default::CREATE(),
-                                                             $resourceAllUsers);
+        $this->view->canCreateUsers = $this->aclService->isAllowed(
+            $loggedInUser,
+            User_Model_Action_Default::CREATE(),
+            $resourceAllUsers
+        );
     }
 
     /**
@@ -69,10 +82,16 @@ class User_ProfileController extends Core_Controller_Ajax
         $this->view->canEditPassword = ($user === $loggedInUser);
 
         // Est-ce que l'utilisateur peut désactiver le compte
-        /** @var $aclService User_Service_ACL */
-        $aclService = User_Service_ACL::getInstance();
-        $this->view->canDisable = $aclService->isAllowed($loggedInUser, User_Model_Action_Default::DELETE(), $user);
-        $this->view->canEnable = $aclService->isAllowed($loggedInUser, User_Model_Action_Default::UNDELETE(), $user);
+        $this->view->canDisable = $this->aclService->isAllowed(
+            $loggedInUser,
+            User_Model_Action_Default::DELETE(),
+            $user
+        );
+        $this->view->canEnable = $this->aclService->isAllowed(
+            $loggedInUser,
+            User_Model_Action_Default::UNDELETE(),
+            $user
+        );
 
         // Est-ce que l'utilisateur se modifie lui-même
         $this->view->editSelf = ($user === $loggedInUser);
@@ -94,15 +113,12 @@ class User_ProfileController extends Core_Controller_Ajax
         } else {
             $user = $connectedUser;
         }
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
 
         $formData = $this->getFormData('userProfile');
         $user->setFirstName($formData->getValue('firstName'));
         $user->setLastName($formData->getValue('lastName'));
         $user->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $config = Zend_Registry::get('configuration');
         if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
@@ -115,7 +131,7 @@ class User_ProfileController extends Core_Controller_Ajax
                           array(
                                'APPLICATION_NAME' => $config->emails->noreply->name
                           ));
-            $userService->sendEmail($user, $subject, $content);
+            $this->userService->sendEmail($user, $subject, $content);
             $message = __('UI', 'message', 'updated') . __('User', 'editProfile', 'userInformedByEmail');
         } else {
             $message = __('UI', 'message', 'updated');
@@ -131,8 +147,6 @@ class User_ProfileController extends Core_Controller_Ajax
     public function disableAction()
     {
         $connectedUser = $this->_helper->auth();
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
 
         /** @var $user User_Model_User */
         $user = User_Model_User::load($this->getParam('id'));
@@ -140,8 +154,7 @@ class User_ProfileController extends Core_Controller_Ajax
         // Désactivation de l'utilisateur
         $user->disable();
         $user->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Envoi d'un email d'alerte
         $config = Zend_Registry::get('configuration');
@@ -151,7 +164,7 @@ class User_ProfileController extends Core_Controller_Ajax
                            'APPLICATION_NAME' => $config->emails->noreply->name
                       )
         );
-        $userService->sendEmail($user, $subject, $content);
+        $this->userService->sendEmail($user, $subject, $content);
 
         UI_Message::addMessageStatic(__('User', 'editProfile', 'accountDeactivated') . ' '
                                          . __('User', 'editProfile', 'userInformedByEmail'), UI_Message::TYPE_SUCCESS);
@@ -169,17 +182,13 @@ class User_ProfileController extends Core_Controller_Ajax
      */
     public function enableAction()
     {
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
-
         /** @var $user User_Model_User */
         $user = User_Model_User::load($this->getParam('id'));
 
         // Activation de l'utilisateur
         $user->enable();
         $user->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Envoi d'un email d'alerte
         $config = Zend_Registry::get('configuration');
@@ -189,7 +198,7 @@ class User_ProfileController extends Core_Controller_Ajax
                            'APPLICATION_NAME' => $config->emails->noreply->name
                       )
         );
-        $userService->sendEmail($user, $subject, $content);
+        $this->userService->sendEmail($user, $subject, $content);
 
         $message = __('User', 'messages', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
         UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
@@ -238,9 +247,6 @@ class User_ProfileController extends Core_Controller_Ajax
             }
 
             if (!$this->hasFormError()) {
-                /** @var $userService User_Service_User */
-                $userService = User_Service_User::getInstance();
-
                 $subject = __('User', 'email', 'subjectEmailModified');
                 $config = Zend_Registry::get('configuration');
                 if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
@@ -263,14 +269,13 @@ class User_ProfileController extends Core_Controller_Ajax
                 }
 
                 // Envoi de l'email à l'ancienne adresse
-                $userService->sendEmail($user, $subject, $content);
+                $this->userService->sendEmail($user, $subject, $content);
 
                 $user->setEmail($email);
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
 
                 // Envoi de l'email à la nouvelle adresse
-                $userService->sendEmail($user, $subject, $content);
+                $this->userService->sendEmail($user, $subject, $content);
 
                 if ($user === $this->_helper->auth()) {
                     $message = __('UI', 'message', 'updated');
@@ -325,8 +330,7 @@ class User_ProfileController extends Core_Controller_Ajax
 
             if (! $this->hasFormError()) {
                 $user->setPassword($password);
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
                 UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
             }
 

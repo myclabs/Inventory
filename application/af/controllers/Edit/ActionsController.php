@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 /**
  * @package AF
  */
-class AF_Edit_ActionsController extends Core_Controller_Ajax
+class AF_Edit_ActionsController extends Core_Controller
 {
 
     /**
@@ -39,9 +39,7 @@ class AF_Edit_ActionsController extends Core_Controller_Ajax
         switch (get_class($action)) {
             case 'AF_Model_Action_SetValue_Numeric':
                 /** @var $action AF_Model_Action_SetValue_Numeric */
-                $calcValue = new Calc_Value();
-                $calcValue->digitalValue = $this->getParam('numericValue');
-                $calcValue->relativeUncertainty = $this->getParam('numericUncertainty');
+                $calcValue = new Calc_Value($this->getParam('numericValue'), $this->getParam('numericUncertainty'));
                 $action->setValue($calcValue);
                 break;
             case 'AF_Model_Action_SetValue_Checkbox':
@@ -70,8 +68,7 @@ class AF_Edit_ActionsController extends Core_Controller_Ajax
                 break;
         }
         $action->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/interaction');
     }
 

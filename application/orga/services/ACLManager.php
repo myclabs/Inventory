@@ -12,8 +12,13 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
  * @package Orga
  *
  */
-class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL_ResourceTreeTraverser
+class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 {
+    /**
+     * @var User_Service_ACL
+     */
+    protected $aclService;
+
     /**
      * Indique que l'Orga_ACLManager a détected des changements sur les ressources.
      *
@@ -65,15 +70,12 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
 
 
     /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Orga_Service_ACLManager
+     * @param User_Service_ACL $aclService
      */
-    public static function getInstance()
+    public function __construct(User_Service_ACL $aclService)
     {
-        return parent::getInstance();
+        $this->aclService = $aclService;
     }
-
 
     /**
      * @param OnFlushEventArgs $eventArgs
@@ -181,17 +183,17 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $this->newRoles[$organizationAdministrator->getRef()] = $organizationAdministrator;
 
         // Ajout des autorisations du rôle administrateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::EDIT(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::DELETE(),
             $organizationResource
@@ -228,32 +230,32 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $this->newRoles[$cellAdministrator->getRef()] = $cellAdministrator;
 
         // Ajout des autorisations du rôle administrateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::VIEW(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::EDIT(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::ALLOW(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             Orga_Action_Cell::COMMENT(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             Orga_Action_Cell::INPUT(),
             $cellResource
@@ -268,22 +270,22 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $this->newRoles[$cellContributor->getRef()] = $cellContributor;
 
         // Ajout des autorisations du rôle administrateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellContributor,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellContributor,
             User_Model_Action_Default::VIEW(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellContributor,
             Orga_Action_Cell::COMMENT(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellContributor,
             Orga_Action_Cell::INPUT(),
             $cellResource
@@ -298,17 +300,17 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $this->newRoles[$cellObserver->getRef()] = $cellObserver;
 
         // Ajout des autorisations du rôle observateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellObserver,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellObserver,
             User_Model_Action_Default::VIEW(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellObserver,
             Orga_Action_Cell::COMMENT(),
             $cellResource
@@ -339,7 +341,7 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
             } else {
                 $cellAdministrator = User_Model_Role::loadByRef($cellAdministratorRoleRef);
             }
-            User_Service_ACL::getInstance()->allow(
+            $this->aclService->allow(
                 $cellAdministrator,
                 User_Model_Action_Default::VIEW(),
                 $reportResource
@@ -351,7 +353,7 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
             } else {
                 $cellContributor = User_Model_Role::loadByRef($cellContributorRoleRef);
             }
-            User_Service_ACL::getInstance()->allow(
+            $this->aclService->allow(
                 $cellContributor,
                 User_Model_Action_Default::VIEW(),
                 $reportResource
@@ -363,7 +365,7 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
             } else {
                 $cellObserver = User_Model_Role::loadByRef($cellObserverRoleRef);
             }
-            User_Service_ACL::getInstance()->allow(
+            $this->aclService->allow(
                 $cellObserver,
                 User_Model_Action_Default::VIEW(),
                 $reportResource
@@ -388,17 +390,17 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
             $identity = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
         }
 
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $identity,
             User_Model_Action_Default::VIEW(),
             $reportResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $identity,
             User_Model_Action_Default::EDIT(),
             $reportResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $identity,
             User_Model_Action_Default::DELETE(),
             $reportResource

@@ -43,15 +43,28 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
 
     /**
      * @param AF_Model_Component_Select_Option[] $value Array of selected options
+     * @throws Core_Exception_InvalidArgument Value must be an array of AF_Model_Component_Select_Option
      */
     public function setValue($value)
     {
+        $this->value = new ArrayCollection();
         foreach ($value as $option) {
             if ($option instanceof  AF_Model_Component_Select_Option) {
                 $this->value->add($option->getRef());
             } else {
                 throw new Core_Exception_InvalidArgument('Value must be an array of AF_Model_Component_Select_Option');
             }
+        }
+    }
+
+    /**
+     * @param AF_Model_Input_Select_Multi $input
+     */
+    public function setValueFrom(AF_Model_Input_Select_Multi $input)
+    {
+        $this->value = new ArrayCollection();
+        foreach ($input->value as $ref) {
+            $this->value->add($ref);
         }
     }
 
@@ -68,6 +81,23 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
             }
         }
         return 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function equals(AF_Model_Input $input)
+    {
+        $equals = parent::equals($input);
+        if (! $equals) {
+            return false;
+        }
+
+        if ($input instanceof AF_Model_Input_Select_Single) {
+            return $this->getValue() === $input->getValue();
+        }
+
+        return false;
     }
 
 }

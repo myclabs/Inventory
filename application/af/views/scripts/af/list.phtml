@@ -38,7 +38,7 @@ $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
 $refColumn->editable = true;
 $refColumn->addable = true;
 $refColumn->sortName = AF_Model_AF::QUERY_REF;
-$refColumn->filterName = AF_Model_AF::QUERY_LABEL;
+$refColumn->filterName = AF_Model_AF::QUERY_REF;
 $datagrid->addCol($refColumn);
 
 $configurationColumn = new UI_Datagrid_Col_Link('configuration', __('UI', 'name', 'configuration'));

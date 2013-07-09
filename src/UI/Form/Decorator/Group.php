@@ -31,6 +31,9 @@ class UI_Form_Decorator_Group extends Zend_Form_Decorator_Abstract
             $collapse->body = $content;
             $collapse->foldedByDefault = $this->getElement()->folded;
             $collapse->addAttribute('class', 'subGroup');
+            if ($this->getElement() instanceof UI_Form_Element_GroupRepeated) {
+                $collapse->addAttribute('class', 'repeatedGroup');
+            }
             foreach ($this->getElement()->getAttributes() as $name => $value) {
                 $collapse->addAttribute($name, $value);
             }
@@ -42,10 +45,13 @@ class UI_Form_Decorator_Group extends Zend_Form_Decorator_Abstract
             $content = $collapse->getHTML();
         } else {
             $groupOptions = array(
-                    'tag'   => 'fieldset',
-                    'class' => 'wrapper subGroup',
-                    'id'    => $this->getElement()->getId()
-                );
+                'tag'   => 'fieldset',
+                'class' => 'wrapper subGroup',
+                'id'    => $this->getElement()->getId()
+            );
+            if ($this->getElement() instanceof UI_Form_Element_GroupRepeated) {
+                $groupOptions['class'] .= ' repeatedGroup';
+            }
             foreach ($this->getElement()->getAttributes() as $name => $value) {
                 if ($name == 'class') {
                     $groupOptions['class'] .= ' ' . $value;

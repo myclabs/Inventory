@@ -8,15 +8,22 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * CompleteEdition Controller
  * @package AF
  */
-class AF_EditController extends Core_Controller_Ajax
+class AF_EditController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var AF_Service_ConfigurationValidator
+     */
+    private $afConfigurationValidator;
 
     /**
      * Permet l'affichage du menu dans un tabView avec différents onglets
@@ -67,9 +74,8 @@ class AF_EditController extends Core_Controller_Ajax
             $af->setLabel($formData->getValue('label'));
             $af->setDocumentation($formData->getValue('documentation'));
             $af->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
                 $this->setFormMessage(__('UI', 'message', 'updated'));
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->addFormError('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
@@ -159,8 +165,7 @@ class AF_EditController extends Core_Controller_Ajax
             }
             if (!$this->hasFormError()) {
                 $af->save();
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
                 $this->setFormMessage(__('UI', 'message', 'updated'));
             }
         }
@@ -184,9 +189,8 @@ class AF_EditController extends Core_Controller_Ajax
     public function controlResultsAction()
     {
         $this->view->af = AF_Model_AF::load($this->getParam('id'));
-        /** @var $controlService AF_Service_Validator */
-        $controlService = AF_Service_Validator::getInstance();
-        $this->view->errors = $controlService->validateAF($this->view->af);
+
+        $this->view->errors = $this->afConfigurationValidator->validateAF($this->view->af);
         $this->_helper->layout()->disableLayout();
     }
 

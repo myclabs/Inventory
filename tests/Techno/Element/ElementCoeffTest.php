@@ -25,9 +25,7 @@ class Techno_Test_Element_CoeffTest
      */
     public static function generateObject()
     {
-        $value = new Calc_Value();
-        $value->digitalValue = 10;
-        $value->relativeUncertainty = 20;
+        $value = new Calc_Value(10, 20);
         $baseUnit = new Unit_API('m');
         $unit = new Unit_API('km');
         $o = new Techno_Model_Element_Coeff();
@@ -95,9 +93,7 @@ class Techno_Test_Element_CoeffSetUp extends PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         // Fixtures
-        $value = new Calc_Value();
-        $value->digitalValue = 10;
-        $value->relativeUncertainty = 20;
+        $value = new Calc_Value(10, 20);
         $baseUnit = new Unit_API('m');
         $unit = new Unit_API('km');
 

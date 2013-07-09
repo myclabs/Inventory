@@ -10,7 +10,7 @@ use Core\Annotation\Secure;
  * Controleur des éléments
  * @package Techno
  */
-class Techno_ElementController extends Core_Controller_Ajax
+class Techno_ElementController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;
@@ -21,6 +21,7 @@ class Techno_ElementController extends Core_Controller_Ajax
      */
     public function detailsAction()
     {
+        $this->_helper->layout()->disableLayout();
         $idElement = $this->getParam('id');
         $this->view->element = Techno_Model_Element::load($idElement);
     }
@@ -31,13 +32,23 @@ class Techno_ElementController extends Core_Controller_Ajax
      */
     public function editSubmitAction()
     {
-        $formData = $this->getFormData('editElement');
+        $locale = Core_Locale::loadDefault();
+
+        $formData = $this->getFormData('element_editForm');
         $idElement = $formData->getValue('id');
         /** @var $element Techno_Model_Element_Process|Techno_Model_Element_Coeff */
         $element = Techno_Model_Element::load($idElement);
         // Validation du formulaire
-        $digitalValue = $formData->getValue('digitalValue');
-        $uncertainty = $formData->getValue('uncertainty');
+        try {
+            $digitalValue = $locale->readNumber($formData->getValue('digitalValue'));
+        } catch (Core_Exception_InvalidArgument $e) {
+            $this->addFormError('digitalValue', __('UI', 'formValidation', 'invalidNumber'));
+        }
+        try {
+            $uncertainty = $locale->readInteger($formData->getValue('uncertainty'));
+        } catch (Core_Exception_InvalidArgument $e) {
+            $this->addFormError('uncertainty', __('UI', 'formValidation', 'invalidUncertainty'));
+        }
         $refUnit = $formData->getValue('unit');
         if (empty($refUnit)) {
             $this->addFormError('unit', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -53,19 +64,21 @@ class Techno_ElementController extends Core_Controller_Ajax
                     throw new Core_Exception_User('Techno', 'element', 'incompatibleUnit');
                 }
             }
-            $value = new Calc_Value();
-            $value->digitalValue = $digitalValue;
-            $value->relativeUncertainty = $uncertainty;
-            $element->setValue($value);
+            $element->setValue(new Calc_Value($digitalValue, $uncertainty));
             $element->setDocumentation($documentation);
             $element->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
             $this->setFormMessage(__('UI', 'message', 'updated'));
         } else {
             $this->setFormMessage('Erreur de validation du formulaire.');
         }
-        $this->sendFormResponse();
+        $this->sendFormResponse(
+            [
+                'elementId' => $element->getId(),
+                'value' => $element->getValue()->getDigitalValue(),
+                'uncertainty' => $element->getValue()->getRelativeUncertainty()
+            ]
+        );
     }
 
 }

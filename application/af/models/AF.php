@@ -251,7 +251,7 @@ class AF_Model_AF extends Core_Model_Entity
     public function execute(AF_Model_InputSet $inputSet)
     {
         /** @var $mainAlgo Algo_Model_Selection_Main */
-        $mainAlgo = $this->getAlgoByRef('Main');
+        $mainAlgo = $this->getAlgoByRef(self::ALGO_MAIN_REF);
 
         // Execution de l'algo principal
         $results = $mainAlgo->execute($inputSet);
@@ -320,6 +320,7 @@ class AF_Model_AF extends Core_Model_Entity
     /**
      * Retourne un module par son référent textuel
      * @param string $ref
+     * @throws Core_Exception_NotFound
      * @return AF_Model_AF
      */
     public static function loadByRef($ref)

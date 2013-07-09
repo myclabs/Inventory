@@ -44,9 +44,9 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
         $result = $calc->executeExpression($this);
 
         // Convertit à l'unité de l'algo
-        $newValue = clone $result->value;
-        $newValue->digitalValue = $result->value->digitalValue / $result->unit->getConversionFactor($this->getUnit());
-        return new Calc_UnitValue($this->getUnit(), $newValue);
+        $convertedValue = $result->getDigitalValue() / $result->getUnit()->getConversionFactor($this->getUnit());
+
+        return new Calc_UnitValue($this->getUnit(), $convertedValue, $result->getRelativeUncertainty());
     }
 
     /**
@@ -178,7 +178,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
      */
     public function getExpression()
     {
-        return $this->expression;
+        return $this->tecExpression->getExpression();
     }
 
     /**

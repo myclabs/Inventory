@@ -33,11 +33,11 @@ class User_ACLEntityManagerListener
 
 
     /**
-     * Constructeur
+     * @param User_Service_ACLFilter $aclFilterService
      */
-    public function __construct()
+    public function __construct(User_Service_ACLFilter $aclFilterService)
     {
-        $this->aclFilterService = User_Service_ACLFilter::getInstance();
+        $this->aclFilterService = $aclFilterService;
     }
 
     /**

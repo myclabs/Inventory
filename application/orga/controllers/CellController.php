@@ -8,14 +8,33 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Classe controleur de cell.
  * @package    Orga
  * @subpackage Controller
  */
-class Orga_CellController extends Core_Controller_Ajax
+class Orga_CellController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
+    /**
+     * @Inject
+     * @var Orga_Service_InputService
+     */
+    private $inputService;
+
     /**
      * Affiche le détail d'une cellule.
      * @Secure("viewCell")
@@ -36,7 +55,6 @@ class Orga_CellController extends Core_Controller_Ajax
         $this->view->cell = $cell;
 
         $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
 
         if ($this->hasParam('tab')) {
             $tab = $this->getParam('tab');
@@ -49,7 +67,7 @@ class Orga_CellController extends Core_Controller_Ajax
         $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$organization->getLabel().'</small>';
         $this->view->isParentCellReachable = array();
         foreach ($cell->getParentCells() as $parentCell) {
-            $isUserAllowedToViewParentCell = $aclService->isAllowed(
+            $isUserAllowedToViewParentCell = $this->aclService->isAllowed(
                 $connectedUser,
                 User_Model_Action_Default::VIEW(),
                 $parentCell
@@ -61,12 +79,12 @@ class Orga_CellController extends Core_Controller_Ajax
 
 
         // TAB ORGA.
-        $isUserAllowedToEditOrganization = $aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
             $organization
         );
-        $isUserAllowedToEditCell = $aclService->isAllowed(
+        $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::EDIT(),
             $cell
@@ -85,7 +103,7 @@ class Orga_CellController extends Core_Controller_Ajax
 
 
         // TAB ACL
-        $isUserAllowedToAllowAuthorizations = $aclService->isAllowed(
+        $isUserAllowedToAllowAuthorizations = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::ALLOW(),
             $cell
@@ -189,7 +207,7 @@ class Orga_CellController extends Core_Controller_Ajax
 
 
         // TAB DOCUMENTS
-        $isUserAllowedToInputCell = $aclService->isAllowed(
+        $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $connectedUser,
             Orga_Action_Cell::INPUT(),
             User_Model_Resource_Entity::loadByEntity($cell)
@@ -208,6 +226,16 @@ class Orga_CellController extends Core_Controller_Ajax
             $documentsTab->dataSource = 'orga/tab_celldetails/documents?idCell='.$idCell;
             $this->view->tabView->addTab($documentsTab);
         }
+
+
+        // TAB HISTORIQUE
+        $historyTab = new UI_Tab('history');
+        if ($tab === 'history') {
+            $historyTab->active = true;
+        }
+        $historyTab->label = __('UI', 'name', 'history');
+        $historyTab->dataSource = 'orga/tab_celldetails/history?idCell='.$idCell;
+        $this->view->tabView->addTab($historyTab);
 
 
         // TAB ADMINISTRATION
@@ -324,7 +352,7 @@ class Orga_CellController extends Core_Controller_Ajax
         $inputConfigCell = $cell->getParentCellForGranularity($cell->getGranularity()->getInputConfigGranularity());
         $aF = $inputConfigCell->getCellsGroupForInputGranularity($cell->getGranularity())->getAF();
 
-        $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
+        $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
             Orga_Action_Cell::INPUT(),
             $cell
@@ -372,15 +400,18 @@ class Orga_CellController extends Core_Controller_Ajax
      */
     public function inputsaveAction()
     {
+        /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
-        $inputSet = $this->getParam('inputSet');
+        $inputSetContainer = $this->getParam('inputSetContainer');
+        /** @var $newInputSet AF_Model_InputSet_Primary */
+        $newInputSet = $inputSetContainer->inputSet;
 
-        $cell->setAFInputSetPrimary($inputSet);
+        $this->inputService->editInput($cell, $newInputSet);
 
-        Orga_Service_ETLData::getInstance()->clearDWResultsFromCell($cell);
-        if ($inputSet->isInputComplete()) {
-            Orga_Service_ETLData::getInstance()->populateDWResultsFromCell($cell);
-        }
+        $this->entityManager->flush();
+
+        // Remplace l'input set temporaire par celui de la cellule
+        $inputSetContainer->inputSet = $cell->getAFInputSetPrimary();
 
         $this->_helper->viewRenderer->setNoRender(true);
     }
@@ -391,14 +422,11 @@ class Orga_CellController extends Core_Controller_Ajax
      */
     public function resetdwsAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         try {
             // Lance la tache en arrière plan
-            $workDispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenDWCubes',
@@ -417,14 +445,11 @@ class Orga_CellController extends Core_Controller_Ajax
      */
     public function calculateinputsAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         try {
             // Lance la tache en arrière plan
-            $workDispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenCalculationsAndDWCubes',

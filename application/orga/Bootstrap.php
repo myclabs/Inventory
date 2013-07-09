@@ -19,7 +19,7 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
     protected function _initOrgaWorker()
     {
         /**@var Core_Work_Dispatcher $dispatcher */
-        $dispatcher = Zend_Registry::get('workDispatcher');
+        $dispatcher = $this->container->get('Core_Work_Dispatcher');
         $dispatcher->registerWorker(new Orga_Work_WorkerGranularity());
         $dispatcher->registerWorker(new Orga_Work_WorkerMember());
         $dispatcher->registerWorker(new Orga_Work_Worker());
@@ -31,7 +31,10 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
     protected function _initOrgaObservers()
     {
         if (APPLICATION_ENV != 'testsunitaires') {
-            Core_EventDispatcher::getInstance()->addListener('Orga_Model_GranularityReport', 'DW_Model_Report');
+            /** @var Core_EventDispatcher $eventDispatcher */
+            $eventDispatcher = $this->container->get('Core_EventDispatcher');
+
+            $eventDispatcher->addListener('Orga_Model_GranularityReport', 'DW_Model_Report');
         }
     }
 
@@ -41,9 +44,10 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
     protected function _initOrgaACLCellResourceTreeTraverser()
     {
         /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
-        $cellResourceTreeTraverser = Orga_Service_ACLManager::getInstance();
+        $cellResourceTreeTraverser = $this->container->get('Orga_Service_ACLManager');
         /** @var $aclService User_Service_ACL */
-        $aclService = User_Service_ACL::getInstance();
+        $aclService = $this->container->get('User_Service_ACL');
+
         $aclService->setResourceTreeTraverser("Orga_Model_Cell", $cellResourceTreeTraverser);
     }
 
@@ -62,7 +66,12 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
             Doctrine\ORM\Events::onFlush,
             Doctrine\ORM\Events::postFlush,
         ];
-        $entityManager->getEventManager()->addEventListener($events, Orga_Service_ACLManager::getInstance());
+
+        if (APPLICATION_ENV != 'testsunitaires') {
+            $aclManager = $this->container->get('Orga_Service_ACLManager');
+
+            $entityManager->getEventManager()->addEventListener($events, $aclManager);
+        }
     }
 
 }

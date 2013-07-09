@@ -67,8 +67,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
             $dimension->save();
             $family->addDimension($dimension);
             $family->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();
@@ -111,8 +110,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
                 break;
         }
         $dimension->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -129,8 +127,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
         $family = $dimension->getFamily();
         $family->removeDimension($dimension);
         $family->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

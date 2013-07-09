@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.
@@ -15,6 +16,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -82,7 +89,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                     $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
                 } else {
                     $user->addRole($userRole);
-                    User_Service_User::getInstance()->sendEmail(
+                    $this->userService->sendEmail(
                         $user,
                         __('User', 'email', 'subjectAccessRightsChange'),
                         __('Orga', 'email', 'userRoleAdded', array(
@@ -93,7 +100,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                     $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
                 }
             } else {
-                $user = User_Service_User::getInstance()->inviteUser(
+                $user = $this->userService->inviteUser(
                     $userEmail,
                     __('Orga', 'email', 'userRoleGivenAtCreation', array(
                         'CELL' => $cell->getLabelExtended(),
@@ -129,7 +136,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $user->removeRole($userRole);
-        User_Service_User::getInstance()->sendEmail(
+        $this->userService->sendEmail(
             $user,
             __('User', 'email', 'subjectAccessRightsChange'),
             __('Orga', 'email', 'userRoleRemoved', array(

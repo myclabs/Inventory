@@ -9,18 +9,8 @@
  * Service Keyword.
  * @package Keyword
  */
-class Keyword_Service_Association extends Core_Service
+class Keyword_Service_Association
 {
-    /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Keyword_Service_Association
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
-
     /**
      * Ajoute une Association et le renvoie.
      *
@@ -30,7 +20,7 @@ class Keyword_Service_Association extends Core_Service
      *
      * @return Keyword_Model_Association
      */
-    public function addService($subjectKeywordRef, $objectKeywordRef, $predicateRef)
+    public function add($subjectKeywordRef, $objectKeywordRef, $predicateRef)
     {
         $association = new Keyword_Model_Association();
 
@@ -51,8 +41,9 @@ class Keyword_Service_Association extends Core_Service
      * @param string $objectKeywordRef
      * @param string $predicateRef
      * @param string $newPredicateRef
+     * @throws Core_Exception_User
      */
-    public function updatePredicateService($subjectKeywordRef, $objectKeywordRef, $predicateRef, $newPredicateRef)
+    public function updatePredicate($subjectKeywordRef, $objectKeywordRef, $predicateRef, $newPredicateRef)
     {
         try {
             $association = Keyword_Model_Association::loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef);
@@ -72,8 +63,9 @@ class Keyword_Service_Association extends Core_Service
      * @param string $subjectKeywordRef
      * @param string $objectKeywordRef
      * @param string $predicateRef
+     * @throws Core_Exception_User
      */
-    public function deleteService($subjectKeywordRef, $objectKeywordRef, $predicateRef)
+    public function delete($subjectKeywordRef, $objectKeywordRef, $predicateRef)
     {
         try {
             $association = Keyword_Model_Association::loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef);
@@ -178,7 +170,7 @@ class Keyword_Service_Association extends Core_Service
      *
      * @throws Core_Exception_User
      */
-    protected function checkAdd($subjectKeywordRef, $objectKeywordRef, $predicateRef)
+    private function checkAdd($subjectKeywordRef, $objectKeywordRef, $predicateRef)
     {
         $querySubjectKeywordExist = new Core_Model_Query();
         $querySubjectKeywordExist->filter->addCondition(Keyword_Model_Keyword::QUERY_REF, $subjectKeywordRef);
@@ -226,7 +218,7 @@ class Keyword_Service_Association extends Core_Service
      *
      * @throws Core_Exception_User
      */
-    protected function checkUpdatePredicate($subjectKeywordRef, $objectKeywordRef, $predicateRef, $newPredicateRef)
+    private function checkUpdatePredicate($subjectKeywordRef, $objectKeywordRef, $predicateRef, $newPredicateRef)
     {
         $queryPredicateExist = new Core_Model_Query();
         $queryPredicateExist->filter->addCondition(Keyword_Model_Predicate::QUERY_REF, $newPredicateRef);

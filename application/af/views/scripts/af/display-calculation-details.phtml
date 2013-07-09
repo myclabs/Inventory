@@ -54,8 +54,10 @@ function displayAF(AF_Model_AF $af, AF_Model_InputSet $inputSet, $title, $refPre
     foreach (getSubAFInputSets($inputSet) as $array) {
         /** @var $subInputSet AF_Model_InputSet_Sub */
         $subInputSet = $array['subInputSet'];
+        $componentRef = $array['componentRef'];
 
-        $newRefPrefix = $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR;
+        $newRefPrefix = $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR
+            . $componentRef . UI_Generic::REF_SEPARATOR;
         if (isset($array['number'])) {
             $newRefPrefix .= $array['number'] . UI_Generic::REF_SEPARATOR;
         }
@@ -79,8 +81,9 @@ function getSubAFInputSets(AF_Model_InputSet $inputSet)
         if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
             $subInputSet = $input->getValue();
             $subAFInputSets[] = array(
-                'title'       => $input->getComponent()->getLabel(),
-                'subInputSet' => $subInputSet,
+                'title'        => $input->getComponent()->getLabel(),
+                'subInputSet'  => $subInputSet,
+                'componentRef' => $input->getRef(),
             );
             $subAFInputSets = array_merge($subAFInputSets, getSubAFInputSets($subInputSet));
         }
@@ -92,9 +95,10 @@ function getSubAFInputSets(AF_Model_InputSet $inputSet)
                     $title .= " - " . $subInputSet->getFreeLabel();
                 }
                 $subAFInputSets[] = array(
-                    'title'       => $title,
-                    'subInputSet' => $subInputSet,
-                    'number'      => $number,
+                    'title'        => $title,
+                    'subInputSet'  => $subInputSet,
+                    'number'       => $number,
+                    'componentRef' => $input->getRef(),
                 );
                 $subAFInputSets = array_merge($subAFInputSets, getSubAFInputSets($subInputSet));
             }
@@ -117,7 +121,7 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
     $locale = Core_Locale::loadDefault();
     $title = $algo->getRef();
     if ($algo instanceof Algo_Model_Numeric) {
-        $title .= " (" . $algo->getLabel() . ")";
+        $title .= " <small>" . $algo->getLabel() . "</small>";
     }
     $collapse = new UI_HTML_Collapse($refPrefix . $algo->getRef(), $title);
     $collapse->foldedByDefault = true;
@@ -181,9 +185,9 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
     // Valeur
     if ($algo instanceof Algo_Model_Numeric) {
         $value = $algo->execute($inputSet);
-        $stringValue = $locale->formatNumber($value->value->digitalValue, 20)
-            . ' <strong>' . $value->unit->getSymbol() . '</strong> ± '
-            . $locale->formatNumber($value->value->relativeUncertainty) . ' <strong>%</strong>';
+        $stringValue = $locale->formatNumber($value->getDigitalValue(), 20)
+            . ' <strong>' . $value->getUnit()->getSymbol() . '</strong> ± '
+            . $locale->formatNumber($value->getRelativeUncertainty()) . ' <strong>%</strong>';
         $collapse->body .= "<p><strong>" . __('UI', 'name', 'value') . __('UI', 'other', ':')
             . "</strong> $stringValue</p>";
     }

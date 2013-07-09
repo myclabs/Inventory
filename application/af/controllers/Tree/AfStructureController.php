@@ -88,8 +88,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         }
 
         $component->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->message = __('UI', 'message', 'updated');
         $this->send();

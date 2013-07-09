@@ -23,7 +23,7 @@ class Inventory_Model_Translated extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var String
+     * @var string
      */
     protected $name;
 

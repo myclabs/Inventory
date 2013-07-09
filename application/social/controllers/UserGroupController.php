@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 /**
  * @package Social
  */
-class Social_UserGroupController extends Core_Controller_Ajax
+class Social_UserGroupController extends Core_Controller
 {
 
     /**

@@ -8,6 +8,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Classe controlleur de tree des axes.
@@ -16,6 +17,12 @@ use Core\Annotation\Secure;
  */
 class Classif_Tree_AxisController extends UI_Controller_Tree
 {
+    /**
+     * @Inject
+     * @var Classif_Service_Axis
+     */
+    private $axisService;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -36,14 +43,15 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
     {
         if ($this->idNode === null) {
             $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
+            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+                Core_Model_Filter::OPERATOR_NULL);
             $queryRootAxes->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
             $axes = Classif_Model_Axis::loadList($queryRootAxes);
         } else {
             $axes = Classif_Model_Axis::loadByRef($this->idNode)->getDirectBroaders();
         }
         foreach ($axes as $axis) {
-            $axisLabel = ($axis->getLabel() == '') ? $axis->getRef() : $axis->getLabel();
+            $axisLabel = '<b>' . $axis->getLabel() . '</b> <i>('.$axis->getRef().')</i>';
             $this->addNode($axis->getRef(), $axisLabel, (!$axis->hasdirectBroaders()), null, false, true, true);
         }
 
@@ -69,13 +77,13 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
         $label = $this->getAddElementValue('label');
         $refParent = $this->getAddElementValue('refParent');
 
-        $refErrors = Classif_Service_Axis::getInstance()->getErrorMessageForNewRef($ref);
+        $refErrors = $this->axisService->getErrorMessageForNewRef($ref);
         if ($refErrors != null) {
             $this->setAddFormElementErrorMessage('ref', $refErrors);
         }
 
         if (empty($this->_formErrorMessages)) {
-            $axis = Classif_Service_Axis::getInstance()->add($ref, $label, $refParent);
+            $this->axisService->add($ref, $label, $refParent);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -98,8 +106,8 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
     public function editnodeAction()
     {
         $axis = Classif_Model_Axis::loadByRef($this->idNode);
-        $newRef = $this->getEditElementValue('ref');
         $newLabel = $this->getEditElementValue('label');
+        $newRef = $this->getEditElementValue('ref');
         $newParentRef = $this->getEditElementValue('changeParent');
         if ($newParentRef !== '') {
             $newParentRef = ($newParentRef === ($this->id.'_root')) ? null : $newParentRef;
@@ -113,7 +121,8 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
                     $newPosition = $axis->getLastEligiblePosition();
                 } else if ($newParentRef === null) {
                     $queryRootAxis = new Core_Model_Query();
-                    $queryRootAxis->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
+                    $queryRootAxis->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+                        Core_Model_Filter::OPERATOR_NULL);
                     $newPosition = Classif_Model_Axis::countTotal($queryRootAxis) + 1;
                 } else {
                     $newPosition = count(Classif_Model_Axis::loadByRef($this->idNode)->getDirectBroaders()) + 1;
@@ -133,7 +142,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
         }
 
         if ($newRef !== $this->idNode) {
-            $refErrors = Classif_Service_Axis::getInstance()->getErrorMessageForNewRef($newRef);
+            $refErrors = $this->axisService->getErrorMessageForNewRef($newRef);
             if ($refErrors != null) {
                 $this->setEditFormElementErrorMessage('ref', $refErrors);
             }
@@ -142,16 +151,16 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
         if (empty($this->_formErrorMessages)) {
             $label = null;
             if (($axis->getRef() !== $newRef) && ($axis->getLabel() !== $newLabel)) {
-                $label = Classif_Service_Axis::getInstance()->updateRefAndLabel($this->idNode, $newRef, $newLabel);
+                $label = $this->axisService->updateRefAndLabel($this->idNode, $newRef, $newLabel);
             } else if ($axis->getLabel() !== $newLabel) {
-                $label = Classif_Service_Axis::getInstance()->updateLabel($this->idNode, $newLabel);
+                $label = $this->axisService->updateLabel($this->idNode, $newLabel);
             } else if ($axis->getRef() !== $newRef) {
-                $label = Classif_Service_Axis::getInstance()->updateRef($this->idNode, $newRef);
+                $label = $this->axisService->updateRef($this->idNode, $newRef);
             }
             if ($newParentRef !== '') {
-                $label = Classif_Service_Axis::getInstance()->updateParent($this->idNode, $newParentRef, $newPosition);
+                $label = $this->axisService->updateParent($this->idNode, $newParentRef, $newPosition);
             } else if (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
-                $label = Classif_Service_Axis::getInstance()->updatePosition($this->idNode, $newPosition);
+                $label = $this->axisService->updatePosition($this->idNode, $newPosition);
             }
             if ($label !== null) {
                 $this->message = __('UI', 'message', 'updated');
@@ -191,6 +200,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
         $queryOrdered->order->addOrder(Classif_Model_Axis::QUERY_NARROWER);
         $queryOrdered->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
         foreach (Classif_Model_Axis::loadList($queryOrdered) as $axis) {
+            /** @var Classif_Model_Axis $axis */
             $this->addElementList($axis->getRef(), $axis->getLabel());
         }
         $this->send();
@@ -215,7 +225,8 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
             $siblingAxes = $axisParent->getDirectBroaders();
         } else if (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
             $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
+            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+                Core_Model_Filter::OPERATOR_NULL);
             $queryRootAxes->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
             $siblingAxes = Classif_Model_Axis::loadList($queryRootAxes);
         } else {
@@ -256,8 +267,6 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
      */
     public function deletenodeAction()
     {
-        $labelNode = Classif_Service_Axis::getInstance()->delete($this->idNode);
-
         $this->message = __('UI', 'message', 'deleted');
 
         $this->send();

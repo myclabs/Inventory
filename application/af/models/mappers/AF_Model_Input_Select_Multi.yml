@@ -3,6 +3,11 @@ AF_Model_Input_Select_Multi:
   repositoryClass: Core_Model_Repository
   table: AF_Input_Select_Multi
 
+  gedmo:
+    loggable: true
+
   fields:
     value:
       type: array
+      gedmo:
+        - versioned

@@ -9,18 +9,8 @@
  * @package Orga
  * @subpackage Service
  */
-class Orga_Service_ETLData extends Core_Singleton
+class Orga_Service_ETLData
 {
-    /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Orga_Service_ETLData
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
-
 
     /**
      * Supprime l'ensemble des résultats de la Cell donnée.

@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controlleur du Datagrid listant les Roles du projet d'une cellule.
@@ -15,6 +16,18 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ACLManager
+     */
+    private $aclManager;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -66,8 +79,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         }
 
         if (empty($this->_addErrorMessages)) {
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->getConnection()->beginTransaction();
+            $this->entityManager->beginTransaction();
 
             if (User_Model_User::isEmailUsed($userEmail)) {
                 $user = User_Model_User::loadByEmail($userEmail);
@@ -76,22 +88,22 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 } else {
                     set_time_limit(0);
                     try {
-                        $entityManagers['default']->flush();
+                        $this->entityManager->flush();
 
-                        Orga_Service_ACLManager::getInstance()->addOrganizationAdministrator(
+                        $this->aclManager->addOrganizationAdministrator(
                             $organization,
                             $user
                         );
-                        $entityManagers['default']->flush();
+                        $this->entityManager->flush();
 
-                        $entityManagers['default']->getConnection()->commit();
+                        $this->entityManager->commit();
                     } catch (Exception $e) {
-                        $entityManagers['default']->getConnection()->rollback();
-                        $entityManagers['default']->clear();
+                        $this->entityManager->rollback();
+                        $this->entityManager->clear();
 
                         throw $e;
                     }
-                    User_Service_User::getInstance()->sendEmail(
+                    $this->userService->sendEmail(
                         $user,
                         __('User', 'email', 'subjectAccessRightsChange'),
                         __('Orga', 'email', 'userOrganizationAdministratorRoleAdded', array(
@@ -101,7 +113,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                     $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
                 }
             } else {
-                $user = User_Service_User::getInstance()->inviteUser(
+                $user = $this->userService->inviteUser(
                     $userEmail,
                     __('Orga', 'email', 'userOrganizationAdministratorRoleGivenAtCreation', array(
                         'ORGANIZATION' => $organization->getLabel(),
@@ -113,18 +125,18 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
 
                 set_time_limit(0);
                 try {
-                    $entityManagers['default']->flush();
+                    $this->entityManager->flush();
 
-                    Orga_Service_ACLManager::getInstance()->addOrganizationAdministrator(
+                    $this->aclManager->addOrganizationAdministrator(
                         $organization,
                         $user
                     );
-                    $entityManagers['default']->flush();
+                    $this->entityManager->flush();
 
-                    $entityManagers['default']->getConnection()->commit();
+                    $this->entityManager->commit();
                 } catch (Exception $e) {
-                    $entityManagers['default']->getConnection()->rollback();
-                    $entityManagers['default']->clear();
+                    $this->entityManager->rollback();
+                    $this->entityManager->clear();
 
                     throw $e;
                 }
@@ -153,26 +165,25 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $user = User_Model_User::load($this->delete);
 
         set_time_limit(0);
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->getConnection()->beginTransaction();
+        $this->entityManager->beginTransaction();
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
-            Orga_Service_ACLManager::getInstance()->removeOrganizationAdministrator(
+            $this->aclManager->removeOrganizationAdministrator(
                 $organization,
                 $user
             );
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
-            $entityManagers['default']->getConnection()->commit();
+            $this->entityManager->commit();
         } catch (Exception $e) {
-            $entityManagers['default']->getConnection()->rollback();
-            $entityManagers['default']->clear();
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
 
             throw $e;
         }
 
-        User_Service_User::getInstance()->sendEmail(
+        $this->userService->sendEmail(
             $user,
             __('User', 'email', 'subjectAccessRightsChange'),
             __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', array(

@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Contrôleur de gestion des actions de l'utilisateurs
@@ -16,6 +17,12 @@ class User_ActionController extends UI_Controller_Captcha
 {
 
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
 
     /**
      * Par défaut : redirige vers l'action de login.
@@ -143,14 +150,10 @@ class User_ActionController extends UI_Controller_Captcha
             }
 
             if (! $this->hasFormError()) {
-                /** @var $userService User_Service_User */
-                $userService = User_Service_User::getInstance();
-
                 $user = User_Model_User::loadByEmail($email);
                 $user->generateKeyEmail();
                 $user->save();
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
 
                 // On envoie le mail à l'utilisateur
                 $url = 'http://' . $_SERVER["SERVER_NAME"]
@@ -168,7 +171,7 @@ class User_ActionController extends UI_Controller_Captcha
                                    'PASSWORD_RESET_CONFIRMATION_LINK' => $url,
                                    'APPLICATION_NAME'                 => $config->emails->noreply->name
                               ));
-                $userService->sendEmail($user, $subject, $content);
+                $this->userService->sendEmail($user, $subject, $content);
                 $this->setFormMessage(__('User', 'resetPassword', 'emailNewPasswordLinkSent'),
                                       UI_Message::TYPE_SUCCESS);
             }
@@ -203,14 +206,10 @@ class User_ActionController extends UI_Controller_Captcha
             throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été définit !');
         }
 
-        /** @var $userService User_Service_User */
-        $userService = User_Service_User::getInstance();
-
         $user->eraseEmailKey();
         $password = $user->setRandomPassword();
         $user->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $subject = __('User', 'email', 'subjectNewPassword',
                     array(
@@ -222,7 +221,7 @@ class User_ActionController extends UI_Controller_Captcha
                            'APPLICATION_NAME' => $config->emails->noreply->name,
                            'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl(),
                       ));
-        $userService->sendEmail($user, $subject, $content);
+        $this->userService->sendEmail($user, $subject, $content);
     }
 
     /**

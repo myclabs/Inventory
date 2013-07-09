@@ -12,7 +12,7 @@ use Core\Annotation\Secure;
  * Controlleur permettant de gérer les Keyword.
  * @package Keyword
  */
-class Keyword_KeywordController extends Core_Controller_Ajax
+class Keyword_KeywordController extends Core_Controller
 {
     /**
      * Liste des Keywords en consultation.

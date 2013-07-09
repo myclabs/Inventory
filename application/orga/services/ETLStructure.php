@@ -12,16 +12,99 @@ use Doctrine\ORM\EntityManager;
  * @package Orga
  * @subpackage Service
  */
-class Orga_Service_ETLStructure extends Core_Singleton
+class Orga_Service_ETLStructure
 {
     /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Orga_Service_ETLStructure
+     * @var EntityManager
      */
-    public static function getInstance()
+    private $entityManager;
+    /**
+     * @var Orga_Service_ETLData
+     */
+    private $etlDataService;
+
+    /**
+     * @param EntityManager $entityManager
+     * @param Orga_Service_ETLData $etlDataService
+     */
+    public function __construct(EntityManager $entityManager, Orga_Service_ETLData $etlDataService)
     {
-        return parent::getInstance();
+        $this->entityManager = $entityManager;
+        $this->etlDataService = $etlDataService;
+    }
+
+
+    /**
+     * Traduit les labels des objets originaux dans DW.
+     *
+     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
+     */
+    protected function translateEntity($originalEntity, $dWEntity)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
+        $originalTranslations = $translationRepository->findTranslations($originalEntity);
+
+        // Pour l'instant seule moyen de traduire la langue par défaut.
+        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
+        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
+        $dWEntity->setLabel($originalEntity->getLabel());
+        // Traductions
+        foreach (Zend_Registry::get('languages') as $localeId) {
+            if (isset($originalTranslations[$localeId]['label'])) {
+                $translationRepository->translate(
+                    $dWEntity,
+                    'label',
+                    $localeId,
+                    $originalTranslations[$localeId]['label']
+                );
+            }
+        }
+    }
+
+    /**
+     * Vérifie que les traductions sont à jour entre les objets originaux et ceux de DW.
+     *
+     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
+     *
+     * @return bool
+     */
+    protected function areTranslationsDifferent($originalEntity, $dWEntity)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
+        $originalTranslations = $translationRepository->findTranslations($originalEntity);
+        $dWTranslations = $translationRepository->findTranslations($dWEntity);
+
+        // Pour l'instant seule moyen de comparer la langue par défaut.
+        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
+        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
+        if ($originalEntity->getLabel() !== $dWEntity->getLabel()) {
+            return true;
+        }
+        // Traductions
+        foreach (Zend_Registry::get('languages') as $localeId) {
+            if (isset($originalTranslations[$localeId])) {
+                $originalLabel = $originalTranslations[$localeId]['label'];
+            } else {
+                $originalLabel = '';
+            }
+            if (isset($dWTranslations[$localeId])) {
+                $dWLabel = $dWTranslations[$localeId]['label'];
+            } else {
+                $dWLabel = '';
+            }
+
+            if($originalLabel != $dWLabel) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -67,8 +150,53 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     protected function populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters)
     {
+        $this->populateDWCubeWithAF($dWCube);
         $this->populateDWCubeWithOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters);
         $this->populateDWCubeWithClassif($dWCube);
+    }
+
+    /**
+     * Peuple le cube de DW avec les données issues de Classif.
+     *
+     * @param DW_Model_Cube $dWCube
+     */
+    protected function populateDWCubeWithAF(DW_Model_Cube $dWCube)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
+        $inputStatusDWAxis = new DW_Model_Axis($dWCube);
+        $inputStatusDWAxis->setRef('inputStatus');
+
+        $finishedDWMember = new DW_Model_Member($inputStatusDWAxis);
+        $finishedDWMember->setRef('finished');
+
+        $completedDWMember = new DW_Model_Member($inputStatusDWAxis);
+        $completedDWMember->setRef('completed');
+
+        foreach (Zend_Registry::get('languages') as $localeId) {
+            switch ($localeId) {
+                case 'fr':
+                    $inputStatusLabel = 'Status des saisies';
+                    $finishedLabel = 'terminée';
+                    $completedLabel = 'complète';
+                    break;
+                case 'en':
+                    $inputStatusLabel = 'Input status';
+                    $finishedLabel = 'finished';
+                    $completedLabel = 'completed';
+                    break;
+                default:
+                    $inputStatusLabel = '';
+                    $finishedLabel = '';
+                    $completedLabel = '';
+                    break;
+            }
+
+            $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $inputStatusLabel);
+            $translationRepository->translate($finishedDWMember, 'label', $localeId, $finishedLabel);
+            $translationRepository->translate($completedDWMember, 'label', $localeId, $completedLabel);
+        }
     }
 
     /**
@@ -106,10 +234,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
     {
         $dWIndicator = new DW_Model_Indicator($dWCube);
-        $dWIndicator->setLabel($classifIndicator->getLabel());
         $dWIndicator->setRef('classif_'.$classifIndicator->getRef());
         $dWIndicator->setUnit($classifIndicator->getUnit());
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
+        $this->translateEntity($classifIndicator, $dWIndicator);
     }
 
     /**
@@ -122,8 +250,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
     {
         $dWAxis = new DW_Model_Axis($dwCube);
-        $dWAxis->setLabel($classifAxis->getLabel());
         $dWAxis->setRef('classif_'.$classifAxis->getRef());
+        $this->translateEntity($classifAxis, $dWAxis);
+
         $associationArray['axes'][$classifAxis->getRef()] = $dWAxis;
         $narrowerAxis = $classifAxis->getDirectNarrower();
         if ($narrowerAxis !== null) {
@@ -132,9 +261,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
 
         foreach ($classifAxis->getMembers() as $classifMember) {
             $dWMember = new DW_Model_Member($dWAxis);
-            $dWMember->setLabel($classifMember->getLabel());
             $dWMember->setRef('classif_'.$classifMember->getRef());
             $dWMember->setPosition($classifMember->getPosition());
+            $this->translateEntity($classifMember, $dWMember);
+
             $memberIdentifier = $classifMember->getAxis()->getRef().'_'.$classifMember->getRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
             foreach ($classifMember->getDirectChildren() as $narrowerClassifMember) {
@@ -184,8 +314,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
         }
 
         $dWAxis = new DW_Model_Axis($dwCube);
-        $dWAxis->setLabel($orgaAxis->getLabel());
         $dWAxis->setRef('orga_'.$orgaAxis->getRef());
+        $this->translateEntity($orgaAxis, $dWAxis);
+
         $associationArray['axes'][$orgaAxis->getRef()] = $dWAxis;
         $narrowerAxis = $orgaAxis->getDirectNarrower();
         if ($narrowerAxis !== null) {
@@ -207,8 +338,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
 
             $dWMember = new DW_Model_Member($dWAxis);
-            $dWMember->setLabel($orgaMember->getLabel());
             $dWMember->setRef('orga_'.$orgaMember->getRef());
+            $this->translateEntity($orgaMember, $dWMember);
+
             $memberIdentifier = $orgaMember->getAxis()->getRef().'_'.$orgaMember->getCompleteRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
             foreach ($orgaMember->getDirectChildren() as $narrowerClassifMember) {
@@ -245,7 +377,6 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function updateCellsDWReportFromGranularityReport($granularityReport)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
         $granularityReportAsString = $granularityReport->getGranularityDWReport()->getAsString();
         foreach ($granularityReport->getCellDWReports() as $cellDWReport) {
             $cellDWReportId = $cellDWReport->getId();
@@ -257,7 +388,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
                     $granularityReportAsString
                 )
             );
-            $entityManagers['default']->flush($cellDWReport);
+            $this->entityManager->flush($cellDWReport);
         }
     }
 
@@ -362,8 +493,8 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function isDWCubeUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
         return !(
-            $this->areDWIndicatorsDifferentFromClassif($dWCube)
-            || $this->areDWAxesDifferentFromClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
+            $this->areDWIndicatorsUpToDate($dWCube)
+            || $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
         );
     }
 
@@ -374,7 +505,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
      *
      * @return bool
      */
-    protected function areDWIndicatorsDifferentFromClassif($dWCube)
+    protected function areDWIndicatorsUpToDate($dWCube)
     {
         $classifIndicators = Classif_Model_Indicator::loadList();
         $dWIndicators = $dWCube->getIndicators();
@@ -389,7 +520,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
         }
 
-        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 1)) {
+        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 0)) {
             return true;
         }
 
@@ -407,9 +538,9 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator)
     {
         if (('classif_'.$classifIndicator->getRef() !== $dWIndicator->getRef())
-            || ($classifIndicator->getLabel() !== $dWIndicator->getLabel())
             || ($classifIndicator->getUnit()->getRef() !== $dWIndicator->getUnit()->getRef())
             || ($classifIndicator->getRatioUnit()->getRef() !== $dWIndicator->getRatioUnit()->getRef())
+            || ($this->areTranslationsDifferent($classifIndicator, $dWIndicator))
         ) {
             return true;
         }
@@ -426,7 +557,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
      *
      * @return bool
      */
-    protected function areDWAxesDifferentFromClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
+    protected function areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
         $queryClassifRootAxes = new Core_Model_Query();
         $queryClassifRootAxes->filter->addCondition(
@@ -434,9 +565,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
             null,
             Core_Model_Filter::OPERATOR_NULL
         );
-        $classifRootAxes = Classif_Model_Axis::loadList($queryClassifRootAxes);
         $dWRootAxes = $dWCube->getRootAxes();
 
+        // Classif.
+        $classifRootAxes = Classif_Model_Axis::loadList($queryClassifRootAxes);
         foreach (Classif_Model_Axis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
             /** @var Classif_Model_Axis $classifAxis */
             foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
@@ -447,8 +579,8 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
         }
 
+        // Orga.
         $orgaRootAxes = $orgaOrganization->getRootAxes();
-
         foreach ($orgaOrganization->getRootAxes() as $orgaIndex => $orgaAxis) {
             foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
                 if (!($this->isDWAxisDifferentFromOrga($dWAxis, $orgaAxis, $orgaFilters))) {
@@ -476,10 +608,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function isDWAxisDifferentFromClassif($dWAxis, $classifAxis)
     {
         if (('classif_'.$classifAxis->getRef() !== $dWAxis->getRef())
-            || ($classifAxis->getLabel() !== $dWAxis->getLabel())
             || ((($classifAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($classifAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
                 || ('classif_'.$classifAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
+            || ($this->areTranslationsDifferent($classifAxis, $dWAxis))
             || ($this->areDWMembersDifferentFromClassif($dWAxis, $classifAxis))
         ) {
             return true;
@@ -544,7 +676,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function isDWMemberDifferentFromClassif($dWMember, $classifMember)
     {
         if (('classif_'.$classifMember->getRef() !== $dWMember->getRef())
-            || ($classifMember->getLabel() !== $dWMember->getLabel())
+            || ($this->areTranslationsDifferent($classifMember, $dWMember))
         ) {
             return true;
         } else {
@@ -584,10 +716,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
         }
 
         if (('orga_'.$orgaAxis->getRef() !== $dWAxis->getRef())
-            || ($orgaAxis->getLabel() !== $dWAxis->getLabel())
             || ((($orgaAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($orgaAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
                 || ('orga_'.$orgaAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
+            || ($this->areTranslationsDifferent($orgaAxis, $dWAxis))
             || ($this->areDWMembersDifferentFromOrga($dWAxis, $orgaAxis, $orgaFilters))
         ) {
             return true;
@@ -680,7 +812,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function isDWMemberDifferentFromOrga($dWMember, $orgaMember, $orgaFilters)
     {
         if (('orga_'.$orgaMember->getRef() !== $dWMember->getRef())
-            || ($orgaMember->getLabel() !== $dWMember->getLabel())
+            || ($this->areTranslationsDifferent($dWMember, $orgaMember))
         ) {
             return true;
         } else {
@@ -716,18 +848,14 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function resetOrganizationDWCubes(Orga_Model_Organization $organization)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
         foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
-                $entityManager->flush();
+                $this->entityManager->flush();
                 foreach ($granularity->getCells() as $cell) {
-                    $entityManager->clear();
+                    $this->entityManager->clear();
                     $this->resetCellDWCube(Orga_Model_Cell::load($cell->getId()));
-                    $entityManager->flush();
+                    $this->entityManager->flush();
                 }
             }
         }
@@ -757,8 +885,11 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function resetCellAndChildrenCalculationsAndDWCubes(Orga_Model_Cell $cell)
     {
+        /** @var Orga_Service_ETLData $etlDataService */
+        $etlDataService = $this->get('Orga_Service_ETLData');
+
         $this->resetCellAndChildrenDWCubes($cell);
-        Orga_Service_ETLData::getInstance()->calculateResultsForCellAndChildren($cell);
+        $etlDataService->calculateResultsForCellAndChildren($cell);
     }
 
     /**
@@ -784,8 +915,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-
-            Orga_Service_ETLData::getInstance()->clearDWResultsForCell($cell);
+            $this->etlDataService->clearDWResultsForCell($cell);
 
             $this->resetDWCube(
                 $cell->getDWCube(),
@@ -796,7 +926,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
                 )
             );
 
-            Orga_Service_ETLData::getInstance()->populateDWResultsForCell($cell);
+            $this->etlDataService->populateDWResultsForCell($cell);
         }
     }
 
@@ -810,7 +940,6 @@ class Orga_Service_ETLStructure extends Core_Singleton
     protected function resetDWCube(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization, array $orgaFilter)
     {
         set_time_limit(0);
-        $entityManagers = Zend_Registry::get('EntityManagers');
 
         // Problème de proxie;
 //        $dWCube->getLabel();
@@ -846,12 +975,12 @@ class Orga_Service_ETLStructure extends Core_Singleton
             $dWRootAxis->delete();
         }
 
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilter);
         $dWCube->save();
 
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Copie des Reports.
         foreach ($dWReportsAsString as $dWReportString) {
@@ -863,7 +992,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
         }
 
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
     }
 
 }

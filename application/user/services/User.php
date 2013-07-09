@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
  * @package    User
  * @subpackage Service
  */
-class User_Service_User extends Core_Singleton
+class User_Service_User
 {
 
     /**
@@ -21,11 +21,11 @@ class User_Service_User extends Core_Singleton
     private $aclService;
 
     /**
-     * Constructeur
+     * @param User_Service_ACL $aclService
      */
-    protected function __construct()
+    public function __construct(User_Service_ACL $aclService)
     {
-        $this->aclService = User_Service_ACL::getInstance();
+        $this->aclService = $aclService;
     }
 
     /**

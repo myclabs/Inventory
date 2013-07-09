@@ -804,12 +804,13 @@ class Orga_Test_CellOthers extends PHPUnit_Framework_TestCase
         $this->assertTrue($cell8G5->isRelevant());
     }
 
-    /**
-     * Fonction appelee apres tous chaques test
-     */
     protected function tearDown()
     {
-        Orga_Test_OrganizationTest::deleteObject($this->organization);
+        try {
+            Orga_Test_OrganizationTest::deleteObject($this->organization);
+        } catch (Exception $e) {
+            $this->fail($e);
+        }
     }
 
     /**

@@ -15,7 +15,8 @@
 			"Algo": "src/",
 			"AF": "src/",
 			"Orga": "src/",
-			"Inventory": "src/"
+			"Inventory": "src/",
+            "AuditTrail": "src/"
 		}
 	},
 	"require": {
@@ -25,12 +26,17 @@
 		"doctrine/annotations": "1.*",
 		"doctrine/common": "dev-ChainDriverFix as 2.3.0",
 		"gedmo/doctrine-extensions": "2.3.6",
-		"symfony/yaml": "2.*",
+		"symfony/yaml": "2.3.*",
+        "symfony/event-dispatcher": "2.3.*",
 		"pear/console_commandline": "dev-trunk",
 		"netcarver/textile": "3.5.*",
 		"mridgway/zendx_doctrine2": "dev-master",
 		"phpoffice/phpexcel": "1.7.*",
-		"dompdf/dompdf": "dev-master"
+        "dompdf/dompdf": "dev-master",
+        "myclabs/array-comparator": "0.*",
+        "myclabs/php-enum": "1.*",
+        "mnapoli/php-di": "3.1.*",
+        "mnapoli/php-di-zf1": "*"
 	},
     "require-dev": {
         "behat/behat": "2.4.*",

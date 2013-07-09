@@ -7,12 +7,19 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package AF
  */
 class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Techno_Service_Techno
+     */
+    private $technoService;
 
     /**
      * (non-PHPdoc)
@@ -79,7 +86,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
             $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $family = Techno_Service_Techno::getInstance()->getFamily($familyRef);
+            $family = $this->technoService->getFamily($familyRef);
         } catch (Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('family', __('AF', 'configTreatmentMessage', 'unrecognizedFamily'));
         }
@@ -99,9 +106,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -133,7 +139,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 break;
             case 'family':
                 try {
-                    $family = Techno_Service_Techno::getInstance()->getFamily($newValue);
+                    $family = $this->technoService->getFamily($newValue);
                 } catch (Core_Exception_NotFound $e) {
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'unrecognizedFamily');
                 }
@@ -150,8 +156,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 break;
         }
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -168,8 +173,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

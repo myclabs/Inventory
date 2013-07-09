@@ -66,7 +66,7 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
      */
     public function getInputs()
     {
-        return $this->inputs;
+        return $this->inputs->toArray();
     }
 
     /**
@@ -112,6 +112,17 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
         $this->inputs->add($input);
         // Set the InputSet in the input
         $input->setInputSet($this);
+    }
+
+    /**
+     * Supprime une saisie de composant
+     * @param AF_Model_Input $input
+     */
+    public function removeInput(AF_Model_Input $input)
+    {
+        if ($this->inputs->contains($input)) {
+            $this->inputs->removeElement($input);
+        }
     }
 
     /**

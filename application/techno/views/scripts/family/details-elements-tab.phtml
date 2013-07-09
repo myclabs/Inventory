@@ -15,7 +15,16 @@ if (count($dimensions) === 0) {
 
 $tmd = new UI_TMD('elements');
 if ($this->edit) {
-    $tmd->formatCells = '<a href="{url}">{value} ± {uncertainty}</a>';
+    $tmd->formatCells = '<a href="{url}" data-target="#element_edit" data-remote="false" data-toggle="modal" data-element="{elementId}">{value} ± {uncertainty}</a>';
+
+    $editPopup = new UI_Popup_Ajax('element_edit');
+    $editPopup->title = __('UI', 'name', 'loading');
+    $editPopup->addAttribute('class', 'large');
+    $editPopup->footer = '<button class="btn btn-primary" onclick="$(\'#element_editForm\').submit();">'
+        .'<i class="icon-ok icon-white"></i> '.__('UI', 'name', 'save').'</button>';
+    $editPopup->footer .= '<button class="btn" data-dismiss="modal">'
+        .'<i class="icon-remove"></i> '.__('UI', 'name', 'close').'</button>';
+    echo $editPopup->render();
 } else {
     $tmd->formatCells = '{value} ± {uncertainty}';
 }
@@ -23,12 +32,10 @@ if ($this->edit) {
 // Ajout des dimensions/colonnes
 foreach ($dimensions as $dimension) {
     // Éléments de la dimension
-    $values = array_map(
-        function (Techno_Model_Family_Member $member) {
-            return $member->getLabel();
-        },
-        $dimension->getMembers()->toArray()
-    );
+    $values = [];
+    foreach ($dimension->getMembers()->toArray() as $member) {
+        $values[$member->getRef()] = $member->getLabel();
+    }
     // Ajoute la dimension
     if ($dimension->getOrientation() == Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL) {
         $tmd->addDimensionIndexCol(Core_Tools::ucFirst($dimension->getLabel()),
@@ -52,8 +59,7 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
     $members = [];
     $index = 0;
     foreach ($dimensions as $dimension) {
-        $dimensionMembers = $dimension->getMembers();
-        $members[] = $dimensionMembers[$coordinates[$index]];
+        $members[] = $dimension->getMember(Keyword_Model_Keyword::loadByRef($coordinates[$index]));
         $index++;
     }
     $cell = $family->getCell($members);
@@ -61,9 +67,10 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
     if ($chosenElement !== null) {
         /** @var Techno_Model_Element_Coeff|Techno_Model_Element_Process $chosenElement */
         return [
-            'url'         => $this->baseUrl('techno/element/details/id/' . $chosenElement->getId()),
-            'value'       => $locale->formatNumber($chosenElement->getValue()->digitalValue, 3),
-            'uncertainty' => $locale->formatUncertainty($chosenElement->getValue()->relativeUncertainty),
+            'url'         => 'techno/element/details/id/' . $chosenElement->getId(),
+            'elementId'   => $chosenElement->getId(),
+            'value'       => $locale->formatNumber($chosenElement->getValue()->getDigitalValue(), 3),
+            'uncertainty' => $locale->formatUncertainty($chosenElement->getValue()->getRelativeUncertainty()),
             'unit'        => $chosenElement->getUnit()->getSymbol(),
         ];
     }
@@ -71,31 +78,44 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
         $addButton = new UI_HTML_Button('Ajouter');
         $addButton->icon = 'plus-sign';
         $addButton->addAttribute('class', 'btn-mini');
-        $addButton->addAttribute('onclick', 'addElement(' . json_encode($coordinates) . ')');
+        $addButton->addAttribute('onclick', 'addElement(\'' . implode('#', $coordinates) . '\')');
         return $addButton->getHTML();
     }
     return null;
 };
 
-$tmd->display();
+echo $tmd->render();
 
 ?>
 
 <?php if ($this->edit) : ?>
 
     <script>
-
-        function addElement(coordinates) {
+         addElement = function (coordinates) {
             var url = "<?=$this->baseUrl('techno/tmd_family-elements-tmd/add-element')?>";
             var data = {
                 'id': <?=$family->getId()?>,
                 'coordinates':coordinates
             };
             $.post(url, data, function (data, textStatus, jqXHR) {
-                location.reload();
+                $('#elements_' + coordinates.replace(/#/g, '_')).html(
+                    '<a data-toggle="modal" data-remote="false" data-target="#element_edit" href="techno/element/details/id/'
+                        + data.elementId
+                    + '" data-element="' + data.elementId + '">'
+                    + '0 ± 0 %'
+                    + '</a>'
+                );
             });
             return false;
         }
+
+         $.fn.elementEditSuccess = function (response) {
+             addMessage(response.message, response.type);
+             $('#elements tbody tr td a[data-element="' + response.data.elementId + '"]').html(
+                 response.data.value + ' ± ' + response.data.uncertainty + ' %'
+             );
+             $('#element_edit').modal('hide');
+        };
 
     </script>
 

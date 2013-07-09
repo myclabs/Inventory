@@ -1,0 +1,16 @@
+AuditTrail\Domain\Context\Context:
+  type: entity
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_context
+    type: string
+  discriminatorMap:
+    global: AuditTrail\Domain\Context\GlobalContext
+    organization: AuditTrail\Domain\Context\OrganizationContext
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
