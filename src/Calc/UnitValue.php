@@ -71,6 +71,8 @@ class Calc_UnitValue
     /**
      * Permet de comparer deux unitValue entres elles.
      *
+     * Ne compare pas l'incertitude.
+     *
      * @param Calc_UnitValue $uvToCompare
      * @param string         $operator
      *
@@ -117,6 +119,20 @@ class Calc_UnitValue
         }
 
         return $result;
+    }
+
+    /**
+     * Retourne true si les objets sont égaux. Compare aussi l'incertitude.
+     *
+     * @param Calc_UnitValue $uvToCompare
+     *
+     * @return bool $result
+     */
+    public function equals(Calc_UnitValue $uvToCompare)
+    {
+        $equals = $this->toCompare($uvToCompare, self::RELATION_EQUAL);
+
+        return $equals && ($this->getRelativeUncertainty() === $uvToCompare->getRelativeUncertainty());
     }
 
     /**
