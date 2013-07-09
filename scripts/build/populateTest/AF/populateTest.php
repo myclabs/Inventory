@@ -61,7 +61,7 @@ class AF_PopulateTest extends Core_Script_Action
         //  + createAlgoConditionElementary : Component input, ref, expression
         //  + createAlgoConditionExpression : ref, expression
         // OptionalParams : -
-        $aF1->getMainAlgo()->setExpression('expression');
+        $aF1->getMainAlgo()->setExpression('a:b;');
         $this->createAlgoNumericConstant($aF1, 'refa1', 'Label 1', 10, 5, 'm');
         $this->createAlgoNumericInput($aF1, $numericInput, 'ref1', 'ref1');
         $this->createAlgoSelectTextkeyExpression($aF1, 'refa2', 'expression');

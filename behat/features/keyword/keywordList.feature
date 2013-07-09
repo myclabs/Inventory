@@ -77,16 +77,16 @@ Feature: Keywords datagrid
     Then the row 2 of the "keywords" datagrid should contain:
       | label            | ref            |
       | charbon modifié | charbon_modifie |
-  # Modification de l'identifiant d'un mot clé, identifiant vide
+  # Modification de l'identifiant, identifiant vide
     When I set "" for column "ref" of row 2 of the "keywords" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant d'un mot clé, identifiant avec des caractères non autorisés
+  # Modification de l'identifiant, identifiant avec des caractères non autorisés
     When I set "bépo" for column "ref" of row 2 of the "keywords" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant d'un mot clé, identifiant déjà utilisé
+  # Modification de l'identifiant, identifiant déjà utilisé
     When I set "combustible" for column "ref" of row 2 of the "keywords" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Modification de l'identifiant d'un mot clé, identifiant égal à "this"
+  # Modification de l'identifiant, identifiant égal à "this"
     When I set "this" for column "ref" of row 2 of the "keywords" datagrid
     Then the following message is shown and closed: "Merci de ne pas choisir « this » comme identifiant de mot clé, ce terme est réservé pour l'écriture des requêtes sémantiques."
 
