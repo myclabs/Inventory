@@ -121,7 +121,6 @@ class Core_Locale
         return $this->zendLocale->getLanguage();
     }
 
-
     /**
      * Formate un nombre pour l'affichage.
      *
@@ -129,7 +128,6 @@ class Core_Locale
      * @param int|null $significantFigures indique le nombre de chiffres Significatif
      * @param int|null $numberDecimal indique le nombre de décimales pour l'affichage du nombre.
      *                              Incompatible Avec les chiffres significatifs.
-     *
      * @return string
      */
     public function formatNumber($number, $significantFigures=null, $numberDecimal=null)
@@ -158,7 +156,21 @@ class Core_Locale
         $number = Zend_Locale_Format::toNumber($number, $options);
 
         return $number;
+    }
 
+    /**
+     * Formate un nombre pour l'affichage dans un élément de saisie (champ de formulaire).
+     * @param float $number
+     * @return string
+     */
+    public function formatNumberForInput($number)
+    {
+        $options = array(
+            'locale' => $this->zendLocale,
+            'number_format' => '#0.###',
+        );
+
+        return Zend_Locale_Format::toNumber($number, $options);
     }
 
     /**

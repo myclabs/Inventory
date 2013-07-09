@@ -16,6 +16,7 @@ class Core_Test_LocaleTest extends Core_Test_TestCase
     {
         Core_Locale::load('foo');
     }
+
     /**
      * @expectedException Core_Exception_InvalidArgument
      * @expectedExceptionMessage Locale non supportée
@@ -82,6 +83,60 @@ class Core_Test_LocaleTest extends Core_Test_TestCase
         $this->assertSame('10 %', $locale->formatUncertainty(10.4));
         $this->assertSame('11 %', $locale->formatUncertainty(10.6));
         $this->assertSame('130 %', $locale->formatUncertainty(130));
+    }
+
+    /**
+     * @dataProvider localeProvider
+     * @param Core_Locale $locale
+     */
+    public function testFormatNumber(Core_Locale $locale)
+    {
+        $this->assertSame('', $locale->formatNumber(null));
+        $this->assertSame('0', $locale->formatNumber(0));
+        $this->assertSame('10', $locale->formatNumber(10));
+    }
+
+    public function testFormatNumberEn()
+    {
+        $locale = Core_Locale::load('en');
+        $this->assertSame('10.1', $locale->formatNumber(10.1));
+        $this->assertSame('1,000', $locale->formatNumber(1000));
+        $this->assertSame('1,000.1', $locale->formatNumber(1000.1));
+    }
+
+    public function testFormatNumberFr()
+    {
+        $locale = Core_Locale::load('fr');
+        $this->assertSame('10,1', $locale->formatNumber(10.1));
+        $this->assertSame('1 000', $locale->formatNumber(1000));
+        $this->assertSame('1 000,1', $locale->formatNumber(1000.1));
+    }
+
+    /**
+     * @dataProvider localeProvider
+     * @param Core_Locale $locale
+     */
+    public function testFormatNumberForInput(Core_Locale $locale)
+    {
+        $this->assertSame('', $locale->formatNumberForInput(null));
+        $this->assertSame('0', $locale->formatNumberForInput(0));
+        $this->assertSame('10', $locale->formatNumberForInput(10));
+    }
+
+    public function testFormatNumberForInputEn()
+    {
+        $locale = Core_Locale::load('en');
+        $this->assertSame('10.1', $locale->formatNumberForInput(10.1));
+        $this->assertSame('1000', $locale->formatNumberForInput(1000));
+        $this->assertSame('1000.1', $locale->formatNumberForInput(1000.1));
+    }
+
+    public function testFormatNumberForInputFr()
+    {
+        $locale = Core_Locale::load('fr');
+        $this->assertSame('10,1', $locale->formatNumberForInput(10.1));
+        $this->assertSame('1000', $locale->formatNumberForInput(1000));
+        $this->assertSame('1000,1', $locale->formatNumberForInput(1000.1));
     }
 
     /**
