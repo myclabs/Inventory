@@ -61,6 +61,8 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
      */
     public function getUIElement(AF_GenerationHelper $generationHelper)
     {
+        $locale = Core_Locale::loadDefault();
+
         $uiElement = new UI_Form_Element_Pattern_Value($this->ref, $this->withUncertainty);
         $uiElement->setLabel($this->label);
         $uiElement->getElement()->help = $this->help;
@@ -79,9 +81,10 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             $uiElement->getElement()->hidden = $input->isHidden();
             // Valeur
             if ($input->getValue()) {
-                $uiElement->setValue(
-                    [$input->getValue()->getDigitalValue(), $input->getValue()->getRelativeUncertainty()]
-                );
+                $uiElement->setValue([
+                    $locale->formatNumberForInput($input->getValue()->getDigitalValue()),
+                    $locale->formatNumberForInput($input->getValue()->getRelativeUncertainty())
+                ]);
             }
             // Historique de la valeur
             $uiElement->getElement()->addElement($this->getHistoryComponent($input));
@@ -89,7 +92,10 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;
             // Valeur
-            $uiElement->setValue([$this->defaultValue->getDigitalValue(), $this->defaultValue->getRelativeUncertainty()]);
+            $uiElement->setValue([
+                $locale->formatNumberForInput($this->defaultValue->getDigitalValue()),
+                $locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty())
+            ]);
         }
         // Unité
         if ($this->unit !== null) {

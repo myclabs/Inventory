@@ -53,6 +53,7 @@ class Core_Test_LocaleTest extends Core_Test_TestCase
     public function testReadNumber(Core_Locale $locale)
     {
         $this->assertNull($locale->readNumber(""));
+        $this->assertNull($locale->readNumber(" "));
         $this->assertSame(10., $locale->readNumber("10"));
     }
 
