@@ -32,13 +32,23 @@ class Techno_ElementController extends Core_Controller
      */
     public function editSubmitAction()
     {
+        $locale = Core_Locale::loadDefault();
+
         $formData = $this->getFormData('element_editForm');
         $idElement = $formData->getValue('id');
         /** @var $element Techno_Model_Element_Process|Techno_Model_Element_Coeff */
         $element = Techno_Model_Element::load($idElement);
         // Validation du formulaire
-        $digitalValue = $formData->getValue('digitalValue');
-        $uncertainty = $formData->getValue('uncertainty');
+        try {
+            $digitalValue = $locale->readNumber($formData->getValue('digitalValue'));
+        } catch (Core_Exception_InvalidArgument $e) {
+            $this->addFormError('digitalValue', __('UI', 'formValidation', 'invalidNumber'));
+        }
+        try {
+            $uncertainty = $locale->readInteger($formData->getValue('uncertainty'));
+        } catch (Core_Exception_InvalidArgument $e) {
+            $this->addFormError('uncertainty', __('UI', 'formValidation', 'invalidUncertainty'));
+        }
         $refUnit = $formData->getValue('unit');
         if (empty($refUnit)) {
             $this->addFormError('unit', __('UI', 'formValidation', 'emptyRequiredField'));
