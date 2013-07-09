@@ -37,7 +37,7 @@ class Keyword_PopulateTest extends Core_Script_Action
         $keyword_combustion = $this->createKeyword('combustion', 'combustion');
 
         // Création des associations.
-        // Params : Keyword object, Predicate, Keyword subject
+        // Params : Keyword subject, Predicate, Keyword object
         $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_gaz_naturel_);
         $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_charbon);
 
@@ -86,12 +86,12 @@ class Keyword_PopulateTest extends Core_Script_Action
      * @param Keyword_Model_Predicate $predicate
      * @param Keyword_Model_Keyword $subject
      */
-    protected function createAssociation(Keyword_Model_Keyword $object, Keyword_Model_Predicate $predicate, Keyword_Model_Keyword $subject)
+    protected function createAssociation(Keyword_Model_Keyword $subject, Keyword_Model_Predicate $predicate, Keyword_Model_Keyword $object)
     {
         $assocation = new Keyword_Model_Association();
-        $assocation->setObject($object);
-        $assocation->setPredicate($predicate);
         $assocation->setSubject($subject);
+        $assocation->setPredicate($predicate);
+        $assocation->setObject($object);
         $assocation->save();
     }
 
