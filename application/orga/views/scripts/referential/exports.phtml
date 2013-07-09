@@ -1,0 +1,37 @@
+<?php
+/**
+ * Vue générale des exports
+ * @author valentin.claras
+ * @package Orga
+ */
+?>
+
+<?php foreach ($this->exports as $exportArray) { ?>
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=$exportArray['label']?></legend>
+    <div>
+        <form class="form-inline" action="orga/referential/export">
+            <div class="input-prepend input-append">
+                <span class="add-on">
+                    <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
+                </span>
+                <?php if (count($this->formats) > 1) { ?>
+                <select name="format" >
+                    <?php foreach($this->formats as $formatRef => $formatLabel) { ?>
+                        <option value="<?=$formatRef?>"><?=$formatLabel?></option>
+                    <?php } ?>
+                </select>
+                <?php } ?>
+                <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 1)) { ?>
+                    <select name="version" >
+                        <?php foreach($exportArray['version'] as $versionRef => $versionLabel) { ?>
+                            <option value="<?=$versionRef?>"><?=$versionLabel?></option>
+                        <?php } ?>
+                    </select>
+                <?php } ?>
+                <button class="btn btn-primary" type="submit"><?=__('Orga', 'verb', 'export')?></button>
+            </div>
+        </form>
+    </div>
+</fieldset>
+<?php } ?>
