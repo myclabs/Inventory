@@ -95,7 +95,7 @@ Feature: Classification member feature
       | 2   |
 
   @javascript
-  Scenario: Suppression of a classification member
+  Scenario:  Deletion of a classification member
     When I am on "classif/member/manage"
     And I wait 5 seconds
   # Suppression d'un membre, sans obstacle

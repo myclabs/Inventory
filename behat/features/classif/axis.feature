@@ -145,7 +145,7 @@ Feature: Classification axis feature
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
-  Scenario: Suppression of a classification axis
+  Scenario:  Deletion of a classification axis
     Given I am on "classif/axis/manage"
     Then I should see "Axes de classification"
   # Axe contenant un membre

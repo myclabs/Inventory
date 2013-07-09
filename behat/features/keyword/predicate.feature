@@ -85,7 +85,7 @@ Feature: Predicates datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
-  Scenario: Suppression of a predicate
+  Scenario:  Deletion of a predicate
     Given I am on "keyword/predicate/manage"
     Then I should see the "predicates" datagrid
     And the row 1 of the "predicates" datagrid should contain:

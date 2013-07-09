@@ -1,11 +1,11 @@
 @dbFull
-Feature: technoCategory
+Feature: Techno Category feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: technoCategory1
+  Scenario: Creation of a category
     Given I am on "techno/family/tree-edit"
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"

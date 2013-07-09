@@ -52,12 +52,15 @@ class Classif_PopulateTest extends Core_Script_Action
         // OptionalParams : ratioUnitRef=unitRef
 
         $indicator_ges = $this->createIndicator('ges', 'GES', 't_co2e', 'kg_co2e');
-        $indicator_chiffre_affaire = $this->createIndicator('chiffre_affaire', 'Chiffre d\'affaires', 'k€', '€');
+        $indicator_chiffre_affaire = $this->createIndicator('chiffre_affaire', 'Chiffre d\'affaires', 'kiloeuro', 'euro');
+        $indicator_no_context_indicator = $this->createIndicator('sans_indicateur_contextualise', 'Sans indicateur contextualisé', 't', 't');
+        $indicator_incompatible_units = $this->createIndicator('unites_incompatibles', 'Unités incompatibles', 't_co2e', 'kg');
 
         // Création des contextes.
         // Params : ref, label
         $context_general = $this->createContext('general', 'Général');
         $context_deplacement = $this->createContext('deplacement', 'Déplacements');
+        $context_no_context_indicator = $this->createContext('sans_indicateur_contextualise', 'Sans indicateur contextualisé');
 
         $entityManager->flush();
 
@@ -67,6 +70,7 @@ class Classif_PopulateTest extends Core_Script_Action
         $contextIndicator_ges_general = $this->createContextIndicator($context_general, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
         $contextIndicator_ges_deplacement = $this->createContextIndicator($context_deplacement, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
         $contextIndicator_chiffre_affaire_general = $this->createContextIndicator($context_general, $indicator_chiffre_affaire, [$axis_gaz, $axis_poste_article_75, $axis_type_deplacement]);
+        $contextIndicator_related_axes = $this->createContextIndicator($context_general, $indicator_incompatible_units, [$axis_scope, $axis_poste_article_75]);
 
         $entityManager->flush();
 
