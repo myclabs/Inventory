@@ -2,3 +2,5 @@
 * text eol=lf
 
 *.png    binary
+*.gif    binary
+*.swf    binary
