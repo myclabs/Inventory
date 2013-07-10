@@ -45,7 +45,7 @@ class Orga_PopulateTest extends Core_Script_Action
         $member_marque_marque_a = $this->createMember($axis_marque, 'marque_a', 'Marque A');
         $member_marque_marque_sans_site = $this->createMember($axis_marque, 'marque_sans_site', 'Marque sans site');
         $member_site_annecy = $this->createMember($axis_site, 'annecy', 'Annecy', [$member_pays_france, $member_marque_marque_a]);
-        $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambery', [$member_pays_france, $member_marque_marque_a]);
+        $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambéry', [$member_pays_france, $member_marque_marque_a]);
         $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
         $member_categorie = $this->createMember($axis_categorie, 'energie', 'Énergie');
 

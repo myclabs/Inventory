@@ -1,8 +1,17 @@
 @dbFull
-Feature: orgaGranularity
+Feature: Organization granularity feature
 
   Background:
     Given I am logged in
+
+  @javascript
+  Scenario: Creation of a granularity
+
+  @javascript
+  Scenario: Edition of a granularity
+
+  @javascript
+  Scenario: Deletion of a granularity
 
   @javascript
   Scenario: orgaGranularity1

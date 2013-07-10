@@ -1,5 +1,5 @@
 @dbFull
-Feature: orgaRole
+Feature: Organization role feature
 
   Background:
     Given I am logged in

@@ -82,7 +82,7 @@ class Orga_Datagrid_Organization_InputgranularitiesController extends UI_Control
                 && ($inputGranularity !== $inputConfigGranularity)) {
                 $this->setAddElementErrorMessage(
                     'inputGranularity',
-                    __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanInputConfigGranularity')
+                    __('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanFormChoiceGranularity')
                 );
             }
         }

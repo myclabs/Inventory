@@ -1,11 +1,11 @@
 @dbFull
-Feature: Control of organizational data
+Feature: Control of organizational data feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: orgaControl1
+  Scenario: Control of organizational data scenario
   # Accès à l'onglet "Contrôle"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading

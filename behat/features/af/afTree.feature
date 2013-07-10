@@ -1,11 +1,11 @@
 @dbEmpty
-Feature: AF Category feature
+Feature: AF tree edit feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a category
+  Scenario: Creation of an AF category
     Given I am on "af/af/tree"
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
@@ -18,7 +18,7 @@ Feature: AF Category feature
     Then the following message is shown and closed: "Ajout effectué."
 
   @javascript
-  Scenario: Edition of a category
+  Scenario: Edition of an AF category
     Given I am on "af/af/tree"
   # Modification du libellé
     When I click "Catégorie vide"
@@ -57,7 +57,7 @@ Feature: AF Category feature
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
-  Scenario:  Deletion of a category
+  Scenario:  Deletion of an AF category
   # Catégorie vide
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
