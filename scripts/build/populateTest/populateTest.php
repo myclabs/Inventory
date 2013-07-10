@@ -49,7 +49,7 @@ class Inventory_PopulateTest extends Core_Script_Populate
 
         // AF.
         $populateAF = new AF_PopulateTest();
-//        $populateAF->runEnvironment($environment);
+        $populateAF->runEnvironment($environment);
 
 
         $this->close($environment);

@@ -1,12 +1,7 @@
 <?php
-/**
- * @package AF
- */
-
 
 /**
  * Remplissage de la base de données avec des données de test
- * @package AF
  */
 class AF_PopulateTest extends Core_Script_Action
 {
@@ -65,10 +60,10 @@ class AF_PopulateTest extends Core_Script_Action
         // OptionalParams : -
         $aF1->getMainAlgo()->setExpression('a:b;');
         $this->createAlgoNumericConstant($aF1, 'refa1', 'Label 1', 10, 5, 'm');
-        $this->createAlgoNumericInput($aF1, $numericInput, 'ref1', 'ref1');
-        $this->createAlgoSelectTextkeyExpression($aF1, 'refa2', 'expression');
-        $this->createAlgoConditionElementary($aF1, $booleanInput, 'refa3', 'expression');
-        $this->createAlgoConditionExpression($aF1, 'refa4', 'expression');
+        $this->createAlgoNumericInput($aF1, $numericInput, 'general', 'ges');
+//        $this->createAlgoSelectTextkeyExpression($aF1, 'refa2', 'expression');
+//        $this->createAlgoConditionElementary($aF1, $booleanInput, 'refa3', 'expression');
+//        $this->createAlgoConditionExpression($aF1, 'refa4', 'expression');
 
 
         $entityManager->flush();
@@ -346,6 +341,8 @@ class AF_PopulateTest extends Core_Script_Action
         $component->setHelp($help);
         $component->setVisible($visible);
         $component->save();
+        $aF->addComponent($component);
+        $aF->getRootGroup()->addSubComponent($component);
         return $component;
     }
 
