@@ -15,6 +15,7 @@ Feature: Control of organizational data
     And the row 1 of the "consistency" datagrid should contain:
       | control                        | diagnostic | failure  |
       | Axe ne contenant aucun membre  | NOT OK     | Axe vide |
+    # TODO préciser contenu failure
     And the row 2 of the "consistency" datagrid should contain:
       | control                                    | diagnostic | failure |
       | Membre pour lequel manque un membre parent | NOT OK     |         |

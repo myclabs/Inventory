@@ -19,5 +19,5 @@ Feature: Control of classification data
       | Membre pour lequel manque un membre parent | NOT OK       | poste_article_75 : { scope : [membre_sans_parent] } |
     # TODO : ligne 6 à changer en 4 dans version 2.3 (anciennes lignes 4 et 5 sautent).
     And the row 6 of the "coherence" datagrid should contain:
-      | control                                                                      | diag | fail                                                            |
-      | Indicateur contextualisé dont certains des axes sont hiérarchiquement reliés | OK   | general - unites_incompatibles : { (poste_article_75 - scope) } |
+      | control                                                                      | diag | fail                                                   |
+      | Indicateur contextualisé dont certains des axes sont hiérarchiquement reliés | OK   | general - axes_relies : { (poste_article_75 - scope) } |
