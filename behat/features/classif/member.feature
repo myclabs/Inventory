@@ -83,8 +83,8 @@ Feature: Classification member feature
 
   @javascript
   Scenario: Edition of a classification member (position and parent)
-  # TODO : Modification à "vide" d'un membre parent
-  # TODO : Modification de la position d'un membre
+  # TODO : Autoriser, dans les interfaces, la modification à "vide" d'un membre parent
+  # TODO : Tester la modification du numéro d'ordre d'un membre
   # Modification membre parent
     When I am on "classif/member/manage"
     And I open collapse "Poste article 75"
