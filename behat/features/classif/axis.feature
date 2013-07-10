@@ -19,14 +19,14 @@ Feature: Classification axis feature
     When I click "Valider"
     Then the field "ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout d'un axe, saisie correcte
-    When I fill in "label" with "À modifier"
-    And I fill in "ref" with "a_modifier"
+    When I fill in "label" with "Test"
+    And I fill in "ref" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout d'un axe, identifiant déjà utilisé
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
-    When I fill in "ref" with "a_modifier"
+    When I fill in "ref" with "test"
     And I click "Valider"
     Then the field "ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Bouton "Annuler"

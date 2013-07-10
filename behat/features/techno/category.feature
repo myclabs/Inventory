@@ -13,13 +13,28 @@ Feature: Techno Category feature
     When I click "Valider"
     Then the field "label" should have error: "Merci de renseigner ce champ."
   # Ajout d'une catégorie, libellé vide
-    When I fill in "label" with "À supprimer"
+    When I fill in "label" with "Test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Modification du libellé d'une catégorie
+
+  @javascript
+  Scenario: Edition of a category
+    Given I am on "techno/family/tree-edit"
+  # Modification du libellé
+    When I click "Catégorie vide"
+    Then I should see the popup "Édition d'une catégorie"
+  # TODO : modification libellé vide
+  # When I fill in "familyTree_labelEdit" with ""
+  # And I click "Confirmer"
+  # Then the field "familyTree_labelEdit" should have error: "Merci de renseigner ce champ." When I fill in "familyTree_labelEdit" with "Catégorie vide modifiée"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Modification effectuée."
+    And I should see "Catégorie vide modifiée"
+
+
     When I click "À supprimer"
     Then I should see the popup "Édition d'une catégorie"
-    # TODO : modification libellé vide
+
     # When I fill in "familyTree_labelEdit" with ""
     # And I click element "#familyTree_editPanel button:contains('Confirmer')"
     # Then the field "familyTree_labelEdit" should have error: "Merci de renseigner ce champ."
