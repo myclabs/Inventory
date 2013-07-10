@@ -72,7 +72,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
             }
             if ($isConnectedUserAbleToSeeManyCells) {
                 $data['details'] = $this->cellLink('orga/organization/cells/idOrganization/'.$organization->getId());
-            } else {
+            } else if ($numberCellUserCanSee == 1) {
                 $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
                 $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getId());
             }

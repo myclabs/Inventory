@@ -45,13 +45,13 @@
         "behat/mink-selenium2-driver": "*",
         "behat/mink-zombie-driver": "dev-RequestHeaders"
     },
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"repositories": [
-		{
-			"type": "git",
-			"url": "git://github.com/myclabs/common.git"
-		},
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/common.git"
+        },
         {
             "type": "git",
             "url": "git://github.com/mridgway/ZendX_Doctrine2.git"
@@ -60,5 +60,5 @@
             "type": "git",
             "url": "https://github.com/mnapoli/MinkZombieDriver.git"
         }
-	]
+    ]
 }

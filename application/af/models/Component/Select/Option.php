@@ -217,9 +217,6 @@ class AF_Model_Component_Select_Option extends Core_Model_Entity
      */
     protected function getContext()
     {
-        if ($this->select->getId() == null) {
-            throw new Core_Exception_InvalidArgument("Le select doit être persisté et flushé");
-        }
         return [
             'select' => $this->select,
         ];

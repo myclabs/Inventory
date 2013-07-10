@@ -33,30 +33,7 @@
 
         <!-- Niveaux organisationnels de choix des formulaires et de saisie -->
 
-        <tu tuid="inputGranularities">
-            <tuv xml:lang="fr">
-                <seg>Niveaux organisationnels de choix des formulaires et de saisie</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Organizational levels for forms choice and input</seg>
-            </tuv>
-        </tu>
-        <tu tuid="inputConfigGranularity">
-            <tuv xml:lang="fr">
-                <seg>Choix des formulaires</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Form choice</seg>
-            </tuv>
-        </tu>
-        <tu tuid="inputGranularity">
-            <tuv xml:lang="fr">
-                <seg>Saisie</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Input</seg>
-            </tuv>
-        </tu>
+
 
         <!-- Statut et régénération des données d'analyse -->
         <tu tuid="organizationDWCubesState">

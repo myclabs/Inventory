@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="inputGranularities">
+            <tuv xml:lang="fr">
+                <seg>Niveaux organisationnels de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input organizational levels</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau organisationnel de saisie, et du niveau organisationnel correspondant pour le choix des formulaires comptables</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an input organizational level, and of the corresponding organizational level for the choice of accounting forms</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputGranularity">
+            <tuv xml:lang="fr">
+                <seg>Saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputConfigGranularity">
+            <tuv xml:lang="fr">
+                <seg>Choix des formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Form choice</seg>
+            </tuv>
+        </tu>
+
+
+    </body>
+</tmx>
