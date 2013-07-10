@@ -7,7 +7,7 @@ Feature: Organization datagrid feature
   @javascript
   Scenario: Creation of an organization, link details, default attributes
   # Affichage datagrid des organisations
-    When I am on "orga/organization/manage"
+    Given I am on "orga/organization/manage"
     And I wait for the page to finish loading
     Then I should see the "organizations" datagrid
   # Ajout d'une organisation

@@ -1,11 +1,16 @@
-@dbFull
-Feature: Régénération des données d'analyse
+@dbEmpty
+Feature: Analysis data rebuild after a change in organizational data
 
   Background:
     Given I am logged in
 
   @javascript
   Scenario: Rebuild of analysis data after editing organizational axes
+    Given I am on "orga/organization/manage"
+    And I wait for the page to finish loading
+    Then I should see the "organizations" datagrid
+    And the "organizations" datagrid should contain 1 row
+  #
     Given I am on "orga/cell/details/idCell/1/tab/analyses"
     And I wait for the page to finish loading
   # Au départ les données d'analyse sont à jour

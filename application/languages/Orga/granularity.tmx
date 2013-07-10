@@ -98,7 +98,7 @@
         <tu tuid="granularityCantBeDeleted">
             <tuv xml:lang="fr">
                 <seg>Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé pour la configuration
-     générale de l'organisation (statut des inventaires, sélection des formulaires comptables, saisies) .</seg>
+     générale de l'organisation (statut des inventaires, sélection des formulaires comptables, saisies).</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>This organizational level cannot be deleted, since it is used for the general configuration

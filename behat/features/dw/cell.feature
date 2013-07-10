@@ -1,5 +1,5 @@
 @dbFull
-Feature: cellDw
+Feature: Cell dataware analysis feature
 
   Background:
     Given I am logged in
@@ -20,5 +20,5 @@ Feature: cellDw
     And the field "chartType" should have error: "Merci de préciser le type de graphique à afficher."
   # Retour
     When I click "Retour"
-    Then I should see "Unité organisationnelle globale Organisation test"
+    Then I should see "Unité organisationnelle globale Organisation avec données"
 
