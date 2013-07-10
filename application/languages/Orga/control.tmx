@@ -23,10 +23,10 @@
         </tu>
         <tu tuid="axisWithNoMember">
             <tuv xml:lang="fr">
-                <seg>Axe sans membre</seg>
+                <seg>Axe ne contenant aucun membre</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Axis with no number</seg>
+                <seg>Axis containing no member</seg>
             </tuv>
         </tu>
         <tu tuid="memberWithNoDirectChild">

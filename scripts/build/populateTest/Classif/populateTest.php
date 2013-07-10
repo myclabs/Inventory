@@ -54,7 +54,6 @@ class Classif_PopulateTest extends Core_Script_Action
         $indicator_ges = $this->createIndicator('ges', 'GES', 't_co2e', 'kg_co2e');
         $indicator_chiffre_affaire = $this->createIndicator('chiffre_affaire', 'Chiffre d\'affaires', 'kiloeuro', 'euro');
         $indicator_no_context_indicator = $this->createIndicator('sans_indicateur_contextualise', 'Sans indicateur contextualisé', 't', 't');
-        $indicator_incompatible_units = $this->createIndicator('unites_incompatibles', 'Unités incompatibles', 't_co2e', 'kg');
 
         // Création des contextes.
         // Params : ref, label
