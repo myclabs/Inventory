@@ -438,4 +438,12 @@ class UI_Form_Element
 
         return $script;
     }
+
+    /**
+     * @return UI_Form_ZendElement[]
+     */
+    public function getChildrenElements()
+    {
+        return $this->children;
+    }
 }
