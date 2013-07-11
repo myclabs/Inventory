@@ -19,4 +19,11 @@ interface UI_Form_ZendElement
      * @return UI_Form_Element
      */
     public function getElement();
+
+    /**
+     * Return element name
+     *
+     * @return string
+     */
+    public function getName();
 }
