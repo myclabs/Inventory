@@ -33,7 +33,7 @@ class Keyword_PopulateTest extends Core_Script_Action
         $keyword_gaz_naturel_ = $this->createKeyword('gaz_naturel', 'gaz naturel');
         $keyword_charbon = $this->createKeyword('charbon', 'charbon');
         $keyword_processus = $this->createKeyword('processus', 'processus');
-        $keyword_amont_combustion = $this->createKeyword('amont_combustion', 'amont_combustion');
+        $keyword_amont_combustion = $this->createKeyword('amont_combustion', 'amont de la combustion');
         $keyword_combustion = $this->createKeyword('combustion', 'combustion');
 
         // Création des associations.

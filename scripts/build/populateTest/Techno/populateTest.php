@@ -31,8 +31,9 @@ class Techno_PopulateTest extends Core_Script_Action
 
         // Création des familles (Coef ou Process).
         // Params : Category, ref, label, refBaseUnit, refUnit
-        $family1 = $this->createFamilyCoef($category_contenant_famille, 'ref1', 'Label 1', 'm', 'km');
-        $family2 = $this->createFamilyProcess($category_contenant_famille, 'ref2', 'Label 2', 'm³', 'l');
+        // $family_1 = $this->createFamilyCoef($category_contenant_famille, 'ref1', 'Label 1', 'm', 'km');
+        $family_combustion_combustible_masse = $this->createFamilyProcess($category_contenant_famille,
+            'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse', 'kg', 'kg');
 
 
         $entityManager->flush();
@@ -40,14 +41,14 @@ class Techno_PopulateTest extends Core_Script_Action
 
         // Création des dimensions.
         // Params : Family, refKeyword, refKeywordMembers[]
-        $this->createVerticalDimension($family1, 'combustible', ['charbon', 'gaz_naturel']);
-        $this->createHorizontalDimension($family1, 'processus', ['amont_combustion', 'combustion']);
+        $this->createVerticalDimension($family_combustion_combustible_masse, 'combustible', ['charbon', 'gaz_naturel']);
+        $this->createHorizontalDimension($family_combustion_combustible_masse, 'processus', ['amont_combustion', 'combustion']);
 
         // Création des paramètres.
         // Params : Family, refKeywordMembers[], value
         // OptionalParams : uncertainty=0
-        $this->createParameter($family1, ['charbon', 'amont_combustion'], 18);
-        $this->createParameter($family1, ['charbon', 'combustion'], 25, 20);
+        $this->createParameter($family_combustion_combustible_masse, ['charbon', 'amont_combustion'], 18);
+        $this->createParameter($family_combustion_combustible_masse, ['charbon', 'combustion'], 25, 20);
 
 
         $entityManager->flush();

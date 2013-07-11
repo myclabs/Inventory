@@ -45,7 +45,8 @@ class Orga_PopulateTest extends Core_Script_Action
         $member_marque_marque_a = $this->createMember($axis_marque, 'marque_a', 'Marque A');
         $member_marque_marque_sans_site = $this->createMember($axis_marque, 'marque_sans_site', 'Marque sans site');
         $member_site_annecy = $this->createMember($axis_site, 'annecy', 'Annecy', [$member_pays_france, $member_marque_marque_a]);
-        $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambery', [$member_pays_france, $member_marque_marque_a]);
+        $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambéry', [$member_pays_france, $member_marque_marque_a]);
+        $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
         $member_categorie = $this->createMember($axis_categorie, 'energie', 'Énergie');
 
         // Création des granularités.
@@ -78,7 +79,7 @@ class Orga_PopulateTest extends Core_Script_Action
         $this->createUser('administrateur.site@toto.com');
         $this->createUser('contributeur.site@toto.com');
         $this->createUser('observateur.site@toto.com');
-        $this->createUser('acces.deux-sites@toto.com');
+        $this->createUser('utilisateur.connecte@toto.com');
         $entityManager->flush();
 
 
@@ -88,10 +89,19 @@ class Orga_PopulateTest extends Core_Script_Action
         $this->addOrganizationAdministrator('administrateur.organisation@toto.com', $organization);
         // Ajout d'un role sur une cellule à un utilisateur existant.
         // Params : email, Granularity, [Member]
+
+        // La zone-marque pour laquelle les droits sont configurés est "Europe | Marque A".
         $this->addCellAdministrator('administrateur.zone-marque@toto.com', $granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a]);
         $this->addCellContributor('contributeur.zone-marque@toto.com', $granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a]);
         $this->addCellObserver('observateur.zone-marque@toto.com', $granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a]);
 
+        // Les sites pour lesquels les droits sont configurés sont "Annecy" et "Chambéry" (deux sites à chaque fois).
+        $this->addCellAdministrator('administrateur.site@toto.com', $granularity_site, [$member_site_annecy]);
+        $this->addCellContributor('contributeur.site@toto.com', $granularity_site, [$member_site_annecy]);
+        $this->addCellObserver('observateur.site@toto.com', $granularity_site, [$member_site_annecy]);
+        $this->addCellAdministrator('administrateur.site@toto.com', $granularity_site, [$member_site_chambery]);
+        $this->addCellContributor('contributeur.site@toto.com', $granularity_site, [$member_site_chambery]);
+        $this->addCellObserver('observateur.site@toto.com', $granularity_site, [$member_site_chambery]);
 
         $entityManager->flush();
 

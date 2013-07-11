@@ -150,30 +150,6 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
 
         $category = new Techno_Model_Category();
         $category->setLabel($label);
-        // Parent
-        $idParent = $this->getAddElementValue('setParents');
-        if ($idParent != null && $idParent != 'root') {
-            $category->setParentCategory($this->fromTreeId($idParent));
-        }
-
-        // Position
-        $position = $this->getAddElementValue('position');
-        if ($position == 'first') {
-            $category->setPosition(1);
-        } elseif ($position == 'last') {
-            // Rien à faire
-        } else {
-            $previousNodeId = $this->getAddElementValue('brothers');
-            if ($previousNodeId == null) {
-                $this->setAddFormElementErrorMessage('brothers', __('UI', 'formValidation', 'emptyRequiredField'));
-                $this->send();
-                return;
-            }
-            /** @var $previousNode Techno_Model_Category */
-            $previousNode = $this->fromTreeId($previousNodeId);
-            $category->setPosition($previousNode->getPosition() + 1);
-        }
-
         $category->save();
         $this->entityManager->flush();
 

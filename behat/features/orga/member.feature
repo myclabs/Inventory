@@ -27,16 +27,9 @@ Feature: Organizational member feature
   # Ajout d'un membre, saisie correcte (parent renseigné en partie)
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
-    And I fill in "listMemberssite_broaderpays_addForm" with "France"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
-  # L'opération peut prendre du temps
-    When I wait 5 seconds
-    And I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-    And I open tab "Organisation"
-    And I open tab "Membres"
-    And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label  | ref | broaderpays |
@@ -59,19 +52,19 @@ Feature: Organizational member feature
   # Ajout membre axe Pays, zone non renseignée
     When I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
-  # Modification du libellé et de l'identifiant d'un membre, saisie correcte
+  # Modification du libellé et de l'identifiant d'un membre, saisie correcte
     When I set "Annecy modifiée" for column "label" of row 1 of the "listMemberssite" datagrid with a confirmation message
     And I set "annecy_modifie" for column "ref" of row 1 of the "listMemberssite" datagrid with a confirmation message
     Then the row 1 of the "listMemberssite" datagrid should contain:
       | label           | ref     |
       | Annecy modifiée | annecy_modifie |
-  # Modification de l'identifiant d'un membre, identifiant vide
+  # Modification de l'identifiant d'un membre, identifiant vide
     When I set "" for column "ref" of row 1 of the "listMemberssite" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant d'un membre, identifiant avec caractères non autorisés
+  # Modification de l'identifiant d'un membre, identifiant avec caractères non autorisés
     When I set "bépo" for column "ref" of row 1 of the "listMemberssite" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant d'un membre, identifiant déjà utilisé
+  # Modification de l'identifiant d'un membre, identifiant déjà utilisé
     When I set "chambery" for column "ref" of row 1 of the "listMemberssite" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -99,20 +92,18 @@ Feature: Organizational member feature
 
 
   @javascript
-  Scenario: Deletion of a member
-  # TODO : interdire suppression membre ayant un membre enfant direct.
+  Scenario: Deletion of an organizational member
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Membres"
-  # Membre associé à un membre enfant diret
+  # Membre jouant le rôle de parent direct pour au moins un autre membre
     And I open collapse "Pays"
     When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-  # And I wait 10 seconds
-  # Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il joue le rôle de parent direct pour au moins un autre membre."
+    Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il joue le rôle de parent direct pour au moins un autre membre."
   # Suppression d'un membre, sans obstacle
     When I open collapse "Année"
     And I click "Supprimer" in the row 1 of the "listMembersannee" datagrid

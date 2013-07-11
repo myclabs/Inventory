@@ -1,4 +1,4 @@
-@dbFull
+@dbEmpty
 Feature: Unit feature
 
   Background:
