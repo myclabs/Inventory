@@ -6,7 +6,9 @@
  */
 
 use DI\Container;
+use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
 
 /**
@@ -80,10 +82,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initContainer()
     {
-        $this->container = new Container();
+        $builder = new ContainerBuilder();
+        $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
+        // Cache basique, à remplacer
+        $builder->setDefinitionCache(new ArrayCache());
 
-        // Auto-register, waiting for https://github.com/mnapoli/PHP-DI/issues/71
-        $this->container->set('DI\Container', $this->container);
+        $this->container = $builder->build();
 
         // Récupère la configuration
         $configuration = new Zend_Config($this->getOptions());
@@ -92,8 +96,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('container', $this->container);
 
         $this->container->set('application.name', $configuration->get('applicationName', ''));
-
-        $this->container->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
 
         // Configuration pour injecter dans les controleurs (intégration ZF1)
         $dispatcher = new \DI\ZendFramework1\Dispatcher();
@@ -154,11 +156,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Définition du cache en fonction de l'environement.
         switch (APPLICATION_ENV) {
             case 'production':
-                $doctrineCache = new Doctrine\Common\Cache\ArrayCache();
+                $doctrineCache = new ArrayCache();
                 $doctrineAutoGenerateProxy = false;
                 break;
             default:
-                $doctrineCache = new Doctrine\Common\Cache\ArrayCache();
+                $doctrineCache = new ArrayCache();
                 $doctrineAutoGenerateProxy = true;
                 break;
         }
