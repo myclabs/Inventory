@@ -124,6 +124,12 @@ class UI_Form_Element
         foreach ($this->children as $child) {
             $child->getElement()->prefixRef($prefix, $separator);
         }
+        // Groupe répété
+        if ($this->_zendFormElement instanceof UI_Form_Element_GroupRepeated) {
+            foreach ($this->_zendFormElement->getLineValues() as $group) {
+                $group->getElement()->prefixRef($prefix);
+            }
+        }
     }
 
     /**
