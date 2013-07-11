@@ -17,12 +17,7 @@ Feature: Family tree edit feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout d'une catégorie, libellé non vide, située dans une autre catégorie
-    When I click "Ajouter une catégorie"
-    Then I should see the popup "Ajout d'une catégorie"
-    When I fill in "label" with "Test catégorie ajoutée dans une autre catégorie"
-    And I select "Catégorie contenant une sous-catégorie" from "setParents"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
+  # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.
 
 
   @javascript
@@ -140,6 +135,7 @@ Feature: Family tree edit feature
   Scenario: Deletion of a family in family tree edit
     Given I am on "techno/family/tree-edit"
     And I wait 5 seconds
+  # Suppression
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
