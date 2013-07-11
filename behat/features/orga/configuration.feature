@@ -101,9 +101,9 @@ Feature: Configuration of an organization
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification (au passage ordre / à l'ordre conventionnel sur les granularités)
-    And the row 1 of the "inputGranularities" datagrid should contain:
+    And the row 3 of the "inputGranularities" datagrid should contain:
       | inputGranularity | inputConfigGranularity |
-      | Année | Site     | Année | Site           |
+      | Année \| Site    | Année \| Site          |
 
   @javascript
   Scenario: Delete input granularity
