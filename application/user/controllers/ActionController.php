@@ -200,7 +200,7 @@ class User_ActionController extends UI_Controller_Captcha
 
         $config = Zend_Registry::get('configuration');
         if (empty($config->emails->contact->adress)) {
-            throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été définit !');
+            throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
         }
 
         /** @var $userService User_Service_User */
@@ -220,7 +220,7 @@ class User_ActionController extends UI_Controller_Captcha
                       array(
                            'PASSWORD'         => $password,
                            'APPLICATION_NAME' => $config->emails->noreply->name,
-                           'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl(),
+                           'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl() . '/',
                       ));
         $userService->sendEmail($user, $subject, $content);
     }
