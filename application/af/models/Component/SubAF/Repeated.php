@@ -73,15 +73,14 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
                 $uiElement->foldaway = false;
         }
 
+        // Ajoute les en-têtes du tableau
         if ($this->withFreeLabel) {
             $label = new UI_Form_Element_Text('freeLabel');
-            $label->getElement()->prefixRef($this->ref);
             $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
             $uiElement->addElement($label);
         }
         foreach ($this->calledAF->getRootGroup()->getSubComponentsRecursive() as $component) {
             $subElement = $component->getUIElement(new AF_GenerationHelper());
-            $subElement->getElement()->prefixRef($ref);
             $uiElement->addElement($subElement);
         }
 
@@ -113,6 +112,8 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
         foreach ($this->actions as $action) {
             $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
         }
+
+        $uiElement->getElement()->prefixRef($this->ref);
         return $uiElement;
     }
 
@@ -126,19 +127,11 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
     public function getSingleSubAFUIElement(AF_GenerationHelper $generationHelper, $number,
                                             AF_Model_InputSet_Sub $inputSet = null
     ) {
-//        $ref = $this->ref . UI_Generic::REF_SEPARATOR . $number;
-        $ref = $this->ref;
         // On crée un groupe qui contient un sous-formulaire
-        $afGroup = new UI_Form_Element_Group($ref);
-        $afGroup->addAttribute('class', 'subAFGroup');
-        $afGroup->addAttribute('data-id-af-owner', $this->getAf()->getId());
-        $afGroup->addAttribute('data-ref-component', $this->getRef());
-        $afGroup->setLabel($number + 1);
-        $afGroup->addAttribute("data-number", $number);
-        // Pour chaque sous module, on peut ajouter un label choisi librement par l'utilisateur
+        $afGroup = new UI_Form_Element_Group($this->ref);
+        // Pour chaque sous af, on peut ajouter un label choisi librement par l'utilisateur
         if ($this->withFreeLabel) {
             $label = new UI_Form_Element_Text('freeLabel');
-            $label->getElement()->prefixRef($ref);
             $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
             if ($inputSet) {
                 $label->setValue($inputSet->getFreeLabel());
@@ -148,10 +141,12 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
             }
             $afGroup->addElement($label);
         }
-        // Sous-formulaire
+        // Génère le sous-formulaire
         $subForm = $this->calledAF->generateSubForm($generationHelper, $inputSet);
-        $subForm->getElement()->prefixRef($ref);
-        $afGroup->addElement($subForm);
+        // Ajoute chaque élément du sous-formulaire au groupe
+        foreach ($subForm->getElement()->getChildrenElements() as $uiElement) {
+            $afGroup->addElement($uiElement);
+        }
 
         return $afGroup;
     }

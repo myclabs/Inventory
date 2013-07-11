@@ -78,7 +78,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
     /**
      * Génère un élément UI
      * @param AF_GenerationHelper $generationHelper
-     * @return Zend_Form_Element
+     * @return UI_Form_ZendElement
      */
     abstract public function getUIElement(AF_GenerationHelper $generationHelper);
 
