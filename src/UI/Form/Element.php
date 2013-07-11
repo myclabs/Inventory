@@ -18,7 +18,7 @@ class UI_Form_Element
     /**
      * Element de Zend_Form correspondant.
      *
-     * @var Zend_Form_Element
+     * @var Zend_Form_Element|UI_Form_ZendElement
      */
     protected $_zendFormElement = null;
 
@@ -60,7 +60,7 @@ class UI_Form_Element
     /**
      * List of children elements
      *
-     * @var Zend_Form_Element[]
+     * @var UI_Form_ZendElement[]
      */
     public $children = array();
 

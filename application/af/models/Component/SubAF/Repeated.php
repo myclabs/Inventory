@@ -80,7 +80,9 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
             $uiElement->addElement($label);
         }
         foreach ($this->calledAF->getRootGroup()->getSubComponentsRecursive() as $component) {
-            $uiElement->addElement($component->getUIElement(new AF_GenerationHelper()));
+            $subElement = $component->getUIElement(new AF_GenerationHelper());
+            $subElement->getElement()->prefixRef($ref);
+            $uiElement->addElement($subElement);
         }
 
         // Récupère la saisie correspondant à cet élément

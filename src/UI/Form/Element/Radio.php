@@ -11,7 +11,8 @@
  * @package UI
  * @subpackage Form
  */
-class UI_Form_Element_Radio extends Zend_Form_Element_Radio implements UI_Form_Element_Multi
+class UI_Form_Element_Radio extends Zend_Form_Element_Radio
+    implements UI_Form_Element_Multi, UI_Form_ZendElement
 {
     /**
      * Reference to a UI_Form_Element, to access to its methods.
@@ -32,7 +33,6 @@ class UI_Form_Element_Radio extends Zend_Form_Element_Radio implements UI_Form_E
      * Constructor
      *
      * @param string $name
-     * @return void
      *
      * @throws Core_Exception_InvalidArgument if $name is not valid.
      */
