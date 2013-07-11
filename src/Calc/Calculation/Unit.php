@@ -6,6 +6,7 @@
  * @package    Calc
  * @subpackage Calculation
  */
+use Unit\UnitAPI;
 
 /**
  * @package    Calc
@@ -21,7 +22,7 @@ class Calc_Calculation_Unit extends Calc_Calculation
     public function checkComponent()
     {
         foreach ($this->components as $component) {
-            if (!($component['operand'] instanceof Unit_API)) {
+            if (!($component['operand'] instanceof UnitAPI)) {
                 throw new Core_Exception_InvalidArgument('Array of components is not coherent.');
             }
         }
@@ -30,7 +31,7 @@ class Calc_Calculation_Unit extends Calc_Calculation
     /**
      * Effectue une somme ou un produit d'unité.
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function calculate()
     {
@@ -48,7 +49,7 @@ class Calc_Calculation_Unit extends Calc_Calculation
     /**
      * Calcul d'une somme d'unités.
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     protected function calculateSum()
     {
@@ -60,13 +61,13 @@ class Calc_Calculation_Unit extends Calc_Calculation
             $unitTab[] = $component['operand']->getRef();
         }
 
-        return Unit_API::calculateSum($unitTab);
+        return UnitAPI::calculateSum($unitTab);
     }
 
     /**
      * Calcul d'un produit d'unités.
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     protected function calculateProduct()
     {
@@ -78,7 +79,7 @@ class Calc_Calculation_Unit extends Calc_Calculation
             $unitTab[] = array('unit' => $component['operand'], 'signExponent' => $component['signExponent']);
         }
 
-        return Unit_API::multiply($unitTab);
+        return UnitAPI::multiply($unitTab);
     }
 
 }

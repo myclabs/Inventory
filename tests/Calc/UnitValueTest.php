@@ -5,6 +5,9 @@
  * @package Calc
  */
 
+use Unit\IncompatibleUnitsException;
+use Unit\UnitAPI;
+
 /**
  * @package Calc
  */
@@ -18,8 +21,8 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
     {
         //Test multiplication ok
         $unitValue = new Calc_Calculation_UnitValue();
-        $unit1 = new Unit_API('j^2.animal^-1');
-        $unit2 = new Unit_API('t^2');
+        $unit1 = new UnitAPI('j^2.animal^-1');
+        $unit2 = new UnitAPI('t^2');
 
         $calcUnitValue1 = new Calc_UnitValue($unit1, 3, 10);
         $calcUnitValue2 = new Calc_UnitValue($unit2, 4, 0.08);
@@ -43,8 +46,8 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
     {
         $unitValue = new Calc_Calculation_UnitValue();
         $unitValue->setOperation(Calc_Calculation::ADD_OPERATION);
-        $unit1  = new Unit_API('kg.j');
-        $unit2  = new Unit_API('g.j');
+        $unit1  = new UnitAPI('kg.j');
+        $unit2  = new UnitAPI('g.j');
 
         $calcUnitValue1 = new Calc_UnitValue($unit1, 4, 0.04);
         $calcUnitValue2 = new Calc_UnitValue($unit2, 1500, 0.05);
@@ -63,8 +66,8 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         $unitValue2 = new Calc_Calculation_UnitValue();
         $unitValue2->setOperation(Calc_Calculation::ADD_OPERATION);
 
-        $unite3 = new Unit_API('g.animal');
-        $unite4 = new Unit_API('g^2.animal');
+        $unite3 = new UnitAPI('g.animal');
+        $unite4 = new UnitAPI('g^2.animal');
 
         $calcUnitValue3 = new Calc_UnitValue($unite3, 4, 0.04);
         $calcUnitValue4 = new Calc_UnitValue($unite4, 1500, 0.05);
@@ -74,7 +77,7 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 
         try {
              $unitValue2->calculate();
-        } catch (Unit_Exception_IncompatibleUnits $e) {
+        } catch (IncompatibleUnitsException $e) {
              $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
 
@@ -83,8 +86,8 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         $unitValue3 = new Calc_Calculation_UnitValue();
         $unitValue3->setOperation(Calc_Calculation::ADD_OPERATION);
 
-        $unite5 = new Unit_API('gramme.animal');
-        $unite6 = new Unit_API('g^2.animal');
+        $unite5 = new UnitAPI('gramme.animal');
+        $unite6 = new UnitAPI('g^2.animal');
 
         $calcUnitValue5 = new Calc_UnitValue($unite5, 4, 0.04);
         $calcUnitValue6 = new Calc_UnitValue($unite6, 1500, 0.05);
@@ -95,7 +98,7 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         try {
              $unitValue3->calculate();
         } catch (Core_Exception_NotFound $e) {
-            $this->assertEquals("No 'Unit_Model_Unit' matching (ref == gramme)", $e->getMessage());
+            $this->assertEquals("No 'Unit\\Domain\\Unit\\Unit' matching (ref == gramme)", $e->getMessage());
         }
     }
 
@@ -136,12 +139,12 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
     public function valueProvider()
     {
         return [
-            [new Calc_UnitValue(new Unit_API('g'), 0, 0)],
+            [new Calc_UnitValue(new UnitAPI('g'), 0, 0)],
             [new Calc_UnitValue()],
-            [new Calc_UnitValue(new Unit_API('g'))],
-            [new Calc_UnitValue(new Unit_API('g'), 0)],
-            [new Calc_UnitValue(new Unit_API())],
-            [new Calc_UnitValue(new Unit_API('g'), '0.1', '0.1')],
+            [new Calc_UnitValue(new UnitAPI('g'))],
+            [new Calc_UnitValue(new UnitAPI('g'), 0)],
+            [new Calc_UnitValue(new UnitAPI())],
+            [new Calc_UnitValue(new UnitAPI('g'), '0.1', '0.1')],
         ];
     }
 

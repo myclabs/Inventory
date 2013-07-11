@@ -5,6 +5,7 @@
  * @package Unit
  *
  */
+use Unit\Domain\Unit\DiscreteUnit;
 
 /**
  * Script de création de la table UniteDiscrete
@@ -42,7 +43,7 @@ class Unit_Script_Populate_DiscreteUnit
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $discreteUnit = new Unit_Model_Unit_Discrete();
+        $discreteUnit = new DiscreteUnit();
         $discreteUnit->setRef($element->getAttribute('ref'));
 
         foreach ($element->getElementsByTagName('name')->item(0)->childNodes as $node) {

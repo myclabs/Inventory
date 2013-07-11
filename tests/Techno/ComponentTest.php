@@ -3,6 +3,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Unit\UnitAPI;
 
 /**
  * @package Techno
@@ -28,7 +29,7 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
     {
         /** @var $o Techno_Model_Component */
         $o = $this->getMockForAbstractClass('Techno_Model_Component');
-        $baseUnit = new Unit_API('m');
+        $baseUnit = new UnitAPI('m');
         $o->setBaseUnit($baseUnit);
         $this->assertSame($baseUnit, $o->getBaseUnit());
     }
@@ -50,8 +51,8 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
     {
         /** @var $o Techno_Model_Component */
         $o = $this->getMockForAbstractClass('Techno_Model_Component');
-        $o->setBaseUnit(new Unit_API('m'));
-        $o->setUnit(new Unit_API('g'));
+        $o->setBaseUnit(new UnitAPI('m'));
+        $o->setUnit(new UnitAPI('g'));
     }
 
     /**
@@ -61,7 +62,7 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
     {
         /** @var $o Techno_Model_Component */
         $o = $this->getMockForAbstractClass('Techno_Model_Component');
-        $o->setUnit(new Unit_API('g'));
+        $o->setUnit(new UnitAPI('g'));
     }
 
     /**

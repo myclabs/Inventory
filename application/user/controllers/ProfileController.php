@@ -6,6 +6,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use User\ForbiddenException;
 
 /**
  * Contrôleur de gestion des utilisateurs
@@ -302,7 +303,7 @@ class User_ProfileController extends Core_Controller
 
         // Est-ce que l'utilisateur peut modifier le mot de passe
         if ($user !== $loggedInUser) {
-            throw new User_Exception_Forbidden();
+            throw new ForbiddenException();
         }
 
         if ($this->getRequest()->isPost()) {

@@ -7,6 +7,9 @@
  * @package Unit
  * @subpackage Test
  */
+use Unit\Domain\Unit\Unit;
+use Unit\Domain\PhysicalQuantity;
+use Unit\Domain\UnitSystem;
 
 /**
  * PhysicalQuantityTest
@@ -29,11 +32,11 @@ class Unit_Test_PhysicalQuantityTest
     /**
      * Permet de générer un objet de base sur lequel on pourra travailler
      * @param string $ref
-     * @return Unit_Model_PhysicalQuantity $o
+     * @return PhysicalQuantity $o
      */
     public static function generateObject($ref='UnitPhysicalQuantityTest')
     {
-        $o = new Unit_Model_PhysicalQuantity();
+        $o = new PhysicalQuantity();
         $o->setRef('Ref'.$ref);
         $o->setName('Name'.$ref);
         $o->setSymbol('Symbol'.$ref);
@@ -47,9 +50,9 @@ class Unit_Test_PhysicalQuantityTest
 
     /**
      * Permet de supprimer un objet de base sur lequel on a travaillé
-     * @param Unit_Model_PhysicalQuantity $o
+     * @param PhysicalQuantity $o
      */
-    public static function deleteObject(Unit_Model_PhysicalQuantity $o)
+    public static function deleteObject(PhysicalQuantity $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -68,28 +71,28 @@ class Unit_Test_PhysicalQuantitySetUp extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_PhysicalQuantity en base, sinon suppression !
-        if (Unit_Model_PhysicalQuantity::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
+        if (PhysicalQuantity::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_PhysicalQuantity::loadList() as $physicalQuantity) {
+            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -109,8 +112,8 @@ class Unit_Test_PhysicalQuantitySetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $o = new Unit_Model_PhysicalQuantity();
-        $this->assertInstanceOf('Unit_Model_PhysicalQuantity', $o);
+        $o = new PhysicalQuantity();
+        $this->assertInstanceOf('Unit\Domain\PhysicalQuantity', $o);
         $o->setRef('RefPhysicalQuantityTest');
         $o->setName('NamePhysicalQuantityTest');
         $o->setSymbol('physicalQuantity');
@@ -125,12 +128,12 @@ class Unit_Test_PhysicalQuantitySetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Unit_Model_PhysicalQuantity $o
+     * @param PhysicalQuantity $o
      */
     function testLoad($o)
     {
-         $oLoaded = Unit_Model_PhysicalQuantity::load($o->getKey());
-         $this->assertInstanceOf('Unit_Model_PhysicalQuantity', $o);
+         $oLoaded = PhysicalQuantity::load($o->getKey());
+         $this->assertInstanceOf('Unit\Domain\PhysicalQuantity', $o);
          $this->assertEquals($oLoaded->getKey(), $o->getKey());
          $this->assertEquals($oLoaded->getRef(), $o->getRef());
          $this->assertEquals($oLoaded->getName(), $o->getName());
@@ -141,9 +144,9 @@ class Unit_Test_PhysicalQuantitySetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testLoad
-     * @param Unit_Model_PhysicalQuantity $o
+     * @param PhysicalQuantity $o
      */
-    function testDelete(Unit_Model_PhysicalQuantity $o)
+    function testDelete(PhysicalQuantity $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -163,28 +166,28 @@ class Unit_Test_PhysicalQuantitySetUp extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_PhysicalQuantity en base, sinon suppression !
-        if (Unit_Model_PhysicalQuantity::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
+        if (PhysicalQuantity::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_PhysicalQuantity::loadList() as $physicalQuantity) {
+            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -208,28 +211,28 @@ class Unit_Test_PhysicalQuantityOthers extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_PhysicalQuantity en base, sinon suppression !
-        if (Unit_Model_PhysicalQuantity::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
+        if (PhysicalQuantity::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_PhysicalQuantity::loadList() as $physicalQuantity) {
+            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -251,8 +254,8 @@ class Unit_Test_PhysicalQuantityOthers extends PHPUnit_Framework_TestCase
      */
     function testLoadByRef()
     {
-        $o = Unit_Model_PhysicalQuantity::loadByRef('RefDerived');
-        $this->assertInstanceOf('Unit_Model_PhysicalQuantity', $o);
+        $o = PhysicalQuantity::loadByRef('RefDerived');
+        $this->assertInstanceOf('Unit\Domain\PhysicalQuantity', $o);
         $this->assertSame($o, $this->derivedPhysicalQuantity);
     }
 
@@ -313,28 +316,28 @@ class Unit_Test_PhysicalQuantityOthers extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_PhysicalQuantity en base, sinon suppression !
-        if (Unit_Model_PhysicalQuantity::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
+        if (PhysicalQuantity::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_PhysicalQuantity::loadList() as $physicalQuantity) {
+            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');

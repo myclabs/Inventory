@@ -7,6 +7,7 @@
  * @package Unit
  * @subpackage Test
  */
+use Unit\Domain\UnitSystem;
 
 /**
  * UnitSystemTest
@@ -29,11 +30,11 @@ class Unit_Test_UnitSystemTest
     /**
      * Génere un objet pret à l'emploi pour les tests
      * @param string $ref
-     * @return Unit_Model_Unit_System $o
+     * @return UnitSystem $o
      */
     public static function generateObject($ref='UnitSystemTest')
     {
-        $o = new Unit_Model_Unit_System();
+        $o = new UnitSystem();
         $o->setRef('Ref'.$ref);
         $o->setName('Name'.$ref);
         $o->save();
@@ -44,9 +45,9 @@ class Unit_Test_UnitSystemTest
 
     /**
      * Supprime un objet utilisé dans les tests
-     * @param Unit_Model_Unit_System $o
+     * @param UnitSystem $o
      */
-    public static function deleteObject(Unit_Model_Unit_System $o)
+    public static function deleteObject(UnitSystem $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -66,10 +67,10 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -87,12 +88,12 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * Test le constructeur
-     * @return Unit_Model_Unit_System
+     * @return UnitSystem
      */
     function testConstruct()
     {
-        $o = new Unit_Model_Unit_System();
-        $this->assertInstanceOf('Unit_Model_Unit_System', $o);
+        $o = new UnitSystem();
+        $this->assertInstanceOf('Unit\Domain\UnitSystem', $o);
         $o->setRef('RefSystemeUniteTestSave');
         $o->setName('NamzSystemeUniteTestSave');
         $this->assertEquals(array(), $o->getKey());
@@ -105,14 +106,14 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Unit_Model_Unit_System $o
+     * @param UnitSystem $o
      */
     function testLoad($o)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->clear($o);
-        $oLoaded = Unit_Model_Unit_System::load($o->getKey());
-        $this->assertInstanceOf('Unit_Model_Unit_System', $o);
+        $oLoaded = UnitSystem::load($o->getKey());
+        $this->assertInstanceOf('Unit\Domain\UnitSystem', $o);
         $this->assertEquals($oLoaded->getKey(), $o->getKey());
         $this->assertEquals($oLoaded->getRef(), $o->getRef());
         $this->assertEquals($oLoaded->getName(), $o->getName());
@@ -121,9 +122,9 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testLoad
-     * @param Unit_Model_Unit_System $o
+     * @param UnitSystem $o
      */
-    function testDelete(Unit_Model_Unit_System $o)
+    function testDelete(UnitSystem $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -143,10 +144,10 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -169,10 +170,10 @@ class Unit_Test_UnitSystemOthers extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -193,8 +194,8 @@ class Unit_Test_UnitSystemOthers extends PHPUnit_Framework_TestCase
      */
     function testLoadByRef()
     {
-        $o = Unit_Model_Unit_System::loadByRef('RefUnitSystemTest');
-        $this->assertInstanceOf('Unit_Model_Unit_System', $o);
+        $o = UnitSystem::loadByRef('RefUnitSystemTest');
+        $this->assertInstanceOf('Unit\Domain\UnitSystem', $o);
         $this->assertSame($o, $this->unitSystem);
     }
 
@@ -212,10 +213,10 @@ class Unit_Test_UnitSystemOthers extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');

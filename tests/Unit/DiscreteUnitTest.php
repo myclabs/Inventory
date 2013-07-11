@@ -7,6 +7,8 @@
  * @package Unit
  * @subpackage Test
  */
+use Unit\Domain\Unit\Unit;
+use Unit\Domain\Unit\DiscreteUnit;
 
 /**
  * DiscreteUnit
@@ -29,11 +31,11 @@ class Unit_Test_DiscreteUnitTest
     /**
      * Génere un objet pret à l'emploi pour les tests
      * @param string $ref
-     * @return Unit_Model_Unit_Discrete $o
+     * @return \Unit\Domain\Unit\DiscreteUnit $o
      */
     public static function generateObject($ref='DiscreteUnitTest')
     {
-        $o = new Unit_Model_Unit_Discrete();
+        $o = new DiscreteUnit();
         $o->setRef('Ref'.$ref);
         $o->setName('Name'.$ref);
         $o->setSymbol('Symbol'.$ref);
@@ -47,9 +49,9 @@ class Unit_Test_DiscreteUnitTest
 
     /**
      * supprime un objet
-     * @param Unit_Model_Unit_Discrete $o
+     * @param \Unit\Domain\Unit\DiscreteUnit $o
      */
-    public static function deleteObject(Unit_Model_Unit_Discrete $o)
+    public static function deleteObject(DiscreteUnit $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -68,10 +70,10 @@ class Unit_Test_DiscreteUnitSetUp extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -92,8 +94,8 @@ class Unit_Test_DiscreteUnitSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $o = new Unit_Model_Unit_Discrete();
-        $this->assertInstanceOf('Unit_Model_Unit_Discrete', $o);
+        $o = new DiscreteUnit();
+        $this->assertInstanceOf('Unit\Domain\Unit\DiscreteUnit', $o);
         $o->setRef('RefDiscreteUnit');
         $o->setName('NameDiscreteUnit');
         $o->setSymbol('SymbolDiscreteUnit');
@@ -108,15 +110,15 @@ class Unit_Test_DiscreteUnitSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Unit_Model_Unit_Discrete $o
+     * @param \Unit\Domain\Unit\DiscreteUnit $o
      */
-    function testLoad(Unit_Model_Unit_Discrete $o)
+    function testLoad(DiscreteUnit $o)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->clear($o);
         // On tente de charger l'unité enregistrée dans la base lors du test de la méthode save().
-        $oLoaded = Unit_Model_Unit_Discrete::load($o->getKey());
-        $this->assertInstanceOf('Unit_Model_Unit_Discrete', $oLoaded);
+        $oLoaded = DiscreteUnit::load($o->getKey());
+        $this->assertInstanceOf('Unit\Domain\Unit\DiscreteUnit', $oLoaded);
         $this->assertEquals($oLoaded->getKey(), $o->getKey());
         $this->assertEquals($oLoaded->getRef(), $o->getRef());
         $this->assertEquals($oLoaded->getName(), $o->getName());
@@ -128,9 +130,9 @@ class Unit_Test_DiscreteUnitSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testLoad
-     * @param Unit_Model_Unit_Discrete $o
+     * @param \Unit\Domain\Unit\DiscreteUnit $o
      */
-    function testDelete(Unit_Model_Unit_Discrete $o)
+    function testDelete(DiscreteUnit $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -151,10 +153,10 @@ class Unit_Test_DiscreteUnitSetUp extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -179,10 +181,10 @@ class Unit_Test_DiscreteUnitOthers extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -204,8 +206,8 @@ class Unit_Test_DiscreteUnitOthers extends PHPUnit_Framework_TestCase
      */
     function testLoadByRef()
     {
-        $o = Unit_Model_Unit_Discrete::loadByRef('RefDiscreteUnitTest');
-        $this->assertInstanceOf('Unit_Model_Unit_Discrete', $o);
+        $o = DiscreteUnit::loadByRef('RefDiscreteUnitTest');
+        $this->assertInstanceOf('Unit\Domain\Unit\DiscreteUnit', $o);
         $this->assertSame($o, $this->_discreteUnit);
     }
 
@@ -228,7 +230,7 @@ class Unit_Test_DiscreteUnitOthers extends PHPUnit_Framework_TestCase
 
         // Test de l'exception levée lorsque l'on essaye de récupérer le facteur de conversion entre deux unités
         // discrètes différentes.
-        $b = new Unit_Model_Unit_Discrete();
+        $b = new DiscreteUnit();
 
         try {
             $this->assertEquals($this->_discreteUnit->getConversionFactor($b), 1);
@@ -251,10 +253,10 @@ class Unit_Test_DiscreteUnitOthers extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');

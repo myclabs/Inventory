@@ -6,6 +6,8 @@
  * @package Algo
  */
 
+use Unit\UnitAPI;
+
 /**
  * @package Algo
  */
@@ -63,7 +65,7 @@ class Numeric_ConstantTest
      */
     public static function generateUnitValue()
     {
-        return new Calc_UnitValue(new Unit_API('g'), 2, 0.1);
+        return new Calc_UnitValue(new UnitAPI('g'), 2, 0.1);
     }
 
     /**
@@ -78,7 +80,7 @@ class Numeric_ConstantTest
         $indicator = new Classif_Model_Indicator();
         $indicator->setRef(Core_Tools::generateString(20));
         $indicator->setLabel('Classif indicator');
-        $indicator->setUnit(new Unit_API('g'));
+        $indicator->setUnit(new UnitAPI('g'));
         $indicator->setRatioUnit($indicator->getUnit());
         $indicator->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
