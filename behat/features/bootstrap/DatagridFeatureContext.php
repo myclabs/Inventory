@@ -110,7 +110,17 @@ JS;
                     $inputNode = $this->findElement("$popupSelector input.select2-offscreen:not(.select2-focusser)");
                     $inputNode->setValue($content);
                 } else {
-                    throw new \Exception("Unable to set cell value in datagrid");
+                    // Select
+                    $inputNodes = $this->findAllElements("$popupSelector select");
+                    if (count($inputNodes) === 1) {
+                        // Attend la fin du chargement
+                        $selectLoading = "$('$popupSelector select option:contains(\"Chargement\")').length == 0";
+                        $this->getSession()->wait(5000, "($selectLoading)");
+                        $inputNode = current($inputNodes);
+                        $inputNode->setValue($content);
+                    } else {
+                        throw new \Exception("Unable to set cell value in datagrid");
+                    }
                 }
             }
         }

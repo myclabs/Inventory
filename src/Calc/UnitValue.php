@@ -6,6 +6,8 @@
  * @package Calc
  */
 
+use Unit\UnitAPI;
+
 /**
  * Opérande de type unité/valeur.
  *
@@ -25,7 +27,7 @@ class Calc_UnitValue
     /**
      * Unité.
      *
-     * @var Unit_API
+     * @var UnitAPI
      */
     private $unit;
 
@@ -38,13 +40,13 @@ class Calc_UnitValue
 
 
     /**
-     * @param Unit_API   $unit
+     * @param UnitAPI    $unit
      * @param float|null $digitalValue
      * @param float|null $relativeUncertainty
      */
-    public function __construct(Unit_API $unit = null, $digitalValue = null, $relativeUncertainty = null)
+    public function __construct(UnitAPI $unit = null, $digitalValue = null, $relativeUncertainty = null)
     {
-        $this->unit = $unit ? : new Unit_API();
+        $this->unit = $unit ? : new UnitAPI();
         $this->value = new Calc_Value($digitalValue, $relativeUncertainty);
     }
 
@@ -70,6 +72,8 @@ class Calc_UnitValue
 
     /**
      * Permet de comparer deux unitValue entres elles.
+     *
+     * Ne compare pas l'incertitude.
      *
      * @param Calc_UnitValue $uvToCompare
      * @param string         $operator
@@ -120,7 +124,21 @@ class Calc_UnitValue
     }
 
     /**
-     * @return Unit_API
+     * Retourne true si les objets sont égaux. Compare aussi l'incertitude.
+     *
+     * @param Calc_UnitValue $uvToCompare
+     *
+     * @return bool $result
+     */
+    public function equals(Calc_UnitValue $uvToCompare)
+    {
+        $equals = $this->toCompare($uvToCompare, self::RELATION_EQUAL);
+
+        return $equals && ($this->getRelativeUncertainty() === $uvToCompare->getRelativeUncertainty());
+    }
+
+    /**
+     * @return UnitAPI
      */
     public function getUnit()
     {
@@ -170,7 +188,7 @@ class Calc_UnitValue
 
         $value = Calc_Value::createFromString($strValue);
 
-        return new static(new Unit_API($unitRef), $value->getDigitalValue(), $value->getRelativeUncertainty());
+        return new static(new UnitAPI($unitRef), $value->getDigitalValue(), $value->getRelativeUncertainty());
     }
 
 }

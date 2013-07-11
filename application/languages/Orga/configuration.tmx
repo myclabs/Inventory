@@ -4,7 +4,7 @@
 		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
 	<body>
 
-        <!-- Général -->
+        <!-- Libellé de l'organisation et choix de la granularité des inventaires -->
 
         <tu tuid="granularityForInventoryStatus">
             <tuv xml:lang="fr">
@@ -14,9 +14,12 @@
                 <seg>Inventories organizational level</seg>
             </tuv>
         </tu>
-        <tu tuid="inputGranularityNeedsToBeNarrowerThanConfigGranularity">
+
+        <!-- Niveaux organisationnels de choix des formulaires et de saisie -->
+
+        <tu tuid="inputGranularityNeedsToBeNarrowerThanFormChoiceGranularity">
             <tuv xml:lang="fr">
-                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le choix des formulaires.</seg>
+                <seg>Merci de sélectionner un niveau organisationnel de saisie plus fin que ou égal au niveau organisationnel de choix des formulaires.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Please select for input an organizational level narrower than or equal to the one selected for form choice.</seg>
@@ -30,33 +33,17 @@
                 <seg>Please select for input an organizational level narrower than or equal to the one selected for inventory status.</seg>
             </tuv>
         </tu>
+        <tu tuid="granularityIsAlreadyAnInputGranularity">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner pour la saisie un niveau organisationnel différent, celui-là est déjà configuré pour accueillir des saisies.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select for input another organizational level, this one is already used for input.</seg>
+            </tuv>
+        </tu>
 
-        <!-- Niveaux organisationnels de choix des formulaires et de saisie -->
 
-        <tu tuid="inputGranularities">
-            <tuv xml:lang="fr">
-                <seg>Niveaux organisationnels de choix des formulaires et de saisie</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Organizational levels for forms choice and input</seg>
-            </tuv>
-        </tu>
-        <tu tuid="inputConfigGranularity">
-            <tuv xml:lang="fr">
-                <seg>Choix des formulaires</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Form choice</seg>
-            </tuv>
-        </tu>
-        <tu tuid="inputGranularity">
-            <tuv xml:lang="fr">
-                <seg>Saisie</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Input</seg>
-            </tuv>
-        </tu>
+
 
         <!-- Statut et régénération des données d'analyse -->
         <tu tuid="organizationDWCubesState">

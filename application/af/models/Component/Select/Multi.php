@@ -86,6 +86,8 @@ class AF_Model_Component_Select_Multi extends AF_Model_Component_Select
             $uiElement->getElement()->disabled = $input->isDisabled();
             $uiElement->getElement()->hidden = $input->isHidden();
             $uiElement->setValue($input->getValue());
+            // Historique de la valeur
+            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
         } else {
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;

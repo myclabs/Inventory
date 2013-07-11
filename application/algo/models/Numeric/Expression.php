@@ -5,6 +5,8 @@
  * @author  yoann.croizer
  * @package Algo
  */
+use Unit\IncompatibleUnitsException;
+use Unit\UnitAPI;
 
 /**
  * @package    Algo
@@ -16,7 +18,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
 
     /**
      * Unité pour contrôle automatique de la cohérence des unités.
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $unit;
 
@@ -111,7 +113,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
                     true
                 );
             }
-        } catch (Unit_Exception_IncompatibleUnits $e) {
+        } catch (IncompatibleUnitsException $e) {
             $errors[] = new Algo_ConfigError(__('Algo', 'configControl', 'incompatibleUnitsAmongOperands',
                                                 [
                                                     'REF_ALGO' => $this->ref,
@@ -158,7 +160,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
     }
 
     /**
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnit()
     {
@@ -166,7 +168,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
     }
 
     /**
-     * @param Unit_API $unit
+     * @param UnitAPI $unit
      */
     public function setUnit($unit)
     {

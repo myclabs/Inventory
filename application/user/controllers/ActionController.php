@@ -7,6 +7,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use User\AuthAdapter;
 
 /**
  * Contrôleur de gestion des actions de l'utilisateurs
@@ -59,7 +60,7 @@ class User_ActionController extends UI_Controller_Captcha
                 // Obtention d'une référence de l'instance du Singleton de Zend_Auth.
                 $auth = Zend_Auth::getInstance();
                 // Définition de l'adaptateur d'authentification.
-                $authAdapter = new User_AuthAdapter($email, $password);
+                $authAdapter = new AuthAdapter($email, $password);
                 // Tentative d'authentification et stockage du résultat.
                 $result = $auth->authenticate($authAdapter);
                 if ($result->isValid()) {

@@ -25,17 +25,33 @@ $('#groups').on('show', function(e) {
 JS;
 
 
-// Sous-formulaires
-$subAF = new UI_HTML_Collapse('subAF');
-$subAF->foldedByDefault = true;
-$subAF->title = __('AF', 'configComponentCollapse', 'subFormCollapse');
-$subAF->body = $this->partial('edit/components/sub-af.phtml', array('af' => $this->af));
-echo $subAF->render();
+// Sous-formulaires non répétés
+$subAFNotRepeated = new UI_HTML_Collapse('subAFNotRepeated');
+$subAFNotRepeated->foldedByDefault = true;
+$subAFNotRepeated->title = __('AF', 'configComponentCollapse', 'subFormCollapse');
+$subAFNotRepeated->body = $this->partial('edit/components/sub-af-not-repeated.phtml', array('af' => $this->af));
+echo $subAFNotRepeated->render();
 
 $script .= <<<JS
-$('#subAF').on('show', function(e) {
-    if ($(e.target).attr('id') == 'subAF_wrapper') {
-        subAfDatagrid.filter();
+$('#subAFNotRepeated').on('show', function(e) {
+    if ($(e.target).attr('id') == 'subAFNotRepeated_wrapper') {
+        subAfNotRepeatedDatagrid.filter();
+    }
+});
+JS;
+
+
+// Sous-formulaires répétés
+$subAFRepeated = new UI_HTML_Collapse('subAFRepeated');
+$subAFRepeated->foldedByDefault = true;
+$subAFRepeated->title = __('AF', 'configComponentCollapse', 'subFormCollapse');
+$subAFRepeated->body = $this->partial('edit/components/sub-af-repeated.phtml', array('af' => $this->af));
+echo $subAFRepeated->render();
+
+$script .= <<<JS
+$('#subAFRepeated').on('show', function(e) {
+    if ($(e.target).attr('id') == 'subAFRepeated_wrapper') {
+        subAfRepeatedDatagrid.filter();
     }
 });
 JS;

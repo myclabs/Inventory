@@ -16,7 +16,10 @@ class Inventory_Service_Test
      */
     public function doSomething($param)
     {
-        return $param;
+        return [
+            'value' => $param,
+            'locale' => Core_Locale::loadDefault()->getId(),
+        ];
     }
 
 }

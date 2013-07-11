@@ -156,7 +156,7 @@ class FeatureContext extends MinkContext
                 $this->getSession());
         }
 
-        array_filter($nodes, function(NodeElement $node) {
+        $nodes = array_filter($nodes, function(NodeElement $node) {
                 return $node->isVisible();
             });
 
@@ -188,6 +188,12 @@ class FeatureContext extends MinkContext
             'css',
             'legend:contains("' . $label . '")'
         );
+
+        if ($node === null) {
+            throw new ExpectationException("No collapse with label '$label' was found.",
+                $this->getSession());
+        }
+
         $node->click();
 
         $this->waitForPageToFinishLoading();
@@ -234,7 +240,7 @@ class FeatureContext extends MinkContext
                 $this->getSession());
         }
 
-        array_filter($nodes, function(NodeElement $node) {
+        $nodes = array_filter($nodes, function(NodeElement $node) {
                 return $node->isVisible();
             });
 

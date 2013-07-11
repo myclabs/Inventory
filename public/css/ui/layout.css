@@ -59,5 +59,4 @@ footer .feedback-form div { text-align: left; }
 
 /* Ajustement des popover */
 .popover { max-width: 476px; }
-.popover .popover-title { border-bottom: none; background-color: #FFFFFF; padding: 1px 15px; }
 .popover .popover-inner { padding: 1px; border-radius: 3px; height: auto; }

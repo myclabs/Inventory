@@ -3,6 +3,7 @@
  * @author  matthieu.napoli
  * @package Exec
  */
+use Unit\UnitAPI;
 
 /**
  * Interface à implémenter pour récupérer une valeur d'un Input.
@@ -17,7 +18,7 @@ interface Exec_Interface_UnitProvider
      *
      * @param string $ref
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnitForExecution($ref);
 

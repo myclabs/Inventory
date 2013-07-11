@@ -43,9 +43,11 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
 
     /**
      * @param AF_Model_Component_Select_Option[] $value Array of selected options
+     * @throws Core_Exception_InvalidArgument Value must be an array of AF_Model_Component_Select_Option
      */
     public function setValue($value)
     {
+        $this->value = new ArrayCollection();
         foreach ($value as $option) {
             if ($option instanceof  AF_Model_Component_Select_Option) {
                 $this->value->add($option->getRef());
@@ -60,7 +62,7 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
      */
     public function setValueFrom(AF_Model_Input_Select_Multi $input)
     {
-        $this->value->clear();
+        $this->value = new ArrayCollection();
         foreach ($input->value as $ref) {
             $this->value->add($ref);
         }

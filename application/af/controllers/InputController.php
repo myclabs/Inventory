@@ -6,6 +6,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
 
 /**
  * Saisie des AF
@@ -27,6 +28,12 @@ class AF_InputController extends Core_Controller
      * @var AF_Service_InputSetSessionStorage
      */
     private $inputSetSessionStorage;
+
+    /**
+     * @Inject
+     * @var AF_Service_InputHistoryService
+     */
+    private $inputHistoryService;
 
     /**
      * Soumission d'un AF
@@ -223,6 +230,23 @@ class AF_InputController extends Core_Controller
         $this->sendJsonResponse($html);
     }
 
+    /**
+     * Retourne l'historique des valeurs d'une saisie
+     * AJAX
+     * @Secure("editInputAF")
+     */
+    public function inputHistoryAction()
+    {
+        /** @var $input AF_Model_Input */
+        $input = AF_Model_Input::load($this->getParam('idInput'));
+
+        $entries = $this->inputHistoryService->getInputHistory($input);
+
+        $this->view->assign('component', $input->getComponent());
+        $this->view->assign('entries', $entries);
+        $this->_helper->layout->disableLayout();
+    }
+
 
     /**
      * Parse la soumission d'un AF pour remplir un InputSet
@@ -280,33 +304,30 @@ class AF_InputController extends Core_Controller
         } elseif ($component instanceof AF_Model_Component_Numeric) {
             // Champ numérique
             $input = new AF_Model_Input_Numeric($inputSet, $component);
-            $inputDigitalValue = null;
-            $inputUncertainty = null;
-            if ($inputContent['value'] !== '') {
-                $value = str_replace(',', '.', $inputContent['value']);
-                $relativeUncertainty = 0;
-                if ($component->getWithUncertainty()) {
+            $locale = Core_Locale::loadDefault();
+            $value = null;
+            try {
+                $value = $locale->readNumber($inputContent['value']);
+                if ($component->getRequired() && $value === null) {
+                    $errorMessages[$fullRef] = __('UI', 'formValidation', 'emptyRequiredField');
+                }
+            } catch (Core_Exception_InvalidArgument $e) {
+                $errorMessages[$fullRef] = __('UI', 'formValidation', 'invalidNumber');
+            }
+            $relativeUncertainty = null;
+            if ($component->getWithUncertainty()) {
+                try {
                     $childInputContent = current($inputContent['children']);
-                    $relativeUncertainty = $childInputContent['value'];
-                    if ($relativeUncertainty == '') {
-                        $relativeUncertainty = 0;
+                    $relativeUncertainty = $locale->readInteger($childInputContent['value']);
+                    if ($relativeUncertainty < 0) {
+                        $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
                     }
-                }
-                if (!is_numeric($value)) {
-                    $errorMessages[$fullRef] = __("UI", "formValidation", "invalidNumber");
-                } elseif (!is_numeric($relativeUncertainty) || ($relativeUncertainty < 0)) {
+                } catch (Core_Exception_InvalidArgument $e) {
                     $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
-                } else {
-                    $inputDigitalValue = $value;
-                    if ($component->getWithUncertainty()) {
-                        $inputUncertainty = $relativeUncertainty;
-                    }
                 }
-            } elseif ($component->getRequired()) {
-                $errorMessages[$fullRef] = __("UI", "formValidation", "emptyRequiredField");
             }
             $input->setValue(
-                new Calc_UnitValue($component->getUnit(), $inputDigitalValue, $inputUncertainty)
+                new Calc_UnitValue($component->getUnit(), $value, $relativeUncertainty)
             );
         } elseif ($component instanceof AF_Model_Component_Text) {
             // Champ texte

@@ -1,0 +1,96 @@
+<?php
+/**
+ * Sous-AF de l'onglet "Composants"
+ * @author  matthieu.napoli
+ * @author  yoann.croizer
+ * @package AF
+ */
+/** @var $af AF_Model_AF */
+$af = $this->af;
+
+// Datagrid
+$datagrid = new UI_Datagrid('subAfRepeatedDatagrid', 'datagrid_edit_components_sub-af-repeated', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'configComponentDatagrid', 'subformAddPanelTitle');
+$datagrid->deleteElements = true;
+
+// Label
+$subafLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$subafLabel->editable = true;
+$datagrid->addCol($subafLabel);
+// Ref
+$subafRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$subafRef->editable = true;
+$datagrid->addCol($subafRef);
+// Ref du formulaire associé
+$targetAF = new UI_Datagrid_Col_List('targetAF', __('AF', 'configComponentDatagrid', 'associatedFormHeader'));
+$targetAF->list = [];
+foreach (AF_Model_AF::loadList() as $currentAf) {
+    /** @var $currentAf AF_Model_AF */
+    if ($currentAf->getId() != $af->getId()) {
+        $targetAF->list[$currentAf->getId()] = $currentAf->getLabel();
+    }
+}
+$targetAF->withEmptyElement = false;
+$targetAF->editable = true;
+$datagrid->addCol($targetAF);
+// Help
+$help = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
+$help->editable = true;
+$help->popup->title = __('UI', 'name', 'help');
+$datagrid->addCol($help);
+// Hidden / Show
+$isVisible = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));
+$isVisible->editable = true;
+$isVisible->defaultAddValue = true;
+$isVisible->textTrue = __('UI', 'property', 'visible');
+$isVisible->textFalse = __('UI', 'property', 'masked');
+$isVisible->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'visible');
+$isVisible->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'masked');
+$datagrid->addCol($isVisible);
+// Foldaway / Unfodaway
+$foldaway = new UI_Datagrid_Col_List('foldaway', __('AF', 'configComponentDatagrid', 'foldawayHeader'));
+$foldaway->editable = true;
+$foldaway->defaultAddValue = AF_Model_Component_SubAF::FOLDAWAY;
+$foldaway->withEmptyElement = false;
+$foldaway->list = [
+    AF_Model_Component_SubAF::UNFOLDAWAY => __('UI', 'property', 'nonFoldaway'),
+    AF_Model_Component_SubAF::FOLDAWAY   => __('UI', 'property', 'foldaway'),
+    AF_Model_Component_SubAF::FOLDED     => __('UI', 'property', 'folded'),
+];
+$datagrid->addCol($foldaway);
+// Repeated or Not
+$isRepeated = new UI_Datagrid_Col_List('repetition', __('AF', 'configComponentDatagrid', 'repeatableInputHeader'));
+$isRepeated->editable = true;
+$isRepeated->withEmptyElement = false;
+$isRepeated->list = array(
+    AF_Model_Component_SubAF_Repeated::MININPUTNUMBER_0               => __(
+        'AF',
+        'configComponentDatagrid',
+        'repeatableZeroItemOption'
+    ),
+    AF_Model_Component_SubAF_Repeated::MININPUTNUMBER_1_NOT_DELETABLE => __(
+        'AF',
+        'configComponentDatagrid',
+        'repeatableOneUnsuppressibleItemOption'
+    ),
+    AF_Model_Component_SubAF_Repeated::MININPUTNUMBER_1_DELETABLE     => __(
+        'AF',
+        'configComponentDatagrid',
+        'repeatableOneSuppressibleItemOption'
+    )
+);
+$datagrid->addCol($isRepeated);
+// Has Free Label
+$hasFreeLabel = new UI_Datagrid_Col_Bool('hasFreeLabel', __('AF', 'configComponentDatagrid', 'freeLabelHeader'));
+$hasFreeLabel->editable = true;
+$hasFreeLabel->textTrue = __('AF', 'configComponentDatagrid', 'withFreeLabelOption');
+$hasFreeLabel->textFalse = __('AF', 'configComponentDatagrid', 'withoutFreeLabelOption');
+$hasFreeLabel->valueTrue = '<i class="icon-ok"></i> '.__('AF', 'configComponentDatagrid', 'withFreeLabelOption');
+$hasFreeLabel->valueFalse = '<i class="icon-remove"></i> '.__('AF', 'configComponentDatagrid', 'withoutFreeLabelOption');
+$datagrid->addCol($hasFreeLabel);
+
+echo $datagrid->render();

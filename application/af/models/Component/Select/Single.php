@@ -80,6 +80,8 @@ class AF_Model_Component_Select_Single extends AF_Model_Component_Select
             if ($optionRef) {
                 $uiElement->setValue($optionRef);
             }
+            // Historique de la valeur
+            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
         } else {
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;

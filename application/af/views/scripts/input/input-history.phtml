@@ -1,0 +1,52 @@
+<?php
+
+use Doctrine\Common\Collections\Collection;
+use Gedmo\Loggable\Entity\LogEntry;
+
+/** @var AF_Model_Component $component */
+$component = $this->component;
+/** @var AF_Service_InputHistoryService_Entry[] $entries */
+$entries = $this->entries;
+
+$locale = Core_Locale::loadDefault();
+
+if (empty($entries)) : ?>
+    <p class="muted"><?=__('AF', 'inputInput', 'noHistory')?></p>
+<?php else : ?>
+    <ul class="unstyled">
+        <?php
+        foreach ($entries as $entry) {
+            $value = $entry->getValue();
+
+            $shownValue = '&nbsp;';
+            if (is_string($value)) {
+                $shownValue = $value;
+            }
+            if (is_bool($value)) {
+                $shownValue = $value ? __('UI', 'property', 'checked') :  __('UI', 'property', 'unchecked');
+            }
+            if ($value instanceof Calc_UnitValue) {
+                $shownValue = $locale->formatNumber($value->getDigitalValue())
+                    . ' ' . $value->getUnit()->getSymbol()
+                    . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty());
+            }
+            if ($value instanceof AF_Model_Component_Select_Option) {
+                $shownValue = $value->getLabel();
+            }
+            if (is_array($value)) {
+                $labels = array_map(function(AF_Model_Component_Select_Option $option) {
+                        return $option->getLabel();
+                    }, $value);
+                $shownValue = implode(', ', $labels);
+            }
+            ?>
+            <li>
+                <code><?=$shownValue?></code>
+                -
+                <?=$locale->formatDate($entry->getLoggedAt())?>
+            </li>
+            <?php
+        }
+        ?>
+    </ul>
+<?php endif; ?>

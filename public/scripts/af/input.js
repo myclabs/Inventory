@@ -128,8 +128,26 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
 
 	// Handler appelé quand la saisie a été sauvegardée avec succès
 	$.fn.inputSavedHandler = function(data, textStatus, jqXHR) {
-		that.inputSavedHandler(data, textStatus, jqXHR);
+        that.inputSavedHandler(data, textStatus, jqXHR);
 	};
+
+    // Handler pour l'historique d'une valeur
+    var popoverDefaultContent = '<p class="text-center"><img src="images/ui/ajax-loader.gif"></p>';
+    $(".input-history").popover({
+        placement: 'bottom',
+        title: __('AF', 'inputInput', 'valueHistory'),
+        html: true,
+        content: popoverDefaultContent
+    }).click(function() {
+            var button = $(this);
+            // Si visible (merci Bootstrap pour cette merde)
+            if (button.data('popover').tip().hasClass('in')) {
+                that.loadInputHistory(button.data('input-id'), button);
+            } else {
+                // Rétablit le chargement ajax
+                button.data('popover').options.content = popoverDefaultContent;
+            }
+        });
 };
 
 AF.Input.prototype = {
@@ -247,7 +265,9 @@ AF.Input.prototype = {
 		// Définit une nouvelle URL pour le submit
 		var url = "af/input/results-preview/id/" + this.id;
 		for (var key in this.urlParams) {
-			url += '/' + key + '/' + this.urlParams[key];
+            if (this.urlParams.hasOwnProperty(key)) {
+			    url += '/' + key + '/' + this.urlParams[key];
+            }
 		}
 		this.form.prop("action", url);
 		// Définit le handler de retour à utiliser
@@ -301,7 +321,9 @@ AF.Input.prototype = {
 
 		var url = "af/input/get-sub-af/id/" + idAFOwner + "/refComponent/" + refComponent + "/number/" + number;
 		for (var key in this.urlParams) {
-			url += '/' + key + '/' + this.urlParams[key];
+            if (this.urlParams.hasOwnProperty(key)) {
+                url += '/' + key + '/' + this.urlParams[key];
+            }
 		}
 
 		$.get(url,
@@ -335,16 +357,33 @@ AF.Input.prototype = {
 		}).remove();
 	},
 
-	/**
-	 * Ajoute un handler à l'évènement "change" de la saisie
-	 * Ne supprime pas les handlers précédents
-	 * @param {Function} handler Callback
-	 */
-	onChange: function(handler) {
-		// Pour tous les input du formulaire (utilise "on()" pour des raisons de performances)
-		this.form.on("change keyup", ":input", handler);
-		this.form.on("click", ".addSubAF", handler);
-		this.form.on("click", ".removeSubAF", handler);
-	}
+    /**
+     * Ajoute un handler à l'évènement "change" de la saisie
+     * Ne supprime pas les handlers précédents
+     * @param {Function} handler Callback
+     */
+    onChange: function(handler) {
+        // Pour tous les input du formulaire (utilise "on()" pour des raisons de performances)
+        this.form.on("change keyup", ":input", handler);
+        this.form.on("click", ".addSubAF", handler);
+        this.form.on("click", ".removeSubAF", handler);
+    },
+
+    /**
+     * Charge l'historique des valeurs d'une saisie
+     * @param inputId {int}
+     * @param button
+     */
+    loadInputHistory: function(inputId, button) {
+        $.get("af/input/input-history/id/" + this.id + "/idInputSet/" + this.idInputSet + "/idInput/" + inputId,
+            function (html) {
+                // Si visible (merci Bootstrap pour cette merde)
+                if (button.data('popover').tip().hasClass('in')) {
+                    button.data('popover').options.content = html;
+                    button.popover('show');
+                }
+            }
+        );
+    }
 
 };

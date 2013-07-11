@@ -8,6 +8,9 @@
  * @subpackage Model
  */
 
+use Unit\IncompatibleUnitsException;
+use Unit\UnitAPI;
+
 /**
  * Permet de gérer un indicateur.
  *
@@ -51,14 +54,14 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Unité dans laquelle est l'indicateur.
      *
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $unit;
 
     /**
      * Unité utilisé pour les ratios.
      *
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $ratioUnit;
 
@@ -160,14 +163,14 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Modifie l'unit de l'indicateur.
      *
-     * @param Unit_API $unit
-     * @throws Unit_Exception_IncompatibleUnits
+     * @param UnitAPI $unit
+     * @throws IncompatibleUnitsException
      */
-    public function setUnit(Unit_API $unit)
+    public function setUnit(UnitAPI $unit)
     {
         if ($this->ratioUnit != null) {
             if (!$this->getRatioUnit()->isEquivalent($unit)) {
-                throw new Unit_Exception_IncompatibleUnits('Unit ant RatioUnit should be equivalent.');
+                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
             }
         }
 
@@ -177,24 +180,24 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Retourne l'unit de l'indicateur.
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnit()
     {
-        return new Unit_API($this->unit);
+        return new UnitAPI($this->unit);
     }
 
     /**
      * Modifie l'unité de ratio de l'indicateur.
      *
-     * @param Unit_API $ratioUnit
-     * @throws Unit_Exception_IncompatibleUnits
+     * @param UnitAPI $ratioUnit
+     * @throws IncompatibleUnitsException
      */
-    public function setRatioUnit(Unit_API $ratioUnit)
+    public function setRatioUnit(UnitAPI $ratioUnit)
     {
         if ($this->unit != null) {
             if (!$this->getUnit()->isEquivalent($ratioUnit)) {
-                throw new Unit_Exception_IncompatibleUnits('Unit ant RatioUnit should be equivalent.');
+                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
             }
         }
 
@@ -204,11 +207,11 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Retourne l'unité de ratio de l'indicateur
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getRatioUnit()
     {
-        return new Unit_API($this->ratioUnit);
+        return new UnitAPI($this->ratioUnit);
     }
 
     /**

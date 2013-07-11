@@ -4,6 +4,8 @@
  * @package Techno
  */
 
+$locale = Core_Locale::loadDefault();
+
 /** @var $element Techno_Model_Element_Coeff|Techno_Model_Element_Process */
 $element = $this->element;
 
@@ -15,7 +17,7 @@ if ($element instanceof Techno_Model_Element_Process) {
 ?>
 
 <script type="text/javascript">
-    $('#element_edit').children('div.modal-header').children('h3').html('<?=$title?>');
+    $('#element_edit').children('div.modal-header').children('h3').html(<?=json_encode($title)?>);
 </script>
 
 <?php
@@ -32,13 +34,13 @@ $editForm->addElement($unitField);
 // Valeur
 $digitalValueField = new UI_Form_Element_Text('digitalValue');
 $digitalValueField->setLabel(__('UI', 'name', 'value'));
-$digitalValueField->setValue($element->getValue()->getDigitalValue());
+$digitalValueField->setValue($locale->formatNumberForInput($element->getValue()->getDigitalValue()));
 $editForm->addElement($digitalValueField);
 
 // Incertitude
 $uncertaintyField = new UI_Form_Element_Text('uncertainty');
 $uncertaintyField->setLabel(__('UI', 'name', 'uncertainty'));
-$uncertaintyField->setValue($element->getValue()->getRelativeUncertainty());
+$uncertaintyField->setValue($locale->formatNumberForInput($element->getValue()->getRelativeUncertainty()));
 $editForm->addElement($uncertaintyField);
 
 // Documentation

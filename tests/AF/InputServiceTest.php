@@ -3,6 +3,7 @@
  * @author  matthieu.napoli
  * @package AF
  */
+use Unit\UnitAPI;
 
 /**
  * @package AF
@@ -81,7 +82,7 @@ class InputServiceTest extends Core_Test_TestCase
         $this->comp1 = new AF_Model_Component_Numeric();
         $this->comp1->setAf($this->af);
         $this->comp1->setRef('comp1');
-        $this->comp1->setUnit(new Unit_API('m'));
+        $this->comp1->setUnit(new UnitAPI('m'));
         $this->af->addComponent($this->comp1);
         $this->af->getRootGroup()->addSubComponent($this->comp1);
 
@@ -94,7 +95,7 @@ class InputServiceTest extends Core_Test_TestCase
         $this->comp3 = new AF_Model_Component_Numeric();
         $this->comp3->setAf($this->af);
         $this->comp3->setRef('comp3');
-        $this->comp3->setUnit(new Unit_API('m'));
+        $this->comp3->setUnit(new UnitAPI('m'));
         $this->af->addComponent($this->comp3);
         $this->af->getRootGroup()->addSubComponent($this->comp3);
 
