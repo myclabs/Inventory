@@ -48,7 +48,7 @@ class AF_Model_Input_SubAF_Repeated extends AF_Model_Input_SubAF
      */
     public function addSubSet(AF_Model_InputSet_Sub $subSet)
     {
-        if ($this->value->contains($subSet)) {
+        if (!$this->value->contains($subSet)) {
             $this->value->add($subSet);
         }
     }
