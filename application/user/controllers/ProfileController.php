@@ -105,7 +105,7 @@ class User_ProfileController extends Core_Controller_Ajax
         $entityManagers['default']->flush();
 
         $config = Zend_Registry::get('configuration');
-        if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
+        if (empty($config->emails->contact->adress)) {
             throw new Core_Exception_NotFound("Le courriel de 'contact' n'a pas été défini.");
         }
         if ($user->getId() != $connectedUser->getId()) {
@@ -243,7 +243,7 @@ class User_ProfileController extends Core_Controller_Ajax
 
                 $subject = __('User', 'email', 'subjectEmailModified');
                 $config = Zend_Registry::get('configuration');
-                if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
+                if (empty($config->emails->contact->adress)) {
                     throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini.');
                 }
                 if ($user === $this->_helper->auth()) {
