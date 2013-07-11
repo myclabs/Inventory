@@ -107,8 +107,7 @@ Feature: Organization granularity feature
     When I click "Supprimer" in the row 8 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    And I wait 15 seconds
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé pour la configuration générale de l'organisation (statut des inventaires, sélection des formulaires comptables, saisies)."
+    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
     And the "granularity" datagrid should contain 8 row
   # Suppression, granularité de choix des formulaires comptables
     And the row 5 of the "granularity" datagrid should contain:
@@ -117,7 +116,7 @@ Feature: Organization granularity feature
     When I click "Supprimer" in the row 5 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé pour la configuration générale de l'organisation (statut des inventaires, sélection des formulaires comptables, saisies)."
+    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
     And the "granularity" datagrid should contain 8 row
   # Suppression, granularité du statut des inventaires
     And the row 6 of the "granularity" datagrid should contain:
@@ -126,7 +125,7 @@ Feature: Organization granularity feature
     When I click "Supprimer" in the row 6 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé pour la configuration générale de l'organisation (statut des inventaires, sélection des formulaires comptables, saisies)."
+    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
     And the "granularity" datagrid should contain 8 row
   # Suppression sans obstacle
     And the row 4 of the "granularity" datagrid should contain:
