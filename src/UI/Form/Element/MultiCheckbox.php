@@ -11,7 +11,8 @@
  * @package UI
  * @subpackage Form
  */
-class UI_Form_Element_MultiCheckbox extends Zend_Form_Element_MultiCheckbox implements UI_Form_Element_Multi
+class UI_Form_Element_MultiCheckbox extends Zend_Form_Element_MultiCheckbox
+    implements UI_Form_Element_Multi, UI_Form_ZendElement
 {
     /**
      * Reference to a UI_Form_Element, to access to its methods.
