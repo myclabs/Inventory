@@ -20,6 +20,9 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
      */
     public function render($content)
     {
+        $occurrenceSeparator = '__';
+        $occurrence = 0;
+
         // Tags.
         $headerRowOptions = array(
             'tag' => 'tr',
@@ -31,6 +34,7 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         );
         $elementsRowOptions = array(
             'tag' => 'tr',
+            'id'  => $this->getElement()->getId().$occurrenceSeparator.$occurrence,
         );
         $htmlElementsRowTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlElementsRowTagDecorator->setOptions($elementsRowOptions);
@@ -41,9 +45,6 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $htmlElementTagDecorator->setOptions($elementOptions);
         $deleteButton = new UI_HTML_Button(__('UI', 'verb', 'delete'));
         $deleteButton->addAttribute('class', 'deleteRow');
-
-        $occurrenceSeparator = '__';
-        $occurrence = 0;
 
 
         // Header.
