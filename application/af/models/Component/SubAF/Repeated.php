@@ -97,15 +97,13 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
         // Récupère les sous-inputSets correspondant à ce sous-af
         if ($input) {
             $subInputSets = $input->getValue();
-            $number = 0;
             foreach ($subInputSets as $subInputSet) {
-                $uiElement->addLineValue($this->getSingleSubAFUIElement($generationHelper, $number, $subInputSet));
-                $number++;
+                $uiElement->addLineValue($this->getSingleSubAFUIElement($generationHelper, $subInputSet));
             }
         } else {
             if ($this->minInputNumber !== self::MININPUTNUMBER_0) {
                 // Ajoute un seul exemplaire du formulaire par défaut
-                $uiElement->addLineValue($this->getSingleSubAFUIElement($generationHelper, 0, null));
+                $uiElement->addLineValue($this->getSingleSubAFUIElement($generationHelper, null));
             }
         }
         // Actions
@@ -120,11 +118,10 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
     /**
      * Génère un groupe contenant un seul sous-AF
      * @param AF_GenerationHelper        $generationHelper
-     * @param int                        $number
      * @param AF_Model_InputSet_Sub|null $inputSet
      * @return UI_Form_Element_Group
      */
-    public function getSingleSubAFUIElement(AF_GenerationHelper $generationHelper, $number,
+    private function getSingleSubAFUIElement(AF_GenerationHelper $generationHelper,
                                             AF_Model_InputSet_Sub $inputSet = null
     ) {
         // On crée un groupe qui contient un sous-formulaire

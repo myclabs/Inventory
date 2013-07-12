@@ -214,23 +214,6 @@ class AF_InputController extends Core_Controller
     }
 
     /**
-     * Retourne un sous-af (pour ajouter un nouveau sous-af répété)
-     * AJAX
-     * @Secure("editInputAF")
-     */
-    public function getSubAfAction()
-    {
-        /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->getParam('id'));
-        /** @var $component AF_Model_Component_SubAF_Repeated */
-        $component = AF_Model_Component_SubAF_Repeated::loadByRef($this->getParam('refComponent'), $af);
-        $generationHelper = new AF_GenerationHelper();
-        $uiElement = $component->getSingleSubAFUIElement($generationHelper, $this->getParam('number'), null);
-        $html = $uiElement->render() . "<script>" . $uiElement->getScript() . "</script>";
-        $this->sendJsonResponse($html);
-    }
-
-    /**
      * Retourne l'historique des valeurs d'une saisie
      * AJAX
      * @Secure("editInputAF")
