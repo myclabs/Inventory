@@ -9,6 +9,7 @@
 
 namespace Unit;
 
+use Core_Exception;
 use Core_Model_Query;
 use Unit\IncompatibleUnitsException;
 use Unit\Domain\Unit\StandardUnit;
