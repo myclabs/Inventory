@@ -17,7 +17,7 @@ Feature: AF tree edit feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout d'une catégorie, libellé non vide, située dans une autre catégorie
-  # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.
+  # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.
 
   @javascript
   Scenario: Edition of an AF category
@@ -67,7 +67,7 @@ Feature: AF tree edit feature
   Scenario:  Deletion of an AF category
     Given I am on "af/af/tree"
     And I wait 7 seconds
-  # Catégorie vide
+  # Catégorie vide
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
     When I click "Supprimer"
@@ -75,7 +75,7 @@ Feature: AF tree edit feature
     And I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And I should not see "Catégorie vide"
-  # Catégorie contenant une sous-catégorie
+  # Catégorie contenant une sous-catégorie
     When I click "Catégorie contenant une sous-catégorie"
     Then I should see the popup "Édition d'une catégorie"
     When I click "Supprimer"
@@ -84,7 +84,7 @@ Feature: AF tree edit feature
     Then the following message is shown and closed: "Suppression effectuée."
     # And I should see "Catégorie contenant une sous-catégorie"
   # TODO : interdire la suppression d'une catégorie contenant une autre catégorie
-  # Catégorie contenant un formulaire
+  # Catégorie contenant un formulaire
     When I click "Catégorie contenant un formulaire"
     Then I should see the popup "Édition d'une catégorie"
     When I click "Supprimer"

@@ -88,7 +88,7 @@ Feature: Organization granularity feature
     Then the row 4 of the "granularity" datagrid should contain:
       | axes  | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
       | Année | Navigable  | Oui     | Oui | Oui   | Oui | Oui            | Oui            | Oui            |
-    # TODO : restreindre la modification "inverse" des attributs : interdire de passer l'attribut "acl" à "false" si des rôles ont été créés.
+    # TODO : restreindre la modification "inverse" des attributs : interdire de passer l'attribut "acl" à "false" si des rôles ont été créés.
 
 
   @javascript
