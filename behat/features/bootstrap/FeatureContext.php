@@ -196,6 +196,7 @@ class FeatureContext extends MinkContext
 
         $node->click();
 
+        $this->wait(0.1);
         $this->waitForPageToFinishLoading();
     }
 
