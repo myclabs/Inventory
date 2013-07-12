@@ -144,7 +144,5 @@ Feature: Organization granularity feature
     When I click "Supprimer" in the row 2 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    #Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé pour la configuration générale de l'organisation (statut des inventaires, sélection des formulaires comptables, saisies)."
-    #And the "granularity" datagrid should contain 8 row
     Then the following message is shown and closed: "Suppression effectuée."
     And the "granularity" datagrid should contain 6 row

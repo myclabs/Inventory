@@ -162,7 +162,7 @@ class User_ActionController extends UI_Controller_Captcha
                     . $user->getEmailKey();
                 $subject = __('User', 'email', 'subjectForgottenPassword');
                 $config = Zend_Registry::get('configuration');
-                if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
+                if (empty($config->emails->contact->adress)) {
                     throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
                 }
                 $content = __('User',
@@ -203,8 +203,8 @@ class User_ActionController extends UI_Controller_Captcha
         }
 
         $config = Zend_Registry::get('configuration');
-        if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
-            throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été définit !');
+        if (empty($config->emails->contact->adress)) {
+            throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
         }
 
         $user->eraseEmailKey();
@@ -220,7 +220,7 @@ class User_ActionController extends UI_Controller_Captcha
                       array(
                            'PASSWORD'         => $password,
                            'APPLICATION_NAME' => $config->emails->noreply->name,
-                           'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl(),
+                           'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl() . '/',
                       ));
         $this->userService->sendEmail($user, $subject, $content);
     }
