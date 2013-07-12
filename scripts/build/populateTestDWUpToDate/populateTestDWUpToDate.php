@@ -3,14 +3,13 @@
  * @package Inventory
  */
 
-require_once __DIR__ . '/../populate/Unit/populate.php';
-require_once __DIR__ . '/Classif/populateTest.php';
-require_once __DIR__ . '/Orga/populateTest.php';
+require_once __DIR__ . '/Classif/populateTestDWUpToDate.php';
+require_once __DIR__ . '/Orga/populateTestDWUpToDate.php';
 
 /**
  * @package Inventory
  */
-class Inventory_PopulateTest extends Core_Script_Populate
+class Inventory_PopulateTestDWUpToDate extends Core_Script_Populate
 {
 
     /**

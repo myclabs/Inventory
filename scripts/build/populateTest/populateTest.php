@@ -3,7 +3,6 @@
  * @package Inventory
  */
 
-require_once __DIR__ . '/../populate/Unit/populate.php';
 require_once __DIR__ . '/Classif/populateTest.php';
 require_once __DIR__ . '/Keyword/populateTest.php';
 require_once __DIR__ . '/Techno/populateTest.php';
@@ -50,6 +49,7 @@ class Inventory_PopulateTest extends Core_Script_Populate
         // Orga.
         $populateOrga = new Orga_PopulateTest();
         $populateOrga->runEnvironment($environment);
+
 
         $this->close($environment);
     }
