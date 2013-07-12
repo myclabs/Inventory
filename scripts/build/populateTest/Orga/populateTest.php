@@ -51,6 +51,7 @@ class Orga_PopulateTest extends Core_Script_Action
         // Création des granularités.
         // Params : Organization, axes[Axis], navigable
         // OptionalParams : orgaTab=false, aCL=true, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
+        $granularityGlobal = $this->createGranularity($organization_vide, [],                                                        true,  true,  true,  true,   true,  false, false, false);
         $granularityGlobal = $this->createGranularity($organization, [],                                                        true,  true,  true,  true,   true,  false, false, false);
         $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  true,  true,  false,  true,  false, false, false);
         $granularity_site = $this->createGranularity($organization, [$axis_site],                                               true,  false, true,  false,  true,  false, false, true );
@@ -85,6 +86,7 @@ class Orga_PopulateTest extends Core_Script_Action
         // Ajout d'un role sun une organisation à un utilisateur existant.
         // Params : email, Organization
         $this->addOrganizationAdministrator('admin', $organization);
+        $this->addOrganizationAdministrator('admin', $organization_vide);
         $this->addOrganizationAdministrator('administrateur.organisation@toto.com', $organization);
         // Ajout d'un role sur une cellule à un utilisateur existant.
         // Params : email, Granularity, [Member]
@@ -193,7 +195,12 @@ class Orga_PopulateTest extends Core_Script_Action
     protected function addOrganizationAdministrator($email, Orga_Model_Organization $organization)
     {
         $user = User_Model_User::loadByEmail($email);
-        Orga_Service_ACLManager::getInstance()->addOrganizationAdministrator($organization, $user);
+        $user->addRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
+
+        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
+        $user->addRole(
+            User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
+        );
     }
 
     /**

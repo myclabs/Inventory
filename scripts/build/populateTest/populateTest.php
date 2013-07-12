@@ -60,6 +60,8 @@ class Inventory_PopulateTest extends Core_Script_Populate
      */
     protected function init($environment)
     {
+        $container = Zend_Registry::get('container');
+
         // Ajout du listener des ACL.
         if (! Zend_Registry::isRegistered('EntityManagers')) {
             return;
@@ -71,18 +73,18 @@ class Inventory_PopulateTest extends Core_Script_Populate
             Doctrine\ORM\Events::onFlush,
             Doctrine\ORM\Events::postFlush,
         ];
-        $entityManager->getEventManager()->addEventListener($events, Orga_Service_ACLManager::getInstance());
+        $entityManager->getEventManager()->addEventListener($events, $container->get('Orga_Service_ACLManager'));
 
         // Ajout de treeTraverser.
         /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
-        $cellResourceTreeTraverser = Orga_Service_ACLManager::getInstance();
+        $cellResourceTreeTraverser = $container->get('Orga_Service_ACLManager');
         /** @var $aclService User_Service_ACL */
-        $aclService = User_Service_ACL::getInstance();
+        $aclService = $container->get('User_Service_ACL');
         $aclService->setResourceTreeTraverser("Orga_Model_Cell", $cellResourceTreeTraverser);
 
         // Désactivation du filtre des ACL.
         /** @var $aclFilterService User_Service_ACLFilter */
-        $aclFilterService = User_Service_ACLFilter::getInstance();
+        $aclFilterService = $container->get('User_Service_ACLFilter');
         $aclFilterService->enabled = false;
 
         // Filtre des ACL
@@ -99,9 +101,11 @@ class Inventory_PopulateTest extends Core_Script_Populate
      */
     protected function close($environment)
     {
+        $container = Zend_Registry::get('container');
+
         // Résactivation du filtre des ACL.
         /** @var $aclFilterService User_Service_ACLFilter */
-        $aclFilterService = User_Service_ACLFilter::getInstance();
+        $aclFilterService = $container->get('User_Service_ACLFilter');
         $aclFilterService->enabled = true;
         $aclFilterService->generate();
 

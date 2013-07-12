@@ -33,16 +33,20 @@ class Orga_ReferentialController extends Core_Controller
      */
     public function exportsAction()
     {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
         // Formats d'exports.
-        $this->view->defaultFormat = 'xls';
+        $this->view->defaultFormat = 'xlsx';
         $this->view->formats = [
-            'xls' => 'XLS',
-//            'ods' => 'ODS',
+            'xlsx' => __('Orga', 'exports', 'xlsx'),
+            'xls' => __('Orga', 'exports', 'xls'),
         ];
 
         // Liste des exports.
         $this->view->exports = [];
 
+        // AF.
         $this->view->exports['AF'] = [
             'label' => __('AF', 'name', 'accountingForms'),
             'versions' => [
@@ -50,6 +54,7 @@ class Orga_ReferentialController extends Core_Controller
             ]
         ];
 
+        // Classif.
         $this->view->exports['Classif'] = [
             'label' => __('Classif', 'classification', 'classification'),
             'versions' => [
@@ -57,6 +62,7 @@ class Orga_ReferentialController extends Core_Controller
             ]
         ];
 
+        // Techno.
         $this->view->exports['Techno'] = [
             'label' => __('Techno', 'name', 'parameters'),
             'versions' => [
@@ -64,6 +70,7 @@ class Orga_ReferentialController extends Core_Controller
             ]
         ];
 
+        // Keyword.
         $this->view->exports['Keyword'] = [
             'label' => __('Keyword', 'menu', 'semanticResources'),
             'versions' => [
@@ -71,9 +78,24 @@ class Orga_ReferentialController extends Core_Controller
             ]
         ];
 
+        // Unit.
         $this->view->exports['Unit'] = [
             'label' => __('Unit', 'name', 'units'),
         ];
+
+        // Orga
+        $this->view->exports['Orga'] = [
+            'label' => __('Orga', 'name', 'organization'),
+            'versions' => []
+        ];
+        $aclQuery = new Core_Model_Query();
+        $aclQuery->aclFilter->enabled = true;
+        $aclQuery->aclFilter->user = $connectedUser;
+        $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+        foreach (Orga_Model_Organization::loadList($aclQuery) as $organization) {
+            $this->view->exports['Orga']['version'][$organization->getId()] = $organization->getLabel();
+        }
+
     }
 
     /**
@@ -81,7 +103,28 @@ class Orga_ReferentialController extends Core_Controller
      */
     public function exportAction()
     {
-        $filename = 'test.xls';
+        $export = $this->getParam('export');
+        $format = $this->getParam('format');
+        if ($this->hasParam('version')) {
+            $version = $this->getParam('version');
+        }
+
+        switch ($export) {
+            case 'Classif':
+                $exportService = new Classif_Service_Classif();
+                $baseFilename = 'Classif';
+                break;
+            //@todo A supprimer. Utile pour les tests.
+            default:
+                $exportService = new Classif_Service_Classif();
+                $baseFilename = 'Classif';
+                break;
+        }
+
+        $date = date(str_replace('&nbsp;', '', __('Orga', 'export', 'dateFormat')));
+        //@todo A supprimer. Pour éviter les erreurs de génération en attendant la traduction.
+        $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
+        $filename = $date.'_'.$baseFilename.'.'.$format;
 
         $contentType = "Content-type: application/vnd.ms-excel";
 //        $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -89,12 +132,10 @@ class Orga_ReferentialController extends Core_Controller
         header('Content-Disposition:attachement;filename='.$filename);
         header('Cache-Control: max-age=0');
 
-        // Affichage, proposition de télécharger sous le nom donné.
         Zend_Layout::getMvcInstance()->disableLayout();
         Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
 
-        $classifService = new Classif_Service_Classif();
-        $classifService->export('xls');
+        $exportService->streamExport($format);
     }
 
 }

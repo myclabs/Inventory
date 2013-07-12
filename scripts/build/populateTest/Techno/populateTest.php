@@ -185,10 +185,7 @@ class Techno_PopulateTest extends Core_Script_Action
         $element->setBaseUnit($family->getBaseUnit());
         $element->setUnit($family->getUnit());
 
-        $calcValue = new Calc_Value();
-        $calcValue->digitalValue = $value;
-        $calcValue->relativeUncertainty = $uncertainty;
-        $element->setValue($calcValue);
+        $element->setValue(new Calc_Value($value, $uncertainty));
 
         $element->save();
         $cell->setChosenElement($element);

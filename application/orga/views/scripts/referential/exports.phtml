@@ -5,23 +5,31 @@
  * @package Orga
  */
 
-foreach ($this->exports as $exportArray) { ?>
+foreach ($this->exports as $exportRef => $exportArray) { ?>
 <fieldset class="wrapper">
     <legend style="cursor:default"><?=$exportArray['label']?></legend>
     <div>
         <form class="form-inline" action="orga/referential/export">
             <div class="input-prepend input-append">
-                <span class="add-on">
+                <span class="add-on format">
                     <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
                 </span>
+                <input name="export" type="hidden" value="<?=$exportRef?>">
                 <?php if (count($this->formats) > 1) { ?>
-                <select name="format" >
+                <select name="format" class="input-small format">
                     <?php foreach($this->formats as $formatRef => $formatLabel) { ?>
                         <option value="<?=$formatRef?>"><?=$formatLabel?></option>
                     <?php } ?>
                 </select>
+                <?php } else { ?>
+                <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
                 <?php } ?>
                 <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 1)) { ?>
+                    <?php if (count($this->formats) > 1) { ?>
+                        <span class="add-on">
+                            -
+                        </span>
+                    <?php } ?>
                     <select name="version" >
                         <?php foreach($exportArray['version'] as $versionRef => $versionLabel) { ?>
                             <option value="<?=$versionRef?>"><?=$versionLabel?></option>
@@ -35,3 +43,14 @@ foreach ($this->exports as $exportArray) { ?>
 </fieldset>
 <?php
 }
+?>
+<script type="text/javascript">
+    $('.format').on(
+        'change',
+        function() {
+            var imgAddOn = $(this).parent().children('span.format').children('img');
+            imgAddOn.attr('alt', $(this).val());
+            imgAddOn.attr('src', 'images/dw/'+$(this).val()+'.png');
+        }
+    );
+</script>
