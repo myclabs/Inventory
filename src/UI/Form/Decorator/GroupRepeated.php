@@ -155,6 +155,7 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         // Add Button
         $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
         $addButton->addAttribute('id', $this->getElement()->getId().'_add');
+        $addButton->addAttribute('class', 'addRow');
         $content .= $addButton->render();
 
         $addScript = '';
