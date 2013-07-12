@@ -20,7 +20,7 @@ interface UI_Form_Element_Multi
      *
      * @param UI_Form_Element_Option $option
      *
-     * @throws Core_Exception_Systeme if the option is unvalid
+     * @throws Core_Exception if the option is unvalid
      */
     public function addOption(UI_Form_Element_Option $option);
 
@@ -44,10 +44,10 @@ interface UI_Form_Element_Multi
     /**
      * Set a default option of a Multi Element.
      *
-     * @param unknow_var $value
-     * @see Zend/Form/Zend_Form_Element::setValue()
+     * @param mixed $value
+     * @see Zend_Form_Element::setValue()
      *
-     * @throws Core_Exception_Systeme if the value is not valid or if the option to set  is unactivated.
+     * @throws Core_Exception if the value is not valid or if the option to set  is unactivated.
      * */
     public function setValue($value);
 

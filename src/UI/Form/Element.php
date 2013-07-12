@@ -18,7 +18,7 @@ class UI_Form_Element
     /**
      * Element de Zend_Form correspondant.
      *
-     * @var Zend_Form_Element
+     * @var Zend_Form_Element|UI_Form_ZendElement
      */
     protected $_zendFormElement = null;
 
@@ -60,7 +60,7 @@ class UI_Form_Element
     /**
      * List of children elements
      *
-     * @var Zend_Form_Element[]
+     * @var UI_Form_ZendElement[]
      */
     public $children = array();
 
@@ -123,6 +123,12 @@ class UI_Form_Element
         // Groupe
         foreach ($this->children as $child) {
             $child->getElement()->prefixRef($prefix, $separator);
+        }
+        // Groupe répété
+        if ($this->_zendFormElement instanceof UI_Form_Element_GroupRepeated) {
+            foreach ($this->_zendFormElement->getLineValues() as $group) {
+                $group->getElement()->prefixRef($prefix);
+            }
         }
     }
 
@@ -437,5 +443,13 @@ class UI_Form_Element
         }
 
         return $script;
+    }
+
+    /**
+     * @return UI_Form_ZendElement[]
+     */
+    public function getChildrenElements()
+    {
+        return $this->children;
     }
 }

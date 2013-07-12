@@ -191,4 +191,12 @@ class Calc_UnitValue
         return new static(new UnitAPI($unitRef), $value->getDigitalValue(), $value->getRelativeUncertainty());
     }
 
+    /**
+     * For debug purposes only
+     * @return string
+     */
+    public function __toString()
+    {
+        return "$this->value $this->unit";
+    }
 }

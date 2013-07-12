@@ -54,17 +54,17 @@ class AF_GenerationHelper
     }
 
     /**
-     * @param AF_Model_Component $component
-     * @param Zend_Form_Element  $uiElement
+     * @param AF_Model_Component  $component
+     * @param UI_Form_ZendElement $uiElement
      */
-    public function setUIElement(AF_Model_Component $component, Zend_Form_Element $uiElement)
+    public function setUIElement(AF_Model_Component $component, UI_Form_ZendElement $uiElement)
     {
         $this->uiElements[$component->getId()] = $uiElement;
     }
 
     /**
      * @param AF_Model_Component $component
-     * @return Zend_Form_Element
+     * @return UI_Form_ZendElement
      */
     public function getUIElement(AF_Model_Component $component)
     {

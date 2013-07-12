@@ -20,6 +20,9 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
      */
     public function render($content)
     {
+        $occurrenceSeparator = '__';
+        $occurrence = 0;
+
         // Tags.
         $headerRowOptions = array(
             'tag' => 'tr',
@@ -31,6 +34,7 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         );
         $elementsRowOptions = array(
             'tag' => 'tr',
+            'id'  => $this->getElement()->getId().$occurrenceSeparator.$occurrence,
         );
         $htmlElementsRowTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlElementsRowTagDecorator->setOptions($elementsRowOptions);
@@ -39,11 +43,8 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         );
         $htmlElementTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlElementTagDecorator->setOptions($elementOptions);
-        $deleteButton = new UI_HTML_Button(__('UI', 'name', 'delete'));
+        $deleteButton = new UI_HTML_Button(__('UI', 'verb', 'delete'));
         $deleteButton->addAttribute('class', 'deleteRow');
-
-        $occurrenceSeparator = '__';
-        $occurrence = 0;
 
 
         // Header.
@@ -152,8 +153,9 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $content = $htmlTagDecorator->render($headerRow.$elementsRow);
 
         // Add Button
-        $addButton = new UI_HTML_Button(__('UI', 'name', 'add'));
+        $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
         $addButton->addAttribute('id', $this->getElement()->getId().'_add');
+        $addButton->addAttribute('class', 'addRow');
         $content .= $addButton->render();
 
         $addScript = '';

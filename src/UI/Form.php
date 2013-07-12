@@ -128,7 +128,7 @@ class UI_Form extends Zend_Form
     }
 
     /**
-     * @param UI_Form_Element $element
+     * @param UI_Form_ZendElement $element
      * @param string $name
      * @param array|Zend_Config $options
      * @see Zend_Form::addElement()
