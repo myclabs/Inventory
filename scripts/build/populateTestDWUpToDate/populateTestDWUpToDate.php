@@ -28,11 +28,11 @@ class Inventory_PopulateTestDWUpToDate extends Core_Script_Populate
 
 
         // Classif.
-        $populateClassif = new Classif_PopulateTest();
+        $populateClassif = new Classif_PopulateTestDWUpToDate();
         $populateClassif->runEnvironment($environment);
 
         // Orga.
-        $populateOrga = new Orga_PopulateTest();
+        $populateOrga = new Orga_PopulateTestDWUpToDate();
         $populateOrga->runEnvironment($environment);
 
         $this->close($environment);

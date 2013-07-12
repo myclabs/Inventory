@@ -67,6 +67,7 @@ class Orga_PopulateTest extends Orga_Populate
 
         // Granularités de saisie
         $granularity_annee_site_categorie->setInputConfigGranularity($granularity_annee_categorie);
+        $granularity_annee_site->setInputConfigGranularity($granularity_annee);
 
         // Création des utilisateurs orga.
         // Params : email
