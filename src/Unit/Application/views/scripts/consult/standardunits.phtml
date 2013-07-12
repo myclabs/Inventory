@@ -6,39 +6,39 @@
  * @subpackage View
  */
 
+use Unit\Domain\Unit\StandardUnit;
 ?>
-    use Unit\Domain\Unit_Model_Unit_Standard;
 
     <div class="page-header">
 	<h1><?=__('Unit', 'name', 'standardUnits')?></h1>
 </div>
 <?
 
-    $datagrid = new UI_Datagrid ('ListStandardUnits', 'datagrids_standardunits', 'unit');
+$datagrid = new UI_Datagrid ('ListStandardUnits', 'datagrids_standardunits', 'unit');
 
-    $nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));
-    $nameColumn->filterName = Unit_Model_Unit_Standard::QUERY_NAME;
-    $datagrid->addCol($nameColumn);
+$nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));
+$nameColumn->filterName = StandardUnit::QUERY_NAME;
+$datagrid->addCol($nameColumn);
 
-    $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
-    $datagrid->addCol($refColumn);
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$datagrid->addCol($refColumn);
 
-    $symbolColumn = new UI_Datagrid_Col_Text('symbol', __('Unit', 'name', 'symbol'));
-    $symbolColumn->filterName = Unit_Model_Unit_Standard::QUERY_SYMBOL;
-    $datagrid->addCol($symbolColumn);
+$symbolColumn = new UI_Datagrid_Col_Text('symbol', __('Unit', 'name', 'symbol'));
+$symbolColumn->filterName = StandardUnit::QUERY_SYMBOL;
+$datagrid->addCol($symbolColumn);
 
-    $physicalQuantityColumn = new UI_Datagrid_Col_List('physicalQuantity', __('Unit', 'name', 'physicalQuantity'));
-    $physicalQuantityColumn->list = $this->listPhysicalQuantities;
-    $physicalQuantityColumn->filterName = Unit_Model_Unit_Standard::QUERY_PHYSICALQUANTITY;
-    $datagrid->addCol($physicalQuantityColumn);
+$physicalQuantityColumn = new UI_Datagrid_Col_List('physicalQuantity', __('Unit', 'name', 'physicalQuantity'));
+$physicalQuantityColumn->list = $this->listPhysicalQuantities;
+$physicalQuantityColumn->filterName = StandardUnit::QUERY_PHYSICALQUANTITY;
+$datagrid->addCol($physicalQuantityColumn);
 
-    $multiplierColumn = new UI_Datagrid_Col_Number('multiplier', __('Unit', 'name', 'multiplier'));
-    $datagrid->addCol($multiplierColumn);
+$multiplierColumn = new UI_Datagrid_Col_Number('multiplier', __('Unit', 'name', 'multiplier'));
+$datagrid->addCol($multiplierColumn);
 
-    $unitSystemColumn = new UI_Datagrid_Col_List('unitSystem', __('Unit', 'name', 'unitSystem'));
-    $unitSystemColumn->filterName = Unit_Model_Unit_Standard::QUERY_UNITSYSTEM;
-    $unitSystemColumn->list = $this->listUnitSystems;
-    $datagrid->addCol($unitSystemColumn);
+$unitSystemColumn = new UI_Datagrid_Col_List('unitSystem', __('Unit', 'name', 'unitSystem'));
+$unitSystemColumn->filterName = StandardUnit::QUERY_UNITSYSTEM;
+$unitSystemColumn->list = $this->listUnitSystems;
+$datagrid->addCol($unitSystemColumn);
 
-    $datagrid->pagination = false;
-    $datagrid->display();
+$datagrid->pagination = false;
+$datagrid->display();
