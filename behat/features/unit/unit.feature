@@ -102,6 +102,5 @@ Feature: Unit feature
       | nœud |
   # Lien "Réinitialiser"
     When I open collapse "Filtres"
-    And I wait 2 seconds
     And I click "Réinitialiser"
     Then I should see "pourcent"
