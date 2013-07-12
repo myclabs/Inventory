@@ -43,14 +43,13 @@ class Inventory_PopulateTest extends Core_Script_Populate
         $populateTechno = new Techno_PopulateTest();
         $populateTechno->runEnvironment($environment);
 
-        // Orga.
-        $populateOrga = new Orga_PopulateTest();
-        $populateOrga->runEnvironment($environment);
-
         // AF.
         $populateAF = new AF_PopulateTest();
         $populateAF->runEnvironment($environment);
 
+        // Orga.
+        $populateOrga = new Orga_PopulateTest();
+        $populateOrga->runEnvironment($environment);
 
         $this->close($environment);
     }
