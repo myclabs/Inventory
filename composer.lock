@@ -642,12 +642,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "8223c4d1fae22405355865a32bda4bfa2991d5e9"
+                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/8223c4d1fae22405355865a32bda4bfa2991d5e9",
-                "reference": "8223c4d1fae22405355865a32bda4bfa2991d5e9",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/2816aacfc9d461a54b563df9ecc6ba25e937e91f",
+                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f",
                 "shasum": ""
             },
             "require": {
@@ -677,7 +677,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-07-10 20:28:29"
+            "time": "2013-07-12 13:14:27"
         },
         {
             "name": "mnapoli/php-di-zf1",
