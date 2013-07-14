@@ -29,17 +29,14 @@ class Orga_PopulateTestDWUpToDate extends Orga_Populate
         // Création des axes.
         // Params : Organization, ref, label
         // OptionalParams : Axis parent=null
-        $axis_annee = $this->createAxis($organization, 'annee', 'Année');
         $axis_site = $this->createAxis($organization, 'site', 'Site');
         $axis_pays = $this->createAxis($organization, 'pays', 'Pays', $axis_site);
 
         // Création des membres.
         // Params : Axis, ref, label
         // OptionalParams : [Member] parents=[]
-        $member_annee_2013 = $this->createMember($axis_annee, '2013', '2013');
         $member_pays_france = $this->createMember($axis_pays, 'france', 'France');
-        $member_site_annecy = $this->createMember($axis_site, 'annecy', 'Annecy', [$member_pays_france]);
-        $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays');
+        $member_pays_italie = $this->createMember($axis_pays, 'italie', 'Italie');
 
         // Création des granularités.
         // Params : Organization, axes[Axis], navigable
