@@ -1,5 +1,5 @@
 @dbForTestDWUpToDate
-Feature: Analysis data rebuild after a change in organizational data feature
+Feature: Analysis data rebuild after a change in organizational data feature (analysis tab)
 
   Background:
     Given I am logged in
