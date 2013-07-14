@@ -85,7 +85,7 @@ class Orga_PopulateTest extends Orga_Populate
         $entityManager->flush();
 
 
-        // Ajout d'un role sun une organisation à un utilisateur existant.
+        // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         // Params : email, Organization
         $this->addOrganizationAdministrator('admin', $organization);
         $this->addOrganizationAdministrator('administrateur.organisation@toto.com', $organization);
