@@ -8,6 +8,7 @@
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
+use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
 
@@ -82,15 +83,20 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initContainer()
     {
+        // Récupère la configuration
+        $configuration = new Zend_Config($this->getOptions());
+
         $builder = new ContainerBuilder();
         $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
         // Cache basique, à remplacer
-        $builder->setDefinitionCache(new ArrayCache());
+        $diConfig = $configuration->get('di', null);
+        if ($diConfig && $diConfig->get('cache', false)) {
+            // Si cache, on utilise APC
+            $builder->setDefinitionCache(new ApcCache());
+        }
 
         $this->container = $builder->build();
 
-        // Récupère la configuration
-        $configuration = new Zend_Config($this->getOptions());
         Zend_Registry::set('configuration', $configuration);
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
         Zend_Registry::set('container', $this->container);
