@@ -15,8 +15,8 @@ Feature: Cell contributor feature
     And I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
     And the "aFGranularity2Input8" datagrid should contain 2 row
-  # Accès à l'onglet "Inventaires", édition du statut d'un inventaire
-    When I open tab "Inventaires"
+  # Accès à l'onglet "Collectes", édition du statut d'une collecte
+    When I open tab "Collectes"
     Then I should see the "inventories6" datagrid
     When I set "En cours" for column "inventoryStatus" of row 1 of the "inventories6" datagrid with a confirmation message
   # Les autres onglets de la page d'une cellule sont absents

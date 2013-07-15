@@ -6,7 +6,7 @@ Feature: Organization input tab feature
 
   @javascript
   Scenario: Filter on organization members
-  # Accès à l'onglet "Inventaires"
+  # Accès à l'onglet "Collectes"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Saisies"
     Then I should see the "aFGranularity1Input8" datagrid

@@ -118,7 +118,7 @@ Feature: Organization granularity feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
     And the "granularity" datagrid should contain 8 row
-  # Suppression, granularité du statut des inventaires
+  # Suppression, granularité du statut des collectes
     And the row 6 of the "granularity" datagrid should contain:
       | axes  |
       | Année, Zone, Marque |
