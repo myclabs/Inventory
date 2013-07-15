@@ -206,7 +206,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         );
         foreach ($listInputGranularities as $inputGranularity) {
             if ($cell->getGranularity()->isBroaderThan($inputGranularity->getInputConfigGranularity())
-                || ($cell->getGranularity()->getRef() === $inputGranularity->getRef())) {
+                || ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
                     'aFGranularityConfig'.$inputGranularity->getId(),
                     'datagrid_cell_afgranularities_config',
