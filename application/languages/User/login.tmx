@@ -28,7 +28,7 @@
                 <seg>Vous n'êtes pas connecté.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>You are not conneted.</seg>
+                <seg>You are not connected.</seg>
             </tuv>
         </tu>
         <tu tuid="forgottenPassword">

@@ -187,14 +187,22 @@
 				<seg>Reset</seg>
 			</tuv>
 		</tu>
-		<tu tuid="save">
-			<tuv xml:lang="fr">
-				<seg>Enregistrer</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Save</seg>
-			</tuv>
-		</tu>
+        <tu tuid="save">
+            <tuv xml:lang="fr">
+                <seg>Enregistrer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Save</seg>
+            </tuv>
+        </tu>
+        <tu tuid="send">
+            <tuv xml:lang="fr">
+                <seg>Envoyer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Send</seg>
+            </tuv>
+        </tu>
         <tu tuid="show">
             <tuv xml:lang="fr">
                 <seg>Afficher</seg>
