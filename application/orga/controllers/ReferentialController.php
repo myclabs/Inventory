@@ -114,10 +114,14 @@ class Orga_ReferentialController extends Core_Controller
                 $exportService = new Classif_Service_Classif();
                 $baseFilename = 'Classif';
                 break;
+            case 'Unit':
+                $exportService = new \Unit\Application\Service\UnitExport();
+                $baseFilename = 'Unit';
+                break;
             //@todo A supprimer. Utile pour les tests.
             default:
-                $exportService = new Unit_Service_Unit();
-                $baseFilename = 'Classif';
+                $exportService = new \Unit\Application\Service\UnitExport();
+                $baseFilename = 'Unit';
                 break;
         }
 
@@ -135,7 +139,7 @@ class Orga_ReferentialController extends Core_Controller
         Zend_Layout::getMvcInstance()->disableLayout();
         Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
 
-        $exportService->streamExport($format);
+        $exportService->stream($format);
     }
 
 }

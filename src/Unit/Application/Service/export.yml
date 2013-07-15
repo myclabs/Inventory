@@ -1,0 +1,85 @@
+sheets:
+
+
+  - label: "{{ physicalQuantitiesSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ physicalQuantityColumnLabel }}"
+          - label: "{{ physicalQuantityColumnRef }}"
+          - foreach: basePhysicalQuantities as basePhysicalQuantity
+            do:
+              - label: "{{ basePhysicalQuantity.name }}"
+        lines:
+          - foreach: physicalQuantities as physicalQuantity
+            do:
+              - cells:
+                  - "{{ physicalQuantity.name }}"
+                  - "{{ physicalQuantity.ref }}"
+                  - foreach: basePhysicalQuantities as basePhysicalQuantity
+                    do:
+                      - "{{ displayNormalizedExponent(physicalQuantity, basePhysicalQuantity) }}"
+
+
+  - label: "{{ standardUnitsSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ standardUnitColumnLabel }}"
+          - label: "{{ standardUnitColumnRef }}"
+          - label: "{{ standardUnitColumnSymbol }}"
+          - label: "{{ standardUnitColumnPhysicalQuantity }}"
+          - label: "{{ standardUnitColumnMultiplier }}"
+          - label: "{{ standardUnitColumnUnitSystem }}"
+        lines:
+          - foreach: standardUnits as standardUnit
+            do:
+              - cells:
+                  - "{{ standardUnit.name }}"
+                  - "{{ standardUnit.ref }}"
+                  - "{{ standardUnit.symbol }}"
+                  - "{{ standardUnit.physicalQuantity.name }}"
+                  - "{{ standardUnit.multiplier }}"
+                  - "{{ standardUnit.unitSystem.label }}"
+
+
+  - label: "{{ extendedUnitsSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ extendedUnitColumnLabel }}"
+          - label: "{{ extendedUnitColumnRef }}"
+          - label: "{{ extendedUnitColumnSymbol }}"
+          - label: "{{ extendedUnitColumnMultiplier }}"
+        lines:
+          - foreach: extendedUnits as extendedUnit
+            do:
+              - cells:
+                  - "{{ extendedUnit.name }}"
+                  - "{{ extendedUnit.ref }}"
+                  - "{{ extendedUnit.symbol }}"
+                  - "{{ extendedUnit.multiplier }}"
+
+
+  - label: "{{ discreteUnitsSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ discreteUnitColumnLabel }}"
+          - label: "{{ discreteUnitColumnRef }}"
+        lines:
+          - foreach: discreteUnits as discreteUnit
+            do:
+              - cells:
+                  - "{{ discreteUnit.name }}"
+                  - "{{ discreteUnit.ref }}"
+
+#git filter-branch --commit-filter 'if [ "$GIT_AUTHOR_EMAIL" = "eu4a12n" ]; then GIT_AUTHOR_NAME="valentin-mcs"; GIT_AUTHOR_EMAIL="valentin.claras@myc-sense.com"; git commit-tree "$@"; else git commit-tree "$@";fi' HEAD
