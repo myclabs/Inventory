@@ -211,7 +211,9 @@ class PhysicalQuantity extends Core_Model_Entity
     /**
      * Ajoute une ligne au tableau  $_composedPhysicalQuantities
      * @param \Unit\Domain\PhysicalQuantity $basePhysicalQuantity
-     * @param int                                      $exponent
+     * @param int $exponent
+     * @throws \Core_Exception_NotFound
+     * @throws \Core_Exception_InvalidArgument
      */
     public function addPhysicalQuantityComponent(PhysicalQuantity $basePhysicalQuantity, $exponent)
     {
@@ -232,7 +234,7 @@ class PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Récupère la composition en grandeurs physiques de base d'une grandeur physique
-     * @return \Unit\Domain\PhysicalQuantity[]
+     * @return Component[]
      */
     public function getPhysicalQuantityComponents()
     {
