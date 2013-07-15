@@ -329,7 +329,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $organization = $cell->getGranularity()->getOrganization();
-        $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+        try {
+            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = false;
+        }
 
         $listDatagridConfiguration = array();
         $listInputGranularities = $organization->getInputGranularities();
@@ -351,8 +355,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-                if ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
-                    || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
+                if ($granularityForInventoryStatus && ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
+                    || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef())) {
                     $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'inventory', 'inventoryStatus'));
                     $columnStateOrga->withEmptyElement = false;
                     $columnStateOrga->list = array(

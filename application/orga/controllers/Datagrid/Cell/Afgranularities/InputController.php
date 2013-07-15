@@ -62,9 +62,13 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $cell = Orga_Model_Cell::load($idCell);
 
         $inputGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
-        $granularityForInventoryStatus = $inputGranularity->getOrganization()->getGranularityForInventoryStatus();
-        $isInputGranularityInsideInventory = ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
-            || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef());
+        try {
+            $granularityForInventoryStatus = $inputGranularity->getOrganization()->getGranularityForInventoryStatus();
+            $isInputGranularityInsideInventory = ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
+                || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef());
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $isInputGranularityInsideInventory = false;
+        }
 
         $this->request->filter->addCondition(
             Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
