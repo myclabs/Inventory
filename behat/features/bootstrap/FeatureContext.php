@@ -196,6 +196,7 @@ class FeatureContext extends MinkContext
 
         $node->click();
 
+        $this->wait(0.1);
         $this->waitForPageToFinishLoading();
     }
 
@@ -211,6 +212,12 @@ class FeatureContext extends MinkContext
             'css',
             '.nav-tabs a:contains("' . $label . '")'
         );
+
+        if ($node === null) {
+            throw new ExpectationException("No tab with label '$label' was found.",
+                $this->getSession());
+        }
+
         $node->click();
 
         $this->waitForPageToFinishLoading();

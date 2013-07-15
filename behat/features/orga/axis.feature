@@ -130,7 +130,7 @@ Feature: Organizational axis feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il intervient dans la définition de (au moins) un niveau organisationnel."
   # 
-  # Remarque : axe associé à un axe parent : déjà testé dans le scénario "Creation"
+  # Remarque : axe associé à un axe parent : déjà testé dans le scénario "Creation"
   #
   # Suppression sans obstacle
     When I click "Axe vide"

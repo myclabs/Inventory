@@ -40,8 +40,8 @@ Feature: Classification indicator feature
 
   @javascript
   Scenario: Edition of a classification indicator
-  # TODO : contraintes sur l'édition des unités
-  # TODO : position
+  # TODO : contraintes sur l'édition des unités
+  # TODO : position
     Given I am on "classif/indicator/manage"
     Then I should see the "editIndicators" datagrid
   # Modification des différents attributs, saisie correcte

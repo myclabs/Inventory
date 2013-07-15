@@ -24,7 +24,7 @@ Feature: Granularity dataware analysis feature
     When I click element "#indicatorRatio_indicator"
     And I select "Camembert" from "chartType"
     And I click "Lancer"
-  # Si le dataware comprend un indicateur il est indiqué par défaut
+  # Si le dataware comprend un indicateur il est indiqué par défaut
     Then the following message is shown and closed: "Analyse effectuée."
   # Si le dataware ne comprend aucun indicateur l'erreur ci-dessous se produit
   # Then the field "indicator" should have error: "Merci de sélectionner un indicateur."
@@ -32,7 +32,7 @@ Feature: Granularity dataware analysis feature
     When I click element "#indicatorRatio_ratio"
     And I click "Lancer"
     Then the field "chartType" should have error: "Merci de préciser le type de graphique à afficher."
-  # Si le dataware comprend un indicateur il est indiqué par défaut
+  # Si le dataware comprend un indicateur il est indiqué par défaut
     When I select "Camembert" from "chartType"
     And I click "Lancer"
     Then the following message is shown and closed: "Analyse effectuée."

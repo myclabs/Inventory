@@ -17,7 +17,7 @@ Feature: Family tree edit feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout d'une catégorie, libellé non vide, située dans une autre catégorie
-  # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.
+  # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.
 
 
   @javascript
