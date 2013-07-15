@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "dc4152396db8479ff2c017fb7f10bc29",
+    "hash": "0d7249f9e0b4b55e2462cda9b16832f2",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1818,6 +1818,48 @@
             "time": "2013-06-12 03:00:14"
         },
         {
+            "name": "mnapoli/metaconsole",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnapoli/MetaConsole.git",
+                "reference": "ae23ec8791479fb02d42efccb1e160c99c099380"
+            },
+            "require": {
+                "mnapoli/metamodel": "dev-master",
+                "symfony/console": "2.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MetaConsole": "src/"
+                }
+            },
+            "time": "2013-07-15 12:17:09"
+        },
+        {
+            "name": "mnapoli/metamodel",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnapoli/MetaModel.git",
+                "reference": "bb00d60eff9855416d30abe9bd037852d4700a5c"
+            },
+            "require": {
+                "doctrine/orm": "2.3.*",
+                "symfony/property-access": "2.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MetaModel": "src/",
+                    "FunctionalTest": "tests/",
+                    "UnitTest": "tests/"
+                }
+            },
+            "time": "2013-07-15 11:52:26"
+        },
+        {
             "name": "symfony/config",
             "version": "v2.3.1",
             "target-dir": "Symfony/Component/Config",
@@ -2114,6 +2156,64 @@
             "time": "2013-05-06 20:03:44"
         },
         {
+            "name": "symfony/property-access",
+            "version": "v2.3.1",
+            "target-dir": "Symfony/Component/PropertyAccess",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/PropertyAccess.git",
+                "reference": "v2.3.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/PropertyAccess/zipball/v2.3.1",
+                "reference": "v2.3.1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\PropertyAccess\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony PropertyAccess Component",
+            "homepage": "http://symfony.com",
+            "keywords": [
+                "access",
+                "array",
+                "extraction",
+                "index",
+                "injection",
+                "object",
+                "property",
+                "property path",
+                "reflection"
+            ],
+            "time": "2013-04-30 16:43:32"
+        },
+        {
             "name": "symfony/translation",
             "version": "v2.3.1",
             "target-dir": "Symfony/Component/Translation",
@@ -2184,7 +2284,8 @@
         "mridgway/zendx_doctrine2": 20,
         "dompdf/dompdf": 20,
         "mnapoli/php-di": 20,
-        "behat/mink-zombie-driver": 20
+        "behat/mink-zombie-driver": 20,
+        "mnapoli/metaconsole": 20
     },
     "platform": {
         "php": ">=5.4.0"
