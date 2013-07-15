@@ -11,7 +11,9 @@ Feature: Cell contributor feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Europe | Marque A Organisation avec données"
-    And I should see the "aFGranularity2Input8" datagrid
+    When I wait 2 seconds
+    And I open collapse "Année | Site | Catégorie"
+    Then I should see the "aFGranularity2Input8" datagrid
     And the "aFGranularity2Input8" datagrid should contain 2 row
   # Accès à l'onglet "Inventaires", édition du statut d'un inventaire
     When I open tab "Inventaires"
@@ -39,5 +41,6 @@ Feature: Cell contributor feature
   # Accès à une des cellules
     When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Organisation avec données"
-    And I should see the "aFGranularity4Input8" datagrid
+    When I open collapse "Année | Site | Catégorie"
+    Then I should see the "aFGranularity4Input8" datagrid
     And the "aFGranularity4Input8" datagrid should contain 1 row

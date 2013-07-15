@@ -13,19 +13,24 @@ Feature: Organization navigation feature
     And I click element "#goTo3"
     Then I should see "Chambéry Organisation avec données"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
-    And I should see "Avancement"
+    When I open collapse "Année | Site | Catégorie"
+    Then I should see the "aFGranularity5Input8" datagrid
   # Remonter au niveau zone-marque
     When I click "Europe | Marque A"
     Then I should see "Europe | Marque A Organisation avec données"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
-    And I should see "Avancement"
+    When I open collapse "Année | Site | Catégorie"
+    Then I should see the "aFGranularity2Input8" datagrid
   # Remonter au niveau global
     When I click "Unité globale"
     Then I should see "Unité organisationnelle globale"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
-    And I should see "Avancement"
+    When I open collapse "Année | Site | Catégorie"
+    Then I should see the "aFGranularity1Input8" datagrid
   # Descendre au niveau zone|marque
     When I select "Marque sans site" from "marque"
     And I click element "#goTo2"
     Then I should see "Europe | Marque sans site Organisation avec données"
+  # Vérification que l'élément "Unité globale" cliquable est présent, pour tester à l'inverse qu'il est absent dans les tests ACL
+    And I should see a "#navigationParent a:contains('Unité globale')" element
 

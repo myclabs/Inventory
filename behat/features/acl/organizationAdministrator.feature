@@ -15,7 +15,8 @@ Feature: Organization administrator feature
   # Accès à l'organisation
     When I click "Détails" in the row 1 of the "organizations" datagrid
     Then I should see "Unité organisationnelle globale Organisation avec données"
-    And I should see the "aFGranularity1Input8" datagrid
+    When I open collapse "Année | Site | Catégorie"
+    Then I should see the "aFGranularity1Input8" datagrid
     And the "aFGranularity1Input8" datagrid should contain 3 row
   # Accès à l'onglet "Configuration"
     When I open tab "Organisation"
