@@ -32,17 +32,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
      */
     function getelementsAction()
     {
-        $customParameters = array();
-        $filterConditions = array();
-        foreach ($this->request->filter->getConditions() as $filterConditionArray) {
-            if ($filterConditionArray['alias'] == Orga_Model_Member::getAlias()) {
-                $customParameters[] = $filterConditionArray;
-            } else {
-                $filterConditions[] = $filterConditionArray;
-            }
-        }
-        $this->request->setCustomParameters($customParameters);
-        $this->request->filter->setConditions($filterConditions);
 
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
@@ -51,71 +40,99 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
         $crossedGranularity = $granularityForInventoryStatus->getCrossedGranularity($granularity);
 
-        $this->request->filter->addCondition(
-            Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
-            true,
-            Core_Model_Filter::OPERATOR_EQUAL,
-            Orga_Model_Cell::getAlias()
-        );
-        $this->request->filter->addCondition(
-            Orga_Model_Cell::QUERY_RELEVANT,
-            true,
-            Core_Model_Filter::OPERATOR_EQUAL,
-            Orga_Model_Cell::getAlias()
-        );
-        $this->request->order->addOrder(
-            Orga_Model_Cell::QUERY_MEMBERS_HASHKEY,
-            Core_Model_Order::ORDER_ASC,
-            Orga_Model_Cell::getAlias()
-        );
-        foreach ($cell->loadChildCellsForGranularity($crossedGranularity, $this->request) as $childCell) {
-            $data = array();
-            $data['index'] = $childCell->getId();
-            foreach ($childCell->getMembers() as $member) {
-                $data[$member->getAxis()->getRef()] = $member->getRef();
-            }
-
-            if ($crossedGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
-                $cellInventoryStatus = $childCell;
-            } else {
-                $cellInventoryStatus = $childCell->getParentCellForGranularity($granularityForInventoryStatus);
-            }
-            $data['inventoryStatus'] = $cellInventoryStatus->getInventoryStatus();
-            if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
-                $data['advancementInput'] = 0;
-                $data['advancementFinishedInput'] = 0;
-
-                $totalChildInputCells = 0;
-                foreach ($organization->getInputGranularities() as $inputGranularity) {
-                    if ($inputGranularity->isNarrowerThan($childCell->getGranularity())) {
-                        $inputCells = $childCell->getChildCellsForGranularity($inputGranularity);
-                        foreach ($inputCells as $inputCell) {
-                            try {
-                                $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
-                                if ($childAfInputSetPrimary->isInputComplete()) {
-                                    $data['advancementInput'] ++;
-                                }
-                                if ($childAfInputSetPrimary->isFinished()) {
-                                    $data['advancementFinishedInput'] ++;
-                                }
-                            } catch (Core_Exception_UndefinedAttribute $e) {
-                                // Pas de saisie pour l'instant = pas d'avancement.
-                            }
-                            $totalChildInputCells ++;
-                        }
-                    }
-                }
-                if ($totalChildInputCells > 0) {
-                    $data['advancementInput'] *= 100. / $totalChildInputCells;
-                    $data['advancementFinishedInput'] *= 100. / $totalChildInputCells;
+        if ($cell->getGranularity()->getRef() === $granularityForInventoryStatus->getRef()) {
+            $this->addLine($this->getLineData($cell, $crossedGranularity));
+            $this->totalElements = 1;
+        } else {
+            $customParameters = array();
+            $filterConditions = array();
+            foreach ($this->request->filter->getConditions() as $filterConditionArray) {
+                if ($filterConditionArray['alias'] == Orga_Model_Member::getAlias()) {
+                    $customParameters[] = $filterConditionArray;
+                } else {
+                    $filterConditions[] = $filterConditionArray;
                 }
             }
-
-            $this->addLine($data);
+            $this->request->setCustomParameters($customParameters);
+            $this->request->filter->setConditions($filterConditions);
+            $this->request->filter->addCondition(
+                Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
+                true,
+                Core_Model_Filter::OPERATOR_EQUAL,
+                Orga_Model_Cell::getAlias()
+            );
+            $this->request->filter->addCondition(
+                Orga_Model_Cell::QUERY_RELEVANT,
+                true,
+                Core_Model_Filter::OPERATOR_EQUAL,
+                Orga_Model_Cell::getAlias()
+            );
+            $this->request->order->addOrder(
+                Orga_Model_Cell::QUERY_MEMBERS_HASHKEY,
+                Core_Model_Order::ORDER_ASC,
+                Orga_Model_Cell::getAlias()
+            );
+            foreach ($cell->loadChildCellsForGranularity($crossedGranularity, $this->request) as $childCell) {
+                $this->addLine($this->getLineData($childCell, $crossedGranularity));
+            }
+            $this->totalElements = $cell->countTotalChildCellsForGranularity($crossedGranularity, $this->request);
         }
-        $this->totalElements = $cell->countTotalChildCellsForGranularity($crossedGranularity, $this->request);
 
         $this->send();
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @param Orga_Model_Granularity $crossedGranularity
+     * @return array
+     */
+    private function getLineData(Orga_Model_Cell $cell, Orga_Model_Granularity $crossedGranularity)
+    {
+        $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+
+        $data = array();
+        $data['index'] = $cell->getId();
+        foreach ($cell->getMembers() as $member) {
+            $data[$member->getAxis()->getRef()] = $member->getRef();
+        }
+
+        if ($crossedGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
+            $cellInventoryStatus = $cell;
+        } else {
+            $cellInventoryStatus = $cell->getParentCellForGranularity($granularityForInventoryStatus);
+        }
+        $data['inventoryStatus'] = $cellInventoryStatus->getInventoryStatus();
+        if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
+            $data['advancementInput'] = 0;
+            $data['advancementFinishedInput'] = 0;
+
+            $totalChildInputCells = 0;
+            foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
+                if ($inputGranularity->isNarrowerThan($cell->getGranularity())) {
+                    $inputCells = $cell->getChildCellsForGranularity($inputGranularity);
+                    foreach ($inputCells as $inputCell) {
+                        try {
+                            $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
+                            if ($childAfInputSetPrimary->isInputComplete()) {
+                                $data['advancementInput'] ++;
+                            }
+                            if ($childAfInputSetPrimary->isFinished()) {
+                                $data['advancementFinishedInput'] ++;
+                            }
+                        } catch (Core_Exception_UndefinedAttribute $e) {
+                            // Pas de saisie pour l'instant = pas d'avancement.
+                        }
+                        $totalChildInputCells ++;
+                    }
+                }
+            }
+            if ($totalChildInputCells > 0) {
+                $data['advancementInput'] *= 100. / $totalChildInputCells;
+                $data['advancementFinishedInput'] *= 100. / $totalChildInputCells;
+            }
+        }
+
+        return $data;
     }
 
     /**
