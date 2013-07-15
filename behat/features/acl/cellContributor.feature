@@ -13,6 +13,14 @@ Feature: Cell contributor feature
     Then I should see "Europe | Marque A Organisation avec données"
     And I should see the "aFGranularity2Input8" datagrid
     And the "aFGranularity2Input8" datagrid should contain 2 row
+  # Accès à l'onglet "Inventaires", édition du statut d'un inventaire
+    When I open tab "Inventaires"
+    Then I should see the "inventories6" datagrid
+    When I set "En cours" for column "inventoryStatus" of row 1 of the "inventories6" datagrid with a confirmation message
+  # Les autres onglets de la page d'une cellule sont absents
+    # TODO And I should not see "Organisation"
+    And I should not see "Rôles"
+    And I should not see "Reconst. données"
 
   @javascript
   Scenario: Contributor of several cells

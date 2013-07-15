@@ -13,6 +13,22 @@ Feature: Cell observer feature
     Then I should see "Europe | Marque A Organisation avec données"
     And I should see the "aFGranularity2Input8" datagrid
     And the "aFGranularity2Input8" datagrid should contain 2 row
+  # TODO : "Unité globale" non cliquable dans le volet de navigation
+  # Accès à l'onglet "Inventaires"
+    When I open tab "Inventaires"
+    Then I should see the "inventories6" datagrid
+    And the "inventories6" datagrid should contain 1 row
+  # TODO : statut de l'inventaire non éditable
+  # Accès à l'onglet "Analyses"
+    When I open tab "Analyses"
+    Then I should see the "report" datagrid
+  # Clic sur "Export Excel détaillé"
+    When I click "Export Excel détaillé"
+    Then I should see "La génération du fichier est en cours. Une fenêtre de téléchargement devrait apparaître d'ici quelques secondes, merci de patienter."
+  # Les autres onglets de la page d'une cellule sont absents
+    # TODO And I should not see "Organisation"
+    And I should not see "Rôles"
+    And I should not see "Reconst. données"
 
   @javascript
   Scenario: Observer of several cells
