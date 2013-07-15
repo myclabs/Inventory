@@ -314,10 +314,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         uasort(
             $listInputGranularities,
             function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
-                if ($a->getInputConfigGranularity() === $b->getInputConfigGranularity()) {
-                    return $a->getPosition() - $b->getPosition();
-                }
-                return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
+                return $a->getPosition() - $b->getPosition();
             }
         );
         foreach ($listInputGranularities as $inputGranularity) {
