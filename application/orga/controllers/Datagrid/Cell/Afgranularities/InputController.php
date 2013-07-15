@@ -56,6 +56,9 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $cell = Orga_Model_Cell::load($idCell);
 
         $inputGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
+        $granularityForInventoryStatus = $inputGranularity->getOrganization()->getGranularityForInventoryStatus();
+        $isInputGranularityInsideInventory = ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
+            || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef());
 
         $this->request->filter->addCondition(
             Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
@@ -82,34 +85,38 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
 
-            $data['inventoryStatus'] = $childCell->getInventoryStatus();
+            if ($isInputGranularityInsideInventory) {
+                $data['inventoryStatus'] = $childCell->getInventoryStatus();
 
-            if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
-                try {
-                    $aFInputSetPrimary = $childCell->getAFInputSetPrimary();
-                    $percent = $aFInputSetPrimary->getCompletion();
-                    $progressBarColor = null;
-                    switch ($aFInputSetPrimary->getStatus()) {
-                        case AF_Model_InputSet_Primary::STATUS_FINISHED:
-                            $progressBarColor = 'success';
-                            break;
-                        case AF_Model_InputSet_Primary::STATUS_COMPLETE:
-                            $progressBarColor = 'warning';
-                            break;
-                        case AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE:
-                            $progressBarColor = 'danger';
-                            break;
-                        case AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE:
-                            $progressBarColor = 'danger';
-                            break;
+                if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
+                    try {
+                        $aFInputSetPrimary = $childCell->getAFInputSetPrimary();
+                        $percent = $aFInputSetPrimary->getCompletion();
+                        $progressBarColor = null;
+                        switch ($aFInputSetPrimary->getStatus()) {
+                            case AF_Model_InputSet_Primary::STATUS_FINISHED:
+                                $progressBarColor = 'success';
+                                break;
+                            case AF_Model_InputSet_Primary::STATUS_COMPLETE:
+                                $progressBarColor = 'warning';
+                                break;
+                            case AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE:
+                                $progressBarColor = 'danger';
+                                break;
+                            case AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE:
+                                $progressBarColor = 'danger';
+                                break;
+                        }
+                        $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
+                        $data['stateInput'] = $aFInputSetPrimary->getStatus();
+                    } catch (Core_Exception_UndefinedAttribute $e) {
+                        $data['advancementInput'] = $this->cellPercent(0, 'danger');
+                        $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
                     }
-                    $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
-                    $data['stateInput'] = $aFInputSetPrimary->getStatus();
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    $data['advancementInput'] = $this->cellPercent(0, 'danger');
-                    $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
                 }
+            }
 
+            if (!$isInputGranularityInsideInventory || ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED)) {
                 try {
                     // Vérification qu'un AF est défini.
                     $cellsGroup = $childCell->getParentCellForGranularity($inputGranularity->getInputConfigGranularity())
