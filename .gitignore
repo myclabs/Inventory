@@ -8,3 +8,5 @@ behat/selenium-server-standalone.jar
 
 application/configs/application.ini
 public/.htaccess
+
+*.vpp.bak
