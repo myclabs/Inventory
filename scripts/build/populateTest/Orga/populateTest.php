@@ -66,8 +66,10 @@ class Orga_PopulateTest extends Orga_Populate
         $organization->setGranularityForInventoryStatus($granularity_annee_zone_marque);
 
         // Granularités de saisie
+        $granularityGlobal->setInputConfigGranularity($granularityGlobal); // Utile pour tester le bon affichage dans les onglets Saisies et Formulaires
+        $granularity_zone_marque->setInputConfigGranularity($granularity_zone_marque); // Utile pour tester la saisie à un niveau plus grossier que celui des inventaires et les ordres entre les granularités des onglets "Inventaires" et "Saisies"
+        $granularity_annee_site->setInputConfigGranularity($granularityGlobal); // Utile pour tester les ordres entre les granularités des onglets "Inventaires" et "Saisies"
         $granularity_annee_site_categorie->setInputConfigGranularity($granularity_annee_categorie);
-        $granularity_annee_site->setInputConfigGranularity($granularity_annee);
 
         // Création des utilisateurs orga.
         // Params : email
