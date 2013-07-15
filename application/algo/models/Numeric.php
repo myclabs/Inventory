@@ -165,7 +165,6 @@ abstract class Algo_Model_Numeric extends Algo_Model_Algo
     }
 
     /**
-     * Enlève un resultIndex du tableau
      * @param Algo_Model_Index $resultIndex
      */
     public function removeIndex(Algo_Model_Index $resultIndex)
@@ -173,6 +172,14 @@ abstract class Algo_Model_Numeric extends Algo_Model_Algo
         if ($this->hasIndex($resultIndex)) {
             $this->indexes->removeElement($resultIndex);
         }
+    }
+
+    /**
+     * Vide l'indexation de l'algorithme
+     */
+    public function clearIndexes()
+    {
+        $this->indexes->clear();
     }
 
     /**
