@@ -90,7 +90,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
         // Cache basique, à remplacer
         $diConfig = $configuration->get('di', null);
-        if ($diConfig && $diConfig->get('cache', false)) {
+        if ($diConfig && (bool) $diConfig->get('cache', false)) {
             // Si cache, on utilise APC
             $builder->setDefinitionCache(new ApcCache());
         }
