@@ -14,7 +14,7 @@ Feature: Cell observer feature
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
     And the "aFGranularity2Input8" datagrid should contain 2 row
-  # TODO : "Unité globale" non cliquable dans le volet de navigation
+  # TODO : "Vue globale" non cliquable dans le volet de navigation
   # Accès à l'onglet "Collectes"
     When I open tab "Collectes"
     Then I should see the "inventories6" datagrid

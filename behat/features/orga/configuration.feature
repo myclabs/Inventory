@@ -19,7 +19,7 @@ Feature: Configuration of an organization
   # Vérification modification prise en compte
     When I reload the page
     And I wait for the page to finish loading
-    Then I should see "Unité organisationnelle globale Organisation avec données modifiée"
+    Then I should see "Vue globale Organisation avec données modifiée"
 
   @javascript
   Scenario: Edit organization inventory granularity
