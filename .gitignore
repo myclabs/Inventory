@@ -10,3 +10,4 @@ application/configs/application.ini
 public/.htaccess
 
 *.vpp.bak
+*.vpp~*
