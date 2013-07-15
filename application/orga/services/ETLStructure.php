@@ -389,7 +389,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
         }
 
-        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 1)) {
+        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 0)) {
             return true;
         }
 
@@ -458,7 +458,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
             }
         }
 
-        if ((count($classifRootAxes) > 0) || (count($orgaRootAxes) > 0) || (count($dWRootAxes) > 1)) {
+        if ((count($classifRootAxes) > 0) || (count($orgaRootAxes) > 0) || (count($dWRootAxes) > 0)) {
             return true;
         }
 
