@@ -144,27 +144,6 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         }
         $this->addLine($data);
 
-        $data['index'] = 'indicatorsWithNonexistentUnits';
-        $data['control'] = __('Classif', 'control', 'indicatorWithNoUnit');
-        $data['diag'] = empty($listIndicatorsWithNonexistentUnits);
-        $data['fail'] = '';
-        foreach ($listIndicatorsWithNonexistentUnits as $refIndicator => $units) {
-            $data['fail'] .= $refIndicator . ' : { ' . implode(', ', $units) . ' }, ';
-        }
-        if (strlen($data['fail']) > 0) {
-            $data['fail'] = substr($data['fail'], 0, -2);
-        }
-        $this->addLine($data);
-
-        $data['index'] = 'indicatorsWithNoncoherentUnits';
-        $data['control'] = __('Classif', 'control', 'indicatorWithIncompatibleUnits');
-        $data['diag'] = empty($listIndicatorsWithNoncoherentUnits);
-        $data['fail'] = '';
-        foreach ($listIndicatorsWithNoncoherentUnits as $refIndicator => $units) {
-            $data['fail'] .= $refIndicator . ' : { ' . implode(', ', $units) . ' }, ';
-        }
-        $this->addLine($data);
-
         $data['index'] = 'contextIndicatorsWithLinkedAxes';
         $data['control'] = __('Classif', 'control', 'contextIndicatorsWithLinkedAxes');
         $data['diag'] = empty($listContextIndicatorsWithLinkedAxes);
