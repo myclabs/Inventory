@@ -116,7 +116,7 @@ class Orga_ReferentialController extends Core_Controller
                 break;
             //@todo A supprimer. Utile pour les tests.
             default:
-                $exportService = new Classif_Service_Classif();
+                $exportService = new Unit_Service_Unit();
                 $baseFilename = 'Classif';
                 break;
         }
