@@ -3,12 +3,13 @@
  * @package Keyword
  */
 
+require_once __DIR__ . '/../../populate/Keyword/populate.php';
 
 /**
  * Remplissage de la base de données avec des données de test
  * @package Keyword
  */
-class Keyword_PopulateTest extends Core_Script_Action
+class Keyword_PopulateTest extends Keyword_Populate
 {
 
     /**
@@ -33,7 +34,7 @@ class Keyword_PopulateTest extends Core_Script_Action
         $keyword_gaz_naturel_ = $this->createKeyword('gaz_naturel', 'gaz naturel');
         $keyword_charbon = $this->createKeyword('charbon', 'charbon');
         $keyword_processus = $this->createKeyword('processus', 'processus');
-        $keyword_amont_combustion = $this->createKeyword('amont_combustion', 'amont_combustion');
+        $keyword_amont_combustion = $this->createKeyword('amont_combustion', 'amont de la combustion');
         $keyword_combustion = $this->createKeyword('combustion', 'combustion');
 
         // Création des associations.
@@ -45,54 +46,6 @@ class Keyword_PopulateTest extends Core_Script_Action
         $entityManager->flush();
 
         echo "\t\tKeyword created".PHP_EOL;
-    }
-
-    /**
-     * @param string $ref
-     * @param string $label
-     * @param string $reverseRef
-     * @param string $reverseLabel
-     * @param string|null $description
-     * @return Keyword_Model_Predicate
-     */
-    protected function createPredicate($ref, $label, $reverseRef, $reverseLabel, $description=null)
-    {
-        $predicate = new Keyword_Model_Predicate();
-        $predicate->setRef($ref);
-        $predicate->setLabel($label);
-        $predicate->setReverseRef($reverseRef);
-        $predicate->setReverseLabel($reverseLabel);
-        $predicate->setDescription($description);
-        $predicate->save();
-        return $predicate;
-    }
-
-    /**
-     * @param string $ref
-     * @param string $label
-     * @return Keyword_Model_Keyword
-     */
-    protected function createKeyword($ref, $label)
-    {
-        $keyword = new Keyword_Model_Keyword();
-        $keyword->setRef($ref);
-        $keyword->setLabel($label);
-        $keyword->save();
-        return $keyword;
-    }
-
-    /**
-     * @param Keyword_Model_Keyword $object
-     * @param Keyword_Model_Predicate $predicate
-     * @param Keyword_Model_Keyword $subject
-     */
-    protected function createAssociation(Keyword_Model_Keyword $subject, Keyword_Model_Predicate $predicate, Keyword_Model_Keyword $object)
-    {
-        $assocation = new Keyword_Model_Association();
-        $assocation->setSubject($subject);
-        $assocation->setPredicate($predicate);
-        $assocation->setObject($object);
-        $assocation->save();
     }
 
 }

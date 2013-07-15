@@ -87,7 +87,8 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
 
                 $totalChildInputCells = 0;
                 foreach ($organization->getInputGranularities() as $inputGranularity) {
-                    if ($inputGranularity->isNarrowerThan($childCell->getGranularity())) {
+                    if ($inputGranularity->isNarrowerThan($childCell->getGranularity())
+                        || $inputGranularity->getRef() === $childCell->getGranularity()->getRef()) {
                         $inputCells = $childCell->getChildCellsForGranularity($inputGranularity);
                         foreach ($inputCells as $inputCell) {
                             try {

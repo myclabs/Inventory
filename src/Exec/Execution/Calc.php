@@ -5,6 +5,8 @@
  * @author  hugo.charbonnier
  * @package Exec
  */
+use Unit\IncompatibleUnitsException;
+use Unit\UnitAPI;
 
 /**
  * classe Exec_Execution_Calc
@@ -111,9 +113,9 @@ class Exec_Execution_Calc extends Exec_Execution
      *
      * @param Exec_Interface_UnitProvider $unitProvider
      *
-     * @return Unit_API
+     * @return UnitAPI
      *
-     * @throws Unit_Exception_IncompatibleUnits Unités incompatibles
+     * @throws IncompatibleUnitsException Unités incompatibles
      */
     public function checkUnitCompatibility(Exec_Interface_UnitProvider $unitProvider)
     {
@@ -124,9 +126,9 @@ class Exec_Execution_Calc extends Exec_Execution
      * @param TEC_Model_Composite          $node
      * @param Exec_Interface_UnitProvider  $unitProvider
      *
-     * @return Unit_API
+     * @return UnitAPI
      *
-     * @throws Unit_Exception_IncompatibleUnits Unités incompatibles
+     * @throws IncompatibleUnitsException Unités incompatibles
      */
     public function calculateUnitForComponent(TEC_Model_Composite $node,
                                               Exec_Interface_UnitProvider $unitProvider

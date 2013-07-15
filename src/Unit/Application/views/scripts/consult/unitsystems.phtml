@@ -1,0 +1,20 @@
+<?php
+/**
+ * Liste les UnitSystem.
+ * @author valentin.claras
+ * @package Unit
+ * @subpackage View
+ */
+
+    // Vue abandonnée en l'état (janvier 2013).
+
+    $datagrid = new UI_Datagrid ('ListUnitSystem', 'datagrids_unitsystems', 'unit');
+
+    $nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));
+    $datagrid->addCol($nameColumn);
+
+    $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+    $datagrid->addCol($refColumn);
+
+    $datagrid->pagination = false;
+    $datagrid->display();

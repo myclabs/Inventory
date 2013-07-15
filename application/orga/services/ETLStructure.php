@@ -590,7 +590,7 @@ class Orga_Service_ETLStructure
             }
         }
 
-        if ((count($classifRootAxes) > 0) || (count($orgaRootAxes) > 0) || (count($dWRootAxes) > 1)) {
+        if ((count($classifRootAxes) > 0) || (count($orgaRootAxes) > 0) || (count($dWRootAxes) > 0)) {
             return true;
         }
 

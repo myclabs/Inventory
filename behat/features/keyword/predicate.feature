@@ -60,7 +60,7 @@ Feature: Predicates datagrid
   Scenario: Edition of a predicate
     Given I am on "keyword/predicate/manage"
     Then I should see the "predicates" datagrid
-  # Modification des libellés et identifiants(direct et inverse)
+  # Modification des libellés et identifiants(direct et inverse)
     When I set "contient modifié" for column "label" of row 1 of the "predicates" datagrid with a confirmation message
     And I set "contient_modifie" for column "ref" of row 1 of the "predicates" datagrid with a confirmation message
     And I set "fait partie de modifié" for column "reverseLabel" of row 1 of the "predicates" datagrid with a confirmation message

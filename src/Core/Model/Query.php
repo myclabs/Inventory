@@ -4,6 +4,7 @@
  * @package    Core
  * @subpackage Model
  */
+use User\ACL\TypeMapping\ActionType;
 
 /**
  * Requete avec filtres et tri.
@@ -357,7 +358,7 @@ class Core_Model_Query
             $queryBuilder->andWhere('acl_cache.entityIdentifier = ' . $this->rootAlias . '.id');
 
             $queryBuilder->setParameter('aclEntityName', $this->entityName);
-            $queryBuilder->setParameter('aclAction', $this->aclFilter->action, User_TypeMapping_Action::TYPE_NAME);
+            $queryBuilder->setParameter('aclAction', $this->aclFilter->action, ActionType::TYPE_NAME);
             $queryBuilder->setParameter('aclUserId', $this->aclFilter->user->getId());
         }
     }

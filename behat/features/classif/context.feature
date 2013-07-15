@@ -37,7 +37,7 @@ Feature: Classification context feature
 
   @javascript
   Scenario: Edition of a classification context
-    # TODO : position
+    # TODO : position
     Given I am on "classif/context/manage"
     Then I should see the "editContexts" datagrid
   # Modification des différents attributs, saisie correcte

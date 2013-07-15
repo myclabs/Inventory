@@ -11,7 +11,7 @@
  * @package UI
  * @subpackage Form
  */
-class UI_Form_Element_Textarea extends Zend_Form_Element_Textarea
+class UI_Form_Element_Textarea extends Zend_Form_Element_Textarea implements UI_Form_ZendElement
 {
     /**
      * Reference to a UI_Form_Element, to access to its methods.
@@ -32,7 +32,6 @@ class UI_Form_Element_Textarea extends Zend_Form_Element_Textarea
      * Constructor
      *
      * @param string $name
-     * @return void
      *
      * @throws Core_Exception_InvalidArgument if $name is not valid.
      */

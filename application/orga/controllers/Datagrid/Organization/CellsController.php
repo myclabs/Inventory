@@ -50,7 +50,6 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
             $data = array();
             $data['index'] = $cell->getId();
             $data['label'] = $cell->getLabel();
-            $data['granularity'] = $cell->getGranularity()->getRef();
 
             $access = array();
             foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {

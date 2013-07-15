@@ -20,26 +20,13 @@ trait DatabaseFeatureContext
         self::loadFileToDatabase('full.sql');
     }
     /**
-     * @BeforeScenario @dbOneOrganization
+     * @BeforeScenario @dbForTestDWUpToDate
      */
-    public function loadOneOrganizationDatabase()
+    public function loadForTestDWUpToDateDatabase()
     {
-        self::loadFileToDatabase('oneOrganization.sql');
+        self::loadFileToDatabase('forTestDWUpToDate.sql');
     }
-    /**
-     * @BeforeScenario @dbOneOrganizationWithAxes
-     */
-    public function loadOneOrganizationWithAxesDatabase()
-    {
-        self::loadFileToDatabase('oneOrganizationWithAxes.sql');
-    }
-    /**
-     * @BeforeScenario @dbWithClassifAxesIndicatorsContexts
-     */
-    public function loadWithClassifAxesIndicatorsContextsDatabase()
-    {
-        self::loadFileToDatabase('withClassifAxesIndicatorsContexts.sql');
-    }
+
 
     private static function loadFileToDatabase($fileName)
     {

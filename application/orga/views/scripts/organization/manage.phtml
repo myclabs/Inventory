@@ -14,6 +14,10 @@ $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $columnLabel->addable = true;
 $datagridOrganization->addCol($columnLabel);
 
+$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+$columnDetails->addable = false;
+$datagridOrganization->addCol($columnDetails);
+
 $columnRootAxes = new UI_Datagrid_Col_Text('rootAxes', __('Orga', 'axis', 'rootAxes'));
 $columnRootAxes->addable = false;
 $datagridOrganization->addCol($columnRootAxes);
@@ -21,10 +25,6 @@ $datagridOrganization->addCol($columnRootAxes);
 $columnGranularityForInventoryStatus = new UI_Datagrid_Col_Text('granularityForInventoryStatus', __('Orga', 'inventory', 'inventories'));
 $columnGranularityForInventoryStatus->addable = false;
 $datagridOrganization->addCol($columnGranularityForInventoryStatus);
-
-$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
-$columnDetails->addable = false;
-$datagridOrganization->addCol($columnDetails);
 
 $datagridOrganization->deleteElements = $this->isConnectedUserAbleToCreateOrganizations;
 $datagridOrganization->pagination = false;

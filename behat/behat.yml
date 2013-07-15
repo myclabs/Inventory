@@ -1,6 +1,11 @@
 default:
+
   paths:
     features: features
+
+  filters:
+    tags: ~@skipped
+
   extensions:
     Behat\MinkExtension\Extension:
       base_url: http://localhost/inventory

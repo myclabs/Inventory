@@ -98,4 +98,19 @@ class Calc_Value
 
         return new static($digitalValue, $relativeUncertainty);
     }
+
+    /**
+     * For debug purposes only
+     * @return string
+     */
+    public function __toString()
+    {
+        if ($this->relativeUncertainty) {
+            return "$this->digitalValue ± $this->relativeUncertainty %";
+        } elseif ($this->digitalValue) {
+            return (string) $this->digitalValue;
+        }
+
+        return '';
+    }
 }

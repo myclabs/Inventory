@@ -33,10 +33,10 @@
 		"mridgway/zendx_doctrine2": "dev-master",
         "dompdf/dompdf": "dev-master",
         "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
-        "myclabs/array-comparator": "0.*",
+        "myclabs/array-comparator": "1.0.*",
         "myclabs/xport": "dev-master",
         "myclabs/php-enum": "1.*",
-        "mnapoli/php-di": "3.1.*",
+        "mnapoli/php-di": "3.2.*@dev",
         "mnapoli/php-di-zf1": "*"
 	},
     "require-dev": {
@@ -46,17 +46,17 @@
         "behat/mink-selenium2-driver": "*",
         "behat/mink-zombie-driver": "dev-RequestHeaders"
     },
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"repositories": [
-		{
-			"type": "git",
-			"url": "git://github.com/myclabs/common.git"
-		},
-		{
-			"type": "git",
-			"url": "git://github.com/myclabs/PHPExcel.git"
-		},
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/common.git"
+        },
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/PHPExcel.git"
+        },
         {
             "type": "git",
             "url": "git://github.com/mridgway/ZendX_Doctrine2.git"
@@ -65,5 +65,5 @@
             "type": "git",
             "url": "https://github.com/mnapoli/MinkZombieDriver.git"
         }
-	]
+    ]
 }

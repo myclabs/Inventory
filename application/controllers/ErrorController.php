@@ -1,4 +1,5 @@
 <?php
+use User\ForbiddenException;
 
 /**
  * Classe de gestion des erreurs de requetes
@@ -81,7 +82,7 @@ class ErrorController extends Core_Controller
                 break;
             default:
                 // 403 Forbidden
-                if ($error->exception instanceof User_Exception_Forbidden) {
+                if ($error->exception instanceof ForbiddenException) {
                     $errorInfos['code'] = 403;
                     $errorInfos['message'] = $error->exception->getMessage();
                     // 400 Bad request

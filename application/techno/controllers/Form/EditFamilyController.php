@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * @package Techno
@@ -40,7 +41,7 @@ class Techno_Form_EditFamilyController extends Core_Controller
         if (! $this->hasFormError()) {
             $family->setLabel($label);
             $family->setRef($ref);
-            $family->setUnit(new Unit_API($unit));
+            $family->setUnit(new UnitAPI($unit));
             $this->setFormMessage(__('UI', 'message', 'updated'));
         } else {
             $this->setFormMessage('Erreur de validation du formulaire.');
