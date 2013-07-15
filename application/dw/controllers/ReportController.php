@@ -107,7 +107,7 @@ class DW_ReportController extends Core_Controller
             try {
                 $numeratorIndicator = DW_Model_Indicator::loadByRefAndCube($numeratorIndicatorRef, $report->getCube());
             } catch (Core_Exception_NotFound $e) {
-                $errors['numerator'] = __('DW', 'configValidation', 'numeratorInvalid');
+                $errors['numerator'] = __('DW', 'configValidation', 'numeratorIsRequired');
             }
             $report->setNumerator($numeratorIndicator);
 
@@ -115,7 +115,7 @@ class DW_ReportController extends Core_Controller
             try {
                 $denominatorIndicator = DW_Model_Indicator::loadByRefAndCube($denominatorIndicatorRef, $report->getCube());
             } catch (Core_Exception_NotFound $e) {
-                $errors['denominator'] = __('DW', 'configValidation', 'denominatorInvalid');
+                $errors['denominator'] = __('DW', 'configValidation', 'denominatorIsRequired');
             }
             $report->setDenominator($denominatorIndicator);
 
@@ -182,7 +182,7 @@ class DW_ReportController extends Core_Controller
             try {
                 $indicator = DW_Model_Indicator::loadByRefAndCube($indicatorRef, $report->getCube());
             } catch (Core_Exception_NotFound $e) {
-                $errors['indicator'] = __('DW', 'configValidation', 'indicatorInvalid');
+                $errors['indicator'] = __('DW', 'configValidation', 'indicatorIsRequired');
             }
             $report->setNumerator($indicator);
 

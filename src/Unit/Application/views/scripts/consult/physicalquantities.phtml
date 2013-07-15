@@ -1,0 +1,34 @@
+<?php
+/**
+ * Liste les PhysicalQuantity.
+ * @author valentin.claras
+ * @package Unit
+ * @subpackage View
+ */
+
+?>
+<div class="page-header">
+	<h1><?=__('Unit', 'name', 'physicalQuantities')?></h1>
+</div>
+<?
+
+    $datagrid = new UI_Datagrid ('ListPhysicalQuantity', 'datagrids_physicalquantities', 'unit');
+
+    $nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));
+    $datagrid->addCol($nameColumn);
+
+    // $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+    // $datagrid->addCol($refColumn);
+
+    $referenceUnitColumn = new UI_Datagrid_Col_List('referenceUnit', __('Unit', 'name', 'referenceUnit'));
+    $referenceUnitColumn->list = $this->listStandardUnits;
+    $datagrid->addCol($referenceUnitColumn);
+
+    foreach ($this->basePhyscialQuantities as $basePhysicalQuantity) {
+        $basePhysicalQuantityColumn = new UI_Datagrid_Col_Number($basePhysicalQuantity->getRef());
+        $basePhysicalQuantityColumn->label = $basePhysicalQuantity->getName();
+        $datagrid->addCol($basePhysicalQuantityColumn);
+    }
+
+    $datagrid->pagination = false;
+    $datagrid->display();

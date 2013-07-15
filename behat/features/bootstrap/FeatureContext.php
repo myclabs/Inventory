@@ -156,7 +156,7 @@ class FeatureContext extends MinkContext
                 $this->getSession());
         }
 
-        array_filter($nodes, function(NodeElement $node) {
+        $nodes = array_filter($nodes, function(NodeElement $node) {
                 return $node->isVisible();
             });
 
@@ -188,8 +188,15 @@ class FeatureContext extends MinkContext
             'css',
             'legend:contains("' . $label . '")'
         );
+
+        if ($node === null) {
+            throw new ExpectationException("No collapse with label '$label' was found.",
+                $this->getSession());
+        }
+
         $node->click();
 
+        $this->wait(0.1);
         $this->waitForPageToFinishLoading();
     }
 
@@ -205,6 +212,12 @@ class FeatureContext extends MinkContext
             'css',
             '.nav-tabs a:contains("' . $label . '")'
         );
+
+        if ($node === null) {
+            throw new ExpectationException("No tab with label '$label' was found.",
+                $this->getSession());
+        }
+
         $node->click();
 
         $this->waitForPageToFinishLoading();
@@ -234,7 +247,7 @@ class FeatureContext extends MinkContext
                 $this->getSession());
         }
 
-        array_filter($nodes, function(NodeElement $node) {
+        $nodes = array_filter($nodes, function(NodeElement $node) {
                 return $node->isVisible();
             });
 

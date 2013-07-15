@@ -1,4 +1,4 @@
-@dbEmpty
+@dbFull
 Feature: Users
   User management.
 

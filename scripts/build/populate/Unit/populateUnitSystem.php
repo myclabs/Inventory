@@ -5,6 +5,7 @@
  * @package Unit
  *
  */
+use Unit\Domain\UnitSystem;
 
 /**
  * Script de création de la table SystemUnite
@@ -43,7 +44,7 @@ class Unit_Script_Populate_UnitSystem
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $unitSystem = new Unit_Model_Unit_System();
+        $unitSystem = new UnitSystem();
         $unitSystem->setRef($element->getAttribute('ref'));
 
         // Label

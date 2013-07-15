@@ -154,9 +154,19 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
     // Paramètre
     if ($algo instanceof Algo_Model_Numeric_Parameter) {
         $family = $algo->getFamily();
-        $collapse->body .= "<p><strong>" . __('Techno', 'name', 'family') . __('UI', 'other', ':')
-            . '</strong> <a href="' . $view->baseUrl('techno/family/details/id/' . $family->getId()) . '">'
+        $collapse->body .= '<p>';
+        $collapse->body .= '<strong>' . __('Techno', 'name', 'family') . __('UI', 'other', ':') . '</strong>';
+        $collapse->body .= '<a href="' . $view->baseUrl('techno/family/details/id/' . $family->getId()) . '">'
             . $family->getLabel() . "</a>";
+        $collapse->body .= '</p>';
+        $collapse->body .= '<ul>';
+        foreach ($algo->getParameterCoordinates() as $parameterCoordinate) {
+            $collapse->body .= '<li>';
+            $collapse->body .= $parameterCoordinate->getDimension()->getLabel() . __('UI', 'other', ':');
+            $collapse->body .= $parameterCoordinate->getMemberKeyword($inputSet);
+            $collapse->body .= '</li>';
+        }
+        $collapse->body .= '</ul>';
     }
 
     // Expression

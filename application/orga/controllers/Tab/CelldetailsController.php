@@ -328,16 +328,14 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $organization = $cell->getGranularity()->getOrganization();
+        $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
 
         $listDatagridConfiguration = array();
         $listInputGranularities = $organization->getInputGranularities();
         uasort(
             $listInputGranularities,
             function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
-                if ($a->getInputConfigGranularity() === $b->getInputConfigGranularity()) {
-                    return $a->getPosition() - $b->getPosition();
-                }
-                return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
+                return $a->getPosition() - $b->getPosition();
             }
         );
         foreach ($listInputGranularities as $inputGranularity) {
@@ -351,25 +349,28 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-                $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'organization', 'organization'));
-                $columnStateOrga->withEmptyElement = false;
-                $columnStateOrga->list = array(
-                    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
-                    Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
-                    Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'));
-                $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_BOX;
-                $columnStateOrga->filterName = Orga_Model_Cell::QUERY_INVENTORYSTATUS;
-                $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
-                $columnStateOrga->editable = false;
-                $datagridConfiguration->datagrid->addCol($columnStateOrga);
+                if ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
+                    || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
+                    $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'inventory', 'inventoryStatus'));
+                    $columnStateOrga->withEmptyElement = false;
+                    $columnStateOrga->list = array(
+                        Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
+                        Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
+                        Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'));
+                    $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_BOX;
+                    $columnStateOrga->filterName = Orga_Model_Cell::QUERY_INVENTORYSTATUS;
+                    $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
+                    $columnStateOrga->editable = false;
+                    $datagridConfiguration->datagrid->addCol($columnStateOrga);
 
-                $colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('UI', 'name', 'progress'));
-                $colAdvancementInput->filterName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
-                $colAdvancementInput->sortName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
-                $colAdvancementInput->entityAlias = AF_Model_InputSet_Primary::getAlias();
-                $datagridConfiguration->datagrid->addCol($colAdvancementInput);
+                    $colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'input', 'inputProgress'));
+                    $colAdvancementInput->filterName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
+                    $colAdvancementInput->sortName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
+                    $colAdvancementInput->entityAlias = AF_Model_InputSet_Primary::getAlias();
+                    $datagridConfiguration->datagrid->addCol($colAdvancementInput);
+                }
 
-                $columnStateInput = new UI_Datagrid_Col_List('stateInput', __('UI', 'name', 'status'));
+                $columnStateInput = new UI_Datagrid_Col_List('stateInput', __('Orga', 'input', 'inputStatus'));
                 $imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
                 $imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
                 $imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incompletecomplete');

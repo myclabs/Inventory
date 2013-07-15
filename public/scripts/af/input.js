@@ -89,20 +89,6 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
 
 	// Initialisation lorsque toute la page est chargée
 	$(function() {
-		// Se branche sur les boutons des sous-af
-		that.form.find(".addSubAF").click(function() {
-			var button = $(this);
-			var idAFOwner = button.data("id-af-owner");
-			var refComponent = button.data("ref-component");
-			button.button("loading");
-			that.addSubAF(idAFOwner, refComponent, function() {
-				button.button("reset");
-			});
-		});
-		// Se branche sur les boutons des sous-af
-		that.form.find(".removeSubAF").click(function() {
-			that.removeSubAF($(this).data("id-af-owner"), $(this).data("ref-component"), $(this).data("number"));
-		});
 		// Se branche sur les boutons du formulaire
 		$(".inputSave").click(function() {
 			that.save();
@@ -197,7 +183,7 @@ AF.Input.prototype = {
 	 * Sauvegarde le formulaire
 	 */
 	save: function() {
-		$(this).button("loading");
+        this.form.find(".inputSave").button("loading");
 		this.form.submit();
 	},
 
@@ -297,66 +283,6 @@ AF.Input.prototype = {
 		}
 	},
 
-	/**
-	 * Ajoute un nouveau sous-AF
-	 * @param {int} idAFOwner ID de l'AF qui possède ce component (pas forcément = AF affiché dans le cas
-	 * de sous-formulaire dans des sous-formulaires)
-	 * @param {string} refComponent
-	 * @param {Function} onCompletion Callback appelée quand le sous-formulaire est ajouté
-	 */
-	addSubAF: function(idAFOwner, refComponent, onCompletion) {
-		var that = this;
-
-		// Numéro du sous-formulaire
-		var numbers = that.form.find(".subAFGroup").filter(function(index, element) {
-			return ($(element).data("id-af-owner") == idAFOwner)
-				&& ($(element).data("ref-component") == refComponent);
-		}).map(function(index, element) {
-			return $(element).data("number");
-		});
-		var number = Math.max.apply(null, numbers) + 1;
-		if (number < 0) {
-			number = 0;
-		}
-
-		var url = "af/input/get-sub-af/id/" + idAFOwner + "/refComponent/" + refComponent + "/number/" + number;
-		for (var key in this.urlParams) {
-            if (this.urlParams.hasOwnProperty(key)) {
-                url += '/' + key + '/' + this.urlParams[key];
-            }
-		}
-
-		$.get(url,
-			function(data) {
-				var domElement = $(data);
-				that.form.find(".addSubAFGroup").filter(function(index, element) {
-					return ($(element).data("id-af-owner") == idAFOwner)
-						&& ($(element).data("ref-component") == refComponent);
-				})
-					.before(domElement);
-				domElement.find(".removeSubAF").click(function() {
-					that.removeSubAF($(this).data("id-af-owner"), $(this).data("ref-component"), $(this).data("number"));
-				});
-				onCompletion();
-			}
-		);
-	},
-
-	/**
-	 * Supprime un sous-AF
-	 * @param {int} idAFOwner ID de l'AF qui possède ce component (pas forcément = AF affiché dans le cas
-	 * de sous-formulaire dans des sous-formulaires)
-	 * @param {string} refComponent
-	 * @param {int} number
-	 */
-	removeSubAF: function(idAFOwner, refComponent, number) {
-		this.form.find(".subAFGroup").filter(function(index, element) {
-			return ($(element).data("id-af-owner") == idAFOwner)
-				&& ($(element).data("ref-component") == refComponent)
-				&& ($(element).data("number") == number);
-		}).remove();
-	},
-
     /**
      * Ajoute un handler à l'évènement "change" de la saisie
      * Ne supprime pas les handlers précédents
@@ -365,8 +291,8 @@ AF.Input.prototype = {
     onChange: function(handler) {
         // Pour tous les input du formulaire (utilise "on()" pour des raisons de performances)
         this.form.on("change keyup", ":input", handler);
-        this.form.on("click", ".addSubAF", handler);
-        this.form.on("click", ".removeSubAF", handler);
+        this.form.on("click", ".addRow", handler);
+        this.form.on("click", ".deleteRow", handler);
     },
 
     /**

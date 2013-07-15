@@ -36,6 +36,14 @@
                 <seg>Inventorie</seg>
             </tuv>
         </tu>
+        <tu tuid="inventoryStatus">
+            <tuv xml:lang="fr">
+                <seg>Statut inventaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventory status</seg>
+            </tuv>
+        </tu>
         <tu tuid="notLaunched">
             <tuv xml:lang="fr">
                 <seg>Non lancé</seg>

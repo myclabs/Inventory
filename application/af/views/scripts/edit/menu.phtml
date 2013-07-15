@@ -1,7 +1,7 @@
 <?php
-/**
- * @package AF
- */
+// API Google pour les charts
+$this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}', 'text/javascript');
+
 /** @var $af AF_Model_AF */
 $af = $this->af;
 ?>

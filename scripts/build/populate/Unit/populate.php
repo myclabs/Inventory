@@ -2,6 +2,9 @@
 /**
  * @package Unit
  */
+use Unit\Domain\Unit\Unit;
+use Unit\Domain\PhysicalQuantity;
+
 require_once 'populatePhysicalQuantities.php';
 require_once 'populateStandardUnit.php';
 require_once 'populateUnitSystem.php';
@@ -64,7 +67,7 @@ class Unit_Populate extends Core_Script_Populate
      * Initialise la connection et l'EntityManager de Unit.
      * @param string $environment
      */
-    protected function initUnitEntityManager($environment)
+    public function initUnitEntityManager($environment)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
@@ -99,15 +102,15 @@ class Unit_Populate extends Core_Script_Populate
         Zend_Registry::set('EntityManagers', $entityManagers);
 
         // Désignation des PoolName spécifique à UI.
-        //  Les Objets du sous-package Unit utilisent le PoolsNames de Unit_Model_Unit.
-        Unit_Model_Unit::setActivePoolName('unit');
-        Unit_Model_PhysicalQuantity::setActivePoolName('unit');
+        //  Les Objets du sous-package Unit utilisent le PoolsNames de Unit.
+        Unit::setActivePoolName('unit');
+        PhysicalQuantity::setActivePoolName('unit');
     }
 
     /**
      * Reset la connection et l'EntityManager de Unit.
      */
-    protected function resetUnitEntityManager()
+    public function resetUnitEntityManager()
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['unit']->close();

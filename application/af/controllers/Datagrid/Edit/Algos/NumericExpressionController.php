@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * @package AF
@@ -88,7 +89,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->send();
                 return;
             }
-            $algo->setUnit(new Unit_API($this->getAddElementValue('unit')));
+            $algo->setUnit(new UnitAPI($this->getAddElementValue('unit')));
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
@@ -124,7 +125,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->data = $algo->getLabel();
                 break;
             case 'unit':
-                $algo->setUnit(new Unit_API($newValue));
+                $algo->setUnit(new UnitAPI($newValue));
                 $this->data = $algo->getUnit()->getRef();
                 break;
             case 'expression':

@@ -89,7 +89,7 @@ class Keyword_Service_Association
         $querySubjectKeywordExist = new Core_Model_Query();
         $querySubjectKeywordExist->filter->addCondition(Keyword_Model_Keyword::QUERY_REF, $subjectKeywordRef);
         if (Keyword_Model_Keyword::countTotal($querySubjectKeywordExist) != 1) {
-            return __('Keyword', 'exceptions', 'AssociationSubjectNotExists', array('REF' => $subjectKeywordRef));
+            return __('UI', 'formValidation', 'emptyRequiredField');
         }
 
         return null;
@@ -107,7 +107,7 @@ class Keyword_Service_Association
         $queryObjectKeywordExist = new Core_Model_Query();
         $queryObjectKeywordExist->filter->addCondition(Keyword_Model_Keyword::QUERY_REF, $objectKeywordRef);
         if (Keyword_Model_Keyword::countTotal($queryObjectKeywordExist) != 1) {
-            return __('Keyword', 'exceptions', 'AssociationObjectNotExists', array('REF' => $objectKeywordRef));
+            return __('UI', 'formValidation', 'emptyRequiredField');
         }
 
         return null;
@@ -125,7 +125,7 @@ class Keyword_Service_Association
         $queryPredicateExist = new Core_Model_Query();
         $queryPredicateExist->filter->addCondition(Keyword_Model_Predicate::QUERY_REF, $predicateRef);
         if (Keyword_Model_Predicate::countTotal($queryPredicateExist) != 1) {
-            return __('Keyword', 'exceptions', 'AssociationPredicateNotExists', array('REF' => $predicateRef));
+            return __('UI', 'formValidation', 'emptyRequiredField');
         }
 
         return null;

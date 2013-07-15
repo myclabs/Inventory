@@ -38,7 +38,7 @@ class Orga_OrganizationConsistency extends Core_Model_Entity_Singleton
                     foreach ($axis->getMembers() as $member) {
                         try {
                             $member->getParentForAxis($broaderAxis);
-                        } catch (Core_Exception_InvalidArgument $e) {
+                        } catch (Core_Exception_NotFound $e) {
                             $listParentsAxes[] = $axis->getLabel();
                             $listParentsMembers[] = $member->getLabel();
                         }

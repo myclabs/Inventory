@@ -4,6 +4,8 @@
  * @author valentin.claras
  * @package User
  */
+use User\ACL\EntityManagerListener;
+use User\ACL\TypeMapping\ActionType;
 
 /**
  * Bootstrap
@@ -26,7 +28,7 @@ class User_Bootstrap extends Core_Package_Bootstrap
     protected function _initUserTypeMapping()
     {
         \Doctrine\DBAL\Types\Type::addType(Core_TypeMapping_Locale::TYPE_NAME, 'Core_TypeMapping_Locale');
-        \Doctrine\DBAL\Types\Type::addType(User_TypeMapping_Action::TYPE_NAME, 'User_TypeMapping_Action');
+        \Doctrine\DBAL\Types\Type::addType(ActionType::TYPE_NAME, 'User\ACL\TypeMapping\ActionType');
     }
 
     /**
@@ -59,8 +61,8 @@ class User_Bootstrap extends Core_Package_Bootstrap
             Doctrine\ORM\Events::postFlush,
         ];
 
-        /** @var User_ACLEntityManagerListener $aclEntityManagerListener */
-        $aclEntityManagerListener = $this->container->get('User_ACLEntityManagerListener');
+        /** @var EntityManagerListener $aclEntityManagerListener */
+        $aclEntityManagerListener = $this->container->get('User\ACL\EntityManagerListener');
 
         $entityManager->getEventManager()->addEventListener($events, $aclEntityManagerListener);
     }

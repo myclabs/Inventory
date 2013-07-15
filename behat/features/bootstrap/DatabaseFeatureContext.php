@@ -6,33 +6,27 @@
 trait DatabaseFeatureContext
 {
     /**
-     * @BeforeFeature @dbEmpty
+     * @BeforeScenario @dbEmpty
      */
-    public static function loadEmptyDatabase()
+    public function loadEmptyDatabase()
     {
-        self::loadFileToDatabase('base.sql');
+        self::loadFileToDatabase('emptyOneUser.sql');
     }
     /**
-     * @BeforeFeature @dbOneOrganization
+     * @BeforeScenario @dbFull
      */
-    public static function loadOneOrganizationDatabase()
+    public function loadFilledDatabase()
     {
-        self::loadFileToDatabase('oneOrganization.sql');
+        self::loadFileToDatabase('full.sql');
     }
     /**
-     * @BeforeFeature @dbOneOrganizationWithAxes
+     * @BeforeScenario @dbForTestDWUpToDate
      */
-    public static function loadOneOrganizationWithAxesDatabase()
+    public function loadForTestDWUpToDateDatabase()
     {
-        self::loadFileToDatabase('oneOrganizationWithAxes.sql');
+        self::loadFileToDatabase('forTestDWUpToDate.sql');
     }
-    /**
-     * @BeforeFeature @dbWithClassifAxesIndicatorsContexts
-     */
-    public static function loadWithClassifAxesIndicatorsContextsDatabase()
-    {
-        self::loadFileToDatabase('withClassifAxesIndicatorsContexts.sql');
-    }
+
 
     private static function loadFileToDatabase($fileName)
     {

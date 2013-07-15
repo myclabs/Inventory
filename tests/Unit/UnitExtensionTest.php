@@ -7,6 +7,7 @@
  * @package Unit
  * @subpackage Test
  */
+use Unit\Domain\UnitExtension;
 
 /**
  * UnitExtensionTest
@@ -30,11 +31,11 @@ class Unit_Test_UnitExtensionTest
      * Permet de générer un objet de base sur lequel on pourra travailler
      * @param string $ref
      * @param int $multiplier
-     * @return Unit_Model_Unit_Extension $o
+     * @return \Unit\Domain\UnitExtension $o
      */
     public static function generateObject($ref='UnitExtensionTest', $multiplier=1)
     {
-        $o = new Unit_Model_Unit_Extension();
+        $o = new UnitExtension();
         $o->setRef('Ref'.$ref);
         $o->setName('Name'.$ref);
         $o->setSymbol('Symbol'.$ref);
@@ -48,9 +49,9 @@ class Unit_Test_UnitExtensionTest
 
     /**
      * Permet de supprimer un objet de base sur lequel on a travaillé
-     * @param Unit_Model_Unit_Extension $o
+     * @param \Unit\Domain\UnitExtension $o
      */
-    public static function deleteObject(Unit_Model_Unit_Extension $o)
+    public static function deleteObject(UnitExtension $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -69,10 +70,10 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_Extension en base, sinon suppression !
-        if (Unit_Model_Unit_Extension::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
+        if (UnitExtension::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_Extention restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_Extension::loadList() as $extensionunit) {
+            foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -93,8 +94,8 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $o = new Unit_Model_Unit_Extension();
-        $this->assertInstanceOf('Unit_Model_Unit_Extension', $o);
+        $o = new UnitExtension();
+        $this->assertInstanceOf('Unit\Domain\UnitExtension', $o);
         $o->setRef('RefUnitExtensionTest');
         $o->setName('NameUnitExtensionTest');
         $o->setSymbol('Ext');
@@ -109,14 +110,14 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Unit_Model_Unit_Extension $o
+     * @param \Unit\Domain\UnitExtension $o
      */
     function testLoad($o)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->clear($o);
-        $oLoaded = Unit_Model_Unit_Extension::load($o->getKey());
-        $this->assertInstanceOf('Unit_Model_Unit_Extension', $o);
+        $oLoaded = UnitExtension::load($o->getKey());
+        $this->assertInstanceOf('Unit\Domain\UnitExtension', $o);
         $this->assertEquals($oLoaded->getKey(), $o->getKey());
         $this->assertEquals($oLoaded->getRef(), $o->getRef());
         $this->assertEquals($oLoaded->getName(), $o->getName());
@@ -127,9 +128,9 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testLoad
-     * @param Unit_Model_Unit_Extension $o
+     * @param \Unit\Domain\UnitExtension $o
      */
-    function testDelete(Unit_Model_Unit_Extension $o)
+    function testDelete(UnitExtension $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -150,10 +151,10 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_Extension en base, sinon suppression !
-        if (Unit_Model_Unit_Extension::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
+        if (UnitExtension::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_Extension restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_Extension::loadList() as $extensionunit) {
+            foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -175,10 +176,10 @@ class Unit_Test_UnitExtensionOthers extends PHPUnit_Framework_TestCase
       */
      public static function setUpBeforeClass()
      {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_Extension en base, sinon suppression !
-        if (Unit_Model_Unit_Extension::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
+        if (UnitExtension::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_Extension restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_Extension::loadList() as $extensionunit) {
+            foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -200,8 +201,8 @@ class Unit_Test_UnitExtensionOthers extends PHPUnit_Framework_TestCase
       */
      function testLoadByRef()
      {
-        $o = Unit_Model_Unit_Extension::loadByRef('RefUnitExtensionTest');
-        $this->assertInstanceOf('Unit_Model_Unit_Extension', $o);
+        $o = UnitExtension::loadByRef('RefUnitExtensionTest');
+        $this->assertInstanceOf('Unit\Domain\UnitExtension', $o);
         $this->assertSame($o, $this->extension);
      }
 
@@ -218,10 +219,10 @@ class Unit_Test_UnitExtensionOthers extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_Extension en base, sinon suppression !
-        if (Unit_Model_Unit_Extension::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
+        if (UnitExtension::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_Extension restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_Extension::loadList() as $extensionunit) {
+            foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
