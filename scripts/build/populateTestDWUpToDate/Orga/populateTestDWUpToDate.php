@@ -50,11 +50,11 @@ class Orga_PopulateTestDWUpToDate extends Orga_Populate
         // Granularités de saisie
         // $granularity_annee_site_categorie->setInputConfigGranularity($granularity_annee_categorie);
 
+        $entityManager->flush();
+
         // Création des utilisateurs orga.
         // Params : email
         // $this->createUser('administrateur.organisation@toto.com');
-        $entityManager->flush();
-
 
         // Ajout d'un role sun une organisation à un utilisateur existant.
         // Params : email, Organization

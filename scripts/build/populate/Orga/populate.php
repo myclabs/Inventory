@@ -110,10 +110,7 @@ class Orga_Populate extends Core_Script_Action
 
     protected function createUser($email)
     {
-        $user = new User_Model_User();
-        $user->setEmail($email);
-        $user->setPassword($email);
-        $user->save();
+        User_Service_User::getInstance()->createUser($email, $email);
     }
 
     /**

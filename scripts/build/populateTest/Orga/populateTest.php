@@ -71,6 +71,8 @@ class Orga_PopulateTest extends Orga_Populate
         $granularity_annee_site->setInputConfigGranularity($granularityGlobal); // Utile pour tester les ordres entre les granularités des onglets "Collectes" et "Saisies"
         $granularity_annee_site_categorie->setInputConfigGranularity($granularity_annee_categorie);
 
+        $entityManager->flush();
+
         // Création des utilisateurs orga.
         // Params : email
         $this->createUser('administrateur.organisation@toto.com');
@@ -84,8 +86,6 @@ class Orga_PopulateTest extends Orga_Populate
         $this->createUser('contributeur.site@toto.com');
         $this->createUser('observateur.site@toto.com');
         $this->createUser('utilisateur.connecte@toto.com');
-        $entityManager->flush();
-
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         // Params : email, Organization
