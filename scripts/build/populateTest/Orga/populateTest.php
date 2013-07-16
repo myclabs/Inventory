@@ -40,13 +40,16 @@ class Orga_PopulateTest extends Orga_Populate
         // Création des membres.
         // Params : Axis, ref, label
         // OptionalParams : [Member] parents=[]
+        $member_annee_2012 = $this->createMember($axis_annee, '2012', '2012');
         $member_annee_2013 = $this->createMember($axis_annee, '2013', '2013');
         $member_zone_europe = $this->createMember($axis_zone, 'europe', 'Europe');
         $member_pays_france = $this->createMember($axis_pays, 'france', 'France', [$member_zone_europe]);
         $member_marque_marque_a = $this->createMember($axis_marque, 'marque_a', 'Marque A');
+        $member_marque_marque_b = $this->createMember($axis_marque, 'marque_b', 'Marque B');
         $member_marque_marque_sans_site = $this->createMember($axis_marque, 'marque_sans_site', 'Marque sans site');
         $member_site_annecy = $this->createMember($axis_site, 'annecy', 'Annecy', [$member_pays_france, $member_marque_marque_a]);
         $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambéry', [$member_pays_france, $member_marque_marque_a]);
+        $member_site_grenoble = $this->createMember($axis_site, 'grenoble', 'Grenoble', [$member_pays_france, $member_marque_marque_b]);
         $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
         $member_categorie = $this->createMember($axis_categorie, 'energie', 'Énergie');
 
