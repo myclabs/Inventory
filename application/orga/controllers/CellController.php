@@ -291,6 +291,7 @@ class Orga_CellController extends Core_Controller_Ajax
                 $cell,
                 $narrowerGranularity
             );
+            $datagridConfiguration->datagrid->addParam('idOrganization', $cell->getGranularity()->getOrganization()->getId());
             $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
             $columnRelevant = new UI_Datagrid_Col_Bool('relevant');
             $columnRelevant->label = __('Orga', 'cellRelevance', 'relevance');
