@@ -31,7 +31,17 @@ class Orga_Datagrid_Organization_InputgranularitiesController extends UI_Control
     function getelementsAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        foreach ($organization->getInputGranularities() as $inputGranularity) {
+        $listInputGranularities = $organization->getInputGranularities();
+        uasort(
+            $listInputGranularities,
+            function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
+                if ($a->getInputConfigGranularity() === $b->getInputConfigGranularity()) {
+                    return $a->getPosition() - $b->getPosition();
+                }
+                return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
+            }
+        );
+        foreach ($listInputGranularities as $inputGranularity) {
             $data = array();
             $data['index'] = $inputGranularity->getId();
             $data['inputConfigGranularity'] = $this->cellList($inputGranularity->getInputConfigGranularity()->getRef());
