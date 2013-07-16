@@ -6,8 +6,8 @@
  * @subpackage Service
  */
 
-use Xport\SpreadsheetModelBuilder;
-use Xport\SpreadsheetExporter\PHPExcelExporter;
+use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
+use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
 
 /**
@@ -15,22 +15,20 @@ use Xport\MappingReader\YamlMappingReader;
  * @package    Classif
  * @subpackage Service
  */
-class Classif_Service_Classif
+class Classif_Service_Export
 {
     /**
      * Exporte la version de classif.
      *
      * @param string $format
      */
-    public function streamExport($format)
+    public function stream($format)
     {
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
 
-        $modelBuilder->bind('separators', []);
-
         // Feuilles des Context, Indicator, ContextIndicator.
-        $modelBuilder->bind('contextindicatorSheetLabel', __('Classif', 'exports', 'indicatorSheetLabel'));
+        $modelBuilder->bind('contextindicatorsSheetLabel', __('Classif', 'exports', 'indicatorSheetLabel'));
 
         $modelBuilder->bind('contextColumnLabel', __('Classif', 'exports', 'contextColumnLabel'));
         $modelBuilder->bind('contextColumnRef', __('Classif', 'exports', 'contextColumnRef'));
@@ -62,8 +60,8 @@ class Classif_Service_Classif
 
         $modelBuilder->bind('axisColumnLabel', __('Classif', 'exports', 'axisColumnLabel'));
         $modelBuilder->bind('axisColumnRef', __('Classif', 'exports', 'axisColumnRef'));
-        $modelBuilder->bind('axisColumnRef', __('Classif', 'exports', 'axisColumnNarrower'));
-        $modelBuilder->bind('axes', Classif_Model_Axis::loadList());
+        $modelBuilder->bind('axisColumnNarrower', __('Classif', 'exports', 'axisColumnNarrower'));
+        $modelBuilder->bind('axes', Classif_Model_Axis::loadListOrderedAsAscendantTree());
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
             function(Classif_Model_Axis $axis) {
@@ -74,23 +72,22 @@ class Classif_Service_Classif
             }
         );
 
-//        // Feuille des Member.
-//        $modelBuilder->bind('membersSheetLabel', __('Classif', 'exports', 'membersSheetLabel'));
-//
-//        $modelBuilder->bind('memberColumnLabel', __('Classif', 'exports', 'memberColumnLabel'));
-//        $modelBuilder->bind('memberColumnRef', __('Classif', 'exports', 'memberColumnRef'));
-//        $modelBuilder->bind('memberColumnRef', __('Classif', 'exports', 'memberColumnNarrower'));
-//        $modelBuilder->bindFunction(
-//            'displayMemberDirectParents',
-//            function(Classif_Model_member $member) {
-//                $axesLabelRef = [];
-//                foreach ($contextIndicator->getAxes() as $axis) {
-//                    $axesLabelRef[] = $axis->getDirectNarrower()->getLabel() . ' (' . $axis->getDirectNarrower()->getRef() . ')';
-//                }
-//                return implode(' - ', $axesLabelRef);
-//                return '';
-//            }
-//        );
+        // Feuille des Member.
+        $modelBuilder->bind('membersSheetLabel', __('Classif', 'exports', 'membersSheetLabel'));
+
+        $modelBuilder->bind('memberColumnLabel', __('Classif', 'exports', 'memberColumnLabel'));
+        $modelBuilder->bind('memberColumnRef', __('Classif', 'exports', 'memberColumnRef'));
+        $modelBuilder->bindFunction(
+            'displayParentMemberForAxis',
+            function(Classif_Model_member $member, Classif_Model_Axis $broaderAxis) {
+                foreach ($member->getDirectParents() as $directParent) {
+                    if ($directParent->getAxis() === $broaderAxis) {
+                        return $directParent->getLabel();
+                    }
+                }
+                return '';
+            }
+        );
 
 
         switch ($format) {

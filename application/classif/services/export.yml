@@ -1,81 +1,89 @@
 sheets:
 
 
-  - label: "{{ contextindicatorSheetLabel }}"
+  - label: "{{ contextindicatorsSheetLabel }}"
 
-    tables:
+    content:
 
-      - lines:
-          foreach: contexts as context
+      - type: VerticalTable
         columns:
           - label: "{{ contextColumnLabel }}"
-            cellContent: "{{ context.label }}"
           - label: "{{ contextColumnRef }}"
-            cellContent: "{{ context.ref }}"
+        lines:
+          - foreach: contexts as context
+            do:
+              - cells:
+                  - "{{ context.label }}"
+                  - "{{ context.ref }}"
 
-      - lines:
-          foreach: separators as separator
-        columns:
-          - label: ""
-            cellContent: "{{ separator }}"
-
-      - lines:
-          foreach: indicators as indicator
+      - type: VerticalTable
         columns:
           - label: "{{ indicatorColumnLabel }}"
-            cellContent: "{{ indicator.label }}"
           - label: "{{ indicatorColumnRef }}"
-            cellContent: "{{ indicator.ref }}"
           - label: "{{ indicatorColumnUnit }}"
-            cellContent: "{{ indicator.unit }}"
           - label: "{{ indicatorColumnRatioUnit }}"
-            cellContent: "{{ indicator.ratioUnit }}"
+        lines:
+          - foreach: indicators as indicator
+            do:
+              - cells:
+                  - "{{ indicator.label }}"
+                  - "{{ indicator.ref }}"
+                  - "{{ indicator.unit }}"
+                  - "{{ indicator.ratioUnit }}"
 
-      - lines:
-          foreach: separators as separator
-        columns:
-          - label: ""
-            cellContent: "{{ separator }}"
-
-      - lines:
-          foreach: contextindicators as contextindicator
+      - type: VerticalTable
         columns:
           - label: "{{ contextindicatorColumnContext }}"
-            cellContent: "{{ contextindicator.context.label }}"
           - label: "{{ contextindicatorColumnIndicator }}"
-            cellContent: "{{ contextindicator.indicator.label }}"
           - label: "{{ contextindicatorColumnAxes }}"
-            cellContent: "{{ displayContextIndicatorAxes(contextindicator) }}"
+        lines:
+          - foreach: contextindicators as contextindicator
+            do:
+              - cells:
+                  - "{{ contextindicator.context.label }}"
+                  - "{{ contextindicator.indicator.label }}"
+                  - "{{ displayContextIndicatorAxes(contextindicator) }}"
 
 
   - label: "{{ axesSheetLabel }}"
 
-    tables:
+    content:
 
-      - lines:
-          foreach: axes as axis
+      - type: VerticalTable
         columns:
           - label: "{{ axisColumnLabel }}"
-            cellContent: "{{ axis.label }}"
           - label: "{{ axisColumnRef }}"
-            cellContent: "{{ axis.ref }}"
           - label: "{{ axisColumnNarrower }}"
-            cellContent: "{{ displayAxisDirectNarrower(axis) }}"
+        lines:
+          - foreach: axes as axis
+            do:
+              - cells:
+                  - "{{ axis.label }}"
+                  - "{{ axis.ref }}"
+                  - "{{ displayAxisDirectNarrower(axis) }}"
 
-#
-#  - label: "{{ membersSheetLabel }}"
-#
-#    tables:
-#      - foreach axes as axis
-#        lines:
-#          foreach: axis.members as member
-#        columns:
-#          - label: "{{ axis.label }}"
-#            cellContent: ""
-#          - label: "{{ memberColumnLabel }}"
-#            cellContent: "{{ member.label }}"
-#          - label: "{{ memberColumnRef }}"
-#            cellContent: "{{ member.ref }}"
-#          - label: "{{ memberColumnParents }}"
-#            cellContent: "{{ displayMemberDirectParents(member) }}"
-git filter-branch --commit-filter 'if [ "$GIT_AUTHOR_EMAIL" = "eu4a12n" ]; then GIT_AUTHOR_NAME="valentin-mcs"; GIT_AUTHOR_EMAIL="valentin.claras@myc-sense.com"; git commit-tree "$@"; else git commit-tree "$@";fi' HEAD
+
+  - label: "{{ membersSheetLabel }}"
+
+    content:
+
+      - foreach: axes as axis
+        do:
+          - type: VerticalTable
+            columns:
+              - label: "{{ axis.label }}"
+              - label: "{{ memberColumnLabel }}"
+              - label: "{{ memberColumnRef }}"
+              - foreach: axis.directBroaders as broaderAxis
+                do:
+                  - label: "{{ broaderAxis.label }}"
+            lines:
+              - foreach: axis.members as member
+                do:
+                  - cells:
+                      - ""
+                      - "{{ member.label }}"
+                      - "{{ member.ref }}"
+                      - foreach: axis.directBroaders as broaderAxis
+                        do:
+                          - "{{ displayParentMemberForAxis(member, broaderAxis) }}"
