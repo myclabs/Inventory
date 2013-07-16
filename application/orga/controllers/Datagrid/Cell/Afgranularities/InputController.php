@@ -125,10 +125,8 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                             break;
                     }
                     $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
-                    $data['stateInput'] = $aFInputSetPrimary->getStatus();
                 } catch (Core_Exception_UndefinedAttribute $e) {
                     $data['advancementInput'] = $this->cellPercent(0, 'danger');
-                    $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
                 }
             }
         }
@@ -151,15 +149,18 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                     $cell
                 );
                 try {
-                    $inputSetPrimary = $cell->getAFInputSetPrimary();
+                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+                    $data['stateInput'] = $aFInputSetPrimary->getStatus();
                 } catch (Core_Exception_UndefinedAttribute $e) {
-                    $inputSetPrimary = null;
+                    $aFInputSetPrimary = null;
+                    $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
                 }
-                if (($isUserAllowedToInputCell) || ($inputSetPrimary !== null)) {
+                if (($isUserAllowedToInputCell) || ($aFInputSetPrimary !== null)) {
                     $data['link'] = $this->cellLink('orga/cell/input/idCell/'.$cell->getId().'/fromIdCell/'.$fromIdCell);
                 }
             } catch (Core_Exception_UndefinedAttribute $e) {
                 // Pas d'AF configuré, donc pas de lien vers la saisie.
+                $data['stateInput'] = null;
             }
         } else {
             $data['advancementInput'] = null;
