@@ -60,17 +60,18 @@ class Orga_Service_InputService
             $inputSet = null;
         }
 
-        // Modification de la saisie
-        if ($inputSet) {
-            $this->afInputService->editInputSet($inputSet, $newValues);
-
-            // Lance l'évènement
-            $event = new Orga_Service_InputEditedEvent($cell);
-            $this->eventDispatcher->dispatch($event::NAME, $event);
+        // Injecte les coordonnées orga à la saisie en tant que ContextValue
+        foreach ($cell->getMembers() as $member) {
+            $newValues->setContextValue($member->getAxis()->getRef(), $member->getRef());
         }
 
-        // Création de la saisie
-        if (!$inputSet) {
+        if ($inputSet) {
+            // Modification de la saisie
+            $this->afInputService->editInputSet($inputSet, $newValues);
+
+            $event = new Orga_Service_InputEditedEvent($cell);
+        } else {
+            // Création de la saisie
             $inputSet = $newValues;
 
             // Sauvegarde et attache à la cellule
@@ -78,11 +79,13 @@ class Orga_Service_InputService
             $cell->setAFInputSetPrimary($inputSet);
             $this->afInputService->updateResults($inputSet);
 
-            // Lance l'évènement
             $event = new Orga_Service_InputCreatedEvent($cell);
-            $this->eventDispatcher->dispatch($event::NAME, $event);
         }
 
+        // Lance l'évènement
+        $this->eventDispatcher->dispatch($event::NAME, $event);
+
+        // Regénère DW
         $this->etlDataService->clearDWResultsFromCell($cell);
         if ($inputSet->isInputComplete()) {
             $this->etlDataService->populateDWResultsFromCell($cell);

@@ -43,6 +43,12 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
      */
     private $completion;
 
+    /**
+     * Tableau de clés-valeurs définies par le contexte
+     * @var array
+     */
+    private $contextValues;
+
 
     /**
      * @param AF_Model_AF $af
@@ -143,6 +149,59 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
     }
 
     /**
+     * @param array $contextValues
+     */
+    public function setContextValues(array $contextValues)
+    {
+        $this->contextValues = $contextValues;
+
+        // Copie dans les sous-inputset
+        foreach ($this->getSubInputSets() as $subInputSet) {
+            $subInputSet->setContextValues($contextValues);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getContextValues()
+    {
+        return $this->contextValues ?: [];
+    }
+
+    /**
+     * Définit une valeur du contexte
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function setContextValue($key, $value)
+    {
+        if ($this->contextValues === null) {
+            $this->contextValues = [];
+        }
+
+        $this->contextValues[$key] = $value;
+
+        // Copie dans les sous-inputset
+        foreach ($this->getSubInputSets() as $subInputSet) {
+            $subInputSet->setContextValue($key, $value);
+        }
+    }
+
+    /**
+     * Retourne une valeur définie par le contexte à partir de sa clé
+     * @param string $key
+     * @return mixed|null
+     */
+    public function getContextValue($key)
+    {
+        if ($this->contextValues && array_key_exists($key, $this->contextValues)) {
+            return $this->contextValues[$key];
+        }
+        return null;
+    }
+
+    /**
      * Met à jour le pourcentage de complétion de la saisie
      * @see getCompletion
      * @return void
@@ -201,6 +260,31 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
     public function getAF()
     {
         return AF_Model_AF::loadByRef($this->refAF);
+    }
+
+    /**
+     * Retourne tous les sous-inputset (récursivement)
+     * @return AF_Model_InputSet_Sub[]
+     */
+    protected function getSubInputSets()
+    {
+        $subInputSets = [];
+
+        foreach ($this->getInputs() as $input) {
+            if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
+                $subInputSet = $input->getValue();
+                $subInputSets[] = $subInputSet;
+                $subInputSets = array_merge($subInputSets, $subInputSet->getSubInputSets());
+            }
+            if ($input instanceof AF_Model_Input_SubAF_Repeated) {
+                foreach ($input->getValue() as $subInputSet) {
+                    $subInputSets[] = $subInputSet;
+                    $subInputSets = array_merge($subInputSets, $subInputSet->getSubInputSets());
+                }
+            }
+        }
+
+        return $subInputSets;
     }
 
 }

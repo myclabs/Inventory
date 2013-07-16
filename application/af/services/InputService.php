@@ -44,6 +44,9 @@ class AF_Service_InputService
         $updater = new AF_Service_InputService_InputSetUpdater($inputSet, $newValues);
         $updater->run();
 
+        // Copie les "ContextValue"
+        $inputSet->setContextValues($newValues->getContextValues());
+
         // Met à jour les résultats
         $this->updateResults($inputSet);
     }

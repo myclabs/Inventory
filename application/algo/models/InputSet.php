@@ -11,10 +11,17 @@ interface Algo_Model_InputSet
 {
 
     /**
-     * Returns an input by its ref
+     * Retourne la saisie d'un élément à partir de son ref
      * @param string $ref
      * @return Algo_Model_Input|null
      */
     public function getInputByRef($ref);
+
+    /**
+     * Retourne une valeur définie par le contexte à partir de sa clé
+     * @param string $key
+     * @return mixed|null
+     */
+    public function getContextValue($key);
 
 }
