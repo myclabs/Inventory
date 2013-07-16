@@ -90,20 +90,22 @@ Feature: Configuration of an organization
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification (au passage ordre / à l'ordre conventionnel sur les granularités)
-    And the row 1 of the "inputGranularities" datagrid should contain:
+    And the row 4 of the "inputGranularities" datagrid should contain:
       | inputGranularity | inputConfigGranularity |
       | Année            | Année                  |
   # Ajout, saisie correcte (granularité de saisie plus fine que ou égale à la granularité des collectes)
   # Remarque : granularités identiques (sans importance)
-    When I click "Ajouter"
-    And I select "Année | Site" from "Saisie"
-    And I select "Année | Site" from "Choix des formulaires"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
+  # Remarque : test abandonné car pas de granularité plus fine encore disponible
+  #  When I click "Ajouter"
+  #  And I select "Année | Site" from "Saisie"
+  #  And I select "Année | Site" from "Choix des formulaires"
+  #  And I click "Valider"
+  #  Then the following message is shown and closed: "Ajout effectué."
   # Vérification (au passage ordre / à l'ordre conventionnel sur les granularités)
-    And the row 3 of the "inputGranularities" datagrid should contain:
-      | inputGranularity | inputConfigGranularity |
-      | Année \| Site    | Année \| Site          |
+  # TODO : test ordre conventionnel suivant granularités de saisie.
+  #  And the row 3 of the "inputGranularities" datagrid should contain:
+  #    | inputGranularity | inputConfigGranularity |
+  #    | Année \| Site    | Année \| Site          |
 
   @javascript
   Scenario: Delete input granularity
@@ -118,6 +120,6 @@ Feature: Configuration of an organization
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "inputGranularities" datagrid should contain 0 row
+    And the "inputGranularities" datagrid should contain 3 row
 
 

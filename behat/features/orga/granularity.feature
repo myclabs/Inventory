@@ -99,7 +99,7 @@ Feature: Organization granularity feature
     And I open tab "Organisation"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
-  # Suppression, granularité de saisie
+  # Suppression, granularité de saisie  (suppression interdite)
     And the "granularity" datagrid should contain 8 row
     And the row 8 of the "granularity" datagrid should contain:
       | axes  |
@@ -109,7 +109,7 @@ Feature: Organization granularity feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
     And the "granularity" datagrid should contain 8 row
-  # Suppression, granularité de choix des formulaires comptables
+  # Suppression, granularité de choix des formulaires comptables  (suppression interdite)
     And the row 5 of the "granularity" datagrid should contain:
       | axes  |
       | Année, Catégorie  |
@@ -118,7 +118,7 @@ Feature: Organization granularity feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
     And the "granularity" datagrid should contain 8 row
-  # Suppression, granularité du statut des collectes
+  # Suppression, granularité du statut des collectes (suppression interdite)
     And the row 6 of the "granularity" datagrid should contain:
       | axes  |
       | Année, Zone, Marque |
@@ -138,10 +138,10 @@ Feature: Organization granularity feature
     And the "granularity" datagrid should contain 7 row
   # Suppression, granularité avec des rôles
   # TODO : bloquer une telle suppression !
-    And the row 2 of the "granularity" datagrid should contain:
+    And the row 3 of the "granularity" datagrid should contain:
       | axes  |
-      | Zone, Marque |
-    When I click "Supprimer" in the row 2 of the "granularity" datagrid
+      | Site |
+    When I click "Supprimer" in the row 3 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
