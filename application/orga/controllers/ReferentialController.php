@@ -106,22 +106,31 @@ class Orga_ReferentialController extends Core_Controller
         $export = $this->getParam('export');
         $format = $this->getParam('format');
         if ($this->hasParam('version')) {
-            $version = $this->getParam('version');
+            $refVersion = $this->getParam('version');
         }
+        $version = null;
 
         switch ($export) {
+            case 'Orga':
+                $exportService = new Orga_Service_Export();
+                $version = Orga_Model_Organization::load($refVersion);
+                $baseFilename = 'Orga';
+                break;
             case 'Classif':
-                $exportService = new Classif_Service_Classif();
+                $exportService = new Classif_Service_Export();
                 $baseFilename = 'Classif';
+                break;
+            case 'Keyword':
+                $exportService = new Keyword_Service_Export();
+                $baseFilename = 'Keyword';
                 break;
             case 'Unit':
                 $exportService = new \Unit\Application\Service\UnitExport();
                 $baseFilename = 'Unit';
                 break;
-            //@todo A supprimer. Utile pour les tests.
             default:
-                $exportService = new \Unit\Application\Service\UnitExport();
-                $baseFilename = 'Unit';
+                UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);
+                $this->redirect('orga/referential/exports');
                 break;
         }
 
@@ -139,7 +148,11 @@ class Orga_ReferentialController extends Core_Controller
         Zend_Layout::getMvcInstance()->disableLayout();
         Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
 
-        $exportService->stream($format);
+        if ($version === null) {
+            $exportService->stream($format);
+        } else {
+            $exportService->stream($format, $version);
+        }
     }
 
 }
