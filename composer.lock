@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "dc4152396db8479ff2c017fb7f10bc29",
+    "hash": "f77937d8418d7c8fdf773e82a09181f2",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -37,7 +37,7 @@
                     "Doctrine\\Common\\Annotations\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -63,7 +63,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -99,7 +99,7 @@
                     "Doctrine\\Common\\Cache\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -165,7 +165,7 @@
                     "Doctrine\\Common\\Collections\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -191,7 +191,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -209,7 +209,7 @@
             "version": "dev-ChainDriverFix",
             "source": {
                 "type": "git",
-                "url": "https://github.com/myclabs/common.git",
+                "url": "git://github.com/myclabs/common.git",
                 "reference": "e784767eb173e45f0079718eec5f3eccf6e43198"
             },
             "require": {
@@ -296,7 +296,7 @@
                     "Doctrine\\DBAL": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -353,7 +353,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -377,9 +377,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -416,7 +416,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -433,7 +433,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -483,7 +483,7 @@
                     "Doctrine\\ORM": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -538,7 +538,7 @@
                     "include/"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -599,7 +599,7 @@
                     "Gedmo": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -794,6 +794,51 @@
             "time": "2013-03-20 22:20:22"
         },
         {
+            "name": "myclabs/xport",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/Xport.git",
+                "reference": "0e5940e6673dc48732d393178c71d07d57191658"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/Xport/zipball/0e5940e6673dc48732d393178c71d07d57191658",
+                "reference": "0e5940e6673dc48732d393178c71d07d57191658",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "phpoffice/phpexcel": "1.7.*",
+                "symfony/property-access": "2.*",
+                "symfony/yaml": "2.*",
+                "twig/twig": "1.*"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Xport": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Import/Export library for PHP",
+            "homepage": "https://github.com/myclabs/Xport",
+            "keywords": [
+                "excel",
+                "export",
+                "import",
+                "pdf",
+                "xml"
+            ],
+            "time": "2013-07-15 12:45:26"
+        },
+        {
             "name": "netcarver/textile",
             "version": "v3.5.1",
             "source": {
@@ -821,7 +866,7 @@
                     "Netcarver\\Textile": "src/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -915,7 +960,7 @@
                     "Console_CommandLine": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -962,7 +1007,7 @@
                     "PEAR": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "."
             ],
@@ -1006,7 +1051,7 @@
                     "classes/"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1022,17 +1067,11 @@
         },
         {
             "name": "phpoffice/phpexcel",
-            "version": "1.7.9",
+            "version": "dev-WriterExcel5OptionalConstructor",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PHPOffice/PHPExcel.git",
-                "reference": "1.7.9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/1.7.9",
-                "reference": "1.7.9",
-                "shasum": ""
+                "url": "git://github.com/myclabs/PHPExcel.git",
+                "reference": "1a5fc2464042211dec0fb38ec484cc3475140655"
             },
             "require": {
                 "ext-xml": "*",
@@ -1044,7 +1083,6 @@
                     "PHPExcel": "Classes/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1067,14 +1105,14 @@
             "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
             "homepage": "http://phpexcel.codeplex.com",
             "keywords": [
+                "Excel",
                 "OpenXML",
-                "excel",
-                "php",
+                "PHP",
                 "spreadsheet",
                 "xls",
                 "xlsx"
             ],
-            "time": "2013-05-24 11:57:42"
+            "time": "2013-07-10 13:21:31"
         },
         {
             "name": "symfony/console",
@@ -1111,7 +1149,7 @@
                     "Symfony\\Component\\Console\\": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1184,6 +1222,64 @@
             "time": "2013-05-13 14:36:40"
         },
         {
+            "name": "symfony/property-access",
+            "version": "v2.3.1",
+            "target-dir": "Symfony/Component/PropertyAccess",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/PropertyAccess.git",
+                "reference": "v2.3.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/PropertyAccess/zipball/v2.3.1",
+                "reference": "v2.3.1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\PropertyAccess\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony PropertyAccess Component",
+            "homepage": "http://symfony.com",
+            "keywords": [
+                "access",
+                "array",
+                "extraction",
+                "index",
+                "injection",
+                "object",
+                "property",
+                "property path",
+                "reflection"
+            ],
+            "time": "2013-04-30 16:43:32"
+        },
+        {
             "name": "symfony/yaml",
             "version": "v2.3.1",
             "target-dir": "Symfony/Component/Yaml",
@@ -1212,7 +1308,7 @@
                     "Symfony\\Component\\Yaml\\": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1229,6 +1325,55 @@
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
             "time": "2013-05-10 18:12:13"
+        },
+        {
+            "name": "twig/twig",
+            "version": "v1.13.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fabpot/Twig.git",
+                "reference": "v1.13.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.1",
+                "reference": "v1.13.1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.13-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "http://twig.sensiolabs.org",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2013-06-06 06:06:01"
         },
         {
             "name": "zendframework/zend-code",
@@ -1399,7 +1544,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],
@@ -2175,6 +2320,12 @@
             "alias_normalized": "2.3.0.0",
             "version": "dev-ChainDriverFix",
             "package": "doctrine/common"
+        },
+        {
+            "alias": "1.7.99",
+            "alias_normalized": "1.7.99.0",
+            "version": "dev-WriterExcel5OptionalConstructor",
+            "package": "phpoffice/phpexcel"
         }
     ],
     "minimum-stability": "dev",
@@ -2183,6 +2334,8 @@
         "pear/console_commandline": 20,
         "mridgway/zendx_doctrine2": 20,
         "dompdf/dompdf": 20,
+        "phpoffice/phpexcel": 20,
+        "myclabs/xport": 20,
         "mnapoli/php-di": 20,
         "behat/mink-zombie-driver": 20
     },

@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe Unit_Service_Unit
+ * Classe UnitExport
  * @author valentin.claras
  * @package    Unit
  * @subpackage Service
@@ -28,12 +28,10 @@ class UnitExport
      *
      * @param string $format
      */
-    public function stream($format)
+    public function stream($format='xlsx')
     {
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
-
-        $modelBuilder->bind('separators', []);
 
         // Physical Quantities
         $queryBasePhysicalQuantities = new \Core_Model_Query();
@@ -90,7 +88,6 @@ class UnitExport
                 break;
         }
 
-        \Core_Tools::dump($modelBuilder->build(new YamlMappingReader(__DIR__.'/export.yml')));
         $export->export(
             $modelBuilder->build(new YamlMappingReader(__DIR__.'/export.yml')),
             'php://output',
