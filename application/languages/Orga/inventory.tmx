@@ -22,26 +22,26 @@
         </tu>
         <tu tuid="inventories">
             <tuv xml:lang="fr">
-                <seg>Inventaires</seg>
+                <seg>Collectes</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inventories</seg>
+                <seg>Collection</seg>
             </tuv>
         </tu>
         <tu tuid="inventory">
             <tuv xml:lang="fr">
-                <seg>Inventaire</seg>
+                <seg>Collecte</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inventorie</seg>
+                <seg>Collection</seg>
             </tuv>
         </tu>
         <tu tuid="inventoryStatus">
             <tuv xml:lang="fr">
-                <seg>Statut inventaire</seg>
+                <seg>Statut collecte</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inventory status</seg>
+                <seg>Collection status</seg>
             </tuv>
         </tu>
         <tu tuid="notLaunched">

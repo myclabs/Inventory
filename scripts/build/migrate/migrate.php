@@ -290,12 +290,12 @@ class Inventory_Migrate extends Core_Script_Populate
             $organization->setGranularityForInventoryStatus(
                 $this->getGranularity($row['idOrgaGranularityForInventoryStatus'])
             );
-            echo "\t\t > granularité des inventaires : " . $this->getGranularity(
+            echo "\t\t > granularité des collectes : " . $this->getGranularity(
                     $row['idOrgaGranularityForInventoryStatus']
                 )->getLabel() . "\n";
             $this->flush();
         } else {
-            echo "\t\t > pas de granularité des inventaires \n";
+            echo "\t\t > pas de granularité des collectes \n";
         }
 
         $this->migrateOrganizationAFConfig($row['idOrgaCube']);

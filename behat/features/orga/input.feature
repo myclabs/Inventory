@@ -6,13 +6,14 @@ Feature: Organization input tab feature
 
   @javascript
   Scenario: Filter on organization members
-  # Accès à l'onglet "Inventaires"
+  # Accès à l'onglet "Collectes"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Saisies"
+    And I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
     And the "aFGranularity1Input8" datagrid should contain 3 row
   # Filtre sur le site "Annecy"
-    When I open collapse "Filtres"
+    # When I open collapse "Filtres"
     And I select "Annecy" from "aFGranularity1Input8_site_filterForm"
     And I click "Filtrer"
     Then the "aFGranularity1Input8" datagrid should contain 1 row

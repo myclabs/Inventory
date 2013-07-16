@@ -830,7 +830,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         if ($this->getGranularity() !== $this->getGranularity()->getOrganization()->getGranularityForInventoryStatus()) {
             throw new Core_Exception(
-                "Le status de l'inventaire ne peut être défini que pour les cellules de la granularité des inventaires."
+                "Le statut de l'inventaire ne peut être défini que pour les cellules de la granularité des inventaires."
             );
         }
 

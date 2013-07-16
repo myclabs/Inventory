@@ -19,7 +19,7 @@ Feature: Configuration of an organization
   # Vérification modification prise en compte
     When I reload the page
     And I wait for the page to finish loading
-    Then I should see "Unité organisationnelle globale Organisation avec données modifiée"
+    Then I should see "Vue globale Organisation avec données modifiée"
 
   @javascript
   Scenario: Edit organization inventory granularity
@@ -29,18 +29,18 @@ Feature: Configuration of an organization
     And I open tab "Organisation"
     And I open tab "Configuration"
     Then I should see the "inputGranularities" datagrid
-  # Modification du niveau organisationnel des inventaires
-    And I select "Année" from "Niveau organisationnel des inventaires"
+  # Modification du niveau organisationnel des collectes
+    And I select "Année" from "Niveau organisationnel des collectes"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Vérification modification prise en compte
-    When I open tab "Inventaires"
+    When I open tab "Collectes"
     Then I should see the "inventories4" datagrid
     And the "inventories4" datagrid should contain 1 row
     And the row 1 of the "inventories4" datagrid should contain:
       | annee  | inventoryStatus |
       | 2013   | Non lancé       |
-  # Modification du niveau organisationnel des inventaires, choix d'un niveau organisationnel plus fin que certaines saisies
+  # Modification du niveau organisationnel des collectes, choix d'un niveau organisationnel plus fin que certaines saisies
   # TODO…
 
   @javascript
@@ -82,7 +82,7 @@ Feature: Configuration of an organization
     And I open tab "Organisation"
     And I open tab "Configuration"
     Then I should see the "inputGranularities" datagrid
-  # Ajout, saisie correcte (granularité de saisie non plus fine que ou égale à la granularité des inventaires)
+  # Ajout, saisie correcte (granularité de saisie non plus fine que ou égale à la granularité des collectes)
   # Remarque : granularités identiques (sans importance)
     When I click "Ajouter"
     And I select "Année" from "Saisie"
@@ -90,20 +90,22 @@ Feature: Configuration of an organization
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification (au passage ordre / à l'ordre conventionnel sur les granularités)
-    And the row 1 of the "inputGranularities" datagrid should contain:
+    And the row 4 of the "inputGranularities" datagrid should contain:
       | inputGranularity | inputConfigGranularity |
       | Année            | Année                  |
-  # Ajout, saisie correcte (granularité de saisie plus fine que ou égale à la granularité des inventaires)
+  # Ajout, saisie correcte (granularité de saisie plus fine que ou égale à la granularité des collectes)
   # Remarque : granularités identiques (sans importance)
-    When I click "Ajouter"
-    And I select "Année | Site" from "Saisie"
-    And I select "Année | Site" from "Choix des formulaires"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
+  # Remarque : test abandonné car pas de granularité plus fine encore disponible
+  #  When I click "Ajouter"
+  #  And I select "Année | Site" from "Saisie"
+  #  And I select "Année | Site" from "Choix des formulaires"
+  #  And I click "Valider"
+  #  Then the following message is shown and closed: "Ajout effectué."
   # Vérification (au passage ordre / à l'ordre conventionnel sur les granularités)
-    And the row 3 of the "inputGranularities" datagrid should contain:
-      | inputGranularity | inputConfigGranularity |
-      | Année \| Site    | Année \| Site          |
+  # TODO : test ordre conventionnel suivant granularités de saisie.
+  #  And the row 3 of the "inputGranularities" datagrid should contain:
+  #    | inputGranularity | inputConfigGranularity |
+  #    | Année \| Site    | Année \| Site          |
 
   @javascript
   Scenario: Delete input granularity
@@ -118,6 +120,6 @@ Feature: Configuration of an organization
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "inputGranularities" datagrid should contain 0 row
+    And the "inputGranularities" datagrid should contain 3 row
 
 

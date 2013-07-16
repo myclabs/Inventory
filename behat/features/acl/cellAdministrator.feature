@@ -14,10 +14,10 @@ Feature: Cell administrator feature
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
     And the "aFGranularity2Input8" datagrid should contain 2 row
-  # Vérification que le libellé "Unité globale" est présent mais non cliquable
+  # Vérification que le libellé "Vue globale" est présent mais non cliquable
   # Voir "Organization navigation scenario"
-    And I should see "Unité globale"
-    And I should not see a "#navigationParent a:contains('Unité globale')" element
+    And I should see "Vue globale"
+    And I should not see a "#navigationParent a:contains('Vue globale')" element
 
   @javascript
   Scenario: Administrator of several cells

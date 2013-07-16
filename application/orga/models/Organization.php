@@ -423,7 +423,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     {
         if ($this->granularityForInventoryStatus === null) {
             throw new Core_Exception_UndefinedAttribute(
-                "La Granularity des inventaires n'a pas été défini"
+                "Le niveau organisationnel des inventaires n'a pas été défini."
             );
         }
         return $this->granularityForInventoryStatus;
