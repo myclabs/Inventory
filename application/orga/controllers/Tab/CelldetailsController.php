@@ -194,17 +194,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $listDatagridConfiguration = array();
-        $listInputGranularities = $organization->getInputGranularities();
-        uasort(
-            $listInputGranularities,
-            function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
-                if ($a->getInputConfigGranularity() === $b->getInputConfigGranularity()) {
-                    return $a->getPosition() - $b->getPosition();
-                }
-                return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
-            }
-        );
-        foreach ($listInputGranularities as $inputGranularity) {
+        foreach ($organization->getInputGranularities() as $inputGranularity) {
             if ($cell->getGranularity()->isBroaderThan($inputGranularity->getInputConfigGranularity())
                 || ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
@@ -315,14 +305,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $listDatagridConfiguration = array();
-        $listInputGranularities = $organization->getInputGranularities();
-        uasort(
-            $listInputGranularities,
-            function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
-                return $a->getPosition() - $b->getPosition();
-            }
-        );
-        foreach ($listInputGranularities as $inputGranularity) {
+        foreach ($organization->getInputGranularities() as $inputGranularity) {
             if ($cell->getGranularity()->isBroaderThan($inputGranularity)
                 || ($cell->getGranularity()->getRef() === $inputGranularity->getRef())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
