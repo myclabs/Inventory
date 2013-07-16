@@ -4,7 +4,7 @@ Algo_Model_Selection_TextKey_ContextValue:
   table: Algo_Selection_TextKey_ContextValue
 
   fields:
-    key:
+    name:
       type: string
       nullable: false
     defaultValue:

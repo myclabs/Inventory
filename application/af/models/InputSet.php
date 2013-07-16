@@ -171,32 +171,32 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
 
     /**
      * Définit une valeur du contexte
-     * @param string $key
+     * @param string $name
      * @param mixed  $value
      */
-    public function setContextValue($key, $value)
+    public function setContextValue($name, $value)
     {
         if ($this->contextValues === null) {
             $this->contextValues = [];
         }
 
-        $this->contextValues[$key] = $value;
+        $this->contextValues[$name] = $value;
 
         // Copie dans les sous-inputset
         foreach ($this->getSubInputSets() as $subInputSet) {
-            $subInputSet->setContextValue($key, $value);
+            $subInputSet->setContextValue($name, $value);
         }
     }
 
     /**
-     * Retourne une valeur définie par le contexte à partir de sa clé
-     * @param string $key
+     * Retourne une valeur définie par le contexte à partir de son nom
+     * @param string $name
      * @return mixed|null
      */
-    public function getContextValue($key)
+    public function getContextValue($name)
     {
-        if ($this->contextValues && array_key_exists($key, $this->contextValues)) {
-            return $this->contextValues[$key];
+        if ($this->contextValues && array_key_exists($name, $this->contextValues)) {
+            return $this->contextValues[$name];
         }
         return null;
     }

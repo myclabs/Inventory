@@ -11,19 +11,22 @@ $datagrid = new UI_Datagrid('algoSelectionTextkeyContextValue', 'datagrid_edit_a
 $datagrid->initialLoading = false;
 $datagrid->addParam('id', $af->getId());
 $datagrid->pagination = false;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'blahblah');
+$datagrid->deleteElements = true;
 
 // Ref
 $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
 $refColumn->editable = true;
 $datagrid->addCol($refColumn);
 
-// Key
-$keyColumn = new UI_Datagrid_Col_Text('ref', __('AF', 'configInteraction', 'orgaCoordinate'));
-$keyColumn->editable = true;
-$datagrid->addCol($keyColumn);
+// Name
+$nameColumn = new UI_Datagrid_Col_Text('name', __('AF', 'configInteraction', 'orgaCoordinate'));
+$nameColumn->editable = true;
+$datagrid->addCol($nameColumn);
 
 // Default value
-$defaultValueColumn = new UI_Datagrid_Col_Text('ref', __('AF', 'configInteraction', 'defaultValue'));
+$defaultValueColumn = new UI_Datagrid_Col_Text('defaultValue', __('AF', 'configInteraction', 'defaultValue'));
 $defaultValueColumn->editable = true;
 $datagrid->addCol($defaultValueColumn);
 

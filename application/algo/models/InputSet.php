@@ -18,10 +18,10 @@ interface Algo_Model_InputSet
     public function getInputByRef($ref);
 
     /**
-     * Retourne une valeur définie par le contexte à partir de sa clé
-     * @param string $key
+     * Retourne une valeur définie par le contexte à partir de son nom
+     * @param string $name
      * @return mixed|null
      */
-    public function getContextValue($key);
+    public function getContextValue($name);
 
 }

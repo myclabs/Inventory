@@ -12,7 +12,7 @@ class Algo_Model_Selection_TextKey_ContextValue extends Algo_Model_Selection_Tex
     /**
      * @var string
      */
-    protected $key;
+    protected $name;
 
     /**
      * @var string
@@ -28,7 +28,7 @@ class Algo_Model_Selection_TextKey_ContextValue extends Algo_Model_Selection_Tex
      */
     public function execute(Algo_Model_InputSet $inputSet)
     {
-        $value = $inputSet->getContextValue($this->key);
+        $value = $inputSet->getContextValue($this->name);
 
         if ($value === null) {
             return $this->defaultValue;
@@ -40,17 +40,17 @@ class Algo_Model_Selection_TextKey_ContextValue extends Algo_Model_Selection_Tex
     /**
      * @return string
      */
-    public function getKey()
+    public function getName()
     {
-        return $this->key;
+        return $this->name;
     }
 
     /**
-     * @param string $key
+     * @param string $name
      */
-    public function setKey($key)
+    public function setName($name)
     {
-        $this->key = $key;
+        $this->name = $name;
     }
 
     /**

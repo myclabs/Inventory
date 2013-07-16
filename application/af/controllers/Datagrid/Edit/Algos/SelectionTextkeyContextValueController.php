@@ -27,6 +27,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyContextValueController extends UI_C
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
+                $data['name'] = $algo->getName();
+                $data['defaultValue'] = $algo->getDefaultValue();
                 $this->addLine($data);
             }
         }
@@ -56,6 +58,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyContextValueController extends UI_C
                 $this->send();
                 return;
             }
+            $algo->setName($this->getAddElementValue('name'));
+            $algo->setDefaultValue($this->getAddElementValue('defaultValue'));
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
@@ -85,6 +89,14 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyContextValueController extends UI_C
             case 'ref':
                 $algo->setRef($newValue);
                 $this->data = $algo->getRef();
+                break;
+            case 'name':
+                $algo->setName($newValue);
+                $this->data = $algo->getName();
+                break;
+            case 'defaultValue':
+                $algo->setDefaultValue($newValue);
+                $this->data = $algo->getDefaultValue();
                 break;
         }
         $algo->save();
