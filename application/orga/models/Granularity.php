@@ -670,7 +670,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocBibliographyForAFInputSetPrimary();
                     try {
-                        $cell->setAFInputSetPrimary();;
+                        $cell->setAFInputSetPrimary();
                     } catch (Core_Exception_UndefinedAttribute $e) {
                         // Pas de saisie pour cette cellule.
                     }
