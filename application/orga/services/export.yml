@@ -1,0 +1,101 @@
+sheets:
+
+
+  - label: "{{ organizationSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ organizationColumnLabel }}"
+          - label: "{{ organizationColumnGranularityForInventoryStatus }}"
+        lines:
+          - cells:
+              - "{{ organization.label }}"
+              - "{{ organization.granularityForInventoryStatus.label }}"
+
+      - type: VerticalTable
+        title: "{{ organizationInputGranularities }}"
+        columns:
+          - label: "{{ organizationInputGranularityColumnInput }}"
+          - label: "{{ organizationInputGranularityColumnInputConfig }}"
+        lines:
+          - foreach: organization.inputGranularities as inputGranularity
+            do:
+              - cells:
+                  - "{{ inputGranularity.label }}"
+                  - "{{ inputGranularity.inputConfigGranularity.label }}"
+
+
+  - label: "{{ axesSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ axisColumnLabel }}"
+          - label: "{{ axisColumnRef }}"
+          - label: "{{ axisColumnNarrower }}"
+        lines:
+          - foreach: organization.firstOrderedAxes as axis
+            do:
+              - cells:
+                  - "{{ axis.label }}"
+                  - "{{ axis.ref }}"
+                  - "{{ displayAxisDirectNarrower(axis) }}"
+
+
+  - label: "{{ granularitiesSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ granularityColumnLabel }}"
+          - label: "{{ granularityColumnNavigable }}"
+          - label: "{{ granularityColumnOrgaTab }}"
+          - label: "{{ granularityColumnACL }}"
+          - label: "{{ granularityColumnAFTab }}"
+          - label: "{{ granularityColumnDW }}"
+          - label: "{{ granularityColumnGenericActions }}"
+          - label: "{{ granularityColumnContextActions }}"
+          - label: "{{ granularityColumnInputDocuments }}"
+        lines:
+          - foreach: organization.granularities as granularity
+            do:
+              - cells:
+                  - "{{ granularity.label }}"
+                  - "{{ granularity.navigable }}"
+                  - "{{ granularity.cellsWithOrgaTab }}"
+                  - "{{ granularity.cellsWithACL }}"
+                  - "{{ granularity.cellsWithAFConfigTab }}"
+                  - "{{ granularity.cellsGenerateDWCubes }}"
+                  - "{{ granularity.cellsWithSocialGenericActions }}"
+                  - "{{ granularity.cellsWithSocialContextActions }}"
+                  - "{{ granularity.cellsWithInputDocs }}"
+
+
+  - label: "{{ membersSheetLabel }}"
+
+    content:
+
+      - foreach: organization.lastOrderedAxes as axis
+        do:
+          - type: VerticalTable
+            columns:
+              - label: "{{ axis.label }}"
+              - label: "{{ memberColumnLabel }}"
+              - label: "{{ memberColumnRef }}"
+              - foreach: axis.directBroaders as broaderAxis
+                do:
+                  - label: "{{ broaderAxis.label }}"
+            lines:
+              - foreach: axis.members as member
+                do:
+                  - cells:
+                      - ""
+                      - "{{ member.label }}"
+                      - "{{ member.ref }}"
+                      - foreach: axis.directBroaders as broaderAxis
+                        do:
+                          - "{{ displayParentMemberForAxis(member, broaderAxis) }}"

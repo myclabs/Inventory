@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe Classif_Service_Classif
+ * Classe Classif_Service_Export
  * @author valentin.claras
  * @package    Classif
  * @subpackage Service
