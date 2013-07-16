@@ -799,12 +799,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Xport.git",
-                "reference": "0e5940e6673dc48732d393178c71d07d57191658"
+                "reference": "7b7a51ad2eda49778c71c1b9213d58598c0aa8fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Xport/zipball/0e5940e6673dc48732d393178c71d07d57191658",
-                "reference": "0e5940e6673dc48732d393178c71d07d57191658",
+                "url": "https://api.github.com/repos/myclabs/Xport/zipball/7b7a51ad2eda49778c71c1b9213d58598c0aa8fa",
+                "reference": "7b7a51ad2eda49778c71c1b9213d58598c0aa8fa",
                 "shasum": ""
             },
             "require": {
@@ -836,7 +836,7 @@
                 "pdf",
                 "xml"
             ],
-            "time": "2013-07-15 12:45:26"
+            "time": "2013-07-16 08:57:09"
         },
         {
             "name": "netcarver/textile",
