@@ -1,0 +1,30 @@
+<?php
+/**
+ * Datagrid des algos de sélection de mot-clés
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af AF_Model_AF */
+$af = $this->af;
+
+$datagrid = new UI_Datagrid('algoSelectionTextkeyContextValue', 'datagrid_edit_algos_selection-textkey-context-value', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+
+// Ref
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$refColumn->editable = true;
+$datagrid->addCol($refColumn);
+
+// Key
+$keyColumn = new UI_Datagrid_Col_Text('ref', __('AF', 'configInteraction', 'orgaCoordinate'));
+$keyColumn->editable = true;
+$datagrid->addCol($keyColumn);
+
+// Default value
+$defaultValueColumn = new UI_Datagrid_Col_Text('ref', __('AF', 'configInteraction', 'defaultValue'));
+$defaultValueColumn->editable = true;
+$datagrid->addCol($defaultValueColumn);
+
+echo $datagrid->render();
