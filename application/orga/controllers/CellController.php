@@ -322,8 +322,14 @@ class Orga_CellController extends Core_Controller_Ajax
     {
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $inputConfigCell = $cell->getParentCellForGranularity($cell->getGranularity()->getInputConfigGranularity());
-        $aF = $inputConfigCell->getCellsGroupForInputGranularity($cell->getGranularity())->getAF();
+        $inputGranularity = $cell->getGranularity();
+        if ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
+            $aF = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+        } else {
+            $aF = $cell->getParentCellForGranularity(
+                $inputGranularity->getInputConfigGranularity()
+            )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+        }
 
         $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
             $this->_helper->auth(),
