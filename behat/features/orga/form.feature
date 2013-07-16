@@ -5,7 +5,7 @@ Feature: Cell form tab edition feature
     Given I am logged in
 
   @javascript
-  Scenario: Cell form tab edition scenario, 1
+  Scenario: Cell form tab edition scenario, global input granularity
   # Accès à l'onglet "Formulaires" et à un des datagrids
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
@@ -25,7 +25,7 @@ Feature: Cell form tab edition feature
 
 
   @javascript
-  Scenario: Cell form tab edition scenario, 2
+  Scenario: Cell form tab edition scenario, "Année | Catégorie | Site" input granularity
   # Accès à l'onglet "Formulaires" et à un des datagrids
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
