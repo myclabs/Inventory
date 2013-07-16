@@ -23,9 +23,14 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $cell = Orga_Model_Cell::load($idCell);
 
         $inputGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
-        $granularityForInventoryStatus = $inputGranularity->getOrganization()->getGranularityForInventoryStatus();
-        $isInputInInventory = ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
-            || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef());
+        try {
+            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = false;
+        }
+        $isInputInInventory = ($granularityForInventoryStatus
+            && ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
+                || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef()));
 
         if ($cell->getGranularity()->getRef() === $inputGranularity->getRef()) {
             $this->addLine($this->getLineData($cell, $inputGranularity, $isInputInInventory, $idCell));
