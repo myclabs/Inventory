@@ -110,7 +110,9 @@ class Orga_Populate extends Core_Script_Action
 
     protected function createUser($email)
     {
-        User_Service_User::getInstance()->createUser($email, $email);
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
+        $container->get('User_Service_User')->createUser($email, $email);
     }
 
     /**
@@ -120,7 +122,9 @@ class Orga_Populate extends Core_Script_Action
     protected function addOrganizationAdministrator($email, Orga_Model_Organization $organization)
     {
         $user = User_Model_User::loadByEmail($email);
-        Orga_Service_ACLManager::getInstance()->addOrganizationAdministrator($organization, $user);
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
+        $container->get('Orga_Service_ACLManager')->addOrganizationAdministrator($organization, $user);
     }
 
     /**

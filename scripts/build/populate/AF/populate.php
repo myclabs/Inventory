@@ -134,13 +134,11 @@ class AF_Populate extends Core_Script_Action
         $defaultValue=null, $defaultUncertainty=null, $defaultReminder=true, $required=true, $enabled=true, $help=null, $visible=true)
     {
         $numericInput = new AF_Model_Component_Numeric();
-        $numericInput->setUnit(new Unit_API($refUnit));
+        $numericInput->setUnit(new \Unit\UnitAPI($refUnit));
         $numericInput->setRequired($required);
         $numericInput->setEnabled($enabled);
         if ($defaultValue !== null) {
-            $calcValue = new Calc_Value();
-            $calcValue->digitalValue = $defaultValue;
-            $calcValue->relativeUncertainty = $defaultUncertainty;
+            $calcValue = new Calc_Value($defaultValue, $defaultUncertainty);
             $numericInput->setDefaultValue($calcValue);
             $numericInput->setDefaultValueReminder($defaultReminder);
         }
@@ -310,7 +308,7 @@ class AF_Populate extends Core_Script_Action
     {
         $numericExpression = new Algo_Model_Numeric_Expression();
         $numericExpression->setExpression($expression);
-        $numericExpression->setUnit(new Unit_API($refUnit));
+        $numericExpression->setUnit(new \Unit\UnitAPI($refUnit));
         $this->createAlgoNumeric($aF, $numericExpression, $ref, $label);
     }
 
@@ -338,10 +336,7 @@ class AF_Populate extends Core_Script_Action
     protected function createAlgoNumericConstant(AF_Model_AF $aF, $ref, $label, $value, $uncertainty, $refUnit)
     {
         $numericExpression = new Algo_Model_Numeric_Constant();
-        $unitValue = new Calc_UnitValue();
-        $unitValue->value->digitalValue = $value;
-        $unitValue->value->relativeUncertainty = $uncertainty;
-        $unitValue->unit = new Unit_API($refUnit);
+        $unitValue = new Calc_UnitValue(new \Unit\UnitAPI($refUnit), $value, $uncertainty);
         $numericExpression->setUnitValue($unitValue);
         $this->createAlgoNumeric($aF, $numericExpression, $ref, $label);
     }

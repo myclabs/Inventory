@@ -87,8 +87,8 @@ class Techno_Populate extends Core_Script_Action
         $family->setCategory($category);
         $family->setRef($ref);
         $family->setLabel($label);
-        $family->setBaseUnit(new Unit_API($refBaseUnit));
-        $family->setUnit(new Unit_API($refUnit));
+        $family->setBaseUnit(new \Unit\UnitAPI($refBaseUnit));
+        $family->setUnit(new \Unit\UnitAPI($refUnit));
         $family->save();
         return $family;
     }
@@ -159,9 +159,7 @@ class Techno_Populate extends Core_Script_Action
         $element->setBaseUnit($family->getBaseUnit());
         $element->setUnit($family->getUnit());
 
-        $calcValue = new Calc_Value();
-        $calcValue->digitalValue = $value;
-        $calcValue->relativeUncertainty = $uncertainty;
+        $calcValue = new Calc_Value($value, $uncertainty);
         $element->setValue($calcValue);
 
         $element->save();
