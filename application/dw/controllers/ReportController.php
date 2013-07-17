@@ -310,6 +310,7 @@ class DW_ReportController extends Core_Controller_Ajax
         $savePost = json_decode($this->getParam('saveReportAs'), JSON_OBJECT_AS_ARRAY);
         $reportLabel = $savePost['saveLabelReport']['value'];
         if (empty($reportLabel)) {
+            $entityManagers['default']->clear();
             $this->getResponse()->setHttpResponseCode(400);
             $this->sendJsonResponse(
                 array(
