@@ -8,6 +8,7 @@ Feature: Family tree edit feature
   Scenario: Creation of a Techno category
     Given I am on "techno/family/tree-edit"
     And I wait for the page to finish loading
+    And I wait 5 seconds
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
     Then I should see the popup "Ajout d'une catégorie"

@@ -45,7 +45,7 @@ Feature: Organizational subunits tab feature
     And I wait 2 seconds
     And I open collapse "Année | Site"
     Then I should see the "child_c3_g7" datagrid
-    And the "child_c3_g7" datagrid should contain 1 row
+    And the "child_c3_g7" datagrid should contain 2 row
     And the row 1 of the "child_c3_g7" datagrid should contain:
       | annee | site    |
       | 2012 | Grenoble |
