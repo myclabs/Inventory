@@ -5,7 +5,7 @@ Feature: Classification context feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a classification context
+  Scenario: Creation of a classification context (not a context indicator)
     Given I am on "classif/context/manage"
     Then I should see the "editContexts" datagrid
   # Ajout d'un contexte, identifiant vide
@@ -22,7 +22,7 @@ Feature: Classification context feature
     And I fill in "editContexts_ref_addForm" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 3 of the "editContexts" datagrid should contain:
+    And the row 4 of the "editContexts" datagrid should contain:
       | label       | ref         |
       | Test | test |
   # Ajout d'un contexte, identifiant déjà utilisé

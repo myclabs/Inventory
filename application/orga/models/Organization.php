@@ -423,7 +423,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     {
         if ($this->granularityForInventoryStatus === null) {
             throw new Core_Exception_UndefinedAttribute(
-                "La Granularity des inventaires n'a pas été défini"
+                "Le niveau organisationnel des inventaires n'a pas été défini."
             );
         }
         return $this->granularityForInventoryStatus;
@@ -442,19 +442,7 @@ class Orga_Model_Organization extends Core_Model_Entity
         $criteria = Doctrine\Common\Collections\Criteria::create()->where(
             Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null)
         );
-        $inputGranularities = $this->granularities->matching($criteria)->toArray();
-
-        uasort(
-            $inputGranularities,
-            function (Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
-                if (($a->getInputConfigGranularity()) === $b->getInputConfigGranularity()) {
-                    return $a->getPosition() - $b->getPosition();
-                }
-                return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
-            }
-        );
-
-        return $inputGranularities;
+        return $this->granularities->matching($criteria)->toArray();
     }
 
 }

@@ -99,3 +99,4 @@ Feature: Organization role feature
     And the row 3 of the "granularityACL1" datagrid should contain:
       | userEmail                      | userRole     |
       | emmanuel.risler.pro@gmail.com  | Contributeur |
+

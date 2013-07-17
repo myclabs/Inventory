@@ -29,7 +29,7 @@ Feature: Classification indicator feature
     When I fill in "editIndicators_ref_addForm" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 3 of the "editIndicators" datagrid should contain:
+    And the row 5 of the "editIndicators" datagrid should contain:
       | label       | ref         | unit    | ratioUnit |
       | Test | test | t_co2e  | kg_co2e   |
   # Ajout d'un indicateur, test bouton "Annuler"

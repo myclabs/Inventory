@@ -18,7 +18,7 @@ Feature: Keywords relations
   # Ajout d'une relation, relation déjà existante
     When I fill in "association_subject_addForm" with "combustible"
     And I select "est plus général que" from "association_predicate_addForm"
-    And I fill in "association_object_addForm" with "gaz naturel"
+    And I select "gaz naturel" from "association_object_addForm"
     And I click "Valider"
     Then the field "association_predicate_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
   # Ajout d'une relation, saisie valide

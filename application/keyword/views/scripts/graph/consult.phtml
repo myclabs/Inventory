@@ -39,6 +39,8 @@
             </div>
                 <ul>
                     <?php
+                    // Évite les problèmes de modification du tableau lors du l'accès au label (proxy).
+                    array_map(function (Keyword_Model_Keyword $keyword) { $keyword->getLabel(); }, $associations);
                     // Trie $assocations par label
                     uasort(
                         $associations,
@@ -87,6 +89,8 @@
             </div>
                 <ul>
                     <?php
+                    // Évite les problèmes de modification du tableau lors du l'accès au label (proxy).
+                    array_map(function (Keyword_Model_Keyword $keyword) { $keyword->getLabel(); }, $associations);
                     // Trie $assocations par label
                     uasort(
                         $associations,
