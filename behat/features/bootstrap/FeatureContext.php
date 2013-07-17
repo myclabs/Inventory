@@ -180,8 +180,9 @@ class FeatureContext extends MinkContext
      * Open a collapse with specified text.
      *
      * @When /^(?:|I )open collapse "(?P<collapse>(?:[^"]|\\")*)"$/
+     * @When /^(?:|I )close collapse "(?P<collapse>(?:[^"]|\\")*)"$/
      */
-    public function openCollapse($label)
+    public function toggleCollapse($label)
     {
         $label = $this->fixStepArgument($label);
         $node = $this->getSession()->getPage()->find(

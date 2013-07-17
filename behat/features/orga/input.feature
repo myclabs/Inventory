@@ -15,7 +15,7 @@ Feature: Organization input tab feature
   # Filtre sur le site "Annecy"
     # When I open collapse "Filtres"
     And I select "Annecy" from "aFGranularity1Input8_site_filterForm"
-    And I click "Filtrer"
+    And I click "Filtres"
     Then the "aFGranularity1Input8" datagrid should contain 1 row
   # Bouton "Réinitialiser"
     When I click "Réinitialiser"
