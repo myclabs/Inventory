@@ -40,13 +40,16 @@ class Orga_PopulateTest extends Orga_Populate
         // Création des membres.
         // Params : Axis, ref, label
         // OptionalParams : [Member] parents=[]
+        $member_annee_2012 = $this->createMember($axis_annee, '2012', '2012');
         $member_annee_2013 = $this->createMember($axis_annee, '2013', '2013');
         $member_zone_europe = $this->createMember($axis_zone, 'europe', 'Europe');
         $member_pays_france = $this->createMember($axis_pays, 'france', 'France', [$member_zone_europe]);
         $member_marque_marque_a = $this->createMember($axis_marque, 'marque_a', 'Marque A');
+        $member_marque_marque_b = $this->createMember($axis_marque, 'marque_b', 'Marque B');
         $member_marque_marque_sans_site = $this->createMember($axis_marque, 'marque_sans_site', 'Marque sans site');
         $member_site_annecy = $this->createMember($axis_site, 'annecy', 'Annecy', [$member_pays_france, $member_marque_marque_a]);
         $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambéry', [$member_pays_france, $member_marque_marque_a]);
+        $member_site_grenoble = $this->createMember($axis_site, 'grenoble', 'Grenoble', [$member_pays_france, $member_marque_marque_b]);
         $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
         $member_categorie = $this->createMember($axis_categorie, 'energie', 'Énergie');
 
@@ -62,12 +65,16 @@ class Orga_PopulateTest extends Orga_Populate
         $granularity_annee_site = $this->createGranularity($organization, [$axis_annee, $axis_site],                            false, false, false, false,  false, false, false, false);
         $granularity_annee_site_categorie = $this->createGranularity($organization, [$axis_annee, $axis_site, $axis_categorie], false, false, false, false,  false, false, false, false);
 
-        // Granularité des inventaires
+        // Granularité des collectes
         $organization->setGranularityForInventoryStatus($granularity_annee_zone_marque);
 
         // Granularités de saisie
+        $granularityGlobal->setInputConfigGranularity($granularityGlobal); // Utile pour tester le bon affichage dans les onglets Saisies et Formulaires
+        $granularity_zone_marque->setInputConfigGranularity($granularity_zone_marque); // Utile pour tester la saisie à un niveau plus grossier que celui des collectes et les ordres entre les granularités des onglets "Collectes" et "Saisies"
+        $granularity_annee_site->setInputConfigGranularity($granularityGlobal); // Utile pour tester les ordres entre les granularités des onglets "Collectes" et "Saisies"
         $granularity_annee_site_categorie->setInputConfigGranularity($granularity_annee_categorie);
-        $granularity_annee_site->setInputConfigGranularity($granularity_annee);
+
+        $entityManager->flush();
 
         // Création des utilisateurs orga.
         // Params : email
@@ -82,8 +89,6 @@ class Orga_PopulateTest extends Orga_Populate
         $this->createUser('contributeur.site@toto.com');
         $this->createUser('observateur.site@toto.com');
         $this->createUser('utilisateur.connecte@toto.com');
-        $entityManager->flush();
-
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         // Params : email, Organization

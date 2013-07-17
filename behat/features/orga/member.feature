@@ -90,7 +90,6 @@ Feature: Organizational member feature
       | label  | ref      | broaderpays    |
       | Annecy | annecy   | France         |
 
-
   @javascript
   Scenario: Deletion of an organizational member
   # Accès à l'onglet "Membres"
@@ -111,3 +110,20 @@ Feature: Organizational member feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     Then the "listMembersannee" datagrid should contain 0 row
+
+  @javascript
+  Scenario: Check list of members of an axis when the current cell is not the global cell
+    Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
+  # Descendre dans la cellule "Europe | Marque B"
+    When I select "Europe" from "zone"
+    And I select "Marque B" from "marque"
+    And I click element "#goTo2"
+  # Vérification du contenu du datagrid des membres de l'axe "Site"
+    And I open tab "Organisation"
+    And I open tab "Membres"
+    And I open collapse "Site"
+    Then I should see the "listMemberssite" datagrid
+    And the row 1 of the "listMemberssite" datagrid should contain:
+      | label | ref |
+      | Grenoble | grenoble |

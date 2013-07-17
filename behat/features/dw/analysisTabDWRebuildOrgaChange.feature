@@ -66,7 +66,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
-  # Modification de la position (numéro d'ordre) d'un axe
+  # Modification de la position (numéro d'ordre) d'un axe : modification non détectée
     When I open tab "Organisation"
     And I open tab "Axes"
     And I click "Test modifié"
@@ -74,13 +74,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I check "Premier"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
-  # Détection modification
-    When I reload the page
-    And I wait for the page to finish loading
-    Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
-  # Régénération
-    When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+  # Détection modification (modification non détectée, OK)
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -125,6 +119,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
+    And I wait 10 seconds
     Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
     When I reload the page
     And I wait for the page to finish loading

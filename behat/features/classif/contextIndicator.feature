@@ -31,7 +31,7 @@ Feature: Classification context indicator feature
     And the field "editContextIndicators_indicator_addForm" should have error: "Il existe déjà un indicateur contextualisé pour ce contexte et cet indicateur."
   # Vérification contenu datagrid
     When I click "Annuler"
-    Then the row 4 of the "editContextIndicators" datagrid should contain:
+    Then the row 5 of the "editContextIndicators" datagrid should contain:
       | context       | indicator         | axes    |
       | Déplacements | Chiffre d'affaires |   |
   # Suppression
