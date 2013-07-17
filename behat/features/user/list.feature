@@ -1,6 +1,5 @@
 @dbEmpty
 Feature: User list feature
-  User management.
 
   Background:
     Given I am logged in
