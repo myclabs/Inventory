@@ -33,8 +33,21 @@ Feature: Identification feature
     And I am on the homepage
     And I wait for the page to finish loading
     When I click "currentUserButton"
-    And I click "logoutButton"
+    And I click "Déconnexion"
     # On est redirigé vers la page d'accueil
     Then the following message is shown and closed: "Vous n'êtes pas connecté."
     And I should see "Vous n'êtes pas connecté"
     And I should see "Connexion"
+
+  @javascript
+  Scenario: Forgottent password
+  # TODO : à tester, pour l'instant l'accès à la page du captcha pose problème (installation des fontes) donc non testé.
+    Given I am on the homepage
+    And I wait for the page to finish loading
+  #  And I click "Mot de passe oublié ?"
+
+  @javascript
+  Scenario: Trying to reach an url without being connected
+    Given I am on the homepage
+    And I go to "orga/granularity/report/idCell/1/"
+    Then the following message is shown and closed: "Vous n'êtes pas connecté."
