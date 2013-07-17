@@ -224,7 +224,7 @@
                 <seg>Filtres</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Filters</seg>
+                <seg>Filter</seg>   <!-- au singulier, c'est volontaire -->
             </tuv>
         </tu>
         <tu tuid="forms">
@@ -304,7 +304,7 @@
                 <seg>Saisies</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inputs</seg>
+                <seg>Input</seg>    <!-- au singulier, c'est volontaire -->
             </tuv>
         </tu>
         <tu tuid="label">

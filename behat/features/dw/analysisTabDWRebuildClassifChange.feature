@@ -83,7 +83,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
-  # Modification de la position (numéro d'ordre) d'un axe
+  # Modification de la position (numéro d'ordre) d'un axe (modification non détectée)
     When I am on "classif/axis/manage"
     And I wait 5 seconds
     And I click "Test modifié"
@@ -91,14 +91,8 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I check "Premier"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
-  # Détection modification
+  # Détection modification : la modification n'est pas détectée (normal)
     When I am on "orga/cell/details/idCell/1/tab/analyses"
-    And I wait for the page to finish loading
-    Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
-  # Régénération
-    When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
-    When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Suppression axe

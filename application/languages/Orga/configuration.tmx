@@ -4,14 +4,14 @@
 		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
 	<body>
 
-        <!-- Libellé de l'organisation et choix de la granularité des inventaires -->
+        <!-- Libellé de l'organisation et choix de la granularité des collectes -->
 
         <tu tuid="granularityForInventoryStatus">
             <tuv xml:lang="fr">
-                <seg>Niveau organisationnel des inventaires</seg>
+                <seg>Niveau organisationnel des collectes</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inventories organizational level</seg>
+                <seg>Collection organizational level</seg>
             </tuv>
         </tu>
 
@@ -27,10 +27,10 @@
         </tu>
         <tu tuid="inputGranularityNeedsToBeNarrowerThanInventoryGranularity">
             <tuv xml:lang="fr">
-                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le statut des inventaires.</seg>
+                <seg>Merci de sélectionner pour la saisie un niveau organisationnel plus fin que ou égal à celui sélectionné pour le statut des collectes.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Please select for input an organizational level narrower than or equal to the one selected for inventory status.</seg>
+                <seg>Please select for input an organizational level narrower than or equal to the one selected for collection data status.</seg>
             </tuv>
         </tu>
         <tu tuid="granularityIsAlreadyAnInputGranularity">
@@ -132,10 +132,10 @@
         
         <tu tuid="orgaGranularityForInventoryStatusNotDefined">
             <tuv xml:lang="fr">
-                <seg>Pour accéder à cette interface, merci de renseigner au préalable le niveau organisationnel d'assignation du statut des inventaires.</seg>
+                <seg>Pour accéder à cette interface, merci de renseigner au préalable le niveau organisationnel d'assignation du statut des collectes.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>In order to access this interface, please first choose the organizational level where inventory status will be assigned.</seg>
+                <seg>In order to access this interface, please first choose the organizational level where collection data status will be assigned.</seg>
             </tuv>
         </tu>
 

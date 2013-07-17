@@ -8,9 +8,9 @@ Feature: Keywords
   Scenario: Keywords Graph feature
     Given I am on "keyword/graph/root"
     Then I should see "Graphe des mots clés"
-    And I should see "charbon (charbon)"
+    And I should see "combustible (combustible)"
   # Clic sur un mot clé
-    When I click "charbon (charbon)"
+    When I click "combustible (combustible)"
     Then I should see "Sujets"
   # Retour aux mots clés racines
     When I click "Aller aux mots clés racines"

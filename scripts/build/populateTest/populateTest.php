@@ -59,6 +59,7 @@ class Inventory_PopulateTest extends Core_Script_Populate
      */
     protected function init($environment)
     {
+        /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
 
         // Ajout du listener des ACL.
@@ -75,11 +76,9 @@ class Inventory_PopulateTest extends Core_Script_Populate
         $entityManager->getEventManager()->addEventListener($events, $container->get('Orga_Service_ACLManager'));
 
         // Ajout de treeTraverser.
-        /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
-        $cellResourceTreeTraverser = $container->get('Orga_Service_ACLManager');
         /** @var $aclService User_Service_ACL */
         $aclService = $container->get('User_Service_ACL');
-        $aclService->setResourceTreeTraverser("Orga_Model_Cell", $cellResourceTreeTraverser);
+        $aclService->setResourceTreeTraverser("Orga_Model_Cell", $container->get('Orga_Service_ACLManager'));
 
         // Désactivation du filtre des ACL.
         /** @var $aclFilterService User_Service_ACLFilter */
@@ -100,6 +99,7 @@ class Inventory_PopulateTest extends Core_Script_Populate
      */
     protected function close($environment)
     {
+        /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
 
         // Résactivation du filtre des ACL.

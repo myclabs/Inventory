@@ -80,9 +80,9 @@ class Classif_Populate extends Core_Script_Action
         $indicator = new Classif_Model_Indicator();
         $indicator->setRef($ref);
         $indicator->setLabel($label);
-        $indicator->setUnit(new Unit_API($unitRef));
+        $indicator->setUnit(new \Unit\UnitAPI($unitRef));
         if ($ratioUnitRef !== null) {
-            $indicator->setRatioUnit(new Unit_API($ratioUnitRef));
+            $indicator->setRatioUnit(new \Unit\UnitAPI($ratioUnitRef));
         } else {
             $indicator->setRatioUnit($indicator->getUnit());
         }

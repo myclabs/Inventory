@@ -72,9 +72,8 @@ class Classif_PopulateTest extends Classif_Populate
         // Params : Context, Indicator
         // OptionalParams : [Axis]=[]
         $contextIndicator_ges_general = $this->createContextIndicator($context_general, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
-        $contextIndicator_ges_deplacement = $this->createContextIndicator($context_deplacement, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
-        $contextIndicator_chiffre_affaire_general = $this->createContextIndicator($context_general, $indicator_chiffre_affaire, [$axis_gaz, $axis_poste_article_75, $axis_type_deplacement]);
-        $contextIndicator_related_axes = $this->createContextIndicator($context_general, $indicator_incompatible_units, [$axis_scope, $axis_poste_article_75]);
+        $contextIndicator_ges_deplacement = $this->createContextIndicator($context_deplacement, $indicator_ges, [$axis_gaz, $axis_poste_article_75, $axis_type_deplacement]);
+        $contextIndicator_chiffre_affaire_general = $this->createContextIndicator($context_general, $indicator_chiffre_affaire);
 
 
         $entityManager->flush();

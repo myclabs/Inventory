@@ -319,6 +319,7 @@ class Orga_CellController extends Core_Controller
                 $cell,
                 $narrowerGranularity
             );
+            $datagridConfiguration->datagrid->addParam('idOrganization', $cell->getGranularity()->getOrganization()->getId());
             $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
             $columnRelevant = new UI_Datagrid_Col_Bool('relevant');
             $columnRelevant->label = __('Orga', 'cellRelevance', 'relevance');
@@ -349,8 +350,14 @@ class Orga_CellController extends Core_Controller
     {
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $inputConfigCell = $cell->getParentCellForGranularity($cell->getGranularity()->getInputConfigGranularity());
-        $aF = $inputConfigCell->getCellsGroupForInputGranularity($cell->getGranularity())->getAF();
+        $inputGranularity = $cell->getGranularity();
+        if ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
+            $aF = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+        } else {
+            $aF = $cell->getParentCellForGranularity(
+                $inputGranularity->getInputConfigGranularity()
+            )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+        }
 
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),

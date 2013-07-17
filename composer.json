@@ -44,7 +44,8 @@
         "behat/mink": "1.5.*",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
-        "behat/mink-zombie-driver": "dev-RequestHeaders"
+        "behat/mink-zombie-driver": "dev-RequestHeaders",
+        "mnapoli/metaconsole": "dev-master"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -64,6 +65,14 @@
         {
             "type": "git",
             "url": "https://github.com/mnapoli/MinkZombieDriver.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/mnapoli/MetaModel.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/mnapoli/MetaConsole.git"
         }
     ]
 }
