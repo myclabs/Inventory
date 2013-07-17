@@ -189,7 +189,10 @@ class DW_Model_Repository_Report extends Core_Model_Repository
         $queryBuilder->setParameter('indicator', $indicator);
 
         foreach ($axes as $axis) {
-            if (($axis !== null) && ($axis->hasMembers())) {
+            if ($axis !== null) {
+                if (!$axis->hasMembers()) {
+                    return [];
+                }
                 $memberAlias = DW_Model_Member::getAlias().'_Axis'.$axis->getRef();
                 $queryBuilder->leftJoin(DW_Model_Result::getAlias().'.members', $memberAlias);
                 $queryBuilder->andWhere(
