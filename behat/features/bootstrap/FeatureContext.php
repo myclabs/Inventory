@@ -157,7 +157,7 @@ class FeatureContext extends MinkContext
         }
 
         $nodes = array_filter($nodes, function(NodeElement $node) {
-                return $node->isVisible();
+                return $this->isElementVisible($node);
             });
 
         if (count($nodes) === 0) {
@@ -185,10 +185,7 @@ class FeatureContext extends MinkContext
     public function toggleCollapse($label)
     {
         $label = $this->fixStepArgument($label);
-        $node = $this->getSession()->getPage()->find(
-            'css',
-            'legend:contains("' . $label . '")'
-        );
+        $node = $this->findElement('legend:contains("' . $label . '")');
 
         if ($node === null) {
             throw new ExpectationException("No collapse with label '$label' was found.",
@@ -249,7 +246,7 @@ class FeatureContext extends MinkContext
         }
 
         $nodes = array_filter($nodes, function(NodeElement $node) {
-                return $node->isVisible();
+                return $this->isElementVisible($node);
             });
 
         if (count($nodes) === 0) {
@@ -285,7 +282,7 @@ class FeatureContext extends MinkContext
         }
 
         $nodes = array_filter($nodes, function(NodeElement $node) {
-                return $node->isVisible();
+                return $this->isElementVisible($node);
             });
 
         if (count($nodes) === 0) {
@@ -315,9 +312,28 @@ class FeatureContext extends MinkContext
         $nodes = $this->getSession()->getPage()->findAll('css', $cssSelector);
 
         $nodes = array_filter($nodes, function(NodeElement $node) {
-                return $node->isVisible();
+                return $this->isElementVisible($node);
             });
 
         return $nodes;
+    }
+
+    private function isElementVisible(NodeElement $node)
+    {
+        if (!$node->isVisible()) {
+            return false;
+        }
+
+        while ($node) {
+            if (strpos($node->getAttribute('style'), 'height: 0') !== false) {
+                return false;
+            }
+            $node = $node->getParent();
+
+            if ($node->getTagName() == 'body') {
+                $node = null;
+            }
+        }
+        return true;
     }
 }
