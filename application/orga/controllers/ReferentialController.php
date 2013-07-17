@@ -111,11 +111,6 @@ class Orga_ReferentialController extends Core_Controller
         $version = null;
 
         switch ($export) {
-            case 'Orga':
-                $exportService = new Orga_Service_Export();
-                $version = Orga_Model_Organization::load($refVersion);
-                $baseFilename = 'Orga';
-                break;
             case 'Classif':
                 $exportService = new Classif_Service_Export();
                 $baseFilename = 'Classif';
@@ -127,6 +122,11 @@ class Orga_ReferentialController extends Core_Controller
             case 'Unit':
                 $exportService = new \Unit\Application\Service\UnitExport();
                 $baseFilename = 'Unit';
+                break;
+            case 'Orga':
+                $exportService = new Orga_Service_Export();
+                $version = Orga_Model_Organization::load($refVersion);
+                $baseFilename = 'Orga';
                 break;
             default:
                 UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);
