@@ -1,5 +1,5 @@
 @dbEmpty
-Feature: Cell form tab edition feature
+Feature: Feedback feature
 
   Background:
     Given I am logged in
