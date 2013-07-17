@@ -7,6 +7,7 @@ Feature: AF tree edit feature
   @javascript
   Scenario: Creation of an AF category
     Given I am on "af/af/tree"
+    And I wait for the page to finish loading
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
     Then I should see the popup "Ajout d'une catégorie"

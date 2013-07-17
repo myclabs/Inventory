@@ -7,6 +7,7 @@ Feature: Family tree edit feature
   @javascript
   Scenario: Creation of a Techno category
     Given I am on "techno/family/tree-edit"
+    And I wait for the page to finish loading
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
     Then I should see the popup "Ajout d'une catégorie"

@@ -10,7 +10,7 @@ Feature: Cell form tab edition feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
-    And I open collapse "Niveau organisationnel global"
+    And I open collapse "Niveau organisationnel global Niveau organisationnel global"
     Then I should see the "aFGranularityConfig1" datagrid
   # Sélection d'un formulaire comptable (granularité de saisie plus grossière que la granularité des inventaires
     When I set "Combustion de combustible, mesuré en unité de masse" for column "aF" of row 1 of the "aFGranularityConfig1" datagrid with a confirmation message
