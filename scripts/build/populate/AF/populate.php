@@ -361,16 +361,36 @@ class AF_Populate extends Core_Script_Action
     }
 
     /**
-     * @param AF_Model_AF $aF
-     * @param AF_Model_Component $input
+     * @param Algo_Model_Numeric $numeric
      * @param string $refContext
      * @param string $refIndicator
+     * @param array $indexes Sous la forme [$refAxis =» $refMember]
      */
-    protected function createAlgoNumericInput(AF_Model_AF $aF, AF_Model_Component $input, $refContext, $refIndicator)
+    protected function createFixedIndexForAlgoNumeric(Algo_Model_Numeric $numeric, $refContext, $refIndicator, $indexes)
     {
-        /* @var Algo_Model_Numeric_Input $numericInput */
-        $numericInput = $aF->getAlgoByRef($input->getRef());
-        $numericInput->setContextIndicator(Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator));
+        $numeric->setContextIndicator(Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator));
+        foreach ($indexes as $refAxis => $refMember) {
+            $classifAxis = Classif_Model_Axis::loadByRef($refAxis);
+            $index = new Algo_Model_Index_Fixed(Classif_Model_Axis::loadByRef($refAxis));
+            $index->setClassifMember(Classif_Model_Member::loadByRefAndAxis($refMember, $classifAxis));
+            $index->setAlgoNumeric($numeric);
+        }
+    }
+
+    /**
+     * @param Algo_Model_Numeric $numeric
+     * @param string $refContext
+     * @param string $refIndicator
+     * @param array $indexes Sous la forme [$refAxis =» $refMember]
+     */
+    protected function createAlgoIndexForAlgoNumeric(Algo_Model_Numeric $numeric, $refContext, $refIndicator, $indexes)
+    {
+        $numeric->setContextIndicator(Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator));
+        foreach ($indexes as $refAxis => $algo) {
+            $index = new Algo_Model_Index_Algo(Classif_Model_Axis::loadByRef($refAxis));
+            $index->setAlgo($algo);
+            $index->setAlgoNumeric($numeric);
+        }
     }
 
     /**
@@ -401,7 +421,7 @@ class AF_Populate extends Core_Script_Action
         $aF->addAlgo($conditionExpression);
     }
 
-    protected function createAlgoConditionElementary(AF_Model_AF $aF, AF_Model_Component $component, $ref, $expression)
+    protected function createAlgoConditionElementary(AF_Model_AF $aF, AF_Model_Component $component, $ref)
     {
         switch (get_class($component)) {
             case 'AF_Model_Component_Numeric':

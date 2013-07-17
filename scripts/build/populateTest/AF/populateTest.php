@@ -40,13 +40,13 @@ class AF_PopulateTest extends AF_Populate
         $booleanInput = $this->createBooleanInput($aF_combustion_combustible_unite_masse, $group1, 'refb1', 'Label Select 1', true);
         $aF_combustion_combustible_unite_masse->getMainAlgo()->setExpression('a:b;');
         $this->createAlgoNumericConstant($aF_combustion_combustible_unite_masse, 'refa1', 'Label 1', 10, 5, 'm');
-        $this->createAlgoNumericInput($aF_combustion_combustible_unite_masse, $numericInput, 'general', 'ges');
+        $this->createFixedIndexForAlgoNumeric($aF_combustion_combustible_unite_masse->getAlgoByRef($numericInput->getRef()), 'general', 'ges', []);
 
         // Données générales
         $aF_donnees_generales = $this->createAF($category_contenant_formulaire, 'donnees_generales', 'Données générales');
         $groupe_donnees_generales = $this->createGroup($aF_donnees_generales, $aF_donnees_generales->getRootGroup(), 'groupe_donnees_generales', 'Groupe données générales');
         $numericInput_chiffre_affaire = $this->createNumericInput($aF_donnees_generales, $groupe_donnees_generales, 'chiffre_affaire', 'Chiffre d\'affaire', 'kiloeuro');
-        $this->createAlgoNumericInput($aF_donnees_generales, $numericInput_chiffre_affaire, 'general', 'chiffre_affaire');
+        $this->createFixedIndexForAlgoNumeric($aF_donnees_generales->getAlgoByRef($numericInput_chiffre_affaire->getRef()), 'general', 'chiffre_affaire', []);
         $aF_donnees_generales->getMainAlgo()->setExpression(':chiffre_affaire;');
 
         // Création des composants.
@@ -66,19 +66,22 @@ class AF_PopulateTest extends AF_Populate
         //  help=null, visible=true
 
 
-        // Création des Algos.
+        // Création des Algos et indexation.
+        //  Tip : Pour récupérer un algo à partir de l'AF : $aF->getAlgoByRef();
+        //   Donc, Pour récupérer l'algo d'un champs NumericInput : $aF->getAlgoByRef($input->getRef());
         // Param : AF
         //  + createAlgoNumericExpression : ref, label, expression, refUnit
         //  + createAlgoNumericParameter : ref, label, refFamily
         //  + createAlgoNumericExpression : ref, label, value, uncertainty, refUnit
-        //  + createAlgoNumericInput : Component input, refContext, refIndicator
+        //  + createFixedIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => refMember]
+        //  + createAlgoIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => Selection_TextKey algo]
         //  + createAlgoSelectTextkeyExpression : ref, expression
-        //  + createAlgoConditionElementary : Component input, ref, expression
+        //  + createAlgoConditionElementary : Component input, ref
         //  + createAlgoConditionExpression : ref, expression
         // OptionalParams : -
 
 //        $this->createAlgoSelectTextkeyExpression($aF_combustion_combustible_unite_masse, 'refa2', 'expression');
-//        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3', 'expression');
+//        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3');
 //        $this->createAlgoConditionExpression($aF_combustion_combustible_unite_masse, 'refa4', 'expression');
 
 
