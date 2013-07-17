@@ -100,7 +100,7 @@ Feature: Granularity dataware analysis feature
     When I click "Enregistrer"
     Then I should see the popup "Enregistrer la configuration de l'analyse"
     When I click element "#saveReport .btn:contains('Enregistrer')"
-    Then the field "saveLabelReport" should have error: "Merci de renseigner ce champ"
+    Then the field "saveLabelReport" should have error: "La configuration n'a pas pu être enregistrée, car le libellé saisi est vide."
 
   @javascript
   Scenario: Launch and save a granularity analysis, non empty label
