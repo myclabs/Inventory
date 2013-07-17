@@ -168,12 +168,12 @@ class DW_Model_Repository_Report extends Core_Model_Repository
      * Donne une série de résultats
      *
      * @param DW_Model_Indicator $indicator
-     * @param DW_Model_Axis $axes
+     * @param DW_Model_Axis[] $axes
      * @param DW_Model_Filter[] $filters
      *
      * @return DW_Model_Result[]
      */
-    protected function getResultForIndicatorAndAxes($indicator, $axes, $filters=array())
+    protected function getResultForIndicatorAndAxes(DW_Model_Indicator $indicator, array $axes, $filters=array())
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
 
@@ -189,7 +189,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
         $queryBuilder->setParameter('indicator', $indicator);
 
         foreach ($axes as $axis) {
-            if ($axis !== null) {
+            if (($axis !== null) && ($axis->hasMembers())) {
                 $memberAlias = DW_Model_Member::getAlias().'_Axis'.$axis->getRef();
                 $queryBuilder->leftJoin(DW_Model_Result::getAlias().'.members', $memberAlias);
                 $queryBuilder->andWhere(
