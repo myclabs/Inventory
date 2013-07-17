@@ -29,7 +29,7 @@ Feature: Organizational relevance tab feature
       | zone | marque | relevant | allParentsRelevant |
       | Europe | Marque A | Non pertinente | Toutes pertinentes |
   # Vérification de la mise à jour de l'attribut "AllParentsRelevant" pour la granularité "Année | Site | Catégorie"
-    When I open collapse "Année | Site | Catégorie"
+    When I close collapse "Année | Site | Catégorie"
     And I wait 1 seconds
     And I open collapse "Année | Site | Catégorie"
     And I wait 1 seconds
@@ -42,7 +42,7 @@ Feature: Organizational relevance tab feature
     Then the row 1 of the "relevant_c1_g2" datagrid should contain:
       | zone | marque | relevant | allParentsRelevant |
       | Europe | Marque A | Pertinente | Toutes pertinentes |
-    When I open collapse "Année | Site | Catégorie"
+    When I close collapse "Année | Site | Catégorie"
     And I wait 1 seconds
     And I open collapse "Année | Site | Catégorie"
     And I wait 1 seconds
