@@ -1,5 +1,5 @@
 @dbEmpty
-Feature: Users
+Feature: User list feature
   User management.
 
   Background:
