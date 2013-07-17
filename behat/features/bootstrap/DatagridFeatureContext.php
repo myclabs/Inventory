@@ -90,7 +90,7 @@ trait DatagridFeatureContext
         $popupSelector = '.yui-dt-editor:not([style*="display: none"])';
 
         // Text field
-        $inputNodes = $this->findAllElements("$popupSelector input");
+        $inputNodes = $this->findAllElements("$popupSelector input, $popupSelector select");
         if (count($inputNodes) === 1) {
             $inputNode = current($inputNodes);
             $inputNode->setValue($content);
@@ -107,8 +107,12 @@ JS;
                 // Select2
                 $inputNodes = $this->findAllElements("$popupSelector .select2-container");
                 if (count($inputNodes) === 1) {
-                    $inputNode = $this->findElement("$popupSelector input.select2-offscreen:not(.select2-focusser)");
-                    $inputNode->setValue($content);
+                    $inputNode = $this->findElement("$popupSelector .select2-offscreen:not(.select2-focusser)");
+                    if ($inputNode->getTagName() == 'select') {
+                        $inputNode->selectOption($content, false);
+                    } else {
+                        $inputNode->setValue($content);
+                    }
                 } else {
                     // Select
                     $inputNodes = $this->findAllElements("$popupSelector select");
