@@ -47,7 +47,7 @@ class AF_PopulateTest extends AF_Populate
         $groupe_donnees_generales = $this->createGroup($aF_donnees_generales, $aF_donnees_generales->getRootGroup(), 'groupe_donnees_generales', 'Groupe données générales');
         $numericInput_chiffre_affaire = $this->createNumericInput($aF_donnees_generales, $groupe_donnees_generales, 'chiffre_affaire', 'Chiffre d\'affaire', 'kiloeuro');
         $this->createAlgoNumericInput($aF_donnees_generales, $numericInput_chiffre_affaire, 'general', 'chiffre_affaire');
-
+        $aF_donnees_generales->getMainAlgo()->setExpression(':chiffre_affaire;');
 
         // Création des composants.
         // Params : AF, Group, ref, label

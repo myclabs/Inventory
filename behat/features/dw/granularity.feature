@@ -88,6 +88,68 @@ Feature: Granularity dataware analysis feature
     Then I should not see "Nouvelle configuration"
     And I should see "Modifications en cours"
 
+  @javascript
+  Scenario: Launch and save a granularity analysis, empty label
+  # Accès à l'interface de configuration d'une analyse
+    Given I am on "orga/granularity/report/idCell/1/idGranularity/1/idCube/1"
+    When I click element "#indicatorRatio_indicator"
+    And I select "Camembert" from "chartType"
+    And I click "Lancer"
+    Then the following message is shown and closed: "Analyse effectuée."
+  # Enregistrement de l'analyse préconfigurée, libellé vide
+    When I click "Enregistrer"
+    Then I should see the popup "Enregistrer la configuration de l'analyse"
+    When I click element "#saveReport .btn:contains('Enregistrer')"
+    Then the field "saveLabelReport" should have error: "Merci de renseigner ce champ"
+
+  @javascript
+  Scenario: Launch and save a granularity analysis, non empty label
+  # Accès à l'interface de configuration d'une analyse
+    Given I am on "orga/granularity/report/idCell/1/idGranularity/1/idCube/1"
+    When I click element "#indicatorRatio_indicator"
+    And I select "Camembert" from "chartType"
+    And I click "Lancer"
+    Then the following message is shown and closed: "Analyse effectuée."
+  # Enregistrement de l'analyse préconfigurée, libellé non vide
+    When I click "Enregistrer"
+    Then I should see the popup "Enregistrer la configuration de l'analyse"
+    When I fill in "Libellé" with "Analyse préconfigurée test"
+    And I click element "#saveReport .btn:contains('Enregistrer')"
+    Then I should see "Analyse préconfigurée test Niveau organisationnel global"
+    And I should see "Configuration enregistrée"
+  # clic sur l'onglet "Valeurs", histoire de
+    When I open tab "Valeurs"
+    Then I should see the "reportValues" datagrid
+    And the "reportValues" datagrid should contain 0 row
+  # Retour à la liste des analyses préconfigurées
+    When I click "Retour"
+  # Vérification que l'analyse apparaît bien parmi les analyses préconfigurées
+    And I open collapse "Niveau organisationnel global"
+    Then I should see the "granularity1Report" datagrid
+    And the "granularity1Report" datagrid should contain 1 row
+    And the row 1 of the "granularity1Report" datagrid should contain:
+      | label |
+      | Analyse préconfigurée test |
+  # Accès à l'analyse préconfigurée enregistrée
+    When I click "Détails" in the row 1 of the "granularity1Report" datagrid
+    Then I should see "Analyse préconfigurée test Niveau organisationnel global"
+  # Vérification que l'analyse préconfigurée est bien présente dans la cellule globale
+    When I click "Retour"
+    And I open tab "Analyses"
+    Then I should see the "report" datagrid
+    And the "report" datagrid should contain 1 row
+    And the row 1 of the "report" datagrid should contain:
+      | label |
+      | Analyse préconfigurée test |
+  # Accès à l'analyse de la cellule
+    When I click "Détails" in the row 1 of the "report" datagrid
+    Then I should see "Analyse préconfigurée test Vue globale"
+
+
+
+
+
+
 
 
 
