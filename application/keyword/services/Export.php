@@ -77,7 +77,6 @@ class Keyword_Service_Export
                 break;
         }
 
-        Core_Tools::dump($modelBuilder);
         $export->export(
             $modelBuilder->build(new YamlMappingReader(__DIR__.'/export.yml')),
             'php://output',

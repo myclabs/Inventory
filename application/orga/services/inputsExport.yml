@@ -1,0 +1,28 @@
+sheets:
+
+
+  - foreach: organization.inputGranularities as inputGranularity
+    do:
+      - label: "{{ inputGranularity.label }}"
+
+        content:
+
+          - foreach: inputGranularity.cells as cell
+            do:
+              - type: VerticalTable
+                label: "{{ cell.label }}"
+                columns:
+                  - foreach: inputGranularity.axes as axis
+                    do:
+                      - label: "{{ axis.label }}"
+                  - foreach: getInputCellFields(cell) as field
+                    do:
+                      - label: "{{ field }}"
+                lines:
+                  - cells:
+                      - foreach: inputGranularity.axes as axis
+                        do:
+                          - "{{ displayCellMemberForAxis(cell, axis) }}"
+                      - foreach: getInputCellValues(cell) as value
+                        do:
+                          - "{{ value }}"

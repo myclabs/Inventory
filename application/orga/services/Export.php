@@ -23,7 +23,7 @@ class Orga_Service_Export
      * @param string $format
      * @param Orga_Model_Organization $organization
      */
-    public function stream($format, Orga_Model_Organization $organization)
+    public function streamStructure($format, Orga_Model_Organization $organization)
     {
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
@@ -103,4 +103,165 @@ class Orga_Service_Export
         );
     }
 
+    /**
+     * Exporte la version de orga.
+     *
+     * @param string $format
+     * @param Orga_Model_Organization $organization
+     */
+    public function streamInputs($format, Orga_Model_Organization $organization)
+    {
+        $modelBuilder = new SpreadsheetModelBuilder();
+        $export = new PHPExcelExporter();
+
+        $modelBuilder->bind('organization', $organization);
+
+        $modelBuilder->bindFunction(
+            'displayCellMemberForAxis',
+            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+                foreach ($cell->getMembers() as $member) {
+                    if ($member->getAxis() === $member) {
+                        return $member->getLabel();
+                    }
+                }
+                return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'getInputCellFields',
+            function(Orga_Model_Cell $cell) {
+                try {
+                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+                } catch (Core_Exception_UndefinedAttribute $e) {
+                    return [__('Orga', 'exports', 'noInputHeader')];
+                }
+
+                $inputFields = [];
+                foreach ($aFInputSetPrimary->getInputs() as $input) {
+                    $inputFields = array_merge($inputFields, getInputComponentLabel($input));
+                }
+                return $inputFields;
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'getInputCellValues',
+            function(Orga_Model_Cell $cell) {
+                try {
+                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+                } catch (Core_Exception_UndefinedAttribute $e) {
+                    return [__('Orga', 'exports', 'noInput')];
+                }
+
+                $inputValues = [];
+                foreach ($aFInputSetPrimary->getInputs() as $input) {
+                    $inputValues = array_merge($inputValues, getInputComponentValue($input));
+                }
+                return $inputValues;
+            }
+        );
+
+
+        switch ($format) {
+            case 'xls':
+                $writer = new PHPExcel_Writer_Excel5();
+                break;
+            case 'xlsx':
+            default:
+                $writer = new PHPExcel_Writer_Excel2007();
+                break;
+        }
+
+        $export->export(
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/inputsExport.yml')),
+            'php://output',
+            $writer
+        );
+    }
+
+}
+
+function getInputComponentLabel(AF_Model_Input $input, $prefix='')
+{
+    if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
+        $prefix = $prefix.$input->getComponent()->getLabel().'/';
+        $subInputLabels = [];
+        foreach ($input->getValue()->getInputs() as $subInput) {
+            $subInputLabels = array_merge(
+                $subInputLabels,
+                getInputComponentLabel($subInput, $prefix)
+            );
+        }
+        return $subInputLabels;
+//        $subInputSet = $input->getValue();
+//        $subAFInputSets[] = array(
+//            'title'        => $input->getComponent()->getLabel(),
+//            'subInputSet'  => $subInputSet,
+//            'componentRef' => $input->getRef(),
+//        );
+//        $inputFields = array_merge($inputFields, getSubAFInputSets($subInputSet));
+    } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
+        $prefix = $prefix.$input->getComponent()->getLabel().'/';
+        $subInputLabels = [];
+        foreach ($input->getValue() as $number => $subInputSet) {
+            foreach ($subInputSet->getInputs() as $subInput) {
+                $subInputLabels = array_merge(
+                    $subInputLabels,
+                    getInputComponentLabel($subInput, $prefix.$number.'/')
+                );
+            }
+        }
+        return $subInputLabels;
+//        $subInputSets = $input->getValue();
+//        foreach ($subInputSets as $number => $subInputSet) {
+//            $title = $input->getComponent()->getLabel() . " #" . ($number + 1);
+//            if ($subInputSet->getFreeLabel()) {
+//                $title .= " - " . $subInputSet->getFreeLabel();
+//            }
+//            $inputFields[] = array(
+//                'title'        => $title,
+//                'subInputSet'  => $subInputSet,
+//                'number'       => $number,
+//                'componentRef' => $input->getRef(),
+//            );
+//            $subAFInputSets = array_merge($inputFields, getSubAFInputSets($subInputSet));
+//        }
+    } else {
+        return [$prefix.$input->getComponent()->getLabel()];
+    }
+}
+
+function getInputComponentValue(AF_Model_Input $input)
+{
+    if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
+        $subInputLabels = [];
+        foreach ($input->getValue()->getInputs() as $subInput) {
+            $subInputLabels = array_merge(
+                $subInputLabels,
+                getInputComponentValue($subInput)
+            );
+        }
+        return $subInputLabels;
+//        $subInputSet = $input->getValue();
+//        $subAFInputSets[] = array(
+//            'title'        => $input->getComponent()->getLabel(),
+//            'subInputSet'  => $subInputSet,
+//            'componentRef' => $input->getRef(),
+//        );
+//        $inputFields = array_merge($inputFields, getSubAFInputSets($subInputSet));
+    } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
+        $subInputLabels = [];
+        foreach ($input->getValue() as $number => $subInputSet) {
+            foreach ($subInputSet->getInputs() as $subInput) {
+                $subInputLabels = array_merge(
+                    $subInputLabels,
+                    getInputComponentValue($subInput)
+                );
+            }
+        }
+        return $subInputLabels;
+    } else {
+        return [$input->getValue()];
+    }
 }
