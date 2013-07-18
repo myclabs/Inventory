@@ -43,7 +43,6 @@
         "behat/mink": "1.5.*",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
-        "behat/mink-zombie-driver": "dev-RequestHeaders",
         "mnapoli/metaconsole": "dev-master"
     },
     "minimum-stability": "dev",
@@ -56,10 +55,6 @@
         {
             "type": "git",
             "url": "git://github.com/mridgway/ZendX_Doctrine2.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/mnapoli/MinkZombieDriver.git"
         }
     ]
 }
