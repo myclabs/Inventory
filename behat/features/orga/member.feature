@@ -109,7 +109,7 @@ Feature: Organizational member feature
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    Then the "listMembersannee" datagrid should contain 0 row
+    Then the "listMembersannee" datagrid should contain 1 row
 
   @javascript
   Scenario: Check list of members of an axis when the current cell is not the global cell

@@ -11,8 +11,7 @@ $columnAccess->list = $this->listAccess;
 $columnAccess->multiple = true;
 $datagridCells->addCol($columnAccess);
 
-$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'verb', 'clickToAccess'));
-$columnDetails->defaultValue = '<i class="icon-share-alt"></i>'.' '.__('UI', 'verb', 'clickToAccess');
+$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
 $datagridCells->addCol($columnDetails);
 
 $datagridCells->addParam('idOrganization', $this->idOrganization);
