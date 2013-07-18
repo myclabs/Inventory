@@ -71,10 +71,12 @@ class AF_PopulateTest extends AF_Populate
         //   Donc, Pour récupérer l'algo d'un champs NumericInput : $aF->getAlgoByRef($input->getRef());
         // Param : AF
         //  + createAlgoNumericExpression : ref, label, expression, refUnit
-        //  + createAlgoNumericParameter : ref, label, refFamily
         //  + createAlgoNumericExpression : ref, label, value, uncertainty, refUnit
         //  + createFixedIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => refMember]
         //  + createAlgoIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => Selection_TextKey algo]
+        //  + createAlgoNumericParameter : ref, label, refFamily
+        //  + createFixedIndexForAlgoParameter : Parameter parameter, Family family, [refDimensionKeyword => refMemberKeyword]
+        //  + createAlgoIndexForAlgoParameter : Parameter parameter, Family family, [refDimensionKeyword => Selection_TextKey algo]
         //  + createAlgoSelectTextkeyExpression : ref, expression
         //  + createAlgoConditionElementary : Component input, ref
         //  + createAlgoConditionExpression : ref, expression

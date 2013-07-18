@@ -316,19 +316,6 @@ class AF_Populate extends Core_Script_Action
      * @param AF_Model_AF $aF
      * @param string $ref
      * @param string $label
-     * @param string $refFamily
-     */
-    protected function createAlgoNumericParameter(AF_Model_AF $aF, $ref, $label, $refFamily)
-    {
-        $numericParameter = new Algo_Model_Numeric_Parameter();
-        $numericParameter->setFamily(Techno_Model_Family::loadByRef($refFamily));
-        $this->createAlgoNumeric($aF, $numericParameter, $ref, $label);
-    }
-
-    /**
-     * @param AF_Model_AF $aF
-     * @param string $ref
-     * @param string $label
      * @param int $value
      * @param int $uncertainty
      * @param string $refUnit
@@ -376,7 +363,7 @@ class AF_Populate extends Core_Script_Action
      * @param Algo_Model_Numeric $numeric
      * @param string $refContext
      * @param string $refIndicator
-     * @param array $indexes Sous la forme [$refAxis =» $refMember]
+     * @param array $indexes Sous la forme [$refAxis =» $algo]
      */
     protected function createAlgoIndexForAlgoNumeric(Algo_Model_Numeric $numeric, $refContext, $refIndicator, $indexes)
     {
@@ -385,6 +372,51 @@ class AF_Populate extends Core_Script_Action
             $index = new Algo_Model_Index_Algo(Classif_Model_Axis::loadByRef($refAxis));
             $index->setAlgo($algo);
             $index->setAlgoNumeric($numeric);
+        }
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string $ref
+     * @param string $label
+     * @param string $refFamily
+     */
+    protected function createAlgoNumericParameter(AF_Model_AF $aF, $ref, $label, $refFamily)
+    {
+        $numericParameter = new Algo_Model_Numeric_Parameter();
+        $numericParameter->setFamily(Techno_Model_Family::loadByRef($refFamily));
+        $this->createAlgoNumeric($aF, $numericParameter, $ref, $label);
+    }
+
+    /**
+     * @param Algo_Model_Numeric_Parameter $parameter
+     * @param Techno_Model_Family $family
+     * @param array $indexes Sous la forme [$reDimensionKeyword =» $refMemberKeyword]
+     */
+    protected function createFixedIndexForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, Techno_Model_Family $family, $indexes)
+    {
+        foreach ($indexes as $refDimensionKeyword => $refMemberKeyword) {
+            $dimension = $family->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $index = new Algo_Model_ParameterCoordinate_Fixed();
+            $index->setDimension($dimension);
+            $index->setMember($dimension->getMember(Keyword_Model_Keyword::loadByRef($refMemberKeyword)));
+            $index->setAlgoParameter($parameter);
+        }
+    }
+
+    /**
+     * @param Algo_Model_Numeric_Parameter $parameter
+     * @param Techno_Model_Family $family
+     * @param array $indexes Sous la forme [$refAxis =» $algo]
+     */
+    protected function createAlgoIndexForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, Techno_Model_Family $family, $indexes)
+    {
+        foreach ($indexes as $refDimensionKeyword => $algo) {
+            $dimension = $family->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $index = new Algo_Model_ParameterCoordinate_Algo();
+            $index->setDimension($dimension);
+            $index->setAlgoKeyword($algo);
+            $index->setAlgoParameter($parameter);
         }
     }
 
