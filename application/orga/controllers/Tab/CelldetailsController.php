@@ -215,19 +215,9 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $listDatagridConfiguration = array();
-        $listInputGranularities = $organization->getInputGranularities();
-        uasort(
-            $listInputGranularities,
-            function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
-                if ($a->getInputConfigGranularity() === $b->getInputConfigGranularity()) {
-                    return $a->getPosition() - $b->getPosition();
-                }
-                return $a->getInputConfigGranularity()->getPosition() - $b->getInputConfigGranularity()->getPosition();
-            }
-        );
-        foreach ($listInputGranularities as $inputGranularity) {
+        foreach ($organization->getInputGranularities() as $inputGranularity) {
             if ($cell->getGranularity()->isBroaderThan($inputGranularity->getInputConfigGranularity())
-                || ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity())) {
+                || ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
                     'aFGranularityConfig'.$inputGranularity->getId(),
                     'datagrid_cell_afgranularities_config',
@@ -329,11 +319,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $organization = $cell->getGranularity()->getOrganization();
-        try {
-            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $granularityForInventoryStatus = false;
-        }
+        $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
 
         $listDatagridConfiguration = array();
         $listInputGranularities = $organization->getInputGranularities();
@@ -344,8 +330,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             }
         );
         foreach ($listInputGranularities as $inputGranularity) {
-            if ($cell->getGranularity()->isBroaderThan($inputGranularity)
-                || ($cell->getGranularity()->getRef() === $inputGranularity->getRef())) {
+            if ($cell->getGranularity()->isBroaderThan($inputGranularity)) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
                     'aFGranularity'.$idCell.'Input'.$inputGranularity->getId(),
                     'datagrid_cell_afgranularities_input',
@@ -355,8 +340,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-                if ($granularityForInventoryStatus && ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
-                    || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef())) {
+                if ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
+                    || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
                     $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'inventory', 'inventoryStatus'));
                     $columnStateOrga->withEmptyElement = false;
                     $columnStateOrga->list = array(

@@ -50,6 +50,7 @@ When I wait [for] 5 seconds
 When I click "button/link"
 When I click element "css selector"
 When I open collapse "label"
+When I close collapse "label"
 When I open tab "label"
 
 # Message (alerts)

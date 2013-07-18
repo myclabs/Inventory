@@ -11,8 +11,13 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Europe | Marque A Organisation avec données"
-    And I should see the "aFGranularity2Input8" datagrid
+    When I open collapse "Année | Site | Catégorie"
+    Then I should see the "aFGranularity2Input8" datagrid
     And the "aFGranularity2Input8" datagrid should contain 2 row
+  # Vérification que le libellé "Vue globale" est présent mais non cliquable
+  # Voir "Organization navigation scenario"
+    And I should see "Vue globale"
+    And I should not see a "#navigationParent a:contains('Vue globale')" element
 
   @javascript
   Scenario: Administrator of several cells
@@ -31,5 +36,6 @@ Feature: Cell administrator feature
   # Accès à une des cellules
     When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Organisation avec données"
-    And I should see the "aFGranularity4Input8" datagrid
+    When I open collapse "Année | Site | Catégorie"
+    Then I should see the "aFGranularity4Input8" datagrid
     And the "aFGranularity4Input8" datagrid should contain 1 row

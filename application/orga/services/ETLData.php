@@ -71,46 +71,42 @@ class Orga_Service_ETLData
 
         foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
             if ($inputGranularity === $cell->getGranularity()) {
-                try {
-                    $inputSet = $cell->getAFInputSetPrimary();
-                    if ($inputSet->isInputComplete()) {
-                        $this->clearDWResultsFromCell($cell);
-                    }
-                    $inputSet->updateCompletion();
-                    if ($inputSet->isInputComplete()) {
-                        $af = $cell->getParentCellForGranularity(
-                            $inputGranularity->getInputConfigGranularity()
-                        )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
-                        // Exécute l'AF et calcule les totaux
-                        $af->execute($inputSet);
-                        $inputSet->getOutputSet()->calculateTotals();
-                        $this->populateDWResultsFromCell($cell);
-                    }
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    // Pas de saisie.
-                }
+                $this->calculateResults($cell, $inputGranularity);
             } else if ($inputGranularity->isNarrowerThan($granularity)) {
                 foreach ($cell->getChildCellsForGranularity($inputGranularity) as $childCell) {
-                    try {
-                        $inputSet = $childCell->getAFInputSetPrimary();
-                        if ($inputSet->isInputComplete()) {
-                            $this->clearDWResultsFromCell($childCell);
-                        }
-                        $inputSet->updateCompletion();
-                        if ($inputSet->isInputComplete()) {
-                            $af = $childCell->getParentCellForGranularity(
-                                $inputGranularity->getInputConfigGranularity()
-                            )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
-                            // Exécute l'AF et calcule les totaux
-                            $af->execute($inputSet);
-                            $inputSet->getOutputSet()->calculateTotals();
-                            $this->populateDWResultsFromCell($childCell);
-                        }
-                    } catch (Core_Exception_UndefinedAttribute $e) {
-                        // Pas de saisie.
-                    }
+                    $this->calculateResults($childCell, $inputGranularity);
                 }
             }
+        }
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @param Orga_Model_Granularity $inputGranularity
+     */
+    private function calculateResults(Orga_Model_Cell $cell, Orga_Model_Granularity $inputGranularity)
+    {
+        try {
+            $inputSet = $cell->getAFInputSetPrimary();
+            if ($inputSet->isInputComplete()) {
+                $this->clearDWResultsFromCell($cell);
+            }
+            $inputSet->updateCompletion();
+            if ($inputSet->isInputComplete()) {
+                if ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
+                    $af = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+                } else {
+                    $af = $cell->getParentCellForGranularity(
+                        $inputGranularity->getInputConfigGranularity()
+                    )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+                }
+                // Exécute l'AF et calcule les totaux
+                $af->execute($inputSet);
+                $inputSet->getOutputSet()->calculateTotals();
+                $this->populateDWResultsFromCell($cell);
+            }
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            // Pas de saisie.
         }
     }
 

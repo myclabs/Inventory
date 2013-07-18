@@ -1,4 +1,4 @@
-@dbFull
+@dbEmpty
 Feature: Users
   User management.
 
@@ -9,10 +9,10 @@ Feature: Users
   Scenario: User list
     Given I am on "user/profile/list"
     Then I should see the "users" datagrid
-    And the "users" datagrid should contain 1 row
+    And the "users" datagrid should contain 10 row
     And the row 1 of the "users" datagrid should contain:
-      | nom            | email | detailsUser |
-      | Administrateur | admin | Éditer      |
+      | nom            | email | emailValidated | enabled | detailsUser |
+      | Administrateur | admin | Non effectuée  | Activé  | Éditer      |
 
   @javascript
   Scenario: Adding user with empty form
