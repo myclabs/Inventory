@@ -8,6 +8,7 @@ Feature: Classification axis feature
   Scenario: Creation of a classification axis
   # TODO : affichage d'un axe sous la forme : "Libellé (identifiant)"
     Given I am on "classif/axis/manage"
+    And I wait for the page to finish loading
     Then I should see "Axes de classification"
   # Ajout d'un axe, identifiant vide
     When I click "Ajouter"

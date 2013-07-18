@@ -13,12 +13,12 @@ Feature: Cell observer feature
     Then I should see "Europe | Marque A Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
-    And the "aFGranularity2Input8" datagrid should contain 2 row
+    And the "aFGranularity2Input8" datagrid should contain 4 row
   # TODO : "Vue globale" non cliquable dans le volet de navigation
   # Accès à l'onglet "Collectes"
     When I open tab "Collectes"
     Then I should see the "inventories6" datagrid
-    And the "inventories6" datagrid should contain 1 row
+    And the "inventories6" datagrid should contain 2 row
   # TODO : statut de la collecte non éditable
   # Accès à l'onglet "Analyses"
     When I open tab "Analyses"
@@ -49,5 +49,5 @@ Feature: Cell observer feature
     When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
-    Then I should see the "aFGranularity4Input8" datagrid
-    And the "aFGranularity4Input8" datagrid should contain 1 row
+    Then I should see the "aFGranularity5Input8" datagrid
+    And the "aFGranularity5Input8" datagrid should contain 2 row
