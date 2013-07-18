@@ -60,14 +60,6 @@
         {
             "type": "git",
             "url": "https://github.com/mnapoli/MinkZombieDriver.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/mnapoli/MetaModel.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/mnapoli/MetaConsole.git"
         }
     ]
 }

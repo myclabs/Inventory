@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "0d7249f9e0b4b55e2462cda9b16832f2",
+    "hash": "dbec75e13634f1cdc8bf21661c05b4aa",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1860,6 +1860,12 @@
                 "url": "https://github.com/mnapoli/MetaConsole.git",
                 "reference": "4896995d8970a597aa422cffe1cf62327a98091f"
             },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/4896995d8970a597aa422cffe1cf62327a98091f",
+                "reference": "4896995d8970a597aa422cffe1cf62327a98091f",
+                "shasum": ""
+            },
             "require": {
                 "mnapoli/metamodel": "dev-master",
                 "mnapoli/number-two": "0.1.*",
@@ -1874,6 +1880,7 @@
                     "MetaConsole": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "time": "2013-07-16 17:44:39"
         },
         {
@@ -1882,7 +1889,13 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaModel.git",
-                "reference": "c1aa7ae8a96e6e476536a84eb99c3d06be220a5f"
+                "reference": "477d6eebaab26b988f5700193e73dd3577980b53"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/MetaModel/zipball/477d6eebaab26b988f5700193e73dd3577980b53",
+                "reference": "477d6eebaab26b988f5700193e73dd3577980b53",
+                "shasum": ""
             },
             "require": {
                 "jms/parser-lib": "1.0.*",
@@ -1899,7 +1912,8 @@
                     "UnitTest": "tests/"
                 }
             },
-            "time": "2013-07-18 08:47:28"
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2013-07-18 12:23:01"
         },
         {
             "name": "mnapoli/number-two",
