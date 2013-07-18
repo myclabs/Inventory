@@ -160,7 +160,7 @@ class UnitAPI
 
     /**
      * Renvoie la liste des refs des unités compatibles, càd de même grandeur physique.
-     * @return array
+     * @return UnitAPI[]
      */
     public function getSamePhysicalQuantityUnits()
     {

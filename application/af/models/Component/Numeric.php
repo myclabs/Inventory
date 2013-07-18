@@ -87,6 +87,8 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
                     $locale->formatNumberForInput($input->getValue()->getRelativeUncertainty())
                 ]);
             }
+            // Unité
+            $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $input->getValue()->getUnit()));
             // Historique de la valeur
             $uiElement->getElement()->addElement($this->getHistoryComponent($input));
         } else {
@@ -97,10 +99,10 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
                 $locale->formatNumberForInput($this->defaultValue->getDigitalValue()),
                 $locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty())
             ]);
-        }
-        // Unité
-        if ($this->unit !== null) {
-            $uiElement->getElement()->addSuffix($this->unit->getSymbol());
+            // Unité
+            if ($this->unit !== null) {
+                $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $this->unit));
+            }
         }
         // Actions
         foreach ($this->actions as $action) {
@@ -262,6 +264,34 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
     public function setRequired($required)
     {
         $this->required = (bool) $required;
+    }
+
+    /**
+     * Retourne le composant UI pour le choix de l'unité de la saisie
+     * @param UnitAPI $baseUnit
+     * @param UnitAPI $selectedUnit
+     * @return Zend_Form_Element
+     */
+    protected function getUnitComponent(UnitAPI $baseUnit, UnitAPI $selectedUnit)
+    {
+        $unitComponent = new UI_Form_Element_Select($this->ref . '_unit');
+
+        // Ajoute l'unité de base
+        $option = new UI_Form_Element_Option($this->ref . '_unit_' . $baseUnit->getRef(), $baseUnit->getRef(),
+            $baseUnit->getSymbol());
+        $unitComponent->addOption($option);
+
+        // Ajoute les unités compatibles
+        foreach ($baseUnit->getSamePhysicalQuantityUnits() as $compatibleUnit) {
+            $option = new UI_Form_Element_Option($this->ref . '_unit_' . $compatibleUnit->getRef(),
+                $compatibleUnit->getRef(), $compatibleUnit->getSymbol());
+            $unitComponent->addOption($option);
+        }
+
+        // Sélection
+        $unitComponent->setValue($selectedUnit->getRef());
+
+        return $unitComponent;
     }
 
 }
