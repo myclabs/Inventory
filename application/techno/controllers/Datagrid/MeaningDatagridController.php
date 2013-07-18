@@ -63,7 +63,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
         try {
             $keyword = Keyword_Model_Keyword::loadByRef($refKeyword);
         } catch(Core_Exception_NotFound $e) {
-            $this->setAddElementErrorMessage('ref', __('Techno', 'formValidation', 'unknownKeywordRef'));
+            $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
             Techno_Model_Meaning::loadByRef($refKeyword);
