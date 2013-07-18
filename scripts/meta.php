@@ -4,7 +4,6 @@ use MetaConsole\Application;
 use MetaModel\Bridge\Doctrine\EntityManagerBridge;
 use MetaModel\MetaModel;
 
-define('APPLICATION_ENV', 'script');
 define('RUN', false);
 require_once __DIR__ . '/../application/init.php';
 
