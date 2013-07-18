@@ -14,7 +14,7 @@ Feature: Cell contributor feature
     When I wait 2 seconds
     And I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
-    And the "aFGranularity2Input8" datagrid should contain 2 row
+    And the "aFGranularity2Input8" datagrid should contain 4 row
   # Accès à l'onglet "Collectes", édition du statut d'une collecte
     When I open tab "Collectes"
     Then I should see the "inventories6" datagrid
@@ -42,5 +42,5 @@ Feature: Cell contributor feature
     When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
-    Then I should see the "aFGranularity4Input8" datagrid
-    And the "aFGranularity4Input8" datagrid should contain 1 row
+    Then I should see the "aFGranularity5Input8" datagrid
+    And the "aFGranularity5Input8" datagrid should contain 2 row

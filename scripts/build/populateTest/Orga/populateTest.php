@@ -90,6 +90,9 @@ class Orga_PopulateTest extends Orga_Populate
         $this->createUser('observateur.site@toto.com');
         $this->createUser('utilisateur.connecte@toto.com');
 
+        // Création utilisateur pour test édition "mon compte" et test édition compte d'un utilisateur.
+        $this->createUser('emmanuel.risler.pro@gmail.com');
+
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         // Params : email, Organization
         $this->addOrganizationAdministrator('admin', $organization);

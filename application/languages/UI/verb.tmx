@@ -27,14 +27,6 @@
                 <seg>Close</seg>
             </tuv>
         </tu>
-        <tu tuid="clickToAccess">
-            <tuv xml:lang="fr">
-                <seg>Cliquer pour accéder</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Click to access</seg>
-            </tuv>
-        </tu>
         <tu tuid="collapseAll">
             <tuv xml:lang="fr">
                 <seg>Tout replier</seg>

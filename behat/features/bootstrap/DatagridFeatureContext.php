@@ -164,11 +164,13 @@ JS;
     public abstract function waitForPageToFinishLoading();
     public abstract function clickElement($selector);
     public abstract function fillField($field, $value);
+
     /**
-     * @param string $cssSelector
+     * @param string $selector
+     * @param string $type
      * @return NodeElement
      */
-    protected abstract function findElement($cssSelector);
+    protected abstract function findElement($selector, $type = 'css');
     /**
      * @param string $cssSelector
      * @return NodeElement[]
