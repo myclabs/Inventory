@@ -10,6 +10,9 @@ killall() {
     echo DONE
 }
 
+# Git pull
+git pull
+
 # Start virtual display
 #Xvfb :99 -ac > /dev/null 2>&1 &
 #export DISPLAY=:99
@@ -23,4 +26,4 @@ sleep 2
 #export NODE_PATH=/usr/local/lib/node_modules
 
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml -f failed
+php ../vendor/behat/behat/bin/behat --config behat.yml --rerun failed.txt

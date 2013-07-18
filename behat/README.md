@@ -40,6 +40,8 @@ You can launch a specific "Feature" or "Scenario" by its name:
 
 Here are all the standard Behat-Mink commands: [Behat-Mink reference](https://gist.github.com/mnapoli/5848556).
 
+To skip a test, use the tag `@skipped`.
+
 Custom commands are:
 
 ```cucumber

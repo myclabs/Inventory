@@ -20,7 +20,7 @@ Feature: Organization datagrid feature
       | label  |
       | Test   |
   # Lien vers le détail de l'organisation
-    When I click "Détails" in the row 2 of the "organizations" datagrid
+    When I click "Cliquer pour accéder" in the row 2 of the "organizations" datagrid
     Then I should see "Vue globale Test"
   # Vérification de la création de la granularité globale et ses attributs par défaut
     When I open tab "Organisation"

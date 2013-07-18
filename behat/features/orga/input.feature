@@ -16,7 +16,7 @@ Feature: Organization input tab feature
     When I open collapse "Filtres"
     And I select "Annecy" from "aFGranularity1Input8_site_filterForm"
     And I click "Filtrer"
-    Then the "aFGranularity1Input8" datagrid should contain 1 row
+    Then the "aFGranularity1Input8" datagrid should contain 2 row
   # Bouton "Réinitialiser"
     When I click "Réinitialiser"
-    Then the "aFGranularity1Input8" datagrid should contain 3 row
+    Then the "aFGranularity1Input8" datagrid should contain 8 row
