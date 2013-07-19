@@ -1807,12 +1807,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaConsole.git",
-                "reference": "4896995d8970a597aa422cffe1cf62327a98091f"
+                "reference": "f7892612ca37e972d406ae1006a1686979fc8e05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/4896995d8970a597aa422cffe1cf62327a98091f",
-                "reference": "4896995d8970a597aa422cffe1cf62327a98091f",
+                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/f7892612ca37e972d406ae1006a1686979fc8e05",
+                "reference": "f7892612ca37e972d406ae1006a1686979fc8e05",
                 "shasum": ""
             },
             "require": {
@@ -1830,7 +1830,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-16 17:44:39"
+            "time": "2013-07-19 08:17:05"
         },
         {
             "name": "mnapoli/metamodel",
