@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * Classe du controller du datagrid des indicateurs
@@ -48,11 +49,11 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
     {
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
-        $unit = new Unit_API($this->getAddElementValue('unit'));
+        $unit = new UnitAPI($this->getAddElementValue('unit'));
         if (!$unit->exists()) {
             $this->setAddElementErrorMessage('unit', __('Unit', 'exception', 'unitDoesNotExist'));
         }
-        $ratioUnit = new Unit_API($this->getAddElementValue('ratioUnit'));
+        $ratioUnit = new UnitAPI($this->getAddElementValue('ratioUnit'));
         if (!$ratioUnit->exists()) {
             $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'exception', 'unitDoesNotExist'));
         }
@@ -130,7 +131,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 }
                 break;
             case 'unit':
-                $unit = new Unit_API($this->update['value']);
+                $unit = new UnitAPI($this->update['value']);
                 if ($unit->exists()) {
                     try {
                         $indicator->setUnit($unit);
@@ -143,7 +144,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 }
                 break;
             case 'ratioUnit':
-                $ratioUnit = new Unit_API($this->update['value']);
+                $ratioUnit = new UnitAPI($this->update['value']);
                 if ($ratioUnit->exists()) {
                     try {
                         $indicator->setRatioUnit($ratioUnit);
