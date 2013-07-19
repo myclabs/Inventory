@@ -48,7 +48,7 @@ class Inventory_PopulateTest extends Core_Script_Populate
 
         // Orga.
         $populateOrga = new Orga_PopulateTest();
-        $populateOrga->runEnvironment($environment);
+//        $populateOrga->runEnvironment($environment);
 
 
         $this->close($environment);
