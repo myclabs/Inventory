@@ -284,7 +284,7 @@ class DW_ReportController extends Core_Controller
             );
         } else {
             $this->getResponse()->setHttpResponseCode(400);
-            $this->entityManager->flush();
+            $this->entityManager->clear();
             $this->sendJsonResponse(
                 array(
                     'errorMessages' => $errors,
