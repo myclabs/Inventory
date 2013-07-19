@@ -155,7 +155,9 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Ajout membre parent à un membre
     When I open tab "Organisation"
     And I open collapse "Site"
-    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite"
+    And I wait 5 seconds
+    Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I reload the page
     And I wait for the page to finish loading
@@ -169,7 +171,9 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Modification membre parent d'un membre
     When I open tab "Organisation"
     And I open collapse "Site"
-    When I set "italie#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "italie#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
+    And I wait 5 seconds
+    Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I reload the page
     And I wait for the page to finish loading
@@ -183,7 +187,9 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Suppression membre parent d'un membre
     When I open tab "Organisation"
     And I open collapse "Site"
-    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
+    And I wait 5 seconds
+    Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I reload the page
     And I wait for the page to finish loading
