@@ -10,6 +10,12 @@ $idCell = isset($this->idCell) ? $this->idCell : null;
 $entries = $this->entries;
 ?>
 
+<?php if (count($entries) === 0) : ?>
+    <p class="muted">
+        <?=__('', '', 'Aucun historique à afficher.')?>
+    </p>
+<?php endif; ?>
+
 <dl class="dl-horizontal">
     <?php foreach ($entries as $entry) : ?>
 
