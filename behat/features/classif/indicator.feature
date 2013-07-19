@@ -17,7 +17,6 @@ Feature: Classification indicator feature
     When I fill in "editIndicators_ref_addForm" with "bépo"
     And I click "Valider"
     Then the field "editIndicators_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # TODO : tester la validité des unités, une fois la fonctionnalité implémentée
   # Ajout d'un indicateur, identifiant déjà utilisé
     When I fill in "editIndicators_label_addForm" with "Test"
     And I fill in "editIndicators_ref_addForm" with "ges"
@@ -25,6 +24,10 @@ Feature: Classification indicator feature
     And I fill in "editIndicators_ratioUnit_addForm" with "kg_co2e"
     And I click "Valider"
     Then the field "editIndicators_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Ajout d'un indicateur, unités non existantes
+
+  # Ajout d'un indicateur, unités existantes mais non compatibles
+
   # Ajout d'un indicateur, saisie correcte
     When I fill in "editIndicators_ref_addForm" with "test"
     And I click "Valider"

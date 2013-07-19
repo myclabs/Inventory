@@ -6,7 +6,7 @@ Feature: Classification context indicator feature
 
   @javascript
   Scenario: Creation of a classification context indicator
-    When I am on "classif/contextindicator/manage"
+    Given I am on "classif/contextindicator/manage"
     Then I should see the "editContextIndicators" datagrid
   # Ajout d'un indicateur contextualisé, Contexte et indicateurs vides
     When I click "Ajouter"
@@ -31,7 +31,7 @@ Feature: Classification context indicator feature
     And the field "editContextIndicators_indicator_addForm" should have error: "Il existe déjà un indicateur contextualisé pour ce contexte et cet indicateur."
   # Vérification contenu datagrid
     When I click "Annuler"
-    Then the row 5 of the "editContextIndicators" datagrid should contain:
+    Then the row 4 of the "editContextIndicators" datagrid should contain:
       | context       | indicator         | axes    |
       | Déplacements | Chiffre d'affaires |   |
   # Suppression
@@ -47,14 +47,19 @@ Feature: Classification context indicator feature
     And I additionally select "Poste article 75" from "editContextIndicators_axes_addForm"
     And I additionally select "Scope" from "editContextIndicators_axes_addForm"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-    And the row 1 of the "editContextIndicators" datagrid should contain:
-      | context       | indicator         | axes                    |
-      | Général       | GES               | Poste article 75, Scope |
+    Then the field "editContextIndicators_axes_addForm" should have error: "Merci de sélectionner des axes deux à deux non hiérarchiquement reliés."
+
+  @javascript
+  Scenario: Edition of the list of axes of a classification context indicator
+    Given I am on "classif/contextindicator/manage"
+    Then I should see the "editContextIndicators" datagrid
+  # Ajout d'un axe, relié hiérarchiquement à un axe existant
+    When I additionnally set "Scope" for column "axes" of row 1 of the "editContextIndicators" datagrid
+    Then the following message is shown and closed: "Merci de sélectionner des axes deux à deux non hiérarchiquement reliés."
 
   @javascript
   Scenario:  Deletion of a classification context indicator
-    When I am on "classif/contextindicator/manage"
+    Given I am on "classif/contextindicator/manage"
     Then I should see the "editContextIndicators" datagrid
     When I click "Supprimer" in the row 1 of the "editContextIndicators" datagrid
     Then I should see the popup "Demande de confirmation"
