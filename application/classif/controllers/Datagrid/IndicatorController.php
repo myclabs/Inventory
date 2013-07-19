@@ -51,15 +51,15 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
         $label = $this->getAddElementValue('label');
         $unit = new UnitAPI($this->getAddElementValue('unit'));
         if (!$unit->exists()) {
-            $this->setAddElementErrorMessage('unit', __('Unit', 'exception', 'unitDoesNotExist'));
+            $this->setAddElementErrorMessage('unit', __('Unit', 'message', 'incorrectUnitIdentifier'));
         }
         $ratioUnit = new UnitAPI($this->getAddElementValue('ratioUnit'));
         if (!$ratioUnit->exists()) {
-            $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'exception', 'unitDoesNotExist'));
+            $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'message', 'incorrectUnitIdentifier'));
         }
         if ($unit->exists() && $ratioUnit->exists() && !$unit->isEquivalent($ratioUnit)) {
-            $this->setAddElementErrorMessage('unit', __('Unit', 'exception', 'incompatibleUnits'));
-            $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'exception', 'incompatibleUnits'));
+            $this->setAddElementErrorMessage('unit', __('Unit', 'message', 'incompatibleUnits'));
+            $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'message', 'incompatibleUnits'));
         }
 
         try {
@@ -136,11 +136,11 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                     try {
                         $indicator->setUnit($unit);
                     } catch (Unit_Exception_IncompatibleUnits $e) {
-                        throw new Core_Exception_User('Unit', 'exceptions', 'incompatibleUnits');
+                        throw new Core_Exception_User('Unit', 'message', 'incompatibleUnits');
                     }
                     $this->message = __('UI', 'message', 'updated');
                 } else {
-                    throw new Core_Exception_User('Unit', 'exception', 'unitDoesNotExist');
+                    throw new Core_Exception_User('Unit', 'message', 'incorrectUnitIdentifier');
                 }
                 break;
             case 'ratioUnit':
@@ -149,11 +149,11 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                     try {
                         $indicator->setRatioUnit($ratioUnit);
                     } catch (Unit_Exception_IncompatibleUnits $e) {
-                        throw new Core_Exception_User('Unit', 'exceptions', 'incompatibleUnits');
+                        throw new Core_Exception_User('Unit', 'message', 'incompatibleUnits');
                     }
                     $this->message = __('UI', 'message', 'updated');
                 } else {
-                    throw new Core_Exception_User('Unit', 'exception', 'unitDoesNotExist');
+                    throw new Core_Exception_User('Unit', 'message', 'incorrectUnitIdentifier');
                 }
                 break;
             case 'position' :
