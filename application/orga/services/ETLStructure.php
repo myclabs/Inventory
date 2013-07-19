@@ -851,11 +851,13 @@ class Orga_Service_ETLStructure
         foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
-                $this->entityManager->flush();
+
                 foreach ($granularity->getCells() as $cell) {
-                    $this->entityManager->clear();
                     $this->resetCellDWCube(Orga_Model_Cell::load($cell->getId()));
+
+                    // Optimisation de la mémoire.
                     $this->entityManager->flush();
+                    $this->entityManager->clear();
                 }
             }
         }
@@ -885,11 +887,8 @@ class Orga_Service_ETLStructure
      */
     public function resetCellAndChildrenCalculationsAndDWCubes(Orga_Model_Cell $cell)
     {
-        /** @var Orga_Service_ETLData $etlDataService */
-        $etlDataService = $this->get('Orga_Service_ETLData');
-
+        $this->etlDataService->calculateResultsForCellAndChildren($cell);
         $this->resetCellAndChildrenDWCubes($cell);
-        $etlDataService->calculateResultsForCellAndChildren($cell);
     }
 
     /**
@@ -903,7 +902,13 @@ class Orga_Service_ETLStructure
         $this->resetCellDWCube($cell);
 
         foreach ($cell->getChildCells() as $childCell) {
-            $this->resetCellDWCube($childCell);
+            if ($childCell->getGranularity()->getCellsGenerateDWCubes()) {
+                $this->resetCellDWCube(Orga_Model_Cell::load($childCell->getId()));
+
+                // Optimisation de la mémoire.
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+            }
         }
     }
 
@@ -914,20 +919,18 @@ class Orga_Service_ETLStructure
      */
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
-        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            $this->etlDataService->clearDWResultsForCell($cell);
+        $this->etlDataService->clearDWResultsForCell($cell);
 
-            $this->resetDWCube(
-                $cell->getDWCube(),
-                $cell->getGranularity()->getOrganization(),
-                array(
-                    'axes' => $cell->getGranularity()->getAxes(),
-                    'members' => $cell->getMembers()
-                )
-            );
+        $this->resetDWCube(
+            $cell->getDWCube(),
+            $cell->getGranularity()->getOrganization(),
+            array(
+                'axes' => $cell->getGranularity()->getAxes(),
+                'members' => $cell->getMembers()
+            )
+        );
 
-            $this->etlDataService->populateDWResultsForCell($cell);
-        }
+        $this->etlDataService->populateDWResultsForCell($cell);
     }
 
     /**
@@ -975,11 +978,13 @@ class Orga_Service_ETLStructure
             $dWRootAxis->delete();
         }
 
+        // Suppression des données du cube et vidage des Report.
         $this->entityManager->flush();
 
         $this->populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilter);
         $dWCube->save();
 
+        // Peuplement du cube effectif.
         $this->entityManager->flush();
 
         // Copie des Reports.
@@ -992,6 +997,7 @@ class Orga_Service_ETLStructure
             }
         }
 
+        // Copie des rapports.
         $this->entityManager->flush();
     }
 
