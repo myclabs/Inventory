@@ -180,6 +180,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
             $this->deletePosition();
 
             $this->group = $group;
+            $group->addSubComponent($this);
 
             $this->setPosition();
         }

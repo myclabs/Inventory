@@ -196,6 +196,7 @@ class AF_Model_AF extends Core_Model_Entity
 
     /**
      * @return AF_Model_Component_Group
+     * @todo Diminuer l'utilisation de cette méthode (elle casse l'encapsulation)
      */
     public function getRootGroup()
     {
@@ -440,11 +441,11 @@ class AF_Model_AF extends Core_Model_Entity
      */
     public function getNbRequiredFields(AF_Model_InputSet $inputSet = null)
     {
-        return $this->getRootGroup()->getNbRequiredFields($inputSet);
+        return $this->rootGroup->getNbRequiredFields($inputSet);
     }
 
     /**
-     * Ajoute un composant à l'AF
+     * Ajoute un composant à l'AF (au root group)
      *
      * Crée l'algo associé si nécessaire
      *
@@ -452,6 +453,10 @@ class AF_Model_AF extends Core_Model_Entity
      */
     public function addComponent(AF_Model_Component $component)
     {
+        // Ajout au root group si le composant n'est dans aucun groupe
+        if ($component->getGroup() === null) {
+            $this->rootGroup->addSubComponent($component);
+        }
         // S'il s'agit d'un champ numérique, on crée automatiquement l'algo correspondant
         if ($component instanceof AF_Model_Component_Numeric) {
             $algo = new Algo_Model_Numeric_Input();

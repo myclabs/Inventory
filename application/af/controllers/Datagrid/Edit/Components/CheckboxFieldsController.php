@@ -82,11 +82,9 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
             } else {
                 $checkboxField->setDefaultValue(false);
             }
-            $af->getRootGroup()->addSubComponent($checkboxField);
             $af->addComponent($checkboxField);
 
             $checkboxField->save();
-            $af->getRootGroup()->save();
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {

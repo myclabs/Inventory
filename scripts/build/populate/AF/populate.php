@@ -293,7 +293,6 @@ class AF_Populate extends Core_Script_Action
         $component->setVisible($visible);
         $component->save();
         $aF->addComponent($component);
-        $aF->getRootGroup()->addSubComponent($component);
         return $component;
     }
 
