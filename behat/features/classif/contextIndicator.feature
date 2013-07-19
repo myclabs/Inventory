@@ -31,7 +31,7 @@ Feature: Classification context indicator feature
     And the field "editContextIndicators_indicator_addForm" should have error: "Il existe déjà un indicateur contextualisé pour ce contexte et cet indicateur."
   # Vérification contenu datagrid
     When I click "Annuler"
-    Then the row 5 of the "editContextIndicators" datagrid should contain:
+    Then the row 4 of the "editContextIndicators" datagrid should contain:
       | context       | indicator         | axes    |
       | Déplacements | Chiffre d'affaires |   |
   # Suppression
@@ -47,10 +47,7 @@ Feature: Classification context indicator feature
     And I additionally select "Poste article 75" from "editContextIndicators_axes_addForm"
     And I additionally select "Scope" from "editContextIndicators_axes_addForm"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-    And the row 1 of the "editContextIndicators" datagrid should contain:
-      | context       | indicator         | axes                    |
-      | Général       | GES               | Poste article 75, Scope |
+    Then the field "editContextIndicators_axes_addForm" should have error: "Merci de sélectionner des axes deux à deux non hiérarchiquement reliés."
 
   @javascript
   Scenario:  Deletion of a classification context indicator
