@@ -57,7 +57,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
         if (!$ratioUnit->exists()) {
             $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'exception', 'unitDoesNotExist'));
         }
-        if (!$unit->isEquivalent($ratioUnit)) {
+        if ($unit->exists() && $ratioUnit->exists() && !$unit->isEquivalent($ratioUnit)) {
             $this->setAddElementErrorMessage('unit', __('Unit', 'exception', 'incompatibleUnits'));
             $this->setAddElementErrorMessage('ratioUnit', __('Unit', 'exception', 'incompatibleUnits'));
         }
