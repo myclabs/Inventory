@@ -87,6 +87,11 @@
             }
         };
         errorHandler = function (o) {
+            // Ignore aborted requests
+            if (request.readyState == 0 || request.status == 0
+                || request.statusText == "abort") {
+                return;
+            }
             response = (typeof(o.responseText) == 'string') ? $.parseJSON(o.responseText) : o;
             addMessage(response.message, response.typeError);
         };
