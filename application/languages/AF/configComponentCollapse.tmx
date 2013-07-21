@@ -12,12 +12,20 @@
                 <seg>Groups</seg>
             </tuv>
         </tu>
-        <tu tuid="subFormCollapse">
+        <tu tuid="nonRepeatedSubFormCollapse">
             <tuv xml:lang="fr">
-                <seg>Sous-formulaires</seg>
+                <seg>Sous-formulaires non répétés</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Subforms</seg>
+                <seg>Non repeated subforms</seg>
+            </tuv>
+        </tu>
+        <tu tuid="repeatedSubFormCollapse">
+            <tuv xml:lang="fr">
+                <seg>Sous-formulaires répétés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Repeated subforms</seg>
             </tuv>
         </tu>
         <tu tuid="numericInputFieldCollapse">

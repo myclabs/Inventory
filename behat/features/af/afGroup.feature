@@ -33,11 +33,74 @@ Feature: AF group feature
     And I fill in "groupDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    # TODO : ordonner les lignes suivant l'ordre alphabétique des identifiants ?
-    And the row 2 of the "groupDatagrid" datagrid should contain:
-      | label | ref | isVisible | foldaway  |
-      | AAA   | aaa | Visible   | Repliable |
-    When I click "Aide" in the row 2 of the "groupDatagrid" datagrid
+  # Groupes ordonnés suivant l'ordre alphabétique des identifiants
+    And the row 1 of the "groupDatagrid" datagrid should contain:
+      | label | ref | isVisible |
+      | AAA   | aaa | Visible   |
+    When I click "Aide" in the row 1 of the "groupDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#groupDatagrid_help_popup .modal-body h1:contains('Blabla')" element
 
+  @javascript
+  Scenario: Edition of an AF group
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Groupes"
+    Then I should see the "groupDatagrid" datagrid
+  # Modification du libellé
+    When I set "Groupe modifié" for column "label" of row 1 of the "groupDatagrid" datagrid with a confirmation message
+  # Modification de l'identifiant, identifiant vide
+    When I set "" for column "ref" of row 1 of the "groupDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant, identifiant avec caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "groupDatagrid" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification de l'identifiant, identifiant déjà utilisé
+    When I set "champ_numerique" for column "ref" of row 1 of the "groupDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Modification de l'identifiant, saisie correcte
+    When I set "groupe_modifie" for column "ref" of row 1 of the "groupDatagrid" datagrid with a confirmation message
+  # Modification de l'aide
+    When I set "h1. Aide modifiée" for column "help" of row 1 of the "groupDatagrid" datagrid with a confirmation message
+  # Modification de la visibilité initiale
+    When I set "Masqué" for column "isVisible" of row 1 of the "groupDatagrid" datagrid with a confirmation message
+  # Vérification que les modifications on bien été prises en compte au niveau du datagrid
+    Then the row 1 of the "groupDatagrid" datagrid should contain:
+      | label          | ref            | isVisible |
+      | Groupe modifié | groupe_modifie | Masqué    |
+    When I click "Aide" in the row 1 of the "groupDatagrid" datagrid
+    Then I should see the popup "Aide"
+    And I should see a "#groupDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
+
+  @javascript
+  Scenario: Deletion of an AF group
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Groupes"
+    Then I should see the "groupDatagrid" datagrid
+  # Groupe contenant un champ
+    And the row 1 of the "groupDatagrid" datagrid should contain:
+      | label |
+      | Groupe contenant un champ |
+    When I click "Supprimer" in the row 1 of the "groupDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: ""
+  # Groupe contenant un sous-groupe
+    And the row 2 of the "groupDatagrid" datagrid should contain:
+      | label |
+      | Groupe contenant un sous-groupe |
+    When I click "Supprimer" in the row 2 of the "groupDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: ""
+  # Suppression sans obstacle
+    And the row 3 of the "groupDatagrid" datagrid should contain:
+      | label |
+      | Sous-groupe |
+    When I click "Supprimer" in the row 2 of the "groupDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."

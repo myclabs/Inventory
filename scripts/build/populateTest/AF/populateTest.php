@@ -75,10 +75,13 @@ class AF_PopulateTest extends AF_Populate
         // Formulaire de test
         $aF_test = $this->createAF($category_contenant_formulaire, 'formulaire_test', 'Formulaire test');
         // Composants
-        $groupe_test = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe', 'Groupe');
+        $groupe_test_vide = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_vide', 'Groupe vide');
+        $groupe_test_contenant_champ = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_contenant_champ', 'Groupe contenant un champ');
+        $groupe_test_contenant_sous_groupe = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_contenant_sous_groupe', 'Groupe contenant un sous-groupe');
+        $sous_groupe_test = $this->createGroup($aF_test, $groupe_test_contenant_sous_groupe, 'sous_groupe', 'Sous-groupe');
         // $sous_formulaire_non_repete_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_non_repete', 'Sous-formulaire non répété', $aF_d_g);
         // $sous_formulaire_repete_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_repete', 'Sous-formulaire répété', $aF_combustion);
-        $champ_numerique_test = $this->createNumericInput($aF_test, $aF_test->getRootGroup(), 'champ_numerique', 'Champ numérique', 'kg');
+        $champ_numerique_test = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique', 'Champ numérique', 'kg');
         $champ_selection_simple_test = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple', 'Champ sélection simple', ['option_1' => 'Option 1', 'option_2' => 'Option 1
         2']);
         $champ_selection_multiple_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'champ_selection_multiple', 'Champ sélection multiple', ['option_1' => 'Option 1', 'option_2' => 'Option 1

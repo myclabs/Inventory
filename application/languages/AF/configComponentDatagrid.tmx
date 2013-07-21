@@ -31,7 +31,7 @@
             </tuv>
         </tu>
 
-        <!-- Sous-formulaires -->
+        <!-- Sous-formulaires non répétés -->
 
         <tu tuid="associatedFormHeader">
             <tuv xml:lang="fr">
@@ -41,44 +41,36 @@
                 <seg>Associated form</seg>
             </tuv>
         </tu>
-        <tu tuid="repeatableInputHeader">
+        <tu tuid="numberInitialRepetitionHeader">
             <tuv xml:lang="fr">
-                <seg>Saisie répétable ?</seg>
+                <seg>Nombre initial de répétitions</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Repeatable input ?</seg>
+                <seg>Initial item number</seg>
             </tuv>
         </tu>
-        <tu tuid="unrepeatableOption">
+        <tu tuid="zeroItemOption">
             <tuv xml:lang="fr">
-                <seg>Non répétable</seg>
+                <seg>Zéro</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Unrepeatable</seg>
+                <seg>None</seg>
             </tuv>
         </tu>
-        <tu tuid="repeatableZeroItemOption">
+        <tu tuid="oneSuppressibleItemOption">
             <tuv xml:lang="fr">
-                <seg>Répétable, init. zéro</seg>
+                <seg>Une supprimable</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Repeatable, init. none</seg>
+                <seg>One suppressible</seg>
             </tuv>
         </tu>
-        <tu tuid="repeatableOneSuppressibleItemOption">
+        <tu tuid="oneUnsuppressibleItemOption">
             <tuv xml:lang="fr">
-                <seg>Répétable, init. une supprimable</seg>
+                <seg>Une non supprimable</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Repeatable, init. one suppressible</seg>
-            </tuv>
-        </tu>
-        <tu tuid="repeatableOneUnsuppressibleItemOption">
-            <tuv xml:lang="fr">
-                <seg>Répétable, init. une non supprimable</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Repeatable, init. one unsuppressible</seg>
+                <seg>One unsuppressible</seg>
             </tuv>
         </tu>
         <tu tuid="freeLabelHeader">
@@ -89,28 +81,23 @@
                 <seg>Free label</seg>
             </tuv>
         </tu>
-        <tu tuid="withFreeLabelOption">
+        <tu tuid="nonRepeatedSubformAddPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Avec libellé libre</seg>
+                <seg>Ajout d'un sous-formulaire non répété</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>With free label</seg>
+                <seg>Creation of a non repeated subform</seg>
             </tuv>
         </tu>
-        <tu tuid="withoutFreeLabelOption">
+
+        <!-- Sous-formulaires répétés -->
+
+        <tu tuid="repeatedSubformAddPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Sans libellé libre</seg>
+                <seg>Ajout d'un sous-formulaire répété</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Without free label</seg>
-            </tuv>
-        </tu>
-        <tu tuid="subformAddPanelTitle">
-            <tuv xml:lang="fr">
-                <seg>Ajout d'un sous-formulaire</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Creation of a subform</seg>
+                <seg>Creation of a repeated subform</seg>
             </tuv>
         </tu>
 
