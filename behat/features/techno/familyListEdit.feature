@@ -6,7 +6,7 @@ Feature: Family list edit feature
 
   @javascript
   Scenario: Creation of a parameter family
-  # Affichage du datagrid
+  # Affichage du datagrid
     Given I am on "techno/family/list-edit"
     Then I should see the "familyDatagrid" datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:
@@ -46,6 +46,17 @@ Feature: Family list edit feature
     And the row 2 of the "familyDatagrid" datagrid should contain:
       | category                        | label | ref  | type        | unit |
       | Catégorie contenant une famille | Test  | test | Coefficient | m    |
+
+  @javascript
+  Scenario: Link to reach a parameter family from the family list edit datagrid
+    Given I am on "techno/family/list-edit"
+    Then I should see the "familyDatagrid" datagrid
+  # Clic sur "Cliquer pour accéder"
+    When I click "Cliquer pour accéder" in the row 1 of the "familyDatagrid" datagrid
+    Then I should see a "h1:contains('Combustion de combustible, mesuré en unité de masse')" element
+  # Vérification qu'on est bien sur l'interface d'édition
+    When I open tab "Général"
+
 
 
 

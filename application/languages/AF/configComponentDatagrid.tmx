@@ -265,5 +265,32 @@
             </tuv>
         </tu>
 
+        <!-- Champs texte -->
+
+        <tu tuid="textAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un champ texte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a text field</seg>
+            </tuv>
+        </tu>
+        <tu tuid="textFieldTypeShort">
+            <tuv xml:lang="fr">
+                <seg>Texte court</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Short text</seg>
+            </tuv>
+        </tu>
+        <tu tuid="textFieldTypeLong">
+            <tuv xml:lang="fr">
+                <seg>Texte long</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Long text</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>
