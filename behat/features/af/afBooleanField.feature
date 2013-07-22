@@ -32,7 +32,7 @@ Feature: Boolean field feature
     And I fill in "checkboxFieldDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Champs texte ordonnés suivant l'ordre de création, vérification des valeurs par défaut
+  # Champs ordonnés suivant l'ordre de création, vérification des valeurs par défaut
     And the row 2 of the "checkboxFieldDatagrid" datagrid should contain:
       | label | ref | isVisible | enabled | defaultValue |
       | AAA   | aaa | Visible   | Activé  | Décoché      |

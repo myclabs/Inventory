@@ -33,15 +33,15 @@ Feature: Numeric field feature
     When I fill in "numericFieldDatagrid_ref_addForm" with "sous_groupe"
     And I click "Valider"
     Then the field "numericFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # TODO : identifiant utilisé pour un autre algorithme numérique
+  # TODO : identifiant utilisé pour un autre algorithme numérique
 
-  # Ajout, valeur initiale et incertitude initiale pas nombres
+  # Ajout, valeur initiale et incertitude initiale pas nombres
     When I fill in "numericFieldDatagrid_digitalValue_addForm" with "auie"
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "auie"
     And I click "Valider"
     Then the field "numericFieldDatagrid_digitalValue_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
     And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-  # Ajout, valeur initiale et incertitude initiale nombres mais pas au bon format
+  # Ajout, valeur initiale et incertitude initiale nombres mais pas au bon format
     When I fill in "numericFieldDatagrid_digitalValue_addForm" with "1000.5"
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "10.9"
     And I click "Valider"

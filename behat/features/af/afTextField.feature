@@ -32,7 +32,7 @@ Feature: Text field feature
     And I fill in "textFieldDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Champs texte ordonnés suivant l'ordre de création
+  # Champs ordonnés suivant l'ordre de création
     And the row 3 of the "textFieldDatagrid" datagrid should contain:
       | label | ref | isVisible |
       | AAA   | aaa | Visible   |
