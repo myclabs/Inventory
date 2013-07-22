@@ -88,6 +88,7 @@ class AF_Populate extends Core_Script_Action
         $foldaway=true, $help=null, $visible=true)
     {
         $subAF = new AF_Model_Component_SubAF_NotRepeated();
+        $subAF->setCalledAF($calledAF);
         $subAF->setFoldaway($foldaway);
         return $this->createComponent($subAF, $aF,$parentGroup ,$ref, $label, $help, $visible, $foldaway);
     }
@@ -109,6 +110,7 @@ class AF_Populate extends Core_Script_Action
         $foldaway=true, $minimumRepetition=0, $freeLabel=false, $help=null, $visible=true)
     {
         $subAF = new AF_Model_Component_SubAF_Repeated();
+        $subAF->setCalledAF($calledAF);
         $subAF->setMinInputNumber($minimumRepetition);
         $subAF->setWithFreeLabel($freeLabel);
         $subAF->setFoldaway($foldaway);
