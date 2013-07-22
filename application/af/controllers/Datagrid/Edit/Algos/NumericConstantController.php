@@ -60,9 +60,20 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     {
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
+        $locale = Core_Locale::loadDefault();
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
+        }
+        try {
+            $value = $locale->readNumber($this->getAddElementValue('value'));
+        } catch(Core_Exception_InvalidArgument $e) {
+            $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'invalidNumber'));
+        }
+        try {
+            $uncertainty = $locale->readInteger($this->getAddElementValue('uncertainty'));
+        } catch(Core_Exception_InvalidArgument $e) {
+            $this->setAddElementErrorMessage('uncertainty', __('UI', 'formValidation', 'invalidNumber'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -75,10 +86,11 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 return;
             }
             $algo->setLabel($this->getAddElementValue('label'));
+            /** @noinspection PhpUndefinedVariableInspection */
             $algo->setUnitValue(new Calc_UnitValue(
                     new UnitAPI($this->getAddElementValue('unit')),
-                    $this->getAddElementValue('value'),
-                    $this->getAddElementValue('uncertainty')
+                    $value,
+                    $uncertainty
                 ));
             $algo->save();
             $af->addAlgo($algo);
@@ -104,6 +116,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     {
         /** @var $algo Algo_Model_Numeric_Constant */
         $algo = Algo_Model_Numeric_Constant::load($this->update['index']);
+        $locale = Core_Locale::loadDefault();
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'ref':
@@ -123,11 +136,21 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $this->data = $algo->getUnit()->getRef();
                 break;
             case 'value':
+                try {
+                    $newValue = $locale->readNumber($newValue);
+                } catch(Core_Exception_InvalidArgument $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                }
                 $unitValue = $algo->getUnitValue()->copyWithNewValue($newValue);
                 $algo->setUnitValue($unitValue);
                 $this->data = $unitValue->getDigitalValue();
                 break;
             case 'uncertainty':
+                try {
+                    $newValue = $locale->readInteger($newValue);
+                } catch(Core_Exception_InvalidArgument $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                }
                 $unitValue = $algo->getUnitValue()->copyWithNewUncertainty($newValue);
                 $algo->setUnitValue($unitValue);
                 $this->data = $unitValue->getRelativeUncertainty();
