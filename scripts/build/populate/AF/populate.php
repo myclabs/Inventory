@@ -88,6 +88,7 @@ class AF_Populate extends Core_Script_Action
         $foldaway=true, $help=null, $visible=true)
     {
         $subAF = new AF_Model_Component_SubAF_NotRepeated();
+        $subAF->setCalledAF($calledAF);
         $subAF->setFoldaway($foldaway);
         return $this->createComponent($subAF, $aF,$parentGroup ,$ref, $label, $help, $visible, $foldaway);
     }
@@ -109,10 +110,51 @@ class AF_Populate extends Core_Script_Action
         $foldaway=true, $minimumRepetition=0, $freeLabel=false, $help=null, $visible=true)
     {
         $subAF = new AF_Model_Component_SubAF_Repeated();
+        $subAF->setCalledAF($calledAF);
         $subAF->setMinInputNumber($minimumRepetition);
         $subAF->setWithFreeLabel($freeLabel);
         $subAF->setFoldaway($foldaway);
         return $this->createComponent($subAF, $aF,$parentGroup ,$ref, $label, $help, $visible, $foldaway);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param AF_Model_Component_Group $parentGroup
+     * @param $ref
+     * @param $label
+     * @param bool $required
+     * @param bool $enabled
+     * @param null $help
+     * @param bool $visible
+     * @return AF_Model_Component
+     */
+    protected function createShortTextInput(AF_Model_AF $aF, AF_Model_Component_Group $parentGroup, $ref, $label,
+        $required=true, $enabled=true, $help=null, $visible=true)
+    {
+        $textInput = new AF_Model_Component_Text(AF_Model_Component_Text::TYPE_SHORT);
+        $textInput->setRequired($required);
+        $textInput->setEnabled($enabled);
+        return $this->createComponent($textInput, $aF, $parentGroup ,$ref, $label, $help, $visible);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param AF_Model_Component_Group $parentGroup
+     * @param $ref
+     * @param $label
+     * @param bool $required
+     * @param bool $enabled
+     * @param null $help
+     * @param bool $visible
+     * @return AF_Model_Component
+     */
+    protected function createLongTextInput(AF_Model_AF $aF, AF_Model_Component_Group $parentGroup, $ref, $label,
+        $required=true, $enabled=true, $help=null, $visible=true)
+    {
+        $textInput = new AF_Model_Component_Text(AF_Model_Component_Text::TYPE_LONG);
+        $textInput->setRequired($required);
+        $textInput->setEnabled($enabled);
+        return $this->createComponent($textInput, $aF, $parentGroup ,$ref, $label, $help, $visible);
     }
 
     /**
@@ -286,14 +328,13 @@ class AF_Populate extends Core_Script_Action
         $help=null, $visible=true)
     {
         $component->setAf($aF);
-        $component->setGroup($parentGroup);
         $component->setRef($ref);
         $component->setLabel($label);
         $component->setHelp($help);
         $component->setVisible($visible);
         $component->save();
+        $parentGroup->addSubComponent($component);
         $aF->addComponent($component);
-        $aF->getRootGroup()->addSubComponent($component);
         return $component;
     }
 
@@ -310,19 +351,6 @@ class AF_Populate extends Core_Script_Action
         $numericExpression->setExpression($expression);
         $numericExpression->setUnit(new \Unit\UnitAPI($refUnit));
         $this->createAlgoNumeric($aF, $numericExpression, $ref, $label);
-    }
-
-    /**
-     * @param AF_Model_AF $aF
-     * @param string $ref
-     * @param string $label
-     * @param string $refFamily
-     */
-    protected function createAlgoNumericParameter(AF_Model_AF $aF, $ref, $label, $refFamily)
-    {
-        $numericParameter = new Algo_Model_Numeric_Parameter();
-        $numericParameter->setFamily(Techno_Model_Family::loadByRef($refFamily));
-        $this->createAlgoNumeric($aF, $numericParameter, $ref, $label);
     }
 
     /**
@@ -369,6 +397,7 @@ class AF_Populate extends Core_Script_Action
             $index = new Algo_Model_Index_Fixed(Classif_Model_Axis::loadByRef($refAxis));
             $index->setClassifMember(Classif_Model_Member::loadByRefAndAxis($refMember, $classifAxis));
             $index->setAlgoNumeric($numeric);
+            $index->save();
         }
     }
 
@@ -376,7 +405,7 @@ class AF_Populate extends Core_Script_Action
      * @param Algo_Model_Numeric $numeric
      * @param string $refContext
      * @param string $refIndicator
-     * @param array $indexes Sous la forme [$refAxis =» $refMember]
+     * @param array $indexes Sous la forme [$refAxis =» $algo]
      */
     protected function createAlgoIndexForAlgoNumeric(Algo_Model_Numeric $numeric, $refContext, $refIndicator, $indexes)
     {
@@ -385,6 +414,54 @@ class AF_Populate extends Core_Script_Action
             $index = new Algo_Model_Index_Algo(Classif_Model_Axis::loadByRef($refAxis));
             $index->setAlgo($algo);
             $index->setAlgoNumeric($numeric);
+            $index->save();
+        }
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string $ref
+     * @param string $label
+     * @param string $refFamily
+     */
+    protected function createAlgoNumericParameter(AF_Model_AF $aF, $ref, $label, $refFamily)
+    {
+        $numericParameter = new Algo_Model_Numeric_Parameter();
+        $numericParameter->setFamily(Techno_Model_Family::loadByRef($refFamily));
+        $this->createAlgoNumeric($aF, $numericParameter, $ref, $label);
+    }
+
+    /**
+     * @param Algo_Model_Numeric_Parameter $parameter
+     * @param Techno_Model_Family $family
+     * @param array $indexes Sous la forme [$reDimensionKeyword =» $refMemberKeyword]
+     */
+    protected function createFixedIndexForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, Techno_Model_Family $family, $indexes)
+    {
+        foreach ($indexes as $refDimensionKeyword => $refMemberKeyword) {
+            $dimension = $family->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $index = new Algo_Model_ParameterCoordinate_Fixed();
+            $index->setDimension($dimension);
+            $index->setMember($dimension->getMember(Keyword_Model_Keyword::loadByRef($refMemberKeyword)));
+            $index->setAlgoParameter($parameter);
+            $index->save();
+        }
+    }
+
+    /**
+     * @param Algo_Model_Numeric_Parameter $parameter
+     * @param Techno_Model_Family $family
+     * @param array $indexes Sous la forme [$refAxis =» $algo]
+     */
+    protected function createAlgoIndexForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, Techno_Model_Family $family, $indexes)
+    {
+        foreach ($indexes as $refDimensionKeyword => $algo) {
+            $dimension = $family->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $index = new Algo_Model_ParameterCoordinate_Algo();
+            $index->setDimension($dimension);
+            $index->setAlgoKeyword($algo);
+            $index->setAlgoParameter($parameter);
+            $index->save();
         }
     }
 

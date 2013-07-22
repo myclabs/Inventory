@@ -177,7 +177,7 @@ class Orga_CellController extends Core_Controller
             }
             $analysisTab->label = __('DW', 'name', 'analyses');
             $analysisTab->dataSource = 'orga/tab_celldetails/analyses/idCell/'.$idCell;
-            $analysisTab->useCache = true;
+            $analysisTab->useCache = !$isUserAllowedToEditOrganization;
             $this->view->tabView->addTab($analysisTab);
         }
 

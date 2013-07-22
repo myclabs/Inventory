@@ -41,7 +41,7 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
                                 function($a, $b){return (($a === $b) ? 0 : 1);}
                             );
                         if (count($intersectMemberNarrowerMembers) < 1) {
-                            if (!isset($listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getLabel()])) {
+                            if (!isset($listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()])) {
                                 $listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()] = array();
                             }
                             $listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()][] = $member->getLabel();
@@ -115,9 +115,11 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         $data['diag'] = empty($listAxisWithMemberNotLinkedToNarrower);
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToNarrower as $refAxis => $members) {
-            $data['fail'] .= $refAxis . ' : { ';
+            $axis = Classif_Model_Axis::loadByRef($refAxis);
+            $data['fail'] .= $axis->getLabel() . ' : { ';
             foreach ($members as $refNarrowerAxis => $refMember) {
-                $data['fail'] .= $refNarrowerAxis . ' : [' . implode(', ', $refMember) . '], ';
+                $narrowerAxis = Classif_Model_Axis::loadByRef($refNarrowerAxis);
+                $data['fail'] .= $narrowerAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
             $data['fail'] .= ' }, ';
@@ -132,9 +134,11 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         $data['diag'] = empty($listAxisWithMemberNotLinkedToBroader);
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToBroader as $refAxis => $members) {
-            $data['fail'] .= $refAxis . ' : { ';
+            $axis = Classif_Model_Axis::loadByRef($refAxis);
+            $data['fail'] .= $axis->getLabel() . ' : { ';
             foreach ($members as $refBroaderAxis => $refMember) {
-                $data['fail'] .= $refBroaderAxis . ' : [' . implode(', ', $refMember) . '], ';
+                $broaderAxis = Classif_Model_Axis::loadByRef($refBroaderAxis);
+                $data['fail'] .= $broaderAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
             $data['fail'] .= ' }, ';

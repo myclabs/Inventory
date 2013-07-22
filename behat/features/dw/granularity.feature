@@ -131,7 +131,7 @@ Feature: Granularity dataware analysis feature
       | label |
       | Analyse préconfigurée test |
   # Accès à l'analyse préconfigurée enregistrée
-    When I click "Détails" in the row 1 of the "granularity1Report" datagrid
+    When I click "Cliquer pour accéder" in the row 1 of the "granularity1Report" datagrid
     Then I should see "Analyse préconfigurée test Niveau organisationnel global"
   # Vérification que l'analyse préconfigurée est bien présente dans la cellule globale
     When I click "Retour"
@@ -142,7 +142,7 @@ Feature: Granularity dataware analysis feature
       | label |
       | Analyse préconfigurée test |
   # Accès à l'analyse de la cellule
-    When I click "Détails" in the row 1 of the "report" datagrid
+    When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
     Then I should see "Analyse préconfigurée test Vue globale"
 
 

@@ -220,12 +220,20 @@ class AF_InputController extends Core_Controller
      */
     public function inputHistoryAction()
     {
-        /** @var $input AF_Model_Input */
-        $input = AF_Model_Input::load($this->getParam('idInput'));
+        $idInput = $this->getParam('idInput', null);
 
-        $entries = $this->inputHistoryService->getInputHistory($input);
+        // Pour gérer le cas où on demande l'historique dans l'interface de test des AF
+        if ($idInput !== null) {
+            /** @var $input AF_Model_Input */
+            $input = AF_Model_Input::load($this->getParam('idInput'));
 
-        $this->view->assign('component', $input->getComponent());
+            $entries = $this->inputHistoryService->getInputHistory($input);
+
+            $this->view->assign('component', $input->getComponent());
+        } else {
+            $entries = [];
+        }
+
         $this->view->assign('entries', $entries);
         $this->_helper->layout->disableLayout();
     }

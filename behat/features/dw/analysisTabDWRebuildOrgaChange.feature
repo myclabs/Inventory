@@ -111,6 +111,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see the popup "Ajout d'un membre à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "Test"
     And I fill in "listMemberssite_ref_addForm" with "test"
+  # And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Détection modification
@@ -119,7 +120,6 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    And I wait 10 seconds
     Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
     When I reload the page
     And I wait for the page to finish loading
@@ -155,7 +155,9 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Ajout membre parent à un membre
     When I open tab "Organisation"
     And I open collapse "Site"
-    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite"
+    And I wait 5 seconds
+    Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I reload the page
     And I wait for the page to finish loading
@@ -169,7 +171,9 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Modification membre parent d'un membre
     When I open tab "Organisation"
     And I open collapse "Site"
-    When I set "italie#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "italie#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
+    And I wait 5 seconds
+    Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I reload the page
     And I wait for the page to finish loading
@@ -183,7 +187,9 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Suppression membre parent d'un membre
     When I open tab "Organisation"
     And I open collapse "Site"
-    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
+    And I wait 5 seconds
+    Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I reload the page
     And I wait for the page to finish loading

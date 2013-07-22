@@ -267,6 +267,8 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
      */
     public function deletenodeAction()
     {
+        $labelNode = $this->axisService->delete($this->idNode);
+
         $this->message = __('UI', 'message', 'deleted');
 
         $this->send();

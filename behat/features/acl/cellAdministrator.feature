@@ -11,9 +11,10 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Europe | Marque A Organisation avec données"
+    And I wait 2 seconds
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
-    And the "aFGranularity2Input8" datagrid should contain 2 row
+    And the "aFGranularity2Input8" datagrid should contain 4 row
   # Vérification que le libellé "Vue globale" est présent mais non cliquable
   # Voir "Organization navigation scenario"
     And I should see "Vue globale"
@@ -37,5 +38,5 @@ Feature: Cell administrator feature
     When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
-    Then I should see the "aFGranularity4Input8" datagrid
-    And the "aFGranularity4Input8" datagrid should contain 1 row
+    Then I should see the "aFGranularity5Input8" datagrid
+    And the "aFGranularity5Input8" datagrid should contain 2 row

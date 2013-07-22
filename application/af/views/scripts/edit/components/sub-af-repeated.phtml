@@ -14,7 +14,7 @@ $datagrid->initialLoading = false;
 $datagrid->addParam('id', $af->getId());
 $datagrid->pagination = false;
 $datagrid->addElements = true;
-$datagrid->addPanelTitle = __('AF', 'configComponentDatagrid', 'subformAddPanelTitle');
+$datagrid->addPanelTitle = __('AF', 'configComponentDatagrid', 'repeatedSubformAddPanelTitle');
 $datagrid->deleteElements = true;
 
 // Label
@@ -61,36 +61,36 @@ $foldaway->list = [
     AF_Model_Component_SubAF::FOLDAWAY   => __('UI', 'property', 'foldaway'),
     AF_Model_Component_SubAF::FOLDED     => __('UI', 'property', 'folded'),
 ];
-$datagrid->addCol($foldaway);
+//$datagrid->addCol($foldaway);
 // Repeated or Not
-$isRepeated = new UI_Datagrid_Col_List('repetition', __('AF', 'configComponentDatagrid', 'repeatableInputHeader'));
+$isRepeated = new UI_Datagrid_Col_List('repetition', __('AF', 'configComponentDatagrid', 'numberInitialRepetitionHeader'));
 $isRepeated->editable = true;
 $isRepeated->withEmptyElement = false;
 $isRepeated->list = array(
     AF_Model_Component_SubAF_Repeated::MININPUTNUMBER_0               => __(
         'AF',
         'configComponentDatagrid',
-        'repeatableZeroItemOption'
+        'zeroItemOption'
     ),
     AF_Model_Component_SubAF_Repeated::MININPUTNUMBER_1_NOT_DELETABLE => __(
         'AF',
         'configComponentDatagrid',
-        'repeatableOneUnsuppressibleItemOption'
+        'oneSuppressibleItemOption'
     ),
     AF_Model_Component_SubAF_Repeated::MININPUTNUMBER_1_DELETABLE     => __(
         'AF',
         'configComponentDatagrid',
-        'repeatableOneSuppressibleItemOption'
+        'oneUnsuppressibleItemOption'
     )
 );
 $datagrid->addCol($isRepeated);
 // Has Free Label
 $hasFreeLabel = new UI_Datagrid_Col_Bool('hasFreeLabel', __('AF', 'configComponentDatagrid', 'freeLabelHeader'));
 $hasFreeLabel->editable = true;
-$hasFreeLabel->textTrue = __('AF', 'configComponentDatagrid', 'withFreeLabelOption');
-$hasFreeLabel->textFalse = __('AF', 'configComponentDatagrid', 'withoutFreeLabelOption');
-$hasFreeLabel->valueTrue = '<i class="icon-ok"></i> '.__('AF', 'configComponentDatagrid', 'withFreeLabelOption');
-$hasFreeLabel->valueFalse = '<i class="icon-remove"></i> '.__('AF', 'configComponentDatagrid', 'withoutFreeLabelOption');
+$hasFreeLabel->textTrue = __('UI', 'other', 'yes');
+$hasFreeLabel->textFalse = __('UI', 'other', 'no');
+$hasFreeLabel->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
+$hasFreeLabel->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
 $datagrid->addCol($hasFreeLabel);
 
 echo $datagrid->render();

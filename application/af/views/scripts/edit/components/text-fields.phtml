@@ -58,7 +58,7 @@ $requiredColumn->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property'
 $datagrid->addCol($requiredColumn);
 
 // Type
-$typeColumn = new UI_Datagrid_Col_List('type', __('AF', 'configComponentDatagrid', 'textFieldType'));
+$typeColumn = new UI_Datagrid_Col_List('type', __('UI', 'name', 'type'));
 $typeColumn->editable = true;
 $typeColumn->list = [
     AF_Model_Component_Text::TYPE_SHORT => __('AF', 'configComponentDatagrid', 'textFieldTypeShort'),

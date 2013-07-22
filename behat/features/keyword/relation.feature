@@ -6,7 +6,7 @@ Feature: Keywords relations
 
   @javascript
   Scenario: Creation of a keyword relation
-    Given I am on "http://localhost/inventory/keyword/association/manage"
+    Given I am on "keyword/association/manage"
     Then I should see the "association" datagrid
   # Ajout d'une relation, champs non renseignés
     When I click "Ajouter"
