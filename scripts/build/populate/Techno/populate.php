@@ -121,9 +121,13 @@ class Techno_Populate extends Core_Script_Action
      */
     protected function createDimension(Techno_Model_Family $family, $refKeyword, $orientation, array $keywordMembers)
     {
-        $meaning = new Techno_Model_Meaning();
-        $meaning->setKeyword(Keyword_Model_Keyword::loadByRef($refKeyword));
-        $meaning->save();
+        try {
+            $meaning = Techno_Model_Meaning::loadByRef($refKeyword);
+        } catch (Core_Exception_NotFound $e) {
+            $meaning = new Techno_Model_Meaning();
+            $meaning->setKeyword(Keyword_Model_Keyword::loadByRef($refKeyword));
+            $meaning->save();
+        }
         $dimension = new Techno_Model_Family_Dimension($family, $meaning, $orientation);
         foreach ($keywordMembers as $refKeyword) {
             $member = new Techno_Model_Family_Member($dimension, Keyword_Model_Keyword::loadByRef($refKeyword));
