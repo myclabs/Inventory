@@ -99,4 +99,19 @@ class Algo_Model_Set extends Core_Model_Entity
         throw new Core_Exception_NotFound("No algo was found with ref '$ref' in this set");
     }
 
+    public function __clone()
+    {
+        // Nécessaire pour Doctrine
+        if ($this->id) {
+            $this->id = null;
+
+            // Copie les algos
+            $this->algos = $this->algos->map(
+                function (Algo_Model_Algo $algo) {
+                    return clone $algo;
+                }
+            );
+        }
+    }
+
 }

@@ -352,4 +352,13 @@ abstract class AF_Model_Component extends Core_Model_Entity
         return new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
     }
 
+    public function __clone()
+    {
+        // Nécessaire pour Doctrine
+        if ($this->id) {
+            $this->id = null;
+            $this->af = null;
+        }
+    }
+
 }
