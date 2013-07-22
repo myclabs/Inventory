@@ -33,6 +33,8 @@ Feature: Numeric field feature
     When I fill in "numericFieldDatagrid_ref_addForm" with "sous_groupe"
     And I click "Valider"
     Then the field "numericFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # TODO : identifiant utilisé pour un autre algorithme numérique
+
   # Ajout, valeur initiale et incertitude initiale pas nombres
     When I fill in "numericFieldDatagrid_digitalValue_addForm" with "auie"
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "auie"
@@ -53,8 +55,7 @@ Feature: Numeric field feature
     And I fill in "numericFieldDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Champs ordonnés suivant l'ordre alphabétique des identifiants
-    # TODO : problème ordre lignes datagrid
+  # Champs ordonnés suivant l'ordre de création
     And the row 2 of the "numericFieldDatagrid" datagrid should contain:
       | label | ref | isVisible | enabled | required   | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
       | AAA   | aaa | Visible   | Activé  | Facultatif | kg équ. CO2/m³ | Affichée        | 1 000,5      | 10                  | Masqué               |

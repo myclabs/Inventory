@@ -33,11 +33,11 @@ Feature: AF group feature
     And I fill in "groupDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Groupes ordonnés suivant l'ordre alphabétique des identifiants
-    And the row 1 of the "groupDatagrid" datagrid should contain:
+  # Groupes ordonnés suivant l'ordre de création
+    And the row 5 of the "groupDatagrid" datagrid should contain:
       | label | ref | isVisible |
       | AAA   | aaa | Visible   |
-    When I click "Aide" in the row 1 of the "groupDatagrid" datagrid
+    When I click "Aide" in the row 5 of the "groupDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#groupDatagrid_help_popup .modal-body h1:contains('Blabla')" element
 

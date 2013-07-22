@@ -85,6 +85,42 @@ Feature: AF list edit feature
   # Vérification qu'on est bien sur la page "Test"
     Then I should see "Nature du combustible"
 
+  @javascript
+  Scenario: Filters on AF list
+    Given I am on "af/af/list"
+    And I wait for the page to finish loading
+    And I open collapse "Filtres"
+  # Filtre sur le libellé
+    And I fill in "listAF_label_filterForm" with "Formulaire vide"
+    And I click "Filtrer"
+    Then the "listAF" datagrid should contain 1 row
+    And the row 1 of the "listAF" datagrid should contain:
+      | label           | ref             |
+      | Formulaire vide | formulaire_vide |
+  # Clic sur "Réinitialiser"
+    When I click "Réinitialiser"
+    Then the "listAF" datagrid should contain 4 row
+  # Filtre sur l'identifiant
+    When I open collapse "Filtres"
+    And I fill in "listAF_ref_filterForm" with "_test"
+    And I click "Filtrer"
+    Then the "listAF" datagrid should contain 1 row
+    And the row 1 of the "listAF" datagrid should contain:
+      | label           | ref             |
+      | Formulaire test | formulaire_test |
+  # Filtre sur les deux combinés
+    When I click "Réinitialiser"
+    And I open collapse "Filtres"
+    And I fill in "listAF_label_filterForm" with "Formulaire"
+    And I fill in "listAF_ref_filterForm" with "_vide"
+    And I click "Filtrer"
+    Then the "listAF" datagrid should contain 1 row
+  # Alors que…
+    When I click "Réinitialiser"
+    And I open collapse "Filtres"
+    And I fill in "listAF_label_filterForm" with "Formulaire"
+    And I click "Filtrer"
+    Then the "listAF" datagrid should contain 2 row
 
   @javascript
   Scenario: Deletion of an accounting form from AF list
