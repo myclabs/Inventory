@@ -150,7 +150,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                     try {
                         $indicator->setRatioUnit($ratioUnit);
                     } catch (IncompatibleUnitsException $e) {
-                        throw new Core_Exception_User('Unit', 'exceptions', 'incompatibleUnits');
+                        throw new Core_Exception_User('Unit', 'message', 'incompatibleUnits');
                     }
                     $this->message = __('UI', 'message', 'updated');
                 } else {
