@@ -33,9 +33,22 @@ Feature: Numeric field feature
     When I fill in "numericFieldDatagrid_ref_addForm" with "sous_groupe"
     And I click "Valider"
     Then the field "numericFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # TODO : gérer saisie valeurs et incertitudes initiales pas au bon format.
+  # Ajout, valeur initiale et incertitude initiale pas nombres
+    When I fill in "numericFieldDatagrid_digitalValue_addForm" with "auie"
+    And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "auie"
+    And I click "Valider"
+    Then the field "numericFieldDatagrid_digitalValue_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+  # Ajout, valeur initiale et incertitude initiale nombres mais pas au bon format
+    When I fill in "numericFieldDatagrid_digitalValue_addForm" with "1000.5"
+    And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "10.9"
+    And I click "Valider"
+    Then the field "numericFieldDatagrid_digitalValue_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Ajout, saisie correcte
-    When I fill in "numericFieldDatagrid_label_addForm" with "AAA"
+    When I fill in "numericFieldDatagrid_digitalValue_addForm" with "1000,5"
+    And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "10,9"
+    And I fill in "numericFieldDatagrid_label_addForm" with "AAA"
     And I fill in "numericFieldDatagrid_ref_addForm" with "aaa"
     And I fill in "numericFieldDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
@@ -43,8 +56,8 @@ Feature: Numeric field feature
   # Groupes ordonnés suivant l'ordre alphabétique des identifiants
     # TODO : problème ordre lignes datagrid
     And the row 2 of the "numericFieldDatagrid" datagrid should contain:
-      | label | ref | isVisible | enabled | required   | unit          | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
-      | AAA   | aaa | Visible   | Activé  | Facultatif | kg équ. CO2/m³ | Affichée        |              |                     | Masqué               |
+      | label | ref | isVisible | enabled | required   | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
+      | AAA   | aaa | Visible   | Activé  | Facultatif | kg équ. CO2/m³ | Affichée        | 1 000,5      | 10                  | Masqué               |
     When I click "Aide" in the row 2 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#numericFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
@@ -67,8 +80,8 @@ Feature: Numeric field feature
     And I open collapse "Champs numériques"
     Then I should see the "numericFieldDatagrid" datagrid
     And the row 1 of the "numericFieldDatagrid" datagrid should contain:
-      | label             | ref             | isVisible | enabled | required    | unit          | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
-      | Champ numérique   | champ_numerique | Visible   | Activé  | Obligatoire | kg_co2e.m3^-1 | Affichée        |              |                     | Masqué               |
+      | label             | ref             | isVisible | enabled | required    | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
+      | Champ numérique   | champ_numerique | Visible   | Activé  | Obligatoire | kg équ. CO2/m³ | Affichée        | 1 000,5      | 10                  | Masqué               |
   # Modification du libellé
     When I set "Champ numérique modifié" for column "label" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification de l'identifiant, identifiant vide
