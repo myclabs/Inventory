@@ -326,14 +326,13 @@ class AF_Populate extends Core_Script_Action
         $help=null, $visible=true)
     {
         $component->setAf($aF);
-        $component->setGroup($parentGroup);
         $component->setRef($ref);
         $component->setLabel($label);
         $component->setHelp($help);
         $component->setVisible($visible);
         $component->save();
+        $parentGroup->addSubComponent($component);
         $aF->addComponent($component);
-        $aF->getRootGroup()->addSubComponent($component);
         return $component;
     }
 
