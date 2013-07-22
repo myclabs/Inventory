@@ -74,13 +74,4 @@ class Techno_Service_Techno
         return null;
     }
 
-    /**
-     * Surcharge pour avoir le bon type de retour
-     * @return Techno_Service_Techno
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
-
 }

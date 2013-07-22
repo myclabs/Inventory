@@ -26,4 +26,4 @@ sleep 2
 #export NODE_PATH=/usr/local/lib/node_modules
 
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml --rerun failed.txt
+php ../vendor/behat/behat/bin/behat --config behat.yml --rerun failed.txt && rm failed.txt

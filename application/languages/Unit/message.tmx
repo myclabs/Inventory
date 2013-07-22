@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="incorrectUnitIdentifier">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir un identifiant d'unité correct.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please enter a correct unit identifier.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="incompatibleUnits">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir deux unités compatibles.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please choose two compatible units.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

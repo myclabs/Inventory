@@ -45,9 +45,8 @@ class AF_PopulateTest extends AF_Populate
         // Combustion de combustible, mesuré en unité de masse
         $aF_combustion = $this->createAF($category_contenant_formulaire, 'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse');
         // Composants
-        $group_combustion = $this->createGroup($aF_combustion, $aF_combustion->getRootGroup(), 'groupe_combustion', 'Groupe combustion');
-        $nature_combustible = $this->createSelectInputList($aF_combustion, $group_combustion, 'nature_combustible', 'Nature du combustible', ['charbon' => 'Charbon', 'gaz_naturel' => 'Gaz naturel']);
-        $quantite_combustible = $this->createNumericInput($aF_combustion, $group_combustion, 'quantite_combustible', 'Quantité', 't');
+        $nature_combustible = $this->createSelectInputList($aF_combustion, $aF_combustion->getRootGroup(), 'nature_combustible', 'Nature du combustible', ['charbon' => 'Charbon', 'gaz_naturel' => 'Gaz naturel']);
+        $quantite_combustible = $this->createNumericInput($aF_combustion, $aF_combustion->getRootGroup(), 'quantite_combustible', 'Quantité', 't');
         // Algos
         $aF_combustion->getMainAlgo()->setExpression(':emissions_combustion;:emissions_amont;');
         // Paramètres
@@ -62,18 +61,39 @@ class AF_PopulateTest extends AF_Populate
         // Données générales
         $aF_d_g = $this->createAF($category_contenant_formulaire, 'donnees_generales', 'Données générales');
         // Composants
-        $groupe_d_g = $this->createGroup($aF_d_g, $aF_d_g->getRootGroup(), 'groupe_d_g', 'Groupe données générales');
-        $numericInput_chiffre_affaire = $this->createNumericInput($aF_d_g, $groupe_d_g, 'chiffre_affaire', 'Chiffre d\'affaire', 'kiloeuro');
+        $numericInput_chiffre_affaire = $this->createNumericInput($aF_d_g, $aF_d_g->getRootGroup(), 'chiffre_affaire', 'Chiffre d\'affaire', 'kiloeuro');
         // Algos
         $this->createFixedIndexForAlgoNumeric($aF_d_g->getAlgoByRef($numericInput_chiffre_affaire->getRef()), 'general', 'chiffre_affaire', []);
         $aF_d_g->getMainAlgo()->setExpression(':chiffre_affaire;');
+
+        // Formulaire vide
+        $aF_vide = $this->createAF($category_contenant_formulaire, 'formulaire_vide', 'Formulaire vide');
+
+        // Flush nécessaire pour l'appel des sous-formulaires ???
+        // $entityManager->flush();
+
+        // Formulaire de test
+        $aF_test = $this->createAF($category_contenant_formulaire, 'formulaire_test', 'Formulaire test');
+        // Composants
+        $groupe_test_vide = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_vide', 'Groupe vide');
+        $groupe_test_contenant_champ = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_contenant_champ', 'Groupe contenant un champ');
+        $groupe_test_contenant_sous_groupe = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_contenant_sous_groupe', 'Groupe contenant un sous-groupe');
+        $sous_groupe_test = $this->createGroup($aF_test, $groupe_test_contenant_sous_groupe, 'sous_groupe', 'Sous-groupe');
+        // $sous_formulaire_non_repete_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_non_repete', 'Sous-formulaire non répété', $aF_d_g);
+        // $sous_formulaire_repete_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_repete', 'Sous-formulaire répété', $aF_combustion);
+        $champ_numerique_test = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique', 'Champ numérique', 'kg');
+        $champ_selection_simple_test = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple', 'Champ sélection simple', ['option_1' => 'Option 1', 'option_2' => 'Option 1
+        2']);
+        $champ_selection_multiple_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'champ_selection_multiple', 'Champ sélection multiple', ['option_1' => 'Option 1', 'option_2' => 'Option 1
+        2']);
+        $champ_booleen_test = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'champ_booleen', 'Champ booléen');
 
         // Création des composants.
         // Params : AF, Group, ref, label
         //  + createGroup : -
         //  + createSubAF(Repeated) : AF calledAF
         //  + createNumericInput : refUnit
-        //  + createSelectInput List|Radio|Multi|Boxes : [refOtion => labelOption]
+        //  + createSelectInput List|Radio|Multi|Boxes : [refOption => labelOption]
         //  + createBooleanInput : -
         // OptionalParams :
         //  + createGroup : foldaway=true
@@ -104,7 +124,6 @@ class AF_PopulateTest extends AF_Populate
 //        $this->createAlgoSelectTextkeyExpression($aF_combustion_combustible_unite_masse, 'refa2', 'expression');
 //        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3');
 //        $this->createAlgoConditionExpression($aF_combustion_combustible_unite_masse, 'refa4', 'expression');
-
 
         $entityManager->flush();
 

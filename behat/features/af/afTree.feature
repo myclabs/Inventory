@@ -120,24 +120,33 @@ Feature: AF tree edit feature
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier
     When I wait 5 seconds
-    And I click "Combustion (modifiée)"
+    And I click "Formulaire test"
     And I check "Premier"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Modification effectuée."
+  # Déplacement après
+    When I wait 5 seconds
+    And I click "Formulaire test"
+    And I check "Après"
+    And I select "Données générales" from "afTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier
     When I wait 5 seconds
-    And I click "Combustion (modifiée)"
+    And I click "Formulaire test"
     And I check "Premier"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
-# Déplacement après
-# TODO : à faire.
 
   @javascript
   Scenario: Deletion of an AF in AF tree edit
     Given I am on "af/af/tree"
     And I wait 7 seconds
-  # Suppression
+  # Suppression, formulaire utilisé comme sous-formulaire (non répété)
+    # TODO
+  # Suppression, formulaire utilisé comme sous-formulaire (répété)
+    # TODO
+  # Suppression sans obstacle
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
@@ -147,4 +156,21 @@ Feature: AF tree edit feature
     When I wait 5 seconds
     Then I should not see "Combustion de combustible, mesuré en unité de masse"
 
+  @javascript
+  Scenario: Link towards configuration view, from AF tree edit
+    Given I am on "af/af/tree"
+    And I wait 7 seconds
+    When I click "Combustion de combustible, mesuré en unité de masse"
+    And I click "Configuration"
+  # Vérification qu'on est bien sur la page "Configuration"
+    And I open tab "Contrôle"
+    Then I should see "Combustion de combustible, mesuré en unité de masse"
 
+  @javascript
+  Scenario: Link towards test view, from AF tree edit
+    Given I am on "af/af/tree"
+    And I wait 7 seconds
+    When I click "Combustion de combustible, mesuré en unité de masse"
+    And I click "Test"
+  # Vérification qu'on est bien sur la page "Test"
+    Then I should see "Nature du combustible"
