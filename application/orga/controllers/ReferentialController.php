@@ -129,6 +129,11 @@ class Orga_ReferentialController extends Core_Controller
                 $streamFunction = 'stream';
                 $baseFilename = 'Classif';
                 break;
+            case 'Techno':
+                $exportService = new Techno_Service_Export();
+                $streamFunction = 'stream';
+                $baseFilename = 'Techno';
+                break;
             case 'Keyword':
                 $exportService = new Keyword_Service_Export();
                 $streamFunction = 'stream';
