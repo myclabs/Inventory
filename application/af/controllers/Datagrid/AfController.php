@@ -71,6 +71,9 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             $this->setAddElementErrorMessage('category', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         $label = $this->getAddElementValue('label');
+        if (empty($label)) {
+            $this->setAddElementErrorMessage('label', __('UI', 'formValidation', 'emptyRequiredField'));
+        }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
 
