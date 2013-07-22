@@ -11,6 +11,8 @@
 class Techno_Populate extends Core_Script_Action
 {
 
+    private $meanings = [];
+
     /**
      * {@inheritdoc}
      */
@@ -121,14 +123,12 @@ class Techno_Populate extends Core_Script_Action
      */
     protected function createDimension(Techno_Model_Family $family, $refKeyword, $orientation, array $keywordMembers)
     {
-        try {
-            $meaning = Techno_Model_Meaning::loadByRef($refKeyword);
-        } catch (Core_Exception_NotFound $e) {
-            $meaning = new Techno_Model_Meaning();
-            $meaning->setKeyword(Keyword_Model_Keyword::loadByRef($refKeyword));
-            $meaning->save();
+        if (!isset($this->meanings[$refKeyword])) {
+            $this->meanings[$refKeyword] = new Techno_Model_Meaning();
+            $this->meanings[$refKeyword]->setKeyword(Keyword_Model_Keyword::loadByRef($refKeyword));
+            $this->meanings[$refKeyword]->save();
         }
-        $dimension = new Techno_Model_Family_Dimension($family, $meaning, $orientation);
+        $dimension = new Techno_Model_Family_Dimension($family, $this->meanings[$refKeyword], $orientation);
         foreach ($keywordMembers as $refKeyword) {
             $member = new Techno_Model_Family_Member($dimension, Keyword_Model_Keyword::loadByRef($refKeyword));
             $member->save();
