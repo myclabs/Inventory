@@ -53,12 +53,13 @@ class Techno_Populate extends Core_Script_Action
      * @param $label
      * @param $refBaseUnit
      * @param $refUnit
+     * @param $documentation
      * @return Techno_Model_Family
      */
-    protected function createFamilyProcess(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit)
+    protected function createFamilyProcess(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit, $documentation)
     {
         $family = new Techno_Model_Family_Process();
-        return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit);
+        return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit, $documentation);
     }
 
     /**
@@ -67,12 +68,13 @@ class Techno_Populate extends Core_Script_Action
      * @param $label
      * @param $refBaseUnit
      * @param $refUnit
+     * @param $documentation
      * @return Techno_Model_Family
      */
-    protected function createFamilyCoef(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit)
+    protected function createFamilyCoef(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit, $documentation)
     {
         $family = new Techno_Model_Family_Coeff();
-        return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit);
+        return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit, $documentation);
     }
 
     /**
@@ -82,15 +84,17 @@ class Techno_Populate extends Core_Script_Action
      * @param $label
      * @param $refBaseUnit
      * @param $refUnit
+     * @param $documentation
      * @return Techno_Model_Family
      */
-    protected function createFamily(Techno_Model_Family $family, Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit)
+    protected function createFamily(Techno_Model_Family $family, Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit, $documentation)
     {
         $family->setCategory($category);
         $family->setRef($ref);
         $family->setLabel($label);
         $family->setBaseUnit(new \Unit\UnitAPI($refBaseUnit));
         $family->setUnit(new \Unit\UnitAPI($refUnit));
+        $family->setDocumentation($documentation);
         $family->save();
         return $family;
     }
