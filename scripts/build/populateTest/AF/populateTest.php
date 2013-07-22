@@ -92,6 +92,8 @@ class AF_PopulateTest extends AF_Populate
         // Params : AF, Group, ref, label
         //  + createGroup : -
         //  + createSubAF(Repeated) : AF calledAF
+        //  + createShortTextInput : -
+        //  + createLongTextInput : -
         //  + createNumericInput : refUnit
         //  + createSelectInput List|Radio|Multi|Boxes : [refOption => labelOption]
         //  + createBooleanInput : -
@@ -99,6 +101,8 @@ class AF_PopulateTest extends AF_Populate
         //  + createGroup : foldaway=true
         //  + createSubAF : foldaway=true
         //  + createSubAFRepeated : foldaway=true, minimumRepetition=0, freeLabel=false
+        //  + createShortTextInput : required=true, enabled=true
+        //  + createLongTextInput : required=true, enabled=true
         //  + createNumericInput : defaultValue=null, defaultUncertainty=null, defaultReminder=true, required=true, enabled=true
         //  + createSelectInput List|Radio|Multi|Boxes : required=true, enabled=true
         //  + createBooleanInput : defaultValue=true

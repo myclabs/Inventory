@@ -120,6 +120,46 @@ class AF_Populate extends Core_Script_Action
      * @param AF_Model_Component_Group $parentGroup
      * @param $ref
      * @param $label
+     * @param bool $required
+     * @param bool $enabled
+     * @param null $help
+     * @param bool $visible
+     * @return AF_Model_Component
+     */
+    protected function createShortTextInput(AF_Model_AF $aF, AF_Model_Component_Group $parentGroup, $ref, $label,
+        $required=true, $enabled=true, $help=null, $visible=true)
+    {
+        $textInput = new AF_Model_Component_Text(AF_Model_Component_Text::TYPE_SHORT);
+        $textInput->setRequired($required);
+        $textInput->setEnabled($enabled);
+        return $this->createComponent($textInput, $aF, $parentGroup ,$ref, $label, $help, $visible);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param AF_Model_Component_Group $parentGroup
+     * @param $ref
+     * @param $label
+     * @param bool $required
+     * @param bool $enabled
+     * @param null $help
+     * @param bool $visible
+     * @return AF_Model_Component
+     */
+    protected function createLongTextInput(AF_Model_AF $aF, AF_Model_Component_Group $parentGroup, $ref, $label,
+        $required=true, $enabled=true, $help=null, $visible=true)
+    {
+        $textInput = new AF_Model_Component_Text(AF_Model_Component_Text::TYPE_LONG);
+        $textInput->setRequired($required);
+        $textInput->setEnabled($enabled);
+        return $this->createComponent($textInput, $aF, $parentGroup ,$ref, $label, $help, $visible);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param AF_Model_Component_Group $parentGroup
+     * @param $ref
+     * @param $label
      * @param $refUnit
      * @param null $defaultValue
      * @param null $defaultUncertainty
