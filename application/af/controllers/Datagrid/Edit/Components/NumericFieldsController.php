@@ -41,7 +41,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['isVisible'] = $numericField->isVisible();
             $data['enabled'] = $numericField->isEnabled();
             $data['required'] = $numericField->getRequired();
-            $data['unit'] = $numericField->getUnit()->getRef();
+            $data['unit'] = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
             $data['withUncertainty'] = $numericField->getWithUncertainty();
             $data['digitalValue'] = $this->cellNumber($numericField->getDefaultValue()->getDigitalValue());
             $data['relativeUncertainty'] = $this->cellNumber($numericField->getDefaultValue()->getRelativeUncertainty());
@@ -175,7 +175,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $numericField->setUnit($unit);
-                $this->data = $numericField->getUnit()->getRef();
+                $this->data = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
                 break;
             case 'withUncertainty':
                 $numericField->setWithUncertainty($newValue);
