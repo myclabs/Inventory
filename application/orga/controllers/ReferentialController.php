@@ -46,13 +46,13 @@ class Orga_ReferentialController extends Core_Controller
         // Liste des exports.
         $this->view->exports = [];
 
-        // AF.
-        $this->view->exports['AF'] = [
-            'label' => __('AF', 'name', 'accountingForms'),
-            'versions' => [
-                'latest' => __('AF', 'name', 'accountingForms')
-            ]
-        ];
+//        // AF.
+//        $this->view->exports['AF'] = [
+//            'label' => __('AF', 'name', 'accountingForms'),
+//            'versions' => [
+//                'latest' => __('AF', 'name', 'accountingForms')
+//            ]
+//        ];
 
         // Classif.
         $this->view->exports['Classif'] = [

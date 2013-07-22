@@ -24,7 +24,7 @@ foreach ($this->exports as $exportRef => $exportArray) { ?>
                 <?php } else { ?>
                 <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
                 <?php } ?>
-                <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 1)) { ?>
+                <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 0)) { ?>
                     <?php if (count($this->formats) > 1) { ?>
                         <span class="add-on">
                             -

@@ -97,7 +97,7 @@ class Orga_Service_Export
         }
 
         $export->export(
-            $modelBuilder->build(new YamlMappingReader(__DIR__.'/export.yml')),
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/cellExport.yml')),
             'php://output',
             $writer
         );
@@ -194,13 +194,6 @@ function getInputComponentLabel(AF_Model_Input $input, $prefix='')
             );
         }
         return $subInputLabels;
-//        $subInputSet = $input->getValue();
-//        $subAFInputSets[] = array(
-//            'title'        => $input->getComponent()->getLabel(),
-//            'subInputSet'  => $subInputSet,
-//            'componentRef' => $input->getRef(),
-//        );
-//        $inputFields = array_merge($inputFields, getSubAFInputSets($subInputSet));
     } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
         $prefix = $prefix.$input->getComponent()->getLabel().'/';
         $subInputLabels = [];
@@ -213,20 +206,6 @@ function getInputComponentLabel(AF_Model_Input $input, $prefix='')
             }
         }
         return $subInputLabels;
-//        $subInputSets = $input->getValue();
-//        foreach ($subInputSets as $number => $subInputSet) {
-//            $title = $input->getComponent()->getLabel() . " #" . ($number + 1);
-//            if ($subInputSet->getFreeLabel()) {
-//                $title .= " - " . $subInputSet->getFreeLabel();
-//            }
-//            $inputFields[] = array(
-//                'title'        => $title,
-//                'subInputSet'  => $subInputSet,
-//                'number'       => $number,
-//                'componentRef' => $input->getRef(),
-//            );
-//            $subAFInputSets = array_merge($inputFields, getSubAFInputSets($subInputSet));
-//        }
     } else {
         return [$prefix.$input->getComponent()->getLabel()];
     }
@@ -243,13 +222,6 @@ function getInputComponentValue(AF_Model_Input $input)
             );
         }
         return $subInputLabels;
-//        $subInputSet = $input->getValue();
-//        $subAFInputSets[] = array(
-//            'title'        => $input->getComponent()->getLabel(),
-//            'subInputSet'  => $subInputSet,
-//            'componentRef' => $input->getRef(),
-//        );
-//        $inputFields = array_merge($inputFields, getSubAFInputSets($subInputSet));
     } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
         $subInputLabels = [];
         foreach ($input->getValue() as $number => $subInputSet) {
