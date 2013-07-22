@@ -395,6 +395,7 @@ class AF_Populate extends Core_Script_Action
             $index = new Algo_Model_Index_Fixed(Classif_Model_Axis::loadByRef($refAxis));
             $index->setClassifMember(Classif_Model_Member::loadByRefAndAxis($refMember, $classifAxis));
             $index->setAlgoNumeric($numeric);
+            $index->save();
         }
     }
 
@@ -411,6 +412,7 @@ class AF_Populate extends Core_Script_Action
             $index = new Algo_Model_Index_Algo(Classif_Model_Axis::loadByRef($refAxis));
             $index->setAlgo($algo);
             $index->setAlgoNumeric($numeric);
+            $index->save();
         }
     }
 
@@ -440,6 +442,7 @@ class AF_Populate extends Core_Script_Action
             $index->setDimension($dimension);
             $index->setMember($dimension->getMember(Keyword_Model_Keyword::loadByRef($refMemberKeyword)));
             $index->setAlgoParameter($parameter);
+            $index->save();
         }
     }
 
@@ -456,6 +459,7 @@ class AF_Populate extends Core_Script_Action
             $index->setDimension($dimension);
             $index->setAlgoKeyword($algo);
             $index->setAlgoParameter($parameter);
+            $index->save();
         }
     }
 
