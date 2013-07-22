@@ -22,6 +22,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
     {
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
+        $locale = Core_Locale::loadDefault();
         //  Récupère tous les composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(AF_Model_Component::QUERY_AF, $af);
@@ -49,10 +50,10 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
                     switch (get_class($action)) {
                         case 'AF_Model_Action_SetValue_Numeric':
                             /** @var $action AF_Model_Action_SetValue_Numeric */
-                            $data['value'] = $action->getValue()->getDigitalValue();
+                            $data['value'] = $locale->formatNumber($action->getValue()->getDigitalValue());
                             if (null !== $action->getValue()->getRelativeUncertainty()) {
-                                $data['value'] .= ' &#177; '; // Symbole +-
-                                $data['value'] .= $action->getValue()->getRelativeUncertainty();
+                                $data['value'] .= ' ± ';
+                                $data['value'] .= $locale->formatInteger($action->getValue()->getRelativeUncertainty());
                                 $data['value'] .= ' %';
                             }
                             break;

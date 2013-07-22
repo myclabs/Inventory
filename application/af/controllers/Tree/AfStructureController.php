@@ -35,7 +35,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
             $isLeaf = (! $component instanceof AF_Model_Component_Group);
             $this->addNode(
                 $component->getId(),
-                $component->getLabel(),
+                $component->getLabel() . ' (' . $component->getRef() . ')',
                 $isLeaf,
                 null,
                 false,

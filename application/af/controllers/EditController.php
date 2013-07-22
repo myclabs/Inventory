@@ -71,7 +71,13 @@ class AF_EditController extends Core_Controller
                     return;
                 }
             }
-            $af->setLabel($formData->getValue('label'));
+            $label = $formData->getValue('label');
+            if (empty($label)) {
+                $this->addFormError('label', __('UI', 'formValidation', 'emptyRequiredField'));
+                $this->sendFormResponse();
+                return;
+            }
+            $af->setLabel($label);
             $af->setDocumentation($formData->getValue('documentation'));
             $af->save();
             try {

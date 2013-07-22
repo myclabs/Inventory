@@ -43,8 +43,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['required'] = $numericField->getRequired();
             $data['unit'] = $numericField->getUnit()->getRef();
             $data['withUncertainty'] = $numericField->getWithUncertainty();
-            $data['digitalValue'] = $numericField->getDefaultValue()->getDigitalValue();
-            $data['relativeUncertainty'] = $numericField->getDefaultValue()->getRelativeUncertainty();
+            $data['digitalValue'] = $this->cellNumber($numericField->getDefaultValue()->getDigitalValue());
+            $data['relativeUncertainty'] = $this->cellNumber($numericField->getDefaultValue()->getRelativeUncertainty());
             $data['defaultValueReminder'] = $numericField->getDefaultValueReminder();
             $this->addLine($data);
         }
@@ -60,6 +60,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
     {
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
+        $locale = Core_Locale::loadDefault();
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -74,6 +75,16 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $unit->getNormalizedUnit();
         } catch (Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+        }
+        try {
+            $digitalValue = $locale->readNumber($this->getAddElementValue('digitalValue'));
+        } catch(Core_Exception_InvalidArgument $e) {
+            $this->setAddElementErrorMessage('digitalValue', __('UI', 'formValidation', 'invalidNumber'));
+        }
+        try {
+            $relativeUncertainty = $locale->readInteger($this->getAddElementValue('relativeUncertainty'));
+        } catch(Core_Exception_InvalidArgument $e) {
+            $this->setAddElementErrorMessage('relativeUncertainty', __('UI', 'formValidation', 'invalidNumber'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -94,10 +105,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $numericField->setWithUncertainty($this->getAddElementValue('withUncertainty'));
             /** @noinspection PhpUndefinedVariableInspection */
             $numericField->setUnit($unit);
-            $defaultValue = new Calc_Value(
-                $this->getAddElementValue('digitalValue'),
-                $this->getAddElementValue('relativeUncertainty')
-            );
+            /** @noinspection PhpUndefinedVariableInspection */
+            $defaultValue = new Calc_Value($digitalValue, $relativeUncertainty);
             $numericField->setDefaultValue($defaultValue);
             $numericField->setDefaultValueReminder($this->getAddElementValue('defaultValueReminder'));
             $af->getRootGroup()->addSubComponent($numericField);
@@ -127,6 +136,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
     {
         /** @var $numericField AF_Model_Component_Numeric */
         $numericField = AF_Model_Component_Numeric::load($this->update['index']);
+        $locale = Core_Locale::loadDefault();
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
@@ -172,14 +182,24 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 $this->data = $numericField->getWithUncertainty();
                 break;
             case 'digitalValue':
+                try {
+                    $newValue = $locale->readNumber($newValue);
+                } catch(Core_Exception_InvalidArgument $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                }
                 $value = $numericField->getDefaultValue()->copyWithNewValue($newValue);
                 $numericField->setDefaultValue($value);
-                $this->data = $numericField->getDefaultValue()->getDigitalValue();
+                $this->data = $this->cellNumber($numericField->getDefaultValue()->getDigitalValue());
                 break;
             case 'relativeUncertainty':
+                try {
+                    $newValue = $locale->readInteger($newValue);
+                } catch(Core_Exception_InvalidArgument $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                }
                 $value = $numericField->getDefaultValue()->copyWithNewUncertainty($newValue);
                 $numericField->setDefaultValue($value);
-                $this->data = $numericField->getDefaultValue()->getRelativeUncertainty();
+                $this->data = $this->cellNumber($numericField->getDefaultValue()->getRelativeUncertainty());
                 break;
             case 'defaultValueReminder':
                 $numericField->setDefaultValueReminder($newValue);
