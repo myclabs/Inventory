@@ -56,7 +56,7 @@ class Techno_Populate extends Core_Script_Action
      * @param $documentation
      * @return Techno_Model_Family
      */
-    protected function createFamilyProcess(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit, $documentation)
+    protected function createFamilyProcess(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit, $documentation='')
     {
         $family = new Techno_Model_Family_Process();
         return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit, $documentation);
@@ -71,7 +71,7 @@ class Techno_Populate extends Core_Script_Action
      * @param $documentation
      * @return Techno_Model_Family
      */
-    protected function createFamilyCoef(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit, $documentation)
+    protected function createFamilyCoef(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit, $documentation='')
     {
         $family = new Techno_Model_Family_Coeff();
         return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit, $documentation);

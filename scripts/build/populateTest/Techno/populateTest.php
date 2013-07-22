@@ -32,7 +32,8 @@ class Techno_PopulateTest extends Techno_Populate
 
         // Création des familles (Coef ou Process).
         // Params : Category, ref, label, refUnit, refBaseUnit
-        // $family_1 = $this->createFamilyCoef($category_contenant_famille, 'ref1', 'Label 1', 'km', 'm');
+        // OptionalParams : documentation=''
+        // $family_1 = $this->createFamilyCoef($category_contenant_famille, 'ref1', 'Label 1', 'km', 'm', '');
 
         $family_combustion_combustible_masse = $this->createFamilyProcess($category_contenant_famille,
             'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse', 't', 'kg');
