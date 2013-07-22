@@ -53,7 +53,7 @@ Feature: Numeric field feature
     And I fill in "numericFieldDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Groupes ordonnés suivant l'ordre alphabétique des identifiants
+  # Champs ordonnés suivant l'ordre alphabétique des identifiants
     # TODO : problème ordre lignes datagrid
     And the row 2 of the "numericFieldDatagrid" datagrid should contain:
       | label | ref | isVisible | enabled | required   | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
@@ -81,7 +81,7 @@ Feature: Numeric field feature
     Then I should see the "numericFieldDatagrid" datagrid
     And the row 1 of the "numericFieldDatagrid" datagrid should contain:
       | label             | ref             | isVisible | enabled | required    | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
-      | Champ numérique   | champ_numerique | Visible   | Activé  | Obligatoire | kg équ. CO2/m³ | Affichée        | 1 000,5      | 10                  | Masqué               |
+      | Champ numérique   | champ_numerique | Visible   | Activé  | Obligatoire | kg équ. CO2/m³ | Affichée        | 1 000,5      | 10                  | Affiché               |
   # Modification du libellé
     When I set "Champ numérique modifié" for column "label" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification de l'identifiant, identifiant vide
@@ -97,9 +97,9 @@ Feature: Numeric field feature
     When I set "champ_numerique_modifie" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification de l'aide
     When I set "h1. Aide modifiée" for column "help" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
-  # Modification de la visibilité initiale
+  # Modification de la visibilité initiale, de l'activation initiale, du caractère obligatoire
     When I set "Masqué" for column "isVisible" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
-  # Modification du caractère obligatoire
+    When I set "Désactivé" for column "enabled" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
     When I set "Facultatif" for column "required" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification de l'unité, unité vide ou invalide
     When I set "" for column "unit" of row 1 of the "numericFieldDatagrid" datagrid
@@ -107,15 +107,27 @@ Feature: Numeric field feature
     When I set "auie" for column "unit" of row 1 of the "numericFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de saisir un identifiant d'unité valide."
   # Modification de l'unité, unité valide
-    When I set "t" for column "unit" of row 1 of the "numericFieldDatagrid" datagrid
+    When I set "t" for column "unit" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification aff. incertitude
-    When I set "Masquée" for column "withUncertainty" of row 1 of the "numericFieldDatagrid" datagrid
-  # Modification valeur et incertitude initiales
-    # TODO : gérer saisie pas au bon format.
+    When I set "Masquée" for column "withUncertainty" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
+  # Modification valeur initiale
+    When I set "auie" for column "digitalValue" of row 1 of the "numericFieldDatagrid" datagrid
+    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    When I set "1.5" for column "digitalValue" of row 1 of the "numericFieldDatagrid" datagrid
+    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    When I set "1,5" for column "digitalValue" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
+  # Modification incertitude initiale
+    When I set "auie" for column "relativeUncertainty" of row 1 of the "numericFieldDatagrid" datagrid
+    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    When I set "15.9" for column "relativeUncertainty" of row 1 of the "numericFieldDatagrid" datagrid
+    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    When I set "15,9" for column "relativeUncertainty" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
+  # Modification rappel valeur par défaut
+    When I set "Masqué" for column "defaultValueReminder" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "numericFieldDatagrid" datagrid should contain:
-      | label                   | ref                     | isVisible |
-      | Champ numérique modifié | champ_numerique_modifie | Masqué    |
+      | label                   | ref                     | isVisible | enabled   | required   | unit | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
+      | Champ numérique modifié | champ_numerique_modifie | Masqué    | Désactivé | Facultatif | t    | Masquée         | 1,5          | 15                  | Masqué               |
     When I click "Aide" in the row 1 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#numericFieldDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
