@@ -88,7 +88,7 @@ class AF_PopulateTest extends AF_Populate
         2']);
         $champ_booleen_test = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'champ_booleen', 'Champ booléen');
         $champ_texte_court_test = $this->createShortTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_court', 'Champ texte court');
-        $champ_texte_long_test = $this->createShortTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_long', 'Champ texte long');
+        $champ_texte_long_test = $this->createLongTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_long', 'Champ texte long');
 
         // Création des composants.
         // Params : AF, Group, ref, label

@@ -81,26 +81,26 @@ Feature: AF group feature
     And I open collapse "Groupes"
     Then I should see the "groupDatagrid" datagrid
   # Groupe contenant un champ
-    And the row 1 of the "groupDatagrid" datagrid should contain:
-      | label |
-      | Groupe contenant un champ |
-    When I click "Supprimer" in the row 1 of the "groupDatagrid" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: ""
-  # Groupe contenant un sous-groupe
     And the row 2 of the "groupDatagrid" datagrid should contain:
       | label |
-      | Groupe contenant un sous-groupe |
+      | Groupe contenant un champ |
     When I click "Supprimer" in the row 2 of the "groupDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: ""
-  # Suppression sans obstacle
+    Then the following message is shown and closed: "Ce groupe ne peut pas être supprimé, car il contient un ou plusieurs composants."
+  # Groupe contenant un sous-groupe
     And the row 3 of the "groupDatagrid" datagrid should contain:
       | label |
-      | Sous-groupe |
-    When I click "Supprimer" in the row 2 of the "groupDatagrid" datagrid
+      | Groupe contenant un sous-groupe |
+    When I click "Supprimer" in the row 3 of the "groupDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Ce groupe ne peut pas être supprimé, car il contient un ou plusieurs composants."
+  # Suppression sans obstacle
+    And the row 1 of the "groupDatagrid" datagrid should contain:
+      | label |
+      | Groupe vide |
+    When I click "Supprimer" in the row 1 of the "groupDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."

@@ -41,25 +41,23 @@ Feature: Numeric field feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Groupes ordonnés suivant l'ordre alphabétique des identifiants
-    # TODO : unité : kg équ. CO2 / m³
     # TODO : problème ordre lignes datagrid
     And the row 2 of the "numericFieldDatagrid" datagrid should contain:
       | label | ref | isVisible | enabled | required   | unit          | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
-      | AAA   | aaa | Visible   | Activé  | Facultatif | kg_co2e.m3^-1 | Affichée        |              |                     | Masqué               |
+      | AAA   | aaa | Visible   | Activé  | Facultatif | kg équ. CO2/m³ | Affichée        |              |                     | Masqué               |
     When I click "Aide" in the row 2 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#numericFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
     When I click element ".close:contains('×')"
-  # Vérification de la création de l'algorithme correspondant
+  # Vérification de la création de l'algorithme de type "saisie de champ numérique" correspondant
     When I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Saisies de champs numériques"
     Then I should see the "algoNumericInput" datagrid
-    And the "algoNumericInput" datagrid should contain 1 row
-  # TODO : unité : kg équ. CO2 / m³
-    And the row 2 of the "algoNumericInput" datagrid should contain:
+  # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "saisie de champ numérique"
+    And the row 1 of the "algoNumericInput" datagrid should contain:
       | label | ref | input | unit |
-      | AAA   | aaa | AAA   | kg_co2e.m3^-1 |
+      | AAA   | aaa | AAA   | kg équ. CO2/m³ |
 
   @javascript
   Scenario: Edition of a numeric field
