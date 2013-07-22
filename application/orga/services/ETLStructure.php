@@ -849,15 +849,23 @@ class Orga_Service_ETLStructure
     public function resetOrganizationDWCubes(Orga_Model_Organization $organization)
     {
         foreach ($organization->getGranularities() as $granularity) {
+            // Optimisation de la mémoire.
+            $this->entityManager->clear();
+            $granularity = Orga_Model_Granularity::load($granularity->getId());
+
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
 
-                foreach ($granularity->getCells() as $cell) {
-                    $this->resetCellDWCube(Orga_Model_Cell::load($cell->getId()));
+                $this->entityManager->flush();
 
+                foreach ($granularity->getCells() as $cell) {
                     // Optimisation de la mémoire.
-                    $this->entityManager->flush();
                     $this->entityManager->clear();
+                    $cell = Orga_Model_Cell::load($cell->getId());
+
+                    $this->resetCellDWCube($cell);
+
+                    $this->entityManager->flush();
                 }
             }
         }
@@ -902,12 +910,14 @@ class Orga_Service_ETLStructure
         $this->resetCellDWCube($cell);
 
         foreach ($cell->getChildCells() as $childCell) {
-            if ($childCell->getGranularity()->getCellsGenerateDWCubes()) {
-                $this->resetCellDWCube(Orga_Model_Cell::load($childCell->getId()));
+            // Optimisation de la mémoire.
+            $this->entityManager->clear();
+            $childCell = Orga_Model_Cell::load($childCell->getId());
 
-                // Optimisation de la mémoire.
+            if ($childCell->getGranularity()->getCellsGenerateDWCubes()) {
+                $this->resetCellDWCube($childCell);
+
                 $this->entityManager->flush();
-                $this->entityManager->clear();
             }
         }
     }
@@ -943,9 +953,6 @@ class Orga_Service_ETLStructure
     protected function resetDWCube(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization, array $orgaFilter)
     {
         set_time_limit(0);
-
-        // Problème de proxie;
-//        $dWCube->getLabel();
 
         $queryCube = new Core_Model_Query();
         $queryCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $dWCube);
