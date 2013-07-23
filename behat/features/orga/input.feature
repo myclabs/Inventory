@@ -38,5 +38,5 @@ Feature: Organization input tab feature
   # Lien vers le détail de l'organisation
     When I click "Cliquer pour accéder" in the row 2 of the "organizations" datagrid
     Then I should see "Vue globale Test"
-    # TODO : ajouter message pour indiquer qu'aucune granularité n'a été associée à des saisies.
+    # TODO : ajouter message pour indiquer qu'aucune granularité n'a été associée à des saisies.
 

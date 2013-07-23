@@ -35,11 +35,11 @@ Feature: Non repeated subAF feature
     And I fill in "subAfNotRepeatedDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Sous-formulaires non répétés ordonnés suivant l'ordre alphabétique des identifiants
-    And the row 1 of the "subAfNotRepeatedDatagrid" datagrid should contain:
+  # Sous-formulaires non répétés ordonnés suivant l'ordre de création
+    And the row 2 of the "subAfNotRepeatedDatagrid" datagrid should contain:
       | label | ref | targetAF          | isVisible |
       | AAA   | aaa | Données générales | Visible   |
-    When I click "Aide" in the row 1 of the "subAfNotRepeatedDatagrid" datagrid
+    When I click "Aide" in the row 2 of the "subAfNotRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#subAfNotRepeatedDatagrid_help_popup .modal-body h1:contains('Blabla')" element
 

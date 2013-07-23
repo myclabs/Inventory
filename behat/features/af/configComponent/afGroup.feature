@@ -33,11 +33,11 @@ Feature: AF group feature
     And I fill in "groupDatagrid_help_addForm" with "h1. Blabla"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Groupes ordonnés suivant l'ordre alphabétique des identifiants
-    And the row 1 of the "groupDatagrid" datagrid should contain:
+  # Groupes ordonnés suivant l'ordre de création
+    And the row 5 of the "groupDatagrid" datagrid should contain:
       | label | ref | isVisible |
       | AAA   | aaa | Visible   |
-    When I click "Aide" in the row 1 of the "groupDatagrid" datagrid
+    When I click "Aide" in the row 5 of the "groupDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#groupDatagrid_help_popup .modal-body h1:contains('Blabla')" element
 
@@ -81,26 +81,26 @@ Feature: AF group feature
     And I open collapse "Groupes"
     Then I should see the "groupDatagrid" datagrid
   # Groupe contenant un champ
-    And the row 1 of the "groupDatagrid" datagrid should contain:
-      | label |
-      | Groupe contenant un champ |
-    When I click "Supprimer" in the row 1 of the "groupDatagrid" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: ""
-  # Groupe contenant un sous-groupe
     And the row 2 of the "groupDatagrid" datagrid should contain:
       | label |
-      | Groupe contenant un sous-groupe |
+      | Groupe contenant un champ |
     When I click "Supprimer" in the row 2 of the "groupDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: ""
-  # Suppression sans obstacle
+    Then the following message is shown and closed: "Ce groupe ne peut pas être supprimé, car il contient un ou plusieurs composants."
+  # Groupe contenant un sous-groupe
     And the row 3 of the "groupDatagrid" datagrid should contain:
       | label |
-      | Sous-groupe |
-    When I click "Supprimer" in the row 2 of the "groupDatagrid" datagrid
+      | Groupe contenant un sous-groupe |
+    When I click "Supprimer" in the row 3 of the "groupDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Ce groupe ne peut pas être supprimé, car il contient un ou plusieurs composants."
+  # Suppression sans obstacle
+    And the row 1 of the "groupDatagrid" datagrid should contain:
+      | label |
+      | Groupe vide |
+    When I click "Supprimer" in the row 1 of the "groupDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."

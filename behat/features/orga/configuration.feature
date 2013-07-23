@@ -95,7 +95,7 @@ Feature: Configuration of an organization
       | Année            | Année                  |
   # Ajout, saisie correcte (granularité de saisie plus fine que ou égale à la granularité des collectes)
   # Remarque : granularités identiques (sans importance)
-  # Remarque : test abandonné car pas de granularité plus fine encore disponible
+  # Remarque : test abandonné car pas de granularité plus fine encore disponible
   #  When I click "Ajouter"
   #  And I select "Année | Site" from "Saisie"
   #  And I select "Année | Site" from "Choix des formulaires"

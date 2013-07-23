@@ -46,7 +46,7 @@
         </tu>
         <tu tuid="invalidNumber">
             <tuv xml:lang="fr">
-                <seg>La quantité saisie n'a pas pu être interprétée, merci de corriger.</seg>
+                <seg>La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal).</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Entered quantity could not be read, please correct it.</seg>

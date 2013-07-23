@@ -302,8 +302,8 @@ abstract class UI_Controller_Datagrid extends Core_Controller
     /**
      * Formate les données à renvoyer pour une cellule date.
      *
-     * @param Date|DateTime $date Valeur d'une colonne date.
-     * @param string        $content Affichage dans la colonne.
+     * @param DateTime $date Valeur d'une colonne date.
+     * @param string   $content Affichage dans la colonne.
      *
      * @return array
      */
@@ -385,6 +385,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
     {
         $locale = Core_Locale::loadDefault();
         $content = $locale->formatNumber($number, $significantFigures, $numberDecimal);
+        $number = $locale->formatNumberForInput($number);
         return $this->baseCell($number, $content);
     }
 
@@ -407,9 +408,6 @@ abstract class UI_Controller_Datagrid extends Core_Controller
         }
         if ($percent < 0) {
             $percent = abs($percent);
-        }
-        if ($percent > 100) {
-            $percent %= 100;
         }
         return $this->baseCell($percent, $color);
     }

@@ -36,7 +36,7 @@ class Techno_PopulateTest extends Techno_Populate
         // $family_1 = $this->createFamilyCoef($category_contenant_famille, 'ref1', 'Label 1', 'km', 'm', '');
 
         $family_combustion_combustible_masse = $this->createFamilyProcess($category_contenant_famille,
-            'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse', 't', 'kg');
+            'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse', 't', 'kg', 'h1. Documentation de la famille "Combustion…"');
         $family_masse_volumique_combustible = $this->createFamilyCoef($category_contenant_famille,
             'masse_volumique_combustible', 'Masse volumique de combustible', 't.m3^-1', 'kg.m3^-1');
         $family_vide_processus = $this->createFamilyProcess($category_contenant_famille,
@@ -57,7 +57,7 @@ class Techno_PopulateTest extends Techno_Populate
         $this->createParameter($family_combustion_combustible_masse, ['charbon', 'combustion'], 25, 20);
 
         // Masse volumique de combustible
-        $this->createVerticalDimension($family_masse_volumique_combustible, 'charbon', ['charbon', 'gaz_naturel']);
+        $this->createVerticalDimension($family_masse_volumique_combustible, 'combustible', ['charbon', 'gaz_naturel']);
         $this->createParameter($family_masse_volumique_combustible, ['charbon'], 18);
 
         // Famille vide de processus
