@@ -93,7 +93,7 @@ class AF_PopulateTest extends AF_Populate
         $aF_test->getMainAlgo()->setExpression(':champ_numerique;');
         $this->createAlgoNumericExpression($aF_test, 'expression_numerique', 'Expression numérique', 'champ_numerique*parametre', 't_co2e');
         $algo_parametre = $this->createAlgoNumericParameter($aF_test, 'parametre', 'Paramètre', 'combustion_combustible_unite_masse');
-        // $this->createFixedIndexForAlgoParameter($algo_parametre, $family_combustion_combustible_masse, ['combustible' => 'charbon',  'processus' => 'combustion']);
+        // $this->createFixedCoordinateForAlgoParameter($algo_parametre, ['combustible' => 'charbon',  'processus' => 'combustion']);
         $this->createAlgoNumericConstant($aF_test, 'constante', 'Constante', 10, 5, 'pourcent');
         $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_selection', 'a:b;c:(d:e;f:g)');
         $this->createAlgoConditionExpression($aF_test, 'condition_composee', 'condition_elementaire|condition_inexistante');

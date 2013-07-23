@@ -10,6 +10,8 @@ Feature: AF main algo feature
     And I wait for the page to finish loading
     And I open tab "Traitement"
     And I open collapse "Algorithme d'exécution"
+  # Affichage de l'algo (au bon format)
+    # TODO une fois le paramétrage terminé.
   # Saisie algo vide
     When I fill in "expression" with ""
     And I click "Enregistrer"
