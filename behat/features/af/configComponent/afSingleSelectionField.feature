@@ -22,8 +22,12 @@ Feature: Single selection field feature
     When I fill in "selectSingleFieldDatagrid_ref_addForm" with "bépo"
     And I click "Valider"
     Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout, identifiant déjà utilisé
+  # Ajout, identifiant déjà utilisé pour un autre composant
     When I fill in "selectSingleFieldDatagrid_ref_addForm" with "champ_numerique"
+    And I click "Valider"
+    Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Ajout, identifiant déjà utilisé pour un autre algorithme de séloction d'identifiant
+    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "expression_selection"
     And I click "Valider"
     Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Ajout, saisie correcte
@@ -33,12 +37,23 @@ Feature: Single selection field feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Champs ordonnés suivant l'ordre de création, vérification des valeurs par défaut
-    And the row 2 of the "selectSingleFieldDatagrid" datagrid should contain:
+    And the row 4 of the "selectSingleFieldDatagrid" datagrid should contain:
       | label | ref | isVisible | enabled | required    | type             |
       | AAA   | aaa | Visible   | Activé  | Facultatif  | Liste déroulante |
-    When I click "Aide" in the row 2 of the "selectSingleFieldDatagrid" datagrid
+    When I click "Aide" in the row 4 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#selectSingleFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
+    When I click element ".close:contains('×')"
+  # Vérification de la création de l'algorithme de type "sélection d’identifiant à partir d'une saisie de champ de sélection simple" correspondant
+    When I open tab "Traitement"
+    And I open collapse "Algorithmes de sélection d’identifiant"
+    And I open collapse "A partir d'une saisie de champ de sélection simple"
+    Then I should see the "algoSelectionTextkeyInput" datagrid
+  # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "sélection d'identifiant à partir d'une saisie de champ de sélection simple"
+    And the row 1 of the "algoSelectionTextkeyInput" datagrid should contain:
+      | ref |
+      | aaa |
+  # TODO : deux colonnes pour ce datagrid
 
   @javascript
   Scenario: Edition of a single selection field scenario
@@ -58,8 +73,11 @@ Feature: Single selection field feature
   # Modification de l'identifiant, identifiant avec caractères non autorisés
     When I set "bépo" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé
+  # Modification de l'identifiant, identifiant déjà utilisé pour un autre composant
     When I set "champ_numerique" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Modification de l'identifiant, identifiant déjà utilisé pour un autre algorithme de sélection d'identifiant
+    When I set "expression_selection" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, saisie correcte
     When I set "champ_selection_simple_modifie" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid with a confirmation message
@@ -78,6 +96,16 @@ Feature: Single selection field feature
     When I click "Aide" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#selectSingleFieldDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
+  # Vérification que les modifications on bien été prises en compte pour l'algo de type sélection d'identifiant correspondant
+    When I open tab "Traitement"
+    And I open collapse "Algorithmes de sélection d’identifiant"
+    And I open collapse "A partir d'une saisie de champ de sélection simple"
+    Then I should see the "algoSelectionTextkeyInput" datagrid
+  # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "sélection d'identifiant à partir d'une saisie de champ de sélection simple"
+    And the row 1 of the "algoSelectionTextkeyInput" datagrid should contain:
+      | ref |
+      | champ_selection_simple_modifie |
+
 
   @javascript
   Scenario: Deletion of a single selection field scenario
@@ -86,10 +114,37 @@ Feature: Single selection field feature
     And I open tab "Composants"
     And I open collapse "Champs de sélection simple"
     Then I should see the "selectSingleFieldDatagrid" datagrid
-    And the "selectSingleFieldDatagrid" datagrid should contain 1 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
+    And the row 1 of the "selectSingleFieldDatagrid" datagrid should contain:
+      | label                  |
+      | Champ sélection simple |
+    And the row 2 of the "selectSingleFieldDatagrid" datagrid should contain:
+      | label                          |
+      | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Interactions" |
+    And the row 3 of the "selectSingleFieldDatagrid" datagrid should contain:
+      | label                          |
+      | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Traitement" |
+  # Suppression, algo utilisé par une condition élémentaire de l'onglet "Interactions"
+    #When I click "Supprimer" in the row 3 of the "selectSingleFieldDatagrid" datagrid
+    #Then I should see the popup "Demande de confirmation"
+    #When I click "Confirmer"
+    #Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Interactions » porte sur lui."
+    #And the "selectSingleFieldDatagrid" datagrid should contain 3 row
+  # Suppression, algo utilisé par une condition élémentaire de l'onglet "Traitement"
+    When I click "Supprimer" in the row 3 of the "selectSingleFieldDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Traitement » porte sur lui."
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
   # Suppression sans obstacle
     When I click "Supprimer" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "selectSingleFieldDatagrid" datagrid should contain 0 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 2 row
+  # Vérification que la suppression a bien été prise en compte pour l'algo de type sélection d'identifiant correspondant
+    When I open tab "Traitement"
+    And I open collapse "Algorithmes de sélection d’identifiant"
+    And I open collapse "A partir d'une saisie de champ de sélection simple"
+    Then I should see the "algoSelectionTextkeyInput" datagrid
+    And the "algoSelectionTextkeyInput" datagrid should contain 2 row
