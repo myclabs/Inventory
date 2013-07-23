@@ -5,7 +5,7 @@ Feature: AF algo numeric expression feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an AF algo numeric expression
+  Scenario: Creation of an algo numeric expression scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Traitement"
@@ -62,7 +62,7 @@ Feature: AF algo numeric expression feature
     And I click element "#algoNumericExpression_expression_popup .close:contains('×')"
 
   @javascript
-  Scenario: Edition of an AF algo numeric expression
+  Scenario: Edition of an algo numeric expression scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Traitement"
@@ -113,7 +113,7 @@ Feature: AF algo numeric expression feature
       | Expression numérique modifiée | expression_numerique_modifiee | m    |
 
   @javascript
-  Scenario: Deletion of an AF algo numeric expression
+  Scenario: Deletion of an algo numeric expression scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Traitement"
