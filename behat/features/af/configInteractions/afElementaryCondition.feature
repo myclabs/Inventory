@@ -24,7 +24,7 @@ Feature: Elementary condition for interaction feature
     And I click "Valider"
     Then the field "conditionsElementary_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    # TODO…
+    # TODO…
   # Ajout, identifiant correct
     When I fill in "conditionsElementary_ref_addForm" with "test"
     And I click "Valider"

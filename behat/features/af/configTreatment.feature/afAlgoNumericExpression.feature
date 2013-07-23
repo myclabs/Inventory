@@ -58,7 +58,7 @@ Feature: AF algo numeric expression feature
     When I click "Expression" in the row 2 of the "checkboxFieldDatagrid" datagrid
     Then I should see the popup "Expression"
     And I should see "a+b"
-    # TODO …
+    # TODO …
     And I click element "#algoNumericExpression_expression_popup .close:contains('×')"
 
   @javascript
@@ -73,7 +73,7 @@ Feature: AF algo numeric expression feature
     And the row 1 of the "algoNumericExpression" datagrid should contain:
       | label                | ref                  | unit   |
       | Expression numérique | expression_numerique | t_co2e |
-    # TODO : t équ. CO2
+    # TODO : t équ. CO2
     When I click "Expression" in the row 1 of the "algoNumericExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "champ_numerique*parametre"

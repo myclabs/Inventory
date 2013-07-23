@@ -32,7 +32,7 @@ Feature: Composed condition for interaction feature
   # Ajout, identifiant déjà utilisé, expression correcte
     When I fill in "conditionsExpression_expression_addForm" with "a&(b|c)&d"
     And I click "Valider"
-    # TODO…
+    # TODO…
   # Ajout, saisie correcte
     Then the following message is shown and closed: "Ajout effectué."
     And the row 1 of the "conditionsExpression" datagrid should contain:
@@ -40,7 +40,7 @@ Feature: Composed condition for interaction feature
       | test |
     When I click "Expression" in the row 1 of the "conditionsExpression" datagrid
     Then I should see the popup "Expression"
-    And I should see "a & (b | c) & d"
+    And I should see "a & (b | c) & d"
 
   @javascript
   Scenario: Edition of an elementary condition for interaction scenario
