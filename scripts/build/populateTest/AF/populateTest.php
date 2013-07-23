@@ -120,8 +120,8 @@ class AF_PopulateTest extends AF_Populate
         //  + createFixedIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => refMember]
         //  + createAlgoIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => Selection_TextKey algo]
         //  + createAlgoNumericParameter : ref, label, refFamily
-        //  + createFixedIndexForAlgoParameter : Parameter parameter, Family family, [refDimensionKeyword => refMemberKeyword]
-        //  + createAlgoIndexForAlgoParameter : Parameter parameter, Family family, [refDimensionKeyword => Selection_TextKey algo]
+        //  + createFixedCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => refMemberKeyword]
+        //  + createAlgoCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => Selection_TextKey algo]
         //  + createAlgoSelectTextkeyExpression : ref, expression
         //  + createAlgoConditionElementary : Component input, ref
         //  + createAlgoConditionExpression : ref, expression

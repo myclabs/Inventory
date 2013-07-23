@@ -433,13 +433,12 @@ class AF_Populate extends Core_Script_Action
 
     /**
      * @param Algo_Model_Numeric_Parameter $parameter
-     * @param Techno_Model_Family $family
      * @param array $indexes Sous la forme [$reDimensionKeyword =» $refMemberKeyword]
      */
-    protected function createFixedIndexForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, Techno_Model_Family $family, $indexes)
+    protected function createFixedCoordinateForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, $indexes)
     {
         foreach ($indexes as $refDimensionKeyword => $refMemberKeyword) {
-            $dimension = $family->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Fixed();
             $index->setDimension($dimension);
             $index->setMember($dimension->getMember(Keyword_Model_Keyword::loadByRef($refMemberKeyword)));
@@ -450,13 +449,12 @@ class AF_Populate extends Core_Script_Action
 
     /**
      * @param Algo_Model_Numeric_Parameter $parameter
-     * @param Techno_Model_Family $family
      * @param array $indexes Sous la forme [$refAxis =» $algo]
      */
-    protected function createAlgoIndexForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, Techno_Model_Family $family, $indexes)
+    protected function createAlgoCoordinateForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, $indexes)
     {
         foreach ($indexes as $refDimensionKeyword => $algo) {
-            $dimension = $family->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Algo();
             $index->setDimension($dimension);
             $index->setAlgoKeyword($algo);
