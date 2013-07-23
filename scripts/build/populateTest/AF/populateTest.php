@@ -82,10 +82,10 @@ class AF_PopulateTest extends AF_Populate
         $sous_formulaire_non_repete_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_non_repete', 'Sous-formulaire non répété', $aF_d_g);
         $sous_formulaire_repete_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_repete', 'Sous-formulaire répété', $aF_combustion);
         $champ_numerique_test = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique', 'Champ numérique', 'kg_co2e.m3^-1', '1000.5', '10');
-        $champ_selection_simple_test = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple', 'Champ sélection simple', ['option_1' => 'Option 1', 'option_2' => 'Option 1
-        2']);
-        $champ_selection_multiple_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'champ_selection_multiple', 'Champ sélection multiple', ['option_1' => 'Option 1', 'option_2' => 'Option 1
-        2']);
+        $champ_selection_simple_test = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple', 'Champ sélection simple', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
+        $champ_selection_simple_utilise_condition_elementaire_interaction = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple_utilise_condition_elementaire_interaction', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Interactions"', ['option_1' => 'Option 1']);
+        $champ_selection_simple_utilise_condition_elementaire_traitement = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple_utilise_condition_elementaire_traitement', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Traitement"', ['option_1' => 'Option 1']);
+        $champ_selection_multiple_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'champ_selection_multiple', 'Champ sélection multiple', ['option_1' => 'Option 1']);
         $champ_booleen_test = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'champ_booleen', 'Champ booléen');
         $champ_texte_court_test = $this->createShortTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_court', 'Champ texte court');
         $champ_texte_long_test = $this->createLongTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_long', 'Champ texte long');
@@ -93,11 +93,11 @@ class AF_PopulateTest extends AF_Populate
         $aF_test->getMainAlgo()->setExpression(':champ_numerique;');
         $this->createAlgoNumericExpression($aF_test, 'expression_numerique', 'Expression numérique', 'champ_numerique*parametre', 't_co2e');
         $algo_parametre = $this->createAlgoNumericParameter($aF_test, 'parametre', 'Paramètre', 'combustion_combustible_unite_masse');
-        // $this->createFixedIndexForAlgoParameter($algo_parametre, $family_combustion_combustible_masse, ['combustible' => 'charbon',  'processus' => 'combustion']);
+        // $this->createFixedCoordinateForAlgoParameter($algo_parametre, ['combustible' => 'charbon',  'processus' => 'combustion']);
         $this->createAlgoNumericConstant($aF_test, 'constante', 'Constante', 10, 5, 'pourcent');
         $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_selection', 'a:b;c:(d:e;f:g)');
         $this->createAlgoConditionExpression($aF_test, 'condition_composee', 'condition_elementaire|condition_inexistante');
-        $this->createAlgoConditionElementary($aF_test, $champ_selection_simple_test, 'option_1');
+        $this->createAlgoConditionElementary($aF_test, $champ_selection_simple_utilise_condition_elementaire_traitement, 'condition_elementaire');
 
         // Création des composants.
         // Params : AF, Group, ref, label

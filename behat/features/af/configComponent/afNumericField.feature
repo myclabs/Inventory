@@ -29,12 +29,14 @@ Feature: Numeric field feature
     And I fill in "numericFieldDatagrid_ref_addForm" with "bépo"
     And I click "Valider"
     Then the field "numericFieldDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout, identifiant déjà utilisé
+  # Ajout, identifiant déjà utilisé pour un autre composant
     When I fill in "numericFieldDatagrid_ref_addForm" with "sous_groupe"
     And I click "Valider"
     Then the field "numericFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # TODO : identifiant utilisé pour un autre algorithme numérique
-
+  # Ajout, identifiant déjà utilisé pour un autre algorithme numerique
+    When I fill in "numericFieldDatagrid_ref_addForm" with "constante"
+    And I click "Valider"
+    Then the field "numericFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Ajout, valeur initiale et incertitude initiale pas nombres
     When I fill in "numericFieldDatagrid_digitalValue_addForm" with "auie"
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "auie"
@@ -91,8 +93,11 @@ Feature: Numeric field feature
   # Modification de l'identifiant, identifiant avec caractères non autorisés
     When I set "bépo" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé
+  # Modification de l'identifiant, identifiant déjà utilisé pour un autre composant
     When I set "sous_groupe" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Modification de l'identifiant, identifiant déjà utilisé pour un autre algorithme numérique
+    When I set "constante" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, saisie correcte
     When I set "champ_numerique_modifie" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
@@ -132,6 +137,16 @@ Feature: Numeric field feature
     When I click "Aide" in the row 1 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#numericFieldDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
+    When I click element ".close:contains('×')"
+  # Vérification que les modifications on bien été prises en compte pour l'algo de type champ numérique correspondant
+    When I open tab "Traitement"
+    And I open collapse "Algorithmes numériques"
+    And I open collapse "Saisies de champs numériques"
+    Then I should see the "algoNumericInput" datagrid
+  # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "saisie de champ numérique"
+    And the row 1 of the "algoNumericInput" datagrid should contain:
+      | label             | ref                     | input                     | unit |
+      | Champ numérique   | champ_numerique_modifie | Champ numérique modifié   | t    |
 
   @javascript
   Scenario: Deletion of a numeric field
@@ -147,3 +162,9 @@ Feature: Numeric field feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "numericFieldDatagrid" datagrid should contain 0 row
+  # Vérification que la suppression a bien été prise en compte pour l'algo de type sélection d'identifiant correspondant
+    When I open tab "Traitement"
+    And I open collapse "Algorithmes numériques"
+    And I open collapse "Saisies de champs numériques"
+    Then I should see the "algoNumericInput" datagrid
+    And the "algoNumericInput" datagrid should contain 0 row
