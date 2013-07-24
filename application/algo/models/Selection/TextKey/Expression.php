@@ -89,7 +89,7 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
      */
     public function getExpression()
     {
-        return $this->expression;
+        return $this->tecExpression->getTreeAsString();
     }
 
     /**
