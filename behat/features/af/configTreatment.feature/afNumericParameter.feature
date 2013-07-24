@@ -6,9 +6,8 @@ Feature: AF numeric parameter algo feature
 
   @javascript
   Scenario: Creation of an algo numeric parameter scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Paramètres"
     Then I should see the "algoNumericParameter" datagrid
@@ -41,9 +40,8 @@ Feature: AF numeric parameter algo feature
   @javascript
   Scenario: Edition of an algo numeric parameter scenario
   # Accès au datagrid
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Paramètres"
     Then I should see the "algoNumericParameter" datagrid
@@ -80,9 +78,8 @@ Feature: AF numeric parameter algo feature
   @javascript
   Scenario: Edition of coordinates of an algo numeric parameter scenario
   # Accès au datagrid des algos
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Paramètres"
     Then I should see the "algoNumericParameter" datagrid
@@ -166,9 +163,8 @@ Feature: AF numeric parameter algo feature
   @javascript
   Scenario: Influence of a change of family on coordinates of an algo numeric parameter scenario
   # Accès au datagrid des algos
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Paramètres"
     Then I should see the "algoNumericParameter" datagrid
@@ -188,9 +184,8 @@ Feature: AF numeric parameter algo feature
 
   @javascript
   Scenario: Deletion of an algo numeric parameter scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Paramètres"
     Then I should see the "algoNumericParameter" datagrid

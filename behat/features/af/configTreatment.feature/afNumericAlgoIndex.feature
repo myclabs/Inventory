@@ -6,9 +6,8 @@ Feature: AF indexes of a numeric algo feature
 
   @javascript
   Scenario: Edit indexes of a numeric algo scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
   # L'algorithme numérique indexé dans le populate est une saisie de champ numérique
     And I open collapse "Saisies de champs numériques"
@@ -65,9 +64,8 @@ Feature: AF indexes of a numeric algo feature
 
   @javascript
   Scenario: Influence of a change of indicator on indexes of a numeric algo scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
   # L'algorithme numérique indexé dans le populate est une saisie de champ numérique
     And I open collapse "Saisies de champs numériques"

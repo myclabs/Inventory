@@ -8,6 +8,7 @@ Feature: AF main algo feature
   Scenario: AF main algo scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
+  # On ouvre le tab "Traitement" (on ne le fera pas dans les autres tests du même onglet)
     And I open tab "Traitement"
     And I open collapse "Algorithme d'exécution"
   # Affichage de l'algo (au bon format)

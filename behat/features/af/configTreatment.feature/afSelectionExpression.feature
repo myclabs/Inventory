@@ -6,9 +6,8 @@ Feature: AF selection expression algo feature
 
   @javascript
   Scenario: Creation of an algo selection expression scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes de sélection d’identifiant"
     And I open collapse "Expressions"
     Then I should see the "algoSelectionTextkeyExpression" datagrid
@@ -48,9 +47,8 @@ Feature: AF selection expression algo feature
 
   @javascript
   Scenario: Edition of an algo selection expression scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes de sélection d’identifiant"
     And I open collapse "Expressions"
     Then I should see the "algoSelectionTextkeyExpression" datagrid
@@ -89,9 +87,8 @@ Feature: AF selection expression algo feature
 
   @javascript
   Scenario: Deletion of an algo selection expression scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes de sélection d’identifiant"
     And I open collapse "Expressions"
     Then I should see the "algoSelectionTextkeyExpression" datagrid

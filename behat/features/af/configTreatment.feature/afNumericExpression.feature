@@ -6,9 +6,8 @@ Feature: AF numeric expression algo feature
 
   @javascript
   Scenario: Creation of an algo numeric expression scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Expressions"
     Then I should see the "algoNumericExpression" datagrid
@@ -61,9 +60,8 @@ Feature: AF numeric expression algo feature
 
   @javascript
   Scenario: Edition of an algo numeric expression scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Expressions"
     Then I should see the "algoNumericExpression" datagrid
@@ -111,9 +109,8 @@ Feature: AF numeric expression algo feature
 
   @javascript
   Scenario: Deletion of an algo numeric expression scenario
-    Given I am on "af/edit/menu/id/4"
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
-    And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Expressions"
     Then I should see the "algoNumericExpression" datagrid

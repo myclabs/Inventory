@@ -155,14 +155,56 @@ Feature: AF numeric field feature
     And I open tab "Composants"
     And I open collapse "Champs numériques"
     Then I should see the "numericFieldDatagrid" datagrid
+    And the "numericFieldDatagrid" datagrid should contain 3 row
+    And the row 1 of the "numericFieldDatagrid" datagrid should contain:
+      | label                   |
+      | Champ numérique |
+    And the row 2 of the "numericFieldDatagrid" datagrid should contain:
+      | label                   |
+      | Champ numérique cible activation |
+    And the row 3 of the "numericFieldDatagrid" datagrid should contain:
+      | label                   |
+      | Champ numérique cible setvalue |
+  # Suppression des champs cibles d'actions
+    When I open tab "Interactions"
+    And I open collapse "Modifications de l'état de composants"
+    Then I should see the "actionsSetState" datagrid
+    And the "actionsSetState" datagrid should contain 1 row
+    When I open collapse "Assignations de valeurs à des champs"
+    Then I should see the "actionsSetValue" datagrid
+    And the "actionsSetValue" datagrid should contain 3 row
+    When I open tab "Composants"
+    # And I open collapse "Champs numériques" (déjà ouvert !)
+    When I click "Supprimer" in the row 3 of the "numericFieldDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
+    When I click "Supprimer" in the row 2 of the "numericFieldDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
     And the "numericFieldDatagrid" datagrid should contain 1 row
+  # Vérification que les actions ayant pour cibles les deux champs supprimés ont également été supprimées
+    When I open tab "Interactions"
+  # On ferme et on rouvre pour rafraîchir le contenu
+    And I close collapse "Modifications de l'état de composants"
+    And I open collapse "Modifications de l'état de composants"
+    Then I should see the "actionsSetState" datagrid
+    And the "actionsSetState" datagrid should contain 0 row
+  # On ferme et on rouvre pour rafraîchir le contenu
+    When I close collapse "Assignations de valeurs à des champs"
+    And I open collapse "Assignations de valeurs à des champs"
+    Then I should see the "actionsSetValue" datagrid
+    And the "actionsSetValue" datagrid should contain 2 row
   # Suppression sans obstacle
+    When I open tab "Composants"
+  # And I open collapse "Champs numériques" (déjà ouvert !)
     When I click "Supprimer" in the row 1 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "numericFieldDatagrid" datagrid should contain 0 row
-  # Vérification que la suppression a bien été prise en compte pour l'algo de type sélection d'identifiant correspondant
+  # Vérification que les suppressions ont bien été prises en compte pour les algos de type sélection d'identifiant correspondants
     When I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Saisies de champs numériques"

@@ -85,10 +85,10 @@ Feature: AF boolean field feature
     And I open tab "Composants"
     And I open collapse "Champs booléens"
     Then I should see the "checkboxFieldDatagrid" datagrid
-    And the "checkboxFieldDatagrid" datagrid should contain 1 row
+    And the "checkboxFieldDatagrid" datagrid should contain 2 row
   # Suppression sans obstacle
     When I click "Supprimer" in the row 1 of the "checkboxFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "checkboxFieldDatagrid" datagrid should contain 0 row
+    And the "checkboxFieldDatagrid" datagrid should contain 1 row

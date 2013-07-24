@@ -51,9 +51,8 @@ Feature: AF single selection field feature
     Then I should see the "algoSelectionTextkeyInput" datagrid
   # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "sélection d'identifiant à partir d'une saisie de champ de sélection simple"
     And the row 1 of the "algoSelectionTextkeyInput" datagrid should contain:
-      | ref |
-      | aaa |
-  # TODO : deux colonnes pour ce datagrid
+      | ref | input |
+      | aaa | AAA   |
 
   @javascript
   Scenario: Edition of a single selection field scenario
@@ -103,8 +102,8 @@ Feature: AF single selection field feature
     Then I should see the "algoSelectionTextkeyInput" datagrid
   # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "sélection d'identifiant à partir d'une saisie de champ de sélection simple"
     And the row 1 of the "algoSelectionTextkeyInput" datagrid should contain:
-      | ref |
-      | champ_selection_simple_modifie |
+      | ref                            | input                          |
+      | champ_selection_simple_modifie | Champ sélection simple modifié |
 
 
   @javascript
@@ -114,35 +113,61 @@ Feature: AF single selection field feature
     And I open tab "Composants"
     And I open collapse "Champs de sélection simple"
     Then I should see the "selectSingleFieldDatagrid" datagrid
-    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
     And the row 1 of the "selectSingleFieldDatagrid" datagrid should contain:
       | label                  |
       | Champ sélection simple |
     And the row 2 of the "selectSingleFieldDatagrid" datagrid should contain:
-      | label                          |
+      | label                                                                                   |
       | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Interactions" |
     And the row 3 of the "selectSingleFieldDatagrid" datagrid should contain:
-      | label                          |
+      | label                                                                                 |
       | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Traitement" |
+    And the row 4 of the "selectSingleFieldDatagrid" datagrid should contain:
+      | label                                                |
+      | Champ sélection simple cible d'une action "setValue" |
   # Suppression, algo utilisé par une condition élémentaire de l'onglet "Interactions"
-    #When I click "Supprimer" in the row 3 of the "selectSingleFieldDatagrid" datagrid
-    #Then I should see the popup "Demande de confirmation"
-    #When I click "Confirmer"
-    #Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Interactions » porte sur lui."
-    #And the "selectSingleFieldDatagrid" datagrid should contain 3 row
+    When I click "Supprimer" in the row 2 of the "selectSingleFieldDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Interactions » porte sur lui."
+    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
   # Suppression, algo utilisé par une condition élémentaire de l'onglet "Traitement"
     When I click "Supprimer" in the row 3 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Traitement » porte sur lui."
+    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+  # Suppression, algo cible d'une action (en l'occurrence une action setValue)
+  # La suppression est bien permise, et donne lieu à la suppression de l'action en question
+    When open tab "Interactions"
+    And I open collapse "Assignations de valeurs à des champs"
+    Then I should see the "actionsSetValue" datagrid
+    And the "actionsSetValue" datagrid should contain 3 row
+    When I open tab "Composants"
+    # And I open collapse "Champs de sélection simple" (déjà ouvert !)
+    Then I should see the "selectSingleFieldDatagrid" datagrid
+    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    When I click "Supprimer" in the row 4 of the "selectSingleFieldDatagrid" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
     And the "selectSingleFieldDatagrid" datagrid should contain 3 row
+  # On vérifie que l'action correspondante a bien été supprimée
+    When open tab "Interactions"
+    And I close collapse "Assignations de valeurs à des champs"
+    And I open collapse "Assignations de valeurs à des champs"
+    Then I should see the "actionsSetValue" datagrid
+    And the "actionsSetValue" datagrid should contain 2 row
   # Suppression sans obstacle
+    When I open tab "Composants"
+  # And I open collapse "Champs de sélection simple" (déjà ouvert !)
     When I click "Supprimer" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "selectSingleFieldDatagrid" datagrid should contain 2 row
-  # Vérification que la suppression a bien été prise en compte pour l'algo de type sélection d'identifiant correspondant
+  # Vérification que les suppressions ont bien été prises en compte pour les algos de type sélection d'identifiant correspondanti
     When I open tab "Traitement"
     And I open collapse "Algorithmes de sélection d’identifiant"
     And I open collapse "A partir d'une saisie de champ de sélection simple"
