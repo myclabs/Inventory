@@ -61,10 +61,12 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
         $locale = Core_Locale::loadDefault();
+        // Ref validation
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
+        // Unit validation
         try {
             $unitRef = $this->getAddElementValue('unit');
             if (empty($unitRef)) {
@@ -75,13 +77,23 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
         } catch (Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
         }
-        try {
-            $value = $locale->readNumber($this->getAddElementValue('value'));
-        } catch(Core_Exception_InvalidArgument $e) {
-            $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'invalidNumber'));
+        // Value validation
+        $rawValue = $this->getAddElementValue('value');
+        if (empty($rawValue)) {
+            $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'emptyRequiredField'));
+        } else {
+            try {
+                $value = $locale->readNumber($rawValue);
+            } catch(Core_Exception_InvalidArgument $e) {
+                $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'invalidNumber'));
+            }
         }
+        // Uncertainty validation
         try {
             $uncertainty = $locale->readInteger($this->getAddElementValue('uncertainty'));
+            if ($uncertainty === null) {
+                $uncertainty = 0;
+            }
         } catch(Core_Exception_InvalidArgument $e) {
             $this->setAddElementErrorMessage('uncertainty', __('UI', 'formValidation', 'invalidNumber'));
         }
@@ -155,6 +167,9 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $this->data = $algo->getUnit()->getRef();
                 break;
             case 'value':
+                if (empty($newValue)) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
+                }
                 try {
                     $newValue = $locale->readNumber($newValue);
                 } catch(Core_Exception_InvalidArgument $e) {
