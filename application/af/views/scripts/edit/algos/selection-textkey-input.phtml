@@ -13,7 +13,11 @@ $datagrid->addParam('id', $af->getId());
 $datagrid->pagination = false;
 
 // Ref
-$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'field'));
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
 $datagrid->addCol($refColumn);
+
+// Input
+$inputColumn = new UI_Datagrid_Col_Text('input', __('UI', 'name', 'field'));
+$datagrid->addCol($inputColumn);
 
 echo $datagrid->render();

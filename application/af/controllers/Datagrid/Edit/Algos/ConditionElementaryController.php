@@ -80,10 +80,10 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
         if (empty($inputRef)) {
             $this->setAddElementErrorMessage('input', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        /** @var $input AF_Model_Component_Field */
-        $input = AF_Model_Component_Field::loadByRef($inputRef, $af);
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
+            /** @var $input AF_Model_Component_Field */
+            $input = AF_Model_Component_Field::loadByRef($inputRef, $af);
             switch (get_class($input)) {
                 case 'AF_Model_Component_Numeric':
                     $algo = new Algo_Model_Condition_Elementary_Numeric();

@@ -86,11 +86,12 @@ class AF_PopulateTest extends AF_Populate
 
         // Interactions
         $condition_elementaire_interactions = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions', $champ_selection_simple_utilise_condition_elementaire_interaction);
-        $condition_elementaire_interactions_utilisee_action_setstate = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions', $champ_selection_simple_utilise_condition_elementaire_interaction);
-        $condition_elementaire_interactions_utilisee_action_setvalue = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions', $champ_selection_simple_utilise_condition_elementaire_interaction);
+        $condition_elementaire_interactions_utilisee_action_setstate = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions_utilisee_action_setstate', $champ_selection_simple_utilise_condition_elementaire_interaction);
+        $condition_elementaire_interactions_utilisee_action_setvalue = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions_utilisee_action_setvalue', $champ_selection_simple_utilise_condition_elementaire_interaction);
         $condition_composee_interactions = $this->createConditionExpression($aF_test, 'condition_composee_interactions', 'a&(b|c)&d');
         $this->createActionSetState($champ_numerique_test_cible_activation, AF_Model_Action::TYPE_ENABLE, $condition_elementaire_interactions_utilisee_action_setstate);
-        $this->createActionSetState($champ_numerique_test_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, $condition_elementaire_interactions_utilisee_action_setvalue);
+        $calcValueToBeSet = new Calc_Value(1234.56789, 5.9);
+        $this->createActionSetValue($champ_numerique_test_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, $calcValueToBeSet, $condition_elementaire_interactions_utilisee_action_setvalue);
 
         // Algorithmes
         $aF_test->getMainAlgo()->setExpression(':champ_numerique;');
