@@ -22,13 +22,10 @@ class Orga_PopulateTest extends Orga_Populate
 
 
         // Création d'une organisation.
-        // Param : label
         $organization = $this->createOrganization('Organisation avec données');
         $organization_vide = $this->createOrganization('Organisation vide');
 
         // Création des axes.
-        // Params : Organization, ref, label
-        // OptionalParams : Axis parent=null
         $axis_annee = $this->createAxis($organization, 'annee', 'Année');
         $axis_site = $this->createAxis($organization, 'site', 'Site');
         $axis_pays = $this->createAxis($organization, 'pays', 'Pays', $axis_site);
@@ -38,8 +35,6 @@ class Orga_PopulateTest extends Orga_Populate
         $axis_vide = $this->createAxis($organization, 'axe_vide', 'Axe vide');
 
         // Création des membres.
-        // Params : Axis, ref, label
-        // OptionalParams : [Member] parents=[]
         $member_annee_2012 = $this->createMember($axis_annee, '2012', '2012');
         $member_annee_2013 = $this->createMember($axis_annee, '2013', '2013');
         $member_zone_europe = $this->createMember($axis_zone, 'europe', 'Europe');
@@ -54,8 +49,6 @@ class Orga_PopulateTest extends Orga_Populate
         $member_categorie = $this->createMember($axis_categorie, 'energie', 'Énergie');
 
         // Création des granularités.
-        // Params : Organization, axes[Axis], navigable
-        // OptionalParams : orgaTab=false, aCL=true, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
         $granularityGlobal = $this->createGranularity($organization, [],                                                        true,  true,  true,  true,   true,  false, false, false);
         $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  true,  true,  false,  true,  false, false, false);
         $granularity_site = $this->createGranularity($organization, [$axis_site],                                               true,  false, true,  false,  true,  false, false, true );
@@ -74,10 +67,11 @@ class Orga_PopulateTest extends Orga_Populate
         $granularity_annee_site->setInputConfigGranularity($granularityGlobal); // Utile pour tester les ordres entre les granularités des onglets "Collectes" et "Saisies"
         $granularity_annee_site_categorie->setInputConfigGranularity($granularity_annee_categorie);
 
+
         $entityManager->flush();
 
+
         // Création des utilisateurs orga.
-        // Params : email
         $this->createUser('administrateur.organisation@toto.com');
         $this->createUser('administrateur.global@toto.com');
         $this->createUser('contributeur.global@toto.com');
@@ -94,11 +88,9 @@ class Orga_PopulateTest extends Orga_Populate
         $this->createUser('emmanuel.risler.pro@gmail.com');
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
-        // Params : email, Organization
         $this->addOrganizationAdministrator('admin', $organization);
         $this->addOrganizationAdministrator('administrateur.organisation@toto.com', $organization);
         // Ajout d'un role sur une cellule à un utilisateur existant.
-        // Params : email, Granularity, [Member]
 
         // La zone-marque pour laquelle les droits sont configurés est "Europe | Marque A".
         $this->addCellAdministrator('administrateur.zone-marque@toto.com', $granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a]);
@@ -112,6 +104,7 @@ class Orga_PopulateTest extends Orga_Populate
         $this->addCellAdministrator('administrateur.site@toto.com', $granularity_site, [$member_site_chambery]);
         $this->addCellContributor('contributeur.site@toto.com', $granularity_site, [$member_site_chambery]);
         $this->addCellObserver('observateur.site@toto.com', $granularity_site, [$member_site_chambery]);
+
 
         $entityManager->flush();
 

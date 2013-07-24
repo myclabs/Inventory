@@ -22,17 +22,11 @@ class Techno_PopulateTest extends Techno_Populate
         $entityManager = $entityManagers['default'];
 
 
-        // Création des catégories.
-        // Params : ref
-        // OptionalParams : Category parent=null
         $category_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
         $category_sous_categorie = $this->createCategory('Sous-catégorie', $category_contenant_sous_categorie);
         $category_contenant_famille = $this->createCategory('Catégorie contenant une famille');
         $category_vide = $this->createCategory('Catégorie vide');
 
-        // Création des familles (Coef ou Process).
-        // Params : Category, ref, label, refUnit, refBaseUnit
-        // OptionalParams : documentation=''
         // $family_1 = $this->createFamilyCoef($category_contenant_famille, 'ref1', 'Label 1', 'km', 'm', '');
 
         $family_combustion_combustible_masse = $this->createFamilyProcess($category_contenant_famille,
@@ -44,15 +38,14 @@ class Techno_PopulateTest extends Techno_Populate
         $family_vide_coefficients = $this->createFamilyCoef($category_contenant_famille,
             'famille_vide_coefficients', 'Famille vide de coefficients', 't', 'kg');
 
+
         $entityManager->flush();
+
 
         // Combustion de combustible, mesuré en unité de masse
         $this->createVerticalDimension($family_combustion_combustible_masse, 'combustible', ['charbon', 'gaz_naturel']);
         $this->createHorizontalDimension($family_combustion_combustible_masse, 'processus', ['amont_combustion', 'combustion']);
 
-        // Création des paramètres.
-        // Params : Family, refKeywordMembers[], value
-        // OptionalParams : uncertainty=0
         $this->createParameter($family_combustion_combustible_masse, ['charbon', 'amont_combustion'], 18);
         $this->createParameter($family_combustion_combustible_masse, ['charbon', 'combustion'], 25, 20);
 
@@ -63,6 +56,7 @@ class Techno_PopulateTest extends Techno_Populate
         // Famille vide de processus
 
         // Famille vide de coefficients
+
 
         $entityManager->flush();
 

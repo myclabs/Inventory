@@ -22,15 +22,10 @@ class AF_PopulateTest extends AF_Populate
 
 
         // Création des catégories.
-        // Params : ref
-        // OptionalParams : Category parent=null
         $category_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
         $category_sous_categorie = $this->createCategory('Sous-catégorie', $category_contenant_sous_categorie);
         $category_contenant_formulaire = $this->createCategory('Catégorie contenant un formulaire');
         $category_vide = $this->createCategory('Catégorie vide');
-
-        // Création des af.
-        // Params : Category, ref, label
 
         // Formulaire génériques, paramétrage commenté pour exemple
         // Composants
@@ -40,7 +35,6 @@ class AF_PopulateTest extends AF_Populate
         // Algos
         // $this->createFixedIndexForAlgoNumeric($aF_combustion->getAlgoByRef($numericInput->getRef()), 'general', 'ges', []);
         // $this->createAlgoNumericConstant($aF_combustion, 'refa1', 'Label 1', 10, 5, 'm');
-
 
         // Combustion de combustible, mesuré en unité de masse
         $aF_combustion = $this->createAF($category_contenant_formulaire, 'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse');
@@ -69,9 +63,6 @@ class AF_PopulateTest extends AF_Populate
         // Formulaire vide
         $aF_vide = $this->createAF($category_contenant_formulaire, 'formulaire_vide', 'Formulaire vide');
 
-        // Flush nécessaire pour l'appel des sous-formulaires ???
-        // $entityManager->flush();
-
         // Formulaire de test
         $aF_test = $this->createAF($category_contenant_formulaire, 'formulaire_test', 'Formulaire test');
         // Composants
@@ -99,46 +90,10 @@ class AF_PopulateTest extends AF_Populate
         $this->createAlgoConditionExpression($aF_test, 'condition_composee', 'condition_elementaire|condition_inexistante');
         $this->createAlgoConditionElementary($aF_test, $champ_selection_simple_utilise_condition_elementaire_traitement, 'condition_elementaire');
 
-        // Création des composants.
-        // Params : AF, Group, ref, label
-        //  + createGroup : -
-        //  + createSubAF(Repeated) : AF calledAF
-        //  + createShortTextInput : -
-        //  + createLongTextInput : -
-        //  + createNumericInput : refUnit
-        //  + createSelectInput List|Radio|Multi|Boxes : [refOption => labelOption]
-        //  + createBooleanInput : -
-        // OptionalParams :
-        //  + createGroup : foldaway=true
-        //  + createSubAF : foldaway=true
-        //  + createSubAFRepeated : foldaway=true, minimumRepetition=0, freeLabel=false
-        //  + createShortTextInput : required=true, enabled=true
-        //  + createLongTextInput : required=true, enabled=true
-        //  + createNumericInput : defaultValue=null, defaultUncertainty=null, defaultReminder=true, required=true, enabled=true
-        //  + createSelectInput List|Radio|Multi|Boxes : required=true, enabled=true
-        //  + createBooleanInput : defaultValue=true
-        //  help=null, visible=true
-
-
-        // Création des Algos et indexation.
-        //  Tip : Pour récupérer un algo à partir de l'AF : $aF->getAlgoByRef();
-        //   Donc, Pour récupérer l'algo d'un champs NumericInput : $aF->getAlgoByRef($input->getRef());
-        // Param : AF
-        //  + createAlgoNumericExpression : ref, label, expression, refUnit
-        //  + createAlgoNumericExpression : ref, label, value, uncertainty, refUnit
-        //  + createFixedIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => refMember]
-        //  + createAlgoIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => Selection_TextKey algo]
-        //  + createAlgoNumericParameter : ref, label, refFamily
-        //  + createFixedCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => refMemberKeyword]
-        //  + createAlgoCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => Selection_TextKey algo]
-        //  + createAlgoSelectTextkeyExpression : ref, expression
-        //  + createAlgoConditionElementary : Component input, ref
-        //  + createAlgoConditionExpression : ref, expression
-        // OptionalParams : -
-
 //        $this->createAlgoSelectTextkeyExpression($aF_combustion_combustible_unite_masse, 'refa2', 'expression');
 //        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3');
 //        $this->createAlgoConditionExpression($aF_combustion_combustible_unite_masse, 'refa4', 'expression');
+
 
         $entityManager->flush();
 

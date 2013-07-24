@@ -23,7 +23,29 @@ class Techno_Populate extends Core_Script_Action
         $entityManager = $entityManagers['default'];
 
 
+        // Création des catégories.
+        //  + createCategory : -
+        // Params : ref
+        // OptionalParams : Category parent=null
 
+        // Création des familles (Coef ou Process).
+        //  + createFamily : -
+        // Params : Category, ref, label, refUnit, refBaseUnit
+        // OptionalParams : documentation=''
+
+
+        $entityManager->flush();
+
+
+        // Création des dimensions.
+        //  + createVerticalDimension : -
+        //  + createHorizontalDimension : -
+        // Params: Family, refKeyword, refKeywordMembers[]
+
+        // Création des paramètres.
+        //  + createParameter : -
+        // Params : Family, refKeywordMembers[], value
+        // OptionalParams : uncertainty=0
 
 
         $entityManager->flush();
