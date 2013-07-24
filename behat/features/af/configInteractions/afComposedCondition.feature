@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF composed condition for interaction feature
+Feature: AF composed condition for interaction feature
 
   Background:
     Given I am logged in
@@ -13,7 +13,7 @@ Feature: AF composed condition for interaction feature
     Then I should see the "conditionsExpression" datagrid
   # Popup d'ajout
     When I click "Ajouter"
-    Then I should see the popup "Ajout d'une condition élémentaire"
+    Then I should see the popup "Ajout d'une condition composée"
   # Ajout, sans rien préciser
     When I click "Valider"
     Then the field "conditionsExpression_ref_addForm" should have error: "Merci de renseigner ce champ."
@@ -22,7 +22,7 @@ Feature: AF composed condition for interaction feature
     And I click "Valider"
     Then the field "conditionsExpression_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
     # Ajout, identifiant déjà utilisé, expression vide
-    When I fill in "conditionsExpression_ref_addForm" with "test"
+    When I fill in "conditionsExpression_ref_addForm" with "condition_composee_interactions"
     And I click "Valider"
     Then the field "conditionsExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
   # Ajout, identifiant déjà utilisé, expression incorrecte
@@ -32,23 +32,60 @@ Feature: AF composed condition for interaction feature
   # Ajout, identifiant déjà utilisé, expression correcte
     When I fill in "conditionsExpression_expression_addForm" with "a&(b|c)&d"
     And I click "Valider"
-    # TODO…
+    Then the field "conditionsExpression_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Ajout, saisie correcte
+    When I fill in "conditionsExpression_ref_addForm" with "aaa"
+    And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 1 of the "conditionsExpression" datagrid should contain:
+  # Conditions composées affichées dans l'ordre d'ajout
+    And the row 2 of the "conditionsExpression" datagrid should contain:
       | ref  |
-      | test |
-    When I click "Expression" in the row 1 of the "conditionsExpression" datagrid
+      | aaa |
+    When I click "Expression" in the row 2 of the "conditionsExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "a & (b | c) & d"
 
   @javascript
-  Scenario: Edition of an elementary condition for interaction scenario
+  Scenario: Edition of an composed condition for interaction scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Interactions"
     And I open collapse "Conditions composées"
     Then I should see the "conditionsExpression" datagrid
+  # Vérification contenu initial
+    And the row 1 of the "conditionsExpression" datagrid should contain:
+      | ref                             |
+      | condition_composee_interactions |
+    When I click "Expression" in the row 1 of the "conditionsExpression" datagrid
+    Then I should see the popup "Expression"
+    And I should see "a & (b | c) & d"
+    # Fermeture du popup
+    When I click "×"
+  # Modification de l'identifiant, identifiant vide
+    When I set "" for column "ref" of row 1 of the "conditionsExpression" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant, identifiant avec caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "conditionsExpression" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification de l'identifiant, identifiant déjà utilisé
+    When I set "condition_elementaire_interactions" for column "ref" of row 1 of the "conditionsExpression" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Modification de l'identifiant, saisie correcte
+    When I set "condition_composee_interactions_modifiee" for column "ref" of row 1 of the "conditionsExpression" datagrid with a confirmation message
+    Then the row 1 of the "conditionsExpression" datagrid should contain:
+      | ref                                      |
+      | condition_composee_interactions_modifiee |
+  # Modification de l'expression, saisie vide
+    When I set "" for column "expression" of row 1 of the "conditionsExpression" datagrid
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression « »."
+  # Modification de l'expression, saisie invalide
+    When I set "a|(b|(c|d)" for column "expression" of row 1 of the "conditionsExpression" datagrid
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
+  # Modification de l'expression, saisie correcte
+    When I set "a&b" for column "expression" of row 1 of the "algoNumericExpression" datagrid with a confirmation message
+    And I click "Expression" in the row 1 of the "conditionsExpression" datagrid
+    Then I should see the popup "Expression"
+    And I should see "a & b"
 
   @javascript
   Scenario: Deletion of an elementary condition for interaction scenario
@@ -57,3 +94,10 @@ Feature: AF composed condition for interaction feature
     And I open tab "Interactions"
     And I open collapse "Conditions composées"
     Then I should see the "conditionsExpression" datagrid
+    And the "conditionsExpression" datagrid should contain 1 row
+  # Suppression sans obstacle
+    When I click "Supprimer" in the row 1 of the "conditionsExpression" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
+    And the "conditionsExpression" datagrid should contain 0 row

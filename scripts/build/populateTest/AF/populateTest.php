@@ -71,16 +71,25 @@ class AF_PopulateTest extends AF_Populate
         $groupe_test_contenant_champ = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_contenant_champ', 'Groupe contenant un champ');
         $groupe_test_contenant_sous_groupe = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_contenant_sous_groupe', 'Groupe contenant un sous-groupe');
         $sous_groupe_test = $this->createGroup($aF_test, $groupe_test_contenant_sous_groupe, 'sous_groupe', 'Sous-groupe');
+
         $sous_formulaire_non_repete_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_non_repete', 'Sous-formulaire non répété', $aF_d_g);
+
         $sous_formulaire_repete_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_repete', 'Sous-formulaire répété', $aF_combustion);
+
         $champ_numerique_test = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique', 'Champ numérique', 'kg_co2e.m3^-1', '1000.5', '10');
         $champ_numerique_test_cible_activation = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique_cible_activation', 'Champ numérique cible activation', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
         $champ_numerique_test_cible_setvalue = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique_cible_setvalue', 'Champ numérique cible setvalue', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
+
         $champ_selection_simple_test = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple', 'Champ sélection simple', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
         $champ_selection_simple_utilise_condition_elementaire_interaction = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple_utilise_condition_elementaire_interaction', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Interactions"', ['option_1' => 'Option 1']);
         $champ_selection_simple_utilise_condition_elementaire_traitement = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple_utilise_condition_elementaire_traitement', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Traitement"', ['option_1' => 'Option 1']);
+        $champ_selection_simple_cible_setvalue = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple_cible_setvalue', 'Champ sélection simple cible d\'une action "setValue"', ['option_1' => 'Option 1']);
+
         $champ_selection_multiple_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'champ_selection_multiple', 'Champ sélection multiple', ['option_1' => 'Option 1']);
+
         $champ_booleen_test = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'champ_booleen', 'Champ booléen');
+        $champ_booleen_cible_setvalue = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'champ_booleen_cible_setvalue', 'Champ booléen cible d\'une action "setValue"');
+
         $champ_texte_court_test = $this->createShortTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_court', 'Champ texte court');
         $champ_texte_long_test = $this->createLongTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_long', 'Champ texte long');
 
@@ -88,10 +97,15 @@ class AF_PopulateTest extends AF_Populate
         $condition_elementaire_interactions = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions', $champ_selection_simple_utilise_condition_elementaire_interaction);
         $condition_elementaire_interactions_utilisee_action_setstate = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions_utilisee_action_setstate', $champ_selection_simple_utilise_condition_elementaire_interaction);
         $condition_elementaire_interactions_utilisee_action_setvalue = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions_utilisee_action_setvalue', $champ_selection_simple_utilise_condition_elementaire_interaction);
+
         $condition_composee_interactions = $this->createConditionExpression($aF_test, 'condition_composee_interactions', 'a&(b|c)&d');
+
         $this->createActionSetState($champ_numerique_test_cible_activation, AF_Model_Action::TYPE_ENABLE, $condition_elementaire_interactions_utilisee_action_setstate);
+
         $calcValueToBeSet = new Calc_Value(1234.56789, 5.9);
         $this->createActionSetValue($champ_numerique_test_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, $calcValueToBeSet, $condition_elementaire_interactions_utilisee_action_setvalue);
+        $this->createActionSetValue($champ_selection_simple_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, null);
+        $this->createActionSetValue($champ_booleen_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, true, $condition_elementaire_interactions_utilisee_action_setvalue);
 
         // Algorithmes
         $aF_test->getMainAlgo()->setExpression(':champ_numerique;');
