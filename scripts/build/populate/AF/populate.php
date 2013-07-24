@@ -72,7 +72,7 @@ class AF_Populate extends Core_Script_Action
         //  [ TYPE_DISABLE | TYPE_ENABLE | TYPE_HIDE | TYPE_SHOW ] et [ TYPE_SETVALUE | TYPE_SETALGOVALUE]
         // Param: Component component
         //  + createActionSetState : state
-        //  + createActionSetValue : type
+        //  + createActionSetValue : type, value
         // OptionalParams : Condition condition
 
 
@@ -646,30 +646,33 @@ class AF_Populate extends Core_Script_Action
     /**
      * @param AF_Model_Component $component
      * @param string $type TYPE_SETVALUE|TYPE_SETALGOVALUE
-     * @param Algo_Model_Algo $algo
+     * @param mixed $value
      * @param AF_Model_Condition $condition
      * @return AF_Model_Action
      * @throws Core_Exception
      */
-    protected function createActionSetValue(AF_Model_Component $component, $type, Algo_Model_Algo $algo,
+    protected function createActionSetValue(AF_Model_Component $component, $type, $value,
         AF_Model_Condition $condition=null)
     {
         if ($type == AF_Model_Action::TYPE_SETVALUE) {
             switch (get_class($component)) {
                 case 'AF_Model_Component_Numeric':
                     $action = new AF_Model_Action_SetValue_Numeric();
+                    $action->setValue($value);
                     break;
                 case 'AF_Model_Component_Checkbox':
                     $action = new AF_Model_Action_SetValue_Checkbox();
+                    $action->setChecked($value);
                     break;
                 case 'AF_Model_Component_Select_Single':
                     $action = new AF_Model_Action_SetValue_Select_Single();
+                    $action->setOption($value);
                     break;
             }
         } else if ($type == AF_Model_Action::TYPE_SETALGOVALUE) {
             $action = new AF_Model_Action_SetAlgoValue();
+            $action->setAlgo($value);
         }
-        $action->setAlgo($algo);
         return $this->createAction($action, $component, $condition);
     }
 
