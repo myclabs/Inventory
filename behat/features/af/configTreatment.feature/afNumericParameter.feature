@@ -1,5 +1,5 @@
 @dbFull
-Feature: Algo numeric parameter feature
+Feature: AF numeric parameter algo feature
 
   Background:
     Given I am logged in
@@ -94,8 +94,8 @@ Feature: Algo numeric parameter feature
       | combustible | charbon |
     And I should see the "coordinatesAlgo" datagrid
     And the row 1 of the "coordinatesAlgo" datagrid should contain:
-      | dimension | algo                 |
-      | processus | expression_selection |
+      | dimension | algo                                      |
+      | processus | expression_selection_coordonnee_parametre |
   # Modification membre coordonnée fixée
     When I set "gaz naturel" for column "member" of row 1 of the "coordinatesFixed" datagrid
   # On ferme le popup pour aller fermer le message en arrière-plan
@@ -152,7 +152,7 @@ Feature: Algo numeric parameter feature
     Then the field "coordinatesAlgo_dimension_addForm" should have error: "Merci de renseigner ce champ."
     And the field "coordinatesAlgo_algo_addForm" should have error: "Merci de renseigner ce champ."
     When I select "combustible" from "coordinatesAlgo_dimension_addForm"
-    And I select "expression_selection" from "coordinatesAlgo_algo_addForm"
+    And I select "expression_selection_coordonnee_parametre" from "coordinatesAlgo_algo_addForm"
     And I click "Valider"
   # On ferme le popup pour aller fermer le message en arrière-plan
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
@@ -160,8 +160,8 @@ Feature: Algo numeric parameter feature
     When I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
     Then the "coordinatesAlgo" datagrid should contain 1 row
     Then the row 1 of the "coordinatesAlgo" datagrid should contain:
-      | dimension   | member               |
-      | combustible | expression_selection |
+      | dimension   | member                                    |
+      | combustible | expression_selection_coordonnee_parametre |
 
   @javascript
   Scenario: Influence of a change of family on coordinates of an algo numeric parameter scenario

@@ -1,5 +1,5 @@
 @dbFull
-Feature: Elementary condition for interaction feature
+Feature: AF elementary condition for interaction feature
 
   Background:
     Given I am logged in

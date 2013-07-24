@@ -1,5 +1,5 @@
 @dbFull
-Feature: Numeric field feature
+Feature: AF numeric field feature
 
   Background:
     Given I am logged in

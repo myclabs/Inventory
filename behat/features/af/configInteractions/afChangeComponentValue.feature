@@ -1,5 +1,5 @@
 @dbFull
-Feature: Change component value interaction feature
+Feature: AF change component value interaction feature
 
   Background:
     Given I am logged in

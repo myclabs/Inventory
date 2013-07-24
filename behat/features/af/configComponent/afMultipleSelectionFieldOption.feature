@@ -1,5 +1,5 @@
 @dbFull
-Feature: Multiple selection field option feature
+Feature: AF multiple selection field option feature
 
   Background:
     Given I am logged in
