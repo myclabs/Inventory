@@ -31,7 +31,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
                 $data['label'] = $algo->getLabel();
-                $data['unit'] = $algo->getUnit()->getRef();
+                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
                 $data['value'] = $this->cellNumber($algo->getUnitValue()->getDigitalValue());
                 $data['uncertainty'] = $this->cellNumber($algo->getUnitValue()->getRelativeUncertainty());
                 $contextIndicator = $algo->getContextIndicator();
@@ -164,7 +164,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                         $algo->getUnitValue()->getDigitalValue(),
                         $algo->getUnitValue()->getRelativeUncertainty()
                     ));
-                $this->data = $algo->getUnit()->getRef();
+                $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
                 break;
             case 'value':
                 if (empty($newValue)) {
