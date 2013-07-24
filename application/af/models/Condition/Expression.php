@@ -25,20 +25,15 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
      */
     protected $expression;
 
-    /**
-     * @var Expression
-     */
-    protected $tecExpression;
-
 
     /**
      * {@inheritdoc}
      */
     public function getUICondition(AF_GenerationHelper $generationHelper)
     {
-        $tree = $this->getTECExpression();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
         // On construit l'expression en partant de la racine
-        $uiCondition = $this->buildUICondition($tree->getRootNode(), $generationHelper);
+        $uiCondition = $this->buildUICondition($tecExpression->getRootNode(), $generationHelper);
         return $uiCondition;
     }
 
@@ -47,7 +42,8 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
      */
     public function getExpression()
     {
-        return $this->tecExpression->getTreeAsString();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+        return $tecExpression->getAsString();
     }
 
     /**
@@ -60,37 +56,6 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;
-        $this->tecExpression = $tecExpression;
-    }
-
-    /**
-     * Get a tree created from the expression
-     * @return Expression
-     */
-    public function getTECExpression()
-    {
-        return $this->tecExpression;
-    }
-
-    /**
-     * Retourne toutes les feuilles (conditions élémentaires) de l'expression
-     * @param Composite|null $tree Sous-arbre de l'expression, si null alors l'expression entière
-     * @return AF_Model_Condition_Elementary[]
-     */
-    public function getElementary(Composite $tree = null)
-    {
-        if ($tree === null) {
-            $tree = $this->getTECExpression()->getRootNode();
-        }
-        $elementaryList = [];
-        foreach ($tree->getChildren() as $child) {
-            if ($child instanceof Leaf) {
-                $elementaryList[] = AF_Model_Condition_Elementary::loadByRefAndAF($child->getName(), $this->af);
-            } elseif ($child instanceof Composite) {
-                $elementaryList += $this->getElementary($child);
-            }
-        }
-        return $elementaryList;
     }
 
     /**
@@ -102,7 +67,8 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
         $errors = array();
         // On vérifie que l'expression est sémantiquement correcte.
         try {
-            $this->tecExpression->check();
+            $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+            $tecExpression->check();
         } catch (InvalidExpressionException $e) {
             foreach ($e->getErrors() as $message) {
                 $errors[] = new AF_ConfigError($message, true, $this->getAf());

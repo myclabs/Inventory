@@ -7,6 +7,7 @@
  * @subpackage Condition
  */
 
+use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 
 /**
@@ -23,11 +24,6 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
     protected $expression;
 
     /**
-     * @var Expression
-     */
-    protected $tecExpression;
-
-    /**
      * Exécution de l'algorithme
      * @param Algo_Model_InputSet $inputSet
      * @return bool
@@ -35,7 +31,11 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
     public function execute(Algo_Model_InputSet $inputSet)
     {
         $this->inputSet = $inputSet;
-        $executionCalc = new Exec_Execution_Condition($this->tecExpression);
+
+        // Construit l'arbre
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+
+        $executionCalc = new Exec_Execution_Condition($tecExpression);
         return $executionCalc->executeExpression($this);
     }
 
@@ -61,7 +61,8 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
                                              true);
             return $errors;
         }
-        $executionSelect = new Exec_Execution_Condition($this->tecExpression);
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+        $executionSelect = new Exec_Execution_Condition($tecExpression);
         return array_merge($errors, $executionSelect->getErrors($this));
     }
 
@@ -102,7 +103,8 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
      */
     public function getExpression()
     {
-        return $this->tecExpression->getTreeAsString();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+        return $tecExpression->getAsString();
     }
 
     /**
@@ -115,7 +117,6 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;
-        $this->tecExpression = $tecExpression;
     }
 
 }

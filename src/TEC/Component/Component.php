@@ -119,4 +119,12 @@ abstract class Component
         return $this->modifier;
     }
 
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
 }

@@ -1,13 +1,15 @@
 <?php
 /**
- * @author  hmatthieu.napoli
+ * @author  matthieu.napoli
  * @author  hugo.charbonnier
  * @author  yoann.croizer
  * @package Algo
  */
+
+use TEC\Exception\InvalidExpressionException;
+use TEC\Expression;
 use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
-use TEC\Expression;
 
 /**
  * @package    Algo
@@ -29,11 +31,6 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
     protected $expression;
 
     /**
-     * @var Expression
-     */
-    protected $tecExpression;
-
-    /**
      * Exécution de l'algorithme
      * @param Algo_Model_InputSet $inputSet
      * @return Calc_UnitValue
@@ -41,7 +38,11 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
     public function execute(Algo_Model_InputSet $inputSet)
     {
         $this->inputSet = $inputSet;
-        $calc = new Exec_Execution_Calc($this->tecExpression);
+
+        // Construit l'arbre
+        $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
+
+        $calc = new Exec_Execution_Calc($tecExpression);
         $calc->setCalculType(Exec_Execution_Calc::CALC_UNITVALUE);
         /** @var $result Calc_UnitValue */
         $result = $calc->executeExpression($this);
@@ -95,7 +96,8 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
         }
 
         // Vérifie chaque composant de l'expression
-        $calc = new Exec_Execution_Calc($this->tecExpression);
+        $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
+        $calc = new Exec_Execution_Calc($tecExpression);
         $errors = array_merge($errors, $calc->getErrors($this));
 
         // Vérifie la compatibilité des unités
@@ -181,7 +183,8 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
      */
     public function getExpression()
     {
-        return $this->tecExpression->getTreeAsString();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
+        return $tecExpression->getAsString();
     }
 
     /**
@@ -194,7 +197,6 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;
-        $this->tecExpression = $tecExpression;
     }
 
     /**
@@ -202,7 +204,8 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
      */
     public function getSubAlgos()
     {
-        $leafs = $this->tecExpression->getRootNode()->getAllLeafsRecursively();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
+        $leafs = $tecExpression->getRootNode()->getAllLeafsRecursively();
         $subAlgos = [];
         foreach ($leafs as $leaf) {
             $subAlgoRef = $leaf->getName();

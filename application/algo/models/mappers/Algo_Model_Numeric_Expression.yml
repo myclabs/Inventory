@@ -10,13 +10,3 @@ Algo_Model_Numeric_Expression:
     expression:
       type: text
       nullable: false
-
-  oneToOne:
-    tecExpression:
-      targetEntity: TEC\Expression
-      joinColumn:
-        name: idExpression
-        referencedColumnName: id
-        nullable: false
-      cascade: [ all ]
-      orphanRemoval: true

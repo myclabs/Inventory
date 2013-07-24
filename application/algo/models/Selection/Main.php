@@ -6,6 +6,7 @@
  * @package Algo
  */
 
+use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 
 /**
@@ -20,11 +21,6 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
     protected $expression;
 
     /**
-     * @var Expression|null
-     */
-    protected $tecExpression;
-
-    /**
      * {@inheritdoc}
      */
     public function execute(Algo_Model_InputSet $inputSet)
@@ -33,7 +29,11 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
         if (!$this->expression) {
             return [];
         }
-        $executionSelect = new Exec_Execution_Select($this->tecExpression);
+
+        // Construit l'arbre
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+
+        $executionSelect = new Exec_Execution_Select($tecExpression);
         // on doit avoir en sortie un tableau de Algo_Model_Output
         return $executionSelect->executeExpression($this);
     }
@@ -50,7 +50,8 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
             return [];
         }
 
-        $executionSelect = new Exec_Execution_Select($this->tecExpression);
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+        $executionSelect = new Exec_Execution_Select($tecExpression);
         // On doit avoir en sortie un tableau des refs des algos numériques
         $refs = $executionSelect->getSelectedLeafs($this);
 
@@ -84,7 +85,7 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
         $errors = parent::checkConfig();
 
         // Vérifie que l'expression n'est pas vide
-        if (!$this->tecExpression) {
+        if ($this->expression == null) {
             $errors[] = new Algo_ConfigError(__('Algo', 'configControl', 'emptyMainAlgorithmExpression'), false);
             return $errors;
         }
@@ -106,7 +107,8 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
         }
 
         // Valide l'expression
-        $executionSelect = new Exec_Execution_Select($this->tecExpression);
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+        $executionSelect = new Exec_Execution_Select($tecExpression);
         return array_merge($errors, $executionSelect->getErrors($this));
     }
 
@@ -220,7 +222,8 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
      */
     public function getExpression()
     {
-        return $this->expression;
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+        return $tecExpression->getAsString();
     }
 
     /**
@@ -231,13 +234,11 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
     {
         if ($expression == null) {
             $this->expression = null;
-            $this->tecExpression = null;
         } else {
             $tecExpression = new Expression($expression, Expression::TYPE_SELECT);
             $tecExpression->check();
             // Expression OK
             $this->expression = (string) $expression;
-            $this->tecExpression = $tecExpression;
         }
     }
 
@@ -250,7 +251,8 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
         if (!$this->expression) {
             return [];
         }
-        $leafs = $this->tecExpression->getRootNode()->getAllLeafsRecursively();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+        $leafs = $tecExpression->getRootNode()->getAllLeafsRecursively();
         $subAlgos = [];
         foreach ($leafs as $leaf) {
             $subAlgoRef = $leaf->getName();

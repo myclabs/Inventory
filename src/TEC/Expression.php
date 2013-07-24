@@ -192,7 +192,7 @@ class Expression
     /**
      * Méthode qui permet de traiter l'arbre pour ensuite l'afficher sous la forme d'un graph.
      *
-     * @return array $expression
+     * @return Composite $expression
      */
     public function getRootNode()
     {

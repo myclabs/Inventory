@@ -6,6 +6,7 @@
  * @package Algo
  */
 
+use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 
 /**
@@ -22,17 +23,16 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
     protected $expression;
 
     /**
-     * @var Expression
-     */
-    protected $tecExpression;
-
-    /**
      * {@inheritdoc}
      */
     public function execute(Algo_Model_InputSet $inputSet)
     {
         $this->inputSet = $inputSet;
-        $executionSelect = new Exec_Execution_Select($this->tecExpression);
+
+        // Construit l'arbre
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+
+        $executionSelect = new Exec_Execution_Select($tecExpression);
         return $executionSelect->executeExpression($this);
     }
 
@@ -57,7 +57,9 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
     public function checkConfig()
     {
         $errors = parent::checkConfig();
-        $executionSelect = new Exec_Execution_Select($this->tecExpression);
+
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+        $executionSelect = new Exec_Execution_Select($tecExpression);
 
         return array_merge($errors, $executionSelect->getErrors($this));
     }
@@ -91,7 +93,8 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
      */
     public function getExpression()
     {
-        return $this->tecExpression->getTreeAsString();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+        return $tecExpression->getAsString();
     }
 
     /**
@@ -104,7 +107,6 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;
-        $this->tecExpression = $tecExpression;
     }
 
 }
