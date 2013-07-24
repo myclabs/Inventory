@@ -130,7 +130,7 @@ Feature: AF numeric parameter algo feature
     When I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
     And the "coordinatesAlgo" datagrid should contain 0 row
   # Ajout coordonnée fixée
-    When I click element "#.btn:contains('Ajouter')"
+    When I click element ".btn:contains('Ajouter')[data-target='#coordinatesFixed_addPanel']"
     Then I should see the popup "Ajout d'une coordonnée fixée"
     When I click "Valider"
     Then the field "coordinatesFixed_dimension_addForm" should have error: "Merci de renseigner ce champ."
@@ -146,7 +146,7 @@ Feature: AF numeric parameter algo feature
       | dimension | member |
       | processus |        |
   # Ajout coordonnée algo
-    When I click element "#.btn:contains('Ajouter')"
+    When I click element ".btn:contains('Ajouter')[data-target='#coordinatesAlgo_addPanel']"
     Then I should see the popup "Ajout d'une coordonnée déterminée par algorithme"
     When I click "Valider"
     Then the field "coordinatesAlgo_dimension_addForm" should have error: "Merci de renseigner ce champ."
