@@ -546,22 +546,4 @@ class AF_Model_AF extends Core_Model_Entity
         ];
     }
 
-    public function __clone()
-    {
-        // Nécessaire pour Doctrine
-        if ($this->id) {
-            $this->id = null;
-            // Retire de la catégorie
-            $this->category = null;
-
-            // Copie les composants
-            $this->setRootGroup(clone $this->rootGroup);
-
-            // Copie les algos
-            $mainAlgoRef = $this->mainAlgo->getRef();
-            $this->algoSet = clone $this->algoSet;
-            $this->mainAlgo = $this->algoSet->getAlgoByRef($mainAlgoRef);
-        }
-    }
-
 }

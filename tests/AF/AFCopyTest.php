@@ -31,12 +31,14 @@ class AFCopyTest extends Core_Test_TestCase
 
         $this->entityManager->flush();
 
-        $newAF = clone $oldAF;
+        $afCopyService = new AF_Service_AFCopyService();
+        /** @var AF_Model_AF $newAF */
+        $newAF = $afCopyService->copyAF($oldAF, 'new_ref');
 
         $this->assertInstanceOf(get_class($oldAF), $newAF);
 
         $this->assertNull($newAF->getId());
-        $this->assertEquals($oldAF->getRef(), $newAF->getRef());
+        $this->assertEquals('new_ref', $newAF->getRef());
         $this->assertEquals($oldAF->getLabel(), $newAF->getLabel());
         $this->assertEquals($oldAF->getDocumentation(), $newAF->getDocumentation());
         $this->assertNull($newAF->getCategory());

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "85be7f1f9ce18522f92a2e431db55008",
+    "hash": "d3e768a79c2b98474033b2bfb7520175",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -642,12 +642,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f"
+                "reference": "864940f1126895df5ff0a58911aeb9d34156bbd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/2816aacfc9d461a54b563df9ecc6ba25e937e91f",
-                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/864940f1126895df5ff0a58911aeb9d34156bbd5",
+                "reference": "864940f1126895df5ff0a58911aeb9d34156bbd5",
                 "shasum": ""
             },
             "require": {
@@ -677,7 +677,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-07-12 13:14:27"
+            "time": "2013-07-19 21:35:47"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -761,6 +761,48 @@
                 "comparator"
             ],
             "time": "2013-07-10 09:01:00"
+        },
+        {
+            "name": "myclabs/deep-copy",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/DeepCopy.git",
+                "reference": "9334441d54be89f4cb449a3112412917b5a1e03e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/9334441d54be89f4cb449a3112412917b5a1e03e",
+                "reference": "9334441d54be89f4cb449a3112412917b5a1e03e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "doctrine/collections": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "DeepCopy": "src/",
+                    "DeepCopyTest": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Create deep copies (clones) of your objects",
+            "homepage": "https://github.com/myclabs/DeepCopy",
+            "keywords": [
+                "clone",
+                "copy",
+                "duplicate",
+                "object",
+                "object graph"
+            ],
+            "time": "2013-07-23 10:50:55"
         },
         {
             "name": "myclabs/php-enum",
@@ -1807,12 +1849,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaConsole.git",
-                "reference": "f7892612ca37e972d406ae1006a1686979fc8e05"
+                "reference": "823606a20a35462c0545f8d2c347f4b8f7da22a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/f7892612ca37e972d406ae1006a1686979fc8e05",
-                "reference": "f7892612ca37e972d406ae1006a1686979fc8e05",
+                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/823606a20a35462c0545f8d2c347f4b8f7da22a8",
+                "reference": "823606a20a35462c0545f8d2c347f4b8f7da22a8",
                 "shasum": ""
             },
             "require": {
@@ -1830,7 +1872,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-19 08:17:05"
+            "time": "2013-07-19 21:51:34"
         },
         {
             "name": "mnapoli/metamodel",
@@ -1866,16 +1908,16 @@
         },
         {
             "name": "mnapoli/number-two",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.1.0"
+                "reference": "0.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.1.0",
-                "reference": "0.1.0",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.1.1",
+                "reference": "0.1.1",
                 "shasum": ""
             },
             "type": "library",
@@ -1886,7 +1928,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-16 17:37:26"
+            "time": "2013-07-19 12:04:15"
         },
         {
             "name": "phpoption/phpoption",
@@ -2315,6 +2357,7 @@
         "mridgway/zendx_doctrine2": 20,
         "dompdf/dompdf": 20,
         "mnapoli/php-di": 20,
+        "myclabs/deep-copy": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": {

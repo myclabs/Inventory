@@ -225,19 +225,4 @@ class AF_Model_Component_Group extends AF_Model_Component
         $this->foldaway = (int) $foldaway;
     }
 
-    public function __clone()
-    {
-        // Nécessaire pour Doctrine
-        if ($this->id) {
-            parent::__clone();
-
-            // Copie les sous-composants
-            $this->subComponents = $this->subComponents->map(
-                function (AF_Model_Component $component) {
-                    return clone $component;
-                }
-            );
-        }
-    }
-
 }

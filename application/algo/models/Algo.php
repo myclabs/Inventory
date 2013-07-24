@@ -108,12 +108,4 @@ abstract class Algo_Model_Algo extends Core_Model_Entity
         return self::getEntityRepository()->loadBy(['set' => $algoSet, 'ref' => $ref]);
     }
 
-    public function __clone()
-    {
-        // Nécessaire pour Doctrine
-        if ($this->id) {
-            $this->id = null;
-        }
-    }
-
 }
