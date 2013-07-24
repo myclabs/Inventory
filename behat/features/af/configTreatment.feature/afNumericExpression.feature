@@ -25,14 +25,12 @@ Feature: AF algo numeric expression feature
   # Ajout, identifiant déjà utilisé, expression vide
     When I fill in "algoNumericExpression_ref_addForm" with "champ_numerique"
     And I click "Valider"
-    # Then the field "algoNumericExpression_ref_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
-  # Then the field "algoNumericExpression_ref_addForm" should have error: "Il manque un opérateur dans l'expression « »."
+    Then the field "algoNumericExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
     # TODO …
   # Ajout, identifiant déjà utilisé, expression non vide mais invalide
     When I fill in "algoNumericExpression_expression_addForm" with "a+(b+(c+d)"
     And I click "Valider"
-    # Then the field "algoNumericExpression_ref_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
-    # Then the field "algoNumericExpression_ref_addForm" should have error: "Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
+    Then the field "algoNumericExpression_expression_addForm" should have error: "Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
   # TODO …
   # Ajout, identifiant déjà utilisé, expression correcte, unité vide
     When I fill in "algoNumericExpression_expression_addForm" with "a+b"
@@ -71,9 +69,8 @@ Feature: AF algo numeric expression feature
     Then I should see the "algoNumericExpression" datagrid
   # Affichage contenu initial
     And the row 1 of the "algoNumericExpression" datagrid should contain:
-      | label                | ref                  | unit   |
-      | Expression numérique | expression_numerique | t_co2e |
-    # TODO : t équ. CO2
+      | label                | ref                  | unit       |
+      | Expression numérique | expression_numerique | t équ. CO2 |
     When I click "Expression" in the row 1 of the "algoNumericExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "champ_numerique*parametre"
