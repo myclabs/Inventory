@@ -25,6 +25,7 @@ $categoryColumn->list = [];
 foreach ($categories as $category) {
     $categoryColumn->list[$category->getId()] = $category->getLabel();
 }
+$categoryColumn->withEmptyElement = false;
 $datagrid->addCol($categoryColumn);
 
 $labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));

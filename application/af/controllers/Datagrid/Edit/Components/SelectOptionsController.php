@@ -85,7 +85,13 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
 
             $option->save();
             $selectField->save();
-            $this->entityManager->flush();
+            try {
+                $this->entityManager->flush();
+            } catch (Core_ORM_DuplicateEntryException $e) {
+                $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
+                $this->send();
+                return;
+            }
 
             $this->message = __('UI', 'message', 'added');
         }
@@ -154,7 +160,11 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
                 break;
         }
         $option->save();
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }

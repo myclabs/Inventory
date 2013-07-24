@@ -120,8 +120,9 @@ JS;
                         // Attend la fin du chargement
                         $selectLoading = "$('$popupSelector select option:contains(\"Chargement\")').length == 0";
                         $this->getSession()->wait(5000, "($selectLoading)");
+                        /** @var NodeElement $inputNode */
                         $inputNode = current($inputNodes);
-                        $inputNode->setValue($content);
+                        $inputNode->selectOption($content, false);
                     } else {
                         throw new \Exception("Unable to set cell value in datagrid");
                     }
@@ -164,7 +165,6 @@ JS;
     public abstract function waitForPageToFinishLoading();
     public abstract function clickElement($selector);
     public abstract function fillField($field, $value);
-
     /**
      * @param string $selector
      * @param string $type

@@ -53,7 +53,7 @@ Feature: Single selection field feature
     And the row 1 of the "algoSelectionTextkeyInput" datagrid should contain:
       | ref |
       | aaa |
-  # TODO : deux colonnes pour ce datagrid
+  # TODO : deux colonnes pour ce datagrid
 
   @javascript
   Scenario: Edition of a single selection field scenario

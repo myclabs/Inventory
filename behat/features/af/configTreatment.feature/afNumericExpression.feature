@@ -5,7 +5,7 @@ Feature: AF algo numeric expression feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an AF algo numeric expression
+  Scenario: Creation of an algo numeric expression scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Traitement"
@@ -25,14 +25,12 @@ Feature: AF algo numeric expression feature
   # Ajout, identifiant déjà utilisé, expression vide
     When I fill in "algoNumericExpression_ref_addForm" with "champ_numerique"
     And I click "Valider"
-    # Then the field "algoNumericExpression_ref_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
-  # Then the field "algoNumericExpression_ref_addForm" should have error: "Il manque un opérateur dans l'expression « »."
+    Then the field "algoNumericExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
     # TODO …
   # Ajout, identifiant déjà utilisé, expression non vide mais invalide
     When I fill in "algoNumericExpression_expression_addForm" with "a+(b+(c+d)"
     And I click "Valider"
-    # Then the field "algoNumericExpression_ref_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
-    # Then the field "algoNumericExpression_ref_addForm" should have error: "Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
+    Then the field "algoNumericExpression_expression_addForm" should have error: "Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
   # TODO …
   # Ajout, identifiant déjà utilisé, expression correcte, unité vide
     When I fill in "algoNumericExpression_expression_addForm" with "a+b"
@@ -58,11 +56,11 @@ Feature: AF algo numeric expression feature
     When I click "Expression" in the row 2 of the "checkboxFieldDatagrid" datagrid
     Then I should see the popup "Expression"
     And I should see "a+b"
-    # TODO …
+    # TODO …
     And I click element "#algoNumericExpression_expression_popup .close:contains('×')"
 
   @javascript
-  Scenario: Edition of an AF algo numeric expression
+  Scenario: Edition of an algo numeric expression scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Traitement"
@@ -71,9 +69,8 @@ Feature: AF algo numeric expression feature
     Then I should see the "algoNumericExpression" datagrid
   # Affichage contenu initial
     And the row 1 of the "algoNumericExpression" datagrid should contain:
-      | label                | ref                  | unit   |
-      | Expression numérique | expression_numerique | t_co2e |
-    # TODO : t équ. CO2
+      | label                | ref                  | unit       |
+      | Expression numérique | expression_numerique | t équ. CO2 |
     When I click "Expression" in the row 1 of the "algoNumericExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "champ_numerique*parametre"
@@ -113,7 +110,7 @@ Feature: AF algo numeric expression feature
       | Expression numérique modifiée | expression_numerique_modifiee | m    |
 
   @javascript
-  Scenario: Deletion of an AF algo numeric expression
+  Scenario: Deletion of an algo numeric expression scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Traitement"

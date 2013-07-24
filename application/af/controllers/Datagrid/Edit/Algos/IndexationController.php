@@ -138,6 +138,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                 $this->entityManager->flush();
                 break;
         }
+        $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
 

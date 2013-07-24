@@ -140,7 +140,11 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
                 break;
         }
         $algo->save();
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
