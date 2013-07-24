@@ -1,5 +1,5 @@
 @dbFull
-Feature: Composed condition for interaction feature
+Feature: AF composed condition for interaction feature
 
   Background:
     Given I am logged in

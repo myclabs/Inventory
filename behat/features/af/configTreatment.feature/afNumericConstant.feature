@@ -1,5 +1,5 @@
 @dbFull
-Feature: Numeric constant algo feature
+Feature: AF numeric constant algo feature
 
   Background:
     Given I am logged in

@@ -1,5 +1,5 @@
 @dbFull
-Feature: Change component state interaction feature
+Feature: AF change component state interaction feature
 
   Background:
     Given I am logged in

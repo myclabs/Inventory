@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF algo numeric expression feature
+Feature: AF numeric expression algo feature
 
   Background:
     Given I am logged in

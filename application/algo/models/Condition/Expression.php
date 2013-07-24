@@ -100,7 +100,7 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
      */
     public function getExpression()
     {
-        return $this->tecExpression->getExpression();
+        return $this->tecExpression->getTreeAsString();
     }
 
     /**

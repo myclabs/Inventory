@@ -1,11 +1,11 @@
 @dbFull
-Feature: Edit indexes of a numeric parameter feature
+Feature: AF indexes of a numeric algo feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Edit indexes of a numeric parameter scenario
+  Scenario: Edit indexes of a numeric algo scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Traitement"
@@ -24,8 +24,8 @@ Feature: Edit indexes of a numeric parameter feature
       | axis | type         | value |
       | Gaz  | Valeur fixée | CO2   |
     And the row 2 of the "algoResultIndexes" datagrid should contain:
-      | axis             | type       | value                |
-      | Poste article 75 | Algorithme | expression_selection |
+      | axis             | type       | value                                      |
+      | Poste article 75 | Algorithme | expression_selection_indexation_algorithme |
   # Édition de la colonne "Valeur" pour une valeur fixée
     When I set "CH4" for column "value" of row 1 of the "algoResultIndexes" datagrid
     And I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
@@ -64,7 +64,7 @@ Feature: Edit indexes of a numeric parameter feature
     And I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
 
   @javascript
-  Scenario: Influence of a change of indicator on indexes of a numeric parameter scenario
+  Scenario: Influence of a change of indicator on indexes of a numeric algo scenario
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Traitement"
@@ -72,14 +72,14 @@ Feature: Edit indexes of a numeric parameter feature
   # L'algorithme numérique indexé dans le populate est une saisie de champ numérique
     And I open collapse "Saisies de champs numériques"
     Then I should see the "algoNumericInput" datagrid
-  # D'apres le scénario précédent cet algo est associé à l'indicateur contextualisé "GES - Général" et indexé suivant les deux axes de cet indicateur
-  # On modifie l'indicateur
+  # D'apres le scénario précédent cet algo est associé à l'indicateur contextualisé "GES - Général" et indexé suivant les deux axes de cet indicateur
+  # On modifie l'indicateur
     When I set "Chiffre d'affaires - Général" for column "contextIndicator" of row 1 of the "algoNumericInput" datagrid with a confirmation message
   # On vérifie que l'indexation est vide
     And I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
     Then the "algoResultIndexes" datagrid should contain 0 row
     When I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
-  # On revient à l'ancien indicateur
+  # On revient à l'ancien indicateur
     When I set "GES - Général" for column "contextIndicator" of row 1 of the "algoNumericInput" datagrid with a confirmation message
   # On vérifie que l'indexation est encore vide
     And I click "Indexation" in the row 1 of the "algoNumericInput" datagrid

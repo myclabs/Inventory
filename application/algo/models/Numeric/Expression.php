@@ -180,7 +180,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
      */
     public function getExpression()
     {
-        return $this->tecExpression->getExpression();
+        return $this->tecExpression->getTreeAsString();
     }
 
     /**

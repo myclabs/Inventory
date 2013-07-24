@@ -1,5 +1,5 @@
 @dbFull
-Feature: Boolean field feature
+Feature: AF boolean field feature
 
   Background:
     Given I am logged in
