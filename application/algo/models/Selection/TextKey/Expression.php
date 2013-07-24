@@ -6,6 +6,8 @@
  * @package Algo
  */
 
+use TEC\Expression;
+
 /**
  * @package    Algo
  * @subpackage Keyword
@@ -20,7 +22,7 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
     protected $expression;
 
     /**
-     * @var TEC_Model_Expression
+     * @var Expression
      */
     protected $tecExpression;
 
@@ -94,13 +96,11 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
 
     /**
      * @param string $expression
-     * @throws TEC_Model_InvalidExpressionException
+     * @throws InvalidExpressionException
      */
     public function setExpression($expression)
     {
-        $tecExpression = new TEC_Model_Expression();
-        $tecExpression->setType(TEC_Model_Expression::TYPE_SELECT);
-        $tecExpression->setExpression($expression);
+        $tecExpression = new Expression($expression, Expression::TYPE_SELECT);
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;

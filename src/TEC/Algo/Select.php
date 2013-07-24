@@ -1,28 +1,31 @@
 <?php
 /**
- * @author valentin.claras
- * @author yoann.croizer
- * @author hugo.charbonnier
+ * @author     valentin.claras
  * @package    TEC
- * @subpackage Expression
+ * @subpackage Algo
  */
+
+namespace TEC\Algo;
+
+use TEC\Component\Component;
+use TEC\Component\Composite;
+use TEC\Component\Leaf;
 
 /**
  * Description des expressions de type execution et méthodes permettant leur manipulation.
  * @package    TEC
- * @subpackage Expression
+ * @subpackage Algo
  */
-class TEC_Expression_Algo_Select extends TEC_Expression_Algo
+class Select extends Algo
 {
+    /**
+     * {@inheritDoc}
+     */
     protected $mandatoryCharacters = '\:';
 
 
     /**
-     * Renvoi les erreurs d'une expression donnée.
-     *
-     * @param string $expression
-     *
-     * @return array
+     * {@inheritDoc}
      */
     protected function getSpecificErrors($expression)
     {
@@ -119,15 +122,11 @@ class TEC_Expression_Algo_Select extends TEC_Expression_Algo
     }
 
     /**
-     * Créer un arbre à partir d'une expression.
-     *  Fonction commune aux algos Numeric et Logic. Surchargée pour Select.
-     *
-     * @param string              $expression
-     * @param TEC_Model_Composite $parentNode
+     * {@inheritDoc}
      */
-    protected function buildTree($expression, $parentNode)
+    protected function buildTree($expression, Composite $parentNode)
     {
-        $parentNode->setOperator(TEC_Model_Composite::SELECT);
+        $parentNode->setOperator(Composite::SELECT);
 
         $nodeName = '';
         $expressionTab = str_split($expression);
@@ -142,7 +141,7 @@ class TEC_Expression_Algo_Select extends TEC_Expression_Algo
                     if ($nodeName === '') {
                         $this->buildTree($insideExpression, $parentNode);
                     } else {
-                        $childNode = new TEC_Model_Composite();
+                        $childNode = new Composite();
                         $this->buildTree($insideExpression, $childNode);
                         $childNode->setModifier($nodeName);
                         $parentNode->addChild($childNode);
@@ -159,7 +158,7 @@ class TEC_Expression_Algo_Select extends TEC_Expression_Algo
             }
         }
         if (trim($nodeName) !== '') {
-            $leaf = new TEC_Model_Leaf();
+            $leaf = new Leaf();
             $leaf->setName($nodeName);
             $parentNode->addChild($leaf);
         }
@@ -196,19 +195,16 @@ class TEC_Expression_Algo_Select extends TEC_Expression_Algo
     }
 
     /**
-     * Transcrit un Node sous forme de string.
-     *
-     * @param TEC_Model_Component $node
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    protected function convertNodeToString($node)
+    protected function convertNodeToString(Component $node)
     {
         $expression = '';
 
-        if ($node instanceof TEC_Model_Leaf) {
+        if ($node instanceof Leaf) {
             $expression .= ': ' . $node->getName();
         } else {
+            /** @var Composite $node */
             if ($node->getParent() !== null) {
                 $expression .= $node->getModifier() . ' ';
             }
@@ -226,9 +222,7 @@ class TEC_Expression_Algo_Select extends TEC_Expression_Algo
         return $expression;
     }
     /**
-     * Méthode qui donne une représentation d'un Tree sous forme de graph.
-     *
-     * @return array
+     * {@inheritDoc}
      */
     public function convertTreeToGraph()
     {
@@ -242,17 +236,14 @@ class TEC_Expression_Algo_Select extends TEC_Expression_Algo
     }
 
     /**
-     * Méthode indiquant le nom d'un noeud dans un graph.
-     *
-     * @param TEC_model_Composite $node
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    protected function getNodeGraphName($node)
+    protected function getNodeGraphName(Component $node)
     {
-        if ($node instanceof TEC_Model_Composite) {
+        if ($node instanceof Composite) {
             $name = $node->getModifier() . __('TEC', 'tree', 'questionMark');
         } else {
+            /** @var Leaf $node */
             $name = $node->getName();
         }
 

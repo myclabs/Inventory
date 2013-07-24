@@ -8,6 +8,10 @@
  * @subpackage Execution
  */
 
+use TEC\Component\Component;
+use TEC\Component\Composite;
+use TEC\Component\Leaf;
+
 /**
  * classe Exec_Execution_Select
  * @package    Exec
@@ -33,18 +37,18 @@ class Exec_Execution_Select extends Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
      *
-     * @param TEC_Model_Component          $node
+     * @param Component          $node
      * @param Exec_Interface_ValueProvider $valueProvider
      *
      * @return array
      */
-    protected function getErrorsFromComponent(TEC_Model_Component $node, Exec_Interface_ValueProvider $valueProvider)
+    protected function getErrorsFromComponent(Component $node, Exec_Interface_ValueProvider $valueProvider)
     {
         $errors = array();
 
-        if ($node instanceof TEC_Model_Leaf) {
+        if ($node instanceof Leaf) {
             $errors = array_merge($errors, $valueProvider->checkValueForExecution($node->getName()));
-        } elseif ($node instanceof TEC_Model_Composite) {
+        } elseif ($node instanceof Composite) {
             foreach ($node->getChildren() as $child) {
                 $errors = array_merge($errors, $this->getErrorsFromComponent($child, $valueProvider));
             }
@@ -74,18 +78,18 @@ class Exec_Execution_Select extends Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
      *
-     * @param TEC_Model_Component          $node
+     * @param Component          $node
      * @param Exec_Interface_ValueProvider $valueProvider
      *
      * @return array
      */
-    protected function executeComponent(TEC_Model_Component $node, Exec_Interface_ValueProvider $valueProvider)
+    protected function executeComponent(Component $node, Exec_Interface_ValueProvider $valueProvider)
     {
         $results = array();
 
-        if ($node instanceof  TEC_Model_Leaf) {
+        if ($node instanceof  Leaf) {
             $results[$node->getName()] = $valueProvider->getValueForExecution($node->getName());
-        } else if ($node instanceof TEC_Model_Composite) {
+        } else if ($node instanceof Composite) {
             if ($valueProvider->getValueForExecution($node->getModifier()) === true) {
                 foreach ($node->getChildren() as $child) {
                     $results = array_merge($results, $this->executeComponent($child, $valueProvider));
@@ -117,18 +121,18 @@ class Exec_Execution_Select extends Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
      *
-     * @param TEC_Model_Component          $node
+     * @param Component          $node
      * @param Exec_Interface_ValueProvider $valueProvider
      *
      * @return array Tableau des noms des feuilles exécutées
      */
-    protected function getSelectedComponentLeafs(TEC_Model_Component $node, Exec_Interface_ValueProvider $valueProvider)
+    protected function getSelectedComponentLeafs(Component $node, Exec_Interface_ValueProvider $valueProvider)
     {
         $results = array();
 
-        if ($node instanceof  TEC_Model_Leaf) {
+        if ($node instanceof  Leaf) {
             $results[] = $node->getName();
-        } else if ($node instanceof TEC_Model_Composite) {
+        } else if ($node instanceof Composite) {
             if ($valueProvider->getValueForExecution($node->getModifier()) === true) {
                 foreach ($node->getChildren() as $child) {
                     $results = array_merge($results, $this->getSelectedComponentLeafs($child, $valueProvider));

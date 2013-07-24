@@ -1,14 +1,21 @@
 <?php
 /**
- * @author  matthieu.napoli
- * @package TEC
+ * @author     matthieu.napoli
+ * @author     valentin.claras
+ * @package    TEC
+ * @subpackage Exception
  */
+
+namespace TEC\Exception;
+
+use Core_Exception;
 
 /**
  * Exception due à une expression invalide
- * @package TEC
+ * @package    TEC
+ * @subpackage Exception
  */
-class TEC_Model_InvalidExpressionException extends Core_Exception
+class InvalidExpressionException extends Core_Exception
 {
 
     /**

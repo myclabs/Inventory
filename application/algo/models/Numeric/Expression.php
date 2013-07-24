@@ -7,6 +7,7 @@
  */
 use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
+use TEC\Expression;
 
 /**
  * @package    Algo
@@ -28,7 +29,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
     protected $expression;
 
     /**
-     * @var TEC_Model_Expression
+     * @var Expression
      */
     protected $tecExpression;
 
@@ -185,13 +186,11 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
 
     /**
      * @param string $expression
-     * @throws TEC_Model_InvalidExpressionException
+     * @throws InvalidExpressionException
      */
     public function setExpression($expression)
     {
-        $tecExpression = new TEC_Model_Expression();
-        $tecExpression->setType(TEC_Model_Expression::TYPE_NUMERIC);
-        $tecExpression->setExpression($expression);
+        $tecExpression = new Expression($expression, Expression::TYPE_NUMERIC);
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;

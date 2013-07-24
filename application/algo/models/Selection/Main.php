@@ -6,6 +6,8 @@
  * @package Algo
  */
 
+use TEC\Expression;
+
 /**
  * @package Algo
  */
@@ -18,7 +20,7 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
     protected $expression;
 
     /**
-     * @var TEC_Model_Expression|null
+     * @var Expression|null
      */
     protected $tecExpression;
 
@@ -223,7 +225,7 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
 
     /**
      * @param string|null $expression
-     * @throws TEC_Model_InvalidExpressionException
+     * @throws InvalidExpressionException
      */
     public function setExpression($expression = null)
     {
@@ -231,9 +233,7 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
             $this->expression = null;
             $this->tecExpression = null;
         } else {
-            $tecExpression = new TEC_Model_Expression();
-            $tecExpression->setType(TEC_Model_Expression::TYPE_SELECT);
-            $tecExpression->setExpression($expression);
+            $tecExpression = new Expression($expression, Expression::TYPE_SELECT);
             $tecExpression->check();
             // Expression OK
             $this->expression = (string) $expression;

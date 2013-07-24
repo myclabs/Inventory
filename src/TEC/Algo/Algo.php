@@ -1,17 +1,22 @@
 <?php
 /**
- * @author valentin.claras
+ * @author     valentin.claras
  * @package    TEC
- * @subpackage Expression
+ * @subpackage Algo
  */
+
+namespace TEC\Algo;
+
+use TEC\Component\Component;
+use TEC\Component\Composite;
+use TEC\Component\Leaf;
 
 /**
  * Classe contenant les méthode de traitement des expressions.
- *
  * @package    TEC
- * @subpackage Expression
+ * @subpackage Algo
  */
-abstract class TEC_Expression_Algo
+abstract class Algo
 {
     /**
      * Liste des caractères spéciaux obligatoires dans une expression.
@@ -30,7 +35,7 @@ abstract class TEC_Expression_Algo
     /**
      * Noeud racine de l'arbre.
      *
-     * @var TEC_Model_Composite
+     * @var Composite
      */
     protected $rootNode = null;
 
@@ -38,23 +43,19 @@ abstract class TEC_Expression_Algo
     /**
      * Constructeur.
      *
-     * @param String $expression
-     * @param TEC_Model_Composite $rootNode
+     * @param string $expression
      */
-    public function __construct($expression, $rootNode=null)
+    public function __construct($expression)
     {
         $this->expression = preg_replace(array("#\((\s*\w*\s*)\)#"), array('$1'), $expression);
-        $this->rootNode = $rootNode;
     }
 
     /**
      * Renvoi le noeud racine de l'arbre.
      *
-     * @throws Core_Exception_UndefinedAttribute
-     *
-     * @return TEC_Model_Composite
+     * @return Composite
      */
-    protected function getRootNode()
+    public function getRootNode()
     {
         if ($this->rootNode === null) {
             $this->createTree();
@@ -87,11 +88,11 @@ abstract class TEC_Expression_Algo
     /**
      * Construit l'arbre correspondant à l'expression.
      *
-     * @return TEC_Model_Composite
+     * @return Composite
      */
     public function createTree()
     {
-        $this->rootNode = new TEC_Model_Composite();
+        $this->rootNode = new Composite();
         $this->buildTree($this->correctBrackets(), $this->rootNode);
         return $this->rootNode;
     }
@@ -123,6 +124,7 @@ abstract class TEC_Expression_Algo
         $sizeExpression = count($expressionTab);
         $topLevelSymbol = null;
         $lastSymbol = null;
+        $lastBracketSymbol = null;
         $tempExpression = '';
 
         // On parcourt chaque caracatère de l'expression.
@@ -209,10 +211,10 @@ abstract class TEC_Expression_Algo
      * Créer un arbre à partir d'une expression.
      *  Fonction commune aux algos Numeric et Logic. Surchargée pour Select.
      *
-     * @param string              $expression
-     * @param TEC_Model_Composite $parentNode
+     * @param string    $expression
+     * @param Composite $parentNode
      */
-    protected function buildTree($expression, $parentNode)
+    protected function buildTree($expression, Composite $parentNode)
     {
         $expressionTab = str_split($expression);
         $sizeExpression = count($expressionTab);
@@ -223,19 +225,19 @@ abstract class TEC_Expression_Algo
             switch ($character) {
                 case '+' :
                 case '-' :
-                    $parentNode->setOperator(TEC_Model_Composite::OPERATOR_SUM);
+                    $parentNode->setOperator(Composite::OPERATOR_SUM);
                     $lastSymbol = $character;
                     break;
                 case '*' :
                 case '/' :
-                    $parentNode->setOperator(TEC_Model_Composite::OPERATOR_PRODUCT);
+                    $parentNode->setOperator(Composite::OPERATOR_PRODUCT);
                     $lastSymbol = $character;
                     break;
                 case '&' :
-                    $parentNode->setOperator(TEC_Model_Composite::LOGICAL_AND);
+                    $parentNode->setOperator(Composite::LOGICAL_AND);
                     break;
                 case '|' :
-                    $parentNode->setOperator(TEC_Model_Composite::LOGICAL_OR);
+                    $parentNode->setOperator(Composite::LOGICAL_OR);
                     break;
                 case '!' :
                     $lastSymbol = $character;
@@ -258,7 +260,7 @@ abstract class TEC_Expression_Algo
                     $insideExpression = substr($insideExpression, 1, -1);
                     $position--;
                     // Création du composite enfant et traitement de l'expression associée.
-                    $childNode = new TEC_Model_Composite();
+                    $childNode = new Composite();
                     $this->applyModifierToComponent($lastSymbol, $childNode);
                     $lastSymbol = null;
                     $this->buildTree($insideExpression, $childNode);
@@ -269,7 +271,7 @@ abstract class TEC_Expression_Algo
                         break;
                     }
                     // Création de la feuille.
-                    $leaf = new TEC_Model_Leaf();
+                    $leaf = new Leaf();
                     $this->applyModifierToComponent($lastSymbol, $leaf);
                     $lastSymbol = null;
                     // Récupéreration de l'ensemble du nom de l'élément de calcul.
@@ -289,25 +291,26 @@ abstract class TEC_Expression_Algo
     /**
      * Ajoute le bon modifier au component donné.
      *
-     * @param string              $modifier
-     * @param TEC_Model_Component $component
+     * @param string    $modifier
+     * @param Component $component
      */
-    protected function applyModifierToComponent($modifier, $component)
+    protected function applyModifierToComponent($modifier, Component $component)
     {
         switch ($modifier) {
             case '!' :
-                $component->setModifier(TEC_Model_Component::MODIFIER_NOT);
+                $component->setModifier(Component::MODIFIER_NOT);
                 break;
             case '-' :
             case '/' :
-                $component->setModifier(TEC_Model_Component::MODIFIER_SUB);
+                $component->setModifier(Component::MODIFIER_SUB);
                 break;
             case '+' :
             case '*' :
-                $component->setModifier(TEC_Model_Component::MODIFIER_ADD);
+                $component->setModifier(Component::MODIFIER_ADD);
+                break;
             default:
-                if ($this instanceof TEC_Expression_Algo_Numeric) {
-                    $component->setModifier(TEC_Model_Component::MODIFIER_ADD);
+                if ($this instanceof Numeric) {
+                    $component->setModifier(Component::MODIFIER_ADD);
                 }
                 break;
         }
@@ -326,11 +329,11 @@ abstract class TEC_Expression_Algo
     /**
      * Transcrit un Node sous forme de string.
      *
-     * @param TEC_Model_Component $node
+     * @param Component $node
      *
      * @return string
      */
-    abstract protected function convertNodeToString($node);
+    abstract protected function convertNodeToString(Component $node);
 
     /**
      * Méthode qui donne une représentation d'un Tree sous forme de graph.
@@ -356,12 +359,12 @@ abstract class TEC_Expression_Algo
     /**
      * Méthode qui permet l'affichage de l'arbre de calcul.
      *
-     * @param TEC_Model_Composite $node
-     * @param int                 $parentIdentifier
+     * @param Composite $node
+     * @param int       $parentIdentifier
      *
      * @return string
      */
-    protected function buildGraph($node, $parentIdentifier=0)
+    protected function buildGraph(Composite $node, $parentIdentifier=0)
     {
         $expression = '';
 
@@ -371,7 +374,7 @@ abstract class TEC_Expression_Algo
             $expression .= '"'.$parentIdentifier.'",';
             $expression .= '"'.$this->getNodeGraphDescription($child).'"';
             $expression .= '],';
-            if ($child instanceof TEC_Model_Composite) {
+            if ($child instanceof Composite) {
                 $expression .= $this->buildGraph($child, $parentIdentifier.'-'.$position);
             }
         }
@@ -382,20 +385,20 @@ abstract class TEC_Expression_Algo
     /**
      * Méthode indiquant le nom d'un noeud dans un graph.
      *
-     * @param TEC_model_Composite $node
+     * @param Component $node
      *
      * @return string
      */
-    protected abstract function getNodeGraphName($node);
+    protected abstract function getNodeGraphName(Component $node);
 
     /**
      * Méthode indiquant la description d'un noeud dans un graph.
      *
-     * @param TEC_model_Composite $node
+     * @param Component $node
      *
      * @return string
      */
-    protected function getNodeGraphDescription($node)
+    protected function getNodeGraphDescription(Component $node)
     {
         return '';
     }

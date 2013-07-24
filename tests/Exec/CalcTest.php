@@ -7,6 +7,7 @@
  */
 
 use Unit\UnitAPI;
+use TEC\Expression;
 
 /**
  * @package Exec
@@ -22,10 +23,8 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
      */
     function setUp()
     {
-        $this->expression = new TEC_Model_Expression('a+b*c/d-e+f');
-        $this->expression->buildTree();
-        $this->expressionParticulier = new TEC_Model_Expression('o-(a+b)');
-        $this->expressionParticulier->buildTree();
+        $this->expression = new Expression('a+b*c/d-e+f');
+        $this->expressionParticulier = new Expression('o-(a+b)');
     }
 
     /**

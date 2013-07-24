@@ -5,8 +5,12 @@
  * @author  hugo.charbonnier
  * @package Exec
  */
-use Unit\IncompatibleUnitsException;
+
 use Unit\UnitAPI;
+use Unit\IncompatibleUnitsException;
+use TEC\Component\Component;
+use TEC\Component\Composite;
+use TEC\Component\Leaf;
 
 /**
  * classe Exec_Execution_Calc
@@ -88,18 +92,18 @@ class Exec_Execution_Calc extends Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
      *
-     * @param TEC_Model_Component          $node
+     * @param Component          $node
      * @param Exec_Interface_ValueProvider $valueProvider
      *
      * @return array
      */
-    protected function getErrorsFromComponent(TEC_Model_Component $node, Exec_Interface_ValueProvider $valueProvider)
+    protected function getErrorsFromComponent(Component $node, Exec_Interface_ValueProvider $valueProvider)
     {
         $errors = [];
 
-        if ($node instanceof TEC_Model_Leaf) {
+        if ($node instanceof Leaf) {
             $errors = array_merge($errors, $valueProvider->checkValueForExecution($node->getName()));
-        } elseif ($node instanceof TEC_Model_Composite) {
+        } elseif ($node instanceof Composite) {
             foreach ($node->getChildren() as $child) {
                 $errors = array_merge($errors, $this->getErrorsFromComponent($child, $valueProvider));
             }
@@ -123,25 +127,25 @@ class Exec_Execution_Calc extends Exec_Execution
     }
 
     /**
-     * @param TEC_Model_Composite          $node
+     * @param Composite          $node
      * @param Exec_Interface_UnitProvider  $unitProvider
      *
      * @return UnitAPI
      *
      * @throws IncompatibleUnitsException Unités incompatibles
      */
-    public function calculateUnitForComponent(TEC_Model_Composite $node,
+    public function calculateUnitForComponent(Composite $node,
                                               Exec_Interface_UnitProvider $unitProvider
     ) {
         $calculation = new Calc_Calculation_Unit();
         $calculation->setOperation($node->getOperator());
 
         foreach ($node->getChildren() as $child) {
-            if ($child instanceof TEC_Model_Leaf) {
+            if ($child instanceof Leaf) {
                 $unit = $unitProvider->getUnitForExecution($child->getName());
                 $calculation->addComponents($unit, $child->getModifier());
             } else {
-                /** @var $child TEC_Model_Composite */
+                /** @var $child Composite */
                 $calculation->addComponents($this->calculateUnitForComponent($child, $unitProvider),
                                             $child->getModifier());
             }
@@ -153,17 +157,17 @@ class Exec_Execution_Calc extends Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
      *
-     * @param TEC_Model_Component          $node
+     * @param Component          $node
      * @param Exec_Interface_ValueProvider $valueProvider
      *
      * @return mixed
      */
-    protected function executeComponent(TEC_Model_Component $node, Exec_Interface_ValueProvider $valueProvider)
+    protected function executeComponent(Component $node, Exec_Interface_ValueProvider $valueProvider)
     {
-        if ($node instanceof TEC_Model_Leaf) {
+        if ($node instanceof Leaf) {
             $result = $valueProvider->getValueForExecution($node->getName());
         } else {
-            /** @var $node TEC_Model_Composite */
+            /** @var $node Composite */
             $calcul = $this->getCalculation();
             $calcul->setOperation($node->getOperator());
 

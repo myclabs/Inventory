@@ -6,6 +6,8 @@
  * @package Exec
  */
 
+use TEC\Expression;
+
 /**
  * @package Exec
  */
@@ -34,7 +36,7 @@ class Exec_Test_SelectSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $tecExpression = new TEC_Model_Expression();
+        $tecExpression = new Expression('foo:bar');
         $executionSelection = new Exec_Execution_Select($tecExpression);
         $this->assertInstanceOf('Exec_Execution_Select', $executionSelection);
     }
@@ -47,7 +49,7 @@ class Exec_Test_SelectSetUp extends PHPUnit_Framework_TestCase
 class Exec_Test_SelectOthers extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var TEC_Model_Expression
+     * @var Expression
      */
      protected $expression;
      /**
@@ -67,8 +69,7 @@ class Exec_Test_SelectOthers extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->expression = new TEC_Model_Expression('a:(b:(c:d;:e);:f)');
-        $this->expression->buildTree();
+        $this->expression = new Expression('a:(b:(c:d;:e);:f)');
         $this->_valueProvider = new Inventory_Model_ValueProviderEntity(
                                         array(
                                            "a" => true,

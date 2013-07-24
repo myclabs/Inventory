@@ -1,18 +1,20 @@
 <?php
 /**
- * @author  valentin.claras
- * @author  yoann.croizer
- * @author  hugo.charbonnier
- * @package TEC
+ * @author     valentin.claras
+ * @package    TEC
+ * @subpackage Component
  */
+
+namespace TEC\Component;
+
+use Core_Exception_InvalidArgument;
 
 /**
  * @package    TEC
- * @subpackage Model
+ * @subpackage Component
  */
-abstract class TEC_Model_Component extends Core_Model_Entity
+abstract class Component
 {
-
     /**
      * Constante précisant qu'il s'agit d'une addition / mutliplication.
      */
@@ -38,16 +40,16 @@ abstract class TEC_Model_Component extends Core_Model_Entity
     /**
      * Parent du component.
      *
-     * @var TEC_Model_Composite
+     * @var Composite
      */
     protected $parent = null;
 
     /**
      * Indique l'état du noeud dans l'opération.
      *
-     * @see TEC_Model_Component::MODIFIER_ADD
-     * @see TEC_Model_Component::MODIFIER_SUB
-     * @see TEC_Model_Component::MODIFIER_NOT
+     * @see Component::MODIFIER_ADD
+     * @see Component::MODIFIER_SUB
+     * @see Component::MODIFIER_NOT
      *
      * @var string
      */
@@ -55,21 +57,15 @@ abstract class TEC_Model_Component extends Core_Model_Entity
 
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Méthode permettant de modifier le noeud parent du noeud courant.
      *
-     * @param TEC_Model_Composite $newParent
+     * @param Composite $newParent
+     *
+     * @throws Core_Exception_InvalidArgument
      */
-    public function setParent(TEC_Model_Composite $newParent)
+    public function setParent(Composite $newParent)
     {
-        if ($this instanceof TEC_Model_Composite) {
+        if ($this instanceof Composite) {
             $tempParent = $newParent;
             //Vérification de l'absence de cycles.
             while ($tempParent->parent != null) {
@@ -92,7 +88,7 @@ abstract class TEC_Model_Component extends Core_Model_Entity
     /**
      * Récupère le noeud parent du noeud courant.
      *
-     * @return TEC_Model_Composite
+     * @return Composite
      */
     public function getParent()
     {
@@ -102,9 +98,9 @@ abstract class TEC_Model_Component extends Core_Model_Entity
     /**
      * Spécification du modifier.
      *
-     * @see TEC_Model_Component::MODIFIER_ADD
-     * @see TEC_Model_Component::MODIFIER_SUB
-     * @see TEC_Model_Component::MODIFIER_NOT
+     * @see Component::MODIFIER_ADD
+     * @see Component::MODIFIER_SUB
+     * @see Component::MODIFIER_NOT
      *
      * @param string $modifier
      */

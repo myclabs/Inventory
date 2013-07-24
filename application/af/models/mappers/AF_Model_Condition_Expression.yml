@@ -10,7 +10,7 @@ AF_Model_Condition_Expression:
 
   manyToOne:
     tecExpression:
-      targetEntity: TEC_Model_Expression
+      targetEntity: TEC\Expression
       joinColumn:
         name: idTECExpression
         referencedColumnName: id

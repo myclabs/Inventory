@@ -6,6 +6,9 @@
  * @package Exec
  */
 
+use TEC\Expression;
+use TEC\Component\Component;
+
 /**
  * classe Exec_Execution
  * @package Exec
@@ -15,7 +18,7 @@ abstract class Exec_Execution
     /**
      * L'expression à partir de laquelle l'arbre est construit.
      *
-     * @var TEC_Model_Expression
+     * @var Expression
      */
     protected $expression;
 
@@ -23,16 +26,16 @@ abstract class Exec_Execution
     /**
      * Constructeur de la classe.
      *
-     * @param TEC_Model_Expression $expression
+     * @param Expression $expression
      */
-    public function __construct(TEC_Model_Expression $expression)
+    public function __construct(Expression $expression)
     {
         $this->expression = $expression;
     }
 
     /**
      * Renvoi l'attribut protégé expression
-     * @return TEC_Model_Expression
+     * @return Expression
      */
     public function getExpression()
     {
@@ -66,23 +69,23 @@ abstract class Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
      *
-     * @param TEC_Model_Component          $node
+     * @param Component          $node
      * @param Exec_Interface_ValueProvider $valueProvider
      *
      * @return array
      */
-    protected abstract function getErrorsFromComponent(TEC_Model_Component $node,
+    protected abstract function getErrorsFromComponent(Component $node,
                                                        Exec_Interface_ValueProvider $valueProvider);
 
     /**
      * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
      *
-     * @param TEC_Model_Component          $node
+     * @param Component          $node
      * @param Exec_Interface_ValueProvider $valueProvider
      *
      * @return mixed
      */
-    protected abstract function executeComponent(TEC_Model_Component $node,
+    protected abstract function executeComponent(Component $node,
                                                  Exec_Interface_ValueProvider $valueProvider);
 
 }

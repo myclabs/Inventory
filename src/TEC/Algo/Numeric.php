@@ -1,28 +1,32 @@
 <?php
 /**
- * @author valentin.claras
- * @author yoann.croizer
- * @author hugo.charbonnier
+ * @author     valentin.claras
  * @package    TEC
- * @subpackage Expression
+ * @subpackage Algo
  */
+
+namespace TEC\Algo;
+
+use TEC\Component\Component;
+use TEC\Component\Composite;
+use TEC\Component\Leaf;
+use Core_Exception_UndefinedAttribute;
 
 /**
  * Description des expressions numériques et méthodes permettant leur manipulation.
  * @package    TEC
- * @subpackage Expression
+ * @subpackage Algo
  */
-class TEC_Expression_Algo_Numeric extends TEC_Expression_Algo
+class Numeric extends Algo
 {
+    /**
+     * {@inheritDoc}
+     */
     protected $mandatoryCharacters = '\+\-\*\/';
 
 
     /**
-     * Renvoi les erreurs d'une expression donnée.
-     *
-     * @param string $expression
-     *
-     * @return array
+     * {@inheritDoc}
      */
     protected function getSpecificErrors($expression)
     {
@@ -110,25 +114,22 @@ class TEC_Expression_Algo_Numeric extends TEC_Expression_Algo
     }
 
     /**
-     * Transcrit un Node sous forme de string.
-     *
-     * @param TEC_Model_Component $node
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    protected function convertNodeToString($node)
+    protected function convertNodeToString(Component $node)
     {
         $expression = '';
 
-        if ($node instanceof  TEC_Model_Leaf) {
+        if ($node instanceof  Leaf) {
             $expression .= $node->getName();
         } else {
-            $addSymbol = $this->getSymbol($node, TEC_Model_Component::MODIFIER_ADD);
-            $subSymbol = $this->getSymbol($node, TEC_Model_Component::MODIFIER_SUB);
+            /** @var Composite $node */
+            $addSymbol = $this->getSymbol($node, Component::MODIFIER_ADD);
+            $subSymbol = $this->getSymbol($node, Component::MODIFIER_SUB);
             $addChildren = array();
             $subChildren = array();
             foreach ($node->getChildren() as $child) {
-                if ($child->getModifier() === TEC_Model_Component::MODIFIER_SUB) {
+                if ($child->getModifier() === Component::MODIFIER_SUB) {
                     $subChildren[] = $child;
                 } else {
                     $addChildren[] = $child;
@@ -159,23 +160,25 @@ class TEC_Expression_Algo_Numeric extends TEC_Expression_Algo
     /**
      * Permet de récupérer le symbol d'un noeud.
      *
-     * @param TEC_Model_Composite $node
-     * @param string              $modifier
+     * @param Composite $node
+     * @param string $modifier
      *
+     * @throws Core_Exception_UndefinedAttribute
+     * 
      * @return string
      */
     protected function getSymbol($node, $modifier)
     {
         switch ($node->getOperator()) {
-            case TEC_Model_Composite::OPERATOR_SUM:
-                if ($modifier === TEC_Model_Component::MODIFIER_SUB) {
+            case Composite::OPERATOR_SUM:
+                if ($modifier === Component::MODIFIER_SUB) {
                     return ' - ';
                 } else {
                     return ' + ';
                 }
                 break;
-            case TEC_Model_Composite::OPERATOR_PRODUCT:
-                if ($modifier === TEC_Model_Component::MODIFIER_SUB) {
+            case Composite::OPERATOR_PRODUCT:
+                if ($modifier === Component::MODIFIER_SUB) {
                     return ' / ';
                 } else {
                     return ' * ';
@@ -189,8 +192,10 @@ class TEC_Expression_Algo_Numeric extends TEC_Expression_Algo
     /**
      * Renvoi sous forme de string un ensemble
      *
-     * @param TEC_Model_Component $arrayNode
+     * @param array  $arrayNode
      * @param string $operator
+     * 
+     * @return string
      */
     protected function getInsideExpression($arrayNode, $operator)
     {
@@ -208,43 +213,40 @@ class TEC_Expression_Algo_Numeric extends TEC_Expression_Algo
     }
 
     /**
-     * Méthode indiquant le nom d'un noeud dans un graph.
-     *
-     * @param TEC_model_Composite $node
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    protected function getNodeGraphName($node)
+    protected function getNodeGraphName(Component $node)
     {
         $name = '';
 
         $parentNode = $node->getParent();
-        if (($parentNode !== null) && ($parentNode->getOperator() === TEC_Model_Composite::OPERATOR_PRODUCT)) {
+        if (($parentNode !== null) && ($parentNode->getOperator() === Composite::OPERATOR_PRODUCT)) {
             switch ($node->getModifier()) {
-                case TEC_Model_Component::MODIFIER_SUB:
+                case Component::MODIFIER_SUB:
                     $name .= __('TEC', 'tree', 'modifierProductSub');
                     break;
             }
         } else {
             switch ($node->getModifier()) {
-                case TEC_Model_Component::MODIFIER_ADD:
+                case Component::MODIFIER_ADD:
                     $name .= __('TEC', 'tree', 'modifierSumAdd');
                     break;
-                case TEC_Model_Component::MODIFIER_SUB:
+                case Component::MODIFIER_SUB:
                     $name .= __('TEC', 'tree', 'modifierSumSub');
                     break;
             }
         }
-        if ($node instanceof TEC_Model_Composite) {
+        if ($node instanceof Composite) {
             switch ($node->getOperator()) {
-                case TEC_Model_Composite::OPERATOR_SUM:
+                case Composite::OPERATOR_SUM:
                     $name .= '<b>'.__('TEC', 'tree', 'operatorSum').'</b>';
                     break;
-                case TEC_Model_Composite::OPERATOR_PRODUCT:
+                case Composite::OPERATOR_PRODUCT:
                     $name .= '<b>'.__('TEC', 'tree', 'operatorProduct').'</b>';
                     break;
             }
         } else {
+            /** @var Leaf $node */
             $name .= $node->getName();
         }
 

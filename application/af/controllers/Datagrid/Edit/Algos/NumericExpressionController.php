@@ -8,6 +8,7 @@
 
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
+use TEC\Exception\InvalidExpressionException;
 
 /**
  * @package AF
@@ -92,7 +93,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
             $algo->setLabel($this->getAddElementValue('label'));
             try {
                 $algo->setExpression($this->getAddElementValue('expression'));
-            } catch (TEC_Model_InvalidExpressionException $e) {
+            } catch (InvalidExpressionException $e) {
                 $this->setAddElementErrorMessage('expression',
                                                  __('AF', 'configTreatmentMessage', 'invalidExpression')
                                                      . "<br>" . implode("<br>", $e->getErrors()));
@@ -151,7 +152,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
             case 'expression':
                 try {
                     $algo->setExpression($newValue);
-                } catch (TEC_Model_InvalidExpressionException $e) {
+                } catch (InvalidExpressionException $e) {
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }

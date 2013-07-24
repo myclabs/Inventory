@@ -1,26 +1,32 @@
 <?php
 /**
- * @author yoann.croizer
- * @author hugo.charbonnier
- * @package TEC
+ * @author     valentin.claras
+ * @package    TEC
+ * @subpackage Algo
  */
+
+namespace TEC\Algo;
+
+use TEC\Component\Component;
+use TEC\Component\Composite;
+use TEC\Component\Leaf;
+use Core_Exception_UndefinedAttribute;
 
 /**
  * Description des expressions logiques et méthodes permettant leur manipulation.
  * @package TEC
- * @subpackage Expression
+ * @subpackage Algo
  */
-class TEC_Expression_Algo_Logic extends TEC_Expression_Algo
+class Logic extends Algo
 {
+    /**
+     * {@inheritDoc}
+     */
     protected $mandatoryCharacters = '\&\|';
 
 
     /**
-     * Renvoi les erreurs d'une expression donnée.
-     *
-     * @param string $expression
-     *
-     * @return array
+     * {@inheritDoc}
      */
     protected function getSpecificErrors($expression)
     {
@@ -110,19 +116,16 @@ class TEC_Expression_Algo_Logic extends TEC_Expression_Algo
     }
 
     /**
-     * Transcrit un Node sous forme de string.
-     *
-     * @param TEC_Model_Component $node
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    protected function convertNodeToString($node)
+    protected function convertNodeToString(Component $node)
     {
         $expression = '';
 
-        if ($node instanceof  TEC_Model_Leaf) {
+        if ($node instanceof  Leaf) {
             $expression .= $node->getName();
         } else {
+            /** @var Composite $node */
             $symbol = $this->getSymbol($node);
             foreach ($node->getChildren() as $child) {
                 $expression .= $this->convertNodeToString($child);
@@ -133,7 +136,7 @@ class TEC_Expression_Algo_Logic extends TEC_Expression_Algo
                 $expression = '(' . $expression . ')';
             }
         }
-        if ($node->getModifier() == TEC_Model_Component::MODIFIER_NOT) {
+        if ($node->getModifier() == Component::MODIFIER_NOT) {
             $expression = '!'.$expression;
         }
 
@@ -143,17 +146,19 @@ class TEC_Expression_Algo_Logic extends TEC_Expression_Algo
     /**
      * Permet de récupérer le symbol d'un noeud.
      *
-     * @param TEC_Model_Composite $node
+     * @param Composite $node
+     *
+     * @throws Core_Exception_UndefinedAttribute
      *
      * @return string
      */
-    protected function getSymbol($node)
+    protected function getSymbol(Composite $node)
     {
         switch ($node->getOperator()) {
-            case TEC_Model_Composite::LOGICAL_AND:
+            case Composite::LOGICAL_AND:
                 return ' & ';
                 break;
-            case TEC_Model_Composite::LOGICAL_OR:
+            case Composite::LOGICAL_OR:
                 return ' | ';
                 break;
             default:
@@ -162,31 +167,28 @@ class TEC_Expression_Algo_Logic extends TEC_Expression_Algo
     }
 
     /**
-     * Méthode indiquant le nom d'un noeud dans un graph.
-     *
-     * @param TEC_model_Composite $node
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    protected function getNodeGraphName($node)
+    protected function getNodeGraphName(Component $node)
     {
         $name = '';
 
         switch ($node->getModifier()) {
-            case TEC_Model_Component::MODIFIER_NOT:
+            case Component::MODIFIER_NOT:
                 $name .= __('TEC', 'tree', 'modifierLogicalNot');
                 break;
         }
-        if ($node instanceof TEC_Model_Composite) {
+        if ($node instanceof Composite) {
             switch ($node->getOperator()) {
-                case TEC_Model_Composite::LOGICAL_OR:
+                case Composite::LOGICAL_OR:
                     $name .= '<b>'.__('TEC', 'tree', 'operatorOr').'</b>';
                     break;
-                case TEC_Model_Composite::LOGICAL_AND:
+                case Composite::LOGICAL_AND:
                     $name .= '<b>'.__('TEC', 'tree', 'operatorAnd').'</b>';
                     break;
             }
         } else {
+            /** @var Leaf $node */
             $name .= $node->getName();
         }
 

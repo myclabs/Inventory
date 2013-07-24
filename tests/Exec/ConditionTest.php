@@ -6,6 +6,8 @@
  * @package Exec
  */
 
+use TEC\Expression;
+
 /**
  * ConditionTest
  * @package Exec
@@ -36,7 +38,7 @@ class Exec_Test_ConditionSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $tecExpression = new TEC_Model_Expression();
+        $tecExpression = new Expression('foo:bar');
         $executionCondition = new Exec_Execution_Condition($tecExpression);
         $this->assertInstanceOf('Exec_Execution_Condition', $executionCondition);
     }
@@ -66,14 +68,10 @@ class Exec_Test_ConditionOthers extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->expression1 = new TEC_Model_Expression('a&(b|c)');
-        $this->expression1->buildTree();
-        $this->expression2 = new TEC_Model_Expression('vrai&faux');
-        $this->expression2->buildTree();
-        $this->expression3 = new TEC_Model_Expression('un|un|zero');
-        $this->expression3->buildTree();
-        $this->expression4 = new TEC_Model_Expression('a&(b|c)&!(b|!c|(a&b))');
-        $this->expression4->buildTree();
+        $this->expression1 = new Expression('a&(b|c)');
+        $this->expression2 = new Expression('vrai&faux');
+        $this->expression3 = new Expression('un|un|zero');
+        $this->expression4 = new Expression('a&(b|c)&!(b|!c|(a&b))');
     }
 
 

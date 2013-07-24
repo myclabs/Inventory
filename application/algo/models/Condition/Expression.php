@@ -7,6 +7,8 @@
  * @subpackage Condition
  */
 
+use TEC\Expression;
+
 /**
  * @package    Algo
  * @subpackage Condition
@@ -21,7 +23,7 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
     protected $expression;
 
     /**
-     * @var TEC_Model_Expression
+     * @var Expression
      */
     protected $tecExpression;
 
@@ -105,13 +107,11 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
 
     /**
      * @param string $expression
-     * @throws TEC_Model_InvalidExpressionException
+     * @throws InvalidExpressionException
      */
     public function setExpression($expression)
     {
-        $tecExpression = new TEC_Model_Expression();
-        $tecExpression->setType(TEC_Model_Expression::TYPE_LOGICAL);
-        $tecExpression->setExpression($expression);
+        $tecExpression = new Expression($expression, Expression::TYPE_LOGICAL);
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;

@@ -10,7 +10,7 @@ Algo_Model_Selection_Main:
 
   oneToOne:
     tecExpression:
-      targetEntity: TEC_Model_Expression
+      targetEntity: TEC\Expression
       joinColumn:
         name: idExpression
         referencedColumnName: id

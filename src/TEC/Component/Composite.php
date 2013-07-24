@@ -1,49 +1,54 @@
 <?php
 /**
- * @author valentin.claras
- * @author yoann.croizer
- * @author hugo.charbonnier
- * @package TEC
+ * @author     valentin.claras
+ * @package    TEC
+ * @subpackage Component
  */
 
+namespace TEC\Component;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Core_Exception_InvalidArgument;
+use Core_Exception_UndefinedAttribute;
+
 /**
- * @package TEC
- * @subpackage Model
+ * @package    TEC
+ * @subpackage Component
  */
-class TEC_Model_Composite extends TEC_Model_Component
+class Composite extends Component
 {
    /**
     * Constante précisant qu'il s'agit d'une somme.
     *
-    * @var const
+    * @var string
     */
     const OPERATOR_SUM = 'sum';
 
    /**
     * Constante précisant qu'il s'agit d'un produit.
     *
-    * @var const
+    * @var string
     */
     const OPERATOR_PRODUCT = 'mul';
 
    /**
     * Constante précisant qu'il s'agit d'un 'et'.
     *
-    * @var const
+    * @var string
     */
     const LOGICAL_AND ='and';
 
    /**
     * Constante précisant qu'il s'agit d'un 'ou'.
     *
-    * @var const
+    * @var string
     */
     const LOGICAL_OR = 'or';
 
    /**
     * Constante précisant qu'il s'agit d'un 'select'.
     *
-    * @var const
+    * @var string
     */
     const SELECT ='sel';
 
@@ -72,14 +77,14 @@ class TEC_Model_Composite extends TEC_Model_Component
      * @see self::LOGICAL_OR
      * @see self::SELECT
      *
-     * @var const
+     * @var string
      */
     protected $operator;
 
     /**
      * Collection contenant les noeuds enfants.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection
      */
     protected $children = null;
 
@@ -89,18 +94,7 @@ class TEC_Model_Composite extends TEC_Model_Component
      */
     public function __construct()
     {
-        $this->children = new Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Renvoie la référence de la pool active.
-     *  Il s'agit de l'entityManager correspondant.
-     *
-     * @return string
-     */
-    public static function getActivePoolName()
-    {
-        return TEC_Model_Component::getActivePoolName();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -111,7 +105,9 @@ class TEC_Model_Composite extends TEC_Model_Component
      * @see self::LOGICAL_AND
      * @see self::LOGICAL_OR
      *
-     * @param const $operator
+     * @param string $operator
+     * 
+     * @throws Core_Exception_InvalidArgument
      */
     public function setOperator($operator)
     {
@@ -124,7 +120,9 @@ class TEC_Model_Composite extends TEC_Model_Component
     /**
      * Renvoi l'opérateur du noeud.
      *
-     * @return const
+     * @throws Core_Exception_UndefinedAttribute
+     * 
+     * @return string
      */
     public function getOperator()
     {
@@ -137,9 +135,9 @@ class TEC_Model_Composite extends TEC_Model_Component
     /**
      * Ajout un enfant.
      *
-     * @param TEC_Model_Composite $child
+     * @param Component $child
      */
-    public function addChild($child)
+    public function addChild(Component $child)
     {
         if ($child->getParent() !== $this) {
             $child->setParent($this);
@@ -151,9 +149,11 @@ class TEC_Model_Composite extends TEC_Model_Component
     /**
      * Supprime un enfant.
      *
-     * @param TEC_Model_Composite $child
+     * @param Component $child
+     *
+     * @throws Core_Exception_InvalidArgument
      */
-    public function removeChild($child)
+    public function removeChild(Component $child)
     {
         if ($this->hasChild($child)) {
             if ($child->getParent() === $this) {
@@ -166,11 +166,11 @@ class TEC_Model_Composite extends TEC_Model_Component
     /**
      * Indique si le component donné est un enfant de ce composite.
      *
-     * @param TEC_Model_Component $child
+     * @param Component $child
      *
      * @return bool
      */
-    public function hasChild($child)
+    public function hasChild(Component $child)
     {
         return $this->children->contains($child);
     }
@@ -186,8 +186,9 @@ class TEC_Model_Composite extends TEC_Model_Component
     }
 
     /**
-     * Retourne un tableau contenant les instances de ses enfants
-     * @return TEC_Model_Component[]
+     * Retourne un tableau contenant les instances de ses enfants.
+     *
+     * @return Component[]
      */
     public function getChildren()
     {
@@ -195,17 +196,18 @@ class TEC_Model_Composite extends TEC_Model_Component
     }
 
     /**
-     * Retourne un tableau contenant toutes les feuilles
-     * @return TEC_Model_Leaf[]
+     * Retourne un tableau contenant toutes les feuilles.
+     *
+     * @return Leaf[]
      */
     public function getAllLeafsRecursively()
     {
         $leafs = [];
         foreach ($this->children as $child) {
-            if ($child instanceof TEC_Model_Leaf) {
+            if ($child instanceof Leaf) {
                 $leafs[] = $child;
             }
-            if ($child instanceof TEC_Model_Composite) {
+            if ($child instanceof Composite) {
                 $leafs = array_merge($leafs, $child->getAllLeafsRecursively());
             }
         }
