@@ -124,7 +124,18 @@ JS;
                         $inputNode = current($inputNodes);
                         $inputNode->selectOption($content, false);
                     } else {
-                        throw new \Exception("Unable to set cell value in datagrid");
+                        // Textarea
+                        $inputNodes = $this->findAllElements("$popupSelector textarea");
+                        if (count($inputNodes) === 1) {
+                            // Attend la fin du chargement
+                            $textareaLoading = "$('$popupSelector textarea:contains(\"Chargement\")').length == 0";
+                            $this->getSession()->wait(5000, "($textareaLoading)");
+                            /** @var NodeElement $inputNode */
+                            $inputNode = current($inputNodes);
+                            $inputNode->setValue($content);
+                        } else {
+                            throw new \Exception("Unable to set cell value in datagrid");
+                        }
                     }
                 }
             }
