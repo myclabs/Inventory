@@ -66,6 +66,16 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
+            $unitRef = $this->getAddElementValue('unit');
+            if (empty($unitRef)) {
+                $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+            }
+            $unit = new UnitAPI($unitRef);
+            $unit->getNormalizedUnit();
+        } catch (Core_Exception_NotFound $e) {
+            $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+        }
+        try {
             $value = $locale->readNumber($this->getAddElementValue('value'));
         } catch(Core_Exception_InvalidArgument $e) {
             $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'invalidNumber'));
@@ -88,7 +98,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
             $algo->setLabel($this->getAddElementValue('label'));
             /** @noinspection PhpUndefinedVariableInspection */
             $algo->setUnitValue(new Calc_UnitValue(
-                    new UnitAPI($this->getAddElementValue('unit')),
+                    $unit,
                     $value,
                     $uncertainty
                 ));
@@ -128,8 +138,17 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $this->data = $algo->getLabel();
                 break;
             case 'unit':
+                try {
+                    if (empty($newValue)) {
+                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                    }
+                    $unit = new UnitAPI($newValue);
+                    $unit->getNormalizedUnit();
+                } catch (Core_Exception_NotFound $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                }
                 $algo->setUnitValue(new Calc_UnitValue(
-                        new UnitAPI($newValue),
+                        $unit,
                         $algo->getUnitValue()->getDigitalValue(),
                         $algo->getUnitValue()->getRelativeUncertainty()
                     ));

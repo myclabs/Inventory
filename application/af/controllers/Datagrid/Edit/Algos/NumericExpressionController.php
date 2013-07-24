@@ -69,6 +69,16 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
+        try {
+            $unitRef = $this->getAddElementValue('unit');
+            if (empty($unitRef)) {
+                $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+            }
+            $unit = new UnitAPI($unitRef);
+            $unit->getNormalizedUnit();
+        } catch (Core_Exception_NotFound $e) {
+            $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+        }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
             $algo = new Algo_Model_Numeric_Expression();
@@ -89,7 +99,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->send();
                 return;
             }
-            $algo->setUnit(new UnitAPI($this->getAddElementValue('unit')));
+            /** @noinspection PhpUndefinedVariableInspection */
+            $algo->setUnit($unit);
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
@@ -125,7 +136,16 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->data = $algo->getLabel();
                 break;
             case 'unit':
-                $algo->setUnit(new UnitAPI($newValue));
+                try {
+                    if (empty($newValue)) {
+                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                    }
+                    $unit = new UnitAPI($newValue);
+                    $unit->getNormalizedUnit();
+                } catch (Core_Exception_NotFound $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                }
+                $algo->setUnit($unit);
                 $this->data = $algo->getUnit()->getRef();
                 break;
             case 'expression':
