@@ -91,7 +91,7 @@ class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
 		$this->entityManager->flush();
 
 		$this->assertEquals('test', $o->getRef());
-		$this->assertEquals($expression, $o->getExpression());
+		$this->assertEquals($expression, str_replace(' ', '', $o->getExpression()));
 
 		return $o;
     }

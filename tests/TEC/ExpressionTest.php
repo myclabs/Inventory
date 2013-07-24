@@ -156,7 +156,7 @@ class TEC_Test_ExpressionSetUp extends PHPUnit_Framework_TestCase
  * expressionLogiqueMetierTest
  * @package TEC
  */
-class expressionLogiqueMetierTest extends PHPUnit_Framework_TestCase
+class expressionLogiqueMetierTest extends Core_Test_TestCase
 {
      /**
       * Méthode appelée avant l'appel à la classe de test
@@ -287,11 +287,21 @@ class expressionLogiqueMetierTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * Méthode appelée à la fin de chaque test
-     */
-    protected function tearDown()
+    public function testGetTreeAsStringAfterReload()
     {
+        $str = 'ConditionCheckbox : (: KeywordFixed ; ConditionMulti : KeywordOption)';
+
+        $model = new TEC_Model_Expression($str, TEC_Model_Expression::TYPE_SELECT);
+        $model->save();
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $model = TEC_Model_Expression::load($model->getKey());
+
+        $model->delete();
+        $this->entityManager->flush();
+
+        $this->assertEquals($str, $model->getTreeAsString());
     }
 
     /**

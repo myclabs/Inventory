@@ -29,19 +29,6 @@ class TEC_Test_SelectTest
  */
 class TEC_Test_AlgoSelect extends PHPUnit_Framework_TestCase
 {
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
-    public static function setUpBeforeClass()
-    {
-    }
-
-    /**
-     * Méthode appelée avant chaque test
-     */
-    protected function setUp()
-    {
-    }
 
     /**
      * Test de la méthode getErrors()
@@ -202,20 +189,6 @@ class TEC_Test_AlgoSelect extends PHPUnit_Framework_TestCase
                         .'[{v:"-1",f:"o3"},"",""],'
                         .'[{v:"-2",f:"o4"},"",""],';
         $this->assertEquals($expectedGraph, $treeAsGraph);
-    }
-
-    /**
-     * Méthode appelée à la fin de chaque test
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * Méthode appelée à la fin de la classe de test
-     */
-    public static function tearDownAfterClass()
-    {
     }
 
 }
