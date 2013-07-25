@@ -5,7 +5,26 @@ Feature: AF elementary condition for treatment feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an elementary condition for treatment scenario
+  Scenario: Creation of an elementary condition for treatment scenario, correct input
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
+    And I wait for the page to finish loading
+    And I open collapse "Conditions"
+    And I open collapse "Conditions élémentaires"
+    Then I should see the "algoConditionElementary" datagrid
+  # Popup d'ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'une condition élémentaire"
+  # Ajout, saisie correcte
+    When I fill in "algoConditionElementary_ref_addForm" with "aaa"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Conditions élémentaires ordonnées suivant l'ordre de création
+    And the row 2 of the "algoNumericConstant" datagrid should contain:
+      | ref | input           |
+      | aaa | Champ numérique |
+
+  @javascript
+  Scenario: Creation of an elementary condition for treatment scenario, incorrect input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Conditions"
@@ -27,34 +46,17 @@ Feature: AF elementary condition for treatment feature
     When I fill in "algoConditionElementary_ref_addForm" with "champ_numerique"
     And I click "Valider"
     Then the field "algoConditionElementary_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Ajout, saisie correcte
-    When I fill in "algoConditionElementary_ref_addForm" with "aaa"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-  # Conditions élémentaires ordonnées suivant l'ordre de création
-    And the row 2 of the "algoNumericConstant" datagrid should contain:
-      | ref | input           |
-      | aaa | Champ numérique |
 
   @javascript
-  Scenario: Edition of an elementary condition for treatment scenario
+  Scenario: Edition of an elementary condition for treatment scenario, correct input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Conditions"
-    And I open collapse "Conditions élémentaires" 
+    And I open collapse "Conditions élémentaires"
     Then I should see the "algoConditionElementary" datagrid
     And the row 1 of the "algoConditionElementary" datagrid should contain:
       | ref                   | input                                                                                 |
       | condition_elementaire | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Traitement" |
-  # Modification de l'identifiant, identifiant vide
-    When I set "" for column "ref" of row 1 of the "algoConditionElementary" datagrid
-    Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant, identifiant avec caractères non autorisés
-    When I set "bépo" for column "ref" of row 1 of the "algoConditionElementary" datagrid
-    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "algoConditionElementary" datagrid
-    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, saisie correcte
     When I set "condition_elementaire_modifiee" for column "ref" of row 1 of the "algoConditionElementary" datagrid with a confirmation message
   # Popup d'édition
@@ -70,6 +72,24 @@ Feature: AF elementary condition for treatment feature
     Then the row 1 of the "algoConditionElementary" datagrid should contain:
       | ref                            | relation | value    |
       | condition_elementaire_modifiee | ≠        | option_1 |
+
+  @javascript
+  Scenario: Edition of an elementary condition for treatment scenario, incorrect input
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
+    And I wait for the page to finish loading
+    And I open collapse "Conditions"
+    And I open collapse "Conditions élémentaires"
+    Then I should see the "algoConditionElementary" datagrid
+  # Modification de l'identifiant, identifiant vide
+    When I set "" for column "ref" of row 1 of the "algoConditionElementary" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant, identifiant avec caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "algoConditionElementary" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification de l'identifiant, identifiant déjà utilisé
+    When I set "champ_numerique" for column "ref" of row 1 of the "algoConditionElementary" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+
 
   @javascript
   Scenario: Deletion of an elementary condition for treatment scenario

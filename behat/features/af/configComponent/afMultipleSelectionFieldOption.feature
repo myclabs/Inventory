@@ -6,7 +6,7 @@ Feature: AF multiple selection field option feature
 
   @javascript
   Scenario: Creation of a multiple selection field option scenario
-  # Accès au popup des options
+   # Accès au popup des options
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Composants"

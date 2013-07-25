@@ -5,7 +5,27 @@ Feature: AF elementary condition for interaction feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an elementary condition for interaction scenario
+  Scenario: Creation of an elementary condition for interaction scenario, correct input
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Interactions"
+    And I open collapse "Conditions élémentaires"
+    Then I should see the "conditionsElementary" datagrid
+  # Popup d'ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'une condition élémentaire"
+  # Ajout, identifiant correct
+    When I fill in "conditionsElementary_ref_addForm" with "aaa"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Conditions élémentaires affichées dans l'ordre d'ajout
+    And the row 4 of the "conditionsElementary" datagrid should contain:
+      | ref  | field         | relation | value |
+      | aaa  | Champ booléen | =        |       |
+
+
+  @javascript
+  Scenario: Creation of an elementary condition for interaction scenario, incorrect input
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Interactions"
@@ -27,17 +47,9 @@ Feature: AF elementary condition for interaction feature
     When I fill in "conditionsElementary_ref_addForm" with "condition_composee_interactions"
     And I click "Valider"
     Then the field "conditionsElementary_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Ajout, identifiant correct
-    When I fill in "conditionsElementary_ref_addForm" with "aaa"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-  # Conditions élémentaires affichées dans l'ordre d'ajout
-    And the row 4 of the "conditionsElementary" datagrid should contain:
-      | ref  | field         | relation | value |
-      | aaa  | Champ booléen | =        |       |
 
   @javascript
-  Scenario: Edition of an elementary condition for interaction scenario
+  Scenario: Edition of an elementary condition for interaction scenario, correct input
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Interactions"
@@ -47,15 +59,6 @@ Feature: AF elementary condition for interaction feature
     And the row 1 of the "conditionsElementary" datagrid should contain:
       | ref                                 | field                                                                                   | relation | value |
       | condition_elementaire_interactions  | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Interactions" | =        |       |
-  # Modification de l'identifiant, identifiant vide
-    When I set "" for column "ref" of row 1 of the "conditionsElementary" datagrid
-    Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant, identifiant avec caractères non autorisés
-    When I set "bépo" for column "ref" of row 1 of the "conditionsElementary" datagrid
-    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "condition_composee_interactions" for column "ref" of row 1 of the "conditionsElementary" datagrid
-    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, saisie correcte
     When I set "condition_elementaire_interactions_modifiee" for column "ref" of row 1 of the "conditionsElementary" datagrid with a confirmation message
   # Popup d'édition
@@ -71,6 +74,22 @@ Feature: AF elementary condition for interaction feature
       | ref                                         | relation | value    |
       | condition_elementaire_interactions_modifiee | ≠        | Option 1 |
 
+  @javascript
+  Scenario: Edition of an elementary condition for interaction scenario, incorrect input
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Interactions"
+    And I open collapse "Conditions élémentaires"
+    Then I should see the "conditionsElementary" datagrid
+  # Modification de l'identifiant, identifiant vide
+    When I set "" for column "ref" of row 1 of the "conditionsElementary" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant, identifiant avec caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "conditionsElementary" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification de l'identifiant, identifiant déjà utilisé
+    When I set "condition_composee_interactions" for column "ref" of row 1 of the "conditionsElementary" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
   Scenario: Deletion of an elementary condition for interaction scenario

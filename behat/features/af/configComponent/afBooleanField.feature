@@ -5,7 +5,31 @@ Feature: AF boolean field feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a boolean field
+  Scenario: Creation of a boolean field, correct input
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Champs booléens"
+    Then I should see the "checkboxFieldDatagrid" datagrid
+  # Popup d'ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un champ booléen"
+  # Ajout, saisie correcte
+    When I fill in "checkboxFieldDatagrid_label_addForm" with "AAA"
+    And I fill in "checkboxFieldDatagrid_ref_addForm" with "aaa"
+    And I fill in "checkboxFieldDatagrid_help_addForm" with "h1. Blabla"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Champs ordonnés suivant l'ordre de création, vérification des valeurs par défaut
+    And the row 2 of the "checkboxFieldDatagrid" datagrid should contain:
+      | label | ref | isVisible | enabled | defaultValue |
+      | AAA   | aaa | Visible   | Activé  | Décoché      |
+    When I click "Aide" in the row 2 of the "checkboxFieldDatagrid" datagrid
+    Then I should see the popup "Aide"
+    And I should see a "#checkboxFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
+
+  @javascript
+  Scenario: Creation of a boolean field, incorrect input
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Composants"
@@ -26,41 +50,20 @@ Feature: AF boolean field feature
     When I fill in "checkboxFieldDatagrid_ref_addForm" with "champ_numerique"
     And I click "Valider"
     Then the field "checkboxFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Ajout, saisie correcte
-    When I fill in "checkboxFieldDatagrid_label_addForm" with "AAA"
-    And I fill in "checkboxFieldDatagrid_ref_addForm" with "aaa"
-    And I fill in "checkboxFieldDatagrid_help_addForm" with "h1. Blabla"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-  # Champs ordonnés suivant l'ordre de création, vérification des valeurs par défaut
-    And the row 2 of the "checkboxFieldDatagrid" datagrid should contain:
-      | label | ref | isVisible | enabled | defaultValue |
-      | AAA   | aaa | Visible   | Activé  | Décoché      |
-    When I click "Aide" in the row 2 of the "checkboxFieldDatagrid" datagrid
-    Then I should see the popup "Aide"
-    And I should see a "#checkboxFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
 
   @javascript
-  Scenario: Edition of a boolean field
+  Scenario: Edition of a boolean field, correct input
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Composants"
     And I open collapse "Champs booléens"
     Then I should see the "checkboxFieldDatagrid" datagrid
+  # Contenu initial
     And the row 1 of the "checkboxFieldDatagrid" datagrid should contain:
       | label         | ref           | isVisible | enabled | defaultValue |
       | Champ booléen | champ_booleen | Visible   | Activé  | Coché        |
   # Modification du libellé
     When I set "Champ booléen modifié" for column "label" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
-  # Modification de l'identifiant, identifiant vide
-    When I set "" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
-    Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant, identifiant avec caractères non autorisés
-    When I set "bépo" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
-    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
-    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, saisie correcte
     When I set "champ_booleen_modifie" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
   # Modification de l'aide
@@ -77,6 +80,18 @@ Feature: AF boolean field feature
     When I click "Aide" in the row 1 of the "checkboxFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#checkboxFieldDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
+
+  @javascript
+  Scenario: Edition of a boolean field, incorrect input
+  # Modification de l'identifiant, identifiant vide
+    When I set "" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant, identifiant avec caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification de l'identifiant, identifiant déjà utilisé
+    When I set "champ_numerique" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
   Scenario: Deletion of a boolean field
