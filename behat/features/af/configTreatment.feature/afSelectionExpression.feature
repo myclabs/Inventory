@@ -5,7 +5,7 @@ Feature: AF selection expression algo feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an algo selection expression scenario
+  Scenario: Creation of an algo selection expression scenario, correct input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Algorithmes de sélection d’identifiant"
@@ -14,7 +14,31 @@ Feature: AF selection expression algo feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un algorithme de sélection d’identifiant de type expression"
-    # TODO : rajouter guillemets (pas réussi à traiter l'échappement).
+# TODO : rajouter guillemets (pas réussi à traiter l'échappement).
+  # Ajout, saisie correcte
+    When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "aaa"
+    And I fill in "algoSelectionTextkeyExpression_expression_addForm" with "a:(b:(c:d;e:(f:g;:h)))"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Algos ordonnés suivant l'ordre de création
+    And the row 4 of the "algoSelectionTextkeyExpression" datagrid should contain:
+      | ref  |
+      | aaa  |
+    When I click "Expression" in the row 4 of the "algoSelectionTextkeyExpression" datagrid
+    Then I should see the popup "Expression"
+    And I should see "a : (b : (c : d ; e : (f : g ; : h)))"
+
+  @javascript
+  Scenario: Creation of an algo selection expression scenario, incorrect input
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
+    And I wait for the page to finish loading
+    And I open collapse "Algorithmes de sélection d’identifiant"
+    And I open collapse "Expressions"
+    Then I should see the "algoSelectionTextkeyExpression" datagrid
+  # Popup d'ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un algorithme de sélection d’identifiant de type expression"
+  # TODO : rajouter guillemets (pas réussi à traiter l'échappement).
   # Ajout, identifiant vide
     When I click "Valider"
     Then the field "algoSelectionTextkeyExpression_ref_addForm" should have error: "Merci de renseigner ce champ."
@@ -34,20 +58,27 @@ Feature: AF selection expression algo feature
     When I fill in "algoSelectionTextkeyExpression_expression_addForm" with "a:(b:(c:d;e:(f:g;:h)))"
     And I click "Valider"
     Then the field "algoSelectionTextkeyExpression_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Ajout, saisie correcte
-    When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "aaa"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-  # Algos ordonnés suivant l'ordre de création
-    And the row 2 of the "algoSelectionTextkeyExpression" datagrid should contain:
-      | ref  |
-      | aaa  |
-    When I click "Expression" in the row 2 of the "algoSelectionTextkeyExpression" datagrid
-    Then I should see the popup "Expression"
-    And I should see "a : (b : (c : d ; e : (f : g ; : h)))"
 
   @javascript
-  Scenario: Edition of an algo selection expression scenario
+  Scenario: Edition of an algo selection expression scenario, correct input
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
+    And I wait for the page to finish loading
+    And I open collapse "Algorithmes de sélection d’identifiant"
+    And I open collapse "Expressions"
+    Then I should see the "algoSelectionTextkeyExpression" datagrid
+  # Modification de l'identifiant, saisie correcte
+    When I set "expression_selection_modifiee" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
+    Then the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
+      | ref                           |
+      | expression_selection_modifiee |
+  # Modification de l'expression, saisie correcte
+    When I set "a:b" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
+    When I click "Expression" in the row 2 of the "algoSelectionTextkeyExpression" datagrid
+    Then I should see the popup "Expression"
+    And I should see "a : b"
+
+  @javascript
+  Scenario: Edition of an algo selection expression scenario, incorrect input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Algorithmes de sélection d’identifiant"
@@ -69,22 +100,12 @@ Feature: AF selection expression algo feature
   # Modification de l'identifiant, identifiant déjà utilisé
     When I set "champ_numerique" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Modification de l'identifiant, saisie correcte
-    When I set "expression_selection_modifiee" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
-    Then the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
-      | ref                           |
-      | expression_selection_modifiee |
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression « »."
   # Modification de l'expression, saisie invalide
     When I set "a:(b:(c:d)" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
-  # Modification de l'expression, saisie correcte
-    When I set "a:b" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
-    When I click "Expression" in the row 2 of the "algoSelectionTextkeyExpression" datagrid
-    Then I should see the popup "Expression"
-    And I should see "a : b"
 
   @javascript
   Scenario: Deletion of an algo selection expression scenario

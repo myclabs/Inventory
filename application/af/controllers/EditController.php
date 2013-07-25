@@ -166,8 +166,8 @@ class AF_EditController extends Core_Controller
             try {
                 $af->getMainAlgo()->setExpression(trim($formData->getValue('expression')));
             } catch (InvalidExpressionException $e) {
-                $message = __('TEC', 'texts', 'incorrectExpressionWithErrors',
-                              ['ERRORS' => implode("<br>", $e->getErrors())]);
+                $message = __('AF', 'configTreatmentMessage', 'invalidExpression')
+                    . "<br>" . implode("<br>", $e->getErrors());
                 $this->addFormError('expression', $message);
             }
             if (!$this->hasFormError()) {

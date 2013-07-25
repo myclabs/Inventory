@@ -5,7 +5,7 @@ Feature: AF group feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an AF group
+  Scenario: Creation of an AF group, correct input
   # Accès au datagrid
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
@@ -15,18 +15,6 @@ Feature: AF group feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un groupe"
-  # Ajout, identifiant vide
-    When I click "Valider"
-   # Then the field "groupDatagrid_label_addForm" should have error: "Merci de renseigner ce champ."
-    And the field "groupDatagrid_ref_addForm" should have error: "Merci de renseigner ce champ."
-  # Ajout, identifiant avec caractères non autorisés
-    When I fill in "groupDatagrid_ref_addForm" with "bépo"
-    And I click "Valider"
-    Then the field "groupDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout, identifiant déjà utilisé
-    When I fill in "groupDatagrid_ref_addForm" with "champ_numerique"
-    And I click "Valider"
-    Then the field "groupDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Ajout, saisie correcte
     When I fill in "groupDatagrid_label_addForm" with "AAA"
     And I fill in "groupDatagrid_ref_addForm" with "aaa"
@@ -41,8 +29,33 @@ Feature: AF group feature
     Then I should see the popup "Aide"
     And I should see a "#groupDatagrid_help_popup .modal-body h1:contains('Blabla')" element
 
+
   @javascript
-  Scenario: Edition of an AF group
+  Scenario: Creation of an AF group, incorrect input
+  # Accès au datagrid
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Groupes"
+    Then I should see the "groupDatagrid" datagrid
+  # Popup d'ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un groupe"
+  # Ajout, identifiant vide
+    When I click "Valider"
+  # Then the field "groupDatagrid_label_addForm" should have error: "Merci de renseigner ce champ."
+    And the field "groupDatagrid_ref_addForm" should have error: "Merci de renseigner ce champ."
+  # Ajout, identifiant avec caractères non autorisés
+    When I fill in "groupDatagrid_ref_addForm" with "bépo"
+    And I click "Valider"
+    Then the field "groupDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Ajout, identifiant déjà utilisé
+    When I fill in "groupDatagrid_ref_addForm" with "champ_numerique"
+    And I click "Valider"
+    Then the field "groupDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+
+  @javascript
+  Scenario: Edition of an AF group, correct input
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Composants"
@@ -50,15 +63,6 @@ Feature: AF group feature
     Then I should see the "groupDatagrid" datagrid
   # Modification du libellé
     When I set "Groupe modifié" for column "label" of row 1 of the "groupDatagrid" datagrid with a confirmation message
-  # Modification de l'identifiant, identifiant vide
-    When I set "" for column "ref" of row 1 of the "groupDatagrid" datagrid
-    Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant, identifiant avec caractères non autorisés
-    When I set "bépo" for column "ref" of row 1 of the "groupDatagrid" datagrid
-    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "groupDatagrid" datagrid
-    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, saisie correcte
     When I set "groupe_modifie" for column "ref" of row 1 of the "groupDatagrid" datagrid with a confirmation message
   # Modification de l'aide
@@ -72,6 +76,23 @@ Feature: AF group feature
     When I click "Aide" in the row 1 of the "groupDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#groupDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
+
+  @javascript
+  Scenario: Edition of an AF group, incorrect input
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Groupes"
+    Then I should see the "groupDatagrid" datagrid
+  # Modification de l'identifiant, identifiant vide
+    When I set "" for column "ref" of row 1 of the "groupDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant, identifiant avec caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "groupDatagrid" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification de l'identifiant, identifiant déjà utilisé
+    When I set "champ_numerique" for column "ref" of row 1 of the "groupDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
   Scenario: Deletion of an AF group

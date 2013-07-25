@@ -14,12 +14,18 @@ Feature: AF change component state interaction feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une action de modification de l'état d'un composant"
-  # Ajout, sans rien préciser (champs présélectionnés par défaut)
+  # Remarque : composant cible et mode de détermination sont pré-remplis, et la condition est facultative (peut être saisie ultérieurement).
+  # Donc l'ajout sans rien préciser ne pose pas de problème particulier.
+  #
+    When I select "Champ numérique" from "actionsSetState_targetComponent_addForm"
+    And I select "Désactiver" from "actionsSetState_typeState_addForm"
+    And I select "condition_elementaire_interactions" from "actionsSetState_condition_addForm"
     When I click "Valider"
-  # TODO…
-
-
     Then the following message is shown and closed: "Ajout effectué."
+  # Vérification contenu datagrid
+    And the row 2 of the "actionsSetState" datagrid should contain:
+      | targetComponent | typeState  | condition                          |
+      | Champ numérique | Désactiver | condition_elementaire_interactions |
 
   @javascript
   Scenario: Edition of a change component state interaction scenario
@@ -39,8 +45,6 @@ Feature: AF change component state interaction feature
     Then the row 1 of the "actionsSetState" datagrid should contain:
       | targetComponent                  | typeState | condition                                                   |
       | Champ numérique cible activation | Masquer   | condition_elementaire_interactions_utilisee_action_setvalue |
-
-
 
   @javascript
   Scenario: Deletion of a change component state interaction scenario

@@ -5,7 +5,28 @@ Feature: AF numeric parameter algo feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an algo numeric parameter scenario
+  Scenario: Creation of an algo numeric parameter scenario, correct input
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
+    And I wait for the page to finish loading
+    And I open collapse "Algorithmes numériques"
+    And I open collapse "Paramètres"
+    Then I should see the "algoNumericParameter" datagrid
+  # Popup d'ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un algorithme numérique de type « paramètre »"
+  # Ajout, identifiant valide
+    When I fill in "algoNumericParameter_label_addForm" with "Test"
+    And I fill in "algoNumericParameter_ref_addForm" with "aaa"
+    And I select "Masse volumique de combustible" from "algoNumericParameter_family_addForm"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Algos ordonnés suivant l'ordre alphabétique des identifiants ?
+    And the row 2 of the "algoNumericParameter" datagrid should contain:
+      | label | ref  | family         |
+      | AAA   | aaa  | Masse volumique de combustible |
+
+  @javascript
+  Scenario: Creation of an algo numeric parameter scenario, incorrect input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Algorithmes numériques"
@@ -28,17 +49,9 @@ Feature: AF numeric parameter algo feature
     When I fill in "algoNumericParameter_ref_addForm" with "champ_numerique"
     And I click "Valider"
     Then the field "algoNumericParameter_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Ajout, identifiant valide
-    When I fill in "algoNumericParameter_ref_addForm" with "test"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-  # Algos ordonnés suivant l'ordre alphabétique des identifiants ?
-    And the row 2 of the "algoNumericParameter" datagrid should contain:
-      | label | ref  | family         |
-      | Test  | test | Masse volumique de combustible |
 
   @javascript
-  Scenario: Edition of an algo numeric parameter scenario
+  Scenario: Edition of an algo numeric parameter scenario, correct input
   # Accès au datagrid
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
@@ -51,6 +64,23 @@ Feature: AF numeric parameter algo feature
       | Paramètre | parametre | Combustion de combustible, mesuré en unité de masse |
   # Modification du libellé
     When I set "Paramètre modifié" for column "label" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
+  # Modification de l'identifiant, saisie correcte
+    When I set "parametre_modifie" for column "ref" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
+  # Modification de la famille, saisie correcte
+    When I set "Masse volumique de combustible" for column "family" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
+    Then the following message is shown and closed: "Modification effectuée."
+    And the row 1 of the "algoNumericParameter" datagrid should contain:
+      | label     | ref       | family                         |
+      | Paramètre | parametre | Masse volumique de combustible |
+
+  @javascript
+  Scenario: Edition of an algo numeric parameter scenario, incorrect input
+  # Accès au datagrid
+    Given I am on "af/edit/menu/id/4/onglet/traitement"
+    And I wait for the page to finish loading
+    And I open collapse "Algorithmes numériques"
+    And I open collapse "Paramètres"
+    Then I should see the "algoNumericParameter" datagrid
   # Modification de l'identifiant, identifiant vide
     When I set "" for column "ref" of row 1 of the "algoNumericParameter" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
@@ -60,20 +90,12 @@ Feature: AF numeric parameter algo feature
   # Modification de l'identifiant, identifiant déjà utilisé
     When I set "champ_numerique" for column "ref" of row 1 of the "algoNumericParameter" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Modification de l'identifiant, saisie correcte
-    When I set "parametre_modifie" for column "ref" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
   # Modification de la famille, famille vide
     When I set "" for column "family" of row 1 of the "algoNumericParameter" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
     And the row 1 of the "algoNumericParameter" datagrid should contain:
       | family                                              |
       | Combustion de combustible, mesuré en unité de masse |
-  # Modification de la famille, saisie correcte
-    When I set "Masse volumique de combustible" for column "family" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
-    Then the following message is shown and closed: "Modification effectuée."
-    And the row 1 of the "algoNumericParameter" datagrid should contain:
-      | label     | ref       | family                         |
-      | Paramètre | parametre | Masse volumique de combustible |
 
   @javascript
   Scenario: Edition of coordinates of an algo numeric parameter scenario

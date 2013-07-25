@@ -5,7 +5,7 @@ Feature: AF single selection field feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a single selection field scenario
+  Scenario: Creation of a single selection field scenario, correct input
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Composants"
@@ -14,22 +14,6 @@ Feature: AF single selection field feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un champ de sélection simple"
-  # Ajout, identifiant vide
-    When I click "Valider"
-  # Then the field "selectSingleFieldDatagrid_label_addForm" should have error: "Merci de renseigner ce champ."
-    And the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de renseigner ce champ."
-  # Ajout, identifiant avec caractères non autorisés
-    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "bépo"
-    And I click "Valider"
-    Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout, identifiant déjà utilisé pour un autre composant
-    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "champ_numerique"
-    And I click "Valider"
-    Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Ajout, identifiant déjà utilisé pour un autre algorithme de séloction d'identifiant
-    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "expression_selection"
-    And I click "Valider"
-    Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Ajout, saisie correcte
     When I fill in "selectSingleFieldDatagrid_label_addForm" with "AAA"
     And I fill in "selectSingleFieldDatagrid_ref_addForm" with "aaa"
@@ -55,7 +39,34 @@ Feature: AF single selection field feature
       | aaa | AAA   |
 
   @javascript
-  Scenario: Edition of a single selection field scenario
+  Scenario: Creation of a single selection field scenario, incorrect input
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Champs de sélection simple"
+    Then I should see the "selectSingleFieldDatagrid" datagrid
+  # Popup d'ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un champ de sélection simple"
+  # Ajout, identifiant vide
+    When I click "Valider"
+  # Then the field "selectSingleFieldDatagrid_label_addForm" should have error: "Merci de renseigner ce champ."
+    And the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de renseigner ce champ."
+  # Ajout, identifiant avec caractères non autorisés
+    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "bépo"
+    And I click "Valider"
+    Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Ajout, identifiant déjà utilisé pour un autre composant
+    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "champ_numerique"
+    And I click "Valider"
+    Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Ajout, identifiant déjà utilisé pour un autre algorithme de séloction d'identifiant
+    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "expression_selection"
+    And I click "Valider"
+    Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+
+  @javascript
+  Scenario: Edition of a single selection field scenario, correct input
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Composants"
@@ -66,18 +77,6 @@ Feature: AF single selection field feature
       | Champ sélection simple | champ_selection_simple | Visible   | Activé  | Obligatoire |              | Liste déroulante |
   # Modification du libellé
     When I set "Champ sélection simple modifié" for column "label" of row 1 of the "selectSingleFieldDatagrid" datagrid with a confirmation message
-  # Modification de l'identifiant, identifiant vide
-    When I set "" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
-    Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant, identifiant avec caractères non autorisés
-    When I set "bépo" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
-    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé pour un autre composant
-    When I set "champ_numerique" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
-    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Modification de l'identifiant, identifiant déjà utilisé pour un autre algorithme de sélection d'identifiant
-    When I set "expression_selection" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
-    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, saisie correcte
     When I set "champ_selection_simple_modifie" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid with a confirmation message
   # Modification de l'aide
@@ -105,6 +104,25 @@ Feature: AF single selection field feature
       | ref                            | input                          |
       | champ_selection_simple_modifie | Champ sélection simple modifié |
 
+  @javascript
+  Scenario: Edition of a single selection field scenario, incorrect input
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Champs de sélection simple"
+    Then I should see the "selectSingleFieldDatagrid" datagrid
+  # Modification de l'identifiant, identifiant vide
+    When I set "" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant, identifiant avec caractères non autorisés
+    When I set "bépo" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification de l'identifiant, identifiant déjà utilisé pour un autre composant
+    When I set "champ_numerique" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Modification de l'identifiant, identifiant déjà utilisé pour un autre algorithme de sélection d'identifiant
+    When I set "expression_selection" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
   Scenario: Deletion of a single selection field scenario
