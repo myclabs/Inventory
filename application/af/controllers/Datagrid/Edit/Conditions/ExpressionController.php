@@ -121,7 +121,11 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
                 break;
         }
         $condition->save();
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
