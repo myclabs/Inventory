@@ -41,6 +41,7 @@ foreach ($fields as $table => $column) {
         $object = unserialize($row[$column]);
 
         if ($object === false) {
+            continue;
             die('Error while deserializing');
         }
 
@@ -78,4 +79,14 @@ class Calc_UnitValue
 {
     public $unit;
     public $value;
+}
+
+class Unit_API
+{
+    protected $ref;
+
+    public function getRef()
+    {
+        return $this->ref;
+    }
 }
