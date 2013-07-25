@@ -1,17 +1,19 @@
 <?php
 /**
- * @author valentin.claras
- * @author yoann.croizer
- * @author hugo.charbonnier
- * @package Exec
+ * @author     valentin.claras
+ * @package    Exec
+ * @subpackage Provider
  */
+
+namespace Exec\Provider;
 
 /**
  * Interface à implémenter pour récupérer une valeur d'un Input.
  *
  * @package    Exec
+ * @subpackage Provider
  */
-interface Exec_Interface_ValueProvider
+interface ValueInterface
 {
     /**
      * Vérifie la valeur associée à la ref donnée en vue de l'execution.

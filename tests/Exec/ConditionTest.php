@@ -6,6 +6,7 @@
  * @package Exec
  */
 
+use Exec\Execution\Condition;
 use TEC\Expression;
 
 /**
@@ -39,8 +40,8 @@ class Exec_Test_ConditionSetUp extends PHPUnit_Framework_TestCase
     function testConstruct()
     {
         $tecExpression = new Expression('foo:bar');
-        $executionCondition = new Exec_Execution_Condition($tecExpression);
-        $this->assertInstanceOf('Exec_Execution_Condition', $executionCondition);
+        $executionCondition = new Condition($tecExpression);
+        $this->assertInstanceOf('Exec\Execution\Condition', $executionCondition);
     }
 
 }
@@ -81,19 +82,19 @@ class Exec_Test_ConditionOthers extends PHPUnit_Framework_TestCase
     function testExecuteComponent()
     {
         $valueProvider1 = new Inventory_Model_ValueProviderEntity(array('a' => true, 'b' => false, 'c' => true));
-        $expressionCondition1 = new Exec_Execution_Condition($this->expression1);
+        $expressionCondition1 = new Condition($this->expression1);
         $this->assertTrue($expressionCondition1->executeExpression($valueProvider1));
 
         $valueProvider2 = new Inventory_Model_ValueProviderEntity(array('vrai' => true, 'faux' => false));
-        $expressionCondition2 = new Exec_Execution_Condition($this->expression2);
+        $expressionCondition2 = new Condition($this->expression2);
         $this->assertFalse($expressionCondition2->executeExpression($valueProvider2));
 
         $valueProvider3 = new Inventory_Model_ValueProviderEntity(array('un' => false, 'zero' => true));
-        $expressionCondition3 = new Exec_Execution_Condition($this->expression3);
+        $expressionCondition3 = new Condition($this->expression3);
         $this->assertTrue($expressionCondition3->executeExpression($valueProvider3));
 
         $valueProvider4 = new Inventory_Model_ValueProviderEntity(array('a' => true, 'b' => true, 'c' => false));
-        $expressionCondition4 = new Exec_Execution_Condition($this->expression4);
+        $expressionCondition4 = new Condition($this->expression4);
         $this->assertTrue($expressionCondition4->executeExpression($valueProvider4));
     }
 

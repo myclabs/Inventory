@@ -6,6 +6,7 @@
  * @package Exec
  */
 
+use Exec\Execution\Select;
 use TEC\Expression;
 
 /**
@@ -37,8 +38,8 @@ class Exec_Test_SelectSetUp extends PHPUnit_Framework_TestCase
     function testConstruct()
     {
         $tecExpression = new Expression('foo:bar');
-        $executionSelection = new Exec_Execution_Select($tecExpression);
-        $this->assertInstanceOf('Exec_Execution_Select', $executionSelection);
+        $executionSelection = new Select($tecExpression);
+        $this->assertInstanceOf('Exec\Execution\Select', $executionSelection);
     }
 
 }
@@ -87,7 +88,7 @@ class Exec_Test_SelectOthers extends PHPUnit_Framework_TestCase
      */
     function testExecuteExpression()
     {
-        $selection = new Exec_Execution_Select($this->expression);
+        $selection = new Select($this->expression);
 
         $result = $selection->executeExpression($this->_valueProvider);
 

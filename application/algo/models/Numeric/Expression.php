@@ -6,6 +6,9 @@
  * @package Algo
  */
 
+use Exec\Execution\Calc;
+use Exec\Provider\UnitInterface;
+use Exec\Provider\ValueInterface;
 use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 use Unit\IncompatibleUnitsException;
@@ -16,7 +19,7 @@ use Unit\UnitAPI;
  * @subpackage Numeric
  */
 class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
-    implements Exec_Interface_ValueProvider, Exec_Interface_UnitProvider
+    implements ValueInterface, UnitInterface
 {
 
     /**
@@ -42,8 +45,8 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
         // Construit l'arbre
         $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
 
-        $calc = new Exec_Execution_Calc($tecExpression);
-        $calc->setCalculType(Exec_Execution_Calc::CALC_UNITVALUE);
+        $calc = new Calc($tecExpression);
+        $calc->setCalculType(Calc::CALC_UNITVALUE);
         /** @var $result Calc_UnitValue */
         $result = $calc->executeExpression($this);
 
@@ -97,7 +100,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
 
         // Vérifie chaque composant de l'expression
         $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
-        $calc = new Exec_Execution_Calc($tecExpression);
+        $calc = new Calc($tecExpression);
         $errors = array_merge($errors, $calc->getErrors($this));
 
         // Vérifie la compatibilité des unités

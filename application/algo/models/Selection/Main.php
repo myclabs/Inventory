@@ -6,13 +6,15 @@
  * @package Algo
  */
 
+use Exec\Execution\Select;
+use Exec\Provider\ValueInterface;
 use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 
 /**
  * @package Algo
  */
-class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Interface_ValueProvider
+class Algo_Model_Selection_Main extends Algo_Model_Selection implements ValueInterface
 {
 
     /**
@@ -33,7 +35,7 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
         // Construit l'arbre
         $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
 
-        $executionSelect = new Exec_Execution_Select($tecExpression);
+        $executionSelect = new Select($tecExpression);
         // on doit avoir en sortie un tableau de Algo_Model_Output
         return $executionSelect->executeExpression($this);
     }
@@ -51,7 +53,7 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
         }
 
         $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
-        $executionSelect = new Exec_Execution_Select($tecExpression);
+        $executionSelect = new Select($tecExpression);
         // On doit avoir en sortie un tableau des refs des algos numériques
         $refs = $executionSelect->getSelectedLeafs($this);
 
@@ -108,7 +110,7 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements Exec_Int
 
         // Valide l'expression
         $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
-        $executionSelect = new Exec_Execution_Select($tecExpression);
+        $executionSelect = new Select($tecExpression);
         return array_merge($errors, $executionSelect->getErrors($this));
     }
 

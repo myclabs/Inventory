@@ -7,6 +7,8 @@
  * @subpackage Condition
  */
 
+use Exec\Execution\Condition;
+use Exec\Provider\ValueInterface;
 use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 
@@ -15,7 +17,7 @@ use TEC\Expression;
  * @subpackage Condition
  */
 class Algo_Model_Condition_Expression extends Algo_Model_Condition
-    implements Exec_Interface_ValueProvider
+    implements ValueInterface
 {
 
     /**
@@ -35,7 +37,7 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
         // Construit l'arbre
         $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
 
-        $executionCalc = new Exec_Execution_Condition($tecExpression);
+        $executionCalc = new Condition($tecExpression);
         return $executionCalc->executeExpression($this);
     }
 
@@ -62,7 +64,7 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
             return $errors;
         }
         $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
-        $executionSelect = new Exec_Execution_Condition($tecExpression);
+        $executionSelect = new Condition($tecExpression);
         return array_merge($errors, $executionSelect->getErrors($this));
     }
 

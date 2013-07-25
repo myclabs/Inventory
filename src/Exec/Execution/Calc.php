@@ -1,11 +1,21 @@
 <?php
 /**
- * @author  valentin.claras
- * @author  yoann.croizer
- * @author  hugo.charbonnier
- * @package Exec
+ * @author     valentin.claras
+ * @package    Exec
+ * @subpackage Execution
  */
 
+namespace Exec\Execution;
+
+use Calc_Calculation;
+use Calc_Calculation_Unit;
+use Calc_Calculation_UnitValue;
+use Calc_Calculation_Value;
+use Core_Exception_InvalidArgument;
+use Core_Exception_UndefinedAttribute;
+use Exec\Execution;
+use Exec\Provider\UnitInterface;
+use Exec\Provider\ValueInterface;
 use Unit\UnitAPI;
 use Unit\IncompatibleUnitsException;
 use TEC\Component\Component;
@@ -13,11 +23,11 @@ use TEC\Component\Composite;
 use TEC\Component\Leaf;
 
 /**
- * classe Exec_Execution_Calc
+ * classe Calc
  * @package    Exec
  * @subpackage Execution
  */
-class Exec_Execution_Calc extends Exec_Execution
+class Calc extends Execution
 {
 
     /**
@@ -92,12 +102,12 @@ class Exec_Execution_Calc extends Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
      *
-     * @param Component          $node
-     * @param Exec_Interface_ValueProvider $valueProvider
+     * @param Component $node
+     * @param ValueInterface $valueProvider
      *
      * @return array
      */
-    protected function getErrorsFromComponent(Component $node, Exec_Interface_ValueProvider $valueProvider)
+    protected function getErrorsFromComponent(Component $node, ValueInterface $valueProvider)
     {
         $errors = [];
 
@@ -115,27 +125,28 @@ class Exec_Execution_Calc extends Exec_Execution
     /**
      * Vérifie la compatibilité des unités de l'expression
      *
-     * @param Exec_Interface_UnitProvider $unitProvider
+     * @param UnitInterface $unitProvider
      *
      * @return UnitAPI
      *
      * @throws IncompatibleUnitsException Unités incompatibles
      */
-    public function checkUnitCompatibility(Exec_Interface_UnitProvider $unitProvider)
+    public function checkUnitCompatibility(UnitInterface $unitProvider)
     {
         return $this->calculateUnitForComponent($this->expression->getRootNode(), $unitProvider);
     }
 
     /**
-     * @param Composite          $node
-     * @param Exec_Interface_UnitProvider  $unitProvider
+     * @param Composite $node
+     * @param \Exec\Provider\UnitInterface $unitProvider
      *
      * @return UnitAPI
      *
      * @throws IncompatibleUnitsException Unités incompatibles
      */
-    public function calculateUnitForComponent(Composite $node,
-                                              Exec_Interface_UnitProvider $unitProvider
+    public function calculateUnitForComponent(
+        Composite $node,
+        UnitInterface $unitProvider
     ) {
         $calculation = new Calc_Calculation_Unit();
         $calculation->setOperation($node->getOperator());
@@ -146,8 +157,10 @@ class Exec_Execution_Calc extends Exec_Execution
                 $calculation->addComponents($unit, $child->getModifier());
             } else {
                 /** @var $child Composite */
-                $calculation->addComponents($this->calculateUnitForComponent($child, $unitProvider),
-                                            $child->getModifier());
+                $calculation->addComponents(
+                    $this->calculateUnitForComponent($child, $unitProvider),
+                    $child->getModifier()
+                );
             }
         }
 
@@ -157,12 +170,12 @@ class Exec_Execution_Calc extends Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
      *
-     * @param Component          $node
-     * @param Exec_Interface_ValueProvider $valueProvider
+     * @param Component $node
+     * @param ValueInterface $valueProvider
      *
      * @return mixed
      */
-    protected function executeComponent(Component $node, Exec_Interface_ValueProvider $valueProvider)
+    protected function executeComponent(Component $node, ValueInterface $valueProvider)
     {
         if ($node instanceof Leaf) {
             $result = $valueProvider->getValueForExecution($node->getName());

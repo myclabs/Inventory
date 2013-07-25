@@ -37,7 +37,7 @@
                     "Doctrine\\Common\\Annotations\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -63,7 +63,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -99,7 +99,7 @@
                     "Doctrine\\Common\\Cache\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -165,7 +165,7 @@
                     "Doctrine\\Common\\Collections\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -191,7 +191,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -209,7 +209,7 @@
             "version": "dev-ChainDriverFix",
             "source": {
                 "type": "git",
-                "url": "https://github.com/myclabs/common.git",
+                "url": "git://github.com/myclabs/common.git",
                 "reference": "e784767eb173e45f0079718eec5f3eccf6e43198"
             },
             "require": {
@@ -296,7 +296,7 @@
                     "Doctrine\\DBAL": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -353,7 +353,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -377,9 +377,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -416,7 +416,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -433,7 +433,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -483,7 +483,7 @@
                     "Doctrine\\ORM": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -538,7 +538,7 @@
                     "include/"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -599,7 +599,7 @@
                     "Gedmo": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -638,16 +638,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.2.x-dev",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f"
+                "reference": "3.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/2816aacfc9d461a54b563df9ecc6ba25e937e91f",
-                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/3.2.0",
+                "reference": "3.2.0",
                 "shasum": ""
             },
             "require": {
@@ -677,7 +677,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-07-12 13:14:27"
+            "time": "2013-07-23 13:56:31"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -764,16 +764,16 @@
         },
         {
             "name": "myclabs/php-enum",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/php-enum.git",
-                "reference": "1.1.0"
+                "reference": "1.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/1.1.0",
-                "reference": "1.1.0",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/1.2.0",
+                "reference": "1.2.0",
                 "shasum": ""
             },
             "type": "library",
@@ -791,7 +791,7 @@
             "keywords": [
                 "enum"
             ],
-            "time": "2013-03-20 22:20:22"
+            "time": "2013-07-24 12:08:12"
         },
         {
             "name": "netcarver/textile",
@@ -821,7 +821,7 @@
                     "Netcarver\\Textile": "src/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -915,7 +915,7 @@
                     "Console_CommandLine": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -962,7 +962,7 @@
                     "PEAR": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "."
             ],
@@ -1006,7 +1006,7 @@
                     "classes/"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1044,7 +1044,7 @@
                     "PHPExcel": "Classes/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1232,17 +1232,17 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/Code",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendCode.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1276,21 +1276,21 @@
                 "code",
                 "zf2"
             ],
-            "time": "2013-06-12 19:48:38"
+            "time": "2013-06-20 18:00:54"
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/EventManager",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendEventManager.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1321,17 +1321,17 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1361,7 +1361,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2013-06-12 19:46:58"
+            "time": "2013-06-20 18:01:22"
         },
         {
             "name": "zendframework/zendframework1",
@@ -1399,7 +1399,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],
@@ -1807,17 +1807,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaConsole.git",
-                "reference": "f7892612ca37e972d406ae1006a1686979fc8e05"
+                "reference": "139f68bfa8c2ff51b4ebc05c19478067bc39bbdc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/f7892612ca37e972d406ae1006a1686979fc8e05",
-                "reference": "f7892612ca37e972d406ae1006a1686979fc8e05",
+                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/139f68bfa8c2ff51b4ebc05c19478067bc39bbdc",
+                "reference": "139f68bfa8c2ff51b4ebc05c19478067bc39bbdc",
                 "shasum": ""
             },
             "require": {
                 "mnapoli/metamodel": "dev-master",
-                "mnapoli/number-two": "0.1.*",
+                "mnapoli/number-two": "0.2.*",
                 "symfony/console": "2.3.*"
             },
             "require-dev": {
@@ -1830,7 +1830,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-19 08:17:05"
+            "time": "2013-07-25 07:33:11"
         },
         {
             "name": "mnapoli/metamodel",
@@ -1838,12 +1838,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaModel.git",
-                "reference": "477d6eebaab26b988f5700193e73dd3577980b53"
+                "reference": "5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/MetaModel/zipball/477d6eebaab26b988f5700193e73dd3577980b53",
-                "reference": "477d6eebaab26b988f5700193e73dd3577980b53",
+                "url": "https://api.github.com/repos/mnapoli/MetaModel/zipball/5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076",
+                "reference": "5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076",
                 "shasum": ""
             },
             "require": {
@@ -1862,20 +1862,20 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-18 12:23:01"
+            "time": "2013-07-23 12:56:25"
         },
         {
             "name": "mnapoli/number-two",
-            "version": "0.1.0",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.1.0"
+                "reference": "0.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.1.0",
-                "reference": "0.1.0",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.0",
+                "reference": "0.2.0",
                 "shasum": ""
             },
             "type": "library",
@@ -1886,7 +1886,18 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-16 17:37:26"
+            "license": [
+                "MIT"
+            ],
+            "description": "NumberTwo is a classy variable dumper",
+            "homepage": "https://github.com/mnapoli/NumberTwo",
+            "keywords": [
+                "debug",
+                "dump",
+                "var_dump",
+                "variable"
+            ],
+            "time": "2013-07-25 07:19:11"
         },
         {
             "name": "phpoption/phpoption",

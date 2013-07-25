@@ -6,6 +6,8 @@
  * @package Algo
  */
 
+use Exec\Execution\Select;
+use Exec\Provider\ValueInterface;
 use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 
@@ -14,7 +16,7 @@ use TEC\Expression;
  * @subpackage Keyword
  */
 class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextKey
-    implements Exec_Interface_ValueProvider
+    implements ValueInterface
 {
 
     /**
@@ -32,7 +34,7 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
         // Construit l'arbre
         $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
 
-        $executionSelect = new Exec_Execution_Select($tecExpression);
+        $executionSelect = new Select($tecExpression);
         return $executionSelect->executeExpression($this);
     }
 
@@ -59,7 +61,7 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
         $errors = parent::checkConfig();
 
         $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
-        $executionSelect = new Exec_Execution_Select($tecExpression);
+        $executionSelect = new Select($tecExpression);
 
         return array_merge($errors, $executionSelect->getErrors($this));
     }

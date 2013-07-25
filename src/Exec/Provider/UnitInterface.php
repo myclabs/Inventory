@@ -1,16 +1,19 @@
 <?php
 /**
- * @author  matthieu.napoli
- * @package Exec
+ * @author     matthieu.napoli
+ * @package    Exec
+ * @subpackage Provider
  */
+namespace Exec\Provider;
+
 use Unit\UnitAPI;
 
 /**
  * Interface à implémenter pour récupérer une valeur d'un Input.
- *
- * @package Exec
+ * @package    Exec
+ * @subpackage Provider
  */
-interface Exec_Interface_UnitProvider
+interface UnitInterface
 {
 
     /**

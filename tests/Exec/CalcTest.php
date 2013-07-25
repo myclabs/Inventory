@@ -6,6 +6,7 @@
  * @package Exec
  */
 
+use Exec\Execution\Calc;
 use Unit\UnitAPI;
 use TEC\Expression;
 
@@ -55,8 +56,8 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
 
         $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
-        $calc = new Exec_Execution_Calc($this->expression);
-        $calc->setCalculType(Exec_Execution_Calc::CALC_VALUE);
+        $calc = new Calc($this->expression);
+        $calc->setCalculType(Calc::CALC_VALUE);
         $this->assertEquals($calc->getExpression(), $this->expression);
 
         /** @var Calc_Value $result */
@@ -89,8 +90,8 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
 
         $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
-        $calc = new Exec_Execution_Calc($this->expression);
-        $calc->setCalculType(Exec_Execution_Calc::CALC_UNIT);
+        $calc = new Calc($this->expression);
+        $calc->setCalculType(Calc::CALC_UNIT);
 
         /** @var Unit_API $result */
         $result = $calc->executeExpression($valueProvider);
@@ -129,8 +130,8 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
 
         $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
-        $calc = new Exec_Execution_Calc($this->expression);
-        $calc->setCalculType(Exec_Execution_Calc::CALC_UNITVALUE);
+        $calc = new Calc($this->expression);
+        $calc->setCalculType(Calc::CALC_UNITVALUE);
 
         /** @var Calc_UnitValue $result */
         $result = $calc->executeExpression($valueProvider);
@@ -166,8 +167,8 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
 
         $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
-        $calc = new Exec_Execution_Calc($this->expression);
-        $calc->setCalculType(Exec_Execution_Calc::CALC_UNITVALUE);
+        $calc = new Calc($this->expression);
+        $calc->setCalculType(Calc::CALC_UNITVALUE);
         try {
             $calc->executeExpression($valueProvider);
             $this->fail("Erreur d'exception");
@@ -195,8 +196,8 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
 
         $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
-        $calc = new Exec_Execution_Calc($this->expressionParticulier);
-        $calc->setCalculType(Exec_Execution_Calc::CALC_UNIT);
+        $calc = new Calc($this->expressionParticulier);
+        $calc->setCalculType(Calc::CALC_UNIT);
 
         /** @var Unit_API $result */
         $result = $calc->executeExpression($valueProvider);
