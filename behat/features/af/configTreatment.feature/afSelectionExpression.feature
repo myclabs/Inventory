@@ -13,7 +13,8 @@ Feature: AF selection expression algo feature
     Then I should see the "algoSelectionTextkeyExpression" datagrid
   # Popup d'ajout
     When I click "Ajouter"
-    Then I should see the popup "Ajout d'un algorithme de sélection d’identifiant de type « expression »"
+    Then I should see the popup "Ajout d'un algorithme de sélection d’identifiant de type expression"
+    # TODO : rajouter guillemets (pas réussi à traiter l'échappement).
   # Ajout, identifiant vide
     When I click "Valider"
     Then the field "algoSelectionTextkeyExpression_ref_addForm" should have error: "Merci de renseigner ce champ."

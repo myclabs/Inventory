@@ -8,10 +8,10 @@
 
         <tu tuid="initialVisibilityHeader">
             <tuv xml:lang="fr">
-                <seg>Visibilité initiale</seg>
+                <seg>Visibilité</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Initial visibility</seg>
+                <seg>Visibility</seg>
             </tuv>
         </tu>
         <tu tuid="foldawayHeader">
@@ -105,10 +105,10 @@
 
         <tu tuid="initialActivationHeader">
             <tuv xml:lang="fr">
-                <seg>Activation initiale</seg>
+                <seg>Activation</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Initial activation</seg>
+                <seg>Activation</seg>
             </tuv>
         </tu>
         <tu tuid="requiredHeader">
@@ -129,26 +129,26 @@
         </tu>
         <tu tuid="initialValueHeader">
             <tuv xml:lang="fr">
-                <seg>Valeur initiale</seg>
+                <seg>Valeur</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Initial value</seg>
+                <seg>Value</seg>
             </tuv>
         </tu>
         <tu tuid="initialUncertaintyHeader">
             <tuv xml:lang="fr">
-                <seg>Incertitude initiale</seg>
+                <seg>Incertitude</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Initial uncertainty</seg>
+                <seg>Uncertainty</seg>
             </tuv>
         </tu>
         <tu tuid="defaultValueReminderHeader">
             <tuv xml:lang="fr">
-                <seg>Rappel valeur par défaut</seg>
+                <seg>Rappel val. défaut</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Default value reminder</seg>
+                <seg>Default val. reminder</seg>
             </tuv>
         </tu>
         <tu tuid="numericAddPanelTitle">
