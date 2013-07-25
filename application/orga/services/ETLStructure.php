@@ -856,16 +856,12 @@ class Orga_Service_ETLStructure
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
 
-                $this->entityManager->flush();
-
                 foreach ($granularity->getCells() as $cell) {
                     // Optimisation de la mémoire.
                     $this->entityManager->clear();
                     $cell = Orga_Model_Cell::load($cell->getId());
 
                     $this->resetCellDWCube($cell);
-
-                    $this->entityManager->flush();
                 }
             }
         }
@@ -914,11 +910,7 @@ class Orga_Service_ETLStructure
             $this->entityManager->clear();
             $childCell = Orga_Model_Cell::load($childCell->getId());
 
-            if ($childCell->getGranularity()->getCellsGenerateDWCubes()) {
-                $this->resetCellDWCube($childCell);
-
-                $this->entityManager->flush();
-            }
+            $this->resetCellDWCube($childCell);
         }
     }
 
@@ -929,18 +921,28 @@ class Orga_Service_ETLStructure
      */
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
-        $this->etlDataService->clearDWResultsForCell($cell);
+        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+            // Début de transaction.
+            $this->entityManager->beginTransaction();
 
-        $this->resetDWCube(
-            $cell->getDWCube(),
-            $cell->getGranularity()->getOrganization(),
-            array(
-                'axes' => $cell->getGranularity()->getAxes(),
-                'members' => $cell->getMembers()
-            )
-        );
+            $this->etlDataService->clearDWResultsForCell($cell);
+            $this->entityManager->flush();
 
-        $this->etlDataService->populateDWResultsForCell($cell);
+            $this->resetDWCube(
+                $cell->getDWCube(),
+                $cell->getGranularity()->getOrganization(),
+                array(
+                    'axes' => $cell->getGranularity()->getAxes(),
+                    'members' => $cell->getMembers()
+                )
+            );
+
+            $this->etlDataService->populateDWResultsForCell($cell);
+            $this->entityManager->flush();
+
+            // Fin de transaction.
+            $this->entityManager->commit();
+        }
     }
 
     /**
