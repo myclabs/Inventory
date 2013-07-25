@@ -46,9 +46,13 @@ class AF_PopulateTest extends AF_Populate
         // Paramètres
         $this->createAlgoNumericParameter($aF_combustion, 'fe_combustion', 'Facteur d\'émission pour la combustion', 'combustion_combustible_unite_masse');
         $this->createAlgoNumericParameter($aF_combustion, 'fe_amont', 'Facteur d\'émission pour l\'amont de la combustion', 'combustion_combustible_unite_masse');
+        $this->createFixedCoordinateForAlgoParameter($aF_combustion->getAlgoByRef('fe_amont'), ['processus' => 'amont_combustion']);
+        $this->createFixedCoordinateForAlgoParameter($aF_combustion->getAlgoByRef('fe_combustion'), ['processus' => 'combustion']);
+        $this->createAlgoCoordinateForAlgoParameter($aF_combustion->getAlgoByRef('fe_amont'), ['combustible' => $aF_combustion->getAlgoByRef('nature_combustible')]);
+        $this->createAlgoCoordinateForAlgoParameter($aF_combustion->getAlgoByRef('fe_combustion'), ['combustible' => $aF_combustion->getAlgoByRef('nature_combustible')]);
         // Expressions et leur indexation
         $this->createAlgoNumericExpression($aF_combustion, 'emissions_combustion', 'Émissions liées à la combustion', 'quantite_combustible * fe_combustion', 't_co2e');
-        $this->createAlgoNumericExpression($aF_combustion, 'emissions_amont', 'Émissions liées aux processu amont de la combustion', 'quantite_combustible * fe_amont', 't_co2e');
+        $this->createAlgoNumericExpression($aF_combustion, 'emissions_amont', 'Émissions liées aux processus amont de la combustion', 'quantite_combustible * fe_amont', 't_co2e');
         $this->createFixedIndexForAlgoNumeric($aF_combustion->getAlgoByRef('emissions_combustion'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
         $this->createFixedIndexForAlgoNumeric($aF_combustion->getAlgoByRef('emissions_amont'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
 
