@@ -30,6 +30,14 @@ class FeatureContext extends MinkContext
     /**
      * @BeforeScenario
      */
+    public function setWindowSize()
+    {
+        $this->getSession()->resizeWindow(1280, 1024);
+    }
+
+    /**
+     * @BeforeScenario
+     */
     public function setLanguage()
     {
 //        $this->getSession()->setRequestHeader('Accept-Language', 'fr');
