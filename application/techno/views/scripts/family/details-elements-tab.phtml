@@ -124,6 +124,7 @@ echo $tmd->render();
                 );
                 $('#elements-' + coordinates.replace(/#/g, '-') + ' a').trigger('click');
                 $('#element_edit').on('hide', {idElement: data.elementId }, undoAdd);
+                $('#element_edit .modal-footer button.btn-warning').addClass('hide');
             });
             return false;
         };
@@ -131,6 +132,7 @@ echo $tmd->render();
         undoAdd = function (event) {
             deleteElement(event.data.idElement);
             $('#element_edit').unbind('hide', undoAdd);
+            $('#element_edit .modal-footer button.btn-warning').removeClass('hide');
         }
 
         $.fn.elementEditSuccess = function (response) {
@@ -139,6 +141,7 @@ echo $tmd->render();
                 response.data.value + ' ± ' + response.data.uncertainty + ' %'
             );
             $('#element_edit').unbind('hide', undoAdd);
+            $('#element_edit .modal-footer button.btn-warning').removeClass('hide');
             $('#element_edit').modal('hide');
         };
 
