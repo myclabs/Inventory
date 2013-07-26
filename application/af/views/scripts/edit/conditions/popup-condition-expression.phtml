@@ -5,7 +5,7 @@ use TEC\Expression;
 /** @var $condition AF_Model_Condition_Expression */
 $condition = $this->condition;
 
-$expression = new Expression($condition->getExpression(), Expression::TYPE_LOGICAL);
+$expression = new Expression($condition->getExpression());
 $graphExpression = $expression->getGraph();
 ?>
 
