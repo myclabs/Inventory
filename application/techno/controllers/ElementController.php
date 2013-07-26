@@ -49,7 +49,7 @@ class Techno_ElementController extends Core_Controller
             $this->addFormError('digitalValue', __('UI', 'formValidation', 'invalidNumber'));
         }
         if (empty($digitalValue) && ($digitalValue!== 0)) {
-            $this->addFormError('digitalValue', __('UI', 'formValidation', 'mandatory'));
+            $this->addFormError('digitalValue', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
             $uncertainty = $locale->readInteger($formData->getValue('uncertainty'));
