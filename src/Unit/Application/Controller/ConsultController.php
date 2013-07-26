@@ -9,6 +9,7 @@ use Core\Annotation\Secure;
 use Unit\Domain\Unit\StandardUnit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\UnitSystem;
+use Unit\ComposedUnit;
 
 /**
  * Unit_ConsultController
@@ -83,6 +84,25 @@ class Unit_ConsultController extends Core_Controller
         foreach (UnitSystem::loadList() as $unitSystem) {
             $idUnitSystem = $unitSystem->getKey();
             $this->view->listUnitSystems[$idUnitSystem['id']] = $unitSystem->getName();
+        }
+    }
+
+    /**
+     * Liste exemple de ComposedUnit.
+     *
+     * @Secure("viewUnit")
+     */
+    public function composedunitsAction()
+    {
+        $composedUnitRefs = [
+            'km.h^-1',
+            'l.km',
+            'l.km.h^-1',
+        ];
+
+        $this->view->composedUnits = [];
+        foreach ($composedUnitRefs as $composedUnitRef) {
+            $this->view->composedUnits[] = new ComposedUnit($composedUnitRef);
         }
     }
 
