@@ -20,11 +20,22 @@ if ($this->edit) {
     $editPopup = new UI_Popup_Ajax('element_edit');
     $editPopup->title = __('UI', 'name', 'loading');
     $editPopup->addAttribute('class', 'large');
-    $editPopup->footer = '<button class="btn btn-primary" onclick="$(\'#element_editForm\').submit();">'
+    $editPopup->footer = '<button class="btn btn-warning pull-left" data-toggle="modal" data-target="#element_delete, #element_edit">'
+        .'<i class="icon-ok icon-white"></i> '.__('UI', 'name', 'delete').'</button>';
+    $editPopup->footer .= '<button class="btn btn-primary" onclick="$(\'#element_editForm\').submit();">'
         .'<i class="icon-ok icon-white"></i> '.__('UI', 'name', 'save').'</button>';
     $editPopup->footer .= '<button class="btn" data-dismiss="modal">'
         .'<i class="icon-remove"></i> '.__('UI', 'name', 'close').'</button>';
     echo $editPopup->render();
+
+    $deletePopup = new UI_Popup_Static('element_delete');
+    $deletePopup->title = __('UI', 'name', 'delete');
+    $deletePopup->body = __('UI', 'name', 'confirmDelete');
+    $deletePopup->footer = '<button class="btn btn-primary" onclick="deleteElement($(this).attr(\'data-element\'));">'
+        .'<i class="icon-ok icon-white"></i> '.__('UI', 'name', 'confirm').'</button>';
+    $deletePopup->footer .= '<a class="btn" data-toggle="modal" data-remote="false" data-target="#element_edit" onclick="$(\'#element_delete\').modal(\'hide\');">'
+        .'<i class="icon-remove"></i> '.__('UI', 'name', 'cancel').'</button>';
+    echo $deletePopup->render();
 } else {
     $tmd->formatCells = '{value} ± {uncertainty}';
 }
@@ -91,7 +102,12 @@ echo $tmd->render();
 <?php if ($this->edit) : ?>
 
     <script>
-         addElement = function (coordinates) {
+        $('#element_delete').on('hidden', function(){
+            $('#element_delete').children('div.modal-footer').children('button.btn-primary').removeAttr('data-element');
+            $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('data-element');
+            $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('href');
+        });
+        addElement = function (coordinates) {
             var url = "<?=$this->baseUrl('techno/tmd_family-elements-tmd/add-element')?>";
             var data = {
                 'id': <?=$family->getId()?>,
@@ -108,9 +124,9 @@ echo $tmd->render();
                 $('#elements-' + coordinates.replace(/#/g, '-') + ' a').trigger('click');
             });
             return false;
-        }
+        };
 
-         $.fn.elementEditSuccess = function (response) {
+        $.fn.elementEditSuccess = function (response) {
              addMessage(response.message, response.type);
              $('#elements tbody tr td a[data-element="' + response.data.elementId + '"]').html(
                  response.data.value + ' ± ' + response.data.uncertainty + ' %'
@@ -118,6 +134,24 @@ echo $tmd->render();
              $('#element_edit').modal('hide');
         };
 
+        deleteElement = function(idElement) {
+            var coordinates = $('#elements td a[data-element="' + idElement + '"]').parent().attr('id').substr(9);
+            var data = {
+                'idElement':idElement,
+                'idFamily': <?=$family->getId()?>,
+                'coordinates':coordinates
+            };
+            $.post('techno/tmd_family-elements-tmd/delete-element', data, function (data, textStatus, jqXHR) {
+                $('#elements-' + coordinates).html(
+                    '<button class="btn btn-mini" type="button" onclick="addElement(\'' + coordinates.replace(/-/g, '#') + '\');">'
+                        + '<i class="icon-plus-sign"></i>'
+                        + ' <?=__('UI', 'verb', 'add')?>'
+                        + '</button>'
+                );
+                $('#elements-' + coordinates.replace(/#/g, '-') + ' a').trigger('click');
+            });
+            $('#element_delete').modal('hide');
+        };
     </script>
 
 <?php endif;
