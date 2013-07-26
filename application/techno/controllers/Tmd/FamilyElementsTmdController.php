@@ -74,7 +74,11 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $cell->save();
         $chosenElement->delete();
         $this->entityManager->flush();
-        $this->sendJsonResponse([]);
+        if ($chosenElement->getValue()->getDigitalValue() !== null) {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'deleted')]);
+        } else {
+            $this->sendJsonResponse(['message' => '']);
+        }
     }
 
 }
