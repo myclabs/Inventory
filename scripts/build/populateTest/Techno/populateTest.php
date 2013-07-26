@@ -37,7 +37,10 @@ class Techno_PopulateTest extends Techno_Populate
             'famille_vide_processus', 'Famille vide de processus', 't', 'kg');
         $family_vide_coefficients = $this->createFamilyCoef($category_contenant_famille,
             'famille_vide_coefficients', 'Famille vide de coefficients', 't', 'kg');
-
+        $family_test_processus = $this->createFamilyProcess($category_contenant_famille,
+            'famille_test_processus', 'Famille test de processus', 't', 'kg');
+        $family_test_coefficients = $this->createFamilyCoef($category_contenant_famille,
+        'famille_test_coefficients', 'Famille test de coefficients', 't', 'kg');
 
         $entityManager->flush();
 
@@ -53,10 +56,13 @@ class Techno_PopulateTest extends Techno_Populate
         $this->createVerticalDimension($family_masse_volumique_combustible, 'combustible', ['charbon', 'gaz_naturel']);
         $this->createParameter($family_masse_volumique_combustible, ['charbon'], 18);
 
-        // Famille vide de processus
+        // Famille test de processus
+        $this->createVerticalDimension($family_test_processus, 'combustible', ['charbon', 'gaz_naturel']);
+        $this->createHorizontalDimension($family_test_processus, 'processus', ['amont_combustion', 'combustion']);
+        $this->createParameter($family_test_processus, ['charbon', 'combustion'], 12345.6789, 15.9);
+        $this->createParameter($family_test_processus, ['charbon', 'amont_combustion'], 0.1234, 15.9);
 
-        // Famille vide de coefficients
-
+        // Famille test de coefficients
 
         $entityManager->flush();
 
