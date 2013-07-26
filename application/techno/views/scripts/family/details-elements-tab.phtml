@@ -98,13 +98,14 @@ echo $tmd->render();
                 'coordinates':coordinates
             };
             $.post(url, data, function (data, textStatus, jqXHR) {
-                $('#elements_' + coordinates.replace(/#/g, '_')).html(
+                $('#elements-' + coordinates.replace(/#/g, '-')).html(
                     '<a data-toggle="modal" data-remote="false" data-target="#element_edit" href="techno/element/details/id/'
                         + data.elementId
                     + '" data-element="' + data.elementId + '">'
                     + '0 ± 0 %'
                     + '</a>'
                 );
+                $('#elements-' + coordinates.replace(/#/g, '-') + ' a').trigger('click');
             });
             return false;
         }

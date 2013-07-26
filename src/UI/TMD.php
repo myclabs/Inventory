@@ -443,7 +443,7 @@ class UI_TMD extends UI_Generic
             }
         }
 
-        $cell .= '<td id="'.$this->id.':'.implode('.', $listKeysIndexValues).'">';
+        $cell .= '<td id="'.$this->id.'-'.implode('-', $listKeysIndexValues).'">';
         if ((($this->urlDetailsCell !== null) && ($data !== null))
             || (($this->urlAddCell !== null) && ($data === null))) {
             $cell .= '<a ';
