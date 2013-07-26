@@ -130,7 +130,12 @@ Feature: Family tree edit feature
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après
-  # TODO : à faire.
+    When I wait 3 seconds
+    And I click "Combustion (modifiée)"
+    And I check "Après"
+    And I select "Masse volumique de combustible" from "familyTree_selectAfter"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
   Scenario: Deletion of a family in family tree edit
