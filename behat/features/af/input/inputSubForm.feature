@@ -11,10 +11,14 @@ Feature: Subforms input feature
     And I wait for the page to finish loading
   # Saisie
     And I fill in "sous_formulaire_non_repete__chiffre_affaire" with "10"
+  # On commence par ajouter une répétition, juste pour tester l'affichage des messages d'erreur et le taux de complétudi
     And I click "Ajouter"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie incomplète)."
+    And the field "sous_formulaire_repete__nature_combustible__1" should have error: "Merci de renseigner ce champ."
+    And the field "sous_formulaire_repete__quantite_combustible__1" should have error: "Merci de renseigner ce champ."
     And I should see "33%"
+  # Puis on supprime le bloc pour enregistrer une saisie complète
     When I click "Supprimer"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
@@ -25,7 +29,7 @@ Feature: Subforms input feature
   # Formulaire des données générales : un seul champ "Chiffre d'affaires"
     Given I am on "af/af/test/id/3"
     And I wait for the page to finish loading
-  # Saisie
+  # Saisie complète avec 1 répétition
     And I fill in "sous_formulaire_non_repete__chiffre_affaire" with "10"
     And I click "Ajouter"
     And I select "Charbon" from "sous_formulaire_repete__nature_combustible__1"
@@ -39,7 +43,7 @@ Feature: Subforms input feature
   # Formulaire des données générales : un seul champ "Chiffre d'affaires"
     Given I am on "af/af/test/id/3"
     And I wait for the page to finish loading
-  # Saisie
+  # Saisie complète avec 2 répétitions
     And I fill in "sous_formulaire_non_repete__chiffre_affaire" with "10"
     And I click "Ajouter"
     And I click "Ajouter"
