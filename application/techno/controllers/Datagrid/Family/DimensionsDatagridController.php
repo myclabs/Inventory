@@ -70,7 +70,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
                 $family->save();
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
-                $this->setAddElementErrorMessage('meaning', __('', '', 'Dimension existante'));
+                $this->setAddElementErrorMessage('meaning', __('Techno', 'familyDetail', 'meaningAlreadyUsed'));
                 $this->send();
                 return;
             }

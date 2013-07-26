@@ -63,7 +63,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
         try {
             $keyword = Keyword_Model_Keyword::loadByRef($refKeyword);
         } catch(Core_Exception_NotFound $e) {
-            $this->setAddElementErrorMessage('refKeyword', __('Techno', 'formValidation', 'unknownKeywordRef'));
+            $this->setAddElementErrorMessage('refKeyword', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {

@@ -9,21 +9,20 @@ Feature: Family consult feature
     Given I am on "techno/family/details/id/4"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
-  # Affichage de la catégorie
-  # TODO…
-  #  And I should see "Catégorie contenant une famille/Sous-catégorie contenant une famille"
-    And I should see "Sous-catégorie contenant une famille"
+  # Affichage de la catégorie (hiérarchie des catégories en l'occurrence)
+    And I should see "Catégorie contenant une famille/Sous-catégorie contenant une famille"
   # Affichage de l'unité
     And I should see "kg équ. CO2/t"
-  # Vérification qu'on tombe bien sur l'onglet "Éléments"
-  # Séparateur décimal en français
-  # Arrondi à trois chiffres significatifs
-  # Séparateur de milliers en français
   # En-têtes de dimensions commencent par une majuscule
     And I should see "Combustible"
     And I should see "Processus"
-    And I should see "0,123 ± 16 %"
-    And I should see "12 300 ± 16 %"
+  # Arrondi à trois chiffres significatifs
+  # Séparateur décimal en français
+    And I should see a "#elements-charbon-amont_combustion:contains('0,123 ± 16 %')" element
+  # Séparateur de milliers en français
+    And I should see "#elements-charbon-combustion:contains('12 300 ± 16 %')" element
+  # Affichage cellules vides
+    And I should see a "#elements-gaz_naturel-amont_combustion:contains('-')" element
   # Onglet "Documentation"
     When I open tab "Documentation"
     Then I should see a "#container_documentation h1:contains('Documentation de la famille test')" element

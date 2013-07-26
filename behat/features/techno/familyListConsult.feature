@@ -22,9 +22,9 @@ Feature: Family list consult feature
   # Vérification qu'on est bien en consultation
     When I open tab "Documentation"
     Then I should see "Il n'y a aucune documentation pour cette famille."
-  # Vérification de l'unité affichée (famille de processus)
+  # Vérification de l'unité affichée
     And I should see "Unité : kg équ. CO2/t"
-  # Vérification de l'unité affichée (famille de coefficients)
+  # Vérification de l'unité affichée
     When I am on "techno/family/list"
     And I wait for the page to finish loading
     And I click "Cliquer pour accéder" in the row 3 of the "familyDatagrid" datagrid
