@@ -45,28 +45,31 @@ class Techno_ElementController extends Core_Controller
         } catch (Core_Exception_InvalidArgument $e) {
             $this->addFormError('digitalValue', __('UI', 'formValidation', 'invalidNumber'));
         }
+        if (empty($digitalValue) && ($digitalValue!== 0)) {
+            $this->addFormError('digitalValue', __('UI', 'formValidation', 'mandatory'));
+        }
         try {
             $uncertainty = $locale->readInteger($formData->getValue('uncertainty'));
         } catch (Core_Exception_InvalidArgument $e) {
             $this->addFormError('uncertainty', __('UI', 'formValidation', 'invalidUncertainty'));
         }
-        $refUnit = $formData->getValue('unit');
-        if (empty($refUnit)) {
-            $this->addFormError('unit', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
-        $documentation = $formData->getValue('documentation');
+//        $refUnit = $formData->getValue('unit');
+//        if (empty($refUnit)) {
+//            $this->addFormError('unit', __('UI', 'formValidation', 'emptyRequiredField'));
+//        }
+//        $documentation = $formData->getValue('documentation');
         // Modification
         if (! $this->hasFormError()) {
-            $unit = new UnitAPI($refUnit);
-            if ($element->getUnit()->getRef() != $unit->getRef()) {
-                try {
-                    $element->setUnit($unit);
-                } catch (Core_Exception_InvalidArgument $e) {
-                    throw new Core_Exception_User('Techno', 'element', 'incompatibleUnit');
-                }
-            }
+//            $unit = new UnitAPI($refUnit);
+//            if ($element->getUnit()->getRef() != $unit->getRef()) {
+//                try {
+//                    $element->setUnit($unit);
+//                } catch (Core_Exception_InvalidArgument $e) {
+//                    throw new Core_Exception_User('Techno', 'element', 'incompatibleUnit');
+//                }
+//            }
             $element->setValue(new Calc_Value($digitalValue, $uncertainty));
-            $element->setDocumentation($documentation);
+//            $element->setDocumentation($documentation);
             $element->save();
             $this->entityManager->flush();
             $this->setFormMessage(__('UI', 'message', 'updated'));
