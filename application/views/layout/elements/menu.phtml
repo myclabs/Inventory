@@ -203,10 +203,6 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
             'url' => '#',
             'submenu' => [
                 [
-                    'name' => __('Unit', 'name', 'composedUnits'),
-                    'url' => 'unit/consult/composedunits'
-                ],
-                [
                     'name' => __('Unit', 'name', 'standardUnits'),
                     'url' => 'unit/consult/standardunits'
                 ],
@@ -217,6 +213,10 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
                 [
                     'name' => __('Unit', 'name', 'discreteUnits'),
                     'url' => 'unit/consult/discreteunits'
+                ],
+                [
+                    'name' => __('Unit', 'composedUnitIdentifier', 'menuLinkLabel'),
+                    'url' => 'unit/consult/composedunits'
                 ],
                 [
                     'name' => __('Unit', 'name', 'physicalQuantities'),

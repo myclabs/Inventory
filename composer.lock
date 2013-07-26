@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "85be7f1f9ce18522f92a2e431db55008",
+    "hash": "a5ff5954136bc2cbc6b88f1b74d932cb",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -710,22 +710,6 @@
             "description": "Integrates PHP-DI to Zend Framework 1",
             "homepage": "http://mnapoli.github.com/PHP-DI-ZF1/",
             "time": "2013-06-11 11:19:12"
-        },
-        {
-            "name": "mridgway/zendx_doctrine2",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git://github.com/mridgway/ZendX_Doctrine2.git",
-                "reference": "e8168e33e4ec9599a74de089f7a774d2c85fa0f0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "ZendX": "lib/"
-                }
-            },
-            "time": "2013-05-16 17:33:55"
         },
         {
             "name": "myclabs/array-comparator",
@@ -2323,7 +2307,6 @@
     "stability-flags": {
         "doctrine/common": 20,
         "pear/console_commandline": 20,
-        "mridgway/zendx_doctrine2": 20,
         "dompdf/dompdf": 20,
         "mnapoli/php-di": 20,
         "mnapoli/metaconsole": 20
