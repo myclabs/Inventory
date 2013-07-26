@@ -123,7 +123,7 @@ Feature: AF numeric parameter algo feature
     Then the following message is shown and closed: "Modification effectuée."
     When I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
     Then the row 1 of the "coordinatesFixed" datagrid should contain:
-      | dimension   | member  |
+      | dimension   | member      |
       | combustible | gaz naturel |
   # Modification algo coordonnée déterminée par algorithme
     When I set "champ_selection_simple" for column "algo" of row 1 of the "coordinatesAlgo" datagrid
@@ -132,7 +132,7 @@ Feature: AF numeric parameter algo feature
     Then the following message is shown and closed: "Modification effectuée."
     When I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
     Then the row 1 of the "coordinatesAlgo" datagrid should contain:
-      | dimension | algo                 |
+      | dimension | algo                   |
       | processus | champ_selection_simple |
   # Suppression coordonnée fixée
     When I click "Supprimer" in the row 1 of the "coordinatesFixed" datagrid
@@ -179,7 +179,7 @@ Feature: AF numeric parameter algo feature
     When I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
     Then the "coordinatesAlgo" datagrid should contain 1 row
     Then the row 1 of the "coordinatesAlgo" datagrid should contain:
-      | dimension   | member                                    |
+      | dimension   | algo                                      |
       | combustible | expression_selection_coordonnee_parametre |
 
   @javascript

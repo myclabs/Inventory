@@ -64,8 +64,12 @@ class AF_PopulateTest extends AF_Populate
         $this->createFixedIndexForAlgoNumeric($aF_d_g->getAlgoByRef($numericInput_chiffre_affaire->getRef()), 'general', 'chiffre_affaire', []);
         $aF_d_g->getMainAlgo()->setExpression(':chiffre_affaire;');
 
-        // Formulaire vide
-        $aF_vide = $this->createAF($category_contenant_formulaire, 'formulaire_vide', 'Formulaire vide');
+        // Formulaire avec sous-formulaires
+        $aF_sous_af = $this->createAF($category_contenant_formulaire, 'af_avec_sous_af', 'Formulaire avec sous-formulaires');
+        // Composants
+        $sous_formulaire_non_repete = $this->createSubAF($aF_sous_af, $aF_sous_af->getRootGroup(), 'sous_formulaire_non_repete', 'Sous-formulaire non répété', $aF_d_g);
+        $sous_formulaire_repete = $this->createSubAFRepeated($aF_sous_af, $aF_sous_af->getRootGroup(), 'sous_formulaire_repete', 'Sous-formulaire répété', $aF_combustion);
+
 
         // Formulaire de test
         $aF_test = $this->createAF($category_contenant_formulaire, 'formulaire_test', 'Formulaire test');
@@ -132,6 +136,8 @@ class AF_PopulateTest extends AF_Populate
 //        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3');
 //        $this->createAlgoConditionExpression($aF_combustion_combustible_unite_masse, 'refa4', 'expression');
 
+        // Formulaire vide
+        $aF_vide = $this->createAF($category_contenant_formulaire, 'formulaire_vide', 'Formulaire vide');
 
         $entityManager->flush();
 
