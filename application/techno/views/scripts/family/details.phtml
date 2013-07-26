@@ -22,10 +22,10 @@ $family = $this->family;
         if ($category) {
             $categories = '';
             while ($category) {
-                $categories .= ' / '.$category->getLabel();
+                $categories = $category->getLabel() . ' / ' . $categories;
                 $category = $category->getParentCategory();
             }
-            echo substr($categories, 3);
+            echo substr($categories, 0, -3);
         } else {
             echo '<span class="muted">'.__('UI', 'other', 'noneFem').'</span>';
         }
