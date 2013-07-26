@@ -107,6 +107,7 @@ echo $tmd->render();
             $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('data-element');
             $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('href');
         });
+
         addElement = function (coordinates) {
             var url = "<?=$this->baseUrl('techno/tmd_family-elements-tmd/add-element')?>";
             var data = {
@@ -134,7 +135,7 @@ echo $tmd->render();
              $('#element_edit').modal('hide');
         };
 
-        deleteElement = function(idElement) {
+        deleteElement = function (idElement) {
             var coordinates = $('#elements td a[data-element="' + idElement + '"]').parent().attr('id').substr(9);
             var data = {
                 'idElement':idElement,

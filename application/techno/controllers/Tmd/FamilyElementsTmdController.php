@@ -47,13 +47,7 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $cell->setChosenElement($element);
         $cell->save();
         $this->entityManager->flush();
-        $this->sendJsonResponse(
-            [
-                'elementId' => $element->getId(),
-                'message' => __('Techno', 'element', 'added'),
-                'type'    => 'success',
-            ]
-        );
+        $this->sendJsonResponse(['elementId' => $element->getId(),]);
     }
 
     /**
@@ -80,12 +74,7 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $cell->save();
         $chosenElement->delete();
         $this->entityManager->flush();
-        $this->sendJsonResponse(
-            [
-                'message' => __('Techno', 'element', 'deleted'),
-                'type'    => 'success',
-            ]
-        );
+        $this->sendJsonResponse([]);
     }
 
 }
