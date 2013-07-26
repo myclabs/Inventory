@@ -34,7 +34,7 @@ if ($this->edit) {
     $deletePopup->footer = '<button class="btn btn-primary" onclick="deleteElement($(this).attr(\'data-element\'));">'
         .'<i class="icon-ok icon-white"></i> '.__('UI', 'verb', 'confirm').'</button>';
     $deletePopup->footer .= '<a class="btn" data-toggle="modal" data-remote="false" data-target="#element_edit" onclick="$(\'#element_delete\').modal(\'hide\');">'
-        .'<i class="icon-remove"></i> '.__('UI', 'verb', 'cancel').'</button>';
+        .'<i class="icon-remove"></i> '.__('UI', 'verb', 'cancel').'</a>';
     echo $deletePopup->render();
 } else {
     $tmd->formatCells = '{value} ± {uncertainty}';
@@ -107,6 +107,7 @@ echo $tmd->render();
             $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('data-element');
             $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('href');
         });
+
         addElement = function (coordinates) {
             var url = "<?=$this->baseUrl('techno/tmd_family-elements-tmd/add-element')?>";
             var data = {
@@ -122,16 +123,23 @@ echo $tmd->render();
                     + '</a>'
                 );
                 $('#elements-' + coordinates.replace(/#/g, '-') + ' a').trigger('click');
+                $('#element_edit').on('hide', {idElement: data.elementId }, undoAdd);
             });
             return false;
         };
 
+        undoAdd = function (event) {
+            deleteElement(event.data.idElement);
+            $('#element_edit').unbind('hide', undoAdd);
+        }
+
         $.fn.elementEditSuccess = function (response) {
-             addMessage(response.message, response.type);
-             $('#elements tbody tr td a[data-element="' + response.data.elementId + '"]').html(
-                 response.data.value + ' ± ' + response.data.uncertainty + ' %'
-             );
-             $('#element_edit').modal('hide');
+            addMessage(response.message, response.type);
+            $('#elements tbody tr td a[data-element="' + response.data.elementId + '"]').html(
+                response.data.value + ' ± ' + response.data.uncertainty + ' %'
+            );
+            $('#element_edit').unbind('hide', undoAdd);
+            $('#element_edit').modal('hide');
         };
 
         deleteElement = function(idElement) {
