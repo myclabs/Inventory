@@ -90,7 +90,7 @@ trait DatagridFeatureContext
         $popupSelector = '.yui-dt-editor:not([style*="display: none"])';
 
         // Text field
-        $inputNodes = $this->findAllElements("$popupSelector input, $popupSelector select");
+        $inputNodes = $this->findAllElements("$popupSelector input");
         if (count($inputNodes) === 1) {
             $inputNode = current($inputNodes);
             $inputNode->setValue($content);
