@@ -5,7 +5,7 @@ use TEC\Expression;
 /** @var Algo_Model_Numeric_Expression $algo */
 $algo = $this->algo;
 
-$expression = new Expression($algo->getExpression(), Expression::TYPE_NUMERIC);
+$expression = new Expression($algo->getExpression());
 $graphExpression = $expression->getGraph();
 ?>
 

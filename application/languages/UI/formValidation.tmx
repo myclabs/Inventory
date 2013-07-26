@@ -54,7 +54,7 @@
         </tu>
         <tu tuid="invalidUncertainty">
             <tuv xml:lang="fr">
-                <seg>L'incertitude saisie n'a pas pu être interprétée, merci de corriger.</seg>
+                <seg>La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal).</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Entered uncertainty could not be read, please correct it.</seg>

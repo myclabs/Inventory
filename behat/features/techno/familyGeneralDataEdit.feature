@@ -1,5 +1,5 @@
 @dbFull
-Feature: Family general tab edit feature
+Feature: Family general data edit feature
 
   Background:
     Given I am logged in

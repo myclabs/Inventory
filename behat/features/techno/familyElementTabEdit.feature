@@ -5,6 +5,20 @@ Feature: Family element tab edit feature
     Given I am logged in
 
   @javascript
+  Scenario: Family edit, tab element, display
+    Given I am on "techno/family/edit/id/4"
+    And I wait for the page to finish loading
+  # Vérification qu'on tombe bien sur l'onglet "Éléments"
+  # Séparateur décimal en français
+  # Arrondi à trois chiffres significatifs
+  # Séparateur de milliers en français
+  # En-têtes de dimensions commencent par une majuscule
+    And I should see "0,123 ± 16 %"
+    And I should see "12 300 ± 16 %"
+    And I should see "Combustible"
+    And I should see "Processus"
+
+  @javascript
   Scenario: Family edit, creation of an element scenario, correct input
     Given I am on "techno/family/edit/id/4"
     And I wait for the page to finish loading
@@ -15,9 +29,9 @@ Feature: Family element tab edit feature
     And I fill in "Incertitude" with "12,34"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
-    And I should see a "#elements_charbon_amont_combustion a:contains('1234,56789 ± 12 %')" element
-# Ajout d'un élément puis annulation sans enregistrement
-# TODO : actuellement l'élément est tout de même créé.
+    And I should see a "#elements_charbon_amont_combustion a:contains('1 230 ± 12 %')" element
+  # Ajout d'un élément puis annulation sans enregistrement
+  # TODO : actuellement l'élément est tout de même créé.
 
   @javascript
   Scenario: Family edit, creation of an element scenario, incorrect input
@@ -46,15 +60,6 @@ Feature: Family element tab edit feature
   Scenario: Family edit, edition of an element scenario, correct input
     Given I am on "techno/family/edit/id/4"
     And I wait for the page to finish loading
-  # Vérification qu'on tombe bien sur l'onglet "Éléments"
-  # Séparateur décimal en français
-  # Arrondi à trois chiffres significatifs
-  # Séparateur de milliers en français
-  # En-têtes de dimensions commencent par une majuscule
-    And I should see "0,123 ± 16 %"
-    And I should see "12 300 ± 16 %"
-    And I should see "Combustible"
-    And I should see "Processus"
   # Édition d'un élément
     When I click element "#elements-charbon-combustion a"
     Then I should see the popup "Élément"
@@ -104,9 +109,9 @@ Feature: Family element tab edit feature
     Then I should see the popup "Élément"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-  # Cette fois-ci on confirme
+  # Cette fois-ci on confirme 
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And I should see a "#elements-charbon-combustion .btn:contains('Ajouter')" element
+    And I should see a "#elements-charbon-combustion .btn:contains('Ajouter')" element
 
 
