@@ -95,9 +95,12 @@ class Unit_ConsultController extends Core_Controller
     public function composedunitsAction()
     {
         $composedUnitRefs = [
+            'homme.jour',
             'km.h^-1',
-            'l.km',
-            'l.km.h^-1',
+            'kg.m3^-1',
+            'g_co2e.vehicule^-1.km^-1',
+            'passager.vehicule^-1',
+            't_co2e.mwh^-1'
         ];
 
         $this->view->composedUnits = [];
