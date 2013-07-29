@@ -1,5 +1,7 @@
 # Mise en production
 
+Rappel : pour les MEP, il est déconseillé d'utiliser `build update`.
+
 ## 2.3
 
 - Installer APC
@@ -15,7 +17,11 @@ APC est déjà installé en `test`.
     sudo cp application/configs/env.php.default application/configs/env.php
     sudo nano env.php
 
-- Exécuter le script de migration
+- Exécuter le script de migration SQL
+
+    scripts/migration/2.3/migrate.sql
+
+- Exécuter le script de migration PHP
 
     sudo php scripts/migration/2.3/migrate.php
 

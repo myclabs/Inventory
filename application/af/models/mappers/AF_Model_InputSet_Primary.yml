@@ -7,6 +7,9 @@ AF_Model_InputSet_Primary:
     finished:
       type: boolean
       nullable: false
+    calculationComplete:
+      type: boolean
+      nullable: false
 
   oneToOne:
     outputSet:

@@ -63,8 +63,14 @@ class AF_Service_InputService
         // Si la saisie est complète
         if ($inputSet->isInputComplete()) {
             // Calcule les résultats
-            $inputSet->getAF()->execute($inputSet);
-            $inputSet->getOutputSet()->calculateTotals();
+            try {
+                $inputSet->getAF()->execute($inputSet);
+                $inputSet->setCalculationComplete(true);
+                $inputSet->getOutputSet()->calculateTotals();
+            } catch (Algo_Model_ExecutionException $e) {
+                $inputSet->setCalculationComplete(false);
+                $inputSet->clearOutputSet();
+            }
         } else {
             $inputSet->clearOutputSet();
         }
