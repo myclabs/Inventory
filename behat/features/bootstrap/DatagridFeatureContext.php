@@ -147,6 +147,33 @@ JS;
     }
 
     /**
+     * @Then /^(?:|I )additionally select "(?P<content>[^"]*)" for (?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
+     */
+    public function additionallySelectCell($content, $column, $row, $datagrid)
+    {
+        $cellSelector = $this->getDatagridSelector($datagrid)
+            . " .yui-dt-data tr:nth-child($row)"
+            . " .yui-dt-col-$column";
+
+        // Double-click
+        $cellNode = $this->findElement($cellSelector);
+        $cellNode->doubleClick();
+        $this->waitForPageToFinishLoading();
+
+        $popupSelector = '.yui-dt-editor:not([style*="display: none"])';
+
+        // Select
+        $inputNode = $this->findElement("$popupSelector select");
+        $inputNode->selectOption($content, true);
+
+        // Submit
+        $submitNode = $this->findElement("$popupSelector .yui-dt-button .yui-dt-default");
+        $submitNode->click();
+
+        $this->waitForPageToFinishLoading();
+    }
+
+    /**
      * @Then /^(?:|I )set "(?P<content>[^"]*)" for (?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid with a confirmation message$/
      */
     public function setCellContentConfirmationMessage($content, $column, $row, $datagrid)

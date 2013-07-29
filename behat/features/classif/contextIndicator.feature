@@ -54,7 +54,7 @@ Feature: Classification context indicator feature
     Given I am on "classif/contextindicator/manage"
     Then I should see the "editContextIndicators" datagrid
   # Ajout d'un axe, relié hiérarchiquement à un axe existant
-    When I additionnally set "Scope" for column "axes" of row 1 of the "editContextIndicators" datagrid
+    When I additionally select "Scope" for column "axes" of row 1 of the "editContextIndicators" datagrid
     Then the following message is shown and closed: "Merci de sélectionner des axes deux à deux non hiérarchiquement reliés."
 
   @javascript
