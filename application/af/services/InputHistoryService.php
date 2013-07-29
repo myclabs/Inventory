@@ -91,7 +91,10 @@ class AF_Service_InputHistoryService
                 $value = $newValue;
             }
 
-            $entries[] = new AF_Service_InputHistoryService_Entry($input, $logEntry->getLoggedAt(), $value);
+            // Author
+            $author = User_Model_User::load($logEntry->getUsername());
+
+            $entries[] = new AF_Service_InputHistoryService_Entry($input, $logEntry->getLoggedAt(), $value, $author);
         }
 
         return $entries;
