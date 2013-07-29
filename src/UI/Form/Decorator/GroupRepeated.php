@@ -83,10 +83,12 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
             $childZendElement->setName($baseName);
             $childZendElement->setAttrib('id', $baseId);
         }
+        // Delete header
+        $header .= $htmlElementTagDecorator->render('');
+        $headerRow = $htmlHeaderRowTagDecorator->render($header);
         // Base Delete
         $baseElementsRow .= $htmlElementTagDecorator->render($deleteButton->render());
         $baseElementsRow = $htmlElementsRowTagDecorator->render($baseElementsRow);
-        $headerRow = $htmlHeaderRowTagDecorator->render($header);
 
         $occurrence++;
 
