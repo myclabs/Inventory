@@ -106,7 +106,6 @@ class UI_Form_Element
             $this->_zendFormElement->setAttrib('required', 'required');
         }
 
-
         $this->setDefaultDecorators();
     }
 

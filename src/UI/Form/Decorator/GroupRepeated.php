@@ -53,18 +53,16 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $header = '';
         $htmlHeaderTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlHeaderTagDecorator->setOptions($headerOptions);
-        foreach ($this->getElement()->getElement()->children as $zendElement) {
-            Core_Tools::dump($zendElement->getId());
+        foreach ($this->getElement()->getElement()->children as $childZendElement) {
             /**
-             * @var Zend_Form_Element $zendElement
+             * @var Zend_Form_Element $childZendElement
              */
-            $this->initZendElement($zendElement, $occurrence);
-            Core_Tools::dump($zendElement->getId());
+            $this->initZendElement($childZendElement, $occurrence);
 
-            $header .= $htmlHeaderTagDecorator->render($zendElement->getLabel());
+            $header .= $htmlHeaderTagDecorator->render($childZendElement->getLabel());
 
-            $htmlElementTagDecorator->setOption('id', $zendElement->getId().'-line');
-            $baseElementsRow .= $htmlElementTagDecorator->render($zendElement->render());
+            $htmlElementTagDecorator->setOption('id', $childZendElement->getId().'-line');
+            $baseElementsRow .= $htmlElementTagDecorator->render($childZendElement->render());
             $htmlElementTagDecorator->removeOption('id');
         }
         // Header Delete
@@ -80,14 +78,14 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $elementsRow = '';
         foreach ($this->getElement()->getLineValues() as $lineValue) {
             $elements = '';
-            foreach ($lineValue->getElement()->children as $zendElement) {
+            foreach ($lineValue->getElement()->children as $childZendElement) {
                 /**
-                 * @var Zend_Form_Element $zendElement
+                 * @var Zend_Form_Element $childZendElement
                  */
-                $this->initZendElement($zendElement, $occurrence);
+                $this->initZendElement($childZendElement, $occurrence);
                 
-                $htmlElementTagDecorator->setOption('id', $zendElement->getId().'-line');
-                $elements .= $htmlElementTagDecorator->render($zendElement->render());
+                $htmlElementTagDecorator->setOption('id', $childZendElement->getId().'-line');
+                $elements .= $htmlElementTagDecorator->render($childZendElement->render());
                 $htmlElementTagDecorator->removeOption('id');
             }
 
@@ -132,10 +130,16 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
 
         return $content;
     }
-    
+
+    /**
+     * @param Zend_Form_Element $zendElement
+     * @param $occurrence
+     */
     protected function initZendElement($zendElement, $occurrence)
     {
-        $zendElement->init();
+        if ($occurrence > 0) {
+            $zendElement->getElement()->init();
+        }
 
         if ($zendElement instanceof UI_Form_Element_Textarea) {
             $zendElement->setAttrib('rows', 1);
