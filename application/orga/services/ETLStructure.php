@@ -150,9 +150,9 @@ class Orga_Service_ETLStructure
      */
     protected function populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters)
     {
-        $this->populateDWCubeWithAF($dWCube);
         $this->populateDWCubeWithOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters);
         $this->populateDWCubeWithClassif($dWCube);
+        $this->populateDWCubeWithAF($dWCube);
     }
 
     /**
