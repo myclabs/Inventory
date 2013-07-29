@@ -54,10 +54,12 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $htmlHeaderTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlHeaderTagDecorator->setOptions($headerOptions);
         foreach ($this->getElement()->getElement()->children as $zendElement) {
+            Core_Tools::dump($zendElement->getId());
             /**
              * @var Zend_Form_Element $zendElement
              */
             $this->initZendElement($zendElement, $occurrence);
+            Core_Tools::dump($zendElement->getId());
 
             $header .= $htmlHeaderTagDecorator->render($zendElement->getLabel());
 
@@ -144,10 +146,8 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $zendElement->removeDecorator('label');
         $zendElement->removeDecorator('help');
 
-        $zendElement->setName($zendElement->getName().self::OCCURRENCE_SEPARATOR.$occurrence);
         $zendElement->setAttrib('id', $zendElement->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
         $zendElement->setName($zendElement->getName().self::OCCURRENCE_SEPARATOR.$occurrence);
-        $zendElement->setAttrib('id', $zendElement->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
     }
 
 }
