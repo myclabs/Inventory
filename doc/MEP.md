@@ -19,6 +19,12 @@ sudo cp application/configs/env.php.default application/configs/env.php
 sudo nano env.php
 ```
 
+- MAJ des droits sur le log des requêtes
+
+```
+sudo chmod 777 data/logs/queries.log
+```
+
 - Exécuter le script de migration SQL
 
 ```
