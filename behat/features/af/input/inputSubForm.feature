@@ -49,7 +49,7 @@ Feature: Subforms input feature
     And I click "Ajouter"
     And I select "Charbon" from "sous_formulaire_repete__nature_combustible__1"
     And I fill in "sous_formulaire_repete__quantite_combustible__1" with "10"
-    And I select "Gaz naturel" from "sous_formulaire_repete__nature_combustible__2"
+    And I select "Charbon" from "sous_formulaire_repete__nature_combustible__2"
     And I fill in "sous_formulaire_repete__quantite_combustible__2" with "20"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
