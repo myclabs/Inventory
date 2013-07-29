@@ -79,7 +79,9 @@ Feature: Family dimension list edit feature
     Then I should see "Édition d'une dimension"
   # Retour à la page d'édition de la famille
     When I click "Retourner à la famille"
-    Then I should see the "dimensions" datagrid
+  # On ne retombe pas sur l'onglet "Général", mais sur l'onglet "Éléments"
+    Then I should see "Processus"
+    And I should see "0,123 ± 16 %"
 
   @javascript
   Scenario: Delete family dimension

@@ -177,14 +177,14 @@ class Orga_Service_ETLStructure
         foreach (Zend_Registry::get('languages') as $localeId) {
             switch ($localeId) {
                 case 'fr':
-                    $inputStatusLabel = 'Status des saisies';
-                    $finishedLabel = 'terminée';
-                    $completedLabel = 'complète';
+                    $inputStatusLabel = 'Statut de saisie';
+                    $finishedLabel = 'Terminé';
+                    $completedLabel = 'Complet';
                     break;
                 case 'en':
                     $inputStatusLabel = 'Input status';
-                    $finishedLabel = 'finished';
-                    $completedLabel = 'completed';
+                    $finishedLabel = 'Finished';
+                    $completedLabel = 'Complete';
                     break;
                 default:
                     $inputStatusLabel = '';

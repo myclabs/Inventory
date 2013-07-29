@@ -343,7 +343,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
     protected function getHistoryComponent(AF_Model_Input $input)
     {
         $historyButton = new UI_HTML_Button('<i class="icon-time"></i>');
-        $historyButton->addAttribute('title', __('AF', 'inputInput', 'valueHistory'));
+        $historyButton->addAttribute('title', __('UI', 'history', 'valueHistory'));
         $historyButton->addAttribute('class', 'input-history');
         $historyButton->addAttribute('data-input-id', $input->getId());
         $historyButton->addAttribute('data-toggle', 'button');

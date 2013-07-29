@@ -172,25 +172,7 @@
             </tuv>
         </tu>
 
-        <!-- Historique des valeurs -->
 
-        <tu tuid="valueHistory">
-            <tuv xml:lang="fr">
-                <seg>Historique des valeurs</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Value history</seg>
-            </tuv>
-        </tu>
-
-        <tu tuid="noHistory">
-            <tuv xml:lang="fr">
-                <seg>Pas d'historique</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>No history</seg>
-            </tuv>
-        </tu>
 
 	</body>
 </tmx>
