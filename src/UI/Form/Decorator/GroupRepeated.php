@@ -14,13 +14,14 @@
  */
 class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
 {
+    const OCCURRENCE_SEPARATOR = '__';
+    
     /**
      * @param string $content
      * @see Zend/Form/Decorator/Zend_Form_Decorator_Abstract::render()
      */
     public function render($content)
     {
-        $occurrenceSeparator = '__';
         $occurrence = 0;
 
         // Tags.
@@ -34,7 +35,7 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         );
         $elementsRowOptions = array(
             'tag' => 'tr',
-            'id'  => $this->getElement()->getId().$occurrenceSeparator.$occurrence,
+            'id'  => $this->getElement()->getId().self::OCCURRENCE_SEPARATOR.$occurrence,
         );
         $htmlElementsRowTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlElementsRowTagDecorator->setOptions($elementsRowOptions);
@@ -52,38 +53,19 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $header = '';
         $htmlHeaderTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlHeaderTagDecorator->setOptions($headerOptions);
-        foreach ($this->getElement()->getElement()->children as $childZendElement) {
+        foreach ($this->getElement()->getElement()->children as $zendElement) {
             /**
-             * @var Zend_Form_Element $childZendElement
+             * @var Zend_Form_Element $zendElement
              */
-            $childZendElement->init();
+            $this->initZendElement($zendElement, $occurrence);
 
-            if ($childZendElement instanceof UI_Form_Element_Textarea) {
-                $childZendElement->setAttrib('rows', 1);
-            }
+            $header .= $htmlHeaderTagDecorator->render($zendElement->getLabel());
 
-            // Suppression des décorateurs inutiles.
-            $childZendElement->removeDecorator('line');
-            $childZendElement->removeDecorator('label');
-            $childZendElement->removeDecorator('help');
-
-            $header .= $htmlHeaderTagDecorator->render($childZendElement->getLabel());
-
-            // Base Element Row
-            $baseName = $childZendElement->getName();
-            $baseId = $childZendElement->getId();
-
-            $childZendElement->setName($baseName.$occurrenceSeparator.$occurrence);
-            $childZendElement->setAttrib('id', $baseId.$occurrenceSeparator.$occurrence);
-            $htmlElementTagDecorator->setOption('id', $childZendElement->getId().'-line');
-            $baseElementsRow .= $htmlElementTagDecorator->render($childZendElement->render());
+            $htmlElementTagDecorator->setOption('id', $zendElement->getId().'-line');
+            $baseElementsRow .= $htmlElementTagDecorator->render($zendElement->render());
             $htmlElementTagDecorator->removeOption('id');
-
-            // Réinitialisation de l'élément.
-            $childZendElement->setName($baseName);
-            $childZendElement->setAttrib('id', $baseId);
         }
-        // Delete header
+        // Header Delete
         $header .= $htmlHeaderTagDecorator->render('');
         $headerRow = $htmlHeaderRowTagDecorator->render($header);
         // Base Delete
@@ -96,49 +78,21 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $elementsRow = '';
         foreach ($this->getElement()->getLineValues() as $lineValue) {
             $elements = '';
-            foreach ($this->getElement()->getElement()->children as $childZendElement) {
+            foreach ($lineValue->getElement()->children as $zendElement) {
                 /**
-                 * @var Zend_Form_Element $childZendElement
+                 * @var Zend_Form_Element $zendElement
                  */
-                $baseId = $childZendElement->getId();
-                $baseName = $childZendElement->getName();
-                $baseValue = $childZendElement->getValue();
-                if ($childZendElement instanceof UI_Form_Element_Pattern_Value) {
-                    $basePercentValue = $childZendElement->getPercent()->getValue();
-                }
-
-                $childZendElement->setName($baseName.$occurrenceSeparator.$occurrence);
-                $childZendElement->setAttrib('id', $baseId.$occurrenceSeparator.$occurrence);
-
-                foreach ($lineValue->getElement()->children as $valueElement) {
-                    /**
-                     * @var Zend_Form_Element $valueElement
-                     */
-                    if ($baseId === $valueElement->getId()) {
-                        $childZendElement->setValue($valueElement->getValue());
-                        if ($childZendElement instanceof UI_Form_Element_Pattern_Value) {
-                            $childZendElement->setPercentValue($valueElement->getPercent()->getValue());
-                        }
-                    }
-                }
-
-                $htmlElementTagDecorator->setOption('id', $childZendElement->getId().'-line');
-                $elements .= $htmlElementTagDecorator->render($childZendElement->render());
+                $this->initZendElement($zendElement, $occurrence);
+                
+                $htmlElementTagDecorator->setOption('id', $zendElement->getId().'-line');
+                $elements .= $htmlElementTagDecorator->render($zendElement->render());
                 $htmlElementTagDecorator->removeOption('id');
-
-                // Réinitialisation de l'élément.
-                $childZendElement->setName($baseName);
-                $childZendElement->setAttrib('id', $baseId);
-                $childZendElement->setValue($baseValue);
-                if ($childZendElement instanceof UI_Form_Element_Pattern_Value) {
-                    $childZendElement->getPercent()->setValue($basePercentValue);
-                }
             }
 
             // Delete
             $elements .= $htmlElementTagDecorator->render($deleteButton->render());
 
-            $htmlElementsRowTagDecorator->setOption('id', $this->getElement()->getId().$occurrenceSeparator.$occurrence);
+            $htmlElementsRowTagDecorator->setOption('id', $this->getElement()->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
             $elementsRow .= $htmlElementsRowTagDecorator->render($elements);
             $htmlElementsRowTagDecorator->removeOption('id');
             $occurrence++;
@@ -164,7 +118,7 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $addScript .= 'var '.$this->getElement()->getId().'_nextRowId = '.$occurrence.';';
         $addScript .= '$(\'#'.$this->getElement()->getId().'_add'.'\').on(\'click\', function(e) {';
         $addScript .= '$(\'#'.$this->getElement()->getId().' tbody\').append(\''.$baseElementsRow.'\'.replace('.
-            '/'.$occurrenceSeparator.'0/g, \''.$occurrenceSeparator.'\'+'.$this->getElement()->getId().'_nextRowId));';
+            '/'.self::OCCURRENCE_SEPARATOR.'0/g, \''.self::OCCURRENCE_SEPARATOR.'\'+'.$this->getElement()->getId().'_nextRowId));';
         $addScript .= ''.$this->getElement()->getId().'_nextRowId++;';
         $addScript .= '});';
         $deleteScript = '';
@@ -175,6 +129,25 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $content .= '<script>'.$deleteScript.$addScript.'</script>';
 
         return $content;
+    }
+    
+    protected function initZendElement($zendElement, $occurrence)
+    {
+        $zendElement->init();
+
+        if ($zendElement instanceof UI_Form_Element_Textarea) {
+            $zendElement->setAttrib('rows', 1);
+        }
+
+        // Suppression des décorateurs inutiles.
+        $zendElement->removeDecorator('line');
+        $zendElement->removeDecorator('label');
+        $zendElement->removeDecorator('help');
+
+        $zendElement->setName($zendElement->getName().self::OCCURRENCE_SEPARATOR.$occurrence);
+        $zendElement->setAttrib('id', $zendElement->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
+        $zendElement->setName($zendElement->getName().self::OCCURRENCE_SEPARATOR.$occurrence);
+        $zendElement->setAttrib('id', $zendElement->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
     }
 
 }
