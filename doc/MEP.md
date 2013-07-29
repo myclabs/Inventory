@@ -1,7 +1,5 @@
 # Mise en production
 
-Rappel : pour les MEP, il est déconseillé d'utiliser `build update`.
-
 ## 2.3
 
 - Installer APC
