@@ -23,11 +23,17 @@ class AF_Service_InputHistoryService_Entry
      */
     private $value;
 
-    public function __construct(AF_Model_Input $input, DateTime $loggedAt, $value)
+    /**
+     * @var User_Model_User
+     */
+    private $author;
+
+    public function __construct(AF_Model_Input $input, DateTime $loggedAt, $value, User_Model_User $author)
     {
         $this->input = $input;
         $this->loggedAt = $loggedAt;
         $this->value = $value;
+        $this->author = $author;
     }
 
     /**
@@ -52,5 +58,13 @@ class AF_Service_InputHistoryService_Entry
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return User_Model_User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 }

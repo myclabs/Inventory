@@ -121,7 +121,7 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
     var popoverDefaultContent = '<p class="text-center"><img src="images/ui/ajax-loader.gif"></p>';
     $(".input-history").popover({
         placement: 'bottom',
-        title: __('AF', 'inputInput', 'valueHistory'),
+        title: __('UI', 'history', 'valueHistory'),
         html: true,
         content: popoverDefaultContent
     }).click(function() {

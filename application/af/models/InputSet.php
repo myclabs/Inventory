@@ -188,14 +188,6 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
     }
 
     /**
-     * @return bool True si les calculs de l'AF sont fait
-     */
-    public function isCalculationComplete()
-    {
-        return $this->isInputComplete();
-    }
-
-    /**
      * @return AF_Model_AF
      */
     public function getAF()

@@ -189,8 +189,6 @@ class AF_AfController extends Core_Controller
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->isInputComplete = $inputSet ? $inputSet->isInputComplete() : false;
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->view->af = $af;
         $this->_helper->layout->disableLayout();
     }
