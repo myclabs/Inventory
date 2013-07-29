@@ -90,10 +90,19 @@ trait DatagridFeatureContext
         $popupSelector = '.yui-dt-editor:not([style*="display: none"])';
 
         // Text field
-        $inputNodes = $this->findAllElements("$popupSelector input");
+        $inputNodes = $this->findAllElements("$popupSelector input, $popupSelector select");
         if (count($inputNodes) === 1) {
+            /** @var NodeElement $inputNode */
             $inputNode = current($inputNodes);
-            $inputNode->setValue($content);
+            if ($inputNode->getTagName() == 'input') {
+                $inputNode->setValue($content);
+            } else {
+                // Select
+                // Attend la fin du chargement
+                $selectLoading = "$('$popupSelector select option:contains(\"Chargement\")').length == 0";
+                $this->getSession()->wait(5000, "($selectLoading)");
+                $inputNode->selectOption($content, false);
+            }
         } else {
             // Radio
             $inputNodes = $this->findAllElements($popupSelector . ' input[type="radio"]');
@@ -114,28 +123,17 @@ JS;
                         $inputNode->setValue($content);
                     }
                 } else {
-                    // Select
-                    $inputNodes = $this->findAllElements("$popupSelector select");
+                    // Textarea
+                    $inputNodes = $this->findAllElements("$popupSelector textarea");
                     if (count($inputNodes) === 1) {
                         // Attend la fin du chargement
-                        $selectLoading = "$('$popupSelector select option:contains(\"Chargement\")').length == 0";
-                        $this->getSession()->wait(5000, "($selectLoading)");
+                        $textareaLoading = "$('$popupSelector textarea:contains(\"Chargement\")').length == 0";
+                        $this->getSession()->wait(5000, "($textareaLoading)");
                         /** @var NodeElement $inputNode */
                         $inputNode = current($inputNodes);
-                        $inputNode->selectOption($content, false);
+                        $inputNode->setValue($content);
                     } else {
-                        // Textarea
-                        $inputNodes = $this->findAllElements("$popupSelector textarea");
-                        if (count($inputNodes) === 1) {
-                            // Attend la fin du chargement
-                            $textareaLoading = "$('$popupSelector textarea:contains(\"Chargement\")').length == 0";
-                            $this->getSession()->wait(5000, "($textareaLoading)");
-                            /** @var NodeElement $inputNode */
-                            $inputNode = current($inputNodes);
-                            $inputNode->setValue($content);
-                        } else {
-                            throw new \Exception("Unable to set cell value in datagrid");
-                        }
+                        throw new \Exception("Unable to set cell value in datagrid");
                     }
                 }
             }
