@@ -72,6 +72,20 @@ Feature: Family tree edit feature
   Scenario: Deletion of a Techno category
     Given I am on "techno/family/tree-edit"
     And I wait 5 seconds
+  # Catégorie contenant une sous-catégorie
+    When I click "Catégorie contenant une sous-catégorie"
+    Then I should see the popup "Édition d'une catégorie"
+    When I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins une famille ou une autre catégorie)."
+  # Catégorie contenant un formulaire
+    When I click "Catégorie contenant une famille"
+    Then I should see the popup "Édition d'une catégorie"
+    When I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins une famille ou une autre catégorie)."
   # Catégorie vide
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -80,21 +94,6 @@ Feature: Family tree edit feature
     And I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And I should not see "Catégorie vide"
-  # Catégorie contenant une sous-catégorie
-    When I click "Catégorie contenant une sous-catégorie"
-    Then I should see the popup "Édition d'une catégorie"
-    When I click "Supprimer"
-    Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
-  # TODO : interdire la suppression d'une catégorie contenant une autre catégorie
-  # Catégorie contenant un formulaire
-    When I click "Catégorie contenant une famille"
-    Then I should see the popup "Édition d'une catégorie"
-    When I click "Supprimer"
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins une famille ou une autre catégorie)."
 
   @javascript
   Scenario: Edition of a family in family tree edit
@@ -131,7 +130,12 @@ Feature: Family tree edit feature
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après
-  # TODO : à faire.
+    When I wait 3 seconds
+    And I click "Combustion (modifiée)"
+    And I check "Après"
+    And I select "Masse volumique de combustible" from "familyTree_selectAfter"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
   Scenario: Deletion of a family in family tree edit

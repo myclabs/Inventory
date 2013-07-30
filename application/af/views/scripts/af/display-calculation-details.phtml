@@ -13,8 +13,13 @@ $outputSet = $inputSet ? $inputSet->getOutputSet() : null;
 
 UI_Datagrid::addHeader();
 
-if (!$this->isInputComplete) {
+if (!$inputSet || !$inputSet->isInputComplete()) {
     echo '<p>' . __('AF', 'inputInput', 'incompleteInput') . '</p>';
+    return;
+}
+
+if (!$inputSet->isCalculationComplete()) {
+    echo '<p>' . __('AF', 'inputInput', 'statusCalculationIncomplete') . '</p>';
     return;
 }
 
@@ -162,8 +167,9 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
         $collapse->body .= '<ul>';
         foreach ($algo->getParameterCoordinates() as $parameterCoordinate) {
             $collapse->body .= '<li>';
-            $collapse->body .= $parameterCoordinate->getDimension()->getLabel() . __('UI', 'other', ':');
-            $collapse->body .= $parameterCoordinate->getMemberKeyword($inputSet);
+            $collapse->body .= ucfirst($parameterCoordinate->getDimension()->getLabel())
+                . __('UI', 'other', ':')
+                . $parameterCoordinate->getMemberKeyword($inputSet)->getLabel();
             $collapse->body .= '</li>';
         }
         $collapse->body .= '</ul>';

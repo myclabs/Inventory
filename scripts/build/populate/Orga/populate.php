@@ -20,7 +20,42 @@ class Orga_Populate extends Core_Script_Action
         $entityManager = $entityManagers['default'];
 
 
+        // Création d'une organisation.
+        //  + createOrganization : -
+        // Param : label
 
+        // Création des axes.
+        //  + createAxis : -
+        // Params : Organization, ref, label
+        // OptionalParams : Axis parent=null
+
+        // Création des membres.
+        //  + createMember : -
+        // Params : Axis, ref, label
+        // OptionalParams : [Member] parents=[]
+
+        // Création des granularités.
+        //  + createGranularity : -
+        // Params : Organization, axes[Axis], navigable
+        // OptionalParams : orgaTab=false, aCL=true, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
+
+
+        $entityManager->flush();
+
+
+        // Création des utilisateurs orga.
+        //  + createUser: -
+        // Params : email
+
+        // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
+        //  + addOrganizationAdministrator: -
+        // Params : email, Organization
+
+        // Ajout d'un role sur une cellule à un utilisateur existant.
+        //  + addCellAdministrator : -
+        //  + addCellContributor : -
+        //  + addCellObserver : -
+        // Params : email, Granularity, [Member]
 
 
         $entityManager->flush();

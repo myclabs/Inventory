@@ -7,13 +7,3 @@ Algo_Model_Selection_Main:
     expression:
       type: string
       nullable: true
-
-  oneToOne:
-    tecExpression:
-      targetEntity: TEC_Model_Expression
-      joinColumn:
-        name: idExpression
-        referencedColumnName: id
-        nullable: true
-      cascade: [ all ]
-      orphanRemoval: true

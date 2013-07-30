@@ -25,3 +25,7 @@ AuditTrail\Domain\Entry:
       targetEntity: \User_Model_User
       joinColumn:
         nullable: true
+
+  indexes:
+    date_index:
+      columns: date

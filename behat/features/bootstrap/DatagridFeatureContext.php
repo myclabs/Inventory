@@ -92,8 +92,17 @@ trait DatagridFeatureContext
         // Text field
         $inputNodes = $this->findAllElements("$popupSelector input, $popupSelector select");
         if (count($inputNodes) === 1) {
+            /** @var NodeElement $inputNode */
             $inputNode = current($inputNodes);
-            $inputNode->setValue($content);
+            if ($inputNode->getTagName() == 'input') {
+                $inputNode->setValue($content);
+            } else {
+                // Select
+                // Attend la fin du chargement
+                $selectLoading = "$('$popupSelector select option:contains(\"Chargement\")').length == 0";
+                $this->getSession()->wait(5000, "($selectLoading)");
+                $inputNode->selectOption($content, false);
+            }
         } else {
             // Radio
             $inputNodes = $this->findAllElements($popupSelector . ' input[type="radio"]');
@@ -114,12 +123,13 @@ JS;
                         $inputNode->setValue($content);
                     }
                 } else {
-                    // Select
-                    $inputNodes = $this->findAllElements("$popupSelector select");
+                    // Textarea
+                    $inputNodes = $this->findAllElements("$popupSelector textarea");
                     if (count($inputNodes) === 1) {
                         // Attend la fin du chargement
-                        $selectLoading = "$('$popupSelector select option:contains(\"Chargement\")').length == 0";
-                        $this->getSession()->wait(5000, "($selectLoading)");
+                        $textareaLoading = "$('$popupSelector textarea:contains(\"Chargement\")').length == 0";
+                        $this->getSession()->wait(5000, "($textareaLoading)");
+                        /** @var NodeElement $inputNode */
                         $inputNode = current($inputNodes);
                         $inputNode->setValue($content);
                     } else {
@@ -128,6 +138,33 @@ JS;
                 }
             }
         }
+
+        // Submit
+        $submitNode = $this->findElement("$popupSelector .yui-dt-button .yui-dt-default");
+        $submitNode->click();
+
+        $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * @Then /^(?:|I )additionally select "(?P<content>[^"]*)" for (?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid$/
+     */
+    public function additionallySelectCell($content, $column, $row, $datagrid)
+    {
+        $cellSelector = $this->getDatagridSelector($datagrid)
+            . " .yui-dt-data tr:nth-child($row)"
+            . " .yui-dt-col-$column";
+
+        // Double-click
+        $cellNode = $this->findElement($cellSelector);
+        $cellNode->doubleClick();
+        $this->waitForPageToFinishLoading();
+
+        $popupSelector = '.yui-dt-editor:not([style*="display: none"])';
+
+        // Select
+        $inputNode = $this->findElement("$popupSelector select");
+        $inputNode->selectOption($content, true);
 
         // Submit
         $submitNode = $this->findElement("$popupSelector .yui-dt-button .yui-dt-default");
@@ -164,7 +201,6 @@ JS;
     public abstract function waitForPageToFinishLoading();
     public abstract function clickElement($selector);
     public abstract function fillField($field, $value);
-
     /**
      * @param string $selector
      * @param string $type

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "85be7f1f9ce18522f92a2e431db55008",
+    "hash": "a5ff5954136bc2cbc6b88f1b74d932cb",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -638,16 +638,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.2.x-dev",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f"
+                "reference": "3.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/2816aacfc9d461a54b563df9ecc6ba25e937e91f",
-                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/3.2.0",
+                "reference": "3.2.0",
                 "shasum": ""
             },
             "require": {
@@ -677,7 +677,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-07-12 13:14:27"
+            "time": "2013-07-23 13:56:31"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -710,22 +710,6 @@
             "description": "Integrates PHP-DI to Zend Framework 1",
             "homepage": "http://mnapoli.github.com/PHP-DI-ZF1/",
             "time": "2013-06-11 11:19:12"
-        },
-        {
-            "name": "mridgway/zendx_doctrine2",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git://github.com/mridgway/ZendX_Doctrine2.git",
-                "reference": "e8168e33e4ec9599a74de089f7a774d2c85fa0f0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "ZendX": "lib/"
-                }
-            },
-            "time": "2013-05-16 17:33:55"
         },
         {
             "name": "myclabs/array-comparator",
@@ -764,16 +748,16 @@
         },
         {
             "name": "myclabs/php-enum",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/php-enum.git",
-                "reference": "1.1.0"
+                "reference": "1.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/1.1.0",
-                "reference": "1.1.0",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/1.2.0",
+                "reference": "1.2.0",
                 "shasum": ""
             },
             "type": "library",
@@ -791,7 +775,7 @@
             "keywords": [
                 "enum"
             ],
-            "time": "2013-03-20 22:20:22"
+            "time": "2013-07-24 12:08:12"
         },
         {
             "name": "netcarver/textile",
@@ -1232,17 +1216,17 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/Code",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendCode.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1276,21 +1260,21 @@
                 "code",
                 "zf2"
             ],
-            "time": "2013-06-12 19:48:38"
+            "time": "2013-06-20 18:00:54"
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/EventManager",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendEventManager.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1321,17 +1305,17 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1361,7 +1345,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2013-06-12 19:46:58"
+            "time": "2013-06-20 18:01:22"
         },
         {
             "name": "zendframework/zendframework1",
@@ -1807,17 +1791,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaConsole.git",
-                "reference": "4896995d8970a597aa422cffe1cf62327a98091f"
+                "reference": "2ddbd9edcc7fb4c1274da7664a5932bed3616ba2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/4896995d8970a597aa422cffe1cf62327a98091f",
-                "reference": "4896995d8970a597aa422cffe1cf62327a98091f",
+                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/2ddbd9edcc7fb4c1274da7664a5932bed3616ba2",
+                "reference": "2ddbd9edcc7fb4c1274da7664a5932bed3616ba2",
                 "shasum": ""
             },
             "require": {
                 "mnapoli/metamodel": "dev-master",
-                "mnapoli/number-two": "0.1.*",
+                "mnapoli/number-two": "0.2.*",
                 "symfony/console": "2.3.*"
             },
             "require-dev": {
@@ -1830,7 +1814,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-16 17:44:39"
+            "time": "2013-07-25 07:37:03"
         },
         {
             "name": "mnapoli/metamodel",
@@ -1838,12 +1822,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaModel.git",
-                "reference": "477d6eebaab26b988f5700193e73dd3577980b53"
+                "reference": "5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/MetaModel/zipball/477d6eebaab26b988f5700193e73dd3577980b53",
-                "reference": "477d6eebaab26b988f5700193e73dd3577980b53",
+                "url": "https://api.github.com/repos/mnapoli/MetaModel/zipball/5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076",
+                "reference": "5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076",
                 "shasum": ""
             },
             "require": {
@@ -1862,20 +1846,20 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-18 12:23:01"
+            "time": "2013-07-23 12:56:25"
         },
         {
             "name": "mnapoli/number-two",
-            "version": "0.1.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.1.0"
+                "reference": "0.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.1.0",
-                "reference": "0.1.0",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
+                "reference": "0.2.1",
                 "shasum": ""
             },
             "type": "library",
@@ -1886,7 +1870,18 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-16 17:37:26"
+            "license": [
+                "MIT"
+            ],
+            "description": "NumberTwo is a classy variable dumper",
+            "homepage": "https://github.com/mnapoli/NumberTwo",
+            "keywords": [
+                "debug",
+                "dump",
+                "var_dump",
+                "variable"
+            ],
+            "time": "2013-07-25 07:40:43"
         },
         {
             "name": "phpoption/phpoption",
@@ -2312,7 +2307,6 @@
     "stability-flags": {
         "doctrine/common": 20,
         "pear/console_commandline": 20,
-        "mridgway/zendx_doctrine2": 20,
         "dompdf/dompdf": 20,
         "mnapoli/php-di": 20,
         "mnapoli/metaconsole": 20

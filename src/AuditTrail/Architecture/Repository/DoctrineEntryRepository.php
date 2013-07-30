@@ -46,12 +46,10 @@ class DoctrineEntryRepository extends EntityRepository implements EntryRepositor
 
             // Requete moche à cause de limitation Doctrine avec CTI
             // @see http://stackoverflow.com/questions/14851602/where-ing-in-discriminated-tables/14854067#14854067
-            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\OrganizationContext c WHERE c.cell IN (:cells))');
-            $qb->setParameter('cells', $cells);
+            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\OrganizationContext c WHERE c.cell IN (:cells))')
+                ->setParameter('cells', $cells);
         } else {
-            $qb->join('e.context', 'c')
-                ->andWhere('c INSTANCE OF AuditTrail\Domain\Context\OrganizationContext')
-                ->andWhere('c.organization = :organization')
+            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\OrganizationContext c WHERE c.organization = :organization)')
                 ->setParameter('organization', $context->getOrganization());
         }
 

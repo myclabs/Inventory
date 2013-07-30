@@ -15,6 +15,7 @@ Feature: Rebuild of dataware from the configuration tab feature
     Then I should see "La structure des données d'analyse de l'organisation est à jour"
   # Ajout d'un axe organisationnel
     When I open tab "Axes"
+    And I wait 5 seconds
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I fill in "addAxis_label" with "Test"
@@ -22,11 +23,13 @@ Feature: Rebuild of dataware from the configuration tab feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
-    When I open tab "Configuration"
+    When I wait 5 seconds
+    And I open tab "Configuration"
     And I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez les mettre à jour."
   # Régénération
     When I click "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez les mettre à jour."
+    And I wait 5 seconds
     Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour"

@@ -63,11 +63,17 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
             $meaning = Techno_Model_Meaning::load($idMeaning);
-            $dimension = new Techno_Model_Family_Dimension($family, $meaning, $orientation);
-            $dimension->save();
-            $family->addDimension($dimension);
-            $family->save();
-            $this->entityManager->flush();
+            try {
+                $dimension = new Techno_Model_Family_Dimension($family, $meaning, $orientation);
+                $dimension->save();
+                $family->addDimension($dimension);
+                $family->save();
+                $this->entityManager->flush();
+            } catch (Core_ORM_DuplicateEntryException $e) {
+                $this->setAddElementErrorMessage('meaning', __('Techno', 'familyDetail', 'meaningAlreadyUsed'));
+                $this->send();
+                return;
+            }
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();

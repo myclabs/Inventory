@@ -25,6 +25,12 @@ class AF_Model_InputSet_Primary extends AF_Model_InputSet
     const STATUS_INPUT_INCOMPLETE = "input_incomplete";
 
     /**
+     * Est-ce que les calculs ont été effectués
+     * @var bool
+     */
+    private $calculationComplete = false;
+
+    /**
      * Est-ce que la saisie est marquée comme terminée
      * @var boolean
      */
@@ -59,6 +65,22 @@ class AF_Model_InputSet_Primary extends AF_Model_InputSet
         } else {
             return false;
         }
+    }
+
+    /**
+     * @return bool True si les calculs de l'AF sont fait
+     */
+    public function isCalculationComplete()
+    {
+        return $this->isInputComplete() && $this->calculationComplete;
+    }
+
+    /**
+     * @param bool $calculationComplete
+     */
+    public function setCalculationComplete($calculationComplete)
+    {
+        $this->calculationComplete = $calculationComplete;
     }
 
     /**

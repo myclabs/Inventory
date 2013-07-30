@@ -23,7 +23,9 @@ $targetComponentColumn->withEmptyElement = false;
 $list = [];
 foreach ($this->componentList as $component) {
     /** @var $component AF_Model_Component */
-    $list[$component->getId()] = $component->getLabel();
+    if ($af->getRootGroup() !== $component) {
+        $list[$component->getId()] = $component->getLabel();
+    }
 }
 $targetComponentColumn->list = $list;
 $datagrid->addCol($targetComponentColumn);

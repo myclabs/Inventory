@@ -284,7 +284,7 @@ class DW_ReportController extends Core_Controller
             );
         } else {
             $this->getResponse()->setHttpResponseCode(400);
-            $this->entityManager->flush();
+            $this->entityManager->clear();
             $this->sendJsonResponse(
                 array(
                     'errorMessages' => $errors,
@@ -306,7 +306,7 @@ class DW_ReportController extends Core_Controller
         $savePost = json_decode($this->getParam('saveReportAs'), JSON_OBJECT_AS_ARRAY);
         $reportLabel = $savePost['saveLabelReport']['value'];
         if (empty($reportLabel)) {
-            $entityManagers['default']->clear();
+            $this->entityManager->clear();
             $this->getResponse()->setHttpResponseCode(400);
             $this->sendJsonResponse(
                 array(

@@ -259,15 +259,7 @@
                 <seg>Help</seg>
             </tuv>
         </tu>
-        <tu tuid="history">
-            <tuv xml:lang="fr">
-                <seg>Historique</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>History</seg>
-            </tuv>
-        </tu>
-		<tu tuid="home">
+        <tu tuid="home">
 			<tuv xml:lang="fr">
 				<seg>Accueil</seg>
 			</tuv>

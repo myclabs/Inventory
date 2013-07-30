@@ -71,10 +71,10 @@ class Bootstrap extends Core_Bootstrap
                 }
 
                 // Doctrine Mappers
-                $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
-            }
-
-            if (file_exists($moduleRoot2)) {
+                if (file_exists($moduleRoot . '/models/mappers')) {
+                    $driver->getDefaultDriver()->getLocator()->addPaths([$moduleRoot . '/models/mappers']);
+                }
+            } elseif (file_exists($moduleRoot2)) {
                 if (file_exists($moduleRoot2 . '/Application/Controller')) {
                     // Controllers
                     $frontController->addControllerDirectory($moduleRoot2 . '/Application/Controller',

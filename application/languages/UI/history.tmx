@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="history">
+            <tuv xml:lang="fr">
+                <seg>Historique</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>History</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noHistory">
+            <tuv xml:lang="fr">
+                <seg>Aucun historique à afficher.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No history to display.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Historique des valeurs -->
+
+        <tu tuid="valueHistory">
+            <tuv xml:lang="fr">
+                <seg>Historique des valeurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Value history</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>
