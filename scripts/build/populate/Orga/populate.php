@@ -43,9 +43,11 @@ class Orga_Populate extends Core_Script_Action
         // Params : Granularity granularity, [Member] members
         //  + setInventoryStatus : granularityStatus (Orga_Model_Cell::STATUS_)
         //  + setAFForChildCells : Granularity inputGranularity, AF aF
+        //  + setInput: [refComponent => mixed value]
         // OptionalParams : -
         //  + setInventoryStatus : -
         //  + setAFForChildCells : -
+        //  + setInput: -
 
 
         $entityManager->flush();
@@ -184,6 +186,56 @@ class Orga_Populate extends Core_Script_Action
     protected function setAFForChildCells(Orga_Model_Granularity $granularity, array $members, Orga_Model_Granularity $inputGranularity, AF_Model_AF $aF)
     {
         $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->getAF($aF);
+    }
+
+    /**
+     * @param Orga_Model_Granularity $granularity
+     * @param Orga_Model_Member[] $members
+     * @param array $values
+     */
+    protected function setInput(Orga_Model_Granularity $granularity, array $members, array $values)
+    {
+        $inputCell = $granularity->getCellByMembers($members);
+        $inputConfigGranularity = $granularity->getInputConfigGranularity();
+        if ($granularity === $inputConfigGranularity) {
+            $aF = $inputCell->getCellsGroupForInputGranularity($granularity)->getAF();
+        } else {
+            $aF = $inputCell->getParentCellForGranularity($inputConfigGranularity)->getCellsGroupForInputGranularity($granularity)->getAF();
+        }
+
+        $inputSetPrimary = new AF_Model_InputSet_Primary($aF);
+
+        foreach ($values as $refComponent => $value) {
+            $component = AF_Model_Component::loadByRef($refComponent, $aF);
+            if (($component instanceof AF_Model_Component_SubAF_NotRepeated)
+                || ($component instanceof AF_Model_Component_SubAF_Repeated)
+                || ($component instanceof AF_Model_Component_Group)) {
+                continue;
+            }
+
+            if ($component instanceof AF_Model_Component_Numeric) {
+                // Champ numérique
+                $inputType = 'AF_Model_Input_Numeric';
+            } elseif ($component instanceof AF_Model_Component_Text) {
+                // Champ texte
+                $inputType = 'AF_Model_Input_Text';
+            } elseif ($component instanceof AF_Model_Component_Checkbox) {
+                // Champ checkbox
+                $inputType = 'AF_Model_Input_Checkbox';
+            } elseif ($component instanceof AF_Model_Component_Select_Single) {
+                // Champ de sélection simple
+                $inputType = 'AF_Model_Input_Select_Single';
+            } elseif ($component instanceof AF_Model_Component_Select_Multi) {
+                // Champ de sélection multiple
+                $inputType = 'AF_Model_Input_Select_Multi';
+            }
+
+            $input = new $inputType($inputSetPrimary, $component);
+            $input->setValue($value);
+        }
+
+        $inputSetPrimary->save();
+        $inputCell->setAFInputSetPrimary($inputSetPrimary);
     }
 
     /**
