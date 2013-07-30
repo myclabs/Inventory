@@ -9,6 +9,7 @@ APC est déjà installé en `test`.
 ```
 sudo pecl install apc
 sudo nano /etc/php5/apache2/php.ini
+sudo nano /etc/php5/cli/php.ini
 sudo apachectl restart
 ```
 
@@ -16,13 +17,7 @@ sudo apachectl restart
 
 ```
 sudo cp application/configs/env.php.default application/configs/env.php
-sudo nano env.php
-```
-
-- MAJ des droits sur le log des requêtes
-
-```
-sudo chmod 777 data/logs/queries.log
+sudo nano application/configs/env.php
 ```
 
 - Exécuter le script de migration SQL
@@ -35,6 +30,12 @@ scripts/migration/2.3/migrate.sql
 
 ```
 sudo php scripts/migration/2.3/migrate.php
+```
+
+- MAJ des droits sur le log des requêtes
+
+```
+sudo chmod 777 data/logs/queries.log
 ```
 
 - Exécuter le script de suppression des indexations d'algos inutiles
