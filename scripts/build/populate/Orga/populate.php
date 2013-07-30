@@ -42,12 +42,12 @@ class Orga_Populate extends Core_Script_Action
         // Paramétrage des cellules.
         // Params : Granularity granularity, [Member] members
         //  + setInventoryStatus : granularityStatus (Orga_Model_Cell::STATUS_)
-        //  + setAFForChildCells : Granularity inputGranularity, AF aF
+        //  + setAFForChildCells : Granularity inputGranularity, refAF
         //  + setInput: [refComponent => mixed value]
         // OptionalParams : -
         //  + setInventoryStatus : -
         //  + setAFForChildCells : -
-        //  + setInput: -
+        //  + setInput: finished=false
 
 
         $entityManager->flush();
@@ -181,19 +181,20 @@ class Orga_Populate extends Core_Script_Action
      * @param Orga_Model_Granularity $granularity
      * @param Orga_Model_Member[] $members
      * @param Orga_Model_Granularity $inputGranularity
-     * @param AF_Model_AF $aF
+     * @param string $refAF
      */
-    protected function setAFForChildCells(Orga_Model_Granularity $granularity, array $members, Orga_Model_Granularity $inputGranularity, AF_Model_AF $aF)
+    protected function setAFForChildCells(Orga_Model_Granularity $granularity, array $members, Orga_Model_Granularity $inputGranularity, $refAF)
     {
-        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->getAF($aF);
+        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->setAF(AF_Model_AF::loadByRef($refAF));
     }
 
     /**
      * @param Orga_Model_Granularity $granularity
      * @param Orga_Model_Member[] $members
      * @param array $values
+     * @param bool $finished
      */
-    protected function setInput(Orga_Model_Granularity $granularity, array $members, array $values)
+    protected function setInput(Orga_Model_Granularity $granularity, array $members, array $values, $finished=false)
     {
         $inputCell = $granularity->getCellByMembers($members);
         $inputConfigGranularity = $granularity->getInputConfigGranularity();
@@ -234,6 +235,7 @@ class Orga_Populate extends Core_Script_Action
             $input->setValue($value);
         }
 
+        $inputSetPrimary->markAsFinished($finished);
         $inputSetPrimary->save();
         $inputCell->setAFInputSetPrimary($inputSetPrimary);
     }
