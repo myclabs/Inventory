@@ -56,6 +56,12 @@ Feature: Classification context indicator feature
   # Ajout d'un axe, relié hiérarchiquement à un axe existant
     When I additionally select "Scope" for column "axes" of row 1 of the "editContextIndicators" datagrid
     Then the following message is shown and closed: "Merci de sélectionner des axes deux à deux non hiérarchiquement reliés."
+  # Ajout d'un axe, non relié hiérarchiquement à un axe existant
+    When I additionally select "Type de déplacement" for column "axes" of row 1 of the "editContextIndicators" datagrid
+  # TODO : ajouter dans l'interface un message "Modification effectuée" non présent actuellement.
+    Then the row 1 of the "editContextIndicators" datagrid should contain:
+      | axes                                       |
+      | Gaz, Poste article 75, Type de déplacement |
 
   @javascript
   Scenario:  Deletion of a classification context indicator
