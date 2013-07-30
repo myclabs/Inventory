@@ -5,6 +5,8 @@
 
 require_once __DIR__ . '/../../populate/Orga/populate.php';
 
+use Unit\UnitAPI;
+
 /**
  * Remplissage de la base de données avec des données de test
  * @package Orga

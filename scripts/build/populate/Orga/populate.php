@@ -196,6 +196,8 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function setInput(Orga_Model_Granularity $granularity, array $members, array $values, $finished=false)
     {
+        $container = Zend_Registry::get('container');
+
         $inputCell = $granularity->getCellByMembers($members);
         $inputConfigGranularity = $granularity->getInputConfigGranularity();
         if ($granularity === $inputConfigGranularity) {
@@ -235,9 +237,16 @@ class Orga_Populate extends Core_Script_Action
             $input->setValue($value);
         }
 
+        /* @var AF_Service_InputService $inputService */
+        $inputService = $container->get('AF_Service_InputService');
+        $inputService->updateResults($inputSetPrimary);
         $inputSetPrimary->markAsFinished($finished);
         $inputSetPrimary->save();
+
         $inputCell->setAFInputSetPrimary($inputSetPrimary);
+        /* @var Orga_Service_ETLData $eTLDataService */
+        $eTLDataService = $container->get('Orga_Service_ETLData');
+        $eTLDataService->populateDWResultsFromCell($inputCell);
     }
 
     /**
