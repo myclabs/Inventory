@@ -39,6 +39,13 @@ class Orga_Populate extends Core_Script_Action
         // Params : Organization, axes[Axis], navigable
         // OptionalParams : orgaTab=false, aCL=true, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
 
+        // Paramétrage des cellules.
+        // Params : Granularity granularity, [Member] members
+        //  + setInventoryStatus : granularityStatus (Orga_Model_Cell::STATUS_)
+        //  + setAFForChildCells : Granularity inputGranularity, AF aF
+        // OptionalParams : -
+        //  + setInventoryStatus : -
+        //  + setAFForChildCells : -
 
         $entityManager->flush();
 
@@ -143,6 +150,32 @@ class Orga_Populate extends Core_Script_Action
         return $granularity;
     }
 
+    /**
+     * @param Orga_Model_Granularity $granularity
+     * @param Orga_Model_Member[] $members
+     * @param $inventoryStatus
+     */
+    protected function setInventoryStatus(Orga_Model_Granularity $granularity, array $members, $inventoryStatus)
+    {
+        if ($granularity === $granularity->getOrganization()->getGranularityForInventoryStatus()) {
+            $granularity->getCellByMembers($members)->setInventoryStatus($inventoryStatus);
+        }
+    }
+
+    /**
+     * @param Orga_Model_Granularity $granularity
+     * @param Orga_Model_Member[] $members
+     * @param Orga_Model_Granularity $inputGranularity
+     * @param AF_Model_AF $aF
+     */
+    protected function setAFForChildCells(Orga_Model_Granularity $granularity, array $members, Orga_Model_Granularity $inputGranularity, AF_Model_AF $aF)
+    {
+        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->getAF($aF);
+    }
+
+    /**
+     * @param $email
+     */
     protected function createUser($email)
     {
         /** @var DI\Container $container */
