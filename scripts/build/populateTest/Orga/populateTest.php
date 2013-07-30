@@ -48,7 +48,7 @@ class Orga_PopulateTest extends Orga_Populate
         $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambéry', [$member_pays_france, $member_marque_marque_a]);
         $member_site_grenoble = $this->createMember($axis_site, 'grenoble', 'Grenoble', [$member_pays_france, $member_marque_marque_b]);
         $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
-        $member_categorie = $this->createMember($axis_categorie, 'energie', 'Énergie');
+        $member_categorie_energie = $this->createMember($axis_categorie, 'energie', 'Énergie');
 
         // Création des granularités.
         $granularityGlobal = $this->createGranularity($organization, [],                                                        true,  true,  true,  true,   true,  false, false, false);
@@ -69,6 +69,28 @@ class Orga_PopulateTest extends Orga_Populate
         $granularity_annee_site->setInputConfigGranularity($granularityGlobal); // Utile pour tester les ordres entre les granularités des onglets "Collectes" et "Saisies"
         $granularity_annee_site_categorie->setInputConfigGranularity($granularity_annee_categorie);
 
+        // Statut des inventaires
+        // 2012 ouvert pour Europe marque A
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::STATUS_ACTIVE);
+        // 2012 fermé pour Europe marque B
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_b], Orga_Model_Cell::STATUS_CLOSED);
+
+        // Sélection des formulaires
+        // Données générales pour la cellule globale
+        $this->setAFForChildCells($granularityGlobal, [], $granularityGlobal, 'donnees_generales');
+        // Données générales pour Europe marque A
+        $this->setAFForChildCells($granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a], $granularity_zone_marque, 'donnees_generales');
+        // Combustion pour 2012|Énergie
+        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_energie], $granularity_annee_site_categorie, 'combustion_combustible_unite_masse');
+
+        // Renseignement des saisies
+        // Cellule globale
+        $this->setInput($granularityGlobal, [], [
+            'chiffre_affaire' => new Calc_UnitValue(new UnitAPI('kiloeuro'), 10, 15)
+        ], true);
+
+        // Création d'analyses préconfigurées
+        // $this->createSimpleGranularityReport($granularityGlobal, 'chiffre_affaire', 'annee', false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
 
         $entityManager->flush();
 

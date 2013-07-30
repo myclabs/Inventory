@@ -26,13 +26,14 @@ Feature: AF tree edit feature
   Scenario: Edition of an AF category
     Given I am on "af/af/tree"
     And I wait 7 seconds
-  # Modification du libellé
+  # Ouverture popup modification
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
-  # TODO : modification libellé vide
-  # When I fill in "afTree_labelEdit" with ""
-  # And I click "Confirmer"
-  # Then the field "afTree_labelEdit" should have error: "Merci de renseigner ce champ."
+  # Modification du libellé, libellé vide
+    When I fill in "afTree_labelEdit" with ""
+    And I click "Confirmer"
+    Then the field "afTree_labelEdit" should have error: "Merci de renseigner ce champ."
+  # Modification du libellé, saisie correcte
     When I fill in "afTree_labelEdit" with "Catégorie vide modifiée"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
@@ -101,15 +102,12 @@ Feature: AF tree edit feature
     Given I am on "af/af/tree"
     And I wait 7 seconds
   # Modification du libellé, libellé vide
-  # TODO : interdire la saisie d'un libellé vide ou bien afficher en même temps l'identifiant ?
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I fill in "afTree_labelEdit" with ""
     And I click "Confirmer"
-    Then the following message is shown and closed: "Modification effectuée."
+    Then the field "afTree_labelEdit" should have error: "Merci de renseigner ce champ."
   # Modification du libellé, libellé non vide
-    When I wait 3 seconds
-    And I click "Combustion de combustible, mesuré en unité de masse"
-    And I fill in "afTree_labelEdit" with "Combustion (modifiée)"
+    When I fill in "afTree_labelEdit" with "Combustion (modifiée)"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement dans une autre catégorie
@@ -139,14 +137,51 @@ Feature: AF tree edit feature
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
-  Scenario: Deletion of an AF in AF tree edit
+  Scenario: Deletion of an AF in AF tree edit, forbidden
     Given I am on "af/af/tree"
     And I wait 7 seconds
   # Suppression, formulaire utilisé comme sous-formulaire (non répété)
-    # TODO
+    When I click "	Données générales"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire."
   # Suppression, formulaire utilisé comme sous-formulaire (répété)
-    # TODO
-  # Suppression sans obstacle
+    When I click "Combustion de combustible, mesuré en unité de masse"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire."
+
+  @javascript
+  Scenario: Deletion of an AF in AF tree edit, authorized
+    Given I am on "af/af/tree"
+    And I wait 7 seconds
+  # Suppression sans obstacle, formulaire vide
+    When I click "Formulaire vide"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
+  # Suppression sans obstacle, "Formulaire test"
+    When I click "Formulaire test"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
+  # Suppression sans obstacle, "Formulaire avec sous-formulaires"
+    When I click "Formulaire avec sous-formulaires"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
+  # Suppression sans obstacle, "Données générales"
+    When I click "Données générales"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
+  # Suppression sans obstacle, "Combustion de combustible, mesuré en unité de masse"
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
@@ -154,7 +189,12 @@ Feature: AF tree edit feature
     Then the following message is shown and closed: "Suppression effectuée."
   # Vérification suppression effectuée
     When I wait 5 seconds
-    Then I should not see "Combustion de combustible, mesuré en unité de masse"
+    Then I should see "Données générales"
+    And I should not see "Combustion de combustible, mesuré en unité de masse"
+    And I should not see "Données générales"
+    And I should not see "Formulaire avec sous-formulaires"
+    And I should not see "Formulaire test"
+    And I should not see "Formulaire vide"
 
   @javascript
   Scenario: Link towards configuration view, from AF tree edit

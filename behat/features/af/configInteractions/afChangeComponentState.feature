@@ -37,6 +37,7 @@ Feature: AF change component state interaction feature
     And the row 1 of the "actionsSetState" datagrid should contain:
       | targetComponent                  | typeState | condition                                                   |
       | Champ numérique cible activation | Activer   | condition_elementaire_interactions_utilisee_action_setstate |
+  # TODO : ajouter la possibilité de modifier le composant cible ? 
   # Modification type d'action
     When I set "Masquer" for column "typeState" of row 1 of the "actionsSetState" datagrid with a confirmation message
   # Modification condition

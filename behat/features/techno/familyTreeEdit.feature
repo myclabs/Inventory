@@ -26,13 +26,14 @@ Feature: Family tree edit feature
   Scenario: Edition of a Techno category
     Given I am on "techno/family/tree-edit"
     And I wait 5 seconds
-  # Modification du libellé
+  # Popup d'édition
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
-  # TODO : modification libellé vide
-  # When I fill in "familyTree_labelEdit" with ""
-  # And I click "Confirmer"
-  # Then the field "familyTree_labelEdit" should have error: "Merci de renseigner ce champ."
+  # Modification du libellé, libellé vide
+    When I fill in "familyTree_labelEdit" with ""
+    And I click "Confirmer"
+    Then the field "familyTree_labelEdit" should have error: "Merci de renseigner ce champ."
+  # Modification du libellé, libellé non vide
     When I fill in "familyTree_labelEdit" with "Catégorie vide modifiée"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
@@ -100,11 +101,10 @@ Feature: Family tree edit feature
     Given I am on "techno/family/tree-edit"
     And I wait 5 seconds
   # Modification du libellé, libellé vide
-  # TODO : interdire la saisie d'un libellé vide ou bien afficher en même temps l'identifiant ?
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I fill in "familyTree_labelEdit" with ""
     And I click "Confirmer"
-    Then the following message is shown and closed: "Modification effectuée."
+    Then the field "familyTree_labelEdit" should have error: "Merci de renseigner ce champ."
   # Modification du libellé, libellé non vide
     When I wait 3 seconds
     And I click "Combustion de combustible, mesuré en unité de masse"
@@ -136,6 +136,7 @@ Feature: Family tree edit feature
     And I select "Masse volumique de combustible" from "familyTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
+  # TODO : autoriser le déplacement à la racine
 
   @javascript
   Scenario: Deletion of a family in family tree edit
