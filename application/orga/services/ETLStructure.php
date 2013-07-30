@@ -757,8 +757,8 @@ class Orga_Service_ETLStructure extends Core_Singleton
      */
     public function resetCellAndChildrenCalculationsAndDWCubes(Orga_Model_Cell $cell)
     {
-        $this->resetCellAndChildrenDWCubes($cell);
         Orga_Service_ETLData::getInstance()->calculateResultsForCellAndChildren($cell);
+        $this->resetCellAndChildrenDWCubes($cell);
     }
 
     /**
@@ -784,8 +784,10 @@ class Orga_Service_ETLStructure extends Core_Singleton
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+            $entityManagers = Zend_Registry::get('EntityManagers');
 
             Orga_Service_ETLData::getInstance()->clearDWResultsForCell($cell);
+            $entityManagers['default']->flush();
 
             $this->resetDWCube(
                 $cell->getDWCube(),
@@ -797,6 +799,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
             );
 
             Orga_Service_ETLData::getInstance()->populateDWResultsForCell($cell);
+            $entityManagers['default']->flush();
         }
     }
 

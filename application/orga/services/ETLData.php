@@ -98,9 +98,6 @@ class Orga_Service_ETLData extends Core_Singleton
     {
         try {
             $inputSet = $cell->getAFInputSetPrimary();
-            if ($inputSet->isInputComplete()) {
-                $this->clearDWResultsFromCell($cell);
-            }
             $inputSet->updateCompletion();
             if ($inputSet->isInputComplete()) {
                 if ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
@@ -113,7 +110,6 @@ class Orga_Service_ETLData extends Core_Singleton
                 // Exécute l'AF et calcule les totaux
                 $af->execute($inputSet);
                 $inputSet->getOutputSet()->calculateTotals();
-                $this->populateDWResultsFromCell($cell);
             }
         } catch (Core_Exception_UndefinedAttribute $e) {
             // Pas de saisie.
