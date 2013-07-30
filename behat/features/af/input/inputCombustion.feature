@@ -9,12 +9,12 @@ Feature: Combustion input feature
   # Accès au formulaire
     Given I am on "af/af/test/id/1"
     And I wait for the page to finish loading
-  #Saisie
+  # Saisie
     And I select "Charbon" from "nature_combustible"
     And I fill in "quantite_combustible" with "10"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
-  #Vérification contenu onglet détails calculs
+  # Vérification contenu onglet détails calculs
     When I open tab "Détails calculs"
     And I open collapse "Formulaire maître"
   # Vérification libellés collapses (identifiant + libellé algo)
