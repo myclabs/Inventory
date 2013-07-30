@@ -357,13 +357,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
                     $columnStateOrga->editable = false;
                     $datagridConfiguration->datagrid->addCol($columnStateOrga);
-
-                    $colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'input', 'inputProgress'));
-                    $colAdvancementInput->filterName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
-                    $colAdvancementInput->sortName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
-                    $colAdvancementInput->entityAlias = AF_Model_InputSet_Primary::getAlias();
-                    $datagridConfiguration->datagrid->addCol($colAdvancementInput);
                 }
+
+                $colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'input', 'inputProgress'));
+                $colAdvancementInput->filterName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
+                $colAdvancementInput->sortName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
+                $colAdvancementInput->entityAlias = AF_Model_InputSet_Primary::getAlias();
+                $datagridConfiguration->datagrid->addCol($colAdvancementInput);
 
                 $columnStateInput = new UI_Datagrid_Col_List('stateInput', __('Orga', 'input', 'inputStatus'));
                 $imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
