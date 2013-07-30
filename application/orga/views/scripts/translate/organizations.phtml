@@ -11,4 +11,5 @@
 <?php
 echo $this->translateDatagrid('Orga_Model_Organization', 'label', 'datagrid_translate_organizations', 'orga')->simple()
     ->addCol(new UI_Datagrid_Col_Link('axes', __('UI', 'name', 'axes')))
-    ->addCol(new UI_Datagrid_Col_Link('members', __('UI', 'name', 'members')));
+    ->addCol(new UI_Datagrid_Col_Link('members', __('UI', 'name', 'members')))
+    ->addCol(new UI_Datagrid_Col_Link('granularityReports', __('UI', 'name', 'granularityReports')));
