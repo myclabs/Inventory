@@ -46,7 +46,7 @@ Feature: AF composed condition for treatment feature
   # Ajout, identifiant déjà utilisé, expression vide
     When I fill in "algoConditionExpression_ref_addForm" with "champ_numerique"
     And I click "Valider"
-    Then the field "algoConditionExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
+    Then the field "algoConditionExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression «  »."
   # Ajout, identifiant déjà utilisé, expression invalide
     When I fill in "algoConditionExpression_expression_addForm" with "a|(b|(c|d)))"
     And I click "Valider"
