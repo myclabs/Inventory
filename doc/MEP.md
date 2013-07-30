@@ -13,6 +13,12 @@ sudo nano /etc/php5/cli/php.ini
 sudo apachectl restart
 ```
 
+- Déployer sans update ou redémarrage du worker
+
+```
+sudo deploy 2.3.?
+```
+
 - Définir l'environnement d'exécution
 
 ```
@@ -24,6 +30,12 @@ sudo nano application/configs/env.php
 
 ```
 scripts/migration/2.3/migrate.sql
+```
+
+- Faire le build update
+
+```
+php scripts/build/build.php update
 ```
 
 - Exécuter le script de migration PHP
@@ -42,4 +54,12 @@ sudo chmod 777 data/logs/queries.log
 
 ```
 sudo php scripts/af-indexation/fix-af-indexation.php
+```
+
+- Redémarrer le worker
+
+```
+sudo supervisorctl
+    restart inventory-worker
+    status
 ```
