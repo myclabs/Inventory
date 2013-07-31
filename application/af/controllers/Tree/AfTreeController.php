@@ -186,7 +186,12 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         $newLabel = $this->_form[$this->id . '_labelEdit']['value'];
 
         // Label
-        if ($newLabel != null) {
+        if ($newLabel == '') {
+            $this->setAddFormElementErrorMessage($this->id . '_labelEdit', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->send();
+            return;
+        }
+        if ($newLabel !== $node->getLabel()) {
             $node->setLabel($newLabel);
         }
 
