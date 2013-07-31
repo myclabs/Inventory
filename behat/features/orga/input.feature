@@ -40,3 +40,16 @@ Feature: Organization input tab feature
     Then I should see "Vue globale Test"
     # TODO : ajouter message pour indiquer qu'aucune granularité n'a été associée à des saisies.
 
+  @javascript
+  Scenario: Display of input for the current cell (if there is an input to display for this cell)
+    Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
+  # Saisie associée à la cellule globale
+    And I open collapse "Niveau organisationnel global"
+    Then I should see the "aFGranularity1Input1" datagrid
+    And the "aFGranularity1Input1" datagrid should contain 1 row
+  # Saisie associée à une cellule non globale (Europe|Marque A)
+    When I click element "#goTo2"
+    And I open collapse "Zone | Marque"
+    Then I should see the "aFGranularity2Input2" datagrid
+    And the "aFGranularity2Input2" datagrid should contain 1 row
