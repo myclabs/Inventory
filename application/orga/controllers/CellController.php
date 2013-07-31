@@ -366,7 +366,7 @@ class Orga_CellController extends Core_Controller
         );
 
         $aFViewConfiguration = new AF_ViewConfiguration();
-        if ($isUserAllowedToInputCell) {
+        if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::STATUS_CLOSED)) {
             $aFViewConfiguration->setMode(AF_ViewConfiguration::MODE_WRITE);
         } else {
             $aFViewConfiguration->setMode(AF_ViewConfiguration::MODE_READ);
