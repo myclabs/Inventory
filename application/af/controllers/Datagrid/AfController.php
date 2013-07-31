@@ -121,7 +121,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 $this->data = $this->cellList($newValue);
                 break;
             case 'label':
-                if (empty($label)) {
+                if (empty($newValue)) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
                 $af->setLabel($newValue);
