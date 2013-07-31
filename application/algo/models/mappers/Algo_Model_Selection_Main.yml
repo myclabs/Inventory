@@ -5,5 +5,5 @@ Algo_Model_Selection_Main:
 
   fields:
     expression:
-      type: string
+      type: text
       nullable: true
