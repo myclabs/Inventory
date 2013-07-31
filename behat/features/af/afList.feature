@@ -5,7 +5,7 @@ Feature: AF list edit feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an accounting form (in AF list), correct input
+  Scenario: Creation of an AF (in AF list), correct input
   # Affichage du datagrid
     Given I am on "af/af/list"
     And I wait for the page to finish loading
@@ -16,8 +16,9 @@ Feature: AF list edit feature
   # Ajout, saisie correcte
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un formulaire"
-    When I fill in "listAF_label_addForm" with "Test"
-    When I fill in "listAF_ref_addForm" with "test"
+    When I select "Catégorie contenant un formulaire" from "listAF_category_addForm"
+    And I fill in "listAF_label_addForm" with "Test"
+    And I fill in "listAF_ref_addForm" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 6 of the "listAF" datagrid should contain:
@@ -25,7 +26,7 @@ Feature: AF list edit feature
       | Catégorie contenant un formulaire | Test  | test |
 
   @javascript
-  Scenario: Creation of an accounting form (in AF list), incorrect input
+  Scenario: Creation of an AF (in AF list), incorrect input
     Given I am on "af/af/list"
     And I wait for the page to finish loading
     When I click "Ajouter"
@@ -48,7 +49,7 @@ Feature: AF list edit feature
     Then the field "listAF_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
-  Scenario: Edition of an accounting form in AF list, correct input
+  Scenario: Edition of an AF in AF list, correct input
     Given I am on "af/af/list"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
@@ -58,8 +59,8 @@ Feature: AF list edit feature
   # Modifications (catégorie, libellé, identifiant)
     When I set "Catégorie vide" for column "category" of row 1 of the "listAF" datagrid with a confirmation message
     And I set "Libellé modifié" for column "label" of row 1 of the "listAF" datagrid with a confirmation message
-    When I set "identifiant_modifie" for column "ref" of row 1 of the "listAF" datagrid with a confirmation message
-    And the row 1 of the "listAF" datagrid should contain:
+    And I set "identifiant_modifie" for column "ref" of row 1 of the "listAF" datagrid with a confirmation message
+    Then the row 1 of the "listAF" datagrid should contain:
       | category       | label           | ref                 |
       | Catégorie vide | Libellé modifié | identifiant_modifie |
 
@@ -108,6 +109,8 @@ Feature: AF list edit feature
   Scenario: Filters on AF list
     Given I am on "af/af/list"
     And I wait for the page to finish loading
+    Then I should see the "listAF" datagrid
+    And the "listAF" datagrid should contain 5 row
     And I open collapse "Filtres"
   # Filtre sur le libellé
     And I fill in "listAF_label_filterForm" with "Formulaire vide"
@@ -118,7 +121,7 @@ Feature: AF list edit feature
       | Formulaire vide | formulaire_vide |
   # Clic sur "Réinitialiser"
     When I click "Réinitialiser"
-    Then the "listAF" datagrid should contain 4 row
+    Then the "listAF" datagrid should contain 5 row
   # Filtre sur l'identifiant
     When I open collapse "Filtres"
     And I fill in "listAF_ref_filterForm" with "_test"
@@ -139,7 +142,7 @@ Feature: AF list edit feature
     And I open collapse "Filtres"
     And I fill in "listAF_label_filterForm" with "Formulaire"
     And I click "Filtrer"
-    Then the "listAF" datagrid should contain 2 row
+    Then the "listAF" datagrid should contain 3 row
 
   @javascript
   Scenario: Deletion of an A form from AF list
