@@ -44,6 +44,28 @@ trait DatagridFeatureContext
     }
 
     /**
+     * @Then /^the "(?P<datagrid>[^"]*)" datagrid should contain a row:$/
+     */
+    public function assertDatagridContainsRow($datagrid, TableNode $fields)
+    {
+        $rows = $this->findAllElements($this->getDatagridSelector($datagrid) . ' .yui-dt-data tr');
+        $nbRows = count($rows);
+
+        // Try to match in each line
+        for ($rowIndex = 0; $rowIndex < $nbRows; $rowIndex++) {
+            try {
+                $this->assertDatagridRowContains($rowIndex, $datagrid, $fields);
+                // Row matching
+                return;
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
+        throw new \Exception("Now row in the datagrid $datagrid was found matching given values");
+    }
+
+    /**
      * @Then /^(?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should contain "(?P<content>[^"]*)"$/
      */
     public function assertDatagridCellContains($column, $row, $datagrid, $content)
