@@ -163,7 +163,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
         $this->fieldType = self::FIELD_LIST;
         $this->separatorMultiple = ', ';
         $this->loadingText = __('UI', 'loading', 'loading');
-        $this->errorText = __('UI', 'loading', 'error');
+        $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
     }
 
     /**

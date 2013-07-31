@@ -421,7 +421,7 @@ class UI_Datagrid extends UI_Generic
         $this->_module = $module;
 
         $this->datagridEmptyText = __('UI', 'loading', 'empty');
-        $this->datagridErrorText = __('UI', 'loading', 'error');
+        $this->datagridErrorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
         $this->datagridLoadingText = __('UI', 'loading', 'loading');
 
         // Pagination
