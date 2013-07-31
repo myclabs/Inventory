@@ -150,12 +150,12 @@ AF.Input.prototype = {
 				__("UI", "verb", "confirm"),
 				function(choice) {
 					if (choice == true) {
-						window.location.href = that.exitURL;
+						window.location = that.exitURL;
 					}
 				}
 			);
 		} else {
-			window.location.href = that.exitURL;
+			window.location = that.exitURL;
 		}
 	},
 
