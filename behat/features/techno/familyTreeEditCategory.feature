@@ -1,5 +1,5 @@
 @dbFull
-Feature: Family tree edit feature
+Feature: Family tree edit of categories feature
 
   Background:
     Given I am logged in
@@ -8,7 +8,7 @@ Feature: Family tree edit feature
   Scenario: Creation of a Techno category
     Given I am on "techno/family/tree-edit"
     And I wait for the page to finish loading
-    And I wait 5 seconds
+    And I wait 6 seconds
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
     Then I should see the popup "Ajout d'une catégorie"
@@ -21,11 +21,10 @@ Feature: Family tree edit feature
   # Ajout d'une catégorie, libellé non vide, située dans une autre catégorie
   # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.
 
-
   @javascript
-  Scenario: Edition of a Techno category
+  Scenario: Edition of label of a Techno category
     Given I am on "techno/family/tree-edit"
-    And I wait 5 seconds
+    And I wait 6 seconds
   # Popup d'édition
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -38,8 +37,13 @@ Feature: Family tree edit feature
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
     And I should see "Catégorie vide modifiée"
+
+  @javascript
+  Scenario: Edition of parent and position of a Techno category
+    Given I am on "techno/family/tree-edit"
+    And I wait 6 seconds
   # Déplacement dans une autre catégorie
-    When I click "Catégorie vide modifiée"
+    When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
     When I select "Catégorie contenant une sous-catégorie" from "familyTree_changeParent"
     And I click "Confirmer"
@@ -47,23 +51,26 @@ Feature: Family tree edit feature
   # Déplacement à la racine
   # TODO : homogénéiser libellé racine avec arbre des AFs
     When I wait 3 seconds
-    And I click "Catégorie vide modifiée"
+    And I click "Catégorie vide"
     And I select "Racine" from "familyTree_changeParent"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier
-    When I click "Catégorie vide modifiée"
+    When I wait 3 seconds
+    And I click "Catégorie vide"
     And I check "Premier"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après une autre catégorie
-    When I click "Catégorie vide modifiée"
+    When I wait 3 seconds
+    And I click "Catégorie vide"
     And I check "Après"
     And I select "Catégorie contenant une sous-catégorie" from "familyTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier
-    When I click "Catégorie vide modifiée"
+    When I wait 3 seconds
+    And I click "Catégorie vide"
     And I check "Dernier"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
@@ -96,60 +103,5 @@ Feature: Family tree edit feature
     Then the following message is shown and closed: "Suppression effectuée."
     And I should not see "Catégorie vide"
 
-  @javascript
-  Scenario: Edition of a family in family tree edit
-    Given I am on "techno/family/tree-edit"
-    And I wait 5 seconds
-  # Modification du libellé, libellé vide
-    When I click "Combustion de combustible, mesuré en unité de masse"
-    And I fill in "familyTree_labelEdit" with ""
-    And I click "Confirmer"
-    Then the field "familyTree_labelEdit" should have error: "Merci de renseigner ce champ."
-  # Modification du libellé, libellé non vide
-    When I wait 3 seconds
-    And I click "Combustion de combustible, mesuré en unité de masse"
-    And I fill in "familyTree_labelEdit" with "Combustion (modifiée)"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Modification effectuée."
-  # Déplacement dans une autre catégorie
-    When I wait 3 seconds
-    And I click "Combustion (modifiée)"
-    And I select "Catégorie contenant une sous-catégorie" from "familyTree_changeParent"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Modification effectuée."
-  # Déplacement en premier
-    When I wait 3 seconds
-    And I click "Combustion (modifiée)"
-    And I check "Premier"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Modification effectuée."
-  # Déplacement en dernier
-    When I wait 3 seconds
-    And I click "Combustion (modifiée)"
-    And I check "Premier"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Modification effectuée."
-  # Déplacement après
-    When I wait 3 seconds
-    And I click "Combustion (modifiée)"
-    And I check "Après"
-    And I select "Masse volumique de combustible" from "familyTree_selectAfter"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Modification effectuée."
-  # TODO : autoriser le déplacement à la racine
-
-  @javascript
-  Scenario: Deletion of a family in family tree edit
-    Given I am on "techno/family/tree-edit"
-    And I wait 5 seconds
-  # Suppression
-    When I click "Combustion de combustible, mesuré en unité de masse"
-    And I click "Supprimer"
-    Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
-  # Vérification suppression effectuée
-    When I wait 5 seconds
-    Then I should not see "Combustion de combustible, mesuré en unité de masse"
 
 
