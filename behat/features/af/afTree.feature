@@ -141,7 +141,7 @@ Feature: AF tree edit feature
     Given I am on "af/af/tree"
     And I wait 7 seconds
   # Suppression, formulaire utilisé comme sous-formulaire (non répété)
-    When I click "	Données générales"
+    When I click "Données générales"
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click "Confirmer"

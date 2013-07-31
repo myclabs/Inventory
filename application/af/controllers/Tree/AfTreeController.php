@@ -243,6 +243,10 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         try {
             $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
+            if ($e->isSourceEntityInstanceOf('AF_Model_Component_SubAF')
+                && $e->getSourceField() == 'calledAF') {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByOtherAF');
+            }
             throw new Core_Exception_User('AF', 'formTree', 'categoryHasChild');
         }
 
