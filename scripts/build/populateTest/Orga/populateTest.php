@@ -89,11 +89,12 @@ class Orga_PopulateTest extends Orga_Populate
             'chiffre_affaire' => new Calc_UnitValue(new UnitAPI('kiloeuro'), 10, 15)
         ], true);
 
-        // Création d'analyses préconfigurées
-        // $this->createSimpleGranularityReport($granularityGlobal, 'chiffre_affaire', 'annee', false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
 
         $entityManager->flush();
 
+
+        // Création d'analyses préconfigurées
+        $this->createSimpleGranularityReport($granularityGlobal, 'Test', 'classif_chiffre_affaire', 'orga_annee', false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
 
         // Création des utilisateurs orga.
         $this->createUser('administrateur.organisation@toto.com');

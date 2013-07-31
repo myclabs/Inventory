@@ -251,13 +251,15 @@ class Orga_Populate extends Core_Script_Action
 
     /**
      * @param DW_Model_Cube $cube
+     * @param string $label
      * @param string $chartType
      * @param string $displayUncertainty
      * @return DW_Model_Report
      */
-    private function createReport(DW_Model_Cube $cube, $chartType, $displayUncertainty)
+    private function createReport(DW_Model_Cube $cube, $label, $chartType, $displayUncertainty)
     {
         $report = new DW_Model_Report($cube);
+        $report->setLabel($label);
         $report->setChartType($chartType);
         $report->setWithUncertainty($displayUncertainty);
         $report->save();
@@ -266,16 +268,17 @@ class Orga_Populate extends Core_Script_Action
 
     /**
      * @param Orga_Model_Granularity $granularity
+     * @param string $label
      * @param string $refIndicator
      * @param string $refAxis
      * @param bool $displayUncertainty
      * @param string $chartType
      * @param string $sortType
      */
-    protected function createSimpleGranularityReport(Orga_Model_Granularity $granularity, $refIndicator, $refAxis,
+    protected function createSimpleGranularityReport(Orga_Model_Granularity $granularity, $label, $refIndicator, $refAxis,
         $displayUncertainty=false, $chartType=DW_Model_Report::CHART_PIE, $sortType=DW_Model_Report::SORT_VALUE_DECREASING)
     {
-        $report = $this->createReport($granularity->getDWCube(), $chartType, $displayUncertainty);
+        $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refAxis, $granularity->getDWCube()));
         $report->setSortType($sortType);
@@ -283,6 +286,7 @@ class Orga_Populate extends Core_Script_Action
 
     /**
      * @param Orga_Model_Granularity $granularity
+     * @param string $label
      * @param string $refNumeratorIndicator
      * @param string $refNumeratorAxis
      * @param string $refDenominatorIndicator
@@ -291,12 +295,12 @@ class Orga_Populate extends Core_Script_Action
      * @param string $chartType
      * @param string $sortType
      */
-    protected function createSimpleRatioGranularityReport(Orga_Model_Granularity $granularity,
+    protected function createSimpleRatioGranularityReport(Orga_Model_Granularity $granularity, $label,
         $refNumeratorIndicator, $refNumeratorAxis,
         $refDenominatorIndicator, $refDenominatorAxis,
         $displayUncertainty=false, $chartType=DW_Model_Report::CHART_PIE, $sortType=DW_Model_Report::SORT_VALUE_DECREASING)
     {
-        $report = $this->createReport($granularity->getDWCube(), $chartType, $displayUncertainty);
+        $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refNumeratorIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis, $granularity->getDWCube()));
         $report->setDenominator(DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube()));
@@ -306,16 +310,18 @@ class Orga_Populate extends Core_Script_Action
 
     /**
      * @param Orga_Model_Granularity $granularity
+     * @param string $label
      * @param string $refIndicator
      * @param string $refAxis1
      * @param string $refAxis2
      * @param bool $displayUncertainty
      * @param string $chartType
      */
-    protected function createDoubleGranularityReport(Orga_Model_Granularity $granularity, $refIndicator, $refAxis1, $refAxis2,
+    protected function createDoubleGranularityReport(Orga_Model_Granularity $granularity, $label,
+        $refIndicator, $refAxis1, $refAxis2,
         $displayUncertainty=false, $chartType=DW_Model_Report::CHART_VERTICAL_GROUPED)
     {
-        $report = $this->createReport($granularity->getDWCube(), $chartType, $displayUncertainty);
+        $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refAxis1, $granularity->getDWCube()));
         $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube($refAxis2, $granularity->getDWCube()));
@@ -324,6 +330,7 @@ class Orga_Populate extends Core_Script_Action
 
     /**
      * @param Orga_Model_Granularity $granularity
+     * @param string $label
      * @param string $refNumeratorIndicator
      * @param string $refNumeratorAxis1
      * @param string $refNumeratorAxis2
@@ -333,12 +340,12 @@ class Orga_Populate extends Core_Script_Action
      * @param bool $displayUncertainty
      * @param string $chartType
      */
-    protected function createDoubleRatioGranularityReport(Orga_Model_Granularity $granularity,
+    protected function createDoubleRatioGranularityReport(Orga_Model_Granularity $granularity, $label,
         $refNumeratorIndicator, $refNumeratorAxis1, $refNumeratorAxis2,
         $refDenominatorIndicator, $refDenominatorAxis1, $refDenominatorAxis2,
         $displayUncertainty=false, $chartType=DW_Model_Report::CHART_VERTICAL_GROUPED)
     {
-        $report = $this->createReport($granularity->getDWCube(), $chartType, $displayUncertainty);
+        $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refNumeratorIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis1, $granularity->getDWCube()));
         $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis2, $granularity->getDWCube()));
