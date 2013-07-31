@@ -183,11 +183,11 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         $newParent = $this->_form[$this->id . '_changeParent']['value'];
         $newPosition = $this->_form[$this->id . '_changeOrder']['value'];
         $afterElement = $this->_form[$this->id . '_changeOrder']['children'][$this->id . '_selectAfter_child']['value'];
-        $newLabel = $this->_form[$this->id . '_labelEdit']['value'];
+        $newLabel = $this->getEditElementValue('labelEdit');
 
         // Label
         if ($newLabel == '') {
-            $this->setAddFormElementErrorMessage($this->id . '_labelEdit', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->setEditFormElementErrorMessage('labelEdit', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->send();
             return;
         }
