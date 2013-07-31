@@ -96,7 +96,7 @@ echo $form->render();
 
     var afId = <?=$af->getId()?>;
     var inputSetId = <?= $inputSetId ?: "null" ?>;
-    var exitURL = "<?=$this->exitURL?>";
+    var exitURL = "<?=$this->baseUrl($this->exitURL)?>";
     var urlParams = <?=json_encode($this->urlParams)?>;
     // Saisie en cours
     var input = new AF.Input(afId, "<?=$af->getRef()?>", "<?=$this->mode?>", inputSetId, exitURL, urlParams);

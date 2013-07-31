@@ -150,14 +150,12 @@ AF.Input.prototype = {
 				__("UI", "verb", "confirm"),
 				function(choice) {
 					if (choice == true) {
-                        window.event.returnValue = false;
-						window.location = that.exitURL;
+						window.location.href = that.exitURL;
 					}
 				}
 			);
 		} else {
-            window.event.returnValue = false;
-			window.location = that.exitURL;
+			window.location.href = that.exitURL;
 		}
 	},
 
