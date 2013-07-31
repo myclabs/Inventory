@@ -83,32 +83,6 @@ class Orga_ReferentialController extends Core_Controller
             'label' => __('Unit', 'name', 'units'),
         ];
 
-        // Orga Structure
-        $this->view->exports['Orga'] = [
-            'label' => __('Orga', 'name', 'organization'),
-            'versions' => []
-        ];
-        $aclQuery = new Core_Model_Query();
-        $aclQuery->aclFilter->enabled = true;
-        $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-        foreach (Orga_Model_Organization::loadList($aclQuery) as $organization) {
-            $this->view->exports['Orga']['version'][$organization->getId()] = $organization->getLabel();
-        }
-
-        // Orga Inputs
-        $this->view->exports['Inputs'] = [
-            'label' => __('Orga', 'name', 'inputs'),
-            'versions' => []
-        ];
-        $aclQuery = new Core_Model_Query();
-        $aclQuery->aclFilter->enabled = true;
-        $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-        foreach (Orga_Model_Organization::loadList($aclQuery) as $organization) {
-            $this->view->exports['Inputs']['version'][$organization->getId()] = $organization->getLabel();
-        }
-
     }
 
     /**
@@ -143,18 +117,6 @@ class Orga_ReferentialController extends Core_Controller
                 $exportService = new \Unit\Application\Service\UnitExport();
                 $streamFunction = 'stream';
                 $baseFilename = 'Unit';
-                break;
-            case 'Orga':
-            case 'Inputs':
-                $exportService = new Orga_Service_Export();
-                $version = Orga_Model_Organization::load($refVersion);
-                if ($export === 'Inputs') {
-                    $streamFunction = 'streamInputs';
-                    $baseFilename = 'Inputs';
-                } else {
-                    $streamFunction = 'streamStructure';
-                    $baseFilename = 'Orga';
-                }
                 break;
             default:
                 UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);

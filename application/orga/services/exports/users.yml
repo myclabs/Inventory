@@ -1,0 +1,31 @@
+sheets:
+
+
+  - foreach: granularities as granularity
+    do:
+      - label: "{{ granularity.label }}"
+
+        content:
+
+          - type: VerticalTable
+            columns:
+              - foreach: granularity.axes as axis
+                do:
+                  - label: "{{ axis.label }}"
+              - label: "{{ userColumnFirstName }}"
+              - label: "{{ userColumnLastName }}"
+              - label: "{{ userColumnEmail }}"
+              - label: "{{ userColumnRole }}"
+            lines:
+              - foreach: granularity.cells as cell
+                do:
+                  - foreach: getUsersForCell(cell) as userRole
+                    do:
+                      - cells:
+                          - foreach: granularity.axes as axis
+                            do:
+                              - "{{ displayCellMemberForAxis(cell, axis) }}"
+                          - "{{ userRole['user'].firstName }}"
+                          - "{{ userRole['user'].lastName }}"
+                          - "{{ userRole['user'].email }}"
+                          - "{{ displayRoleName(userRole['role']) }}"

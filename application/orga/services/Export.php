@@ -18,21 +18,21 @@ use Xport\MappingReader\YamlMappingReader;
 class Orga_Service_Export
 {
     /**
-     * Exporte la version de orga.
+     * Exporte la structure d'une Organization.
      *
      * @param string $format
-     * @param Orga_Model_Organization $organization
+     * @param Orga_Model_Cell $cell
      */
-    public function streamStructure($format, Orga_Model_Organization $organization)
+    public function streamOrganization($format, Orga_Model_Cell $cell)
     {
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
 
         // Organization.
-        $modelBuilder->bind('organization', $organization);
+        $modelBuilder->bind('organization', $cell->getGranularity()->getOrganization());
 
         // Feuilles de l'Organization.
-        $modelBuilder->bind('organizationSheetLabel', __('Orga', 'exports', 'organizationSheetLAbel'));
+        $modelBuilder->bind('organizationSheetLabel', __('Orga', 'exports', 'organizationSheetLabel'));
 
         $modelBuilder->bind('organizationColumnLabel', __('Orga', 'exports', 'organizationColumnLabel'));
         $modelBuilder->bind('organizationColumnGranularityForInventoryStatus', __('Orga', 'exports', 'organizationColumnGranularityForInventoryStatus'));
@@ -85,6 +85,23 @@ class Orga_Service_Export
             }
         );
 
+        // Feuille de la pertinence des Cell.
+        $modelBuilder->bind('cellsRelevanceSheetLabel', __('Orga', 'exports', 'cellsRelevanceSheetLabel'));
+
+        $modelBuilder->bind('cellColumnRelevant', __('Orga', 'exports', 'cellColumnRelevant'));
+        $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'exports', 'cellColumnAllParentsRelevant'));
+        $modelBuilder->bindFunction(
+            'displayCellMemberForAxis',
+            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+                foreach ($cell->getMembers() as $member) {
+                    if ($member->getAxis() === $axis) {
+                        return $member->getLabel();
+                    }
+                }
+                return '';
+            }
+        );
+
 
         switch ($format) {
             case 'xls':
@@ -97,14 +114,196 @@ class Orga_Service_Export
         }
 
         $export->export(
-            $modelBuilder->build(new YamlMappingReader(__DIR__.'/cellExport.yml')),
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/organization.yml')),
+            'php://output',
+            $writer
+        );
+    }
+    /**
+     * Exporte la structure d'une Cell es de ses enfants.
+     *
+     * @param string $format
+     * @param Orga_Model_Cell $cell
+     */
+    public function streamCell($format, Orga_Model_Cell $cell)
+    {
+        $modelBuilder = new SpreadsheetModelBuilder();
+        $export = new PHPExcelExporter();
+
+        // Cell.
+        $modelBuilder->bind('cell', $cell);
+        // Organization.
+        $modelBuilder->bind('organization', $cell->getGranularity()->getOrganization());
+
+        // Feuille des Member.
+        $modelBuilder->bind('membersSheetLabel', __('Orga', 'exports', 'membersSheetLabel'));
+
+        $modelBuilder->bind('memberColumnLabel', __('Orga', 'exports', 'memberColumnLabel'));
+        $modelBuilder->bind('memberColumnRef', __('Orga', 'exports', 'memberColumnRef'));
+        $modelBuilder->bindFunction(
+            'getCellNarrowerAxes',
+            function(Orga_Model_Cell $cell, Orga_Model_Organization $organization=null) {
+                $organization = $cell->getGranularity()->getOrganization();
+                $axes = [];
+                foreach ($organization->getAxes() as $organizationAxis) {
+                    foreach ($cell->getMembers() as $member) {
+                        if ($organizationAxis->isNarrowerThan($member->getAxis())) {
+                            continue;
+                        } elseif (!$organizationAxis->isTransverse($member->getAxis())) {
+                            continue 2;
+                        }
+                    }
+                    $axes[] = $organizationAxis;
+                }
+                return $axes;
+            }
+        );
+        $modelBuilder->bindFunction(
+            'getCellNarrowerMembers',
+            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+                $members = [];
+                foreach ($axis->getMembers() as $axisMember) {
+                    foreach ($cell->getMembers() as $member) {
+                        if (($axis->isNarrowerThan($member->getAxis())) && in_array($member, $axisMember->getAllParents())) {
+                            continue;
+                        } elseif (!$axis->isTransverse($member->getAxis())) {
+                            continue 2;
+                        }
+                    }
+                    $members[] = $axisMember;
+                }
+                return $members;
+            }
+        );
+        $modelBuilder->bindFunction(
+            'displayParentMemberForAxis',
+            function(Orga_Model_member $member, Orga_Model_Axis $broaderAxis) {
+                foreach ($member->getDirectParents() as $directParent) {
+                    if ($directParent->getAxis() === $broaderAxis) {
+                        return $directParent->getLabel();
+                    }
+                }
+                return '';
+            }
+        );
+
+        // Feuille de la pertinence des Cell.
+        $modelBuilder->bind('cellsRelevanceSheetLabel', __('Orga', 'exports', 'cellsRelevanceSheetLabel'));
+
+        $modelBuilder->bind('cellColumnRelevant', __('Orga', 'exports', 'cellColumnRelevant'));
+        $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'exports', 'cellColumnAllParentsRelevant'));
+        $modelBuilder->bindFunction(
+            'displayCellMemberForAxis',
+            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+                foreach ($cell->getMembers() as $member) {
+                    if ($member->getAxis() === $axis) {
+                        return $member->getLabel();
+                    }
+                }
+                return '';
+            }
+        );
+
+
+        switch ($format) {
+            case 'xls':
+                $writer = new PHPExcel_Writer_Excel5();
+                break;
+            case 'xlsx':
+            default:
+                $writer = new PHPExcel_Writer_Excel2007();
+                break;
+        }
+
+        $export->export(
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/cell.yml')),
             'php://output',
             $writer
         );
     }
 
     /**
-     * Exporte la version de orga.
+     * Exporte les utilisateurs de la version de orga.
+     *
+     * @param string $format
+     * @param Orga_Model_Cell $cell
+     */
+    public function streamUsers($format, Orga_Model_Cell $cell)
+    {
+        $modelBuilder = new SpreadsheetModelBuilder();
+        $export = new PHPExcelExporter();
+
+        // Cell.
+        $modelBuilder->bind('cell', $cell);
+        // Organization.
+        $granularities = [];
+        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            if ($narrowerGranularity->getCellsWithACL()) {
+                $granularities[] = $narrowerGranularity;
+            }
+        }
+        $modelBuilder->bind('granularities', $granularities);
+
+        $modelBuilder->bindFunction(
+            'getUsersForCell',
+            function(Orga_Model_Cell $cell) {
+                $users = [];
+
+                $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
+                $linkedIndentities = $cellResource->getLinkedSecurityIdentities();
+                foreach ($linkedIndentities as $linkedIndentity) {
+                    if ($linkedIndentity instanceof User_Model_Role) {
+                        foreach ($linkedIndentity->getUsers() as $user) {
+                            $users[] = ['user' => $user, 'role' => $linkedIndentity];
+                        }
+                    }
+                }
+
+                return $users;
+            }
+        );
+        $modelBuilder->bind('userColumnFirstName', __('User', 'name', 'firstName'));
+        $modelBuilder->bind('userColumnLastName', __('User', 'name', 'lastName'));
+        $modelBuilder->bind('userColumnEmail', __('User', 'name', 'email'));
+        $modelBuilder->bind('userColumnRole', __('User', 'name', 'role'));
+        $modelBuilder->bindFunction(
+            'displayCellMemberForAxis',
+            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+                foreach ($cell->getMembers() as $member) {
+                    if ($member->getAxis() === $axis) {
+                        return $member->getLabel();
+                    }
+                }
+                return '';
+            }
+        );
+        $modelBuilder->bindFunction(
+            'displayRoleName',
+            function(User_Model_Role $role) {
+                return __('Orga', 'role', $role->getName());
+            }
+        );
+
+
+        switch ($format) {
+            case 'xls':
+                $writer = new PHPExcel_Writer_Excel5();
+                break;
+            case 'xlsx':
+            default:
+                $writer = new PHPExcel_Writer_Excel2007();
+                break;
+        }
+
+        $export->export(
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/users.yml')),
+            'php://output',
+            $writer
+        );
+    }
+
+    /**
+     * Exporte les Inputs de la version de orga.
      *
      * @param string $format
      * @param Orga_Model_Organization $organization
@@ -174,7 +373,7 @@ class Orga_Service_Export
         }
 
         $export->export(
-            $modelBuilder->build(new YamlMappingReader(__DIR__.'/inputsExport.yml')),
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/inputs.yml')),
             'php://output',
             $writer
         );
