@@ -25,7 +25,7 @@ Feature: Family list edit feature
     And the row 2 of the "familyDatagrid" datagrid should contain:
       | category                        | label | ref  | type        | unit |
       | Catégorie contenant une famille | Test  | test | Coefficient | m    |
-  # TODO : autoriser la création à la racine
+  # TODO : autoriser la création à la racine
 
   @javascript
   Scenario: Creation of a parameter family, incorrect input

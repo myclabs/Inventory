@@ -136,7 +136,7 @@ Feature: Family tree edit feature
     And I select "Masse volumique de combustible" from "familyTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
-  # TODO : autoriser le déplacement à la racine
+  # TODO : autoriser le déplacement à la racine
 
   @javascript
   Scenario: Deletion of a family in family tree edit

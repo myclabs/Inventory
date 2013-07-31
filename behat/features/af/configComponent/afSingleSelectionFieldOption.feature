@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF single selection field option feature
+Feature: AF single selection field option feature
 
   Background:
     Given I am logged in

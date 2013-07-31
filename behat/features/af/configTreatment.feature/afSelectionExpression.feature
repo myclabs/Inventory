@@ -14,7 +14,7 @@ Feature: AF selection expression algo feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un algorithme de sélection d’identifiant de type expression"
-# TODO : rajouter guillemets (pas réussi à traiter l'échappement).
+# TODO : rajouter guillemets (pas réussi à traiter l'échappement).
   # Ajout, saisie correcte
     When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "aaa"
     And I fill in "algoSelectionTextkeyExpression_expression_addForm" with "a:(b:(c:d;e:(f:g;:h)))"
@@ -38,7 +38,7 @@ Feature: AF selection expression algo feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un algorithme de sélection d’identifiant de type expression"
-  # TODO : rajouter guillemets (pas réussi à traiter l'échappement).
+  # TODO : rajouter guillemets (pas réussi à traiter l'échappement).
   # Ajout, identifiant vide
     When I click "Valider"
     Then the field "algoSelectionTextkeyExpression_ref_addForm" should have error: "Merci de renseigner ce champ."

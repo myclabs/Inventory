@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF non repeated subAF feature
+Feature: AF non repeated subAF feature
 
   Background:
     Given I am logged in

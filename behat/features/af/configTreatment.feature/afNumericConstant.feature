@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF numeric constant algo feature
+Feature: AF numeric constant algo feature
 
   Background:
     Given I am logged in
@@ -103,7 +103,7 @@ Feature: AF numeric constant algo feature
   # Modification de l'incertitude, saisie vide (correcte)
     When I set "" for column "uncertainty" of row 1 of the "algoNumericConstant" datagrid with a confirmation message
   # Affichage contenu modifié
-  # TODO : afficher plutôt "0" que "vide" pour l'incertitude ?
+  # TODO : afficher plutôt "0" que "vide" pour l'incertitude ?
     Then the row 1 of the "algoNumericConstant" datagrid should contain:
       | label              | ref                | unit | value | uncertainty |
       | Constante modifiée | constante_modifiee | m    | 1     |            |

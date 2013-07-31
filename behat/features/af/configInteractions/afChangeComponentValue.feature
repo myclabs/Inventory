@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF change component value interaction feature
+Feature: AF change component value interaction feature
 
   Background:
     Given I am logged in
@@ -13,25 +13,25 @@ Feature: AF change component value interaction feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une action d'assignation de valeur à un champ"
-  # Remarque : composant cible et mode de détermination sont pré-remplis, et la condition est facultative (peut être saisie ultérieurement).
+  # Remarque : composant cible et mode de détermination sont pré-remplis, et la condition est facultative (peut être saisie ultérieurement).
   # Donc l'ajout sans rien préciser ne pose pas de problème particulier.
   #
   # Ajout action d'assignation à un champ numérique (disons sans condition renseignée)
     When I select "Champ numérique" from "actionsSetValue_targetComponent_addForm"
-    And I select "Valeur fixée" from "actionsSetValue_type_addForm"
+    And I select "Valeur fixée" from "actionsSetValue_type_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    # TODO : vérifier que la liste déroulante des champs proposés ne propose pas de champs de sélection multiple…
+    # TODO : vérifier que la liste déroulante des champs proposés ne propose pas de champs de sélection multiple…
   # Ajout action d'assignation à un champ de sélection simple (disons avec condition renseignée)
     When I select "Champ sélection simple" from "actionsSetValue_targetComponent_addForm"
-    And I select "Valeur fixée" from "actionsSetValue_type_addForm"
-    And I select "condition_elementaire_interactions_utilisee_action_setvalue" from "actionsSetValue_condition_addForm"
+    And I select "Valeur fixée" from "actionsSetValue_type_addForm"
+    And I select "condition_elementaire_interactions_utilisee_action_setvalue" from "actionsSetValue_condition_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout action d'assignation à un champ booléen (disons avec condition renseignée)
     When I select "Champ booléen" from "actionsSetValue_targetComponent_addForm"
-    And I select "Valeur fixée" from "actionsSetValue_type_addForm"
-    And I select "condition_elementaire_interactions_utilisee_action_setvalue" from "actionsSetValue_condition_addForm"
+    And I select "Valeur fixée" from "actionsSetValue_type_addForm"
+    And I select "condition_elementaire_interactions_utilisee_action_setvalue" from "actionsSetValue_condition_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification contenu datagrid
@@ -76,22 +76,22 @@ Feature: AF change component value interaction feature
     When I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
     Then I should see the popup "Édition de la valeur ou de l'algorithme à assigner"
   # Saisie valeur non valide
-    When I fill in "numericValue" with "auie"
-    And I click "Enregistrer"
+    When I fill in "numericValue" with "auie"
+    And I click "Enregistrer"
     Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
   # Saisie valeur séparateur décimal non valide
     And I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
-    And I fill in "numericValue" with "1234.56789"
-    And I click "Enregistrer"
+    And I fill in "numericValue" with "1234.56789"
+    And I click "Enregistrer"
     Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
   # Saisie valeur séparateur décimal non valide
     And I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
-    And I fill in "numericValue" with "1234,56789"
-    And I click "Enregistrer"
+    And I fill in "numericValue" with "1234,56789"
+    And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
@@ -99,16 +99,16 @@ Feature: AF change component value interaction feature
       | value       |
       | 1 234,56789 |
     When I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
-    And I fill in "numericValue" with ""
-    And I fill in "numericUncertainty" with "15.9"
-    And I click "Enregistrer"
+    And I fill in "numericValue" with ""
+    And I fill in "numericUncertainty" with "15.9"
+    And I click "Enregistrer"
     Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
     And I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
-    And I fill in "numericValue" with ""
-    And I fill in "numericUncertainty" with "15,9"
-    And I click "Enregistrer"
+    And I fill in "numericValue" with ""
+    And I fill in "numericUncertainty" with "15,9"
+    And I click "Enregistrer"
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
     Then the row 1 of the "actionsSetValue" datagrid should contain:

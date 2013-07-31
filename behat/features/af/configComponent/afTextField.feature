@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF text field feature
+Feature: AF text field feature
 
   Background:
     Given I am logged in

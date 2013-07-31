@@ -17,7 +17,7 @@ Feature: Organization datagrid feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Organisations affichées dans l'ordre de création
-  # TODO : ordre alphabétique des libellés ?
+  # TODO : ordre alphabétique des libellés ?
     And the row 2 of the "organizations" datagrid should contain:
       | label  |
       | AAA   |

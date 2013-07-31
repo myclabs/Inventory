@@ -14,7 +14,7 @@ Feature: AF numeric parameter algo feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un algorithme numérique de type « paramètre »"
-  # TODO : ordre entre les familles…
+  # TODO : ordre entre les familles…
   # Ajout, identifiant valide
     When I fill in "algoNumericParameter_label_addForm" with "Test"
     And I fill in "algoNumericParameter_ref_addForm" with "aaa"

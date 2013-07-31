@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF elementary condition for interaction feature
+Feature: AF elementary condition for interaction feature
 
   Background:
     Given I am logged in
@@ -55,7 +55,7 @@ Feature: AF elementary condition for interaction feature
     And I open tab "Interactions"
     And I open collapse "Conditions élémentaires"
     Then I should see the "conditionsElementary" datagrid
-  # Vérification continu initial
+  # Vérification continu initial
     And the row 1 of the "conditionsElementary" datagrid should contain:
       | ref                                 | field                                                                                   | relation | value |
       | condition_elementaire_interactions  | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Interactions" | =        |       |
