@@ -136,6 +136,19 @@ class AF_PopulateTest extends AF_Populate
 //        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3');
 //        $this->createAlgoConditionExpression($aF_combustion_combustible_unite_masse, 'refa4', 'expression');
 
+        // Formulaire avec tous types de champs
+        $aF_tous_types_champs = $this->createAF($category_contenant_formulaire, 'formulaire_tous_types_champ', 'Formulaire avec tout type de champ');
+
+        // Composants
+        $champ_numerique = $this->createNumericInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_numerique', 'Champ numérique', 'kg_co2e.m3^-1', null, null, true, true, true, null, true);
+        $champ_selection_simple_liste = $this->createSelectInputList($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_selection_simple_liste', 'Champ sélection simple (liste déroulante)', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
+        $champ_selection_simple_bouton = $this->createSelectInputRadio($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_selection_simple_bouton', 'Champ sélection simple (boutons radio)', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
+        $champ_selection_multi_checkbox = $this->createSelectInputBoxes($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_selection_multi_checkbox', 'Champ sélection multiple (checkboxes)', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
+        $champ_selection_multi_list = $this->createSelectInputMulti($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_selection_multi_list', 'Champ sélection multiple (liste)', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
+        $champ_booleen_test = $this->createBooleanInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_booleen', 'Champ booléen', false, true, null, true);
+        $champ_texte_court = $this->createShortTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_texte_court', 'Champ texte court', true, true, null, true);
+        $champ_texte_long = $this->createLongTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_texte_long', 'Champ texte long', true, true, null, true);
+
         // Formulaire vide
         $aF_vide = $this->createAF($category_contenant_formulaire, 'formulaire_vide', 'Formulaire vide');
 
