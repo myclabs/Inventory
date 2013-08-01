@@ -121,7 +121,7 @@
                 $setLabelNullValue = new UI_Form_Action_SetValue('setLabelNullValue');
                 $setLabelNullValue->condition = $optionSaveAsSelected;
                 $setLabelNullValue->value = null;
-                $setLabelNullValue->backValue = $this->reportLabel;
+                $setLabelNullValue->backValue = str_replace('\'', '\\\'', $this->reportLabel);
                 $saveLabelReport->getElement()->addAction($setLabelNullValue);
             }
 
