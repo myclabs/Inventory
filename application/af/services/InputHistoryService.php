@@ -92,7 +92,11 @@ class AF_Service_InputHistoryService
             }
 
             // Author
-            $author = User_Model_User::load($logEntry->getUsername());
+            try {
+                $author = User_Model_User::load($logEntry->getUsername());
+            } catch (Core_Exception_NotFound $e) {
+                $author = null;
+            }
 
             $entries[] = new AF_Service_InputHistoryService_Entry($input, $logEntry->getLoggedAt(), $value, $author);
         }
