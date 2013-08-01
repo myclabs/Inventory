@@ -262,7 +262,6 @@ class Orga_Populate extends Core_Script_Action
         $report->setLabel($label);
         $report->setChartType($chartType);
         $report->setWithUncertainty($displayUncertainty);
-        $report->save();
         return $report;
     }
 
@@ -282,6 +281,7 @@ class Orga_Populate extends Core_Script_Action
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refAxis, $granularity->getDWCube()));
         $report->setSortType($sortType);
+        $report->save();
     }
 
     /**
@@ -306,6 +306,7 @@ class Orga_Populate extends Core_Script_Action
         $report->setDenominator(DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube()));
         $report->setDenominatorAxis1(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis, $granularity->getDWCube()));
         $report->setSortType($sortType);
+        $report->save();
     }
 
     /**
@@ -326,6 +327,7 @@ class Orga_Populate extends Core_Script_Action
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refAxis1, $granularity->getDWCube()));
         $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube($refAxis2, $granularity->getDWCube()));
         $report->setWithUncertainty($displayUncertainty);
+        $report->save();
     }
 
     /**
@@ -352,6 +354,7 @@ class Orga_Populate extends Core_Script_Action
         $report->setDenominator(DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube()));
         $report->setDenominatorAxis1(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis1, $granularity->getDWCube()));
         $report->setDenominatorAxis2(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis2, $granularity->getDWCube()));
+        $report->save();
     }
 
     /**
