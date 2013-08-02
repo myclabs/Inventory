@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "118ef38ccf9ffa357c7c4eea045ee997",
+    "hash": "6d4a204c2e9f2bb84448d11dcaf8b954",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -638,16 +638,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.2.0",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "3.2.0"
+                "reference": "3.3.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/3.2.0",
-                "reference": "3.2.0",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/3.3.0",
+                "reference": "3.3.0",
                 "shasum": ""
             },
             "require": {
@@ -677,7 +677,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-07-23 13:56:31"
+            "time": "2013-07-30 16:04:56"
         },
         {
             "name": "mnapoli/php-di-zf1",
