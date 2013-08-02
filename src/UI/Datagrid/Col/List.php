@@ -593,14 +593,14 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
             }
         }
         foreach ($this->list as $idElement => $element) {
-            $option = new UI_Form_Element_Option($idElement, $idElement, $element);
-            $filterFormElement->addOption($option);
+            $filterFormElement->addOption(new UI_Form_Element_Option($idElement, $idElement, $element));
         }
 
         // Récupération des valeurs par défaut.
         if (isset($defaultValue[$this->filterOperator])) {
             $filterFormElement->setValue($defaultValue[$this->filterOperator]);
-        } else if ($this->getFilterFieldType() === self::FIELD_BOX) {
+        }
+        if ($this->getFilterFieldType() === self::FIELD_BOX) {
             $resetButton = new UI_HTML_Button();
             $resetButton->icon = $datagrid->filterIconResetFieldSuffix;
             $resetAction = '$(\'#'.$this->getFilterFormId($datagrid).' :checked\')';
