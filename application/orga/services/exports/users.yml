@@ -17,14 +17,14 @@ sheets:
               - label: "{{ userColumnEmail }}"
               - label: "{{ userColumnRole }}"
             lines:
-              - foreach: granularity.cells as cell
+              - foreach: getChildCellsForGranularity(cell, granularity) as childCell
                 do:
-                  - foreach: getUsersForCell(cell) as userRole
+                  - foreach: getUsersForCell(childCell) as userRole
                     do:
                       - cells:
                           - foreach: granularity.axes as axis
                             do:
-                              - "{{ displayCellMemberForAxis(cell, axis) }}"
+                              - "{{ displayCellMemberForAxis(childCell, axis) }}"
                           - "{{ userRole['user'].firstName }}"
                           - "{{ userRole['user'].lastName }}"
                           - "{{ userRole['user'].email }}"

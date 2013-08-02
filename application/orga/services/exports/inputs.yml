@@ -1,28 +1,28 @@
 sheets:
 
 
-  - foreach: organization.inputGranularities as inputGranularity
+  - foreach: granularities as granularity
     do:
-      - label: "{{ inputGranularity.label }}"
+      - label: "{{ granularity.label }}"
 
         content:
 
-          - foreach: inputGranularity.cells as cell
+          - foreach: getChildCellsForGranularity(cell, granularity) as childCell
             do:
               - type: VerticalTable
-                label: "{{ cell.label }}"
+                label: "{{ childCell.label }}"
                 columns:
-                  - foreach: inputGranularity.axes as axis
+                  - foreach: granularity.axes as axis
                     do:
                       - label: "{{ axis.label }}"
-                  - foreach: getInputCellFields(cell) as field
+                  - foreach: getInputCellFields(childCell) as field
                     do:
                       - label: "{{ field }}"
                 lines:
                   - cells:
-                      - foreach: inputGranularity.axes as axis
+                      - foreach: granularity.axes as axis
                         do:
-                          - "{{ displayCellMemberForAxis(cell, axis) }}"
-                      - foreach: getInputCellValues(cell) as value
+                          - "{{ displayCellMemberForAxis(childCell, axis) }}"
+                      - foreach: getInputCellValues(childCell) as value
                         do:
                           - "{{ value }}"

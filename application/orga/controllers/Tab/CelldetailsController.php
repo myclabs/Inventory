@@ -505,6 +505,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->view->formats = [
             'xlsx' => __('Orga', 'exports', 'xlsx'),
             'xls' => __('Orga', 'exports', 'xls'),
+            'ods' => __('Orga', 'exports', 'ods'),
         ];
 
         // Liste des exports.

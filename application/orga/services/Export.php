@@ -142,7 +142,7 @@ class Orga_Service_Export
         $modelBuilder->bind('memberColumnRef', __('Orga', 'exports', 'memberColumnRef'));
         $modelBuilder->bindFunction(
             'getCellNarrowerAxes',
-            function(Orga_Model_Cell $cell, Orga_Model_Organization $organization=null) {
+            function(Orga_Model_Cell $cell) {
                 $organization = $cell->getGranularity()->getOrganization();
                 $axes = [];
                 foreach ($organization->getAxes() as $organizationAxis) {
@@ -235,14 +235,28 @@ class Orga_Service_Export
 
         // Cell.
         $modelBuilder->bind('cell', $cell);
-        // Organization.
+
         $granularities = [];
+        if ($cell->getGranularity()->getCellsWithACL()) {
+            $granularities[] = $cell->getGranularity();
+        }
         foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
             if ($narrowerGranularity->getCellsWithACL()) {
                 $granularities[] = $narrowerGranularity;
             }
         }
         $modelBuilder->bind('granularities', $granularities);
+
+        $modelBuilder->bindFunction(
+            'getChildCellsForGranularity',
+            function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
+                if ($cell->getGranularity() === $granularity) {
+                    return [$cell];
+                } else {
+                    return $cell->getChildCellsForGranularity($granularity);
+                }
+            }
+        );
 
         $modelBuilder->bindFunction(
             'getUsersForCell',
@@ -306,14 +320,36 @@ class Orga_Service_Export
      * Exporte les Inputs de la version de orga.
      *
      * @param string $format
-     * @param Orga_Model_Organization $organization
+     * @param Orga_Model_Cell $cell
      */
-    public function streamInputs($format, Orga_Model_Organization $organization)
+    public function streamInputs($format, Orga_Model_Cell $cell)
     {
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
 
-        $modelBuilder->bind('organization', $organization);
+        $modelBuilder->bind('cell', $cell);
+
+        $granularities = [];
+        if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
+            $granularities[] = $cell->getGranularity();
+        }
+        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            if ($narrowerGranularity->getInputConfigGranularity() !== null) {
+                $granularities[] = $narrowerGranularity;
+            }
+        }
+        $modelBuilder->bind('granularities', $granularities);
+
+        $modelBuilder->bindFunction(
+            'getChildCellsForGranularity',
+            function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
+                if ($cell->getGranularity() === $granularity) {
+                    return [$cell];
+                } else {
+                    return $cell->getChildCellsForGranularity($granularity);
+                }
+            }
+        );
 
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
