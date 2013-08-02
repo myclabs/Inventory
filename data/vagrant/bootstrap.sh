@@ -28,7 +28,7 @@ mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'myc-sense'@'localhost';"
 mysql -u root -e "FLUSH PRIVILEGES;"
 
 # PHP
-apt-get install -y php5 php5-curl php5-cli php5-gd php5-mcrypt php5-dev php5-mysql php-pear
+apt-get install -y php5 php5-curl php5-cli php5-gd php5-mcrypt php5-dev php5-mysql php-pear php5-xdebug
 
 # Apache
 apt-get install -y apache2
