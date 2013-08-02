@@ -6,6 +6,7 @@
  * @package AF
  */
 
+use DI\Annotation\Inject;
 use Core\Annotation\Secure;
 
 /**
@@ -15,6 +16,12 @@ use Core\Annotation\Secure;
  */
 class AF_Datagrid_AfController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var AF_Service_AFDeletionService
+     */
+    private $afDeletionService;
 
     /**
      * (non-PHPdoc)
@@ -151,8 +158,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     {
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('index'));
-        $af->delete();
         try {
+            $this->afDeletionService->deleteAF($af);
             $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Component_SubAF')
