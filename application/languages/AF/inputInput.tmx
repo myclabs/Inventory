@@ -152,6 +152,14 @@
 				<seg>Saved input is not complete, the results cannot be displayed.</seg>
 			</tuv>
 		</tu>
+        <tu tuid="completeInputIncompleteCalculations">
+            <tuv xml:lang="fr">
+                <seg>La saisie enregistrée est complète mais un problème est intervenu au cours de l'exécution des calculs.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Saved input is complete but a problem occurred during calculation.</seg>
+            </tuv>
+        </tu>
         <tu tuid="completeInputNoResult">
             <tuv xml:lang="fr">
                 <seg>La saisie enregistrée est complète mais n'a généré aucun résultat.</seg>
@@ -172,25 +180,7 @@
             </tuv>
         </tu>
 
-        <!-- Historique des valeurs -->
 
-        <tu tuid="valueHistory">
-            <tuv xml:lang="fr">
-                <seg>Historique des valeurs</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Value history</seg>
-            </tuv>
-        </tu>
-
-        <tu tuid="noHistory">
-            <tuv xml:lang="fr">
-                <seg>Pas d'historique</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>No history</seg>
-            </tuv>
-        </tu>
 
 	</body>
 </tmx>

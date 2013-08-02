@@ -38,9 +38,17 @@ class AF_Edit_ActionsController extends Core_Controller
 
         switch (get_class($action)) {
             case 'AF_Model_Action_SetValue_Numeric':
+                $locale = Core_Locale::loadDefault();
+                try {
+                    $value = $locale->readNumber($this->getParam('numericValue'));
+                    $uncertainty = $locale->readInteger($this->getParam('numericUncertainty'));
+                } catch(Core_Exception_InvalidArgument $e) {
+                    UI_Message::addMessageStatic(__('UI', 'formValidation', 'invalidNumber'), UI_Message::TYPE_ALERT);
+                    $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/interaction');
+                    return;
+                }
                 /** @var $action AF_Model_Action_SetValue_Numeric */
-                $calcValue = new Calc_Value($this->getParam('numericValue'), $this->getParam('numericUncertainty'));
-                $action->setValue($calcValue);
+                $action->setValue(new Calc_Value($value, $uncertainty));
                 break;
             case 'AF_Model_Action_SetValue_Checkbox':
                 /** @var $action AF_Model_Action_SetValue_Checkbox */

@@ -21,7 +21,18 @@ class Keyword_Populate extends Core_Script_Action
         $entityManager = $entityManagers['default'];
 
 
+        // Création des prédicats.
+        //  + createPredicate : -
+        // Params : ref, label, reverseRef, reverseLabel
+        // OptionalParams : description=null
 
+        // Création des mot-clefs.
+        //  + createKeyword : -
+        // Params : ref, label
+
+        // Création des associations.
+        //  + createAssociation : -
+        // Params : Keyword subject, Predicate, Keyword object
 
 
         $entityManager->flush();

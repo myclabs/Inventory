@@ -16,7 +16,64 @@ class AF_Populate extends Core_Script_Action
         $entityManager = $entityManagers['default'];
 
 
+        // Création des catégories.
+        //  + createCategory : -
+        // Params : ref
+        // OptionalParams : Category parent=null
 
+        // Création des af.
+        //  + createAF : -
+        // Params : Category, ref, label
+
+        // Création des composants.
+        // Params : AF, Group, ref, label
+        //  + createGroup : -
+        //  + createSubAF(Repeated) : AF calledAF
+        //  + createShortTextInput : -
+        //  + createLongTextInput : -
+        //  + createNumericInput : refUnit
+        //  + createSelectInput List|Radio|Multi|Boxes : [refOption => labelOption]
+        //  + createBooleanInput : -
+        // OptionalParams :
+        //  + createGroup : foldaway=true
+        //  + createSubAF : foldaway=true
+        //  + createSubAFRepeated : foldaway=true, minimumRepetition=0, freeLabel=false
+        //  + createShortTextInput : required=true, enabled=true
+        //  + createLongTextInput : required=true, enabled=true
+        //  + createNumericInput : defaultValue=null, defaultUncertainty=null, defaultReminder=true, required=true, enabled=true
+        //  + createSelectInput List|Radio|Multi|Boxes : required=true, enabled=true
+        //  + createBooleanInput : defaultValue=true
+        //  help=null, visible=true
+
+        // Création des Algos et indexation (ne renvoient rien).
+        //  Tip : Pour récupérer un algo à partir de l'AF : $aF->getAlgoByRef();
+        //   Donc, Pour récupérer l'algo d'un champs NumericInput : $aF->getAlgoByRef($input->getRef());
+        // Param : AF
+        //  + createAlgoNumericExpression : ref, label, expression, refUnit
+        //  + createAlgoNumericExpression : ref, label, value, uncertainty, refUnit
+        //  + createFixedIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => refMember]
+        //  + createAlgoIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => Selection_TextKey algo]
+        //  + createAlgoNumericParameter : ref, label, refFamily
+        //  + createFixedCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => refMemberKeyword]
+        //  + createAlgoCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => Selection_TextKey algo]
+        //  + createAlgoSelectTextkeyExpression : ref, expression
+        //  + createAlgoConditionElementary : Component input, ref
+        //  + createAlgoConditionExpression : ref, expression
+        // OptionalParams : -
+
+        // Création des Condition.
+        // Param: AF, ref
+        //  + createConditionElementary : Field component
+        //  + createConditionExpression : expression
+        // OptionalParams : -
+
+        // Création des Action.
+        // Tip : state et type sont des constantes de la classe AF_Model_Action acceptant respectivement
+        //  [ TYPE_DISABLE | TYPE_ENABLE | TYPE_HIDE | TYPE_SHOW ] et [ TYPE_SETVALUE | TYPE_SETALGOVALUE]
+        // Param: Component component
+        //  + createActionSetState : state
+        //  + createActionSetValue : type, value
+        // OptionalParams : Condition condition
 
 
         $entityManager->flush();
@@ -88,6 +145,7 @@ class AF_Populate extends Core_Script_Action
         $foldaway=true, $help=null, $visible=true)
     {
         $subAF = new AF_Model_Component_SubAF_NotRepeated();
+        $subAF->setCalledAF($calledAF);
         $subAF->setFoldaway($foldaway);
         return $this->createComponent($subAF, $aF,$parentGroup ,$ref, $label, $help, $visible, $foldaway);
     }
@@ -109,10 +167,51 @@ class AF_Populate extends Core_Script_Action
         $foldaway=true, $minimumRepetition=0, $freeLabel=false, $help=null, $visible=true)
     {
         $subAF = new AF_Model_Component_SubAF_Repeated();
+        $subAF->setCalledAF($calledAF);
         $subAF->setMinInputNumber($minimumRepetition);
         $subAF->setWithFreeLabel($freeLabel);
         $subAF->setFoldaway($foldaway);
         return $this->createComponent($subAF, $aF,$parentGroup ,$ref, $label, $help, $visible, $foldaway);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param AF_Model_Component_Group $parentGroup
+     * @param $ref
+     * @param $label
+     * @param bool $required
+     * @param bool $enabled
+     * @param null $help
+     * @param bool $visible
+     * @return AF_Model_Component
+     */
+    protected function createShortTextInput(AF_Model_AF $aF, AF_Model_Component_Group $parentGroup, $ref, $label,
+        $required=true, $enabled=true, $help=null, $visible=true)
+    {
+        $textInput = new AF_Model_Component_Text(AF_Model_Component_Text::TYPE_SHORT);
+        $textInput->setRequired($required);
+        $textInput->setEnabled($enabled);
+        return $this->createComponent($textInput, $aF, $parentGroup ,$ref, $label, $help, $visible);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param AF_Model_Component_Group $parentGroup
+     * @param $ref
+     * @param $label
+     * @param bool $required
+     * @param bool $enabled
+     * @param null $help
+     * @param bool $visible
+     * @return AF_Model_Component
+     */
+    protected function createLongTextInput(AF_Model_AF $aF, AF_Model_Component_Group $parentGroup, $ref, $label,
+        $required=true, $enabled=true, $help=null, $visible=true)
+    {
+        $textInput = new AF_Model_Component_Text(AF_Model_Component_Text::TYPE_LONG);
+        $textInput->setRequired($required);
+        $textInput->setEnabled($enabled);
+        return $this->createComponent($textInput, $aF, $parentGroup ,$ref, $label, $help, $visible);
     }
 
     /**
@@ -238,7 +337,7 @@ class AF_Populate extends Core_Script_Action
      * @param bool $visible
      * @return AF_Model_Component
      */
-    protected function createSelectInput(AF_Model_Component_Select $selectInput, AF_Model_AF $aF, AF_Model_Component_Group $parentGroup,
+    private function createSelectInput(AF_Model_Component_Select $selectInput, AF_Model_AF $aF, AF_Model_Component_Group $parentGroup,
         $ref, $label, array $options, $required=true, $enabled=true, $help=null, $visible=true)
     {
         $selectInput->setRequired($required);
@@ -282,18 +381,17 @@ class AF_Populate extends Core_Script_Action
      * @param bool $visible
      * @return AF_Model_Component
      */
-    protected function createComponent(AF_Model_Component $component, AF_Model_AF $aF, AF_Model_Component_Group $parentGroup, $ref, $label,
+    private function createComponent(AF_Model_Component $component, AF_Model_AF $aF, AF_Model_Component_Group $parentGroup, $ref, $label,
         $help=null, $visible=true)
     {
         $component->setAf($aF);
-        $component->setGroup($parentGroup);
         $component->setRef($ref);
         $component->setLabel($label);
         $component->setHelp($help);
         $component->setVisible($visible);
         $component->save();
+        $parentGroup->addSubComponent($component);
         $aF->addComponent($component);
-        $aF->getRootGroup()->addSubComponent($component);
         return $component;
     }
 
@@ -334,7 +432,7 @@ class AF_Populate extends Core_Script_Action
      * @param string $ref
      * @param string $label
      */
-    protected function createAlgoNumeric(AF_Model_AF $aF, Algo_Model_Numeric $numeric, $ref, $label)
+    private function createAlgoNumeric(AF_Model_AF $aF, Algo_Model_Numeric $numeric, $ref, $label)
     {
         $numeric->setRef($ref);
         $numeric->setLabel($label);
@@ -356,6 +454,7 @@ class AF_Populate extends Core_Script_Action
             $index = new Algo_Model_Index_Fixed(Classif_Model_Axis::loadByRef($refAxis));
             $index->setClassifMember(Classif_Model_Member::loadByRefAndAxis($refMember, $classifAxis));
             $index->setAlgoNumeric($numeric);
+            $index->save();
         }
     }
 
@@ -372,6 +471,7 @@ class AF_Populate extends Core_Script_Action
             $index = new Algo_Model_Index_Algo(Classif_Model_Axis::loadByRef($refAxis));
             $index->setAlgo($algo);
             $index->setAlgoNumeric($numeric);
+            $index->save();
         }
     }
 
@@ -390,33 +490,33 @@ class AF_Populate extends Core_Script_Action
 
     /**
      * @param Algo_Model_Numeric_Parameter $parameter
-     * @param Techno_Model_Family $family
      * @param array $indexes Sous la forme [$reDimensionKeyword =» $refMemberKeyword]
      */
-    protected function createFixedIndexForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, Techno_Model_Family $family, $indexes)
+    protected function createFixedCoordinateForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, $indexes)
     {
         foreach ($indexes as $refDimensionKeyword => $refMemberKeyword) {
-            $dimension = $family->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Fixed();
             $index->setDimension($dimension);
             $index->setMember($dimension->getMember(Keyword_Model_Keyword::loadByRef($refMemberKeyword)));
             $index->setAlgoParameter($parameter);
+            $index->save();
         }
     }
 
     /**
      * @param Algo_Model_Numeric_Parameter $parameter
-     * @param Techno_Model_Family $family
      * @param array $indexes Sous la forme [$refAxis =» $algo]
      */
-    protected function createAlgoIndexForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, Techno_Model_Family $family, $indexes)
+    protected function createAlgoCoordinateForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, $indexes)
     {
         foreach ($indexes as $refDimensionKeyword => $algo) {
-            $dimension = $family->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Algo();
             $index->setDimension($dimension);
             $index->setAlgoKeyword($algo);
             $index->setAlgoParameter($parameter);
+            $index->save();
         }
     }
 
@@ -470,6 +570,128 @@ class AF_Populate extends Core_Script_Action
         $conditionElementary->setInputRef($component->getRef());
         $conditionElementary->save();
         $aF->addAlgo($conditionElementary);
+        return $conditionElementary;
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param $ref
+     * @param AF_Model_Component_Field $component
+     * @return AF_Model_Condition_Expression
+     * @throws Core_Exception
+     */
+    protected function createConditionElementary(AF_Model_AF $aF, $ref, AF_Model_Component_Field $component)
+    {
+        switch (get_class($component)) {
+            case 'AF_Model_Component_Numeric':
+                $condition = new AF_Model_Condition_Elementary_Numeric();
+                break;
+            case 'AF_Model_Component_Checkbox':
+                $condition = new AF_Model_Condition_Elementary_Checkbox();
+                break;
+            case 'AF_Model_Component_Select_Single':
+                $condition = new AF_Model_Condition_Elementary_Select_Single();
+                break;
+            case 'AF_Model_Component_Select_Multi':
+                $condition = new AF_Model_Condition_Elementary_Select_Multi();
+                break;
+            default:
+                throw new Core_Exception("Unhandled field type");
+        }
+        $condition->setField($component);
+        return $this->createCondition($condition, $aF, $ref);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param $ref
+     * @param $expression
+     * @return AF_Model_Condition_Expression
+     */
+    protected function createConditionExpression(AF_Model_AF $aF, $ref, $expression)
+    {
+        $condition = new AF_Model_Condition_Expression();
+        $condition->setExpression($expression);
+        return $this->createCondition($condition, $aF, $ref);
+    }
+
+    /**
+     * @param AF_Model_Condition $condition
+     * @param AF_Model_AF $aF
+     * @param $ref
+     * @return AF_Model_Condition_Expression
+     */
+    private function createCondition(AF_Model_Condition $condition, AF_Model_AF $aF, $ref)
+    {
+        $condition->setRef($ref);
+        $condition->setAf($aF);
+        $condition->save();
+        return $condition;
+    }
+
+    /**
+     * @param AF_Model_Component $component
+     * @param string $state TYPE_DISABLE|TYPE_ENABLE|TYPE_HIDE|TYPE_SHOW
+     * @param AF_Model_Condition $condition
+     * @return AF_Model_Action
+     */
+    protected function createActionSetState(AF_Model_Component $component, $state,
+        AF_Model_Condition $condition=null)
+    {
+        $action = new AF_Model_Action_SetState();
+        $action->setState($state);
+        return $this->createAction($action, $component, $condition);
+    }
+
+    /**
+     * @param AF_Model_Component $component
+     * @param string $type TYPE_SETVALUE|TYPE_SETALGOVALUE
+     * @param mixed $value
+     * @param AF_Model_Condition $condition
+     * @return AF_Model_Action
+     * @throws Core_Exception
+     */
+    protected function createActionSetValue(AF_Model_Component $component, $type, $value,
+        AF_Model_Condition $condition=null)
+    {
+        if ($type == AF_Model_Action::TYPE_SETVALUE) {
+            switch (get_class($component)) {
+                case 'AF_Model_Component_Numeric':
+                    $action = new AF_Model_Action_SetValue_Numeric();
+                    $action->setValue($value);
+                    break;
+                case 'AF_Model_Component_Checkbox':
+                    $action = new AF_Model_Action_SetValue_Checkbox();
+                    $action->setChecked($value);
+                    break;
+                case 'AF_Model_Component_Select_Single':
+                    $action = new AF_Model_Action_SetValue_Select_Single();
+                    $action->setOption($value);
+                    break;
+            }
+        } else if ($type == AF_Model_Action::TYPE_SETALGOVALUE) {
+            $action = new AF_Model_Action_SetAlgoValue();
+            $action->setAlgo($value);
+        }
+        return $this->createAction($action, $component, $condition);
+    }
+
+    /**
+     * @param AF_Model_Action $action
+     * @param AF_Model_Component $component
+     * @param AF_Model_Condition $condition
+     * @return AF_Model_Action
+     */
+    private function createAction(AF_Model_Action $action, AF_Model_Component $component, AF_Model_Condition $condition=null)
+    {
+        $action->setTargetComponent($component);
+        $component->addAction($action);
+        if ($condition !== null) {
+            $action->setCondition($condition);
+        }
+        $action->save();
+        $component->save();
+        return $action;
     }
 
 }

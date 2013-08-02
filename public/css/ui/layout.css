@@ -10,7 +10,7 @@
 /* Masque de chargement */
 #loadingMask {
     position: fixed;
-    z-index: 100;
+    z-index: 10000;
     height: 100%;
     width: 100%;
     background-image: url('../../images/ui/ajax-loader_large.gif');

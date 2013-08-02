@@ -7,6 +7,7 @@ Feature: Keywords datagrid
   @javascript
   Scenario: Creation of a keyword
     Given I am on "keyword/keyword/manage"
+    And I wait for the page to finish loading
     Then I should see the "keywords" datagrid
   # Ajout d'un mot clé, identifiant vide
     When I click "Ajouter"

@@ -14,7 +14,7 @@ class AF_Model_Action_SetValue_Select_Single extends AF_Model_Action_SetValue
 {
 
     /**
-     * @var AF_Model_Component_Select_Option
+     * @var AF_Model_Component_Select_Option|null
      */
     protected $option;
 
@@ -27,12 +27,14 @@ class AF_Model_Action_SetValue_Select_Single extends AF_Model_Action_SetValue
         if (!empty($this->condition)) {
             $uiAction->condition = $generationHelper->getUICondition($this->condition);
         }
-        $uiAction->value = $this->option->getRef();
+        if ($this->option) {
+            $uiAction->value = $this->option->getRef();
+        }
         return $uiAction;
     }
 
     /**
-     * @return AF_Model_Component_Select_Option
+     * @return AF_Model_Component_Select_Option|null
      */
     public function getOption()
     {

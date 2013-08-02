@@ -9,6 +9,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use TEC\Exception\InvalidExpressionException;
 
 /**
  * CompleteEdition Controller
@@ -71,7 +72,13 @@ class AF_EditController extends Core_Controller
                     return;
                 }
             }
-            $af->setLabel($formData->getValue('label'));
+            $label = $formData->getValue('label');
+            if (empty($label)) {
+                $this->addFormError('label', __('UI', 'formValidation', 'emptyRequiredField'));
+                $this->sendFormResponse();
+                return;
+            }
+            $af->setLabel($label);
             $af->setDocumentation($formData->getValue('documentation'));
             $af->save();
             try {
@@ -158,9 +165,9 @@ class AF_EditController extends Core_Controller
         if ($this->getRequest()->isPost()) {
             try {
                 $af->getMainAlgo()->setExpression(trim($formData->getValue('expression')));
-            } catch (TEC_Model_InvalidExpressionException $e) {
-                $message = __('TEC', 'texts', 'incorrectExpressionWithErrors',
-                              ['ERRORS' => implode("<br>", $e->getErrors())]);
+            } catch (InvalidExpressionException $e) {
+                $message = __('AF', 'configTreatmentMessage', 'invalidExpression')
+                    . "<br>" . implode("<br>", $e->getErrors());
                 $this->addFormError('expression', $message);
             }
             if (!$this->hasFormError()) {

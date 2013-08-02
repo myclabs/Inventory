@@ -11,7 +11,7 @@ $entries = $this->entries;
 $locale = Core_Locale::loadDefault();
 
 if (empty($entries)) : ?>
-    <p class="muted"><?=__('AF', 'inputInput', 'noHistory')?></p>
+    <p class="muted"><?=__('UI', 'history', 'noHistory')?></p>
 <?php else : ?>
     <ul class="unstyled">
         <?php
@@ -39,11 +39,16 @@ if (empty($entries)) : ?>
                     }, $value);
                 $shownValue = implode(', ', $labels);
             }
+            $author = $entry->getAuthor();
             ?>
             <li>
                 <code><?=$shownValue?></code>
                 -
                 <?=$locale->formatDate($entry->getLoggedAt())?>
+                <?php if ($author) : ?>
+                    -
+                    <?=$author->getName()?>
+                <?php endif; ?>
             </li>
             <?php
         }

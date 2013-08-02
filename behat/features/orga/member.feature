@@ -86,6 +86,7 @@ Feature: Organizational member feature
       | Annecy | annecy   |                |
   # Modification du membre parent suivant l'axe "Pays" (modification de "vide" à "France")
     When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    And I wait 15 seconds
     Then the row 1 of the "listMemberssite" datagrid should contain:
       | label  | ref      | broaderpays    |
       | Annecy | annecy   | France         |

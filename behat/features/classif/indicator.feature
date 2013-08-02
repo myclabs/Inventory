@@ -13,25 +13,38 @@ Feature: Classification indicator feature
     Then I should see the popup "Ajout d'un indicateur"
     When I click "Valider"
     Then the field "editIndicators_ref_addForm" should have error: "Merci de renseigner ce champ."
+    And the field "editIndicators_unit_addForm" should have error: "Merci de saisir un identifiant d'unité correct."
+    And the field "editIndicators_ratioUnit_addForm" should have error: "Merci de saisir un identifiant d'unité correct."
   # Ajout d'un indicateur, identifiant avec des caractères non autorisés
     When I fill in "editIndicators_ref_addForm" with "bépo"
     And I click "Valider"
     Then the field "editIndicators_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # TODO : tester la validité des unités, une fois la fonctionnalité implémentée
   # Ajout d'un indicateur, identifiant déjà utilisé
     When I fill in "editIndicators_label_addForm" with "Test"
     And I fill in "editIndicators_ref_addForm" with "ges"
-    And I fill in "editIndicators_unit_addForm" with "t_co2e"
-    And I fill in "editIndicators_ratioUnit_addForm" with "kg_co2e"
     And I click "Valider"
     Then the field "editIndicators_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Ajout d'un indicateur, unités non existantes
+    When I fill in "editIndicators_unit_addForm" with "auie"
+    And I fill in "editIndicators_ratioUnit_addForm" with "auie"
+    And I click "Valider"
+    Then the field "editIndicators_unit_addForm" should have error: "Merci de saisir un identifiant d'unité correct."
+    And the field "editIndicators_ratioUnit_addForm" should have error: "Merci de saisir un identifiant d'unité correct."
+  # Ajout d'un indicateur, unités existantes mais non compatibles
+    When I fill in "editIndicators_unit_addForm" with "t"
+    And I fill in "editIndicators_ratioUnit_addForm" with "m"
+    And I click "Valider"
+    Then the field "editIndicators_unit_addForm" should have error: "Merci de saisir deux unités compatibles."
+    And the field "editIndicators_ratioUnit_addForm" should have error: "Merci de saisir deux unités compatibles."
   # Ajout d'un indicateur, saisie correcte
-    When I fill in "editIndicators_ref_addForm" with "test"
+    When I fill in "editIndicators_unit_addForm" with "t_co2e"
+    And I fill in "editIndicators_ratioUnit_addForm" with "kg_co2e"
+    And I fill in "editIndicators_ref_addForm" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 5 of the "editIndicators" datagrid should contain:
-      | label       | ref         | unit    | ratioUnit |
-      | Test | test | t_co2e  | kg_co2e   |
+      | label | ref  | unit       | ratioUnit   |
+      | Test  | test | t équ. CO2 | kg équ. CO2 |
   # Ajout d'un indicateur, test bouton "Annuler"
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un indicateur"
@@ -40,18 +53,17 @@ Feature: Classification indicator feature
 
   @javascript
   Scenario: Edition of a classification indicator
-  # TODO : contraintes sur l'édition des unités
   # TODO : position
     Given I am on "classif/indicator/manage"
     Then I should see the "editIndicators" datagrid
   # Modification des différents attributs, saisie correcte
     When I set "GES modifié" for column "label" of row 1 of the "editIndicators" datagrid with a confirmation message
     And I set "ges_modifie" for column "ref" of row 1 of the "editIndicators" datagrid with a confirmation message
-    And I set "mwh" for column "unit" of row 1 of the "editIndicators" datagrid with a confirmation message
-    And I set "kwh" for column "ratioUnit" of row 1 of the "editIndicators" datagrid with a confirmation message
+    And I set "kg_co2e" for column "unit" of row 1 of the "editIndicators" datagrid with a confirmation message
+    And I set "t_co2e" for column "ratioUnit" of row 1 of the "editIndicators" datagrid with a confirmation message
     Then the row 1 of the "editIndicators" datagrid should contain:
-      | label       | ref         | unit | ratioUnit |
-      | GES modifié | ges_modifie | mwh  | kwh       |
+      | label       | ref         | unit        | ratioUnit  |
+      | GES modifié | ges_modifie | kg équ. CO2 | t équ. CO2 |
   # Modification de l'identifiant, identifiant vide
     When I set "" for column "ref" of row 1 of the "editIndicators" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
@@ -63,22 +75,26 @@ Feature: Classification indicator feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'unité, unité vide
     When I set "" for column "unit" of row 1 of the "editIndicators" datagrid
-    Then the following message is shown and closed: "Modification effectuée."
+    Then the following message is shown and closed: "Merci de saisir un identifiant d'unité correct."
   # Modification de l'unité, unité incorrecte
     When I set "auie" for column "unit" of row 1 of the "editIndicators" datagrid
-    Then the following message is shown and closed: "Modification effectuée."
+    Then the following message is shown and closed: "Merci de saisir un identifiant d'unité correct."
   # Modification de l'unité, unité incompatible avec l'unité pour ratio
     When I set "t" for column "unit" of row 1 of the "editIndicators" datagrid
-    Then the following message is shown and closed: "Modification effectuée."
+    Then the following message is shown and closed: "Merci de saisir deux unités compatibles."
   # Modification de l'unité pour ratio, unité vide
     When I set "" for column "ratioUnit" of row 1 of the "editIndicators" datagrid
-    Then the following message is shown and closed: "Modification effectuée."
+    Then the following message is shown and closed: "Merci de saisir un identifiant d'unité correct."
   # Modification de l'unité pour ratio, unité incorrecte
     When I set "auie" for column "ratioUnit" of row 1 of the "editIndicators" datagrid
-    Then the following message is shown and closed: "Modification effectuée."
+    Then the following message is shown and closed: "Merci de saisir un identifiant d'unité correct."
   # Modification de l'unité pour ratio, unité incompatible avec l'unité pour ratio
     When I set "m" for column "ratioUnit" of row 1 of the "editIndicators" datagrid
-    Then the following message is shown and closed: "Modification effectuée."
+    Then the following message is shown and closed: "Merci de saisir deux unités compatibles."
+  # Vérification que aucune des actions précédentes n'a entraîné de modification
+    And the row 1 of the "editIndicators" datagrid should contain:
+      | label       | ref         | unit        | ratioUnit  |
+      | GES modifié | ges_modifie | kg équ. CO2 | t équ. CO2 |
 
   @javascript
   Scenario:  Deletion of a classification indicator

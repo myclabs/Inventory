@@ -12,12 +12,15 @@ $element = $this->element;
 if ($element instanceof Techno_Model_Element_Process) {
     $title = __('Techno', 'name', 'emissionFactor');
 } else {
-    $title = __('Techno', 'name', 'coefficient');
+    $title = __('Techno', 'element', 'element');
 }
 ?>
 
 <script type="text/javascript">
     $('#element_edit').children('div.modal-header').children('h3').html(<?=json_encode($title)?>);
+    $('#element_delete').children('div.modal-footer').children('button.btn-primary').attr('data-element', <?=$element->getId()?>);
+    $('#element_delete').children('div.modal-footer').children('a.btn').attr('data-element', <?=$element->getId()?>);
+    $('#element_delete').children('div.modal-footer').children('a.btn').attr('href', 'techno/element/details/id/<?=$element->getId()?>');
 </script>
 
 <?php
@@ -25,16 +28,17 @@ $editForm = new UI_Form('element_editForm');
 $editForm->setAction('techno/element/edit-submit');
 $editForm->setAjax(true, 'elementEditSuccess');
 
-// Unité
-$unitField = new UI_Form_Element_Text('unit');
-$unitField->setLabel(__('Unit', 'name', 'unit'));
-$unitField->setValue($element->getUnit()->getRef());
-$editForm->addElement($unitField);
+//// Unité
+//$unitField = new UI_Form_Element_Text('unit');
+//$unitField->setLabel(__('Unit', 'name', 'unit'));
+//$unitField->setValue($element->getUnit()->getRef());
+//$editForm->addElement($unitField);
 
 // Valeur
 $digitalValueField = new UI_Form_Element_Text('digitalValue');
 $digitalValueField->setLabel(__('UI', 'name', 'value'));
 $digitalValueField->setValue($locale->formatNumberForInput($element->getValue()->getDigitalValue()));
+$digitalValueField->setRequired(true);
 $editForm->addElement($digitalValueField);
 
 // Incertitude
@@ -43,12 +47,12 @@ $uncertaintyField->setLabel(__('UI', 'name', 'uncertainty'));
 $uncertaintyField->setValue($locale->formatNumberForInput($element->getValue()->getRelativeUncertainty()));
 $editForm->addElement($uncertaintyField);
 
-// Documentation
-$documentationField = new UI_Form_Element_Textarea('documentation');
-$documentationField->setLabel(__('UI', 'name', 'documentation'));
-$documentationField->setValue($element->getDocumentation());
-$documentationField->setAttrib('rows', 7);
-$editForm->addElement($documentationField);
+//// Documentation
+//$documentationField = new UI_Form_Element_Textarea('documentation');
+//$documentationField->setLabel(__('UI', 'name', 'documentation'));
+//$documentationField->setValue($element->getDocumentation());
+//$documentationField->setAttrib('rows', 7);
+//$editForm->addElement($documentationField);
 
 // Valeur
 $elementIdField = new UI_Form_Element_Hidden('id');

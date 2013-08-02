@@ -30,6 +30,14 @@ class FeatureContext extends MinkContext
     /**
      * @BeforeScenario
      */
+    public function setWindowSize()
+    {
+        $this->getSession()->resizeWindow(1280, 1024);
+    }
+
+    /**
+     * @BeforeScenario
+     */
     public function setLanguage()
     {
 //        $this->getSession()->setRequestHeader('Accept-Language', 'fr');
@@ -103,7 +111,7 @@ class FeatureContext extends MinkContext
 
         $errorMessage = $this->getSession()->evaluateScript("return $expression;");
 
-        if ($errorMessage != $error) {
+        if (strpos($errorMessage, $error) === false) {
             throw new ExpectationException("No error message '$error' for field '$field'.\n"
                 . "Error message found: '$errorMessage'.\n"
                 . "Javascript expression: '$expression'.", $this->getSession());

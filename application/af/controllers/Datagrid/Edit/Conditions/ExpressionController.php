@@ -8,6 +8,7 @@
 
 use Core\Annotation\Secure;
 use Doctrine\DBAL\DBALException;
+use TEC\Exception\InvalidExpressionException;
 
 /**
  * @package AF
@@ -69,7 +70,7 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
             $condition->setAf($af);
             try {
                 $condition->setExpression($this->getAddElementValue('expression'));
-            } catch (TEC_Model_InvalidExpressionException $e) {
+            } catch (InvalidExpressionException $e) {
                 $this->setAddElementErrorMessage('expression',
                                                  __('AF', 'configTreatmentMessage', 'invalidExpression')
                                                      . "<br>" . implode("<br>", $e->getErrors()));
@@ -107,7 +108,7 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
             case 'expression':
                 try {
                     $condition->setExpression($newValue);
-                } catch (TEC_Model_InvalidExpressionException $e) {
+                } catch (InvalidExpressionException $e) {
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
@@ -120,7 +121,11 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
                 break;
         }
         $condition->save();
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
