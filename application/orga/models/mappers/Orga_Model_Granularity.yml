@@ -114,7 +114,7 @@ Orga_Model_Granularity:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      granularityRefUniquenessInOrganization:
-          columns:
-              - ref
-              - idOrganization
+    granularityRefUniquenessInOrganization:
+      columns:
+        - ref
+        - idOrganization
