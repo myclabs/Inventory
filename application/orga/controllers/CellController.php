@@ -177,7 +177,7 @@ class Orga_CellController extends Core_Controller
             }
             $analysisTab->label = __('DW', 'name', 'analyses');
             $analysisTab->dataSource = 'orga/tab_celldetails/analyses/idCell/'.$idCell;
-            $analysisTab->useCache = true;
+            $analysisTab->useCache = !$isUserAllowedToEditOrganization;
             $this->view->tabView->addTab($analysisTab);
         }
 
@@ -233,7 +233,7 @@ class Orga_CellController extends Core_Controller
         if ($tab === 'history') {
             $historyTab->active = true;
         }
-        $historyTab->label = __('UI', 'name', 'history');
+        $historyTab->label =  __('UI', 'history', 'history');
         $historyTab->dataSource = 'orga/tab_celldetails/history?idCell='.$idCell;
         $this->view->tabView->addTab($historyTab);
 
@@ -366,7 +366,7 @@ class Orga_CellController extends Core_Controller
         );
 
         $aFViewConfiguration = new AF_ViewConfiguration();
-        if ($isUserAllowedToInputCell) {
+        if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::STATUS_CLOSED)) {
             $aFViewConfiguration->setMode(AF_ViewConfiguration::MODE_WRITE);
         } else {
             $aFViewConfiguration->setMode(AF_ViewConfiguration::MODE_READ);

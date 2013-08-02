@@ -421,7 +421,7 @@ class UI_Datagrid extends UI_Generic
         $this->_module = $module;
 
         $this->datagridEmptyText = __('UI', 'loading', 'empty');
-        $this->datagridErrorText = __('UI', 'loading', 'error');
+        $this->datagridErrorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
         $this->datagridLoadingText = __('UI', 'loading', 'loading');
 
         // Pagination
@@ -657,12 +657,13 @@ class UI_Datagrid extends UI_Generic
                 }
             }
         }
+        $scriptHideWrapper = '$(\'#'.$this->id.'_filter_wrapper\').collapse(\'hide\');';
         $filterElement = new UI_Form_Element_HTML($this->id.'-filter');
-        $this->filterConfirmButton->addAttribute('onclick', $this->id.'.filter();');
+        $this->filterConfirmButton->addAttribute('onclick', $this->id.'.filter();'.$scriptHideWrapper);
         $filterElement->content = $this->filterConfirmButton->getHTML();
         $formFilter->addActionElement($filterElement);
         $resetElement = new UI_Form_Element_HTML($this->id.'-resetFilter');
-        $this->filterResetButton->addAttribute('onclick', $this->id.'.resetFilter();'.$this->id.'.filter();');
+        $this->filterResetButton->addAttribute('onclick', $this->id.'.resetFilter();'.$this->id.'.filter();'.$scriptHideWrapper);
         $resetElement->content = $this->filterResetButton->getHTML();
         $formFilter->addActionElement($resetElement);
 
@@ -703,19 +704,12 @@ class UI_Datagrid extends UI_Generic
 
         // Ajout de la fonction Reinitialiser à la datagrid
         $filterScript .= $this->id.'.resetFilter = function() {';
-        $filterScript .= '$(\'#'.$this->id.'_filter legend i.filterActive\').remove();';
-        $filterScript .= '$(\'#'.$this->id.'_filter_wrapper\').collapse(\'hide\');';
         foreach ($filters as $column) {
             if ($column->filterName !== null) {
                 $filterScript .= $column->getResettingFilter($this);
             }
         }
         $filterScript .= '};';
-        //  Ajout du déclenchement de cette fonction sur l'evenement onlick.
-        $filterScript .= '$(\'#'.$this->id.'.resetFilter\').click(function(){';
-        $filterScript .= $this->id.'.resetFilter();';
-        $filterScript .= $this->id.'.filter();';
-        $filterScript .= '});';
 
         return $filterScript;
     }
@@ -989,7 +983,6 @@ class UI_Datagrid extends UI_Generic
         $datagridScript .= 'var startIndex = 0;';
         $datagridScript .= 'var results = null;';
         $datagridScript .= '}';
-
         // Ajout du filtre à la requete.
         $datagridScript .= 'var filter = \'\';';
         $datagridScript .= 'filter += "{ ";';
@@ -1003,6 +996,14 @@ class UI_Datagrid extends UI_Generic
             $datagridScript .= 'filter = filter.substr(0, filter.length-1);';
         }
         $datagridScript .= 'filter += "}";';
+        // Mise à jour de l'indicateur de présence du filtre.
+        $datagridScript .= '$(\'#'.$this->id.'_filter legend i.filterActive\').remove();';
+        $datagridScript .= 'if (filter != \'{}\') {';
+        $datagridScript .= '$(\'#'.$this->id.'_filter legend\').append(\'';
+        $datagridScript .= ' <i class="filterActive icon-filter" title="'.$this->filterCollapseActiveHint.'"></i>';
+        $datagridScript .= '\');';
+        $datagridScript .= '}';
+        // Création de requête.
         $datagridScript .= 'return "getelements';
         $datagridScript .= $this->encodeParameters();
         $datagridScript .= '/sortColumn/" + sort + "';

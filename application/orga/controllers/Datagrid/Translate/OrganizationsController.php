@@ -48,6 +48,7 @@ class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Data
 
             $data['axes'] = $this->cellLink('orga/translate/axes/idOrganization/'.$organization->getId());
             $data['members'] = $this->cellLink('orga/translate/members/idOrganization/'.$organization->getId());
+            $data['granularityReports'] = $this->cellLink('orga/translate/granularityreports/idOrganization/'.$organization->getId());
             $this->addline($data);
         }
         $this->totalElements = Orga_Model_Organization::countTotal($this->request);

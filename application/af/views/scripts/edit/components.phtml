@@ -28,7 +28,7 @@ JS;
 // Sous-formulaires non répétés
 $subAFNotRepeated = new UI_HTML_Collapse('subAFNotRepeated');
 $subAFNotRepeated->foldedByDefault = true;
-$subAFNotRepeated->title = __('AF', 'configComponentCollapse', 'subFormCollapse');
+$subAFNotRepeated->title = __('AF', 'configComponentCollapse', 'nonRepeatedSubFormCollapse');
 $subAFNotRepeated->body = $this->partial('edit/components/sub-af-not-repeated.phtml', array('af' => $this->af));
 echo $subAFNotRepeated->render();
 
@@ -44,7 +44,7 @@ JS;
 // Sous-formulaires répétés
 $subAFRepeated = new UI_HTML_Collapse('subAFRepeated');
 $subAFRepeated->foldedByDefault = true;
-$subAFRepeated->title = __('AF', 'configComponentCollapse', 'subFormCollapse');
+$subAFRepeated->title = __('AF', 'configComponentCollapse', 'repeatedSubFormCollapse');
 $subAFRepeated->body = $this->partial('edit/components/sub-af-repeated.phtml', array('af' => $this->af));
 echo $subAFRepeated->render();
 

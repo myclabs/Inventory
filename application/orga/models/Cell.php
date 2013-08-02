@@ -193,6 +193,8 @@ class Orga_Model_Cell extends Core_Model_Entity
         $this->updateMembersHashKey();
         $this->updateHierarchy();
 
+        // Création du cube de DW.
+        $this->createDWCube();
         // Création du CellsGroup.
         foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
             $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);

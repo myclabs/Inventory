@@ -39,7 +39,6 @@ class ComposedUnit
      */
     protected $components = array();
 
-
     /**
      * Constructeur
      * @param String $ref

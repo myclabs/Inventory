@@ -1,10 +1,16 @@
 <?php
 /**
- * @author  hmatthieu.napoli
+ * @author  matthieu.napoli
  * @author  hugo.charbonnier
  * @author  yoann.croizer
  * @package Algo
  */
+
+use Exec\Execution\Calc;
+use Exec\Provider\UnitInterface;
+use Exec\Provider\ValueInterface;
+use TEC\Exception\InvalidExpressionException;
+use TEC\Expression;
 use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
@@ -13,7 +19,7 @@ use Unit\UnitAPI;
  * @subpackage Numeric
  */
 class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
-    implements Exec_Interface_ValueProvider, Exec_Interface_UnitProvider
+    implements ValueInterface, UnitInterface
 {
 
     /**
@@ -28,11 +34,6 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
     protected $expression;
 
     /**
-     * @var TEC_Model_Expression
-     */
-    protected $tecExpression;
-
-    /**
      * Exécution de l'algorithme
      * @param Algo_Model_InputSet $inputSet
      * @return Calc_UnitValue
@@ -40,8 +41,12 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
     public function execute(Algo_Model_InputSet $inputSet)
     {
         $this->inputSet = $inputSet;
-        $calc = new Exec_Execution_Calc($this->tecExpression);
-        $calc->setCalculType(Exec_Execution_Calc::CALC_UNITVALUE);
+
+        // Construit l'arbre
+        $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
+
+        $calc = new Calc($tecExpression);
+        $calc->setCalculType(Calc::CALC_UNITVALUE);
         /** @var $result Calc_UnitValue */
         $result = $calc->executeExpression($this);
 
@@ -94,7 +99,8 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
         }
 
         // Vérifie chaque composant de l'expression
-        $calc = new Exec_Execution_Calc($this->tecExpression);
+        $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
+        $calc = new Calc($tecExpression);
         $errors = array_merge($errors, $calc->getErrors($this));
 
         // Vérifie la compatibilité des unités
@@ -180,22 +186,20 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
      */
     public function getExpression()
     {
-        return $this->tecExpression->getExpression();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
+        return $tecExpression->getAsString();
     }
 
     /**
      * @param string $expression
-     * @throws TEC_Model_InvalidExpressionException
+     * @throws InvalidExpressionException
      */
     public function setExpression($expression)
     {
-        $tecExpression = new TEC_Model_Expression();
-        $tecExpression->setType(TEC_Model_Expression::TYPE_NUMERIC);
-        $tecExpression->setExpression($expression);
+        $tecExpression = new Expression($expression, Expression::TYPE_NUMERIC);
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;
-        $this->tecExpression = $tecExpression;
     }
 
     /**
@@ -203,7 +207,8 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
      */
     public function getSubAlgos()
     {
-        $leafs = $this->tecExpression->getRootNode()->getAllLeafsRecursively();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_NUMERIC);
+        $leafs = $tecExpression->getRootNode()->getAllLeafsRecursively();
         $subAlgos = [];
         foreach ($leafs as $leaf) {
             $subAlgoRef = $leaf->getName();

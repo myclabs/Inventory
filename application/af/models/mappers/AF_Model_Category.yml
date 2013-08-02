@@ -37,7 +37,6 @@ AF_Model_Category:
       mappedBy: parentCategory
       orderBy:
         position: ASC
-      cascade: [ all ]
     afs:
       targetEntity: AF_Model_AF
       mappedBy: category

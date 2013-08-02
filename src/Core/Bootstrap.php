@@ -216,9 +216,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         switch (APPLICATION_ENV) {
             case 'test':
             case 'developpement':
-                // Requêtes transmises à Firebug.
-                $profiler = new ZendX\Doctrine2\FirebugProfiler();
-                break;
             case 'testsunitaires':
                 // Requêtes placées dans un fichier.
                 $profiler = new Core_Profiler_File();

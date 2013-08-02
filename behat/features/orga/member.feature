@@ -86,6 +86,7 @@ Feature: Organizational member feature
       | Annecy | annecy   |                |
   # Modification du membre parent suivant l'axe "Pays" (modification de "vide" à "France")
     When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    And I wait 15 seconds
     Then the row 1 of the "listMemberssite" datagrid should contain:
       | label  | ref      | broaderpays    |
       | Annecy | annecy   | France         |
@@ -109,7 +110,7 @@ Feature: Organizational member feature
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    Then the "listMembersannee" datagrid should contain 0 row
+    Then the "listMembersannee" datagrid should contain 1 row
 
   @javascript
   Scenario: Check list of members of an axis when the current cell is not the global cell

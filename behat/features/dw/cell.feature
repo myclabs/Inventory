@@ -5,14 +5,12 @@ Feature: Cell dataware analysis feature
     Given I am logged in
 
   @javascript
-  Scenario: Access to analysis configuration page
+  Scenario: New cell analysis scenario
   # Accès à l'onglet "Analyses" et au datagrid des analyses (cellule globale)
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Analyses"
     Then I should see the "report" datagrid
-  # Accès à l'export Excel détaillé (on teste juste que le bouton est cliquable)
-    # When I click "Export Excel détaillé"
   # Nouvelle analyse
     When I click "Nouvelle analyse"
     And I click "Lancer"
@@ -22,3 +20,13 @@ Feature: Cell dataware analysis feature
     When I click "Retour"
     Then I should see "Vue globale Organisation avec données"
 
+  @javascript
+  Scenario: Cell existing preconfigured analysis scenario
+    Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
+    And I open tab "Analyses"
+    Then I should see the "report" datagrid
+    And the row 1 of the "report" datagrid should contain:
+      | label                        |
+      | Chiffre d'affaire, par année |
+    When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid

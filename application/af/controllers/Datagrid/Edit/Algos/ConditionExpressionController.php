@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use TEC\Exception\InvalidExpressionException;
 
 /**
  * Algoconditionsexpression Controller
@@ -66,7 +67,7 @@ class AF_Datagrid_Edit_Algos_ConditionExpressionController extends UI_Controller
             }
             try {
                 $algo->setExpression($this->getAddElementValue('expression'));
-            } catch (TEC_Model_InvalidExpressionException $e) {
+            } catch (InvalidExpressionException $e) {
                 $this->setAddElementErrorMessage('expression',
                                                  __('AF', 'configTreatmentMessage', 'invalidExpression')
                                                      . "<br>" . implode("<br>", $e->getErrors()));
@@ -106,7 +107,7 @@ class AF_Datagrid_Edit_Algos_ConditionExpressionController extends UI_Controller
             case 'expression':
                 try {
                     $algo->setExpression($newValue);
-                } catch (TEC_Model_InvalidExpressionException $e) {
+                } catch (InvalidExpressionException $e) {
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
@@ -118,7 +119,11 @@ class AF_Datagrid_Edit_Algos_ConditionExpressionController extends UI_Controller
                 break;
         }
         $algo->save();
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }

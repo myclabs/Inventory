@@ -48,7 +48,7 @@
         </tu>    
 
         <!-- Messages -->
-        
+
         <tu tuid="axisHasDirectBroaders">
             <tuv xml:lang="fr">
                 <seg>Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier.</seg>

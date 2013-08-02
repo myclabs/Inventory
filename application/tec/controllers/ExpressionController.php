@@ -5,12 +5,14 @@
  */
 
 use Core\Annotation\Secure;
+use TEC\Exception\InvalidExpressionException;
+use TEC\Expression;
 
 /**
  * Index controller.
  * @package TEC
  */
-class TEC_ExpressionController extends Core_Controller
+class ExpressionController extends Core_Controller
 {
    /**
     * Appel de la vue index.
@@ -52,15 +54,13 @@ class TEC_ExpressionController extends Core_Controller
             UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             $this->view->typeExpression = $this->view->typeExpression;
-            $expression = new TEC_Model_Expression();
-            $expression->setType($this->view->typeExpression);
-            $expression->setExpression($this->view->input);
+            $expression = new Expression($this->view->input, $this->view->typeExpression);
 
             try {
                 $expression->check();
                 $this->view->correctedExpression = $expression->getTreeAsString();
                 $this->view->graphExpression = $expression->getGraph();
-            } catch (TEC_Model_InvalidExpressionException $e) {
+            } catch (InvalidExpressionException $e) {
                 $this->view->errors = $e->getErrors();
             }
         }

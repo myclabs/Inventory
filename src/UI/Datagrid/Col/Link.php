@@ -57,7 +57,7 @@ class UI_Datagrid_Col_Link extends UI_Datagrid_Col_Generic
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
         $this->keywordFilterEqual = __('UI', 'datagridFilter', 'ColLinkEqual');
         $this->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
-        $this->defaultValue = '<i class="icon-share-alt"></i> '.__('UI', 'name', 'details');
+        $this->defaultValue = '<i class="icon-share-alt"></i> '.__('UI', 'datagridContent', 'linkLabel');
     }
 
     /**
@@ -203,7 +203,6 @@ class UI_Datagrid_Col_Link extends UI_Datagrid_Col_Generic
         } else {
             return null;
         }
-            return null;
     }
 
 }

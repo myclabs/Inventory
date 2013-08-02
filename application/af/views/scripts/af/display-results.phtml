@@ -16,6 +16,11 @@ if (!$inputSet || !$inputSet->isInputComplete()) {
     return;
 }
 
+if (!$inputSet->isCalculationComplete()) {
+    echo '<p>' . __('AF', 'inputInput', 'completeInputIncompleteCalculations') . '</p>';
+    return;
+}
+
 
 /** @var $outputSet AF_Model_Output_OutputSet */
 $outputSet = $inputSet->getOutputSet();

@@ -30,12 +30,11 @@
         "symfony/event-dispatcher": "2.3.*",
 		"pear/console_commandline": "dev-trunk",
 		"netcarver/textile": "3.5.*",
-		"mridgway/zendx_doctrine2": "dev-master",
 		"phpoffice/phpexcel": "1.7.*",
         "dompdf/dompdf": "dev-master",
         "myclabs/array-comparator": "1.0.*",
         "myclabs/php-enum": "1.*",
-        "mnapoli/php-di": "3.2.*@dev",
+        "mnapoli/php-di": "3.2.*",
         "mnapoli/php-di-zf1": "*"
 	},
     "require-dev": {
@@ -43,7 +42,6 @@
         "behat/mink": "1.5.*",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
-        "behat/mink-zombie-driver": "dev-RequestHeaders",
         "mnapoli/metaconsole": "dev-master"
     },
     "minimum-stability": "dev",
@@ -52,22 +50,6 @@
         {
             "type": "git",
             "url": "git://github.com/myclabs/common.git"
-        },
-        {
-            "type": "git",
-            "url": "git://github.com/mridgway/ZendX_Doctrine2.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/mnapoli/MinkZombieDriver.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/mnapoli/MetaModel.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/mnapoli/MetaConsole.git"
         }
     ]
 }

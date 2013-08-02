@@ -40,6 +40,8 @@ You can launch a specific "Feature" or "Scenario" by its name:
 
 Here are all the standard Behat-Mink commands: [Behat-Mink reference](https://gist.github.com/mnapoli/5848556).
 
+To skip a test, use the tag `@skipped`.
+
 Custom commands are:
 
 ```cucumber
@@ -66,10 +68,14 @@ Then I should see the popup "Popup title"
 # Datagrid
 Then I should see the "users" datagrid
 Then the "users" datagrid should contain 1 row
+Then the "users" datagrid should contain a row:
+  | nom            | email | detailsUser |
+  | Administrateur | admin | Éditer      |
 Then the row 1 of the "users" datagrid should contain:
   | nom            | email | detailsUser |
   | Administrateur | admin | Éditer      |
 Then [the] column "name" of [the] row 2 of the "users" datagrid should contain "Bob"
 Then I set "value" for [the] column "label" of [the] row 1 of the "keywords" datagrid [with a confirmation message]
+Then I additionally select "value" for [the] column "label" of [the] row 1 of the "keywords" datagrid [with a confirmation message]
 When I click "Supprimer" in the row 5 of the "users" datagrid
 ```

@@ -8,10 +8,10 @@
 
         <tu tuid="initialVisibilityHeader">
             <tuv xml:lang="fr">
-                <seg>Visibilité initiale</seg>
+                <seg>Visibilité</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Initial visibility</seg>
+                <seg>Visibility</seg>
             </tuv>
         </tu>
         <tu tuid="foldawayHeader">
@@ -31,7 +31,7 @@
             </tuv>
         </tu>
 
-        <!-- Sous-formulaires -->
+        <!-- Sous-formulaires non répétés -->
 
         <tu tuid="associatedFormHeader">
             <tuv xml:lang="fr">
@@ -41,44 +41,36 @@
                 <seg>Associated form</seg>
             </tuv>
         </tu>
-        <tu tuid="repeatableInputHeader">
+        <tu tuid="numberInitialRepetitionHeader">
             <tuv xml:lang="fr">
-                <seg>Saisie répétable ?</seg>
+                <seg>Nombre initial de répétitions</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Repeatable input ?</seg>
+                <seg>Initial item number</seg>
             </tuv>
         </tu>
-        <tu tuid="unrepeatableOption">
+        <tu tuid="zeroItemOption">
             <tuv xml:lang="fr">
-                <seg>Non répétable</seg>
+                <seg>Zéro</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Unrepeatable</seg>
+                <seg>None</seg>
             </tuv>
         </tu>
-        <tu tuid="repeatableZeroItemOption">
+        <tu tuid="oneSuppressibleItemOption">
             <tuv xml:lang="fr">
-                <seg>Répétable, init. zéro</seg>
+                <seg>Une supprimable</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Repeatable, init. none</seg>
+                <seg>One suppressible</seg>
             </tuv>
         </tu>
-        <tu tuid="repeatableOneSuppressibleItemOption">
+        <tu tuid="oneUnsuppressibleItemOption">
             <tuv xml:lang="fr">
-                <seg>Répétable, init. une supprimable</seg>
+                <seg>Une non supprimable</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Repeatable, init. one suppressible</seg>
-            </tuv>
-        </tu>
-        <tu tuid="repeatableOneUnsuppressibleItemOption">
-            <tuv xml:lang="fr">
-                <seg>Répétable, init. une non supprimable</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Repeatable, init. one unsuppressible</seg>
+                <seg>One unsuppressible</seg>
             </tuv>
         </tu>
         <tu tuid="freeLabelHeader">
@@ -89,28 +81,23 @@
                 <seg>Free label</seg>
             </tuv>
         </tu>
-        <tu tuid="withFreeLabelOption">
+        <tu tuid="nonRepeatedSubformAddPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Avec libellé libre</seg>
+                <seg>Ajout d'un sous-formulaire non répété</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>With free label</seg>
+                <seg>Creation of a non repeated subform</seg>
             </tuv>
         </tu>
-        <tu tuid="withoutFreeLabelOption">
+
+        <!-- Sous-formulaires répétés -->
+
+        <tu tuid="repeatedSubformAddPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Sans libellé libre</seg>
+                <seg>Ajout d'un sous-formulaire répété</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Without free label</seg>
-            </tuv>
-        </tu>
-        <tu tuid="subformAddPanelTitle">
-            <tuv xml:lang="fr">
-                <seg>Ajout d'un sous-formulaire</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Creation of a subform</seg>
+                <seg>Creation of a repeated subform</seg>
             </tuv>
         </tu>
 
@@ -118,10 +105,10 @@
 
         <tu tuid="initialActivationHeader">
             <tuv xml:lang="fr">
-                <seg>Activation initiale</seg>
+                <seg>Activation</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Initial activation</seg>
+                <seg>Activation</seg>
             </tuv>
         </tu>
         <tu tuid="requiredHeader">
@@ -142,26 +129,26 @@
         </tu>
         <tu tuid="initialValueHeader">
             <tuv xml:lang="fr">
-                <seg>Valeur initiale</seg>
+                <seg>Valeur</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Initial value</seg>
+                <seg>Value</seg>
             </tuv>
         </tu>
         <tu tuid="initialUncertaintyHeader">
             <tuv xml:lang="fr">
-                <seg>Incertitude initiale</seg>
+                <seg>Incertitude</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Initial uncertainty</seg>
+                <seg>Uncertainty</seg>
             </tuv>
         </tu>
         <tu tuid="defaultValueReminderHeader">
             <tuv xml:lang="fr">
-                <seg>Rappel valeur par défaut</seg>
+                <seg>Rappel val. défaut</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Default value reminder</seg>
+                <seg>Default val. reminder</seg>
             </tuv>
         </tu>
         <tu tuid="numericAddPanelTitle">
@@ -262,6 +249,33 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Creation of a boolean field</seg>
+            </tuv>
+        </tu>
+
+        <!-- Champs texte -->
+
+        <tu tuid="textAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un champ texte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a text field</seg>
+            </tuv>
+        </tu>
+        <tu tuid="textFieldTypeShort">
+            <tuv xml:lang="fr">
+                <seg>Texte court</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Short text</seg>
+            </tuv>
+        </tu>
+        <tu tuid="textFieldTypeLong">
+            <tuv xml:lang="fr">
+                <seg>Texte long</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Long text</seg>
             </tuv>
         </tu>
 

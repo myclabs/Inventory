@@ -15,6 +15,11 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 {
     /**
+     * @var User_Service_User
+     */
+    protected $userService;
+
+    /**
      * @var User_Service_ACL
      */
     protected $aclService;
@@ -70,10 +75,12 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
 
     /**
+     * @param User_Service_User $userService
      * @param User_Service_ACL $aclService
      */
-    public function __construct(User_Service_ACL $aclService)
+    public function __construct(User_Service_User $userService, User_Service_ACL $aclService)
     {
+        $this->userService = $userService;
         $this->aclService = $aclService;
     }
 
@@ -140,23 +147,23 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         foreach ($this->newOrganizations as $organization) {
             $this->processNewOrganization($organization);
         }
-        $this->newOrganizations = array();
+        $this->newOrganizations = [];
 
         foreach ($this->newCells as $cell) {
             $this->processNewCell($cell);
         }
-        $this->newCells = array();
+        $this->newCells = [];
 
         foreach ($this->newReports as $report) {
             $this->processNewReport($report);
         }
-        $this->newReports = array();
+        $this->newReports = [];
 
 
         $eventArgs->getEntityManager()->flush();
 
-        $this->newResources = array('organization' => array(), 'cell' => array(), 'report' => array());
-        $this->newRoles = array();
+        $this->newResources = ['organization' => [], 'cell' => [], 'report' => []];
+        $this->newRoles = [];
 
         self::$changesDetected = false;
         self::$processing = false;
@@ -456,6 +463,10 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     }
 
 
+    /*
+     * Hierarchie des ressources Cell.
+     */
+
     /**
      * Trouve les ressources parent d'une ressource
      *
@@ -519,13 +530,19 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         return $childResources;
     }
 
+
+    /*
+     * Gestion des roles sur les utilisateurs.
+     */
+
     /**
      * Ajoute au projet donné, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Organization $organization
-     * @param User_Model_User $user
+     * @param User_Model_User  $user
+     * @param bool $sendMail
      */
-    public function addOrganizationAdministrator($organization, $user)
+    public function addOrganizationAdministrator(Orga_Model_Organization $organization, User_Model_User $user, $sendMail=true)
     {
         $user->addRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
@@ -533,6 +550,18 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         $user->addRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
+
+        if ($sendMail === true) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userOrganizationAdministratorRoleAdded',
+                    [
+                        'ORGANIZATION' => $organization->getLabel()
+                    ]
+                )
+            );
+        }
     }
 
     /**
@@ -540,8 +569,9 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      *
      * @param Orga_Model_Organization $organization
      * @param User_Model_User $user
+     * @param bool $sendMail
      */
-    public function removeOrganizationAdministrator($organization, $user)
+    public function removeOrganizationAdministrator(Orga_Model_Organization $organization, User_Model_User $user, $sendMail=true)
     {
         $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
@@ -549,6 +579,134 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         $user->removeRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
+
+        if ($sendMail === true) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', ['ORGANIZATION' => $organization->getLabel()])
+            );
+        }
+    }
+
+    /**
+     * Ajoute à la cellule donnée, l'utilisateur comme administrateur.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function addCellAdministrator(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->addCellUser($user, $cell, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Retire de la cellule donnée, l'utilisateur comme administrateur.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function removeCellAdministrator(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->removeCellUser($user, $cell, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Ajoute à la cellule donnée, l'utilisateur comme contributor.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function addCellContributor(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->addCellUser($user, $cell, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Retire de la cellule donnée, l'utilisateur comme contributor.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function removeCellContributor(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->removeCellUser($user, $cell, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Ajoute à la cellule donnée, l'utilisateur comme observateur.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function addCellObserver(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->addCellUser($user, $cell, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Retire de la cellule donnée, l'utilisateur comme observateur.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function removeCellObserver(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->removeCellUser($user, $cell, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User $user
+     * @param User_Model_Role $role
+     * @param bool $sendMail
+     */
+    public function addCellUser(Orga_Model_Cell $cell, User_Model_User $user, User_Model_Role $role, $sendMail=true)
+    {
+        $user->addRole($role);
+
+        if($sendMail) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userRoleAdded',
+                    [
+                        'CELL' => $cell->getLabelExtended(),
+                        'ROLE' => __('Orga', 'role', $role->getName())
+                    ]
+                )
+            );
+        }
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User $user
+     * @param User_Model_Role $role
+     * @param bool $sendMail
+     */
+    public function removeCellUser(Orga_Model_Cell $cell, User_Model_User $user, User_Model_Role $role, $sendMail=true)
+    {
+        $user->removeRole($role);
+
+        if ($sendMail) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userRoleRemoved',
+                    [
+                        'CELL' => $cell->getLabelExtended(),
+                        'ROLE' => __('Orga', 'role', $role->getName())
+                    ]
+                )
+            );
+        }
     }
 
 }

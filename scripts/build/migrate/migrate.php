@@ -15,6 +15,11 @@ class Inventory_Migrate extends Core_Script_Populate
     private $em;
 
     /**
+     * @var \Gedmo\Translatable\Entity\Repository\TranslationRepository
+     */
+    private $tr;
+
+    /**
      * @var PDO
      */
     private $connection;
@@ -164,6 +169,7 @@ class Inventory_Migrate extends Core_Script_Populate
         ];
         $this->em->getEventManager()->addEventListener($events, Orga_Service_ACLManager::getInstance());
 
+        $this->tr = $this->em->getRepository('Gedmo\Translatable\Entity\Translation');
 
         echo "Début de la migration -->\n";
 
@@ -252,6 +258,19 @@ class Inventory_Migrate extends Core_Script_Populate
 
         $count = $connection->exec("UPDATE User_Resource SET entityName = 'Orga_Model_Organization' WHERE entityName = 'Inventory_Model_Project'");
         echo "\t -> $count resources changées de 'Inventory_Model_Organization' à 'Orga_Model_Organization'\n";
+
+        $count = $connection->exec("DELETE FROM ext_translations WHERE (object_class = 'Inventory_Model_Project') OR (object_class = 'Orga_Model_Axis') OR (object_class = 'Orga_Model_Member')");
+        echo "\t -> $count anciennes traductions supprimées\n";
+    }
+
+    protected function migrateTranslationsForEntity(Core_Model_Entity $entity, $class, $id)
+    {
+        $selectTranslations = $this->connection->query(
+            "SELECT * FROM ext_translations WHERE object_class='$class' AND foreign_key=$id"
+        );
+        while ($translationsRows = $selectTranslations->fetch()) {
+            $this->tr->translate($entity, $translationsRows['field'], $translationsRows['locale'], $translationsRows['content']);
+        }
     }
 
     /**
@@ -276,6 +295,7 @@ class Inventory_Migrate extends Core_Script_Populate
         $organization = new Orga_Model_Organization();
         $organization->setLabel($row['label']);
         $organization->save();
+        $this->migrateTranslationsForEntity($organization, 'Inventory_Model_Project', $row['id']);
 
         $this->mapIdOrganization[$row['idOrgaCube']] = $organization;
         $this->flush();
@@ -336,6 +356,7 @@ class Inventory_Migrate extends Core_Script_Populate
             $axis->setDirectNarrower($this->getAxis($row['idDirectNarrower']));
         }
         $axis->save();
+        $this->migrateTranslationsForEntity($axis, 'Orga_Model_Axis', $row['id']);
 
         echo "\t\t Axis : " . $row['ref'] . (($row['idDirectNarrower'] != null) ? " narrower of " . $this->getAxis(
                     $row['idDirectNarrower']
@@ -371,6 +392,7 @@ class Inventory_Migrate extends Core_Script_Populate
         $member->setRef($row['ref']);
         $member->setLabel($row['label']);
         $member->save();
+        $this->migrateTranslationsForEntity($member, 'Orga_Model_Member', $row['id']);
 
         $this->mapIdMembers[$row['id']] = $member;
 

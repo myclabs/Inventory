@@ -51,7 +51,9 @@ if ($action instanceof AF_Model_Action_SetValue_Select_Single) {
         $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());
         $selectOptionValue->addOption($uiOption);
     }
-    $selectOptionValue->setValue($action->getOption()->getId());
+    if ($action->getOption()) {
+        $selectOptionValue->setValue($action->getOption()->getId());
+    }
     $form->addElement($selectOptionValue);
 }
 

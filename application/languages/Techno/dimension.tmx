@@ -11,6 +11,14 @@
                 <seg>Edition of a dimension</seg>
             </tuv>
         </tu>
+        <tu tuid="returnToFamily">
+            <tuv xml:lang="fr">
+                <seg>Retourner à la famille</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Return to family</seg>
+            </tuv>
+        </tu>
         <tu tuid="addPanelTitle">
             <tuv xml:lang="fr">
                 <seg>Ajout d'un membre</seg>

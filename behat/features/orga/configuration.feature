@@ -36,10 +36,10 @@ Feature: Configuration of an organization
   # Vérification modification prise en compte
     When I open tab "Collectes"
     Then I should see the "inventories4" datagrid
-    And the "inventories4" datagrid should contain 1 row
+    And the "inventories4" datagrid should contain 2 row
     And the row 1 of the "inventories4" datagrid should contain:
       | annee  | inventoryStatus |
-      | 2013   | Non lancé       |
+      | 2012   | Non lancé       |
   # Modification du niveau organisationnel des collectes, choix d'un niveau organisationnel plus fin que certaines saisies
   # TODO…
 
@@ -95,7 +95,7 @@ Feature: Configuration of an organization
       | Année            | Année                  |
   # Ajout, saisie correcte (granularité de saisie plus fine que ou égale à la granularité des collectes)
   # Remarque : granularités identiques (sans importance)
-  # Remarque : test abandonné car pas de granularité plus fine encore disponible
+  # Remarque : test abandonné car pas de granularité plus fine encore disponible
   #  When I click "Ajouter"
   #  And I select "Année | Site" from "Saisie"
   #  And I select "Année | Site" from "Choix des formulaires"

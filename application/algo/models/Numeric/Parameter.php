@@ -55,7 +55,15 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
         /** @var Techno_Service_Techno $technoService */
         $technoService = $container->get('Techno_Service_Techno');
 
-        return $technoService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
+        $value = $technoService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
+
+        if (!$value) {
+            throw new Algo_Model_ExecutionException("No value was found for parameter $this->familyRef"
+                . " and coordinates " . implode(', ', $coordinates)
+                . " in algorithm $this->ref");
+        }
+
+        return $value;
     }
 
     /**
