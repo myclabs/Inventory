@@ -3,6 +3,7 @@
  * @author  matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 
 /** @var $family Techno_Model_Family */
 $family = $this->family;
@@ -70,7 +71,7 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
     $members = [];
     $index = 0;
     foreach ($dimensions as $dimension) {
-        $members[] = $dimension->getMember(Keyword_Model_Keyword::loadByRef($coordinates[$index]));
+        $members[] = $dimension->getMember(Keyword::loadByRef($coordinates[$index]));
         $index++;
     }
     $cell = $family->getCell($members);
