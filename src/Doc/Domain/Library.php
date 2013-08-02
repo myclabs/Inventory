@@ -1,19 +1,17 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Doc
- * @subpackage Model
- */
+
+namespace Doc\Domain;
+
+use Core_Model_Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
  * Bibliothèque de documents
  *
- * @package    Doc
- * @subpackage Model
+ * @author matthieu.napoli
  */
-class Doc_Model_Library extends Core_Model_Entity
+class Library extends Core_Model_Entity
 {
 
     /**
@@ -22,7 +20,7 @@ class Doc_Model_Library extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var Collection|Doc_Model_Document[]
+     * @var Collection|Document[]
      */
     protected $documents;
 
@@ -44,7 +42,7 @@ class Doc_Model_Library extends Core_Model_Entity
     }
 
     /**
-     * @return Doc_Model_Document[]
+     * @return Document[]
      */
     public function getDocuments()
     {
@@ -54,20 +52,20 @@ class Doc_Model_Library extends Core_Model_Entity
     /**
      * Vérifie si la bibliothèque possède un document.
      *
-     * @param Doc_Model_Document $document
+     * @param Document $document
      *
      * @return bool
      */
-    public function hasDocument(Doc_Model_Document $document)
+    public function hasDocument(Document $document)
     {
         return $this->documents->contains($document);
     }
 
     /**
      * Ajoute un document à la bibilothèque
-     * @param Doc_Model_Document $document
+     * @param Document $document
      */
-    public function addDocument(Doc_Model_Document $document)
+    public function addDocument(Document $document)
     {
         if (!$this->hasDocument($document)) {
             $this->documents->add($document);
@@ -75,9 +73,9 @@ class Doc_Model_Library extends Core_Model_Entity
     }
 
     /**
-     * @param Doc_Model_Document $document
+     * @param Document $document
      */
-    public function removeDocument(Doc_Model_Document $document)
+    public function removeDocument(Document $document)
     {
         if ($this->hasDocument($document)) {
             $this->documents->removeElement($document);

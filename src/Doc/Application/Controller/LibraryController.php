@@ -1,14 +1,11 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Doc
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
+use Doc\Application\FileAdapter;
+use Doc\Domain\Library;
 
 /**
- * @package Doc
+ * @author matthieu.napoli
  */
 class Doc_LibraryController extends Core_Controller
 {
@@ -19,8 +16,8 @@ class Doc_LibraryController extends Core_Controller
      */
     public function viewAction()
     {
-        /** @var $library Doc_Model_Library */
-        $library = Doc_Model_Library::load($this->getParam('id'));
+        /** @var $library Library */
+        $library = Library::load($this->getParam('id'));
         $this->view->library = $library;
     }
 
@@ -31,12 +28,12 @@ class Doc_LibraryController extends Core_Controller
      */
     public function addAction()
     {
-        /** @var $library Doc_Model_Library */
-        $library = Doc_Model_Library::load($this->getParam('id'));
+        /** @var $library Library */
+        $library = Library::load($this->getParam('id'));
         $this->view->id = $this->getParam('id');
 
         try {
-            $adapter = new Doc_FileAdapter($library);
+            $adapter = new FileAdapter($library);
             $adapter->allowDocumentTypes(['document', 'text', 'image']);
             $adapter->addValidators();
             $result = $adapter->receive();

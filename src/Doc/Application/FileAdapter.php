@@ -1,16 +1,22 @@
 <?php
+
+namespace Doc\Application;
+
+use Zend_Controller_Action_HelperBroker;
+use Doc\Domain\Library;
+use Zend_File_Transfer_Adapter_Http;
+use Doc\Domain\Document;
+use Zend_Registry;
+use Core_Exception_InvalidArgument;
+use Core_Exception;
+use Core_Exception_NotFound;
+
 /**
- * Fichier de la classe Adapter
- *
- * @author  thibaud.rolland
- *
- * @package Doc
+ * Adaptateur ZF pour le transfert de document.
+ * @author thibaud.rolland
+ * @author matthieu.napoli
  */
-/**
- * adaptateur pour le transfert de document.
- * @package Doc
- */
-class Doc_FileAdapter
+class FileAdapter
 {
 
     /**
@@ -24,11 +30,11 @@ class Doc_FileAdapter
     private $basePath;
 
     /**
-     * @var Doc_Model_Library
+     * @var \Doc\Domain\Library
      */
     private $library;
     /**
-     * @var Doc_Model_Document
+     * @var Document
      */
     private $document;
 
@@ -45,10 +51,10 @@ class Doc_FileAdapter
 
 
     /**
-     * @param Doc_Model_Library $library
+     * @param \Doc\Domain\Library $library
      * @throws Core_Exception
      */
-    public function __construct(Doc_Model_Library $library)
+    public function __construct(Library $library)
     {
         $this->library = $library;
         $this->transferAdapter = new Zend_File_Transfer_Adapter_Http();
@@ -61,7 +67,7 @@ class Doc_FileAdapter
     }
 
     /**
-     * Récéption du document sur le serveur
+     * Réception du document sur le serveur
      * @param  string|array $documents (Optional) Name of the file when multi files uploaded defined with tag name
      * @throws Core_Exception_InvalidArgument
      * @return bool
@@ -92,7 +98,7 @@ class Doc_FileAdapter
 
         $filePath = $this->basePath . DIRECTORY_SEPARATOR . $this->transferAdapter->getFileName(null, false);
 
-        $this->document = new Doc_Model_Document($this->library, $filePath);
+        $this->document = new Document($this->library, $filePath);
         $this->document->save();
 
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -115,7 +121,7 @@ class Doc_FileAdapter
     /**
      * mise à jour du fichier pour remplacer la version précédente du serveur
      *  -- update the file from the client (Upload)
-     * @param  Doc_Model_Document $oldDocument document to update
+     * @param  Document $oldDocument document to update
      * @param  string|array       $documents   (Optional) Name of the file when multi files uploaded defined with tag name
      * @return bool
      */
@@ -153,10 +159,10 @@ class Doc_FileAdapter
 
     /**
      * Supprime le document
-     * @param Doc_Model_Document $document
+     * @param Document $document
      * @throws Core_Exception
      */
-    public static function deleteDocumentFile(Doc_Model_Document $document)
+    public static function deleteDocumentFile(Document $document)
     {
         if (file_exists($document->getFilePath())) {
             if (unlink($document->getFilePath())) {
@@ -263,10 +269,10 @@ class Doc_FileAdapter
     /**
      * méthode pour récupérer le document -- Method for downloading the document
      *
-     * @param Doc_Model_Document $document
+     * @param \Doc\Domain\Document $document
      * @throws Core_Exception_NotFound
      */
-    public static function downloadDocument(Doc_Model_Document $document)
+    public static function downloadDocument(Document $document)
     {
         $filePath = $document->getFilePath();
 
@@ -279,8 +285,10 @@ class Doc_FileAdapter
 
         $mimeType = self::mimeContentType(pathinfo($filePath, PATHINFO_BASENAME));
 
-        $downloadBaseName = self::sanitizeFileName($document->getName()
-                                                        . '.' . pathinfo($filePath, PATHINFO_EXTENSION));
+        $downloadBaseName = self::sanitizeFileName(
+            $document->getName()
+            . '.' . pathinfo($filePath, PATHINFO_EXTENSION)
+        );
 
         header("Pragma: public");
         header("Expires: 0");
@@ -503,43 +511,43 @@ class Doc_FileAdapter
     static public function mimeContentType($filename)
     {
         $mimeTypes = array(
-            'txt' => 'text/plain',
+            'txt'  => 'text/plain',
             // images
-            'png' => 'image/png',
-            'jpe' => 'image/jpeg',
+            'png'  => 'image/png',
+            'jpe'  => 'image/jpeg',
             'jpeg' => 'image/jpeg',
-            'jpg' => 'image/jpeg',
-            'gif' => 'image/gif',
-            'bmp' => 'image/bmp',
-            'ico' => 'image/vnd.microsoft.icon',
+            'jpg'  => 'image/jpeg',
+            'gif'  => 'image/gif',
+            'bmp'  => 'image/bmp',
+            'ico'  => 'image/vnd.microsoft.icon',
             'tiff' => 'image/tiff',
-            'tif' => 'image/tiff',
-            'svg' => 'image/svg+xml',
+            'tif'  => 'image/tiff',
+            'svg'  => 'image/svg+xml',
             'svgz' => 'image/svg+xml',
             // archives
-            '7z' => 'application/x-7z-compressed',
-            'zip' => 'application/zip',
-            'rar' => 'application/x-rar-compressed',
-            'cab' => 'application/vnd.ms-cab-compressed',
+            '7z'   => 'application/x-7z-compressed',
+            'zip'  => 'application/zip',
+            'rar'  => 'application/x-rar-compressed',
+            'cab'  => 'application/vnd.ms-cab-compressed',
             // adobe
-            'pdf' => 'application/pdf',
-            'psd' => 'image/vnd.adobe.photoshop',
-            'ai' => 'application/postscript',
-            'eps' => 'application/postscript',
-            'ps' => 'application/postscript',
+            'pdf'  => 'application/pdf',
+            'psd'  => 'image/vnd.adobe.photoshop',
+            'ai'   => 'application/postscript',
+            'eps'  => 'application/postscript',
+            'ps'   => 'application/postscript',
             // ms office
-            'pub' => 'application/x-mspublisher',
+            'pub'  => 'application/x-mspublisher',
             'docx' => 'application/msword',
             'xlsx' => 'application/vnd.ms-excel',
             'pptx' => 'application/vnd.ms-powerpoint',
-            'doc' => 'application/msword',
-            'rtf' => 'application/rtf',
-            'xls' => 'application/vnd.ms-excel',
-            'ppt' => 'application/vnd.ms-powerpoint',
+            'doc'  => 'application/msword',
+            'rtf'  => 'application/rtf',
+            'xls'  => 'application/vnd.ms-excel',
+            'ppt'  => 'application/vnd.ms-powerpoint',
             'pptm' => 'application/vnd.ms-powerpoint',
             // open office
-            'odt' => 'application/vnd.oasis.opendocument.text',
-            'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+            'odt'  => 'application/vnd.oasis.opendocument.text',
+            'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
         );
 
         $ext = pathinfo($filename, PATHINFO_EXTENSION);

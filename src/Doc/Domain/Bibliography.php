@@ -1,20 +1,17 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Doc
- * @subpackage Model
- */
 
+namespace Doc\Domain;
+
+use Core_Model_Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
  * Une bibiliographie est une liste de références vers des documents
  *
- * @package    Doc
- * @subpackage Model
+ * @author matthieu.napoli
  */
-class Doc_Model_Bibliography extends Core_Model_Entity
+class Bibliography extends Core_Model_Entity
 {
 
     /**
@@ -23,8 +20,8 @@ class Doc_Model_Bibliography extends Core_Model_Entity
     protected $id;
 
     /**
-     * Document référencés par la bibliographie
-     * @var Collection|Doc_Model_Document[]
+     * Documents référencés par la bibliographie
+     * @var Collection|Document[]
      */
     protected $referencedDocuments;
 
@@ -46,7 +43,7 @@ class Doc_Model_Bibliography extends Core_Model_Entity
     }
 
     /**
-     * @return Doc_Model_Document[]
+     * @return Document[]
      */
     public function getReferencedDocuments()
     {
@@ -55,9 +52,9 @@ class Doc_Model_Bibliography extends Core_Model_Entity
 
     /**
      * Ajoute un lien vers un document
-     * @param Doc_Model_Document $document
+     * @param Document $document
      */
-    public function referenceDocument(Doc_Model_Document $document)
+    public function referenceDocument(Document $document)
     {
         if (!$this->referencedDocuments->contains($document)) {
             $this->referencedDocuments->add($document);
@@ -66,19 +63,19 @@ class Doc_Model_Bibliography extends Core_Model_Entity
     }
 
     /**
-     * @param Doc_Model_Document $document
+     * @param Document $document
      * @return boolean
      */
-    public function hasReferenceToDocument(Doc_Model_Document $document)
+    public function hasReferenceToDocument(Document $document)
     {
         return $this->referencedDocuments->contains($document);
     }
 
     /**
      * Supprime un lien vers un document
-     * @param Doc_Model_Document $document
+     * @param Document $document
      */
-    public function unreferenceDocument(Doc_Model_Document $document)
+    public function unreferenceDocument(Document $document)
     {
         if ($this->referencedDocuments->contains($document)) {
             $this->referencedDocuments->removeElement($document);

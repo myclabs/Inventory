@@ -1,4 +1,4 @@
-Doc_Model_Bibliography:
+Doc\Domain\Bibliography:
   type: entity
   repositoryClass: Core_Model_Repository
   table: Doc_Bibliography
@@ -11,7 +11,7 @@ Doc_Model_Bibliography:
 
   manyToMany:
     referencedDocuments:
-      targetEntity: Doc_Model_Document
+      targetEntity: Doc\Domain\Document
       inversedBy: referencingBibliographies
       orderBy:
         name: ASC

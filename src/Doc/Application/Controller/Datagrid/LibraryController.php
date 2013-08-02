@@ -1,16 +1,14 @@
 <?php
-/**
- * @author     thibaud.rolland
- * @author     matthieu.napoli
- * @package    Doc
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
+use Doc\Application\FileAdapter;
+use Doc\Domain\Library;
+use Doc\Domain\Document;
 
 /**
  * Liste des documents d'une bibliothèque
- * @package Doc
+ * @author thibaud.rolland
+ * @author matthieu.napoli
  */
 class Doc_Datagrid_LibraryController extends UI_Controller_Datagrid
 {
@@ -21,14 +19,14 @@ class Doc_Datagrid_LibraryController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        /** @var $library Doc_Model_Library */
-        $library = Doc_Model_Library::load($this->getParam('id'));
+        /** @var $library Library */
+        $library = Library::load($this->getParam('id'));
 
-        $this->request->filter->addCondition(Doc_Model_Document::QUERY_LIBRARY, $library);
-        $this->request->order->addOrder(Doc_Model_Document::QUERY_NAME);
-        /** @var $documents Doc_Model_Document[] */
-        $documents = Doc_Model_Document::loadList($this->request);
-        $this->totalElements = Doc_Model_Document::countTotal($this->request);
+        $this->request->filter->addCondition(Document::QUERY_LIBRARY, $library);
+        $this->request->order->addOrder(Document::QUERY_NAME);
+        /** @var $documents Document[] */
+        $documents = Document::loadList($this->request);
+        $this->totalElements = Document::countTotal($this->request);
 
         foreach ($documents as $document) {
             $data = [];
@@ -55,8 +53,8 @@ class Doc_Datagrid_LibraryController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->update['index']);
+        /** @var $document Document */
+        $document = Document::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'name':
@@ -82,10 +80,10 @@ class Doc_Datagrid_LibraryController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->delete);
+        /** @var $document Document */
+        $document = Document::load($this->delete);
 
-        Doc_FileAdapter::deleteDocumentFile($document);
+        FileAdapter::deleteDocumentFile($document);
         $document->delete();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
@@ -97,8 +95,8 @@ class Doc_Datagrid_LibraryController extends UI_Controller_Datagrid
      */
     public function getDescriptionAction()
     {
-        /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->getParam('id'));
+        /** @var $document Document */
+        $document = Document::load($this->getParam('id'));
         $this->data = (string) $document->getDescription();
         $this->send();
     }

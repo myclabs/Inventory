@@ -1,5 +1,8 @@
 <?php
-/** @var $library Doc_Model_Library */
+/** @var $library Library */
+use Doc\Domain\Library;
+use Doc\Domain\Document;
+
 $library = $this->library;
 
 $datagrid = new UI_Datagrid('library'.$library->getId(), 'datagrid_library', 'doc');
@@ -9,7 +12,7 @@ $datagrid->deleteElements = true;
 
 // Name
 $nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'name'));
-$nameColumn->filterName = Doc_Model_Document::QUERY_NAME;
+$nameColumn->filterName = Document::QUERY_NAME;
 $nameColumn->editable = true;
 $datagrid->addCol($nameColumn);
 

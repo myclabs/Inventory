@@ -1,15 +1,12 @@
 <?php
-/**
- * @author     thibaud.rolland
- * @author     matthieu.napoli
- * @package    Doc
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
+use Doc\Domain\Bibliography;
+use Doc\Domain\Document;
 
 /**
- * @package Doc
+ * @author thibaud.rolland
+ * @author matthieu.napoli
  */
 class Doc_BibliographyController extends Core_Controller
 {
@@ -21,16 +18,16 @@ class Doc_BibliographyController extends Core_Controller
      */
     public function addAction()
     {
-        /** @var $bibliography Doc_Model_Bibliography */
-        $bibliography = Doc_Model_Bibliography::load($this->getParam('id'));
+        /** @var $bibliography Bibliography */
+        $bibliography = Bibliography::load($this->getParam('id'));
         $idDocuments = $this->getParam('documents');
         if (! is_array($idDocuments)) {
             throw new Core_Exception_InvalidHTTPQuery();
         }
 
         foreach ($idDocuments as $idDocument) {
-            /** @var $document Doc_Model_Document */
-            $document = Doc_Model_Document::load($idDocument);
+            /** @var $document Document */
+            $document = Document::load($idDocument);
 
             if ($bibliography->hasReferenceToDocument($document)) {
                 throw new Core_Exception_User('Doc', 'bibliography', 'referenceToThisDocumentAlreadyExists');

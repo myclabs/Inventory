@@ -1,16 +1,13 @@
 <?php
-/**
- * @author     thibaud.rolland
- * @author     matthieu.napoli
- * @package    Doc
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
+use Doc\Domain\Bibliography;
+use Doc\Domain\Document;
 
 /**
  * Liste des documents référencés par une bibliographie
- * @package Doc
+ * @author thibaud.rolland
+ * @author matthieu.napoli
  */
 class Doc_Datagrid_BibliographyController extends UI_Controller_Datagrid
 {
@@ -21,8 +18,8 @@ class Doc_Datagrid_BibliographyController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        /** @var $bibliography Doc_Model_Bibliography */
-        $bibliography = Doc_Model_Bibliography::load($this->getParam('id'));
+        /** @var $bibliography Bibliography */
+        $bibliography = Bibliography::load($this->getParam('id'));
         $documents = $bibliography->getReferencedDocuments();
 
         foreach ($documents as $document) {
@@ -50,10 +47,10 @@ class Doc_Datagrid_BibliographyController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var $bibliography Doc_Model_Bibliography */
-        $bibliography = Doc_Model_Bibliography::load($this->getParam('id'));
-        /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->delete);
+        /** @var $bibliography Bibliography */
+        $bibliography = Bibliography::load($this->getParam('id'));
+        /** @var $document Document */
+        $document = Document::load($this->delete);
 
         $bibliography->unreferenceDocument($document);
 
@@ -67,8 +64,8 @@ class Doc_Datagrid_BibliographyController extends UI_Controller_Datagrid
      */
     public function getDescriptionAction()
     {
-        /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->getParam('id'));
+        /** @var $document Document */
+        $document = Document::load($this->getParam('id'));
         $this->data = $document->getDescription();
         $this->send();
     }

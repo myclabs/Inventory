@@ -1,15 +1,12 @@
 <?php
-/**
- * @author     thibaud.rolland
- * @author     matthieu.napoli
- * @package    Doc
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
+use Doc\Application\FileAdapter;
+use Doc\Domain\Document;
 
 /**
- * @package Doc
+ * @author thibaud.rolland
+ * @author matthieu.napoli
  */
 class Doc_DocumentController extends Core_Controller
 {
@@ -20,10 +17,10 @@ class Doc_DocumentController extends Core_Controller
      */
     public function downloadAction()
     {
-        /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->getParam('id'));
+        /** @var $document Document */
+        $document = Document::load($this->getParam('id'));
 
-        Doc_FileAdapter::downloadDocument($document);
+        FileAdapter::downloadDocument($document);
     }
 
     /**
@@ -33,7 +30,7 @@ class Doc_DocumentController extends Core_Controller
      */
     public function popupDescriptionAction()
     {
-        $this->view->document = Doc_Model_Document::load($this->getParam('id'));
+        $this->view->document = Document::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 

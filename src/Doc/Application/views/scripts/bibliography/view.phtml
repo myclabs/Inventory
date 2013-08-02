@@ -1,7 +1,10 @@
 <?php
-/** @var $library Doc_Model_Library */
+/** @var $library Library */
+use Doc\Domain\Bibliography;
+use Doc\Domain\Library;
+
 $library = $this->library;
-/** @var $bibliography Doc_Model_Bibliography */
+/** @var $bibliography Bibliography */
 $bibliography = $this->bibliography;
 $documents = $bibliography->getReferencedDocuments();
 

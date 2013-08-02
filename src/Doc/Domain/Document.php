@@ -1,20 +1,21 @@
 <?php
-/**
- * @author     thibaud.rolland
- * @author     matthieu.napoli
- * @package    Doc
- * @subpackage Model
- */
+
+namespace Doc\Domain;
+
+use Core_Exception_InvalidArgument;
+use Core_Model_Entity;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Exception;
 
 /**
  * Document utilisateur
  *
- * @package    Doc
- * @subpackage Model
+ * @author thibaud.rolland
+ * @author matthieu.napoli
  */
-class Doc_Model_Document extends Core_Model_Entity
+class Document extends Core_Model_Entity
 {
 
     const QUERY_NAME = 'name';
@@ -51,24 +52,24 @@ class Doc_Model_Document extends Core_Model_Entity
 
     /**
      * Bibliothèque dans laquelle se trouve le document
-     * @var Doc_Model_Library
+     * @var Library
      */
     protected $library;
 
     /**
      * Liste des bibliographies qui référencent ce document
-     * @var Doc_Model_Bibliography[]|Collection
+     * @var Bibliography[]|Collection
      */
     protected $referencingBibliographies;
 
 
     /**
-     * @param Doc_Model_Library $library  Bibliothèque dans laquelle se trouve le document
+     * @param Library $library  Bibliothèque dans laquelle se trouve le document
      * @param string            $filePath Chemin d'accès complet au fichier
      * @param string|null       $name
      * @throws Core_Exception_InvalidArgument Le fichier n'existe pas
      */
-    public function __construct(Doc_Model_Library $library, $filePath, $name = null)
+    public function __construct(Library $library, $filePath, $name = null)
     {
         $this->setFilePath($filePath);
         $this->referencingBibliographies = new ArrayCollection();
@@ -179,7 +180,7 @@ class Doc_Model_Document extends Core_Model_Entity
     }
 
     /**
-     * @return Doc_Model_Library Bibliothèque dans laquelle se trouve le document
+     * @return Library Bibliothèque dans laquelle se trouve le document
      */
     public function getLibrary()
     {
@@ -187,7 +188,7 @@ class Doc_Model_Document extends Core_Model_Entity
     }
 
     /**
-     * @return Doc_Model_Bibliography[] Liste des bibliographies qui utilisent ce document
+     * @return Bibliography[] Liste des bibliographies qui utilisent ce document
      */
     public function getReferencingBibliographies()
     {
@@ -203,9 +204,9 @@ class Doc_Model_Document extends Core_Model_Entity
     }
 
     /**
-     * @param Doc_Model_Bibliography $bibliography
+     * @param Bibliography $bibliography
      */
-    public function addReferencingBibliography(Doc_Model_Bibliography $bibliography)
+    public function addReferencingBibliography(Bibliography $bibliography)
     {
         if (!$this->referencingBibliographies->contains($bibliography)) {
             $this->referencingBibliographies->add($bibliography);
@@ -213,9 +214,9 @@ class Doc_Model_Document extends Core_Model_Entity
     }
 
     /**
-     * @param Doc_Model_Bibliography $bibliography
+     * @param Bibliography $bibliography
      */
-    public function removeReferencingBibliography(Doc_Model_Bibliography $bibliography)
+    public function removeReferencingBibliography(Bibliography $bibliography)
     {
         if ($this->referencingBibliographies->contains($bibliography)) {
             $this->referencingBibliographies->removeElement($bibliography);
