@@ -250,7 +250,7 @@ class Orga_Service_ETLStructure
     protected function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
     {
         $dWAxis = new DW_Model_Axis($dwCube);
-        $dWAxis->setRef('classif_'.$classifAxis->getRef());
+        $dWAxis->setRef('c_'.$classifAxis->getRef());
         $this->translateEntity($classifAxis, $dWAxis);
 
         $associationArray['axes'][$classifAxis->getRef()] = $dWAxis;
@@ -314,7 +314,7 @@ class Orga_Service_ETLStructure
         }
 
         $dWAxis = new DW_Model_Axis($dwCube);
-        $dWAxis->setRef('orga_'.$orgaAxis->getRef());
+        $dWAxis->setRef('o_'.$orgaAxis->getRef());
         $this->translateEntity($orgaAxis, $dWAxis);
 
         $associationArray['axes'][$orgaAxis->getRef()] = $dWAxis;
@@ -607,10 +607,10 @@ class Orga_Service_ETLStructure
      */
     protected function isDWAxisDifferentFromClassif($dWAxis, $classifAxis)
     {
-        if (('classif_'.$classifAxis->getRef() !== $dWAxis->getRef())
+        if (('c_'.$classifAxis->getRef() !== $dWAxis->getRef())
             || ((($classifAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($classifAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
-                || ('classif_'.$classifAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
+                || ('c_'.$classifAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
             || ($this->areTranslationsDifferent($classifAxis, $dWAxis))
             || ($this->areDWMembersDifferentFromClassif($dWAxis, $classifAxis))
         ) {
@@ -715,10 +715,10 @@ class Orga_Service_ETLStructure
             return false;
         }
 
-        if (('orga_'.$orgaAxis->getRef() !== $dWAxis->getRef())
+        if (('o_'.$orgaAxis->getRef() !== $dWAxis->getRef())
             || ((($orgaAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($orgaAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
-                || ('orga_'.$orgaAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
+                || ('o_'.$orgaAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
             || ($this->areTranslationsDifferent($orgaAxis, $dWAxis))
             || ($this->areDWMembersDifferentFromOrga($dWAxis, $orgaAxis, $orgaFilters))
         ) {
