@@ -245,20 +245,6 @@
         <unitSystemRef>international</unitSystemRef>
     </standardUnit>
 
-    <standardUnit ref="dollar">
-        <name>
-            <fr>dollar</fr>
-            <en>dollar</en>
-        </name>
-        <symbol>
-            <fr>$</fr>
-            <en>$</en>
-        </symbol>
-        <quantityRef>numeraire</quantityRef>
-        <multiplier>0.7671123589</multiplier>
-        <unitSystemRef>international</unitSystemRef>
-    </standardUnit>
-
     <!-- Exposant deux -->
 
     <!-- Surface -->

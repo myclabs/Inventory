@@ -1,4 +1,6 @@
 <?php
+
+use TEC\Expression;
 /**
  * Popup d'affichage d'une expression
  * @author  matthieu.napoli
@@ -9,7 +11,7 @@
 /** @var $algo Algo_Model_Numeric_Expression */
 $algo = $this->algo;
 
-$expression = new TEC_Model_Expression($algo->getExpression(), TEC_Model_Expression::TYPE_NUMERIC);
+$expression = new Expression($algo->getExpression());
 $graphExpression = $expression->getGraph();
 ?>
 

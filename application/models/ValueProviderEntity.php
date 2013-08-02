@@ -6,13 +6,14 @@
  * @package Exec
  * @subpackage Model
  */
+use Exec\Provider\ValueInterface;
 
 /**
  * Classe utilisée lors des tests unitaires et qui implémente l'interface ValueProvider
  * @package Exec
  * @subpackage Model
  */
-class Inventory_Model_ValueProviderEntity implements Exec_Interface_ValueProvider
+class Inventory_Model_ValueProviderEntity implements ValueInterface
 {
     /**
      * Tableau qui contiendra une liste de ref => bool

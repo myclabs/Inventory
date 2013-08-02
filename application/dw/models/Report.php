@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class DW_Model_Report extends Core_Model_Entity
 {
     use Core_Event_ObservableTrait;
+    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_CUBE = 'cube';

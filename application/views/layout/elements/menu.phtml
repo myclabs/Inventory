@@ -197,28 +197,57 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         ];
     }
 
-    $subMenuReferencial[] = [
-        'name' => __('Unit', 'name', 'units'),
-        'url' => '#',
-        'submenu' => [
-            [
-                'name' => __('Unit', 'name', 'standardUnits'),
-                'url' => 'unit/consult/standardunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'extendedUnits'),
-                'url' => 'unit/consult/extendedunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'discreteUnits'),
-                'url' => 'unit/consult/discreteunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'physicalQuantities'),
-                'url' => 'unit/consult/physicalquantities'
-            ],
-        ]
-    ];
+    if ($isAllowedToEditReferential) {
+        $subMenuReferencial[] = [
+            'name' => __('Unit', 'name', 'units'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Unit', 'name', 'standardUnits'),
+                    'url' => 'unit/consult/standardunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'extendedUnits'),
+                    'url' => 'unit/consult/extendedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'discreteUnits'),
+                    'url' => 'unit/consult/discreteunits'
+                ],
+                [
+                    'name' => __('Unit', 'composedUnitIdentifier', 'menuLinkLabel'),
+                    'url' => 'unit/consult/composedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'physicalQuantities'),
+                    'url' => 'unit/consult/physicalquantities'
+                ],
+            ]
+        ];
+    } else {
+        $subMenuReferencial[] = [
+            'name' => __('Unit', 'name', 'units'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Unit', 'name', 'standardUnits'),
+                    'url' => 'unit/consult/standardunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'extendedUnits'),
+                    'url' => 'unit/consult/extendedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'discreteUnits'),
+                    'url' => 'unit/consult/discreteunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'physicalQuantities'),
+                    'url' => 'unit/consult/physicalquantities'
+                ],
+            ]
+        ];
+    }
 
     $subMenuReferencial[] = [
         'name' => '<i class="icon-download-alt"></i> '.__('Orga', 'referential', 'exports'),

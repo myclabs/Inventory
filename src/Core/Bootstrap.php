@@ -216,9 +216,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         switch (APPLICATION_ENV) {
             case 'test':
             case 'developpement':
-                // Requêtes transmises à Firebug.
-                $profiler = new ZendX\Doctrine2\FirebugProfiler();
-                break;
             case 'testsunitaires':
                 // Requêtes placées dans un fichier.
                 $profiler = new Core_Profiler_File();
@@ -293,6 +290,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $translatableListener = new Gedmo\Translatable\TranslatableListener();
         $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
         $translatableListener->setDefaultLocale('fr');
+        $translatableListener->setPersistDefaultLocaleTranslation(true);
         $translatableListener->setTranslationFallback(true);
         $em->getEventManager()->addEventSubscriber($translatableListener);
         Zend_Registry::set('doctrineTranslate', $translatableListener);

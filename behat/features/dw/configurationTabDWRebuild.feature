@@ -4,7 +4,7 @@ Feature: Rebuild of dataware from the configuration tab feature
   Background:
     Given I am logged in
 
-  @javascript @skipped
+  @javascript
   Scenario: Rebuild analysis data from the configuration tab scenario
   # Accès à l'onglet "Configuration"
     Given I am on "orga/cell/details/idCell/1"

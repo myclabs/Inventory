@@ -65,7 +65,7 @@ class AF_Model_Component_Select_Single extends AF_Model_Component_Select
             $uiElement->addOption($generationHelper->getUIOption($option));
         }
         if ($generationHelper->isReadOnly()) {
-            $uiElement->getElement()->setReadOnly();
+            $uiElement->getElement()->setReadOnly(true);
         }
         // Remplit avec la valeur saisie
         $input = null;

@@ -5,13 +5,32 @@ Feature: Family list edit feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a parameter family
-  # Affichage du datagrid
+  Scenario: Creation of a parameter family, correct input
     Given I am on "techno/family/list-edit"
     Then I should see the "familyDatagrid" datagrid
+  # Affichage du datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:
       | category                        | label                                               | ref                                | type               | unit           |
       | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | Facteur d'émission | kg équ. CO2/kg |
+  # Ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'une famille"
+    When I select "Catégorie contenant une famille" from "familyDatagrid_category_addForm"
+    And I fill in "familyDatagrid_label_addForm" with "Test"
+    And I fill in "familyDatagrid_ref_addForm" with "test"
+    And I select "Coefficient" from "familyDatagrid_type_addForm"
+    And I fill in "familyDatagrid_unit_addForm" with "m"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+    And the row 2 of the "familyDatagrid" datagrid should contain:
+      | category                        | label | ref  | type        | unit |
+      | Catégorie contenant une famille | Test  | test | Coefficient | m    |
+  # TODO : autoriser la création à la racine
+
+  @javascript
+  Scenario: Creation of a parameter family, incorrect input
+    Given I am on "techno/family/list-edit"
+    Then I should see the "familyDatagrid" datagrid
   # Ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une famille"
@@ -39,13 +58,6 @@ Feature: Family list edit feature
     And I fill in "familyDatagrid_unit_addForm" with "auie"
     And I click "Valider"
     Then the field "familyDatagrid_unit_addForm" should have error: "Merci de saisir un identifiant d'unité valide."
-  # Ajout, saisie correcte
-    When I fill in "familyDatagrid_unit_addForm" with "m"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-    And the row 2 of the "familyDatagrid" datagrid should contain:
-      | category                        | label | ref  | type        | unit |
-      | Catégorie contenant une famille | Test  | test | Coefficient | m    |
 
   @javascript
   Scenario: Link to reach a parameter family from the family list edit datagrid

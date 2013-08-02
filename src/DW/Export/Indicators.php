@@ -72,6 +72,7 @@ class DW_Export_Indicators extends Export_Excel
         $queryCubeResults = new Core_Model_Query();
         $queryCubeResults->filter->addCondition(DW_Model_Result::QUERY_CUBE, $cube);
         foreach (DW_Model_Result::loadList($queryCubeResults) as $cubeResult) {
+            /* @var DW_Model_Result $cubeResult */
             $row = array();
 
             foreach ($cube->getAxes() as $axis) {
@@ -79,12 +80,12 @@ class DW_Export_Indicators extends Export_Excel
                 $row[] = $labelAxisMember = ($axisMember === null) ? '' : $axisMember->getLabel();
             }
 
-            $row[] = $cubeResult->getValue()->digitalValue;
+            $row[] = $cubeResult->getValue()->getDigitalValue();
             $row[] = round(
-                $cubeResult->getValue()->digitalValue,
-                floor(3 - log10(abs($cubeResult->getValue()->digitalValue)))
+                $cubeResult->getValue()->getDigitalValue(),
+                floor(3 - log10(abs($cubeResult->getValue()->getDigitalValue())))
             );
-            $row[] = round($cubeResult->getValue()->relativeUncertainty);
+            $row[] = round($cubeResult->getValue()->getRelativeUncertainty());
 
             $sheets[$sheetLabels[$cubeResult->getIndicator()->getRef()]][] = $row;
         }
@@ -155,6 +156,7 @@ class DW_Export_Indicators extends Export_Excel
         $queryCubeResults = new Core_Model_Query();
         $queryCubeResults->filter->addCondition(DW_Model_Result::QUERY_CUBE, $cube);
         foreach (DW_Model_Result::loadList($queryCubeResults) as $cubeResult) {
+            /* @var DW_Model_Result $cubeResult */
             $row = array();
 
             foreach ($cube->getAxes() as $axis) {
@@ -167,13 +169,13 @@ class DW_Export_Indicators extends Export_Excel
 
             $row[] = array(
                 round(
-                    $cubeResult->getValue()->digitalValue,
-                    floor(3 - log10(abs($cubeResult->getValue()->digitalValue)))
+                    $cubeResult->getValue()->getDigitalValue(),
+                    floor(3 - log10(abs($cubeResult->getValue()->getDigitalValue())))
                 ),
                 array('borders' => $thin)
             );
             $row[] = array(
-                round($cubeResult->getValue()->relativeUncertainty),
+                round($cubeResult->getValue()->getRelativeUncertainty()),
                 array('borders' => $thin)
             );
 

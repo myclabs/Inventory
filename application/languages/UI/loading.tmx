@@ -16,10 +16,10 @@
         </tu>     
         <tu tuid="error">
             <tuv xml:lang="fr">
-                <seg>Erreur : les données n\'ont pas pu être chargées.</seg>
+                <seg>Erreur : les données n'ont pas pu être chargées.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>An error occured while loading data.</seg>
+                <seg>An error occurred while loading data.</seg>
             </tuv>
         </tu>
     

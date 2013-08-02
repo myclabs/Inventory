@@ -4,6 +4,10 @@ DW_Model_Report:
   repositoryClass: DW_Model_Repository_Report
   table: DW_Report
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       column: id
@@ -17,6 +21,8 @@ DW_Model_Report:
       type: string
       length: 255
       nullable: false
+      gedmo:
+        - translatable
     chartType:
       column: chartType
       type: string

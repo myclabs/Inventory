@@ -47,13 +47,38 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $cell->setChosenElement($element);
         $cell->save();
         $this->entityManager->flush();
-        $this->sendJsonResponse(
-            [
-                'elementId' => $element->getId(),
-                'message' => 'Un élément vide a été créé.',
-                'type'    => 'success',
-            ]
-        );
+        $this->sendJsonResponse(['elementId' => $element->getId(),]);
+    }
+
+    /**
+     * Create an empty element for a cell
+     * @Secure("editTechno")
+     */
+    public function deleteElementAction()
+    {
+        $idFamily = $this->getParam('idFamily');
+        /** @var $family Techno_Model_Family */
+        $family = Techno_Model_Family::load($idFamily);
+        // Récupère la cellule
+        $coordinates = explode('-', $this->getParam('coordinates'));
+        $members = [];
+        $index = 0;
+        foreach ($family->getDimensions() as $dimension) {
+            $members[] = $dimension->getMember(Keyword_Model_Keyword::loadByRef($coordinates[$index]));
+            $index++;
+        }
+        $cell = $family->getCell($members);
+        // Vérifie qu'il n'y a pas déjà d'élément choisi
+        $chosenElement = $cell->getChosenElement();
+        $cell->setChosenElement(null);
+        $cell->save();
+        $chosenElement->delete();
+        $this->entityManager->flush();
+        if ($chosenElement->getValue()->getDigitalValue() !== null) {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'deleted')]);
+        } else {
+            $this->sendJsonResponse(['message' => '']);
+        }
     }
 
 }

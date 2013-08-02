@@ -169,6 +169,9 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 break;
             case 'unit':
                 try {
+                    if (empty($newValue)) {
+                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                    }
                     $unit = new UnitAPI($newValue);
                     $unit->getNormalizedUnit();
                 } catch (Core_Exception_NotFound $e) {

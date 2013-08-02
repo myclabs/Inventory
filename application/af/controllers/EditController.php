@@ -9,6 +9,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use TEC\Exception\InvalidExpressionException;
 
 /**
  * CompleteEdition Controller
@@ -164,9 +165,9 @@ class AF_EditController extends Core_Controller
         if ($this->getRequest()->isPost()) {
             try {
                 $af->getMainAlgo()->setExpression(trim($formData->getValue('expression')));
-            } catch (TEC_Model_InvalidExpressionException $e) {
-                $message = __('TEC', 'texts', 'incorrectExpressionWithErrors',
-                              ['ERRORS' => implode("<br>", $e->getErrors())]);
+            } catch (InvalidExpressionException $e) {
+                $message = __('AF', 'configTreatmentMessage', 'invalidExpression')
+                    . "<br>" . implode("<br>", $e->getErrors());
                 $this->addFormError('expression', $message);
             }
             if (!$this->hasFormError()) {
