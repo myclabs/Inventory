@@ -49,6 +49,7 @@ class Orga_PopulateTest extends Orga_Populate
         $member_site_grenoble = $this->createMember($axis_site, 'grenoble', 'Grenoble', [$member_pays_france, $member_marque_marque_b]);
         $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
         $member_categorie_energie = $this->createMember($axis_categorie, 'energie', 'Énergie');
+        $member_categorie_test_affichage = $this->createMember($axis_categorie, 'test_affichage', 'Test affichage');
 
         // Création des granularités.
         $granularityGlobal = $this->createGranularity($organization, [],                                                        true,  true,  true,  true,   true,  false, false, false);
@@ -86,6 +87,8 @@ class Orga_PopulateTest extends Orga_Populate
         $this->setAFForChildCells($granularityGlobal, [], $granularity_annee_site, 'donnees_generales');
         // Combustion pour toutes les cellules de granularité "Année | Site | Catégorie" incluses dans "2012|énergie"
         $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_energie], $granularity_annee_site_categorie, 'combustion_combustible_unite_masse');
+        // Test affichage
+        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'formulaire_tous_types_champ');
 
         // Renseignement des saisies
         // Cellule globale, saisie terminée
@@ -112,7 +115,8 @@ class Orga_PopulateTest extends Orga_Populate
         $entityManager->flush();
 
         // Création d'analyses préconfigurées
-        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire, par année', 'classif_chiffre_affaire', 'orga_annee', false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
+        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire, par année', 'classif_chiffre_affaire', 'orga_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
+        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire 2012, marques A et B, par site', 'classif_chiffre_affaire', 'orga_site', ['orga_annee' => ['orga_2012'], 'orga_marque' => ['orga_marque_a', 'orga_marque_b']], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
 
         // Création des utilisateurs orga.
         $this->createUser('administrateur.organisation@toto.com');

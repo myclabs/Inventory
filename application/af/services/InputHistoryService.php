@@ -92,9 +92,9 @@ class AF_Service_InputHistoryService
             }
 
             // Author
-            try {
+            if ($logEntry->getUsername()) {
                 $author = User_Model_User::load($logEntry->getUsername());
-            } catch (Core_Exception_NotFound $e) {
+            } else {
                 $author = null;
             }
 
