@@ -10,7 +10,7 @@ Feature: Family consult feature
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
   # Affichage de la catégorie (hiérarchie des catégories en l'occurrence)
-    And I should see "Catégorie contenant une famille/Sous-catégorie contenant une famille"
+    And I should see "Catégorie contenant une famille / Sous-catégorie contenant une famille"
   # Affichage de l'unité
     And I should see "kg équ. CO2/t"
   # En-têtes de dimensions commencent par une majuscule
@@ -20,7 +20,7 @@ Feature: Family consult feature
   # Séparateur décimal en français
     And I should see a "#elements-charbon-amont_combustion:contains('0,123 ± 16 %')" element
   # Séparateur de milliers en français
-    And I should see "#elements-charbon-combustion:contains('12 300 ± 16 %')" element
+    And I should see a "#elements-charbon-combustion:contains('12 300 ± 16 %')" element
   # Affichage cellules vides
     And I should see a "#elements-gaz_naturel-amont_combustion:contains('-')" element
   # Onglet "Documentation"

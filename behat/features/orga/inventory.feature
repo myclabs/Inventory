@@ -10,11 +10,14 @@ Feature: Organization inventory tab feature
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Collectes"
     Then I should see the "inventories6" datagrid
-    And the row 1 of the "inventories6" datagrid should contain:
+    And the row 4 of the "inventories6" datagrid should contain:
       | annee | zone   | marque   | inventoryStatus |
-      | 2012  | Europe | Marque A | Non lancé |
+      | 2013  | Europe | Marque A | Non lancé       |
   # Édition du statut d'une collecte
-    When I set "En cours" for column "inventoryStatus" of row 1 of the "inventories6" datagrid with a confirmation message
+    When I set "En cours" for column "inventoryStatus" of row 4 of the "inventories6" datagrid with a confirmation message
+    Then the row 4 of the "inventories6" datagrid should contain:
+      | annee | zone   | marque   | inventoryStatus |
+      | 2013  | Europe | Marque A | En cours        |
 
   @javascript
   Scenario: Test Inventory filter

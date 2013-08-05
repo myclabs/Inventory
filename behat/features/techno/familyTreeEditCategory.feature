@@ -50,26 +50,26 @@ Feature: Family tree edit of categories feature
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement à la racine
   # TODO : homogénéiser libellé racine avec arbre des AFs
-    When I wait 3 seconds
+    When I wait 5 seconds
     And I click "Catégorie vide"
     And I select "Racine" from "familyTree_changeParent"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier
-    When I wait 3 seconds
+    When I wait 5 seconds
     And I click "Catégorie vide"
     And I check "Premier"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après une autre catégorie
-    When I wait 3 seconds
+    When I wait 5 seconds
     And I click "Catégorie vide"
     And I check "Après"
     And I select "Catégorie contenant une sous-catégorie" from "familyTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier
-    When I wait 3 seconds
+    When I wait 5 seconds
     And I click "Catégorie vide"
     And I check "Dernier"
     And I click "Confirmer"
