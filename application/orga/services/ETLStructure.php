@@ -165,7 +165,7 @@ class Orga_Service_ETLStructure
                 foreach ($cell->getMembers() as $member) {
                     $originalTranslations = $translationRepository->findTranslations($member);
                     if (isset($originalTranslations[$localeId])) {
-                        $labelParts[] = $originalTranslations[]['label'];
+                        $labelParts[] = $originalTranslations[$localeId]['label'];
                     } else {
                         $labelParts[] = $originalTranslations[$defaultLocale]['label'];
                     }
