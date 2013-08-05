@@ -79,7 +79,7 @@ Feature: AF composed condition for interaction feature
       | ref                                      |
       | condition_composee_interactions_modifiee |
   # Modification de l'expression, saisie correcte
-    When I set "a&b" for column "expression" of row 1 of the "algoNumericExpression" datagrid with a confirmation message
+    When I set "a&b" for column "expression" of row 1 of the "conditionsExpression" datagrid with a confirmation message
     And I click "Expression" in the row 1 of the "conditionsExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "a & b"
