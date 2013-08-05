@@ -16,10 +16,11 @@ Feature: AF elementary condition for treatment feature
     Then I should see the popup "Ajout d'une condition élémentaire"
   # Ajout, saisie correcte
     When I fill in "algoConditionElementary_ref_addForm" with "aaa"
+    And I select "Champ numérique" from "algoConditionElementary_input_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Conditions élémentaires ordonnées suivant l'ordre de création
-    And the row 2 of the "algoNumericConstant" datagrid should contain:
+    And the row 2 of the "algoConditionElementary" datagrid should contain:
       | ref | input           |
       | aaa | Champ numérique |
 

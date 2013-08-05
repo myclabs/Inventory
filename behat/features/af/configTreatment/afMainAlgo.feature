@@ -12,7 +12,7 @@ Feature: AF main algo feature
     And I open tab "Traitement"
     And I open collapse "Algorithme d'exécution"
   # Affichage de l'algo (au bon format)
-    # TODO une fois le paramétrage terminé.
+    Then the "expression" field should contain ": champ_numerique"
   # Saisie algo vide
     When I fill in "expression" with ""
     And I click "Enregistrer"
@@ -24,4 +24,5 @@ Feature: AF main algo feature
   # Saisie algo incorrect
     When I fill in "expression" with "a:b;:c;de;"
     And I click "Enregistrer"
-    Then the following message is shown and closed: "L'expression n'a pas pu être interprétée. Il manque un opérateur dans l'expression « de »."
+    Then the field "expression" should have error: "Il manque un opérateur dans l'expression « de »."
+    And I should see "L'expression saisie présente les erreurs de syntaxe suivantes :"
