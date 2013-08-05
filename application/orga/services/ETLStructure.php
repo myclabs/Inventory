@@ -115,6 +115,7 @@ class Orga_Service_ETLStructure
      */
     public function populateCellDWCube(Orga_Model_Cell $cell)
     {
+        $this->updateCellDWCubeLabel($cell);
         $this->populateDWCubeWithClassifAndOrgaOrganization(
             $cell->getDWCube(),
             $cell->getGranularity()->getOrganization(),
@@ -132,6 +133,7 @@ class Orga_Service_ETLStructure
      */
     public function populateGranularityDWCube(Orga_Model_Granularity $granularity)
     {
+        $this->updateGranularityDWCubeLabel($granularity);
         $this->populateDWCubeWithClassifAndOrgaOrganization(
             $granularity->getDWCube(),
             $granularity->getOrganization(),
@@ -139,6 +141,95 @@ class Orga_Service_ETLStructure
                 'axes' => $granularity->getAxes()
             )
         );
+    }
+
+    /**
+     * Met à jour les labels du Cube de DW de la Cell donnée.
+     *
+     * @param Orga_Model_Cell $cell
+     */
+    protected function updateCellDWCubeLabel(Orga_Model_Cell $cell)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
+        $labels = [];
+        if (!$cell->hasMembers()) {
+            foreach (Zend_Registry::get('languages') as $localeId) {
+                $labels[$localeId] = Core_Translate::get('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
+            }
+        } else {
+            foreach (Zend_Registry::get('languages') as $localeId) {
+                $labelParts = [];
+                foreach ($cell->getMembers() as $member) {
+                    $originalTranslations = $translationRepository->findTranslations($member);
+                    if (isset($originalTranslations[$localeId])) {
+                        $labelParts[] = $originalTranslations[$localeId]['label'];
+                    } else {
+                        $labelParts[] = $member->getLabel();
+                    }
+                }
+                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels);
+            }
+        }
+
+        $this->updateDWCubeLabel($cell->getDWCube(), $labels);
+    }
+
+    /**
+     * Met à jour les labels du Cube de DW de la Cell donnée.
+     *
+     * @param Orga_Model_Granularity $granularity
+     */
+    protected function updateGranularityDWCubeLabel(Orga_Model_Granularity $granularity)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
+        $labels = [];
+        if (!$granularity->hasAxes()) {
+            foreach (Zend_Registry::get('languages') as $localeId) {
+                $labels[$localeId] = Core_Translate::get('Orga', 'navigation', 'labelGlobalGranularity', [], $localeId);
+            }
+        } else {
+            $axes = $granularity->getAxes();
+            // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
+            @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+            foreach (Zend_Registry::get('languages') as $localeId) {
+                $labelParts = [];
+                foreach ($axes as $axis) {
+                    $originalTranslations = $translationRepository->findTranslations($axis);
+                    if (isset($originalTranslations[$localeId])) {
+                        $labelParts[] = $originalTranslations[$localeId]['label'];
+                    } else {
+                        $labelParts[] = $axis->getLabel();
+                    }
+                }
+                $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
+            }
+        }
+
+        $this->updateDWCubeLabel($granularity->getDWCube(), $labels);
+    }
+
+    /**
+     * Met à jour les labels d'um Cube de DW donné.
+     *
+     * @param DW_Model_Cube $dWCube
+     * @param array $labels
+     */
+    protected function updateDWCubeLabel(DW_Model_Cube $dWCube, $labels)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        foreach ($labels as $localeId => $label) {
+            $translationRepository->translate(
+                $dWCube,
+                'label',
+                $localeId,
+                $label
+            );
+        }
     }
 
     /**
@@ -874,6 +965,7 @@ class Orga_Service_ETLStructure
      */
     public function resetGranularityDWCubes(Orga_Model_Granularity $granularity)
     {
+        $this->updateGranularityDWCubeLabel($granularity);
         $this->resetDWCube(
             $granularity->getDWCube(),
             $granularity->getOrganization(),
@@ -928,6 +1020,7 @@ class Orga_Service_ETLStructure
             $this->etlDataService->clearDWResultsForCell($cell);
             $this->entityManager->flush();
 
+            $this->updateCellDWCubeLabel($cell);
             $this->resetDWCube(
                 $cell->getDWCube(),
                 $cell->getGranularity()->getOrganization(),

@@ -31,6 +31,11 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
      */
     public function getelementsAction()
     {
+        $this->request->filter->addCondition(
+            AF_Model_Component::QUERY_REF,
+            AF_Model_Component_Group::ROOT_GROUP_REF,
+            Core_Model_Filter::OPERATOR_NOT_EQUAL
+        );
         foreach (AF_Model_Component::loadList($this->request) as $component) {
             $data = array();
             $data['index'] = $component->getId();
