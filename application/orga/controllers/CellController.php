@@ -50,7 +50,6 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
-        $idOrganization = $organization->getId();
 
         $this->view->cell = $cell;
 

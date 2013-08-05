@@ -38,7 +38,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
     /**
      * Confguration du projet.
-     * @Secure("editOrganization")
+     * @Secure("editCell")
      */
     public function orgaAction()
     {
@@ -47,12 +47,24 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
 
+        $connectedUser = $this->_helper->auth();
+
         $this->view->idCell = $idCell;
         $this->view->idOrganization = $organization->getId();
-        if ($granularity->getRef() === 'global') {
-            $this->view->isGlobal = true;
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
+        $isUserAllowedToEditCell = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $cell
+        );
+        if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && ($granularity->getRef() === 'global')) {
+            $this->view->displayOrganizationTabs = true;
         } else {
-            $this->view->isGlobal = false;
+            $this->view->displayOrganizationTabs = false;
         }
         $this->view->hasChildCells = ($cell->countTotalChildCells() > 0);
 
