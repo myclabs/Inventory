@@ -28,7 +28,7 @@ mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'myc-sense'@'localhost';"
 mysql -u root -e "FLUSH PRIVILEGES;"
 
 # PHP
-apt-get install -y php5 php5-curl php5-cli php5-gd php5-mcrypt php5-dev php5-mysql php-pear
+apt-get install -y php5 php5-curl php5-cli php5-gd php5-mcrypt php5-dev php5-mysql php-pear php5-xdebug
 
 # Apache
 apt-get install -y apache2
@@ -50,27 +50,27 @@ apt-get install -q -y phpmyadmin
 cp ${BASEDIR}/phpmyadmin-config.inc.php /etc/phpmyadmin/config.inc.php
 
 # Gearman
-apt-get install -y build-essential
-apt-get install -y gearman libgearman6 libgearman-dev gearman-tools gearman-job-server
-cd /tmp
-wget http://pecl.php.net/get/gearman-1.0.3.tgz
-tar -xzf gearman-1.0.3.tgz
-cd gearman-1.0.3
-phpize
-./configure
-make
-make install
+#apt-get install -y build-essential
+#apt-get install -y gearman libgearman6 libgearman-dev gearman-tools gearman-job-server
+#cd /tmp
+#wget http://pecl.php.net/get/gearman-1.0.3.tgz
+#tar -xzf gearman-1.0.3.tgz
+#cd gearman-1.0.3
+#phpize
+#./configure
+#make
+#make install
 
 # PHPUnit
 pear config-set auto_discover 1
 pear install pear.phpunit.de/PHPUnit
 
 # Behat & Selenium
-add-apt-repository -y ppa:mozillateam/firefox-stable
-apt-get install -y xvfb xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic
-apt-get install -y default-jre-headless
-apt-get install -y firefox
-echo 'user_pref("intl.accept_languages", "fr, fr-fr, en-us, en");' >> /etc/firefox/syspref.js
+#add-apt-repository -y ppa:mozillateam/firefox-stable
+#apt-get install -y xvfb xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic
+#apt-get install -y default-jre-headless
+#apt-get install -y firefox
+#echo 'user_pref("intl.accept_languages", "fr, fr-fr, en-us, en");' >> /etc/firefox/syspref.js
 
 #apt-get install -y chromium-browser
 #wget -O /tmp/chromedriver.zip https://chromedriver.googlecode.com/files/chromedriver_linux32_2.0.zip

@@ -5,6 +5,7 @@
  * @author hugo.charbonnier
  * @package Algo
  */
+use Keyword\Domain\Keyword;
 
 /**
  * Creation of the Test Suite.
@@ -84,7 +85,7 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
         foreach (Algo_Model_Algo::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
+        foreach (Keyword::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {

@@ -6,6 +6,8 @@
  * @package    Orga
  * @subpackage Model
  */
+use Doc\Domain\Bibliography;
+use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -667,7 +669,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 $configGranularity->addInputGranularity($this);
 
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocBibliographyForAFInputSetPrimary(new Doc_Model_Bibliography());
+                    $cell->setDocBibliographyForAFInputSetPrimary(new Bibliography());
                 }
             } else {
                 foreach ($this->getCells() as $cell) {
@@ -920,7 +922,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 }
             } else  {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialGenericAction(new Doc_Model_Library());
+                    $cell->setDocLibraryForSocialGenericAction(new Library());
                 }
             }
         }
@@ -958,7 +960,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 }
             } else  {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialContextAction(new Doc_Model_Library());
+                    $cell->setDocLibraryForSocialContextAction(new Library());
                 }
             }
         }
@@ -996,7 +998,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 }
             } else  {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForAFInputSetsPrimary(new Doc_Model_Library());
+                    $cell->setDocLibraryForAFInputSetsPrimary(new Library());
                 }
             }
         }

@@ -6,6 +6,7 @@
  * @package Algo
  */
 
+use Keyword\Domain\Keyword;
 use TEC\Expression;
 
 /**
@@ -58,7 +59,7 @@ class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
 		foreach (Algo_Model_Algo::loadList() as $o) {
 			$o->delete();
 		}
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
+        foreach (Keyword::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_ContextIndicator::loadList() as $o) {

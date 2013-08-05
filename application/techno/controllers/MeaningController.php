@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Keyword\Domain\Keyword;
 
 /**
  * Controleur des significations
@@ -19,7 +20,7 @@ class Techno_MeaningController extends Core_Controller
      */
     public function listAction()
     {
-        $this->view->keywords = Keyword_Model_Keyword::loadList();
+        $this->view->keywords = Keyword::loadList();
     }
 
 }
