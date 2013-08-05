@@ -16,7 +16,7 @@ Feature: AF numeric parameter algo feature
     Then I should see the popup "Ajout d'un algorithme numérique de type « paramètre »"
   # TODO : ordre entre les familles…
   # Ajout, identifiant valide
-    When I fill in "algoNumericParameter_label_addForm" with "Test"
+    When I fill in "algoNumericParameter_label_addForm" with "AAA"
     And I fill in "algoNumericParameter_ref_addForm" with "aaa"
     And I select "Masse volumique de combustible" from "algoNumericParameter_family_addForm"
     And I click "Valider"
@@ -69,8 +69,7 @@ Feature: AF numeric parameter algo feature
     When I set "parametre_modifie" for column "ref" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
   # Modification de la famille, saisie correcte
     When I set "Masse volumique de combustible" for column "family" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
-    Then the following message is shown and closed: "Modification effectuée."
-    And the row 1 of the "algoNumericParameter" datagrid should contain:
+    Then the row 1 of the "algoNumericParameter" datagrid should contain:
       | label     | ref       | family                         |
       | Paramètre | parametre | Masse volumique de combustible |
 
