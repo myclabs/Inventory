@@ -59,7 +59,9 @@ Feature: AF numeric expression algo feature
   # Ajout, identifiant déjà utilisé, expression vide, unité valide
     When I fill in "algoNumericExpression_ref_addForm" with "champ_numerique"
     And I click "Valider"
-    Then the field "algoNumericExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
+    And I wait 5 seconds
+    Then the field "algoNumericExpression_expression_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
+    And the field "algoNumericExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
   # Ajout, identifiant identifiant déjà utilisé, expression invalide, unité valide
     When I fill in "algoNumericExpression_expression_addForm" with "a+(b+(c+d)"
     And I click "Valider"
