@@ -152,6 +152,7 @@ class Orga_Service_ETLStructure
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
 
         $labels = [];
         if (!$cell->hasMembers()) {
@@ -164,9 +165,9 @@ class Orga_Service_ETLStructure
                 foreach ($cell->getMembers() as $member) {
                     $originalTranslations = $translationRepository->findTranslations($member);
                     if (isset($originalTranslations[$localeId])) {
-                        $labelParts[] = $originalTranslations[$localeId]['label'];
+                        $labelParts[] = $originalTranslations[]['label'];
                     } else {
-                        $labelParts[] = $member->getLabel();
+                        $labelParts[] = $originalTranslations[$defaultLocale]['label'];
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels);
@@ -185,6 +186,7 @@ class Orga_Service_ETLStructure
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
 
         $labels = [];
         if (!$granularity->hasAxes()) {
@@ -202,7 +204,7 @@ class Orga_Service_ETLStructure
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
                     } else {
-                        $labelParts[] = $axis->getLabel();
+                        $labelParts[] = $originalTranslations[$defaultLocale]['label'];
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
