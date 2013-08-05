@@ -144,6 +144,9 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         $granularity = Orga_Model_Granularity::load($this->delete);
+        if ($granularity->getCellsWithACL()) {
+            throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
+        }
 
         $granularity->delete();
 
