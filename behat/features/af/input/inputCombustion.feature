@@ -28,15 +28,15 @@ Feature: Combustion input feature
     And I should see "quantite_combustible * fe_amont"
     And I should see "Produit"
     When I click "×"
-    Then I should see "Valeur : 0,18 t équ. CO2 ± 0 %"
+    Then I should see "Valeur : 2,54 t équ. CO2 ± 20 %"
   # Vérification contenu pour un algo de type "paramètre"
     When I open collapse "fe_amont"
     Then I should see "Type : Paramètre"
     And I should see "Processus : amont de la combustion"
-    And I should see "Valeur : 18 kg équ. CO2/t ± 0 %"
-    When I click "Combustion de combustible, mesuré en unité de masse"
+    And I should see "Valeur : 254 kg équ. CO2/t ± 20 %"
+    When I click element "#combustion_combustible_unite_masse__emissions_amont__fe_amont a:contains('Combustion de combustible, mesuré en unité de masse')"
     And I open tab "Documentation"
-    Then I should see "Documentation de la famille “Combustion…”"
+    Then I should see "Il n'y a aucune documentation pour cette famille."
 
 
 

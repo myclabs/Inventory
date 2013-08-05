@@ -42,11 +42,11 @@ Feature: General data input feature
     When I fill in "chiffre_affaire" with ""
     And I fill in "percentchiffre_affaire" with "auie"
     And I click "Aperçu des résultats"
-    Then the field "chiffre_affaire" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de corriger."
+    Then the field "chiffre_affaire" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Saisie incertitude séparateur décimal incorrect (nombre vide)
     When I fill in "percentchiffre_affaire" with "5.3"
     And I click "Aperçu des résultats"
-    Then the field "chiffre_affaire" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de corriger."
+    Then the field "chiffre_affaire" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Bouton "Quitter" (colorié en rouge), popup de confirmation
     When I click "Quitter"
     Then I should see "Perte des modifications non enregistrées. Poursuivre ?"

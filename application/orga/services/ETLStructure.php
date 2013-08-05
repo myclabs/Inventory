@@ -189,7 +189,7 @@ class Orga_Service_ETLStructure
         $labels = [];
         if (!$granularity->hasAxes()) {
             foreach (Zend_Registry::get('languages') as $localeId) {
-                $labels[$localeId] = Core_Translate::get('Orga', 'navigation', 'labelGlobalGranularity', [], $localeId);
+                $labels[$localeId] = Core_Translate::get('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
             }
         } else {
             $axes = $granularity->getAxes();
