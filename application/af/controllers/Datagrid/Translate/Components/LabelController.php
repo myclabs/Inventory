@@ -31,6 +31,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
      */
     public function getelementsAction()
     {
+        $this->request->filter->addCondition(AF_Model_Component::QUERY_REF, 'root_group', Core_Model_Filter::OPERATOR_NOT_EQUAL);
         foreach (AF_Model_Component::loadList($this->request) as $component) {
             $data = array();
             $data['index'] = $component->getId();
