@@ -16,6 +16,7 @@ Feature: AF elementary condition for interaction feature
     Then I should see the popup "Ajout d'une condition élémentaire"
   # Ajout, identifiant correct
     When I fill in "conditionsElementary_ref_addForm" with "aaa"
+    And I select "Champ booléen" from "conditionsElementary_field_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Conditions élémentaires affichées dans l'ordre d'ajout
@@ -102,10 +103,10 @@ Feature: AF elementary condition for interaction feature
     And the row 1 of the "conditionsElementary" datagrid should contain:
       | ref                                 |
       | condition_elementaire_interactions  |
-    And the row 1 of the "conditionsElementary" datagrid should contain:
+    And the row 2 of the "conditionsElementary" datagrid should contain:
       | ref                                 |
       | condition_elementaire_interactions_utilisee_action_setstate  |
-    And the row 1 of the "conditionsElementary" datagrid should contain:
+    And the row 3 of the "conditionsElementary" datagrid should contain:
       | ref                                 |
       | condition_elementaire_interactions_utilisee_action_setvalue  |
   # Suppression, condition utilisée pour une action de modification de l'état d'un composant
