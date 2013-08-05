@@ -25,6 +25,10 @@ class Orga_Model_Cell extends Core_Model_Entity
     const QUERY_INVENTORYSTATUS = 'inventoryStatus';
     const QUERY_AFINPUTSETPRIMARY = 'aFInputSetPrimary';
 
+    // Séparateur des labels des membres dans le label de la cellule.
+    const  LABEL_SEPARATOR = ' | ';
+
+
     /**
      * Etat non débuté de l'inventaire.
      */
@@ -505,7 +509,7 @@ class Orga_Model_Cell extends Core_Model_Entity
             $labels[] = $member->getLabel();
         }
 
-        return implode(' | ', $labels);
+        return implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
@@ -524,7 +528,7 @@ class Orga_Model_Cell extends Core_Model_Entity
             $labels[] = $member->getExtendedLabel();
         }
 
-        return implode(' | ', $labels);
+        return implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
