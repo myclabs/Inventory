@@ -50,7 +50,7 @@ Feature: AF selection expression algo feature
     When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "champ_numerique"
     And I click "Valider"
     Then the field "algoSelectionTextkeyExpression_expression_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
-    And the field "algoSelectionTextkeyExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
+    And the field "algoSelectionTextkeyExpression_expression_addForm" should have error: " Il manque un opérateur dans l'expression «  »."
   # Ajout, identifiant déjà utilisé, expression invalide
     When I fill in "algoSelectionTextkeyExpression_expression_addForm" with "a:(b:(c:d)"
     And I click "Valider"
@@ -104,7 +104,7 @@ Feature: AF selection expression algo feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
-    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression « »."
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes :  Il manque un opérateur dans l'expression «  »."
   # Modification de l'expression, saisie invalide
     When I set "a:(b:(c:d)" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
