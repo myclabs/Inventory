@@ -47,17 +47,23 @@ class Orga_Service_OrganizationService
         $this->entityManager->beginTransaction();
 
         try {
+            // Création de l'organization.
             $organization = new Orga_Model_Organization();
             $organization->setLabel($label);
+            // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
             $defaultGranularity->setNavigability(true);
             $defaultGranularity->setCellsWithOrgaTab(true);
             $defaultGranularity->setCellsWithACL(true);
             $defaultGranularity->setCellsWithAFConfigTab(true);
-            $defaultGranularity->setCellsGenerateDWCubes(true);
+            // Sauvegarde.
             $organization->save();
             $this->entityManager->flush();
+            // Définition de la création des DW après pour éviter un bug d'insertion.
+            $defaultGranularity->setCellsGenerateDWCubes(true);
+            $organization->save();
 
+            // Ajout de l'utilisateur courant en tant qu'administrateur.
             $this->aclManager->addOrganizationAdministrator($organization, $administrator);
             $this->entityManager->flush();
 
