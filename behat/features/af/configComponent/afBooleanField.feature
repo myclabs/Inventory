@@ -21,7 +21,7 @@ Feature: AF boolean field feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Champs ordonnés suivant l'ordre de création, vérification des valeurs par défaut
-    And the row 2 of the "checkboxFieldDatagrid" datagrid should contain:
+    And the "checkboxFieldDatagrid" datagrid should contain a row:
       | label | ref | isVisible | enabled | defaultValue |
       | AAA   | aaa | Visible   | Activé  | Décoché      |
     When I click "Aide" in the row 2 of the "checkboxFieldDatagrid" datagrid
@@ -71,7 +71,6 @@ Feature: AF boolean field feature
   # Modification des autres attributs
     When I set "Masqué" for column "isVisible" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
     When I set "Désactivé" for column "enabled" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
-    When I set "Facultatif" for column "required" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
     When I set "Décoché" for column "defaultValue" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "checkboxFieldDatagrid" datagrid should contain:
