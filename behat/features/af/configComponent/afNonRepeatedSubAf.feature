@@ -78,7 +78,7 @@ Feature: AF non repeated subAF feature
       | Sous-formulaire non répété modifié | sous_formulaire_non_repete_modifie | Combustion de combustible, mesuré en unité de masse | Masqué    |
     When I click "Aide" in the row 1 of the "subAfNotRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"
-    And I should see a "#subAfNotRepeatedDatagrid_help_popup .modal-body h1:contains('Blabla')" element
+    And I should see a "#subAfNotRepeatedDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
 
   @javascript
   Scenario: Edition of a non repeated subAF, incorrect input
