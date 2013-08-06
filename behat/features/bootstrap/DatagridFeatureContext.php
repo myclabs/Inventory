@@ -62,7 +62,7 @@ trait DatagridFeatureContext
             }
         }
 
-        throw new \Exception("Now row in the datagrid $datagrid was found matching given values");
+        throw new \Exception("No row in the datagrid $datagrid was found matching given values");
     }
 
     /**
