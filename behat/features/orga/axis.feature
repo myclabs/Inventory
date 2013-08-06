@@ -5,39 +5,25 @@ Feature: Organizational axis feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an organizational axis
-  # TODO : modification sans effet
-  # TODO : affichage libellé + identifiant
+  Scenario: Creation of an organizational axis, correct input
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Axes"
-  # Ajout d'un axe, identifiant vide
+    And I wait 5 seconds
+    Then I should see "Année (annee)"
+  # Popup d'ajout
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
-    When I click "Valider"
-    Then the field "addAxis_ref" should have error: "Merci de renseigner ce champ."
-  # Ajout d'un axe, identifiant avec des caractères non autorisés
-    When I fill in "addAxis_ref" with "bépo"
-    When I click "Valider"
-    Then the field "addAxis_ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout d'un axe, saisie correcte
+  # Ajout d'un axe à la racine, saisie correcte
     When I fill in "addAxis_label" with "Test"
     And I fill in "addAxis_ref" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Ajout d'un axe, identifiant déjà utilisé
-    When I click "Ajouter"
-    Then I should see the popup "Ajout d'un axe"
-    When I fill in "addAxis_ref" with "test"
-    And I click "Valider"
-    Then the field "addAxis_ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Bouton "Annuler"
-    When I click "Annuler"
-    Then I should not see "Ajout d'un axe"
   # Ajout d'un axe non à la racine
-    When I click "Ajouter"
+    When I wait 5 seconds
+    And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I fill in "addAxis_label" with "Axe plus grossier que l'axe vide"
     And I fill in "addAxis_ref" with "axe_plus_grossier_que_axe_vide"
@@ -53,12 +39,40 @@ Feature: Organizational axis feature
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
 
   @javascript
+  Scenario: Creation of an organizational axis, incorrect input
+  # Accès à l'onglet "Axes"
+    Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
+    And I open tab "Organisation"
+    And I open tab "Axes"
+    And I wait 5 seconds
+  # TODO : modification sans effet
+  # Popup d'ajout
+    And I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+  # Ajout, identifiant vide
+    When I click "Valider"
+    Then the field "addAxis_ref" should have error: "Merci de renseigner ce champ."
+  # Ajout d'un axe, identifiant avec des caractères non autorisés
+    When I fill in "addAxis_ref" with "bépo"
+    When I click "Valider"
+    Then the field "addAxis_ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Ajout d'un axe, identifiant déjà utilisé
+    When I fill in "addAxis_ref" with "annee"
+    And I click "Valider"
+    Then the field "addAxis_ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+  # Bouton "Annuler"
+    When I click "Annuler"
+    Then I should not see "Ajout d'un axe"
+
+  @javascript
   Scenario: Edition of label and identifier of an organizational axis
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Axes"
+    And I wait 5 seconds
   # Modification du libellé et de l'identifiant d'un axe
     When I click "Site"
     Then I should see the popup "Édition d'un axe"
@@ -87,6 +101,7 @@ Feature: Organizational axis feature
     And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Axes"
+    And I wait 5 seconds
   # Déplacement en premier (axe situé à la racine)
     When I click "Catégorie"
     Then I should see the popup "Édition d'un axe"

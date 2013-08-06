@@ -29,7 +29,7 @@ Feature: Family element tab edit feature
     And I fill in "Incertitude" with "12,34"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
-    And I should see a "#elements_charbon_amont_combustion a:contains('1 230 ± 12 %')" element
+    And I should see a "#elements-gaz_naturel-combustion a:contains('1 230 ± 12 %')" element
   # Ajout d'un élément puis annulation sans enregistrement
   # TODO : actuellement l'élément est tout de même créé.
 

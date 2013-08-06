@@ -47,7 +47,7 @@ Feature: AF composed condition for interaction feature
   # Ajout, identifiant déjà utilisé, expression vide
     When I fill in "conditionsExpression_ref_addForm" with "condition_composee_interactions"
     And I click "Valider"
-    Then the field "conditionsExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
+    Then the field "conditionsExpression_expression_addForm" should have error: " Il manque un opérateur dans l'expression «  »."
   # Ajout, identifiant déjà utilisé, expression incorrecte
     When I fill in "conditionsExpression_expression_addForm" with "a|(b|(c|d)"
     And I click "Valider"
@@ -102,7 +102,7 @@ Feature: AF composed condition for interaction feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "conditionsExpression" datagrid
-    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression « »."
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes :  Il manque un opérateur dans l'expression «  »."
   # Modification de l'expression, saisie invalide
     When I set "a|(b|(c|d)" for column "expression" of row 1 of the "conditionsExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."

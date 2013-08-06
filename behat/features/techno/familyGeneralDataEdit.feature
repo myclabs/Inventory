@@ -13,16 +13,21 @@ Feature: Family general data edit feature
   # Vérification du contenu des différents champs du formulaire "Général"
     And the "Libellé" field should contain "Famille test non vide"
     And the "Identifiant" field should contain "famille_test"
-    And the "Unité" field should contain "t"
+    And the "Unité" field should contain "kg_co2e.t^-1"
   # Modifications
     When I fill in "Libellé" with "Famille test modifiée"
     And I fill in "Identifiant" with "famille_test_modifiee"
-    And I fill in "Unité" with "kg"
+    And I fill in "Unité" with "t_co2e.kg^-1"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
     And the "Libellé" field should contain "Famille test modifiée"
     And the "Identifiant" field should contain "famille_test_modifiee"
-    And the "Unité" field should contain "kg"
+    And the "Unité" field should contain "t_co2e.kg^-1"
+  # TODO : tester la modification de l'unité.
+  # Modification du libellé seul
+    When I fill in "Libellé" with "Famille test modifiée une seconde fois"
+    And I click "Enregistrer"
+    Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
   Scenario: Family edit general data scenario, incorrect input
