@@ -96,13 +96,14 @@ Feature: AF single selection field feature
     When I click "Aide" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#selectSingleFieldDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
+    When I click "×"
   # Vérification que les modifications on bien été prises en compte pour l'algo de type sélection d'identifiant correspondant
     When I open tab "Traitement"
     And I open collapse "Algorithmes de sélection d’identifiant"
     And I open collapse "A partir d'une saisie de champ de sélection simple"
     Then I should see the "algoSelectionTextkeyInput" datagrid
   # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "sélection d'identifiant à partir d'une saisie de champ de sélection simple"
-    And the row 1 of the "algoSelectionTextkeyInput" datagrid should contain:
+    And the "algoSelectionTextkeyInput" datagrid should contain a row:
       | ref                            | input                          |
       | c_s_s_modifie | Champ sélection simple modifié |
 

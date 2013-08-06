@@ -25,7 +25,7 @@ Feature: AF numeric field feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Champs ordonnés suivant l'ordre de création
-    And the row 4 of the "numericFieldDatagrid" datagrid should contain:
+    And the "numericFieldDatagrid" datagrid should contain a row:
       | label | ref | isVisible | enabled | required   | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
       | AAA   | aaa | Visible   | Activé  | Facultatif | kg équ. CO2/m³ | Affichée        | 1 000,5      | 10                  | Masqué               |
     When I click "Aide" in the row 4 of the "numericFieldDatagrid" datagrid
@@ -95,7 +95,7 @@ Feature: AF numeric field feature
     And I open collapse "Champs numériques"
     Then I should see the "numericFieldDatagrid" datagrid
     And the row 1 of the "numericFieldDatagrid" datagrid should contain:
-      | label    | ref | isVisible | enabled | required    | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
+      | label           | ref | isVisible | enabled | required    | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
       | Champ numérique | c_n | Visible   | Activé  | Obligatoire | kg équ. CO2/m³ | Affichée        | 1 000,5      | 10                  | Affiché               |
   # Modification du libellé
     When I set "Champ numérique modifié" for column "label" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
@@ -109,6 +109,8 @@ Feature: AF numeric field feature
     When I set "Facultatif" for column "required" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification de l'unité, unité valide
     When I set "t" for column "unit" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
+  # Modification de l'affichage de l'incertitude
+    When I set "Masquée" for column "withUncertainty" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification valeur initiale
     When I set "1,5" for column "digitalValue" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification incertitude initiale
@@ -117,7 +119,7 @@ Feature: AF numeric field feature
     When I set "Masqué" for column "defaultValueReminder" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "numericFieldDatagrid" datagrid should contain:
-      | label                   | ref                     | isVisible | enabled   | required   | unit | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
+      | label                   | ref         | isVisible | enabled   | required   | unit | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
       | Champ numérique modifié | c_n_modifie | Masqué    | Désactivé | Facultatif | t    | Masquée         | 1,5          | 15                  | Masqué               |
     When I click "Aide" in the row 1 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
@@ -129,7 +131,7 @@ Feature: AF numeric field feature
     And I open collapse "Saisies de champs numériques"
     Then I should see the "algoNumericInput" datagrid
   # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "saisie de champ numérique"
-    And the row 1 of the "algoNumericInput" datagrid should contain:
+    And the "algoNumericInput" datagrid should contain a row:
       | label    | ref                     | input                     | unit |
       | Champ numérique | c_n_modifie | Champ numérique modifié   | t    |
 
@@ -177,13 +179,13 @@ Feature: AF numeric field feature
     Then I should see the "numericFieldDatagrid" datagrid
     And the "numericFieldDatagrid" datagrid should contain 3 row
     And the row 1 of the "numericFieldDatagrid" datagrid should contain:
-      | label    |
+      | label           |
       | Champ numérique |
     And the row 2 of the "numericFieldDatagrid" datagrid should contain:
-      | label                     |
+      | label                            |
       | Champ numérique cible activation |
     And the row 3 of the "numericFieldDatagrid" datagrid should contain:
-      | label                   |
+      | label                          |
       | Champ numérique cible setvalue |
   # Suppression des champs cibles d'actions
     When I open tab "Interactions"

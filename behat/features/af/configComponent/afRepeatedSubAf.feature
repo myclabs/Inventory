@@ -78,7 +78,7 @@ Feature: AF repeated subAF feature
       | Sous-formulaire répété modifié | sous_formulaire_repete_modifie | Données générales | Masqué    |
     When I click "Aide" in the row 1 of the "subAfRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"
-    And I should see a "#subAfRepeatedDatagrid_help_popup .modal-body h1:contains('Blabla')" element
+    And I should see a "#subAfRepeatedDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
 
   @javascript
   Scenario: Edition of a repeated subAF, incorrect input
