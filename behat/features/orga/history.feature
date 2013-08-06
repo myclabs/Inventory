@@ -71,7 +71,7 @@ Feature: Input history feature
     And I wait for the page to finish loading
   # Ouverture du popup d'historique
     And I click element "#chiffre_affaireHistory .btn"
-    Then I should see a "code:contains('10 k€ ± 0 %')" element
+    Then I should see a "code:contains('10 k€ ± 10 %')" element
   # Fermeture du popup d'historique
     When I click element "#chiffre_affaireHistory .btn"
     And I click "Quitter"

@@ -67,7 +67,8 @@ Feature: Unit feature
       | name  |
       | heure |
   # Filtre sur le symbole
-    When I fill in "ListStandardUnits_name_filterForm" with ""
+    When I open collapse "Filtres"
+    And I fill in "ListStandardUnits_name_filterForm" with ""
     And I fill in "ListStandardUnits_symbol_filterForm" with "km"
     And I click "Filtrer"
     And I wait 5 seconds
@@ -76,7 +77,8 @@ Feature: Unit feature
       | name      |
       | kilomètre |
   # Filtre sur la grandeur physique
-    When I fill in "ListStandardUnits_symbol_filterForm" with ""
+    When I open collapse "Filtres"
+    And I fill in "ListStandardUnits_symbol_filterForm" with ""
     And I select "Vitesse" from "ListStandardUnits_physicalQuantity_filterForm"
     And I click "Filtrer"
     Then the "ListStandardUnits" datagrid should contain 2 row
@@ -84,7 +86,8 @@ Feature: Unit feature
       | name              |
       | mètre par seconde |
   # Filtre sur le système d'unités
-    When I select "" from "ListStandardUnits_physicalQuantity_filterForm"
+    When I open collapse "Filtres"
+    And I select "" from "ListStandardUnits_physicalQuantity_filterForm"
     And I select "Anglo-saxon" from "ListStandardUnits_unitSystem_filterForm"
     And I click "Filtrer"
     Then the "ListStandardUnits" datagrid should contain 1 row

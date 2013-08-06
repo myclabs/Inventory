@@ -9,17 +9,18 @@ Feature: Organization input tab feature
   # Accès à l'onglet "Saisies"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Saisies"
-    And I open collapse "Année | Site | Catégorie"
-    Then I should see the "aFGranularity1Input8" datagrid
-    And the "aFGranularity1Input8" datagrid should contain 8 row
+    And I open collapse "Année | Site"
+    Then I should see the "aFGranularity1Input7" datagrid
+    And the "aFGranularity1Input7" datagrid should contain 8 row
   # Filtre sur le site "Annecy"
     When I open collapse "Filtres"
-    And I select "Annecy" from "aFGranularity1Input8_site_filterForm"
+    And I select "Annecy" from "aFGranularity1Input7_site_filterForm"
     And I click "Filtrer"
-    Then the "aFGranularity1Input8" datagrid should contain 2 row
+    Then the "aFGranularity1Input7" datagrid should contain 2 row
   # Bouton "Réinitialiser"
-    When I click "Réinitialiser"
-    Then the "aFGranularity1Input8" datagrid should contain 8 row
+    When I open collapse "Filtres"
+    And I click "Réinitialiser"
+    Then the "aFGranularity1Input7" datagrid should contain 8 row
 
   @javascript
   Scenario: Display of input tab when the inventory granularity has not been defined

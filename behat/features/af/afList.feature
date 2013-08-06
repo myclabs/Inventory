@@ -110,7 +110,7 @@ Feature: AF list edit feature
     Given I am on "af/af/list"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
-    And the "listAF" datagrid should contain 5 row
+    And the "listAF" datagrid should contain 6 row
     And I open collapse "Filtres"
   # Filtre sur le libellé
     And I fill in "listAF_label_filterForm" with "Formulaire vide"
@@ -120,8 +120,9 @@ Feature: AF list edit feature
       | label           | ref             |
       | Formulaire vide | formulaire_vide |
   # Clic sur "Réinitialiser"
-    When I click "Réinitialiser"
-    Then the "listAF" datagrid should contain 5 row
+    When I open collapse "Filtres"
+    And I click "Réinitialiser"
+    Then the "listAF" datagrid should contain 6 row
   # Filtre sur l'identifiant
     When I open collapse "Filtres"
     And I fill in "listAF_ref_filterForm" with "_test"
@@ -131,18 +132,20 @@ Feature: AF list edit feature
       | label           | ref             |
       | Formulaire test | formulaire_test |
   # Filtre sur les deux combinés
-    When I click "Réinitialiser"
+    When I open collapse "Filtres"
+    And I click "Réinitialiser"
     And I open collapse "Filtres"
     And I fill in "listAF_label_filterForm" with "Formulaire"
     And I fill in "listAF_ref_filterForm" with "_vide"
     And I click "Filtrer"
     Then the "listAF" datagrid should contain 1 row
   # Alors que…
-    When I click "Réinitialiser"
+    When I open collapse "Filtres"
+    And I click "Réinitialiser"
     And I open collapse "Filtres"
     And I fill in "listAF_label_filterForm" with "Formulaire"
     And I click "Filtrer"
-    Then the "listAF" datagrid should contain 3 row
+    Then the "listAF" datagrid should contain 4 row
 
   @javascript
   Scenario: Deletion of an A form from AF list
