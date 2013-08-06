@@ -12,7 +12,7 @@ Feature: AF main algo feature
     And I open tab "Traitement"
     And I open collapse "Algorithme d'exécution"
   # Affichage de l'algo (au bon format)
-    Then the "expression" field should contain ": champ_numerique"
+    Then the "expression" field should contain ": c_n"
   # Saisie algo vide
     When I fill in "expression" with ""
     And I click "Enregistrer"

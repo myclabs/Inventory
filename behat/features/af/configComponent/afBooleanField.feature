@@ -47,7 +47,7 @@ Feature: AF boolean field feature
     And I click "Valider"
     Then the field "checkboxFieldDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "checkboxFieldDatagrid_ref_addForm" with "champ_numerique"
+    When I fill in "checkboxFieldDatagrid_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "checkboxFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -60,12 +60,12 @@ Feature: AF boolean field feature
     Then I should see the "checkboxFieldDatagrid" datagrid
   # Contenu initial
     And the row 1 of the "checkboxFieldDatagrid" datagrid should contain:
-      | label         | ref           | isVisible | enabled | defaultValue |
-      | Champ booléen | champ_booleen | Visible   | Activé  | Coché        |
+      | label     | ref | isVisible | enabled | defaultValue |
+      | Champ booléen | c_b | Visible   | Activé  | Coché        |
   # Modification du libellé
     When I set "Champ booléen modifié" for column "label" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
   # Modification de l'identifiant, saisie correcte
-    When I set "champ_booleen_modifie" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
+    When I set "c_b_modifie" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
   # Modification de l'aide
     When I set "h1. Aide modifiée" for column "help" of row 1 of the "checkboxFieldDatagrid" datagrid with a confirmation message
   # Modification des autres attributs
@@ -75,7 +75,7 @@ Feature: AF boolean field feature
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "checkboxFieldDatagrid" datagrid should contain:
       | label                 | ref                   | isVisible | enabled   | defaultValue |
-      | Champ booléen modifié | champ_booleen_modifie | Masqué    | Désactivé | Décoché      |
+      | Champ booléen modifié | c_b_modifie | Masqué    | Désactivé | Décoché      |
     When I click "Aide" in the row 1 of the "checkboxFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#checkboxFieldDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
@@ -89,7 +89,7 @@ Feature: AF boolean field feature
     When I set "bépo" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript

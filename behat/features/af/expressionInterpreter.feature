@@ -15,7 +15,7 @@ Feature: Expression interpreter feature
   # Expression vide
     When I click "Interpréter"
     Then I should see "L'expression n'a pas pu être interprétée."
-    And I should see " Il manque un opérateur dans l'expression «  »."
+    And I should see "Il manque un opérateur dans l'expression « »."
   # Expression correcte "simple"
     When I fill in "input" with "a+b"
     And I click "Interpréter"
@@ -62,7 +62,7 @@ Feature: Expression interpreter feature
   # Expression vide
     When I click "Interpréter"
     Then I should see "L'expression n'a pas pu être interprétée."
-    And I should see " Il manque un opérateur dans l'expression «  »."
+    And I should see "Il manque un opérateur dans l'expression « »."
   # Expression correcte "simple"
     When I fill in "input" with "a&b"
     And I click "Interpréter"
@@ -110,7 +110,7 @@ Feature: Expression interpreter feature
   # Expression vide
     When I click "Interpréter"
     Then I should see "L'expression n'a pas pu être interprétée."
-    And I should see " Il manque un opérateur dans l'expression «  »."
+    And I should see "Il manque un opérateur dans l'expression « »."
   # Expression correcte "simple"
     When I fill in "input" with "a:b"
     And I click "Interpréter"

@@ -35,14 +35,14 @@ Feature: AF indexes of a numeric algo feature
       | axis | type         | value |
       | Gaz  | Valeur fixée | CH4   |
   # Édition de la colonne "Valeur" pour un algorithme
-    When I set "champ_selection_simple" for column "value" of row 2 of the "algoResultIndexes" datagrid
+    When I set "c_s_s" for column "value" of row 2 of the "algoResultIndexes" datagrid
     And I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
     And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
     When I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
     Then the row 2 of the "algoResultIndexes" datagrid should contain:
       | axis             | type       | value                  |
-      | Poste article 75 | Algorithme | champ_selection_simple |
+      | Poste article 75 | Algorithme | c_s_s |
   # Édition de la colonne "Mode de détermination" (modif pour "Algorithme")
     When I set "Algorithme" for column "type" of row 1 of the "algoResultIndexes" datagrid
     Then the row 1 of the "algoResultIndexes" datagrid should contain:
@@ -83,5 +83,5 @@ Feature: AF indexes of a numeric algo feature
     And I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
     Then I should not see "Valeur fixée"
     # And I should not see "CO2" (présent ailleurs dans la page)
-    And I should not see "Algorithme"
+    # And I should not see "Algorithme" (présent ailleurs dans la page)
     And I should not see "expression_selection_indexation_algorithme"

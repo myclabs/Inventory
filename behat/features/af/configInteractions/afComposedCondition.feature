@@ -45,9 +45,10 @@ Feature: AF composed condition for interaction feature
     And I click "Valider"
     Then the field "conditionsExpression_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé, expression vide
-    When I fill in "conditionsExpression_ref_addForm" with "condition_composee_interactions"
+    When I fill in "conditionsExpression_ref_addForm" with "cond_el_inter"
     And I click "Valider"
-    Then the field "conditionsExpression_expression_addForm" should have error: " Il manque un opérateur dans l'expression «  »."
+    Then the field "conditionsExpression_expression_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
+    And the field "conditionsExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression «  »."
   # Ajout, identifiant déjà utilisé, expression incorrecte
     When I fill in "conditionsExpression_expression_addForm" with "a|(b|(c|d)"
     And I click "Valider"
@@ -66,18 +67,18 @@ Feature: AF composed condition for interaction feature
     Then I should see the "conditionsExpression" datagrid
   # Vérification contenu initial
     And the row 1 of the "conditionsExpression" datagrid should contain:
-      | ref                             |
-      | condition_composee_interactions |
+      | ref             |
+      | cond_comp_inter |
     When I click "Expression" in the row 1 of the "conditionsExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "a & (b | c) & d"
   # Fermeture du popup
     When I click "×"
   # Modification de l'identifiant, saisie correcte
-    When I set "condition_composee_interactions_modifiee" for column "ref" of row 1 of the "conditionsExpression" datagrid with a confirmation message
+    When I set "cond_comp_inter_modifiee" for column "ref" of row 1 of the "conditionsExpression" datagrid with a confirmation message
     Then the row 1 of the "conditionsExpression" datagrid should contain:
-      | ref                                      |
-      | condition_composee_interactions_modifiee |
+      | ref                      |
+      | cond_comp_inter_modifiee |
   # Modification de l'expression, saisie correcte
     When I set "a&b" for column "expression" of row 1 of the "conditionsExpression" datagrid with a confirmation message
     And I click "Expression" in the row 1 of the "conditionsExpression" datagrid
@@ -98,11 +99,11 @@ Feature: AF composed condition for interaction feature
     When I set "bépo" for column "ref" of row 1 of the "conditionsExpression" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "condition_elementaire_interactions" for column "ref" of row 1 of the "conditionsExpression" datagrid
+    When I set "cond_el_inter" for column "ref" of row 1 of the "conditionsExpression" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "conditionsExpression" datagrid
-    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes :  Il manque un opérateur dans l'expression «  »."
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression «  »."
   # Modification de l'expression, saisie invalide
     When I set "a|(b|(c|d)" for column "expression" of row 1 of the "conditionsExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
