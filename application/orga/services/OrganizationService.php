@@ -82,12 +82,26 @@ class Orga_Service_OrganizationService
      * Supprime un projet
      *
      * @param Orga_Model_Organization $organization
+     * @throws Exception
      */
     public function deleteOrganization(Orga_Model_Organization $organization)
     {
-        $organization->setGranularityForInventoryStatus(null);
+        $this->entityManager->beginTransaction();
 
-        $organization->delete();
+        try {
+            foreach ($organization->getGranularities() as $granularity) {
+                $granularity->delete();
+            }
+            $this->entityManager->flush();
+            $organization->delete();
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+
+            throw $e;
+        }
     }
 
 }

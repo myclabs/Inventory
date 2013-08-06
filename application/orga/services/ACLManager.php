@@ -387,8 +387,8 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
         $organizationResource->delete();
 
-        $organizationAdministrator = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
-        $organizationAdministrator->delete();
+        $this->deleteRole(User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization));
+        self::$changesDetected = true;
     }
 
     /**
@@ -402,14 +402,10 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
         $cellResource->delete();
 
-        $cellAdministrator = User_Model_Role::loadByRef('cellAdministrator_'.$idCell);
-        $cellAdministrator->delete();
-
-        $cellContributor = User_Model_Role::loadByRef('cellContributor_'.$idCell);
-        $cellContributor->delete();
-
-        $cellObserver = User_Model_Role::loadByRef('cellObserver_'.$idCell);
-        $cellObserver->delete();
+        $this->deleteRole(User_Model_Role::loadByRef('cellAdministrator_'.$idCell));
+        $this->deleteRole(User_Model_Role::loadByRef('cellContributor_'.$idCell));
+        $this->deleteRole(User_Model_Role::loadByRef('cellObserver_'.$idCell));
+        self::$changesDetected = true;
     }
 
     /**
@@ -422,6 +418,18 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         $idReport = $reportResource->getEntityIdentifier();
 
         $reportResource->delete();
+        self::$changesDetected = true;
+    }
+
+    /**
+     * @param User_Model_Role $role
+     */
+    protected function deleteRole(User_Model_Role $role)
+    {
+        foreach ($role->getUsers() as $user) {
+            $user->removeRole($role);
+        }
+        $role->delete();
     }
 
 
