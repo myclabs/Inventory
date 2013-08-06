@@ -24,9 +24,9 @@ Feature: AF boolean field feature
     And the "checkboxFieldDatagrid" datagrid should contain a row:
       | label | ref | isVisible | enabled | defaultValue |
       | AAA   | aaa | Visible   | Activé  | Décoché      |
-    When I click "Aide" in the row 2 of the "checkboxFieldDatagrid" datagrid
+    When I click "Aide" in the row 3 of the "checkboxFieldDatagrid" datagrid
     Then I should see the popup "Aide"
-    And I should see a "#checkboxFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
+    And I should see "Blabla" in the "#checkboxFieldDatagrid_help_popup .modal-body h1" element
 
   @javascript
   Scenario: Creation of a boolean field, incorrect input
