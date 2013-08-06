@@ -67,8 +67,8 @@ class AF_PopulateTest extends AF_Populate
         // Formulaire avec sous-formulaires
         $aF_sous_af = $this->createAF($category_cont_formulaire, 'af_avec_sous_af', 'Formulaire avec sous-formulaires');
         // Composants
-        $s_f_n_r = $this->createSubAF($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_n_r', 'Sous-formulaire non rép.', $aF_d_g);
-        $s_f_r = $this->createSubAFRepeated($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_r', 'Sous-formulaire rép.', $aF_combustion);
+        $s_f_n_r = $this->createSubAF($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $aF_d_g);
+        $s_f_r = $this->createSubAFRepeated($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $aF_combustion);
 
 
         // Formulaire de test
@@ -80,9 +80,9 @@ class AF_PopulateTest extends AF_Populate
         $g_test_cont_sous_g = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'g_cont_sous_g', 'Groupe contenant un sous-groupe');
         $sous_g_test = $this->createGroup($aF_test, $g_test_cont_sous_g, 'sous_g', 'Sous-groupe');
 
-        $s_f_n_r_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 's_f_n_r', 'Sous-formulaire non rép.', $aF_d_g);
+        $s_f_n_r_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $aF_d_g);
 
-        $s_f_r_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 's_f_r', 'Sous-formulaire rép.', $aF_combustion);
+        $s_f_r_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $aF_combustion);
 
         $c_n_test = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', '1000.5', '10');
         $c_n_test_cible_activation = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n_cible_activation', 'Champ numérique cible activation', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
