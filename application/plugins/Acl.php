@@ -154,6 +154,26 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
+    public function viewMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return ($this->viewOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function editMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return ($this->editOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
     protected function viewCellRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
