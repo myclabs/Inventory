@@ -70,7 +70,7 @@ Feature: AF change component value interaction feature
     Given I am on "af/edit/menu/id/4/onglet/interaction"
     And I wait for the page to finish loading
     And I open collapse "Assignations de valeurs à des champs"
-  # Vérification contenu
+  # Vérification contenu
     Then the row 2 of the "actionsSetValue" datagrid should contain:
       | targetComponent                | value             |
       | Champ numérique cible setvalue | 1 234,56789 ± 5 % |
@@ -78,8 +78,8 @@ Feature: AF change component value interaction feature
     When I click "Éditer" in the row 2 of the "actionsSetValue" datagrid
     Then I should see the popup "Édition de la valeur ou de l'algorithme à assigner"
   # Vérification que la valeur affichée dans le popup est bien au format français
-    And the field "numericValue" should contain "1234,56789"
-    And the field "numericUncertainty" should contain "5,9"
+    And the "numericValue" field should contain "1234,56789"
+    And the "numericUncertainty" field should contain "5,9"
   # Modification de la valeur (incertitude vide)
     And I fill in "numericValue" with "12345,6789"
     And I click "Enregistrer"
