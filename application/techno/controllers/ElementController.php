@@ -79,7 +79,7 @@ class Techno_ElementController extends Core_Controller
         $this->sendFormResponse(
             [
                 'elementId' => $element->getId(),
-                'value' => $locale->formatNumber($element->getValue()->getDigitalValue()),
+                'value' => $locale->formatNumber($element->getValue()->getDigitalValue(), 3),
                 'uncertainty' => $element->getValue()->getRelativeUncertainty(),
             ]
         );
