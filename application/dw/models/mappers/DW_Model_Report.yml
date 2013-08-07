@@ -97,5 +97,6 @@ DW_Model_Report:
 
   lifecycleCallbacks:
     prePersist: [ preSave ]
-    preUpdate: [ preUpdate ]
+    preUpdate: [ updateLastModification ]
+    postUpdate: [ postUpdate ]
     preRemove: [ preDelete ]

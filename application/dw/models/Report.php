@@ -165,29 +165,26 @@ class DW_Model_Report extends Core_Model_Entity
     }
 
     /**
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
+     */
+    public function preSave()
+    {
+        $this->launchEvent(self::EVENT_SAVE);
+    }
+
+    /**
      * Mets à jour le timestamp de dernière modification
      */
-    protected function updateLastModification()
+    public function updateLastModification()
     {
         $this->lastModificationTimestamp = time();
     }
 
     /**
-     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
-     */
-    public function preSave()
-    {
-        Core_Tools::dump('Pre Save : '.$this->getLabel().' ('.$this->getCube()->getId().')');
-        $this->launchEvent(self::EVENT_SAVE);
-    }
-
-    /**
      * Fonction appelée après un update de l'objet (défini dans le mapper).
      */
-    public function preUpdate()
+    public function postUpdate()
     {
-        $this->updateLastModification();
-        Core_Tools::dump('Pre Update : '.$this->getLabel().' ('.$this->getCube()->getId().')');
         $this->launchEvent(self::EVENT_UPDATED);
     }
 
@@ -196,7 +193,6 @@ class DW_Model_Report extends Core_Model_Entity
      */
     public function preDelete()
     {
-        Core_Tools::dump('Pre Delete : '.$this->getLabel().' ('.$this->getCube()->getId().')');
         $this->launchEvent(self::EVENT_DELETE);
     }
 
