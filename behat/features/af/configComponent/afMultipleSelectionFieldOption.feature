@@ -23,7 +23,7 @@ Feature: AF multiple selection field option feature
     And I fill in "optionDatagrid_ref_addForm" with "aaa"
     And I click "Valider"
   # Option ajoutée apparaît en dernier
-    Then the row 2 of the "optionDatagrid" datagrid should contain:
+    Then the row 3 of the "optionDatagrid" datagrid should contain:
       | label | ref | isVisible | enabled | defaultValue     |
       | AAA   | aaa | Visible   | Activé  | Non sélectionnée |
     When I click element "#selectMultiFieldDatagrid_options_popup .close:contains('×')"
@@ -122,7 +122,7 @@ Feature: AF multiple selection field option feature
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
     When I click "Options" in the row 1 of the "selectMultiFieldDatagrid" datagrid
-    And I set "opt_1" for column "ref" of row 1 of the "optionDatagrid" datagrid
+    And I set "opt_2" for column "ref" of row 1 of the "optionDatagrid" datagrid
     And I click element "#selectMultiFieldDatagrid_options_popup .close:contains('×')"
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -138,6 +138,7 @@ Feature: AF multiple selection field option feature
     When I click "Options" in the row 1 of the "selectMultiFieldDatagrid" datagrid
     Then I should see the popup "Options"
     And I should see the "optionDatagrid" datagrid
+    And the "optionDatagrid" datagrid should contain 2 row
   # Suppression sans obstacle
     When I click "Supprimer" in the row 1 of the "optionDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
@@ -145,4 +146,4 @@ Feature: AF multiple selection field option feature
     Then the following message is shown and closed: "Suppression effectuée."
   # On doit rouvrir le popup des options, car les deux popups sont fermés d'un coup
     When I click "Options" in the row 1 of the "selectMultiFieldDatagrid" datagrid
-    Then the "optionDatagrid" datagrid should contain 0 row
+    Then the "optionDatagrid" datagrid should contain 1 row

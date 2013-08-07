@@ -42,7 +42,6 @@ Feature: Cell observer feature
     And I click "connection"
   # On tombe sur le datagrid des cellules
     Then I should see the "listCells" datagrid
-    And the "listCells" datagrid should contain 2 row
     And the row 1 of the "listCells" datagrid should contain:
       | label  | access      |
       | Annecy | Observateur |
@@ -51,4 +50,3 @@ Feature: Cell observer feature
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
-    And the "aFGranularity5Input8" datagrid should contain 2 row

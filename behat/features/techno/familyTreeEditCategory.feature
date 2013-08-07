@@ -79,7 +79,7 @@ Feature: Family tree edit of categories feature
   @javascript
   Scenario: Deletion of a Techno category
     Given I am on "techno/family/tree-edit"
-    And I wait 5 seconds
+    And I wait 7 seconds
   # Catégorie contenant une sous-catégorie
     When I click "Catégorie contenant une sous-catégorie"
     Then I should see the popup "Édition d'une catégorie"

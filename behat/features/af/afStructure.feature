@@ -9,6 +9,7 @@ Feature: AF structure feature
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Structure"
+    And I wait 5 seconds
   # Déplacement d'un groupe, à la fin
     When I click "Groupe vide"
     Then I should see the popup "Déplacement dans la structure du formulaire"

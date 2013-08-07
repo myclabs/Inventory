@@ -68,10 +68,11 @@ Feature: AF selection expression algo feature
     And I open collapse "Expressions"
     Then I should see the "algoSelectionTextkeyExpression" datagrid
   # Modification de l'identifiant, saisie correcte
-    When I set "expression_selection_modifiee" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
-    Then the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
-      | ref                           |
-      | expression_selection_modifiee |
+    When I set "expression_sel_modifiee" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
+  # Attention, modification de l'ordre lors de l'édition (???)
+    Then the "algoSelectionTextkeyExpression" datagrid should contain a row:
+      | ref                     |
+      | expression_sel_modifiee |
   # Modification de l'expression, saisie correcte
     When I set "a:b" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
     When I click "Expression" in the row 2 of the "algoSelectionTextkeyExpression" datagrid
@@ -88,7 +89,7 @@ Feature: AF selection expression algo feature
   # Affichage contenu initial
     And the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref                  |
-      | expression_selection |
+      | expression_sel |
     When I click "Expression" in the row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "a : (b : (c : d ; e : (f : g ; : h)))"
@@ -104,7 +105,7 @@ Feature: AF selection expression algo feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
-    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes :  Il manque un opérateur dans l'expression «  »."
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression «  »."
   # Modification de l'expression, saisie invalide
     When I set "a:(b:(c:d)" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
@@ -119,13 +120,13 @@ Feature: AF selection expression algo feature
     And the "algoSelectionTextkeyExpression" datagrid should contain 3 row
     And the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref  |
-      | expression_selection |
+      | expression_sel |
     And the row 2 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref  |
-      | expression_selection_coordonnee_parametre |
+      | expression_sel_coord_param |
     And the row 3 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref  |
-      | expression_selection_indexation_algorithme |
+      | expression_sel_index_algo |
   # Algo utilisé pour la détermination d'une coordonnée de paramètre
     When I click "Supprimer" in the row 2 of the "algoSelectionTextkeyExpression" datagrid
     Then I should see the popup "Demande de confirmation"

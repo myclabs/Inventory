@@ -67,6 +67,7 @@ Feature: AF tree edit AF feature
 
   @javascript
   Scenario: Deletion of an AF in AF tree edit, authorized
+    @skipped
     Given I am on "af/af/tree"
     And I wait 7 seconds
   # Suppression sans obstacle, formulaire vide
