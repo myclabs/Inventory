@@ -64,7 +64,7 @@ class Orga_Service_OrganizationService
             $organization->save();
 
             // Ajout de l'utilisateur courant en tant qu'administrateur.
-            $this->aclManager->addOrganizationAdministrator($organization, $administrator);
+            $this->aclManager->addOrganizationAdministrator($organization, $administrator, false);
             $this->entityManager->flush();
 
             $this->entityManager->commit();
