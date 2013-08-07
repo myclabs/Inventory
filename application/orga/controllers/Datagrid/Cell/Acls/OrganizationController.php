@@ -145,7 +145,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             )
         );
 
-        $this->message = __('UI', 'message', 'removedLater');
+        $this->message = __('UI', 'message', 'deletedLater');
         $this->send();
     }
 

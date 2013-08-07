@@ -13,22 +13,25 @@ Feature: AF structure feature
     When I click "Groupe vide"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Dernier"
+  # L'attente qui suit semble, curieusement, nécessaire
+    And I wait 5 seconds
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un groupe, au début
-    When I click "Groupe contenant un sous-groupe"
+    When I wait 7 seconds
+    And I click "Groupe contenant un sous-groupe"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Premier"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un groupe, après un autre composant ou group
-    When I wait 5 seconds
+    When I wait 7 seconds
     And I click "Groupe contenant un champ"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Après"
     And I select "Champ sélection simple" from "afTree_selectAfter"
     And I click "Confirmer"
-    And I wait 5 seconds
+    And I wait 7 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript

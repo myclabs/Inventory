@@ -22,9 +22,9 @@ class AF_PopulateTest extends AF_Populate
 
 
         // Création des catégories.
-        $category_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
-        $category_sous_categorie = $this->createCategory('Sous-catégorie', $category_contenant_sous_categorie);
-        $category_contenant_formulaire = $this->createCategory('Catégorie contenant un formulaire');
+        $category_cont_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
+        $category_sous_categorie = $this->createCategory('Sous-catégorie', $category_cont_sous_categorie);
+        $category_cont_formulaire = $this->createCategory('Catégorie contenant un formulaire');
         $category_vide = $this->createCategory('Catégorie vide');
 
         // Formulaire génériques, paramétrage commenté pour exemple
@@ -37,7 +37,7 @@ class AF_PopulateTest extends AF_Populate
         // $this->createAlgoNumericConstant($aF_combustion, 'refa1', 'Label 1', 10, 5, 'm');
 
         // Combustion de combustible, mesuré en unité de masse
-        $aF_combustion = $this->createAF($category_contenant_formulaire, 'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse');
+        $aF_combustion = $this->createAF($category_cont_formulaire, 'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse');
         // Composants
         $nature_combustible = $this->createSelectInputList($aF_combustion, $aF_combustion->getRootGroup(), 'nature_combustible', 'Nature du combustible', ['charbon' => 'Charbon', 'gaz_naturel' => 'Gaz naturel']);
         $quantite_combustible = $this->createNumericInput($aF_combustion, $aF_combustion->getRootGroup(), 'quantite_combustible', 'Quantité', 't');
@@ -57,7 +57,7 @@ class AF_PopulateTest extends AF_Populate
         $this->createFixedIndexForAlgoNumeric($aF_combustion->getAlgoByRef('emissions_amont'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
 
         // Données générales
-        $aF_d_g = $this->createAF($category_contenant_formulaire, 'donnees_generales', 'Données générales');
+        $aF_d_g = $this->createAF($category_cont_formulaire, 'donnees_generales', 'Données générales');
         // Composants
         $numericInput_chiffre_affaire = $this->createNumericInput($aF_d_g, $aF_d_g->getRootGroup(), 'chiffre_affaire', 'Chiffre d\'affaire', 'kiloeuro');
         // Algos
@@ -65,92 +65,92 @@ class AF_PopulateTest extends AF_Populate
         $aF_d_g->getMainAlgo()->setExpression(':chiffre_affaire;');
 
         // Formulaire avec sous-formulaires
-        $aF_sous_af = $this->createAF($category_contenant_formulaire, 'af_avec_sous_af', 'Formulaire avec sous-formulaires');
+        $aF_sous_af = $this->createAF($category_cont_formulaire, 'af_avec_sous_af', 'Formulaire avec sous-formulaires');
         // Composants
-        $sous_formulaire_non_repete = $this->createSubAF($aF_sous_af, $aF_sous_af->getRootGroup(), 'sous_formulaire_non_repete', 'Sous-formulaire non répété', $aF_d_g);
-        $sous_formulaire_repete = $this->createSubAFRepeated($aF_sous_af, $aF_sous_af->getRootGroup(), 'sous_formulaire_repete', 'Sous-formulaire répété', $aF_combustion);
+        $s_f_n_r = $this->createSubAF($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $aF_d_g);
+        $s_f_r = $this->createSubAFRepeated($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $aF_combustion);
 
 
         // Formulaire de test
-        $aF_test = $this->createAF($category_contenant_formulaire, 'formulaire_test', 'Formulaire test');
+        $aF_test = $this->createAF($category_cont_formulaire, 'formulaire_test', 'Formulaire test');
 
         // Composants
-        $groupe_test_vide = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_vide', 'Groupe vide');
-        $groupe_test_contenant_champ = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_contenant_champ', 'Groupe contenant un champ');
-        $groupe_test_contenant_sous_groupe = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'groupe_contenant_sous_groupe', 'Groupe contenant un sous-groupe');
-        $sous_groupe_test = $this->createGroup($aF_test, $groupe_test_contenant_sous_groupe, 'sous_groupe', 'Sous-groupe');
+        $g_test_vide = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'g_vide', 'Groupe vide');
+        $g_test_cont_champ = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'g_cont_champ', 'Groupe contenant un champ');
+        $g_test_cont_sous_g = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'g_cont_sous_g', 'Groupe contenant un sous-groupe');
+        $sous_g_test = $this->createGroup($aF_test, $g_test_cont_sous_g, 'sous_g', 'Sous-groupe');
 
-        $sous_formulaire_non_repete_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_non_repete', 'Sous-formulaire non répété', $aF_d_g);
+        $s_f_n_r_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $aF_d_g);
 
-        $sous_formulaire_repete_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 'sous_formulaire_repete', 'Sous-formulaire répété', $aF_combustion);
+        $s_f_r_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $aF_combustion);
 
-        $champ_numerique_test = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique', 'Champ numérique', 'kg_co2e.m3^-1', '1000.5', '10');
-        $champ_numerique_test_cible_activation = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique_cible_activation', 'Champ numérique cible activation', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
-        $champ_numerique_test_cible_setvalue = $this->createNumericInput($aF_test, $groupe_test_contenant_champ, 'champ_numerique_cible_setvalue', 'Champ numérique cible setvalue', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
+        $c_n_test = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', '1000.5', '10');
+        $c_n_test_cible_activation = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n_cible_activation', 'Champ numérique cible activation', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
+        $c_n_test_cible_setvalue = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n_cible_setvalue', 'Champ numérique cible setvalue', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
 
-        $champ_selection_simple_test = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple', 'Champ sélection simple', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
-        $champ_selection_simple_utilise_condition_elementaire_interaction = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple_utilise_condition_elementaire_interaction', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Interactions"', ['option_1' => 'Option 1']);
-        $champ_selection_simple_utilise_condition_elementaire_traitement = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple_utilise_condition_elementaire_traitement', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Traitement"', ['option_1' => 'Option 1']);
-        $champ_selection_simple_cible_setvalue = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'champ_selection_simple_cible_setvalue', 'Champ sélection simple cible d\'une action "setValue"', ['option_1' => 'Option 1']);
+        $c_s_s_test = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s', 'Champ sélection simple', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
+        $c_s_s_util_cond_el_inter = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s_util_cond_el_inter', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Interactions"', ['opt_1' => 'Option 1']);
+        $c_s_s_util_cond_el_trait = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s_util_cond_el_trait', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Traitement"', ['opt_1' => 'Option 1']);
+        $c_s_s_cible_setvalue = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s_cible_setvalue', 'Champ sélection simple cible d\'une action "setValue"', ['opt_1' => 'Option 1']);
 
-        $champ_selection_multiple_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'champ_selection_multiple', 'Champ sélection multiple', ['option_1' => 'Option 1']);
+        $c_s_m_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'c_s_m', 'Champ sélection multiple', ['opt_1' => 'Option 1']);
 
-        $champ_booleen_test = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'champ_booleen', 'Champ booléen');
-        $champ_booleen_cible_setvalue = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'champ_booleen_cible_setvalue', 'Champ booléen cible d\'une action "setValue"');
+        $c_b_test = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'c_b', 'Champ booléen');
+        $c_b_cible_setvalue = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'c_b_cible_setvalue', 'Champ booléen cible d\'une action "setValue"');
 
-        $champ_texte_court_test = $this->createShortTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_court', 'Champ texte court');
-        $champ_texte_long_test = $this->createLongTextInput($aF_test, $aF_test->getRootGroup(), 'champ_texte_long', 'Champ texte long');
+        $c_t_c_test = $this->createShortTextInput($aF_test, $aF_test->getRootGroup(), 'c_t_c', 'Champ texte court');
+        $c_t_l_test = $this->createLongTextInput($aF_test, $aF_test->getRootGroup(), 'c_t_l', 'Champ texte long');
 
         // Interactions
-        $condition_elementaire_interactions = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions', $champ_selection_simple_utilise_condition_elementaire_interaction);
-        $condition_elementaire_interactions_utilisee_action_setstate = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions_utilisee_action_setstate', $champ_selection_simple_utilise_condition_elementaire_interaction);
-        $condition_elementaire_interactions_utilisee_action_setvalue = $this->createConditionElementary($aF_test, 'condition_elementaire_interactions_utilisee_action_setvalue', $champ_selection_simple_utilise_condition_elementaire_interaction);
+        $cond_el_inter = $this->createConditionElementary($aF_test, 'cond_el_inter', $c_s_s_util_cond_el_inter);
+        $cond_el_inter_util_act_setstate = $this->createConditionElementary($aF_test, 'cond_el_inter_util_act_setstate', $c_s_s_util_cond_el_inter);
+        $cond_el_inter_util_act_setvalue = $this->createConditionElementary($aF_test, 'cond_el_inter_util_act_setvalue', $c_s_s_util_cond_el_inter);
 
-        $condition_composee_interactions = $this->createConditionExpression($aF_test, 'condition_composee_interactions', 'a&(b|c)&d');
+        $cond_comp_inter = $this->createConditionExpression($aF_test, 'cond_comp_inter', 'a&(b|c)&d');
 
-        $this->createActionSetState($champ_numerique_test_cible_activation, AF_Model_Action::TYPE_ENABLE, $condition_elementaire_interactions_utilisee_action_setstate);
+        $this->createActionSetState($c_n_test_cible_activation, AF_Model_Action::TYPE_ENABLE, $cond_el_inter_util_act_setstate);
 
         $calcValueToBeSet = new Calc_Value(1234.56789, 5.9);
-        $this->createActionSetValue($champ_numerique_test_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, $calcValueToBeSet, $condition_elementaire_interactions_utilisee_action_setvalue);
-        $this->createActionSetValue($champ_selection_simple_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, null);
-        $this->createActionSetValue($champ_booleen_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, true, $condition_elementaire_interactions_utilisee_action_setvalue);
+        $this->createActionSetValue($c_n_test_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, $calcValueToBeSet, $cond_el_inter_util_act_setvalue);
+        $this->createActionSetValue($c_s_s_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, null);
+        $this->createActionSetValue($c_b_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, true, $cond_el_inter_util_act_setvalue);
 
         // Algorithmes
-        $aF_test->getMainAlgo()->setExpression(':champ_numerique;');
-        $this->createAlgoNumericExpression($aF_test, 'expression_numerique', 'Expression numérique', 'champ_numerique*parametre', 't_co2e');
+        $aF_test->getMainAlgo()->setExpression(':c_n;');
+        $this->createAlgoNumericExpression($aF_test, 'expression_num', 'Expression numérique', 'c_n*parametre', 't_co2e');
         $this->createAlgoNumericParameter($aF_test, 'parametre', 'Paramètre', 'combustion_combustible_unite_masse');
         $this->createAlgoNumericConstant($aF_test, 'constante', 'Constante', 12345.6789, 5.9, 't_co2e.passager^-1.km^-1');
-        $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_selection', 'a:(b:(c:d;e:(f:g;:h)))');
-        $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_selection_indexation_algorithme', 'a:b');
-        $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_selection_coordonnee_parametre', 'a:b');
-        $this->createAlgoConditionExpression($aF_test, 'condition_composee', 'condition_elementaire|condition_inexistante');
-        $this->createAlgoConditionElementary($aF_test, $champ_selection_simple_utilise_condition_elementaire_traitement, 'condition_elementaire');
+        $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel', 'a:(b:(c:d;e:(f:g;:h)))');
+        $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel_index_algo', 'a:b');
+        $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel_coord_param', 'a:b');
+        $this->createAlgoConditionExpression($aF_test, 'cond_comp', 'cond_el|condition_inexistante');
+        $this->createAlgoConditionElementary($aF_test, $c_s_s_util_cond_el_trait, 'cond_el');
         // Coordonnées des algorithmes numériques de type paramètre
         $this->createFixedCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre'), ['combustible' => 'charbon']);
-        $this->createAlgoCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre'), ['processus' => $aF_test->getAlgoByRef('expression_selection_coordonnee_parametre')]);
+        $this->createAlgoCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre'), ['processus' => $aF_test->getAlgoByRef('expression_sel_coord_param')]);
         // Indexation des algorithmes numériques
-        $this->createFixedIndexForAlgoNumeric($aF_test->getAlgoByRef('champ_numerique'), 'general', 'ges', ['gaz' => 'co2']);
-        $this->createAlgoIndexForAlgoNumeric($aF_test->getAlgoByRef('champ_numerique'), 'general', 'ges', ['poste_article_75' => $aF_test->getAlgoByRef('expression_selection_indexation_algorithme')]);
+        $this->createFixedIndexForAlgoNumeric($aF_test->getAlgoByRef('c_n'), 'general', 'ges', ['gaz' => 'co2']);
+        $this->createAlgoIndexForAlgoNumeric($aF_test->getAlgoByRef('c_n'), 'general', 'ges', ['poste_article_75' => $aF_test->getAlgoByRef('expression_sel_index_algo')]);
 
 //        $this->createAlgoSelectTextkeyExpression($aF_combustion_combustible_unite_masse, 'refa2', 'expression');
 //        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3');
 //        $this->createAlgoConditionExpression($aF_combustion_combustible_unite_masse, 'refa4', 'expression');
 
         // Formulaire avec tous types de champs
-        $aF_tous_types_champs = $this->createAF($category_contenant_formulaire, 'formulaire_tous_types_champ', 'Formulaire avec tout type de champ');
+        $aF_tous_types_champs = $this->createAF($category_cont_formulaire, 'formulaire_tous_types_champ', 'Formulaire avec tout type de champ');
 
         // Composants
-        $champ_numerique = $this->createNumericInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_numerique', 'Champ numérique', 'kg_co2e.m3^-1', null, null, true, true, true, null, true);
-        $champ_selection_simple_liste = $this->createSelectInputList($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_selection_simple_liste', 'Champ sélection simple (liste déroulante)', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
-        $champ_selection_simple_bouton = $this->createSelectInputRadio($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_selection_simple_bouton', 'Champ sélection simple (boutons radio)', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
-        $champ_selection_multi_checkbox = $this->createSelectInputBoxes($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_selection_multi_checkbox', 'Champ sélection multiple (checkboxes)', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
-        $champ_selection_multi_list = $this->createSelectInputMulti($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_selection_multi_list', 'Champ sélection multiple (liste)', ['option_1' => 'Option 1', 'option_2' => 'Option 2']);
-        $champ_booleen_test = $this->createBooleanInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_booleen', 'Champ booléen', false, true, null, true);
-        $champ_texte_court = $this->createShortTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_texte_court', 'Champ texte court', true, true, null, true);
-        $champ_texte_long = $this->createLongTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'champ_texte_long', 'Champ texte long', true, true, null, true);
+        $c_n = $this->createNumericInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', null, null, true, true, true, null, true);
+        $c_s_s_liste = $this->createSelectInputList($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_s_liste', 'Champ sélection simple (liste déroulante)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
+        $c_s_s_bouton = $this->createSelectInputRadio($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_s_bouton', 'Champ sélection simple (boutons radio)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
+        $c_s_m_checkbox = $this->createSelectInputBoxes($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_m_checkbox', 'Champ sélection multiple (checkboxes)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
+        $c_s_m_list = $this->createSelectInputMulti($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_m_list', 'Champ sélection multiple (liste)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
+        $c_b_test = $this->createBooleanInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_b', 'Champ booléen', false, true, null, true);
+        $c_t_c = $this->createShortTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_c', 'Champ texte court', true, true, null, true);
+        $c_t_l = $this->createLongTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_l', 'Champ texte long', true, true, null, true);
 
         // Formulaire vide
-        $aF_vide = $this->createAF($category_contenant_formulaire, 'formulaire_vide', 'Formulaire vide');
+        $aF_vide = $this->createAF($category_cont_formulaire, 'formulaire_vide', 'Formulaire vide');
 
         $entityManager->flush();
 

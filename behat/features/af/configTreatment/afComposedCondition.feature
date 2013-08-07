@@ -45,7 +45,7 @@ Feature: AF composed condition for treatment feature
     And I click "Valider"
     Then the field "algoConditionExpression_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé, expression vide
-    When I fill in "algoConditionExpression_ref_addForm" with "champ_numerique"
+    When I fill in "algoConditionExpression_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "algoConditionExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression «  »."
   # Ajout, identifiant déjà utilisé, expression invalide
@@ -68,18 +68,18 @@ Feature: AF composed condition for treatment feature
   # Vérification contenu initial
     And the row 1 of the "algoConditionExpression" datagrid should contain:
       | ref |
-      | condition_composee |
+      | cond_comp |
     And I click "Expression" in the row 1 of the "algoConditionExpression" datagrid
     Then I should see the popup "Expression"
-    And I should see "condition_elementaire | condition_inexistante"
+    And I should see "cond_el | condition_inexistante"
     When I click "×"
   # Modification de l'identifiant, saisie correcte
-    And I set "condition_composee_modifiee" for column "ref" of row 1 of the "algoConditionExpression" datagrid with a confirmation message
+    And I set "cond_comp_modifiee" for column "ref" of row 1 of the "algoConditionExpression" datagrid with a confirmation message
     Then the row 1 of the "algoConditionExpression" datagrid should contain:
       | ref |
-      | condition_composee_modifiee |
+      | cond_comp_modifiee |
   # Modification de l'expression, saisie correcte
-    When I set "a&(b|c)&d" for column "expression" of row 1 of the "algoNumericExpression" datagrid with a confirmation message
+    When I set "a&(b|c)&d" for column "expression" of row 1 of the "algoConditionExpression" datagrid with a confirmation message
     And I click "Expression" in the row 1 of the "algoConditionExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "a & (b | c) & d"
@@ -100,7 +100,7 @@ Feature: AF composed condition for treatment feature
     When I set "bépo" for column "ref" of row 1 of the "algoConditionExpression" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "algoConditionExpression" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "algoConditionExpression" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoConditionExpression" datagrid

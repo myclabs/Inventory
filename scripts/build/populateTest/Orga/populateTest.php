@@ -112,7 +112,7 @@ class Orga_PopulateTest extends Orga_Populate
         ], true);
         // Annecy | 2012 | Test affichage (inventaire en cours), saisie incomplète
         $this->setInput($granularity_annee_site_categorie, [$member_annee_2012, $member_site_annecy, $member_categorie_test_affichage], [
-            'champ_numerique' => new Calc_UnitValue(new UnitAPI('kg_co2e.m3⁻1'), 10, 15),
+            'c_n' => new Calc_UnitValue(new UnitAPI('kg_co2e.m3⁻1'), 10, 15),
             //'champ_selection_simple_liste' => 'option_1',
             //'champ_selection_simple_bouton' => 'option_1',
             //'champ_selection_multi_checkbox' => 'option_1',

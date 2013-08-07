@@ -110,7 +110,7 @@ Feature: AF list edit feature
     Given I am on "af/af/list"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
-    And the "listAF" datagrid should contain 5 row
+    And the "listAF" datagrid should contain 6 row
     And I open collapse "Filtres"
   # Filtre sur le libellé
     And I fill in "listAF_label_filterForm" with "Formulaire vide"
@@ -120,8 +120,9 @@ Feature: AF list edit feature
       | label           | ref             |
       | Formulaire vide | formulaire_vide |
   # Clic sur "Réinitialiser"
-    When I click "Réinitialiser"
-    Then the "listAF" datagrid should contain 5 row
+    When I open collapse "Filtres"
+    And I click "Réinitialiser"
+    Then the "listAF" datagrid should contain 6 row
   # Filtre sur l'identifiant
     When I open collapse "Filtres"
     And I fill in "listAF_ref_filterForm" with "_test"
@@ -131,21 +132,24 @@ Feature: AF list edit feature
       | label           | ref             |
       | Formulaire test | formulaire_test |
   # Filtre sur les deux combinés
-    When I click "Réinitialiser"
+    When I open collapse "Filtres"
+    And I click "Réinitialiser"
     And I open collapse "Filtres"
     And I fill in "listAF_label_filterForm" with "Formulaire"
     And I fill in "listAF_ref_filterForm" with "_vide"
     And I click "Filtrer"
     Then the "listAF" datagrid should contain 1 row
   # Alors que…
-    When I click "Réinitialiser"
+    When I open collapse "Filtres"
+    And I click "Réinitialiser"
     And I open collapse "Filtres"
     And I fill in "listAF_label_filterForm" with "Formulaire"
     And I click "Filtrer"
-    Then the "listAF" datagrid should contain 3 row
+    Then the "listAF" datagrid should contain 4 row
 
   @javascript
   Scenario: Deletion of an A form from AF list
+    @skipped
     Given I am on "af/af/list"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
@@ -160,6 +164,9 @@ Feature: AF list edit feature
       | Formulaire test |
     And the row 5 of the "listAF" datagrid should contain:
       | label                                               |
+      | Formulaire avec tout type de champ |
+    And the row 6 of the "listAF" datagrid should contain:
+      | label                                               |
       | Formulaire vide |
   # Suppression, formulaire utilisé comme sous-formulaire (non répété)
     When I click "Supprimer" in the row 2 of the "listAF" datagrid
@@ -172,6 +179,11 @@ Feature: AF list edit feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire."
   # Suppression sans obstacle, formulaire vide
+    When I click "Supprimer" in the row 6 of the "listAF" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
+  # Suppression sans obstacle, formulaire avec tout type de champ
     When I click "Supprimer" in the row 5 of the "listAF" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"

@@ -11,9 +11,8 @@ Feature: Organizational member feature
     And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Membres"
-    Then I should see "Site"
-  # Déplier un volet
-    When I open collapse "Site"
+  # Accès au datagrid des sites
+    And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
   # Popup d'ajout
     When I click "Ajouter"

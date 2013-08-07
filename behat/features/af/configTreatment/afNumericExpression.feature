@@ -57,7 +57,7 @@ Feature: AF numeric expression algo feature
     And I wait 5 seconds
     Then the field "algoNumericExpression_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé, expression vide, unité valide
-    When I fill in "algoNumericExpression_ref_addForm" with "champ_numerique"
+    When I fill in "algoNumericExpression_ref_addForm" with "c_n"
     And I click "Valider"
     And I wait 5 seconds
     Then the field "algoNumericExpression_expression_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
@@ -84,7 +84,7 @@ Feature: AF numeric expression algo feature
       | Expression numérique | expression_numerique | t équ. CO2 |
     When I click "Expression" in the row 1 of the "algoNumericExpression" datagrid
     Then I should see the popup "Expression"
-    And I should see "champ_numerique * parametre"
+    And I should see "c_n * parametre"
     And I click element "#algoNumericExpression_expression_popup .close:contains('×')"
   # Modification du libellé
     When I set "Expression numérique modifiée" for column "label" of row 1 of the "algoNumericExpression" datagrid with a confirmation message
@@ -114,7 +114,7 @@ Feature: AF numeric expression algo feature
     When I set "bépo" for column "ref" of row 1 of the "algoNumericExpression" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "algoNumericExpression" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "algoNumericExpression" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoNumericExpression" datagrid

@@ -18,12 +18,13 @@ Feature: AF text field feature
     When I fill in "textFieldDatagrid_label_addForm" with "AAA"
     And I fill in "textFieldDatagrid_ref_addForm" with "aaa"
     And I fill in "textFieldDatagrid_help_addForm" with "h1. Blabla"
+    And I select "Texte court" from "textFieldDatagrid_type_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Champs ordonnés suivant l'ordre de création
     And the row 3 of the "textFieldDatagrid" datagrid should contain:
-      | label | ref | isVisible |
-      | AAA   | aaa | Visible   |
+      | label | ref | isVisible | enabled | required    | type        |
+      | AAA   | aaa | Visible   | Activé  | Facultatif  | Texte court |
     When I click "Aide" in the row 3 of the "textFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#textFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
@@ -42,12 +43,14 @@ Feature: AF text field feature
     When I click "Valider"
   # Then the field "textFieldDatagrid_label_addForm" should have error: "Merci de renseigner ce champ."
     And the field "textFieldDatagrid_ref_addForm" should have error: "Merci de renseigner ce champ."
+    And the field "textFieldDatagrid_type_addForm" should have error: "Merci de renseigner ce champ."
   # Ajout, identifiant avec caractères non autorisés
     When I fill in "textFieldDatagrid_ref_addForm" with "bépo"
+    And I select "Texte court" from "textFieldDatagrid_type_addForm"
     And I click "Valider"
     Then the field "textFieldDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "textFieldDatagrid_ref_addForm" with "champ_numerique"
+    When I fill in "textFieldDatagrid_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "textFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -59,8 +62,8 @@ Feature: AF text field feature
     And I open collapse "Champs texte"
     Then I should see the "textFieldDatagrid" datagrid
     And the row 1 of the "textFieldDatagrid" datagrid should contain:
-      | label             | ref               | isVisible | enabled | required    | type        |
-      | Champ texte court | champ_texte_court | Visible   | Activé  | Obligatoire | Texte court |
+      | label             | ref   | isVisible | enabled | required    | type        |
+      | Champ texte court | c_t_c | Visible   | Activé  | Obligatoire | Texte court |
   # Modification du libellé
     When I set "Champ texte modifié" for column "label" of row 1 of the "textFieldDatagrid" datagrid with a confirmation message
   # Modification de l'identifiant, saisie correcte
@@ -94,7 +97,7 @@ Feature: AF text field feature
     When I set "bépo" for column "ref" of row 1 of the "textFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "textFieldDatagrid" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "textFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript

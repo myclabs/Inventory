@@ -50,7 +50,7 @@ Feature: AF group feature
     And I click "Valider"
     Then the field "groupDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "groupDatagrid_ref_addForm" with "champ_numerique"
+    When I fill in "groupDatagrid_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "groupDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -91,7 +91,7 @@ Feature: AF group feature
     When I set "bépo" for column "ref" of row 1 of the "groupDatagrid" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "groupDatagrid" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "groupDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
@@ -103,7 +103,7 @@ Feature: AF group feature
     Then I should see the "groupDatagrid" datagrid
   # Groupe contenant un champ
     And the row 2 of the "groupDatagrid" datagrid should contain:
-      | label |
+      | label                     |
       | Groupe contenant un champ |
     When I click "Supprimer" in the row 2 of the "groupDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
@@ -111,7 +111,7 @@ Feature: AF group feature
     Then the following message is shown and closed: "Ce groupe ne peut pas être supprimé, car il contient un ou plusieurs composants."
   # Groupe contenant un sous-groupe
     And the row 3 of the "groupDatagrid" datagrid should contain:
-      | label |
+      | label                           |
       | Groupe contenant un sous-groupe |
     When I click "Supprimer" in the row 3 of the "groupDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
@@ -119,7 +119,7 @@ Feature: AF group feature
     Then the following message is shown and closed: "Ce groupe ne peut pas être supprimé, car il contient un ou plusieurs composants."
   # Suppression sans obstacle
     And the row 1 of the "groupDatagrid" datagrid should contain:
-      | label |
+      | label       |
       | Groupe vide |
     When I click "Supprimer" in the row 1 of the "groupDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"

@@ -47,10 +47,10 @@ Feature: AF selection expression algo feature
     And I click "Valider"
     Then the field "algoSelectionTextkeyExpression_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé, expression vide
-    When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "champ_numerique"
+    When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "algoSelectionTextkeyExpression_expression_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
-    And the field "algoSelectionTextkeyExpression_expression_addForm" should have error: " Il manque un opérateur dans l'expression «  »."
+    And the field "algoSelectionTextkeyExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression «  »."
   # Ajout, identifiant déjà utilisé, expression invalide
     When I fill in "algoSelectionTextkeyExpression_expression_addForm" with "a:(b:(c:d)"
     And I click "Valider"
@@ -100,7 +100,7 @@ Feature: AF selection expression algo feature
     When I set "bépo" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
