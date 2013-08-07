@@ -61,7 +61,6 @@ Feature: Cell administrator feature
     And I fill in "listMemberssite_ref_addForm" with "aaa"
     And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
-    And I wait 15 seconds
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Modification d'un membre
     When I set "Annecy modifiée" for column "label" of row 1 of the "listMemberssite" datagrid with a confirmation message
