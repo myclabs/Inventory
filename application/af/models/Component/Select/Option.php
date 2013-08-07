@@ -162,7 +162,7 @@ class AF_Model_Component_Select_Option extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -174,7 +174,7 @@ class AF_Model_Component_Select_Option extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -182,7 +182,7 @@ class AF_Model_Component_Select_Option extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -203,7 +203,7 @@ class AF_Model_Component_Select_Option extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {
