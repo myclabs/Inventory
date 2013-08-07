@@ -1,41 +1,20 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Error
- */
+
+use Psr\Log\LoggerInterface;
 
 /**
  * Log des erreurs et des exceptions.
  *
- * @package    Core
- * @subpackage Error
+ * @author matthieu.napoli
  */
 class Core_Error_Log
 {
-
-    /**
-     * Les logs ne sont envoyés nulle part.
-     */
-    const DESTINATION_NONE = 0;
     /**
      * Les logs sont envoyés vers firebug.
      *
      * Utilisé pour le rendu en navigateur.
      */
     const DESTINATION_FIREBUG = 1;
-    /**
-     * Les logs sont envoyés dans la console.
-     *
-     * Aucun formatage HTML n'est utilisé.
-     */
-    const DESTINATION_CONSOLE = 2;
-    /**
-     * Les logs sont envoyés dans la console.
-     *
-     * Aucun formatage HTML n'est utilisé.
-     */
-    const DESTINATION_FILE = 3;
 
     /**
      * Classe de log de Zend.
@@ -45,20 +24,16 @@ class Core_Error_Log
     protected $_zendLogger;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Activation du log d'erreur (activé par défaut).
      *
      * @var bool
      */
     protected $_activation = true;
-
-    /**
-     * Fichier de log.
-     *
-     * Chemin relatif au dossier "application".
-     *
-     * @var string
-     */
-    protected $_fichierLog = '/../data/logs/error.log';
 
     /**
      * Log dans Firebug.
@@ -90,20 +65,9 @@ class Core_Error_Log
         $this->_zendLogger = new Zend_Log();
     }
 
-    /**
-     * Active le log d'erreur (activé par défaut)
-     */
-    public function enable()
+    public function setLogger(LoggerInterface $logger)
     {
-        $this->_activation = true;
-    }
-
-    /**
-     * Désactive le log d'erreur
-     */
-    public function disable()
-    {
-        $this->_activation = false;
+        $this->logger = $logger;
     }
 
     /**
@@ -127,33 +91,6 @@ class Core_Error_Log
             // Pour afficher une table dans firebug
             $this->_zendLogger->addPriority('TABLE', 8);
         }
-        // Fichier
-        if ($destination == self::DESTINATION_FILE) {
-            // Teste si le dossier existe
-            if (! is_dir(dirname(APPLICATION_PATH.$this->_fichierLog))) {
-                if (! mkdir(dirname(APPLICATION_PATH.$this->_fichierLog), 0777, true)) {
-                    $this->warning("Impossible d'activer le log des erreurs dans un fichier : "
-                        . "le dossier 'data/logs/' n'existe pas.");
-                    return;
-                }
-            }
-            // Teste s'il est possible d'écrire dans le fichier
-            if (! is_writable(APPLICATION_PATH.$this->_fichierLog)) {
-                if (!touch(APPLICATION_PATH.$this->_fichierLog)) {
-                    $this->warning("Impossible d'activer le log des erreurs dans un fichier : "
-                        . "le fichier 'data/logs/error.log' ne peut pas être accédé en écriture.");
-                    return;
-                }
-            }
-            $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH.$this->_fichierLog);
-            $this->_zendLogger->addWriter($writer);
-        }
-        // Sortie PHP
-        if ($destination == self::DESTINATION_CONSOLE) {
-            $writer = new Zend_Log_Writer_Stream('php://output');
-            $this->_zendLogger->addWriter($writer);
-        }
-
     }
 
     /**
@@ -180,6 +117,7 @@ class Core_Error_Log
             return;
         }
         $this->_zendLogger->err($e);
+        $this->logger->error($e->getMessage(), ['exception' => $e]);
     }
 
     /**
@@ -189,7 +127,7 @@ class Core_Error_Log
      */
     public function error($message)
     {
-        $this->_zendLogger->log($message, Zend_Log::ERR);
+        $this->logger->error($message);
     }
 
     /**
@@ -199,7 +137,7 @@ class Core_Error_Log
      */
     public function warning($message)
     {
-        $this->_zendLogger->log($message, Zend_Log::WARN);
+        $this->logger->warning($message);
     }
 
     /**
@@ -209,7 +147,7 @@ class Core_Error_Log
      */
     public function info($message)
     {
-        $this->_zendLogger->log($message, Zend_Log::INFO);
+        $this->logger->info($message);
     }
 
     /**
@@ -219,7 +157,7 @@ class Core_Error_Log
      */
     public function debug($message)
     {
-        $this->_zendLogger->log($message, Zend_Log::DEBUG);
+        $this->logger->debug($message);
     }
 
     /**

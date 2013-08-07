@@ -11,6 +11,9 @@ use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
+use Monolog\Handler\FirePHPHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
@@ -41,7 +44,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'UTF8',
                 'Container',
                 'Translations',
-                'ErrorLog',
+                'Log',
                 'ErrorHandler',
                 'FrontController',
                 'Doctrine',
@@ -113,25 +116,27 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * Log des erreurs
      */
-    protected function _initErrorLog()
+    protected function _initLog()
     {
+        $configuration = Zend_Registry::get('configuration');
+
+        $logger = new Logger('log');
         $errorLog = Core_Error_Log::getInstance();
+        $errorLog->setLogger($logger);
         // Si on est en tests unitaires
         if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'script')) {
-            // Prend en compte toutes les erreurs
-            error_reporting(E_ALL);
             // Log vers la console
-            $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_CONSOLE);
+            $logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
         }
-        // Si on est en développement ou test
-        if (APPLICATION_ENV == 'developpement') {
-            // Prend en compte toutes les erreurs
-            error_reporting(E_ALL);
-            // Log vers Firebug
+        // Log FirePHP
+        if ($configuration->log->firephp) {
             $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_FIREBUG);
         }
         // Log dans un fichier
-        $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_FILE);
+        $file = $this->container->get('log.file');
+        $logger->pushHandler(new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG));
+
+        $this->container->set('Psr\Log\LoggerInterface', $logger);
     }
 
     /**

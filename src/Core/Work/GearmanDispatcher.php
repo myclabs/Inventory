@@ -1,16 +1,13 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
 
 use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 
 /**
  * Implémentation WorkDispatcher en utilisant Gearman
  *
- * @package Core
+ * @author matthieu.napoli
  */
 class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 {
@@ -36,14 +33,21 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     private $entityManager;
 
     /**
-     * @Inject({"applicationName" = "application.name"})
-     * @param string        $applicationName
-     * @param EntityManager $entityManager
+     * @var LoggerInterface
      */
-    public function __construct($applicationName, EntityManager $entityManager)
+    private $logger;
+
+    /**
+     * @Inject({"applicationName" = "application.name"})
+     * @param string          $applicationName
+     * @param EntityManager   $entityManager
+     * @param LoggerInterface $logger
+     */
+    public function __construct($applicationName, EntityManager $entityManager, LoggerInterface $logger)
     {
         $this->applicationName = $applicationName;
-        $this->entityManager =$entityManager;
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -100,12 +104,12 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     {
         $this->entityManager->getConnection()->close();
 
-        Core_Error_Log::getInstance()->info("Worker started");
+        $this->logger->info("Worker started");
 
         $worker = $this->getGearmanWorker();
 
         while (1) {
-            Core_Error_Log::getInstance()->info("Waiting for a job");
+            $this->logger->info("Waiting for a job");
 
             // Exécute 1 job
             $worker->work();
@@ -114,8 +118,8 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
                 break;
             }
         }
-        Core_Error_Log::getInstance()->error("Error while processing job: " . $worker->returnCode());
-        Core_Error_Log::getInstance()->error("Worker terminating");
+        $this->logger->error("Error while processing job: " . $worker->returnCode());
+        $this->logger->error("Worker terminating");
         exit(1);
     }
 
@@ -127,7 +131,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private function executeWorker(Core_Work_Worker $worker, GearmanJob $job)
     {
-        Core_Error_Log::getInstance()->info("Executing task " . $worker->getTaskType());
+        $this->logger->info("Executing task " . $worker->getTaskType());
 
         /** @var Core_Work_Task $task */
         $task = unserialize($job->workload());
@@ -158,7 +162,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
             Core_Locale::setDefault($oldDefaultLocale);
         }
 
-        Core_Error_Log::getInstance()->info("Task executed");
+        $this->logger->info("Task executed");
 
         // Retourne le résultat sérialisé
         return serialize($result);

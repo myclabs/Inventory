@@ -1,2 +1,15 @@
 # Activation des ACL
 enable.acl: true
+
+# Logs normaux
+log.file: "data/logs/error.log"
+
+# Logs des workers
+worker.log:
+  class: Monolog\Logger
+  methods:
+    pushHandler: worker.log.handler
+worker.log.handler:
+  class: Monolog\Handler\StreamHandler
+  constructor:
+    stream: "php://stdout"

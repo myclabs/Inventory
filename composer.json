@@ -35,7 +35,8 @@
         "myclabs/array-comparator": "1.0.*",
         "myclabs/php-enum": "1.*",
         "mnapoli/php-di": "3.2.*",
-        "mnapoli/php-di-zf1": "*"
+        "mnapoli/php-di-zf1": "*",
+        "monolog/monolog": "~1.6.0"
 	},
     "require-dev": {
         "behat/behat": "2.4.*",
