@@ -26,7 +26,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -44,7 +44,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -62,7 +62,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -93,7 +93,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -120,7 +120,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -134,7 +134,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -148,7 +148,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -164,7 +164,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -180,7 +180,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -196,7 +196,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -213,7 +213,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
