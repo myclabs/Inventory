@@ -5,36 +5,23 @@ Feature: Classification axis feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a classification axis
-  # TODO : affichage d'un axe sous la forme : "Libellé (identifiant)"
+  Scenario: Creation of a classification axis, correct input
     Given I am on "classif/axis/manage"
     And I wait for the page to finish loading
     Then I should see "Axes de classification"
-  # Ajout d'un axe, identifiant vide
-    When I click "Ajouter"
+  # TODO : affichage d'un axe sous la forme : "Libellé (identifiant)"
+  # Popup d'ajout
+    When I wait 5 seconds
+    And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
-    When I click "Valider"
-    Then the field "ref" should have error: "Merci de renseigner ce champ."
-  # Ajout d'un axe, identifiant avec des caractères non autorisés
-    When I fill in "ref" with "bépo"
-    When I click "Valider"
-    Then the field "ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout d'un axe, saisie correcte
+  # Ajout d'un axe à la racine, saisie correcte
     When I fill in "label" with "Test"
     And I fill in "ref" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Ajout d'un axe, identifiant déjà utilisé
-    When I click "Ajouter"
-    Then I should see the popup "Ajout d'un axe"
-    When I fill in "ref" with "test"
-    And I click "Valider"
-    Then the field "ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Bouton "Annuler"
-    When I click "Annuler"
-    Then I should not see "Ajout d'un axe"
   # Ajout d'un axe non à la racine
-    When I click "Ajouter"
+    When I wait 5 seconds
+    And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I fill in "label" with "Axe plus grossier que gaz"
     And I fill in "ref" with "axe_plus_grossier_que_gaz"
@@ -42,12 +29,43 @@ Feature: Classification axis feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification que l'axe ajouté est bien parent de l'axe Gaz
-    When I click "Gaz"
+    When I wait 5 seconds
+    And I click "Gaz"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
+
+  @javascript
+  Scenario: Creation of a classification axis, incorrect input
+    Given I am on "classif/axis/manage"
+    And I wait for the page to finish loading
+  # Popup d'ajout
+    When I wait 5 seconds
+    And I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+  # Ajout, identifiant vide
+    When I click "Valider"
+    Then the field "ref" should have error: "Merci de renseigner ce champ."
+  # Ajout, identifiant avec des caractères non autorisés
+    When I fill in "ref" with "bépo"
+    When I click "Valider"
+    Then the field "ref" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Ajout, identifiant déjà utilisé
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un axe"
+    When I fill in "ref" with "gaz"
+    And I click "Valider"
+    Then the field "ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
+
+
+
+
+
+
+
+
 
   @javascript
   Scenario: Edition of label and identifier of a classification axis

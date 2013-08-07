@@ -38,10 +38,10 @@ Feature: Cell administrator feature
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
-    And the "aFGranularity5Input8" datagrid should contain 2 row
 
   @javascript
   Scenario: Cell administrator organization tab
+    @skipped
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté

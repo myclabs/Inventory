@@ -21,7 +21,7 @@ Feature: AF list edit feature
     And I fill in "listAF_ref_addForm" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 6 of the "listAF" datagrid should contain:
+    And the "listAF" datagrid should contain a row:
       | category                          | label | ref  |
       | Catégorie contenant un formulaire | Test  | test |
 

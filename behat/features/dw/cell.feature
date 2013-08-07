@@ -26,7 +26,7 @@ Feature: Cell dataware analysis feature
     And I wait for the page to finish loading
     And I open tab "Analyses"
     Then I should see the "report" datagrid
-    And the row 1 of the "report" datagrid should contain:
+    And the row 2 of the "report" datagrid should contain:
       | label                        |
       | Chiffre d'affaire, par année |
     When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid

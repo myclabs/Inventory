@@ -82,6 +82,11 @@ Feature: AF boolean field feature
 
   @javascript
   Scenario: Edition of a boolean field, incorrect input
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Champs booléens"
+    Then I should see the "checkboxFieldDatagrid" datagrid
   # Modification de l'identifiant, identifiant vide
     When I set "" for column "ref" of row 1 of the "checkboxFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."

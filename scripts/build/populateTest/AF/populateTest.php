@@ -93,7 +93,7 @@ class AF_PopulateTest extends AF_Populate
         $c_s_s_util_cond_el_trait = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s_util_cond_el_trait', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Traitement"', ['opt_1' => 'Option 1']);
         $c_s_s_cible_setvalue = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s_cible_setvalue', 'Champ sélection simple cible d\'une action "setValue"', ['opt_1' => 'Option 1']);
 
-        $c_s_m_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'c_s_m', 'Champ sélection multiple', ['opt_1' => 'Option 1']);
+        $c_s_m_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'c_s_m', 'Champ sélection multiple', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
 
         $c_b_test = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'c_b', 'Champ booléen');
         $c_b_cible_setvalue = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'c_b_cible_setvalue', 'Champ booléen cible d\'une action "setValue"');
