@@ -756,17 +756,21 @@ class DW_Model_Report extends Core_Model_Entity
      * Renvoi le rapport récupéré à partir de la chaine depuis l'enregistrer en session.
      *
      * @param string $string
+     * @param DW_Model_Cube $cube
      *
      * @return DW_Model_Report
      */
-    public static function getFromString($string)
+    public static function getFromString($string, DW_Model_Cube $cube=null)
     {
         $stdReport = json_decode($string);
 
         if ($stdReport->id !== null) {
             $report = DW_Model_Report::load($stdReport->id);
         } else {
-            $report = new DW_Model_Report(DW_Model_Cube::load($stdReport->idCube));
+            if ($stdReport->idCube != null) {
+                $cube = DW_Model_Cube::load($stdReport->idCube);
+            }
+            $report = new DW_Model_Report($cube);
         }
 
         // Label.
@@ -879,10 +883,10 @@ class DW_Model_Report extends Core_Model_Entity
     {
         $reportAsString = preg_replace(
             '#^(\{"id":)(null|[0-9]+)(,"idCube":)([0-9]+)(,.+\})$#',
-            '${1}null${3}'.$cube->getId().'${5}',
+            '${1}null${3}'.($cube->getId() ? : 'null').'${5}',
             $this->getAsString()
         );
-        return DW_Model_Report::getFromString($reportAsString);
+        return DW_Model_Report::getFromString($reportAsString, $cube);
     }
 
 }

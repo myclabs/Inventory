@@ -360,28 +360,6 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param Zend_Controller_Request_Abstract $request
-     * @return DW_Model_Report
-     */
-    protected function getReport(Zend_Controller_Request_Abstract $request)
-    {
-        $idReport = $request->getParam('idReport');
-        if ($idReport !== null) {
-            return DW_Model_Report::load($idReport);
-        }
-        $hashReport = $request->getParam('hashReport');
-        if ($hashReport !== null) {
-            $configuration = Zend_Registry::get('configuration');
-            $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
-            $zendSessionReport = new Zend_Session_Namespace($sessionName);
-
-            return DW_Model_Report::getFromString($zendSessionReport->$hashReport);
-        }
-
-        throw new ForbiddenException();
-    }
-
-    /**
      * @param User_Model_SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
