@@ -103,9 +103,10 @@ echo $tmd->render();
 
     <script>
         $('#element_delete').on('hidden', function(){
-            $('#element_delete').children('div.modal-footer').children('button.btn-primary').removeAttr('data-element');
-            $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('data-element');
-            $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('href');
+            var modalFooter = $('#element_delete').children('div.modal-footer');
+            modalFooter.children('button.btn-primary').removeAttr('data-element');
+            modalFooter.children('a.btn').removeAttr('data-element');
+            modalFooter.children('a.btn').removeAttr('href');
         });
 
         addElement = function (coordinates) {
@@ -133,7 +134,7 @@ echo $tmd->render();
             deleteElement(event.data.idElement);
             $('#element_edit').unbind('hide', undoAdd);
             $('#element_edit .modal-footer button.btn-warning').removeClass('hide');
-        }
+        };
 
         $.fn.elementEditSuccess = function (response) {
             addMessage(response.message, response.type);
