@@ -35,8 +35,9 @@ class Techno_Form_EditFamilyController extends Core_Controller
             $this->addFormError('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             try {
-                Techno_Model_Family::loadByRef($ref);
-                $this->addFormError('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
+                if (Techno_Model_Family::loadByRef($ref) !== $family) {
+                    $this->addFormError('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
+                }
             } catch (Core_Exception_NotFound $e) {
                 try {
                     Core_Tools::checkRef($ref);

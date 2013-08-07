@@ -461,7 +461,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             );
             $reportCanBeUpdated = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                User_Model_Action_Default::EDIT(),
+                Orga_Action_Report::EDIT(),
                 $reportResource
             );
         } else {

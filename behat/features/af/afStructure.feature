@@ -5,7 +5,7 @@ Feature: AF structure feature
     Given I am logged in
 
   @javascript
-  Scenario: Change the position and parent of an AF group
+  Scenario: Change the position of an AF group
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Structure"
@@ -13,23 +13,32 @@ Feature: AF structure feature
     When I click "Groupe vide"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Dernier"
+  # L'attente qui suit semble, curieusement, nécessaire
+    And I wait 5 seconds
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un groupe, au début
-    When I click "Groupe contenant un sous-groupe"
+    When I wait 7 seconds
+    And I click "Groupe contenant un sous-groupe"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Premier"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un groupe, après un autre composant ou group
-    When I wait 5 seconds
+    When I wait 7 seconds
     And I click "Groupe contenant un champ"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Après"
     And I select "Champ sélection simple" from "afTree_selectAfter"
     And I click "Confirmer"
-    And I wait 5 seconds
+    And I wait 7 seconds
     Then the following message is shown and closed: "Modification effectuée."
+
+  @javascript
+  Scenario: Change the parent of an AF group
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Structure"
   # Modification du parent d'un groupe (depuis la racine)
     When I click "Groupe vide"
     Then I should see the popup "Déplacement dans la structure du formulaire"
@@ -44,38 +53,55 @@ Feature: AF structure feature
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
-  Scenario: Change the position and parent of an AF component (not a group)
+  Scenario: Change the position of an AF component (not a group)
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Structure"
+    And I wait 10 seconds
   # Déplacement d'un composant, à la fin
-    When I click "Champ sélection simple"
+    And I click "Sous-formulaire non répété"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Dernier"
     And I click "Confirmer"
+    And I wait 10 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un composant, au début
-    When I click "	Champ booléen"
+    When I wait 10 seconds
+    And I click "Champ texte long"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Premier"
     And I click "Confirmer"
+    And I wait 10 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un composant, après un autre composant
-    When I click "Champ sélection simple"
+    When I wait 10 seconds
+    And I click "Champ texte court"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Après"
-    And I select "Groupe contenant un sous-groupe" from "afTree_selectAfter"
+    And I select "Sous-formulaire répété" from "afTree_selectAfter"
     And I click "Confirmer"
+    And I wait 10 seconds
     Then the following message is shown and closed: "Modification effectuée."
+
+
+  @javascript
+  Scenario: Change the parent of an AF component (not a group)
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Structure"
+    And I wait 10 seconds
   # Modification du parent d'un composant (depuis la racine)
-    When I click "Champ sélection multiple"
+    And I click "Champ sélection multiple"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I select "Groupe contenant un champ" from "afTree_changeParent"
     And I click "Confirmer"
+    And I wait 10 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Modification du parent d'un composant (vers la racine)
-    When I click "Champ sélection multiple"
+    When I wait 10 seconds
+    And I click "Champ numérique cible activation"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I select "Racine" from "afTree_changeParent"
     And I click "Confirmer"
+    And I wait 10 seconds
     Then the following message is shown and closed: "Modification effectuée."

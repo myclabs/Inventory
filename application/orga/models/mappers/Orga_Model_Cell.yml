@@ -167,4 +167,5 @@ Orga_Model_Cell:
             referencedColumnName: id
             nullable: false
             unique: true
+            onDelete: CASCADE
       cascade: [ persist, remove ]

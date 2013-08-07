@@ -52,7 +52,7 @@ trait DatagridFeatureContext
         $nbRows = count($rows);
 
         // Try to match in each line
-        for ($rowIndex = 0; $rowIndex < $nbRows; $rowIndex++) {
+        for ($rowIndex = 1; $rowIndex <= $nbRows; $rowIndex++) {
             try {
                 $this->assertDatagridRowContains($rowIndex, $datagrid, $fields);
                 // Row matching
@@ -62,7 +62,7 @@ trait DatagridFeatureContext
             }
         }
 
-        throw new \Exception("Now row in the datagrid $datagrid was found matching given values");
+        throw new \Exception("No row in the datagrid $datagrid was found matching given values");
     }
 
     /**

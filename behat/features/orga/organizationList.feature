@@ -23,7 +23,7 @@ Feature: Organization datagrid feature
       | AAA   |
   # Lien vers le détail de l'organisation
     When I click "Cliquer pour accéder" in the row 2 of the "organizations" datagrid
-    Then I should see "Vue globale Test"
+    Then I should see "Vue globale AAA"
   # Vérification de la création de la granularité globale et ses attributs par défaut
     When I open tab "Organisation"
     And I open tab "Niveaux"

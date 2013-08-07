@@ -16,6 +16,7 @@ Feature: AF elementary condition for interaction feature
     Then I should see the popup "Ajout d'une condition élémentaire"
   # Ajout, identifiant correct
     When I fill in "conditionsElementary_ref_addForm" with "aaa"
+    And I select "Champ booléen" from "conditionsElementary_field_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Conditions élémentaires affichées dans l'ordre d'ajout
@@ -44,7 +45,7 @@ Feature: AF elementary condition for interaction feature
     And I click "Valider"
     Then the field "conditionsElementary_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "conditionsElementary_ref_addForm" with "condition_composee_interactions"
+    When I fill in "conditionsElementary_ref_addForm" with "cond_comp_inter"
     And I click "Valider"
     Then the field "conditionsElementary_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -57,10 +58,10 @@ Feature: AF elementary condition for interaction feature
     Then I should see the "conditionsElementary" datagrid
   # Vérification continu initial
     And the row 1 of the "conditionsElementary" datagrid should contain:
-      | ref                                 | field                                                                                   | relation | value |
-      | condition_elementaire_interactions  | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Interactions" | =        |       |
+      | ref            | field                                                                                   | relation | value |
+      | cond_el_inter  | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Interactions" | =        |       |
   # Modification de l'identifiant, saisie correcte
-    When I set "condition_elementaire_interactions_modifiee" for column "ref" of row 1 of the "conditionsElementary" datagrid with a confirmation message
+    When I set "cond_el_inter_modifiee" for column "ref" of row 1 of the "conditionsElementary" datagrid with a confirmation message
   # Popup d'édition
     When I click "Éditer" in the row 1 of the "conditionsElementary" datagrid
     Then I should see the popup "Édition d'une condition élémentaire"
@@ -71,8 +72,8 @@ Feature: AF elementary condition for interaction feature
   # Édition pas en ajax donc l'onglet est rechargé
     And I open collapse "Conditions élémentaires"
     Then the row 1 of the "conditionsElementary" datagrid should contain:
-      | ref                                         | relation | value    |
-      | condition_elementaire_interactions_modifiee | ≠        | Option 1 |
+      | ref                    | relation | value    |
+      | cond_el_inter_modifiee | ≠        | Option 1 |
 
   @javascript
   Scenario: Edition of an elementary condition for interaction scenario, incorrect input
@@ -88,7 +89,7 @@ Feature: AF elementary condition for interaction feature
     When I set "bépo" for column "ref" of row 1 of the "conditionsElementary" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "condition_composee_interactions" for column "ref" of row 1 of the "conditionsElementary" datagrid
+    When I set "cond_comp_inter" for column "ref" of row 1 of the "conditionsElementary" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
@@ -100,14 +101,14 @@ Feature: AF elementary condition for interaction feature
     Then I should see the "conditionsElementary" datagrid
     And the "conditionsElementary" datagrid should contain 3 row
     And the row 1 of the "conditionsElementary" datagrid should contain:
-      | ref                                 |
-      | condition_elementaire_interactions  |
-    And the row 1 of the "conditionsElementary" datagrid should contain:
-      | ref                                 |
-      | condition_elementaire_interactions_utilisee_action_setstate  |
-    And the row 1 of the "conditionsElementary" datagrid should contain:
-      | ref                                 |
-      | condition_elementaire_interactions_utilisee_action_setvalue  |
+      | ref           |
+      | cond_el_inter |
+    And the row 2 of the "conditionsElementary" datagrid should contain:
+      | ref                              |
+      | cond_el_inter_util_act_setstate  |
+    And the row 3 of the "conditionsElementary" datagrid should contain:
+      | ref                              |
+      | cond_el_inter_util_act_setvalue  |
   # Suppression, condition utilisée pour une action de modification de l'état d'un composant
     When I click "Supprimer" in the row 2 of the "conditionsElementary" datagrid
     Then I should see the popup "Demande de confirmation"

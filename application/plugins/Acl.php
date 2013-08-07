@@ -155,6 +155,26 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
+    public function viewMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return ($this->viewOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function editMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return ($this->editOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
     protected function viewCellRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
@@ -358,28 +378,6 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             User_Model_Action_Default::DELETE(),
             User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load($idReport))
         );
-    }
-
-    /**
-     * @param Zend_Controller_Request_Abstract $request
-     * @return DW_Model_Report
-     */
-    protected function getReport(Zend_Controller_Request_Abstract $request)
-    {
-        $idReport = $request->getParam('idReport');
-        if ($idReport !== null) {
-            return DW_Model_Report::load($idReport);
-        }
-        $hashReport = $request->getParam('hashReport');
-        if ($hashReport !== null) {
-            $configuration = Zend_Registry::get('configuration');
-            $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
-            $zendSessionReport = new Zend_Session_Namespace($sessionName);
-
-            return DW_Model_Report::getFromString($zendSessionReport->$hashReport);
-        }
-
-        throw new ForbiddenException();
     }
 
     /**

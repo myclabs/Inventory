@@ -23,11 +23,13 @@ DW_Model_Result:
       joinColumn:
         name: idCube
         referencedColumnName: id
+        onDelete: CASCADE
     indicator:
       targetEntity: DW_Model_Indicator
       joinColumn:
         name: idIndicator
         referencedColumnName: id
+        onDelete: CASCADE
 
   manyToMany:
     members:

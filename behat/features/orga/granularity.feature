@@ -137,12 +137,11 @@ Feature: Organization granularity feature
     Then the following message is shown and closed: "Suppression effectuée."
     And the "granularity" datagrid should contain 7 row
   # Suppression, granularité avec des rôles
-  # TODO : bloquer une telle suppression !
     And the row 3 of the "granularity" datagrid should contain:
       | axes  |
       | Site |
     When I click "Supprimer" in the row 3 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
-    And the "granularity" datagrid should contain 6 row
+    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
+    And the "granularity" datagrid should contain 7 row

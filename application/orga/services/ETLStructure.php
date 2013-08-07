@@ -191,7 +191,7 @@ class Orga_Service_ETLStructure
         $labels = [];
         if (!$granularity->hasAxes()) {
             foreach (Zend_Registry::get('languages') as $localeId) {
-                $labels[$localeId] = Core_Translate::get('Orga', 'navigation', 'labelGlobalGranularity', [], $localeId);
+                $labels[$localeId] = Core_Translate::get('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
             }
         } else {
             $axes = $granularity->getAxes();
@@ -222,15 +222,11 @@ class Orga_Service_ETLStructure
      */
     protected function updateDWCubeLabel(DW_Model_Cube $dWCube, $labels)
     {
+        $dWCube->getLabel();
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
         foreach ($labels as $localeId => $label) {
-            $translationRepository->translate(
-                $dWCube,
-                'label',
-                $localeId,
-                $label
-            );
+            $translationRepository->translate($dWCube, 'label', $localeId, $label);
         }
     }
 
@@ -1064,7 +1060,7 @@ class Orga_Service_ETLStructure
             /** @var DW_Model_Report $dWReport */
             $dWReportsAsString[] = $dWReport->getAsString();
             $emptyDWReportString = '{'.
-                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWReport->getCube()->getKey()['id'].',"label":"",'.
+                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWCube->getId().',"label":"",'.
                 '"refNumerator":null,"refNumeratorAxis1":null,"refNumeratorAxis2":null,'.
                 '"refDenominator":null,"refDenominatorAxis1":null,"refDenominatorAxis2":null,'.
                 '"chartType":null,"sortType":"orderResultByDecreasingValue","withUncertainty":false,'.
