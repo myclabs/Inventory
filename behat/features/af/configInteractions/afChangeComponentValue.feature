@@ -79,28 +79,26 @@ Feature: AF change component value interaction feature
     Then I should see the popup "Édition de la valeur ou de l'algorithme à assigner"
   # Vérification que la valeur affichée dans le popup est bien au format français
     And the "numericValue" field should contain "1234,56789"
-    And the "numericUncertainty" field should contain "5,9"
+    And the "numericUncertainty" field should contain "5"
   # Modification de la valeur (incertitude vide)
     And I fill in "numericValue" with "12345,6789"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
-    Then the row 1 of the "actionsSetValue" datagrid should contain:
+    Then the row 2 of the "actionsSetValue" datagrid should contain:
       | value       |
       | 12 345,6789 |
-  # Édition pas en Ajax, donc on doit rouvrir le collapse
-    When I open collapse "Assignations de valeurs à des champs"
   # Modification de l'incertitude (valeur vide)
-    And I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
+    And I click "Éditer" in the row 2 of the "actionsSetValue" datagrid
     And I fill in "numericValue" with ""
-    And I fill in "numericUncertainty" with "15,9"
+    And I fill in "numericUncertainty" with "15"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
-    Then the row 1 of the "actionsSetValue" datagrid should contain:
-      | value       |
+    Then the row 2 of the "actionsSetValue" datagrid should contain:
+      | value  |
       | ± 15 % |
 
   @javascript
