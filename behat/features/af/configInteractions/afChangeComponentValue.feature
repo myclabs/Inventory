@@ -147,8 +147,8 @@ Feature: AF change component value interaction feature
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
     Then the row 3 of the "actionsSetValue" datagrid should contain:
-      | targetComponent                             | value   |
-      | Champ booléen cible d'une action "setValue" | Option 1 |
+      | targetComponent                                      | value   |
+      | Champ sélection simple cible d'une action "setValue" | Option 1 |
 
   @javascript
   Scenario: Edition of a change component value interaction scenario (change boolean value)
