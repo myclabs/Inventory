@@ -29,8 +29,6 @@ class Inventory_Migrate extends Core_Script_Populate
     private $mapIdMembers = array();
     private $mapIdGranularities = array();
 
-    private $filters = [];
-
 
     /**
      * @param string $idOrganization
@@ -206,9 +204,6 @@ class Inventory_Migrate extends Core_Script_Populate
             echo " - regénération du cache des ACLs…\n";
             User_Service_ACLFilter::getInstance()->generate();
             echo "\t …done !\n";
-            echo " -> DW REPORT…\n";
-            echo implode('', $this->filters);
-            echo " …-/\n";
         } catch (PDOException $e) {
             echo " - aborting : $dbName _ La base n'existe pas.\n";
         }
@@ -601,7 +596,6 @@ class Inventory_Migrate extends Core_Script_Populate
         $this->flush();
 
         if ($granularity->getCellsGenerateDWCubes()) {
-            $this->filters[] = "\t\t GranularityDataProvider : " . $row['ref'] . " updated\n";
             $this->migrateDWReports($row['idOrgaGranularity']);
             $this->flush();
         }
@@ -715,7 +709,6 @@ class Inventory_Migrate extends Core_Script_Populate
             $dWReport->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube($rowAxis['ref'], $granularity->getDWCube()));
             $subSelect->closeCursor();
         }
-        $this->filters[] = "\t\t\t Report added : " . $dWReport->getLabel() . "\n";
         echo "\t\t\t Report added : " . $dWReport->getLabel() . "\n";
         
         if ($row['idDenominator'] != null) {
@@ -747,7 +740,6 @@ class Inventory_Migrate extends Core_Script_Populate
             $subSelectAxis->closeCursor();
 
             $dWFilter = new DW_Model_Filter($dWReport, $dWAxis);
-            $this->filters[] = "\t\t\t\t with filter on axis : " . $dWAxis->getLabel() . "\n";
             echo "\t\t\t\t with filter on axis : " . $dWAxis->getLabel() . "\n";
 
             // Members
@@ -756,7 +748,6 @@ class Inventory_Migrate extends Core_Script_Populate
             while ($rowMember = $subSelectMember->fetch()) {
                 $dWMember = DW_Model_Member::loadByRefAndAxis($rowMember['ref'], $dWFilter->getAxis());
                 $dWFilter->addMember($dWMember);
-                $this->filters[] = "\t\t\t\t\t for Member : " . $dWMember->getLabel() . "\n";
                 echo "\t\t\t\t\t for Member : " . $dWMember->getLabel() . "\n";
             }
             $subSelectMember->closeCursor();
