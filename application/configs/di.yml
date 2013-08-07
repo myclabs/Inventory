@@ -5,8 +5,11 @@ enable.acl: true
 log.file: "data/logs/error.log"
 
 # Logs des workers
+worker.log.name: "log.worker"
 worker.log:
   class: Monolog\Logger
+  constructor:
+    name: worker.log.name
   methods:
     pushHandler: worker.log.handler
 worker.log.handler:
