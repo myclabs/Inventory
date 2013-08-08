@@ -10,7 +10,7 @@ Feature: AF config control feature
     And I wait for the page to finish loading
   # Vérification qu'on se trouve bien sur le bon formulaire
     Then I should see "Formulaire vide"
-  # Onglet "Contrôle"
+  # Onglet "Contrôle"
     When I open tab "Contrôle"
     And I click "Contrôler"
     Then I should see "Avertissement"

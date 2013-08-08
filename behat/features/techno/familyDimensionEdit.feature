@@ -81,7 +81,7 @@ Feature: Family dimension list edit feature
     When I click "Retourner à la famille"
   # On ne retombe pas sur l'onglet "Général", mais sur l'onglet "Éléments"
     Then I should see "Processus"
-    And I should see "0,123 ± 16 %"
+    And I should see "0,123 ± 15 %"
 
   @javascript
   Scenario: Delete family dimension

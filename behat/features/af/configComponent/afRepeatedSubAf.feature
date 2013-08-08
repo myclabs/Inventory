@@ -65,7 +65,7 @@ Feature: AF repeated subAF feature
   # Modification du libellé
     When I set "Sous-formulaire répété modifié" for column "label" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
   # Modification de l'identifiant, saisie correcte
-    When I set "sous_formulaire_repete_modifie" for column "ref" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
+    When I set "s_f_r_modifie" for column "ref" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
   # Modification du formulaire associé
     When I set "Données générales" for column "targetAF" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
   # Modification de l'aide
@@ -75,7 +75,7 @@ Feature: AF repeated subAF feature
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "subAfRepeatedDatagrid" datagrid should contain:
       | label                          | ref                            | targetAF          | isVisible |
-      | Sous-formulaire répété modifié | sous_formulaire_repete_modifie | Données générales | Masqué    |
+      | Sous-formulaire répété modifié | s_f_r_modifie | Données générales | Masqué    |
     When I click "Aide" in the row 1 of the "subAfRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#subAfRepeatedDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element

@@ -47,6 +47,7 @@ Feature: Family tree edit of families feature
     And I click "Combustion de combustible, mesuré en unité de masse"
     And I select "Catégorie contenant une sous-catégorie" from "familyTree_changeParent"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # TODO : autoriser le déplacement à la racine
 

@@ -109,6 +109,7 @@ Feature: Organizational axis feature
     Then I should see the popup "Édition d'un axe"
     When I check "Premier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement "Après" (axe situé à la racine)
     When I click "Catégorie"
@@ -123,6 +124,7 @@ Feature: Organizational axis feature
     Then I should see the popup "Édition d'un axe"
     When I check "Dernier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript

@@ -37,6 +37,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see the popup "Édition d'un axe"
     When I fill in "editAxis_label" with "Test modifié"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I reload the page
@@ -55,6 +56,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see the popup "Édition d'un axe"
     When I fill in "editAxis_ref" with "test_modifie"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I reload the page
@@ -73,6 +75,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see the popup "Édition d'un axe"
     When I check "Premier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification (modification non détectée, OK)
     When I reload the page
@@ -86,6 +89,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Suppression effectuée."
   # Détection axe organisationnel supprimé
     When I reload the page
@@ -113,6 +117,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     And I fill in "listMemberssite_ref_addForm" with "test"
   # And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
   # Détection modification
     When I reload the page
@@ -155,7 +160,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Ajout membre parent à un membre
     When I open tab "Organisation"
     And I open collapse "Site"
-    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite"
+    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification

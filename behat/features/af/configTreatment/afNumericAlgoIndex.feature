@@ -57,10 +57,9 @@ Feature: AF indexes of a numeric algo feature
     Then the row 2 of the "algoResultIndexes" datagrid should contain:
       | axis              | type         | value |
       | Poste article 75  | Valeur fixée |       |
-    When I click "×"
+    And I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
     And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
-    And I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
 
   @javascript
   Scenario: Influence of a change of indicator on indexes of a numeric algo scenario
