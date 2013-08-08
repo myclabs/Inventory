@@ -36,17 +36,13 @@ Orga_Model_Axis:
       column: position
       type: integer
       nullable: false
-    globalPosition:
-      column: globalPosition
-      type: integer
-      nullable: false
 
   manyToOne:
-    cube:
-      targetEntity: Orga_Model_Cube
+    organization:
+      targetEntity: Orga_Model_Organization
       inversedBy: axes
       joinColumn:
-        name: idCube
+        name: idOrganization
         referencedColumnName: id
         nullable: false
     directNarrower:
@@ -60,13 +56,14 @@ Orga_Model_Axis:
     directBroaders:
       targetEntity: Orga_Model_Axis
       mappedBy: directNarrower
-      cascade: [ remove ]
       orderBy:
         position: ASC
+      cascade: [ remove ]
     members:
       targetEntity: Orga_Model_Member
       mappedBy: axis
-      cascade: [ remove ]
+      orphanRemoval: true
+      cascade: [ persist, remove ]
       orderBy:
         ref: ASC
 
@@ -74,17 +71,15 @@ Orga_Model_Axis:
     granularities:
       targetEntity: Orga_Model_Granularity
       mappedBy: axes
-      cascade: [ remove ]
+      cascade: [ persist, remove ]
 
   lifecycleCallbacks:
-    prePersist: [ preSave ]
-    preUpdate: [ preUpdate ]
     preRemove: [ preDelete ]
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      refUniqueness:
+      axisRefUniquenessInOrganization:
           columns:
               - ref
-              - idCube
+              - idOrganization
       

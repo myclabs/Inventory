@@ -20,7 +20,7 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
      */
     public function getnodesAction()
     {
-        $isEditable = ($this->_getParam('mode') == 'edition');
+        $isEditable = ($this->getParam('mode') == 'edition');
 
         // Chargement des catégories racine
         if ($this->idNode === null) {
@@ -91,7 +91,7 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
 
         // Détermine le parent
         $sameParent = false;
-        $idParent = $this->_getParam('idParent');
+        $idParent = $this->getParam('idParent');
         if ($idParent == "root") {
             $parentNode = null;
         } elseif ($idParent) {
@@ -150,30 +150,6 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
 
         $category = new Techno_Model_Category();
         $category->setLabel($label);
-        // Parent
-        $idParent = $this->getAddElementValue('setParents');
-        if ($idParent != null && $idParent != 'root') {
-            $category->setParentCategory($this->fromTreeId($idParent));
-        }
-
-        // Position
-        $position = $this->getAddElementValue('position');
-        if ($position == 'first') {
-            $category->setPosition(1);
-        } elseif ($position == 'last') {
-            // Rien à faire
-        } else {
-            $previousNodeId = $this->getAddElementValue('brothers');
-            if ($previousNodeId == null) {
-                $this->setAddFormElementErrorMessage('brothers', __('UI', 'formValidation', 'emptyRequiredField'));
-                $this->send();
-                return;
-            }
-            /** @var $previousNode Techno_Model_Category */
-            $previousNode = $this->fromTreeId($previousNodeId);
-            $category->setPosition($previousNode->getPosition() + 1);
-        }
-
         $category->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();

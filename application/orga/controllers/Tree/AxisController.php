@@ -22,18 +22,18 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *  $this->idNode
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * @see addNode
-     * @Secure("viewOrgaCube")
+     * @Secure("viewOrganization")
      */
     public function getnodesAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         if ($this->idNode === null) {
-            $axes = $cube->getRootAxes();
+            $axes = $organization->getRootAxes();
         } else {
-            $currentAxis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+            $currentAxis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
             $axes = $currentAxis->getDirectBroaders();
         }
         foreach ($axes as $axis) {
@@ -58,11 +58,11 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * @see getAddElementValue
      * @see setAddElementErrorMessage
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function addnodeAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         try {
             Core_Tools::checkRef($this->getAddElementValue('addAxis_ref'));
@@ -70,14 +70,14 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $this->setAddFormElementErrorMessage('addAxis_ref', $e->getMessage());
         }
         try {
-            $existingAxis = Orga_Model_Axis::loadByRefAndCube($this->getAddElementValue('addAxis_ref'), $cube);
+            $existingAxis = Orga_Model_Axis::loadByRefAndOrganization($this->getAddElementValue('addAxis_ref'), $organization);
             $this->setAddFormElementErrorMessage('addAxis_ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
         } catch (Core_Exception_NotFound $e) {
             // La référence n'est pas utilisée.
         }
 
         if (empty($this->_formErrorMessages)) {
-            $axis = new Orga_Model_Axis();
+            $axis = new Orga_Model_Axis($organization);
             $axis->setRef($this->getAddElementValue('addAxis_ref'));
             $axis->setLabel($this->getAddElementValue('addAxis_label'));
             if ($this->getAddElementValue('addAxis_contextualizing') === 'contextualizing') {
@@ -85,9 +85,8 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             } else {
                 $axis->setContextualize(false);
             }
-            $axis->setCube($cube);
             if ($this->getAddElementValue('addAxis_parent') != null) {
-                $narrower = Orga_Model_Axis::loadByRefAndCube($this->getAddElementValue('addAxis_parent'), $cube);
+                $narrower = Orga_Model_Axis::loadByRefAndOrganization($this->getAddElementValue('addAxis_parent'), $organization);
                 $narrower->addDirectBroader($axis);
             }
             $axis->save();
@@ -117,14 +116,14 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie un tableau contenant les parents possibles de l'élément au format :
      *  array('id' => id, 'label' => label).
-     * @Secure("viewOrgaCube")
+     * @Secure("viewOrganization")
      */
     public function getlistparentsAction()
     {
         $this->addElementList(null, '');
 
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        foreach ($cube->getFirstOrderedAxes() as $axis) {
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        foreach ($organization->getFirstOrderedAxes() as $axis) {
             $this->addElementList($axis->getRef(), ' '.$axis->getLabel());
         }
 
@@ -139,15 +138,15 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie un un tableau contenant la fratrie de l'élément au format :
      *  array('id' => id, 'label' => label).
-     * @Secure("viewOrgaCube")
+     * @Secure("viewOrganization")
      */
     public function getlistsiblingsAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
 
         if ($axis->getDirectNarrower() === null) {
-            $axes = $cube->getRootAxes();
+            $axes = $organization->getRootAxes();
         } else {
             $axes = $axis->getDirectNarrower()->getDirectBroaders();
         }
@@ -173,12 +172,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      * $this->update['idElement'].
      *
      * Renvoie un message d'information.
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function editnodeAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
 
         $newRef = $this->getEditElementValue('ref');
         $newLabel = $this->getEditElementValue('label');
@@ -189,11 +188,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $this->setEditFormElementErrorMessage('ref', $e->getMessage());
         }
 
-        if ($this->getEditElementValue('contextualizing') === 'contextualizing') {
-            $contextualizing = true;
-        } else {
-            $contextualizing = false;
-        }
+//        if ($this->getEditElementValue('contextualizing') === 'contextualizing') {
+//            $contextualizing = true;
+//        } else {
+//            $contextualizing = false;
+//        }
+        $contextualizing = false;
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;
@@ -204,7 +204,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             case 'after':
                 $currentAxisPosition = $axis->getPosition();
                 $refAfter = $this->_form[$this->id.'_changeOrder']['children'][$this->id.'_selectAfter_child']['value'];
-                $newPosition = Orga_Model_Axis::loadByRefAndCube($refAfter, $cube)->getPosition();
+                $newPosition = Orga_Model_Axis::loadByRefAndOrganization($refAfter, $organization)->getPosition();
                 if (($currentAxisPosition > $newPosition)) {
                     $newPosition += 1;
                 }
@@ -216,7 +216,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
         if ($newRef !== $this->idNode) {
             try {
-                $existingAxis = Orga_Model_Axis::loadByRefAndCube($newRef, $cube);
+                $existingAxis = Orga_Model_Axis::loadByRefAndOrganization($newRef, $organization);
                 $this->setEditFormElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
                 // La référence n'est pas utilisée.
@@ -249,22 +249,22 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
      *  $this->idNode
      *
      * Renvoie une message d'information.
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function deletenodeAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
 
         if ($axis->hasGranularities()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasGranularities',
-                array('AXIS' => $this->_getParam('label')));
+                array('AXIS' => $this->getParam('label')));
         } else if ($axis->hasMembers()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasMembers',
-                    array('AXIS' => $this->_getParam('label')));
+                    array('AXIS' => $this->getParam('label')));
         } else if ($axis->hasDirectBroaders()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasDirectBroaders',
-                    array('AXIS' => $this->_getParam('label')));
+                    array('AXIS' => $this->getParam('label')));
         }
         $axis->delete();
         $this->message = __('UI', 'message', 'deleted', array('AXIS' => $axis->getLabel()));
@@ -274,12 +274,12 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
     /**
      * Fonction récupérant les informations d'édition pour le formulaire.
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function getinfoeditAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->idNode, $cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->idNode, $organization);
 
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $axis->getLabel();

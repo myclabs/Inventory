@@ -11,7 +11,8 @@ $columnAxis = new UI_Datagrid_Col_List('axes', __('UI', 'name', 'axes'));
 $columnAxis->list = $this->listAxes;
 $columnAxis->multiple = true;
 $columnAxis->addable = true;
-$columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_BOX;
+$columnAxis->withEmptyElement = false;
+$columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $datagrid->addCol($columnAxis);
 
 $columnNavigable = new UI_Datagrid_Col_Bool('navigable', __('Orga', 'granularity', 'navigableHeader'));
@@ -24,16 +25,90 @@ $columnNavigable->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'granularity
 $columnNavigable->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'granularity', 'notNavigableOption');
 $datagrid->addCol($columnNavigable);
 
+$columnOrgaTab = new UI_Datagrid_Col_Bool('orgaTab', __('Orga', 'organization', 'organization'));
+$columnOrgaTab->addable = true;
+$columnOrgaTab->editable = true;
+$columnOrgaTab->defaultAddValue = false;
+$columnOrgaTab->textTrue = __('UI', 'other', 'yes');
+$columnOrgaTab->textFalse = __('UI', 'other', 'no');
+$columnOrgaTab->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
+$columnOrgaTab->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
+$datagrid->addCol($columnOrgaTab);
+
+$columnACL = new UI_Datagrid_Col_Bool('aCL', __('User', 'role', 'roles'));
+$columnACL->addable = true;
+$columnACL->editable = true;
+$columnACL->defaultAddValue = false;
+$columnACL->textTrue = __('UI', 'other', 'yes');
+$columnACL->textFalse = __('UI', 'other', 'no');
+$columnACL->valueTrue = '<i CLass="icon-ok"></i> '.__('UI', 'other', 'yes');
+$columnACL->valueFalse = '<i CLass="icon-remove"></i> '.__('UI', 'other', 'no');
+$datagrid->addCol($columnACL);
+
+$columnAFTab = new UI_Datagrid_Col_Bool('aFTab', __('UI', 'name', 'forms'));
+$columnAFTab->addable = true;
+$columnAFTab->editable = true;
+$columnAFTab->defaultAddValue = false;
+$columnAFTab->textTrue = __('UI', 'other', 'yes');
+$columnAFTab->textFalse = __('UI', 'other', 'no');
+$columnAFTab->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
+$columnAFTab->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
+$datagrid->addCol($columnAFTab);
+
+$columnDW = new UI_Datagrid_Col_Bool('dW', __('DW', 'name', 'analyses'));
+$columnDW->addable = true;
+$columnDW->editable = true;
+$columnDW->defaultAddValue = false;
+$columnDW->textTrue = __('UI', 'other', 'yes');
+$columnDW->textFalse = __('UI', 'other', 'no');
+$columnDW->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
+$columnDW->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
+$datagrid->addCol($columnDW);
+
+$columnGenericActions = new UI_Datagrid_Col_Bool('genericActions', __('Social', 'actionTemplate', 'actionTemplates'));
+$columnGenericActions->addable = true;
+$columnGenericActions->editable = true;
+$columnGenericActions->defaultAddValue = false;
+$columnGenericActions->textTrue = __('UI', 'other', 'yes');
+$columnGenericActions->textFalse = __('UI', 'other', 'no');
+$columnGenericActions->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
+$columnGenericActions->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
+$datagrid->addCol($columnGenericActions);
+
+$columnContextActions = new UI_Datagrid_Col_Bool('contextActions', __('Social', 'action', 'actions'));
+$columnContextActions->addable = true;
+$columnContextActions->editable = true;
+$columnContextActions->defaultAddValue = false;
+$columnContextActions->textTrue = __('UI', 'other', 'yes');
+$columnContextActions->textFalse = __('UI', 'other', 'no');
+$columnContextActions->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
+$columnContextActions->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
+$datagrid->addCol($columnContextActions);
+
+$columnInputDocuments = new UI_Datagrid_Col_Bool('inputDocuments', __('Doc', 'name', 'documents'));
+$columnInputDocuments->addable = true;
+$columnInputDocuments->editable = true;
+$columnInputDocuments->defaultAddValue = false;
+$columnInputDocuments->textTrue = __('UI', 'other', 'yes');
+$columnInputDocuments->textFalse = __('UI', 'other', 'no');
+$columnInputDocuments->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
+$columnInputDocuments->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
+$datagrid->addCol($columnInputDocuments);
+
 $datagrid->pagination = false;
-if ($this->idCell !== null) {
-    $datagrid->addParam('idCell', $this->idCell);
-}
-$datagrid->addParam('idCube', $this->idCube);
-$datagrid->deleteElements = true;
+$datagrid->addParam('idOrganization', $this->idOrganization);
 $datagrid->addElements = true;
 $datagrid->addPanelTitle = __('Orga', 'granularity', 'addPanelTitle');
+$datagrid->deleteElements = true;
+
 if ($this->display === false) {
     echo $datagrid->render();
 } else {
     $datagrid->display();
 }
+?>
+<script type="text/javascript">
+    $('#granularity_addPanel').on('hide', function() {
+        $('#granularity_axes_addForm').val([]).trigger('change');
+    });
+</script>

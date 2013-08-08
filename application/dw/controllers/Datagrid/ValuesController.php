@@ -21,7 +21,7 @@ class DW_Datagrid_ValuesController extends UI_Controller_Datagrid
     {
         $locale = Core_Locale::loadDefault();
 
-        $hash = $this->_getParam('hashReport');
+        $hash = $this->getParam('hashReport');
         $configuration = Zend_Registry::get('configuration');
         $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
         $zendSessionReport = new Zend_Session_Namespace($sessionName);

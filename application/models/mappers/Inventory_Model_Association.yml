@@ -1,0 +1,28 @@
+# inventory\models\mappers\Inventory_Model_Association.yml
+Inventory_Model_Association:
+  type: entity
+  repositoryClass: Inventory_Model_Repository_Association
+  table: Inventory_Association
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      column: name
+      type: string
+      length: 50
+      nullable: true
+  manyToMany:
+    simples:
+      targetEntity: Inventory_Model_Simple
+      joinTable:
+        name: Inventory_SimpleAssociation
+        joinColumns:
+          associationid:
+            referencedColumnName: id
+        inverseJoinColumns:
+          simpleid:
+            referencedColumnName: id

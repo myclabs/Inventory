@@ -6,7 +6,9 @@
  * @package    DW
  * @subpackage Model
  */
-use Doctrine\Common\Collections\Criteria;
+
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Objet métier définissant un axe organisationnel au sein d'un cube.
@@ -63,14 +65,14 @@ class DW_Model_Axis extends Core_Model_Entity
     /**
      * Collection des Axis broader de l'axe courant.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection|DW_Model_Axis[]
      */
     protected $directBroaders = null;
 
     /**
      * Collection des Member de l'Axis courant.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection|DW_Model_Member[]
      */
     protected $members = null;
 
@@ -78,10 +80,14 @@ class DW_Model_Axis extends Core_Model_Entity
     /**
      * Constructeur de la classe Axis.
      */
-    public function __construct()
+    public function __construct(DW_Model_Cube $cube)
     {
-        $this->directBroaders = new Doctrine\Common\Collections\ArrayCollection();
-        $this->members = new Doctrine\Common\Collections\ArrayCollection();
+        $this->directBroaders = new ArrayCollection();
+        $this->members = new ArrayCollection();
+
+        $this->cube = $cube;
+        $this->setPosition();
+        $this->cube->addAxis($this);
     }
 
     /**
@@ -91,19 +97,7 @@ class DW_Model_Axis extends Core_Model_Entity
      */
     protected function getContext()
     {
-        return array('directNarrower' => $this->directNarrower, 'cube' => $this->cube);
-    }
-
-    /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
-     */
-    public function preSave()
-    {
-        try {
-            $this->checkHasPosition();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->setPosition();
-        }
+        return array('cube' => $this->cube, 'directNarrower' => $this->directNarrower);
     }
 
     /**
@@ -138,25 +132,29 @@ class DW_Model_Axis extends Core_Model_Entity
      *
      * @return DW_Model_Axis
      */
-    public static function loadByRefAndCube($ref, $cube)
+    public static function loadByRefAndCube($ref, DW_Model_Cube $cube)
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref, 'cube' => $cube));
+        return $cube->getAxisByRef($ref);
     }
 
     /**
-     * Définit la référence de l'axe. Ne peut pas être "global".
+     * Renvoie l'id de l'Axis.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Définit la référence de l'axe..
      *
      * @param string $ref
-     *
-     * @throws Core_Exception_InvalidArgument
      */
     public function setRef($ref)
     {
-        if ($ref === 'global') {
-            throw new Core_Exception_InvalidArgument('An Axis ref cannot be "global".');
-        } else {
-            $this->ref = $ref;
-        }
+        $this->ref = $ref;
     }
 
     /**
@@ -190,22 +188,6 @@ class DW_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Définit le cube de l'axe.
-     *
-     * @param DW_Model_Cube $cube
-     */
-    public function setCube(DW_Model_Cube $cube=null)
-    {
-        if ($this->cube !== $cube) {
-            if ($this->cube !== null) {
-                throw new Core_Exception_TooMany('Cube already set, an axis cannot be move.');
-            }
-            $this->cube = $cube;
-            $cube->addAxis($this);
-        }
-    }
-
-    /**
      * Renvoie le cube de l'axe.
      *
      * @return DW_Model_Cube
@@ -223,14 +205,15 @@ class DW_Model_Axis extends Core_Model_Entity
     public function setDirectNarrower(DW_Model_Axis $narrowerAxis=null)
     {
         if ($this->directNarrower !== $narrowerAxis) {
-            if ($this->position !== null) {
-                $this->deletePosition();
-            }
-            $this->directNarrower = $narrowerAxis;
             if ($this->directNarrower !== null) {
-                $this->setPosition();
+                $this->directNarrower->removeDirectBroader($this);
             }
-            $narrowerAxis->addDirectBroader($this);
+            $this->deletePosition();
+            $this->directNarrower = $narrowerAxis;
+            if ($narrowerAxis !== null) {
+                $narrowerAxis->addDirectBroader($this);
+            }
+            $this->setPosition();
         }
     }
 
@@ -278,7 +261,7 @@ class DW_Model_Axis extends Core_Model_Entity
     {
         if ($this->hasDirectBroader($broaderAxis)) {
             $this->directBroaders->removeElement($broaderAxis);
-            $broaderAxis->setDirectNarrower(null);
+            $broaderAxis->setDirectNarrower();
         }
     }
 
@@ -299,7 +282,14 @@ class DW_Model_Axis extends Core_Model_Entity
      */
     public function getDirectBroaders()
     {
-        return $this->directBroaders->toArray();
+        $directBroaders = $this->directBroaders->toArray();
+
+        uasort(
+            $directBroaders,
+            function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
+        );
+
+        return $directBroaders;
     }
 
     /**
@@ -340,12 +330,17 @@ class DW_Model_Axis extends Core_Model_Entity
      * Ajoute une Member à l'Axis.
      *
      * @param DW_Model_Member $member
+     * 
+     * @throws Core_Exception_InvalidArgument
      */
     public function addMember(DW_Model_Member $member)
     {
-        if (!($this->hasMember($member))) {
+        if ($member->getAxis() !== $this) {
+            throw new Core_Exception_InvalidArgument();
+        }
+
+        if (!$this->hasMember($member)) {
             $this->members->add($member);
-            $member->setAxis($this);
         }
     }
 
@@ -362,6 +357,33 @@ class DW_Model_Axis extends Core_Model_Entity
     }
 
     /**
+     * Retourne un tableau contenant les members de l'Axis.
+     *
+     * @param string $ref
+     *
+     * @throws Core_Exception_NotFound
+     * @throws Core_Exception_TooMany
+     *
+     * @return DW_Model_Member
+     */
+    public function getMemberByRef($ref)
+    {
+        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        $criteria->where($criteria->expr()->eq('ref', $ref));
+        $member = $this->members->matching($criteria)->toArray();
+
+        if (empty($member)) {
+            throw new Core_Exception_NotFound("No 'DW_Model_Member' matching " . $ref);
+        } else {
+            if (count($member) > 1) {
+                throw new Core_Exception_TooMany("Too many 'DW_Model_Member' matching " . $ref);
+            }
+        }
+
+        return array_pop($member);
+    }
+
+    /**
      * Supprime le Member donné de la collection de l'Axis.
      *
      * @param DW_Model_Member $member
@@ -370,7 +392,6 @@ class DW_Model_Axis extends Core_Model_Entity
     {
         if ($this->hasMember($member)) {
             $this->members->removeElement($member);
-            $member->setAxis(null);
         }
     }
 
@@ -392,22 +413,6 @@ class DW_Model_Axis extends Core_Model_Entity
     public function getMembers()
     {
         return $this->members->toArray();
-    }
-
-    /**
-     * @param string $ref
-     * @throws Core_Exception_NotFound
-     * @return DW_Model_Axis
-     */
-    public function getMemberByRef($ref)
-    {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('ref', $ref));
-        $results = $this->members->matching($criteria);
-        if (count($results) > 0) {
-            return $results->first();
-        }
-        throw new Core_Exception_NotFound("Le membre $ref est introuvable dans l'axe " . $this->ref);
     }
 
     /**

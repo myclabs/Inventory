@@ -23,7 +23,7 @@ class AF_Datagrid_Edit_Components_SubAfController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(AF_Model_Component::QUERY_AF, $af);
         /** @var $subAFList AF_Model_Component_SubAF[] */
@@ -71,7 +71,7 @@ class AF_Datagrid_Edit_Components_SubAfController extends UI_Controller_Datagrid
     public function addelementAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -206,7 +206,7 @@ class AF_Datagrid_Edit_Components_SubAfController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         /** @var $subAF AF_Model_Component_SubAF */
-        $subAF = AF_Model_Component_SubAF::load($this->_getParam('index'));
+        $subAF = AF_Model_Component_SubAF::load($this->getParam('index'));
         $subAF->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
@@ -221,7 +221,7 @@ class AF_Datagrid_Edit_Components_SubAfController extends UI_Controller_Datagrid
     public function getRawHelpAction()
     {
         /** @var $subAF AF_Model_Component_SubAF */
-        $subAF = AF_Model_Component_SubAF::load($this->_getParam('id'));
+        $subAF = AF_Model_Component_SubAF::load($this->getParam('id'));
         $this->data = $subAF->getHelp();
         $this->send();
     }

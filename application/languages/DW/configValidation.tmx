@@ -4,8 +4,8 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-    <!-- Caractère obligatoire du choix du type de valeurs à fournir par l'analyse -->
-    
+        <!-- Caractère obligatoire du choix du type de valeurs à fournir par l'analyse -->
+
         <tu tuid="reportTypeMandatory">
             <tuv xml:lang="fr">
                 <seg>Merci de préciser la nature des valeurs à fournir.</seg>
@@ -15,7 +15,34 @@
             </tuv>
         </tu>
 
-    <!-- Les axes 1 et 2 ne peuvent pas être identiques -->
+        <!-- Caractère obligatoire du champ indicateur -->
+
+        <tu tuid="indicatorIsRequired">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner un indicateur.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select an indicator.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numeratorIsRequired">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner un indicateur pour le numérateur.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select an indicator for numerator.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="denominatorIsRequired">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner un indicateur pour le dénominateur.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select an indicator for denominator.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Les axes 1 et 2 ne peuvent pas être identiques -->
     
         <tu tuid="axisTwoSameAsOne">
             <tuv xml:lang="fr">

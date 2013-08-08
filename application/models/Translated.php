@@ -10,7 +10,7 @@
  * @package    Core
  * @subpackage Test
  */
-class Default_Model_Translated extends Core_Model_Entity
+class Inventory_Model_Translated extends Core_Model_Entity
 {
 
     use Core_Model_Entity_Translatable;

@@ -58,7 +58,6 @@ DW_Model_Member:
       cascade: [ detach ]
 
   lifecycleCallbacks:
-    prePersist: [ preSave ]
     preUpdate: [ preUpdate ]
     preRemove: [ preDelete ]
     postLoad: [ postLoad ]

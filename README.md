@@ -35,9 +35,9 @@ Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](h
 vagrant up
 ```
 
-The website is accessible at [http://localhost:8080/](http://localhost:8080/).
+The website is accessible at [http://localhost:8000/inventory/](http://localhost:8000/inventory/).
 
-PhpMyAdmin is accessible at [http://localhost:8080/phpmyadmin/](http://localhost:8080/phpmyadmin/).
+PhpMyAdmin is accessible at [http://localhost:8000/phpmyadmin/](http://localhost:8000/phpmyadmin/).
 
 SSH to the virtual machine:
 
@@ -57,27 +57,3 @@ vagrant destroy
 ```bash
 phpunit
 ```
-
-## Migration from SVN
-
-SVN revision migrated for each package:
-
-- Core: 12223
-- UI: 12205
-- Unit: 12214
-- User: 12223
-- TEC: 12083
-- Calc: 11087
-- Exec: 11090
-- Export: 12202
-- Classif: 12212
-- Keyword: 12212
-- Techno: 12212
-- Doc: 12202
-- DW: 12222
-- Algo: 12124
-- AF: 12234
-- Social: 12212
-- Orga: 12202
-- Simulation: 12202
-- Inventory: 12223

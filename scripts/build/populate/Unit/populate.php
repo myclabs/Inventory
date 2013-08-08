@@ -64,7 +64,7 @@ class Unit_Populate extends Core_Script_Populate
      * Initialise la connection et l'EntityManager de Unit.
      * @param string $environment
      */
-    protected function initUnitEntityManager($environment)
+    public function initUnitEntityManager($environment)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
@@ -107,7 +107,7 @@ class Unit_Populate extends Core_Script_Populate
     /**
      * Reset la connection et l'EntityManager de Unit.
      */
-    protected function resetUnitEntityManager()
+    public function resetUnitEntityManager()
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['unit']->close();

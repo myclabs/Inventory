@@ -10,7 +10,7 @@
  * @package    Default
  * @subpackage Model
  */
-class Default_Model_SimpleExample extends Core_Model_Entity
+class Inventory_Model_SimpleExample extends Core_Model_Entity
 {
 
     protected $id;

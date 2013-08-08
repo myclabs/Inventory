@@ -4,6 +4,25 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="actionTemplate">
+            <tuv xml:lang="fr">
+                <seg>Modèle d'action</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Action template</seg>
+            </tuv>
+        </tu>
+        <tu tuid="actionTemplates">
+            <tuv xml:lang="fr">
+                <seg>Modèles d'action</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Action templates</seg>
+            </tuv>
+        </tu>
+
+        <!-- Attributs -->
+
         <tu tuid="numberOfAssociatedActions">
             <tuv xml:lang="fr">
                 <seg>Nombre d'actions associées</seg>

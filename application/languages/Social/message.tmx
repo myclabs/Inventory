@@ -4,6 +4,23 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="message">
+            <tuv xml:lang="fr">
+                <seg>Message</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Message</seg>
+            </tuv>
+        </tu>
+        <tu tuid="messages">
+            <tuv xml:lang="fr">
+                <seg>Messages</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Messages</seg>
+            </tuv>
+        </tu>
+
         <!-- Onglets -->
 
         <tu tuid="inbox">

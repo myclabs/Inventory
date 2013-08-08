@@ -20,7 +20,7 @@ class Doc_LibraryController extends Core_Controller_Ajax
     public function viewAction()
     {
         /** @var $library Doc_Model_Library */
-        $library = Doc_Model_Library::load($this->_getParam('id'));
+        $library = Doc_Model_Library::load($this->getParam('id'));
         $this->view->library = $library;
     }
 
@@ -32,8 +32,8 @@ class Doc_LibraryController extends Core_Controller_Ajax
     public function addAction()
     {
         /** @var $library Doc_Model_Library */
-        $library = Doc_Model_Library::load($this->_getParam('id'));
-        $this->view->id = $this->_getParam('id');
+        $library = Doc_Model_Library::load($this->getParam('id'));
+        $this->view->id = $this->getParam('id');
 
         try {
             $adapter = new Doc_FileAdapter($library);

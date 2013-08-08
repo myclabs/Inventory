@@ -196,7 +196,11 @@ class UI_JS_AutoComplete extends UI_Generic
             $this->addOption('minimumInputLength', $this->minimumInputLength);
         }
         if (($this->multiple === true) && !(isset($this->_options['multiple']))) {
-            $this->addOption('multiple', true);
+            if (!is_array($this->source)) {
+                $this->addOption('multiple', true);
+            } else {
+                $this->_attributes['multiple'] = 'multiple';
+            }
         }
         if ((!is_array($this->source)) && !(isset($this->_options['ajax']))) {
             $ajax = '{';
@@ -239,11 +243,16 @@ class UI_JS_AutoComplete extends UI_Generic
         if ($this->generateHTML === false) {
             return '';
         }
+
         if (!(isset($this->_attributes['name']))) {
             $this->addAttribute('name', $this->id);
         }
         if (($this->multiple === true) && !(isset($this->_attributes['multiple']))) {
-            $this->addAttribute('multiple', 'multiple');
+            if (!is_array($this->source)) {
+                $this->addOption('multiple', true);
+            } else {
+                $this->_attributes['multiple'] = 'multiple';
+            }
         }
 
         $html = '';

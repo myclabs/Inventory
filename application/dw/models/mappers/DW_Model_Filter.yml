@@ -18,6 +18,7 @@ DW_Model_Filter:
       joinColumn:
         name: idReport
         referencedColumnName: id
+      nullable: false
     axis:
       targetEntity: DW_Model_Axis
       joinColumn:

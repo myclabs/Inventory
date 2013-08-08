@@ -78,10 +78,10 @@ class Social_MessageController extends Core_Controller_Ajax
             $this->sendFormResponse();
             return;
         }
-        if ($this->_hasParam('idUser')) {
-            $recipient = User_Model_User::load($this->_getParam('idUser'));
-        } elseif ($this->_hasParam('idUserGroup')) {
-            $recipient = Social_Model_UserGroup::load($this->_getParam('idUserGroup'));
+        if ($this->hasParam('idUser')) {
+            $recipient = User_Model_User::load($this->getParam('idUser'));
+        } elseif ($this->hasParam('idUserGroup')) {
+            $recipient = Social_Model_UserGroup::load($this->getParam('idUserGroup'));
         } else {
             throw new Core_Exception_InvalidHTTPQuery();
         }
@@ -97,7 +97,7 @@ class Social_MessageController extends Core_Controller_Ajax
      */
     public function viewAction()
     {
-        $this->view->message = Social_Model_Message::load($this->_getParam('id'));
+        $this->view->message = Social_Model_Message::load($this->getParam('id'));
         $this->view->user = $this->_helper->auth();
         if ($this->getRequest()->isXmlHttpRequest()) {
             $this->_helper->layout->disableLayout();

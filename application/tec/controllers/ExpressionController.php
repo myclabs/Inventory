@@ -18,7 +18,7 @@ class TEC_ExpressionController extends Core_Controller
     */
    public function indexAction()
    {
-        $this->_redirect("tec/expression/test");
+        $this->redirect("tec/expression/test");
    }
 
    /**
@@ -28,8 +28,8 @@ class TEC_ExpressionController extends Core_Controller
     */
    public function init()
    {
-        $this->view->typeExpression = ($this->_hasParam('typeExpression')) ? $this->_getParam('typeExpression') : 'numeric';
-        $this->view->input = $this->_getParam('input');
+        $this->view->typeExpression = ($this->hasParam('typeExpression')) ? $this->getParam('typeExpression') : 'numeric';
+        $this->view->input = $this->getParam('input');
    }
 
    /**
@@ -65,7 +65,7 @@ class TEC_ExpressionController extends Core_Controller
             }
         }
 
-        $this->_forward('test');
+        $this->forward('test');
     }
 
 }

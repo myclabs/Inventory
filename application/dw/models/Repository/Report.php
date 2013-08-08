@@ -50,12 +50,12 @@ class DW_Model_Repository_Report extends Core_Model_Repository
             $numeratorMembers = array();
             if ($numeratorAxis1 !== null) {
                 $numeratorMember1 = $result->getMemberForAxis($numeratorAxis1);
-                $identifierValue .= $numeratorMember1->getKey()['id'];
+                $identifierValue .= $numeratorMember1->getId();
                 $numeratorMembers[] = $numeratorMember1;
             }
             if ($numeratorAxis2 !== null) {
                 $numeratorMember2 = $result->getMemberForAxis($numeratorAxis2);
-                $identifierValue .= '#'.$numeratorMember2->getKey()['id'];
+                $identifierValue .= '#'.$numeratorMember2->getId();
                 $numeratorMembers[] = $numeratorMember2;
             }
             if (!isset($values[$identifierValue])) {
@@ -64,14 +64,14 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                     // Détermination de l'identifiant du dénominateur.
                     $parentMembersId = '';
                     if (($numeratorAxis1 !== null) && ($numeratorAxis1 === $denominatorAxis1)) {
-                        $parentMembersId .= $numeratorMember1->getKey()['id'];
+                        $parentMembersId .= $numeratorMember1->getId();
                     } else if (($numeratorAxis1 !== null) && ($denominatorAxis1 !== null)) {
-                        $parentMembersId .= $numeratorMember1->getParentForAxis($denominatorAxis1)->getKey()['id'];
+                        $parentMembersId .= $numeratorMember1->getParentForAxis($denominatorAxis1)->getId();
                     }
                     if (($numeratorAxis2 !== null) && ($numeratorAxis2 === $denominatorAxis2)) {
-                        $parentMembersId .= '#'.$numeratorMember2->getKey()['id'];
+                        $parentMembersId .= '#'.$numeratorMember2->getId();
                     } else if (($numeratorAxis2 !== null) && ($denominatorAxis2 !== null)) {
-                        $parentMembersId .= '#'.$numeratorMember2->getParentForAxis($denominatorAxis2)->getKey()['id'];
+                        $parentMembersId .= '#'.$numeratorMember2->getParentForAxis($denominatorAxis2)->getId();
                     }
                     $membersLink[$identifierValue] = $parentMembersId;
                 }
@@ -106,9 +106,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
             foreach ($denominatorResults as $result) {
                 $identifierValue = '';
                 if ($denominatorAxis1 !== null) {
-                    $identifierValue .= $result->getMemberForAxis($denominatorAxis1)->getKey()['id'];
+                    $identifierValue .= $result->getMemberForAxis($denominatorAxis1)->getId();
                     if ($denominatorAxis2 !== null) {
-                        $identifierValue .= '#'.$result->getMemberForAxis($denominatorAxis2)->getKey()['id'];
+                        $identifierValue .= '#'.$result->getMemberForAxis($denominatorAxis2)->getId();
                     }
                 }
                 if (!isset($ratioValues[$identifierValue])) {
@@ -168,12 +168,12 @@ class DW_Model_Repository_Report extends Core_Model_Repository
      * Donne une série de résultats
      *
      * @param DW_Model_Indicator $indicator
-     * @param DW_Model_Axis $axes
+     * @param DW_Model_Axis[] $axes
      * @param DW_Model_Filter[] $filters
      *
      * @return DW_Model_Result[]
      */
-    protected function getResultForIndicatorAndAxes($indicator, $axes, $filters=array())
+    protected function getResultForIndicatorAndAxes(DW_Model_Indicator $indicator, array $axes, $filters=array())
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
 
@@ -190,6 +190,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
 
         foreach ($axes as $axis) {
             if ($axis !== null) {
+                if (!$axis->hasMembers()) {
+                    return [];
+                }
                 $memberAlias = DW_Model_Member::getAlias().'_Axis'.$axis->getRef();
                 $queryBuilder->leftJoin(DW_Model_Result::getAlias().'.members', $memberAlias);
                 $queryBuilder->andWhere(
@@ -303,7 +306,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
      */
     protected function orderResultByMember($a, $b)
     {
-
+        if ($a['members'][0] === $b['members'][0]) {
+            return $a['members'][1]->getPosition() - $b['members'][1]->getPosition();
+        }
         return $a['members'][0]->getPosition() - $b['members'][0]->getPosition();
     }
 

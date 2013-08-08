@@ -10,7 +10,7 @@
     }
     ?>
     <base href="http://<?= $server ?><?= $this->baseUrl() ?>/"/>
-    <title>My C-Tool</title>
+    <title><?=__('Inventory', 'layout', 'title')?></title>
 
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="scripts/ui/jquery-1.7.2.min.js"></script>
@@ -22,8 +22,8 @@
     $this->headScript()->appendFile('scripts/bootbox.min.js', 'text/javascript');
     $this->headScript()->appendFile('scripts/ui/feedback-form.js', 'text/javascript');
     $this->headLink()->prependStylesheet('css/ui/layout.css');
-    $this->headLink()->prependStylesheet('bootstrap/css/bootstrap.css');
     $this->headLink()->prependStylesheet('bootstrap/css/bootstrap-responsive.css');
+    $this->headLink()->prependStylesheet('bootstrap/css/bootstrap.css');
     // Ajout des link, et des Styles dynamiques. //  Les scripts sont ajoutés à la fin.
     echo "\n" . $this->headLink()->toString(8) . "\n" . $this->headStyle()->toString(8) . "\n";
     ?>
@@ -115,6 +115,16 @@
         $(document).ready(function () {
             setMask(false);
         });
+    </script>
+    <script>
+        <?=Core_Translate::exportJS('UI', 'verb', 'cancel')?>
+        <?=Core_Translate::exportJS('UI', 'verb', 'send')?>
+        <?=Core_Translate::exportJS('UI', 'feedback', 'title')?>
+        <?=Core_Translate::exportJS('UI', 'feedback', 'unclearContent')?>
+        <?=Core_Translate::exportJS('UI', 'feedback', 'bugReport')?>
+        <?=Core_Translate::exportJS('UI', 'feedback', 'improvement')?>
+        <?=Core_Translate::exportJS('UI', 'feedback', 'moreDetails')?>
+        <?=Core_Translate::exportJS('UI', 'feedback', 'thanks')?>
     </script>
 </body>
 </html>

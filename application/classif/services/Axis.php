@@ -123,7 +123,7 @@ class Classif_Service_Axis extends Core_Service
         $axis = Classif_Model_Axis::loadByRef($axisRef);
 
         if ($newParentRef === null) {
-            $axis->setDirectNarrower(null);
+            $axis->setDirectNarrower();
         } else {
             $axis->setDirectNarrower(Classif_Model_Axis::loadByRef($newParentRef));
         }

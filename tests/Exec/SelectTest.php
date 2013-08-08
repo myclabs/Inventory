@@ -51,7 +51,7 @@ class Exec_Test_SelectOthers extends PHPUnit_Framework_TestCase
      */
      protected $expression;
      /**
-      * @var Default_Model_ValueProviderEntity
+      * @var Inventory_Model_ValueProviderEntity
       */
      protected $_valueProvider;
 
@@ -69,7 +69,7 @@ class Exec_Test_SelectOthers extends PHPUnit_Framework_TestCase
     {
         $this->expression = new TEC_Model_Expression('a:(b:(c:d;:e);:f)');
         $this->expression->buildTree();
-        $this->_valueProvider = new Default_Model_ValueProviderEntity(
+        $this->_valueProvider = new Inventory_Model_ValueProviderEntity(
                                         array(
                                            "a" => true,
                                            "b" => true,

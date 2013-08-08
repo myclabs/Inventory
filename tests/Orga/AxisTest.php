@@ -7,7 +7,7 @@
  * @subpackage Test
  */
 
-//require_once dirname(__FILE__).'/CubeTest.php';
+//require_once dirname(__FILE__).'/OrganizationTest.php';
 
 /**
  * Creation de la suite de test sur les Axis.
@@ -22,8 +22,8 @@ class Orga_Test_AxisTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Orga_Test_AxisSetUp');
-        $suite->addTestSuite('Orga_Test_AxisOthers');
+//        $suite->addTestSuite('Orga_Test_AxisSetUp');
+//        $suite->addTestSuite('Orga_Test_AxisOthers');
         return $suite;
     }
 
@@ -31,18 +31,17 @@ class Orga_Test_AxisTest
      * Generation de l'objet de test.
      * @param string $refAxis
      * @param string $labelAxis
-     * @param Orga_Model_Cube $cube
+     * @param Orga_Model_Organization $organization
      * @return Orga_Model_Axis
      */
-    public static function generateObject($refAxis='RefTestAxis', $labelAxis='LabelTestAxis', $cube=null)
+    public static function generateObject($refAxis='RefTestAxis', $labelAxis='LabelTestAxis', $organization=null)
     {
-        if ($cube === null) {
-            $cube = Orga_Test_CubeTest::generateObject();
+        if ($organization === null) {
+            $organization = Orga_Test_OrganizationTest::generateObject();
         }
-        $o = new Orga_Model_Axis();
+        $o = new Orga_Model_Axis($organization);
         $o->setRef($refAxis);
         $o->setLabel($labelAxis);
-        $o->setCube($cube);
         $o->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
@@ -52,13 +51,13 @@ class Orga_Test_AxisTest
     /**
      * Suppression d'un objet cree avec generateObject
      * @param Orga_Model_Axis $o
-     * @param bool $deleteCube
+     * @param bool $deleteOrganization
      * @depends generateObject
      */
-    public static function deleteObject($o, $deleteCube=true)
+    public static function deleteObject($o, $deleteOrganization=true)
     {
-        if ($deleteCube === true) {
-            $o->getCube()->delete();
+        if ($deleteOrganization === true) {
+            $o->getOrganization()->delete();
         } else {
             $o->delete();
         }
@@ -88,11 +87,11 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -106,9 +105,8 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $cube = Orga_Test_CubeTest::generateObject();
-        $o = new Orga_Model_Axis();
-        $o->setCube($cube);
+        $organization = Orga_Test_OrganizationTest::generateObject();
+        $o = new Orga_Model_Axis($organization);
         $o->setRef('RefTestAxis');
         $o->setLabel('LabalTestAxis');
         $o->setContextualize(true);
@@ -133,7 +131,7 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
          $this->assertEquals($oLoaded->getRef(), $o->getRef());
          $this->assertEquals($oLoaded->getLabel(), $o->getLabel());
          $this->assertEquals($oLoaded->isContextualizing(), $o->isContextualizing());
-         $this->assertSame($oLoaded->getCube(), $o->getCube());
+         $this->assertSame($oLoaded->getOrganization(), $o->getOrganization());
          return $oLoaded;
     }
 
@@ -147,7 +145,7 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
         $this->assertEquals(array(), $o->getKey());
-        Orga_Test_CubeTest::deleteObject($o->getCube());
+        Orga_Test_OrganizationTest::deleteObject($o->getOrganization());
     }
 
     /**
@@ -164,11 +162,11 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -177,16 +175,16 @@ class Orga_Test_AxisSetUp extends PHPUnit_Framework_TestCase
 }
 
 /**
- * Tests de la classe Cube
+ * Tests de la classe Organization
  * @package Orga
  * @subpackage Test
  */
 class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Orga_Model_Cube
+     * @var Orga_Model_Organization
      */
-    protected $cube;
+    protected $organization;
 
     /**
      * @var Orga_Model_Axis
@@ -216,11 +214,11 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -234,15 +232,15 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
     {
         // Crée un objet de test
         $this->axis = Orga_Test_AxisTest::generateObject();
-        $this->cube = $this->axis->getCube();
+        $this->organization = $this->axis->getOrganization();
     }
 
     /**
      * Test de loadbyref
      */
-    public function testLoadByRefAndCube()
+    public function testLoadByRefAndOrganization()
     {
-        $o = Orga_Model_Axis::loadByRefAndCube($this->axis->getRef(), $this->cube);
+        $o = Orga_Model_Axis::loadByRefAndOrganization($this->axis->getRef(), $this->organization);
         $this->assertSame($this->axis, $o);
     }
 
@@ -251,12 +249,12 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
      */
     public function testManagerBroaders()
     {
-        $axis1 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders1', 'LabelAxisManageBroaders1', $this->cube);
-        $axis11 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders11', 'LabelAxisManageBroaders11', $this->cube);
-        $axis2 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders2', 'LabelAxisManageBroaders2', $this->cube);
-        $axis21 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders21', 'LabelAxisManageBroaders21', $this->cube);
-        $axis22 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders22', 'LabelAxisManageBroaders22', $this->cube);
-        $axis3 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders3', 'LabelAxisManageBroaders3', $this->cube);
+        $axis1 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders1', 'LabelAxisManageBroaders1', $this->organization);
+        $axis11 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders11', 'LabelAxisManageBroaders11', $this->organization);
+        $axis2 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders2', 'LabelAxisManageBroaders2', $this->organization);
+        $axis21 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders21', 'LabelAxisManageBroaders21', $this->organization);
+        $axis22 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders22', 'LabelAxisManageBroaders22', $this->organization);
+        $axis3 = Orga_Test_AxisTest::generateObject('RefAxisManageBroaders3', 'LabelAxisManageBroaders3', $this->organization);
 
         $this->assertFalse($this->axis->hasDirectBroaders());
         $this->assertEmpty($this->axis->getDirectBroaders());
@@ -390,151 +388,11 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests all functions relative to Member in Axis.
-     */
-    public function testManagerMembers()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
-        $member1 = new Orga_Model_Member();
-        $member1->setRef('RefMemberAxis1');
-        $member1->setLabel('LabelMemberAxis1');
-
-        $member2 = new Orga_Model_Member();
-        $member2->setRef('RefMemberAxis2');
-        $member2->setLabel('LabelMemberAxis2');
-
-        $member3 = new Orga_Model_Member();
-        $member3->setRef('RefMemberAxis3');
-        $member3->setLabel('LabelMemberAxis3');
-
-        $this->assertFalse($this->axis->hasMembers());
-        $this->assertEmpty($this->axis->getMembers());
-        $this->assertFalse($this->axis->hasMember($member1));
-        $this->assertFalse($this->axis->hasMember($member2));
-        $this->assertFalse($this->axis->hasMember($member3));
-        try {
-            $this->assertNull($member1->getAxis());
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->assertEquals($e->getMessage(), 'The Axis has not been defined yet.');
-        }
-        try {
-            $this->assertNull($member3->getAxis());
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->assertEquals($e->getMessage(), 'The Axis has not been defined yet.');
-        }
-        try {
-            $this->assertNull($member3->getAxis());
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->assertEquals($e->getMessage(), 'The Axis has not been defined yet.');
-        }
-
-        $this->axis->addMember($member1);
-        $member1->save();
-        $entityManagers['default']->flush();
-
-        $this->assertTrue($this->axis->hasMembers());
-        $this->assertEquals(array(0 => $member1), $this->axis->getMembers());
-        $this->assertTrue($this->axis->hasMember($member1));
-        $this->assertFalse($this->axis->hasMember($member2));
-        $this->assertFalse($this->axis->hasMember($member3));
-        $this->assertSame($this->axis, $member1->getAxis());
-        try {
-            $this->assertNull($member3->getAxis());
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->assertEquals($e->getMessage(), 'The Axis has not been defined yet.');
-        }
-        try {
-            $this->assertNull($member3->getAxis());
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->assertEquals($e->getMessage(), 'The Axis has not been defined yet.');
-        }
-
-        $this->axis->addMember($member2);
-        $member2->save();
-        $this->axis->addMember($member3);
-        $member3->save();
-        $entityManagers['default']->flush();
-
-        $this->assertTrue($this->axis->hasMembers());
-        $this->assertEquals(array(0 => $member1, 1 => $member2, 2 => $member3), $this->axis->getMembers());
-        $this->assertTrue($this->axis->hasMember($member1));
-        $this->assertTrue($this->axis->hasMember($member2));
-        $this->assertTrue($this->axis->hasMember($member3));
-        $this->assertSame($this->axis, $member1->getAxis());
-        $this->assertSame($this->axis, $member2->getAxis());
-        $this->assertSame($this->axis, $member3->getAxis());
-    }
-
-    /**
-     * Tests all functions relative to Granularity in Axis.
-     */
-    public function testManageGranularities()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
-        $granularity1 = new Orga_Model_Granularity();
-        $granularity1->setCube($this->cube);
-        $granularity1->save();
-
-        $granularity2 = new Orga_Model_Granularity();
-        $granularity2->setCube($this->cube);
-        $granularity2->save();
-
-        $granularity3 = new Orga_Model_Granularity();
-        $granularity3->setCube($this->cube);
-        $granularity3->save();
-
-        $this->assertFalse($this->axis->hasGranularities());
-        $this->assertEmpty($this->axis->getGranularities());
-        $this->assertFalse($this->axis->hasGranularity($granularity1));
-        $this->assertFalse($this->axis->hasGranularity($granularity2));
-        $this->assertFalse($this->axis->hasGranularity($granularity3));
-        $this->assertFalse($granularity1->hasAxis($this->axis));
-        $this->assertFalse($granularity2->hasAxis($this->axis));
-        $this->assertFalse($granularity3->hasAxis($this->axis));
-
-        $this->axis->addGranularity($granularity1);
-
-        $this->assertTrue($this->axis->hasGranularities());
-        $this->assertEquals(array(0 => $granularity1), $this->axis->getGranularities());
-        $this->assertTrue($this->axis->hasGranularity($granularity1));
-        $this->assertFalse($this->axis->hasGranularity($granularity2));
-        $this->assertFalse($this->axis->hasGranularity($granularity3));
-        $this->assertTrue($granularity1->hasAxis($this->axis));
-        $this->assertFalse($granularity2->hasAxis($this->axis));
-        $this->assertFalse($granularity3->hasAxis($this->axis));
-
-        $this->axis->addGranularity($granularity2);
-        $this->axis->addGranularity($granularity3);
-
-        $this->assertTrue($this->axis->hasGranularities());
-        $this->assertEquals(array(0 => $granularity1, 1 => $granularity2, 2 => $granularity3), $this->axis->getGranularities());
-        $this->assertTrue($this->axis->hasGranularity($granularity1));
-        $this->assertTrue($this->axis->hasGranularity($granularity2));
-        $this->assertTrue($this->axis->hasGranularity($granularity3));
-        $this->assertTrue($granularity1->hasAxis($this->axis));
-        $this->assertTrue($granularity2->hasAxis($this->axis));
-        $this->assertTrue($granularity3->hasAxis($this->axis));
-
-        $this->axis->removeGranularity($granularity2);
-
-        $this->assertTrue($this->axis->hasGranularities());
-        $this->assertEquals(array(0 => $granularity1, 2 => $granularity3), $this->axis->getGranularities());
-        $this->assertTrue($this->axis->hasGranularity($granularity1));
-        $this->assertFalse($this->axis->hasGranularity($granularity2));
-        $this->assertTrue($this->axis->hasGranularity($granularity3));
-        $this->assertTrue($granularity1->hasAxis($this->axis));
-        $this->assertFalse($granularity2->hasAxis($this->axis));
-        $this->assertTrue($granularity3->hasAxis($this->axis));
-    }
-
-    /**
      * Fonction appelee apres chaques tests
      */
     protected function tearDown()
     {
-       Orga_Test_CubeTest::deleteObject($this->cube);
+       Orga_Test_OrganizationTest::deleteObject($this->organization);
     }
 
     /**
@@ -560,11 +418,11 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();

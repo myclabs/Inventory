@@ -23,7 +23,7 @@ class Simulation_Datagrid_SetController extends UI_Controller_Datagrid
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
@@ -54,7 +54,7 @@ class Simulation_Datagrid_SetController extends UI_Controller_Datagrid
      *  $this->add['nomDuChamps'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie une message d'information.
      *
@@ -87,7 +87,7 @@ class Simulation_Datagrid_SetController extends UI_Controller_Datagrid
      *  $this->delete.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information.
      *
@@ -115,7 +115,7 @@ class Simulation_Datagrid_SetController extends UI_Controller_Datagrid
      *  $this->update['value'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *

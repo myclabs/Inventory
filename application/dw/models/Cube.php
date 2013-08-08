@@ -62,6 +62,16 @@ class DW_Model_Cube extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Cube.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Définit le label du Cube.
      *
      * @param String $label
@@ -82,15 +92,20 @@ class DW_Model_Cube extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un Axis à la collction du Cube.
+     * Ajoute un Axis à la collection du Cube.
      *
      * @param DW_Model_Axis $axis
+     * 
+     * @throws Core_Exception_InvalidArgument
      */
     public function addAxis(DW_Model_Axis $axis)
     {
-        if (!($this->hasAxis($axis))) {
+        if ($axis->getCube() !== $this) {
+            throw new Core_Exception_InvalidArgument();
+        }
+
+        if (!$this->hasAxis($axis)) {
             $this->axes->add($axis);
-            $axis->setCube($this);
         }
     }
 
@@ -107,20 +122,44 @@ class DW_Model_Cube extends Core_Model_Entity
     }
 
     /**
+     * Retourne un Axis du Cube en fonction de la ref donnée.
+     *
+     * @param string $ref
+     *
+     * @throws Core_Exception_NotFound
+     * @throws Core_Exception_TooMany
+     *
+     * @return DW_Model_Axis
+     */
+    public function getAxisByRef($ref)
+    {
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->where($criteria->expr()->eq('ref', $ref));
+        $axis = $this->axes->matching($criteria)->toArray();
+
+        if (count($axis) === 0) {
+            throw new Core_Exception_NotFound("No 'DW_Model_Axis' matching " . $ref);
+        } else if (count($axis) > 1) {
+            throw new Core_Exception_TooMany("Too many 'DW_Model_Axis' matching " . $ref);
+        }
+
+        return array_pop($axis);
+    }
+
+    /**
      * Retire un Axis de ceux du Cube.
      *
      * @param DW_Model_Axis $axis
      */
-    public function removeAxis($axis)
+    public function removeAxis(DW_Model_Axis $axis)
     {
         if ($this->hasAxis($axis)) {
             $this->axes->removeElement($axis);
-            $axis->setCube(null);
         }
     }
 
     /**
-     * Vérifie si le Cube ossède au moins un Axis.
+     * Vérifie si le Cube possède au moins un Axis.
      *
      * @return bool
      */
@@ -140,22 +179,6 @@ class DW_Model_Cube extends Core_Model_Entity
     }
 
     /**
-     * @param string $ref
-     * @throws Core_Exception_NotFound
-     * @return DW_Model_Axis
-     */
-    public function getAxisByRef($ref)
-    {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('ref', $ref));
-        $results = $this->axes->matching($criteria);
-        if (count($results) > 0) {
-            return $results->first();
-        }
-        throw new Core_Exception_NotFound("L'axe $ref est introuvable dans le cube");
-    }
-
-    /**
      * Retourne un tableau contenant les Axis racines du Cube.
      *
      * @return DW_Model_Axis[]
@@ -165,7 +188,14 @@ class DW_Model_Cube extends Core_Model_Entity
         $criteria = Doctrine\Common\Collections\Criteria::create()->where(
             Doctrine\Common\Collections\Criteria::expr()->isNull('directNarrower')
         );
-        return $this->axes->matching($criteria)->toArray();
+        $rootAxes = $this->axes->matching($criteria)->toArray();
+
+        uasort(
+            $rootAxes,
+            function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
+        );
+
+        return $rootAxes;
     }
 
     /**
@@ -211,7 +241,6 @@ class DW_Model_Cube extends Core_Model_Entity
     {
         if (!($this->hasIndicator($indicator))) {
             $this->indicators->add($indicator);
-            $indicator->setCube($this);
         }
     }
 
@@ -236,7 +265,6 @@ class DW_Model_Cube extends Core_Model_Entity
     {
         if ($this->hasIndicator($indicator)) {
             $this->indicators->removeElement($indicator);
-            $indicator->setCube(null);
         }
     }
 
@@ -274,6 +302,62 @@ class DW_Model_Cube extends Core_Model_Entity
             return $results->first();
         }
         throw new Core_Exception_NotFound("L'indicateur $ref est introuvable dans le cube");
+    }
+
+    /**
+     * Ajoute un Report à la collection du Cube.
+     *
+     * @param DW_Model_Report $report
+     */
+    public function addReport(DW_Model_Report $report)
+    {
+        if (!($this->hasReport($report))) {
+            $this->reports->add($report);
+        }
+    }
+
+    /**
+     * Vérifie si l'Report donné appartient à ceux du Cube.
+     *
+     * @param DW_Model_Report $report
+     *
+     * @return boolean
+     */
+    public function hasReport(DW_Model_Report $report)
+    {
+        return $this->reports->contains($report);
+    }
+
+    /**
+     * Retire un Report de ceux du Cube.
+     *
+     * @param DW_Model_Report $report
+     */
+    public function removeReport($report)
+    {
+        if ($this->hasReport($report)) {
+            $this->reports->removeElement($report);
+        }
+    }
+
+    /**
+     * Vérifie si le Cube ossède au moins un Report.
+     *
+     * @return bool
+     */
+    public function hasReports()
+    {
+        return !$this->reports->isEmpty();
+    }
+
+    /**
+     * Renvoie les Report du Cube.
+     *
+     * @return DW_Model_Report[]
+     */
+    public function getReports()
+    {
+        return $this->reports->toArray();
     }
 
 }

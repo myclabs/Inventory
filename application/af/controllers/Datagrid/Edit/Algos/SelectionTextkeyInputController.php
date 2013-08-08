@@ -22,7 +22,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyInputController extends UI_Controll
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
             if ($algo instanceof Algo_Model_Selection_TextKey_Input) {

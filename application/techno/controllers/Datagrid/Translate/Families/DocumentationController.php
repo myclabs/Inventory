@@ -84,7 +84,7 @@ class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Cont
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $family = Techno_Model_Family::load($this->_getParam('id'));
+        $family = Techno_Model_Family::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $family->reloadWithLocale($locale);
 
@@ -100,7 +100,7 @@ class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Cont
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $family = Techno_Model_Family::load($this->_getParam('id'));
+        $family = Techno_Model_Family::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $family->reloadWithLocale($locale);
         

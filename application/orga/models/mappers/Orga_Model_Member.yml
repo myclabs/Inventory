@@ -68,6 +68,6 @@ Orga_Model_Member:
     prePersist: [ preSave ]
     preUpdate: [ preUpdate ]
 
-#  uniqueConstraints:
-#    refUniqueness:
-#      columns: [ ref, parentMembersHashKey, idAxis ]
+  uniqueConstraints:
+    memberRefUniquenessInAxisAndParentMembersSashKey:
+      columns: [ ref, parentMembersHashKey, idAxis ]

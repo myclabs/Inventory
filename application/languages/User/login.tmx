@@ -4,6 +4,23 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="connection">
+            <tuv xml:lang="fr">
+                <seg>Connexion</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Connection</seg>
+            </tuv>
+        </tu>
+        <tu tuid="password">
+            <tuv xml:lang="fr">
+                <seg>Mot de passe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Password</seg>
+            </tuv>
+        </tu>
+
         <!-- Formulaire de connection -->
 
         <tu tuid="youAreNotConnected">
@@ -11,7 +28,7 @@
                 <seg>Vous n'êtes pas connecté.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>You are not conneted.</seg>
+                <seg>You are not connected.</seg>
             </tuv>
         </tu>
         <tu tuid="forgottenPassword">

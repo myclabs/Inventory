@@ -38,7 +38,7 @@ class AF_AfController extends Core_Controller_Ajax
     public function testAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
 
         $viewConfiguration = new AF_ViewConfiguration();
         $viewConfiguration->setMode(AF_ViewConfiguration::MODE_TEST);
@@ -46,13 +46,13 @@ class AF_AfController extends Core_Controller_Ajax
         $viewConfiguration->setDisplayConfigurationLink(true);
         $viewConfiguration->addBaseTabs();
         $viewConfiguration->setPageTitle($af->getLabel());
-        if ($this->_hasParam('fromTree')) {
+        if ($this->hasParam('fromTree')) {
             $viewConfiguration->setExitUrl($this->_helper->url('tree', 'af', 'af'));
         } else {
             $viewConfiguration->setExitUrl($this->_helper->url('list', 'af', 'af'));
         }
 
-        $this->_forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
+        $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
     }
 
     /**
@@ -64,12 +64,12 @@ class AF_AfController extends Core_Controller_Ajax
     public function displayAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
 
-        if (!$this->_hasParam('viewConfiguration')) {
+        if (!$this->hasParam('viewConfiguration')) {
             throw new Core_Exception_InvalidHTTPQuery("ViewConfiguration must be provided");
         }
-        $viewConfiguration = $this->_getParam('viewConfiguration');
+        $viewConfiguration = $this->getParam('viewConfiguration');
         if (!$viewConfiguration->isUsable()) {
             throw new Core_Exception_InvalidHTTPQuery('The viewConfiguration is not properly configured');
         }
@@ -88,11 +88,11 @@ class AF_AfController extends Core_Controller_Ajax
     public function displayInputAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('idAF'));
-        $actionStack = json_decode($this->_getParam('actionStack'));
-        $exitURL = urldecode($this->_getParam('exitURL'));
-        $mode = $this->_getParam('mode');
-        $idInputSet = $this->_getParam('idInputSet');
+        $af = AF_Model_AF::load($this->getParam('idAF'));
+        $actionStack = json_decode($this->getParam('actionStack'));
+        $exitURL = urldecode($this->getParam('exitURL'));
+        $mode = $this->getParam('mode');
+        $idInputSet = $this->getParam('idInputSet');
         if ($idInputSet) {
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
@@ -148,8 +148,8 @@ class AF_AfController extends Core_Controller_Ajax
     public function displayResultsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('idAF'));
-        $idInputSet = $this->_getParam('idInputSet');
+        $af = AF_Model_AF::load($this->getParam('idAF'));
+        $idInputSet = $this->getParam('idInputSet');
         if ($idInputSet) {
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
@@ -174,8 +174,8 @@ class AF_AfController extends Core_Controller_Ajax
     public function displayCalculationDetailsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('idAF'));
-        $idInputSet = $this->_getParam('idInputSet');
+        $af = AF_Model_AF::load($this->getParam('idAF'));
+        $idInputSet = $this->getParam('idInputSet');
         if ($idInputSet) {
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
@@ -202,7 +202,7 @@ class AF_AfController extends Core_Controller_Ajax
     public function displayDocumentationAction()
     {
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->af = AF_Model_AF::load($this->_getParam('idAF'));
+        $this->view->af = AF_Model_AF::load($this->getParam('idAF'));
         $this->_helper->layout->disableLayout();
     }
 
@@ -214,7 +214,7 @@ class AF_AfController extends Core_Controller_Ajax
     public function popupExpressionGraphAction()
     {
         /** @var Algo_Model_Numeric_Expression $algo */
-        $algo = Algo_Model_Numeric_Expression::load($this->_getParam('id'));
+        $algo = Algo_Model_Numeric_Expression::load($this->getParam('id'));
 
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->algo = $algo;

@@ -23,7 +23,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->_getParam('refAxis'));
+        $axis = Classif_Model_Axis::loadByRef($this->getParam('refAxis'));
 
         $this->request->filter->addCondition(Classif_Model_Member::QUERY_AXIS, $axis);
         foreach (Classif_Model_Member::loadList($this->request) as $member) {
@@ -59,7 +59,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->_getParam('refAxis'));
+        $axis = Classif_Model_Axis::loadByRef($this->getParam('refAxis'));
         $label = $this->getAddElementValue('label');
         $ref = $this->getAddElementValue('ref');
         try {
@@ -110,7 +110,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->_getParam('refAxis'));
+        $axis = Classif_Model_Axis::loadByRef($this->getParam('refAxis'));
         $member = Classif_Model_Member::loadByRefAndAxis($this->delete, $axis);
         $member->delete();
         $this->message = __('UI', 'message', 'deleted');
@@ -124,7 +124,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->_getParam('refAxis'));
+        $axis = Classif_Model_Axis::loadByRef($this->getParam('refAxis'));
         $member = Classif_Model_Member::loadByRefAndAxis($this->update['index'], $axis);
 
         switch ($this->update['column']) {
@@ -199,9 +199,9 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function getparentsAction()
     {
-        $broaderAxis = Classif_Model_Axis::loadByRef($this->_getParam('refParentAxis'));
+        $broaderAxis = Classif_Model_Axis::loadByRef($this->getParam('refParentAxis'));
 
-        if (($this->_hasParam('source')) && ($this->_getParam('source') === 'add')) {
+        if (($this->hasParam('source')) && ($this->getParam('source') === 'add')) {
             $this->addElementList('', '');
         }
         foreach ($broaderAxis->getMembers() as $eligibleParentMember) {

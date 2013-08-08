@@ -11,7 +11,7 @@ $columnAuthor = new UI_Datagrid_Col_Text('author', __('Social', 'message', 'send
 $datagrid->addCol($columnAuthor);
 
 // Objet
-$columnObject = new UI_Datagrid_Col_Popup('message', __('Social', 'name', 'message'));
+$columnObject = new UI_Datagrid_Col_Popup('message', __('Social', 'message', 'message'));
 $columnObject->editable = false;
 $columnObject->popup->title = __('Social', 'message', 'inboxDetailMessagePopupTitle');
 $columnObject->popup->footer = $closeButton->render();

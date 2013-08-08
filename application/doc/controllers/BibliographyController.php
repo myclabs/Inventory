@@ -22,8 +22,8 @@ class Doc_BibliographyController extends Core_Controller_Ajax
     public function addAction()
     {
         /** @var $bibliography Doc_Model_Bibliography */
-        $bibliography = Doc_Model_Bibliography::load($this->_getParam('id'));
-        $idDocuments = $this->_getParam('documents');
+        $bibliography = Doc_Model_Bibliography::load($this->getParam('id'));
+        $idDocuments = $this->getParam('documents');
         if (! is_array($idDocuments)) {
             throw new Core_Exception_InvalidHTTPQuery();
         }

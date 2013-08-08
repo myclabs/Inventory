@@ -22,7 +22,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(AF_Model_Component::QUERY_AF, $af);
         /** @var $selectFields AF_Model_Component_Select_Single[] */
@@ -64,7 +64,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         /** @var $em \Doctrine\ORM\EntityManager */
         $em = $entityManagers['default'];
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -185,9 +185,9 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     public function deleteelementAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         /** @var $field AF_Model_Component_Select_Single */
-        $field = AF_Model_Component_Select_Single::load($this->_getParam('index'));
+        $field = AF_Model_Component_Select_Single::load($this->getParam('index'));
         // Vérifie qu'il n'y a pas d'Algo_Condition qui référence cet input
         $query = new Core_Model_Query();
         $query->filter->addCondition(Algo_Model_Condition_Elementary::QUERY_INPUT_REF, $field->getRef());
@@ -221,7 +221,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     {
         $this->addElementList(null, '');
         /** @var $select AF_Model_Component_Select */
-        $select = AF_Model_Component_Select::load($this->_getParam('index'));
+        $select = AF_Model_Component_Select::load($this->getParam('index'));
         foreach ($select->getOptions() as $option) {
             $this->addElementList($option->getId(), $option->getLabel());
         }
@@ -235,7 +235,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     public function getRawHelpAction()
     {
         /** @var $select AF_Model_Component_Select */
-        $select = AF_Model_Component_Select::load($this->_getParam('id'));
+        $select = AF_Model_Component_Select::load($this->getParam('id'));
         $this->data = $select->getHelp();
         $this->send();
     }

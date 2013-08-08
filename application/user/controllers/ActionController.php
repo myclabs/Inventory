@@ -23,7 +23,7 @@ class User_ActionController extends UI_Controller_Captcha
      */
     public function indexAction()
     {
-        $this->_redirect('login');
+        $this->redirect('login');
     }
 
     /**
@@ -81,7 +81,7 @@ class User_ActionController extends UI_Controller_Captcha
     {
         // Vide l'identité mémorisée
         Zend_Auth::getInstance()->clearIdentity();
-        $this->_redirect($this->getReferer());
+        $this->redirect($this->getReferer());
     }
 
     /**
@@ -91,7 +91,7 @@ class User_ActionController extends UI_Controller_Captcha
     public function emailauthenticationAction()
     {
         $user = null;
-        $cle = $this->_getParam('mailKey');
+        $cle = $this->getParam('mailKey');
         if ($cle != null) {
             //on charge l'utilisateur à partir de la clé mail
             try {
@@ -109,7 +109,7 @@ class User_ActionController extends UI_Controller_Captcha
         } else {
             throw new Core_Exception_InvalidArgument(__('User', 'exceptions', 'noEmailKeySpecified'));
         }
-        $this->_redirect('login');
+        $this->redirect('login');
     }
 
     /**
@@ -158,7 +158,7 @@ class User_ActionController extends UI_Controller_Captcha
                     . $user->getEmailKey();
                 $subject = __('User', 'email', 'subjectForgottenPassword');
                 $config = Zend_Registry::get('configuration');
-                if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
+                if (empty($config->emails->contact->adress)) {
                     throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
                 }
                 $content = __('User',
@@ -182,10 +182,10 @@ class User_ActionController extends UI_Controller_Captcha
      */
     public function newPasswordAction()
     {
-        $key = $this->_getParam('key');
+        $key = $this->getParam('key');
         if (!$key) {
             UI_Message::addMessageStatic(__('User', 'messages', 'unknownEmailKey'));
-            $this->_redirect('user/action/password-forgotten');
+            $this->redirect('user/action/password-forgotten');
             return;
         }
 
@@ -194,13 +194,13 @@ class User_ActionController extends UI_Controller_Captcha
             $user = User_Model_User::loadByEmailKey($key);
         } catch (Core_Exception_NotFound $e) {
             UI_Message::addMessageStatic(__('User', 'messages', 'unknownEmailKey'));
-            $this->_redirect('user/action/password-forgotten');
+            $this->redirect('user/action/password-forgotten');
             return;
         }
 
         $config = Zend_Registry::get('configuration');
-        if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
-            throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été définit !');
+        if (empty($config->emails->contact->adress)) {
+            throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
         }
 
         /** @var $userService User_Service_User */
@@ -220,7 +220,7 @@ class User_ActionController extends UI_Controller_Captcha
                       array(
                            'PASSWORD'         => $password,
                            'APPLICATION_NAME' => $config->emails->noreply->name,
-                           'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl(),
+                           'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl() . '/',
                       ));
         $userService->sendEmail($user, $subject, $content);
     }
@@ -231,7 +231,7 @@ class User_ActionController extends UI_Controller_Captcha
      */
     protected function getReferer()
     {
-        $refer = urldecode($this->_getParam('refer'));
+        $refer = urldecode($this->getParam('refer'));
         if (($refer !== null)
             && ($refer !== '')
             && !(strpos($refer, '/user/action/'))

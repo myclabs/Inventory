@@ -21,7 +21,7 @@ class Techno_ElementController extends Core_Controller_Ajax
      */
     public function detailsAction()
     {
-        $idElement = $this->_getParam('id');
+        $idElement = $this->getParam('id');
         $this->view->element = Techno_Model_Element::load($idElement);
     }
 

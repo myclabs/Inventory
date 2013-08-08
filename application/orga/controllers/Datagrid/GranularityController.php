@@ -21,28 +21,37 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewOrgaCube")
+     * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_CUBE, $cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_ORGANIZATION, $organization);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
+        /**@var Orga_Model_Granularity $granularity */
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
             $data = array();
-            $data['index'] = $granularity->getRef();
+            $data['index'] = $granularity->getId();
             $listAxes = array();
             foreach ($granularity->getAxes() as $axis) {
                 $listAxes[] = $axis->getRef();
             }
             $data['axes'] = $this->cellList($listAxes);
             $data['navigable'] = $granularity->isNavigable();
+            $data['orgaTab'] = $granularity->getCellsWithOrgaTab();
+            $data['aCL'] = $granularity->getCellsWithACL();
+            $data['aFTab'] = $granularity->getCellsWithAFConfigTab();
+            $data['dW'] = $granularity->getCellsGenerateDWCubes();
+            $data['genericActions'] = $granularity->getCellsWithSocialGenericActions();
+            $data['contextActions'] = $granularity->getCellsWithSocialContextActions();
+            $data['inputDocuments'] = $granularity->getCellsWithInputDocuments();
             if (!($granularity->hasAxes())) {
                 $this->editableCell($data['navigable'], false);
+                $this->editableCell($data['orgaTab'], false);
                 $data['delete'] = false;
             }
             $this->addLine($data);
@@ -58,21 +67,22 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      * @see getAddElementValue
      * @see setAddElementErrorMessage
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function addelementAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        $refAxes = $this->getAddElementValue('axes');
+        $refAxes = explode(',', $this->getAddElementValue('axes'));
         $listAxes = array();
         $refGranularity = '';
         if (empty($refAxes)) {
             $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'emptyGranularity'));
         }
-        foreach ($this->getAddElementValue('axes') as $refAxis) {
+
+        foreach ($refAxes as $refAxis) {
             $refGranularity .= $refAxis . '|';
-            $axis = Orga_Model_Axis::loadByRefAndCube($refAxis, $cube);
+            $axis = Orga_Model_Axis::loadByRefAndOrganization($refAxis, $organization);
             // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
             if (!$axis->isTransverse($listAxes)) {
                 $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'));
@@ -82,20 +92,29 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             }
         }
         $refGranularity = substr($refGranularity, 0, -1);
+
         try {
-            Orga_Model_Granularity::loadByRefAndCube($refGranularity, $cube);
+            Orga_Model_Granularity::loadByRefAndOrganization($refGranularity, $organization);
             $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'));
         } catch (Core_Exception_NotFound $e) {
             // La granularité n'existe pas déjà.
         }
+
         if (empty($this->_addErrorMessages)) {
             /**@var Core_Work_Dispatcher $dispatcher */
             $dispatcher = Zend_Registry::get('workDispatcher');
             $dispatcher->runBackground(
                 new Orga_Work_Task_AddGranularity(
-                    $cube,
+                    $organization,
                     $listAxes,
-                    $this->getAddElementValue('navigable')
+                    (bool) $this->getAddElementValue('navigable'),
+                    (bool) $this->getAddElementValue('orgaTab'),
+                    (bool) $this->getAddElementValue('aCL'),
+                    (bool) $this->getAddElementValue('aFTab'),
+                    (bool) $this->getAddElementValue('dW'),
+                    (bool) $this->getAddElementValue('genericActions'),
+                    (bool) $this->getAddElementValue('contextActions'),
+                    (bool) $this->getAddElementValue('inputDocuments')
                 )
             );
             $this->message = __('UI', 'message', 'addedLater');
@@ -111,16 +130,15 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *  $this->delete.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function deleteelementAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $granularity = Orga_Model_Granularity::loadByRefAndCube($this->delete, $cube);
+        $granularity = Orga_Model_Granularity::load($this->delete);
 
         $granularity->delete();
 
@@ -149,27 +167,55 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
      *  $this->update['value'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function updateelementAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $granularity = Orga_Model_Granularity::loadByRefAndCube($this->update['index'], $cube);
+        $granularity = Orga_Model_Granularity::load($this->update['index']);
 
         switch ($this->update['column']) {
             case 'navigable':
                 $granularity->setNavigability((bool) $this->update['value']);
-                $this->message = __('UI', 'message', 'updated', array('GRANULARITY' => $granularity->getLabel()));
+                $this->data = $granularity->isNavigable();
+                break;
+            case 'orgaTab':
+                $granularity->setCellsWithOrgaTab((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithOrgaTab();
+                break;
+            case 'aCL':
+                $granularity->setCellsWithACL((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithACL();
+                break;
+            case 'aFTab':
+                $granularity->setCellsWithAFConfigTab((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithAFConfigTab();
+                break;
+            case 'dW':
+                $granularity->setCellsGenerateDWCubes((bool) $this->update['value']);
+                $this->data = $granularity->getCellsGenerateDWCubes();
+                break;
+            case 'genericActions':
+                $granularity->setCellsWithSocialGenericActions((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithSocialGenericActions();
+                break;
+            case 'contextActions':
+                $granularity->setCellsWithSocialContextActions((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithSocialContextActions();
+                break;
+            case 'inputDocuments':
+                $granularity->setCellsWithInputDocuments((bool) $this->update['value']);
+                $this->data = $granularity->getCellsWithInputDocuments();
                 break;
             default:
                 parent::updateelementAction();
                 break;
         }
-        $this->data = $granularity->isNavigable();
+        $granularity->save();
+        $this->message = __('UI', 'message', 'updated', array('GRANULARITY' => $granularity->getLabel()));
 
         $this->send();
     }

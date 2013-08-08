@@ -21,7 +21,7 @@ class Social_CommentController extends Core_Controller_Ajax
     public function commentAddedAction()
     {
         /** @var $comment Social_Model_Comment */
-        $comment = $this->_getParam('comment');
+        $comment = $this->getParam('comment');
 
         $this->view->comment = $comment;
         $data = $this->view->render('comment/view.phtml');

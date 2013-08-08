@@ -28,4 +28,4 @@ Unit_Model_Unit_Extension:
       gedmo:
         - translatable
     multiplier:
-      type: integer
+      type: float

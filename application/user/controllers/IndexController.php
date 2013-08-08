@@ -17,7 +17,7 @@ class User_IndexController extends Core_Controller
      */
     public function indexAction()
     {
-        $this->_redirect('/user/profile/list');
+        $this->redirect('/user/profile/list');
     }
 
 }

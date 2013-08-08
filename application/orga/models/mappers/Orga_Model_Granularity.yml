@@ -26,15 +26,61 @@ Orga_Model_Granularity:
       type: integer
       length: 2
       nullable: false
+    cellsWithACL:
+      column: cellsWithACL
+      type: boolean
+      nullable: false
+    cellsGenerateDWCubes:
+      column: cellsGenerateDWCubes
+      type: boolean
+      nullable: false
+    cellsWithOrgaTab:
+      column: cellsWithOrgaTab
+      type: boolean
+      nullable: false
+    cellsWithAFConfigTab:
+      column: cellsWithAFConfigTab
+      type: boolean
+      nullable: false
+    cellsWithSocialGenericActions:
+      column: cellsWithSocialGenericActions
+      type: boolean
+      nullable: false
+    cellsWithSocialContextActions:
+      column: cellsWithSocialContextActions
+      type: boolean
+      nullable: false
+    cellsWithInputDocs:
+      column: cellsWithInputDocs
+      type: boolean
+      nullable: false
 
   manyToOne:
-    cube:
-      targetEntity: Orga_Model_Cube
+    organization:
+      targetEntity: Orga_Model_Organization
       inversedBy: granularities
       joinColumn:
-        name: idCube
+        name: idOrganization
         referencedColumnName: id
         nullable: false
+    inputConfigGranularity:
+      targetEntity: Orga_Model_Granularity
+      inversedBy: inputGranularities
+      joinColumn:
+        name: idInputConfigGranularity
+        referencedColumnName: id
+        nullable: true
+
+  oneToOne:
+    dWCube:
+      targetEntity: DW_Model_Cube
+      joinColumn:
+        name: idDWCube
+        referencedColumnName: id
+        nullable: true
+        unique: true
+      orphanRemoval: true
+      cascade: [ persist, remove ]
 
   manyToMany:
     axes:
@@ -48,8 +94,6 @@ Orga_Model_Granularity:
         inverseJoinColumns:
           idAxis:
             referencedColumnName: id
-      orderBy:
-        globalPosition: ASC
 
   oneToMany:
     cells:
@@ -57,7 +101,11 @@ Orga_Model_Granularity:
       mappedBy: granularity
       orderBy:
         membersHashKey: ASC
+      orphanRemoval: true
       cascade: [ persist, remove ]
+    inputGranularities:
+      targetEntity: Orga_Model_Granularity
+      mappedBy: inputConfigGranularity
 
   lifecycleCallbacks:
     prePersist: [ preSave ]
@@ -66,7 +114,7 @@ Orga_Model_Granularity:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      refUniqueness:
+      granularityRefUniquenessInOrganization:
           columns:
               - ref
-              - idCube
+              - idOrganization

@@ -98,7 +98,7 @@ class DW_Export_Report_Pdf extends Export_Pdf
             $indicator = $report->getNumerator();
 
             $this->html .= '<tr>';
-            $this->html .= '<td>'.__('Classif', 'name', 'indicator').' : </td>';
+            $this->html .= '<td>'.__('Classif', 'indicator', 'indicator').' : </td>';
             $this->html .= '<td>'.$indicator->getLabel().' ('.$indicator->getUnit()->getSymbol() .')'.'</td>';
             $this->html .= '</tr>';
 

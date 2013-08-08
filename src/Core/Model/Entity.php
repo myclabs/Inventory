@@ -184,8 +184,7 @@ abstract class Core_Model_Entity
      */
     public function getKey()
     {
-        $className = get_called_class();
-        return self::getEntityManager()->getMetadataFactory()->getMetadataFor($className)->getIdentifierValues($this);
+        return self::getEntityManager()->getClassMetadata(get_called_class())->getIdentifierValues($this);
     }
 
     /**

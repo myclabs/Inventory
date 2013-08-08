@@ -146,7 +146,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('index'));
+        $af = AF_Model_AF::load($this->getParam('index'));
         $af->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
         try {

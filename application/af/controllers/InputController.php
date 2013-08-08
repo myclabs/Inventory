@@ -25,13 +25,13 @@ class AF_InputController extends Core_Controller_Ajax
     public function submitAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $this->_setParam('af', $af);
 
         // InputSet
-        if ($this->_hasParam('idInputSet')) {
+        if ($this->hasParam('idInputSet')) {
             /** @var $inputSet AF_Model_InputSet_Primary */
-            $inputSet = AF_Model_InputSet_Primary::load($this->_getParam('idInputSet'));
+            $inputSet = AF_Model_InputSet_Primary::load($this->getParam('idInputSet'));
             // Vide la saisie
             $inputSet->clear();
         } else {
@@ -40,7 +40,7 @@ class AF_InputController extends Core_Controller_Ajax
         $this->_setParam('inputSet', $inputSet);
 
         // Form data
-        $formData = json_decode($this->_getParam($af->getRef()), true);
+        $formData = json_decode($this->getParam($af->getRef()), true);
 
         // MAJ l'InputSet
         $errorMessages = $this->parseAfSubmit($formData, $inputSet, $af);
@@ -65,7 +65,7 @@ class AF_InputController extends Core_Controller_Ajax
         }
 
         // Fait suivre aux actions de processing
-        $actions = json_decode($this->_getParam('actionStack'), true);
+        $actions = json_decode($this->getParam('actionStack'), true);
         // Fait suivre à la fin à l'action qui renvoie la réponse
         $actions[] = [
             'action'     => 'submit-send-response',
@@ -97,8 +97,8 @@ class AF_InputController extends Core_Controller_Ajax
     public function submitSendResponseAction()
     {
         /** @var $inputSet AF_Model_InputSet_Primary */
-        $inputSet = $this->_getParam('inputSet');
-        $response = $this->_getParam('response');
+        $inputSet = $this->getParam('inputSet');
+        $response = $this->getParam('response');
 
         if (isset($response['errorMessages'])) {
             $this->addFormErrors($response['errorMessages']);
@@ -132,7 +132,7 @@ class AF_InputController extends Core_Controller_Ajax
     {
         /** @var $sessionStorage AF_Service_InputSetSessionStorage */
         $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
-        $sessionStorage->saveInputSet($this->_getParam('af'), $this->_getParam('inputSet'));
+        $sessionStorage->saveInputSet($this->getParam('af'), $this->getParam('inputSet'));
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
@@ -144,13 +144,13 @@ class AF_InputController extends Core_Controller_Ajax
     public function resultsPreviewAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
 
         // Crée une nouvelle saisie temporaire
         $inputSet = new AF_Model_InputSet_Primary($af);
 
         // Remplit l'InputSet
-        $formContent = json_decode($this->_getParam($af->getRef()), true);
+        $formContent = json_decode($this->getParam($af->getRef()), true);
         $errorMessages = $this->parseAfSubmit($formContent, $inputSet, $af);
 
         // MAJ le pourcentage de complétion
@@ -192,12 +192,12 @@ class AF_InputController extends Core_Controller_Ajax
     public function markInputAsFinishedAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
-        if ($this->_hasParam('idInputSet')) {
+        $af = AF_Model_AF::load($this->getParam('id'));
+        if ($this->hasParam('idInputSet')) {
             // Charge la saisie depuis la BDD
             /** @var $inputSet AF_Model_InputSet_Primary */
-            $inputSet = AF_Model_InputSet_Primary::load($this->_getParam('idInputSet'));
-            $inputSet->markAsFinished($this->_getParam('value'));
+            $inputSet = AF_Model_InputSet_Primary::load($this->getParam('idInputSet'));
+            $inputSet->markAsFinished($this->getParam('value'));
             $inputSet->save();
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -209,7 +209,7 @@ class AF_InputController extends Core_Controller_Ajax
             if ($inputSet === null) {
                 throw new Core_Exception_User("AF", "message", "inputSetDoesntExist");
             }
-            $inputSet->markAsFinished($this->_getParam('value'));
+            $inputSet->markAsFinished($this->getParam('value'));
             $sessionStorage->saveInputSet($af, $inputSet);
         }
         $this->sendJsonResponse(__("AF", "inputInput", "progressStatusUpdated"));
@@ -229,11 +229,11 @@ class AF_InputController extends Core_Controller_Ajax
     public function getSubAfAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         /** @var $component AF_Model_Component_SubAF_Repeated */
-        $component = AF_Model_Component_SubAF_Repeated::loadByRef($this->_getParam('refComponent'), $af);
+        $component = AF_Model_Component_SubAF_Repeated::loadByRef($this->getParam('refComponent'), $af);
         $generationHelper = new AF_GenerationHelper();
-        $uiElement = $component->getSingleSubAFUIElement($generationHelper, $this->_getParam('number'), null);
+        $uiElement = $component->getSingleSubAFUIElement($generationHelper, $this->getParam('number'), null);
         $html = $uiElement->render() . "<script>" . $uiElement->getScript() . "</script>";
         $this->sendJsonResponse($html);
     }

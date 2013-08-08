@@ -42,7 +42,7 @@ $coordinatesColumn->popup->addAttribute('class', 'large');
 $datagrid->addCol($coordinatesColumn);
 
 // Context indicator
-$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classif', 'name', 'indicator'));
+$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classif', 'indicator', 'indicator'));
 $contextIndicatorColumn->editable = true;
 $contextIndicatorColumn->dynamicList = true;
 $contextIndicatorColumn->list = $this->baseUrl(
@@ -57,3 +57,9 @@ $resultIndexColumn->popup->addAttribute('class', 'large');
 $datagrid->addCol($resultIndexColumn);
 
 echo $datagrid->render();
+?>
+<script type="text/javascript">
+    $('#algoNumericParameter_addPanel').on('hidden', function() {
+        $('#algoNumericParameter_family_addForm').val('').trigger('change');
+    });
+</script>

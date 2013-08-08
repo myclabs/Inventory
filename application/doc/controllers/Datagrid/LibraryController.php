@@ -22,7 +22,7 @@ class Doc_Datagrid_LibraryController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         /** @var $library Doc_Model_Library */
-        $library = Doc_Model_Library::load($this->_getParam('id'));
+        $library = Doc_Model_Library::load($this->getParam('id'));
 
         $this->request->filter->addCondition(Doc_Model_Document::QUERY_LIBRARY, $library);
         $this->request->order->addOrder(Doc_Model_Document::QUERY_NAME);
@@ -98,7 +98,7 @@ class Doc_Datagrid_LibraryController extends UI_Controller_Datagrid
     public function getDescriptionAction()
     {
         /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->_getParam('id'));
+        $document = Doc_Model_Document::load($this->getParam('id'));
         $this->data = (string) $document->getDescription();
         $this->send();
     }
