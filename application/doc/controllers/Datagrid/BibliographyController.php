@@ -22,7 +22,7 @@ class Doc_Datagrid_BibliographyController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         /** @var $bibliography Doc_Model_Bibliography */
-        $bibliography = Doc_Model_Bibliography::load($this->_getParam('id'));
+        $bibliography = Doc_Model_Bibliography::load($this->getParam('id'));
         $documents = $bibliography->getReferencedDocuments();
 
         foreach ($documents as $document) {
@@ -51,7 +51,7 @@ class Doc_Datagrid_BibliographyController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         /** @var $bibliography Doc_Model_Bibliography */
-        $bibliography = Doc_Model_Bibliography::load($this->_getParam('id'));
+        $bibliography = Doc_Model_Bibliography::load($this->getParam('id'));
         /** @var $document Doc_Model_Document */
         $document = Doc_Model_Document::load($this->delete);
 
@@ -68,7 +68,7 @@ class Doc_Datagrid_BibliographyController extends UI_Controller_Datagrid
     public function getDescriptionAction()
     {
         /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->_getParam('id'));
+        $document = Doc_Model_Document::load($this->getParam('id'));
         $this->data = $document->getDescription();
         $this->send();
     }

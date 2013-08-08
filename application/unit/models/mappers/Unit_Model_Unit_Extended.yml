@@ -6,7 +6,7 @@ Unit_Model_Unit_Extended:
 
   fields:
     multiplier:
-      type: integer
+      type: float
 
   manyToOne:
     extension:

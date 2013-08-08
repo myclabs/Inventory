@@ -5,18 +5,18 @@
 
         <tu tuid="labelGlobalCellExtended">
             <tuv xml:lang="fr">
-                <seg>Unité organisationnelle globale</seg>
+                <seg>Vue globale</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Global organizational unit</seg>
+                <seg>Global view</seg>
             </tuv>
         </tu>
         <tu tuid="labelGlobalCell">
             <tuv xml:lang="fr">
-                <seg>Unité globale</seg>
+                <seg>Vue globale</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Global unit</seg>
+                <seg>Global view</seg>
             </tuv>
         </tu>
         <tu tuid="irrelevantCell">

@@ -145,11 +145,7 @@ class User_Model_Resource_Entity extends User_Model_Resource
      */
     private static function getEntityIdentifierFromEntity(Core_Model_Entity $entity)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager \Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-        $identifier = $classMetadata->getIdentifierValues($entity);
+        $identifier = $entity->getKey();
         if (count($identifier) == 0) {
             throw new Core_ORM_NotPersistedEntityException("The entity has no identity (it is not persisted)");
         }

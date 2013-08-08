@@ -39,8 +39,7 @@ class Orga_Test_MemberTest
         if ($axis === null) {
             $axis = Orga_Test_AxisTest::generateObject();
         }
-        $o = new Orga_Model_Member();
-        $o->setAxis($axis);
+        $o = new Orga_Model_Member($axis);
         $o->setRef($refMember);
         $o->setLabel($labelMember);
         $o->save();
@@ -68,7 +67,7 @@ class Orga_Test_MemberTest
 
 /**
  * Test de la creation/modification/suppression de l'entite
- * @package Cube
+ * @package Organization
  * @subpackage Test
  */
 class Orga_Test_MemberSetUp extends PHPUnit_Framework_TestCase
@@ -96,11 +95,11 @@ class Orga_Test_MemberSetUp extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -115,8 +114,7 @@ class Orga_Test_MemberSetUp extends PHPUnit_Framework_TestCase
     function testConstruct()
     {
         $axis = Orga_Test_AxisTest::generateObject();
-        $o = new Orga_Model_Member();
-        $o->setAxis($axis);
+        $o = new Orga_Model_Member($axis);
         $o->setRef('RefTestMember');
         $o->setLabel('LabalTestMember');
         $this->assertInstanceOf('Orga_Model_Member', $o);
@@ -179,11 +177,11 @@ class Orga_Test_MemberSetUp extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -192,16 +190,16 @@ class Orga_Test_MemberSetUp extends PHPUnit_Framework_TestCase
 }
 
 /**
- * Tests de la classe Cube
- * @package Cube
+ * Tests de la classe Organization
+ * @package Organization
  * @subpackage Test
  */
 class Orga_Test_MemberOthers extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Orga_Model_Cube
+     * @var Orga_Model_Organization
      */
-    protected $cube;
+    protected $organization;
 
     /**
      * @var Orga_Model_Axis
@@ -236,11 +234,11 @@ class Orga_Test_MemberOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
@@ -255,7 +253,7 @@ class Orga_Test_MemberOthers extends PHPUnit_Framework_TestCase
         // Crée un objet de test
         $this->member = Orga_Test_MemberTest::generateObject();
         $this->axis = $this->member->getAxis();
-        $this->cube = $this->axis->getCube();
+        $this->organization = $this->axis->getOrganization();
     }
 
     /**
@@ -468,14 +466,14 @@ class Orga_Test_MemberOthers extends PHPUnit_Framework_TestCase
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $axisA = Orga_Test_AxisTest::generateObject('a', 'a', $this->cube);
-        $axisB = Orga_Test_AxisTest::generateObject('b', 'b', $this->cube);
-        $axisC = Orga_Test_AxisTest::generateObject('c', 'c', $this->cube);
-        $axisD = Orga_Test_AxisTest::generateObject('d', 'd', $this->cube);
-        $axisE = Orga_Test_AxisTest::generateObject('e', 'e', $this->cube);
-        $axisF = Orga_Test_AxisTest::generateObject('f', 'f', $this->cube);
-        $axisG = Orga_Test_AxisTest::generateObject('g', 'g', $this->cube);
-        $axisH = Orga_Test_AxisTest::generateObject('h', 'h', $this->cube);
+        $axisA = Orga_Test_AxisTest::generateObject('a', 'a', $this->organization);
+        $axisB = Orga_Test_AxisTest::generateObject('b', 'b', $this->organization);
+        $axisC = Orga_Test_AxisTest::generateObject('c', 'c', $this->organization);
+        $axisD = Orga_Test_AxisTest::generateObject('d', 'd', $this->organization);
+        $axisE = Orga_Test_AxisTest::generateObject('e', 'e', $this->organization);
+        $axisF = Orga_Test_AxisTest::generateObject('f', 'f', $this->organization);
+        $axisG = Orga_Test_AxisTest::generateObject('g', 'g', $this->organization);
+        $axisH = Orga_Test_AxisTest::generateObject('h', 'h', $this->organization);
 
         $axisB->setDirectNarrower($axisA);
         $axisC->setDirectNarrower($axisA);
@@ -552,7 +550,7 @@ class Orga_Test_MemberOthers extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        Orga_Test_CubeTest::deleteObject($this->cube);
+        Orga_Test_OrganizationTest::deleteObject($this->organization);
     }
 
     /**
@@ -578,11 +576,11 @@ class Orga_Test_MemberOthers extends PHPUnit_Framework_TestCase
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Cube en base, sinon suppression !
-        if (Orga_Model_Cube::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cube restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Cube::loadList() as $cube) {
-                $cube->delete();
+        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
+        if (Orga_Model_Organization::countTotal() > 0) {
+            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
+            foreach (Orga_Model_Organization::loadList() as $organization) {
+                $organization->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();

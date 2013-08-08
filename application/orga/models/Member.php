@@ -6,9 +6,8 @@
  * @package    Orga
  * @subpackage Model
  */
-
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Definit un membre d'un axe.
@@ -86,12 +85,17 @@ class Orga_Model_Member extends Core_Model_Entity
 
     /**
      * Constructeur de la classe Member.
+     *
+     * @param Orga_Model_Axis $axis
      */
-    public function __construct()
+    public function __construct(Orga_Model_Axis $axis)
     {
         $this->directParents = new ArrayCollection();
         $this->directChildren = new ArrayCollection();
         $this->cells = new ArrayCollection();
+
+        $this->axis = $axis;
+        $axis->addMember($this);
     }
 
     /**
@@ -101,7 +105,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     protected function getContext()
     {
-        return array('parentMembersHashKey' => $this->parentMembersHashKey, 'axis' => $this->axis);
+        return array('axis' => $this->axis, 'parentMembersHashKey' => $this->parentMembersHashKey);
     }
 
     /**
@@ -128,7 +132,7 @@ class Orga_Model_Member extends Core_Model_Entity
      *
      * @return Orga_Model_Member
      */
-    public static function loadByCompleteRefAndAxis($completeRef, $axis)
+    public static function loadByCompleteRefAndAxis($completeRef, Orga_Model_Axis $axis)
     {
         return $axis->getMemberByCompleteRef($completeRef);
     }
@@ -142,12 +146,8 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function buildParentMembersHashKey($contextualizingParentMembers)
     {
-        @uasort(
-            $contextualizingParentMembers,
-            function (Orga_Model_Member $a, Orga_Model_Member $b) {
-                return $a->getAxis()->getGlobalPosition() - $b->getAxis()->getGlobalPosition();
-            }
-        );
+        // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
+        @uasort($contextualizingParentMembers, array('Orga_Model_Member', 'orderMembers'));
         $parentMembersRef = [];
 
         foreach ($contextualizingParentMembers as $parentMember) {
@@ -155,6 +155,19 @@ class Orga_Model_Member extends Core_Model_Entity
         }
 
         return implode('|', $parentMembersRef);
+    }
+
+    /**
+     * Permet d'ordonner des Member entre eux.
+     *
+     * @param Orga_Model_Member $a
+     * @param Orga_Model_Member $b
+     *
+     * @return int 1, 0 ou -1
+     */
+    public static function orderMembers(Orga_Model_Member $a, Orga_Model_Member $b)
+    {
+        return $a->getAxis()->getGlobalPosition() - $b->getAxis()->getGlobalPosition();
     }
 
     /**
@@ -190,12 +203,12 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Met à jour la pertinence des cellules du membre et de leurs cellules enfants.
      */
-    protected function updateCellsAllParentsRelevant()
+    protected function updateCellsHierarchy()
     {
         foreach ($this->cells as $cell) {
-            $cell->updateAllParentsRelevant();
+            $cell->updateHierarchy();
             foreach ($cell->getChildCells() as $childCell) {
-                $childCell->updateAllParentsRelevant();
+                $childCell->updateHierarchy();
             }
         }
     }
@@ -225,6 +238,16 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
+     * Renvoie l'id du Member.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Définit la référence du Member.
      *
      * @param string $ref
@@ -233,9 +256,7 @@ class Orga_Model_Member extends Core_Model_Entity
     {
         $this->ref = $ref;
 
-        if ($this->axis !== null) {
-            $this->updateParentMembersHashKey();
-        }
+        $this->updateParentMembersHashKey();
     }
 
     /**
@@ -305,25 +326,6 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Définit l'Axis du Member.
-     *
-     * @param Orga_Model_Axis $axis
-     */
-    public function setAxis(Orga_Model_Axis $axis = null)
-    {
-        if ($this->axis !== $axis) {
-            if ($this->axis !== null) {
-                $this->axis->removeMember($this);
-            }
-            $this->axis = $axis;
-            $this->updateParentMembersHashKey();
-            if ($axis !== null) {
-                $axis->addMember($this);
-            }
-        }
-    }
-
-    /**
      * Renvoie l'Axis du Member.
      *
      * @throws Core_Exception_UndefinedAttribute
@@ -348,7 +350,7 @@ class Orga_Model_Member extends Core_Model_Entity
             $this->directParents->add($parentMember);
             $parentMember->addDirectChild($this);
             $this->updateParentMembersHashKey();
-            $this->updateCellsAllParentsRelevant();
+            $this->updateCellsHierarchy();
         }
     }
 
@@ -374,6 +376,8 @@ class Orga_Model_Member extends Core_Model_Entity
         if ($this->hasDirectParent($parentMember)) {
             $this->directParents->removeElement($parentMember);
             $parentMember->removeDirectChild($this);
+            $this->updateParentMembersHashKey();
+            $this->updateCellsHierarchy();
         }
     }
 
@@ -555,12 +559,17 @@ class Orga_Model_Member extends Core_Model_Entity
      * Ajoute une Cell à celles utilisant le Member courant.
      *
      * @param Orga_Model_Cell $cell
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function addCell(Orga_Model_Cell $cell)
     {
-        if (! $this->hasCell($cell)) {
+        if (!$cell->hasMember($this)) {
+            throw new Core_Exception_InvalidArgument();
+        }
+
+        if (!$this->hasCell($cell)) {
             $this->cells->add($cell);
-            $cell->addMember($this);
         }
     }
 
@@ -610,7 +619,7 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * @return string Représentation textuelle de l'unité
+     * @return string Représentation textuelle du member
      */
     public function __toString()
     {

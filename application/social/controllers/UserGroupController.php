@@ -17,7 +17,7 @@ class Social_UserGroupController extends Core_Controller_Ajax
      */
     public function detailsAction()
     {
-        $this->view->group = Social_Model_UserGroup::load($this->_getParam('id'));
+        $this->view->group = Social_Model_UserGroup::load($this->getParam('id'));
         if ($this->getRequest()->isXmlHttpRequest()) {
             $this->_helper->layout->disableLayout();
         }

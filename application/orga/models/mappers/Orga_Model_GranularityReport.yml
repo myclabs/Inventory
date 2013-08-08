@@ -1,0 +1,34 @@
+# Orga\models\mappers\Orga_Model_GranularityReport.yml
+Orga_Model_GranularityReport:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Orga_Granularity_DWReport
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToOne:
+    granularityDWReport:
+      targetEntity: DW_Model_Report
+      joinColumn:
+        name: idGranularityDWReport
+        referencedColumnName: id
+        nullable: true
+        unique: true
+
+  manyToMany:
+    cellDWReports:
+      targetEntity: DW_Model_Report
+      joinTable:
+        name: Orga_Granularity_DWReport_Cell_DWReport
+        joinColumns:
+          idGranularityDWReport:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idCellDWReport:
+            referencedColumnName: id
+      cascade: [ persist, remove ]

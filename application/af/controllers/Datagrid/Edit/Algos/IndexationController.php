@@ -22,7 +22,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         /** @var $algo Algo_Model_Numeric */
-        $algo = Algo_Model_Numeric::load($this->_getParam('idAlgo'));
+        $algo = Algo_Model_Numeric::load($this->getParam('idAlgo'));
         $contextIndicator = $algo->getContextIndicator();
         // S'il n'y a pas d'indicateur de défini on n'affiche rien dans le datagrid
         if ($contextIndicator != null) {
@@ -72,7 +72,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         /** @var $algo Algo_Model_Numeric */
-        $algo = Algo_Model_Numeric::load($this->_getParam('idAlgo'));
+        $algo = Algo_Model_Numeric::load($this->getParam('idAlgo'));
         /** @var $axis Classif_Model_Axis */
         $axis = Classif_Model_Axis::load($this->update['index']);
         $newValue = $this->update['value'];
@@ -160,9 +160,9 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     public function getValueListAction()
     {
         /** @var $algo Algo_Model_Numeric */
-        $algo = Algo_Model_Numeric::load($this->_getParam('idAlgo'));
+        $algo = Algo_Model_Numeric::load($this->getParam('idAlgo'));
         /** @var $axis Classif_Model_Axis */
-        $axis = Classif_Model_Axis::load($this->_getParam('index'));
+        $axis = Classif_Model_Axis::load($this->getParam('index'));
         $index = $algo->getIndexForAxis($axis);
         if ($index) {
             $type = get_class($index);

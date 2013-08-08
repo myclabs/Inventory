@@ -10,7 +10,7 @@
  * @package Core
  * @subpackage Test
  */
-class Default_Model_Simple extends Core_Model_Entity
+class Inventory_Model_Simple extends Core_Model_Entity
 {
     // Constantes de tri et filtres.
     const QUERY_ID = 'id';
@@ -44,7 +44,7 @@ class Default_Model_Simple extends Core_Model_Entity
 
     /**
      * @param string $name
-     * @return Default_Model_Simple
+     * @return Inventory_Model_Simple
      */
     public static function loadByName($name)
     {

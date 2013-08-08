@@ -22,16 +22,16 @@ class Orga_Datagrid_ConsistencyController extends UI_Controller_Datagrid
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewOrgaCube")
+     * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
-        $cube = Orga_Model_Cube::load(array('id' => $this->_getParam('idCube')));
-        $consistency = Orga_CubeConsistency::getInstance()->check($cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $consistency = Orga_OrganizationConsistency::getInstance()->check($organization);
 
         $data['index'] = 1;
         $data['diagnostic'] = $consistency['okAxis'];

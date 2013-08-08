@@ -27,7 +27,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
             $group = AF_Model_Component_Group::load($this->idNode);
         } else {
             /** @var $af AF_Model_AF */
-            $af = AF_Model_AF::load($this->_getParam('id'));
+            $af = AF_Model_AF::load($this->getParam('id'));
             $group = $af->getRootGroup();
         }
 
@@ -110,7 +110,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
     public function getlistparentsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         /** @var $component AF_Model_Component */
         if ($this->idNode != null) {
             $component = AF_Model_Component::load($this->idNode);
@@ -151,7 +151,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         /** @var $component AF_Model_Component */
         $component = AF_Model_Component::load($this->idNode);
 
-        $idGroup = $this->_getParam('idParent');
+        $idGroup = $this->getParam('idParent');
         if ($idGroup == null) {
             $group = $component->getGroup();
         } else {

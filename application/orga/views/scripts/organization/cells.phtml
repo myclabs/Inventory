@@ -1,0 +1,20 @@
+<?php
+// Liste des Cellules d'un Organization (auxquelles l'utilisateur a accès).
+
+$datagridCells = new UI_Datagrid('listCells', 'datagrid_organization_cells', 'orga');
+
+$columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$datagridCells->addCol($columnLabel);
+
+$columnAccess = new UI_Datagrid_Col_List('access', __('User', 'role', 'role'));
+$columnAccess->list = $this->listAccess;
+$columnAccess->multiple = true;
+$datagridCells->addCol($columnAccess);
+
+$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+$datagridCells->addCol($columnDetails);
+
+$datagridCells->addParam('idOrganization', $this->idOrganization);
+$datagridCells->pagination = false;
+
+$datagridCells->display();

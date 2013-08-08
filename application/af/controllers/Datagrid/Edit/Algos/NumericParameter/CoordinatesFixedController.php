@@ -20,7 +20,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
     public function getelementsAction()
     {
         /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->_getParam('idAlgo'));
+        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
         $coordinates = $algo->getParameterCoordinates();
         foreach ($coordinates as $coordinate) {
             if ($coordinate instanceof Algo_Model_ParameterCoordinate_Fixed) {
@@ -47,7 +47,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
     public function addelementAction()
     {
         /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->_getParam('idAlgo'));
+        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
         $idDimension = $this->getAddElementValue('dimension');
         if (empty($idDimension)) {
             $this->setAddElementErrorMessage('dimension', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -76,7 +76,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
     public function updateelementAction()
     {
         /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->_getParam('idAlgo'));
+        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
         /** @var $coordinate Algo_Model_ParameterCoordinate_Fixed */
         $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->update['index']);
         $newValue = $this->update['value'];
@@ -107,9 +107,9 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
     public function deleteelementAction()
     {
         /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->_getParam('idAlgo'));
+        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
         /** @var $coordinate Algo_Model_ParameterCoordinate_Fixed */
-        $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->_getParam('index'));
+        $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->getParam('index'));
         $coordinate->delete();
         $algo->removeParameterCoordinates($coordinate);
         $algo->save();
@@ -126,7 +126,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
     public function getMemberListAction()
     {
         /** @var $coordinate Algo_Model_ParameterCoordinate_Fixed */
-        $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->_getParam('index'));
+        $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->getParam('index'));
 
         try {
             $dimension = $coordinate->getDimension();

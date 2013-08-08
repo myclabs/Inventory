@@ -16,25 +16,34 @@ class Orga_TranslateController extends Core_Controller
 {
 
     /**
+     * Liste des libellés des Orga_Model_Organization en mode traduction.
+     *
+     * @Secure("editOrganizations")
+     */
+    public function organizationsAction()
+    {
+    }
+
+    /**
      * Liste des libellés des Orga_Model_Axis en mode traduction.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function axesAction()
     {
-        $this->view->idCube = $this->_getParam('idCube');
+        $this->view->idOrganization = $this->getParam('idOrganization');
     }
 
     /**
      * Liste des libellés des Orga_Model_Member en mode traduction.
      *
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function membersAction()
     {
-        $this->view->idCube = $this->_getParam('idCube');
-        $cube = Orga_Model_Cube::load(array('id' => $this->view->idCube));
-        $this->view->axes = $cube->getLastOrderedAxes();
+        $this->view->idOrganization = $this->getParam('idOrganization');
+        $organization = Orga_Model_Organization::load($this->view->idOrganization);
+        $this->view->axes = $organization->getLastOrderedAxes();
     }
 
 }

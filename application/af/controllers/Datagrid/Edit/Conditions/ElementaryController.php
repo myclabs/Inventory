@@ -24,7 +24,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $query = new Core_Model_Query();
         $query->filter->addCondition(AF_Model_Condition::QUERY_AF, $af);
         /** @var $conditions AF_Model_Condition_Elementary[] */
@@ -74,7 +74,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
     public function addelementAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -157,7 +157,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
     public function deleteelementAction()
     {
         /** @var $condition AF_Model_Condition */
-        $condition = AF_Model_Condition::load($this->_getParam('index'));
+        $condition = AF_Model_Condition::load($this->getParam('index'));
         try {
             $condition->delete();
             $entityManagers = Zend_Registry::get('EntityManagers');

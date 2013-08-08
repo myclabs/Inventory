@@ -20,7 +20,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
     public function getelementsAction()
     {
         /** @var $dimension Techno_Model_Family_Dimension */
-        $dimension = Techno_Model_Family_Dimension::load($this->_getParam('id'));
+        $dimension = Techno_Model_Family_Dimension::load($this->getParam('id'));
         $members = $dimension->getMembers();
 
         foreach ($members as $member) {
@@ -54,7 +54,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
     public function addelementAction()
     {
         /** @var $dimension Techno_Model_Family_Dimension */
-        $dimension = Techno_Model_Family_Dimension::load($this->_getParam('id'));
+        $dimension = Techno_Model_Family_Dimension::load($this->getParam('id'));
         // Validation du formulaire
         $refKeyword = $this->getAddElementValue('refKeyword');
         if (empty($refKeyword)) {
@@ -142,7 +142,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
     public function deleteelementAction()
     {
         /** @var $member Techno_Model_Family_Member */
-        $member = Techno_Model_Family_Member::load($this->_getParam('index'));
+        $member = Techno_Model_Family_Member::load($this->getParam('index'));
         $dimension = $member->getDimension();
         $dimension->removeMember($member);
         $dimension->save();

@@ -6,6 +6,9 @@
  * @subpackage Model
  */
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Classe permettant de gérer un filtre sur un rapport.
  *
@@ -42,7 +45,7 @@ class DW_Model_Filter extends Core_Model_Entity
     /**
      * Ensembles de Member filtrés.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection|DW_Model_Member[]
      */
     protected $members = null;
 
@@ -50,46 +53,26 @@ class DW_Model_Filter extends Core_Model_Entity
     /**
      * Constructeur de l'objet
      *
-     * @param boolean $temp
-     */
-    public function __construct($temp = false)
-    {
-        $this->members = new Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Clone le Filter.
-     *
-     * @return DW_Model_Filter
-     */
-    public function __clone()
-    {
-        if ($this->id) {
-            $this->id = null;
-        }
-    }
-
-    /**
-     * Définit le Report.
-     *
      * @param DW_Model_Report $report
+     * @param DW_Model_Axis $axis
      */
-    public function setReport($report)
+    public function __construct(DW_Model_Report $report, DW_Model_Axis $axis)
     {
+        $this->members = new ArrayCollection();
+
         $this->report = $report;
+        $this->report->addFilter($this);
+        $this->axis = $axis;
+    }
 
-        if ($report !== null) {
-            $cube = $this->report->getCube();
-
-            // MAJ de l'axis
-            if ($this->axis) {
-                $this->axis = $cube->getAxisByRef($this->axis->getRef());
-            }
-            // MAJ des membres
-            $this->members = $this->members->map(function(DW_Model_Member $member) use ($cube) {
-                return $this->axis->getMemberByRef($member->getRef());
-            });
-        }
+    /**
+     * Renvoie l'id du Filter.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -100,16 +83,6 @@ class DW_Model_Filter extends Core_Model_Entity
     public function getReport()
     {
         return $this->report;
-    }
-
-    /**
-     * Définit l'Axis sur lequel s'exerce le Filter.
-     *
-     * @param DW_Model_Axe $axis
-     */
-    public function setAxis($axis)
-    {
-        $this->axis = $axis;
     }
 
     /**

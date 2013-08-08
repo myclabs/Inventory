@@ -108,7 +108,7 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
                    "f" => $value6
                    );
 
-        $valueProvider = new Default_Model_ValueProviderEntity($tab);
+        $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
         $calc = new Exec_Execution_Calc($this->expression);
         $calc->setCalculType(Exec_Execution_Calc::CALC_VALUE);
@@ -141,7 +141,7 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
                        "f" => $unite6
                    );
 
-        $valueProvider = new Default_Model_ValueProviderEntity($tab);
+        $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
         $calc = new Exec_Execution_Calc($this->expression);
         $calc->setCalculType(Exec_Execution_Calc::CALC_UNIT);
@@ -222,7 +222,7 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
                    "f" => $unitValue6
                    );
 
-        $valueProvider = new Default_Model_ValueProviderEntity($tab);
+        $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
         $calc = new Exec_Execution_Calc($this->expression);
         $calc->setCalculType(Exec_Execution_Calc::CALC_UNITVALUE);
@@ -269,7 +269,7 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
            "f" => $unitValue2
            );
 
-        $valueProvider = new Default_Model_ValueProviderEntity($tab);
+        $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
         $calc = new Exec_Execution_Calc($this->expression);
         $calc->setCalculType(Exec_Execution_Calc::CALC_UNITVALUE);
@@ -298,7 +298,7 @@ class Exec_Test_CalcOthers extends PHPUnit_Framework_TestCase
             "b" => $unite2,
         );
 
-        $valueProvider = new Default_Model_ValueProviderEntity($tab);
+        $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
         $calc = new Exec_Execution_Calc($this->expressionParticulier);
         $calc->setCalculType(Exec_Execution_Calc::CALC_UNIT);

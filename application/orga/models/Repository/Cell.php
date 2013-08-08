@@ -13,6 +13,49 @@
  */
 class Orga_Model_Repository_Cell extends Core_Model_Repository
 {
+
+    /**
+     * Ajoute des paramètres personnalisés au QueryBuilder utilisé par le loadList et le countTotal.
+     *
+     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param Core_Model_Query $queryParameters
+     */
+    protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters=null)
+    {
+        if ($queryParameters === null) {
+            return;
+        }
+
+        $arrayAuthorisedAFQuery = array(
+            AF_Model_InputSet_Primary::getAlias().AF_Model_InputSet_Primary::QUERY_COMPLETION,
+        );
+
+        $needsJoinToAF = false;
+        foreach ($queryParameters->filter->getConditions() as $filterConditionArray) {
+            if (in_array($filterConditionArray['alias'].$filterConditionArray['name'], $arrayAuthorisedAFQuery)) {
+                $needsJoinToAF = true;
+            }
+            if ($needsJoinToAF) {
+                break;
+            }
+        }
+        foreach ($queryParameters->order->getOrders() as $orderArray) {
+            if (in_array($orderArray['alias'].$orderArray['name'], $arrayAuthorisedAFQuery)) {
+                $needsJoinToAF = true;
+            }
+            if ($needsJoinToAF) {
+                break;
+            }
+        }
+
+        if ($needsJoinToAF) {
+            $queryBuilder->leftJoin(
+                Orga_Model_Cell::getAlias().'.aFInputSetPrimary',
+                AF_Model_InputSet_Primary::getAlias()
+            );
+        }
+    }
+
     /**
      * Charge la liste des Cell possédant l'exact liste des membres données.
      *

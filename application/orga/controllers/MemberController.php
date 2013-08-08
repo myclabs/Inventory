@@ -17,28 +17,48 @@ use Core\Annotation\Secure;
 class Orga_MemberController extends Core_Controller
 {
     /**
-     * Controller de la vue des Member d'un cube.
-     * @Secure("viewOrgaCube")
+     * Controller de la vue des Member d'un organization.
+     * @Secure("viewOrganization")
      */
     public function manageAction()
     {
-        if ($this->_hasParam('idCell')) {
-            $this->view->idCell = $this->_getParam('idCell');
+        if ($this->hasParam('idCell')) {
+            $idCell = $this->getParam('idCell');
+            $this->view->idCell = $idCell;
+            $cell = Orga_Model_Cell::load($idCell);
         } else {
             $this->view->idCell = null;
+            $cell = null;
         }
-        $this->view->idCube = $this->_getParam('idCube');
-        $cube = Orga_Model_Cube::load(array('id' => $this->view->idCube));
-        $this->view->axes = $cube->getLastOrderedAxes();
 
-        if ($this->_hasParam('display') && ($this->_getParam('display') === 'render')) {
+        $idOrganization = $this->getParam('idOrganization');
+        $this->view->idOrganization = $idOrganization;
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        if (($cell !== null) && ($cell->getGranularity()->hasAxes())) {
+            $axes = array();
+            $idAxes = array();
+            foreach ($cell->getMembers() as $members) {
+                $axis = $members->getAxis()->getDirectNarrower();
+                while ($axis !== null) {
+                    if (!(in_array($axis->getId(), $idAxes))) {
+                        $axes[] = $axis;
+                        $idAxes[] = $axis->getId();
+                    }
+                    $axis = $axis->getDirectNarrower();
+                }
+            }
+            $this->view->axes = $axes;
+        } else {
+            $this->view->axes = $organization->getLastOrderedAxes();
+        }
+
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
             $this->view->display = false;
         } else {
             $this->view->display = true;
         }
-
-        $this->view->idFilterCell = null;
-        $this->view->ambiantGranularity = null;
     }
 
 }

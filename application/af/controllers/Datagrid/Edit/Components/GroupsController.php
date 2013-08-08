@@ -22,7 +22,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
     public function getelementsAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(AF_Model_Component::QUERY_AF, $af);
         // Filtre pour exclure le rootGroup
@@ -56,7 +56,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
     public function addelementAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('id'));
+        $af = AF_Model_AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -147,7 +147,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
     public function deleteelementAction()
     {
         /** @var $group AF_Model_Component_Group */
-        $group = AF_Model_Component_Group::load($this->_getParam('index'));
+        $group = AF_Model_Component_Group::load($this->getParam('index'));
         $group->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
         try {
@@ -166,7 +166,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
     public function getRawHelpAction()
     {
         /** @var $group AF_Model_Component_Group */
-        $group = AF_Model_Component_Group::load($this->_getParam('id'));
+        $group = AF_Model_Component_Group::load($this->getParam('id'));
         $this->data = $group->getHelp();
         $this->send();
     }

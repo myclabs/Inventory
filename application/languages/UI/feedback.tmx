@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="title">
+            <tuv xml:lang="fr">
+                <seg>Aidez-nous à améliorer cette page</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Help us improve this page</seg>
+            </tuv>
+        </tu>
+        <tu tuid="unclearContent">
+            <tuv xml:lang="fr">
+                <seg>Le contenu de cette page n'est pas clair</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The content of this page is not clear</seg>
+            </tuv>
+        </tu>
+        <tu tuid="bugReport">
+            <tuv xml:lang="fr">
+                <seg>Je constate un dysfonctionnement</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>I want to report a bug</seg>
+            </tuv>
+        </tu>
+        <tu tuid="improvement">
+            <tuv xml:lang="fr">
+                <seg>J'ai une amélioration à proposer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>I would like to suggest an improvement</seg>
+            </tuv>
+        </tu>
+        <tu tuid="moreDetails">
+            <tuv xml:lang="fr">
+                <seg>Plus de détails (facultatif)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>More details (optional)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="thanks">
+            <tuv xml:lang="fr">
+                <seg>Votre retour a été enregistré, merci.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Your feedback has been registered, thank you.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

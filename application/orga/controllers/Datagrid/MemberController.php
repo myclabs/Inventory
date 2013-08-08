@@ -22,25 +22,25 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewOrgaCube")
+     * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->_getParam('refAxis'), $cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
 
         $this->request->filter->addCondition(Orga_Model_Member::QUERY_AXIS, $axis);
         $this->request->order->addOrder(Orga_Model_Member::QUERY_REF);
         $members = Orga_Model_Member::loadList($this->request);
 
-        $idFilterCell = $this->_getParam('idFilterCell');
-        if (!empty($idFilterCell)) {
-            $filterCell = Orga_Model_Cell::load(array('id' => $idFilterCell));
-            foreach ($filterCell->getMembers() as $cellMember) {
+        $idCell = $this->getParam('idCell');
+        if (!empty($idCell)) {
+            $cell = Orga_Model_Cell::load($idCell);
+            foreach ($cell->getMembers() as $cellMember) {
                 $cellMember->getAxis()->getRef();
                 if ($cellMember->getAxis()->isBroaderThan($axis)) {
                     $members = array_intersect($members, $cellMember->getChildrenForAxis($axis));
@@ -51,7 +51,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         foreach ($members as $member) {
             $data = array();
             /** @var $member Orga_Model_Member */
-            $data['index'] = $member->getCompleteRef();
+            $data['index'] = $member->getId();
             $data['label'] = $this->cellText($member->getLabel());
             $data['ref'] = $this->cellText($member->getRef());
             $parentMembers = $member->getDirectParents();
@@ -66,7 +66,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             }
             $this->addLine($data);
         }
-        if (empty($idFilterCell)) {
+        if (empty($idCell)) {
             $this->totalElements = Orga_Model_Member::countTotal($this->request);
         }
 
@@ -76,12 +76,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Ajoute un nouvel element.
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function addelementAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->_getParam('refAxis'), $cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
 
         $label = $this->getAddElementValue('label');
         $ref = $this->getAddElementValue('ref');
@@ -98,7 +98,6 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             $formFieldRef = 'broader'.$directBroaderAxis->getRef();
             $refBroaderMember = $this->getAddElementValue($formFieldRef);
             if (empty($refBroaderMember)) {
-                $this->setAddElementErrorMessage($formFieldRef, __('UI', 'formValidation', 'emptyRequiredField'));
                 continue;
             } else {
                 try {
@@ -145,13 +144,11 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Supprime un element.
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function deleteelementAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->_getParam('refAxis'), $cube);
-        $member = Orga_Model_Member::loadByCompleteRefAndAxis($this->delete, $axis);
+        $member = Orga_Model_Member::load($this->delete);
 
         if ($member->hasDirectChildren()) {
             throw new Core_Exception_User('Orga', 'member', 'memberHasChild');
@@ -164,13 +161,13 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Modifie les valeurs d'un element.
-     * @Secure("editOrgaCube")
+     * @Secure("editOrganization")
      */
     public function updateelementAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $axis = Orga_Model_Axis::loadByRefAndCube($this->_getParam('refAxis'), $cube);
-        $member = Orga_Model_Member::loadByCompleteRefAndAxis($this->update['index'], $axis);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
+        $member = Orga_Model_Member::load($this->update['index']);
 
         switch ($this->update['column']) {
             case 'label':
@@ -191,23 +188,25 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 }
                 break;
             default:
+                $refBroaderAxis = substr($this->update['column'], 7);
                 try {
-                    $refBroaderAxis = substr($this->update['column'], 7);
-                    $broaderAxis = Orga_Model_Axis::loadByRefAndCube($refBroaderAxis, $cube);
-                    foreach ($member->getDirectParents() as $parentMember) {
-                        if (($parentMember->getAxis()->getRef() === $refBroaderAxis)
-                                && ($parentMember->getRef() === $this->update['value'])) {
-                            break 2;
-                        } else if ($parentMember->getAxis()->getRef() === $refBroaderAxis) {
-                            $member->removeDirectParent($parentMember);
-                        }
+                    $broaderAxis = Orga_Model_Axis::loadByRefAndOrganization($refBroaderAxis, $organization);
+                } catch (Core_Exception_NotFound $e) {
+                    parent::updateelementAction();
+                }
+                foreach ($member->getDirectParents() as $parentMember) {
+                    if (($parentMember->getAxis()->getRef() === $refBroaderAxis)
+                        && ($parentMember->getRef() === $this->update['value'])) {
+                        break 2;
+                    } else if ($parentMember->getAxis()->getRef() === $refBroaderAxis) {
+                        $member->removeDirectParent($parentMember);
                     }
+                }
+                if (!empty($this->update['value'])) {
                     $parentMember = Orga_Model_Member::loadByCompleteRefAndAxis($this->update['value'], $broaderAxis);
                     $member->addDirectParent($parentMember);
-                    $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
-                } catch (Core_Exception_NotFound $e) {
-                   parent::updateelementAction();
                 }
+                $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
                 break;
         }
         $this->data = $this->update['value'];
@@ -217,18 +216,18 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Renvoie la liste des parents éligibles pour un membre.
-     * @Secure("viewOrgaCube")
+     * @Secure("viewOrganization")
      */
     public function getparentsAction()
     {
-        $cube = Orga_Model_Cube::load($this->_getParam('idCube'));
-        $broaderAxis = Orga_Model_Axis::loadByRefAndCube($this->_getParam('refParentAxis'), $cube);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $broaderAxis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refParentAxis'), $organization);
 
         $members = $broaderAxis->getMembers();
-        $idFilterCell = $this->_getParam('idFilterCell');
-        if (!empty($idFilterCell)) {
-            $filterCell = Orga_Model_Cell::load(array('id' => $idFilterCell));
-            foreach ($filterCell->getMembers() as $cellMember) {
+        $idCell = $this->getParam('idCell');
+        if (!empty($idCell)) {
+            $cell = Orga_Model_Cell::load($idCell);
+            foreach ($cell->getMembers() as $cellMember) {
                 $cellMember->getAxis()->getRef();
                 if ($cellMember->getAxis()->isBroaderThan($broaderAxis)) {
                     $members = array_intersect($members, $cellMember->getChildrenForAxis($broaderAxis));
@@ -239,11 +238,18 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             }
         }
 
-        if (($this->_hasParam('source')) && ($this->_getParam('source') === 'add') && (count($members) > 1)) {
-            $this->addElementList('', '');
+        $query = $this->getParam('q');
+        if (!empty($query)) {
+            foreach ($members as $indexMember => $member) {
+                if (strpos($member->getLabel(), $query) === false) {
+                    unset($members[$indexMember]);
+                }
+            }
         }
+
+        $this->addElementAutocompleteList('', '');
         foreach ($members as $eligibleParentMember) {
-            $this->addElementList($eligibleParentMember->getCompleteRef(), $eligibleParentMember->getLabel());
+            $this->addElementAutocompleteList($eligibleParentMember->getCompleteRef(), $eligibleParentMember->getLabel());
         }
 
         $this->send();

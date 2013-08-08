@@ -43,7 +43,7 @@ $form = new UI_Form('editContextAction');
 $form->setAction('social/action/context-action-update/id/' . $contextAction->getId());
 
 $genericActionField = new UI_Form_Element_Select('genericAction');
-$genericActionField->setLabel(__('Social', 'name', 'actionTemplate'));
+$genericActionField->setLabel(__('Social', 'actionTemplate', 'actionTemplate'));
 $query = new Core_Model_Query();
 $query->order->addOrder(Social_Model_GenericAction::QUERY_LABEL);
 foreach (Social_Model_GenericAction::loadList($query) as $genericAction) {
@@ -125,7 +125,7 @@ echo $this->partial('bibliography/view.phtml',
 ?>
 
 
-<h2><?=__('Social', 'name', 'comments')?></h2>
+<h2><?=__('Social', 'comment', 'comments')?></h2>
 
 <?php
 echo $this->partial('comment/list.phtml',

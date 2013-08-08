@@ -14,7 +14,6 @@ use Core\Annotation\Secure;
  */
 class Orga_Forms_NavigationController extends Core_Controller_Ajax
 {
-
     /**
      * accéder à une cellule par le volet de navigation
      * @Secure("viewCell")
@@ -22,8 +21,8 @@ class Orga_Forms_NavigationController extends Core_Controller_Ajax
     public function gotocellAction()
     {
         if ($this->getRequest()->isPost()) {
-            $departureCell = Orga_Model_Cell::load(array('id' => $this->_getParam('idCell')));
-            $narrowerGranularity = Orga_Model_Granularity::load($this->_getParam('idGranularity'));
+            $departureCell = Orga_Model_Cell::load($this->getParam('idCell'));
+            $narrowerGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
             $listMembers = array();
             if ($departureCell->hasMembers()) {
@@ -33,7 +32,7 @@ class Orga_Forms_NavigationController extends Core_Controller_Ajax
                             $listMembers[] = $member;
                         } elseif (!$departureCell->getGranularity()->hasAxis($narrowerAxis)) {
                             $listMembers[] = Orga_Model_Member::loadByCompleteRefAndAxis(
-                                $this->_getParam($narrowerAxis->getRef()),
+                                $this->getParam($narrowerAxis->getRef()),
                                 $narrowerAxis
                             );
                         }
@@ -43,7 +42,7 @@ class Orga_Forms_NavigationController extends Core_Controller_Ajax
             } else {
                 foreach ($narrowerGranularity->getAxes() as $narrowerAxis) {
                     $listMembers[] = Orga_Model_Member::loadByCompleteRefAndAxis(
-                        $this->_getParam($narrowerAxis->getRef()),
+                        $this->getParam($narrowerAxis->getRef()),
                         $narrowerAxis
                     );
                 }
@@ -55,11 +54,11 @@ class Orga_Forms_NavigationController extends Core_Controller_Ajax
                     __('Orga', 'navigation', 'irrelevantCell',
                         array('cell' => $arrivalCell->getLabel()))
                 );
-                $idCell = $departureCell->getKey()['id'];
+                $idCell = $departureCell->getId();
             } else {
-                $idCell = $arrivalCell->getKey()['id'];
+                $idCell = $arrivalCell->getId();
             }
-            $this->_redirect(urldecode($this->_getParam('url')).'idCell='.$idCell);
+            $this->redirect('orga/cell/details/idCell/'.$idCell);
         }
     }
 }

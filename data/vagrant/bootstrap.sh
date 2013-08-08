@@ -9,7 +9,7 @@ apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php5
 apt-get update
 
-apt-get install -y bash-completion curl lynx
+apt-get install -y bash-completion curl lynx unzip
 
 # SCM
 apt-get install -y git
@@ -32,8 +32,7 @@ apt-get install -y php5 php5-curl php5-cli php5-gd php5-mcrypt php5-dev php5-mys
 
 # Apache
 apt-get install -y apache2
-rm -rf /var/www
-ln -fs /vagrant/public /var/www
+ln -s /vagrant/public /var/www/inventory
 cp ${BASEDIR}/php.ini /etc/php5/apache2/
 cp ${BASEDIR}/php.ini /etc/php5/cli/
 cp ${BASEDIR}/apache-000-default /etc/apache2/sites-enabled/000-default
@@ -60,11 +59,26 @@ cd gearman-1.0.3
 phpize
 ./configure
 make
-sudo make install
+make install
 
 # PHPUnit
 pear config-set auto_discover 1
 pear install pear.phpunit.de/PHPUnit
 
+# Behat & Selenium
+add-apt-repository -y ppa:mozillateam/firefox-stable
+apt-get install -y xvfb xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic
+apt-get install -y default-jre-headless
+apt-get install -y firefox
+echo 'user_pref("intl.accept_languages", "fr, fr-fr, en-us, en");' >> /etc/firefox/syspref.js
+
+#apt-get install -y chromium-browser
+#wget -O /tmp/chromedriver.zip https://chromedriver.googlecode.com/files/chromedriver_linux32_2.0.zip
+#unzip /tmp/chromedriver.zip -d /tmp
+#mv /tmp/chromedriver /usr/local/bin/
+
+#apt-get install -y nodejs npm
+#npm install -g zombie@1.4.1
+
 # Data
-php /vagrant/scripts/build/build.php create update populate
+php /vagrant/scripts/build/build.php create update

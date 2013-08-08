@@ -21,8 +21,9 @@ if (count($parentCells) > 0) {
         if ($parentCell->getGranularity()->isNavigable()) {
 ?>
         <li class="navigationParent">
-            <?php if ($this->configuration->isParentCellALink($parentCell)) { ?>
-            <a href="<?=$this->configuration->getOutputUrl()?>idCell=<?=$parentCell->getKey()['id']?>">
+            <?php if ((!(isset($this->isParentCellReachable[$parentCell->getMembersHashKey()])))
+                || ($this->isParentCellReachable[$parentCell->getMembersHashKey()] !== false)) { ?>
+            <a href="orga/cell/details/idCell/<?=$parentCell->getId()?>">
                 <?= $parentCell->getLabel()?>
             </a>
             <?php } else { ?>
@@ -43,14 +44,11 @@ if (count($parentCells) > 0) {
 </div>
 <?php
     foreach ($this->cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-        if ($narrowerGranularity->isNavigable() && $narrowerGranularity->hasCells()) {
-            $form = new UI_Form('navigation_'.$narrowerGranularity->getKey()['id']);
+        if ($narrowerGranularity->isNavigable()) {
+            $form = new UI_Form('navigation_'.$narrowerGranularity->getId());
             $form->setAjax(false);
             $form->setAction(
-                'orga/forms_navigation/gotocell?'.
-                'idCell='.$this->cell->getKey()['id'].'&'.
-                'idGranularity='.$narrowerGranularity->getKey()['id'].'&'.
-                'url='.urlencode($this->configuration->getOutputUrl())
+                'orga/forms_navigation/gotocell/idCell/'.$this->cell->getId().'/idGranularity/'.$narrowerGranularity->getId()
             );
 
             $idAddedAxes = array();
@@ -60,12 +58,7 @@ if (count($parentCells) > 0) {
                     if (!$this->cell->getGranularity()->hasAxis($narrowerAxis)) {
                         $select = new UI_Form_Element_Select($narrowerAxis->getRef());
                         $select->setLabel($narrowerAxis->getLabel());
-                        if (isset($childMembers[$narrowerAxis->getRef()])) {
-                            $listChildMembers = $childMembers[$narrowerAxis->getRef()];
-                        } else {
-                            $listChildMembers = $narrowerAxis->getMembers();
-                        }
-                        foreach ($listChildMembers as $childMember) {
+                        foreach ($childMembers[$narrowerAxis->getRef()] as $childMember) {
                             $option = new UI_Form_Element_Option(
                                 $childMember->getCompleteRef(),
                                 $childMember->getCompleteRef(),
@@ -94,7 +87,7 @@ if (count($parentCells) > 0) {
 ?>
     <hr />
     <?php
-        $submit = new UI_Form_Element_Submit('goTo'.$narrowerGranularity->getKey()['id']);
+        $submit = new UI_Form_Element_Submit('goTo'.$narrowerGranularity->getId());
         $submit->setLabel(__('UI', 'verb', 'goTo'));
         $form->addElement($submit);
         $form->display();

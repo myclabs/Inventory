@@ -271,7 +271,7 @@ class Classif_Model_Axis extends Core_Model_Entity
     {
         if ($this->hasDirectBroader($broaderAxis)) {
             $this->directBroaders->removeElement($broaderAxis);
-            $broaderAxis->setDirectNarrower(null);
+            $broaderAxis->setDirectNarrower();
         }
     }
 

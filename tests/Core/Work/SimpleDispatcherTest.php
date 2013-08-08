@@ -87,7 +87,7 @@ class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
         $dispatcher = new Core_Work_SimpleDispatcher();
         $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker());
 
-        $task = new Core_Work_ServiceCall_Task('Default_Service_Test', 'doSomething', ['foo']);
+        $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
 
         $this->assertEquals('foo', $dispatcher->run($task));
     }

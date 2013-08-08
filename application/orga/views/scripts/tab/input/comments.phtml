@@ -1,0 +1,17 @@
+<?php
+if ($this->isUserAbleToComment) {
+    echo $this->partial('comment/list.phtml',
+        'social',
+        array(
+            'comments' => $this->comments,
+            'endpointAdd' => 'orga/tab_input/comment-add/idCell/'.$this->idCell,
+        )
+    );
+} else {
+    echo $this->partial('comment/list.phtml',
+        'social',
+        array(
+            'comments' => $this->comments,
+        )
+    );
+}

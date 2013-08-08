@@ -18,7 +18,7 @@ class AF_Edit_ActionsController extends Core_Controller_Ajax
      */
     public function updateActionPopupAction()
     {
-        $this->view->action = AF_Model_Action::load($this->_getParam('idAction'));
+        $this->view->action = AF_Model_Action::load($this->getParam('idAction'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -30,29 +30,29 @@ class AF_Edit_ActionsController extends Core_Controller_Ajax
     public function updateActionSubmitAction()
     {
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->_getParam('idAf'));
+        $af = AF_Model_AF::load($this->getParam('idAf'));
         if (!$this->getRequest()->isPost()) {
             throw new Core_Exception_NotFound("Page invalide");
         }
-        $action = AF_Model_Action::load($this->_getParam('idAction'));
+        $action = AF_Model_Action::load($this->getParam('idAction'));
 
         switch (get_class($action)) {
             case 'AF_Model_Action_SetValue_Numeric':
                 /** @var $action AF_Model_Action_SetValue_Numeric */
                 $calcValue = new Calc_Value();
-                $calcValue->digitalValue = $this->_getParam('numericValue');
-                $calcValue->relativeUncertainty = $this->_getParam('numericUncertainty');
+                $calcValue->digitalValue = $this->getParam('numericValue');
+                $calcValue->relativeUncertainty = $this->getParam('numericUncertainty');
                 $action->setValue($calcValue);
                 break;
             case 'AF_Model_Action_SetValue_Checkbox':
                 /** @var $action AF_Model_Action_SetValue_Checkbox */
-                $action->setChecked($this->_getParam('checkboxValue'));
+                $action->setChecked($this->getParam('checkboxValue'));
                 break;
             case 'AF_Model_Action_SetValue_Select_Single':
                 /** @var $action AF_Model_Action_SetValue_Select_Single */
-                if ($this->_getParam('selectOptionValue') != null) {
+                if ($this->getParam('selectOptionValue') != null) {
                     /** @var $option AF_Model_Component_Select_Option */
-                    $option = AF_Model_Component_Select_Option::load($this->_getParam('selectOptionValue'));
+                    $option = AF_Model_Component_Select_Option::load($this->getParam('selectOptionValue'));
                     $action->setOption($option);
                 } else {
                     $action->setOption(null);
@@ -60,9 +60,9 @@ class AF_Edit_ActionsController extends Core_Controller_Ajax
                 break;
             case 'AF_Model_Action_SetAlgoValue':
                 /** @var $action AF_Model_Action_SetAlgoValue */
-                if ($this->_getParam('algoSelect') != null) {
+                if ($this->getParam('algoSelect') != null) {
                     /** @var $algo Algo_Model_Algo */
-                    $algo = Algo_Model_Algo::load($this->_getParam('algoSelect'));
+                    $algo = Algo_Model_Algo::load($this->getParam('algoSelect'));
                     $action->setAlgo($algo);
                 } else {
                     $action->setAlgo(null);
@@ -72,7 +72,7 @@ class AF_Edit_ActionsController extends Core_Controller_Ajax
         $action->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
-        $this->_redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/interaction');
+        $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/interaction');
     }
 
 }

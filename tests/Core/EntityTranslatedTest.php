@@ -19,9 +19,9 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Default_Model_Entity en base, sinon suppression !
-        if (Default_Model_Translated::countTotal() > 0) {
-            foreach (Default_Model_Translated::loadList() as $o) {
+        // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
+        if (Inventory_Model_Translated::countTotal() > 0) {
+            foreach (Inventory_Model_Translated::loadList() as $o) {
                 $o->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -35,7 +35,7 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         $french = Core_Locale::load('fr');
         $english = Core_Locale::load('en');
 
-        $o = new Default_Model_Translated();
+        $o = new Inventory_Model_Translated();
         $o->setTranslationLocale($french);
         $o->setName('Bonjour');
         $o->save();
@@ -62,7 +62,7 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         $french = Core_Locale::load('fr');
         $english = Core_Locale::load('en');
 
-        $o = new Default_Model_Translated();
+        $o = new Inventory_Model_Translated();
         $o->setTranslationLocale($french);
         $o->setName('Bonjour');
         $o->save();
@@ -86,7 +86,7 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
     {
         $english = Core_Locale::load('en');
 
-        $o = new Default_Model_Translated();
+        $o = new Inventory_Model_Translated();
         $o->setName('Bonjour');
         $o->save();
         $this->entityManager->flush($o);
@@ -113,7 +113,7 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
 
-        $o = new Default_Model_Translated();
+        $o = new Inventory_Model_Translated();
 
         $translationRepository->translate($o, 'name', $french->getId(), 'Bonjour');
         $translationRepository->translate($o, 'name', $english->getId(), 'Hello');
@@ -140,12 +140,12 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
 
-        $o1 = new Default_Model_Translated();
+        $o1 = new Inventory_Model_Translated();
         $translationRepository->translate($o1, 'name', $french->getId(), 'A');
         $translationRepository->translate($o1, 'name', $english->getId(), 'B');
         $o1->save();
 
-        $o2 = new Default_Model_Translated();
+        $o2 = new Inventory_Model_Translated();
         $translationRepository->translate($o2, 'name', $french->getId(), 'B');
         $translationRepository->translate($o2, 'name', $english->getId(), 'A');
         $o2->save();
@@ -154,8 +154,8 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
 
         // Test default
         $query = new Core_Model_Query();
-        $query->order->addOrder(Default_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
-        $list = Default_Model_Translated::loadList($query);
+        $query->order->addOrder(Inventory_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
+        $list = Inventory_Model_Translated::loadList($query);
 
         $this->assertSame($o1, $list[0]);
         $this->assertSame($o2, $list[1]);
@@ -163,8 +163,8 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         // Test en (liste inversée)
         Core_Locale::setDefault($english);
         $query = new Core_Model_Query();
-        $query->order->addOrder(Default_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
-        $list = Default_Model_Translated::loadList($query);
+        $query->order->addOrder(Inventory_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
+        $list = Inventory_Model_Translated::loadList($query);
 
         $this->assertSame($o2, $list[0]);
         $this->assertSame($o1, $list[1]);
@@ -172,8 +172,8 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         // Test fr
         Core_Locale::setDefault($french);
         $query = new Core_Model_Query();
-        $query->order->addOrder(Default_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
-        $list = Default_Model_Translated::loadList($query);
+        $query->order->addOrder(Inventory_Model_Translated::QUERY_NAME, Core_Model_Order::ORDER_ASC);
+        $list = Inventory_Model_Translated::loadList($query);
 
         $this->assertSame($o1, $list[0]);
         $this->assertSame($o2, $list[1]);
@@ -193,12 +193,12 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
 
-        $o1 = new Default_Model_Translated();
+        $o1 = new Inventory_Model_Translated();
         $translationRepository->translate($o1, 'name', $french->getId(), 'A');
         $translationRepository->translate($o1, 'name', $english->getId(), 'B');
         $o1->save();
 
-        $o2 = new Default_Model_Translated();
+        $o2 = new Inventory_Model_Translated();
         $translationRepository->translate($o2, 'name', $french->getId(), 'B');
         $translationRepository->translate($o2, 'name', $english->getId(), 'A');
         $o2->save();
@@ -207,8 +207,8 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
 
         // Test default
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Translated::QUERY_NAME, 'A');
-        $list = Default_Model_Translated::loadList($query);
+        $query->filter->addCondition(Inventory_Model_Translated::QUERY_NAME, 'A');
+        $list = Inventory_Model_Translated::loadList($query);
 
         $this->assertCount(1, $list);
         $this->assertSame($o1, $list[0]);
@@ -216,8 +216,8 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         // Test en (liste inversée)
         Core_Locale::setDefault($english);
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Translated::QUERY_NAME, 'A');
-        $list = Default_Model_Translated::loadList($query);
+        $query->filter->addCondition(Inventory_Model_Translated::QUERY_NAME, 'A');
+        $list = Inventory_Model_Translated::loadList($query);
 
         $this->assertCount(1, $list);
         $this->assertSame($o2, $list[0]);
@@ -225,8 +225,8 @@ class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
         // Test fr
         Core_Locale::setDefault($french);
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Translated::QUERY_NAME, 'A');
-        $list = Default_Model_Translated::loadList($query);
+        $query->filter->addCondition(Inventory_Model_Translated::QUERY_NAME, 'A');
+        $list = Inventory_Model_Translated::loadList($query);
 
         $this->assertCount(1, $list);
         $this->assertSame($o1, $list[0]);

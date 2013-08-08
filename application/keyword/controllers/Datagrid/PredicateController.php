@@ -131,7 +131,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function getdescriptionAction()
     {
-        $predicate = Keyword_Model_Predicate::loadByRef($this->_getParam('ref'));
+        $predicate = Keyword_Model_Predicate::loadByRef($this->getParam('ref'));
         $this->data = Core_Tools::textile($predicate->getDescription());
         $this->send();
     }
@@ -143,7 +143,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function getbrutdescriptionAction()
     {
-        $predicate = Keyword_Model_Predicate::loadByRef($this->_getParam('ref'));
+        $predicate = Keyword_Model_Predicate::loadByRef($this->getParam('ref'));
         $this->data = $predicate->getDescription();
         $this->send();
     }

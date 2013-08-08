@@ -6,10 +6,12 @@
  * @package    Orga
  * @subpackage Model
  */
+
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Objet métier définissant un axe organisationnel au sein d'un cube.
+ * Objet métier définissant un axe organisationnel au sein d'un organization.
  * @package    Orga
  * @subpackage Model
  */
@@ -26,9 +28,8 @@ class Orga_Model_Axis extends Core_Model_Entity
     const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
     const QUERY_POSITION = 'position';
-    const QUERY_GLOBALPOSITION = 'globalPosition';
     const QUERY_NARROWER = 'directNarrower';
-    const QUERY_CUBE = 'cube';
+    const QUERY_ORGANIZATION = 'organization';
 
 
     /**
@@ -39,7 +40,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     protected  $id = null;
 
     /**
-     * Référence unique (au sein d'un cube) de l'axe.
+     * Référence unique (au sein d'un organization) de l'axe.
      *
      * @var string
      */
@@ -53,18 +54,11 @@ class Orga_Model_Axis extends Core_Model_Entity
     protected $label = null;
 
     /**
-     * Cube contenant l'axe.
+     * Organization contenant l'axe.
      *
-     * @var Orga_Model_Cube
+     * @var Orga_Model_Organization
      */
-    protected $cube = null;
-
-    /**
-     * Position générale de l'axe dans le cube.
-     *
-     * @var int
-     */
-    protected $globalPosition = null;
+    protected $organization = null;
 
     /**
      * Axe narrower de l'axe courant.
@@ -104,12 +98,18 @@ class Orga_Model_Axis extends Core_Model_Entity
 
     /**
      * Constructeur de la classe Axis.
+     *
+     * @param Orga_Model_Organization $organization
      */
-    public function __construct()
+    public function __construct(Orga_Model_Organization $organization)
     {
-        $this->directBroaders = new Doctrine\Common\Collections\ArrayCollection();
-        $this->members = new Doctrine\Common\Collections\ArrayCollection();
-        $this->granularities = new Doctrine\Common\Collections\ArrayCollection();
+        $this->directBroaders = new ArrayCollection();
+        $this->members = new ArrayCollection();
+        $this->granularities = new ArrayCollection();
+
+        $this->organization = $organization;
+        $this->setPosition();
+        $this->organization->addAxis($this);
     }
 
     /**
@@ -119,27 +119,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     protected function getContext()
     {
-        return array('directNarrower' => $this->directNarrower, 'cube' => $this->cube);
-    }
-
-    /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
-     */
-    public function preSave()
-    {
-        try {
-            $this->checkHasPosition();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->setPosition();
-        }
-    }
-
-    /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
-     */
-    public function preUpdate()
-    {
-        $this->checkHasPosition();
+        return array('organization' => $this->organization, 'directNarrower' => $this->directNarrower);
     }
 
     /**
@@ -148,7 +128,6 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function preDelete()
     {
         $this->deletePosition();
-        $this->getCube()->removeAxis($this);
     }
 
     /**
@@ -160,16 +139,16 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Charge un Axis en fonction de sa référence et son cube.
+     * Charge un Axis en fonction de sa référence et son organization.
      *
      * @param string $ref
-     * @param Orga_Model_Cube $cube
+     * @param Orga_Model_Organization $organization
      *
      * @return Orga_Model_Axis
      */
-    public static function loadByRefAndCube($ref, $cube)
+    public static function loadByRefAndOrganization($ref, $organization)
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref, 'cube' => $cube));
+        return $organization->getAxisByRef($ref);
     }
 
     /**
@@ -186,6 +165,16 @@ class Orga_Model_Axis extends Core_Model_Entity
                 $cell->updateMembersHashKey();
             }
         }
+    }
+
+    /**
+     * Renvoie l'id de l'Axis.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -238,31 +227,13 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Définit le cube de l'axe.
+     * Renvoie le organization de l'axe.
      *
-     * @param Orga_Model_Cube $cube
+     * @return Orga_Model_Organization
      */
-    public function setCube(Orga_Model_Cube $cube=null)
+    public function getOrganization()
     {
-        if ($this->cube !== $cube) {
-            if ($this->cube !== null) {
-                throw new Core_Exception_TooMany('Cube already set, an axis cannot be move.');
-            }
-            $this->cube = $cube;
-            if ($cube !== null) {
-                $cube->addAxis($this);
-            }
-        }
-    }
-
-    /**
-     * Renvoie le cube de l'axe.
-     *
-     * @return Orga_Model_Cube
-     */
-    public function getCube()
-    {
-        return $this->cube;
+        return $this->organization;
     }
 
     /**
@@ -296,22 +267,16 @@ class Orga_Model_Axis extends Core_Model_Entity
                 }
             }
         }
-//        $this->setPositionInternalOrdered($position);
 
-        $this->getCube()->orderAxes();
-        $this->getCube()->orderGranularities();
-
-        $this->updateMembersAndCellsHashKey();
+        $this->getOrganization()->orderGranularities();
     }
 
     /**
-     * Définit la position globale de l'axe.
-     *
-     * @param int $globalPosition
+     * Permet une surcharge facile pour lancer des évents après qu'un objet ait été déplacé.
      */
-    public function setGlobalPosition($globalPosition)
+    protected function hasMove()
     {
-        $this->globalPosition = $globalPosition;
+        $this->updateMembersAndCellsHashKey();
     }
 
     /**
@@ -321,7 +286,20 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getGlobalPosition()
     {
-        return $this->globalPosition;
+        return $this->getOrganization()->getAxisGlobalPosition($this);
+    }
+
+    /**
+     * Permet d'ordonner des Axis entre eux.
+     *
+     * @param Orga_Model_Axis $a
+     * @param Orga_Model_Axis $b
+     *
+     * @return int 1, 0 ou -1
+     */
+    public static function orderAxes(Orga_Model_Axis $a, Orga_Model_Axis $b)
+    {
+        return $a->getGlobalPosition() - $b->getGlobalPosition();
     }
 
     /**
@@ -388,7 +366,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     {
         if ($this->hasDirectBroader($broaderAxis)) {
             $this->directBroaders->removeElement($broaderAxis);
-            $broaderAxis->setDirectNarrower(null);
+            $broaderAxis->setDirectNarrower();
         }
     }
 
@@ -481,13 +459,18 @@ class Orga_Model_Axis extends Core_Model_Entity
      * Ajoute une Member à l'Axis.
      *
      * @param Orga_Model_Member $member
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function addMember(Orga_Model_Member $member)
     {
-        if (!($this->hasMember($member))) {
+        if ($member->getAxis() !== $this) {
+            throw new Core_Exception_InvalidArgument();
+        }
+
+        if (!$this->hasMember($member)) {
             $this->members->add($member);
-            $member->setAxis($this);
-            foreach ($this->granularities as $granularity) {
+            foreach ($this->getGranularities() as $granularity) {
                 $granularity->generateCellsFromNewMember($member);
             }
         }
@@ -506,15 +489,45 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
+     * Retourne un tableau contenant les members de l'Axis.
+     *
+     * @param string $completeRef
+     *
+     * @throws Core_Exception_NotFound
+     * @throws Core_Exception_TooMany
+     *
+     * @return Orga_Model_Member
+     */
+    public function getMemberByCompleteRef($completeRef)
+    {
+        $refParts = explode('#', $completeRef);
+        $baseRef = (isset($refParts[0]) ? $refParts[0] : '');
+        $parentMembersHashKey = (isset($refParts[1]) ? $refParts[1] : null);
+        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        $criteria->where($criteria->expr()->eq('ref', $baseRef));
+        $criteria->andWhere($criteria->expr()->eq('parentMembersHashKey', $parentMembersHashKey));
+        $member = $this->members->matching($criteria)->toArray();
+
+        if (empty($member)) {
+            throw new Core_Exception_NotFound("No 'Orga_Model_Member' matching " . $completeRef);
+        } else {
+            if (count($member) > 1) {
+                throw new Core_Exception_TooMany("Too many 'Orga_Model_Member' matching " . $completeRef);
+            }
+        }
+
+        return array_pop($member);
+    }
+
+    /**
      * Supprime le Member donné de la collection de l'Axis.
      *
      * @param Orga_Model_Member $member
      */
-    public function removeMember($member)
+    public function removeMember(Orga_Model_Member $member)
     {
         if ($this->hasMember($member)) {
             $this->members->removeElement($member);
-            $member->setAxis(null);
         }
     }
 
@@ -531,30 +544,6 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Retourne un tableau contenant les members de l'Axis.
      *
-     * @param string $completeRef
-     * @return Orga_Model_Member[]
-     */
-    public function getMemberByCompleteRef($completeRef)
-    {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->where($criteria->expr()->eq('ref', explode('#', $completeRef)[0]));
-        $criteria->andWhere($criteria->expr()->eq('parentMembersHashKey', explode('#', $completeRef)[1]));
-        $member = $this->members->matching($criteria)->toArray();
-
-        if (empty($member)) {
-            throw new Core_Exception_NotFound("No 'Orga_Model_Member' matching " . $completeRef);
-        } else {
-            if (count($member) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_Member' matching " . $completeRef);
-            }
-        }
-
-        return array_pop($member);
-    }
-
-    /**
-     * Retourne un tableau contenant les members de l'Axis.
-     *
      * @return Orga_Model_Member[]
      */
     public function getMembers()
@@ -566,12 +555,17 @@ class Orga_Model_Axis extends Core_Model_Entity
      * Ajoute une Granularity à l'Axis ourrant.
      *
      * @param Orga_Model_Granularity $granularity
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function addGranularity(Orga_Model_Granularity $granularity)
     {
-        if (!($this->hasGranularity($granularity))) {
+        if (!$granularity->hasAxis($this)) {
+            throw new Core_Exception_InvalidArgument();
+        }
+
+        if (!$this->hasGranularity($granularity)) {
             $this->granularities->add($granularity);
-            $granularity->addAxis($this);
         }
     }
 
@@ -585,19 +579,6 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function hasGranularity(Orga_Model_Granularity $granularity)
     {
         return $this->granularities->contains($granularity);
-    }
-
-    /**
-     * Supprime une Granularity de la collection de celle utilisant l'Axis.
-     *
-     * @param Orga_Model_Granularity $granularity
-     */
-    public function removeGranularity($granularity)
-    {
-        if ($this->hasGranularity($granularity)) {
-            $this->granularities->removeElement($granularity);
-            $granularity->removeAxis($this);
-        }
     }
 
     /**
@@ -660,6 +641,14 @@ class Orga_Model_Axis extends Core_Model_Entity
             }
         }
         return true;
+    }
+
+    /**
+     * @return string Représentation textuelle de l'Axis
+     */
+    public function __toString()
+    {
+        return $this->getRef();
     }
 
 }

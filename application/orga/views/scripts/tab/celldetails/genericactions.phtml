@@ -1,0 +1,34 @@
+<?php
+$datagrid = new UI_Datagrid('cellGenericActions', 'datagrid_cell_actions_generic', 'orga');
+
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn->editable = true;
+$datagrid->addCol($labelColumn);
+
+$themeColumn = new UI_Datagrid_Col_List('theme', __('Social', 'actionTheme', 'actionTheme'));
+$themeColumn->list = [];
+foreach ($this->themes as $theme) {
+    /** @var $theme Social_Model_Theme */
+    $themeColumn->list[$theme->getId()] = $theme->getLabel();
+}
+$datagrid->addCol($themeColumn);
+
+$descriptionColumn = new UI_Datagrid_Col_LongText('description', __('UI', 'name', 'description'));
+$descriptionColumn->popup->title = __('UI', 'name', 'description');
+$descriptionColumn->popup->render();
+$datagrid->addCol($descriptionColumn);
+
+$contextActionCountColumn = new UI_Datagrid_Col_Number('contextActionCount',
+    __('Social', 'actionTemplate', 'numberOfAssociatedActions'));
+$contextActionCountColumn->addable = false;
+$datagrid->addCol($contextActionCountColumn);
+
+$detailsColumn = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
+$datagrid->addCol($detailsColumn);
+
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('Social', 'actionTemplate', 'addPanelTitle');
+$datagrid->addParam('idCell', $this->idCell);
+$datagrid->pagination = false;
+$datagrid->deleteElements = true;
+echo $datagrid->render();

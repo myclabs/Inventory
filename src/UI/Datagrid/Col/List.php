@@ -176,14 +176,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
      */
     protected function getUrlDynamicList($datagrid, $source)
     {
-        if (strpos($this->list, '?') === false) {
-            $baseUrl = $this->list . '?';
-        } else if (preg_match('#[^?&]$#', $this->list) !== 0) {
-            $baseUrl = $this->list . '&';
-        } else {
-            $baseUrl = $this->list;
-        }
-        return $baseUrl . $datagrid->encodeParameters() . 'source=' . $source;
+        return $this->list . $datagrid->encodeParameters() . '/source/' . $source;
     }
 
     /**
@@ -594,7 +587,10 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
 
         $filterFormElement->setLabel($this->getFilterFormLabel());
         if ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
-            $filterFormElement->useAutocomplete = true;
+            // Nécessaire pour éviter le bug de select2 miltiple avec des appnd/prepend.
+            if ($this->isFilterFieldMultiple() !== true) {
+                $filterFormElement->useAutocomplete = true;
+            }
         }
         foreach ($this->list as $idElement => $element) {
             $option = new UI_Form_Element_Option($idElement, $idElement, $element);
@@ -724,6 +720,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                 $addFormElement = new UI_Form_Element_Pattern_AjaxAutocomplete($this->getAddFormElementId($datagrid));
                 $addFormElement->getAutocomplete()->source = $this->getUrlDynamicList($datagrid, 'add');
                 $addFormElement->getAutocomplete()->multiple = $this->multiple;
+                $addFormElement->setLabel($this->getAddFormElementLabel());
             } else {
                 if ($this->multiple) {
                     $addFormElement = new UI_Form_Element_MultiSelect($this->getAddFormElementId($datagrid));

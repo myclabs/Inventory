@@ -19,6 +19,6 @@ class Simulation_IndexController extends Core_Controller
      */
     public function indexAction()
     {
-        $this->_redirect('simulation/set/list');
+        $this->redirect('simulation/set/list');
     }
 }

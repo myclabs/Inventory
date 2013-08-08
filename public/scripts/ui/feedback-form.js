@@ -17,30 +17,30 @@
 		var form = $(
 		'<form class="feedback-form"> \
 			<a class="feedback-form-text" href="#"> \
-				Aidez-nous à améliorer cette page \
+				' + __('UI', 'feedback', 'title') + ' \
 			</a> \
 			<div class="alert alert-success hide"> \
 				<button type="button" class="close" data-dismiss="alert">&times;</button> \
-				Votre retour a été enregistré, merci. \
+				' + __('UI', 'feedback', 'thanks') + ' \
 			</div> \
 			<div class="feedback-form-content hide"> \
 				<label class="checkbox"> \
-					<input type="checkbox" name="not-clear"> Le contenu de cette page n\'est pas clair \
+					<input type="checkbox" name="not-clear"> ' + __('UI', 'feedback', 'unclearContent') + ' \
 				</label> \
 				<label class="checkbox"> \
-					<input type="checkbox" name="bug"> Je constate un dysfonctionnement \
+					<input type="checkbox" name="bug"> ' + __('UI', 'feedback', 'bugReport') + ' \
 				</label> \
 				<label class="checkbox"> \
-					<input type="checkbox" name="improvement"> J\'ai une amélioration à proposer \
+					<input type="checkbox" name="improvement"> ' + __('UI', 'feedback', 'improvement') + ' \
 				</label> \
 				<p> \
-					Plus de détails (facultatif) \
+					' + __('UI', 'feedback', 'moreDetails') + ' \
 				</p> \
 				<p> \
 					<textarea name="details" rows="2" style="width: 100%"></textarea> \
 				</p> \
-				<input type="submit" class="btn btn-primary" value="Envoyer"> \
-				<input type="button" class="cancel btn" value="Annuler"> \
+				<input type="submit" class="btn btn-primary" value="' + __('UI', 'verb', 'send') + '"> \
+				<input type="button" class="cancel btn" value="' + __('UI', 'verb', 'cancel') + '"> \
 			</div> \
 		</form>');
 

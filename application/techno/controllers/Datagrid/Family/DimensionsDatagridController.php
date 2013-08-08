@@ -20,7 +20,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
     public function getelementsAction()
     {
         /** @var $family Techno_Model_Family */
-        $family = Techno_Model_Family::load($this->_getParam('idFamily'));
+        $family = Techno_Model_Family::load($this->getParam('idFamily'));
         $dimensions = $family->getDimensions();
 
         foreach ($dimensions as $dimension) {
@@ -50,7 +50,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
     public function addelementAction()
     {
         /** @var $family Techno_Model_Family */
-        $family = Techno_Model_Family::load($this->_getParam('idFamily'));
+        $family = Techno_Model_Family::load($this->getParam('idFamily'));
         // Validation du formulaire
         $orientation = $this->getAddElementValue('orientation');
         if (empty($orientation)) {
@@ -125,7 +125,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
     public function deleteelementAction()
     {
         /** @var $dimension Techno_Model_Family_Dimension */
-        $dimension = Techno_Model_Family_Dimension::load($this->_getParam('index'));
+        $dimension = Techno_Model_Family_Dimension::load($this->getParam('index'));
         $family = $dimension->getFamily();
         $family->removeDimension($dimension);
         $family->save();

@@ -1,0 +1,52 @@
+<?php
+if ($this->docLibraryForAFInputSetPrimary !== null) {
+?>
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'doc', 'docLibraryForAFInputSetPrimary')?></legend>
+    <div>
+<?php
+    echo $this->partial('library/view.phtml',
+        'doc',
+        array(
+            'library' => $this->docLibraryForAFInputSetPrimary,
+        )
+    );
+?>
+    </div>
+</fieldset>
+<?php
+}
+if ($this->docLibraryForSocialGenericAction !== null) {
+    ?>
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'doc', 'docLibraryForSocialTemplateAction')?></legend>
+    <div>
+        <?php
+        echo $this->partial('library/view.phtml',
+            'doc',
+            array(
+                'library' => $this->docLibraryForSocialGenericAction,
+            )
+        );
+        ?>
+    </div>
+</fieldset>
+<?php
+}
+if ($this->docLibraryForSocialContextAction !== null) {
+    ?>
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'doc', 'docLibraryForSocialAction')?></legend>
+    <div>
+        <?php
+        echo $this->partial('library/view.phtml',
+            'doc',
+            array(
+                'library' => $this->docLibraryForSocialContextAction,
+            )
+        );
+        ?>
+    </div>
+</fieldset>
+<?php
+}

@@ -44,12 +44,12 @@ class Core_Test_OrderExceptions extends PHPUnit_Framework_TestCase
     public function testMultipleOrdersOnSameAttribute()
     {
         $query = new Core_Model_Query();
-        $query->order->addOrder(Default_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_ASC);
-        $query->order->addOrder(Default_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_DESC);
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_ASC);
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_DESC);
         try {
             $query->order->validate();
         } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'Order for '.Default_Model_Simple::QUERY_ID.'" has already been specified.') {
+            if ($e->getMessage() == 'Order for '.Inventory_Model_Simple::QUERY_ID.'" has already been specified.') {
                 throw $e;
             }
         }
@@ -63,11 +63,11 @@ class Core_Test_OrderExceptions extends PHPUnit_Framework_TestCase
     public function testInvalidOrder()
     {
         $query = new Core_Model_Query();
-        $query->order->addOrder(Default_Model_Simple::QUERY_ID, 'asc');
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, 'asc');
         try {
             $query->order->validate();
         } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'Sort direction for "'.Default_Model_Simple::QUERY_ID.'" is invald.') {
+            if ($e->getMessage() == 'Sort direction for "'.Inventory_Model_Simple::QUERY_ID.'" is invald.') {
                 throw $e;
             }
         }
@@ -407,7 +407,7 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
     public function testUndefinedAlias()
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
-        $simpleRepository = $entityManagers['default']->getRepository('Default_Model_Simple');
+        $simpleRepository = $entityManagers['default']->getRepository('Inventory_Model_Simple');
         $queryBuilder = $simpleRepository->createQueryBuilder('test');
         $conditionName = 'test';
         $query = new Core_Model_Query();
@@ -476,27 +476,27 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         // Création de 5 objets.
-        $simpleEntityA1 = new Default_Model_Simple();
+        $simpleEntityA1 = new Inventory_Model_Simple();
         $simpleEntityA1->setName('Atest1');
         $simpleEntityA1->setCreationDate(new DateTime('2008-01-01'));
         $this->_simpleEntities[] = $simpleEntityA1;
-        $simpleEntityB1 = new Default_Model_Simple();
+        $simpleEntityB1 = new Inventory_Model_Simple();
         $simpleEntityB1->setName('Btest1');
         $simpleEntityB1->setCreationDate(new DateTime('2009-01-01'));
         $this->_simpleEntities[] = $simpleEntityB1;
-        $simpleEntityA2 = new Default_Model_Simple();
+        $simpleEntityA2 = new Inventory_Model_Simple();
         $simpleEntityA2->setName('Atest2');
         $simpleEntityA2->setCreationDate(new DateTime('2012-01-01'));
         $this->_simpleEntities[] = $simpleEntityA2;
-        $simpleEntityC1 = new Default_Model_Simple();
+        $simpleEntityC1 = new Inventory_Model_Simple();
         $simpleEntityC1->setName('Ctest1');
         $simpleEntityC1->setCreationDate(new DateTime('2010-01-01'));
         $this->_simpleEntities[] = $simpleEntityC1;
-        $simpleEntityA1b = new Default_Model_Simple();
+        $simpleEntityA1b = new Inventory_Model_Simple();
         $simpleEntityA1b->setName('Atest1');
         $simpleEntityA1b->setCreationDate(new DateTime('2011-01-01'));
         $this->_simpleEntities[] = $simpleEntityA1b;
-        $simpleEntityNull = new Default_Model_Simple();
+        $simpleEntityNull = new Inventory_Model_Simple();
         $this->_simpleEntities[] = $simpleEntityNull;
 
         foreach ($this->_simpleEntities as $simpleEntity) {
@@ -512,7 +512,7 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
      */
     function testDefaultOrder()
     {
-        foreach (Default_Model_Simple::loadList() as $index => $simpleEntity) {
+        foreach (Inventory_Model_Simple::loadList() as $index => $simpleEntity) {
             $this->assertSame($simpleEntity, $this->_simpleEntities[$index]);
         }
     }
@@ -523,11 +523,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testOrderNameASC()
     {
         $query = new Core_Model_Query();
-        $query->order->addOrder(Default_Model_Simple::QUERY_NAME);
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_NAME);
 
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(6, count($simpleEntities));
-        $this->assertEquals(6, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[0]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[4]);
@@ -542,11 +542,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testOrderIDDESC()
     {
         $query = new Core_Model_Query();
-        $query->order->addOrder(Default_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_DESC);
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_DESC);
 
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(6, count($simpleEntities));
-        $this->assertEquals(6, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[4]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
@@ -561,12 +561,12 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testOrderNAMEASCIDDESC()
     {
         $query = new Core_Model_Query();
-        $query->order->addOrder(Default_Model_Simple::QUERY_NAME, Core_Model_Order::ORDER_ASC);
-        $query->order->addOrder(Default_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_DESC);
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_NAME, Core_Model_Order::ORDER_ASC);
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_DESC);
 
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(6, count($simpleEntities));
-        $this->assertEquals(6, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[4]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[0]);
@@ -582,9 +582,9 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->totalElements = 4;
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
-        $this->assertEquals(6, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[2]);
@@ -599,9 +599,9 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
         $query = new Core_Model_Query();
         $query->startIndex = 2;
         $query->totalElements = 10;
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
-        $this->assertEquals(6, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[2]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[3]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[4]);
@@ -616,9 +616,9 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
         $query = new Core_Model_Query();
         $query->startIndex = 2;
         $query->totalElements = 2;
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(2, count($simpleEntities));
-        $this->assertEquals(6, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[2]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[3]);
     }
@@ -629,10 +629,10 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterCOUNTAINSNametest1()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, 'test1', Core_Model_Filter::OPERATOR_CONTAINS);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'test1', Core_Model_Filter::OPERATOR_CONTAINS);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
-        $this->assertEquals(4, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
@@ -645,10 +645,10 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterBEGINSNameA()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, 'A', Core_Model_Filter::OPERATOR_BEGINS);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'A', Core_Model_Filter::OPERATOR_BEGINS);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(3, count($simpleEntities));
-        $this->assertEquals(3, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(3, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[2]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[4]);
@@ -660,10 +660,10 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterENDSName2()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, '2', Core_Model_Filter::OPERATOR_ENDS);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, '2', Core_Model_Filter::OPERATOR_ENDS);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(1, count($simpleEntities));
-        $this->assertEquals(1, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(1, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[2]);
     }
 
@@ -673,10 +673,10 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterEQUALNameA()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, 'A', Core_Model_Filter::OPERATOR_EQUAL);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'A', Core_Model_Filter::OPERATOR_EQUAL);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(0, count($simpleEntities));
-        $this->assertEquals(0, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(0, Inventory_Model_Simple::countTotal($query));
     }
 
     /**
@@ -685,11 +685,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterEQUALNameBtest1()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, 'Btest1',
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'Btest1',
                 Core_Model_Filter::OPERATOR_EQUAL);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(1, count($simpleEntities));
-        $this->assertEquals(1, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(1, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[1]);
     }
 
@@ -699,11 +699,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterNOTEQUALNameCtest1()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, 'Ctest1',
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'Ctest1',
                 Core_Model_Filter::OPERATOR_NOT_EQUAL);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
-        $this->assertEquals(4, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[2]);
@@ -716,11 +716,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterHIGHERDate2009()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
                 Core_Model_Filter::OPERATOR_HIGHER);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
-        $this->assertEquals(4, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[2]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[3]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[4]);
@@ -733,11 +733,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterHIGHEREQUALDate2009()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
                 Core_Model_Filter::OPERATOR_HIGHER_EQUAL);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(5, count($simpleEntities));
-        $this->assertEquals(5, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(5, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[1]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[2]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
@@ -751,11 +751,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterLOWERDate2011()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
                 Core_Model_Filter::OPERATOR_LOWER);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(3, count($simpleEntities));
-        $this->assertEquals(3, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(3, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
@@ -767,11 +767,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterLOWEREQUALDate2011()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
                 Core_Model_Filter::OPERATOR_LOWER_EQUAL);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
-        $this->assertEquals(4, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
@@ -784,11 +784,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterNULLName()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, null,
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, null,
                 Core_Model_Filter::OPERATOR_NULL);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(1, count($simpleEntities));
-        $this->assertEquals(1, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(1, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
     }
 
@@ -798,11 +798,11 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testFilterNOTNULLName()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, null,
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, null,
                 Core_Model_Filter::OPERATOR_NOT_NULL);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(5, count($simpleEntities));
-        $this->assertEquals(5, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(5, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[2]);
@@ -816,15 +816,15 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testAdvancedQueryAnd()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Default_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
                 Core_Model_Filter::OPERATOR_LOWER_EQUAL);
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, 'Ctest1',
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'Ctest1',
                 Core_Model_Filter::OPERATOR_NOT_EQUAL);
-        $query->order->addOrder(Default_Model_Simple::QUERY_ID,
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID,
                 Core_Model_Order::ORDER_DESC);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(3, count($simpleEntities));
-        $this->assertEquals(3, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(3, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[4]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[0]);
@@ -837,15 +837,15 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->filter->condition = Core_Model_Filter::CONDITION_OR;
-        $query->filter->addCondition(Default_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
                 Core_Model_Filter::OPERATOR_EQUAL);
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, 'A',
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'A',
                 Core_Model_Filter::OPERATOR_CONTAINS);
-        $query->order->addOrder(Default_Model_Simple::QUERY_ID,
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID,
                 Core_Model_Order::ORDER_DESC);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
-        $this->assertEquals(4, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[4]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[2]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[1]);
@@ -858,21 +858,21 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     function testAdvancedSubQuery()
     {
         $subQuery = new Core_Model_Filter();
-        $subQuery->addCondition(Default_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
+        $subQuery->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
                 Core_Model_Filter::OPERATOR_LOWER_EQUAL);
-        $subQuery->addCondition(Default_Model_Simple::QUERY_NAME, 'Ctest1',
+        $subQuery->addCondition(Inventory_Model_Simple::QUERY_NAME, 'Ctest1',
                 Core_Model_Filter::OPERATOR_NOT_EQUAL);
         $query = new Core_Model_Query();
         $query->filter->condition = Core_Model_Filter::CONDITION_OR;
-        $query->filter->addCondition(Default_Model_Simple::QUERY_NAME, null,
+        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, null,
                 Core_Model_Filter::OPERATOR_NULL);
         $query->filter->addCondition('SubQuery', $subQuery,
                 Core_Model_Filter::OPERATOR_SUB_FILTER);
-        $query->order->addOrder(Default_Model_Simple::QUERY_ID,
+        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID,
                 Core_Model_Order::ORDER_DESC);
-        $simpleEntities = Default_Model_Simple::loadList($query);
+        $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
-        $this->assertEquals(4, Default_Model_Simple::countTotal($query));
+        $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
         $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
         $this->assertSame($simpleEntities[1], $this->_simpleEntities[4]);
         $this->assertSame($simpleEntities[2], $this->_simpleEntities[1]);
@@ -896,10 +896,10 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Default_Model_Simple en base, sinon suppression !
-        if (Default_Model_Simple::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Inventory_Model_Simple en base, sinon suppression !
+        if (Inventory_Model_Simple::countTotal() > 0) {
             echo PHP_EOL . 'Des SimpleEntity restantes ont été trouvé après les tests, suppression en cours !';
-            foreach (Default_Model_Simple::loadList() as $simpleEntity) {
+            foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');

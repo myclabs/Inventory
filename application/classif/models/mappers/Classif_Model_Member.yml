@@ -55,7 +55,7 @@ Classif_Model_Member:
         position: ASC
 
   uniqueConstraints:
-    refUniqueness:
+    memberRefUniquenessInAxis:
       columns:
         - ref
         - idAxis

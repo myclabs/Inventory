@@ -20,7 +20,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
     public function getelementsAction()
     {
         /** @var $family Techno_Model_Family */
-        $family = Techno_Model_Family::load($this->_getParam('idFamily'));
+        $family = Techno_Model_Family::load($this->getParam('idFamily'));
         $tags = $family->getTags();
 
         foreach ($tags as $tag) {
@@ -73,7 +73,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
             $tag->setValue($value);
             $tag->save();
             /** @var $family Techno_Model_Family */
-            $family = Techno_Model_Family::load($this->_getParam('idFamily'));
+            $family = Techno_Model_Family::load($this->getParam('idFamily'));
             $family->addTag($tag);
             $family->save();
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -91,7 +91,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
     public function updateelementAction()
     {
         /** @var $tag Techno_Model_Tag */
-        $tag = Techno_Model_Tag::load($this->_getParam('index'));
+        $tag = Techno_Model_Tag::load($this->getParam('index'));
 
         $newValue = $this->update['value'];
         switch($this->update['column']) {
@@ -120,9 +120,9 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
     public function deleteelementAction()
     {
         /** @var $family Techno_Model_Family */
-        $family = Techno_Model_Family::load($this->_getParam('idFamily'));
+        $family = Techno_Model_Family::load($this->getParam('idFamily'));
         /** @var $tag Techno_Model_Tag */
-        $tag = Techno_Model_Tag::load($this->_getParam('index'));
+        $tag = Techno_Model_Tag::load($this->getParam('index'));
         $family->removeTag($tag);
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();

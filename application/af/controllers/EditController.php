@@ -24,8 +24,8 @@ class AF_EditController extends Core_Controller_Ajax
      */
     public function menuAction()
     {
-        $this->view->af = AF_Model_AF::load($this->_getParam('id'));
-        $this->view->onglet = $this->_getParam('onglet');
+        $this->view->af = AF_Model_AF::load($this->getParam('id'));
+        $this->view->onglet = $this->getParam('onglet');
     }
 
     /**
@@ -35,7 +35,7 @@ class AF_EditController extends Core_Controller_Ajax
      */
     public function generalTabAction()
     {
-        $this->view->af = AF_Model_AF::load($this->_getParam('id'));
+        $this->view->af = AF_Model_AF::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -86,7 +86,7 @@ class AF_EditController extends Core_Controller_Ajax
      */
     public function structureAction()
     {
-        $this->view->af = AF_Model_AF::load($this->_getParam('id'));
+        $this->view->af = AF_Model_AF::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -97,7 +97,7 @@ class AF_EditController extends Core_Controller_Ajax
      */
     public function componentsAction()
     {
-        $this->view->af = AF_Model_AF::load($this->_getParam('id'));
+        $this->view->af = AF_Model_AF::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -108,7 +108,7 @@ class AF_EditController extends Core_Controller_Ajax
      */
     public function interactionsAction()
     {
-        $this->view->af = AF_Model_AF::load($this->_getParam('id'));
+        $this->view->af = AF_Model_AF::load($this->getParam('id'));
         // Composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(AF_Model_Component::QUERY_AF, $this->view->af);
@@ -127,7 +127,7 @@ class AF_EditController extends Core_Controller_Ajax
      */
     public function traitementAction()
     {
-        $this->view->af = AF_Model_AF::load($this->_getParam('id'));
+        $this->view->af = AF_Model_AF::load($this->getParam('id'));
         // Composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(AF_Model_Component_Field::QUERY_AF, $this->view->af);
@@ -173,7 +173,7 @@ class AF_EditController extends Core_Controller_Ajax
      */
     public function controlAction()
     {
-        $this->view->af = AF_Model_AF::load($this->_getParam('id'));
+        $this->view->af = AF_Model_AF::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -183,7 +183,7 @@ class AF_EditController extends Core_Controller_Ajax
      */
     public function controlResultsAction()
     {
-        $this->view->af = AF_Model_AF::load($this->_getParam('id'));
+        $this->view->af = AF_Model_AF::load($this->getParam('id'));
         /** @var $controlService AF_Service_Validator */
         $controlService = AF_Service_Validator::getInstance();
         $this->view->errors = $controlService->validateAF($this->view->af);

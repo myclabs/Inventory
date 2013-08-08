@@ -21,7 +21,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function treeEditAction()
     {
-        $this->_forward('tree', 'family', 'techno', array('mode' => 'edition'));
+        $this->forward('tree', 'family', 'techno', array('mode' => 'edition'));
     }
 
     /**
@@ -30,7 +30,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function treeAction()
     {
-        $mode = $this->_getParam('mode');
+        $mode = $this->getParam('mode');
         if (empty($mode)) {
             $mode = 'consultation';
         }
@@ -43,7 +43,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function listEditAction()
     {
-        $this->_forward('list', 'family', 'techno', array('mode' => 'edition'));
+        $this->forward('list', 'family', 'techno', array('mode' => 'edition'));
     }
 
     /**
@@ -52,7 +52,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function listAction()
     {
-        $mode = $this->_getParam('mode');
+        $mode = $this->getParam('mode');
         if (empty($mode)) {
             $mode = 'consultation';
         }
@@ -66,7 +66,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function detailsAction()
     {
-        $mode = $this->_getParam('mode');
+        $mode = $this->getParam('mode');
         if (empty($mode)) {
             $mode = 'consultation';
         }
@@ -76,7 +76,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
             $this->view->edit = true;
         }
         $this->view->mode = $mode;
-        $this->view->family = Techno_Model_Family::load($this->_getParam('id'));
+        $this->view->family = Techno_Model_Family::load($this->getParam('id'));
     }
 
     /**
@@ -85,7 +85,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function editAction()
     {
-        $this->_forward('details', 'family', 'techno', array('mode' => 'edition'));
+        $this->forward('details', 'family', 'techno', array('mode' => 'edition'));
     }
 
     /**
@@ -95,7 +95,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function detailsMainTabAction()
     {
-        $this->view->family = Techno_Model_Family::load($this->_getParam('id'));
+        $this->view->family = Techno_Model_Family::load($this->getParam('id'));
         $this->view->meanings = Techno_Model_Meaning::loadList();
         $this->view->keywords = Keyword_Model_Keyword::loadList();
         $this->_helper->layout()->disableLayout();
@@ -108,7 +108,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function detailsElementsTabAction()
     {
-        $mode = $this->_getParam('mode');
+        $mode = $this->getParam('mode');
         if (empty($mode)) {
             $mode = 'consultation';
         }
@@ -118,7 +118,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
             $this->view->edit = true;
         }
         $this->view->mode = $mode;
-        $this->view->family = Techno_Model_Family::load($this->_getParam('id'));
+        $this->view->family = Techno_Model_Family::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -129,7 +129,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function detailsDocumentationTabAction()
     {
-        $mode = $this->_getParam('mode');
+        $mode = $this->getParam('mode');
         if (empty($mode)) {
             $mode = 'consultation';
         }
@@ -138,7 +138,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
         } else {
             $this->view->edit = true;
         }
-        $this->view->family = Techno_Model_Family::load($this->_getParam('id'));
+        $this->view->family = Techno_Model_Family::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -149,7 +149,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
     public function submitDocumentationAction()
     {
         /** @var $family Techno_Model_Family */
-        $family = Techno_Model_Family::load($this->_getParam('id'));
+        $family = Techno_Model_Family::load($this->getParam('id'));
         $formData = $this->getFormData('documentationForm');
         $family->setDocumentation($formData->getValue('documentation'));
         $family->save();
@@ -166,7 +166,7 @@ class Techno_FamilyController extends Core_Controller_Ajax
      */
     public function deleteAction()
     {
-        $idFamily = $this->_getParam('id');
+        $idFamily = $this->getParam('id');
         /** @var $family Techno_Model_Family */
         $family = Techno_Model_Family::load($idFamily);
         if ($family->hasChosenElements()) {

@@ -67,7 +67,13 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
         $component = AF_Model_Component::load($this->update['index']);
         $component->setTranslationLocale(Core_Locale::load($this->update['column']));
         $component->setHelp($this->update['value']);
-        $this->data = $component->getHelp();
+        $brutText = Core_Tools::removeTextileMarkUp($component->getHelp());
+        $this->data = $this->cellLongText(
+            'af/datagrid_translate_components_help/view/id/'.$component->getId().'/locale/'.$this->update['column'],
+            'af/datagrid_translate_components_help/edit/id/'.$component->getId().'/locale/'.$this->update['column'],
+            substr($brutText, 0, 50).((strlen($brutText) > 50) ? __('UI', 'translate', '…') : ''),
+            'zoom-in'
+        );
 
         $this->send(true);
     }
@@ -81,7 +87,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $component = AF_Model_Component::load($this->_getParam('id'));
+        $component = AF_Model_Component::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $component->reloadWithLocale($locale);
 
@@ -97,7 +103,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     {
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $component = AF_Model_Component::load($this->_getParam('id'));
+        $component = AF_Model_Component::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $component->reloadWithLocale($locale);
 

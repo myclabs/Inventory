@@ -21,13 +21,13 @@ class Simulation_Datagrid_ReportController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        $this->request->filter->addCondition(DW_Model_Report::QUERY_CUBE, $this->_getParam('idCube'));
+        $this->request->filter->addCondition(DW_Model_Report::QUERY_CUBE, $this->getParam('idCube'));
         $this->request->order->addOrder(DW_Model_Report::QUERY_LABEL);
         foreach (DW_Model_Report::loadList($this->request) as $report) {
             $data = array();
             $data['index'] = $report->getKey()['id'];
             $data['label'] = $report->getLabel();
-            $urlDetails = 'simulation/set/report?idSet='.$this->_getParam('idSet').'&idReport='.$data['index'];
+            $urlDetails = 'simulation/set/report?idSet='.$this->getParam('idSet').'&idReport='.$data['index'];
             $data['details'] = $this->cellLink($urlDetails, __('UI', 'name', 'details'), 'share-alt');
             $this->addline($data);
         }
@@ -41,7 +41,7 @@ class Simulation_Datagrid_ReportController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        DW_Model_Report::load(array('id' => $this->delete))->delete();
+        DW_Model_Report::load($this->delete)->delete();
         $this->message = __('UI', 'messages', 'deleted');
         $this->send();
     }

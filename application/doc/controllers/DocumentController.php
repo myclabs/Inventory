@@ -21,7 +21,7 @@ class Doc_DocumentController extends Core_Controller_Ajax
     public function downloadAction()
     {
         /** @var $document Doc_Model_Document */
-        $document = Doc_Model_Document::load($this->_getParam('id'));
+        $document = Doc_Model_Document::load($this->getParam('id'));
 
         Doc_FileAdapter::downloadDocument($document);
     }
@@ -33,7 +33,7 @@ class Doc_DocumentController extends Core_Controller_Ajax
      */
     public function popupDescriptionAction()
     {
-        $this->view->document = Doc_Model_Document::load($this->_getParam('id'));
+        $this->view->document = Doc_Model_Document::load($this->getParam('id'));
         $this->_helper->layout()->disableLayout();
     }
 

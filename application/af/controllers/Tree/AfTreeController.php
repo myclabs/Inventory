@@ -74,7 +74,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
 
         // Détermine le parent
         $sameParent = false;
-        $idParent = $this->_getParam('idParent');
+        $idParent = $this->getParam('idParent');
         if ($idParent == "root") {
             $parentNode = null;
         } elseif ($idParent) {

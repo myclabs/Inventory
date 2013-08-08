@@ -1,0 +1,93 @@
+<?php
+/**
+ * Vue générale d'un organization
+ * @author valentin.claras
+ * @package Orga
+ */
+$tabView = new UI_Tab_View('orga');
+
+if ($this->isGlobal) {
+    $organizationTab = new UI_Tab('organization');
+    $organizationTab->label = __('UI', 'name', 'configuration');
+    $organizationTab->dataSource = 'orga/organization/details/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
+    $organizationTab->useCache = false;
+    $tabView->addTab($organizationTab);
+
+    $axisTab = new UI_Tab('axes');
+    $axisTab->label = __('UI', 'name', 'axes');
+    $axisTab->dataSource = 'orga/axis/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
+    $axisTab->useCache = true;
+    $tabView->addTab($axisTab);
+
+    $granularityTab = new UI_Tab('granularities');
+    $granularityTab->label = __('Orga', 'granularity', 'granularities');
+    $granularityTab->dataSource = 'orga/granularity/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
+    $granularityTab->useCache = false;
+    $tabView->addTab($granularityTab);
+}
+
+$membersTab = new UI_Tab('members');
+$membersTab->label = __('UI', 'name', 'members');
+$membersTab->dataSource = 'orga/member/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
+$membersTab->useCache = false;
+$tabView->addTab($membersTab);
+
+if ($this->hasChildCells) {
+    $childCellsTab = new UI_Tab('childCells');
+    $childCellsTab->label = __('Orga', 'cell', 'subCells');
+    $childCellsTab->dataSource = 'orga/cell/child/idCell/'.$this->idCell.'/display/render';
+    $childCellsTab->useCache = false;
+    $tabView->addTab($childCellsTab);
+
+    $relevanceTab = new UI_Tab('relevant');
+    $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');
+    $relevanceTab->dataSource = 'orga/cell/relevant/idCell/'.$this->idCell.'/display/render';
+    $relevanceTab->useCache = false;
+    $tabView->addTab($relevanceTab);
+}
+
+if ($this->isGlobal) {
+    $consistencyTab = new UI_Tab('consistency');
+    $consistencyTab->label = __('UI', 'name', 'control');
+    $consistencyTab->dataSource = 'orga/organization/consistency/idOrganization/'.$this->idOrganization.'/display/render';
+    $consistencyTab->useCache = true;
+    $tabView->addTab($consistencyTab);
+}
+
+if ((!$this->isGlobal) && (in_array($this->tab, array('organization', 'axes', 'granularities', 'consistency')))) {
+    $this->tab = 'members';
+}
+if ((!$this->hasChildCells) && (in_array($this->tab, array('childCells', 'relevant')))) {
+    $this->tab = 'members';
+}
+switch ($this->tab) {
+    case 'organization':
+        $organizationTab->active = true;
+        break;
+    case 'axes':
+        $axisTab->active = true;
+        break;
+    case 'granularities':
+        $granularityTab->active = true;
+        break;
+    case 'consistency':
+        $consistencyTab->active = true;
+        break;
+    case 'childCells':
+        $childCellsTab->active = true;
+        break;
+    case 'relevant':
+        $relevanceTab->active = true;
+        break;
+    case 'members':
+    default:
+        $membersTab->active = true;
+        break;
+}
+
+if ($this->display === false) {
+    echo $tabView->render();
+} else {
+    $tabView->display();
+}
+

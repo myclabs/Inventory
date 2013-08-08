@@ -60,19 +60,19 @@ class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $this->entityManager = $entityManagers['default'];
-        $this->_orderedEntityRepository = $this->entityManager->getRepository('Default_Model_Ordered');
+        $this->_orderedEntityRepository = $this->entityManager->getRepository('Inventory_Model_Ordered');
     }
 
     /**
      * Test de la création d'une entité.
-     * @return Default_Model_Ordered
+     * @return Inventory_Model_Ordered
      */
     public function testCreateEntity()
     {
-        $orderedEntity = new Default_Model_Ordered();
+        $orderedEntity = new Inventory_Model_Ordered();
         $orderedEntity->save();
 
-        $this->assertInstanceOf('Default_Model_Ordered', $orderedEntity);
+        $this->assertInstanceOf('Inventory_Model_Ordered', $orderedEntity);
         // Vérification que la orderedEntity est gérée par l'EntityManager.
         //  Tant qu'aucun flush n'est fait, l'id reste nulle.
         $this->assertTrue($this->entityManager->contains($orderedEntity));
@@ -91,17 +91,17 @@ class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
     /**
      * Test du chargement des entités.
      * @depends testCreateEntity
-     * @param Default_Model_Ordered $orderedEntity
-     * @return Default_Model_Ordered
+     * @param Inventory_Model_Ordered $orderedEntity
+     * @return Inventory_Model_Ordered
      */
-    public function testLoadEntity(Default_Model_Ordered $orderedEntity)
+    public function testLoadEntity(Inventory_Model_Ordered $orderedEntity)
     {
         // Suppression de la orderedEntity de l'entityManager pour garantir un chargement complet.
         $this->assertTrue($this->entityManager->contains($orderedEntity));
         $this->entityManager->clear();
         $this->assertFalse($this->entityManager->contains($orderedEntity));
         // Chargement d'une nouvelle instance de la orderedEntity.
-        $loadedFromBaseOrderedEntity = Default_Model_Ordered::load($orderedEntity->getKey());
+        $loadedFromBaseOrderedEntity = Inventory_Model_Ordered::load($orderedEntity->getKey());
         // Vérification que l'ancienne orderedEntity à bien été mise de côté au profit de la nouvelle.
         $this->assertFalse($this->entityManager->contains($orderedEntity));
         $this->assertTrue($this->entityManager->contains($loadedFromBaseOrderedEntity));
@@ -109,7 +109,7 @@ class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
         $this->assertNotSame($loadedFromBaseOrderedEntity, $orderedEntity);
         $this->assertEquals($loadedFromBaseOrderedEntity->getPosition(), 1);
         // Chargement de la même instance de la orderedEntity.
-        $loadedFromEntityManagerOrderedEntity = Default_Model_Ordered::load($orderedEntity->getKey());
+        $loadedFromEntityManagerOrderedEntity = Inventory_Model_Ordered::load($orderedEntity->getKey());
         // Vérification qu'un nouveau chargement utilise la orderedEntity gérée par l'EntityManager.
         $this->assertEquals($loadedFromEntityManagerOrderedEntity, $orderedEntity);
         $this->assertEquals($loadedFromEntityManagerOrderedEntity, $loadedFromBaseOrderedEntity);
@@ -122,9 +122,9 @@ class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
     /**
      * Test de la suppression des entités.
      * @depends testLoadEntity
-     * @param Default_Model_Ordered $orderedEntity
+     * @param Inventory_Model_Ordered $orderedEntity
      */
-    public function testDeleteEntity(Default_Model_Ordered $orderedEntity)
+    public function testDeleteEntity(Inventory_Model_Ordered $orderedEntity)
     {
         $orderedEntity->delete();
         // Vérification que l'entity existe toujours bien.
@@ -152,10 +152,10 @@ class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Default_Model_Ordered en base, sinon suppression !
-        if (Default_Model_Ordered::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Inventory_Model_Ordered en base, sinon suppression !
+        if (Inventory_Model_Ordered::countTotal() > 0) {
             echo PHP_EOL . 'Des OrderedEntity restantes ont été trouvé après les tests, suppression en cours !';
-            foreach (Default_Model_Ordered::loadList() as $orderedEntity) {
+            foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -186,10 +186,10 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Default_Model_Entity en base, sinon suppression !
-        if (Default_Model_Ordered::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
+        if (Inventory_Model_Ordered::countTotal() > 0) {
             echo PHP_EOL . 'Des OrderedEntity restantes ont été trouvé avant les tests, suppression en cours !';
-            foreach (Default_Model_Ordered::loadList() as $orderedEntity) {
+            foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -211,39 +211,39 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public function testGetLastPosition()
     {
-        $this->assertEquals(Default_Model_Ordered::getLastPosition(), 0);
-        $this->assertEquals(Default_Model_Ordered::getLastPosition('context'), 0);
-        $orderedEntity1 = new Default_Model_Ordered();
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition(), 0);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition('context'), 0);
+        $orderedEntity1 = new Inventory_Model_Ordered();
         $orderedEntity1->save();
-        $this->assertEquals(Default_Model_Ordered::getLastPosition(), 1);
-        $this->assertEquals(Default_Model_Ordered::getLastPosition('context'), 0);
-        $orderedEntity2 = new Default_Model_Ordered();
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition(), 1);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition('context'), 0);
+        $orderedEntity2 = new Inventory_Model_Ordered();
         $orderedEntity2->save();
-        $this->assertEquals(Default_Model_Ordered::getLastPosition(), 2);
-        $this->assertEquals(Default_Model_Ordered::getLastPosition('context'), 0);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition(), 2);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition('context'), 0);
 
-        $orderedContextedEntity1 = new Default_Model_Ordered();
+        $orderedContextedEntity1 = new Inventory_Model_Ordered();
         $orderedContextedEntity1->setContext('context');
         $orderedContextedEntity1->save();
-        $orderedContextedEntity2 = new Default_Model_Ordered();
+        $orderedContextedEntity2 = new Inventory_Model_Ordered();
         $orderedContextedEntity2->setContext('context');
         $orderedContextedEntity2->save();
-        $this->assertEquals(Default_Model_Ordered::getLastPosition(), 2);
-        $this->assertEquals(Default_Model_Ordered::getLastPosition('context'), 2);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition(), 2);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition('context'), 2);
 
         $orderedEntity2->delete();
-        $this->assertEquals(Default_Model_Ordered::getLastPosition(), 1);
-        $this->assertEquals(Default_Model_Ordered::getLastPosition('context'), 2);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition(), 1);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition('context'), 2);
         $orderedEntity1->delete();
-        $this->assertEquals(Default_Model_Ordered::getLastPosition(), 0);
-        $this->assertEquals(Default_Model_Ordered::getLastPosition('context'), 2);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition(), 0);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition('context'), 2);
 
         $orderedContextedEntity1->delete();
-        $this->assertEquals(Default_Model_Ordered::getLastPosition(), 0);
-        $this->assertEquals(Default_Model_Ordered::getLastPosition('context'), 1);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition(), 0);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition('context'), 1);
         $orderedContextedEntity2->delete();
-        $this->assertEquals(Default_Model_Ordered::getLastPosition(), 0);
-        $this->assertEquals(Default_Model_Ordered::getLastPosition('context'), 0);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition(), 0);
+        $this->assertEquals(Inventory_Model_Ordered::getLastPosition('context'), 0);
     }
 
     /**
@@ -251,11 +251,11 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public function testGoUp()
     {
-        $orderedEntity1 = new Default_Model_Ordered();
+        $orderedEntity1 = new Inventory_Model_Ordered();
         $orderedEntity1->save();
-        $orderedEntity2 = new Default_Model_Ordered();
+        $orderedEntity2 = new Inventory_Model_Ordered();
         $orderedEntity2->save();
-        $orderedEntity3 = new Default_Model_Ordered();
+        $orderedEntity3 = new Inventory_Model_Ordered();
         $orderedEntity3->save();
         $this->assertEquals($orderedEntity1->getPosition(), 1);
         $this->assertEquals($orderedEntity2->getPosition(), 2);
@@ -282,11 +282,11 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public function testGoDown()
     {
-        $orderedEntity1 = new Default_Model_Ordered();
+        $orderedEntity1 = new Inventory_Model_Ordered();
         $orderedEntity1->save();
-        $orderedEntity2 = new Default_Model_Ordered();
+        $orderedEntity2 = new Inventory_Model_Ordered();
         $orderedEntity2->save();
-        $orderedEntity3 = new Default_Model_Ordered();
+        $orderedEntity3 = new Inventory_Model_Ordered();
         $orderedEntity3->save();
         $this->assertEquals($orderedEntity1->getPosition(), 1);
         $this->assertEquals($orderedEntity2->getPosition(), 2);
@@ -313,24 +313,24 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public function testSetPosition()
     {
-        $orderedEntity1 = new Default_Model_Ordered();
+        $orderedEntity1 = new Inventory_Model_Ordered();
         $orderedEntity1->save();
-        $orderedEntity2 = new Default_Model_Ordered();
+        $orderedEntity2 = new Inventory_Model_Ordered();
         $orderedEntity2->save();
-        $orderedEntity3 = new Default_Model_Ordered();
+        $orderedEntity3 = new Inventory_Model_Ordered();
         $orderedEntity3->save();
-        $orderedEntity4 = new Default_Model_Ordered();
+        $orderedEntity4 = new Inventory_Model_Ordered();
         $orderedEntity4->save();
-        $orderedEntity5 = new Default_Model_Ordered();
+        $orderedEntity5 = new Inventory_Model_Ordered();
         $orderedEntity5->save();
 
-        $orderedContextedEntity1 = new Default_Model_Ordered();
+        $orderedContextedEntity1 = new Inventory_Model_Ordered();
         $orderedContextedEntity1->setContext('context');
         $orderedContextedEntity1->save();
-        $orderedContextedEntity2 = new Default_Model_Ordered();
+        $orderedContextedEntity2 = new Inventory_Model_Ordered();
         $orderedContextedEntity2->setContext('context');
         $orderedContextedEntity2->save();
-        $orderedContextedEntity3 = new Default_Model_Ordered();
+        $orderedContextedEntity3 = new Inventory_Model_Ordered();
         $orderedContextedEntity3->setContext('context');
         $orderedContextedEntity3->save();
 
@@ -398,24 +398,24 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public function testMoveAfter()
     {
-        $orderedEntity1 = new Default_Model_Ordered();
+        $orderedEntity1 = new Inventory_Model_Ordered();
         $orderedEntity1->save();
-        $orderedEntity2 = new Default_Model_Ordered();
+        $orderedEntity2 = new Inventory_Model_Ordered();
         $orderedEntity2->save();
-        $orderedEntity3 = new Default_Model_Ordered();
+        $orderedEntity3 = new Inventory_Model_Ordered();
         $orderedEntity3->save();
-        $orderedEntity4 = new Default_Model_Ordered();
+        $orderedEntity4 = new Inventory_Model_Ordered();
         $orderedEntity4->save();
-        $orderedEntity5 = new Default_Model_Ordered();
+        $orderedEntity5 = new Inventory_Model_Ordered();
         $orderedEntity5->save();
 
-        $orderedContextedEntity1 = new Default_Model_Ordered();
+        $orderedContextedEntity1 = new Inventory_Model_Ordered();
         $orderedContextedEntity1->setContext('context');
         $orderedContextedEntity1->save();
-        $orderedContextedEntity2 = new Default_Model_Ordered();
+        $orderedContextedEntity2 = new Inventory_Model_Ordered();
         $orderedContextedEntity2->setContext('context');
         $orderedContextedEntity2->save();
-        $orderedContextedEntity3 = new Default_Model_Ordered();
+        $orderedContextedEntity3 = new Inventory_Model_Ordered();
         $orderedContextedEntity3->setContext('context');
         $orderedContextedEntity3->save();
 
@@ -484,10 +484,10 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public function testMoveAfterDifferentContexts()
     {
-        $orderedEntity1 = new Default_Model_Ordered();
+        $orderedEntity1 = new Inventory_Model_Ordered();
         $orderedEntity1->setContext('context1');
         $orderedEntity1->save();
-        $orderedEntity2 = new Default_Model_Ordered();
+        $orderedEntity2 = new Inventory_Model_Ordered();
         $orderedEntity2->setContext('context2');
         $orderedEntity2->save();
 
@@ -499,24 +499,24 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public function testLoadByPosition()
     {
-        $orderedEntity1 = new Default_Model_Ordered();
+        $orderedEntity1 = new Inventory_Model_Ordered();
         $orderedEntity1->save();
-        $orderedEntity2 = new Default_Model_Ordered();
+        $orderedEntity2 = new Inventory_Model_Ordered();
         $orderedEntity2->save();
-        $orderedEntity3 = new Default_Model_Ordered();
+        $orderedEntity3 = new Inventory_Model_Ordered();
         $orderedEntity3->save();
-        $orderedContextedEntity1 = new Default_Model_Ordered();
+        $orderedContextedEntity1 = new Inventory_Model_Ordered();
         $orderedContextedEntity1->setContext('context');
         $orderedContextedEntity1->save();
-        $orderedContextedEntity2 = new Default_Model_Ordered();
+        $orderedContextedEntity2 = new Inventory_Model_Ordered();
         $orderedContextedEntity2->setContext('context');
         $orderedContextedEntity2->save();
         $this->entityManager->flush();
 
-        $loadedOrderedEntity2 = Default_Model_Ordered::loadByPosition(2);
+        $loadedOrderedEntity2 = Inventory_Model_Ordered::loadByPosition(2);
         $this->assertSame($loadedOrderedEntity2, $orderedEntity2);
 
-        $loadedOrderedContextedEntity2 = Default_Model_Ordered::loadByPosition(2, 'context');
+        $loadedOrderedContextedEntity2 = Inventory_Model_Ordered::loadByPosition(2, 'context');
         $this->assertSame($loadedOrderedEntity2, $orderedEntity2);
 
         $orderedEntity1->delete();
@@ -539,10 +539,10 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Default_Model_Entity en base, sinon suppression !
-        if (Default_Model_Ordered::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
+        if (Inventory_Model_Ordered::countTotal() > 0) {
             echo PHP_EOL . 'Des OrderedEntity restantes ont été trouvé après les tests, suppression en cours !';
-            foreach (Default_Model_Ordered::loadList() as $orderedEntity) {
+            foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');

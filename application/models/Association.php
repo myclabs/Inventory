@@ -10,7 +10,7 @@
  * @package Core
  * @subpackage Test
  */
-class Default_Model_Association extends Core_Model_Entity
+class Inventory_Model_Association extends Core_Model_Entity
 {
     // Constantes de tri et filtres.
     const QUERY_ID = 'id';
@@ -43,13 +43,13 @@ class Default_Model_Association extends Core_Model_Entity
     }
 
     /**
-     * Renvoie une liste de Default_Model_Association en fonction du nombre minimal de Simple associés.
+     * Renvoie une liste de Inventory_Model_Association en fonction du nombre minimal de Simple associés.
      *
      * @param Core_Model_Query $queryParameters
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return Default_Model_Association
+     * @return Inventory_Model_Association
      */
     public static function loadWithMoreThanXSimple(Core_Model_Query $queryParameters)
     {
@@ -61,7 +61,7 @@ class Default_Model_Association extends Core_Model_Entity
     }
 
     /**
-     * Renvoie une liste de Default_Model_Association en fonction du nombre minimal de Simple associés.
+     * Renvoie une liste de Inventory_Model_Association en fonction du nombre minimal de Simple associés.
      *
      * @param Core_Model_Query $queryParameters
      *
@@ -96,18 +96,18 @@ class Default_Model_Association extends Core_Model_Entity
 
     /**
      * Ajoute un Simple à la collection.
-     * @param Default_Model_Simple $simple
+     * @param Inventory_Model_Simple $simple
      */
-    public function addSimple(Default_Model_Simple $simple)
+    public function addSimple(Inventory_Model_Simple $simple)
     {
         $this->simples->add($simple);
     }
 
     /**
      * Retire un Simple de la collection.
-     * @param Default_Model_Simple $simple
+     * @param Inventory_Model_Simple $simple
      */
-    public function removeSimple(Default_Model_Simple $simple)
+    public function removeSimple(Inventory_Model_Simple $simple)
     {
         if ($this->hasSimple($simple)) {
             $this->simples->removeElement($simple);
@@ -116,17 +116,17 @@ class Default_Model_Association extends Core_Model_Entity
 
     /**
      * Vérifie si le Simple est contenu dans la collection.
-     * @param Default_Model_Simple $simple
+     * @param Inventory_Model_Simple $simple
      * @return boolean
      */
-    public function hasSimple(Default_Model_Simple $simple)
+    public function hasSimple(Inventory_Model_Simple $simple)
     {
         return $this->simples->contains($simple);
     }
 
     /**
      * Renvoi l'ensemble des Simple de la collection.
-     * @return Default_Model_Simple[]
+     * @return Inventory_Model_Simple[]
      */
     public function getSimples()
     {

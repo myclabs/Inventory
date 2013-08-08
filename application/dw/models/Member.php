@@ -7,6 +7,9 @@
  * @subpackage Model
  */
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Definit un membre d'un axe.
  * @package    DW
@@ -54,33 +57,39 @@ class DW_Model_Member extends Core_Model_Entity
     /**
      * Collection des Member parents du Member courant.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection|DW_Model_Member[]
      */
     protected $directParents = null;
 
     /**
      * Collection des Member enfants du Member courant.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection|DW_Model_Member[]
      */
     protected $directChildren = null;
 
     /**
      * Collection des Result utilisant ce Member.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection|DW_Model_Result[]
      */
     private $results = null;
 
 
     /**
      * Constructeur de la classe Member.
+     *
+     * @param DW_Model_Axis $axis
      */
-    public function __construct()
+    public function __construct(DW_Model_Axis $axis)
     {
-        $this->directParents = new Doctrine\Common\Collections\ArrayCollection();
-        $this->directChildren = new Doctrine\Common\Collections\ArrayCollection();
-        $this->results = new Doctrine\Common\Collections\ArrayCollection();
+        $this->directParents = new ArrayCollection();
+        $this->directChildren = new ArrayCollection();
+        $this->results = new ArrayCollection();
+
+        $this->axis = $axis;
+        $this->setPosition();
+        $axis->addMember($this);
     }
 
     /**
@@ -91,19 +100,6 @@ class DW_Model_Member extends Core_Model_Entity
     protected function getContext()
     {
         return array('axis' => $this->axis);
-    }
-
-    /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
-     */
-    public function preSave()
-    {
-        try {
-            $this->checkHasPosition();
-            $this->checkRefUniqueness();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->setPosition();
-        }
     }
 
     /**
@@ -131,24 +127,26 @@ class DW_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Vérifie que la ref est unique.
-     *
-     * @throw Core_Exception_TooMany
-     */
-    protected function checkRefUniqueness()
-    {
-        // Vérifier que la ref est unique.
-    }
-
-    /**
      * Charge l'objet en fonction de sa ref et son Axis.
      *
      * @param string $ref
      * @param DW_Model_Axis $axis
+     *
+     * @return DW_Model_Member
      */
-    public static function loadByRefAndAxis($ref, $axis)
+    public static function loadByRefAndAxis($ref, DW_Model_Axis $axis)
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref, 'axis' => $axis));
+        return $axis->getMemberByRef($ref);
+    }
+
+    /**
+     * Renvoie l'id du Member.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -192,35 +190,12 @@ class DW_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Définit l'Axis du Member.
-     *
-     * @param DW_Model_Axis $axis
-     */
-    public function setAxis(DW_Model_Axis $axis=null)
-    {
-        if ($this->axis !== $axis) {
-            if ($this->axis !== null) {
-                $this->axis->removeMember($this);
-            }
-            $this->deletePosition();
-            $this->axis = $axis;
-            $this->setPosition();
-            if ($axis !== null) {
-                $axis->addMember($this);
-            }
-        }
-    }
-
-    /**
      * Renvoie l'Axis du Member.
      *
      * @return DW_Model_Axis
      */
     public function getAxis()
     {
-        if ($this->axis === null) {
-            throw new Core_Exception_UndefinedAttribute('The Axis has not been defined yet.');
-        }
         return $this->axis;
     }
 
@@ -303,6 +278,8 @@ class DW_Model_Member extends Core_Model_Entity
      * Renvoie le Member parent pour l'Axis donné.
      *
      * @param DW_Model_Axis $axis
+     *
+     * @throws Core_Exception_InvalidArgument
      *
      * @return DW_Model_Member
      */

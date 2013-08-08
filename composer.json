@@ -1,47 +1,58 @@
 {
-	"autoload": {
-		"psr-0": {
-			"Core": "src/",
-			"UI": "src/",
-			"Unit": "src/",
-			"User": "src/",
-			"TEC": "src/",
-			"Calc": "src/",
-			"Exec": "src/",
-			"Export": "src/",
-			"Keyword": "src/",
-			"Doc": "src/",
-			"DW": "src/",
-			"Algo": "src/",
-			"AF": "src/",
-			"Orga": "src/",
-			"Inventory": "src/"
-		}
-	},
-	"require": {
-		"php": ">=5.4.0",
-		"zendframework/zendframework1": "1.12.*",
-		"doctrine/orm": "2.3.*",
-		"doctrine/annotations": "1.*",
-		"doctrine/common": "dev-ChainDriverFix as 2.3.0",
-		"gedmo/doctrine-extensions": "2.3.6",
-		"symfony/yaml": "2.*",
-		"pear/console_commandline": "dev-trunk",
-		"netcarver/textile": "3.5.*",
-		"mridgway/zendx_doctrine2": "dev-master",
-		"phpoffice/phpexcel": "1.7.*",
-		"dompdf/dompdf": "dev-master"
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"repositories": [
-		{
-			"type": "git",
-			"url": "git://github.com/myclabs/common.git"
-		},
-		{
-			"type": "git",
-			"url": "git://github.com/mridgway/ZendX_Doctrine2.git"
-		}
-	]
+    "autoload": {
+        "psr-0": {
+            "Core": "src/",
+            "UI": "src/",
+            "Unit": "src/",
+            "User": "src/",
+            "TEC": "src/",
+            "Calc": "src/",
+            "Exec": "src/",
+            "Export": "src/",
+            "Keyword": "src/",
+            "Doc": "src/",
+            "DW": "src/",
+            "Algo": "src/",
+            "AF": "src/",
+            "Orga": "src/",
+            "Inventory": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "zendframework/zendframework1": "1.12.*",
+        "doctrine/orm": "2.3.*",
+        "doctrine/annotations": "1.*",
+        "doctrine/common": "dev-ChainDriverFix as 2.3.0",
+        "gedmo/doctrine-extensions": "2.3.6",
+        "symfony/yaml": "2.*",
+        "pear/console_commandline": "dev-trunk",
+        "netcarver/textile": "3.5.*",
+        "mridgway/zendx_doctrine2": "dev-master",
+        "phpoffice/phpexcel": "1.7.*",
+        "dompdf/dompdf": "dev-master"
+    },
+    "require-dev": {
+        "behat/behat": "2.4.*",
+        "behat/mink": "1.5.*",
+        "behat/mink-extension": "*",
+        "behat/mink-selenium2-driver": "*",
+        "behat/mink-zombie-driver": "dev-RequestHeaders"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/common.git"
+        },
+        {
+            "type": "git",
+            "url": "git://github.com/mridgway/ZendX_Doctrine2.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/mnapoli/MinkZombieDriver.git"
+        }
+    ]
 }

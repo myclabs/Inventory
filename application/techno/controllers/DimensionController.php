@@ -21,7 +21,7 @@ class Techno_DimensionController extends Core_Controller_Ajax
      */
     public function detailsAction()
     {
-        $idDimension = $this->_getParam('id');
+        $idDimension = $this->getParam('id');
         $this->view->dimension = Techno_Model_Family_Dimension::load($idDimension);
         $this->view->family = $this->view->dimension->getFamily();
         $this->view->keywords = Keyword_Model_Keyword::loadList();

@@ -119,7 +119,7 @@ class User_Service_User extends Core_Singleton
         $url = 'http://' . $_SERVER["SERVER_NAME"] . Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
 
         $config = Zend_Registry::get('configuration');
-        if (empty($config->emails->contact->adress) || empty($config->emails->contact->name)) {
+        if (empty($config->emails->contact->adress)) {
             throw new Core_Exception("Le courriel de 'contact' n'a pas été défini");
         }
         $emailSubject = __('User',
@@ -182,7 +182,7 @@ class User_Service_User extends Core_Singleton
     protected function getEmailConclusion()
     {
         $config = Zend_Registry::get('configuration');
-        if ((empty($config->emails->contact->adress)) || (empty($config->emails->contact->name))) {
+        if (empty($config->emails->contact->adress)) {
             throw new Core_Exception('Le courriel de "contact" n\'a pas été défini !');
         }
         return __('User',
