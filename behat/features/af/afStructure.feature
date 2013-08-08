@@ -17,16 +17,16 @@ Feature: AF structure feature
   # L'attente qui suit semble, curieusement, nécessaire
     And I wait 5 seconds
     And I click "Confirmer"
+    And I wait 7 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un groupe, au début
-    When I wait 7 seconds
     And I click "Groupe contenant un sous-groupe"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Premier"
     And I click "Confirmer"
+    And I wait 7 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un groupe, après un autre composant ou group
-    When I wait 7 seconds
     And I click "Groupe contenant un champ"
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I check "Après"
@@ -55,6 +55,7 @@ Feature: AF structure feature
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I select "Racine" from "afTree_changeParent"
     And I click "Confirmer"
+    And I wait for 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
