@@ -24,8 +24,8 @@ Feature: Classification axis feature
   # Ajout d'un axe non à la racine
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
-    When I fill in "label" with "Axe plus grossier que \"Axe vide\""
-    And I fill in "ref" with "axe_plus_grossier_que_axe_vide"
+    When I fill in "label" with "Axe plus grossier"
+    And I fill in "ref" with "axe_plus_grossier"
     And I select "Axe vide" from "refParent"
     And I click "Valider"
     And I wait 5 seconds
