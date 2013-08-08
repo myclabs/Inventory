@@ -22,6 +22,7 @@ Feature: Organizational axis feature
     And I click "Valider"
     And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
+    And I should see "Test"
   # Ajout d'un axe non à la racine
     When I wait 5 seconds
     And I click "Ajouter"
@@ -32,7 +33,7 @@ Feature: Organizational axis feature
     And I click "Valider"
     And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
-  # Vérification que l'axe ajouté est bien parent de l'axe Gaz
+  # Vérification que l'axe ajouté est bien parent de l'axe "axe vide"
     When I click "Axe vide"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"

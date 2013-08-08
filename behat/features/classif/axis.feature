@@ -20,22 +20,23 @@ Feature: Classification axis feature
     And I click "Valider"
     And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
+    And I should see "Test"
   # Ajout d'un axe non à la racine
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
-    When I fill in "label" with "Axe plus grossier que gaz"
-    And I fill in "ref" with "axe_plus_grossier_que_gaz"
-    And I select "Gaz" from "refParent"
+    When I fill in "label" with "Axe plus grossier que \"Axe vide\""
+    And I fill in "ref" with "axe_plus_grossier_que_axe_vide"
+    And I select "Axe vide" from "refParent"
     And I click "Valider"
     And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
-  # Vérification que l'axe ajouté est bien parent de l'axe Gaz
-    When I click "Gaz"
+  # Vérification que l'axe ajouté est bien "plus grossier" que l'axe "Axe vide" (a l'axe vide comme parent)
+    When I click "Axe vide"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    And I wait 5 seconds
+    And I wait 7 seconds
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
 
   @javascript
@@ -57,14 +58,6 @@ Feature: Classification axis feature
     When I fill in "ref" with "gaz"
     And I click "Valider"
     Then the field "ref" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-
-
-
-
-
-
-
-
 
   @javascript
   Scenario: Edition of label and identifier of a classification axis
