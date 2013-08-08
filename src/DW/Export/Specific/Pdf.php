@@ -13,6 +13,11 @@
 class DW_Export_Specific_Pdf extends Export_Pdf
 {
     /**
+     * @var DW_Model_Report[]
+     */
+    private $reports = [];
+
+    /**
      * Constructeur de la classe.
      *
      * @param string $xmlPath
@@ -308,6 +313,8 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         }
 
         $this->html .= '</html>';
+
+        $this->clearReports();
     }
 
     /**
@@ -438,10 +445,20 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                     )
                 );
             }
-            $report->addFilter($filter);
         }
 
+        $this->reports[] = $report;
         return $report;
+    }
+
+    /**
+     * Supprime tous ler reports créés durant l'export.
+     */
+    protected function clearReports()
+    {
+        foreach ($this->reports as $report) {
+            $report->getCube()->removeReport($report);
+        }
     }
 
     /**
