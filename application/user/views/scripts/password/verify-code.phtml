@@ -1,0 +1,18 @@
+<div class="page-header">
+    <h1><?=__('User', '', 'Vérification du code')?></h1>
+</div>
+<p><?=__('User', 'resetPasswordCode', 'Entrez le code de vérification reçu par email.')?></p>
+
+<?php
+$form = new UI_Form('passwordResetCode');
+$form->setAction('user/password/reset');
+$form->setAjax(false);
+
+$code = new UI_Form_Element_Text('code');
+$code->setLabel(__('UI', 'name', 'Code de vérification'));
+$code->setRequired();
+$form->addElement($code);
+
+$form->addSubmitButton(__('UI', 'verb', 'validate'));
+
+$form->display();
