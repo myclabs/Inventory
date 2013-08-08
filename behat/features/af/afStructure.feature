@@ -40,14 +40,18 @@ Feature: AF structure feature
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Structure"
+    And I wait for 5 seconds
   # Modification du parent d'un groupe (depuis la racine)
     When I click "Groupe vide"
+    And I wait for 3 seconds
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I select "Groupe contenant un sous-groupe" from "afTree_changeParent"
     And I click "Confirmer"
+    And I wait for 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Modification du parent d'un groupe (vers la racine)
     When I click "Groupe vide"
+    And I wait for 5 seconds
     Then I should see the popup "Déplacement dans la structure du formulaire"
     When I select "Racine" from "afTree_changeParent"
     And I click "Confirmer"
