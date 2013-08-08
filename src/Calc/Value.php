@@ -32,7 +32,7 @@ class Calc_Value
     public function __construct($digitalValue = null, $relativeUncertainty = null)
     {
         $this->digitalValue = is_numeric($digitalValue) ? floatval($digitalValue) : null;
-        $this->relativeUncertainty = is_numeric($relativeUncertainty) ? floatval($relativeUncertainty) : null;
+        $this->relativeUncertainty = is_numeric($relativeUncertainty) ? intval($relativeUncertainty) : null;
     }
 
     /**

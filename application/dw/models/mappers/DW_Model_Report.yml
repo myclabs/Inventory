@@ -37,6 +37,10 @@ DW_Model_Report:
       column: withUncertainty
       type: boolean
       nullable: false
+    lastModificationTimestamp:
+      column: lastModificationTimestamp
+      type: integer
+      nullable: false
 
   manyToOne:
     cube:
@@ -93,5 +97,6 @@ DW_Model_Report:
 
   lifecycleCallbacks:
     prePersist: [ preSave ]
+    preUpdate: [ updateLastModification ]
     postUpdate: [ postUpdate ]
     preRemove: [ preDelete ]

@@ -65,7 +65,7 @@ Feature: AF non repeated subAF feature
   # Modification du libellé
     When I set "Sous-formulaire non répété modifié" for column "label" of row 1 of the "subAfNotRepeatedDatagrid" datagrid with a confirmation message
   # Modification de l'identifiant, saisie correcte
-    When I set "sous_formulaire_non_repete_modifie" for column "ref" of row 1 of the "subAfNotRepeatedDatagrid" datagrid with a confirmation message
+    When I set "s_f_n_r_modifie" for column "ref" of row 1 of the "subAfNotRepeatedDatagrid" datagrid with a confirmation message
   # Modification du formulaire associé
     When I set "Combustion de combustible, mesuré en unité de masse" for column "targetAF" of row 1 of the "subAfNotRepeatedDatagrid" datagrid with a confirmation message
   # Modification de l'aide
@@ -75,7 +75,7 @@ Feature: AF non repeated subAF feature
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "subAfNotRepeatedDatagrid" datagrid should contain:
       | label                              | ref                                | targetAF                                            | isVisible |
-      | Sous-formulaire non répété modifié | sous_formulaire_non_repete_modifie | Combustion de combustible, mesuré en unité de masse | Masqué    |
+      | Sous-formulaire non répété modifié | s_f_n_r_modifie | Combustion de combustible, mesuré en unité de masse | Masqué    |
     When I click "Aide" in the row 1 of the "subAfNotRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#subAfNotRepeatedDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element

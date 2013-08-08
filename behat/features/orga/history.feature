@@ -94,5 +94,5 @@ Feature: Input history feature
     Then I should see the "aFGranularity1Input2" datagrid
     When I click "Cliquer pour accéder" in the row 2 of the "aFGranularity1Input2" datagrid
   # Création de la saisie initiale
-    When I fill in "sous_formulaire_non_repete__chiffre_affaire" with "10"
+    When I fill in "s_f_n_r__chiffre_affaire" with "10"
     And I click "Enregistrer"

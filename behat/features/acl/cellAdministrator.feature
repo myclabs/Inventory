@@ -38,10 +38,10 @@ Feature: Cell administrator feature
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
-    And the "aFGranularity5Input8" datagrid should contain 2 row
 
   @javascript
   Scenario: Cell administrator organization tab
+    @skipped
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté
@@ -61,8 +61,7 @@ Feature: Cell administrator feature
     And I fill in "listMemberssite_ref_addForm" with "aaa"
     And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
-    And I wait 15 seconds
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
   # Modification d'un membre
     When I set "Annecy modifiée" for column "label" of row 1 of the "listMemberssite" datagrid with a confirmation message
     And I set "annecy_modifie" for column "ref" of row 1 of the "listMemberssite" datagrid with a confirmation message

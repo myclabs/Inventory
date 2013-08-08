@@ -10,7 +10,7 @@ Feature: Subforms input feature
     Given I am on "af/af/test/id/3"
     And I wait for the page to finish loading
   # Saisie
-    And I fill in "sous_formulaire_non_repete__chiffre_affaire" with "10"
+    And I fill in "s_f_n_r__chiffre_affaire" with "10"
   # On commence par ajouter une répétition, juste pour tester l'affichage des messages d'erreur et le taux de complétudi
     And I click "Ajouter"
     And I click "Enregistrer"
@@ -30,7 +30,7 @@ Feature: Subforms input feature
     Given I am on "af/af/test/id/3"
     And I wait for the page to finish loading
   # Saisie complète avec 1 répétition
-    And I fill in "sous_formulaire_non_repete__chiffre_affaire" with "10"
+    And I fill in "s_f_n_r__chiffre_affaire" with "10"
     And I click "Ajouter"
     And I select "Charbon" from "sous_formulaire_repete__nature_combustible__1"
     And I fill in "sous_formulaire_repete__quantite_combustible__1" with "10"
@@ -44,7 +44,7 @@ Feature: Subforms input feature
     Given I am on "af/af/test/id/3"
     And I wait for the page to finish loading
   # Saisie complète avec 2 répétitions
-    And I fill in "sous_formulaire_non_repete__chiffre_affaire" with "10"
+    And I fill in "s_f_n_r__chiffre_affaire" with "10"
     And I click "Ajouter"
     And I click "Ajouter"
     And I select "Charbon" from "sous_formulaire_repete__nature_combustible__1"

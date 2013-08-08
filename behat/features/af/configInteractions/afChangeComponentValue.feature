@@ -70,7 +70,7 @@ Feature: AF change component value interaction feature
     Given I am on "af/edit/menu/id/4/onglet/interaction"
     And I wait for the page to finish loading
     And I open collapse "Assignations de valeurs à des champs"
-  # Vérification contenu
+  # Vérification contenu
     Then the row 2 of the "actionsSetValue" datagrid should contain:
       | targetComponent                | value             |
       | Champ numérique cible setvalue | 1 234,56789 ± 5 % |
@@ -78,29 +78,27 @@ Feature: AF change component value interaction feature
     When I click "Éditer" in the row 2 of the "actionsSetValue" datagrid
     Then I should see the popup "Édition de la valeur ou de l'algorithme à assigner"
   # Vérification que la valeur affichée dans le popup est bien au format français
-    And the field "numericValue" should contain "1234,56789"
-    And the field "numericUncertainty" should contain "5,9"
+    And the "numericValue" field should contain "1234,56789"
+    And the "numericUncertainty" field should contain "5"
   # Modification de la valeur (incertitude vide)
     And I fill in "numericValue" with "12345,6789"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
-    Then the row 1 of the "actionsSetValue" datagrid should contain:
+    Then the row 2 of the "actionsSetValue" datagrid should contain:
       | value       |
       | 12 345,6789 |
-  # Édition pas en Ajax, donc on doit rouvrir le collapse
-    When I open collapse "Assignations de valeurs à des champs"
   # Modification de l'incertitude (valeur vide)
-    And I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
+    And I click "Éditer" in the row 2 of the "actionsSetValue" datagrid
     And I fill in "numericValue" with ""
-    And I fill in "numericUncertainty" with "15,9"
+    And I fill in "numericUncertainty" with "15"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
-    Then the row 1 of the "actionsSetValue" datagrid should contain:
-      | value       |
+    Then the row 2 of the "actionsSetValue" datagrid should contain:
+      | value  |
       | ± 15 % |
 
   @javascript
@@ -149,8 +147,8 @@ Feature: AF change component value interaction feature
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
     Then the row 3 of the "actionsSetValue" datagrid should contain:
-      | targetComponent                             | value   |
-      | Champ booléen cible d'une action "setValue" | Option 1 |
+      | targetComponent                                      | value   |
+      | Champ sélection simple cible d'une action "setValue" | Option 1 |
 
   @javascript
   Scenario: Edition of a change component value interaction scenario (change boolean value)

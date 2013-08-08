@@ -114,7 +114,7 @@ Feature: AF numeric parameter algo feature
     And I should see the "coordinatesAlgo" datagrid
     And the row 1 of the "coordinatesAlgo" datagrid should contain:
       | dimension | algo                                      |
-      | processus | expression_selection_coordonnee_parametre |
+      | processus | expression_sel_coord_param |
   # Modification membre coordonnée fixée
     When I set "gaz naturel" for column "member" of row 1 of the "coordinatesFixed" datagrid
   # On ferme le popup pour aller fermer le message en arrière-plan
@@ -171,7 +171,7 @@ Feature: AF numeric parameter algo feature
     Then the field "coordinatesAlgo_dimension_addForm" should have error: "Merci de renseigner ce champ."
     And the field "coordinatesAlgo_algo_addForm" should have error: "Merci de renseigner ce champ."
     When I select "combustible" from "coordinatesAlgo_dimension_addForm"
-    And I select "expression_selection_coordonnee_parametre" from "coordinatesAlgo_algo_addForm"
+    And I select "expression_sel_coord_param" from "coordinatesAlgo_algo_addForm"
     And I click "Valider"
   # On ferme le popup pour aller fermer le message en arrière-plan
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
@@ -180,7 +180,7 @@ Feature: AF numeric parameter algo feature
     Then the "coordinatesAlgo" datagrid should contain 1 row
     Then the row 1 of the "coordinatesAlgo" datagrid should contain:
       | dimension   | algo                                      |
-      | combustible | expression_selection_coordonnee_parametre |
+      | combustible | expression_sel_coord_param |
 
   @javascript
   Scenario: Influence of a change of family on coordinates of an algo numeric parameter scenario

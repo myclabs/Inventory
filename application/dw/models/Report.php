@@ -144,6 +144,13 @@ class DW_Model_Report extends Core_Model_Entity
      */
     protected $filters;
 
+    /**
+     * Timestamp de dernière modification du rapport.
+     *
+     * @var int
+     */
+    protected $lastModificationTimestamp = 1;
+
 
     /**
      * Constructeur de l'objet
@@ -154,10 +161,11 @@ class DW_Model_Report extends Core_Model_Entity
 
         $this->cube = $cube;
         $this->cube->addReport($this);
+        $this->updateLastModification();
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -165,7 +173,15 @@ class DW_Model_Report extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un update de l'objet (défini dans le mapper).
+     * Mets à jour le timestamp de dernière modification
+     */
+    public function updateLastModification()
+    {
+        $this->lastModificationTimestamp = time();
+    }
+
+    /**
+     * Fonction appelée après un update de l'objet (défini dans le mapper).
      */
     public function postUpdate()
     {
@@ -173,7 +189,7 @@ class DW_Model_Report extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -437,6 +453,7 @@ class DW_Model_Report extends Core_Model_Entity
     {
         if (!($this->hasFilter($filter))) {
             $this->filters->add($filter);
+            $this->updateLastModification();
         }
     }
 
@@ -461,6 +478,7 @@ class DW_Model_Report extends Core_Model_Entity
     {
         if ($this->hasFilter($filter)) {
             $this->filters->removeElement($filter);
+            $this->updateLastModification();
         }
     }
 

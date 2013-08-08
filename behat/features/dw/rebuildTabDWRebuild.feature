@@ -25,7 +25,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
   # Régénération
     When I open tab "Reconst. données"
     And I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
   # Vérification que la régénération a bien fonctionné
     When I reload the page
     And I wait for the page to finish loading
@@ -52,7 +52,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
   # Régénération
     When I open tab "Reconst. données"
     And I click "Relancer les calculs et régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes."
+    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
   # Vérification que la régénération a bien fonctionné
     When I am on "orga/cell/details/idCell/1/tab/analyses"
     And I wait for the page to finish loading
