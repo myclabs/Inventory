@@ -94,7 +94,7 @@ class User_PasswordController extends UI_Controller_Captcha
             try {
                 User_Model_User::loadByEmailKey($code);
                 $this->view->assign('code', $code);
-                $this->_helper->viewRenderer->renderBySpec('reset-password',
+                $this->_helper->viewRenderer->renderBySpec('reset',
                     ['module' => 'user', 'controller' => 'password']);
                 return;
             } catch (Core_Exception_NotFound $e) {
@@ -125,27 +125,29 @@ class User_PasswordController extends UI_Controller_Captcha
             return;
         }
 
-        $config = Zend_Registry::get('configuration');
-        if (empty($config->emails->contact->adress)) {
-            throw new Core_Exception_NotFound("Le courriel de 'contact' n'a pas été définie");
+        $formData = $this->getFormData('editPassword');
+        $password1 = $formData->getValue('password1');
+        $password2 = $formData->getValue('password2');
+
+        // Validation
+        if (empty($password1)) {
+            $this->addFormError('password1', __('UI', 'formValidation', 'emptyRequiredField'));
+        }
+        if (empty($password2)) {
+            $this->addFormError('password2', __('UI', 'formValidation', 'emptyRequiredField'));
+        }
+        if ($password1 && ($password1 != $password2)) {
+            $this->addFormError('password2', __('User', 'editPassword', 'passwordsAreNotIdentical'));
         }
 
-        $user->eraseEmailKey();
-        $password = $user->setRandomPassword();
-        $user->save();
-        $this->entityManager->flush();
+        if (! $this->hasFormError()) {
+            $user->setPassword($password1);
+            $user->eraseEmailKey();
+            $this->entityManager->flush();
+            UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
+        }
 
-        $subject = __('User', 'email', 'subjectNewPassword',
-                    array(
-                         'APPLICATION_NAME' => $config->emails->noreply->name
-                    ));
-        $content = __('User', 'email', 'bodyNewPassword',
-                      array(
-                           'PASSWORD'         => $password,
-                           'APPLICATION_NAME' => $config->emails->noreply->name,
-                           'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl() . '/',
-                      ));
-        $this->userService->sendEmail($user, $subject, $content);
+        $this->sendFormResponse();
     }
 
 }

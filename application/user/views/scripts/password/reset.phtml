@@ -5,8 +5,8 @@
 
 <?php
 $form = new UI_Form('editPassword');
-$form->setAction('user/password/reset-submit/');
-$form->setAjax(false);
+$form->setAction('user/password/reset-submit/code/' . $this->code);
+$form->setAjax(true, 'passwordUpdated');
 
 $password1 = new UI_Form_Element_Password('password1');
 $password1->setLabel(__('User', 'editPassword', 'newPassword'));
@@ -18,9 +18,12 @@ $password2->setLabel(__('User', 'editPassword', 'confirmNewPassword'));
 $password2->setRequired();
 $form->addElement($password2);
 
-$code = new UI_Form_Element_Hidden('code');
-$code->setValue($this->code);
-$form->addElement($code);
-
 $form->addSubmitButton();
 $form->display();
+?>
+
+<script>
+    $.fn.passwordUpdated = function () {
+        window.location.href = "<?=$this->baseUrl()?>";
+    };
+</script>
