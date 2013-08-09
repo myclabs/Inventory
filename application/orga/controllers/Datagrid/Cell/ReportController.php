@@ -61,7 +61,7 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         DW_Model_Report::load($this->delete)->delete();
-        $this->message = __('UI', 'messages', 'deleted');
+        $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
 
