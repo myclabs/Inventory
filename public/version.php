@@ -1,9 +1,8 @@
 <?php
 
-if (file_exists(__DIR__ . '/../application/configs/version')) {
-    $version = file_get_contents(__DIR__ . '/../application/configs/version');
-} else {
-    $version = 'unknown';
+$version = exec('git rev-parse --abbrev-ref HEAD');
+if ($version == 'HEAD') {
+    $version = exec('git describe --abbrev=0 --tags');
 }
 
 echo $version;
