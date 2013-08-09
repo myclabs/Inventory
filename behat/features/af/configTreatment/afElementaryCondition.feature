@@ -56,7 +56,7 @@ Feature: AF elementary condition for treatment feature
     And I open collapse "Conditions élémentaires"
     Then I should see the "algoConditionElementary" datagrid
     And the row 1 of the "algoConditionElementary" datagrid should contain:
-      | ref                   | input                                                                                 |
+      | ref     | input                                                                                 |
       | cond_el | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Traitement" |
   # Modification de l'identifiant, saisie correcte
     When I set "cond_el_modifiee" for column "ref" of row 1 of the "algoConditionElementary" datagrid with a confirmation message
@@ -64,15 +64,15 @@ Feature: AF elementary condition for treatment feature
     When I click "Éditer" in the row 1 of the "algoConditionElementary" datagrid
     Then I should see the popup "Édition d'une condition élémentaire"
     When I select "≠" from "relation"
-    And I select "option_1" from "Valeur de référence"
+    And I select "opt_1" from "Valeur de référence"
     And I click "Enregistrer"
   # TODO : édition en ajax…
   # Édition pas en ajax donc l'onglet est rechargé
     And I open collapse "Conditions"
     And I open collapse "Conditions élémentaires"
     Then the row 1 of the "algoConditionElementary" datagrid should contain:
-      | ref                            | relation | value    |
-      | cond_el_modifiee | ≠        | option_1 |
+      | ref              | relation | value    |
+      | cond_el_modifiee | ≠        | opt_1 |
 
   @javascript
   Scenario: Edition of an elementary condition for treatment scenario, incorrect input

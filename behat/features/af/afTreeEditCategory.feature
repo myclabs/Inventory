@@ -37,6 +37,7 @@ Feature: AF tree edit category feature
   # Modification du libellé, saisie correcte
     When I fill in "afTree_labelEdit" with "Catégorie vide modifiée"
     And I click "Confirmer"
+    And I wait 7 seconds
     Then the following message is shown and closed: "Modification effectuée."
     And I should see "Catégorie vide modifiée"
 
@@ -74,6 +75,7 @@ Feature: AF tree edit category feature
     And I click "Catégorie vide"
     And I check "Dernier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
