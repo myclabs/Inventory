@@ -1,11 +1,11 @@
 @dbFull
-Feature: Input mandatory field feature
+Feature: Input mandatory field display feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Input mandatory field scenario
+  Scenario: Input mandatory field display scenario
   # Accès interface de test
     Given I am on "af/af/test/id/5"
     And I wait for the page to finish loading
