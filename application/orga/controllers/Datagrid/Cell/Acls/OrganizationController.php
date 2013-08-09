@@ -24,9 +24,9 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
 
     /**
      * @Inject
-     * @var Orga_Service_ACLManager
+     * @var Core_Work_Dispatcher
      */
-    private $aclManager;
+    private $workDispatcher;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -79,67 +79,40 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         }
 
         if (empty($this->_addErrorMessages)) {
-            $this->entityManager->beginTransaction();
-
             if (User_Model_User::isEmailUsed($userEmail)) {
                 $user = User_Model_User::loadByEmail($userEmail);
                 if ($user->hasRole($organizationAdministratorRole)) {
                     $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
                 } else {
-                    set_time_limit(0);
-                    try {
-                        $this->entityManager->flush();
-
-                        $this->aclManager->addOrganizationAdministrator(
-                            $organization,
-                            $user
-                        );
-                        $this->entityManager->flush();
-
-                        $this->entityManager->commit();
-                    } catch (Exception $e) {
-                        $this->entityManager->rollback();
-                        $this->entityManager->clear();
-
-                        throw $e;
-                    }
-                    $this->userService->sendEmail(
-                        $user,
-                        __('User', 'email', 'subjectAccessRightsChange'),
-                        __('Orga', 'email', 'userOrganizationAdministratorRoleAdded', array(
-                            'ORGANIZATION' => $organization->getLabel(),
-                        ))
+                    $this->workDispatcher->runBackground(
+                        new Core_Work_ServiceCall_Task(
+                            'Orga_Service_ACLManager',
+                            'addOrganizationAdministrator',
+                            [$organization, $user]
+                        )
                     );
-                    $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
+                    $this->message = __('UI', 'message', 'addedLater');
                 }
             } else {
                 $user = $this->userService->inviteUser(
                     $userEmail,
-                    __('Orga', 'email', 'userOrganizationAdministratorRoleGivenAtCreation', array(
-                        'ORGANIZATION' => $organization->getLabel(),
-                        'ROLE' => __('Orga', 'role', $organizationAdministratorRole->getName())
-                    ))
+                    __('Orga', 'email', 'userOrganizationAdministratorRoleGivenAtCreation',
+                        [
+                            'ORGANIZATION' => $organization->getLabel(),
+                            'ROLE' => __('Orga', 'role', $organizationAdministratorRole->getName())
+                        ]
+                    )
                 );
                 $this->message = __('Orga', 'role', 'userCreatedFromRessource');
                 $user->addRole(User_Model_Role::loadByRef('user'));
 
-                set_time_limit(0);
-                try {
-                    $this->entityManager->flush();
-
-                    $this->aclManager->addOrganizationAdministrator(
-                        $organization,
-                        $user
-                    );
-                    $this->entityManager->flush();
-
-                    $this->entityManager->commit();
-                } catch (Exception $e) {
-                    $this->entityManager->rollback();
-                    $this->entityManager->clear();
-
-                    throw $e;
-                }
+                $this->workDispatcher->runBackground(
+                    new Core_Work_ServiceCall_Task(
+                        'Orga_Service_ACLManager',
+                        'addOrganizationAdministrator',
+                        [$organization, $user, false]
+                    )
+                );
             }
         }
 
@@ -164,34 +137,15 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $organization = Orga_Model_Organization::load($idOrganization);
         $user = User_Model_User::load($this->delete);
 
-        set_time_limit(0);
-        $this->entityManager->beginTransaction();
-        try {
-            $this->entityManager->flush();
-
-            $this->aclManager->removeOrganizationAdministrator(
-                $organization,
-                $user
-            );
-            $this->entityManager->flush();
-
-            $this->entityManager->commit();
-        } catch (Exception $e) {
-            $this->entityManager->rollback();
-            $this->entityManager->clear();
-
-            throw $e;
-        }
-
-        $this->userService->sendEmail(
-            $user,
-            __('User', 'email', 'subjectAccessRightsChange'),
-            __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', array(
-                'ORGANIZATION' => $organization->getLabel(),
-            ))
+        $this->workDispatcher->runBackground(
+            new Core_Work_ServiceCall_Task(
+                'Orga_Service_ACLManager',
+                'removeOrganizationAdministrator',
+                [$organization, $user]
+            )
         );
 
-        $this->message = __('Orga', 'role', 'userRoleRemovedFromUser');
+        $this->message = __('UI', 'message', 'deletedLater');
         $this->send();
     }
 

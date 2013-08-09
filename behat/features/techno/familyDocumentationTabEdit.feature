@@ -21,5 +21,6 @@ Feature: Family documentation tab edit feature
     Then I should see a "#container_documentation h1:contains('Test documentation')" element
   # Vérification que la documentation est bien réaffichée en édition
     Given I am on "techno/family/edit/id/3"
+    And I wait for the page to finish loading
     And I open tab "Documentation"
     Then the "documentation" field should contain "h1. Test documentation"

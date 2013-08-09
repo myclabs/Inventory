@@ -2,7 +2,7 @@
 /**
  * @package Techno
  */
-
+use Keyword\Domain\Keyword;
 
 /**
  * Remplissage de la base de données avec des données de test
@@ -154,12 +154,12 @@ class Techno_Populate extends Core_Script_Action
     {
         if (!isset($this->meanings[$refKeyword])) {
             $this->meanings[$refKeyword] = new Techno_Model_Meaning();
-            $this->meanings[$refKeyword]->setKeyword(Keyword_Model_Keyword::loadByRef($refKeyword));
+            $this->meanings[$refKeyword]->setKeyword(Keyword::loadByRef($refKeyword));
             $this->meanings[$refKeyword]->save();
         }
         $dimension = new Techno_Model_Family_Dimension($family, $this->meanings[$refKeyword], $orientation);
         foreach ($keywordMembers as $refKeyword) {
-            $member = new Techno_Model_Family_Member($dimension, Keyword_Model_Keyword::loadByRef($refKeyword));
+            $member = new Techno_Model_Family_Member($dimension, Keyword::loadByRef($refKeyword));
             $member->save();
             $dimension->addMember($member);
         }

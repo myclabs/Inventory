@@ -42,7 +42,6 @@ foreach ($fields as $table => $column) {
 
         if ($object === false) {
             continue;
-            echo 'Error while deserializing : ' . $row[$column] . PHP_EOL;
         }
 
         if ($object instanceof Calc_Value) {

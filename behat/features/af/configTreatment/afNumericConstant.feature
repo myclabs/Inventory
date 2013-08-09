@@ -23,6 +23,9 @@ Feature: AF numeric constant algo feature
     And I fill in "algoNumericConstant_uncertainty_addForm" with "10,9999"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
+    And the row 2 of the "algoNumericConstant" datagrid should contain:
+      | label | ref | unit                   | value       | uncertainty |
+      | AAA   | aaa | t équ. CO2/passager.km | 12 345,6789 | 10          |
   # Ajout avec libellé vide et incertitude  vide
     When I click "Ajouter"
     And I fill in "algoNumericConstant_ref_addForm" with "aab"
@@ -31,10 +34,10 @@ Feature: AF numeric constant algo feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification contenu (algos ordonnés suivant l'ordre de création ?)
-    And the row 2 of the "algoNumericConstant" datagrid should contain:
+    And the row 1 of the "algoNumericConstant" datagrid should contain:
       | label | ref | unit                   | value       | uncertainty |
       | AAA   | aaa | t équ. CO2/passager.km | 12 345,6789 | 10          |
-    And the row 3 of the "algoNumericConstant" datagrid should contain:
+    And the row 2 of the "algoNumericConstant" datagrid should contain:
       | label | ref | unit | value   | uncertainty |
       |       | aab | %    | 10,9999 | 0          |
 
@@ -75,7 +78,7 @@ Feature: AF numeric constant algo feature
     And I click "Valider"
     Then the field "algoNumericConstant_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé, unité valide, valeur valide, incertitude vide
-    When I fill in "algoNumericConstant_ref_addForm" with "champ_numerique"
+    When I fill in "algoNumericConstant_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "algoNumericConstant_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
     And I click "Annuler"
@@ -127,7 +130,7 @@ Feature: AF numeric constant algo feature
     When I set "bépo" for column "ref" of row 1 of the "algoNumericConstant" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "algoNumericConstant" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "algoNumericConstant" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'unité, saisie vide
     When I set "" for column "unit" of row 1 of the "algoNumericConstant" datagrid

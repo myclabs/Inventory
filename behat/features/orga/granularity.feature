@@ -59,7 +59,7 @@ Feature: Organization granularity feature
     And I select "Oui" in radio "Documents"
     And I click "Valider"
     And I wait 20 seconds
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     And the row 2 of the "granularity" datagrid should contain:
       | axes | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
       | Zone | Navigable  | Oui     | Oui | Oui   | Oui | Oui            | Oui            | Oui            |
@@ -137,12 +137,11 @@ Feature: Organization granularity feature
     Then the following message is shown and closed: "Suppression effectuée."
     And the "granularity" datagrid should contain 7 row
   # Suppression, granularité avec des rôles
-  # TODO : bloquer une telle suppression !
     And the row 3 of the "granularity" datagrid should contain:
       | axes  |
       | Site |
     When I click "Supprimer" in the row 3 of the "granularity" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
-    And the "granularity" datagrid should contain 6 row
+    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
+    And the "granularity" datagrid should contain 7 row

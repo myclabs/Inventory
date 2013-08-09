@@ -102,6 +102,7 @@ class DW_Model_Filter extends Core_Model_Entity
     {
         if (!($this->hasMember($member))) {
             $this->members->add($member);
+            $this->getReport()->updateLastModification();
         }
     }
 
@@ -126,6 +127,7 @@ class DW_Model_Filter extends Core_Model_Entity
     {
         if ($this->hasMember($member)) {
             $this->members->removeElement($member);
+            $this->getReport()->updateLastModification();
         }
     }
 

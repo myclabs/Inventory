@@ -50,7 +50,6 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
-        $idOrganization = $organization->getId();
 
         $this->view->cell = $cell;
 
@@ -522,7 +521,7 @@ class Orga_CellController extends Core_Controller
         }
 
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getOrganization()->getId().'/'.
+            $cell->getGranularity()->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
             $specificReportsDirectoryPath.$this->getParam('export').'.xml',

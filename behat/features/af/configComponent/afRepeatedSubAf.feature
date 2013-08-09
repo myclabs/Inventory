@@ -51,7 +51,7 @@ Feature: AF repeated subAF feature
     And I click "Valider"
     Then the field "subAfRepeatedDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "subAfRepeatedDatagrid_ref_addForm" with "champ_numerique"
+    When I fill in "subAfRepeatedDatagrid_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "subAfRepeatedDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -65,7 +65,7 @@ Feature: AF repeated subAF feature
   # Modification du libellé
     When I set "Sous-formulaire répété modifié" for column "label" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
   # Modification de l'identifiant, saisie correcte
-    When I set "sous_formulaire_repete_modifie" for column "ref" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
+    When I set "s_f_r_modifie" for column "ref" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
   # Modification du formulaire associé
     When I set "Données générales" for column "targetAF" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
   # Modification de l'aide
@@ -75,10 +75,10 @@ Feature: AF repeated subAF feature
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "subAfRepeatedDatagrid" datagrid should contain:
       | label                          | ref                            | targetAF          | isVisible |
-      | Sous-formulaire répété modifié | sous_formulaire_repete_modifie | Données générales | Masqué    |
+      | Sous-formulaire répété modifié | s_f_r_modifie | Données générales | Masqué    |
     When I click "Aide" in the row 1 of the "subAfRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"
-    And I should see a "#subAfRepeatedDatagrid_help_popup .modal-body h1:contains('Blabla')" element
+    And I should see a "#subAfRepeatedDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
 
   @javascript
   Scenario: Edition of a repeated subAF, incorrect input
@@ -94,7 +94,7 @@ Feature: AF repeated subAF feature
     When I set "bépo" for column "ref" of row 1 of the "subAfRepeatedDatagrid" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "subAfRepeatedDatagrid" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "subAfRepeatedDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript

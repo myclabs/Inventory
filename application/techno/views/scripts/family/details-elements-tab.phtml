@@ -3,6 +3,7 @@
  * @author  matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 
 /** @var $family Techno_Model_Family */
 $family = $this->family;
@@ -70,7 +71,7 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
     $members = [];
     $index = 0;
     foreach ($dimensions as $dimension) {
-        $members[] = $dimension->getMember(Keyword_Model_Keyword::loadByRef($coordinates[$index]));
+        $members[] = $dimension->getMember(Keyword::loadByRef($coordinates[$index]));
         $index++;
     }
     $cell = $family->getCell($members);
@@ -103,9 +104,10 @@ echo $tmd->render();
 
     <script>
         $('#element_delete').on('hidden', function(){
-            $('#element_delete').children('div.modal-footer').children('button.btn-primary').removeAttr('data-element');
-            $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('data-element');
-            $('#element_delete').children('div.modal-footer').children('a.btn').removeAttr('href');
+            var modalFooter = $('#element_delete').children('div.modal-footer');
+            modalFooter.children('button.btn-primary').removeAttr('data-element');
+            modalFooter.children('a.btn').removeAttr('data-element');
+            modalFooter.children('a.btn').removeAttr('href');
         });
 
         addElement = function (coordinates) {
@@ -133,7 +135,7 @@ echo $tmd->render();
             deleteElement(event.data.idElement);
             $('#element_edit').unbind('hide', undoAdd);
             $('#element_edit .modal-footer button.btn-warning').removeClass('hide');
-        }
+        };
 
         $.fn.elementEditSuccess = function (response) {
             addMessage(response.message, response.type);

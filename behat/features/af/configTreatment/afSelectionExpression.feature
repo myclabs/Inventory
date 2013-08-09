@@ -14,7 +14,7 @@ Feature: AF selection expression algo feature
   # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un algorithme de sélection d’identifiant de type expression"
-# TODO : rajouter guillemets (pas réussi à traiter l'échappement).
+  # TODO : rajouter guillemets (pas réussi à traiter l'échappement).
   # Ajout, saisie correcte
     When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "aaa"
     And I fill in "algoSelectionTextkeyExpression_expression_addForm" with "a:(b:(c:d;e:(f:g;:h)))"
@@ -47,9 +47,10 @@ Feature: AF selection expression algo feature
     And I click "Valider"
     Then the field "algoSelectionTextkeyExpression_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé, expression vide
-    When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "champ_numerique"
+    When I fill in "algoSelectionTextkeyExpression_ref_addForm" with "c_n"
     And I click "Valider"
-    Then the field "algoSelectionTextkeyExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression « »."
+    Then the field "algoSelectionTextkeyExpression_expression_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
+    And the field "algoSelectionTextkeyExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression «  »."
   # Ajout, identifiant déjà utilisé, expression invalide
     When I fill in "algoSelectionTextkeyExpression_expression_addForm" with "a:(b:(c:d)"
     And I click "Valider"
@@ -67,10 +68,11 @@ Feature: AF selection expression algo feature
     And I open collapse "Expressions"
     Then I should see the "algoSelectionTextkeyExpression" datagrid
   # Modification de l'identifiant, saisie correcte
-    When I set "expression_selection_modifiee" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
-    Then the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
-      | ref                           |
-      | expression_selection_modifiee |
+    When I set "expression_sel_modifiee" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
+  # Attention, modification de l'ordre lors de l'édition (???)
+    Then the "algoSelectionTextkeyExpression" datagrid should contain a row:
+      | ref                     |
+      | expression_sel_modifiee |
   # Modification de l'expression, saisie correcte
     When I set "a:b" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid with a confirmation message
     When I click "Expression" in the row 2 of the "algoSelectionTextkeyExpression" datagrid
@@ -87,22 +89,23 @@ Feature: AF selection expression algo feature
   # Affichage contenu initial
     And the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref                  |
-      | expression_selection |
-    When I click "Expression" in the row 2 of the "algoSelectionTextkeyExpression" datagrid
+      | expression_sel |
+    When I click "Expression" in the row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "a : (b : (c : d ; e : (f : g ; : h)))"
+    When I click "×"
   # Modification de l'identifiant, identifiant vide
-    When I set "" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
+    And I set "" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
   # Modification de l'identifiant, identifiant avec caractères non autorisés
     When I set "bépo" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
-    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression « »."
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression «  »."
   # Modification de l'expression, saisie invalide
     When I set "a:(b:(c:d)" for column "expression" of row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
@@ -117,20 +120,20 @@ Feature: AF selection expression algo feature
     And the "algoSelectionTextkeyExpression" datagrid should contain 3 row
     And the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref  |
-      | expression_selection |
+      | expression_sel |
     And the row 2 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref  |
-      | expression_selection_indexation_algorithme |
+      | expression_sel_coord_param |
     And the row 3 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref  |
-      | expression_selection_coordonnee_parametre |
-  # Algo utilisé pour l'indexation d'un algo numérique
+      | expression_sel_index_algo |
+  # Algo utilisé pour la détermination d'une coordonnée de paramètre
     When I click "Supprimer" in the row 2 of the "algoSelectionTextkeyExpression" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Cet algorithme ne peut pas être supprimé, car il est utilisé pour l'indexation d'au moins un algorithme numérique ou la détermination d'au moins une coordonnée d'algorithme de type paramètre."
     And the "algoSelectionTextkeyExpression" datagrid should contain 3 row
-  # Algo utilisé pour la détermination d'une coordonnée de paramètre
+  # Algo utilisé pour l'indexation d'un algo numérique
     When I click "Supprimer" in the row 3 of the "algoSelectionTextkeyExpression" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"

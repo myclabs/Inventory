@@ -16,6 +16,7 @@ Feature: AF tree edit AF feature
   # Modification du libellé, libellé non vide
     When I fill in "afTree_labelEdit" with "Combustion (modifiée)"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
@@ -23,29 +24,29 @@ Feature: AF tree edit AF feature
     Given I am on "af/af/tree"
     And I wait 7 seconds
   # Déplacement dans une autre catégorie
-    When I wait 5 seconds
     And I click "Combustion de combustible, mesuré en unité de masse"
     And I select "Catégorie contenant une sous-catégorie" from "afTree_changeParent"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier
-    When I wait 5 seconds
     And I click "Formulaire test"
     And I check "Premier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après
-    When I wait 5 seconds
     And I click "Formulaire test"
     And I check "Après"
     And I select "Données générales" from "afTree_selectAfter"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier
-    When I wait 5 seconds
     And I click "Formulaire test"
     And I check "Premier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
@@ -67,6 +68,7 @@ Feature: AF tree edit AF feature
 
   @javascript
   Scenario: Deletion of an AF in AF tree edit, authorized
+    @skipped
     Given I am on "af/af/tree"
     And I wait 7 seconds
   # Suppression sans obstacle, formulaire vide

@@ -358,7 +358,7 @@ class Simulation_Service_ETLStructure
             /** @var DW_Model_Report $dWReport */
             $dWReportsAsString[] = $dWReport->getAsString();
             $emptyDWReportString = '{'.
-                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWReport->getCube()->getKey()['id'].',"label":"",'.
+                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWReport->getCube()->getId().',"label":"",'.
                 '"refNumerator":null,"refNumeratorAxis1":null,"refNumeratorAxis2":null,'.
                 '"refDenominator":null,"refDenominatorAxis1":null,"refDenominatorAxis2":null,'.
                 '"chartType":null,"sortType":"orderResultByDecreasingValue","withUncertainty":false,'.

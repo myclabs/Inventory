@@ -109,6 +109,7 @@ class UI_Form_Element_MultiSelect extends Zend_Form_Element_Multiselect
     {
         $content = '';
 
+        $getValue = $this->getValue();
         // Size of the multi
         $size = 0;
         foreach ($this->_options as $optionElement) {
@@ -119,15 +120,14 @@ class UI_Form_Element_MultiSelect extends Zend_Form_Element_Multiselect
                 'value' => $optionElement->value
             );
 
-            $getValue = $this->getValue();
             if (isset($getValue)) {
                 if (!is_array($getValue)) {
-                    if ($getValue === $optionElement->value) {
+                    if ($getValue == $optionElement->value) {
                         $optionOptions['selected'] = 'selected';
                     }
                 } else {
                     foreach ($getValue as $value) {
-                        if ($value === $optionElement->value) {
+                        if ($value == $optionElement->value) {
                             $optionOptions['selected'] = 'selected';
                             break;
                         }

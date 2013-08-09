@@ -70,6 +70,20 @@
         <unitSystemRef>international</unitSystemRef>
     </standardUnit>
 
+    <standardUnit ref="mile">
+        <name>
+            <fr>mile</fr>
+            <en>mile</en>
+        </name>
+        <symbol>
+            <fr>mi</fr>
+            <en>mi</en>
+        </symbol>
+        <quantityRef>l</quantityRef>
+        <multiplier>1609.344</multiplier>
+        <unitSystemRef>anglo_saxon</unitSystemRef>
+    </standardUnit>
+
     <standardUnit ref="100km">
         <name>
             <fr>cent kilomètres</fr>

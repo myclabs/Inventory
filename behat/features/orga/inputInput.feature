@@ -38,3 +38,4 @@ Feature: Organization input input feature
     When I open tab "Saisie"
     And I click "Quitter"
     Then I should see "Vue globale Organisation avec données"
+

@@ -16,7 +16,7 @@ class Unit_Datagrids_Translate_StandardUnitSymbolController extends UI_Controlle
 {
 
     /**
-     * @Secure("viewTechno")
+     * @Secure("viewUnit")
      */
     public function getelementsAction()
     {

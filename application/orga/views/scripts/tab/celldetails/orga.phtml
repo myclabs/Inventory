@@ -6,7 +6,7 @@
  */
 $tabView = new UI_Tab_View('orga');
 
-if ($this->isGlobal) {
+if ($this->displayOrganizationTabs) {
     $organizationTab = new UI_Tab('organization');
     $organizationTab->label = __('UI', 'name', 'configuration');
     $organizationTab->dataSource = 'orga/organization/details/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
@@ -46,7 +46,7 @@ if ($this->hasChildCells) {
     $tabView->addTab($relevanceTab);
 }
 
-if ($this->isGlobal) {
+if ($this->displayOrganizationTabs) {
     $consistencyTab = new UI_Tab('consistency');
     $consistencyTab->label = __('UI', 'name', 'control');
     $consistencyTab->dataSource = 'orga/organization/consistency/idOrganization/'.$this->idOrganization.'/display/render';
@@ -54,7 +54,7 @@ if ($this->isGlobal) {
     $tabView->addTab($consistencyTab);
 }
 
-if ((!$this->isGlobal) && (in_array($this->tab, array('organization', 'axes', 'granularities', 'consistency')))) {
+if ((!$this->displayOrganizationTabs) && (in_array($this->tab, array('organization', 'axes', 'granularities', 'consistency')))) {
     $this->tab = 'members';
 }
 if ((!$this->hasChildCells) && (in_array($this->tab, array('childCells', 'relevant')))) {

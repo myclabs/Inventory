@@ -6,6 +6,8 @@
  * @package    Orga
  * @subpackage Model
  */
+use Doc\Domain\Bibliography;
+use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -22,6 +24,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
     const QUERY_REF = 'ref';
     const QUERY_POSITION = 'position';
     const QUERY_ORGANIZATION = 'organization';
+
+    // Séparateur des labels des axes dans le label de la granularité.
+    const  LABEL_SEPARATOR = ' | ';
 
 
     /**
@@ -172,7 +177,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -184,7 +189,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -192,7 +197,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -200,7 +205,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {
@@ -342,7 +347,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             foreach ($axes as $axis) {
                 $labelParts[] = $axis->getLabel();
             }
-            $label = implode(' | ', $labelParts);
+            $label = implode(self::LABEL_SEPARATOR, $labelParts);
         }
         return $label;
     }
@@ -664,7 +669,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 $configGranularity->addInputGranularity($this);
 
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocBibliographyForAFInputSetPrimary(new Doc_Model_Bibliography());
+                    $cell->setDocBibliographyForAFInputSetPrimary(new Bibliography());
                 }
             } else {
                 foreach ($this->getCells() as $cell) {
@@ -917,7 +922,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 }
             } else  {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialGenericAction(new Doc_Model_Library());
+                    $cell->setDocLibraryForSocialGenericAction(new Library());
                 }
             }
         }
@@ -955,7 +960,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 }
             } else  {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialContextAction(new Doc_Model_Library());
+                    $cell->setDocLibraryForSocialContextAction(new Library());
                 }
             }
         }
@@ -993,7 +998,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 }
             } else  {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForAFInputSetsPrimary(new Doc_Model_Library());
+                    $cell->setDocLibraryForAFInputSetsPrimary(new Library());
                 }
             }
         }
