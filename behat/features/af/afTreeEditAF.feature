@@ -46,6 +46,7 @@ Feature: AF tree edit AF feature
     And I click "Formulaire test"
     And I check "Premier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript

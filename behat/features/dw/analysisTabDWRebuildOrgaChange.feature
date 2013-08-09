@@ -118,7 +118,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
     And I wait 5 seconds
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
   # Détection modification
     When I reload the page
     And I wait for the page to finish loading
