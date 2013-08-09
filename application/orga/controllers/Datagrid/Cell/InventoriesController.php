@@ -88,7 +88,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
      */
     private function getLineData(Orga_Model_Cell $cell, Orga_Model_Granularity $crossedGranularity)
     {
-        Core_Tools::dump($cell->getLabel());
         $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
         $data = array();
