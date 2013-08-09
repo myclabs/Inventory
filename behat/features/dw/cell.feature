@@ -33,6 +33,7 @@ Feature: Cell dataware analysis feature
 
   @javascript
   Scenario: Input status scenario
+    @skipped
   # Analyse sans filtre sur le statut
     Given I am on "orga/cell/details/idCell/5/tab/analyses"
     And I wait for the page to finish loading
