@@ -88,6 +88,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
      */
     private function getLineData(Orga_Model_Cell $cell, Orga_Model_Granularity $crossedGranularity)
     {
+        Core_Tools::dump($cell->getLabel());
         $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
         $data = array();
@@ -108,7 +109,20 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
 
             $totalChildInputCells = 0;
             foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-                if ($inputGranularity->isNarrowerThan($cell->getGranularity())) {
+                if ($inputGranularity === $cell->getGranularity()) {
+                    try {
+                        $afInputSetPrimary = $cell->getAFInputSetPrimary();
+                        if ($afInputSetPrimary->isInputComplete()) {
+                            $data['advancementInput'] ++;
+                        }
+                        if ($afInputSetPrimary->isFinished()) {
+                            $data['advancementFinishedInput'] ++;
+                        }
+                    } catch (Core_Exception_UndefinedAttribute $e) {
+                        // Pas de saisie pour l'instant = pas d'avancement.
+                    }
+                    $totalChildInputCells ++;
+                } elseif ($inputGranularity->isNarrowerThan($cell->getGranularity())) {
                     $inputCells = $cell->getChildCellsForGranularity($inputGranularity);
                     foreach ($inputCells as $inputCell) {
                         try {
