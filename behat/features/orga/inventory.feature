@@ -8,6 +8,7 @@ Feature: Organization inventory tab feature
   Scenario: Edit Inventory status
   # Accès à l'onglet "Collectes"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Collectes"
     Then I should see the "inventories6" datagrid
     And the row 4 of the "inventories6" datagrid should contain:
@@ -23,6 +24,7 @@ Feature: Organization inventory tab feature
   Scenario: Test Inventory filter
   # Accès à l'onglet "Collectes"
     Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
     And I open tab "Collectes"
     Then I should see the "inventories6" datagrid
     And the "inventories6" datagrid should contain 6 row
@@ -31,3 +33,12 @@ Feature: Organization inventory tab feature
     And I select "Marque sans site" from "inventories6_marque_filterForm"
     And I click "Filtrer"
     Then the "inventories6" datagrid should contain 2 row
+
+  @javascript
+  Scenario: Percentage of complete and finished inputs
+    Given I am on "orga/cell/details/idCell/5"
+    And I wait for the page to finish loading
+    And I open tab "Collectes"
+    Then the "inventories6" datagrid should contain a row:
+      | annee | inventoryStatus | advancementInput | advancementFinishedInput |
+      | 2012  | En cours        | 66%              | 33%                      |

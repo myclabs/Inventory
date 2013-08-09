@@ -75,6 +75,7 @@ Feature: Family tree edit of categories feature
     And I click "Catégorie vide"
     And I check "Dernier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
 
