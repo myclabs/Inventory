@@ -13,8 +13,8 @@ Feature: Family element tab edit feature
   # Arrondi à trois chiffres significatifs
   # Séparateur de milliers en français
   # En-têtes de dimensions commencent par une majuscule
-    And I should see "0,123 ± 16 %"
-    And I should see "12 300 ± 16 %"
+    And I should see "0,123 ± 15 %"
+    And I should see "12 300 ± 15 %"
     And I should see "Combustible"
     And I should see "Processus"
 

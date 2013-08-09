@@ -117,13 +117,13 @@ Feature: AF change component value interaction feature
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
   # Saisie valeur séparateur décimal non valide
-    And I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
+    And I click "Éditer" in the row 2 of the "actionsSetValue" datagrid
     And I fill in "numericValue" with "1234.56789"
     And I click "Enregistrer"
     Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
     When I open collapse "Assignations de valeurs à des champs"
-    And I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
+    And I click "Éditer" in the row 2 of the "actionsSetValue" datagrid
     And I fill in "numericValue" with ""
     And I fill in "numericUncertainty" with "15.9"
     And I click "Enregistrer"
