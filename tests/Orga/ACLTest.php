@@ -20,7 +20,7 @@ class Orga_Test_ACLTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Orga_Test_ACL');
+//        $suite->addTestSuite('Orga_Test_ACL');
         return $suite;
     }
 
@@ -549,7 +549,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
      * Test les points du vue formel (IsAllow) des utilisateurs.
      *  Désactivé pour soulager le test.
      */
-    public function disabledtestUsersIsAllow()
+    public function testUsersIsAllow()
     {
         $this->tIsAllowOrganizationAdministrator();
         $this->tIsAllowGlobaleCellAdministrator();
@@ -6363,6 +6363,20 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
+        $entityManagers = Zend_Registry::get('EntityManagers');
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = $entityManagers['default'];
+
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+
+        /** @var Orga_Service_ACLManager $aclManagerService */
+        $aclManagerService = $container->get('Orga_Service_ACLManager');
+        $entityManager->getEventManager()->removeEventListener(
+            [Doctrine\ORM\Events::onFlush, Doctrine\ORM\Events::postFlush],
+            $aclManagerService
+        );
+
         // Vérification qu'il ne reste aucun User_Model_User en base, sinon suppression !
         if (User_Model_User::countTotal() > 0) {
             echo PHP_EOL . 'Des User_User restants ont été trouvé après les tests, suppression en cours !';
