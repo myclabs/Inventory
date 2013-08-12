@@ -1,0 +1,19 @@
+<?php
+/** @var $document Document */
+use Doc\Domain\Document;
+
+$document = $this->document;
+
+$description = $document->getDescription();
+?>
+
+<h3>
+    <?=$document->getName()?>
+</h3>
+
+<?php
+if ($description) {
+    echo Core_Tools::textile($document->getDescription());
+} else {
+    echo '<p class="muted">' . __('UI', 'other', 'noDescription') . '</p>';
+}

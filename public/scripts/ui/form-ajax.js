@@ -165,10 +165,13 @@ $.fn.getFormElementValue = function ()
 			hidden.push('"' + child.attr('id') + '": "' + child.encodeVal() + '"');
 			break;
 		default:
-			if (child.val() != null) {
-                element = element.slice(0, -2) + '"' + child.encodeVal() + '", ';
+            element = element.slice(0, -2);
+			if (typeof child.val() === 'object') {
+                element += '["' + child.val().join('", "') + '"], ';
+            } else if (child.val() != null) {
+                element += '"' + child.encodeVal() + '", ';
 			} else {
-				element = element.slice(0, -2) + 'null, ';
+				element += 'null, ';
 			}
 			element += '"disabled": ' + ((child.attr('disabled') == 'disabled') ? 'true' : 'false');
 		}

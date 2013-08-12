@@ -294,7 +294,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Extension de traduction de champs
         $translatableListener = new Gedmo\Translatable\TranslatableListener();
         $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
-        $translatableListener->setDefaultLocale('fr');
+        $translatableListener->setDefaultLocale(Zend_Registry::get('configuration')->translation->defaultLocale);
+        $translatableListener->setPersistDefaultLocaleTranslation(true);
         $translatableListener->setTranslationFallback(true);
         $em->getEventManager()->addEventSubscriber($translatableListener);
         Zend_Registry::set('doctrineTranslate', $translatableListener);

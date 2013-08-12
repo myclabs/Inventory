@@ -1,4 +1,5 @@
 <?php
+use Keyword\Domain\Keyword;
 
 /**
  * Remplissage de la base de données avec des données de test
@@ -498,7 +499,7 @@ class AF_Populate extends Core_Script_Action
             $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Fixed();
             $index->setDimension($dimension);
-            $index->setMember($dimension->getMember(Keyword_Model_Keyword::loadByRef($refMemberKeyword)));
+            $index->setMember($dimension->getMember(Keyword::loadByRef($refMemberKeyword)));
             $index->setAlgoParameter($parameter);
             $index->save();
         }

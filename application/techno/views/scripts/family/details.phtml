@@ -30,14 +30,6 @@ $family = $this->family;
             echo '<span class="muted">'.__('UI', 'other', 'noneFem').'</span>';
         }
         ?>
-        | <strong><?=__('UI', 'name', 'type') . __('UI', 'other', ':')?></strong>
-        <?php
-        if ($family instanceof Techno_Model_Family_Coeff) {
-            echo __('Techno', 'name', 'coefficient');
-        } else {
-            echo __('Techno', 'name', 'emissionFactor');
-        }
-        ?>
         | <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
         <?=$family->getValueUnit()->getSymbol()?>
         | <strong><?=__('Techno', 'name', 'tags') . __('UI', 'other', ':')?></strong>

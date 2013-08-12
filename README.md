@@ -1,5 +1,7 @@
 # Inventory
 
+To see the current version installed, visit the url: `/version.php`.
+
 ## Installation
 
 Checkout the project using git or the Github plugin for PhpStorm.

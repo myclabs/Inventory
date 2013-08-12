@@ -32,7 +32,7 @@ Feature: Organization input tab feature
     Then I should see the popup "Ajout d'une organisation"
     When I fill in "Libellé" with "Test"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     And the row 2 of the "organizations" datagrid should contain:
       | label  |
       | Test   |
@@ -55,6 +55,28 @@ Feature: Organization input tab feature
     Then I should see the "aFGranularity2Input2" datagrid
     And the "aFGranularity2Input2" datagrid should contain 1 row
 
-
-
+  @javascript
+  Scenario: Display of the various columns (inventory status, input progress, input status)
+    Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
+  # Descendre depuis la cellule globale dans une cellule de granularité site
+    When I select "Annecy" from "site"
+    And I click element "#goTo3"
+  # Cas inventaire non lancé, saisie complète
+    When I open collapse "Année | Site"
+    Then the "aFGranularity5Input7" datagrid should contain a row:
+      | annee | inventoryStatus | advancementInput | stateInput      |
+      | 2012  | En cours        | 100%             | Saisie complète |
+    And the "aFGranularity5Input7" datagrid should contain a row:
+      | annee | inventoryStatus |
+      | 2013  | Non lancé       |
+  # Cas inventaire saisie incomplète / saisie terminée
+    When I close collapse "Année | Site"
+    When I open collapse "Année | Site | Catégorie"
+    Then the "aFGranularity5Input8" datagrid should contain a row:
+      | annee | categorie | inventoryStatus | advancementInput | stateInput      |
+      | 2012  | Énergie   | En cours        | 100%             | Saisie terminée |
+    And the "aFGranularity5Input8" datagrid should contain a row:
+      | annee | categorie      | inventoryStatus | advancementInput | stateInput        |
+      | 2012  | Test affichage | En cours        | 14%              | Saisie incomplète |
 

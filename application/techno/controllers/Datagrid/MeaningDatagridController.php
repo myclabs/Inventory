@@ -6,6 +6,7 @@
 
 use Core\Annotation\Secure;
 use Doctrine\DBAL\DBALException;
+use Keyword\Domain\Keyword;
 
 /**
  * @package Techno
@@ -61,7 +62,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $keyword = Keyword_Model_Keyword::loadByRef($refKeyword);
+            $keyword = Keyword::loadByRef($refKeyword);
         } catch(Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
@@ -100,7 +101,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
         switch ($this->update['column']) {
             case 'ref':
                 try {
-                    $keyword = Keyword_Model_Keyword::loadByRef($newValue);
+                    $keyword = Keyword::loadByRef($newValue);
                     $meaning->setKeyword($keyword);
                     $this->data = $keyword->getRef();
                 } catch (Core_Exception_NotFound $e) {

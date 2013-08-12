@@ -40,9 +40,9 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
             foreach ($currentCategory->getFamilies() as $family) {
                 // Place un symbole indiquant le type de la famille
                 if ($family instanceof Techno_Model_Family_Process) {
-                    $label = '[FE] ' . $family->getLabel();
+                    $label = $family->getLabel();
                 } else {
-                    $label = '[C] ' . $family->getLabel();
+                    $label = $family->getLabel();
                 }
                 if ($isEditable) {
                     $action = 'edit';

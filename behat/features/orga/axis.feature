@@ -20,7 +20,9 @@ Feature: Organizational axis feature
     When I fill in "addAxis_label" with "Test"
     And I fill in "addAxis_ref" with "test"
     And I click "Valider"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
+    And I should see "Test"
   # Ajout d'un axe non à la racine
     When I wait 5 seconds
     And I click "Ajouter"
@@ -29,8 +31,9 @@ Feature: Organizational axis feature
     And I fill in "addAxis_ref" with "axe_plus_grossier_que_axe_vide"
     And I select "Axe vide" from "addAxis_parent"
     And I click "Valider"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
-  # Vérification que l'axe ajouté est bien parent de l'axe Gaz
+  # Vérification que l'axe ajouté est bien parent de l'axe "axe vide"
     When I click "Axe vide"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
@@ -107,6 +110,7 @@ Feature: Organizational axis feature
     Then I should see the popup "Édition d'un axe"
     When I check "Premier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement "Après" (axe situé à la racine)
     When I click "Catégorie"
@@ -114,12 +118,14 @@ Feature: Organizational axis feature
     When I check "Après"
     And I select "Année" from "editAxis_selectAfter"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier (axe situé à la racine)
     When I click "Catégorie"
     Then I should see the popup "Édition d'un axe"
     When I check "Dernier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
@@ -153,6 +159,7 @@ Feature: Organizational axis feature
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Suppression effectuée."
     And I should not see "Axe vide"
 

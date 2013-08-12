@@ -62,8 +62,8 @@ Feature: AF single selection field feature
     When I fill in "selectSingleFieldDatagrid_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Ajout, identifiant déjà utilisé pour un autre algorithme de séloction d'identifiant
-    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "expression_selection"
+  # Ajout, identifiant déjà utilisé pour un autre algorithme de sélection d'identifiant
+    When I fill in "selectSingleFieldDatagrid_ref_addForm" with "expression_sel"
     And I click "Valider"
     Then the field "selectSingleFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -124,7 +124,7 @@ Feature: AF single selection field feature
     When I set "c_n" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, identifiant déjà utilisé pour un autre algorithme de sélection d'identifiant
-    When I set "expression_selection" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
+    When I set "expression_sel" for column "ref" of row 1 of the "selectSingleFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript

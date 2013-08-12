@@ -5,6 +5,7 @@
  * @subpackage Plugin
  */
 
+use Doc\Domain\Library;
 use User\ForbiddenException;
 
 /**
@@ -166,7 +167,14 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      */
     public function editMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
-        return ($this->editOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
+        return (
+            $this->editOrganizationRule($identity, $request)
+            || $this->aclService->isAllowed(
+                $identity,
+                User_Model_Action_Default::EDIT(),
+                Orga_Model_Cell::load($request->getParam('idCell'))
+            )
+        );
     }
 
     /**
@@ -612,7 +620,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     protected function getCellFromLibrary(Zend_Controller_Request_Abstract $request)
     {
         $idLibrary = $request->getParam('id');
-        $library = Doc_Model_Library::load($idLibrary);
+        $library = Library::load($idLibrary);
 
         try {
             return Orga_Model_Cell::loadByDocLibraryForAFInputSetsPrimary($library);

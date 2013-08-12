@@ -67,7 +67,7 @@ Feature: AF numeric field feature
     And I click "Valider"
     Then the field "numericFieldDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé pour un autre composant
-    When I fill in "numericFieldDatagrid_ref_addForm" with "sous_groupe"
+    When I fill in "numericFieldDatagrid_ref_addForm" with "sous_g"
     And I click "Valider"
     Then the field "numericFieldDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Ajout, identifiant déjà utilisé pour un autre algorithme numerique
@@ -149,7 +149,7 @@ Feature: AF numeric field feature
     When I set "bépo" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé pour un autre composant
-    When I set "sous_groupe" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid
+    When I set "sous_g" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, identifiant déjà utilisé pour un autre algorithme numérique
     When I set "constante" for column "ref" of row 1 of the "numericFieldDatagrid" datagrid

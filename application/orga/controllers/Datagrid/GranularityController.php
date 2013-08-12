@@ -194,6 +194,14 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 $this->data = $granularity->getCellsWithOrgaTab();
                 break;
             case 'aCL':
+                foreach ($granularity->getCells() as $cell) {
+                    $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
+                    foreach ($cellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
+                        if (!($linkedIdentity instanceof User_Model_Role) || (count($linkedIdentity->getUsers()) > 0)) {
+                            throw new Core_Exception_User('Orga', 'exceptions', 'cellHasUsers');
+                        }
+                    }
+                }
                 $granularity->setCellsWithACL((bool) $this->update['value']);
                 $this->data = $granularity->getCellsWithACL();
                 break;

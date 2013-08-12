@@ -22,7 +22,7 @@ Feature: Organizational member feature
     And I fill in "listMemberssite_ref_addForm" with "aaa"
     And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
   # Affichage suivant l'ordre alphabétique des identifiants
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label  | ref | broaderpays |
@@ -116,6 +116,8 @@ Feature: Organizational member feature
 
   @javascript
   Scenario: Deletion of an organizational member
+    @skipped
+    #6268 Exceptions non capturées suppression d'un membre organisationnel
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading

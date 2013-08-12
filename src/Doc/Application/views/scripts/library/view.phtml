@@ -1,0 +1,74 @@
+<?php
+/** @var $library Library */
+use Doc\Domain\Library;
+use Doc\Domain\Document;
+
+$library = $this->library;
+
+$datagrid = new UI_Datagrid('library'.$library->getId(), 'datagrid_library', 'doc');
+$datagrid->addParam('id', $library->getId());
+$datagrid->selectableElement = true;
+$datagrid->deleteElements = true;
+
+// Name
+$nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'name'));
+$nameColumn->filterName = Document::QUERY_NAME;
+$nameColumn->editable = true;
+$datagrid->addCol($nameColumn);
+
+// Extension
+$extensionColumn = new UI_Datagrid_Col_Text('extension', __('Doc', 'library', 'extension'));
+$datagrid->addCol($extensionColumn);
+
+// Description
+$descriptionColumn = new UI_Datagrid_Col_LongText('description', __('UI', 'name', 'description'));
+$descriptionColumn->editable = true;
+$datagrid->addCol($descriptionColumn);
+
+// File size
+$fileSizeColumn = new UI_Datagrid_Col_Number('fileSize', __('Doc', 'library', 'fileSize'));
+$datagrid->addCol($fileSizeColumn);
+
+// Nombre d'utilisations
+$referenceCountColumn = new UI_Datagrid_Col_Number('referenceCount', __('Doc', 'library', 'quotations'));
+$datagrid->addCol($referenceCountColumn);
+
+// Download file
+$downloadColumn = new UI_Datagrid_Col_Link('download', __('Doc', 'verb', 'download'));
+$datagrid->addCol($downloadColumn);
+
+echo $datagrid->render();
+$datagrid->addHeader();
+
+// Popup d'ajout
+$popup = new UI_Popup_Static('library'.$library->getId().'_add');
+$popup->title = __('Doc', 'library', 'addPanelTitle');
+$popup->body = $this->partial('library/upload.phtml', 'doc', ['library' => $library]);
+$validateButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
+$validateButton->addAttribute('class', 'btn-primary');
+$validateButton->addAttribute('class', 'validateNewDocument');
+$cancelButton = new UI_HTML_Button(__('UI', 'verb', 'cancel'));
+$cancelButton->addAttribute('data-dismiss', 'modal');
+$popup->footer = $validateButton->render() . ' ' . $cancelButton->render();
+$popup->display();
+
+// Bouton d'ajout
+$addButton = new UI_HTML_Button('<i class="icon-plus-sign"></i> ' . __('Doc', 'bibliography', 'addNewDocument'));
+$addButton->addAttribute('id', 'addDocumentButton'.$library->getId());
+echo $addButton->render();
+?>
+
+<script>
+    $("#addDocumentButton<?=$library->getId()?>").click(function() {
+        $("#library<?=$library->getId()?>_add").modal('show');
+    });
+    $("#addDocument<?=$library->getId()?>").on('uploadSuccess', function() {
+        $("#library<?=$library->getId()?>_add").modal('hide');
+        // Rafraichit le datagrid
+        library<?=$library->getId()?>.filter();
+    });
+    // Lors de la soumission du formulaire d'ajout
+    $("#library<?=$library->getId()?>_add").find(".validateNewDocument").click(function() {
+        $("#addDocument<?=$library->getId()?>").submit();
+    });
+</script>

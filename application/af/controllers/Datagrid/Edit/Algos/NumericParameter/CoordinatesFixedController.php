@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Keyword\Domain\Keyword;
 
 /**
  * @package AF
@@ -85,7 +86,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
                 /** @var $member Techno_Model_Family_Member */
-                $keyword = Keyword_Model_Keyword::loadByRef($newValue);
+                $keyword = Keyword::loadByRef($newValue);
                 $member = $coordinate->getDimension()->getMember($keyword);
                 $coordinate->setMember($member);
                 $this->data = $newValue;

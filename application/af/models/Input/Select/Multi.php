@@ -93,7 +93,7 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
             return false;
         }
 
-        if ($input instanceof AF_Model_Input_Select_Single) {
+        if ($input instanceof AF_Model_Input_Select_Multi) {
             return $this->getValue() === $input->getValue();
         }
 
