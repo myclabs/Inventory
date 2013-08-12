@@ -452,6 +452,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         } elseif ($entity instanceof Orga_Model_Cell) {
             return $this->getCellParentResources($entity);
         }
+        return [];
     }
 
     /**
@@ -462,9 +463,8 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     {
         if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
             return [User_Model_Resource_Entity::loadByEntity(Orga_Model_Cell::loadByDWCube($report->getCube()))];
-        } else {
-            return [];
         }
+        return [];
     }
 
     /**
@@ -511,6 +511,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         } elseif ($entity instanceof Orga_Model_Cell) {
             return $this->getCellChildResources($entity);
         }
+        return [];
     }
 
     /**
