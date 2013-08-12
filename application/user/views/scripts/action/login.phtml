@@ -37,8 +37,7 @@ if ($this->user) {
     $form->addElement($password);
 
     $forgotPassword = new UI_Form_Element_HTML('forgotPasswordLogin');
-    $forgotPassword->content = '<a class="fieldForgotPassword" href="user/action/password-forgotten?refer='
-        . urlencode($this->referer) . '">'
+    $forgotPassword->content = '<a class="fieldForgotPassword" href="user/password/forgotten">'
         . __('User', 'login', 'forgottenPassword')
         . '</a>';
     $form->addElement($forgotPassword);

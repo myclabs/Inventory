@@ -2,7 +2,6 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use User\AuthAdapter;
 
 /**
  * Contrôleur de gestion des mots de passe oubliés
