@@ -254,9 +254,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      */
     protected function getCell(Zend_Controller_Request_Abstract $request)
     {
-        Core_Tools::dump('get Cell');
         $index = $request->getParam('index');
-        Core_Tools::dump($index);
         if ($index !== null) {
             try {
                 return Orga_Model_Cell::load($index);
