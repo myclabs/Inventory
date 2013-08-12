@@ -31,9 +31,8 @@ Feature: Cell dataware analysis feature
       | Chiffre d'affaire, par année |
     When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
 
-  @javascript
+  @javascript @skipped
   Scenario: Input status scenario
-    @skipped
   # Analyse sans filtre sur le statut
     Given I am on "orga/cell/details/idCell/5/tab/analyses"
     And I wait for the page to finish loading

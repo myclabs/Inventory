@@ -39,10 +39,9 @@ Feature: Cell administrator feature
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
 
-  @javascript
+  @javascript @skipped
   Scenario: Cell administrator organization tab
-    @skipped
-    #6272 Scenario: Cell administrator organization tab
+  #6272 Scenario: Cell administrator organization tab
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté

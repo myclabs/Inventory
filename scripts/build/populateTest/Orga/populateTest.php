@@ -113,11 +113,29 @@ class Orga_PopulateTest extends Orga_Populate
         // Annecy | 2012 | Test affichage (inventaire en cours), saisie incomplète
         $this->setInput($granularity_annee_site_categorie, [$member_annee_2012, $member_site_annecy, $member_categorie_test_affichage], [
             'c_n' => new Calc_UnitValue(new UnitAPI('kg_co2e.m3^-1'), 10, 15),
-            //'champ_selection_simple_liste' => 'option_1',
-            //'champ_selection_simple_bouton' => 'option_1',
-            //'champ_selection_multi_checkbox' => 'option_1',
-            //'champ_selection_multi_list' => 'option_1',
         ], false);
+        // Chambéry | 2012 | Test affichage (inventaire en cours), saisie complète (pour tester affichage historique)
+        $aF_tous_types_champs = AF_Model_AF::loadByRef('formulaire_tous_types_champ');
+        $c_s_s_liste = AF_Model_Component_Select::loadByRef('c_s_s_liste', $aF_tous_types_champs);
+        $c_s_s_bouton = AF_Model_Component_Select::loadByRef('c_s_s_bouton', $aF_tous_types_champs);
+        $c_s_m_checkbox = AF_Model_Component_Select::loadByRef('c_s_m_checkbox', $aF_tous_types_champs);
+        $c_s_m_liste = AF_Model_Component_Select::loadByRef('c_s_m_liste', $aF_tous_types_champs);
+        $this->setInput($granularity_annee_site_categorie, [$member_annee_2012, $member_site_chambery, $member_categorie_test_affichage], [
+            'c_n' => new Calc_UnitValue(new UnitAPI('kg_co2e.m3^-1'), 10, 15),
+            'c_s_s_liste' => $c_s_s_liste->getOptionByRef('opt_1'),
+            'c_s_s_bouton' => $c_s_s_bouton->getOptionByRef('opt_1'),
+            'c_s_m_checkbox' => [$c_s_m_checkbox->getOptionByRef('opt_1'), $c_s_m_checkbox->getOptionByRef('opt_2')],
+            'c_s_m_liste' => [$c_s_m_liste->getOptionByRef('opt_1'), $c_s_m_checkbox->getOptionByRef('opt_2')],
+            'c_b' => true,
+            'c_t_c' => 'Blabla',
+            'c_t_l' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+qui officia deserunt mollit anim id est laborum.',
+
+        ], false);
+
         // Grenoble 2012 (inventaire clôturé), saisie terminée
         $this->setInput($granularity_annee_site, [$member_annee_2012, $member_site_grenoble], [
             'chiffre_affaire' => new Calc_UnitValue(new UnitAPI('kiloeuro'), 10, 15)

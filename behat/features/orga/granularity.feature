@@ -210,9 +210,8 @@ Feature: Organization granularity feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
 
-  @javascript
+  @javascript @skipped
   Scenario: Deletion of a granularity 'with DW'
-    @skipped
     #6300 : La suppression d'une granularité associée à des DWs entraîne une erreur
   # Suppression des rôles associés à la granularité "Site"
     Given I am on "orga/cell/details/idCell/1"
