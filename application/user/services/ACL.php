@@ -251,15 +251,18 @@ class User_Service_ACL
     public function getParentResources(array $resources)
     {
         $parentResources = [];
+
         foreach ($resources as $resource) {
-            if ($resource instanceof User_Model_Resource_Entity) {
-                $resourceResolver = $this->getResourceTreeTraverser($resource);
-                if ($resourceResolver) {
-                    // Pour chaque ressource, récupère tous ses parents
-                    $parentResources += $resourceResolver->getParentResources($resource);
-                }
+            if (!$resource instanceof User_Model_Resource_Entity) {
+                continue;
+            }
+            $resourceResolver = $this->getResourceTreeTraverser($resource);
+            if ($resourceResolver) {
+                // Pour chaque ressource, récupère tous ses parents
+                $parentResources = array_merge($parentResources, $resourceResolver->getParentResources($resource));
             }
         }
+
         return $parentResources;
     }
 
@@ -271,15 +274,18 @@ class User_Service_ACL
     public function getChildResources(array $resources)
     {
         $childResources = [];
+
         foreach ($resources as $resource) {
-            if ($resource instanceof User_Model_Resource_Entity) {
-                $resourceResolver = $this->getResourceTreeTraverser($resource);
-                if ($resourceResolver) {
-                    // Pour chaque ressource, récupère tous ses parents
-                    $childResources += $resourceResolver->getChildResources($resource);
-                }
+            if (!$resource instanceof User_Model_Resource_Entity) {
+                continue;
+            }
+            $resourceResolver = $this->getResourceTreeTraverser($resource);
+            if ($resourceResolver) {
+                // Pour chaque ressource, récupère tous ses parents
+                $childResources = array_merge($childResources, $resourceResolver->getChildResources($resource));
             }
         }
+
         return $childResources;
     }
 
