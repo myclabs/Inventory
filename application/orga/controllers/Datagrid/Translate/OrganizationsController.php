@@ -64,7 +64,7 @@ class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Data
     public function updateelementAction()
     {
         $organization = Orga_Model_Organization::load($this->update['index']);
-        $organization->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $organization->reloadWithLocale(Core_Locale::load($this->update['column']));
         $organization->setLabel($this->update['value']);
         $this->data = $organization->getLabel();
 

@@ -56,7 +56,7 @@ class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         $category = AF_Model_Category::load($this->update['index']);
-        $category->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $category->reloadWithLocale(Core_Locale::load($this->update['column']));
         $category->setLabel($this->update['value']);
         $this->data = $category->getLabel();
 

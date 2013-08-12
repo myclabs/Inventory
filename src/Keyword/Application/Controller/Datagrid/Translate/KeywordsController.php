@@ -57,7 +57,7 @@ class Keyword_Datagrid_Translate_KeywordsController extends UI_Controller_Datagr
     public function updateelementAction()
     {
         $keyword = Keyword::loadByRef($this->update['index']);
-        $keyword->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $keyword->reloadWithLocale(Core_Locale::load($this->update['column']));
         $keyword->setLabel($this->update['value']);
         $this->data = $keyword->getLabel();
 
