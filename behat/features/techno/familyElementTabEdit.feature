@@ -13,8 +13,8 @@ Feature: Family element tab edit feature
   # Arrondi à trois chiffres significatifs
   # Séparateur de milliers en français
   # En-têtes de dimensions commencent par une majuscule
-    And I should see "0,123 ± 16 %"
-    And I should see "12 300 ± 16 %"
+    And I should see "0,123 ± 15 %"
+    And I should see "12 300 ± 15 %"
     And I should see "Combustible"
     And I should see "Processus"
 
@@ -29,7 +29,7 @@ Feature: Family element tab edit feature
     And I fill in "Incertitude" with "12,34"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
-    And I should see a "#elements_charbon_amont_combustion a:contains('1 230 ± 12 %')" element
+    And I should see "1 230 ± 12 %" in the "#elements-gaz_naturel-combustion" element
   # Ajout d'un élément puis annulation sans enregistrement
   # TODO : actuellement l'élément est tout de même créé.
 
@@ -68,7 +68,7 @@ Feature: Family element tab edit feature
     And I fill in "Incertitude" with "12,89"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
-    And I should see a "#elements-charbon-amont_combustion a:contains('1 230 ± 12 %')" element
+    And I should see "1 230 ± 12 %" in the "#elements-charbon-combustion" element
 
   @javascript
   Scenario: Family edit, edition of an element scenario, incorrect input

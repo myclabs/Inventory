@@ -67,3 +67,9 @@ DW_Model_Member:
     preUpdate: [ preUpdate ]
     preRemove: [ preDelete ]
     postLoad: [ postLoad ]
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idAxis

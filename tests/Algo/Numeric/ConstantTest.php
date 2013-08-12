@@ -6,6 +6,7 @@
  * @package Algo
  */
 
+use Keyword\Domain\Keyword;
 use Unit\UnitAPI;
 
 /**
@@ -128,7 +129,7 @@ class Numeric_ConstantSetUpTest extends Core_Test_TestCase
         foreach (Algo_Model_Algo::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
+        foreach (Keyword::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {
@@ -223,7 +224,7 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
         foreach (Algo_Model_Algo::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
+        foreach (Keyword::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {

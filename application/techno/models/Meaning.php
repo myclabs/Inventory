@@ -4,6 +4,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 
 /**
  * Classe Meaning
@@ -48,7 +49,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
     public function validateKeyword()
     {
         try {
-            Keyword_Model_Keyword::loadByRef($this->refKeyword);
+            Keyword::loadByRef($this->refKeyword);
         } catch (Core_Exception_NotFound $e) {
             return $this->refKeyword;
         }
@@ -65,9 +66,9 @@ class Techno_Model_Meaning extends Core_Model_Entity
 
     /**
      * Affecte le mot-clé
-     * @param Keyword_Model_Keyword $keyword
+     * @param Keyword $keyword
      */
-    public function setKeyword(Keyword_Model_Keyword $keyword)
+    public function setKeyword(Keyword $keyword)
     {
         $this->keyword = $keyword;
         $this->refKeyword = $keyword->getRef();
@@ -90,12 +91,12 @@ class Techno_Model_Meaning extends Core_Model_Entity
 
     /**
      * Renvoie le mot-clé
-     * @return Keyword_Model_Keyword
+     * @return Keyword
      */
     public function getKeyword()
     {
         if ($this->keyword === null) {
-            $this->keyword = Keyword_Model_Keyword::loadByRef($this->refKeyword);
+            $this->keyword = Keyword::loadByRef($this->refKeyword);
         }
         return $this->keyword;
     }
@@ -122,7 +123,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -134,7 +135,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -142,7 +143,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -150,7 +151,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {

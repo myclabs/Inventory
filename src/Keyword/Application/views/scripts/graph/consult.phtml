@@ -1,0 +1,115 @@
+<?php
+/**
+ * Vue presentant l'arbres des mots-cles.
+ * @author valentin.claras
+ * @author bertrand.ferry
+ * @package Keyword
+ */
+?>use Keyword\Domain\Keyword_Model_Keyword;
+<div class="page-header">
+    <h1><?=__('Keyword', 'graph', 'pageTitle')?></h1>
+</div>
+
+<div class="navbar">
+    <div class="navbar-inner">
+        <form class="navbar-form pull-left" method="post" action="keyword/graph/gotokeyword">
+            <?=$this->autocomplete('keywordGoTo', 'keyword/graph/autocompleteprovider')
+                ->addOption('width', '"350px"')
+                ->addOption('containerCss', '{"vertical-align": "bottom"}');?>
+            <input class="btn btn-success" type="submit" value="<?=__('UI', 'other', 'ok')?>" name="ok">
+        </form>
+        <ul class="nav">
+            <li>
+                <a href="keyword/graph/root"><?=__('Keyword', 'graph', 'goToRootKeywords')?></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div>
+    <div class="span3">
+        <div style="text-align: center;">
+            <h3><?=__('Keyword', 'graph', 'subjectKeywords')?></h3>
+        </div>
+        <?php if (count($this->subjectKeywords) > 0) { ?>
+        <div>
+            <?php foreach ($this->subjectKeywords as $predicateLabel => $associations) { ?>
+            <div>
+                <h4><?=$predicateLabel?></h4>
+            </div>
+                <ul>
+                    <?php
+                    // Évite les problèmes de modification du tableau lors du l'accès au label (proxy).
+                    array_map(function (Keyword_Model_Keyword $keyword) { $keyword->getLabel(); }, $associations);
+                    // Trie $assocations par label
+                    uasort(
+                        $associations,
+                        function (Keyword_Model_Keyword $k1, Keyword_Model_Keyword $k2) {
+                            return strnatcmp($k1->getLabel(), $k2->getLabel());
+                        }
+                    );
+                    ?>
+                    <?php foreach ($associations as $keyword) { ?>
+                        <li>
+                            <a href="keyword/graph/consult?ref=<?=$keyword->getRef()?>">
+                                <?=$keyword->getLabel()?>
+                                <i>(<?=$keyword->getRef()?>)</i>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+        </div>
+        <?php } ?>
+    </div>
+
+    <div class="span2"></div>
+
+    <div class="span2">
+        <div style="text-align: center;">
+            <h3><?=__('Keyword', 'graph', 'currentKeyword')?></h3>
+        </div>
+        <p>
+            <?=$this->keyword->getLabel()?>
+            <i>(<?=$this->keyword->getRef()?>)</i>
+        </p>
+    </div>
+
+    <div class="span2"></div>
+
+    <div class="span3">
+        <div style="text-align: center;">
+            <h3><?=__('Keyword', 'graph', 'objectKeywords')?></h3>
+        </div>
+        <?php if (count($this->objectKeywords) > 0) { ?>
+        <div>
+            <?php foreach ($this->objectKeywords as $predicateLabel => $associations) { ?>
+            <div>
+                <h4><?=$predicateLabel?></h4>
+            </div>
+                <ul>
+                    <?php
+                    // Évite les problèmes de modification du tableau lors du l'accès au label (proxy).
+                    array_map(function (Keyword_Model_Keyword $keyword) { $keyword->getLabel(); }, $associations);
+                    // Trie $assocations par label
+                    uasort(
+                        $associations,
+                        function (Keyword_Model_Keyword $k1, Keyword_Model_Keyword $k2) {
+                            return strnatcmp($k1->getLabel(), $k2->getLabel());
+                        }
+                    );
+                    ?>
+                    <?php foreach ($associations as $keyword) { ?>
+                        <li>
+                            <a href="keyword/graph/consult?ref=<?=$keyword->getRef()?>">
+                                <?=$keyword->getLabel()?>
+                                <i>(<?=$keyword->getRef()?>)</i>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+        </div>
+        <?php } ?>
+    </div>
+</div>

@@ -328,8 +328,10 @@ class AF_InputController extends Core_Controller
         } elseif ($component instanceof AF_Model_Component_Text) {
             // Champ texte
             $input = new AF_Model_Input_Text($inputSet, $component);
-            if (isset($inputContent['value'])) {
+            if (!empty($inputContent['value'])) {
                 $input->setValue($inputContent['value']);
+            } elseif ($component->getRequired()) {
+                $errorMessages[$fullRef] = __("UI", "formValidation", "emptyRequiredField");
             }
         } elseif ($component instanceof AF_Model_Component_Checkbox) {
             // Champ checkbox

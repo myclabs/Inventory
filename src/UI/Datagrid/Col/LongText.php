@@ -57,7 +57,7 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
         $this->valueAlignment = self::DISPLAY_TEXT_LEFT;
         $this->defaultValue = '<i class="icon-zoom-in"></i> '.__('UI', 'name', 'details');
         $this->loadingText = __('UI', 'loading', 'loading');
-        $this->errorText = __('UI', 'loading', 'error');
+        $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
     }
 
     /**

@@ -1,5 +1,5 @@
 @dbFull
-Feature: AF non repeated subAF feature
+Feature: AF non repeated subAF feature
 
   Background:
     Given I am logged in
@@ -51,7 +51,7 @@ Feature: AF non repeated subAF feature
     And I click "Valider"
     Then the field "subAfNotRepeatedDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "subAfNotRepeatedDatagrid_ref_addForm" with "champ_numerique"
+    When I fill in "subAfNotRepeatedDatagrid_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "subAfNotRepeatedDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -65,7 +65,7 @@ Feature: AF non repeated subAF feature
   # Modification du libellé
     When I set "Sous-formulaire non répété modifié" for column "label" of row 1 of the "subAfNotRepeatedDatagrid" datagrid with a confirmation message
   # Modification de l'identifiant, saisie correcte
-    When I set "sous_formulaire_non_repete_modifie" for column "ref" of row 1 of the "subAfNotRepeatedDatagrid" datagrid with a confirmation message
+    When I set "s_f_n_r_modifie" for column "ref" of row 1 of the "subAfNotRepeatedDatagrid" datagrid with a confirmation message
   # Modification du formulaire associé
     When I set "Combustion de combustible, mesuré en unité de masse" for column "targetAF" of row 1 of the "subAfNotRepeatedDatagrid" datagrid with a confirmation message
   # Modification de l'aide
@@ -75,10 +75,10 @@ Feature: AF non repeated subAF feature
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "subAfNotRepeatedDatagrid" datagrid should contain:
       | label                              | ref                                | targetAF                                            | isVisible |
-      | Sous-formulaire non répété modifié | sous_formulaire_non_repete_modifie | Combustion de combustible, mesuré en unité de masse | Masqué    |
+      | Sous-formulaire non répété modifié | s_f_n_r_modifie | Combustion de combustible, mesuré en unité de masse | Masqué    |
     When I click "Aide" in the row 1 of the "subAfNotRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"
-    And I should see a "#subAfNotRepeatedDatagrid_help_popup .modal-body h1:contains('Blabla')" element
+    And I should see a "#subAfNotRepeatedDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
 
   @javascript
   Scenario: Edition of a non repeated subAF, incorrect input
@@ -94,7 +94,7 @@ Feature: AF non repeated subAF feature
     When I set "bépo" for column "ref" of row 1 of the "subAfNotRepeatedDatagrid" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "subAfNotRepeatedDatagrid" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "subAfNotRepeatedDatagrid" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript

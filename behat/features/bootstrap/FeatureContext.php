@@ -49,7 +49,7 @@ class FeatureContext extends MinkContext
     public function assertLoggedIn()
     {
         return [
-            new Step\Given('I am on "user/action/login"'),
+            new Step\Given('I am on "user/action/login?refer=index%2Faccueil"'),
             new Step\Given('I fill in "email" with "admin"'),
             new Step\Given('I fill in "password" with "myc-53n53"'),
             new Step\Given('I press "connection"'),
@@ -75,6 +75,8 @@ class FeatureContext extends MinkContext
      */
     public function waitForPageToFinishLoading()
     {
+        $this->getSession()->wait(50);
+
         // Chargements AJAX
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
@@ -140,9 +142,21 @@ class FeatureContext extends MinkContext
     public function clickElement($selector)
     {
         $node = $this->findElement($selector);
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * Focus on an element found using CSS selectors.
+     *
+     * @When /^(?:|I )focus on element "(?P<selector>(?:[^"]|\\")*)"$/
+     */
+    public function focusOnElement($selector)
+    {
+        $node = $this->findElement($selector);
+        $node->focus();
     }
 
     /**

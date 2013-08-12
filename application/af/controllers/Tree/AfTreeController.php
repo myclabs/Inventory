@@ -183,10 +183,15 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         $newParent = $this->_form[$this->id . '_changeParent']['value'];
         $newPosition = $this->_form[$this->id . '_changeOrder']['value'];
         $afterElement = $this->_form[$this->id . '_changeOrder']['children'][$this->id . '_selectAfter_child']['value'];
-        $newLabel = $this->_form[$this->id . '_labelEdit']['value'];
+        $newLabel = $this->getEditElementValue('labelEdit');
 
         // Label
-        if ($newLabel != null) {
+        if ($newLabel == '') {
+            $this->setEditFormElementErrorMessage('labelEdit', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->send();
+            return;
+        }
+        if ($newLabel !== $node->getLabel()) {
             $node->setLabel($newLabel);
         }
 
@@ -238,6 +243,10 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         try {
             $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
+            if ($e->isSourceEntityInstanceOf('AF_Model_Component_SubAF')
+                && $e->getSourceField() == 'calledAF') {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByOtherAF');
+            }
             throw new Core_Exception_User('AF', 'formTree', 'categoryHasChild');
         }
 

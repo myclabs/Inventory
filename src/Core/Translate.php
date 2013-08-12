@@ -120,15 +120,16 @@ class Core_Translate extends Zend_Translate
      * @param string $ref          Référence du texte (datagrids, champs etc...)
      * @param array  $replacements (optional) Tableau de remplacement à effectuer,
      *  ces remplacement prennent la forme suivante : array('RECHERCHE' => 'remplacement').
+     * @param string $locale
      *
      * @return string Texte traduit
      */
-    public static function get($package, $file, $ref, $replacements=array())
+    public static function get($package, $file, $ref, $replacements=array(), $locale=null)
     {
         // Chargement de la traduction.
         $translate = Zend_Registry::get(Core_Translate::registryKey);
         // Traduction du texte.
-        $translation = $translate->_($ref, $file, $package);
+        $translation = $translate->_($ref, $file, $package, $locale);
 
         // Insertion d'espaces insécables, et des sauts de lignes.
         $exceptionList = array(

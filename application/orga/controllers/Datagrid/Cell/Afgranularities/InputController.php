@@ -110,31 +110,6 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
         if ($isInputInInventory) {
             $data['inventoryStatus'] = $cell->getInventoryStatus();
-
-            if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
-                try {
-                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
-                    $percent = $aFInputSetPrimary->getCompletion();
-                    $progressBarColor = null;
-                    switch ($aFInputSetPrimary->getStatus()) {
-                        case AF_Model_InputSet_Primary::STATUS_FINISHED:
-                            $progressBarColor = 'success';
-                            break;
-                        case AF_Model_InputSet_Primary::STATUS_COMPLETE:
-                            $progressBarColor = 'warning';
-                            break;
-                        case AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE:
-                            $progressBarColor = 'danger';
-                            break;
-                        case AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE:
-                            $progressBarColor = 'danger';
-                            break;
-                    }
-                    $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    $data['advancementInput'] = $this->cellPercent(0, 'danger');
-                }
-            }
         }
 
         if (!$isInputInInventory || ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED)) {
@@ -156,9 +131,27 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                 );
                 try {
                     $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+                    $percent = $aFInputSetPrimary->getCompletion();
+                    $progressBarColor = null;
+                    switch ($aFInputSetPrimary->getStatus()) {
+                        case AF_Model_InputSet_Primary::STATUS_FINISHED:
+                            $progressBarColor = 'success';
+                            break;
+                        case AF_Model_InputSet_Primary::STATUS_COMPLETE:
+                            $progressBarColor = 'warning';
+                            break;
+                        case AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE:
+                            $progressBarColor = 'danger';
+                            break;
+                        case AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE:
+                            $progressBarColor = 'danger';
+                            break;
+                    }
+                    $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
                     $data['stateInput'] = $aFInputSetPrimary->getStatus();
                 } catch (Core_Exception_UndefinedAttribute $e) {
                     $aFInputSetPrimary = null;
+                    $data['advancementInput'] = $this->cellPercent(0, 'danger');
                     $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
                 }
                 if (($isUserAllowedToInputCell) || ($aFInputSetPrimary !== null)) {

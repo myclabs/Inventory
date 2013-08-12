@@ -1,14 +1,16 @@
 <?php
 /** @var $genericAction Social_Model_GenericAction */
+use Doc\Domain\Library;
+
 $genericAction = $this->genericAction;
 
-/** @var $documentLibrary Doc_Model_Library */
+/** @var $documentLibrary Library */
 if (isset($this->documentLibrary)) {
     $documentLibrary = $this->documentLibrary;
 } else {
     // Bibliothèque de test créée dans le build populate
     try {
-        $documentLibrary = Doc_Model_Library::load(1);
+        $documentLibrary = Library::load(1);
     } catch (Core_Exception_NotFound $e) {
         throw new Exception("Aucune bibliothèque globale de test trouvée, il est nécessaire de lancer build populate");
     }

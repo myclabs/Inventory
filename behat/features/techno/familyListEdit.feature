@@ -10,21 +10,22 @@ Feature: Family list edit feature
     Then I should see the "familyDatagrid" datagrid
   # Affichage du datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:
-      | category                        | label                                               | ref                                | type               | unit           |
-      | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | Facteur d'émission | kg équ. CO2/kg |
+      | category                        | label                                               | ref                                | unit           |
+      | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | kg équ. CO2/t |
   # Ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une famille"
     When I select "Catégorie contenant une famille" from "familyDatagrid_category_addForm"
-    And I fill in "familyDatagrid_label_addForm" with "Test"
-    And I fill in "familyDatagrid_ref_addForm" with "test"
+    And I fill in "familyDatagrid_label_addForm" with "AAA"
+    And I fill in "familyDatagrid_ref_addForm" with "aaa"
     And I select "Coefficient" from "familyDatagrid_type_addForm"
     And I fill in "familyDatagrid_unit_addForm" with "m"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 2 of the "familyDatagrid" datagrid should contain:
-      | category                        | label | ref  | type        | unit |
-      | Catégorie contenant une famille | Test  | test | Coefficient | m    |
+    And the "familyDatagrid" datagrid should contain a row:
+      | category                        | label | ref  | unit |
+      | Catégorie contenant une famille | AAA   | aaa  | m    |
+  # TODO : autoriser la création à la racine
 
   @javascript
   Scenario: Creation of a parameter family, incorrect input
@@ -38,7 +39,6 @@ Feature: Family list edit feature
     Then the field "familyDatagrid_category_addForm" should have error: "Merci de renseigner ce champ."
     And the field "familyDatagrid_label_addForm" should have error: "Merci de renseigner ce champ."
     And the field "familyDatagrid_ref_addForm" should have error: "Merci de renseigner ce champ."
-    And the field "familyDatagrid_type_addForm" should have error: "Merci de renseigner ce champ."
     And the field "familyDatagrid_unit_addForm" should have error: "Merci de renseigner ce champ."
   # Ajout, identifiant caractères non autorisés
     When I select "Catégorie contenant une famille" from "familyDatagrid_category_addForm"

@@ -4,6 +4,7 @@
  * @author  cyril.perraud
  * @package Algo
  */
+use Keyword\Domain\Keyword;
 
 /**
  * @package Algo
@@ -27,7 +28,7 @@ class Algo_Model_ParameterCoordinate_Algo extends Algo_Model_ParameterCoordinate
             throw new Core_Exception_InvalidArgument("The InputSet can't be null");
         }
         $keyword = $this->algoKeyword->execute($inputSet);
-        return Keyword_Model_Keyword::loadByRef($keyword);
+        return Keyword::loadByRef($keyword);
     }
 
     /**

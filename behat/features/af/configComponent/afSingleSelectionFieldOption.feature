@@ -1,11 +1,37 @@
 @dbFull
-Feature: AF single selection field option feature
+Feature: AF single selection field option feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a single selection field option scenario
+  Scenario: Creation of a single selection field option scenario, correct input
+  # Accès au popup des options
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Champs de sélection simple"
+    Then I should see the "selectSingleFieldDatagrid" datagrid
+    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
+    Then I should see the popup "Options"
+    And I should see the "optionDatagrid" datagrid
+  # Popup d'ajout
+    When I click element "#selectSingleFieldDatagrid_options_popup .btn:contains('Ajouter')"
+    Then I should see the popup "Ajout d'une option"
+  # Ajout, saisie correcte
+    When I fill in "optionDatagrid_label_addForm" with "AAA"
+    And I fill in "optionDatagrid_ref_addForm" with "aaa"
+    And I click "Valider"
+  # Option ajoutée apparaît en dernier
+    Then the row 3 of the "optionDatagrid" datagrid should contain:
+      | label | ref | isVisible | enabled |
+      | AAA   | aaa | Visible   | Activé  |
+    When I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
+    # When I click "×" (ne marche pas)
+    Then the following message is shown and closed: "Ajout effectué."
+
+  @javascript
+  Scenario: Creation of a single selection field option scenario, incorrect input
   # Accès au popup des options
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
@@ -27,22 +53,13 @@ Feature: AF single selection field option feature
     And I click "Valider"
     Then the field "optionDatagrid_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "optionDatagrid_ref_addForm" with "option_1"
+    When I fill in "optionDatagrid_ref_addForm" with "opt_1"
     And I click "Valider"
     Then the field "optionDatagrid_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # Ajout, saisie correcte
-    When I fill in "optionDatagrid_label_addForm" with "AAA"
-    And I fill in "optionDatagrid_ref_addForm" with "aaa"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-  # Option ajoutée apparaît en dernier
-    And the row 3 of the "optionDatagrid" datagrid should contain:
-      | label | ref | isVisible | enabled |
-      | AAA   | aaa | Visible   | Activé  |
 
   @javascript
-  Scenario: Edition of a single selection field option scenario
-  # Accès au popup des options, contenu première ligne
+  Scenario: Edition of a single selection field option scenario, correct input
+  # Accès au popup des options
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
     And I open tab "Composants"
@@ -50,29 +67,15 @@ Feature: AF single selection field option feature
     Then I should see the "selectSingleFieldDatagrid" datagrid
     When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Options"
+  # Contenu première ligne
     And I should see the "optionDatagrid" datagrid
     And the row 1 of the "optionDatagrid" datagrid should contain:
-      | label    | ref      | isVisible | enabled |
-      | Option 1 | option_1 | Visible   | Activée |
+      | label    | ref   | isVisible | enabled |
+      | Option 1 | opt_1 | Visible   | Activée |
   # Modification du libellé
     When I set "Option 1 modifiée" for column "label" of row 1 of the "optionDatagrid" datagrid
     And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
     Then the following message is shown and closed: "Modification effectuée."
-  # Modification de l'identifiant, identifiant vide
-    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
-    And I set "" for column "ref" of row 1 of the "optionDatagrid" datagrid
-    And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
-    Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant, identifiant avec caractères non autorisés
-    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
-    And I set "bépo" for column "ref" of row 1 of the "optionDatagrid" datagrid
-    And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
-    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé
-    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
-    And I set "option_2" for column "ref" of row 1 of the "optionDatagrid" datagrid
-    And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
-    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'identifiant, saisie correcte
     When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     And I set "option_1_modifiee" for column "ref" of row 1 of the "optionDatagrid" datagrid
@@ -93,6 +96,31 @@ Feature: AF single selection field option feature
     Then the row 1 of the "optionDatagrid" datagrid should contain:
       | label             | ref               | isVisible | enabled    |
       | Option 1 modifiée | option_1_modifiee | Masquée   | Désactivée |
+
+  @javascript
+  Scenario: Edition of a single selection field option scenario, incorrect input
+  # Accès au popup des options
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Champs de sélection simple"
+    Then I should see the "selectSingleFieldDatagrid" datagrid
+    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
+    Then I should see the popup "Options"
+  # Modification de l'identifiant, identifiant vide
+    When I set "" for column "ref" of row 1 of the "optionDatagrid" datagrid
+    And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+  # Modification de l'identifiant, identifiant avec caractères non autorisés
+    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
+    And I set "bépo" for column "ref" of row 1 of the "optionDatagrid" datagrid
+    And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
+    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
+  # Modification de l'identifiant, identifiant déjà utilisé
+    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
+    And I set "opt_2" for column "ref" of row 1 of the "optionDatagrid" datagrid
+    And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
+    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
   Scenario: Deletion of a single selection field option scenario

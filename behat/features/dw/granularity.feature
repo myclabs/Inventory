@@ -126,8 +126,7 @@ Feature: Granularity dataware analysis feature
   # Vérification que l'analyse apparaît bien parmi les analyses préconfigurées
     And I open collapse "Niveau organisationnel global"
     Then I should see the "granularity1Report" datagrid
-    And the "granularity1Report" datagrid should contain 1 row
-    And the row 1 of the "granularity1Report" datagrid should contain:
+    And the "granularity1Report" datagrid should contain a row:
       | label |
       | Analyse préconfigurée test |
   # Accès à l'analyse préconfigurée enregistrée
@@ -137,9 +136,8 @@ Feature: Granularity dataware analysis feature
     When I click "Retour"
     And I open tab "Analyses"
     Then I should see the "report" datagrid
-    And the "report" datagrid should contain 1 row
-    And the row 1 of the "report" datagrid should contain:
-      | label |
+    And the "report" datagrid should contain a row:
+      | label                      |
       | Analyse préconfigurée test |
   # Accès à l'analyse de la cellule
     When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid

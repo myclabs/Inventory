@@ -56,7 +56,7 @@ class Classif_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         $axis = Classif_Model_Axis::loadByRef($this->update['index']);
-        $axis->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $axis->reloadWithLocale(Core_Locale::load($this->update['column']));
         $axis->setLabel($this->update['value']);
         $this->data = $axis->getLabel();
 

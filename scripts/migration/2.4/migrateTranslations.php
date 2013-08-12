@@ -6,8 +6,8 @@ $entityManager = $entityManagers['default'];
 
 $temporaryLabel = 'Temporary Label';
 $translatableClasses = [
-    'Keyword_Model_Predicate' => ['attributes' => ['label', 'reverseLabel'], 'translations' => []],
-    'Keyword_Model_Keyword' => ['attributes' => ['label'], 'translations' => []],
+    'Keyword\Domain\Predicate' => ['attributes' => ['label', 'reverseLabel'], 'translations' => []],
+    'Keyword\Domain\Keyword' => ['attributes' => ['label'], 'translations' => []],
     'Techno_Model_Category' => ['attributes' => ['label'], 'translations' => []],
     'Techno_Model_Family' => ['attributes' => ['label', 'documentation'], 'translations' => []],
     'Techno_Model_Element' => ['attributes' => ['documentation'], 'translations' => []],

@@ -81,7 +81,7 @@ class Core_Locale
         if (self::$default !== null) {
             return self::$default;
         }
-        return new self(new Zend_Locale(Zend_Registry::get('configuration')->translation->fallback));
+        return new self(new Zend_Locale(Zend_Registry::get('configuration')->translation->defaultLocale));
     }
 
     /**

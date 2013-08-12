@@ -3,6 +3,8 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\Keyword;
+
 /** @var $family Techno_Model_Family */
 $family = $this->family;
 /** @var $dimension Techno_Model_Family_Dimension */
@@ -63,7 +65,7 @@ $refKeywordColumn->editable = true;
 $refKeywordColumn->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $refKeywordColumn->list = [];
 foreach ($this->keywords as $keyword) {
-    /** @var $keyword Keyword_Model_Keyword */
+    /** @var $keyword Keyword */
     $refKeywordColumn->list[$keyword->getRef()] = $keyword->getRef();
 }
 $datagrid->addCol($refKeywordColumn);

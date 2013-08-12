@@ -27,7 +27,7 @@ class StandardUnit extends Unit
     /**
      * Coefficient mutliplicateur d'une unité standard.
      * Permet par exemple de savoir le rapport entre km et m.
-     * @var int
+     * @var float
      */
     protected $multiplier = null;
 
@@ -67,7 +67,7 @@ class StandardUnit extends Unit
 
     /**
      * Défini le coefficient multiplicateur de l'unité.
-     * @param int $multiplier
+     * @param float $multiplier
      */
     public function setMultiplier($multiplier)
     {
@@ -77,7 +77,7 @@ class StandardUnit extends Unit
     /**
      * Renvoie le coefficient multiplicateur.
      * @throws \Core_Exception_UndefinedAttribute
-     * @return int
+     * @return float
      */
     public function getMultiplier()
     {
