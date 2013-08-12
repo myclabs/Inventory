@@ -89,7 +89,7 @@ Feature: Classification axis feature
     Then I should see the popup "Édition d'un axe"
   # Clic sur "Confirmer" sans avoir effectué aucune modification
     When I click "Confirmer"
-    And I wait 5 seconds
+    And I wait 5 seconds
     Then the following message is shown and closed: "Cette action n'a entraîné aucune modification."
   # Modification de l'identifiant d'un axe, identifiant vide
     When I click "Gaz"
