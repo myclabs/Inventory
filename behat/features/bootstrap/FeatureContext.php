@@ -142,9 +142,21 @@ class FeatureContext extends MinkContext
     public function clickElement($selector)
     {
         $node = $this->findElement($selector);
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * Focus on an element found using CSS selectors.
+     *
+     * @When /^(?:|I )focus on element "(?P<selector>(?:[^"]|\\")*)"$/
+     */
+    public function focusOnElement($selector)
+    {
+        $node = $this->findElement($selector);
+        $node->focus();
     }
 
     /**

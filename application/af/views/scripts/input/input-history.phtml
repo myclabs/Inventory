@@ -39,6 +39,9 @@ if (empty($entries)) : ?>
                     }, $value);
                 $shownValue = implode(', ', $labels);
             }
+            // Tronque à 50 caractères
+            $shownValue = Core_Tools::truncateString($shownValue, 50);
+
             $author = $entry->getAuthor();
             ?>
             <li>
