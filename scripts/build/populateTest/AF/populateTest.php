@@ -149,6 +149,12 @@ class AF_PopulateTest extends AF_Populate
         $c_t_c = $this->createShortTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_c', 'Champ texte court', true, true, null, true);
         $c_t_l = $this->createLongTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_l', 'Champ texte long', true, true, null, true);
 
+        // Formulaire avec sous-formulaire répété contenant tous types de champs
+        $aF_sous_AF_tous_types_champs = $this->createAF($category_cont_formulaire, 'formulaire_s_f_r_tous_types_champ', 'Formulaire avec sous-formulaire répété contenant tout type de champ');
+
+        // Composants
+        $s_f_r_t_t_c = $this->createSubAFRepeated($aF_sous_AF_tous_types_champs, $aF_sous_AF_tous_types_champs->getRootGroup(), 's_f_r_t_t_c', 'Sous-formulaire répété tout type de champ', $aF_tous_types_champs);
+
         // Formulaire vide
         $aF_vide = $this->createAF($category_cont_formulaire, 'formulaire_vide', 'Formulaire vide');
 

@@ -75,7 +75,9 @@ class Orga_PopulateTest extends Orga_Populate
         $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::STATUS_ACTIVE);
         // 2012 clôturé pour Europe marque B
         $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_b], Orga_Model_Cell::STATUS_CLOSED);
-        // 2013 non lancé pour Europe marque A et marque B (par défaut)
+        // 2013 ouvert pour Europe marque A
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2013, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::STATUS_ACTIVE);
+        // 2013 non lancé pour Europe marque B (par défaut)
 
         // Sélection des formulaires
         // Données générales pour la cellule globale
@@ -89,6 +91,8 @@ class Orga_PopulateTest extends Orga_Populate
         $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_energie], $granularity_annee_site_categorie, 'combustion_combustible_unite_masse');
         // Test affichage
         $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'formulaire_tous_types_champ');
+        // Test affichage sous-formulaire répété tout type de champ
+        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2013, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'formulaire_s_f_r_tous_types_champ');
 
         // Renseignement des saisies
         // Cellule globale, saisie terminée
