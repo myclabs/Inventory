@@ -34,6 +34,7 @@ Feature: Cell dataware analysis feature
   @javascript
   Scenario: Input status scenario
     @skipped
+    #6303 : Behat : je n'arrive pas à tester le volet "Filtres" de la configuration d'une analyse (pour cause de la taille verticale trop grande de ce volet)
   # Analyse sans filtre sur le statut
     Given I am on "orga/cell/details/idCell/5/tab/analyses"
     And I wait for the page to finish loading

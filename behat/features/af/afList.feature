@@ -150,6 +150,7 @@ Feature: AF list edit feature
   @javascript
   Scenario: Deletion of an A form from AF list
     @skipped
+    #6193 	Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
     Given I am on "af/af/list"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
