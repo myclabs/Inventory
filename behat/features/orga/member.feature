@@ -117,6 +117,7 @@ Feature: Organizational member feature
   @javascript
   Scenario: Deletion of an organizational member
     @skipped
+    #6268 Exceptions non capturées suppression d'un membre organisationnel
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
