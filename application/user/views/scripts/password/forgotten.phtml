@@ -1,7 +1,10 @@
 <div class="page-header">
     <h1><?=__('User', 'resetPassword', 'pageTitle')?></h1>
 </div>
-<p><?=__('User', 'resetPassword', 'comment')?></p>
+<p>
+    <label class="badge">1</label>
+    <?=__('User', 'resetPassword', 'Remplissez le premier formulaire pour recevoir un code de vérification par email.')?>
+</p>
 
 <?php
 $form = new UI_Form('passwordForgotten');
@@ -20,3 +23,23 @@ $form->addElement($captcha);
 $form->addSubmitButton(__('UI', 'verb', 'validate'));
 
 $form->display();
+?>
+
+<p>
+    <label class="badge">2</label>
+    <?=__('User', 'resetPasswordCode', 'Entrez le code de vérification reçu par email.')?>
+</p>
+
+<?php
+$resetCodeForm = new UI_Form('passwordResetCode');
+$resetCodeForm->setAction('user/password/reset');
+$resetCodeForm->setAjax(false);
+
+$code = new UI_Form_Element_Text('code');
+$code->setLabel(__('UI', 'name', 'Code de vérification'));
+$code->setRequired();
+$resetCodeForm->addElement($code);
+
+$resetCodeForm->addSubmitButton(__('UI', 'verb', 'validate'));
+
+$resetCodeForm->display();

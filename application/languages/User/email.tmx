@@ -168,9 +168,7 @@ vous pourrez changer votre mot de passe.
 
 [PASSWORD_RESET_LINK]
 
-Vous pouvez également saisir manuellement le code de vérification suivant :
-
-[PASSWORD_RESET_CODE]
+Vous pouvez également saisir manuellement le code de vérification suivant : [PASSWORD_RESET_CODE]
 
 Si vous n'êtes pas à l'origine de cette demande, merci de ne pas cliquer sur le lien précédant et d’ignorer cet e-mail; 
 votre mot de passe sur l'application « [APPLICATION_NAME] » ne sera pas modifié.
@@ -184,9 +182,7 @@ If you are behind this request, please click on the link below; your will be abl
 
 [PASSWORD_RESET_LINK]
 
-Vous can also enter the following verification code:
-
-[PASSWORD_RESET_CODE]
+Vous can also enter the following verification code: [PASSWORD_RESET_CODE]
 
 If you are not behind this request, please do not click on the link above and ignore this e-mail; 
 your password on application "[APPLICATION_NAME]" will remain unchanged.
