@@ -87,22 +87,17 @@ class User_PasswordController extends UI_Controller_Captcha
     public function resetAction()
     {
         $code = $this->getParam('code');
-
-        // Affichage du formulaire de modification du mot de passe
-        if ($code != null) {
-            try {
-                User_Model_User::loadByEmailKey($code);
-                $this->view->assign('code', $code);
-                $this->_helper->viewRenderer->renderBySpec('reset',
-                    ['module' => 'user', 'controller' => 'password']);
-                return;
-            } catch (Core_Exception_NotFound $e) {
-                UI_Message::addMessageStatic(__('User', 'messages', 'authenticationKeyInvalid'));
-            }
+        if ($code == null) {
+            $this->redirect('user/password/forgotten');
         }
 
-        // Affichage du formulaire de vérification du code
-        $this->_helper->viewRenderer->renderBySpec('verify-code', ['module' => 'user', 'controller' => 'password']);
+        try {
+            User_Model_User::loadByEmailKey($code);
+        } catch (Core_Exception_NotFound $e) {
+            UI_Message::addMessageStatic(__('User', 'messages', 'authenticationKeyInvalid'));
+            $this->redirect('user/password/forgotten');
+        }
+        $this->view->assign('code', $code);
     }
 
     /**
