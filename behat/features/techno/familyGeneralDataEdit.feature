@@ -54,6 +54,6 @@ Feature: Family general data edit feature
     And I fill in "Unité" with "m2"
     And I click "Enregistrer"
     Then the field "Identifiant" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
-  # TODO : modifier le message d'erreur pour préciser que le problème n'est pas que l'unité est invalide, mais qu'elle est incompatible avec l'unité initiale.
+  # TODO : modifier le message d'erreur pour préciser que le problème n'est pas que l'unité est invalide, mais qu'elle est incompatible avec l'unité initiale.
     And the field "Unité" should have error: "Merci de saisir un identifiant d'unité valide."
 
