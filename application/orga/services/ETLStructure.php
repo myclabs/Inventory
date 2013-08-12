@@ -47,11 +47,7 @@ class Orga_Service_ETLStructure
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
-        // Pour l'instant seule moyen de traduire la langue par défaut.
-        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        $dWEntity->setLabel($originalEntity->getLabel());
-        // Traductions
+        // Traductions.
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
                 $translationRepository->translate(
@@ -62,6 +58,10 @@ class Orga_Service_ETLStructure
                 );
             }
         }
+        // Pour l'instant seule moyen de traduire la langue par défaut.
+        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
+        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
+        $dWEntity->setLabel($originalEntity->getLabel());
     }
 
     /**
@@ -175,6 +175,8 @@ class Orga_Service_ETLStructure
         }
 
         $this->updateDWCubeLabel($cell->getDWCube(), $labels);
+        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
+        $cell->getDWCube()->setLabel($cell->getLabel());
     }
 
     /**
@@ -212,6 +214,8 @@ class Orga_Service_ETLStructure
         }
 
         $this->updateDWCubeLabel($granularity->getDWCube(), $labels);
+        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
+        $granularity->getDWCube()->setLabel($granularity->getLabel());
     }
 
     /**
