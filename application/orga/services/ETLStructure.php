@@ -166,8 +166,10 @@ class Orga_Service_ETLStructure
                     $originalTranslations = $translationRepository->findTranslations($member);
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } else {
+                    } elseif (isset($originalTranslations[$defaultLocale])) {
                         $labelParts[] = $originalTranslations[$defaultLocale]['label'];
+                    } else {
+                        $labelParts[] = $member->getLabel();
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels);
@@ -205,8 +207,10 @@ class Orga_Service_ETLStructure
                     $originalTranslations = $translationRepository->findTranslations($axis);
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } else {
+                    } elseif (isset($originalTranslations[$defaultLocale])) {
                         $labelParts[] = $originalTranslations[$defaultLocale]['label'];
+                    } else {
+                        $labelParts[] = $axis->getLabel();
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
