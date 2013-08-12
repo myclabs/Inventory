@@ -20,7 +20,7 @@ class Orga_Test_ACLTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-//        $suite->addTestSuite('Orga_Test_ACL');
+        $suite->addTestSuite('Orga_Test_ACL');
         return $suite;
     }
 
@@ -31,7 +31,7 @@ class Orga_Test_ACLTest
  * @package Orga
  * @subpackage Test
  */
-class Orga_Test_ACL extends PHPUnit_Framework_TestCase
+class Orga_Test_ACL extends Core_Test_TestCase
 {
     /**
      * @var User_Service_User
@@ -257,8 +257,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (User_Model_User::loadList() as $user) {
                 $user->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
 
         // Vérification qu'il ne reste aucun Orga_Model_Cell en base, sinon suppression !
@@ -267,8 +266,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Cell::loadList() as $cell) {
                 $cell->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
         // Vérification qu'il ne reste aucun Orga_Model_Granularity en base, sinon suppression !
         if (Orga_Model_Granularity::countTotal() > 0) {
@@ -276,8 +274,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Granularity::loadList() as $granularity) {
                 $granularity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
         // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
         if (Orga_Model_Member::countTotal() > 0) {
@@ -285,8 +282,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Member::loadList() as $member) {
                 $member->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
         // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
         if (Orga_Model_Axis::countTotal() > 0) {
@@ -294,8 +290,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
         // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
         if (Orga_Model_Organization::countTotal() > 0) {
@@ -303,16 +298,17 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Organization::loadList() as $organization) {
                 $organization->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
     }
 
     /**
      * Fonction appelee avant chaque test
      */
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
+
         $entityManagers = Zend_Registry::get('EntityManagers');
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = $entityManagers['default'];
@@ -6331,7 +6327,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
+        parent::tearDown();
 
         $this->userService->deleteUser($this->organizationAdministrator);
         $this->userService->deleteUser($this->globaleCellAdministrator);
@@ -6341,21 +6337,21 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
         $this->userService->deleteUser($this->berlinCellObserver);
         $this->userService->deleteUser($this->limaCellContributor);
 
-        $entityManagers['default']->flush();
-        $entityManagers['default']->clear();
+        $this->entityManager->flush();
+        $this->entityManager->clear();
 
         $this->organization = Orga_Model_Organization::load($this->organization->getId());
         foreach ($this->organization->getGranularities() as $granularity) {
             $granularity->delete();
         }
 
-        $entityManagers['default']->flush();
-        $entityManagers['default']->clear();
+        $this->entityManager->flush();
+        $this->entityManager->clear();
 
         $this->organization = Orga_Model_Organization::load($this->organization->getId());
         $this->organization->delete();
 
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
     }
 
     /**
@@ -6383,8 +6379,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (User_Model_User::loadList() as $user) {
                 $user->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
 
         // Vérification qu'il ne reste aucun Orga_Model_Cell en base, sinon suppression !
@@ -6393,8 +6388,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Cell::loadList() as $cell) {
                 $cell->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
         // Vérification qu'il ne reste aucun Orga_Model_Granularity en base, sinon suppression !
         if (Orga_Model_Granularity::countTotal() > 0) {
@@ -6402,8 +6396,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Granularity::loadList() as $granularity) {
                 $granularity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
         // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
         if (Orga_Model_Member::countTotal() > 0) {
@@ -6411,8 +6404,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Member::loadList() as $member) {
                 $member->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
         // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
         if (Orga_Model_Axis::countTotal() > 0) {
@@ -6420,8 +6412,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
         // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
         if (Orga_Model_Organization::countTotal() > 0) {
@@ -6429,8 +6420,7 @@ class Orga_Test_ACL extends PHPUnit_Framework_TestCase
             foreach (Orga_Model_Organization::loadList() as $organization) {
                 $organization->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $entityManager->flush();
         }
     }
 
