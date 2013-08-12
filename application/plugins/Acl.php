@@ -167,6 +167,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      */
     public function editMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
+        $request->setParam('index', 0);
         return ($this->editOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
     }
 
@@ -247,7 +248,9 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      */
     protected function getCell(Zend_Controller_Request_Abstract $request)
     {
+        Core_Tools::dump('get Cell');
         $index = $request->getParam('index');
+        Core_Tools::dump($index);
         if ($index !== null) {
             try {
                 return Orga_Model_Cell::load($index);
