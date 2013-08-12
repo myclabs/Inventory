@@ -152,6 +152,11 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
 
         $zendElement->setAttrib('id', $zendElement->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
         $zendElement->setName($zendElement->getName().self::OCCURRENCE_SEPARATOR.$occurrence);
+
+        foreach ($zendElement->getElement()->children as $childZendElement) {
+            $childZendElement->setAttrib('id', $childZendElement->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
+            $childZendElement->setName($childZendElement->getName().self::OCCURRENCE_SEPARATOR.$occurrence);
+        }
     }
 
 }
