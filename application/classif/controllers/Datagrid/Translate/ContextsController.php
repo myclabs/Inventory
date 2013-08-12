@@ -56,7 +56,7 @@ class Classif_Datagrid_Translate_ContextsController extends UI_Controller_Datagr
     public function updateelementAction()
     {
         $context = Classif_Model_Context::loadByRef($this->update['index']);
-        $context->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $context->reloadWithLocale(Core_Locale::load($this->update['column']));
         $context->setLabel($this->update['value']);
         $this->data = $context->getLabel();
 

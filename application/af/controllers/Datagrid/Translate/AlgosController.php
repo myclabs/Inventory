@@ -56,7 +56,7 @@ class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         $algo = Algo_Model_Numeric::load($this->update['index']);
-        $algo->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $algo->reloadWithLocale(Core_Locale::load($this->update['column']));
         $algo->setLabel($this->update['value']);
         $this->data = $algo->getLabel();
 
