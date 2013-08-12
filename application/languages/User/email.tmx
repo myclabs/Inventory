@@ -164,9 +164,13 @@ You can login again at the following address: [URL_APPLICATION].
 Une demande de réinitialisation de votre mot de passe a été déposée sur l’application « [APPLICATION_NAME] ».
 
 Si vous êtes à l'origine de cette demande, merci de cliquer sur le lien ci-dessous ; 
-votre mot de passe sera réinitialisé, et vous recevrez votre nouveau mot de passe par e-mail à cette même adresse.
+vous pourrez changer votre mot de passe.
 
-[PASSWORD_RESET_CONFIRMATION_LINK]
+[PASSWORD_RESET_LINK]
+
+Vous pouvez également saisir manuellement le code de vérification suivant :
+
+[PASSWORD_RESET_CODE]
 
 Si vous n'êtes pas à l'origine de cette demande, merci de ne pas cliquer sur le lien précédant et d’ignorer cet e-mail; 
 votre mot de passe sur l'application « [APPLICATION_NAME] » ne sera pas modifié.
@@ -176,46 +180,19 @@ votre mot de passe sur l'application « [APPLICATION_NAME] » ne sera pas modifi
                 <seg>	
 A password reset request has been submitted on application "[APPLICATION_NAME]".
 
-If you are behind this request, please click on the link below; your password will be reset, and your new password will be e-mailed at this address.
+If you are behind this request, please click on the link below; your will be able to change your password.
 
-[URL_CONFIRMATION_RENVOI_PARAMETRES_CONNEXION]
+[PASSWORD_RESET_LINK]
+
+Vous can also enter the following verification code:
+
+[PASSWORD_RESET_CODE]
 
 If you are not behind this request, please do not click on the link above and ignore this e-mail; 
 your password on application "[APPLICATION_NAME]" will remain unchanged.
                 </seg>
     		</tuv>
         </tu>
-
-		<!-- Email de renvoi du nouveau mot de passe -->
-
-		<tu tuid="subjectNewPassword">
-			<tuv xml:lang="fr">
-				<seg>Votre nouveau mot de passe</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Your new password</seg>
-			</tuv>
-		</tu>
-		<tu tuid="bodyNewPassword">
-			<tuv xml:lang="fr">
-				<seg>
-Suite à votre demande, votre mot de passe sur l’application « [APPLICATION_NAME] » a été réinitialisé.
-
-Votre nouveau mot de passe : [PASSWORD]
-
-Vous pouvez dès à présent vous connecter à votre compte avec ce nouveau mot de passe en vous rendant à l’adresse [URL_APPLICATION].
-                </seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>		
-Further to your request, your password on application "[APPLICATION_NAME]" has been reset.
-
-Your new password: [PASSWORD]
-
-From now on, you can login with this new password at address [URL_APPLICATION].
-                </seg>
-			</tuv>
-		</tu>
 
 		<!-- Changement de l'adresse e-mail d'un utilisateur (par un autre utilisateur 
 			ou par lui-même) -->
