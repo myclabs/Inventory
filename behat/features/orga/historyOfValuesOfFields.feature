@@ -34,25 +34,6 @@ Feature: History of values of a field feature
     Then I should see "La saisie Europe | Marque B a été enregistrée pour la première fois par Administrateur."
 
   @javascript
-  Scenario: Input history scenario, form with (repeated) subforms, creation and modification of an input
-    Given I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-  # Onglet "Formulaires"
-    And I open tab "Formulaires"
-    And I open collapse "Zone | Marque"
-    Then I should see the "aFGranularityConfig2" datagrid
-    When I set "Formulaire avec sous-formulaires" for column "aF" of row 2 of the "aFGranularityConfig2" datagrid with a confirmation message
-  # Pas besoin de modifier le statut de l'inventaire, on se trouve "au-dessus"
-  # Accès à la saisie"
-    When I open tab "Saisies"
-    And I open collapse "Zone | Marque"
-    Then I should see the "aFGranularity1Input2" datagrid
-    When I click "Cliquer pour accéder" in the row 2 of the "aFGranularity1Input2" datagrid
-  # Création de la saisie initiale
-    When I fill in "s_f_n_r__chiffre_affaire" with "10"
-    And I click "Enregistrer"
-
-  @javascript
   Scenario: Input history scenario, display of history for various kinds of input fiels
     Given I am on "orga/cell/input/idCell/32/fromIdCell/1"
     And I wait for the page to finish loading
@@ -89,3 +70,29 @@ Feature: History of values of a field feature
     Then I should see a "code:contains('Lorem ipsum dolor sit amet, consectetur adipisici…')" element
   # Fermeture dernier popup historique
     And I click element "#c_t_lHistory .btn"
+
+  @javascript
+  Scenario: Input history scenario, display of history for a repeated subform containing various types of fields
+    Given I am on "orga/cell/input/idCell/32/fromIdCell/1"
+    And I wait for the page to finish loading
+  # Ajout 1 blocs de répétition
+    And I click "Ajouter"
+  # Champ numérique
+    And I fill in "s_f_r_t_t_c__c_n__1" with "10"
+    And I fill in "s_f_r_t_t_c__percentc_n" wit "10"
+  # Champs sélection simple
+    And I select "Option 1" from "s_f_r_t_t_c__c_s_s_liste__1"
+    And I check "s_f_r_t_t_c__c_s_s_bouton__1_opt_1"
+  # Champs sélection multiple
+    And I check "s_f_r_t_t_c__c_s_m_checkbox__1_opt_1"
+    And I check "s_f_r_t_t_c__c_s_m_checkbox__1_opt_2"
+    And I additionally select "s_f_r_t_t_c__c_s_m_liste__1_opt_1" from "s_f_r_t_t_c__c_s_m_liste__1"
+    And I additionally select "s_f_r_t_t_c__c_s_m_liste__1_opt_2" from "s_f_r_t_t_c__c_s_m_liste__1"
+  # Champ booléen
+    And I check "s_f_r_t_t_c__c_b__1"
+  # Champs texte
+    And I fill in "s_f_r_t_t_c__c_t_c__1" with "Lorem ipsum dolor sit amet"
+    And I fill in "s_f_r_t_t_c__c_t_l__1" with "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi"
+    And I click "Enregistrer"
+
+
