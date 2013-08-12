@@ -56,7 +56,7 @@ class AF_Datagrid_Translate_AfsController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         $aF = AF_Model_AF::load($this->update['index']);
-        $aF->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $aF->reloadWithLocale(Core_Locale::load($this->update['column']));
         $aF->setLabel($this->update['value']);
         $this->data = $aF->getLabel();
 

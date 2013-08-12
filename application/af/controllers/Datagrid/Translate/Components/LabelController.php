@@ -61,7 +61,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
     public function updateelementAction()
     {
         $component = AF_Model_Component::load($this->update['index']);
-        $component->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $component->reloadWithLocale(Core_Locale::load($this->update['column']));
         $component->setLabel($this->update['value']);
         $this->data = $component->getLabel();
 

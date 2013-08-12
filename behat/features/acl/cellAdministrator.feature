@@ -42,6 +42,7 @@ Feature: Cell administrator feature
   @javascript
   Scenario: Cell administrator organization tab
     @skipped
+    #6272 Scenario: Cell administrator organization tab
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté

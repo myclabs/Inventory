@@ -43,6 +43,10 @@ class UI_Form_Decorator_InputAppend extends Zend_Form_Decorator_Abstract
             }
         }
 
+        if ($element instanceof UI_Form_Element_Textarea) {
+            $options['class'] .= ' large';
+        }
+
         // Pour les éléments childrens. Les options hide sont affichés dans l'input decorator.
         if (($element->getDecorator('line') === false)
             && ($element->getDecorator('controls') === false)) {

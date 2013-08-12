@@ -452,6 +452,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         } elseif ($entity instanceof Orga_Model_Cell) {
             return $this->getCellParentResources($entity);
         }
+        return [];
     }
 
     /**
@@ -462,9 +463,8 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     {
         if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
             return [User_Model_Resource_Entity::loadByEntity(Orga_Model_Cell::loadByDWCube($report->getCube()))];
-        } else {
-            return [];
         }
+        return [];
     }
 
     /**
@@ -506,19 +506,9 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     public function getChildResources(User_Model_Resource_Entity $resource)
     {
         $entity = $resource->getEntity();
-        if ($entity instanceof DW_Model_Report) {
-            return $this->getDWReportChildResources($entity);
-        } elseif ($entity instanceof Orga_Model_Cell) {
+        if ($entity instanceof Orga_Model_Cell) {
             return $this->getCellChildResources($entity);
         }
-    }
-
-    /**
-     * @param DW_Model_Report $report
-     * @return User_Model_Resource_Entity[]
-     */
-    protected function getDWReportChildResources(DW_Model_Report $report)
-    {
         return [];
     }
 
@@ -627,7 +617,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     public function addCellAdministrator(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
     {
-        $this->addCellUser($user, $cell, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
+        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
     }
 
     /**
@@ -639,7 +629,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     public function removeCellAdministrator(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
     {
-        $this->removeCellUser($user, $cell, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
+        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
     }
 
     /**
@@ -651,7 +641,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     public function addCellContributor(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
     {
-        $this->addCellUser($user, $cell, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
+        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
     }
 
     /**
@@ -663,7 +653,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     public function removeCellContributor(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
     {
-        $this->removeCellUser($user, $cell, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
+        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
     }
 
     /**
@@ -675,7 +665,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     public function addCellObserver(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
     {
-        $this->addCellUser($user, $cell, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
+        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
     }
 
     /**
@@ -687,7 +677,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     public function removeCellObserver(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
     {
-        $this->removeCellUser($user, $cell, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
+        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
     }
 
     /**

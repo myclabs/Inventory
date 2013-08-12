@@ -1,11 +1,11 @@
 @dbFull
-Feature: Edit Classif translations
+Feature: Edit Classif translations feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Edit classif axes translations
+  Scenario: Edit classif axes translations scenario
   # Affichage du datagrid
     Given I am on "classif/translate/axes"
     And I wait for the page to finish loading
@@ -22,7 +22,7 @@ Feature: Edit Classif translations
 
 
   @javascript
-  Scenario: Edit classif members translations
+  Scenario: Edit classif members translations scenario
   # Affichage du datagrid
     Given I am on "classif/translate/members"
     And I wait for the page to finish loading
@@ -38,7 +38,7 @@ Feature: Edit Classif translations
       | gaz \| co2 | CO2 (français) | CO2 (anglais) |
 
   @javascript
-  Scenario: Edit classif indicators translations
+  Scenario: Edit classif indicators translations scenario
   # Affichage du datagrid
     Given I am on "classif/translate/indicators"
     And I wait for the page to finish loading
@@ -54,7 +54,7 @@ Feature: Edit Classif translations
       | ges        | GES (français) | GES (anglais) |
 
   @javascript
-  Scenario: Edit classif contexts translations
+  Scenario: Edit classif contexts translations scenario
   # Affichage du datagrid
     Given I am on "classif/translate/contexts"
     And I wait for the page to finish loading

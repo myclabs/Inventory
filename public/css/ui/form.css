@@ -2,8 +2,8 @@
 .form .control-label { width: 400px; }
 .form .controls { margin-left: 430px; }
 .form .controls > div { margin-right: 25px; }
-.form .controls > div:first-child { width: 380px; margin-right: 0px; }
-.form .input { display: inline-block; }
+.form .controls > div:first-child { width: 380px; }
+.form .input { display: inline-block; margin-right: 5px; }
 .form .input.hide { display: none; }
 .form .incertitude { width: 30px; }
 .form .subGroup { margin-left: 40px; }
@@ -31,6 +31,7 @@
     margin-top: 0px;
 }
 
+.form div.input.large { width: auto; }
 .form textarea { width: auto; height: auto; }
 
 /* Formulaires répétés : affichage des lignes*/
@@ -200,7 +201,7 @@
 
 /* Redéfinition du champs markItUp */
 .form .markItUp { width: auto; border: none; }
-.form .markItUp .markItUpContainer { width: 760px; padding: 0px; border: inherit; background: none; }
+.form .markItUp .markItUpContainer { padding: 0px; border: inherit; background: none; }
 .markItUp textarea { width: 98%; padding: 1%; background: none;
  /* Réécritue des règles de twitter bootstrap */
   background-color: #ffffff;

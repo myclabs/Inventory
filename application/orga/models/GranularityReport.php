@@ -56,7 +56,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
      *
      * @param string            $event
      * @param Core_Model_Entity $subject
-     * @param array                $arguments
+     * @param array             $arguments
      */
     public static function applyEvent($event, $subject, $arguments = array())
     {
@@ -120,6 +120,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     public static function isDWReportCopiedFromGranularityDWReport(DW_Model_Report $dWReport)
     {
         foreach (self::loadList() as $granularityReport) {
+            /** @var self $granularityReport */
             if ($granularityReport->hasCellDWReport($dWReport)) {
                 return true;
             }

@@ -26,18 +26,26 @@ class Orga_Service_InputService
     private $eventDispatcher;
 
     /**
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
+    /**
      * @param AF_Service_InputService $afInputService
      * @param Orga_Service_ETLData    $etlDataService
      * @param EventDispatcher         $eventDispatcher
+     * @param Core_Work_Dispatcher    $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,
         Orga_Service_ETLData $etlDataService,
-        EventDispatcher $eventDispatcher
+        EventDispatcher $eventDispatcher,
+        Core_Work_Dispatcher $workDispatcher
     ) {
         $this->afInputService = $afInputService;
         $this->etlDataService = $etlDataService;
         $this->eventDispatcher = $eventDispatcher;
+        $this->workDispatcher = $workDispatcher;
     }
 
     /**
@@ -83,9 +91,15 @@ class Orga_Service_InputService
             $this->eventDispatcher->dispatch($event::NAME, $event);
         }
 
+
+        $this->workDispatcher->runBackground(
+            new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'clearDWResultsFromCell', [$cell])
+        );
         $this->etlDataService->clearDWResultsFromCell($cell);
         if ($inputSet->isInputComplete()) {
-            $this->etlDataService->populateDWResultsFromCell($cell);
+            $this->workDispatcher->runBackground(
+                new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
+            );
         }
     }
 }
