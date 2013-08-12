@@ -42,4 +42,10 @@ Feature: Input mandatory field display feature
     And I click "Ajouter"
   # Affichage des messages des champs au clic sur "Aperçu des résultats"
     And I click "Aperçu des résultats"
-  # TODO : à compléter !
+    Then the field "s_f_r_t_t_c__c_n__1" should have error: "Merci de renseigner ce champ."
+    And the field "s_f_r_t_t_c__c_s_s_liste__1" should have error: "Merci de renseigner ce champ."
+    And the field "s_f_r_t_t_c__c_s_s_bouton__1" should have error: "Merci de renseigner ce champ."
+    And the field "s_f_r_t_t_c__c_s_m_checkbox__1" should have error: "Merci de renseigner ce champ."
+    And the field "s_f_r_t_t_c__c_s_m_liste__1" should have error: "Merci de renseigner ce champ."
+    And the field "s_f_r_t_t_c__c_t_c__1" should have error: "Merci de renseigner ce champ."
+    And the field "s_f_r_t_t_c__c_t_l__1" should have error: "Merci de renseigner ce champ."
