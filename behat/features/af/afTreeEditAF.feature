@@ -69,6 +69,7 @@ Feature: AF tree edit AF feature
   @javascript
   Scenario: Deletion of an AF in AF tree edit, authorized
     @skipped
+    #6193 	Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
     Given I am on "af/af/tree"
     And I wait 7 seconds
   # Suppression sans obstacle, formulaire vide
