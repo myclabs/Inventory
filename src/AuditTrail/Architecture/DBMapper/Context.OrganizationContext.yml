@@ -5,7 +5,12 @@ AuditTrail\Domain\Context\OrganizationContext:
   manyToOne:
     organization:
       targetEntity: \Orga_Model_Organization
+      joinColumn:
+        # Suppression du contexte si l'organisation est supprimée
+        onDelete: CASCADE
     cell:
       targetEntity: \Orga_Model_Cell
       joinColumn:
         nullable: true
+        # Suppression du contexte si la cellule est supprimée
+        onDelete: CASCADE
