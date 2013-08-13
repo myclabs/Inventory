@@ -37,6 +37,8 @@ Feature: History of values of a field feature
   Scenario: Input history scenario, display of history for various kinds of input fiels
     Given I am on "orga/cell/input/idCell/32/fromIdCell/1"
     And I wait for the page to finish loading
+  # Attente pour voir si ça aide à passer sur serveur dédié
+    And I wait 5 seconds
   # Champ numérique
     And I click element "#c_nHistory .btn"
     Then I should see a "code:contains('10 kg équ. CO2/m³ ± 15 %')" element
@@ -75,6 +77,8 @@ Feature: History of values of a field feature
   Scenario: Input history scenario, display of history for a repeated subform containing various types of fields, one repetition
     Given I am on "orga/cell/input/idCell/38/fromIdCell/1"
     And I wait for the page to finish loading
+  # Ajout attente pour voir si ça aide à faire passer le test sur serveur distant
+    And I wait 5 seconds
   # Ajout 1 blocs de répétition
     And I click "Ajouter"
   # Champ numérique
