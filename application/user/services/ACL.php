@@ -153,7 +153,7 @@ class User_Service_ACL
 
         // Autorisations héritées des ressources parent
         foreach ($this->getAllParentResources([$resource]) as $parentResource) {
-            $authorizations += $this->getAllAuthorizationsForResource($parentResource);
+            $authorizations = array_merge($authorizations, $this->getAllAuthorizationsForResource($parentResource));
         }
 
         return $authorizations;
