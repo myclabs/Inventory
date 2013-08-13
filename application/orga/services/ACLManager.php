@@ -519,9 +519,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     protected function getCellChildResources(Orga_Model_Cell $cell)
     {
-        $childResources = [];
-
-        $childResources = array_merge($childResources, $this->getCellDWReportResources($cell));
+        $childResources = $this->getCellDWReportResources($cell);
 
         foreach ($cell->getChildCells() as $childCell) {
             if (isset($this->newResources['cell'][$childCell->getId()])) {
@@ -544,19 +542,21 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     protected function getCellDWReportResources(Orga_Model_Cell $cell)
     {
+        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+            return [];
+        }
+
         $dWReportResources = [];
 
-        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            foreach ($cell->getDWCube()->getReports() as $dWReport) {
-                if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
-                    if (isset($this->newResources['report'][$dWReport->getId()])) {
-                        $dWReportResource = $this->newResources['report'][$dWReport->getId()];
-                    } else {
-                        $dWReportResource = User_Model_Resource_Entity::loadByEntity($dWReport);
-                    }
-                    if ($dWReportResource !== null) {
-                        $dWReportResources[] = $dWReportResource;
-                    }
+        foreach ($cell->getDWCube()->getReports() as $dWReport) {
+            if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
+                if (isset($this->newResources['report'][$dWReport->getId()])) {
+                    $dWReportResource = $this->newResources['report'][$dWReport->getId()];
+                } else {
+                    $dWReportResource = User_Model_Resource_Entity::loadByEntity($dWReport);
+                }
+                if ($dWReportResource !== null) {
+                    $dWReportResources[] = $dWReportResource;
                 }
             }
         }
