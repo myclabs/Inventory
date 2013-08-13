@@ -542,7 +542,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     protected function getCellDWReportResources(Orga_Model_Cell $cell)
     {
-        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+        if (!$cell->getGranularity()->getCellsGenerateDWCubes()) {
             return [];
         }
 
