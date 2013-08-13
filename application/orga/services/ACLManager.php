@@ -444,7 +444,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      *
      * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
      */
-    public function getParentResources(User_Model_Resource_Entity $resource)
+    public function getAllParentResources(User_Model_Resource_Entity $resource)
     {
         $entity = $resource->getEntity();
         if ($entity instanceof DW_Model_Report) {
@@ -503,7 +503,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      *
      * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
      */
-    public function getChildResources(User_Model_Resource_Entity $resource)
+    public function getAllChildResources(User_Model_Resource_Entity $resource)
     {
         $entity = $resource->getEntity();
         if ($entity instanceof Orga_Model_Cell) {
