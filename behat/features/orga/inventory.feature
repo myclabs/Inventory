@@ -15,7 +15,7 @@ Feature: Organization inventory tab feature
       | annee | zone   | marque   | inventoryStatus |
       | 2013  | Europe | Marque B | Non lancé       |
   # Édition du statut d'une collecte
-    When I set "En cours" for column "inventoryStatus" of row 4 of the "inventories6" datagrid with a confirmation message
+    When I set "En cours" for column "inventoryStatus" of row 5 of the "inventories6" datagrid with a confirmation message
     Then the row 5 of the "inventories6" datagrid should contain:
       | annee | zone   | marque   | inventoryStatus |
       | 2013  | Europe | Marque B | En cours        |
