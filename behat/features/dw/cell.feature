@@ -29,7 +29,14 @@ Feature: Cell dataware analysis feature
     And the row 2 of the "report" datagrid should contain:
       | label                        |
       | Chiffre d'affaire, par année |
-    When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
+    When I click "Cliquer pour accéder" in the row 2 of the "report" datagrid
+    And I open tab "Valeurs"
+    Then the row 1 of the "reportValues" datagrid should contain:
+      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | 2012                | 20           | 10%              |
+    And the row 2 of the "reportValues" datagrid should contain:
+      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | 2013                | 10           | 15%              |
 
   @javascript
   Scenario: Filter on input status for an analysis scenario

@@ -26,7 +26,8 @@ Feature: Organization granularity feature
     And I select "Oui" in radio "Actions"
     And I select "Oui" in radio "Documents"
     And I click "Valider"
-    And I wait 20 seconds
+  # Nécessité d'une attente longue du fait de la présence du masque de chargement, pour que le scénario passe en local (affichage du message de confirmation)
+    And I wait 30 seconds
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     And the row 2 of the "granularity" datagrid should contain:
       | axes | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
