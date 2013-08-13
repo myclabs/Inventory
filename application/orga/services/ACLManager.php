@@ -462,7 +462,8 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     protected function getDWReportParentResources(DW_Model_Report $report)
     {
         if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
-            return [User_Model_Resource_Entity::loadByEntity(Orga_Model_Cell::loadByDWCube($report->getCube()))];
+            $reportCell = Orga_Model_Cell::loadByDWCube($report->getCube());
+            return array_merge([User_Model_Resource_Entity::loadByEntity($reportCell)], $this->getCellParentResources($reportCell));
         }
         return [];
     }
@@ -520,20 +521,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     {
         $childResources = [];
 
-        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            foreach ($cell->getDWCube()->getReports() as $dWReport) {
-                if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
-                    if (isset($this->newResources['report'][$dWReport->getId()])) {
-                        $childDWReportResource = $this->newResources['report'][$dWReport->getId()];
-                    } else {
-                        $childDWReportResource = User_Model_Resource_Entity::loadByEntity($dWReport);
-                    }
-                    if ($childDWReportResource !== null) {
-                        $childResources[] = $childDWReportResource;
-                    }
-                }
-            }
-        }
+        $childResources = array_merge($childResources, $this->getCellDWReportResources($cell));
 
         foreach ($cell->getChildCells() as $childCell) {
             if (isset($this->newResources['cell'][$childCell->getId()])) {
@@ -544,9 +532,36 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
             if ($childCellResource !== null) {
                 $childResources[] = $childCellResource;
             }
+            $childResources = array_merge($childResources, $this->getCellDWReportResources($childCell));
         }
 
         return $childResources;
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @return User_Model_Resource_Entity[]
+     */
+    protected function getCellDWReportResources(Orga_Model_Cell $cell)
+    {
+        $dWReportResources = [];
+
+        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+            foreach ($cell->getDWCube()->getReports() as $dWReport) {
+                if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
+                    if (isset($this->newResources['report'][$dWReport->getId()])) {
+                        $dWReportResource = $this->newResources['report'][$dWReport->getId()];
+                    } else {
+                        $dWReportResource = User_Model_Resource_Entity::loadByEntity($dWReport);
+                    }
+                    if ($dWReportResource !== null) {
+                        $dWReportResources[] = $dWReportResource;
+                    }
+                }
+            }
+        }
+
+        return $dWReportResources;
     }
 
 
