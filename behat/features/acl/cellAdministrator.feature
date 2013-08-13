@@ -39,9 +39,9 @@ Feature: Cell administrator feature
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
 
-  @javascript @skipped
-  Scenario: Cell administrator organization tab
-  #6272 Scenario: Cell administrator organization tab
+  @javascript
+  Scenario: Cell administrator members tab, creation and modification of a member
+  #6268, #6300
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté
@@ -62,25 +62,68 @@ Feature: Cell administrator feature
     And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    And the row 1 of the "listMemberssite" datagrid should contain:
+      | label | ref | broaderpays |
+      | AAA   | aaa | France      |
   # Modification d'un membre
     When I set "Annecy modifiée" for column "label" of row 1 of the "listMemberssite" datagrid with a confirmation message
     And I set "annecy_modifie" for column "ref" of row 1 of the "listMemberssite" datagrid with a confirmation message
     Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label           | ref     |
+      | label           | ref            |
       | Annecy modifiée | annecy_modifie |
-  # Suppression d'un membre
-    When I click "Supprimer" in the row 1 of the "listMemberssite" datagrid
+
+  @javascript
+  Scenario: Cell administrator members tab, deletion of a member
+    Given I am on the homepage
+    And I wait for the page to finish loading
+  # Login en tant qu'utilisateur connecté
+    When I fill in "email" with "administrateur.zone-marque@toto.com"
+    And I fill in "password" with "administrateur.zone-marque@toto.com"
+    And I click "connection"
+    And I open tab "Organisation"
+  # Ajout et suppression d'un membre à l'axe "Pays"
+    And I open collapse "Pays"
+    And I click "Ajouter"
+    Then I should see the popup "Ajout d'un membre à l'axe « Pays »"
+    When I fill in "listMemberspays_label_addForm" with "AAA"
+    And I fill in "listMemberspays_ref_addForm" with "aaa"
+    And I fill in "listMemberspays_broaderzone_addForm" with "europe#"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    And the "listMemberspays" datagrid should contain 2 row
+    And the row 1 of the "listMemberspays" datagrid should contain:
+      | label | ref | broaderzone |
+      | AAA   | aaa | Europe      |
+    When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
+    And the "listMemberspays" datagrid should contain 1 row
+  # TODO : Suppression d'un membre entraînant la suppression de cellules associées à des DWs (par exemple un site).
+
+
+  @javascript
+  Scenario: Cell administrator subunits and relevance tabs
+    Given I am on the homepage
+    And I wait for the page to finish loading
+  # Login en tant qu'utilisateur connecté
+    When I fill in "email" with "administrateur.zone-marque@toto.com"
+    And I fill in "password" with "administrateur.zone-marque@toto.com"
+    And I click "connection"
+    Then I should see "Europe | Marque A Organisation avec données"
+  # Vérification qu'on a bien accès à l'onglet "Organisation" et à ses sous-onglets
+    When I open tab "Organisation"
   # Accès à l'onglet "Sous-unités"
-    When I open tab "Sous-unités"
+    And I open tab "Sous-unités"
     And I open collapse "Site"
     Then I should see the "child_c2_g3" datagrid
   # Accès à l'onglet "Pertinence"
     When I open tab "Pertinence"
     And I open collapse "Site"
     Then I should see the "relevant_c2_g3" datagrid
+    And the row 1 of the "relevant_c2_g3" datagrid should contain:
+      | site   | relevant   | allParentsRelevant |
+      | Annecy | Pertinente | Toutes pertinentes |
   # Édition de la pertinence : rendre non pertinente une cellule pertinente
     When I set "Non pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
     Then the row 1 of the "relevant_c2_g3" datagrid should contain:
@@ -89,5 +132,5 @@ Feature: Cell administrator feature
   # Édition de la pertinence : rendre pertinente une cellule non pertinente
     When I set "Pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
     Then the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site   | relevant       | allParentsRelevant |
-      | Annecy | Pertinente | Toutes pertinentes |
+      | site            | relevant   | allParentsRelevant |
+      | Annecy modifiée | Pertinente | Toutes pertinentes |
