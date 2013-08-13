@@ -927,11 +927,9 @@ class Orga_Model_Cell extends Core_Model_Entity
 
         if (empty($cellsGroup)) {
             throw new Core_Exception_NotFound("No 'Orga_Model_CellsGroup' for input Granularity " . $inputGranularity);
-        } else {
-            if (count($cellsGroup) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity "
-                    . $inputGranularity);
-            }
+        } elseif (count($cellsGroup) > 1) {
+            throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity "
+                . $inputGranularity);
         }
 
         return array_pop($cellsGroup);

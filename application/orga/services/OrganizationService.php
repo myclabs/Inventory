@@ -89,11 +89,37 @@ class Orga_Service_OrganizationService
         $this->entityManager->beginTransaction();
 
         try {
+            // Suppression des autorisations de tous les utilisateurs.
+            $this->clearAttachedUsers(User_Model_Resource_Entity::loadByEntity($organization));
             foreach ($organization->getGranularities() as $granularity) {
+                foreach ($granularity->getCells() as $cell) {
+                    $this->clearAttachedUsers(User_Model_Resource_Entity::loadByEntity($cell));
+                }
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+
+            $organization = Orga_Model_Organization::load($organization->getId());
+            $organization->setGranularityForInventoryStatus();
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+
+            $organization = Orga_Model_Organization::load($organization->getId());
+            $granularities = $organization->getGranularities();
+            foreach (array_reverse($granularities) as $granularity) {
+                $granularity = Orga_Model_Granularity::load($granularity->getId());
+                $granularity->setInputConfigGranularity();
                 $granularity->delete();
             }
+
             $this->entityManager->flush();
+            $this->entityManager->clear();
+
+            $organization = Orga_Model_Organization::load($organization->getId());
             $organization->delete();
+
             $this->entityManager->flush();
             $this->entityManager->commit();
         } catch (Exception $e) {
@@ -101,6 +127,20 @@ class Orga_Service_OrganizationService
             $this->entityManager->clear();
 
             throw $e;
+        }
+    }
+
+    /**
+     * @param User_Model_Resource_Entity $resource
+     */
+    protected function clearAttachedUsers(User_Model_Resource_Entity $resource)
+    {
+        foreach ($resource->getLinkedSecurityIdentities() as $securityIdentity) {
+            if ($securityIdentity instanceof User_Model_Role) {
+                foreach ($securityIdentity->getUsers() as $attachedUser) {
+                    $attachedUser->removeRole($securityIdentity);
+                }
+            }
         }
     }
 

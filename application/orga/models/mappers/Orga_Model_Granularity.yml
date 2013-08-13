@@ -69,6 +69,7 @@ Orga_Model_Granularity:
       joinColumn:
         name: idInputConfigGranularity
         referencedColumnName: id
+        onDelete: CASCADE
         nullable: true
 
   oneToOne:
