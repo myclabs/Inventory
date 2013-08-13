@@ -264,7 +264,7 @@ class User_Service_ACL
         }
 
         // Supprime les doublons
-        return array_unique($parentResources, SORT_REGULAR);
+        return Core_Tools::arrayFilterDuplicates($parentResources);
     }
 
     /**
@@ -275,7 +275,7 @@ class User_Service_ACL
     public function getAllChildResources(array $resources)
     {
         $childResources = [];
-        
+
         foreach ($resources as $resource) {
             if (!$resource instanceof User_Model_Resource_Entity) {
                 continue;
@@ -288,7 +288,7 @@ class User_Service_ACL
         }
 
         // Supprime les doublons
-        return array_unique($childResources, SORT_REGULAR);
+        return Core_Tools::arrayFilterDuplicates($childResources);
     }
 
 }
