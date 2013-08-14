@@ -54,7 +54,7 @@ if ($this->mode != AF_ViewConfiguration::MODE_READ) {
     $resultsPreviewButtonLabel = __('AF', 'inputInput', 'resultsPreview');
     $quitButtonLabel = __('UI', 'verb', 'quit');
     $actionGroup->content = <<<HTML
-        <button type="button" class="inputSave btn btn-primary" data-loading-text="$loadingText" disabled>
+        <button type="button" class="inputSave btn" data-loading-text="$loadingText" disabled>
             $saveButtonLabel
         </button>
         <button type="button" class="inputReset btn" disabled>
@@ -63,7 +63,7 @@ if ($this->mode != AF_ViewConfiguration::MODE_READ) {
         <button type="button" class="inputPreview btn" data-loading-text="$loadingText">
             $resultsPreviewButtonLabel
         </button>
-        <button type="button" class="inputExit btn">
+        <button type="button" class="inputExit btn btn-primary">
             $quitButtonLabel
         </button>
 HTML;
