@@ -15,7 +15,7 @@ Feature: Input mandatory field display feature
     And the field "c_s_s_liste" should have error: "Merci de renseigner ce champ."
     And the field "c_s_s_bouton" should have error: "Merci de renseigner ce champ."
     And the field "c_s_m_checkbox" should have error: "Merci de renseigner ce champ."
-    And the field "c_s_m_list" should have error: "Merci de renseigner ce champ."
+    And the field "c_s_m_liste" should have error: "Merci de renseigner ce champ."
     And the field "c_t_c" should have error: "Merci de renseigner ce champ."
     And the field "c_t_l" should have error: "Merci de renseigner ce champ."
   # Affichage des messages des champs au clic sur "Enregistrer"
@@ -29,7 +29,7 @@ Feature: Input mandatory field display feature
     And the field "c_s_s_liste" should have error: "Merci de renseigner ce champ."
     And the field "c_s_s_bouton" should have error: "Merci de renseigner ce champ."
     And the field "c_s_m_checkbox" should have error: "Merci de renseigner ce champ."
-    And the field "c_s_m_list" should have error: "Merci de renseigner ce champ."
+    And the field "c_s_m_liste" should have error: "Merci de renseigner ce champ."
     And the field "c_t_c" should have error: "Merci de renseigner ce champ."
     And the field "c_t_l" should have error: "Merci de renseigner ce champ."
 

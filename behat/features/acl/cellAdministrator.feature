@@ -60,15 +60,16 @@ Feature: Cell administrator feature
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
     And I fill in "listMemberssite_broaderpays_addForm" with "france#"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     And the row 1 of the "listMemberssite" datagrid should contain:
-      | label | ref | broaderpays |
-      | AAA   | aaa | France      |
+      | label | ref | broaderpays | broadermarque |
+      | AAA   | aaa | France      | Marque A      |
   # Modification d'un membre
-    When I set "Annecy modifiée" for column "label" of row 1 of the "listMemberssite" datagrid with a confirmation message
-    And I set "annecy_modifie" for column "ref" of row 1 of the "listMemberssite" datagrid with a confirmation message
-    Then the row 1 of the "listMemberssite" datagrid should contain:
+    When I set "Annecy modifiée" for column "label" of row 2 of the "listMemberssite" datagrid with a confirmation message
+    And I set "annecy_modifie" for column "ref" of row 2 of the "listMemberssite" datagrid with a confirmation message
+    Then the row 2 of the "listMemberssite" datagrid should contain:
       | label           | ref            |
       | Annecy modifiée | annecy_modifie |
 
@@ -132,5 +133,5 @@ Feature: Cell administrator feature
   # Édition de la pertinence : rendre pertinente une cellule non pertinente
     When I set "Pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
     Then the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site            | relevant   | allParentsRelevant |
-      | Annecy modifiée | Pertinente | Toutes pertinentes |
+      | site    | relevant   | allParentsRelevant |
+      | Annecy  | Pertinente | Toutes pertinentes |

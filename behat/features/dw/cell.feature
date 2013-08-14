@@ -47,7 +47,8 @@ Feature: Cell dataware analysis feature
     And I click element "#indicatorRatio_indicator"
     And I select "Histogramme vertical" from "chartType"
     And I click "Lancer"
-    And I open tab "Valeurs"
+    Then the following message is shown and closed: "Analyse effectuée."
+    When I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 1 row
     And the row 1 of the "reportValues" datagrid should contain:
       | valueAxisorga_annee | valueDigital | valueUncertainty |
