@@ -169,7 +169,7 @@ class Orga_Service_ETLStructure
                         $labelParts[] = $member->getLabel();
                     }
                 }
-                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels);
+                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);
             }
         }
 
