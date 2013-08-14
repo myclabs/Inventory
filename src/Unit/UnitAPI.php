@@ -164,17 +164,12 @@ class UnitAPI
      */
     public function getSamePhysicalQuantityUnits()
     {
+        /** @var StandardUnit $unit */
         $unit = StandardUnit::loadByRef($this->getRef());
-
-        $queryCompatibleUnits = new Core_Model_Query();
-        $queryCompatibleUnits->filter->addCondition(
-            StandardUnit::QUERY_PHYSICALQUANTITY,
-            $unit->getPhysicalQuantity()
-        );
 
         $refs = array();
 
-        foreach (StandardUnit::loadList($queryCompatibleUnits) as $standardUnit) {
+        foreach (StandardUnit::findByPhysicalQuantity($unit->getPhysicalQuantity()) as $standardUnit) {
             $refs[] = new UnitAPI($standardUnit->getRef());
         }
 

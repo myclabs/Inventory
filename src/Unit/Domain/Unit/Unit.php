@@ -1,10 +1,4 @@
 <?php
-/**
- * @author  valentin.claras
- * @author  hugo.charbonniere
- * @author  yoann.croizer
- * @package Unit
- */
 
 namespace Unit\Domain\Unit;
 
@@ -13,19 +7,13 @@ use Core_Model_Entity_Translatable;
 
 /**
  * Unité
- * @package Unit
+ * @author  valentin.claras
+ * @author  hugo.charbonniere
+ * @author  yoann.croizer
  */
-abstract class Unit extends Core_Model_Entity
+abstract class Unit
 {
-
     use Core_Model_Entity_Translatable;
-
-    // Constantes de tri et filtres.
-    const QUERY_ID = 'id';
-    const QUERY_NAME = 'name';
-    const QUERY_SYMBOL = 'symbol';
-    const QUERY_REF = 'ref';
-
 
     /**
      * Identifiant d'une unité
@@ -51,16 +39,6 @@ abstract class Unit extends Core_Model_Entity
      */
     protected $symbol;
 
-
-    /**
-     * Retourne l'objet Unit à partir de son référent textuel.
-     * @param string $ref
-     * @return Unit
-     */
-    public static function loadByRef($ref)
-    {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref));
-    }
 
     /**
      * Défini la ref de l'unité.
@@ -127,4 +105,84 @@ abstract class Unit extends Core_Model_Entity
      */
     abstract public function getConversionFactor(Unit $unit);
 
+    /**
+     * @todo Supprimer
+     * @return Unit
+     */
+    public static function loadByRef($ref)
+    {
+        /** @var UnitRepository $repository */
+        $repository = self::getEntityRepository();
+        return $repository->findByRef($ref);
+    }
+    /**
+     * @todo Supprimer
+     */
+    public function save()
+    {
+        /** @var UnitRepository $repository */
+        $repository = self::getEntityRepository();
+        $repository->add($this);
+    }
+
+    /**
+     * @todo Supprimer
+     */
+    public function delete()
+    {
+        /** @var UnitRepository $repository */
+        $repository = self::getEntityRepository();
+        $repository->remove($this);
+    }
+
+    /**
+     * @todo Supprimer
+     */
+    public static function load($id)
+    {
+        /** @var UnitRepository $repository */
+        $repository = self::getEntityRepository();
+        $entityName = get_called_class();
+
+        $entity = $repository->find($id);
+        if (empty($entity)) {
+            // Nécessaire pour contourner un problème de récursivité lorsque la clé contient un objet.
+            ob_start();
+            var_dump($id);
+            $exportedId = ob_get_clean();
+            throw new \Core_Exception_NotFound('No "' . $entityName . '" matching key ' . $exportedId);
+        }
+        return $entity;
+    }
+
+    /**
+     * @todo Supprimer
+     */
+    public static function loadList(\stdClass $foo = null)
+    {
+        /** @var UnitRepository $repository */
+        $repository = self::getEntityRepository();
+        return $repository->findAll();
+    }
+
+    /**
+     * @todo Supprimer
+     */
+    public static function countTotal(\stdClass $foo = null)
+    {
+        /** @var UnitRepository $repository */
+        $repository = self::getEntityRepository();
+        return $repository->count();
+    }
+
+    /**
+     * @todo Supprimer
+     */
+    protected static function getEntityRepository()
+    {
+        $entityManagers = \Zend_Registry::get('EntityManagers');
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $entityManagers['default'];
+        return $em->getRepository(get_called_class());
+    }
 }

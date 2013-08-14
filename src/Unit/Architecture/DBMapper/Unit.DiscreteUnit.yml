@@ -1,4 +1,4 @@
 Unit\Domain\Unit\DiscreteUnit:
   type: entity
-  repositoryClass: \Core_Model_Repository
+  repositoryClass: Unit\Architecture\Repository\DoctrineUnitRepository
   table: Unit_DiscreteUnit

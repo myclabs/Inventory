@@ -1,7 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- */
 
 namespace AuditTrail\Domain;
 
@@ -10,6 +7,8 @@ use Core\Model\EntityRepositoryInterface;
 
 /**
  * Audit trail entry repository
+ *
+ * @author matthieu.napoli
  */
 interface EntryRepository extends EntityRepositoryInterface
 {

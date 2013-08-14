@@ -26,27 +26,6 @@ class DiscreteUnit extends Unit
     }
 
     /**
-     * Renvoie la référence de la pool active.
-     *  Il s'agit de l'entityManager correspondant.
-     *
-     * @return string
-     */
-    public static function getActivePoolName()
-    {
-        return Unit::getActivePoolName();
-    }
-
-    /**
-     * Retourne l'objet Unit à partir de son référent textuel.
-     * @param string $ref
-     * @return \Unit\Domain\Unit\DiscreteUnit
-     */
-    public static function loadByRef($ref)
-    {
-        return parent::loadByRef($ref);
-    }
-
-    /**
      * Renvoi l'unité de reference (elle-meme).
      * @return \Unit\Domain\Unit\DiscreteUnit
      */
