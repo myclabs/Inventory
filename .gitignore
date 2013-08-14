@@ -10,5 +10,5 @@ application/configs/application.ini
 application/configs/env.php
 public/.htaccess
 
-*.vpp.bak
+*.vpp.*
 *.vpp~*
