@@ -2,7 +2,7 @@
 .form .control-label { width: 400px; }
 .form .controls { margin-left: 430px; }
 .form .controls > div { margin-right: 25px; }
-.form .controls > div:first-child { width: 380px; }
+.form .controls > div:first-child { width: 380px; margin-right: 0px; }
 .form .input { display: inline-block; margin-right: 5px; }
 .form .input.hide { display: none; }
 .form .incertitude { width: 30px; }

@@ -945,7 +945,7 @@ class Orga_Service_ETLStructure
             $granularity = Orga_Model_Granularity::load($granularity->getId());
 
             if ($granularity->getCellsGenerateDWCubes()) {
-                $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
+                $this->resetGranularityDWCubes($granularity);
 
                 foreach ($granularity->getCells() as $cell) {
                     // Optimisation de la mémoire.
