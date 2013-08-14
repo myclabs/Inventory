@@ -38,6 +38,19 @@ Feature: Cell administrator feature
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
+  # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
+    When I open tab "Analyses"
+    Then the row 1 of the "report" datagrid should contain:
+      | label                        |
+      | Chiffre d'affaire, par année |
+    When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
+    And I open tab "Valeurs"
+    Then the row 1 of the "reportValues" datagrid should contain:
+      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | 2012                | 10           | 15               |
+    And the row 2 of the "reportValues" datagrid should contain:
+      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | 2013                | 10           | 15               |
 
   @javascript
   Scenario: Cell administrator members tab, creation and modification of a member
