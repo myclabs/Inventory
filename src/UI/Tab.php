@@ -92,7 +92,7 @@ class UI_Tab
 
         $imageLoading = new UI_HTML_Image('images/ui/ajax-loader_large.gif', '');
         $this->loadingText = $imageLoading->getHTML().' '.__('UI', 'loading', 'loading');
-        $this->errorText = __('UI', 'loading', 'error');
+        $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
     }
 
     /**

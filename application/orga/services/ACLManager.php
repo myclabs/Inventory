@@ -12,8 +12,18 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
  * @package Orga
  *
  */
-class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL_ResourceTreeTraverser
+class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 {
+    /**
+     * @var User_Service_User
+     */
+    protected $userService;
+
+    /**
+     * @var User_Service_ACL
+     */
+    protected $aclService;
+
     /**
      * Indique que l'Orga_ACLManager a détected des changements sur les ressources.
      *
@@ -65,15 +75,14 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
 
 
     /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Orga_Service_ACLManager
+     * @param User_Service_User $userService
+     * @param User_Service_ACL $aclService
      */
-    public static function getInstance()
+    public function __construct(User_Service_User $userService, User_Service_ACL $aclService)
     {
-        return parent::getInstance();
+        $this->userService = $userService;
+        $this->aclService = $aclService;
     }
-
 
     /**
      * @param OnFlushEventArgs $eventArgs
@@ -138,23 +147,23 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         foreach ($this->newOrganizations as $organization) {
             $this->processNewOrganization($organization);
         }
-        $this->newOrganizations = array();
+        $this->newOrganizations = [];
 
         foreach ($this->newCells as $cell) {
             $this->processNewCell($cell);
         }
-        $this->newCells = array();
+        $this->newCells = [];
 
         foreach ($this->newReports as $report) {
             $this->processNewReport($report);
         }
-        $this->newReports = array();
+        $this->newReports = [];
 
 
         $eventArgs->getEntityManager()->flush();
 
-        $this->newResources = array('organization' => array(), 'cell' => array(), 'report' => array());
-        $this->newRoles = array();
+        $this->newResources = ['organization' => [], 'cell' => [], 'report' => []];
+        $this->newRoles = [];
 
         self::$changesDetected = false;
         self::$processing = false;
@@ -181,17 +190,17 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $this->newRoles[$organizationAdministrator->getRef()] = $organizationAdministrator;
 
         // Ajout des autorisations du rôle administrateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::EDIT(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $organizationAdministrator,
             User_Model_Action_Default::DELETE(),
             $organizationResource
@@ -228,32 +237,32 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $this->newRoles[$cellAdministrator->getRef()] = $cellAdministrator;
 
         // Ajout des autorisations du rôle administrateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::VIEW(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::EDIT(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             User_Model_Action_Default::ALLOW(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             Orga_Action_Cell::COMMENT(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellAdministrator,
             Orga_Action_Cell::INPUT(),
             $cellResource
@@ -268,22 +277,22 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $this->newRoles[$cellContributor->getRef()] = $cellContributor;
 
         // Ajout des autorisations du rôle administrateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellContributor,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellContributor,
             User_Model_Action_Default::VIEW(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellContributor,
             Orga_Action_Cell::COMMENT(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellContributor,
             Orga_Action_Cell::INPUT(),
             $cellResource
@@ -298,17 +307,17 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $this->newRoles[$cellObserver->getRef()] = $cellObserver;
 
         // Ajout des autorisations du rôle observateur sur la ressource.
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellObserver,
             User_Model_Action_Default::VIEW(),
             $organizationResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellObserver,
             User_Model_Action_Default::VIEW(),
             $cellResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $cellObserver,
             Orga_Action_Cell::COMMENT(),
             $cellResource
@@ -331,44 +340,6 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
 
         // Cas spécifique d'un Report de Cell copié depuis le Cube d'une Granularity.
         if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
-            $cell = Orga_Model_Cell::loadByDWCube($dWReport->getCube());
-
-            $cellAdministratorRoleRef = 'cellAdministrator_'.$cell->getId();
-            if (isset($this->newRoles[$cellAdministratorRoleRef])) {
-                $cellAdministrator = $this->newRoles[$cellAdministratorRoleRef];
-            } else {
-                $cellAdministrator = User_Model_Role::loadByRef($cellAdministratorRoleRef);
-            }
-            User_Service_ACL::getInstance()->allow(
-                $cellAdministrator,
-                User_Model_Action_Default::VIEW(),
-                $reportResource
-            );
-
-            $cellContributorRoleRef = 'cellContributor_'.$cell->getId();
-            if (isset($this->newRoles[$cellContributorRoleRef])) {
-                $cellContributor = $this->newRoles[$cellContributorRoleRef];
-            } else {
-                $cellContributor = User_Model_Role::loadByRef($cellContributorRoleRef);
-            }
-            User_Service_ACL::getInstance()->allow(
-                $cellContributor,
-                User_Model_Action_Default::VIEW(),
-                $reportResource
-            );
-
-            $cellObserverRoleRef = 'cellObserver_'.$cell->getId();
-            if (isset($this->newRoles[$cellObserverRoleRef])) {
-                $cellObserver = $this->newRoles[$cellObserverRoleRef];
-            } else {
-                $cellObserver = User_Model_Role::loadByRef($cellObserverRoleRef);
-            }
-            User_Service_ACL::getInstance()->allow(
-                $cellObserver,
-                User_Model_Action_Default::VIEW(),
-                $reportResource
-            );
-
             return;
         }
 
@@ -388,17 +359,17 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
             $identity = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
         }
 
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $identity,
             User_Model_Action_Default::VIEW(),
             $reportResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $identity,
-            User_Model_Action_Default::EDIT(),
+            Orga_Action_Report::EDIT(),
             $reportResource
         );
-        User_Service_ACL::getInstance()->allow(
+        $this->aclService->allow(
             $identity,
             User_Model_Action_Default::DELETE(),
             $reportResource
@@ -416,8 +387,8 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
 
         $organizationResource->delete();
 
-        $organizationAdministrator = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
-        $organizationAdministrator->delete();
+        $this->deleteRole(User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization));
+        self::$changesDetected = true;
     }
 
     /**
@@ -431,14 +402,10 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
 
         $cellResource->delete();
 
-        $cellAdministrator = User_Model_Role::loadByRef('cellAdministrator_'.$idCell);
-        $cellAdministrator->delete();
-
-        $cellContributor = User_Model_Role::loadByRef('cellContributor_'.$idCell);
-        $cellContributor->delete();
-
-        $cellObserver = User_Model_Role::loadByRef('cellObserver_'.$idCell);
-        $cellObserver->delete();
+        $this->deleteRole(User_Model_Role::loadByRef('cellAdministrator_'.$idCell));
+        $this->deleteRole(User_Model_Role::loadByRef('cellContributor_'.$idCell));
+        $this->deleteRole(User_Model_Role::loadByRef('cellObserver_'.$idCell));
+        self::$changesDetected = true;
     }
 
     /**
@@ -451,8 +418,24 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $idReport = $reportResource->getEntityIdentifier();
 
         $reportResource->delete();
+        self::$changesDetected = true;
     }
 
+    /**
+     * @param User_Model_Role $role
+     */
+    protected function deleteRole(User_Model_Role $role)
+    {
+        foreach ($role->getUsers() as $user) {
+            $user->removeRole($role);
+        }
+        $role->delete();
+    }
+
+
+    /*
+     * Hierarchie des ressources Cell.
+     */
 
     /**
      * Trouve les ressources parent d'une ressource
@@ -461,28 +444,53 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
      *
      * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
      */
-    public function getParentResources(User_Model_Resource_Entity $resource)
+    public function getAllParentResources(User_Model_Resource_Entity $resource)
+    {
+        $entity = $resource->getEntity();
+        if ($entity instanceof DW_Model_Report) {
+            return $this->getDWReportParentResources($entity);
+        } elseif ($entity instanceof Orga_Model_Cell) {
+            return $this->getCellParentResources($entity);
+        }
+        return [];
+    }
+
+    /**
+     * @param DW_Model_Report $report
+     * @return User_Model_Resource_Entity[]
+     */
+    protected function getDWReportParentResources(DW_Model_Report $report)
+    {
+        if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
+            $reportCell = Orga_Model_Cell::loadByDWCube($report->getCube());
+            return array_merge([User_Model_Resource_Entity::loadByEntity($reportCell)], $this->getCellParentResources($reportCell));
+        }
+        return [];
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @return User_Model_Resource_Entity[]
+     */
+    protected function getCellParentResources(Orga_Model_Cell $cell)
     {
         $parentResources = [];
-
-        /** @var Orga_Model_Cell $cell */
-        $cell = $resource->getEntity();
 
         try {
             // Si la cellule a été supprimée, il n'y a plus de parents
             $parentCells = $cell->getParentCells();
         } catch (Core_Exception_NotFound $e) {
-            return $parentResources;
+            return [];
         }
 
         foreach ($parentCells as $parentCell) {
             if (isset($this->newResources['cell'][$parentCell->getId()])) {
-                $parentResource = $this->newResources['cell'][$parentCell->getId()];
+                $parentCellResource = $this->newResources['cell'][$parentCell->getId()];
             } else {
-                $parentResource = User_Model_Resource_Entity::loadByEntity($parentCell);
+                $parentCellResource = User_Model_Resource_Entity::loadByEntity($parentCell);
             }
-            if ($parentResource !== null) {
-                $parentResources[] = $parentResource;
+            if ($parentCellResource !== null) {
+                $parentResources[] = $parentCellResource;
             }
         }
 
@@ -496,34 +504,79 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
      *
      * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
      */
-    public function getChildResources(User_Model_Resource_Entity $resource)
+    public function getAllChildResources(User_Model_Resource_Entity $resource)
     {
-        $childResources = [];
+        $entity = $resource->getEntity();
+        if ($entity instanceof Orga_Model_Cell) {
+            return $this->getCellChildResources($entity);
+        }
+        return [];
+    }
 
-        /** @var Orga_Model_Cell $cell */
-        $cell = $resource->getEntity();
+    /**
+     * @param Orga_Model_Cell $cell
+     * @return User_Model_Resource_Entity[]
+     */
+    protected function getCellChildResources(Orga_Model_Cell $cell)
+    {
+        $childResources = $this->getCellDWReportResources($cell);
 
         foreach ($cell->getChildCells() as $childCell) {
             if (isset($this->newResources['cell'][$childCell->getId()])) {
-                $childResource = $this->newResources['cell'][$childCell->getId()];
+                $childCellResource = $this->newResources['cell'][$childCell->getId()];
             } else {
-                $childResource = User_Model_Resource_Entity::loadByEntity($childCell);
+                $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
             }
-            if ($childResource !== null) {
-                $childResources[] = $childResource;
+            if ($childCellResource !== null) {
+                $childResources[] = $childCellResource;
             }
+            $childResources = array_merge($childResources, $this->getCellDWReportResources($childCell));
         }
 
         return $childResources;
     }
 
     /**
+     * @param Orga_Model_Cell $cell
+     * @return User_Model_Resource_Entity[]
+     */
+    protected function getCellDWReportResources(Orga_Model_Cell $cell)
+    {
+        if (!$cell->getGranularity()->getCellsGenerateDWCubes()) {
+            return [];
+        }
+
+        $dWReportResources = [];
+
+        foreach ($cell->getDWCube()->getReports() as $dWReport) {
+            if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
+                if (isset($this->newResources['report'][$dWReport->getId()])) {
+                    $dWReportResource = $this->newResources['report'][$dWReport->getId()];
+                } else {
+                    $dWReportResource = User_Model_Resource_Entity::loadByEntity($dWReport);
+                }
+                if ($dWReportResource !== null) {
+                    $dWReportResources[] = $dWReportResource;
+                }
+            }
+        }
+
+        return $dWReportResources;
+    }
+
+
+    /*
+     * Gestion des roles sur les utilisateurs.
+     */
+
+    /**
      * Ajoute au projet donné, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Organization $organization
-     * @param User_Model_User $user
+     * @param User_Model_User  $user
+     * @param bool $sendMail
      */
-    public function addOrganizationAdministrator($organization, $user)
+    public function addOrganizationAdministrator(Orga_Model_Organization $organization, User_Model_User $user, $sendMail=true)
     {
         $user->addRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
@@ -531,6 +584,18 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $user->addRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
+
+        if ($sendMail === true) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userOrganizationAdministratorRoleAdded',
+                    [
+                        'ORGANIZATION' => $organization->getLabel()
+                    ]
+                )
+            );
+        }
     }
 
     /**
@@ -538,8 +603,9 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
      *
      * @param Orga_Model_Organization $organization
      * @param User_Model_User $user
+     * @param bool $sendMail
      */
-    public function removeOrganizationAdministrator($organization, $user)
+    public function removeOrganizationAdministrator(Orga_Model_Organization $organization, User_Model_User $user, $sendMail=true)
     {
         $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
@@ -547,6 +613,134 @@ class Orga_Service_ACLManager extends Core_Singleton implements User_Service_ACL
         $user->removeRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
+
+        if ($sendMail === true) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', ['ORGANIZATION' => $organization->getLabel()])
+            );
+        }
+    }
+
+    /**
+     * Ajoute à la cellule donnée, l'utilisateur comme administrateur.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function addCellAdministrator(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Retire de la cellule donnée, l'utilisateur comme administrateur.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function removeCellAdministrator(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Ajoute à la cellule donnée, l'utilisateur comme contributor.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function addCellContributor(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Retire de la cellule donnée, l'utilisateur comme contributor.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function removeCellContributor(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Ajoute à la cellule donnée, l'utilisateur comme observateur.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function addCellObserver(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * Retire de la cellule donnée, l'utilisateur comme observateur.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User  $user
+     * @param bool $sendMail
+     */
+    public function removeCellObserver(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    {
+        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User $user
+     * @param User_Model_Role $role
+     * @param bool $sendMail
+     */
+    public function addCellUser(Orga_Model_Cell $cell, User_Model_User $user, User_Model_Role $role, $sendMail=true)
+    {
+        $user->addRole($role);
+
+        if($sendMail) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userRoleAdded',
+                    [
+                        'CELL' => $cell->getLabelExtended(),
+                        'ROLE' => __('Orga', 'role', $role->getName())
+                    ]
+                )
+            );
+        }
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @param User_Model_User $user
+     * @param User_Model_Role $role
+     * @param bool $sendMail
+     */
+    public function removeCellUser(Orga_Model_Cell $cell, User_Model_User $user, User_Model_Role $role, $sendMail=true)
+    {
+        $user->removeRole($role);
+
+        if ($sendMail) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userRoleRemoved',
+                    [
+                        'CELL' => $cell->getLabelExtended(),
+                        'ROLE' => __('Orga', 'role', $role->getName())
+                    ]
+                )
+            );
+        }
     }
 
 }

@@ -10,7 +10,7 @@ use Core\Annotation\Secure;
 /**
  * @package Doc
  */
-class Doc_LibraryController extends Core_Controller_Ajax
+class Doc_LibraryController extends Core_Controller
 {
 
     /**

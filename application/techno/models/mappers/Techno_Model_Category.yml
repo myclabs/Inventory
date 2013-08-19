@@ -37,7 +37,6 @@ Techno_Model_Category:
       mappedBy: parentCategory
       orderBy:
         position: ASC
-      cascade: [ all ]
     families:
       targetEntity: Techno_Model_Family
       mappedBy: category

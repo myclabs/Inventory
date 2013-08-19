@@ -12,7 +12,7 @@ use Core\Annotation\Secure;
  * Controlleur permettant de gérer les Keyword.
  * @package Keyword
  */
-class Keyword_GraphController extends Core_Controller_Ajax
+class Keyword_GraphController extends Core_Controller
 {
     /**
      * Graphe des Keyword, racine.

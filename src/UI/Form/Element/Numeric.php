@@ -11,7 +11,7 @@
  * @package UI
  * @subpackage Form
  */
-class UI_Form_Element_Numeric extends Zend_Form_Element_Xhtml
+class UI_Form_Element_Numeric extends Zend_Form_Element_Xhtml implements UI_Form_ZendElement
 {
     /**
      * Default form view helper to use for rendering

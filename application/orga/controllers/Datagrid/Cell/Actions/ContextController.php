@@ -119,8 +119,7 @@ class Orga_Datagrid_Cell_Actions_ContextController extends UI_Controller_Datagri
             $contextAction->save();
             $cell->addSocialContextAction($contextAction);
 
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
             /** @var $actionKeyFigures Social_Model_ActionKeyFigure[] */
             $actionKeyFigures = Social_Model_ActionKeyFigure::loadList();
@@ -131,8 +130,7 @@ class Orga_Datagrid_Cell_Actions_ContextController extends UI_Controller_Datagri
             }
             $contextAction->save();
 
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
             $this->message = __('UI', 'message', 'added');
         }

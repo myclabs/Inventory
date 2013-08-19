@@ -7,6 +7,12 @@
  * @package AF
  */
 
+use TEC\Expression;
+use TEC\Component\Component;
+use TEC\Component\Composite;
+use TEC\Component\Leaf;
+use TEC\Exception\InvalidExpressionException;
+
 /**
  * @package    AF
  * @subpackage Condition
@@ -19,20 +25,15 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
      */
     protected $expression;
 
-    /**
-     * @var TEC_Model_Expression
-     */
-    protected $tecExpression;
-
 
     /**
      * {@inheritdoc}
      */
     public function getUICondition(AF_GenerationHelper $generationHelper)
     {
-        $tree = $this->getTECExpression();
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
         // On construit l'expression en partant de la racine
-        $uiCondition = $this->buildUICondition($tree->getRootNode(), $generationHelper);
+        $uiCondition = $this->buildUICondition($tecExpression->getRootNode(), $generationHelper);
         return $uiCondition;
     }
 
@@ -41,7 +42,8 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
      */
     public function getExpression()
     {
-        return $this->expression;
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+        return $tecExpression->getAsString();
     }
 
     /**
@@ -50,43 +52,10 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
      */
     public function setExpression($expression)
     {
-        $tecExpression = new TEC_Model_Expression();
-        $tecExpression->setType(TEC_Model_Expression::TYPE_LOGICAL);
-        $tecExpression->setExpression($expression);
+        $tecExpression = new Expression($expression, Expression::TYPE_LOGICAL);
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;
-        $this->tecExpression = $tecExpression;
-    }
-
-    /**
-     * Get a tree created from the expression
-     * @return TEC_Model_Expression
-     */
-    public function getTECExpression()
-    {
-        return $this->tecExpression;
-    }
-
-    /**
-     * Retourne toutes les feuilles (conditions élémentaires) de l'expression
-     * @param TEC_Model_Composite|null $tree Sous-arbre de l'expression, si null alors l'expression entière
-     * @return AF_Model_Condition_Elementary[]
-     */
-    public function getElementary(TEC_Model_Composite $tree = null)
-    {
-        if ($tree === null) {
-            $tree = $this->getTECExpression()->getRootNode();
-        }
-        $elementaryList = [];
-        foreach ($tree->getChildren() as $child) {
-            if ($child instanceof TEC_Model_Leaf) {
-                $elementaryList[] = AF_Model_Condition_Elementary::loadByRefAndAF($child->getName(), $this->af);
-            } elseif ($child instanceof TEC_Model_Composite) {
-                $elementaryList += $this->getElementary($child);
-            }
-        }
-        return $elementaryList;
     }
 
     /**
@@ -98,8 +67,9 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
         $errors = array();
         // On vérifie que l'expression est sémantiquement correcte.
         try {
-            $this->tecExpression->check();
-        } catch (TEC_Model_InvalidExpressionException $e) {
+            $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+            $tecExpression->check();
+        } catch (InvalidExpressionException $e) {
             foreach ($e->getErrors() as $message) {
                 $errors[] = new AF_ConfigError($message, true, $this->getAf());
             }
@@ -109,20 +79,20 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
 
     /**
      * Construit la condition UI Expression en parcourant l'arbre de l'expression TEC
-     * @param TEC_Model_Component $currentNode
+     * @param Component $currentNode
      * @param AF_GenerationHelper $generationHelper
      * @return UI_Form_Condition
      */
-    private function buildUICondition(TEC_Model_Component $currentNode, AF_GenerationHelper $generationHelper)
+    private function buildUICondition(Component $currentNode, AF_GenerationHelper $generationHelper)
     {
-        if ($currentNode instanceof TEC_Model_Composite) {
+        if ($currentNode instanceof Composite) {
             // Noeud de l'arbre : une sous-expression
             $uiCondition = new UI_Form_Condition_Expression($this->id . '_' . $currentNode->getId());
             switch ($currentNode->getOperator()) {
-                case TEC_Model_Composite::LOGICAL_AND:
+                case Composite::LOGICAL_AND:
                     $uiCondition->expression = UI_Form_Condition_Expression::AND_SIGN;
                     break;
-                case TEC_Model_Composite::LOGICAL_OR:
+                case Composite::LOGICAL_OR:
                     $uiCondition->expression = UI_Form_Condition_Expression::OR_SIGN;
                     break;
             }
@@ -132,7 +102,7 @@ class AF_Model_Condition_Expression extends AF_Model_Condition
             return $uiCondition;
         }
         // Feuille de l'arbre
-        /** @var $currentNode TEC_Model_Leaf */
+        /** @var $currentNode Leaf */
         $childUICondition = AF_Model_Condition::loadByRefAndAF($currentNode->getName(),
                                                                $this->getAf());
         return $generationHelper->getUICondition($childUICondition);

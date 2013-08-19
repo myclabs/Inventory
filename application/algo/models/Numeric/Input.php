@@ -5,6 +5,7 @@
  * @author  yoann.croizer
  * @package Algo
  */
+use Unit\UnitAPI;
 
 /**
  * @package    Algo
@@ -21,7 +22,7 @@ class Algo_Model_Numeric_Input extends Algo_Model_Numeric
 
     /**
      * L'unité associée au champs numérique.
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $unit;
 
@@ -67,7 +68,7 @@ class Algo_Model_Numeric_Input extends Algo_Model_Numeric
     }
 
     /**
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnit()
     {
@@ -75,9 +76,9 @@ class Algo_Model_Numeric_Input extends Algo_Model_Numeric
     }
 
     /**
-     * @param Unit_API $unit
+     * @param UnitAPI $unit
      */
-    public function setUnit(Unit_API $unit)
+    public function setUnit(UnitAPI $unit)
     {
         $this->unit = $unit;
     }

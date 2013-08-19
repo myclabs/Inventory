@@ -34,15 +34,14 @@ class Algo_Model_Condition_Elementary_Numeric extends Algo_Model_Condition_Eleme
         // Valeur attendue vide
         if ($this->getValue() === null) {
             if ($this->getRelation() == Algo_Model_Condition_Elementary::RELATION_EQUAL) {
-                return ($input->getValue() === null || $input->getValue()->value->digitalValue === null);
+                return ($input->getValue() === null || $input->getValue()->getDigitalValue() === null);
             } elseif ($this->getRelation() == Algo_Model_Condition_Elementary::RELATION_NOTEQUAL) {
-                return ($input->getValue() !== null && $input->getValue()->value->digitalValue !== null);
+                return ($input->getValue() !== null && $input->getValue()->getDigitalValue() !== null);
             } else {
                 throw new Core_Exception_UndefinedAttribute("The value of the condition {$this->ref} must be defined");
             }
         }
-        $expectedValue = new Calc_UnitValue($input->getValue()->unit, new Calc_Value());
-        $expectedValue->value->digitalValue = $this->getValue();
+        $expectedValue = new Calc_UnitValue($input->getValue()->getUnit(), $this->getValue());
         // Valeur attendue non vide
         switch ($this->getRelation()) {
             case Algo_Model_Condition_Elementary::RELATION_EQUAL:

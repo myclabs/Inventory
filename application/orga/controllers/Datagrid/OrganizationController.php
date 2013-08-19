@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controller de projet
@@ -12,6 +13,18 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
     /**
      * Methode appelee pour remplir le tableau.
      * @Secure("viewOrganizations")
@@ -23,6 +36,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
         $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
 
         foreach (Orga_Model_Organization::loadList($this->request) as $organization) {
+            /** @var Orga_Model_Organization $organization */
             $data = array();
             $data['index'] = $organization->getId();
             $data['label'] = $organization->getLabel();
@@ -63,7 +77,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
                 $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getId());
             }
 
-            $isConnectedUserAbleToDeleteOrganization = User_Service_ACL::getInstance()->isAllowed(
+            $isConnectedUserAbleToDeleteOrganization = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::DELETE(),
                 $organization
@@ -84,13 +98,10 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $administrator = $this->_helper->auth();
         $label = $this->getAddElementValue('label');
 
-        $workDispatcher->runBackground(
+        $this->workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_OrganizationService',
                 'createOrganization',
@@ -108,12 +119,9 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $organization = Orga_Model_Organization::load($this->delete);
 
-        $workDispatcher->runBackground(
+        $this->workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_OrganizationService',
                 'deleteOrganization',

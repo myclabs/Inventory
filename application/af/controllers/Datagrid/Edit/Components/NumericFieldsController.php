@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * Numeric fields datagrid Controller
@@ -40,10 +41,10 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['isVisible'] = $numericField->isVisible();
             $data['enabled'] = $numericField->isEnabled();
             $data['required'] = $numericField->getRequired();
-            $data['unit'] = $numericField->getUnit()->getRef();
+            $data['unit'] = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
             $data['withUncertainty'] = $numericField->getWithUncertainty();
-            $data['digitalValue'] = $numericField->getDefaultValue()->digitalValue;
-            $data['relativeUncertainty'] = $numericField->getDefaultValue()->relativeUncertainty;
+            $data['digitalValue'] = $this->cellNumber($numericField->getDefaultValue()->getDigitalValue());
+            $data['relativeUncertainty'] = $this->cellNumber($numericField->getDefaultValue()->getRelativeUncertainty());
             $data['defaultValueReminder'] = $numericField->getDefaultValueReminder();
             $this->addLine($data);
         }
@@ -57,11 +58,9 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
      */
     public function addelementAction()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $entityManagers['default'];
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
+        $locale = Core_Locale::loadDefault();
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -72,10 +71,20 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             if (empty($unitRef)) {
                 $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
             }
-            $unit = new Unit_API($unitRef);
+            $unit = new UnitAPI($unitRef);
             $unit->getNormalizedUnit();
         } catch (Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+        }
+        try {
+            $digitalValue = $locale->readNumber($this->getAddElementValue('digitalValue'));
+        } catch(Core_Exception_InvalidArgument $e) {
+            $this->setAddElementErrorMessage('digitalValue', __('UI', 'formValidation', 'invalidNumber'));
+        }
+        try {
+            $relativeUncertainty = $locale->readInteger($this->getAddElementValue('relativeUncertainty'));
+        } catch(Core_Exception_InvalidArgument $e) {
+            $this->setAddElementErrorMessage('relativeUncertainty', __('UI', 'formValidation', 'invalidNumber'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -96,10 +105,9 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $numericField->setWithUncertainty($this->getAddElementValue('withUncertainty'));
             /** @noinspection PhpUndefinedVariableInspection */
             $numericField->setUnit($unit);
-            $value = new Calc_Value();
-            $value->digitalValue = $this->getAddElementValue('digitalValue');
-            $value->relativeUncertainty = $this->getAddElementValue('relativeUncertainty');
-            $numericField->setDefaultValue($value);
+            /** @noinspection PhpUndefinedVariableInspection */
+            $defaultValue = new Calc_Value($digitalValue, $relativeUncertainty);
+            $numericField->setDefaultValue($defaultValue);
             $numericField->setDefaultValueReminder($this->getAddElementValue('defaultValueReminder'));
             $af->getRootGroup()->addSubComponent($numericField);
             $af->addComponent($numericField);
@@ -107,7 +115,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $numericField->save();
             $af->getRootGroup()->save();
             try {
-                $em->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -128,6 +136,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
     {
         /** @var $numericField AF_Model_Component_Numeric */
         $numericField = AF_Model_Component_Numeric::load($this->update['index']);
+        $locale = Core_Locale::loadDefault();
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
@@ -160,29 +169,40 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 break;
             case 'unit':
                 try {
-                    $unit = new Unit_API($newValue);
+                    if (empty($newValue)) {
+                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                    }
+                    $unit = new UnitAPI($newValue);
                     $unit->getNormalizedUnit();
                 } catch (Core_Exception_NotFound $e) {
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $numericField->setUnit($unit);
-                $this->data = $numericField->getUnit()->getRef();
+                $this->data = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
                 break;
             case 'withUncertainty':
                 $numericField->setWithUncertainty($newValue);
                 $this->data = $numericField->getWithUncertainty();
                 break;
             case 'digitalValue':
-                $value = clone $numericField->getDefaultValue();
-                $value->digitalValue = $newValue;
+                try {
+                    $newValue = $locale->readNumber($newValue);
+                } catch(Core_Exception_InvalidArgument $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                }
+                $value = $numericField->getDefaultValue()->copyWithNewValue($newValue);
                 $numericField->setDefaultValue($value);
-                $this->data = $numericField->getDefaultValue()->digitalValue;
+                $this->data = $this->cellNumber($numericField->getDefaultValue()->getDigitalValue());
                 break;
             case 'relativeUncertainty':
-                $value = clone $numericField->getDefaultValue();
-                $value->relativeUncertainty = $newValue;
+                try {
+                    $newValue = $locale->readInteger($newValue);
+                } catch(Core_Exception_InvalidArgument $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                }
+                $value = $numericField->getDefaultValue()->copyWithNewUncertainty($newValue);
                 $numericField->setDefaultValue($value);
-                $this->data = $numericField->getDefaultValue()->relativeUncertainty;
+                $this->data = $this->cellNumber($numericField->getDefaultValue()->getRelativeUncertainty());
                 break;
             case 'defaultValueReminder':
                 $numericField->setDefaultValueReminder($newValue);
@@ -190,9 +210,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 break;
         }
         $numericField->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_DuplicateEntryException $e) {
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
@@ -222,9 +241,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
         $field->delete();
         $field->getGroup()->removeSubComponent($field);
         $af->removeComponent($field);
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Condition_Elementary')) {
                 throw new Core_Exception_User('AF', 'configComponentMessage',

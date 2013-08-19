@@ -60,7 +60,12 @@ class ResourceUserTest extends Core_Test_TestCase
 
     public static function setUpBeforeClass()
     {
-        User_Service_ACLFilter::getInstance()->enabled = false;
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var User_Service_ACLFilter $aclFilterService */
+        $aclFilterService = $container->get('User_Service_ACLFilter');
+
+        $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         $entityManagers = Zend_Registry::get('EntityManagers');
         foreach (User_Model_Authorization::loadList() as $o) {
@@ -83,9 +88,9 @@ class ResourceUserTest extends Core_Test_TestCase
         parent::setUp();
 
         // Service des ACL
-        $this->aclService = User_Service_ACL::getInstance();
+        $this->aclService = $this->get('User_Service_ACL');
         // Service de cache
-        $this->cacheService = User_Service_ACLFilter::getInstance();
+        $this->cacheService = $this->get('User_Service_ACLFilter');
         $this->cacheService->enabled = false;
 
         try {

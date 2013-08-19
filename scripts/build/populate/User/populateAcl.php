@@ -15,12 +15,15 @@ class User_PopulateAcl extends Core_Script_Action
      */
     public function runEnvironment($environment)
     {
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
+
         $entityManagers = Zend_Registry::get('EntityManagers');
         /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = $entityManagers['default'];
 
         /** @var $aclService User_Service_ACL */
-        $aclService = User_Service_ACL::getInstance();
+        $aclService = $container->get('User_Service_ACL');
 
         // ROLES
 

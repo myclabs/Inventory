@@ -65,7 +65,7 @@ class AF_Model_Component_Select_Single extends AF_Model_Component_Select
             $uiElement->addOption($generationHelper->getUIOption($option));
         }
         if ($generationHelper->isReadOnly()) {
-            $uiElement->getElement()->setReadOnly();
+            $uiElement->getElement()->setReadOnly(true);
         }
         // Remplit avec la valeur saisie
         $input = null;
@@ -80,6 +80,8 @@ class AF_Model_Component_Select_Single extends AF_Model_Component_Select
             if ($optionRef) {
                 $uiElement->setValue($optionRef);
             }
+            // Historique de la valeur
+            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
         } else {
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;

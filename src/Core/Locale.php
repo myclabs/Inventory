@@ -121,7 +121,6 @@ class Core_Locale
         return $this->zendLocale->getLanguage();
     }
 
-
     /**
      * Formate un nombre pour l'affichage.
      *
@@ -129,7 +128,6 @@ class Core_Locale
      * @param int|null $significantFigures indique le nombre de chiffres Significatif
      * @param int|null $numberDecimal indique le nombre de décimales pour l'affichage du nombre.
      *                              Incompatible Avec les chiffres significatifs.
-     *
      * @return string
      */
     public function formatNumber($number, $significantFigures=null, $numberDecimal=null)
@@ -158,7 +156,21 @@ class Core_Locale
         $number = Zend_Locale_Format::toNumber($number, $options);
 
         return $number;
+    }
 
+    /**
+     * Formate un nombre pour l'affichage dans un élément de saisie (champ de formulaire).
+     * @param float $number
+     * @return string
+     */
+    public function formatNumberForInput($number)
+    {
+        $options = array(
+            'locale' => $this->zendLocale,
+            'number_format' => '#0.###',
+        );
+
+        return Zend_Locale_Format::toNumber($number, $options);
     }
 
     /**
@@ -198,10 +210,14 @@ class Core_Locale
      *                                     Incompatible Avec les chiffres significatifs.
      *
      * @return float
-     * @throws Core_Exception_User Le nombre saisi n'est pas reconnu comme un nombre
+     * @throws Core_Exception_InvalidArgument Le nombre saisi n'est pas reconnu comme un nombre
      */
-    public function retrieveNumber($input, $significantFigures = null, $numberDecimal = null)
+    public function readNumber($input, $significantFigures = null, $numberDecimal = null)
     {
+        if (trim($input) === '') {
+            return null;
+        }
+
         $options = array(
             'locale' => $this->zendLocale
         );
@@ -217,7 +233,7 @@ class Core_Locale
         }
 
         try {
-            return (double) Zend_Locale_Format::getNumber($input, $options);
+            return (float) Zend_Locale_Format::getNumber($input, $options);
         } catch (Zend_Locale_Exception $e) {
             throw new Core_Exception_InvalidArgument("Le nombre saisi n'est pas reconnu comme un nombre.");
         }
@@ -226,20 +242,22 @@ class Core_Locale
     /**
      * Récupère la valeur numérique entière d'une chaine de caractère
      *
-     * Peut être utilisé par exemple pour récupérer le nombre entier saisi par
-     * un utilisateur dans un champ de formulaire.
-     *
-     * @param string $saisie
-     * @return int
-     * @throws Core_Exception_User Le nombre saisi n'est pas reconnu comme un nombre entier
+     * @param string $input
+     * @return int|null
+     * @throws Core_Exception_InvalidArgument Le nombre saisi n'est pas reconnu comme un nombre entier
      */
-    public function retrieveInteger($saisie)
+    public function readInteger($input)
     {
-        $options = array(
+        if (trim($input) === '') {
+            return null;
+        }
+
+        $options = [
             'locale' => $this->zendLocale,
-        );
+        ];
+
         try {
-            return Zend_Locale_Format::getInteger($saisie, $options);
+            return Zend_Locale_Format::getInteger($input, $options);
         } catch (Zend_Locale_Exception $e) {
             throw new Core_Exception_InvalidArgument("Le nombre saisi n'est pas reconnu comme un nombre entier.");
         }
@@ -277,6 +295,70 @@ class Core_Locale
     {
         if ($date) {
             return $date->format('d/m/Y');
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Formate une date en fonction de la locale
+     *
+     * @param DateTime|null $date
+     *
+     * @return string
+     */
+    public function formatShortDate(DateTime $date = null)
+    {
+        if ($date) {
+            return $date->format('j M');
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Formate une date en fonction de la locale
+     *
+     * @param DateTime|null $date
+     *
+     * @return string
+     */
+    public function formatDateTime(DateTime $date = null)
+    {
+        if ($date) {
+            return $date->format('d/m/Y H:i');
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Formate une date en fonction de la locale
+     *
+     * @param DateTime|null $date
+     *
+     * @return string
+     */
+    public function formatShortDateTime(DateTime $date = null)
+    {
+        if ($date) {
+            return $date->format('j M H:i');
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Formate une date en fonction de la locale
+     *
+     * @param DateTime|null $date
+     *
+     * @return string
+     */
+    public function formatTime(DateTime $date = null)
+    {
+        if ($date) {
+            return $date->format('H \h i');
         } else {
             return '';
         }

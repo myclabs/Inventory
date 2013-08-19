@@ -5,6 +5,11 @@
  * @subpackage Bootstrap
  */
 
+use DI\Container;
+use DI\ContainerBuilder;
+use DI\Definition\FileLoader\YamlDefinitionFileLoader;
+use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
 
 /**
@@ -15,6 +20,11 @@ use Doctrine\ORM\Tools\Setup;
  */
 abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+
+    /**
+     * @var Container
+     */
+    protected $container;
 
     /**
      * Lance en priorité nos méthodes "_init", puis ensuite celles des classes filles.
@@ -29,12 +39,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $resources = array(
                 'Autoloader',
                 'UTF8',
-                'Configuration',
+                'Container',
                 'Translations',
                 'ErrorLog',
                 'ErrorHandler',
                 'FrontController',
-                'Acl',
                 'Doctrine',
                 'DefaultEntityManager',
                 'WorkDispatcher',
@@ -52,6 +61,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initAutoloader()
     {
+        /** @noinspection PhpIncludeInspection */
         require PACKAGE_PATH . '/vendor/autoload.php';
         Core_Autoloader::getInstance()->register();
     }
@@ -69,16 +79,35 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Récupère la configuration de l'application
+     * Initialize the dependency injection container
      */
-    protected function _initConfiguration()
+    protected function _initContainer()
     {
         // Récupère la configuration
         $configuration = new Zend_Config($this->getOptions());
-        // La place dans le registry
+
+        $builder = new ContainerBuilder();
+        $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
+        // Cache basique, à remplacer
+        $diConfig = $configuration->get('di', null);
+        if ($diConfig && (bool) $diConfig->get('cache', false)) {
+            // Si cache, on utilise APC
+            $builder->setDefinitionCache(new ApcCache());
+        }
+
+        $this->container = $builder->build();
+
         Zend_Registry::set('configuration', $configuration);
-        // Place également le nom de l'application
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
+        Zend_Registry::set('container', $this->container);
+
+        $this->container->set('application.name', $configuration->get('applicationName', ''));
+
+        // Configuration pour injecter dans les controleurs (intégration ZF1)
+        $dispatcher = new \DI\ZendFramework1\Dispatcher();
+        $dispatcher->setContainer($this->container);
+        $frontController = Zend_Controller_Front::getInstance();
+        $frontController->setDispatcher($dispatcher);
     }
 
     /**
@@ -123,14 +152,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Active la prise en compte des droits d'accès
-     */
-    protected function _initAcl()
-    {
-        Zend_Registry::set('activerAcl', true);
-    }
-
-    /**
      * Initialise Doctrine pour utiliser l'autoloader de Zend.
      */
     protected function _initDoctrine()
@@ -141,14 +162,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Définition du cache en fonction de l'environement.
         switch (APPLICATION_ENV) {
             case 'production':
-                //@todo Voir avec Benjamin quel cache on utilise.
-//                 $doctrineCache = new Doctrine\Common\Cache\ApcCache();
-//                 $doctrineCache = new Doctrine\Common\Cache\MemcachedCache();
-                $doctrineCache = new Doctrine\Common\Cache\ArrayCache();
+                $doctrineCache = new ArrayCache();
                 $doctrineAutoGenerateProxy = false;
                 break;
             default:
-                $doctrineCache = new Doctrine\Common\Cache\ArrayCache();
+                $doctrineCache = new ArrayCache();
                 $doctrineAutoGenerateProxy = true;
                 break;
         }
@@ -198,9 +216,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         switch (APPLICATION_ENV) {
             case 'test':
             case 'developpement':
-                // Requêtes transmises à Firebug.
-                $profiler = new ZendX\Doctrine2\FirebugProfiler();
-                break;
             case 'testsunitaires':
                 // Requêtes placées dans un fichier.
                 $profiler = new Core_Profiler_File();
@@ -227,17 +242,29 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Les prochains devront être ajouté au tableau.
         $entityManagers = array('default' => $entityManager);
         Zend_Registry::set('EntityManagers', $entityManagers);
+        $this->container->set('Doctrine\ORM\EntityManager', $entityManager);
+    }
+
+    /**
+     * Plugin qui configure l'extension Doctrine Loggable
+     */
+    protected function _initLoggableExtension()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin($this->container->get('Inventory_Plugin_LoggableExtensionConfigurator'));
     }
 
     /**
      * Crée l'entity manager utilisé par défaut. Méthode utilise pour recréer un entity manager
      * si celui-ci se ferme à cause d'une exception
+     * @param null $connectionSettings
      * @return Core_ORM_EntityManager
      */
     public function createDefaultEntityManager($connectionSettings = null)
     {
         if ($connectionSettings == null) {
             // Récupération de la configuration de la connexion dans l'application.ini
+            /** @var mixed $connectionSettings */
             $connectionSettings = Zend_Registry::get('configuration')->doctrine->default->connection;
         }
 
@@ -259,14 +286,19 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Création de l'EntityManager depuis la configuration de doctrine.
         $em = Core_ORM_EntityManager::create($connectionArray, $doctrineConfig);
 
-        // Configuration des extensions doctrine
+        // Extension de traduction de champs
         $translatableListener = new Gedmo\Translatable\TranslatableListener();
         $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
         $translatableListener->setDefaultLocale('fr');
         $translatableListener->setTranslationFallback(true);
-        Zend_Registry::set('doctrineTranslate', $translatableListener);
-
         $em->getEventManager()->addEventSubscriber($translatableListener);
+        Zend_Registry::set('doctrineTranslate', $translatableListener);
+        $this->container->set('Gedmo\Translatable\TranslatableListener', $translatableListener);
+
+        // Extension de versionnement de champs
+        $loggableListener = new Gedmo\Loggable\LoggableListener();
+        $em->getEventManager()->addEventSubscriber($loggableListener);
+        $this->container->set('Gedmo\Loggable\LoggableListener', $loggableListener);
 
         return $em;
     }
@@ -286,14 +318,17 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $useGearman = $useGearman && extension_loaded('gearman');
 
         if ($useGearman) {
-            $workDispatcher = new Core_Work_GearmanDispatcher();
+            $this->container->set('Core_Work_Dispatcher')
+                            ->bindTo('Core_Work_GearmanDispatcher');
         } else {
-            $workDispatcher = new Core_Work_SimpleDispatcher();
+            $this->container->set('Core_Work_Dispatcher')
+                            ->bindTo('Core_Work_SimpleDispatcher');
         }
+        $workDispatcher = $this->container->get('Core_Work_Dispatcher');
         Zend_Registry::set('workDispatcher', $workDispatcher);
 
         // Register workers
-        $workDispatcher->registerWorker(new Core_Work_ServiceCall_Worker());
+        $workDispatcher->registerWorker($this->container->get('Core_Work_ServiceCall_Worker'));
     }
 
     /**
@@ -318,7 +353,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initSessionNamespace()
     {
         $auth = Zend_Auth::getInstance();
-        $name = Zend_Registry::get('applicationName');
+        $name = $this->container->get('application.name');
         if ($name == '') {
             $configuration = Zend_Registry::get('configuration');
             $name = $configuration->sessionStorage->name;
@@ -335,34 +370,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Définition du doctype du document.
-     */
-    protected function _initDocType()
-    {
-        $this->bootstrap('View');
-        $view = $this->getResource('View');
-        $view->doctype('HTML5');
-    }
-
-    /**
      * Enregistre les plugins de Core.
      */
     protected function _initPluginCore()
     {
         $front = Zend_Controller_Front::getInstance();
         $front->registerPlugin(new Core_Plugin_Flush());
-    }
-
-    /**
-     * Enregistre les helpers de Core.
-     */
-    protected function _initViewHelperCore()
-    {
-        $this->bootstrap('View');
-        // Exceptionellement, les helpers de vue de Core sont dans la librairie.
-        //  Car Core n'est pas un module.
-        $view = $this->getResource('view');
-        $view->addHelperPath(PACKAGE_PATH.'/src/View/Helper', 'Core_View_Helper');
     }
 
     /**

@@ -7,4 +7,8 @@ composer.phar
 behat/selenium-server-standalone.jar
 
 application/configs/application.ini
+application/configs/env.php
 public/.htaccess
+
+*.vpp.bak
+*.vpp~*

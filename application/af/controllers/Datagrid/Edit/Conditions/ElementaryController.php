@@ -113,9 +113,8 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
             $condition->setField($field);
             $condition->setAf($af);
             $condition->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -143,8 +142,11 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
                 break;
         }
         $condition->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -160,8 +162,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
         $condition = AF_Model_Condition::load($this->getParam('index'));
         try {
             $condition->delete();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'deleted');
         } catch (DBALException $e) {
             throw new Core_Exception_User('AF', 'configInteractionMessage', 'conditionUsedByActionDeletionDenied');

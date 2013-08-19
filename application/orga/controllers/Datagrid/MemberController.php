@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Enter description here ...
@@ -14,6 +15,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -26,7 +33,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewOrganization")
+     * @Secure("viewMembers")
      */
     public function getelementsAction()
     {
@@ -76,7 +83,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Ajoute un nouvel element.
-     * @Secure("editOrganization")
+     * @Secure("editMembers")
      */
     public function addelementAction()
     {
@@ -125,9 +132,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 );
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                /**@var Core_Work_Dispatcher $dispatcher */
-                $dispatcher = Zend_Registry::get('workDispatcher');
-                $dispatcher->runBackground(
+                $this->workDispatcher->runBackground(
                     new Orga_Work_Task_AddMember(
                         $axis,
                         $ref,
@@ -144,7 +149,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Supprime un element.
-     * @Secure("editOrganization")
+     * @Secure("editMembers")
      */
     public function deleteelementAction()
     {
@@ -161,7 +166,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Modifie les valeurs d'un element.
-     * @Secure("editOrganization")
+     * @Secure("editMembers")
      */
     public function updateelementAction()
     {
@@ -216,7 +221,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Renvoie la liste des parents éligibles pour un membre.
-     * @Secure("viewOrganization")
+     * @Secure("viewMembers")
      */
     public function getparentsAction()
     {

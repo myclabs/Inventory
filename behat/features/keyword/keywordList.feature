@@ -7,6 +7,7 @@ Feature: Keywords datagrid
   @javascript
   Scenario: Creation of a keyword
     Given I am on "keyword/keyword/manage"
+    And I wait for the page to finish loading
     Then I should see the "keywords" datagrid
   # Ajout d'un mot clé, identifiant vide
     When I click "Ajouter"
@@ -52,18 +53,21 @@ Feature: Keywords datagrid
     And I fill in "keywords_label_filterForm" with "x"
     And I click "Filtrer"
     Then the "keywords" datagrid should contain 0 row
-    When I fill in "keywords_label_filterForm" with "charbon"
+    When I open collapse "Filtres"
+    And I fill in "keywords_label_filterForm" with "charbon"
     And I click "Filtrer"
     Then the "keywords" datagrid should contain 1 row
   # Test bouton "Réinitialiser"
-    When I click "Réinitialiser"
+    When I open collapse "Filtres"
+    And I click "Réinitialiser"
     Then I should see "processus"
   # Test filtre identifiant
     When I open collapse "Filtres"
     And I fill in "keywords_ref_filterForm" with "x"
     And I click "Filtrer"
     Then the "keywords" datagrid should contain 0 row
-    When I fill in "keywords_ref_filterForm" with "charbon"
+    When I open collapse "Filtres"
+    And I fill in "keywords_ref_filterForm" with "charbon"
     And I click "Filtrer"
     Then the "keywords" datagrid should contain 1 row
 

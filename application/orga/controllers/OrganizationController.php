@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 
 /**
@@ -14,9 +15,27 @@ use Core\Annotation\Secure;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_OrganizationController extends Core_Controller_Ajax
+class Orga_OrganizationController extends Core_Controller
 {
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ETLStructure
+     */
+    private $etlStructureService;
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
 
     /**
      * Redirection sur la liste.
@@ -24,11 +43,11 @@ class Orga_OrganizationController extends Core_Controller_Ajax
      */
     public function indexAction()
     {
+        /** @var User_Model_User $connectedUser */
         $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
 
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
-        $isConnectedUserAbleToCreateOrganizations = $aclService->isAllowed(
+        $isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $organizationResource
@@ -85,10 +104,9 @@ class Orga_OrganizationController extends Core_Controller_Ajax
     public function manageAction()
     {
         $connectedUser = $this->_helper->auth();
-        $aclService = User_Service_ACL::getInstance();
 
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
-        $this->view->isConnectedUserAbleToCreateOrganizations = $aclService->isAllowed(
+        $this->view->isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $organizationResource
@@ -177,7 +195,7 @@ class Orga_OrganizationController extends Core_Controller_Ajax
     {
         $this->sendJsonResponse(
             array(
-                'organizationDWCubesState' => Orga_Service_ETLStructure::getInstance()->areOrganizationDWCubesUpToDate(
+                'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
                     Orga_Model_Organization::load($this->getParam('idOrganization'))
                 )
             )
@@ -190,14 +208,11 @@ class Orga_OrganizationController extends Core_Controller_Ajax
      */
     public function resetdwcubesAction()
     {
-        /** @var Core_Work_Dispatcher $workDispatcher */
-        $workDispatcher = Zend_Registry::get('workDispatcher');
-
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         try {
             // Lance la tache en arrière plan
-            $workDispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetOrganizationDWCubes',

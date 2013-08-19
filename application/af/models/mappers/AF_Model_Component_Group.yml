@@ -14,4 +14,4 @@ AF_Model_Component_Group:
       mappedBy: group
       orderBy:
         position: ASC
-      cascade: [ all ]
+      cascade: [ persist, merge ]

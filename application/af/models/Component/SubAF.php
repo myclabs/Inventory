@@ -37,11 +37,6 @@ abstract class AF_Model_Component_SubAF extends AF_Model_Component
      */
     const FOLDED = 2;
 
-    const NOT_REPEATED_SUB_AF = '1';
-    const REPEATED_SUB_AF_NULL = '2';
-    const REPEATED_SUB_AF_ONE_DELETABLE = '3';
-    const REPEATED_SUB_AF_ONE_MANDATORY = '4';
-
     /**
      * Identifiant du formulaire appelé.
      * @var AF_Model_AF

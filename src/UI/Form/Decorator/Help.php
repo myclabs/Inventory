@@ -28,7 +28,6 @@ class UI_Form_Decorator_Help extends Zend_Form_Decorator_Abstract
             'onMouseout'   => '$(this).children(\'.icon-question-sign\').css(\'opacity\', 0.3);',
             'onMouseover'  => '$(this).children(\'.icon-question-sign\').css(\'opacity\', 1);',
             'rel'          => 'popover',
-            'escape'       => false,
             'data-content' => 'helpWillBeReplace',
             'style'        => 'display: inline-block; margin-left: 5px; padding-top: -5px;',
         );

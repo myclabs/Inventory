@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManager;
  * @package    User
  * @subpackage Service
  */
-class User_Service_ACLFilter extends Core_Singleton
+class User_Service_ACLFilter
 {
 
     const TABLE_NAME = 'ACL_Filter';
@@ -37,14 +37,12 @@ class User_Service_ACLFilter extends Core_Singleton
 
 
     /**
-     * Constructeur
+     * @param User_Service_ACL $aclService
+     * @param EntityManager    $entityManager
      */
-    protected function __construct()
+    public function __construct(User_Service_ACL $aclService, EntityManager $entityManager)
     {
-        $this->aclService = User_Service_ACL::getInstance();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager EntityManager */
-        $entityManager = $entityManagers['default'];
+        $this->aclService = $aclService;
         $this->connection = $entityManager->getConnection();
     }
 
@@ -103,7 +101,7 @@ class User_Service_ACLFilter extends Core_Singleton
         // Récupère les ressources filles
         if ($generateResourcesHierarchy) {
             foreach ($allResources as $resource) {
-                $children = $this->aclService->getChildResources([$resource]);
+                $children = $this->aclService->getAllChildResources([$resource]);
                 foreach ($children as $childResource) {
                     $allResources[$childResource->getId()] = $childResource;
                 }
@@ -136,9 +134,10 @@ class User_Service_ACLFilter extends Core_Singleton
         if ($resource->getEntity() === null) {
             // Traite uniquement les sous-ressources
             if ($generateResourcesHierarchy) {
-                $children = $this->aclService->getChildResources([$resource]);
+                $children = $this->aclService->getAllChildResources([$resource]);
                 foreach ($children as $childResource) {
-                    $this->generateForResource($childResource, true, $cleanResourceFilter);
+                    // false : ne parcourt pas la hiérarchie encore une fois
+                    $this->generateForResource($childResource, false, $cleanResourceFilter);
                 }
             }
             return;
@@ -188,7 +187,7 @@ class User_Service_ACLFilter extends Core_Singleton
 
         // Répète la même chose pour les ressources filles
         if ($generateResourcesHierarchy) {
-            $children = $this->aclService->getChildResources([$resource]);
+            $children = $this->aclService->getAllChildResources([$resource]);
             foreach ($children as $childResource) {
                 $this->generateForResource($childResource, $generateResourcesHierarchy, $cleanResourceFilter);
             }
@@ -238,7 +237,7 @@ class User_Service_ACLFilter extends Core_Singleton
 
         // Répète la même chose pour les ressources filles
         if ($generateResourcesHierarchy) {
-            $children = $this->aclService->getChildResources([$resource]);
+            $children = $this->aclService->getAllChildResources([$resource]);
             foreach ($children as $childResource) {
                 $entries += $this->getEntriesForResource($childResource, $generateResourcesHierarchy);
             }
@@ -271,9 +270,10 @@ class User_Service_ACLFilter extends Core_Singleton
 
         // Répète la même chose pour les ressources filles
         if ($cleanResourcesHierarchy) {
-            $children = $this->aclService->getChildResources([$resource]);
+            $children = $this->aclService->getAllChildResources([$resource]);
             foreach ($children as $childResource) {
-                $this->cleanForResource($childResource, true);
+                // false : ne parcourt pas la hiérarchie encore une fois
+                $this->cleanForResource($childResource, false);
             }
         }
     }

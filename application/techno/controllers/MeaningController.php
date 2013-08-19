@@ -10,7 +10,7 @@ use Core\Annotation\Secure;
  * Controleur des significations
  * @package Techno
  */
-class Techno_MeaningController extends Core_Controller_Ajax
+class Techno_MeaningController extends Core_Controller
 {
 
     /**

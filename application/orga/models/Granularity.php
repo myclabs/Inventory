@@ -23,6 +23,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
     const QUERY_POSITION = 'position';
     const QUERY_ORGANIZATION = 'organization';
 
+    // Séparateur des labels des axes dans le label de la granularité.
+    const  LABEL_SEPARATOR = ' | ';
+
 
     /**
      * Identifiant unique de la Granularity.
@@ -172,7 +175,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -184,7 +187,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -192,7 +195,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -200,7 +203,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {
@@ -342,7 +345,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             foreach ($axes as $axis) {
                 $labelParts[] = $axis->getLabel();
             }
-            $label = implode(' | ', $labelParts);
+            $label = implode(self::LABEL_SEPARATOR, $labelParts);
         }
         return $label;
     }
@@ -798,7 +801,12 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $this->dWCube = new DW_model_cube();
             $this->dWCube->setLabel($this->getLabel());
 
-            Orga_Service_ETLStructure::getInstance()->populateGranularityDWCube($this);
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
+            /** @var Orga_Service_ETLStructure $etlStructureService */
+            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+
+            $etlStructureService->populateGranularityDWCube($this);
         }
     }
 

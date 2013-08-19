@@ -8,6 +8,9 @@
  * @subpackage Model
  */
 
+use Unit\IncompatibleUnitsException;
+use Unit\UnitAPI;
+
 /**
  * Permet de gérer un indicateur.
  *
@@ -51,20 +54,20 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Unité dans laquelle est l'indicateur.
      *
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $unit;
 
     /**
      * Unité utilisé pour les ratios.
      *
-     * @var Unit_API
+     * @var UnitAPI
      */
     protected $ratioUnit;
 
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -76,7 +79,7 @@ class Classif_Model_Indicator extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -84,7 +87,7 @@ class Classif_Model_Indicator extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -92,7 +95,7 @@ class Classif_Model_Indicator extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {
@@ -160,41 +163,55 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Modifie l'unit de l'indicateur.
      *
-     * @param Unit_API $unit
+     * @param UnitAPI $unit
+     * @throws IncompatibleUnitsException
      */
-    public function setUnit($unit)
+    public function setUnit(UnitAPI $unit)
     {
-        $this->unit = $unit;
+        if ($this->ratioUnit != null) {
+            if (!$this->getRatioUnit()->isEquivalent($unit)) {
+                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
+            }
+        }
+
+        $this->unit = (string) $unit;
     }
 
     /**
      * Retourne l'unit de l'indicateur.
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnit()
     {
-        return new Unit_API($this->unit);
+        return new UnitAPI($this->unit);
     }
 
     /**
      * Modifie l'unité de ratio de l'indicateur.
      *
-     * @param Unit_API $ratioUnit
+     * @param UnitAPI $ratioUnit
+     * @throws IncompatibleUnitsException
      */
-    public function setRatioUnit($ratioUnit)
+    public function setRatioUnit(UnitAPI $ratioUnit)
     {
-        $this->ratioUnit = $ratioUnit;
+        if ($this->unit != null) {
+            if (!$this->getUnit()->isEquivalent($ratioUnit)) {
+                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
+            }
+        }
+
+        $this->ratioUnit = (string) $ratioUnit;
     }
 
     /**
      * Retourne l'unité de ratio de l'indicateur
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getRatioUnit()
     {
-        return new Unit_API($this->ratioUnit);
+        return new UnitAPI($this->ratioUnit);
     }
 
     /**

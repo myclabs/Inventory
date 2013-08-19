@@ -11,7 +11,7 @@
  * @package UI
  * @subpackage Form
  */
-class UI_Form_Element_Password extends Zend_Form_Element_Password
+class UI_Form_Element_Password extends Zend_Form_Element_Password implements UI_Form_ZendElement
 {
     /**
      * Reference to a UI_Form_Element, to access to its methods.
@@ -25,7 +25,6 @@ class UI_Form_Element_Password extends Zend_Form_Element_Password
      * Constructor
      *
      * @param string $name
-     * @return void
      *
      * @throws Core_Exception_InvalidArgument if $name is not valid.
      */

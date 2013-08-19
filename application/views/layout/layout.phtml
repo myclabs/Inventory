@@ -86,8 +86,12 @@
                 setTimeout(eraseFirstMessage, 500, 2);
             }
         };
-        errorHandler = function (o) {
-            response = (typeof(o.responseText) == 'string') ? $.parseJSON(o.responseText) : o;
+        errorHandler = function (jqXHR) {
+            // Ignore aborted requests
+            if (jqXHR.readyState == 0 || jqXHR.status == 0 || jqXHR.statusText == "abort") {
+                return;
+            }
+            var response = (typeof(jqXHR.responseText) == 'string') ? $.parseJSON(jqXHR.responseText) : jqXHR;
             addMessage(response.message, response.typeError);
         };
         setMask = function (display) {

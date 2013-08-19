@@ -7,23 +7,23 @@
  * @subpackage Condition
  */
 
+use Exec\Execution\Condition;
+use Exec\Provider\ValueInterface;
+use TEC\Exception\InvalidExpressionException;
+use TEC\Expression;
+
 /**
  * @package    Algo
  * @subpackage Condition
  */
 class Algo_Model_Condition_Expression extends Algo_Model_Condition
-    implements Exec_Interface_ValueProvider
+    implements ValueInterface
 {
 
     /**
      * @var string
      */
     protected $expression;
-
-    /**
-     * @var TEC_Model_Expression
-     */
-    protected $tecExpression;
 
     /**
      * Exécution de l'algorithme
@@ -33,7 +33,11 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
     public function execute(Algo_Model_InputSet $inputSet)
     {
         $this->inputSet = $inputSet;
-        $executionCalc = new Exec_Execution_Condition($this->tecExpression);
+
+        // Construit l'arbre
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+
+        $executionCalc = new Condition($tecExpression);
         return $executionCalc->executeExpression($this);
     }
 
@@ -59,7 +63,8 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
                                              true);
             return $errors;
         }
-        $executionSelect = new Exec_Execution_Condition($this->tecExpression);
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+        $executionSelect = new Condition($tecExpression);
         return array_merge($errors, $executionSelect->getErrors($this));
     }
 
@@ -100,22 +105,20 @@ class Algo_Model_Condition_Expression extends Algo_Model_Condition
      */
     public function getExpression()
     {
-        return $this->expression;
+        $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
+        return $tecExpression->getAsString();
     }
 
     /**
      * @param string $expression
-     * @throws TEC_Model_InvalidExpressionException
+     * @throws InvalidExpressionException
      */
     public function setExpression($expression)
     {
-        $tecExpression = new TEC_Model_Expression();
-        $tecExpression->setType(TEC_Model_Expression::TYPE_LOGICAL);
-        $tecExpression->setExpression($expression);
+        $tecExpression = new Expression($expression, Expression::TYPE_LOGICAL);
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;
-        $this->tecExpression = $tecExpression;
     }
 
 }

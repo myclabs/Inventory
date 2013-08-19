@@ -57,7 +57,10 @@ abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
     public function getDimension()
     {
         if (!$this->dimension) {
-            $technoService = Techno_Service_Techno::getInstance();
+            /** @var \DI\Container $container */
+            $container = Zend_Registry::get('container');
+            /** @var Techno_Service_Techno $technoService */
+            $technoService = $container->get('Techno_Service_Techno');
             $meaning = $technoService->getMeaning($this->refDimensionMeaning);
             $this->dimension = $this->getAlgoParameter()->getFamily()->getDimensionByMeaning($meaning);
         }

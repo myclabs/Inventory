@@ -56,7 +56,7 @@ class Techno_Datagrid_Translate_Families_LabelController extends UI_Controller_D
     public function updateelementAction()
     {
         $family = Techno_Model_Family::load($this->update['index']);
-        $family->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $family->reloadWithLocale(Core_Locale::load($this->update['column']));
         $family->setLabel($this->update['value']);
         $this->data = $family->getLabel();
 

@@ -8,7 +8,7 @@
  * Service de validation des données de Techno
  * @package Techno
  */
-class Techno_Service_Validator extends Core_Singleton
+class Techno_Service_Validator
 {
 
     /**

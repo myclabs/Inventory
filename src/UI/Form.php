@@ -128,7 +128,7 @@ class UI_Form extends Zend_Form
     }
 
     /**
-     * @param UI_Form_Element $element
+     * @param UI_Form_ZendElement $element
      * @param string $name
      * @param array|Zend_Config $options
      * @see Zend_Form::addElement()
@@ -321,6 +321,7 @@ class UI_Form extends Zend_Form
         if ($this->_ajax === true) {
             $script .= '$(\'#'.$this->_ref.'\').submit(function(event) {';
             $script .= 'event.preventDefault();';
+            $script .= 'setMask(true);';
             $script .= '$(\'#'.$this->_ref.'\').eraseFormErrors();';
             $script .= '$.post(';
             $script .= '$(\'#'.$this->_ref.'\').attr(\'action\'),';
@@ -328,14 +329,19 @@ class UI_Form extends Zend_Form
             // Success callback
             if ($this->_ajaxSuccessFunction !== null) {
                 $script .= 'function(data, textStatus, jqXHR){';
+                $script .= 'setMask(false);';
                 $script .= '$(\'#'.$this->_ref.'\').'.$this->_ajaxSuccessFunction.'(data, textStatus, jqXHR);';
                 $script .= '}';
             } else {
-                $script .= 'function(o){$(\'#'.$this->_ref.'\').parseFormValidation(o);}';
+                $script .= 'function(o){';
+                $script .= 'setMask(false);';
+                $script .= '$(\'#'.$this->_ref.'\').parseFormValidation(o);';
+                $script .= '}';
             }
             // Error callback
             $script .= ').error(';
             $script .= 'function(o) {';
+            $script .= 'setMask(false);';
             $script .= '$(\'#'.$this->_ref.'\').parseFormErrors(o);';
             foreach ($this->getElements() as $zendFormElement) {
                 $script .= $zendFormElement->getElement()->getErrorScript();

@@ -30,6 +30,14 @@ class FeatureContext extends MinkContext
     /**
      * @BeforeScenario
      */
+    public function setWindowSize()
+    {
+        $this->getSession()->resizeWindow(1280, 1024);
+    }
+
+    /**
+     * @BeforeScenario
+     */
     public function setLanguage()
     {
 //        $this->getSession()->setRequestHeader('Accept-Language', 'fr');
@@ -67,6 +75,8 @@ class FeatureContext extends MinkContext
      */
     public function waitForPageToFinishLoading()
     {
+        $this->getSession()->wait(50);
+
         // Chargements AJAX
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
@@ -103,7 +113,7 @@ class FeatureContext extends MinkContext
 
         $errorMessage = $this->getSession()->evaluateScript("return $expression;");
 
-        if ($errorMessage != $error) {
+        if (strpos($errorMessage, $error) === false) {
             throw new ExpectationException("No error message '$error' for field '$field'.\n"
                 . "Error message found: '$errorMessage'.\n"
                 . "Javascript expression: '$expression'.", $this->getSession());
@@ -132,9 +142,21 @@ class FeatureContext extends MinkContext
     public function clickElement($selector)
     {
         $node = $this->findElement($selector);
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * Focus on an element found using CSS selectors.
+     *
+     * @When /^(?:|I )focus on element "(?P<selector>(?:[^"]|\\")*)"$/
+     */
+    public function focusOnElement($selector)
+    {
+        $node = $this->findElement($selector);
+        $node->focus();
     }
 
     /**

@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use TEC\Exception\InvalidExpressionException;
 
 /**
  * @package AF
@@ -63,7 +64,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
             }
             try {
                 $algo->setExpression($this->getAddElementValue('expression'));
-            } catch (TEC_Model_InvalidExpressionException $e) {
+            } catch (InvalidExpressionException $e) {
                 $this->setAddElementErrorMessage('expression',
                                                  __('AF', 'configTreatmentMessage', 'invalidExpression')
                                                      . "<br>" . implode("<br>", $e->getErrors()));
@@ -73,9 +74,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -104,7 +104,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
             case 'expression':
                 try {
                     $algo->setExpression($newValue);
-                } catch (TEC_Model_InvalidExpressionException $e) {
+                } catch (InvalidExpressionException $e) {
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
@@ -116,8 +116,11 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
                 break;
         }
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -134,9 +137,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             throw new Core_Exception_User('AF', 'configTreatmentMessage', 'algoUsed');
         }

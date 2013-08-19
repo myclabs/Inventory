@@ -17,4 +17,3 @@ AF_Model_Input_SubAF_Repeated:
             referencedColumnName: id
             nullable: false
       cascade: [ all ]
-      orphanRemoval: true

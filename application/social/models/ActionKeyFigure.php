@@ -2,6 +2,7 @@
 /**
  * @package Social
  */
+use Unit\UnitAPI;
 
 /**
  * @author  joseph.rouffet
@@ -31,10 +32,10 @@ class Social_Model_ActionKeyFigure extends Core_Model_Entity
 
 
     /**
-     * @param Unit_API $unit
+     * @param UnitAPI $unit
      * @param string $label
      */
-    public function __construct(Unit_API $unit, $label)
+    public function __construct(UnitAPI $unit, $label)
     {
         $this->setUnit($unit);
         $this->setLabel($label);
@@ -65,23 +66,23 @@ class Social_Model_ActionKeyFigure extends Core_Model_Entity
     }
 
     /**
-     * @return Unit_API
+     * @return UnitAPI
      */
     public function getUnit()
     {
-        return new Unit_API($this->unitRef);
+        return new UnitAPI($this->unitRef);
     }
 
     /**
-     * @param Unit_API $unit
+     * @param UnitAPI $unit
      */
-    public function setUnit(Unit_API $unit)
+    public function setUnit(UnitAPI $unit)
     {
         $this->unitRef = $unit->getRef();
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -93,7 +94,7 @@ class Social_Model_ActionKeyFigure extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -101,7 +102,7 @@ class Social_Model_ActionKeyFigure extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -109,7 +110,7 @@ class Social_Model_ActionKeyFigure extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {

@@ -69,7 +69,12 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
      */
     public static function setUpBeforeClass()
     {
-        User_Service_ACLFilter::getInstance()->enabled = false;
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var User_Service_ACLFilter $aclFilterService */
+        $aclFilterService = $container->get('User_Service_ACLFilter');
+
+        $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (User_Model_Authorization::loadList() as $o) {
             $o->delete();
@@ -171,7 +176,12 @@ class AuthorizationMetierTest extends Core_Test_TestCase
      */
     public static function setUpBeforeClass()
     {
-        User_Service_ACLFilter::getInstance()->enabled = false;
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var User_Service_ACLFilter $aclFilterService */
+        $aclFilterService = $container->get('User_Service_ACLFilter');
+
+        $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (User_Model_Role::loadList() as $o) {
             $o->delete();
@@ -192,7 +202,9 @@ class AuthorizationMetierTest extends Core_Test_TestCase
     public function setUp()
     {
         parent::setUp();
-        User_Service_ACLFilter::getInstance()->enabled = false;
+        /** @var User_Service_ACLFilter $aclFilterService */
+        $aclFilterService = $this->get('User_Service_ACLFilter');
+        $aclFilterService->enabled = false;
     }
 
     /**

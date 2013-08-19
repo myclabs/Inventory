@@ -7,6 +7,15 @@
  * @package Unit
  * @subpackage Test
  */
+use Unit\Domain\Unit\DiscreteUnit;
+use Unit\Domain\Unit\ExtendedUnit;
+use Unit\Domain\Unit\StandardUnit;
+use Unit\Domain\PhysicalQuantity;
+use Unit\Domain\UnitSystem;
+use Unit\Domain\UnitExtension;
+use Unit\IncompatibleUnitsException;
+use Unit\Domain\Unit\Unit;
+use Unit\UnitAPI;
 
 /**
  * UnitAPITest
@@ -39,8 +48,8 @@ class Unit_Test_UnitAPISetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $o = new Unit_API('m^2.animal^-1.m^-2.g.g_co2e^2');
-        $this->assertInstanceOf('Unit_API', $o);
+        $o = new UnitAPI('m^2.animal^-1.m^-2.g.g_co2e^2');
+        $this->assertInstanceOf('Unit\UnitAPI', $o);
     }
 }
 
@@ -79,37 +88,37 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_Extension en base, sinon suppression !
-        if (Unit_Model_Unit_Extension::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
+        if (UnitExtension::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_Extension::loadList() as $extensionunit) {
+            foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_PhysicalQuantity en base, sinon suppression !
-        if (Unit_Model_PhysicalQuantity::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
+        if (PhysicalQuantity::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_PhysicalQuantity::loadList() as $physicalQuantity) {
+            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -125,34 +134,34 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $entityManagers = Zend_Registry::get('EntityManagers');
 
         // On créer un système d'unité (obligatoire pour une unité standard).
-        $this->unitSystem = new Unit_Model_Unit_System();
+        $this->unitSystem = new UnitSystem();
         $this->unitSystem->setRef('international');
         $this->unitSystem->setName('International');
         $this->unitSystem->save();
 
         // On créer les grandeurs physiques de base.
-        $this->_lengthPhysicalQuantity = new Unit_Model_PhysicalQuantity();
+        $this->_lengthPhysicalQuantity = new PhysicalQuantity();
         $this->_lengthPhysicalQuantity->setName('longueur');
         $this->_lengthPhysicalQuantity->setRef('l');
         $this->_lengthPhysicalQuantity->setSymbol('L');
         $this->_lengthPhysicalQuantity->setIsBase(true);
         $this->_lengthPhysicalQuantity->save();
 
-        $this->_massPhysicalQuantity = new Unit_Model_PhysicalQuantity();
+        $this->_massPhysicalQuantity = new PhysicalQuantity();
         $this->_massPhysicalQuantity->setName('masse');
         $this->_massPhysicalQuantity->setRef('m');
         $this->_massPhysicalQuantity->setSymbol('M');
         $this->_massPhysicalQuantity->setIsBase(true);
         $this->_massPhysicalQuantity->save();
 
-        $this->_timePhysicalQuantity = new Unit_Model_PhysicalQuantity();
+        $this->_timePhysicalQuantity = new PhysicalQuantity();
         $this->_timePhysicalQuantity->setName('temps');
         $this->_timePhysicalQuantity->setRef('t');
         $this->_timePhysicalQuantity->setSymbol('T');
         $this->_timePhysicalQuantity->setIsBase(true);
         $this->_timePhysicalQuantity->save();
 
-        $this->_cashPhysicalQuantity = new Unit_Model_PhysicalQuantity();
+        $this->_cashPhysicalQuantity = new PhysicalQuantity();
         $this->_cashPhysicalQuantity->setName('numéraire');
         $this->_cashPhysicalQuantity->setRef('numeraire');
         $this->_cashPhysicalQuantity->setSymbol('$');
@@ -160,7 +169,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $this->_cashPhysicalQuantity->save();
 
         // On créer une grandeur physique composée de grandeur physique de base.
-        $this->physicalQuantity1 = new Unit_Model_PhysicalQuantity();
+        $this->physicalQuantity1 = new PhysicalQuantity();
         $this->physicalQuantity1->setName('energie');
         $this->physicalQuantity1->setRef('ml2/t2');
         $this->physicalQuantity1->setSymbol('M.L2/T2');
@@ -180,7 +189,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $this->physicalQuantity1->addPhysicalQuantityComponent($this->_cashPhysicalQuantity, 0);
 
         // On crée les unités standards.
-        $this->_lengthStandardUnit = new Unit_Model_Unit_Standard();
+        $this->_lengthStandardUnit = new StandardUnit();
         $this->_lengthStandardUnit->setMultiplier(1);
         $this->_lengthStandardUnit->setName('Metre');
         $this->_lengthStandardUnit->setSymbol('m');
@@ -191,7 +200,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $entityManagers['default']->flush();
         $this->_lengthPhysicalQuantity->setReferenceUnit($this->_lengthStandardUnit);
 
-        $this->_massStandardUnit = new Unit_Model_Unit_Standard();
+        $this->_massStandardUnit = new StandardUnit();
         $this->_massStandardUnit->setMultiplier(1);
         $this->_massStandardUnit->setName('Kilogramme');
         $this->_massStandardUnit->setSymbol('kg');
@@ -202,7 +211,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $entityManagers['default']->flush();
         $this->_massPhysicalQuantity->setReferenceUnit($this->_massStandardUnit);
 
-        $this->_timeStandardUnit = new Unit_Model_Unit_Standard();
+        $this->_timeStandardUnit = new StandardUnit();
         $this->_timeStandardUnit->setMultiplier(1);
         $this->_timeStandardUnit->setName('Seconde');
         $this->_timeStandardUnit->setSymbol('s');
@@ -213,7 +222,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $entityManagers['default']->flush();
         $this->_timePhysicalQuantity->setReferenceUnit($this->_timeStandardUnit);
 
-        $this->_cashStandardUnit = new Unit_Model_Unit_Standard();
+        $this->_cashStandardUnit = new StandardUnit();
         $this->_cashStandardUnit->setMultiplier(1);
         $this->_cashStandardUnit->setName('Euro');
         $this->_cashStandardUnit->setSymbol('€');
@@ -227,14 +236,14 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $entityManagers['default']->flush();
 
         // On créer deux extensions.
-        $this->extension = new Unit_Model_Unit_Extension();
+        $this->extension = new UnitExtension();
         $this->extension->setRef('co2e');
         $this->extension->setName('équivalent CO2');
         $this->extension->setSymbol('equ. CO2');
         $this->extension->setMultiplier(1);
         $this->extension->save();
 
-        $this->extension2 = new Unit_Model_Unit_Extension();
+        $this->extension2 = new UnitExtension();
         $this->extension2->setRef('ce');
         $this->extension2->setName('équivalent carbone');
         $this->extension2->setSymbol('equ. C');
@@ -242,13 +251,13 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $this->extension2->save();
 
         //on créer plusieurs unités :
-        $this->_unit1 = new Unit_Model_Unit_Discrete();
+        $this->_unit1 = new DiscreteUnit();
         $this->_unit1->setName('Animal');
         $this->_unit1->setSymbol('animal');
         $this->_unit1->setRef('animal');
         $this->_unit1->save();
 
-        $this->_unit2 = new Unit_Model_Unit_Standard();
+        $this->_unit2 = new StandardUnit();
         $this->_unit2->setMultiplier(0.001);
         $this->_unit2->setName('gramme');
         $this->_unit2->setSymbol('g');
@@ -257,7 +266,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $this->_unit2->setUnitSystem($this->unitSystem);
         $this->_unit2->save();
 
-        $this->_unit3 = new Unit_Model_Unit_Standard();
+        $this->_unit3 = new StandardUnit();
         $this->_unit3->setMultiplier(1);
         $this->_unit3->setName('Joule');
         $this->_unit3->setSymbol('J');
@@ -266,7 +275,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $this->_unit3->setUnitSystem($this->unitSystem);
         $this->_unit3->save();
 
-        $this->_unit4 = new Unit_Model_Unit_Extended();
+        $this->_unit4 = new ExtendedUnit();
         $this->_unit4->setRef('g_co2e');
         $this->_unit4->setName('gramme équivalent CO2');
         $this->_unit4->setSymbol('g equ. CO2');
@@ -275,7 +284,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $this->_unit4->setStandardUnit($this->_massStandardUnit);
         $this->_unit4->save();
 
-        $this->_unit7 = new Unit_Model_Unit_Extended();
+        $this->_unit7 = new ExtendedUnit();
         $this->_unit7->setRef('kg_co2e');
         $this->_unit7->setName('kilogramme équivalent CO2');
         $this->_unit7->setSymbol('kg.equ. CO2');
@@ -284,7 +293,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $this->_unit7->setStandardUnit($this->_massStandardUnit);
         $this->_unit7->save();
 
-        $this->_unit5 = new Unit_Model_Unit_Extended();
+        $this->_unit5 = new ExtendedUnit();
         $this->_unit5->setRef('kg_ce');
         $this->_unit5->setName('kilogramme équivalent carbone');
         $this->_unit5->setSymbol('kg.equ. C');
@@ -293,7 +302,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         $this->_unit5->setStandardUnit($this->_massStandardUnit);
         $this->_unit5->save();
 
-        $this->_unit6 = new Unit_Model_Unit_Standard();
+        $this->_unit6 = new StandardUnit();
         $this->_unit6->setMultiplier(3.15576e+007);
         $this->_unit6->setName('an');
         $this->_unit6->setSymbol('an');
@@ -312,7 +321,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     function testGetSymbol()
     {
         //Traitement d'un cas assez complexe utilisant tout les types d'unité (discrète, étendue et standard)
-        $o = new Unit_API('m^2.animal^-1.m^-2.g.g_co2e^2');
+        $o = new UnitAPI('m^2.animal^-1.m^-2.g.g_co2e^2');
         $this->assertSame('m2.g.g equ. CO22/animal.m2', $o->getSymbol());
     }
 
@@ -324,9 +333,9 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     function testGetNormalizedUnit()
     {
         //Traitement d'un cas assez complexe utilisant tout les types d'unité (discrète, étendue et standard)
-        $o = new Unit_API('g.An');
+        $o = new UnitAPI('g.An');
         $result = $o->getNormalizedUnit();
-        $this->assertTrue($result instanceof Unit_API);
+        $this->assertTrue($result instanceof UnitAPI);
         $this->assertSame('kg.s', $result->getRef());
     }
 
@@ -337,23 +346,23 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     function testIsEquivalent()
     {
         //Cas ou l'on mélange plusieurs type d'unité.
-        $unit1 = new Unit_API('m^2.animal^-1.m^-2.kg.m^2.J^-5.kg_co2e^2');
-        $unit2 = new Unit_API('animal^-1.g.m^2.J^-5.g_co2e^2');
+        $unit1 = new UnitAPI('m^2.animal^-1.m^-2.kg.m^2.J^-5.kg_co2e^2');
+        $unit2 = new UnitAPI('animal^-1.g.m^2.J^-5.g_co2e^2');
         $this->assertEquals(true, $unit1->isEquivalent($unit2->getRef()));
 
-        $unit3 = new Unit_API('animal^-1.g.m');
+        $unit3 = new UnitAPI('animal^-1.g.m');
         $this->assertEquals(false, $unit1->isEquivalent($unit3->getRef()));
 
         // Cas ou l'on compare seulement des unités standard
-        $unit4 = new Unit_API('g');
+        $unit4 = new UnitAPI('g');
         $this->assertEquals(true, $unit4->isEquivalent($unit4->getRef()));
 
         // Cas ou l'on compare seulement des unités pas standard.
-        $unit5 = new Unit_API('animal');
+        $unit5 = new UnitAPI('animal');
         $this->assertEquals(true, $unit5->isEquivalent($unit5->getRef()));
 
         // Test de l'expression levée lorsque l'on cherche à comparer une unité qui n'existe pas
-        $unit6 = new Unit_API('');
+        $unit6 = new UnitAPI('');
         try {
             $unit1->isEquivalent($unit6->getRef());
         } catch (Core_Exception_NotFound $e) {
@@ -367,11 +376,11 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
      */
     function testGetConversionFactor()
     {
-        $unit1 = new Unit_API('m^2.animal^-1.m^-2.kg.kg_ce');
+        $unit1 = new UnitAPI('m^2.animal^-1.m^-2.kg.kg_ce');
         $result = $unit1->getConversionFactor();
         $this->assertEquals(true, $result == 3.7);
 
-        $unit1 = new Unit_API('kg^2.g');
+        $unit1 = new UnitAPI('kg^2.g');
         $result = $unit1->getConversionFactor();
         $this->assertEquals(true, $result == 0.001);
 
@@ -380,7 +389,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
 
         $this->_unit7->setExtension($this->extension);
 
-        $unit1 = new Unit_API('kg_co2e');
+        $unit1 = new UnitAPI('kg_co2e');
         try {
             $result = $unit1->getConversionFactor();
         } catch (Core_Exception_UndefinedAttribute $e) {
@@ -390,7 +399,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
         //Test de l'exception levée lorsque le coefficient multiplicateur d'une extension est null.
         $this->_unit2->setMultiplier(null);
 
-        $unit1 = new Unit_API('g');
+        $unit1 = new UnitAPI('g');
         try {
             $result = $unit1->getConversionFactor();
         } catch (Core_Exception_UndefinedAttribute $e) {
@@ -407,14 +416,14 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
      */
     function testMultiply()
     {
-        $operande[0]['unit'] = new Unit_API('g.animal^-1.kg.kg_ce');
+        $operande[0]['unit'] = new UnitAPI('g.animal^-1.kg.kg_ce');
         $operande[0]['signExponent'] = 1;
-        $operande[1]['unit'] = new Unit_API('animal.s.an.kg^-1');
+        $operande[1]['unit'] = new UnitAPI('animal.s.an.kg^-1');
         $operande[1]['signExponent'] = -1;
 
-        $result = Unit_API::multiply($operande);
-        $this->assertTrue($result instanceof Unit_API);
-        $this->assertEquals('kg_co2e.kg^3.animal^-2.s^-2', $result->getRef());
+        $result = UnitAPI::multiply($operande);
+        $this->assertTrue($result instanceof UnitAPI);
+        $this->assertEquals('kg^3.kg_co2e.s^-2.animal^-2', $result->getRef());
     }
 
     /**
@@ -427,11 +436,11 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     {
         $operande[] = 'g.animal^-1.kg.g_co2e';
         $operande[] = 'animal.s.an.kg^-1';
-        $unit = new Unit_API();
+        $unit = new UnitAPI();
 
         try {
             $result = $unit->calculateSum($operande);
-        } catch (Unit_Exception_IncompatibleUnits $e) {
+        } catch (IncompatibleUnitsException $e) {
             $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
 
@@ -441,7 +450,7 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
 
         $result = $unit->calculateSum($operande);
 
-        $this->assertTrue($result instanceof Unit_API);
+        $this->assertTrue($result instanceof UnitAPI);
         $this->assertEquals('kg^2.s^2.animal^-1', $result->getRef());
     }
 
@@ -452,13 +461,13 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
     function testGetSamePhysicalQuantityUnits()
     {
          // Cas ou la méthode fonctionne correctement.
-         $unit1 = new Unit_API('kg');
+         $unit1 = new UnitAPI('kg');
          $results = $unit1->getSamePhysicalQuantityUnits();
          $this->assertTrue(count($results) >= 1);
 
          // Test de l'erreur générée dans le cas ou l'on cherche à récupérer les unités
          // compatibles avec une unité non standard.
-         $unit2 = new Unit_API('kg.s^2');
+         $unit2 = new UnitAPI('kg.s^2');
          $results = $unit2->getSamePhysicalQuantityUnits();
          $this->assertTrue(count($results) == 0);
     }
@@ -510,37 +519,37 @@ class Unit_Test_UnitAPILogiqueMetier extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit_Model_Unit en base, sinon suppression !
-        if (Unit_Model_Unit::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit::loadList() as $unit) {
+            foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_Extension en base, sinon suppression !
-        if (Unit_Model_Unit_Extension::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
+        if (UnitExtension::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_Extension::loadList() as $extensionunit) {
+            foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_PhysicalQuantity en base, sinon suppression !
-        if (Unit_Model_PhysicalQuantity::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
+        if (PhysicalQuantity::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_PhysicalQuantity::loadList() as $physicalQuantity) {
+            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
             $entityManagers['default']->flush();
         }
-        // Vérification qu'il ne reste aucun Unit_Model_Unit_System en base, sinon suppression !
-        if (Unit_Model_Unit_System::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
+        if (UnitSystem::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit_Model_Unit_System::loadList() as $systemunit) {
+            foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
