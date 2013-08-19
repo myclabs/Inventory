@@ -5,6 +5,9 @@
  * @subpackage Controller
  */
 
+use DI\Annotation\Inject;
+use Doctrine\ORM\EntityManager;
+
 /**
  * Classe abstraite de contrôleur.
  *
@@ -15,6 +18,13 @@
  */
 abstract class Core_Controller extends Zend_Controller_Action
 {
+
+    /**
+     * @Inject
+     * @var EntityManager
+     */
+    protected $entityManager;
+
     /**
      * Helper pour les redirections.
      *
@@ -33,6 +43,22 @@ abstract class Core_Controller extends Zend_Controller_Action
     {
         // Charge les helpers d'action.
         $this->redirector = $this->_helper->getHelper('Redirector');
+    }
+
+    /**
+     * Envoie une réponse ajax encodée en Json.
+     *
+     * @param mixed $reponse N'importe quel type de variable.
+     */
+    public function sendJsonResponse($reponse)
+    {
+        // Toute cette manipulation est nécessaire pour contourner
+        //  un bug de Zend Framework (les headers firebug ne sont pas envoyés sinon).
+        //@see http://framework.zend.com/issues/browse/ZF-4134
+        $json = $this->getHelper('Json');
+        $json->suppressExit = true;
+        $json->sendJson($reponse);
+        Zend_Wildfire_Channel_HttpHeaders::getInstance()->flush();
     }
 
 }

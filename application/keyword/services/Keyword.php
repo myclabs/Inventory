@@ -10,18 +10,8 @@
  * Service Keyword.
  * @package Keyword
  */
-class Keyword_Service_Keyword extends Core_Service
+class Keyword_Service_Keyword
 {
-    /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Keyword_Service_Keyword
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
-
     /**
      * Ajoute un Keyword et le renvoie.
      *
@@ -30,7 +20,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @return Keyword_Model_Keyword
      */
-    public function addService($ref, $label)
+    public function add($ref, $label)
     {
         return $this->createKeyword($ref, $label);
     }
@@ -43,7 +33,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @return Keyword_Model_Keyword
      */
-    public function updateRefService($keywordRef, $newRef)
+    public function updateRef($keywordRef, $newRef)
     {
         $keyword = Keyword_Model_Keyword::loadByRef($keywordRef);
 
@@ -62,7 +52,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @return Keyword_Model_Keyword
      */
-    public function updateLabelService($keywordRef, $newLabel)
+    public function updateLabel($keywordRef, $newLabel)
     {
         $keyword = Keyword_Model_Keyword::loadByRef($keywordRef);
 
@@ -80,7 +70,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @return Keyword_Model_Keyword
      */
-    public function updateRefAndLabelService($keywordRef, $newRef, $newLabel)
+    public function updateRefAndLabel($keywordRef, $newRef, $newLabel)
     {
         $keyword = Keyword_Model_Keyword::loadByRef($keywordRef);
 
@@ -99,7 +89,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @return string Le label du Keyword.
      */
-    public function deleteService($keywordRef)
+    public function delete($keywordRef)
     {
         $keyword = Keyword_Model_Keyword::loadByRef($keywordRef);
 
@@ -118,7 +108,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @return Keyword_Model_Keyword
      */
-    public function addAsObjectInAssociationService($ref, $label, $subjectKeywordRef, $predicateRef)
+    public function addAsObjectInAssociation($ref, $label, $subjectKeywordRef, $predicateRef)
     {
         $keyword = $this->createKeyword($ref, $label);
 
@@ -141,7 +131,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @return Keyword_Model_Keyword
      */
-    public function addAsSubjectInAssociationService($ref, $label, $objectKeywordRef, $predicateRef)
+    public function addAsSubjectInAssociation($ref, $label, $objectKeywordRef, $predicateRef)
     {
         $keyword = $this->createKeyword($ref, $label);
 
@@ -162,7 +152,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @return Keyword_Model_Keyword
      */
-    protected function createKeyword($ref, $label)
+    private function createKeyword($ref, $label)
     {
         $keyword = new Keyword_Model_Keyword();
 
@@ -211,7 +201,7 @@ class Keyword_Service_Keyword extends Core_Service
      *
      * @throws Core_Exception_User
      */
-    protected function checkKeywordRef($ref)
+    private function checkKeywordRef($ref)
     {
         Core_Tools::checkRef($ref);
         if ($ref === 'this') {

@@ -11,7 +11,7 @@ use Core\Annotation\Secure;
 /**
  * @package Doc
  */
-class Doc_BibliographyController extends Core_Controller_Ajax
+class Doc_BibliographyController extends Core_Controller
 {
 
     /**

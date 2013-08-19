@@ -82,9 +82,8 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
             $af->addComponent($group);
             $af->getRootGroup()->save();
 
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -133,8 +132,11 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 break;
         }
         $group->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -149,9 +151,8 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
         /** @var $group AF_Model_Component_Group */
         $group = AF_Model_Component_Group::load($this->getParam('index'));
         $group->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             throw new Core_Exception_User('AF', 'configComponentMessage', 'groupNotEmptyDeletionDenied');
         }

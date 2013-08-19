@@ -9,7 +9,7 @@
  * @package    Techno
  * @subpackage Service
  */
-class Techno_Service_Techno extends Core_Singleton
+class Techno_Service_Techno
 {
 
     /**
@@ -59,20 +59,19 @@ class Techno_Service_Techno extends Core_Singleton
         }
         // TODO passer $value dans Techno_Model_Element pour éviter ça
         if ($element instanceof Techno_Model_Element_Process) {
-            return new Calc_UnitValue($element->getValueUnit(), $element->getValue());
+            return new Calc_UnitValue(
+                $element->getValueUnit(),
+                $element->getValue()->getDigitalValue(),
+                $element->getValue()->getRelativeUncertainty()
+            );
         } elseif ($element instanceof Techno_Model_Element_Coeff) {
-            return new Calc_UnitValue($element->getValueUnit(), $element->getValue());
+            return new Calc_UnitValue(
+                $element->getValueUnit(),
+                $element->getValue()->getDigitalValue(),
+                $element->getValue()->getRelativeUncertainty()
+            );
         }
         return null;
-    }
-
-    /**
-     * Surcharge pour avoir le bon type de retour
-     * @return Techno_Service_Techno
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
     }
 
 }

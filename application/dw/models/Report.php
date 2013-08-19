@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class DW_Model_Report extends Core_Model_Entity
 {
     use Core_Event_ObservableTrait;
+    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_CUBE = 'cube';
@@ -143,6 +144,13 @@ class DW_Model_Report extends Core_Model_Entity
      */
     protected $filters;
 
+    /**
+     * Timestamp de dernière modification du rapport.
+     *
+     * @var int
+     */
+    protected $lastModificationTimestamp = 1;
+
 
     /**
      * Constructeur de l'objet
@@ -153,10 +161,11 @@ class DW_Model_Report extends Core_Model_Entity
 
         $this->cube = $cube;
         $this->cube->addReport($this);
+        $this->updateLastModification();
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -164,7 +173,15 @@ class DW_Model_Report extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un update de l'objet (défini dans le mapper).
+     * Mets à jour le timestamp de dernière modification
+     */
+    public function updateLastModification()
+    {
+        $this->lastModificationTimestamp = time();
+    }
+
+    /**
+     * Fonction appelée après un update de l'objet (défini dans le mapper).
      */
     public function postUpdate()
     {
@@ -172,7 +189,7 @@ class DW_Model_Report extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -436,6 +453,7 @@ class DW_Model_Report extends Core_Model_Entity
     {
         if (!($this->hasFilter($filter))) {
             $this->filters->add($filter);
+            $this->updateLastModification();
         }
     }
 
@@ -460,6 +478,7 @@ class DW_Model_Report extends Core_Model_Entity
     {
         if ($this->hasFilter($filter)) {
             $this->filters->removeElement($filter);
+            $this->updateLastModification();
         }
     }
 
@@ -755,17 +774,21 @@ class DW_Model_Report extends Core_Model_Entity
      * Renvoi le rapport récupéré à partir de la chaine depuis l'enregistrer en session.
      *
      * @param string $string
+     * @param DW_Model_Cube $cube
      *
      * @return DW_Model_Report
      */
-    public static function getFromString($string)
+    public static function getFromString($string, DW_Model_Cube $cube=null)
     {
         $stdReport = json_decode($string);
 
         if ($stdReport->id !== null) {
             $report = DW_Model_Report::load($stdReport->id);
         } else {
-            $report = new DW_Model_Report(DW_Model_Cube::load($stdReport->idCube));
+            if ($stdReport->idCube != null) {
+                $cube = DW_Model_Cube::load($stdReport->idCube);
+            }
+            $report = new DW_Model_Report($cube);
         }
 
         // Label.
@@ -878,10 +901,10 @@ class DW_Model_Report extends Core_Model_Entity
     {
         $reportAsString = preg_replace(
             '#^(\{"id":)(null|[0-9]+)(,"idCube":)([0-9]+)(,.+\})$#',
-            '${1}null${3}'.$cube->getId().'${5}',
+            '${1}null${3}'.($cube->getId() ? : 'null').'${5}',
             $this->getAsString()
         );
-        return DW_Model_Report::getFromString($reportAsString);
+        return DW_Model_Report::getFromString($reportAsString, $cube);
     }
 
 }

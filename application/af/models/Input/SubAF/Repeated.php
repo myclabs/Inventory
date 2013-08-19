@@ -40,22 +40,7 @@ class AF_Model_Input_SubAF_Repeated extends AF_Model_Input_SubAF
      */
     public function getValue()
     {
-        return $this->value;
-    }
-
-    /**
-     * Set the value of a subAF element.
-     * @param AF_Model_InputSet_Sub[] $value array of subSet.
-     */
-    public function setValue($value)
-    {
-        foreach ($value as $subSet) {
-            if ($subSet instanceof AF_Model_InputSet_Sub) {
-                $this->addSubSet($subSet);
-            } else {
-                throw new Core_Exception_InvalidArgument('Parameter value must be an array of AF_Model_InputSet_Sub');
-            }
-        }
+        return $this->value->toArray();
     }
 
     /**
@@ -63,7 +48,19 @@ class AF_Model_Input_SubAF_Repeated extends AF_Model_Input_SubAF
      */
     public function addSubSet(AF_Model_InputSet_Sub $subSet)
     {
-        $this->value->add($subSet);
+        if (!$this->value->contains($subSet)) {
+            $this->value->add($subSet);
+        }
+    }
+
+    /**
+     * @param AF_Model_InputSet_Sub $subSet
+     */
+    public function removeSubSet(AF_Model_InputSet_Sub $subSet)
+    {
+        if ($this->value->contains($subSet)) {
+            $this->value->removeElement($subSet);
+        }
     }
 
     /**

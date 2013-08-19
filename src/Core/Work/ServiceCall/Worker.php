@@ -4,6 +4,8 @@
  * @package Core
  */
 
+use DI\Container;
+
 /**
  * Exécute l'appel d'une méthode d'un service
  *
@@ -11,6 +13,19 @@
  */
 class Core_Work_ServiceCall_Worker extends Core_Work_Worker
 {
+
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * {@inheritdoc}
@@ -30,8 +45,8 @@ class Core_Work_ServiceCall_Worker extends Core_Work_Worker
         $methodName = $task->getMethodName();
         $parameters = $task->getParameters();
 
-        // Tous nos services implémentent le pattern singleton aujourd'hui
-        $service = $serviceName::getInstance();
+        // Récupère le service depuis le container
+        $service = $this->container->get($serviceName);
 
         Core_Error_Log::getInstance()->debug("Calling $serviceName::$methodName");
 

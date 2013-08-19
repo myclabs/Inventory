@@ -3,7 +3,12 @@ AF_Model_Input_Numeric:
   repositoryClass: Core_Model_Repository
   table: AF_Input_Numeric
 
+  gedmo:
+    loggable: true
+
   fields:
     value:
       type: calc_unitvalue
       nullable: false
+      gedmo:
+        - versioned

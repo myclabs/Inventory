@@ -19,6 +19,7 @@ AF_Model_Component:
     field: AF_Model_Component_Field
     checkbox: AF_Model_Component_Checkbox
     numeric: AF_Model_Component_Numeric
+    text: AF_Model_Component_Text
     select: AF_Model_Component_Select
     select_single: AF_Model_Component_Select_Single
     select_multi: AF_Model_Component_Select_Multi

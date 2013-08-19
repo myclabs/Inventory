@@ -11,7 +11,7 @@
  * @package    Core
  * @subpackage EventDispatcher
  */
-class Core_EventDispatcher extends Core_Singleton
+class Core_EventDispatcher
 {
     /**
      * List of all observable enteties referencing their observers

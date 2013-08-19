@@ -7,6 +7,8 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
+use TEC\Exception\InvalidExpressionException;
 
 /**
  * @package AF
@@ -30,7 +32,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
                 $data['label'] = $algo->getLabel();
-                $data['unit'] = $algo->getUnit()->getRef();
+                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
                 $data['expression'] = $this->cellLongText('af/edit_algos/popup-expression/id/' . $algo->getId(),
                                                           'af/datagrid_edit_algos_numeric-expression/get-expression/id/'
                                                               . $algo->getId(),
@@ -68,6 +70,16 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
+        try {
+            $unitRef = $this->getAddElementValue('unit');
+            if (empty($unitRef)) {
+                $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+            }
+            $unit = new UnitAPI($unitRef);
+            $unit->getNormalizedUnit();
+        } catch (Core_Exception_NotFound $e) {
+            $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+        }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
             $algo = new Algo_Model_Numeric_Expression();
@@ -81,20 +93,20 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
             $algo->setLabel($this->getAddElementValue('label'));
             try {
                 $algo->setExpression($this->getAddElementValue('expression'));
-            } catch (TEC_Model_InvalidExpressionException $e) {
+            } catch (InvalidExpressionException $e) {
                 $this->setAddElementErrorMessage('expression',
                                                  __('AF', 'configTreatmentMessage', 'invalidExpression')
                                                      . "<br>" . implode("<br>", $e->getErrors()));
                 $this->send();
                 return;
             }
-            $algo->setUnit(new Unit_API($this->getAddElementValue('unit')));
+            /** @noinspection PhpUndefinedVariableInspection */
+            $algo->setUnit($unit);
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -125,13 +137,22 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->data = $algo->getLabel();
                 break;
             case 'unit':
-                $algo->setUnit(new Unit_API($newValue));
-                $this->data = $algo->getUnit()->getRef();
+                try {
+                    if (empty($newValue)) {
+                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                    }
+                    $unit = new UnitAPI($newValue);
+                    $unit->getNormalizedUnit();
+                } catch (Core_Exception_NotFound $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                }
+                $algo->setUnit($unit);
+                $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
                 break;
             case 'expression':
                 try {
                     $algo->setExpression($newValue);
-                } catch (TEC_Model_InvalidExpressionException $e) {
+                } catch (InvalidExpressionException $e) {
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
@@ -151,8 +172,11 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 break;
         }
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -169,8 +193,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

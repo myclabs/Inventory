@@ -56,7 +56,7 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
     public function updateelementAction()
     {
         $member = Classif_Model_Member::load($this->update['index']);
-        $member->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $member->reloadWithLocale(Core_Locale::load($this->update['column']));
         $member->setLabel($this->update['value']);
         $this->data = $member->getLabel();
 

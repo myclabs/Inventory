@@ -91,9 +91,11 @@
         ?>
         <script type="text/javascript">
             var checkOrganizationDWCubesState = function() {
+                setMask(true);
                 $.get(
                     'orga/organization/dwcubesstate/idOrganization/<?=$this->idOrganization?>',
                     function (response) {
+                        setMask(false);
                         var button = $('#organizationDWCubes');
                         if (response.organizationDWCubesState) {
                             button.attr('class', 'btn btn-success')
@@ -107,12 +109,14 @@
                             button.bind('click', resetOrganizationDWCubes);
                         }
                     }
-                ).fail(errorHandler);
+                ).fail(function(o) { setMask(false); errorHandler(o); });
             };
             var resetOrganizationDWCubes = function() {
+                setMask(true);
                 $.get(
                     'orga/organization/resetdwcubes/idOrganization/<?=$this->idOrganization?>',
                     function (response) {
+                        setMask(false);
                         var button = $('#organizationDWCubes');
                         button.attr('class', 'btn');
                         button.children('i').attr('class', 'icon-leaf');
@@ -121,7 +125,7 @@
                         button.unbind('click');
                         button.bind('click', checkOrganizationDWCubesState);
                     }
-                ).fail(errorHandler);
+                ).fail(function(o) { setMask(false); errorHandler(o); });
             };
             $('#organizationDWCubes').unbind('click').bind('click', checkOrganizationDWCubesState);
         </script>

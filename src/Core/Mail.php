@@ -21,7 +21,8 @@ class Core_Mail extends Zend_Mail
      *
      * Définition de paramètres par défaut.
      *
-     * @return void
+     * @throws Core_Exception_UndefinedAttribute
+     * @return \Core_Mail
      */
     public function __construct()
     {
@@ -33,6 +34,7 @@ class Core_Mail extends Zend_Mail
             throw new Core_Exception_UndefinedAttribute('Le mail "no-reply" n\'est pas définit dans le application.ini');
         } else {
             $this->setFrom($config->emails->noreply->adress, $config->emails->noreply->name);
+            $this->setReplyTo($config->emails->noreply->adress, $config->emails->noreply->name);
         }
     }
 

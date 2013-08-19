@@ -63,12 +63,17 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
             $meaning = Techno_Model_Meaning::load($idMeaning);
-            $dimension = new Techno_Model_Family_Dimension($family, $meaning, $orientation);
-            $dimension->save();
-            $family->addDimension($dimension);
-            $family->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            try {
+                $dimension = new Techno_Model_Family_Dimension($family, $meaning, $orientation);
+                $dimension->save();
+                $family->addDimension($dimension);
+                $family->save();
+                $this->entityManager->flush();
+            } catch (Core_ORM_DuplicateEntryException $e) {
+                $this->setAddElementErrorMessage('meaning', __('Techno', 'familyDetail', 'meaningAlreadyUsed'));
+                $this->send();
+                return;
+            }
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();
@@ -111,8 +116,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
                 break;
         }
         $dimension->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -129,8 +133,7 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
         $family = $dimension->getFamily();
         $family->removeDimension($dimension);
         $family->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

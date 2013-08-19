@@ -6,12 +6,19 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package Social
  */
 class Social_Datagrid_Message_InboxController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Social_Service_Message
+     */
+    private $messageService;
 
     /**
      * {@inheritdoc}
@@ -21,10 +28,8 @@ class Social_Datagrid_Message_InboxController extends UI_Controller_Datagrid
     {
         $currentUser = $this->_helper->auth();
 
-        /** @var $messageService Social_Service_Message */
-        $messageService = Social_Service_Message::getInstance();
-        $messages = $messageService->getUserInbox($currentUser, $this->request->totalElements);
-        $this->totalElements = $messageService->getUserInboxSize($currentUser);
+        $messages = $this->messageService->getUserInbox($currentUser, $this->request->totalElements);
+        $this->totalElements = $this->messageService->getUserInboxSize($currentUser);
 
         foreach ($messages as $message) {
             $data = [];

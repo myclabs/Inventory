@@ -36,7 +36,9 @@ class AF_Model_Condition_Elementary_Select_Single extends AF_Model_Condition_Ele
             default :
                 throw new Core_Exception("The relation '$this->relation'' is invalid or undefined");
         }
-        $uiCondition->value = $generationHelper->getUIOption($this->option)->ref;
+        if ($this->option) {
+            $uiCondition->value = $generationHelper->getUIOption($this->option)->ref;
+        }
         return $uiCondition;
     }
 

@@ -41,7 +41,7 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
      * Pourcentage de complétion de la saisie
      * @var int|null
      */
-    private $completion;
+    protected $completion;
 
 
     /**
@@ -66,7 +66,7 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
      */
     public function getInputs()
     {
-        return $this->inputs;
+        return $this->inputs->toArray();
     }
 
     /**
@@ -112,6 +112,17 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
         $this->inputs->add($input);
         // Set the InputSet in the input
         $input->setInputSet($this);
+    }
+
+    /**
+     * Supprime une saisie de composant
+     * @param AF_Model_Input $input
+     */
+    public function removeInput(AF_Model_Input $input)
+    {
+        if ($this->inputs->contains($input)) {
+            $this->inputs->removeElement($input);
+        }
     }
 
     /**
@@ -174,14 +185,6 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
     public function isInputComplete()
     {
         return $this->getCompletion() == 100;
-    }
-
-    /**
-     * @return bool True si les calculs de l'AF sont fait
-     */
-    public function isCalculationComplete()
-    {
-        return $this->isInputComplete();
     }
 
     /**

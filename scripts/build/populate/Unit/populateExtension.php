@@ -5,6 +5,7 @@
  * @author yoann.croizer
  * @package Unit
  */
+use Unit\Domain\UnitExtension;
 
 /**
  * Script de création de la table Extension
@@ -42,7 +43,7 @@ class Unit_Script_Populate_Extension
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $extension = new Unit_Model_Unit_Extension();
+        $extension = new UnitExtension();
         $extension->setRef($element->getAttribute('ref'));
         $extension->setMultiplier($element->getElementsByTagName('multiplier')->item(0)->firstChild->nodeValue);
 

@@ -28,7 +28,7 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
 
         foreach (Classif_Model_Axis::loadList() as $axis) {
             if (!$axis->hasMembers()) {
-                $listAxisWithoutMember[] = $axis->getRef();
+                $listAxisWithoutMember[] = $axis->getLabel();
             } else {
                 $narrowerAxis = $axis->getDirectNarrower();
                 $broaderAxes = $axis->getDirectBroaders();
@@ -44,7 +44,7 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
                             if (!isset($listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()])) {
                                 $listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()] = array();
                             }
-                            $listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()][] = $member->getRef();
+                            $listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()][] = $member->getLabel();
                         }
                     }
                     foreach ($broaderAxes as $broaderAxis) {
@@ -57,7 +57,7 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
                             if (!isset($listAxisWithMemberNotLinkedToBroader[$axis->getRef()][$broaderAxis->getRef()])) {
                                 $listAxisWithMemberNotLinkedToBroader[$axis->getRef()][$broaderAxis->getRef()] = array();
                             }
-                            $listAxisWithMemberNotLinkedToBroader[$axis->getRef()][$broaderAxis->getRef()][] = $member->getRef();
+                            $listAxisWithMemberNotLinkedToBroader[$axis->getRef()][$broaderAxis->getRef()][] = $member->getLabel();
                         }
                     }
                 }
@@ -71,17 +71,17 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
                 $listCompatibleUnits = $unit->getNormalizedUnit();
             } catch (Core_Exception_NotFound $e) {
                 $listCompatibleUnits = array();
-                $listIndicatorsWithNonexistentUnits[$indicator->getRef()][] = $unit->getRef();
+                $listIndicatorsWithNonexistentUnits[$indicator->getRef()][] = $unit->getLabel();
             }
             try {
                 $listCompatibleRatioUnits = $ratioUnit->getNormalizedUnit();
             } catch (Core_Exception_NotFound $e) {
                 $listCompatibleRatioUnits = array();
-                $listIndicatorsWithNonexistentUnits[$indicator->getRef()][] = $ratioUnit->getRef();
+                $listIndicatorsWithNonexistentUnits[$indicator->getRef()][] = $ratioUnit->getLabel();
             }
             if ($listCompatibleUnits != $listCompatibleRatioUnits) {
-                $listIndicatorsWithNoncoherentUnits[$indicator->getRef()][] = $unit->getRef();
-                $listIndicatorsWithNoncoherentUnits[$indicator->getRef()][] = $ratioUnit->getRef();
+                $listIndicatorsWithNoncoherentUnits[$indicator->getRef()][] = $unit->getLabel();
+                $listIndicatorsWithNoncoherentUnits[$indicator->getRef()][] = $ratioUnit->getLabel();
             }
         }
 
@@ -92,7 +92,7 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
                 foreach ($contextIndicatorAxes as $contextIndicatorAxisVerif) {
                     if (($contextIndicatorAxis !== $contextIndicatorAxisVerif)
                         && ($contextIndicatorAxis->isNarrowerThan($contextIndicatorAxisVerif))) {
-                        $contextIndicatorErrors[] = '(' . $contextIndicatorAxis->getRef() . ' - ' . $contextIndicatorAxisVerif->getRef() . ')';
+                        $contextIndicatorErrors[] = '(' . $contextIndicatorAxis->getLabel() . ' - ' . $contextIndicatorAxisVerif->getLabel() . ')';
                     }
                 }
             }
@@ -115,9 +115,11 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         $data['diag'] = empty($listAxisWithMemberNotLinkedToNarrower);
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToNarrower as $refAxis => $members) {
-            $data['fail'] .= $refAxis . ' : { ';
+            $axis = Classif_Model_Axis::loadByRef($refAxis);
+            $data['fail'] .= $axis->getLabel() . ' : { ';
             foreach ($members as $refNarrowerAxis => $refMember) {
-                $data['fail'] .= $refNarrowerAxis . ' : [' . implode(', ', $refMember) . '], ';
+                $narrowerAxis = Classif_Model_Axis::loadByRef($refNarrowerAxis);
+                $data['fail'] .= $narrowerAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
             $data['fail'] .= ' }, ';
@@ -132,9 +134,11 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         $data['diag'] = empty($listAxisWithMemberNotLinkedToBroader);
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToBroader as $refAxis => $members) {
-            $data['fail'] .= $refAxis . ' : { ';
+            $axis = Classif_Model_Axis::loadByRef($refAxis);
+            $data['fail'] .= $axis->getLabel() . ' : { ';
             foreach ($members as $refBroaderAxis => $refMember) {
-                $data['fail'] .= $refBroaderAxis . ' : [' . implode(', ', $refMember) . '], ';
+                $broaderAxis = Classif_Model_Axis::loadByRef($refBroaderAxis);
+                $data['fail'] .= $broaderAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
             $data['fail'] .= ' }, ';
@@ -144,34 +148,13 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         }
         $this->addLine($data);
 
-        $data['index'] = 'indicatorsWithNonexistentUnits';
-        $data['control'] = __('Classif', 'control', 'indicatorWithNoUnit');
-        $data['diag'] = empty($listIndicatorsWithNonexistentUnits);
-        $data['fail'] = '';
-        foreach ($listIndicatorsWithNonexistentUnits as $refIndicator => $units) {
-            $data['fail'] .= $refIndicator . ' : { ' . implode(', ', $units) . ' }, ';
-        }
-        if (strlen($data['fail']) > 0) {
-            $data['fail'] = substr($data['fail'], 0, -2);
-        }
-        $this->addLine($data);
-
-        $data['index'] = 'indicatorsWithNoncoherentUnits';
-        $data['control'] = __('Classif', 'control', 'indicatorWithIncompatibleUnits');
-        $data['diag'] = empty($listIndicatorsWithNoncoherentUnits);
-        $data['fail'] = '';
-        foreach ($listIndicatorsWithNoncoherentUnits as $refIndicator => $units) {
-            $data['fail'] .= $refIndicator . ' : { ' . implode(', ', $units) . ' }, ';
-        }
-        $this->addLine($data);
-
         $data['index'] = 'contextIndicatorsWithLinkedAxes';
         $data['control'] = __('Classif', 'control', 'contextIndicatorsWithLinkedAxes');
         $data['diag'] = empty($listContextIndicatorsWithLinkedAxes);
         $data['fail'] = '';
         foreach ($listContextIndicatorsWithLinkedAxes as $contextIndicatorArray) {
-            $data['fail'] .= $contextIndicatorArray['contextIndicator']->getContext()->getRef() . ' - ' .
-                $contextIndicatorArray['contextIndicator']->getIndicator()->getRef() .
+            $data['fail'] .= $contextIndicatorArray['contextIndicator']->getContext()->getLabel() . ' - ' .
+                $contextIndicatorArray['contextIndicator']->getIndicator()->getLabel() .
                 ' : { ' . implode(', ', $contextIndicatorArray['axes']) . ' }, ';
         }
         if (strlen($data['fail']) > 0) {

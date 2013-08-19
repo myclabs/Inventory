@@ -41,7 +41,7 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     protected $hidden = false;
 
     /**
-     * Indicate if the field is disabled (tru) or not (false).
+     * Indicate if the field is disabled (true) or not (false).
      * @var bool
      */
     protected $disabled = false;
@@ -73,6 +73,19 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     abstract public function getNbRequiredFieldsCompleted();
 
     /**
+     * Retourne true si la saisie donnée est égale à la saisie actuelle
+     * @param AF_Model_Input $input
+     * @return boolean
+     */
+    public function equals(AF_Model_Input $input)
+    {
+        return (get_class($this) === get_class($input))
+            && ($this->getRefComponent() === $input->getRefComponent())
+            && ($this->isDisabled() === $input->isDisabled())
+            && ($this->isHidden() === $input->isHidden());
+    }
+
+    /**
      * @param AF_Model_InputSet $inputSet
      */
     public function setInputSet(AF_Model_InputSet $inputSet)
@@ -91,19 +104,15 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     }
 
     /**
-     * @return AF_Model_Component
+     * @return AF_Model_Component|null
      */
     public function getComponent()
     {
-        return AF_Model_Component::loadByRef($this->refComponent, $this->inputSet->getAf());
-    }
-
-    /**
-     * @param AF_Model_Component $component
-     */
-    public function setComponent(AF_Model_Component $component)
-    {
-        $this->refComponent = $component->getRef();
+        try {
+            return AF_Model_Component::loadByRef($this->refComponent, $this->inputSet->getAf());
+        } catch (Core_Exception_NotFound $e) {
+            return null;
+        }
     }
 
     /**
@@ -144,6 +153,14 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     public function setDisabled($isDisabled)
     {
         $this->disabled = (bool) $isDisabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
 }

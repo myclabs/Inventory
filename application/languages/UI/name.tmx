@@ -251,15 +251,15 @@
                 <seg>Graph</seg>
             </tuv>
         </tu>
-		<tu tuid="help">
-			<tuv xml:lang="fr">
-				<seg>Aide</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Help</seg>
-			</tuv>
-		</tu>
-		<tu tuid="home">
+        <tu tuid="help">
+            <tuv xml:lang="fr">
+                <seg>Aide</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Help</seg>
+            </tuv>
+        </tu>
+        <tu tuid="home">
 			<tuv xml:lang="fr">
 				<seg>Accueil</seg>
 			</tuv>

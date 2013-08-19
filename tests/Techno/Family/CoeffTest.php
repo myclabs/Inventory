@@ -2,6 +2,7 @@
 /**
 * @package Techno
 */
+use Unit\UnitAPI;
 
 /**
  * Test Family Coeff Class
@@ -27,8 +28,8 @@ class Techno_Test_Family_CoeffTest
     public static function generateObject()
     {
         // Fixtures
-        $baseUnit = new Unit_API('m');
-        $unit = new Unit_API('km');
+        $baseUnit = new UnitAPI('m');
+        $unit = new UnitAPI('km');
 
         $o = new Techno_Model_Family_Coeff();
         $o->setRef(strtolower(Core_Tools::generateString(10)));
@@ -112,8 +113,8 @@ class Techno_Test_Family_CoeffSetUpTest extends PHPUnit_Framework_TestCase
     function testConstruct()
     {
         // Fixtures
-        $baseUnit = new Unit_API('m');
-        $unit = new Unit_API('km');
+        $baseUnit = new UnitAPI('m');
+        $unit = new UnitAPI('km');
 
         $o = new Techno_Model_Family_Coeff();
         $o->setRef('family');
@@ -233,8 +234,8 @@ class Techno_Test_Family_CoeffMetierTest extends PHPUnit_Framework_TestCase
     function testNullableFields()
     {
         // Fixtures
-        $baseUnit = new Unit_API('m');
-        $unit = new Unit_API('km');
+        $baseUnit = new UnitAPI('m');
+        $unit = new UnitAPI('km');
 
         $o = new Techno_Model_Family_Coeff();
         $o->setRef('family');

@@ -89,7 +89,7 @@ class Classif_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -101,7 +101,7 @@ class Classif_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -109,7 +109,7 @@ class Classif_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -117,7 +117,7 @@ class Classif_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {

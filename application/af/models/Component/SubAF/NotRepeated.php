@@ -78,7 +78,7 @@ class AF_Model_Component_SubAF_NotRepeated extends AF_Model_Component_SubAF
             }
         }
         // Pas de saisie
-        return $this->getCalledAF()->getNbRequiredFields($inputSet);
+        return $this->getCalledAF()->getNbRequiredFields();
     }
 
 }

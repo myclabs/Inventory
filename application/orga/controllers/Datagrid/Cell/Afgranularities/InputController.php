@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controller du datagrid des saisies des formulaires des cellules.
@@ -12,6 +13,11 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
 
     /**
      * Methode appelee pour remplir le tableau.
@@ -104,8 +110,25 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
         if ($isInputInInventory) {
             $data['inventoryStatus'] = $cell->getInventoryStatus();
+        }
 
-            if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
+        if (!$isInputInInventory || ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED)) {
+            try {
+                // Vérification qu'un AF est défini.
+                if ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
+                    $cellsGroup = $cell->getCellsGroupForInputGranularity($inputGranularity);
+                } else {
+                    $cellsGroup = $cell->getParentCellForGranularity(
+                        $inputGranularity->getInputConfigGranularity()
+                    )->getCellsGroupForInputGranularity($inputGranularity);
+                }
+                $cellsGroup->getAF();
+
+                $isUserAllowedToInputCell = $this->aclService->isAllowed(
+                    $this->_helper->auth(),
+                    Orga_Action_Cell::INPUT(),
+                    $cell
+                );
                 try {
                     $aFInputSetPrimary = $cell->getAFInputSetPrimary();
                     $percent = $aFInputSetPrimary->getCompletion();
@@ -125,34 +148,10 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                             break;
                     }
                     $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    $data['advancementInput'] = $this->cellPercent(0, 'danger');
-                }
-            }
-        }
-
-        if (!$isInputInInventory || ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED)) {
-            try {
-                // Vérification qu'un AF est défini.
-                if ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
-                    $cellsGroup = $cell->getCellsGroupForInputGranularity($inputGranularity);
-                } else {
-                    $cellsGroup = $cell->getParentCellForGranularity(
-                        $inputGranularity->getInputConfigGranularity()
-                    )->getCellsGroupForInputGranularity($inputGranularity);
-                }
-                $cellsGroup->getAF();
-
-                $isUserAllowedToInputCell = User_Service_ACL::getInstance()->isAllowed(
-                    $this->_helper->auth(),
-                    Orga_Action_Cell::INPUT(),
-                    $cell
-                );
-                try {
-                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
                     $data['stateInput'] = $aFInputSetPrimary->getStatus();
                 } catch (Core_Exception_UndefinedAttribute $e) {
                     $aFInputSetPrimary = null;
+                    $data['advancementInput'] = $this->cellPercent(0, 'danger');
                     $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
                 }
                 if (($isUserAllowedToInputCell) || ($aFInputSetPrimary !== null)) {

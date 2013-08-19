@@ -5,6 +5,9 @@
  * @package Unit
  *
  */
+use Unit\Domain\Unit\StandardUnit;
+use Unit\Domain\PhysicalQuantity;
+use Unit\Domain\UnitSystem;
 
 /**
  * Script de création de la table Unité standard
@@ -44,16 +47,16 @@ class Unit_Script_Populate_StandardUnit
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
 
-        $unit = new Unit_Model_Unit_Standard();
+        $unit = new StandardUnit();
         $unit->setRef($element->getAttribute('ref'));
         $unit->setMultiplier($element->getElementsByTagName('multiplier')->item(0)->firstChild->nodeValue);
 
         $refUnitSystem = $element->getElementsByTagName('unitSystemRef')->item(0)->firstChild->nodeValue;
-        $unitSystem = Unit_Model_Unit_System::loadByRef($refUnitSystem);
+        $unitSystem = UnitSystem::loadByRef($refUnitSystem);
         $unit->setUnitSystem($unitSystem);
 
         $refPhysicalQuantity = $element->getElementsByTagName('quantityRef')->item(0)->firstChild->nodeValue;
-        $physicalQuantity = Unit_Model_PhysicalQuantity::loadByRef($refPhysicalQuantity);
+        $physicalQuantity = PhysicalQuantity::loadByRef($refPhysicalQuantity);
         $unit->setPhysicalQuantity($physicalQuantity);
 
         // Label & Symbol

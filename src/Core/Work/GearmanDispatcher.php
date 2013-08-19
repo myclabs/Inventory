@@ -3,6 +3,8 @@
  * @author  matthieu.napoli
  * @package Core
  */
+
+use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -23,16 +25,40 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private $worker;
 
+    /**
+     * @var string
+     */
+    private $applicationName;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @Inject({"applicationName" = "application.name"})
+     * @param string        $applicationName
+     * @param EntityManager $entityManager
+     */
+    public function __construct($applicationName, EntityManager $entityManager)
+    {
+        $this->applicationName = $applicationName;
+        $this->entityManager =$entityManager;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function run(Core_Work_Task $task)
     {
+        $this->saveContextInTask($task);
+
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
-        return $this->getGearmanClient()->doNormal($taskType, $workload);
+        $return = $this->getGearmanClient()->doNormal($taskType, $workload);
+
+        return unserialize($return);
     }
 
     /**
@@ -40,13 +66,15 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     public function runBackground(Core_Work_Task $task)
     {
+        $this->saveContextInTask($task);
+
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
         $this->getGearmanClient()->doBackground($taskType, $workload);
 
         if ($this->getGearmanClient()->returnCode() != GEARMAN_SUCCESS) {
-            throw new Core_Exception("Gearman error: " . $this->client->returnCode());
+            throw new Core_Exception("Gearman error: " . $this->getGearmanClient()->returnCode());
         }
     }
 
@@ -70,10 +98,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     public function work()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-        $entityManager->getConnection()->close();
+        $this->entityManager->getConnection()->close();
 
         Core_Error_Log::getInstance()->info("Worker started");
 
@@ -98,32 +123,45 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      * Execute a job
      * @param Core_Work_Worker $worker
      * @param GearmanJob       $job
-     * @return mixed Job result
+     * @return string Serialized job result
      */
     private function executeWorker(Core_Work_Worker $worker, GearmanJob $job)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
         Core_Error_Log::getInstance()->info("Executing task " . $worker->getTaskType());
 
-        // Connexion BDD et transaction
-        $entityManager->getConnection()->connect();
-        $entityManager->beginTransaction();
-
+        /** @var Core_Work_Task $task */
         $task = unserialize($job->workload());
+
+        // Change la locale
+        if ($task->getContext() && $task->getContext()->getUserLocale()) {
+            $oldDefaultLocale = Core_Locale::loadDefault();
+            Core_Locale::setDefault($task->getContext()->getUserLocale());
+        } else {
+            $oldDefaultLocale = null;
+        }
+
+        // Connexion BDD et transaction
+        $this->entityManager->getConnection()->connect();
+        $this->entityManager->beginTransaction();
+
+        // Exécute la tâche
         $result = $worker->execute($task);
 
         // Flush et vide l'entity manager
-        $entityManager->flush();
-        $entityManager->commit();
-        $entityManager->clear();
-        $entityManager->getConnection()->close();
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+        $this->entityManager->clear();
+        $this->entityManager->getConnection()->close();
+
+        // Rétablit la locale
+        if ($oldDefaultLocale) {
+            Core_Locale::setDefault($oldDefaultLocale);
+        }
 
         Core_Error_Log::getInstance()->info("Task executed");
 
-        return $result;
+        // Retourne le résultat sérialisé
+        return serialize($result);
     }
 
     /**
@@ -157,7 +195,18 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      */
     private function prefixTaskType($taskType)
     {
-        return Zend_Registry::get('applicationName') . '::' . $taskType;
+        return $this->applicationName . '::' . $taskType;
+    }
+
+    /**
+     * @param Core_Work_Task $task
+     */
+    private function saveContextInTask(Core_Work_Task $task)
+    {
+        $context = new Core_Work_TaskContext();
+        $context->setUserLocale(Core_Locale::loadDefault());
+
+        $task->setContext($context);
     }
 
 }

@@ -40,10 +40,15 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
      */
     public function __construct($granularityDWReport)
     {
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var Orga_Service_ETLStructure $etlStructureService */
+        $etlStructureService = $container->get('Orga_Service_ETLStructure');
+
         $this->cellDWReports = new ArrayCollection();
 
         $this->granularityDWReport = $granularityDWReport;
-        Orga_Service_ETLStructure::getInstance()->createCellsDWReportFromGranularityReport($this);
+        $etlStructureService->createCellsDWReportFromGranularityReport($this);
     }
 
     /**
@@ -51,24 +56,31 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
      *
      * @param string            $event
      * @param Core_Model_Entity $subject
-     * @param array                $arguments
+     * @param array             $arguments
      */
     public static function applyEvent($event, $subject, $arguments = array())
     {
         switch ($event) {
             case DW_Model_Report::EVENT_SAVE:
                 try {
-                    // Nécessaire pour détecter d'où est issu le Report
-                    $granularity = Orga_Model_Granularity::loadByDWCube($subject->getCube());
-                    $granularityReport = new Orga_Model_GranularityReport($subject);
-                    $granularityReport->save();
+                    // Nécessaire pour détecter d'où est issu le Report.
+                    if ($subject->getCube()->getId() !== null) {
+                        $granularity = Orga_Model_Granularity::loadByDWCube($subject->getCube());
+                        $granularityReport = new Orga_Model_GranularityReport($subject);
+                        $granularityReport->save();
+                    }
                 } catch (Core_Exception_NotFound $e) {
                     // Le Report n'est pas issue d'un Cube de Granularity.
                 }
                 break;
             case DW_Model_Report::EVENT_UPDATED:
                 try {
-                    Orga_Service_ETLStructure::getInstance()->updateCellsDWReportFromGranularityReport(
+                    /** @var \DI\Container $container */
+                    $container = Zend_Registry::get('container');
+                    /** @var Orga_Service_ETLStructure $etlStructureService */
+                    $etlStructureService = $container->get('Orga_Service_ETLStructure');
+
+                    $etlStructureService->updateCellsDWReportFromGranularityReport(
                         Orga_Model_GranularityReport::loadByGranularityDWReport($subject)
                     );
                 } catch (Core_Exception_NotFound $e) {
@@ -108,6 +120,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     public static function isDWReportCopiedFromGranularityDWReport(DW_Model_Report $dWReport)
     {
         foreach (self::loadList() as $granularityReport) {
+            /** @var self $granularityReport */
             if ($granularityReport->hasCellDWReport($dWReport)) {
                 return true;
             }

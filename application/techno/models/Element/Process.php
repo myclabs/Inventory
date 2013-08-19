@@ -4,6 +4,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Unit\UnitAPI;
 
 /**
  * Classe Process
@@ -53,7 +54,7 @@ class Techno_Model_Element_Process extends Techno_Model_Element
     {
         // Retourne kg eq. CO2 divisé par l'unité
         $unitInverse = $this->getUnit()->reverse();
-        return new Unit_API($unitInverse->getRef().'.kg_co2e');
+        return new UnitAPI($unitInverse->getRef().'.kg_co2e');
     }
 
 }

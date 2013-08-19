@@ -152,6 +152,14 @@
 				<seg>Saved input is not complete, the results cannot be displayed.</seg>
 			</tuv>
 		</tu>
+        <tu tuid="completeInputIncompleteCalculations">
+            <tuv xml:lang="fr">
+                <seg>La saisie enregistrée est complète mais un problème est intervenu au cours de l'exécution des calculs.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Saved input is complete but a problem occurred during calculation.</seg>
+            </tuv>
+        </tu>
         <tu tuid="completeInputNoResult">
             <tuv xml:lang="fr">
                 <seg>La saisie enregistrée est complète mais n'a généré aucun résultat.</seg>
@@ -161,16 +169,18 @@
             </tuv>
         </tu>
 
-		<!-- Message lors de la modification du caractère terminée ou non -->
+        <!-- Message lors de la modification du caractère terminée ou non -->
 
-		<tu tuid="progressStatusUpdated">
-			<tuv xml:lang="fr">
-				<seg>Statut d'avancement modifié.</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Progress status updated.</seg>
-			</tuv>
-		</tu>
+        <tu tuid="progressStatusUpdated">
+            <tuv xml:lang="fr">
+                <seg>Statut d'avancement modifié.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Progress status updated.</seg>
+            </tuv>
+        </tu>
+
+
 
 	</body>
 </tmx>

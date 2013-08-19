@@ -35,7 +35,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
             $isLeaf = (! $component instanceof AF_Model_Component_Group);
             $this->addNode(
                 $component->getId(),
-                $component->getLabel(),
+                $component->getLabel() . ' <em>(' . $component->getRef() . ')</em>',
                 $isLeaf,
                 null,
                 false,
@@ -68,7 +68,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         $afterElement = $this->_form[$this->id . '_changeOrder']['children'][$this->id . '_selectAfter_child']['value'];
 
         // Groupe
-        if ($newParent != null) {
+        if ($newParent != 0) {
             /** @var $group AF_Model_Component_Group */
             $group = AF_Model_Component_Group::load($newParent);
 
@@ -88,8 +88,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         }
 
         $component->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         $this->message = __('UI', 'message', 'updated');
         $this->send();
@@ -123,7 +122,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         $rootGroup = $af->getRootGroup();
 
         // Sélection par défaut = pas de changement
-        $this->addElementList('', '');
+        $this->addElementList('0', '');
 
         $groups = [$rootGroup->getId() => __('UI', 'name', 'root')]
             + $this->getAllAFGroups($rootGroup);

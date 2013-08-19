@@ -85,8 +85,13 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
 
             $option->save();
             $selectField->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            try {
+                $this->entityManager->flush();
+            } catch (Core_ORM_DuplicateEntryException $e) {
+                $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
+                $this->send();
+                return;
+            }
 
             $this->message = __('UI', 'message', 'added');
         }
@@ -155,8 +160,11 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
                 break;
         }
         $option->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -192,9 +200,8 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
                 $select->removeDefaultValue($option);
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Condition')) {
                 throw new Core_Exception_User('AF', 'configComponentMessage',

@@ -42,7 +42,7 @@ class Orga_Test_OrganizationTest
     /**
      * Deletion of an object created with generateObject
      *
-     * @param Orga_Organization $o
+     * @param Orga_Model_Organization $o
      */
     public static function deleteObject($o)
     {

@@ -11,7 +11,7 @@ use Core\Annotation\Secure;
  * Classe du controler de Data Warehouse
  * @package DW
  */
-class DW_CubeController extends Core_Controller_Ajax
+class DW_CubeController extends Core_Controller
 {
 
     /**

@@ -11,7 +11,7 @@
  * @package UI
  * @subpackage Form
  */
-class UI_Form_Element_HTML extends Zend_Form_Element
+class UI_Form_Element_HTML extends Zend_Form_Element implements UI_Form_ZendElement
 {
     /**
      * Reference to a UI_Form_Element, to access to its methods.

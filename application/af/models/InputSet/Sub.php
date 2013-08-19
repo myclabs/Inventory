@@ -21,18 +21,6 @@ class AF_Model_InputSet_Sub extends AF_Model_InputSet
     protected $freeLabel;
 
     /**
-     * @return int Nombre de champs requis dans le composant
-     */
-    public function getNbFieldsRequired()
-    {
-        $nbRequiredFields = 0;
-        foreach ($this->inputs as $input) {
-            $nbRequiredFields += $input->getNbFieldsRequired();
-        }
-        return $nbRequiredFields;
-    }
-
-    /**
      * @return int Nombre de champs remplis dans le composant
      */
     public function getNbRequiredFieldsCompleted()

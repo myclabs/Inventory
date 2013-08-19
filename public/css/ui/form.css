@@ -3,7 +3,7 @@
 .form .controls { margin-left: 430px; }
 .form .controls > div { margin-right: 25px; }
 .form .controls > div:first-child { width: 380px; margin-right: 0px; }
-.form .input { display: inline-block; }
+.form .input { display: inline-block; margin-right: 5px; }
 .form .input.hide { display: none; }
 .form .incertitude { width: 30px; }
 .form .subGroup { margin-left: 40px; }
@@ -31,10 +31,181 @@
     margin-top: 0px;
 }
 
+.form div.input.large { width: auto; }
 .form textarea { width: auto; height: auto; }
+
+/* Formulaires répétés : affichage des lignes*/
+.form .repeatedGroup > div { padding-left: 40px; }
+.form .repeatedGroup table.repeatedGroup { margin-bottom: 5px; }
+.form .repeatedGroup table.repeatedGroup .controls { margin-left: 0px; }
+.form .repeatedGroup table.repeatedGroup .controls > div { margin-right: 0px; }
+.form .repeatedGroup table.repeatedGroup .controls > div:first-child { width: auto; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child input { width: 100px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:not(:first-child) { margin: 2px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child select { width: 150px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child textarea { width: 150px; }
+.form .repeatedGroup table.repeatedGroup .controls .input +.input { margin-left: 5px; }
+.form .repeatedGroup table.repeatedGroup .controls .input +.input { margin-left: 5px; }
+
+/* Formulaires répétés : Correction de l'affichage des messages d'erreurs*/
+.form .repeatedGroup table.repeatedGroup td.warning .help-block,
+.form .repeatedGroup table.repeatedGroup td.warning .help-inline {
+    color: #c09853;
+}
+
+.form .repeatedGroup table.repeatedGroup td.warning .checkbox,
+.form .repeatedGroup table.repeatedGroup td.warning .radio,
+.form .repeatedGroup table.repeatedGroup td.warning input,
+.form .repeatedGroup table.repeatedGroup td.warning select,
+.form .repeatedGroup table.repeatedGroup td.warning textarea {
+    color: #c09853;
+}
+
+.form .repeatedGroup table.repeatedGroup td.warning input,
+.form .repeatedGroup table.repeatedGroup td.warning select,
+.form .repeatedGroup table.repeatedGroup td.warning textarea {
+    border-color: #c09853;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.form .repeatedGroup table.repeatedGroup td.warning input:focus,
+.form .repeatedGroup table.repeatedGroup td.warning select:focus,
+.form .repeatedGroup table.repeatedGroup td.warning textarea:focus {
+    border-color: #a47e3c;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
+}
+
+.form .repeatedGroup table.repeatedGroup td.warning .input-prepend .add-on,
+.form .repeatedGroup table.repeatedGroup td.warning .input-append .add-on {
+    color: #c09853;
+    background-color: #fcf8e3;
+    border-color: #c09853;
+}
+
+.form .repeatedGroup table.repeatedGroup td.error .control-label,
+.form .repeatedGroup table.repeatedGroup td.error .help-block,
+.form .repeatedGroup table.repeatedGroup td.error .help-inline {
+    color: #b94a48;
+}
+
+.form .repeatedGroup table.repeatedGroup td.error .checkbox,
+.form .repeatedGroup table.repeatedGroup td.error .radio,
+.form .repeatedGroup table.repeatedGroup td.error input,
+.form .repeatedGroup table.repeatedGroup td.error select,
+.form .repeatedGroup table.repeatedGroup td.error textarea {
+    color: #b94a48;
+}
+
+.form .repeatedGroup table.repeatedGroup td.error input,
+.form .repeatedGroup table.repeatedGroup td.error select,
+.form .repeatedGroup table.repeatedGroup td.error textarea {
+    border-color: #b94a48;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.form .repeatedGroup table.repeatedGroup td.error input:focus,
+.form .repeatedGroup table.repeatedGroup td.error select:focus,
+.form .repeatedGroup table.repeatedGroup td.error textarea:focus {
+    border-color: #953b39;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+}
+
+.form .repeatedGroup table.repeatedGroup td.error .input-prepend .add-on,
+.form .repeatedGroup table.repeatedGroup td.error .input-append .add-on {
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #b94a48;
+}
+
+.form .repeatedGroup table.repeatedGroup td.success .control-label,
+.form .repeatedGroup table.repeatedGroup td.success .help-block,
+.form .repeatedGroup table.repeatedGroup td.success .help-inline {
+    color: #468847;
+}
+
+.form .repeatedGroup table.repeatedGroup td.success .checkbox,
+.form .repeatedGroup table.repeatedGroup td.success .radio,
+.form .repeatedGroup table.repeatedGroup td.success input,
+.form .repeatedGroup table.repeatedGroup td.success select,
+.form .repeatedGroup table.repeatedGroup td.success textarea {
+    color: #468847;
+}
+
+.form .repeatedGroup table.repeatedGroup td.success input,
+.form .repeatedGroup table.repeatedGroup td.success select,
+.form .repeatedGroup table.repeatedGroup td.success textarea {
+    border-color: #468847;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.form .repeatedGroup table.repeatedGroup td.success input:focus,
+.form .repeatedGroup table.repeatedGroup td.success select:focus,
+.form .repeatedGroup table.repeatedGroup td.success textarea:focus {
+    border-color: #356635;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+}
+
+.form .repeatedGroup table.repeatedGroup td.success .input-prepend .add-on,
+.form .repeatedGroup table.repeatedGroup td.success .input-append .add-on {
+    color: #468847;
+    background-color: #dff0d8;
+    border-color: #468847;
+}
+
+.form .repeatedGroup table.repeatedGroup td.info .control-label,
+.form .repeatedGroup table.repeatedGroup td.info .help-block,
+.form .repeatedGroup table.repeatedGroup td.info .help-inline {
+    color: #3a87ad;
+}
+
+.form .repeatedGroup table.repeatedGroup td.info .checkbox,
+.form .repeatedGroup table.repeatedGroup td.info .radio,
+.form .repeatedGroup table.repeatedGroup td.info input,
+.form .repeatedGroup table.repeatedGroup td.info select,
+.form .repeatedGroup table.repeatedGroup td.info textarea {
+    color: #3a87ad;
+}
+
+.form .repeatedGroup table.repeatedGroup td.info input,
+.form .repeatedGroup table.repeatedGroup td.info select,
+.form .repeatedGroup table.repeatedGroup td.info textarea {
+    border-color: #3a87ad;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.form .repeatedGroup table.repeatedGroup td.info input:focus,
+.form .repeatedGroup table.repeatedGroup td.info select:focus,
+.form .repeatedGroup table.repeatedGroup td.info textarea:focus {
+    border-color: #2d6987;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7ab5d3;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7ab5d3;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7ab5d3;
+}
+
+.form .repeatedGroup table.repeatedGroup td.info .input-prepend .add-on,
+.form .repeatedGroup table.repeatedGroup td.info .input-append .add-on {
+    color: #3a87ad;
+    background-color: #d9edf7;
+    border-color: #3a87ad;
+}
+
 /* Redéfinition du champs markItUp */
 .form .markItUp { width: auto; border: none; }
-.form .markItUp .markItUpContainer { width: 760px; padding: 0px; border: inherit; background: none; }
+.form .markItUp .markItUpContainer { padding: 0px; border: inherit; background: none; }
 .markItUp textarea { width: 98%; padding: 1%; background: none;
  /* Réécritue des règles de twitter bootstrap */
   background-color: #ffffff;

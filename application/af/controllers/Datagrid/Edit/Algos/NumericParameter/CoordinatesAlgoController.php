@@ -71,8 +71,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
             $coordinate->save();
             $algo->addParameterCoordinates($coordinate);
             $algo->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();
@@ -100,8 +99,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
                 break;
         }
         $coordinate->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -120,8 +118,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
         $coordinate->delete();
         $algo->removeParameterCoordinates($coordinate);
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

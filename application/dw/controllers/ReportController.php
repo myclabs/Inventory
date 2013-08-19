@@ -12,7 +12,7 @@ use Core\Annotation\Secure;
  * Classe du controler de Data Warehouse
  * @package DW
  */
-class DW_ReportController extends Core_Controller_Ajax
+class DW_ReportController extends Core_Controller
 {
     /**
      * Récupère un report enregistré en session par son hash.
@@ -42,8 +42,7 @@ class DW_ReportController extends Core_Controller_Ajax
         $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
         $zendSessionReport = new Zend_Session_Namespace($sessionName);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $zendSessionReport->$hash = $report->getAsString();
     }
@@ -285,8 +284,7 @@ class DW_ReportController extends Core_Controller_Ajax
             );
         } else {
             $this->getResponse()->setHttpResponseCode(400);
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->clear();
+            $this->entityManager->clear();
             $this->sendJsonResponse(
                 array(
                     'errorMessages' => $errors,
@@ -303,14 +301,12 @@ class DW_ReportController extends Core_Controller_Ajax
      */
     public function saveAction()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $savePost = json_decode($this->getParam('saveReportAs'), JSON_OBJECT_AS_ARRAY);
         $reportLabel = $savePost['saveLabelReport']['value'];
         if (empty($reportLabel)) {
-            $entityManagers['default']->clear();
+            $this->entityManager->clear();
             $this->getResponse()->setHttpResponseCode(400);
             $this->sendJsonResponse(
                 array(
@@ -325,13 +321,13 @@ class DW_ReportController extends Core_Controller_Ajax
                 && ($savePost['saveType']['value'] == 'saveAs')
             ) {
                 $clonedReport = clone $report;
-                $entityManagers['default']->refresh($report);
+                $this->entityManager->refresh($report);
                 $report = $clonedReport;
             }
 
             $report->setLabel($reportLabel);
             $report->save();
-            $entityManagers['default']->flush($report);
+            $this->entityManager->flush($report);
 
             $this->sendJsonResponse(
                 array(
@@ -341,7 +337,7 @@ class DW_ReportController extends Core_Controller_Ajax
                 )
             );
 
-            $entityManagers['default']->clear();
+            $this->entityManager->clear();
         }
 
     }
@@ -363,8 +359,7 @@ class DW_ReportController extends Core_Controller_Ajax
         }
         $this->_helper->layout()->disableLayout();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
     }
 
     /**
@@ -382,8 +377,7 @@ class DW_ReportController extends Core_Controller_Ajax
         }
         $this->_helper->layout()->disableLayout();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
     }
 
     /**
@@ -396,8 +390,7 @@ class DW_ReportController extends Core_Controller_Ajax
 
         $export = new DW_Export_Report_Excel($report);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $export->display();
     }
@@ -412,8 +405,7 @@ class DW_ReportController extends Core_Controller_Ajax
 
         $export = new DW_Export_Report_Pdf($report);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear();
+        $this->entityManager->clear();
 
         $export->display();
     }

@@ -22,8 +22,8 @@ class Orga_Test_AxisTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-//        $suite->addTestSuite('Orga_Test_AxisSetUp');
-//        $suite->addTestSuite('Orga_Test_AxisOthers');
+        $suite->addTestSuite('Orga_Test_AxisSetUp');
+        $suite->addTestSuite('Orga_Test_AxisOthers');
         return $suite;
     }
 

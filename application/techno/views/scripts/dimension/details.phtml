@@ -13,8 +13,19 @@ $dimension = $this->dimension;
     <h1><?=__('Techno', 'dimension', 'pageTitle')?></h1>
 </div>
 
-<p><?=__('Techno', 'name', 'family') . __('UI', 'other', ':') . ' ' . $family->getLabel()?></p>
-<p><?=__('Techno', 'name', 'meaning') . __('UI', 'other', ':') . ' ' . $dimension->getLabel()?></p>
+<p>
+    <a class="btn btn-primary" href="techno/family/edit/id/<?=$family->getId()?>">
+        <i class="icon-white icon-arrow-left"></i>
+        <?=__('Techno', 'dimension', 'returnToFamily')?></a>
+</p>
+<p>
+    <strong><?=__('Techno', 'name', 'family') . __('UI', 'other', ':')?></strong>
+    <?=$family->getLabel()?>
+</p>
+<p>
+    <strong><?=__('Techno', 'name', 'meaning') . __('UI', 'other', ':')?></strong>
+    <?=$dimension->getLabel()?>
+</p>
 
 
 <?php

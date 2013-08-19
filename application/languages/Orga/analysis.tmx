@@ -19,10 +19,12 @@
         
         <tu tuid="detailedExcelExportPopup">
             <tuv xml:lang="fr">
-                <seg>La génération du fichier est en cours. Une fenêtre de téléchargement devrait apparaître d'ici quelques secondes, merci de patienter.</seg>
+                <seg>La génération du fichier est en cours. Une fenêtre de téléchargement devrait apparaître d'ici quelques secondes, merci de patienter.<br/>
+                    Merci de fermer ce message une fois le téléchargement terminé.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>File generation in progress. Download window should appear within a few seconds, thank you for your patience.</seg>
+                <seg>File generation in progress. Download window should appear within a few seconds, thank you for your patience.<br/>
+                    Please close this message once upload is finished.</seg>
             </tuv>
         </tu>
 

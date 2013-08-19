@@ -28,7 +28,12 @@ class ACLServiceTest extends Core_Test_TestCase
      */
     public static function setUpBeforeClass()
     {
-        User_Service_ACLFilter::getInstance()->enabled = false;
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var User_Service_ACLFilter $aclFilterService */
+        $aclFilterService = $container->get('User_Service_ACLFilter');
+
+        $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (User_Model_Authorization::loadList() as $o) {
             $o->delete();
@@ -53,10 +58,12 @@ class ACLServiceTest extends Core_Test_TestCase
     {
         parent::setUp();
 
-        $this->userService = User_Service_User::getInstance();
-        $this->aclService = User_Service_ACL::getInstance();
+        $this->userService = $this->get('User_Service_User');
+        $this->aclService = $this->get('User_Service_ACL');
+        /** @var User_Service_ACLFilter $aclFilterService */
+        $aclFilterService = $this->get('User_Service_ACLFilter');
 
-        User_Service_ACLFilter::getInstance()->enabled = false;
+        $aclFilterService->enabled = false;
     }
 
     /**

@@ -63,7 +63,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
         try {
             $keyword = Keyword_Model_Keyword::loadByRef($refKeyword);
         } catch(Core_Exception_NotFound $e) {
-            $this->setAddElementErrorMessage('refKeyword', __('Techno', 'formValidation', 'unknownKeywordRef'));
+            $this->setAddElementErrorMessage('refKeyword', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -73,8 +73,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
                 $member->save();
                 $dimension->addMember($member);
                 $dimension->save();
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('refKeyword', __('Techno', 'dimension', 'dimensionHasKeyword'));
                 $this->send();
@@ -128,8 +127,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
                 break;
         }
         $member->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -146,8 +144,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
         $dimension = $member->getDimension();
         $dimension->removeMember($member);
         $dimension->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
