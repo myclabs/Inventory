@@ -173,7 +173,7 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
         if ($this->getMinInputNumber() == self::MININPUTNUMBER_0) {
             return 0;
         }
-        return $this->getCalledAF()->getNbRequiredFields($inputSet);
+        return $this->getCalledAF()->getNbRequiredFields();
     }
 
     /**
