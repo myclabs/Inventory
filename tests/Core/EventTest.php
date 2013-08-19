@@ -6,85 +6,12 @@
  */
 
 /**
- * Creation of the Test Suite.
- *
- * @package    Core
- * @subpackage Event
- */
-class Core_Test_EventTest
-{
-    /**
-     * Déclaration de la suite de test à éffectuer.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Core_Test_EventSetUp');
-        $suite->addTestSuite('Core_Test_EventMetier');
-        return $suite;
-    }
-
-}
-
-/**
  * Test des fonctionnalités de l'objet métier Core_Model_List.
  *
  * @package Core
  * @subpackage Event
  */
-class Core_Test_EventSetUp extends PHPUnit_Framework_TestCase
-{
-    // Attributs des Tests.
-
-
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
-    public static function setUpBeforeClass()
-    {
-    }
-
-    /**
-     * Méthode appelée avant l'exécution des tests.
-     */
-    protected function setUp()
-    {
-    }
-
-    /**
-     * Test de getInstance
-     */
-    public function testGetInstance()
-    {
-        $o = Core_EventDispatcher::getInstance();
-        $this->assertInstanceOf('Core_EventDispatcher', $o);
-        $o2 = Core_EventDispatcher::getInstance();
-        $this->assertSame($o, $o2);
-    }
-
-    /**
-     * Méthode appelée à la fin des test.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * Méthode appelée à la fin des test
-     */
-    public static function tearDownAfterClass()
-    {
-    }
-
-}
-
-/**
- * Test des fonctionnalités de l'objet métier Core_Model_List.
- *
- * @package Core
- * @subpackage Event
- */
-class Core_Test_EventMetier extends PHPUnit_Framework_TestCase
+class Core_Test_EventTest extends Core_Test_TestCase
 {
     // Attributs des Tests.
     protected $subject1;
@@ -94,29 +21,27 @@ class Core_Test_EventMetier extends PHPUnit_Framework_TestCase
 
 
     /**
-     * Méthode appelée avant l'exécution des tests
-     */
-    public static function setUpBeforeClass()
-    {
-    }
-
-    /**
      * Méthode appelée avant l'exécution des tests.
      */
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
+
+        /** @var Core_EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->get('Core_EventDispatcher');
+
         $this->subject1 = new testSubject1();
         $this->subject2 = new testSubject2();
         $this->observer1 = new testObserver1();
         $this->observer2 = new testObserver2();
-        if (!(Core_EventDispatcher::getInstance()->hasListener('testSubject1', 'testObserver1'))) {
-            Core_EventDispatcher::getInstance()->addListener('testObserver1', 'testSubject1');
+        if (!$eventDispatcher->hasListener('testSubject1', 'testObserver1')) {
+            $eventDispatcher->addListener('testObserver1', 'testSubject1');
         }
-        if (!(Core_EventDispatcher::getInstance()->hasListener('testSubject1', 'testObserver2'))) {
-            Core_EventDispatcher::getInstance()->addListener('testObserver2', 'testSubject1');
+        if (!$eventDispatcher->hasListener('testSubject1', 'testObserver2')) {
+            $eventDispatcher->addListener('testObserver2', 'testSubject1');
         }
-        if (!(Core_EventDispatcher::getInstance()->hasListener('testSubject2', 'testObserver2'))) {
-            Core_EventDispatcher::getInstance()->addListener('testObserver2', 'testSubject2');
+        if (!$eventDispatcher->hasListener('testSubject2', 'testObserver2')) {
+            $eventDispatcher->addListener('testObserver2', 'testSubject2');
         }
     }
 
@@ -143,21 +68,6 @@ class Core_Test_EventMetier extends PHPUnit_Framework_TestCase
         $this->subject2->launchEvent2();
         $this->assertEquals('event 2 by testSubject2 : c - d', testObserver2::$proof);
     }
-
-    /**
-     * Méthode appelée à la fin des test.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * Méthode appelée à la fin des test
-     */
-    public static function tearDownAfterClass()
-    {
-    }
-
 }
 
 /**

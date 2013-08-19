@@ -5,7 +5,10 @@
  * @subpackage Controller
  */
 
+use AuditTrail\Domain\Context\OrganizationContext;
+use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controlleur des onglets des détails d'une cellule.
@@ -16,8 +19,26 @@ use Core\Annotation\Secure;
 class Orga_Tab_CelldetailsController extends Core_Controller
 {
     /**
+     * @Inject
+     * @var User_Service_ACL
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ETLStructure
+     */
+    private $etlStructureService;
+
+    /**
+     * @Inject
+     * @var EntryRepository
+     */
+    private $entryRepository;
+
+    /**
      * Confguration du projet.
-     * @Secure("editOrganization")
+     * @Secure("editCell")
      */
     public function orgaAction()
     {
@@ -26,12 +47,24 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
 
+        $connectedUser = $this->_helper->auth();
+
         $this->view->idCell = $idCell;
         $this->view->idOrganization = $organization->getId();
-        if ($granularity->getRef() === 'global') {
-            $this->view->isGlobal = true;
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
+        $isUserAllowedToEditCell = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $cell
+        );
+        if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && ($granularity->getRef() === 'global')) {
+            $this->view->displayOrganizationTabs = true;
         } else {
-            $this->view->isGlobal = false;
+            $this->view->displayOrganizationTabs = false;
         }
         $this->view->hasChildCells = ($cell->countTotalChildCells() > 0);
 
@@ -66,7 +99,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $listDatagridConfiguration = array();
 
         if (count($granularity->getAxes()) === 0) {
-            $isUserAllowedToEditOrganization = User_Service_ACL::getInstance()->isAllowed(
+            $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 User_Model_Action_Default::EDIT(),
                 $organizationResource
@@ -255,7 +288,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('UI', 'name', 'status'));
         $columnStateOrga->withEmptyElement = false;
 
-        $isUserAllowedToInputInventoryStatus = User_Service_ACL::getInstance()->isAllowed(
+        $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
             $this->_helper->auth(),
             Orga_Action_Cell::INPUT(),
             $cell
@@ -305,7 +338,14 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $listDatagridConfiguration = array();
-        foreach ($organization->getInputGranularities() as $inputGranularity) {
+        $listInputGranularities = $organization->getInputGranularities();
+        uasort(
+            $listInputGranularities,
+            function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
+                return $a->getPosition() - $b->getPosition();
+            }
+        );
+        foreach ($listInputGranularities as $inputGranularity) {
             if ($cell->getGranularity()->isBroaderThan($inputGranularity)
                 || ($cell->getGranularity()->getRef() === $inputGranularity->getRef())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
@@ -330,13 +370,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
                     $columnStateOrga->editable = false;
                     $datagridConfiguration->datagrid->addCol($columnStateOrga);
-
-                    $colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'input', 'inputProgress'));
-                    $colAdvancementInput->filterName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
-                    $colAdvancementInput->sortName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
-                    $colAdvancementInput->entityAlias = AF_Model_InputSet_Primary::getAlias();
-                    $datagridConfiguration->datagrid->addCol($colAdvancementInput);
                 }
+
+                $colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'input', 'inputProgress'));
+                $colAdvancementInput->filterName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
+                $colAdvancementInput->sortName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
+                $colAdvancementInput->entityAlias = AF_Model_InputSet_Primary::getAlias();
+                $datagridConfiguration->datagrid->addCol($colAdvancementInput);
 
                 $columnStateInput = new UI_Datagrid_Col_List('stateInput', __('Orga', 'input', 'inputStatus'));
                 $imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
@@ -379,8 +419,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->idCell = $cell->getId();
         $this->view->idCube = $cell->getDWCube()->getId();
-        $this->view->isDWCubeUpToDate = Orga_Service_ETLStructure::getInstance()->isCellDWCubeUpToDate($cell);
-        $this->view->dWCubesCanBeReset = User_Service_ACL::getInstance()->isAllowed(
+        $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate($cell);
+        $this->view->dWCubesCanBeReset = $this->aclService->isAllowed(
             $this->_helper->auth(),
             User_Model_Action_Default::EDIT(),
             $cell
@@ -419,15 +459,15 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $reportResource = User_Model_Resource_Entity::loadByEntity(
                 DW_Model_Report::load($this->getParam('idReport'))
             );
-            $reportCanBeUpdated = User_Service_ACL::getInstance()->isAllowed(
+            $reportCanBeUpdated = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                User_Model_Action_Default::EDIT(),
+                Orga_Action_Report::EDIT(),
                 $reportResource
             );
         } else {
             $reportCanBeUpdated = false;
         }
-        $reportCanBeSaveAs = User_Service_ACL::getInstance()->isAllowed(
+        $reportCanBeSaveAs = $this->aclService->isAllowed(
             $this->_helper->auth(),
             User_Model_Action_Default::VIEW(),
             User_Model_Resource_Entity::loadByEntity($cell)
@@ -518,6 +558,26 @@ class Orga_Tab_CelldetailsController extends Core_Controller
     }
 
     /**
+     * Action fournissant la vue de l'historique de la cellule.
+     * @Secure("viewCell")
+     */
+    public function historyAction()
+    {
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+
+        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+        $context->setCell($cell);
+
+        $entries = $this->entryRepository->findLatestForOrganizationContext($context, 100);
+
+        $this->view->assign('idCell', $this->getParam('idCell'));
+        $this->view->assign('entries', $entries);
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+    }
+
+    /**
      * Action fournissant la vue d'administration d'une cellule.
      * @Secure("editOrganization")
      */
@@ -531,7 +591,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $granularity = $cell->getGranularity();
 
         if ($granularity->getCellsGenerateDWCubes()) {
-            $this->view->isDWCubeUpToDate = Orga_Service_ETLStructure::getInstance()->isCellDWCubeUpToDate(
+            $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate(
                 $cell
             );
         }

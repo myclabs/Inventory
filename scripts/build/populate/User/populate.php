@@ -17,8 +17,10 @@ class User_Populate extends Core_Script_Populate
      */
     public function populateEnvironment($environment)
     {
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
         /** @var $aclFilterService User_Service_ACLFilter */
-        $aclFilterService = User_Service_ACLFilter::getInstance();
+        $aclFilterService = $container->get('User_Service_ACLFilter');
 
         // Filtre des ACL
         $aclFilterService->enabled = false;

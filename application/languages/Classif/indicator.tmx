@@ -33,7 +33,7 @@
         </tu>
     
         <!-- Messages -->
-        
+
         <tu tuid="IndicatorIsUsedInContextIndicator">
             <tuv xml:lang="fr">
                 <seg>Cet indicateur ne peut pas être supprimé, car il est utilisé pour (au moins) un indicateur contextualisé.</seg>

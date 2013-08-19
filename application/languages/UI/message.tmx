@@ -86,34 +86,34 @@
         
         <tu tuid="addedLater">
             <tuv xml:lang="fr">
-                <seg>Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page.</seg>
+                <seg>Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation in progress. Depending on existing data this operation can be instantaneous or require some time.</seg>
+                <seg>Creation in progress. Depending on existing data this operation can be instantaneous or require some time and a reload of this page.</seg>
             </tuv>
         </tu>
          <tu tuid="updatedLater">
             <tuv xml:lang="fr">
-                <seg>Modification en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. La modification sera visible au plus tard dans quelques minutes.</seg>
+                <seg>Modification en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Update in progress. Depending on existing data this operation can be instantaneous or require some time. Changes will be visible at the latest within a few minutes.</seg>
+                <seg>Update in progress. Depending on existing data this operation can be instantaneous or require some time and a reload of this page.</seg>
             </tuv>
         </tu>
         <tu tuid="deletedLater">
             <tuv xml:lang="fr">
-                <seg>Suppression en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. La modification sera visible au plus tard dans quelques minutes.</seg>
+                <seg>Suppression en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Deletion in progress. Depending on existing data this operation can be instantaneous or require some time. Changes will be visible at the latest within a few minutes.</seg>
+                <seg>Deletion in progress. Depending on existing data this operation can be instantaneous or require some time and a reload of this page.</seg>
             </tuv>
         </tu>
         <tu tuid="operationInProgress">
             <tuv xml:lang="fr">
-                <seg>Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Le résultat sera visible au plus tard dans quelques minutes.</seg>
+                <seg>Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Operation in progress. Depending on existing data this operation can be instantaneous or require some time. Changes will be visible at the latest within a few minutes.</seg>
+                <seg>Operation in progress. Depending on existing data this operation can be instantaneous or require some time and a reload of this page.</seg>
             </tuv>
         </tu>
 

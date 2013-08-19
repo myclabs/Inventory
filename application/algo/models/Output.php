@@ -58,15 +58,16 @@ class Algo_Model_Output
     public function __construct(Calc_UnitValue $value, Classif_Model_ContextIndicator $contextIndicator,
                                 array $classifMembers, $label
     ) {
-        $this->sourceValue = $value;
+        $this->sourceValue = clone $value;
         $this->contextIndicator = $contextIndicator;
         $this->label = $label;
         $unit = $contextIndicator->getIndicator()->getUnit();
-        $conversionFactor = $unit->getConversionFactor($this->sourceValue->unit->getRef());
-        $this->value = new Calc_Value();
         // Get the value using the conversionFactor
-        $this->value->digitalValue = $value->value->digitalValue * $conversionFactor;
-        $this->value->relativeUncertainty = $value->value->relativeUncertainty;
+        $conversionFactor = $unit->getConversionFactor($this->sourceValue->getUnit()->getRef());
+        $this->value = new Calc_Value(
+            $value->getDigitalValue() * $conversionFactor,
+            $value->getRelativeUncertainty()
+        );
         foreach ($classifMembers as $member) {
             $this->classifMembers[] = $member;
         }

@@ -58,7 +58,7 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
     public function getUIElement(AF_GenerationHelper $generationHelper)
     {
         // Groupe contenant une liste de sous-formulaires
-        $uiElement = new UI_Form_Element_Group($this->ref);
+        $uiElement = new UI_Form_Element_GroupRepeated($this->ref);
         $uiElement->setLabel($this->label);
         $uiElement->getElement()->help = $this->help;
         $uiElement->getElement()->hidden = !$this->visible;
@@ -72,6 +72,18 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
             default:
                 $uiElement->foldaway = false;
         }
+
+        // Ajoute les en-têtes du tableau
+        if ($this->withFreeLabel) {
+            $label = new UI_Form_Element_Text('freeLabel');
+            $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
+            $uiElement->addElement($label);
+        }
+        foreach ($this->calledAF->getRootGroup()->getSubComponentsRecursive() as $component) {
+            $subElement = $component->getUIElement(new AF_GenerationHelper());
+            $uiElement->addElement($subElement);
+        }
+
         // Récupère la saisie correspondant à cet élément
         $input = null;
         if ($generationHelper->getInputSet()) {
@@ -85,65 +97,38 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
         // Récupère les sous-inputSets correspondant à ce sous-af
         if ($input) {
             $subInputSets = $input->getValue();
-            $number = 0;
             foreach ($subInputSets as $subInputSet) {
-                $uiElement->addElement($this->getSingleSubAFUIElement($generationHelper, $number, $subInputSet));
-                $number++;
+                $uiElement->addLineValue($this->getSingleSubAFUIElement($generationHelper, $subInputSet));
             }
         } else {
             if ($this->minInputNumber !== self::MININPUTNUMBER_0) {
                 // Ajoute un seul exemplaire du formulaire par défaut
-                $uiElement->addElement($this->getSingleSubAFUIElement($generationHelper, 0, null));
+                $uiElement->addLineValue($this->getSingleSubAFUIElement($generationHelper, null));
             }
-        }
-        // Bouton d'ajout d'un nouveau groupe
-        if (!$generationHelper->isReadOnly()) {
-            $addButtonGroup = new UI_Form_Element_Group('addButtonGroup');
-            $addButtonGroup->addAttribute('class', 'addSubAFGroup');
-            $addButtonGroup->addAttribute('data-id-af-owner', $this->getAf()->getId());
-            $addButtonGroup->addAttribute('data-ref-component', $this->getRef());
-            $addButtonGroup->getElement()->prefixRef($this->ref);
-            $addButtonGroup->setLabel('');
-            $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
-            $addButton->addAttribute('class', 'addSubAF');
-            $addButton->addAttribute('data-loading-text', "...");
-            $addButton->addAttribute('data-id-af-owner', $this->getAf()->getId());
-            $addButton->addAttribute('data-ref-component', $this->getRef());
-            $addButtonHTML = new UI_Form_Element_HTML('addButton_' . $this->ref);
-            $addButtonHTML->content = $addButton->render();
-            $addButtonGroup->addElement($addButtonHTML);
-            $addButtonGroup->foldaway = false;
-            $uiElement->addElement($addButtonGroup);
         }
         // Actions
         foreach ($this->actions as $action) {
             $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
         }
+
+        $uiElement->getElement()->prefixRef($this->ref);
         return $uiElement;
     }
 
     /**
      * Génère un groupe contenant un seul sous-AF
      * @param AF_GenerationHelper        $generationHelper
-     * @param int                        $number
      * @param AF_Model_InputSet_Sub|null $inputSet
      * @return UI_Form_Element_Group
      */
-    public function getSingleSubAFUIElement(AF_GenerationHelper $generationHelper, $number,
+    private function getSingleSubAFUIElement(AF_GenerationHelper $generationHelper,
                                             AF_Model_InputSet_Sub $inputSet = null
     ) {
-        $ref = $this->ref . UI_Generic::REF_SEPARATOR . $number;
         // On crée un groupe qui contient un sous-formulaire
-        $afGroup = new UI_Form_Element_Group($ref);
-        $afGroup->addAttribute('class', 'subAFGroup');
-        $afGroup->addAttribute('data-id-af-owner', $this->getAf()->getId());
-        $afGroup->addAttribute('data-ref-component', $this->getRef());
-        $afGroup->setLabel($number + 1);
-        $afGroup->addAttribute("data-number", $number);
-        // Pour chaque sous module, on peut ajouter un label choisi librement par l'utilisateur
+        $afGroup = new UI_Form_Element_Group($this->ref);
+        // Pour chaque sous af, on peut ajouter un label choisi librement par l'utilisateur
         if ($this->withFreeLabel) {
             $label = new UI_Form_Element_Text('freeLabel');
-            $label->getElement()->prefixRef($ref);
             $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
             if ($inputSet) {
                 $label->setValue($inputSet->getFreeLabel());
@@ -153,20 +138,11 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
             }
             $afGroup->addElement($label);
         }
-        // Sous-formulaire
+        // Génère le sous-formulaire
         $subForm = $this->calledAF->generateSubForm($generationHelper, $inputSet);
-        $subForm->getElement()->prefixRef($ref);
-        $afGroup->addElement($subForm);
-        // Bouton de suppression
-        if ($this->minInputNumber !== self::MININPUTNUMBER_1_NOT_DELETABLE  && !$generationHelper->isReadOnly()) {
-            $deleteButton = new UI_HTML_Button(__('UI', 'verb', 'delete'));
-            $deleteButton->addAttribute('class', 'removeSubAF');
-            $deleteButton->addAttribute('data-id-af-owner', $this->getAf()->getId());
-            $deleteButton->addAttribute('data-ref-component', $this->getRef());
-            $deleteButton->addAttribute('data-number', $number);
-            $deleteButtonHTML = new UI_Form_Element_HTML("deleteButton_{$this->ref}_$number");
-            $deleteButtonHTML->content = $deleteButton->render();
-            $afGroup->addElement($deleteButtonHTML);
+        // Ajoute chaque élément du sous-formulaire au groupe
+        foreach ($subForm->getElement()->getChildrenElements() as $uiElement) {
+            $afGroup->addElement($uiElement);
         }
 
         return $afGroup;
@@ -197,7 +173,7 @@ class AF_Model_Component_SubAF_Repeated extends AF_Model_Component_SubAF
         if ($this->getMinInputNumber() == self::MININPUTNUMBER_0) {
             return 0;
         }
-        return $this->getCalledAF()->getNbRequiredFields($inputSet);
+        return $this->getCalledAF()->getNbRequiredFields();
     }
 
     /**

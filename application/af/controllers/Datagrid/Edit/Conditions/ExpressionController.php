@@ -8,6 +8,7 @@
 
 use Core\Annotation\Secure;
 use Doctrine\DBAL\DBALException;
+use TEC\Exception\InvalidExpressionException;
 
 /**
  * @package AF
@@ -69,7 +70,7 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
             $condition->setAf($af);
             try {
                 $condition->setExpression($this->getAddElementValue('expression'));
-            } catch (TEC_Model_InvalidExpressionException $e) {
+            } catch (InvalidExpressionException $e) {
                 $this->setAddElementErrorMessage('expression',
                                                  __('AF', 'configTreatmentMessage', 'invalidExpression')
                                                      . "<br>" . implode("<br>", $e->getErrors()));
@@ -77,9 +78,8 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
                 return;
             }
             $condition->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -108,7 +108,7 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
             case 'expression':
                 try {
                     $condition->setExpression($newValue);
-                } catch (TEC_Model_InvalidExpressionException $e) {
+                } catch (InvalidExpressionException $e) {
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
@@ -121,8 +121,11 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
                 break;
         }
         $condition->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -138,8 +141,7 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
         $condition = AF_Model_Condition::load($this->getParam('index'));
         try {
             $condition->delete();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'deleted');
         } catch (DBALException $e) {
             throw new Core_Exception_User('AF', 'configInteractionMessage', 'conditionUsedByActionDeletionDenied');

@@ -7,13 +7,20 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Countroleur des AF
  * @package AF
  */
-class AF_AfController extends Core_Controller_Ajax
+class AF_AfController extends Core_Controller
 {
+
+    /**
+     * @Inject
+     * @var AF_Service_InputSetSessionStorage
+     */
+    private $inputSetSessionStorage;
 
     /**
      * Liste des AF
@@ -97,10 +104,8 @@ class AF_AfController extends Core_Controller_Ajax
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
-            /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
             // Récupère la saisie en session
-            $inputSet = $sessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->af = $af;
@@ -116,7 +121,7 @@ class AF_AfController extends Core_Controller_Ajax
         // URL de submit
         $params = ['id' => $af->getId(), 'actionStack' => json_encode($actionStack)];
         // Ajoute les paramètres personnalisés qu'il peut y'avoir dans l'URL
-        $urlParams = $this->_getAllParams();
+        $urlParams = $this->getAllParams();
         unset(
             $urlParams['module'],
             $urlParams['controller'],
@@ -154,10 +159,8 @@ class AF_AfController extends Core_Controller_Ajax
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
-            /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
             // Récupère la saisie en session
-            $inputSet = $sessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
@@ -180,15 +183,11 @@ class AF_AfController extends Core_Controller_Ajax
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
         } else {
-            /** @var $sessionStorage AF_Service_InputSetSessionStorage */
-            $sessionStorage = AF_Service_InputSetSessionStorage::getInstance();
             // Récupère la saisie en session
-            $inputSet = $sessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->isInputComplete = $inputSet ? $inputSet->isInputComplete() : false;
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->af = $af;
         $this->_helper->layout->disableLayout();

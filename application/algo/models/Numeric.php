@@ -8,6 +8,7 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Unit\UnitAPI;
 
 /**
  * @package Algo
@@ -50,7 +51,7 @@ abstract class Algo_Model_Numeric extends Algo_Model_Algo
      * Méthode permettant de récupérer l'unité associée à un algorithme.
      * Cette méthode est en particulier utilisée lors du controle de la configuration des algos.
      *
-     * @return Unit_API
+     * @return UnitAPI
      */
     abstract public function getUnit();
 
@@ -164,7 +165,6 @@ abstract class Algo_Model_Numeric extends Algo_Model_Algo
     }
 
     /**
-     * Enlève un resultIndex du tableau
      * @param Algo_Model_Index $resultIndex
      */
     public function removeIndex(Algo_Model_Index $resultIndex)
@@ -172,6 +172,14 @@ abstract class Algo_Model_Numeric extends Algo_Model_Algo
         if ($this->hasIndex($resultIndex)) {
             $this->indexes->removeElement($resultIndex);
         }
+    }
+
+    /**
+     * Vide l'indexation de l'algorithme
+     */
+    public function clearIndexes()
+    {
+        $this->indexes->clear();
     }
 
     /**

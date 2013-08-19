@@ -10,7 +10,7 @@
 /* Masque de chargement */
 #loadingMask {
     position: fixed;
-    z-index: 100;
+    z-index: 10000;
     height: 100%;
     width: 100%;
     background-image: url('../../images/ui/ajax-loader_large.gif');
@@ -45,13 +45,18 @@ footer .feedback-form div { text-align: left; }
 .wrapper legend { cursor: pointer; border-style: solid none none; border-width: 1px 0 0; border-color: #E5E5E5; margin-bottom: 18px; }
 /* Espacement des wrapper successifs */
 .wrapper + .wrapper { margin-top : 15px; }
+.wrapper + script + .wrapper { margin-top : 15px; }
 .wrapper .wrapper { margin-left: 15px; }
 /*fieldset fieldset { margin-left: 15px; }*/
+/** Collapse dans collapse */
+.wrapper .wrapper legend {
+    font-size: 18px;
+    line-height: 30px;
+}
 
 /* Différente tailles de Modaux */
 .modal.large { width: 850px; margin-left: -425px; }
 
 /* Ajustement des popover */
 .popover { max-width: 476px; }
-.popover .popover-title { border-bottom: none; background-color: #FFFFFF; padding: 1px 15px; }
 .popover .popover-inner { padding: 1px; border-radius: 3px; height: auto; }

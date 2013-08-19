@@ -7,13 +7,3 @@ AF_Model_Condition_Expression:
     expression:
       type: text
       nullable: false
-
-  manyToOne:
-    tecExpression:
-      targetEntity: TEC_Model_Expression
-      joinColumn:
-        name: idTECExpression
-        referencedColumnName: id
-        nullable: false
-      cascade: [ all ]
-      orphanRemoval: true

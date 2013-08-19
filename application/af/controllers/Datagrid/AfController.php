@@ -71,6 +71,9 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             $this->setAddElementErrorMessage('category', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         $label = $this->getAddElementValue('label');
+        if (empty($label)) {
+            $this->setAddElementErrorMessage('label', __('UI', 'formValidation', 'emptyRequiredField'));
+        }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
 
@@ -88,9 +91,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             $af->setCategory($category);
             $af->save();
 
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -119,6 +121,9 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 $this->data = $this->cellList($newValue);
                 break;
             case 'label':
+                if (empty($newValue)) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
+                }
                 $af->setLabel($newValue);
                 $this->data = $af->getLabel();
                 break;
@@ -128,9 +133,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 break;
         }
         $af->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_DuplicateEntryException $e) {
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
@@ -148,9 +152,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('index'));
         $af->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Component_SubAF')
                 && $e->getSourceField() == 'calledAF') {

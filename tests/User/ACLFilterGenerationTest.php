@@ -34,9 +34,9 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->userService = User_Service_User::getInstance();
-        $this->aclService = User_Service_ACL::getInstance();
-        $this->aclFilterService = User_Service_ACLFilter::getInstance();
+        $this->userService = $this->get('User_Service_User');
+        $this->aclService = $this->get('User_Service_ACL');
+        $this->aclFilterService = $this->get('User_Service_ACLFilter');
         $this->aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (User_Model_Authorization::loadList() as $o) {

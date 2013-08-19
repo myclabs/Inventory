@@ -25,9 +25,6 @@ class Classif_PopulateTest extends Classif_Populate
 
 
         // Création des axes.
-        // Params : ref, label
-        // OptionalParams : Axis parent=null
-
         $axis_gaz = $this->createAxis('gaz', 'Gaz');
         $axis_poste_article_75 = $this->createAxis('poste_article_75', 'Poste article 75');
         $axis_scope = $this->createAxis('scope', 'Scope', $axis_poste_article_75);
@@ -35,9 +32,6 @@ class Classif_PopulateTest extends Classif_Populate
         $axis_axe_vide = $this->createAxis('axe_vide', 'Axe vide');
 
         // Création des membres.
-        // Params : Axis, ref, label
-        // OptionalParams : [Member] parents=[]
-
         $member_gaz_co2 = $this->createMember($axis_gaz, 'co2', 'CO2');
         $member_gaz_ch4 = $this->createMember($axis_gaz, 'ch4', 'CH4');
 
@@ -52,29 +46,24 @@ class Classif_PopulateTest extends Classif_Populate
         $member_deplacement = $this->createMember($axis_type_deplacement, 'professionnel', 'Professionnel');
 
         // Création des indicateurs.
-        // Params : ref, label, unitRef
-        // OptionalParams : ratioUnitRef=unitRef
-
         $indicator_ges = $this->createIndicator('ges', 'GES', 't_co2e', 'kg_co2e');
         $indicator_chiffre_affaire = $this->createIndicator('chiffre_affaire', 'Chiffre d\'affaires', 'kiloeuro', 'euro');
         $indicator_no_context_indicator = $this->createIndicator('sans_indicateur_contextualise', 'Sans indicateur contextualisé', 't', 't');
         $indicator_related_axes = $this->createIndicator('axes_relies', 'Axes hiérarchiquement reliés', 't', 't');
 
         // Création des contextes.
-        // Params : ref, label
         $context_general = $this->createContext('general', 'Général');
         $context_deplacement = $this->createContext('deplacement', 'Déplacements');
         $context_no_context_indicator = $this->createContext('sans_indicateur_contextualise', 'Sans indicateur contextualisé');
 
+
         $entityManager->flush();
 
+
         // Création des contexte-indicateurs.
-        // Params : Context, Indicator
-        // OptionalParams : [Axis]=[]
         $contextIndicator_ges_general = $this->createContextIndicator($context_general, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
         $contextIndicator_ges_deplacement = $this->createContextIndicator($context_deplacement, $indicator_ges, [$axis_gaz, $axis_poste_article_75, $axis_type_deplacement]);
         $contextIndicator_chiffre_affaire_general = $this->createContextIndicator($context_general, $indicator_chiffre_affaire);
-        $contextIndicator_related_axes = $this->createContextIndicator($context_general, $indicator_related_axes, [$axis_scope, $axis_poste_article_75]);
 
 
         $entityManager->flush();

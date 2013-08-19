@@ -35,8 +35,8 @@ class AF_Model_Action_SetValue_Numeric extends AF_Model_Action_SetValue
         if (!empty($this->condition)) {
             $uiAction->condition = $generationHelper->getUICondition($this->condition);
         }
-        $uiAction->uncertainty = $this->getValue()->relativeUncertainty;
-        $uiAction->value = $this->getValue()->digitalValue;
+        $uiAction->uncertainty = $this->getValue()->getRelativeUncertainty();
+        $uiAction->value = $this->getValue()->getDigitalValue();
         return $uiAction;
     }
 

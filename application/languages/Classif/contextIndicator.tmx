@@ -26,13 +26,21 @@
         </tu>
 
         <!-- Messages -->
-        
+
         <tu tuid="ContextIndicatorAlreadyExists">
             <tuv xml:lang="fr">
                 <seg>Il existe déjà un indicateur contextualisé pour ce contexte et cet indicateur.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>A context indicator with the same context and indicator already exists.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="axesMustBeTransverse">
+            <tuv xml:lang="fr">
+                <seg>Merci de sélectionner des axes deux à deux non hiérarchiquement reliés.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select a set of axes without any pair of hierarchically linked axes.</seg>
             </tuv>
         </tu>
     

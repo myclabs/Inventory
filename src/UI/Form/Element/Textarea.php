@@ -11,7 +11,7 @@
  * @package UI
  * @subpackage Form
  */
-class UI_Form_Element_Textarea extends Zend_Form_Element_Textarea
+class UI_Form_Element_Textarea extends Zend_Form_Element_Textarea implements UI_Form_ZendElement
 {
     /**
      * Reference to a UI_Form_Element, to access to its methods.
@@ -32,7 +32,6 @@ class UI_Form_Element_Textarea extends Zend_Form_Element_Textarea
      * Constructor
      *
      * @param string $name
-     * @return void
      *
      * @throws Core_Exception_InvalidArgument if $name is not valid.
      */
@@ -43,8 +42,8 @@ class UI_Form_Element_Textarea extends Zend_Form_Element_Textarea
         }
         parent::__construct($name);
         $this->_element = new UI_Form_Element($this);
-        $this->setAttrib('rows', 5);
-        $this->setAttrib('cols', 65);
+        $this->setAttrib('rows', 4);
+        $this->setAttrib('cols', 55);
     }
 
     /**

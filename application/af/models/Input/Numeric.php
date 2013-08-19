@@ -7,7 +7,7 @@
  */
 
 /**
- * Inpunt Element for numerics fields
+ * Input Element for numerics fields
  * @package    AF
  * @subpackage Input
  */
@@ -38,7 +38,7 @@ class AF_Model_Input_Numeric extends AF_Model_Input implements Algo_Model_Input_
         if (!$this->isHidden()) {
             /** @var $component AF_Model_Component_Numeric */
             $component = $this->getComponent();
-            if ($component->getRequired() && $this->value->value->digitalValue != null) {
+            if ($component->getRequired() && $this->value->getDigitalValue() !== null) {
                 return 1;
             }
         }
@@ -62,6 +62,23 @@ class AF_Model_Input_Numeric extends AF_Model_Input implements Algo_Model_Input_
             throw new Core_Exception_InvalidArgument('The value must be a Calc_UnitValue');
         }
         $this->value = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function equals(AF_Model_Input $input)
+    {
+        $equals = parent::equals($input);
+        if (! $equals) {
+            return false;
+        }
+
+        if ($input instanceof AF_Model_Input_Numeric) {
+            return $this->getValue()->equals($input->getValue());
+        }
+
+        return false;
     }
 
 }

@@ -16,6 +16,11 @@ if (!$inputSet || !$inputSet->isInputComplete()) {
     return;
 }
 
+if (!$inputSet->isCalculationComplete()) {
+    echo '<p>' . __('AF', 'inputInput', 'completeInputIncompleteCalculations') . '</p>';
+    return;
+}
+
 
 /** @var $outputSet AF_Model_Output_OutputSet */
 $outputSet = $inputSet->getOutputSet();
@@ -37,7 +42,7 @@ foreach ($indicators as $indicator) {
 
     if (!empty($outputTotal)) {
         echo "<h3>" . __('UI', 'name', 'total') . __('UI', 'other', ':')
-            . $locale->formatNumber($outputTotal->getValue()->digitalValue, 3) . " "
+            . $locale->formatNumber($outputTotal->getValue()->getDigitalValue(), 3) . " "
             . $formattedUnit . "</h3>";
     }
 
@@ -78,8 +83,8 @@ foreach ($indicators as $indicator) {
             }
             echo "<tr>";
             echo "<td>" . $outputElement->getLabel() . "</td>";
-            echo "<td>" . $locale->formatNumber($outputElement->getValue()->digitalValue, 3) . "</td>";
-            echo "<td>" . $locale->formatInteger($outputElement->getValue()->relativeUncertainty) . "</td>";
+            echo "<td>" . $locale->formatNumber($outputElement->getValue()->getDigitalValue(), 3) . "</td>";
+            echo "<td>" . $locale->formatInteger($outputElement->getValue()->getRelativeUncertainty()) . "</td>";
 
             // Indexation de l'élément
             foreach ($axes as $axis) {

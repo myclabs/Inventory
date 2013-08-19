@@ -5,13 +5,20 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @author valentin.claras
  * @package Simulation
  */
-class Simulation_SetController extends Core_Controller_Ajax
+class Simulation_SetController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var Simulation_Service_ETLStructure
+     */
+    private $etlStructureService;
+
     /**
      * Redirection sur la liste.
      *
@@ -32,6 +39,7 @@ class Simulation_SetController extends Core_Controller_Ajax
         $this->view->listAF = array();
         // @todo normalement la liste déroulante des AF devrait être fonction de l'utilisateur.
         foreach (AF_Model_Category::loadList() as $category) {
+            /** @var AF_Model_Category $category */
             foreach ($category->getAFs() as $af) {
                 $this->view->listAF[$af->getRef()] = $category->getLabel() . ' - ' . $af->getLabel();
             }
@@ -55,7 +63,7 @@ class Simulation_SetController extends Core_Controller_Ajax
         $this->view->idCube = $set->getDWCube()->getKey()['id'];
         $this->view->setName = $set->getLabel();
         $this->view->aFName = $set->getAF()->getLabel();
-        $this->view->isSetDWCubeUpToDate = Simulation_Service_ETLStructure::getInstance()->isSetDWCubeUpToDate($set);
+        $this->view->isSetDWCubeUpToDate = $this->etlStructureService->isSetDWCubeUpToDate($set);
 
         $this->view->activatedTab = ($this->hasParam('tab')) ? $this->getParam('tab') : null;
     }
@@ -68,7 +76,7 @@ class Simulation_SetController extends Core_Controller_Ajax
     public function resetdwAction()
     {
         $set = Simulation_Model_Set::load($this->getParam('idSet'));
-        Simulation_Service_ETLStructure::getInstance()->resetSetDWCube($set);
+        $this->etlStructureService->resetSetDWCube($set);
         $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'confirmationMessage')));
     }
 

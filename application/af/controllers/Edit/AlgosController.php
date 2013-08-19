@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 /**
  * @package AF
  */
-class AF_Edit_AlgosController extends Core_Controller_Ajax
+class AF_Edit_AlgosController extends Core_Controller
 {
 
     /**
@@ -83,8 +83,7 @@ class AF_Edit_AlgosController extends Core_Controller_Ajax
                 break;
         }
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/traitement');
     }
 

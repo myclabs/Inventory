@@ -115,8 +115,7 @@ class Social_Datagrid_Action_ContextActionController extends UI_Controller_Datag
             $contextAction->setProgress($progress);
             $contextAction->save();
 
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
             /** @var $actionKeyFigures Social_Model_ActionKeyFigure[] */
             $actionKeyFigures = Social_Model_ActionKeyFigure::loadList();
@@ -127,8 +126,7 @@ class Social_Datagrid_Action_ContextActionController extends UI_Controller_Datag
             }
             $contextAction->save();
 
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
             $this->message = __('UI', 'message', 'added');
         }

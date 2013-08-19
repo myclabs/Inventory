@@ -16,7 +16,7 @@ use Core\Annotation\Secure;
  * @package    User
  * @subpackage Service
  */
-class User_Service_ControllerSecurity extends Core_Singleton
+class User_Service_ControllerSecurity
 {
 
     /**

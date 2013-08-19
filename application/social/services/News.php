@@ -9,7 +9,7 @@
  * @package Social
  * @subpackage Service
  */
-class Social_Service_News extends Core_Singleton
+class Social_Service_News
 {
 
     /**

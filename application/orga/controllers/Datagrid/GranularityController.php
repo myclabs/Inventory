@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Datagrid de granularity
@@ -13,6 +14,12 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -73,7 +80,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        $refAxes = explode(',', $this->getAddElementValue('axes'));
+        $refAxes = $this->getAddElementValue('axes');
         $listAxes = array();
         $refGranularity = '';
         if (empty($refAxes)) {
@@ -101,9 +108,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            /**@var Core_Work_Dispatcher $dispatcher */
-            $dispatcher = Zend_Registry::get('workDispatcher');
-            $dispatcher->runBackground(
+            $this->workDispatcher->runBackground(
                 new Orga_Work_Task_AddGranularity(
                     $organization,
                     $listAxes,
@@ -139,12 +144,14 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         $granularity = Orga_Model_Granularity::load($this->delete);
+        if ($granularity->getCellsWithACL()) {
+            throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
+        }
 
         $granularity->delete();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
         }

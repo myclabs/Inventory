@@ -9,7 +9,7 @@
  * @package    AF
  * @subpackage Service
  */
-class AF_Service_InputSetSessionStorage extends Core_Singleton
+class AF_Service_InputSetSessionStorage
 {
 
     const SESSION_EXPIRATION = 3600;

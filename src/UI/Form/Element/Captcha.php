@@ -11,7 +11,7 @@
  * @package UI
  * @subpackage Form
  */
-class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha
+class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Form_ZendElement
 {
     /**
      * Contient le chemin vers le controlleur qui doit étendre UI_Form_Element_Captcha.

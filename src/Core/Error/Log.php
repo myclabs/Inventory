@@ -11,7 +11,7 @@
  * @package    Core
  * @subpackage Error
  */
-class Core_Error_Log extends Core_Singleton
+class Core_Error_Log
 {
 
     /**
@@ -67,6 +67,20 @@ class Core_Error_Log extends Core_Singleton
      */
     protected $_firebug = false;
 
+
+    /**
+     * Renvoie l'instance Singleton de la classe.
+     *
+     * @return Core_Error_Log
+     */
+    public static function getInstance()
+    {
+        static $instance = null;
+        if (! $instance) {
+            $instance = new self();
+        }
+        return $instance;
+    }
 
     /**
      * Constructeur.

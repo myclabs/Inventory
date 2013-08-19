@@ -24,7 +24,6 @@ if ($mainAlgo->getExpression()) {
 }
 $algoMainForm->addElement($algoMainExpression);
 $algoMainForm->addSubmitButton();
-$algoMainForm->addResetButton();
 $algoMainCollapse->body = $algoMainForm->render();
 echo $algoMainCollapse->render();
 
@@ -112,28 +111,43 @@ echo $algoConditionCollapse->render();
 
 <script>
     $('#algoNumericExpressionCollapse').on('show', function(e) {
-        algoNumericExpression.filter();
+        if ($(e.target).attr('id') == 'algoNumericExpressionCollapse_wrapper') {
+            algoNumericExpression.filter();
+        }
     });
     $('#algoNumericParameterCollapse').on('show', function(e) {
-        algoNumericParameter.filter();
+        if ($(e.target).attr('id') == 'algoNumericParameterCollapse_wrapper') {
+            algoNumericParameter.filter();
+        }
     });
     $('#algoNumericConstantCollapse').on('show', function(e) {
-        algoNumericConstant.filter();
+        if ($(e.target).attr('id') == 'algoNumericConstantCollapse_wrapper') {
+            algoNumericConstant.filter();
+        }
     });
     $('#algoNumericInputCollapse').on('show', function(e) {
-        algoNumericInput.filter();
+        if ($(e.target).attr('id') == 'algoNumericInputCollapse_wrapper') {
+            algoNumericInput.filter();
+        }
     });
-    // TODO Décommenter une fois le datagrid des algoSelectionTextKeyExpression terminé.
     $('#algoSelectionTextKeyExpressionCollapse').on('show', function(e) {
-        algoSelectionTextkeyExpression.filter();
+        if ($(e.target).attr('id') == 'algoSelectionTextKeyExpressionCollapse_wrapper') {
+            algoSelectionTextkeyExpression.filter();
+        }
     });
     $('#algoSelectionTextKeyInputCollapse').on('show', function(e) {
-        algoSelectionTextkeyInput.filter();
+        if ($(e.target).attr('id') == 'algoSelectionTextKeyInputCollapse_wrapper') {
+            algoSelectionTextkeyInput.filter();
+        }
     });
     $('#algoConditionExpressionCollapse').on('show', function(e) {
-        algoConditionExpression.filter();
+        if ($(e.target).attr('id') == 'algoConditionExpressionCollapse_wrapper') {
+            algoConditionExpression.filter();
+        }
     });
     $('#algoConditionElementaryCollapse').on('show', function(e) {
-        algoConditionElementary.filter();
+        if ($(e.target).attr('id') == 'algoConditionElementaryCollapse_wrapper') {
+            algoConditionElementary.filter();
+        }
     });
 </script>

@@ -20,7 +20,12 @@ $family = $this->family;
         <?php
         $category = $family->getCategory();
         if ($category) {
-            echo $category->getLabel();
+            $categories = '';
+            while ($category) {
+                $categories = $category->getLabel() . ' / ' . $categories;
+                $category = $category->getParentCategory();
+            }
+            echo substr($categories, 0, -3);
         } else {
             echo '<span class="muted">'.__('UI', 'other', 'noneFem').'</span>';
         }

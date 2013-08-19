@@ -4,32 +4,42 @@
  * @subpackage Service
  */
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * Classe permettant de construire DW
  * @author valentin.claras
  * @package Simulation
  * @subpackage Service
- *
  */
-class Simulation_Service_ETLStructure extends Core_Service
+class Simulation_Service_ETLStructure
 {
     /**
-     * Renvoie l'instance Singleton de la classe.
-     *
-     * @return Simulation_Service_ETLStructure
+     * @var Simulation_Service_ETLData
      */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
+    private $etlDataService;
 
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @param Simulation_Service_ETLData $etlDataService
+     * @param EntityManager              $entityManager
+     */
+    public function __construct(Simulation_Service_ETLData $etlDataService, EntityManager $entityManager)
+    {
+        $this->etlDataService = $etlDataService;
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * Peuple le cube de DW avec les données issues de Classif.
      *
      * @param DW_Model_Cube $dWCube
      */
-    protected function populateDWCubeWithClassifService($dWCube)
+    public function populateDWCubeWithClassif($dWCube)
     {
         foreach (Classif_Model_Indicator::loadList() as $classifIndicator) {
             $this->copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube);
@@ -52,7 +62,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      * @param Classif_Model_Indicator $classifIndicator
      * @param DW_Model_Cube $dWCube
      */
-    protected function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
+    private function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
     {
         $dWIndicator = new DW_Model_Indicator($dWCube);
         $dWIndicator->setLabel($classifIndicator->getLabel());
@@ -61,14 +71,14 @@ class Simulation_Service_ETLStructure extends Core_Service
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
     }
 
-    /*
+    /**
      * Copie un axe de Classif dans un cube DW.
      *
      * @param Classif_Model_Axis $classifAxis
-     * @param DW_Model_Cube $dWCube
+     * @param DW_Model_Cube $dwCube
      * @param array &$associationArray
      */
-    protected function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
+    private function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
     {
         $dWAxis = new DW_Model_Axis($dwCube);
         $dWAxis->setLabel($classifAxis->getLabel());
@@ -102,7 +112,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @return bool
      */
-    protected function isSetDWCubeUpToDateService($set)
+    public function isSetDWCubeUpToDate($set)
     {
         return $this->isDWCubeUpToDate($set->getDWCube());
     }
@@ -115,9 +125,9 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @return bool
      */
-    protected function isDWCubeUpToDate($dWCube)
+    private function isDWCubeUpToDate($dWCube)
     {
-        return !($this->areDWIndicatorsDifferentFromClassif($dWCube) || $this->areDWAxesDifferentFromClassif($dWCube));
+        return !($this->areDWIndicatorsUpToDate($dWCube) || $this->areDWAxesUpToDate($dWCube));
     }
 
     /**
@@ -127,7 +137,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @return bool
      */
-    protected function areDWIndicatorsDifferentFromClassif($dWCube)
+    private function areDWIndicatorsUpToDate($dWCube)
     {
         $classifIndicators = Classif_Model_Indicator::loadList();
         $dWIndicators = $dWCube->getIndicators();
@@ -141,7 +151,7 @@ class Simulation_Service_ETLStructure extends Core_Service
             }
         }
 
-        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 1)) {
+        if ((count($classifIndicators) > 0) || (count($dWIndicators) > 0)) {
             return true;
         }
 
@@ -156,7 +166,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @return bool
      */
-    protected function isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator)
+    private function isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator)
     {
         if (($classifIndicator->getRef() !== $dWIndicator->getRef())
             || ($classifIndicator->getLabel() !== $dWIndicator->getLabel())
@@ -176,7 +186,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @return bool
      */
-    protected function areDWAxesDifferentFromClassif($dWCube)
+    private function areDWAxesUpToDate($dWCube)
     {
         $queryClassifRootAxes = new Core_Model_Query();
         $queryClassifRootAxes->filter->addCondition(
@@ -213,7 +223,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @return bool
      */
-    protected function isDWAxisDifferentFromClassif($dWAxis, $classifAxis)
+    private function isDWAxisDifferentFromClassif($dWAxis, $classifAxis)
     {
         if (($classifAxis->getRef() !== $dWAxis->getRef())
             || ($classifAxis->getLabel() !== $dWAxis->getLabel())
@@ -252,7 +262,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @return bool
      */
-    protected function areDWMembersDifferentFromClassif($dWAxis, $classifAxis)
+    private function areDWMembersDifferentFromClassif($dWAxis, $classifAxis)
     {
         $classifMembers = $classifAxis->getMembers();
         $dWMembers = $dWAxis->getMembers();
@@ -281,7 +291,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @return bool
      */
-    protected function isDWMemberDifferentFromClassif($dWMember, $classifMember)
+    private function isDWMemberDifferentFromClassif($dWMember, $classifMember)
     {
         if (($classifMember->getRef() !== $dWMember->getRef())
             || ($classifMember->getLabel() !== $dWMember->getLabel())
@@ -313,18 +323,18 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @param Simulation_Model_Set $set
      */
-    protected function resetSetDWCubeService($set)
+    public function resetSetDWCube($set)
     {
         $scenarios = $set->getScenarios();
 
         foreach ($scenarios as $scenario) {
-            Simulation_Service_ETLData::getInstance()->clearDWResultsFromScenario($scenario);
+            $this->etlDataService->clearDWResultsFromScenario($scenario);
         }
 
         $this->resetDWCube($set->getDWCube());
 
         foreach ($scenarios as $scenario) {
-            Simulation_Service_ETLData::getInstance()->populateDWResultsFromScenario($scenario);
+            $this->etlDataService->populateDWResultsFromScenario($scenario);
         }
     }
 
@@ -333,7 +343,7 @@ class Simulation_Service_ETLStructure extends Core_Service
      *
      * @param DW_Model_Cube $dWCube
      */
-    protected function resetDWCube($dWCube)
+    private function resetDWCube($dWCube)
     {
         $queryCube = new Core_Model_Query();
         $queryCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $dWCube);
@@ -345,9 +355,10 @@ class Simulation_Service_ETLStructure extends Core_Service
         // Préparation à la copie des Reports.
         $dWReportsAsString = array();
         foreach (DW_Model_Report::loadList($queryCube) as $dWReport) {
+            /** @var DW_Model_Report $dWReport */
             $dWReportsAsString[] = $dWReport->getAsString();
             $emptyDWReportString = '{'.
-                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWReport->getCube()->getKey()['id'].',"label":"",'.
+                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWReport->getCube()->getId().',"label":"",'.
                 '"refNumerator":null,"refNumeratorAxis1":null,"refNumeratorAxis2":null,'.
                 '"refDenominator":null,"refDenominatorAxis1":null,"refDenominatorAxis2":null,'.
                 '"chartType":null,"sortType":"orderResultByDecreasingValue","withUncertainty":false,'.
@@ -366,14 +377,12 @@ class Simulation_Service_ETLStructure extends Core_Service
                 $dWRootAxis->delete();
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
-        $this->populateDWCubeWithClassifService($dWCube);
+        $this->populateDWCubeWithClassif($dWCube);
         $dWCube->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
 
         // Copie des Reports.
         foreach ($dWReportsAsString as $dWReportString) {
@@ -385,8 +394,7 @@ class Simulation_Service_ETLStructure extends Core_Service
             }
         }
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
     }
 
 }

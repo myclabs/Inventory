@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 /**
  * @package AF
  */
-class AF_Edit_ConditionsController extends Core_Controller_Ajax
+class AF_Edit_ConditionsController extends Core_Controller
 {
 
     /**
@@ -73,8 +73,7 @@ class AF_Edit_ConditionsController extends Core_Controller_Ajax
                 break;
         }
         $condition->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->redirect('/af/edit/menu/id/' . $condition->getAf()->getId() . '/onglet/interaction');
     }
 

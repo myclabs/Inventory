@@ -2,6 +2,10 @@
 if (Zend_Auth::getInstance()->hasIdentity()) {
     $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
 
+    $container = Zend_Registry::get('container');
+    /** @var User_Service_ACL $aclService */
+    $aclService = $container->get('User_Service_ACL');
+
     $leftMenu = [];
 
     $aclQuery = new Core_Model_Query();
@@ -23,7 +27,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         'submenu' => []
     ];
 
-    $isAllowedToViewAllUser = User_Service_ACL::getInstance()->isAllowed(
+    $isAllowedToViewAllUser = $aclService->isAllowed(
         $connectedUser,
         User_Model_Action_Default::VIEW(),
         User_Model_Resource_Entity::loadByEntityName('User_Model_User')
@@ -64,7 +68,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
     $subMenuReferencial = &$leftMenu[4]['submenu'];
 
-    $isAllowedToEditReferential = User_Service_ACL::getInstance()->isAllowed(
+    $isAllowedToEditReferential = $aclService->isAllowed(
         $connectedUser,
         User_Model_Action_Default::EDIT(),
         User_Model_Resource_Named::loadByName('referential')
@@ -193,28 +197,57 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         ];
     }
 
-    $subMenuReferencial[] = [
-        'name' => __('Unit', 'name', 'units'),
-        'url' => '#',
-        'submenu' => [
-            [
-                'name' => __('Unit', 'name', 'standardUnits'),
-                'url' => 'unit/consult/standardunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'extendedUnits'),
-                'url' => 'unit/consult/extendedunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'discreteUnits'),
-                'url' => 'unit/consult/discreteunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'physicalQuantities'),
-                'url' => 'unit/consult/physicalquantities'
-            ],
-        ]
-    ];
+    if ($isAllowedToEditReferential) {
+        $subMenuReferencial[] = [
+            'name' => __('Unit', 'name', 'units'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Unit', 'name', 'standardUnits'),
+                    'url' => 'unit/consult/standardunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'extendedUnits'),
+                    'url' => 'unit/consult/extendedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'discreteUnits'),
+                    'url' => 'unit/consult/discreteunits'
+                ],
+                [
+                    'name' => __('Unit', 'composedUnitIdentifier', 'menuLinkLabel'),
+                    'url' => 'unit/consult/composedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'physicalQuantities'),
+                    'url' => 'unit/consult/physicalquantities'
+                ],
+            ]
+        ];
+    } else {
+        $subMenuReferencial[] = [
+            'name' => __('Unit', 'name', 'units'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Unit', 'name', 'standardUnits'),
+                    'url' => 'unit/consult/standardunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'extendedUnits'),
+                    'url' => 'unit/consult/extendedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'discreteUnits'),
+                    'url' => 'unit/consult/discreteunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'physicalQuantities'),
+                    'url' => 'unit/consult/physicalquantities'
+                ],
+            ]
+        ];
+    }
 
     $aclQuery = new Core_Model_Query();
     $aclQuery->aclFilter->enabled = true;

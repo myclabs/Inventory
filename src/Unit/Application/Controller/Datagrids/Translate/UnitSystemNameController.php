@@ -1,0 +1,41 @@
+<?php
+/**
+ * @author     matthieu.napoli
+ * @package    Unit
+ * @subpackage Controller
+ */
+
+use Core\Annotation\Secure;
+use Unit\Domain\UnitSystem;
+
+/**
+ * @package    Unit
+ * @subpackage Controller
+ */
+class Unit_Datagrids_Translate_UnitSystemNameController extends UI_Controller_Datagrid
+{
+
+    /**
+     * @Secure("viewUnit")
+     */
+    public function getelementsAction()
+    {
+        foreach (UnitSystem::loadList($this->request) as $unitSystem) {
+            /** @var UnitSystem $unitSystem */
+            $data = [];
+
+            $data['identifier'] = $unitSystem->getRef();
+
+            foreach (Zend_Registry::get('languages') as $language) {
+                $locale = Core_Locale::load($language);
+                $unitSystem->reloadWithLocale($locale);
+                $data[$language] = $unitSystem->getName();
+            }
+            $this->addline($data);
+        }
+        $this->totalElements = UnitSystem::countTotal($this->request);
+
+        $this->send();
+    }
+
+}

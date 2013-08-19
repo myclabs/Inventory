@@ -99,10 +99,18 @@ class Classif_Model_ContextIndicator extends Core_Model_Entity
      * Ajoute un Axis donné à la collection du ContextIndicator.
      *
      * @param Classif_Model_Axis $axis
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function addAxis(Classif_Model_Axis $axis)
     {
         if (!($this->hasAxis($axis))) {
+            foreach ($this->getAxes() as $existentAxis) {
+                if ($existentAxis->isBroaderThan($axis) || $existentAxis->isNarrowerThan($axis)) {
+                    throw new Core_Exception_InvalidArgument('Axes must be transverse');
+                }
+            }
+
             $this->axes->add($axis);
         }
     }

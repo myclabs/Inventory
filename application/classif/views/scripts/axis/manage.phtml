@@ -14,11 +14,11 @@
 
     // Caractéristiques du popup d'édition
     $editElements = array();
+    $editElements['label'] = new UI_Form_Element_Text('editAxis_label');
+    $editElements['label']->setLabel(__('UI', 'name', 'label'));
     $editElements['ref'] = new UI_Form_Element_Text('editAxis_ref');
     $editElements['ref']->setLabel(__('UI', 'name', 'identifier'));
     $editElements['ref']->setAttrib('required', true);
-    $editElements['label'] = new UI_Form_Element_Text('editAxis_label');
-    $editElements['label']->setLabel(__('UI', 'name', 'label'));
 
     $addForm = new UI_Form('addAxis');
 

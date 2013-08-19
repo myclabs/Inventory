@@ -1,0 +1,38 @@
+Unit\Domain\Unit\Unit:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Unit_Unit
+  inheritanceType: JOINED
+  discriminatorColumn:
+    name: unitType
+    type: string
+    length: 8
+  discriminatorMap:
+    standard: Unit\Domain\Unit\StandardUnit
+    extended: Unit\Domain\Unit\ExtendedUnit
+    discrete: Unit\Domain\Unit\DiscreteUnit
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      unique: true
+    name:
+      type: string
+      nullable: true
+      gedmo:
+        - translatable
+    symbol:
+      type: string
+      gedmo:
+        - translatable

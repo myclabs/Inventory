@@ -87,9 +87,8 @@ class Social_Datagrid_Action_ThemeController extends UI_Controller_Datagrid
 
         $theme->delete();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
         try {
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             throw new Core_Exception_User('Social', 'actionTheme', 'deletionForbidden');
         }

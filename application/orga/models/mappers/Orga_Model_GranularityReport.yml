@@ -31,4 +31,5 @@ Orga_Model_GranularityReport:
         inverseJoinColumns:
           idCellDWReport:
             referencedColumnName: id
+            onDelete: CASCADE
       cascade: [ persist, remove ]

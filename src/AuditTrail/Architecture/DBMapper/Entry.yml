@@ -1,0 +1,34 @@
+AuditTrail\Domain\Entry:
+  type: entity
+  repositoryClass: AuditTrail\Architecture\Repository\DoctrineEntryRepository
+  table: AuditTrail_Entry
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    date:
+      type: datetime
+    eventName:
+      type: string
+
+  oneToOne:
+    context:
+      targetEntity: AuditTrail\Domain\Context\Context
+      cascade: [ all ]
+      joinColumn:
+        # Suppression de l'entrée si le context est supprimé
+        onDelete: CASCADE
+
+  manyToOne:
+    user:
+      targetEntity: \User_Model_User
+      joinColumn:
+        nullable: true
+
+  indexes:
+    date_index:
+      columns: date

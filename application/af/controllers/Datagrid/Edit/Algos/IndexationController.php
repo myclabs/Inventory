@@ -85,8 +85,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                         // Suppression de l'ancien index
                         $algo->removeIndex($index);
                         $algo->save();
-                        $entityManagers = Zend_Registry::get('EntityManagers');
-                        $entityManagers['default']->flush();
+                        $this->entityManager->flush();
                     }
                 }
                 $this->setChosenIndexType($algo, $axis, $newValue);
@@ -136,10 +135,10 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
 
                 }
                 $index->save();
-                $entityManagers = Zend_Registry::get('EntityManagers');
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
                 break;
         }
+        $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
 

@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * @package    User
@@ -14,24 +15,16 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
 {
 
     /**
+     * @Inject
      * @var User_Service_User
      */
     private $userService;
 
     /**
+     * @Inject
      * @var User_Service_ACL
      */
     private $aclService;
-
-    /**
-     * (non-PHPdoc)
-     */
-    public function init()
-    {
-        parent::init();
-        $this->userService = User_Service_User::getInstance();
-        $this->aclService = User_Service_ACL::getInstance();
-    }
 
     /**
      * @Secure("viewAllUsers")
@@ -105,27 +98,12 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
             $user->addRole($role);
 
             $user->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $this->entityManager->flush();
 
             $this->message = __('User', 'list', 'accountCreated');
         }
 
         $this->send();
-    }
-
-    /**
-     * (non-PHPdoc)
-     */
-    public function updateelementAction()
-    {
-    }
-
-    /**
-     * (non-PHPdoc)
-     */
-    public function deleteelementAction()
-    {
     }
 
 }

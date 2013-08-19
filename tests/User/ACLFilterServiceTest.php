@@ -31,8 +31,13 @@ class ACLFilterServiceTest extends Core_Test_TestCase
      */
     public static function setUpBeforeClass()
     {
-        User_Service_ACLFilter::getInstance()->clean();
-        User_Service_ACLFilter::getInstance()->enabled = false;
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var User_Service_ACLFilter $aclFilterService */
+        $aclFilterService = $container->get('User_Service_ACLFilter');
+
+        $aclFilterService->clean();
+        $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (User_Model_Authorization::loadList() as $o) {
             $o->delete();
@@ -53,9 +58,9 @@ class ACLFilterServiceTest extends Core_Test_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->userService = User_Service_User::getInstance();
-        $this->aclService = User_Service_ACL::getInstance();
-        $this->aclFilterService = User_Service_ACLFilter::getInstance();
+        $this->userService = $this->get('User_Service_User');
+        $this->aclService = $this->get('User_Service_ACL');
+        $this->aclFilterService = $this->get('User_Service_ACLFilter');
         $this->aclFilterService->enabled = true;
     }
 
@@ -113,14 +118,14 @@ class ACLFilterServiceTest extends Core_Test_TestCase
         $this->aclService->allow($admin, User_Model_Action_Default::VIEW(), $allUsersResource);
         $this->entityManager->flush();
 
-        // 2 droits par utilisateur (VIEW et EDIT sur eux-même) + (le droit qu'on a rajouté manuellement == 0)
+        // 2 droits par utilisateur (VIEW et EDIT sur eux-même)
         $this->assertEquals(2, $this->aclFilterService->getEntriesCount());
 
         // Ajoute un autre utilisateur
         $admin = $this->userService->createUser('user', 'user');
 
-        // 2 droits par utilisateur (VIEW et EDIT sur eux-même) + (le droit qu'on a rajouté manuellement == 0)
-        $this->assertEquals(2*2, $this->aclFilterService->getEntriesCount());
+        // 2 droits par utilisateur (VIEW et EDIT sur eux-même) + (admin voit user)
+        $this->assertEquals(2*2+1, $this->aclFilterService->getEntriesCount());
 
         // Fixtures
         $this->aclService->disallow($admin, User_Model_Action_Default::VIEW(), $allUsersResource);

@@ -11,9 +11,14 @@ defined('APPLICATION_PATH') || define('APPLICATION_PATH', dirname(__FILE__));
 // Répertoire vers le package
 defined('PACKAGE_PATH') || define('PACKAGE_PATH', realpath(APPLICATION_PATH . '/..'));
 
+// Environnement
+if (file_exists(APPLICATION_PATH . '/configs/env.php')) {
+    require_once APPLICATION_PATH . '/configs/env.php';
+}
+
 // Vérifie que l'environnement d'exécution est définit
 if (! defined('APPLICATION_ENV')) {
-    die("Aucun environnement d'exécution défini");
+    die("No application environment defined. Use the application/configs/env.php file.");
 }
 
 require_once PACKAGE_PATH . '/vendor/autoload.php';

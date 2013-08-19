@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Unit\UnitAPI;
 
 /**
  * @package AF
@@ -30,9 +31,9 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
                 $data['label'] = $algo->getLabel();
-                $data['unit'] = $algo->getUnitValue()->unit->getRef();
-                $data['value'] = $this->cellNumber($algo->getUnitValue()->value->digitalValue);
-                $data['uncertainty'] = $this->cellNumber($algo->getUnitValue()->value->relativeUncertainty);
+                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $data['value'] = $this->cellNumber($algo->getUnitValue()->getDigitalValue());
+                $data['uncertainty'] = $this->cellNumber($algo->getUnitValue()->getRelativeUncertainty());
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
                     $ref = $contextIndicator->getContext()->getRef()
@@ -59,9 +60,42 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     {
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
+        $locale = Core_Locale::loadDefault();
+        // Ref validation
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
+        }
+        // Unit validation
+        try {
+            $unitRef = $this->getAddElementValue('unit');
+            if (empty($unitRef)) {
+                $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+            }
+            $unit = new UnitAPI($unitRef);
+            $unit->getNormalizedUnit();
+        } catch (Core_Exception_NotFound $e) {
+            $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
+        }
+        // Value validation
+        $rawValue = $this->getAddElementValue('value');
+        if (empty($rawValue)) {
+            $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'emptyRequiredField'));
+        } else {
+            try {
+                $value = $locale->readNumber($rawValue);
+            } catch(Core_Exception_InvalidArgument $e) {
+                $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'invalidNumber'));
+            }
+        }
+        // Uncertainty validation
+        try {
+            $uncertainty = $locale->readInteger($this->getAddElementValue('uncertainty'));
+            if ($uncertainty === null) {
+                $uncertainty = 0;
+            }
+        } catch(Core_Exception_InvalidArgument $e) {
+            $this->setAddElementErrorMessage('uncertainty', __('UI', 'formValidation', 'invalidNumber'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -74,16 +108,17 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 return;
             }
             $algo->setLabel($this->getAddElementValue('label'));
-            $algo->getUnitValue()->value->digitalValue = $this->getAddElementValue('value');
-            $algo->getUnitValue()->value->relativeUncertainty = $this->getAddElementValue('uncertainty');
-            $unit = new Unit_API($this->getAddElementValue('unit'));
-            $algo->getUnitValue()->unit = $unit;
+            /** @noinspection PhpUndefinedVariableInspection */
+            $algo->setUnitValue(new Calc_UnitValue(
+                    $unit,
+                    $value,
+                    $uncertainty
+                ));
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
-            $entityManagers = Zend_Registry::get('EntityManagers');
             try {
-                $entityManagers['default']->flush();
+                $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
@@ -103,6 +138,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     {
         /** @var $algo Algo_Model_Numeric_Constant */
         $algo = Algo_Model_Numeric_Constant::load($this->update['index']);
+        $locale = Core_Locale::loadDefault();
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'ref':
@@ -114,22 +150,44 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $this->data = $algo->getLabel();
                 break;
             case 'unit':
-                $unitValue = clone $algo->getUnitValue();
-                $unitValue->unit = new Unit_API($newValue);
-                $algo->setUnitValue($unitValue);
-                $this->data = $unitValue->unit->getRef();
+                try {
+                    if (empty($newValue)) {
+                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                    }
+                    $unit = new UnitAPI($newValue);
+                    $unit->getNormalizedUnit();
+                } catch (Core_Exception_NotFound $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
+                }
+                $algo->setUnitValue(new Calc_UnitValue(
+                        $unit,
+                        $algo->getUnitValue()->getDigitalValue(),
+                        $algo->getUnitValue()->getRelativeUncertainty()
+                    ));
+                $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
                 break;
             case 'value':
-                $unitValue = clone $algo->getUnitValue();
-                $unitValue->value->digitalValue = $newValue;
+                if (empty($newValue)) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
+                }
+                try {
+                    $newValue = $locale->readNumber($newValue);
+                } catch(Core_Exception_InvalidArgument $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                }
+                $unitValue = $algo->getUnitValue()->copyWithNewValue($newValue);
                 $algo->setUnitValue($unitValue);
-                $this->data = $unitValue->value->digitalValue;
+                $this->data = $unitValue->getDigitalValue();
                 break;
             case 'uncertainty':
-                $unitValue = clone $algo->getUnitValue();
-                $unitValue->value->relativeUncertainty = $newValue;
+                try {
+                    $newValue = $locale->readInteger($newValue);
+                } catch(Core_Exception_InvalidArgument $e) {
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                }
+                $unitValue = $algo->getUnitValue()->copyWithNewUncertainty($newValue);
                 $algo->setUnitValue($unitValue);
-                $this->data = $unitValue->value->relativeUncertainty;
+                $this->data = $unitValue->getRelativeUncertainty();
                 break;
             case 'contextIndicator':
                 if ($newValue) {
@@ -141,8 +199,11 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 break;
         }
         $algo->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }
@@ -159,8 +220,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
