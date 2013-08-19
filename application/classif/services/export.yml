@@ -70,8 +70,8 @@ sheets:
       - foreach: axes as axis
         do:
           - type: VerticalTable
+            label: "{{ axis.label }}"
             columns:
-              - label: "{{ axis.label }}"
               - label: "{{ memberColumnLabel }}"
               - label: "{{ memberColumnRef }}"
               - foreach: axis.directBroaders as broaderAxis
@@ -81,7 +81,6 @@ sheets:
               - foreach: axis.members as member
                 do:
                   - cells:
-                      - ""
                       - "{{ member.label }}"
                       - "{{ member.ref }}"
                       - foreach: axis.directBroaders as broaderAxis
