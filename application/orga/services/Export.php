@@ -149,7 +149,7 @@ class Orga_Service_Export
                     foreach ($cell->getMembers() as $member) {
                         if ($organizationAxis->isNarrowerThan($member->getAxis())) {
                             continue;
-                        } elseif (!$organizationAxis->isTransverse($member->getAxis())) {
+                        } elseif (!($organizationAxis->isTransverse([$member->getAxis()]))) {
                             continue 2;
                         }
                     }
@@ -166,7 +166,7 @@ class Orga_Service_Export
                     foreach ($cell->getMembers() as $member) {
                         if (($axis->isNarrowerThan($member->getAxis())) && in_array($member, $axisMember->getAllParents())) {
                             continue;
-                        } elseif (!$axis->isTransverse($member->getAxis())) {
+                        } elseif (!($axis->isTransverse([$member->getAxis()]))) {
                             continue 2;
                         }
                     }
@@ -192,6 +192,12 @@ class Orga_Service_Export
 
         $modelBuilder->bind('cellColumnRelevant', __('Orga', 'exports', 'cellColumnRelevant'));
         $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'exports', 'cellColumnAllParentsRelevant'));
+        $modelBuilder->bindFunction(
+            'getChildCellsForGranularity',
+            function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
+                return $cell->getChildCellsForGranularity($granularity);
+            }
+        );
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
             function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
@@ -469,6 +475,10 @@ function getInputComponentValue(AF_Model_Input $input)
         }
         return $subInputLabels;
     } else {
-        return [$input->getValue()];
+        $value = $input->getValue();
+        if (is_array($value)) {
+            $value = implode(', ', $value);
+        }
+        return [$value];
     }
 }
