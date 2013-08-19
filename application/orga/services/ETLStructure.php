@@ -722,13 +722,7 @@ class Orga_Service_ETLStructure extends Core_Singleton
 
         foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
-                $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
-                $entityManager->flush();
-                foreach ($granularity->getCells() as $cell) {
-                    $entityManager->clear();
-                    $this->resetCellDWCube(Orga_Model_Cell::load($cell->getId()));
-                    $entityManager->flush();
-                }
+                $this->resetGranularityAndCellsDWCubes($granularity);
             }
         }
     }
@@ -738,8 +732,18 @@ class Orga_Service_ETLStructure extends Core_Singleton
      *
      * @param Orga_Model_Granularity $granularity
      */
-    public function resetGranularityDWCubes(Orga_Model_Granularity $granularity)
+    public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
+        foreach ($granularity->getCells() as $cell) {
+            $cell = Orga_Model_Cell::load($cell->getId());
+            $this->resetCellDWCube($cell);
+
+            // Optimisation de la mémoire.
+            $this->entityManager->clear();
+        }
+
+        $granularity = Orga_Model_Granularity::load($granularity->getId());
+        $this->updateGranularityDWCubeLabel($granularity);
         $this->resetDWCube(
             $granularity->getDWCube(),
             $granularity->getOrganization(),
