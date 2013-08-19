@@ -856,7 +856,6 @@ class DW_Model_Report extends Core_Model_Entity
         // Filters.
         foreach ($report->getFilters() as $reportFilter) {
             $report->removeFilter($reportFilter);
-            $reportFilter->delete();
         }
         foreach ($stdReport->filters as $stdFilter) {
             $axis = DW_Model_Axis::loadByRefAndCube($stdFilter->refAxis, $report->getCube());
