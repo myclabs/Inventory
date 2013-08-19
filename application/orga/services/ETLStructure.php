@@ -1072,6 +1072,9 @@ class Orga_Service_ETLStructure
             $dWReportReset->save();
         }
 
+        // Suppression des données du cube et vidage des Report.
+        $this->entityManager->flush();
+
         // Suppression des axes et indicateurs.
         foreach ($dWCube->getIndicators() as $dWIndicator) {
             $dWIndicator->delete();
