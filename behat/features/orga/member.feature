@@ -114,9 +114,8 @@ Feature: Organizational member feature
       | label  | ref      | broaderpays    |
       | Annecy | annecy   | France         |
 
-  @javascript
+  @javascript @skipped
   Scenario: Deletion of an organizational member
-    @skipped
     #6268 Exceptions non capturées suppression d'un membre organisationnel
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"

@@ -80,7 +80,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        $refAxes = explode(',', $this->getAddElementValue('axes'));
+        $refAxes = $this->getAddElementValue('axes');
         $listAxes = array();
         $refGranularity = '';
         if (empty($refAxes)) {

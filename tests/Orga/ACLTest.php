@@ -545,7 +545,7 @@ class Orga_Test_ACL extends Core_Test_TestCase
      * Test les points du vue formel (IsAllow) des utilisateurs.
      *  Désactivé pour soulager le test.
      */
-    public function testUsersIsAllow()
+    public function testUsersIsAllowed()
     {
         $this->tIsAllowOrganizationAdministrator();
         $this->tIsAllowGlobaleCellAdministrator();
@@ -3604,13 +3604,9 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertContains($cell2013LimaTransport, $cellsAllow);
 
         $reportsView = DW_Model_Report::loadList($queryView);
-        //@todo Il devrait voir les 12.
-        $this->assertCount(4, $reportsView);
-//        $this->assertCount(12, $reportsView);
+        $this->assertCount(12, $reportsView);
         $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        //@todo Il devrait hériter de l'édition pour les 9.
-        $this->assertCount(1, $reportsEdit);
-//        $this->assertCount(9, $reportsEdit);
+        $this->assertCount(9, $reportsEdit);
         $reportsReport = DW_Model_Report::loadList($queryReport);
         $this->assertCount(3, $reportsReport);
         $reportsDelete = DW_Model_Report::loadList($queryDelete);
@@ -3637,23 +3633,23 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertContains($reportZoneMarque, $reportsDelete);
 
         $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-//        $this->assertContains($reportEuropeA, $reportsView);
-//        $this->assertContains($reportEuropeA, $reportsEdit);
+        $this->assertContains($reportEuropeA, $reportsView);
+        $this->assertContains($reportEuropeA, $reportsEdit);
         $this->assertNotContains($reportEuropeA, $reportsReport);
         $this->assertNotContains($reportEuropeA, $reportsDelete);
         $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-//        $this->assertContains($reportEuropeB, $reportsView);
-//        $this->assertContains($reportEuropeB, $reportsEdit);
+        $this->assertContains($reportEuropeB, $reportsView);
+        $this->assertContains($reportEuropeB, $reportsEdit);
         $this->assertNotContains($reportEuropeB, $reportsReport);
         $this->assertNotContains($reportEuropeB, $reportsDelete);
         $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-//        $this->assertContains($reportSudameriqueA, $reportsView);
-//        $this->assertContains($reportSudameriqueA, $reportsEdit);
+        $this->assertContains($reportSudameriqueA, $reportsView);
+        $this->assertContains($reportSudameriqueA, $reportsEdit);
         $this->assertNotContains($reportSudameriqueA, $reportsReport);
         $this->assertNotContains($reportSudameriqueA, $reportsDelete);
         $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-//        $this->assertContains($reportSudameriqueB, $reportsView);
-//        $this->assertContains($reportSudameriqueB, $reportsEdit);
+        $this->assertContains($reportSudameriqueB, $reportsView);
+        $this->assertContains($reportSudameriqueB, $reportsEdit);
         $this->assertNotContains($reportSudameriqueB, $reportsReport);
         $this->assertNotContains($reportSudameriqueB, $reportsDelete);
 
@@ -3665,23 +3661,23 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertContains($reportSite, $reportsDelete);
 
         $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-//        $this->assertContains($reportAnnecy, $reportsView);
-//        $this->assertContains($reportAnnecy, $reportsEdit);
+        $this->assertContains($reportAnnecy, $reportsView);
+        $this->assertContains($reportAnnecy, $reportsEdit);
         $this->assertNotContains($reportAnnecy, $reportsReport);
         $this->assertNotContains($reportAnnecy, $reportsDelete);
         $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-//        $this->assertContains($reportChambery, $reportsView);
-//        $this->assertContains($reportChambery, $reportsEdit);
+        $this->assertContains($reportChambery, $reportsView);
+        $this->assertContains($reportChambery, $reportsEdit);
         $this->assertNotContains($reportChambery, $reportsReport);
         $this->assertNotContains($reportChambery, $reportsDelete);
         $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-//        $this->assertContains($reportBerlin, $reportsView);
-//        $this->assertContains($reportBerlin, $reportsEdit);
+        $this->assertContains($reportBerlin, $reportsView);
+        $this->assertContains($reportBerlin, $reportsEdit);
         $this->assertNotContains($reportBerlin, $reportsReport);
         $this->assertNotContains($reportBerlin, $reportsDelete);
         $reportLima = $cellLima->getDWCube()->getReports()[0];
-//        $this->assertContains($reportLima, $reportsView);
-//        $this->assertContains($reportLima, $reportsEdit);
+        $this->assertContains($reportLima, $reportsView);
+        $this->assertContains($reportLima, $reportsEdit);
         $this->assertNotContains($reportLima, $reportsReport);
         $this->assertNotContains($reportLima, $reportsDelete);
     }
@@ -4046,13 +4042,9 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertContains($cell2013LimaTransport, $cellsAllow);
 
         $reportsView = DW_Model_Report::loadList($queryView);
-        //@todo Il devrait voir les 9 copies.
-        $this->assertCount(1, $reportsView);
-//        $this->assertCount(9, $reportsView);
+        $this->assertCount(9, $reportsView);
         $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        //@todo Il devrait hériter de l'édition pour les 9.
-        $this->assertCount(1, $reportsEdit);
-//        $this->assertCount(9, $reportsEdit);
+        $this->assertCount(9, $reportsEdit);
         $reportsReport = DW_Model_Report::loadList($queryReport);
         $this->assertCount(0, $reportsReport);
         $reportsDelete = DW_Model_Report::loadList($queryDelete);
@@ -4079,23 +4071,23 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertNotContains($reportZoneMarque, $reportsDelete);
 
         $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-//        $this->assertContains($reportEuropeA, $reportsView);
-//        $this->assertContains($reportEuropeA, $reportsEdit);
+        $this->assertContains($reportEuropeA, $reportsView);
+        $this->assertContains($reportEuropeA, $reportsEdit);
         $this->assertNotContains($reportEuropeA, $reportsReport);
         $this->assertNotContains($reportEuropeA, $reportsDelete);
         $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-//        $this->assertContains($reportEuropeB, $reportsView);
-//        $this->assertContains($reportEuropeB, $reportsEdit);
+        $this->assertContains($reportEuropeB, $reportsView);
+        $this->assertContains($reportEuropeB, $reportsEdit);
         $this->assertNotContains($reportEuropeB, $reportsReport);
         $this->assertNotContains($reportEuropeB, $reportsDelete);
         $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-//        $this->assertContains($reportSudameriqueA, $reportsView);
-//        $this->assertContains($reportSudameriqueA, $reportsEdit);
+        $this->assertContains($reportSudameriqueA, $reportsView);
+        $this->assertContains($reportSudameriqueA, $reportsEdit);
         $this->assertNotContains($reportSudameriqueA, $reportsReport);
         $this->assertNotContains($reportSudameriqueA, $reportsDelete);
         $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-//        $this->assertContains($reportSudameriqueB, $reportsView);
-//        $this->assertContains($reportSudameriqueB, $reportsEdit);
+        $this->assertContains($reportSudameriqueB, $reportsView);
+        $this->assertContains($reportSudameriqueB, $reportsEdit);
         $this->assertNotContains($reportSudameriqueB, $reportsReport);
         $this->assertNotContains($reportSudameriqueB, $reportsDelete);
 
@@ -4107,23 +4099,23 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertNotContains($reportSite, $reportsDelete);
 
         $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-//        $this->assertContains($reportAnnecy, $reportsView);
-//        $this->assertContains($reportAnnecy, $reportsEdit);
+        $this->assertContains($reportAnnecy, $reportsView);
+        $this->assertContains($reportAnnecy, $reportsEdit);
         $this->assertNotContains($reportAnnecy, $reportsReport);
         $this->assertNotContains($reportAnnecy, $reportsDelete);
         $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-//        $this->assertContains($reportChambery, $reportsView);
-//        $this->assertContains($reportChambery, $reportsEdit);
+        $this->assertContains($reportChambery, $reportsView);
+        $this->assertContains($reportChambery, $reportsEdit);
         $this->assertNotContains($reportChambery, $reportsReport);
         $this->assertNotContains($reportChambery, $reportsDelete);
         $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-//        $this->assertContains($reportBerlin, $reportsView);
-//        $this->assertContains($reportBerlin, $reportsEdit);
+        $this->assertContains($reportBerlin, $reportsView);
+        $this->assertContains($reportBerlin, $reportsEdit);
         $this->assertNotContains($reportBerlin, $reportsReport);
         $this->assertNotContains($reportBerlin, $reportsDelete);
         $reportLima = $cellLima->getDWCube()->getReports()[0];
-//        $this->assertContains($reportLima, $reportsView);
-//        $this->assertContains($reportLima, $reportsEdit);
+        $this->assertContains($reportLima, $reportsView);
+        $this->assertContains($reportLima, $reportsEdit);
         $this->assertNotContains($reportLima, $reportsReport);
         $this->assertNotContains($reportLima, $reportsDelete);
     }
@@ -4488,9 +4480,7 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertNotContains($cell2013LimaTransport, $cellsAllow);
 
         $reportsView = DW_Model_Report::loadList($queryView);
-        //@todo Il devrait voir 3 copies.
-        $this->assertCount(1, $reportsView);
-//        $this->assertCount(3, $reportsView);
+        $this->assertCount(3, $reportsView);
         $reportsEdit = DW_Model_Report::loadList($queryEdit);
         $this->assertCount(0, $reportsEdit);
         $reportsReport = DW_Model_Report::loadList($queryReport);
@@ -4547,12 +4537,12 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertNotContains($reportSite, $reportsDelete);
 
         $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-//        $this->assertContains($reportAnnecy, $reportsView);
+        $this->assertContains($reportAnnecy, $reportsView);
         $this->assertNotContains($reportAnnecy, $reportsEdit);
         $this->assertNotContains($reportAnnecy, $reportsReport);
         $this->assertNotContains($reportAnnecy, $reportsDelete);
         $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-//        $this->assertContains($reportChambery, $reportsView);
+        $this->assertContains($reportChambery, $reportsView);
         $this->assertNotContains($reportChambery, $reportsEdit);
         $this->assertNotContains($reportChambery, $reportsReport);
         $this->assertNotContains($reportChambery, $reportsDelete);
@@ -4928,9 +4918,7 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertNotContains($cell2013LimaTransport, $cellsAllow);
 
         $reportsView = DW_Model_Report::loadList($queryView);
-        //@todo Il devrait voir 2 copies.
-        $this->assertCount(1, $reportsView);
-//        $this->assertCount(2, $reportsView);
+        $this->assertCount(2, $reportsView);
         $reportsEdit = DW_Model_Report::loadList($queryEdit);
         $this->assertCount(0, $reportsEdit);
         $reportsReport = DW_Model_Report::loadList($queryReport);
@@ -5002,7 +4990,7 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->assertNotContains($reportBerlin, $reportsReport);
         $this->assertNotContains($reportBerlin, $reportsDelete);
         $reportLima = $cellLima->getDWCube()->getReports()[0];
-//        $this->assertContains($reportLima, $reportsView);
+        $this->assertContains($reportLima, $reportsView);
         $this->assertNotContains($reportLima, $reportsEdit);
         $this->assertNotContains($reportLima, $reportsReport);
         $this->assertNotContains($reportLima, $reportsDelete);

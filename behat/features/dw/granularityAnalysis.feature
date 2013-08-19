@@ -106,6 +106,7 @@ Feature: Granularity dataware analysis feature
   Scenario: Launch and save a granularity analysis, non empty label
   # Accès à l'interface de configuration d'une analyse
     Given I am on "orga/granularity/report/idCell/1/idGranularity/1/idCube/1"
+    And I wait for the page to finish loading
     When I click element "#indicatorRatio_indicator"
     And I select "Camembert" from "chartType"
     And I click "Lancer"
@@ -142,6 +143,44 @@ Feature: Granularity dataware analysis feature
   # Accès à l'analyse de la cellule
     When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
     Then I should see "Analyse préconfigurée test Vue globale"
+
+  @javascript
+  Scenario: Update a granularity analysis, without any change except on filters
+    Given I am on "orga/granularity/report/idCell/1/idGranularity/1/idReport/2"
+    And I wait for the page to finish loading
+    Then I should see "Chiffre d'affaire, par année Niveau organisationnel global"
+  # Ajout d'un filtre
+    When I open collapse "Filtres"
+    And I check "filterAxisorga_anneeNumberMembers_one"
+    And I select "2013" from "selectAxisorga_anneeMemberFilter"
+    # And I focus on element "#applyReportConfiguration"
+    And I click "Lancer"
+    Then the following message is shown and closed: "Analyse effectuée."
+  # On utilise "click element" pour scroller vers le haut (focus)
+    When I click element "#saveReportButton.btn:contains('Enregistrer')"
+    Then I should see the popup "Enregistrer la configuration de l'analyse"
+  # Par défaut, il est proposé de mettre à jour la configuration existante
+    When I click element "#saveReport .btn:contains('Enregistrer')"
+  # Vérification que le filtre sur 2013 est bien présent sur les analyses de la ou des cellule(s) correspondant à cette granularité
+    And I click "Retour"
+    And I open tab "Analyses"
+    Then the row 2 of the "report" datagrid should contain:
+      | label                        |
+      | Chiffre d'affaire, par année |
+    When I click "Cliquer pour accéder" in the row 2 of the "report" datagrid
+    And I open tab "Valeurs"
+    Then the "reportValues" datagrid should contain 1 row
+    And the row 1 of the "reportValues" datagrid should contain:
+      | valueAxisorga_annee |
+      | 2013                |
+
+
+
+
+
+
+
+
 
 
 

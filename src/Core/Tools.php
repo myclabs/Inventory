@@ -189,4 +189,20 @@ abstract class Core_Tools
         return mb_strtoupper(mb_substr($str, 0, 1)) . mb_substr($str, 1);
     }
 
+    /**
+     * Filter duplicates inside an array using the "===" comparator (!= array_unique())
+     * @param array $array
+     * @return array
+     */
+    public static function arrayFilterDuplicates($array)
+    {
+        $newArray = [];
+        foreach ($array as $object) {
+            if (!in_array($object, $newArray, true)) {
+                $newArray[] = $object;
+            }
+        }
+        return $newArray;
+    }
+
 }

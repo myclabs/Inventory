@@ -172,7 +172,7 @@ class Orga_Service_ETLStructure
                         $labelParts[] = $member->getLabel();
                     }
                 }
-                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels);
+                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);
             }
         }
 
@@ -951,15 +951,7 @@ class Orga_Service_ETLStructure
             $granularity = Orga_Model_Granularity::load($granularity->getId());
 
             if ($granularity->getCellsGenerateDWCubes()) {
-                $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
-
-                foreach ($granularity->getCells() as $cell) {
-                    // Optimisation de la mémoire.
-                    $this->entityManager->clear();
-                    $cell = Orga_Model_Cell::load($cell->getId());
-
-                    $this->resetCellDWCube($cell);
-                }
+                $this->resetGranularityAndCellsDWCubes($granularity);
             }
         }
     }
@@ -969,8 +961,17 @@ class Orga_Service_ETLStructure
      *
      * @param Orga_Model_Granularity $granularity
      */
-    public function resetGranularityDWCubes(Orga_Model_Granularity $granularity)
+    public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
+        foreach ($granularity->getCells() as $cell) {
+            $cell = Orga_Model_Cell::load($cell->getId());
+            $this->resetCellDWCube($cell);
+
+            // Optimisation de la mémoire.
+            $this->entityManager->clear();
+        }
+
+        $granularity = Orga_Model_Granularity::load($granularity->getId());
         $this->updateGranularityDWCubeLabel($granularity);
         $this->resetDWCube(
             $granularity->getDWCube(),
