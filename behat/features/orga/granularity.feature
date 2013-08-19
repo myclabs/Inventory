@@ -213,7 +213,7 @@ Feature: Organization granularity feature
 
   @javascript @skipped
   Scenario: Deletion of a granularity 'with DW'
-    #6300 : La suppression d'une granularité associée à des DWs entraîne une erreur
+    #6300 : La suppression d'une granularité associée à des DWs entraîne une erreur
   # Suppression des rôles associés à la granularité "Site"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
