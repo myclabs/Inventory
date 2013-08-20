@@ -20,6 +20,7 @@ foreach ($families as $processFamily) {
     $entityManager->flush();
 
     $coeffFamily->setLabel($processFamily->getLabel());
+    $coeffFamily->setDocumentation($processFamily->getDocumentation());
     $coeffFamily->setCategory($processFamily->getCategory());
 
     // Unit
