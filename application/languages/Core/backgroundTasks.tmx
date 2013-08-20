@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="emailNotificationTitle">
+            <tuv xml:lang="fr">
+                <seg>L'opération "[TASK_NAME]" a été effectuée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The operation "[TASK_NAME]" has been executed</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="emailNotificationContent">
+            <tuv xml:lang="fr">
+                <seg>
+                    Bonjour
+
+                    l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».
+
+                    En cas de question, vous pouvez vous adresser à : [CONTACT_ADDRESS].
+
+                    Merci de votre confiance.
+
+                    Cet e-mail vous a été envoyé automatiquement par le serveur de l'application « [APPLICATION_NAME] ». Merci de ne pas y répondre.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Bonjour
+
+                    l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».
+
+                    En cas de question, vous pouvez vous adresser à : [CONTACT_ADDRESS].
+
+                    Merci de votre confiance.
+
+                    Cet e-mail vous a été envoyé automatiquement par le serveur de l'application « [APPLICATION_NAME] ». Merci de ne pas y répondre.
+                </seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>
