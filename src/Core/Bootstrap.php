@@ -329,7 +329,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $this->container->set('Core_Work_Dispatcher')
                             ->bindTo('Core_Work_SimpleDispatcher');
         }
-        $workDispatcher = $this->container->get('Core_Work_Dispatcher');
+        $workDispatcher = $this->container->get('Core_Work_Dispatcher', true);
         Zend_Registry::set('workDispatcher', $workDispatcher);
 
         // Register workers
