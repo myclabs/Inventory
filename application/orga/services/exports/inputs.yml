@@ -15,14 +15,20 @@ sheets:
                   - foreach: granularity.axes as axis
                     do:
                       - label: "{{ axis.label }}"
+                  - {{ fieldAncestor }}
+                  - {{ fieldLabel }}
+                  - {{ fieldType }}
+                  - {{ fieldValue }}
+                  - {{ fieldUncertainty }}
+                lines:
                   - foreach: getInputCellFields(childCell) as field
                     do:
-                      - label: "{{ field }}"
-                lines:
-                  - cells:
-                      - foreach: granularity.axes as axis
-                        do:
-                          - "{{ displayCellMemberForAxis(childCell, axis) }}"
-                      - foreach: getInputCellValues(childCell) as value
-                        do:
-                          - "{{ value }}"
+                    - cells:
+                        - foreach: granularity.axes as axis
+                          do:
+                            - "{{ displayCellMemberForAxis(childCell, axis) }}"
+                        - "{{ getFieldAncestors(field) }}"
+                        - "{{ field.label }}"
+                        - foreach: getFieldValues(field) as value
+                          do:
+                            - "{{ value }}"
