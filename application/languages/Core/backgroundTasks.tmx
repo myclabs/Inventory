@@ -42,5 +42,43 @@
             </tuv>
         </tu>
 
+        <tu tuid="emailNotificationErrorTitle">
+            <tuv xml:lang="fr">
+                <seg>L'opération "[TASK_NAME]" a été stoppée à cause d'une erreur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The operation "[TASK_NAME]" stopped because of an error</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="emailNotificationErrorContent">
+            <tuv xml:lang="fr">
+                <seg>
+                    Bonjour
+
+                    l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'application « [APPLICATION_NAME] ».
+
+                    En cas de question, vous pouvez vous adresser à : [CONTACT_ADDRESS].
+
+                    Merci de votre confiance.
+
+                    Cet e-mail vous a été envoyé automatiquement par le serveur de l'application « [APPLICATION_NAME] ». Merci de ne pas y répondre.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Bonjour
+
+                    l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'application « [APPLICATION_NAME] ».
+
+                    En cas de question, vous pouvez vous adresser à : [CONTACT_ADDRESS].
+
+                    Merci de votre confiance.
+
+                    Cet e-mail vous a été envoyé automatiquement par le serveur de l'application « [APPLICATION_NAME] ». Merci de ne pas y répondre.
+                </seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

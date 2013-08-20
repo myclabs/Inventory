@@ -148,11 +148,24 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $this->entityManager->getConnection()->connect();
         $this->entityManager->beginTransaction();
 
-        // Exécute la tâche
-        $result = $worker->execute($task);
+        try {
+            // Exécute la tâche
+            $result = $worker->execute($task);
 
-        // Flush et vide l'entity manager
-        $this->entityManager->flush();
+            // Flush et vide l'entity manager
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            // Error notification
+            if ($task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
+                /** @var User_Model_User $user */
+                $user = User_Model_User::load($task->getContext()->getUserId());
+
+                $this->notifier->notifyTaskError($user, $task->getTaskLabel());
+            }
+
+            throw $e;
+        }
+
         $this->entityManager->commit();
         $this->entityManager->clear();
 

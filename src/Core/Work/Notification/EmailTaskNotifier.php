@@ -48,4 +48,19 @@ class EmailTaskNotifier implements TaskNotifier
 
         $this->userService->sendEmail($user, $subject, $content);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    function notifyTaskError(User_Model_User $user, $taskLabel)
+    {
+        $subject = __('Core', 'backgroundTasks', 'emailNotificationErrorTitle', ['TASK_NAME' => $taskLabel]);
+        $content = __('Core', 'backgroundTasks', 'emailNotificationErrorContent', [
+             'TASK_NAME'        => $taskLabel,
+             'APPLICATION_NAME' => $this->applicationName,
+             'CONTACT_ADDRESS' => $this->contactAddress,
+         ]);
+
+        $this->userService->sendEmail($user, $subject, $content);
+    }
 }

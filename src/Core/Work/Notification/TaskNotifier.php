@@ -18,4 +18,12 @@ interface TaskNotifier
      * @param string          $taskLabel
      */
     function notifyTaskFinished(User_Model_User $user, $taskLabel);
+
+    /**
+     * Notify a user that a task has errored.
+     *
+     * @param User_Model_User $user
+     * @param string          $taskLabel
+     */
+    function notifyTaskError(User_Model_User $user, $taskLabel);
 }
