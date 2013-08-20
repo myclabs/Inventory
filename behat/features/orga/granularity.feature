@@ -261,7 +261,7 @@ Feature: Organization granularity feature
     Then the row 3 of the "granularity" datagrid should contain:
       | axes |
       | site |
-    When I set "Non" for column "aCL" of row 3 of the "granularity" datagrid
+    When I set "Non" for column "aCL" of row 3 of the "granularity" datagrid with a confirmation message
     And I click "Supprimer" in the row 3 of the "granularity" datagrid
     And I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."

@@ -43,7 +43,8 @@ Feature: Configuration tab analysis edit feature
     And the "granularity1Report" datagrid should contain 2 row
     When I click "Supprimer" in the row 1 of the "granularity1Report" datagrid
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer" 
+    When I click "Confirmer"
+    And I wait 10 seconds
     Then the following message is shown and closed: "Suppression effectuée"
     And the "granularity1Report" datagrid should contain 1 row
 
