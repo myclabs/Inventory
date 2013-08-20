@@ -20,17 +20,11 @@ class EmailTaskNotifier implements TaskNotifier
     /**
      * @var string
      */
-    private $contactAddress;
-
-    /**
-     * @var string
-     */
     private $applicationName;
 
-    public function __construct(User_Service_User $userService, $contactAddress, $applicationName)
+    public function __construct(User_Service_User $userService, $applicationName)
     {
         $this->userService = $userService;
-        $this->contactAddress = $contactAddress;
         $this->applicationName = $applicationName;
     }
 
@@ -43,7 +37,6 @@ class EmailTaskNotifier implements TaskNotifier
         $content = __('Core', 'backgroundTasks', 'emailNotificationContent', [
             'TASK_NAME'        => $taskLabel,
             'APPLICATION_NAME' => $this->applicationName,
-            'CONTACT_ADDRESS' => $this->contactAddress,
         ]);
 
         $this->userService->sendEmail($user, $subject, $content);
@@ -58,7 +51,6 @@ class EmailTaskNotifier implements TaskNotifier
         $content = __('Core', 'backgroundTasks', 'emailNotificationErrorContent', [
              'TASK_NAME'        => $taskLabel,
              'APPLICATION_NAME' => $this->applicationName,
-             'CONTACT_ADDRESS' => $this->contactAddress,
          ]);
 
         $this->userService->sendEmail($user, $subject, $content);

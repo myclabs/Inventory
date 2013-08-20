@@ -13,5 +13,4 @@ Core\Work\Notification\TaskNotifier:
 Core\Work\Notification\EmailTaskNotifier:
   constructor:
     userService: User_Service_User
-    contactAddress: email.contact.address
     applicationName: email.noreply.name
