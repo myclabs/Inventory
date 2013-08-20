@@ -44,9 +44,15 @@ class Orga_Service_ETLStructure
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
+        if (isset($originalTranslations[$defaultLocale])) {
+            $dWEntity->setLabel($originalTranslations[$defaultLocale]);
+        } else {
+            $dWEntity->setLabel($originalEntity->getLabel());
+        }
         // Traductions.
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
