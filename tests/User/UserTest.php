@@ -331,7 +331,7 @@ class UserMetierTest extends Core_Test_TestCase
         $user->generateKeyEmail();
         // Vérifie que la clé mail n'est plus vide
         $this->assertNotNull($user->getEmailKey());
-        $this->assertEquals(32, mb_strlen($user->getEmailKey()));
+        $this->assertEquals(10, mb_strlen($user->getEmailKey()));
     }
 
     /**
