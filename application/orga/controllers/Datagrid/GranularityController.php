@@ -119,7 +119,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                     (bool) $this->getAddElementValue('dW'),
                     (bool) $this->getAddElementValue('genericActions'),
                     (bool) $this->getAddElementValue('contextActions'),
-                    (bool) $this->getAddElementValue('inputDocuments')
+                    (bool) $this->getAddElementValue('inputDocuments'),
+                    __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $listAxes)])
                 )
             );
             $this->message = __('UI', 'message', 'addedLater');

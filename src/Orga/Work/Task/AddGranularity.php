@@ -73,9 +73,21 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
      * @param bool $genericActions
      * @param bool $contextActions
      * @param bool $inputDocuments
+     * @param null|string $taskLabel
      */
-    public function __construct($organization, $listAxes, $navigability, $orgaTab, $aCL, $aFTab, $dW, $genericActions, $contextActions, $inputDocuments)
-    {
+    public function __construct(
+        $organization,
+        $listAxes,
+        $navigability,
+        $orgaTab,
+        $aCL,
+        $aFTab,
+        $dW,
+        $genericActions,
+        $contextActions,
+        $inputDocuments,
+        $taskLabel = null
+    ) {
         $this->idOrganization = $organization->getId();
         foreach ($listAxes as $axis) {
             $this->listAxes[] = $axis->getId();
@@ -88,6 +100,9 @@ class Orga_Work_Task_AddGranularity extends Core_Work_Task
         $this->genericActions = $genericActions;
         $this->contextActions = $contextActions;
         $this->inputDocuments = $inputDocuments;
+        if ($taskLabel) {
+            $this->setTaskLabel($taskLabel);
+        }
     }
 
     /**

@@ -20,6 +20,14 @@
                 <seg>Ajout du membre : [MEMBER] à l’axe : [AXIS]</seg>
             </tuv>
         </tu>
+        <tu tuid="addGranularity">
+            <tuv xml:lang="fr">
+                <seg>Ajout de la granularité : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ajout de la granularité : [LABEL]</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>
