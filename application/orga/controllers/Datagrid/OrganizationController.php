@@ -105,7 +105,8 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_OrganizationService',
                 'createOrganization',
-                [$administrator, $label]
+                [$administrator, $label],
+                __('Orga', 'task', 'createOrganization', ['LABEL' => $label])
             )
         );
 
