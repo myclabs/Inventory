@@ -57,7 +57,7 @@ class AF_Model_Input_Select_Single extends AF_Model_Input implements Algo_Model_
         if (!$this->isHidden()) {
             /** @var $component AF_Model_Component_Numeric */
             $component = $this->getComponent();
-            if ($component->getRequired() && $this->value != null) {
+            if ($component && $component->getRequired() && $this->value != null) {
                 return 1;
             }
         }
