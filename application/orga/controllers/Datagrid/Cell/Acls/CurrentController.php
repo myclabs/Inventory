@@ -150,7 +150,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ACLManager',
                 'removeCellUser',
-                [$cell, $user, $role]
+                [$cell, $user, $role, false]
             )
         );
 
