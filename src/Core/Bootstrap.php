@@ -322,18 +322,21 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         $useGearman = $useGearman && extension_loaded('gearman');
 
-        if ($useGearman) {
-            $this->container->set('Core_Work_Dispatcher')
-                            ->bindTo('Core_Work_GearmanDispatcher');
-        } else {
-            $this->container->set('Core_Work_Dispatcher')
-                            ->bindTo('Core_Work_SimpleDispatcher');
-        }
-        $workDispatcher = $this->container->get('Core_Work_Dispatcher', true);
-        Zend_Registry::set('workDispatcher', $workDispatcher);
+        $this->container->set('Core_Work_Dispatcher', function(Container $c) use ($useGearman) {
+                if ($useGearman) {
+                    $implementation = 'Core_Work_GearmanDispatcher';
+                } else {
+                    $implementation = 'Core_Work_SimpleDispatcher';
+                }
+                /** @var Core_Work_Dispatcher $workDispatcher */
+                $workDispatcher = $c->get($implementation);
+                // Register workers
+                $workDispatcher->registerWorker($this->container->get('Core_Work_ServiceCall_Worker'));
 
-        // Register workers
-        $workDispatcher->registerWorker($this->container->get('Core_Work_ServiceCall_Worker'));
+                return $workDispatcher;
+            });
+
+        Zend_Registry::set('workDispatcher', $this->container->get('Core_Work_Dispatcher', true));
     }
 
     /**
