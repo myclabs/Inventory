@@ -335,8 +335,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
                 return $workDispatcher;
             });
-
-        Zend_Registry::set('workDispatcher', $this->container->get('Core_Work_Dispatcher', true));
     }
 
     /**
