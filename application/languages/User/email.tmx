@@ -163,12 +163,13 @@ You can login again at the following address: [URL_APPLICATION].
 				<seg>
 Une demande de réinitialisation de votre mot de passe a été déposée sur l’application « [APPLICATION_NAME] ».
 
-Si vous êtes à l'origine de cette demande, merci de cliquer sur le lien ci-dessous ; 
-vous pourrez changer votre mot de passe.
+Si vous êtes bien à l'origine de cette demande, merci de cliquer sur le lien suivant :
 
 [PASSWORD_RESET_LINK]
 
-Vous pouvez également saisir manuellement le code de vérification suivant : [PASSWORD_RESET_CODE]
+ou bien de saisir sur la page de demande de réinitialisation du mot de passe le code de confirmation suivant : [PASSWORD_RESET_CODE]
+
+Il vous sera alors proposé de saisir un nouveau mot de passe.
 
 Si vous n'êtes pas à l'origine de cette demande, merci de ne pas cliquer sur le lien précédant et d’ignorer cet e-mail; 
 votre mot de passe sur l'application « [APPLICATION_NAME] » ne sera pas modifié.
@@ -178,11 +179,13 @@ votre mot de passe sur l'application « [APPLICATION_NAME] » ne sera pas modifi
                 <seg>	
 A password reset request has been submitted on application "[APPLICATION_NAME]".
 
-If you are behind this request, please click on the link below; your will be able to change your password.
+If you are behind this request, please click on the link below:
 
 [PASSWORD_RESET_LINK]
 
-Vous can also enter the following verification code: [PASSWORD_RESET_CODE]
+or type in the following confirmation code on the page of password reset request: [PASSWORD_RESET_CODE]
+
+You will then be asked to type in a new password.
 
 If you are not behind this request, please do not click on the link above and ignore this e-mail; 
 your password on application "[APPLICATION_NAME]" will remain unchanged.

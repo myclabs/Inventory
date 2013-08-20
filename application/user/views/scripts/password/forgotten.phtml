@@ -3,7 +3,7 @@
 </div>
 <p>
     <label class="badge">1</label>
-    <?=__('User', 'resetPassword', 'Remplissez le premier formulaire pour recevoir un code de vérification par email.')?>
+    <?=__('User', 'resetPassword', 'captchaFormDescriptionSentence')?>
 </p>
 
 <?php
@@ -27,7 +27,7 @@ $form->display();
 
 <p>
     <label class="badge">2</label>
-    <?=__('User', 'resetPasswordCode', 'Entrez le code de vérification reçu par email.')?>
+    <?=__('User', 'resetPassword', 'confirmationFormDescriptionSentence')?>
 </p>
 
 <?php
@@ -36,7 +36,7 @@ $resetCodeForm->setAction('user/password/reset');
 $resetCodeForm->setAjax(false);
 
 $code = new UI_Form_Element_Text('code');
-$code->setLabel(__('UI', 'name', 'Code de vérification'));
+$code->setLabel(__('User', 'resetPassword', 'confirmationCodeLabel'));
 $code->setRequired();
 $resetCodeForm->addElement($code);
 
