@@ -2,6 +2,8 @@
 
 ## 2.4
 
+- Déployer normalement l'application (avec build update)
+
 - Exécuter le script de migration PHP
 
 ```
