@@ -137,7 +137,8 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                         $axis,
                         $ref,
                         $label,
-                        $broaderMembers
+                        $broaderMembers,
+                        __('Orga', 'task', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
                     )
                 );
                 $this->message = __('UI', 'message', 'addedLater');

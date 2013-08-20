@@ -12,6 +12,14 @@
                 <seg>Creation of the organization: [LABEL]</seg>
             </tuv>
         </tu>
+        <tu tuid="addMember">
+            <tuv xml:lang="fr">
+                <seg>Ajout du membre : [MEMBER] à l’axe : [AXIS]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ajout du membre : [MEMBER] à l’axe : [AXIS]</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>
