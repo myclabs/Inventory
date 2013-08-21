@@ -1,11 +1,16 @@
 <?php
 /**
- * Classe Keyword_Service_Export
+ * Classe KeywordExport
  * @author valentin.claras
  * @package    Keyword
  * @subpackage Service
  */
 
+namespace Keyword\Application\Service;
+
+use Keyword\Domain\Association;
+use Keyword\Domain\Keyword;
+use Keyword\Domain\Predicate;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
@@ -15,7 +20,7 @@ use Xport\MappingReader\YamlMappingReader;
  * @package    Keyword
  * @subpackage Service
  */
-class Keyword_Service_Export
+class KeywordExport
 {
     /**
      * Exporte la version de Keyword.
@@ -28,9 +33,9 @@ class Keyword_Service_Export
         $export = new PHPExcelExporter();
 
         // Predicates
-        $queryPredicateLabel = new Core_Model_Query();
-        $queryPredicateLabel->order->addOrder(Keyword_Model_Predicate::QUERY_LABEL);
-        $modelBuilder->bind('predicates', Keyword_Model_Predicate::loadList($queryPredicateLabel));
+        $queryPredicateLabel = new \Core_Model_Query();
+        $queryPredicateLabel->order->addOrder(Predicate::QUERY_LABEL);
+        $modelBuilder->bind('predicates', Predicate::loadList($queryPredicateLabel));
         $modelBuilder->bind('predicatesSheetLabel', __('Keyword', 'exports', 'predicatesSheetLabel'));
         $modelBuilder->bind('predicateColumnDirectLabel', __('Keyword', 'exports', 'predicateColumnDirectLabel'));
         $modelBuilder->bind('predicateColumnDirectRef', __('Keyword', 'exports', 'predicateColumnDirectRef'));
@@ -39,9 +44,9 @@ class Keyword_Service_Export
         $modelBuilder->bind('predicateColumnDescription', __('Keyword', 'exports', 'predicateColumnDescription'));
 
         // Keywords
-        $queryKeywordLabel = new Core_Model_Query();
-        $queryKeywordLabel->order->addOrder(Keyword_Model_Keyword::QUERY_LABEL);
-        $modelBuilder->bind('keywords', Keyword_Model_Keyword::loadList($queryKeywordLabel));
+        $queryKeywordLabel = new \Core_Model_Query();
+        $queryKeywordLabel->order->addOrder(Keyword::QUERY_LABEL);
+        $modelBuilder->bind('keywords', Keyword::loadList($queryKeywordLabel));
         $modelBuilder->bind('keywordsSheetLabel', __('Keyword', 'exports', 'keywordsSheetLabel'));
         $modelBuilder->bind('keywordColumnLabel', __('Keyword', 'exports', 'keywordColumnLabel'));
         $modelBuilder->bind('keywordColumnRef', __('Keyword', 'exports', 'keywordColumnRef'));
@@ -49,18 +54,18 @@ class Keyword_Service_Export
         $modelBuilder->bind('keywordColumnAssociationsAsObject', __('Keyword', 'exports', 'keywordColumnAssociationsAsObject'));
 
         // Associations
-        $queryAssociationLabels = new Core_Model_Query();
+        $queryAssociationLabels = new \Core_Model_Query();
         $queryAssociationLabels->order->addOrder(
-            Keyword_Model_Keyword::QUERY_LABEL,
-            Core_Model_Order::ORDER_ASC,
-            Keyword_Model_Keyword::getAliasAsSubject()
+            Keyword::QUERY_LABEL,
+            \Core_Model_Order::ORDER_ASC,
+            Keyword::getAliasAsSubject()
         );
         $queryAssociationLabels->order->addOrder(
-            Keyword_Model_Keyword::QUERY_LABEL,
-            Core_Model_Order::ORDER_ASC,
-            Keyword_Model_Keyword::getAliasAsObject()
+            Keyword::QUERY_LABEL,
+            \Core_Model_Order::ORDER_ASC,
+            Keyword::getAliasAsObject()
         );
-        $modelBuilder->bind('associations', Keyword_Model_Association::loadList($queryAssociationLabels));
+        $modelBuilder->bind('associations', Association::loadList($queryAssociationLabels));
         $modelBuilder->bind('associationsSheetLabel', __('Keyword', 'exports', 'associationsSheetLabel'));
         $modelBuilder->bind('associationColumnSubject', __('Keyword', 'exports', 'associationColumnSubject'));
         $modelBuilder->bind('associationColumnPredicate', __('Keyword', 'exports', 'associationColumnPredicate'));

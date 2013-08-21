@@ -102,7 +102,7 @@ class Orga_ReferentialController extends Core_Controller
                 $baseFilename = 'Techno';
                 break;
             case 'Keyword':
-                $exportService = new Keyword_Service_Export();
+                $exportService = new \Keyword\Application\Service\KeywordExport();
                 $streamFunction = 'stream';
                 $baseFilename = 'Keyword';
                 break;
