@@ -76,45 +76,40 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->send();
+            return;
         }
 
-        if (empty($this->_addErrorMessages)) {
-            if (User_Model_User::isEmailUsed($userEmail)) {
-                $user = User_Model_User::loadByEmail($userEmail);
-                if ($user->hasRole($organizationAdministratorRole)) {
-                    $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
-                } else {
-                    $this->workDispatcher->runBackground(
-                        new Core_Work_ServiceCall_Task(
-                            'Orga_Service_ACLManager',
-                            'addOrganizationAdministrator',
-                            [$organization, $user, false]
-                        )
-                    );
-                    $this->message = __('UI', 'message', 'addedLater');
-                }
-            } else {
-                $user = $this->userService->inviteUser(
-                    $userEmail,
-                    __('Orga', 'email', 'userOrganizationAdministratorRoleGivenAtCreation',
-                        [
-                            'ORGANIZATION' => $organization->getLabel(),
-                            'ROLE' => __('Orga', 'role', $organizationAdministratorRole->getName())
-                        ]
-                    )
-                );
-                $this->message = __('UI', 'message', 'addedLater');
-                $user->addRole(User_Model_Role::loadByRef('user'));
+        if (User_Model_User::isEmailUsed($userEmail)) {
+            $user = User_Model_User::loadByEmail($userEmail);
 
-                $this->workDispatcher->runBackground(
-                    new Core_Work_ServiceCall_Task(
-                        'Orga_Service_ACLManager',
-                        'addOrganizationAdministrator',
-                        [$organization, $user, false]
-                    )
-                );
+            if ($user->hasRole($organizationAdministratorRole)) {
+                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                $this->send();
+                return;
             }
+            $this->message = __('UI', 'message', 'addedLater');
+        } else {
+            $user = $this->userService->inviteUser(
+                $userEmail,
+                __('Orga', 'email', 'userOrganizationAdministratorRoleGivenAtCreation',
+                    [
+                        'ORGANIZATION' => $organization->getLabel(),
+                        'ROLE' => __('Orga', 'role', $organizationAdministratorRole->getName()),
+                    ]
+                )
+            );
+            $user->addRole(User_Model_Role::loadByRef('user'));
+            $this->message = __('UI', 'message', 'addedLater');
         }
+
+        $this->workDispatcher->runBackground(
+            new Core_Work_ServiceCall_Task(
+                'Orga_Service_ACLManager',
+                'addOrganizationAdministrator',
+                [$organization, $user, false]
+            )
+        );
 
         $this->send();
     }
