@@ -82,13 +82,11 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
 
         if (User_Model_User::isEmailUsed($userEmail)) {
             $user = User_Model_User::loadByEmail($userEmail);
-
             if ($user->hasRole($organizationAdministratorRole)) {
                 $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
                 $this->send();
                 return;
             }
-            $this->message = __('UI', 'message', 'addedLater');
         } else {
             $user = $this->userService->inviteUser(
                 $userEmail,
@@ -100,7 +98,6 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 )
             );
             $user->addRole(User_Model_Role::loadByRef('user'));
-            $this->message = __('UI', 'message', 'addedLater');
         }
 
         $this->workDispatcher->runBackground(
@@ -111,6 +108,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             )
         );
 
+        $this->message = __('UI', 'message', 'addedLater');
         $this->send();
     }
 
