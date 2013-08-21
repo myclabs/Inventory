@@ -437,7 +437,8 @@ class Orga_CellController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenDWCubes',
-                    [$cell]
+                    [$cell],
+                    __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {
@@ -460,7 +461,8 @@ class Orga_CellController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenCalculationsAndDWCubes',
-                    [$cell]
+                    [$cell],
+                    __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {
