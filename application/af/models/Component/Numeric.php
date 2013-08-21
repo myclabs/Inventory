@@ -80,15 +80,23 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
         if ($input) {
             $uiElement->getElement()->disabled = $input->isDisabled();
             $uiElement->getElement()->hidden = $input->isHidden();
+            $value = $input->getValue();
+            $selectedUnit = $input->getValue()->getUnit();
+            // Si l'unité du champ n'est plus compatible avec l'ancienne saisie
+            if (!$selectedUnit->isEquivalent($this->unit->getRef())) {
+                // Ignore l'ancienne saisie
+                $value = $this->defaultValue;
+                $selectedUnit = $this->unit;
+            }
             // Valeur
-            if ($input->getValue()) {
+            if ($value) {
                 $uiElement->setValue([
-                    $locale->formatNumberForInput($input->getValue()->getDigitalValue()),
-                    $locale->formatNumberForInput($input->getValue()->getRelativeUncertainty())
+                    $locale->formatNumberForInput($value->getDigitalValue()),
+                    $locale->formatNumberForInput($value->getRelativeUncertainty())
                 ]);
             }
             // Unité
-            $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $input->getValue()->getUnit()));
+            $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $selectedUnit));
             // Historique de la valeur
             $uiElement->getElement()->addElement($this->getHistoryComponent($input));
         } else {
