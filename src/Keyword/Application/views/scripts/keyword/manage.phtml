@@ -5,23 +5,23 @@
  * @author bertrand.ferry
  * @package Keyword
  */
-?>
-    use Keyword\Domain\Keyword_Model_Keyword;
 
-    <div class="page-header">
+use Keyword\Domain\Keyword;
+?>
+<div class="page-header">
 	<h1><?=__('Keyword', 'list', 'pageTitle')?></h1>
 </div>
 <?php
     $datagrid = new UI_Datagrid('keywords', 'datagrid_keyword', 'keyword');
 
     $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
-    $columnLabel->sortName = Keyword_Model_Keyword::QUERY_LABEL;
-    $columnLabel->filterName = Keyword_Model_Keyword::QUERY_LABEL;
+    $columnLabel->sortName = Keyword::QUERY_LABEL;
+    $columnLabel->filterName = Keyword::QUERY_LABEL;
     $columnLabel->editable = true;
 
     $columnRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
-    $columnRef->sortName = Keyword_Model_Keyword::QUERY_REF;
-    $columnRef->filterName = Keyword_Model_Keyword::QUERY_REF;
+    $columnRef->sortName = Keyword::QUERY_REF;
+    $columnRef->filterName = Keyword::QUERY_REF;
     $columnRef->editable = true;
 
     $columnNbRelations = new UI_Datagrid_Col_Number('nbRelations', __('Keyword', 'list', 'relationNumberHeader'));

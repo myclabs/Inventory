@@ -56,7 +56,7 @@ class Keyword_Datagrid_Translate_Predicates_LabelController extends UI_Controlle
      */
     public function updateelementAction()
     {
-        $predicate = Keyword_Model_Predicate::loadByRef($this->update['index']);
+        $predicate = Predicate::loadByRef($this->update['index']);
         $predicate->reloadWithLocale(Core_Locale::load($this->update['column']));
         $predicate->setLabel($this->update['value']);
         $this->data = $predicate->getLabel();
