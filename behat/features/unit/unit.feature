@@ -102,7 +102,7 @@ Feature: Unit feature
     Then the "ListStandardUnits" datagrid should contain 2 row
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name |
-      | nœud |
+      | mile |
   # Lien "Réinitialiser"
     When I open collapse "Filtres"
     And I click "Réinitialiser"
