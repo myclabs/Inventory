@@ -23,7 +23,7 @@ Feature: Organization role feature
   # Ajout, format email correct, utilisateur non existant
     When I fill in "organizationACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
-    Then the following message is shown and closed: "Nouveau compte créé. Un e-mail a été envoyé à l’utilisateur avec ses identifiants de connexion."
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     And the row 3 of the "organizationACL1" datagrid should contain:
       | userEmail                     |
       | emmanuel.risler.abo@gmail.com |
@@ -71,7 +71,7 @@ Feature: Organization role feature
   # Ajout, saisie correcte, utilisateur non existant
     When I fill in "granularityACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
-    Then the following message is shown and closed: "Nouveau compte créé. Un e-mail a été envoyé à l’utilisateur avec ses identifiants de connexion."
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
     And the row 3 of the "granularityACL1" datagrid should contain:
       | userEmail                      | userRole       |
       | emmanuel.risler.abo@gmail.com  | Administrateur |

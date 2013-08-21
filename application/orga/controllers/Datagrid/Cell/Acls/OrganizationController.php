@@ -103,7 +103,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                         ]
                     )
                 );
-                $this->message = __('Orga', 'role', 'userCreatedFromRessource');
+                $this->message = __('UI', 'message', 'addedLater');
                 $user->addRole(User_Model_Role::loadByRef('user'));
 
                 $this->workDispatcher->runBackground(
