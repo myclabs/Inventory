@@ -59,6 +59,7 @@ class User_PasswordController extends UI_Controller_Captcha
                 $url = sprintf('http://%s/user/password/reset?code=%s',
                     $_SERVER["SERVER_NAME"] . $this->view->baseUrl(),
                     $user->getEmailKey());
+                $urlApplication = 'http://' . $_SERVER["SERVER_NAME"] . Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
                 $subject = __('User', 'email', 'subjectForgottenPassword');
                 $config = Zend_Registry::get('configuration');
                 if (empty($config->emails->contact->adress)) {
@@ -70,7 +71,8 @@ class User_PasswordController extends UI_Controller_Captcha
                               array(
                                    'PASSWORD_RESET_LINK' => $url,
                                    'PASSWORD_RESET_CODE' => $user->getEmailKey(),
-                                   'APPLICATION_NAME'    => $config->emails->noreply->name
+                                   'APPLICATION_NAME'    => $config->emails->noreply->name,
+                                   'URL_APPLICATION'     => $urlApplication,
                               ));
                 $this->userService->sendEmail($user, $subject, $content);
                 $this->setFormMessage(__('User', 'resetPassword', 'emailNewPasswordLinkSent'),
