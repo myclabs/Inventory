@@ -115,7 +115,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                 'Orga_Service_ACLManager',
                 'addCellUser',
                 [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'addRole', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
             )
         );
 
@@ -146,7 +146,8 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ACLManager',
                 'removeCellUser',
-                [$cell, $user, $role, false]
+                [$cell, $user, $role, false],
+                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
             )
         );
 

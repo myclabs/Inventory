@@ -105,7 +105,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 'Orga_Service_ACLManager',
                 'addOrganizationAdministrator',
                 [$organization, $user, false],
-                __('Orga', 'backgroundTasks', 'addRole', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
             )
         );
 
@@ -130,12 +130,14 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $idOrganization = $this->getParam('idOrganization');
         $organization = Orga_Model_Organization::load($idOrganization);
         $user = User_Model_User::load($this->delete);
+        $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
 
         $this->workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ACLManager',
                 'removeOrganizationAdministrator',
-                [$organization, $user, false]
+                [$organization, $user, false],
+                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
             )
         );
 

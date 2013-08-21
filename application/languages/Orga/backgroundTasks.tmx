@@ -28,12 +28,20 @@
                 <seg>Ajout de la granularité : [LABEL]</seg>
             </tuv>
         </tu>
-        <tu tuid="addRole">
+        <tu tuid="addRoleToUser">
             <tuv xml:lang="fr">
                 <seg>Ajout du rôle : [ROLE] à l’utilisateur : [USER]</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Ajout du rôle : [ROLE] à l’utilisateur : [USER]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="removeRoleFromUser">
+            <tuv xml:lang="fr">
+                <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
             </tuv>
         </tu>
 
