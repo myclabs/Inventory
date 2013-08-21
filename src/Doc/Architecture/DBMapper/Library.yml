@@ -1,6 +1,6 @@
 Doc\Domain\Library:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Doc_Library
 
   id:
