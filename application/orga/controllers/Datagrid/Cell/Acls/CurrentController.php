@@ -114,7 +114,8 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ACLManager',
                 'addCellUser',
-                [$cell, $user, $role, false]
+                [$cell, $user, $role, false],
+                __('Orga', 'backgroundTasks', 'addRole', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
             )
         );
 
