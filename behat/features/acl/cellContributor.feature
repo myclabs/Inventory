@@ -50,8 +50,8 @@ Feature: Cell contributor feature
     When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
     And I open tab "Valeurs"
     Then the row 1 of the "reportValues" datagrid should contain:
-      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | valueAxiso_annee | valueDigital | valueUncertainty |
       | 2012                | 10           | 15               |
     And the row 2 of the "reportValues" datagrid should contain:
-      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | valueAxiso_annee | valueDigital | valueUncertainty |
       | 2013                | 10           | 15               |

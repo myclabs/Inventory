@@ -32,10 +32,10 @@ Feature: Cell dataware analysis feature
     When I click "Cliquer pour accéder" in the row 2 of the "report" datagrid
     And I open tab "Valeurs"
     Then the row 1 of the "reportValues" datagrid should contain:
-      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | valueAxiso_annee | valueDigital | valueUncertainty |
       | 2012                | 20           | 10%              |
     And the row 2 of the "reportValues" datagrid should contain:
-      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | valueAxiso_annee | valueDigital | valueUncertainty |
       | 2013                | 10           | 15%              |
 
   @javascript
@@ -51,7 +51,7 @@ Feature: Cell dataware analysis feature
     When I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 1 row
     And the row 1 of the "reportValues" datagrid should contain:
-      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | valueAxiso_annee | valueDigital | valueUncertainty |
       | 2012                | 33,3         | 23%              |
   # On filtre sur la valeur "Terminé" pour le statut
     When I open collapse "Filtres"
@@ -65,7 +65,7 @@ Feature: Cell dataware analysis feature
     And I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 1 row
     And the row 1 of the "reportValues" datagrid should contain:
-      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | valueAxiso_annee | valueDigital | valueUncertainty |
       | 2012                | 33,3         | 23%              |
   # On filtre sur la valeur "Complet" pour le statut
     And I select "Complet" from "selectAxisinputStatusMemberFilter"

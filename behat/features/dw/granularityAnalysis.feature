@@ -84,7 +84,7 @@ Feature: Granularity dataware analysis feature
     And I should not see "Modifications en cours"
   # Édition d'un filtre
     When I open collapse "Filtres"
-    And I click element "#filterAxisorga_anneeNumberMembers_one"
+    And I click element "#filterAxiso_anneeNumberMembers_one"
     Then I should not see "Nouvelle configuration"
     And I should see "Modifications en cours"
 
@@ -151,8 +151,8 @@ Feature: Granularity dataware analysis feature
     Then I should see "Chiffre d'affaire, par année Niveau organisationnel global"
   # Ajout d'un filtre
     When I open collapse "Filtres"
-    And I check "filterAxisorga_anneeNumberMembers_one"
-    And I select "2013" from "selectAxisorga_anneeMemberFilter"
+    And I click element "#filterAxiso_anneeNumberMembers_one"
+    And I select "2013" from "selectAxiso_anneeMemberFilter"
     # And I focus on element "#applyReportConfiguration"
     And I click "Lancer"
     Then the following message is shown and closed: "Analyse effectuée."
@@ -171,7 +171,7 @@ Feature: Granularity dataware analysis feature
     And I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 1 row
     And the row 1 of the "reportValues" datagrid should contain:
-      | valueAxisorga_annee |
+      | valueAxiso_annee |
       | 2013                |
 
 
