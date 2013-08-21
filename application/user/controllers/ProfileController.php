@@ -106,13 +106,11 @@ class User_ProfileController extends Core_Controller
      */
     public function editSubmitAction()
     {
-        /** @var $connectedUser User_Model_User */
-        $connectedUser = $this->_helper->auth();
+        /** @var $user User_Model_User */
         if ($this->hasParam('id')) {
-            /** @var $user User_Model_User */
             $user = User_Model_User::load($this->getParam('id'));
         } else {
-            $user = $connectedUser;
+            $user = $this->_helper->auth();
         }
 
         $formData = $this->getFormData('userProfile');
@@ -121,23 +119,7 @@ class User_ProfileController extends Core_Controller
         $user->save();
         $this->entityManager->flush();
 
-        $config = Zend_Registry::get('configuration');
-        if (empty($config->emails->contact->adress)) {
-            throw new Core_Exception_NotFound("Le courriel de 'contact' n'a pas été défini.");
-        }
-        if ($user->getId() != $connectedUser->getId()) {
-            // Contenu du mail
-            $subject = __('User', 'email', 'subjectProfileModifiedByAdmin');
-            $content = __('User', 'email', 'bodyProfileModifiedByAdmin',
-                          array(
-                               'APPLICATION_NAME' => $config->emails->noreply->name
-                          ));
-            $this->userService->sendEmail($user, $subject, $content);
-            $message = __('UI', 'message', 'updated') . __('User', 'editProfile', 'userInformedByEmail');
-        } else {
-            $message = __('UI', 'message', 'updated');
-        }
-        $this->setFormMessage($message);
+        $this->setFormMessage(__('UI', 'message', 'updated'));
         $this->sendFormResponse();
     }
 
