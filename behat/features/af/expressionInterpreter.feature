@@ -25,6 +25,13 @@ Feature: Expression interpreter feature
     When I fill in "input" with "a/b/c+d-e*f/(g-h)"
     And I click "Interpréter"
     Then I should see "(a / (b * c)) + d - (e * f / (g - h))"
+  # Parenthésage
+    When I fill in "input" with "a-(b+c+d)"
+    And I click "Interpréter"
+    Then I should see "a - (b + c + d)"
+    When I fill in "input" with "a/(b*c*d)"
+    And I click "Interpréter"
+    Then I should see "a / (b * c * d)"
   # Expression correcte mais pas arithmétique
     When I fill in "input" with "a&b"
     And I click "Interpréter"
