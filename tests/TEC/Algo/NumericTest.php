@@ -110,6 +110,12 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
         $this->assertEquals($expression->correctBrackets(), 'c*(a+b)');
         $expression = new Numeric('(a+b)*c');
         $this->assertEquals($expression->correctBrackets(), '(a+b)*c');
+        $expression = new Numeric('a/(b+c+d)');
+        $this->assertEquals($expression->correctBrackets(), 'a/(b+c+d)');
+        $expression = new Numeric('a/(b*c*d)');
+        $this->assertEquals($expression->correctBrackets(), 'a/(b*c*d)');
+        $expression = new Numeric('a/(b/c*d)');
+        $this->assertEquals($expression->correctBrackets(), 'a/(b/c*d)');
 
         // Expression utilisé pour le test suivant.
         $expression = new Numeric('A+B/C*D-E-F+G/(H+I*J)');
