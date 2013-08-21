@@ -99,7 +99,7 @@ Feature: Unit feature
     And I wait for the page to finish loading
     And I am on "unit/consult/standardunits"
     And I wait for the page to finish loading
-    Then the "ListStandardUnits" datagrid should contain 1 row
+    Then the "ListStandardUnits" datagrid should contain 2 row
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name |
       | nœud |
