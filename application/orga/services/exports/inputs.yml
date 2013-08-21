@@ -7,28 +7,32 @@ sheets:
 
         content:
 
-          - foreach: getChildCellsForGranularity(cell, granularity) as childCell
-            do:
-              - type: VerticalTable
-                label: "{{ childCell.label }}"
-                columns:
-                  - foreach: granularity.axes as axis
+          - type: VerticalTable
+            columns:
+              - foreach: granularity.axes as axis
+                do:
+                  - label: "{{ axis.label }}"
+              - label: "{{ inputAncestor }}"
+              - label: "{{ inputLabel }}"
+              - label: "{{ inputType }}"
+              - label: "{{ inputValue }}"
+              - label: "{{ inputUncertainty }}"
+              - label: "{{ inputUnit }}"
+              - label: "{{ inputReferenceValue }}"
+              - label: "{{ inputReferenceUncertainty }}"
+              - label: "{{ inputReferenceUnit }}"
+            lines:
+              - foreach: getChildCellsForGranularity(cell, granularity) as childCell
+                do:
+                  - foreach: getCellInputs(childCell) as input
                     do:
-                      - label: "{{ axis.label }}"
-                  - {{ fieldAncestor }}
-                  - {{ fieldLabel }}
-                  - {{ fieldType }}
-                  - {{ fieldValue }}
-                  - {{ fieldUncertainty }}
-                lines:
-                  - foreach: getInputCellFields(childCell) as field
-                    do:
-                    - cells:
-                        - foreach: granularity.axes as axis
-                          do:
-                            - "{{ displayCellMemberForAxis(childCell, axis) }}"
-                        - "{{ getFieldAncestors(field) }}"
-                        - "{{ field.label }}"
-                        - foreach: getFieldValues(field) as value
-                          do:
-                            - "{{ value }}"
+                      - cells:
+                          - foreach: granularity.axes as axis
+                            do:
+                              - "{{ displayCellMemberForAxis(childCell, axis) }}"
+                          - "{{ input['ancestors'] }}"
+                          - "{{ input['label'] }}"
+                          - "{{ input['type'] }}"
+                          - foreach: input[values] as value
+                            do:
+                              - "{{ value }}"

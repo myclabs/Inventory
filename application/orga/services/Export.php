@@ -346,6 +346,16 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('granularities', $granularities);
 
+        $modelBuilder->bind('inputAncestor', __('Orga', 'exports', 'inputColumnAncestors'));
+        $modelBuilder->bind('inputLabel', __('Orga', 'exports', 'inputColumnLabel'));
+        $modelBuilder->bind('inputType', __('Orga', 'exports', 'inputColumnType'));
+        $modelBuilder->bind('inputValue', __('Orga', 'exports', 'inputColumnValue'));
+        $modelBuilder->bind('inputUncertainty', __('Orga', 'exports', 'inputColumnUncertainty'));
+        $modelBuilder->bind('inputUnit', __('Orga', 'exports', 'inputColumnUnit'));
+        $modelBuilder->bind('inputReferenceValue', __('Orga', 'exports', 'inputColumnReferenceValue'));
+        $modelBuilder->bind('inputReferenceUncertainty', __('Orga', 'exports', 'inputColumnReferenceUncertainty'));
+        $modelBuilder->bind('inputReferenceUnit', __('Orga', 'exports', 'inputColumnReferenceUnit'));
+
         $modelBuilder->bindFunction(
             'getChildCellsForGranularity',
             function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
@@ -361,7 +371,7 @@ class Orga_Service_Export
             'displayCellMemberForAxis',
             function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
-                    if ($member->getAxis() === $member) {
+                    if ($member->getAxis() === $axis) {
                         return $member->getLabel();
                     }
                 }
@@ -370,36 +380,20 @@ class Orga_Service_Export
         );
 
         $modelBuilder->bindFunction(
-            'getInputCellFields',
+            'getCellInputs',
             function(Orga_Model_Cell $cell) {
                 try {
                     $aFInputSetPrimary = $cell->getAFInputSetPrimary();
                 } catch (Core_Exception_UndefinedAttribute $e) {
-                    return [__('Orga', 'exports', 'noInputHeader')];
+                    return [];
                 }
 
-                $inputFields = [];
+                $inputs = [];
                 foreach ($aFInputSetPrimary->getInputs() as $input) {
-                    $inputFields = array_merge($inputFields, getInputComponentLabel($input));
+                    $inputs = array_merge($inputs, getInputsDetails($input));
                 }
-                return $inputFields;
-            }
-        );
-
-        $modelBuilder->bindFunction(
-            'getInputCellValues',
-            function(Orga_Model_Cell $cell) {
-                try {
-                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    return [__('Orga', 'exports', 'noInput')];
-                }
-
-                $inputValues = [];
-                foreach ($aFInputSetPrimary->getInputs() as $input) {
-                    $inputValues = array_merge($inputValues, getInputComponentValue($input));
-                }
-                return $inputValues;
+                Core_Tools::dump($inputs);
+                return $inputs;
             }
         );
 
@@ -423,62 +417,93 @@ class Orga_Service_Export
 
 }
 
-function getInputComponentLabel(AF_Model_Input $input, $prefix='')
+function getInputsDetails(AF_Model_Input $input, $prefix='')
 {
+    $ancestors = '';
+    $ancestor = $input->getComponent()->getGroup();
+    while ($ancestor !== null) {
+        if ($ancestor instanceof AF_Rep)
+        $ancestors = $ancestor->getLabel() . ' / ' . $ancestors;
+        $ancestor = $ancestor->getGroup();
+    }
+    $prefix .= $input->getComponent()->getAf()->getLabel() . ' / ' . $ancestors;
+
     if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
-        $prefix = $prefix.$input->getComponent()->getLabel().'/';
-        $subInputLabels = [];
+        $subInputs = [];
         foreach ($input->getValue()->getInputs() as $subInput) {
-            $subInputLabels = array_merge(
-                $subInputLabels,
-                getInputComponentLabel($subInput, $prefix)
+            $subInputs = array_merge(
+                $subInputs,
+                getInputsDetails($subInput, $prefix)
             );
         }
-        return $subInputLabels;
+        return $subInputs;
     } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
-        $prefix = $prefix.$input->getComponent()->getLabel().'/';
-        $subInputLabels = [];
+        $subInputs = [];
         foreach ($input->getValue() as $number => $subInputSet) {
             foreach ($subInputSet->getInputs() as $subInput) {
-                $subInputLabels = array_merge(
-                    $subInputLabels,
-                    getInputComponentLabel($subInput, $prefix.$number.'/')
+                $subInputs = array_merge(
+                    $subInputs,
+                    getInputsDetails($subInput, $prefix . ($number + 1) . ' / ')
                 );
             }
         }
-        return $subInputLabels;
+        return $subInputs;
     } else {
-        return [$prefix.$input->getComponent()->getLabel()];
+        $a = [
+            'ancestors' => $prefix,
+            'label' => $input->getComponent()->getLabel(),
+            'type' => getInputType($input),
+            'values' => getInputValues($input)
+        ];
+        return [$a];
     }
 }
 
-function getInputComponentValue(AF_Model_Input $input)
+function getInputType (AF_Model_Input $input) {
+    switch (get_class($input)) {
+        case 'AF_Model_Input_Checkbox':
+            return __('Orga', 'exports', 'checkboxField');
+        case 'AF_Model_Input_Select_Single':
+            return __('Orga', 'exports', 'singleSelectField');
+        case 'AF_Model_Input_Select_Multi':
+            return __('Orga', 'exports', 'multiSelectField');
+        case 'AF_Model_Input_Text':
+            return __('Orga', 'exports', 'textField');
+        case 'AF_Model_Input_Numeric':
+            return __('Orga', 'exports', 'numericField');
+        default:
+            return __('Orga', 'exports', 'unknownFieldType');
+    }
+}
+
+function getInputValues(AF_Model_Input $input)
 {
-    if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
-        $subInputLabels = [];
-        foreach ($input->getValue()->getInputs() as $subInput) {
-            $subInputLabels = array_merge(
-                $subInputLabels,
-                getInputComponentValue($subInput)
+    switch (get_class($input)) {
+        case 'AF_Model_Input_Numeric':
+            /** @var AF_Model_Input_Numeric $input */
+            $inputValue = $input->getValue();
+            /** @var \Unit\UnitAPI $baseComponentUnit */
+            $baseComponentUnit = $input->getComponent()->getUnit();
+            $conversionFactor = $inputValue->getUnit()->getConversionFactor($baseComponentUnit->getRef());
+            $baseConvertedValue = new Calc_UnitValue(
+                $baseComponentUnit,
+                $inputValue->getDigitalValue() * $conversionFactor,
+                $inputValue->getRelativeUncertainty(). $conversionFactor
             );
-        }
-        return $subInputLabels;
-    } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
-        $subInputLabels = [];
-        foreach ($input->getValue() as $number => $subInputSet) {
-            foreach ($subInputSet->getInputs() as $subInput) {
-                $subInputLabels = array_merge(
-                    $subInputLabels,
-                    getInputComponentValue($subInput)
-                );
+            return [
+                $inputValue->getDigitalValue(),
+                $inputValue->getRelativeUncertainty(),
+                $inputValue->getUnit(),
+                $baseConvertedValue->getDigitalValue(),
+                $baseConvertedValue->getRelativeUncertainty(),
+                $baseConvertedValue->getUnit(),
+            ];
+        case 'AF_Model_Input_Checkbox':
+        case 'AF_Model_Input_Select_Multi':
+            if (is_array($input->getValue)) {
+                return implode(', ', $input->getValue());
             }
-        }
-        return $subInputLabels;
-    } else {
-        $value = $input->getValue();
-        if (is_array($value)) {
-            $value = implode(', ', $value);
-        }
-        return [$value];
+        default:
+            return [$input->getValue()];
     }
 }
