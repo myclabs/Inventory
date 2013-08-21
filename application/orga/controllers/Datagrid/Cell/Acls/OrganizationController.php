@@ -70,7 +70,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
     function addelementAction()
     {
         $idOrganization = $this->getParam('idOrganization');
-        $organizationAdministratorRole = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
+        $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $userEmail = $this->getAddElementValue('userEmail');
@@ -82,7 +82,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
 
         if (User_Model_User::isEmailUsed($userEmail)) {
             $user = User_Model_User::loadByEmail($userEmail);
-            if ($user->hasRole($organizationAdministratorRole)) {
+            if ($user->hasRole($role)) {
                 $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
                 $this->send();
                 return;
@@ -93,7 +93,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 __('Orga', 'email', 'userOrganizationAdministratorRoleGivenAtCreation',
                     [
                         'ORGANIZATION' => $organization->getLabel(),
-                        'ROLE' => __('Orga', 'role', $organizationAdministratorRole->getName()),
+                        'ROLE' => __('Orga', 'role', $role->getName()),
                     ]
                 )
             );
@@ -104,7 +104,8 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ACLManager',
                 'addOrganizationAdministrator',
-                [$organization, $user, false]
+                [$organization, $user, false],
+                __('Orga', 'backgroundTasks', 'addRole', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
             )
         );
 
