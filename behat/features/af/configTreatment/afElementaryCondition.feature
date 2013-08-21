@@ -16,10 +16,11 @@ Feature: AF elementary condition for treatment feature
     Then I should see the popup "Ajout d'une condition élémentaire"
   # Ajout, saisie correcte
     When I fill in "algoConditionElementary_ref_addForm" with "aaa"
+    And I select "Champ numérique" from "algoConditionElementary_input_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Conditions élémentaires ordonnées suivant l'ordre de création
-    And the row 2 of the "algoNumericConstant" datagrid should contain:
+    And the "algoConditionElementary" datagrid should contain a row:
       | ref | input           |
       | aaa | Champ numérique |
 
@@ -43,7 +44,7 @@ Feature: AF elementary condition for treatment feature
     And I click "Valider"
     Then the field "algoConditionElementary_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "algoConditionElementary_ref_addForm" with "champ_numerique"
+    When I fill in "algoConditionElementary_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "algoConditionElementary_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -55,23 +56,23 @@ Feature: AF elementary condition for treatment feature
     And I open collapse "Conditions élémentaires"
     Then I should see the "algoConditionElementary" datagrid
     And the row 1 of the "algoConditionElementary" datagrid should contain:
-      | ref                   | input                                                                                 |
-      | condition_elementaire | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Traitement" |
+      | ref     | input                                                                                 |
+      | cond_el | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Traitement" |
   # Modification de l'identifiant, saisie correcte
-    When I set "condition_elementaire_modifiee" for column "ref" of row 1 of the "algoConditionElementary" datagrid with a confirmation message
+    When I set "cond_el_modifiee" for column "ref" of row 1 of the "algoConditionElementary" datagrid with a confirmation message
   # Popup d'édition
     When I click "Éditer" in the row 1 of the "algoConditionElementary" datagrid
     Then I should see the popup "Édition d'une condition élémentaire"
     When I select "≠" from "relation"
-    And I select "option_1" from "Valeur de référence"
+    And I select "opt_1" from "Valeur de référence"
     And I click "Enregistrer"
   # TODO : édition en ajax…
   # Édition pas en ajax donc l'onglet est rechargé
     And I open collapse "Conditions"
     And I open collapse "Conditions élémentaires"
     Then the row 1 of the "algoConditionElementary" datagrid should contain:
-      | ref                            | relation | value    |
-      | condition_elementaire_modifiee | ≠        | option_1 |
+      | ref              | relation | value    |
+      | cond_el_modifiee | ≠        | opt_1 |
 
   @javascript
   Scenario: Edition of an elementary condition for treatment scenario, incorrect input
@@ -87,7 +88,7 @@ Feature: AF elementary condition for treatment feature
     When I set "bépo" for column "ref" of row 1 of the "algoConditionElementary" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "algoConditionElementary" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "algoConditionElementary" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
 

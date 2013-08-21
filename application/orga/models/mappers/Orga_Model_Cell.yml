@@ -162,9 +162,11 @@ Orga_Model_Cell:
           idCell:
             referencedColumnName: id
             nullable: false
+            onDelete: CASCADE
         inverseJoinColumns:
           idDWResult:
             referencedColumnName: id
             nullable: false
             unique: true
+            onDelete: CASCADE
       cascade: [ persist, remove ]

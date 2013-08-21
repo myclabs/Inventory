@@ -12,7 +12,7 @@ use TEC\Expression;
  * Index controller.
  * @package TEC
  */
-class ExpressionController extends Core_Controller
+class Tec_ExpressionController extends Core_Controller
 {
    /**
     * Appel de la vue index.
@@ -58,7 +58,7 @@ class ExpressionController extends Core_Controller
 
             try {
                 $expression->check();
-                $this->view->correctedExpression = $expression->getTreeAsString();
+                $this->view->correctedExpression = $expression->getAsString();
                 $this->view->graphExpression = $expression->getGraph();
             } catch (InvalidExpressionException $e) {
                 $this->view->errors = $e->getErrors();

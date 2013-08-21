@@ -41,14 +41,15 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
     /**
      * Configuration pour les ressources "Cell" des ACL
      */
-    protected function _initOrgaACLCellResourceTreeTraverser()
+    protected function _initOrgaACLResourceTreeTraverser()
     {
         /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
-        $cellResourceTreeTraverser = $this->container->get('Orga_Service_ACLManager');
+        $resourceTreeTraverser = $this->container->get('Orga_Service_ACLManager');
         /** @var $aclService User_Service_ACL */
         $aclService = $this->container->get('User_Service_ACL');
 
-        $aclService->setResourceTreeTraverser("Orga_Model_Cell", $cellResourceTreeTraverser);
+        $aclService->setResourceTreeTraverser("Orga_Model_Cell", $resourceTreeTraverser);
+        $aclService->setResourceTreeTraverser("DW_Model_Report", $resourceTreeTraverser);
     }
 
     /**

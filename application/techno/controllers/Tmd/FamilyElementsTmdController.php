@@ -47,7 +47,7 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $cell->setChosenElement($element);
         $cell->save();
         $this->entityManager->flush();
-        $this->sendJsonResponse(['elementId' => $element->getId(),]);
+        $this->sendJsonResponse(['elementId' => $element->getId()]);
     }
 
     /**

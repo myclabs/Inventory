@@ -106,7 +106,9 @@ class Inventory_PopulateTest extends Core_Script_Populate
         /** @var $aclFilterService User_Service_ACLFilter */
         $aclFilterService = $container->get('User_Service_ACLFilter');
         $aclFilterService->enabled = true;
+        echo "\tRégénération des ACL…";
         $aclFilterService->generate();
+        echo "… done!".PHP_EOL;
 
         // Fermeture Unit.
         $populateUnit = new Unit_Populate();

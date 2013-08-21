@@ -80,7 +80,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        $refAxes = explode(',', $this->getAddElementValue('axes'));
+        $refAxes = $this->getAddElementValue('axes');
         $listAxes = array();
         $refGranularity = '';
         if (empty($refAxes)) {
@@ -144,6 +144,9 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         $granularity = Orga_Model_Granularity::load($this->delete);
+        if ($granularity->getCellsWithACL()) {
+            throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
+        }
 
         $granularity->delete();
 

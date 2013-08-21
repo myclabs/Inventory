@@ -15,7 +15,7 @@ Feature: Organization datagrid feature
     Then I should see the popup "Ajout d'une organisation"
     When I fill in "Libellé" with "AAA"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps. Dans ce dernier cas le résultat sera visible après rechargement de la page."
+    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
   # Organisations affichées dans l'ordre de création
   # TODO : ordre alphabétique des libellés ?
     And the row 2 of the "organizations" datagrid should contain:
@@ -23,7 +23,7 @@ Feature: Organization datagrid feature
       | AAA   |
   # Lien vers le détail de l'organisation
     When I click "Cliquer pour accéder" in the row 2 of the "organizations" datagrid
-    Then I should see "Vue globale Test"
+    Then I should see "Vue globale AAA"
   # Vérification de la création de la granularité globale et ses attributs par défaut
     When I open tab "Organisation"
     And I open tab "Niveaux"

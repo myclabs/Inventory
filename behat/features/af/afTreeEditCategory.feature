@@ -18,6 +18,7 @@ Feature: AF tree edit category feature
   # Ajout d'une catégorie, libellé non vide
     When I fill in "label" with "Test"
     And I click "Valider"
+    And I wait 7 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout d'une catégorie, libellé non vide, située dans une autre catégorie
   # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.
@@ -36,6 +37,7 @@ Feature: AF tree edit category feature
   # Modification du libellé, saisie correcte
     When I fill in "afTree_labelEdit" with "Catégorie vide modifiée"
     And I click "Confirmer"
+    And I wait 7 seconds
     Then the following message is shown and closed: "Modification effectuée."
     And I should see "Catégorie vide modifiée"
 
@@ -48,31 +50,32 @@ Feature: AF tree edit category feature
     Then I should see the popup "Édition d'une catégorie"
     When I select "Catégorie contenant une sous-catégorie" from "afTree_changeParent"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement à la racine
-    When I wait 5 seconds
     And I click "Catégorie vide"
     And I select "Aucun" from "afTree_changeParent"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier
-    When I wait 3 seconds
     And I click "Catégorie vide"
     And I check "Premier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après une autre catégorie
-    When I wait 3 seconds
     And I click "Catégorie vide"
     And I check "Après"
     And I select "Catégorie contenant une sous-catégorie" from "afTree_selectAfter"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier
-    When I wait 3 seconds
     And I click "Catégorie vide"
     And I check "Dernier"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
@@ -85,6 +88,7 @@ Feature: AF tree edit category feature
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins un formulaire ou une autre catégorie)."
     And I should see "Catégorie contenant une sous-catégorie"
   # Catégorie contenant un formulaire
@@ -93,6 +97,7 @@ Feature: AF tree edit category feature
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins un formulaire ou une autre catégorie)."
     And I should see "Catégorie contenant un formulaire"
   # Catégorie vide
@@ -101,6 +106,7 @@ Feature: AF tree edit category feature
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click "Confirmer"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Suppression effectuée."
     And I should not see "Catégorie vide"
 

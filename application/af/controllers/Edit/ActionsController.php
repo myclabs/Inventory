@@ -77,6 +77,7 @@ class AF_Edit_ActionsController extends Core_Controller
         }
         $action->save();
         $this->entityManager->flush();
+        UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
         $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/interaction');
     }
 

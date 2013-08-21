@@ -41,7 +41,7 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
      * Pourcentage de complétion de la saisie
      * @var int|null
      */
-    private $completion;
+    protected $completion;
 
 
     /**

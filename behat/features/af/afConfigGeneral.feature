@@ -6,7 +6,7 @@ Feature: AF configuration general tab feature
 
   @javascript
   Scenario: AF configuration general tab scenario
-    Given I am on "af/edit/menu/id/3"
+    Given I am on "af/edit/menu/id/7"
     And I wait for the page to finish loading
   # Vérification du contenu des champs
     Then the "label" field should contain "Formulaire vide"

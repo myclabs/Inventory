@@ -20,6 +20,13 @@ class Core_Test_EntityVersionedTest extends Core_Test_TestCase
     {
         parent::setUp();
 
+        /** @var $repository \Gedmo\Loggable\Entity\Repository\LogEntryRepository */
+        $repository = $this->entityManager->getRepository('Gedmo\Loggable\Entity\LogEntry');
+        foreach ($repository->findAll() as $version) {
+            $this->entityManager->remove($version);
+        }
+        $this->entityManager->flush();
+
         /** @var Gedmo\Loggable\LoggableListener $loggableListener */
         $loggableListener = $this->get('Gedmo\Loggable\LoggableListener');
         $loggableListener->setUsername('foo');

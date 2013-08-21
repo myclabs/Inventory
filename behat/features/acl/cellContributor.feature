@@ -14,7 +14,6 @@ Feature: Cell contributor feature
     When I wait 2 seconds
     And I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
-    And the "aFGranularity2Input8" datagrid should contain 4 row
   # Accès à l'onglet "Collectes", édition du statut d'une collecte
     When I open tab "Collectes"
     Then I should see the "inventories6" datagrid
@@ -43,4 +42,16 @@ Feature: Cell contributor feature
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
-    And the "aFGranularity5Input8" datagrid should contain 2 row
+  # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
+    When I open tab "Analyses"
+    Then the row 1 of the "report" datagrid should contain:
+      | label                        |
+      | Chiffre d'affaire, par année |
+    When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
+    And I open tab "Valeurs"
+    Then the row 1 of the "reportValues" datagrid should contain:
+      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | 2012                | 10           | 15               |
+    And the row 2 of the "reportValues" datagrid should contain:
+      | valueAxisorga_annee | valueDigital | valueUncertainty |
+      | 2013                | 10           | 15               |

@@ -71,7 +71,7 @@ class Orga_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
             $this->update['index'],
             Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), Orga_Model_Organization::load($this->getParam('idOrganization')))
         );
-        $member->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $member->reloadWithLocale(Core_Locale::load($this->update['column']));
         $member->setLabel($this->update['value']);
         $this->data = $member->getLabel();
 

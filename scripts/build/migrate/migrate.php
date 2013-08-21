@@ -733,7 +733,7 @@ class Inventory_Migrate extends Core_Script_Populate
         // Filter
         $subSelectFilter = $this->connection->query("SELECT * FROM DW_Filter WHERE idReport=".$row['id']);
         /** @noinspection PhpAssignmentInConditionInspection */
-        if ($rowFilter = $subSelectFilter->fetch()) {
+        while ($rowFilter = $subSelectFilter->fetch()) {
             $subSelectAxis = $this->connection->query("SELECT ref FROM DW_Axis WHERE id=" . $rowFilter['idAxis']);
             $rowAxis = $subSelectAxis->fetch();
             $dWAxis = DW_Model_Axis::loadByRefAndCube($rowAxis['ref'], $granularity->getDWCube());
@@ -745,7 +745,7 @@ class Inventory_Migrate extends Core_Script_Populate
             // Members
             $subSelectMember = $this->connection->query("SELECT * FROM DW_Filter_Member JOIN DW_Member ON DW_Filter_Member.idMember = DW_Member.id WHERE idFilter=".$rowFilter['id']);
             /** @noinspection PhpAssignmentInConditionInspection */
-            if ($rowMember = $subSelectMember->fetch()) {
+            while ($rowMember = $subSelectMember->fetch()) {
                 $dWMember = DW_Model_Member::loadByRefAndAxis($rowMember['ref'], $dWFilter->getAxis());
                 $dWFilter->addMember($dWMember);
                 echo "\t\t\t\t\t for Member : " . $dWMember->getLabel() . "\n";

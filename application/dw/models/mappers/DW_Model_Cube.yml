@@ -4,6 +4,10 @@ DW_Model_Cube:
   repositoryClass: Core_Model_Repository
   table: DW_Cube
 
+  gedmo:
+    translation:
+      locale: translationLocale
+
   id:
     id:
       column: id
@@ -17,6 +21,8 @@ DW_Model_Cube:
       type: string
       length: 255
       nullable: false
+      gedmo:
+        - translatable
 
   oneToMany:
     reports:

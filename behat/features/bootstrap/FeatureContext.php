@@ -75,6 +75,8 @@ class FeatureContext extends MinkContext
      */
     public function waitForPageToFinishLoading()
     {
+        $this->getSession()->wait(50);
+
         // Chargements AJAX
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
@@ -140,9 +142,21 @@ class FeatureContext extends MinkContext
     public function clickElement($selector)
     {
         $node = $this->findElement($selector);
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * Focus on an element found using CSS selectors.
+     *
+     * @When /^(?:|I )focus on element "(?P<selector>(?:[^"]|\\")*)"$/
+     */
+    public function focusOnElement($selector)
+    {
+        $node = $this->findElement($selector);
+        $node->focus();
     }
 
     /**

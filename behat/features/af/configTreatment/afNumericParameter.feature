@@ -16,7 +16,7 @@ Feature: AF numeric parameter algo feature
     Then I should see the popup "Ajout d'un algorithme numérique de type « paramètre »"
   # TODO : ordre entre les familles…
   # Ajout, identifiant valide
-    When I fill in "algoNumericParameter_label_addForm" with "Test"
+    When I fill in "algoNumericParameter_label_addForm" with "AAA"
     And I fill in "algoNumericParameter_ref_addForm" with "aaa"
     And I select "Masse volumique de combustible" from "algoNumericParameter_family_addForm"
     And I click "Valider"
@@ -47,7 +47,7 @@ Feature: AF numeric parameter algo feature
     And I click "Valider"
     Then the field "algoNumericParameter_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé
-    When I fill in "algoNumericParameter_ref_addForm" with "champ_numerique"
+    When I fill in "algoNumericParameter_ref_addForm" with "c_n"
     And I click "Valider"
     Then the field "algoNumericParameter_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -69,8 +69,7 @@ Feature: AF numeric parameter algo feature
     When I set "parametre_modifie" for column "ref" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
   # Modification de la famille, saisie correcte
     When I set "Masse volumique de combustible" for column "family" of row 1 of the "algoNumericParameter" datagrid with a confirmation message
-    Then the following message is shown and closed: "Modification effectuée."
-    And the row 1 of the "algoNumericParameter" datagrid should contain:
+    Then the row 1 of the "algoNumericParameter" datagrid should contain:
       | label     | ref       | family                         |
       | Paramètre | parametre | Masse volumique de combustible |
 
@@ -89,7 +88,7 @@ Feature: AF numeric parameter algo feature
     When I set "bépo" for column "ref" of row 1 of the "algoNumericParameter" datagrid
     Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "champ_numerique" for column "ref" of row 1 of the "algoNumericParameter" datagrid
+    When I set "c_n" for column "ref" of row 1 of the "algoNumericParameter" datagrid
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de la famille, famille vide
     When I set "" for column "family" of row 1 of the "algoNumericParameter" datagrid
@@ -115,7 +114,7 @@ Feature: AF numeric parameter algo feature
     And I should see the "coordinatesAlgo" datagrid
     And the row 1 of the "coordinatesAlgo" datagrid should contain:
       | dimension | algo                                      |
-      | processus | expression_selection_coordonnee_parametre |
+      | processus | expression_sel_coord_param |
   # Modification membre coordonnée fixée
     When I set "gaz naturel" for column "member" of row 1 of the "coordinatesFixed" datagrid
   # On ferme le popup pour aller fermer le message en arrière-plan
@@ -127,14 +126,14 @@ Feature: AF numeric parameter algo feature
       | dimension   | member      |
       | combustible | gaz naturel |
   # Modification algo coordonnée déterminée par algorithme
-    When I set "champ_selection_simple" for column "algo" of row 1 of the "coordinatesAlgo" datagrid
+    When I set "c_s_s" for column "algo" of row 1 of the "coordinatesAlgo" datagrid
   # On ferme le popup pour aller fermer le message en arrière-plan
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
     Then the following message is shown and closed: "Modification effectuée."
     When I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
     Then the row 1 of the "coordinatesAlgo" datagrid should contain:
       | dimension | algo                   |
-      | processus | champ_selection_simple |
+      | processus | c_s_s |
   # Suppression coordonnée fixée
     When I click "Supprimer" in the row 1 of the "coordinatesFixed" datagrid
     Then I should see the popup "Demande de confirmation"
@@ -172,7 +171,7 @@ Feature: AF numeric parameter algo feature
     Then the field "coordinatesAlgo_dimension_addForm" should have error: "Merci de renseigner ce champ."
     And the field "coordinatesAlgo_algo_addForm" should have error: "Merci de renseigner ce champ."
     When I select "combustible" from "coordinatesAlgo_dimension_addForm"
-    And I select "expression_selection_coordonnee_parametre" from "coordinatesAlgo_algo_addForm"
+    And I select "expression_sel_coord_param" from "coordinatesAlgo_algo_addForm"
     And I click "Valider"
   # On ferme le popup pour aller fermer le message en arrière-plan
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
@@ -181,7 +180,7 @@ Feature: AF numeric parameter algo feature
     Then the "coordinatesAlgo" datagrid should contain 1 row
     Then the row 1 of the "coordinatesAlgo" datagrid should contain:
       | dimension   | algo                                      |
-      | combustible | expression_selection_coordonnee_parametre |
+      | combustible | expression_sel_coord_param |
 
   @javascript
   Scenario: Influence of a change of family on coordinates of an algo numeric parameter scenario

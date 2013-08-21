@@ -37,6 +37,10 @@ DW_Model_Report:
       column: withUncertainty
       type: boolean
       nullable: false
+    lastModificationTimestamp:
+      column: lastModificationTimestamp
+      type: integer
+      nullable: false
 
   manyToOne:
     cube:
@@ -87,11 +91,11 @@ DW_Model_Report:
     filters:
       targetEntity: DW_Model_Filter
       mappedBy: report
-      orphanRemoval: true
       cascade: [ persist, remove ]
       orphanRemoval: true
 
   lifecycleCallbacks:
     prePersist: [ preSave ]
+    preUpdate: [ updateLastModification ]
     postUpdate: [ postUpdate ]
     preRemove: [ preDelete ]
