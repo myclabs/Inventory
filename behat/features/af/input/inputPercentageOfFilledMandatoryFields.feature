@@ -86,8 +86,6 @@ Feature: Percentage of filled mandatory fields feature
 
   @javascript
   Scenario: Percentage of filled mandatory fields scenario, all fields are mandatory and completed scenario
-    @skipped
-    #6305 Les champs de sélection multiple de type "liste déroulante" apparaissent systématiquement comme incomplets
     Given I am on "af/af/test/id/5"
     And I wait for the page to finish loading
     And I fill in "c_n" with "10"

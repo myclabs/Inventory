@@ -93,6 +93,12 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                     $granularityReport->delete();
                 } catch (Core_Exception_NotFound $e) {
                     // Le Report n'est pas issue d'un Cube de Granularity.
+                    foreach (self::loadList() as $granularityReport) {
+                        /** @var self $granularityReport */
+                        if ($granularityReport->hasCellDWReport($subject)) {
+                            $granularityReport->removeCellDWReport($subject);
+                        }
+                    }
                 }
                 break;
         }

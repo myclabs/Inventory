@@ -289,8 +289,8 @@ class User_Model_User extends User_Model_SecurityIdentity
         // Vérifie que la chaine n'est pas utilisée. 3 essais (pour éviter la boucle infinie)
         $i = 0;
         do {
-            $mailKey = Core_Tools::generateString(32);
-            $used = $this->isEmailKeyUsed($mailKey);
+            $mailKey = Core_Tools::generateString(10);
+            $used = self::isEmailKeyUsed($mailKey);
             $i++;
         } while ($used && ($i < 3));
         // On a trouvé notre chaine : on l'utilise

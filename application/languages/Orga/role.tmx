@@ -121,18 +121,18 @@
 
         <tu tuid="userCreatedFromRessource">
             <tuv xml:lang="fr">
-                <seg>Un compte utilisateur a été créé pour cette adresse e-mail. Un e-mail contenant les identifiants de connexion a été envoyé à cette même adresse.</seg>
+                <seg>Nouveau compte créé. Un e-mail a été envoyé à l’utilisateur avec ses identifiants de connexion.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>User account has been created for this e-mail address. An e-mail with login parameter has been sent to this address.</seg>
+                <seg>New account created. An e-mail has been sent to the user with the login parameters.</seg>
             </tuv>
         </tu>        
         <tu tuid="roleAddedToExistingUser">
             <tuv xml:lang="fr">
-                <seg>L'adresse e-mail saisie correspond à un compte utilisateur existant, auquel le rôle indiqué a été attribué. L'utilisateur en sera informé par e-mail.</seg>
+                <seg>Ce compte existe déjà. Le nouveau rôle lui a été attribué.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Given e-mail address is that of an existing account, to which the given role has been assigned. User will be informed by e-mail.</seg>
+                <seg>This account already exists. The new role has been assigned to it.</seg>
             </tuv>
         </tu>        
 
@@ -140,10 +140,10 @@
 
         <tu tuid="userRoleRemovedFromUser">
             <tuv xml:lang="fr">
-                <seg>Suppression effectuée. L'utilisateur en sera informé par e-mail.</seg>
+                <seg>Suppression du rôle effectuée.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Deletion performed. User will be informed by e-mail.</seg>
+                <seg>Role deletion performed.</seg>
             </tuv>
         </tu>        
 

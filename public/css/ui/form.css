@@ -2,7 +2,7 @@
 .form .control-label { width: 400px; }
 .form .controls { margin-left: 430px; }
 .form .controls > div { margin-right: 25px; }
-.form .controls > div:first-child { width: 380px; }
+.form .controls > div:first-child { width: 380px; margin-right: 0px; }
 .form .input { display: inline-block; margin-right: 5px; }
 .form .input.hide { display: none; }
 .form .incertitude { width: 30px; }
@@ -40,6 +40,10 @@
 .form .repeatedGroup table.repeatedGroup .controls { margin-left: 0px; }
 .form .repeatedGroup table.repeatedGroup .controls > div { margin-right: 0px; }
 .form .repeatedGroup table.repeatedGroup .controls > div:first-child { width: auto; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child input { width: 100px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:not(:first-child) { margin: 2px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child select { width: 150px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child textarea { width: 150px; }
 .form .repeatedGroup table.repeatedGroup .controls .input +.input { margin-left: 5px; }
 .form .repeatedGroup table.repeatedGroup .controls .input +.input { margin-left: 5px; }
 

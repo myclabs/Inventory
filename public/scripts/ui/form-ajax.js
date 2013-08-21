@@ -167,7 +167,13 @@ $.fn.getFormElementValue = function ()
 		default:
             element = element.slice(0, -2);
 			if (typeof child.val() === 'object') {
-                element += '["' + child.val().join('", "') + '"], ';
+                element += '[';
+                if (child.val() != null) {
+                    element += '"';
+                    element += child.val().join('", "');
+                    element += '"';
+                }
+                element += '], ';
             } else if (child.val() != null) {
                 element += '"' + child.encodeVal() + '", ';
 			} else {

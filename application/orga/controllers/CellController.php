@@ -372,7 +372,8 @@ class Orga_CellController extends Core_Controller
         }
         $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $aFViewConfiguration->addToActionStack('inputsave', 'cell', 'orga', array('idCell' => $idCell));
-        $aFViewConfiguration->setExitUrl('orga/cell/details?idCell='.$this->getParam('fromIdCell'));
+        $aFViewConfiguration->setExitUrl($this->_helper->url('details', 'cell', 'orga',
+                ['idCell' => $this->getParam('fromIdCell')]));
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
         $aFViewConfiguration->addBaseTabs();
@@ -436,7 +437,8 @@ class Orga_CellController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenDWCubes',
-                    [$cell]
+                    [$cell],
+                    __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {
@@ -459,7 +461,8 @@ class Orga_CellController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenCalculationsAndDWCubes',
-                    [$cell]
+                    [$cell],
+                    __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {

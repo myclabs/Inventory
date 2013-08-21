@@ -58,8 +58,7 @@ abstract class Core_Controller extends Zend_Controller_Action
 
         /** @var Zend_Controller_Action_Helper_Json $json */
         $json = $this->getHelper('Json');
-        // Commenté suite à http://dev.myc-sense.com:3000/issues/6251
-//        $json->suppressExit = true;
+        $json->suppressExit = true;
         $json->sendJson($reponse);
         Zend_Wildfire_Channel_HttpHeaders::getInstance()->flush();
     }

@@ -28,7 +28,7 @@ class AF_Model_InputSet_Primary extends AF_Model_InputSet
      * Est-ce que les calculs ont été effectués
      * @var bool
      */
-    private $calculationComplete = false;
+    protected $calculationComplete = false;
 
     /**
      * Est-ce que la saisie est marquée comme terminée

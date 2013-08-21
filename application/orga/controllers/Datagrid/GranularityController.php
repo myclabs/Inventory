@@ -80,7 +80,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        $refAxes = explode(',', $this->getAddElementValue('axes'));
+        $refAxes = $this->getAddElementValue('axes');
         $listAxes = array();
         $refGranularity = '';
         if (empty($refAxes)) {
@@ -119,7 +119,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                     (bool) $this->getAddElementValue('dW'),
                     (bool) $this->getAddElementValue('genericActions'),
                     (bool) $this->getAddElementValue('contextActions'),
-                    (bool) $this->getAddElementValue('inputDocuments')
+                    (bool) $this->getAddElementValue('inputDocuments'),
+                    __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $listAxes)])
                 )
             );
             $this->message = __('UI', 'message', 'addedLater');
@@ -198,7 +199,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                     $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
                     foreach ($cellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
                         if (!($linkedIdentity instanceof User_Model_Role) || (count($linkedIdentity->getUsers()) > 0)) {
-                            throw new Core_Exception_User('Orga', 'exceptions', 'cellHasUsers');
+                            throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
                         }
                     }
                 }

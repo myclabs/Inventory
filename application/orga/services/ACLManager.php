@@ -444,7 +444,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      *
      * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
      */
-    public function getParentResources(User_Model_Resource_Entity $resource)
+    public function getAllParentResources(User_Model_Resource_Entity $resource)
     {
         $entity = $resource->getEntity();
         if ($entity instanceof DW_Model_Report) {
@@ -462,7 +462,8 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     protected function getDWReportParentResources(DW_Model_Report $report)
     {
         if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
-            return [User_Model_Resource_Entity::loadByEntity(Orga_Model_Cell::loadByDWCube($report->getCube()))];
+            $reportCell = Orga_Model_Cell::loadByDWCube($report->getCube());
+            return array_merge([User_Model_Resource_Entity::loadByEntity($reportCell)], $this->getCellParentResources($reportCell));
         }
         return [];
     }
@@ -503,7 +504,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      *
      * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
      */
-    public function getChildResources(User_Model_Resource_Entity $resource)
+    public function getAllChildResources(User_Model_Resource_Entity $resource)
     {
         $entity = $resource->getEntity();
         if ($entity instanceof Orga_Model_Cell) {
@@ -518,22 +519,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
     protected function getCellChildResources(Orga_Model_Cell $cell)
     {
-        $childResources = [];
-
-        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            foreach ($cell->getDWCube()->getReports() as $dWReport) {
-                if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
-                    if (isset($this->newResources['report'][$dWReport->getId()])) {
-                        $childDWReportResource = $this->newResources['report'][$dWReport->getId()];
-                    } else {
-                        $childDWReportResource = User_Model_Resource_Entity::loadByEntity($dWReport);
-                    }
-                    if ($childDWReportResource !== null) {
-                        $childResources[] = $childDWReportResource;
-                    }
-                }
-            }
-        }
+        $childResources = $this->getCellDWReportResources($cell);
 
         foreach ($cell->getChildCells() as $childCell) {
             if (isset($this->newResources['cell'][$childCell->getId()])) {
@@ -544,9 +530,38 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
             if ($childCellResource !== null) {
                 $childResources[] = $childCellResource;
             }
+            $childResources = array_merge($childResources, $this->getCellDWReportResources($childCell));
         }
 
         return $childResources;
+    }
+
+    /**
+     * @param Orga_Model_Cell $cell
+     * @return User_Model_Resource_Entity[]
+     */
+    protected function getCellDWReportResources(Orga_Model_Cell $cell)
+    {
+        if (!$cell->getGranularity()->getCellsGenerateDWCubes()) {
+            return [];
+        }
+
+        $dWReportResources = [];
+
+        foreach ($cell->getDWCube()->getReports() as $dWReport) {
+            if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
+                if (isset($this->newResources['report'][$dWReport->getId()])) {
+                    $dWReportResource = $this->newResources['report'][$dWReport->getId()];
+                } else {
+                    $dWReportResource = User_Model_Resource_Entity::loadByEntity($dWReport);
+                }
+                if ($dWReportResource !== null) {
+                    $dWReportResources[] = $dWReportResource;
+                }
+            }
+        }
+
+        return $dWReportResources;
     }
 
 

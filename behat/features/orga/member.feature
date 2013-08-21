@@ -115,8 +115,34 @@ Feature: Organizational member feature
       | Annecy | annecy   | France         |
 
   @javascript
-  Scenario: Deletion of an organizational member
-    @skipped
+  Scenario: Deletion of an organizational member generating cells with inputs and DW, but no cell with roles
+  # Accès à l'onglet "Membres"
+    Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
+    And I open tab "Organisation"
+    And I open tab "Membres"
+    And I open collapse "Site"
+    Then I should see the "listMemberssite" datagrid
+    And the "listMemberssite" datagrid should contain 4 row
+    And the row 3 of the "listMemberssite" datagrid should contain:
+      | label  |
+      | Grenoble |
+  # Remarque : Grenoble associé à aucun rôle
+    When I click "Supprimer" in the row 3 of the "listMemberssite" datagrid
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée."
+    And the "listMemberssite" datagrid should contain 3 row
+  # Tentative de suppression d'un membre générant une cellule associée à des rôles
+    And the row 1 of the "listMemberssite" datagrid should contain:
+      | label  |
+      | Annecy |
+    When I click "Supprimer" in the row 1 of the "listMemberssite" datagrid
+    And I click "Confirmer"
+    # Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il est associé à des unités organisationnelles elles-mêmes associées à des rôles"
+    # TODO : capturer l'exception actuellement renvoyée.
+
+  @javascript @skipped
+  Scenario: Deletion of an organizational member scenario
     #6268 Exceptions non capturées suppression d'un membre organisationnel
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"

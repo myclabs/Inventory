@@ -44,9 +44,15 @@ class Orga_Service_ETLStructure
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
+        if (isset($originalTranslations[$defaultLocale])) {
+            $dWEntity->setLabel($originalTranslations[$defaultLocale]);
+        } else {
+            $dWEntity->setLabel($originalEntity->getLabel());
+        }
         // Traductions.
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
@@ -58,10 +64,6 @@ class Orga_Service_ETLStructure
                 );
             }
         }
-        // Pour l'instant seule moyen de traduire la langue par défaut.
-        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        $dWEntity->setLabel($originalEntity->getLabel());
     }
 
     /**
@@ -80,12 +82,6 @@ class Orga_Service_ETLStructure
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
         $dWTranslations = $translationRepository->findTranslations($dWEntity);
 
-        // Pour l'instant seule moyen de comparer la langue par défaut.
-        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        if ($originalEntity->getLabel() !== $dWEntity->getLabel()) {
-            return true;
-        }
         // Traductions
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId])) {
@@ -172,13 +168,11 @@ class Orga_Service_ETLStructure
                         $labelParts[] = $member->getLabel();
                     }
                 }
-                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels);
+                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);
             }
         }
 
         $this->updateDWCubeLabel($cell->getDWCube(), $labels);
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        $cell->getDWCube()->setLabel($cell->getLabel());
     }
 
     /**
@@ -218,8 +212,6 @@ class Orga_Service_ETLStructure
         }
 
         $this->updateDWCubeLabel($granularity->getDWCube(), $labels);
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        $granularity->getDWCube()->setLabel($granularity->getLabel());
     }
 
     /**
@@ -951,15 +943,7 @@ class Orga_Service_ETLStructure
             $granularity = Orga_Model_Granularity::load($granularity->getId());
 
             if ($granularity->getCellsGenerateDWCubes()) {
-                $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
-
-                foreach ($granularity->getCells() as $cell) {
-                    // Optimisation de la mémoire.
-                    $this->entityManager->clear();
-                    $cell = Orga_Model_Cell::load($cell->getId());
-
-                    $this->resetCellDWCube($cell);
-                }
+                $this->resetGranularityAndCellsDWCubes($granularity);
             }
         }
     }
@@ -969,8 +953,17 @@ class Orga_Service_ETLStructure
      *
      * @param Orga_Model_Granularity $granularity
      */
-    public function resetGranularityDWCubes(Orga_Model_Granularity $granularity)
+    public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
+        foreach ($granularity->getCells() as $cell) {
+            $cell = Orga_Model_Cell::load($cell->getId());
+            $this->resetCellDWCube($cell);
+
+            // Optimisation de la mémoire.
+            $this->entityManager->clear();
+        }
+
+        $granularity = Orga_Model_Granularity::load($granularity->getId());
         $this->updateGranularityDWCubeLabel($granularity);
         $this->resetDWCube(
             $granularity->getDWCube(),
