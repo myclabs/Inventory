@@ -5,6 +5,7 @@
  * @subpackage Plugin
  */
 
+use Doc\Domain\Library;
 use User\ForbiddenException;
 
 /**
@@ -619,7 +620,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     protected function getCellFromLibrary(Zend_Controller_Request_Abstract $request)
     {
         $idLibrary = $request->getParam('id');
-        $library = Doc_Model_Library::load($idLibrary);
+        $library = Library::load($idLibrary);
 
         try {
             return Orga_Model_Cell::loadByDocLibraryForAFInputSetsPrimary($library);

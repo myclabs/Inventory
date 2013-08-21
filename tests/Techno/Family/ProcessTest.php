@@ -2,6 +2,7 @@
 /**
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 use Unit\UnitAPI;
 
 /**
@@ -89,8 +90,8 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            foreach (Keyword_Model_Keyword::loadList() as $o) {
+        if (Keyword::countTotal() > 0) {
+            foreach (Keyword::loadList() as $o) {
                 $o->delete();
             }
         }
@@ -210,8 +211,8 @@ class Techno_Test_Family_ProcessMetierTest extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            foreach (Keyword_Model_Keyword::loadList() as $o) {
+        if (Keyword::countTotal() > 0) {
+            foreach (Keyword::loadList() as $o) {
                 $o->delete();
             }
         }

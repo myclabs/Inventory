@@ -25,7 +25,9 @@ $fieldColumn->editable = false;
 $fieldColumn->withEmptyElement = true;
 $list = [];
 foreach ($this->componentList as $component) {
-    if ($component instanceof AF_Model_Component_Field) {
+    if ($component instanceof AF_Model_Component_Field
+        && !$component instanceof AF_Model_Component_Text
+    ) {
         $list[$component->getId()] = $component->getLabel();
     }
 }

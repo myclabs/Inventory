@@ -1,2 +1,16 @@
 # Activation des ACL
 enable.acl: true
+
+# Définit dans le bootstrap:
+# application.name:
+# email.contact.address:
+# email.noreply.name:
+# email.noreply.address:
+
+# Notification des taches de fond
+Core\Work\Notification\TaskNotifier:
+  class: Core\Work\Notification\EmailTaskNotifier
+Core\Work\Notification\EmailTaskNotifier:
+  constructor:
+    userService: User_Service_User
+    applicationName: email.noreply.name

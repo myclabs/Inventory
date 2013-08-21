@@ -44,9 +44,15 @@ class Orga_Service_ETLStructure
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
+        if (isset($originalTranslations[$defaultLocale])) {
+            $dWEntity->setLabel($originalTranslations[$defaultLocale]);
+        } else {
+            $dWEntity->setLabel($originalEntity->getLabel());
+        }
         // Traductions.
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
@@ -58,10 +64,6 @@ class Orga_Service_ETLStructure
                 );
             }
         }
-        // Pour l'instant seule moyen de traduire la langue par défaut.
-        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        $dWEntity->setLabel($originalEntity->getLabel());
     }
 
     /**
@@ -80,12 +82,6 @@ class Orga_Service_ETLStructure
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
         $dWTranslations = $translationRepository->findTranslations($dWEntity);
 
-        // Pour l'instant seule moyen de comparer la langue par défaut.
-        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        if ($originalEntity->getLabel() !== $dWEntity->getLabel()) {
-            return true;
-        }
         // Traductions
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId])) {
@@ -152,6 +148,7 @@ class Orga_Service_ETLStructure
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
 
         $labels = [];
         if (!$cell->hasMembers()) {
@@ -165,6 +162,8 @@ class Orga_Service_ETLStructure
                     $originalTranslations = $translationRepository->findTranslations($member);
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
+                    } elseif (isset($originalTranslations[$defaultLocale])) {
+                        $labelParts[] = $originalTranslations[$defaultLocale]['label'];
                     } else {
                         $labelParts[] = $member->getLabel();
                     }
@@ -174,8 +173,6 @@ class Orga_Service_ETLStructure
         }
 
         $this->updateDWCubeLabel($cell->getDWCube(), $labels);
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        $cell->getDWCube()->setLabel($cell->getLabel());
     }
 
     /**
@@ -187,6 +184,7 @@ class Orga_Service_ETLStructure
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
 
         $labels = [];
         if (!$granularity->hasAxes()) {
@@ -203,6 +201,8 @@ class Orga_Service_ETLStructure
                     $originalTranslations = $translationRepository->findTranslations($axis);
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
+                    } elseif (isset($originalTranslations[$defaultLocale])) {
+                        $labelParts[] = $originalTranslations[$defaultLocale]['label'];
                     } else {
                         $labelParts[] = $axis->getLabel();
                     }
@@ -212,8 +212,6 @@ class Orga_Service_ETLStructure
         }
 
         $this->updateDWCubeLabel($granularity->getDWCube(), $labels);
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        $granularity->getDWCube()->setLabel($granularity->getLabel());
     }
 
     /**

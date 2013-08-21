@@ -1,0 +1,37 @@
+Keyword\Domain\Association:
+  type: entity
+  repositoryClass: Keyword\Architecture\Repository\AssociationRepository
+  table: Keyword_Association
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    subject:
+      targetEntity: Keyword\Domain\Keyword
+      inversedBy: subjectAssociation
+      joinColumns:
+        idSubjectKeyword:
+          referencedColumnName: id
+      nullable : false
+    object:
+      targetEntity: Keyword\Domain\Keyword
+      inversedBy: objectAssociation
+      joinColumns:
+        idObjectKeyword:
+          referencedColumnName: id
+      nullable : false
+    predicate:
+      targetEntity: Keyword\Domain\Predicate
+      joinColumns:
+        idPredicate:
+          referencedColumnName: id
+      nullable : false
+
+  uniqueConstraints:
+    associationUniqueness:
+      columns: idSubjectKeyword, idObjectKeyword, idPredicate

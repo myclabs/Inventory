@@ -119,7 +119,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                     (bool) $this->getAddElementValue('dW'),
                     (bool) $this->getAddElementValue('genericActions'),
                     (bool) $this->getAddElementValue('contextActions'),
-                    (bool) $this->getAddElementValue('inputDocuments')
+                    (bool) $this->getAddElementValue('inputDocuments'),
+                    __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $listAxes)])
                 )
             );
             $this->message = __('UI', 'message', 'addedLater');
@@ -194,6 +195,14 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 $this->data = $granularity->getCellsWithOrgaTab();
                 break;
             case 'aCL':
+                foreach ($granularity->getCells() as $cell) {
+                    $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
+                    foreach ($cellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
+                        if (!($linkedIdentity instanceof User_Model_Role) || (count($linkedIdentity->getUsers()) > 0)) {
+                            throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
+                        }
+                    }
+                }
                 $granularity->setCellsWithACL((bool) $this->update['value']);
                 $this->data = $granularity->getCellsWithACL();
                 break;

@@ -158,7 +158,7 @@ class User_Service_User
         $mail = new Core_Mail();
         $mail->addTo($user->getEmail(), $user->getName());
         $mail->setSubject($subject);
-        $content = $this->getEmailHeader() . ' ' . PHP_EOL . $content;
+        $content = $this->getEmailHeader() . ' ' . PHP_EOL . PHP_EOL . $content . PHP_EOL;
         $content .= ' ' . $this->getEmailConclusion();
         $content .= ' ' . $this->getEmailFooter();
         $mail->setBodyText($content);

@@ -6,7 +6,6 @@
  */
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 use User\AuthAdapter;
 
 /**
@@ -18,12 +17,6 @@ class User_ActionController extends UI_Controller_Captcha
 {
 
     use UI_Controller_Helper_Form;
-
-    /**
-     * @Inject
-     * @var User_Service_User
-     */
-    private $userService;
 
     /**
      * Par défaut : redirige vers l'action de login.
@@ -118,111 +111,6 @@ class User_ActionController extends UI_Controller_Captcha
             throw new Core_Exception_InvalidArgument(__('User', 'exceptions', 'noEmailKeySpecified'));
         }
         $this->redirect('login');
-    }
-
-    /**
-     * Formulaire d'oubli de mot de passe
-     * @Secure("public")
-     */
-    public function passwordForgottenAction()
-    {
-        if ($this->getRequest()->isPost()) {
-
-            $formData = $this->getFormData('passwordForgotten');
-
-            $email = $formData->getValue('email');
-            if (!$email) {
-                $this->addFormError('email', __('UI', 'formValidation', 'emptyRequiredField'));
-            } else {
-                $emailUsed = User_Model_User::isEmailUsed($email);
-                if (!$emailUsed) {
-                    $this->addFormError('email', __('User', 'login', 'unknownEmail'));
-                }
-            }
-
-            // Captcha de merde.
-            $captchaInput = [
-                'id' => $formData->getHiddenValue('captcha', 'captcha-id'),
-                'input' => $formData->getValue('captcha'),
-            ];
-            $captchaField = new UI_Form_Element_Captcha('captcha', $this->view->baseUrl('/user/captcha/newimage'));
-            if (! $captchaField->isValid($captchaInput, $captchaInput)) {
-                $this->addFormError('captcha', __('User', 'resetPassword', 'invalidCaptchaInput'));
-            }
-
-            if (! $this->hasFormError()) {
-                $user = User_Model_User::loadByEmail($email);
-                $user->generateKeyEmail();
-                $user->save();
-                $this->entityManager->flush();
-
-                // On envoie le mail à l'utilisateur
-                $url = 'http://' . $_SERVER["SERVER_NAME"]
-                    . $this->view->baseUrl() . "/user/action/new-password?key="
-                    . $user->getEmailKey();
-                $subject = __('User', 'email', 'subjectForgottenPassword');
-                $config = Zend_Registry::get('configuration');
-                if (empty($config->emails->contact->adress)) {
-                    throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
-                }
-                $content = __('User',
-                              'email',
-                              'bodyForgottenPassword',
-                              array(
-                                   'PASSWORD_RESET_CONFIRMATION_LINK' => $url,
-                                   'APPLICATION_NAME'                 => $config->emails->noreply->name
-                              ));
-                $this->userService->sendEmail($user, $subject, $content);
-                $this->setFormMessage(__('User', 'resetPassword', 'emailNewPasswordLinkSent'),
-                                      UI_Message::TYPE_SUCCESS);
-            }
-            $this->sendFormResponse();
-        }
-    }
-
-    /**
-     * Demande de nouveau mot de passe
-     * @Secure("public")
-     */
-    public function newPasswordAction()
-    {
-        $key = $this->getParam('key');
-        if (!$key) {
-            UI_Message::addMessageStatic(__('User', 'messages', 'unknownEmailKey'));
-            $this->redirect('user/action/password-forgotten');
-            return;
-        }
-
-        //on charge l'utilisateur à partir de la clé mail
-        try {
-            $user = User_Model_User::loadByEmailKey($key);
-        } catch (Core_Exception_NotFound $e) {
-            UI_Message::addMessageStatic(__('User', 'messages', 'unknownEmailKey'));
-            $this->redirect('user/action/password-forgotten');
-            return;
-        }
-
-        $config = Zend_Registry::get('configuration');
-        if (empty($config->emails->contact->adress)) {
-            throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
-        }
-
-        $user->eraseEmailKey();
-        $password = $user->setRandomPassword();
-        $user->save();
-        $this->entityManager->flush();
-
-        $subject = __('User', 'email', 'subjectNewPassword',
-                    array(
-                         'APPLICATION_NAME' => $config->emails->noreply->name
-                    ));
-        $content = __('User', 'email', 'bodyNewPassword',
-                      array(
-                           'PASSWORD'         => $password,
-                           'APPLICATION_NAME' => $config->emails->noreply->name,
-                           'URL_APPLICATION'  => 'http://' . $_SERVER["SERVER_NAME"] . $this->view->baseUrl() . '/',
-                      ));
-        $this->userService->sendEmail($user, $subject, $content);
     }
 
     /**

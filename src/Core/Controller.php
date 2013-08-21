@@ -55,6 +55,8 @@ abstract class Core_Controller extends Zend_Controller_Action
         // Toute cette manipulation est nécessaire pour contourner
         //  un bug de Zend Framework (les headers firebug ne sont pas envoyés sinon).
         //@see http://framework.zend.com/issues/browse/ZF-4134
+
+        /** @var Zend_Controller_Action_Helper_Json $json */
         $json = $this->getHelper('Json');
         $json->suppressExit = true;
         $json->sendJson($reponse);

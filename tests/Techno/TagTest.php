@@ -3,6 +3,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 
 /**
  * @package Techno
@@ -25,7 +26,7 @@ class Techno_Test_TagTest
      */
     public static function generateObject()
     {
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label test');
         $keyword->setRef(Core_Tools::generateString(10));
         $keyword->save();
@@ -82,8 +83,8 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            foreach (Keyword_Model_Keyword::loadList() as $o) {
+        if (Keyword::countTotal() > 0) {
+            foreach (Keyword::loadList() as $o) {
                 $o->delete();
             }
         }
@@ -106,7 +107,7 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
     function testConstruct()
     {
         // Fixtures
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label');
         $keyword->setRef('keywordTest2');
         $keyword->save();
@@ -125,7 +126,7 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Techno_Model_Meaning', $o->getMeaning());
         $this->assertEquals($meaning->getKey(), $o->getMeaning()->getKey());
-        $this->assertInstanceOf('Keyword_Model_Keyword', $o->getValue());
+        $this->assertInstanceOf('Keyword\Domain\Keyword', $o->getValue());
         $this->assertEquals($keyword->getRef(), $o->getValue()->getRef());
         return $o;
     }
@@ -148,7 +149,7 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Techno_Model_Meaning', $oLoaded->getMeaning());
         $this->assertEquals($o->getMeaning()->getKey(), $oLoaded->getMeaning()->getKey());
         // getValue
-        $this->assertInstanceOf('Keyword_Model_Keyword', $oLoaded->getValue());
+        $this->assertInstanceOf('Keyword\Domain\Keyword', $oLoaded->getValue());
         $this->assertEquals($o->getValue()->getRef(), $oLoaded->getValue()->getRef());
         return $oLoaded;
     }

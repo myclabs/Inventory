@@ -1,0 +1,19 @@
+Doc\Domain\Library:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Doc_Library
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToMany:
+    documents:
+      targetEntity: Doc\Domain\Document
+      mappedBy: library
+      orderBy:
+        name: ASC
+      cascade: [ persist ]
+      orphanRemoval: true

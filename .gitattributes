@@ -6,3 +6,5 @@
 *.swf    binary
 *.ods    binary
 *.vpp    binary
+*.ttf    binary
+*.jpg    binary
