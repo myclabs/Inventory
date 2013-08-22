@@ -252,7 +252,7 @@ class DW_ReportController extends Core_Controller
 
                 if ($filterArray['elements']['filterAxis'.$filterAxisRef.'NumberMembers']['value'] === 'some') {
                     $filterMemberRefs = $filterArray['elements']['selectAxis'.$filterAxisRef.'MembersFilter']['value'];
-                    foreach (explode(',', $filterMemberRefs) as $filterMemberRef) {
+                    foreach ($filterMemberRefs as $filterMemberRef) {
                         try {
                             $filterMember = DW_Model_Member::loadByRefAndAxis($filterMemberRef, $filterAxis);
                             $filter->addMember($filterMember);
