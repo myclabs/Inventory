@@ -482,7 +482,7 @@ function getInputValues(AF_Model_Input $input)
         case 'AF_Model_Input_Numeric':
             /** @var AF_Model_Input_Numeric $input */
             $inputValue = $input->getValue();
-            $conversionFactor = $inputValue->getUnit()->getConversionFactor($input->getComponent()->getUnit()->getRef());
+            $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
             $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
             return [
                 $inputValue->getDigitalValue(),
