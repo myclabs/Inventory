@@ -17,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    <?php /** @var \Unit\ComposedUnit $composedUnit */ foreach ($this->composedUnits as $composedUnit) { ?>
+    <?php /** @var \Unit\Domain\Unit\ComposedUnit $composedUnit */ foreach ($this->composedUnits as $composedUnit) { ?>
         <tr>
             <td><?=$composedUnit->getSymbol()?></td>
             <td><?=$composedUnit->getRef()?></td>

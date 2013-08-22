@@ -63,7 +63,7 @@ abstract class Unit extends Core_Model_Entity
     }
 
     /**
-     * Défini la ref de l'unité.
+     * Définit la ref de l'unité.
      * @param string $ref
      */
     public function setRef($ref)
@@ -72,7 +72,7 @@ abstract class Unit extends Core_Model_Entity
     }
 
     /**
-     * Renvoi la ref de l'unité.
+     * Renvoie la ref de l'unité.
      * @return string
      */
     public function getRef()
@@ -81,7 +81,7 @@ abstract class Unit extends Core_Model_Entity
     }
 
     /**
-     * Défini le nom de l'unité.
+     * Définit le nom de l'unité.
      * @param string $name
      */
     public function setName($name)
@@ -90,7 +90,7 @@ abstract class Unit extends Core_Model_Entity
     }
 
     /**
-     * Renvoi le nom de l'unité.
+     * Renvoie le nom de l'unité.
      * @return string
      */
     public function getName()
@@ -99,7 +99,7 @@ abstract class Unit extends Core_Model_Entity
     }
 
     /**
-     * Défini le symbole de l'unité.
+     * Définit le symbole de l'unité.
      * @param string $symbol
      */
     public function setSymbol($symbol)
@@ -108,7 +108,7 @@ abstract class Unit extends Core_Model_Entity
     }
 
     /**
-     * Renvoi le symbole de l'unité.
+     * Renvoie le symbole de l'unité.
      * @return string
      */
     public function getSymbol()
@@ -122,9 +122,15 @@ abstract class Unit extends Core_Model_Entity
     abstract public function getReferenceUnit();
 
     /**
-     * Renvoi le facteur de Conversion de l'unité
+     * Renvoie le facteur de conversion de l'unité.
      * @param Unit $unit
      */
     abstract public function getConversionFactor(Unit $unit);
+
+    /**
+     * Renvoie la liste des unités compatibles, càd de même grandeur physique.
+     * @return Unit[]
+     */
+    abstract public function getEquivalentUnits();
 
 }

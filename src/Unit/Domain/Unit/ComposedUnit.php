@@ -1,13 +1,6 @@
 <?php
-/**
- * @author     valentin.claras
- * @author     hugo.charbonnier
- * @author     yoann.croizer
- * @package    Unit
- * @subpackage Model
- */
 
-namespace Unit;
+namespace Unit\Domain\Unit;
 
 use Unit\Domain\Unit\Unit;
 use Unit\Domain\Unit\ExtendedUnit;
@@ -21,10 +14,11 @@ use Unit\IncompatibleUnitsException;
 /**
  * Unité Composée
  *
- * Classe utilitaire (pas du modèle), utilisée par UnitAPI.
+ * Value Object
  *
- * @package    Unit
- * @subpackage Model
+ * @author     valentin.claras
+ * @author     hugo.charbonnier
+ * @author     yoann.croizer
  */
 class ComposedUnit
 {
@@ -40,11 +34,10 @@ class ComposedUnit
      * Tableau de la forme array('unit' => $unit, 'exponent' => $exponent);
      * @var array
      */
-    protected $components = array();
+    protected $components = [];
 
     /**
-     * Constructeur
-     * @param String $ref
+     * @param string $ref
      */
     public function __construct($ref = null)
     {
@@ -54,7 +47,7 @@ class ComposedUnit
 
     /**
      * Permet de récupérer les composants d'une unité composée.
-     * @return array tableau de $components
+     * @return array tableau de components
      */
     public function getComponents()
     {
@@ -63,13 +56,13 @@ class ComposedUnit
 
     /**
      * Récupère un tableau avec les composants et les exposants à partir du ref.
-     * @param String $ref
+     * @param string $ref
      * @return array
      */
     private function getComponentsByRef($ref)
     {
         // Tableau qui contiendra les références des unités.
-        $componentRefs = array();
+        $componentRefs = [];
         // On parse chacun des caractères de la référence de l'unité composée.
         //  Pour chaque symbole, soit on termine la ref en cours et on l'ajoute au tableau,
         //  soit on continue de la construire.
@@ -225,7 +218,7 @@ class ComposedUnit
     /**
      * Cette méthode permet de vérifier que deux unités sont compatibles.
      * Cette méthode sera notamment appelée avant des calculs de sommes.
-     * @param \Unit\ComposedUnit $unit
+     * @param \Unit\Domain\Unit\ComposedUnit $unit
      * @return bool
      */
     public function isEquivalent(ComposedUnit $unit)
@@ -244,7 +237,7 @@ class ComposedUnit
      * On converti une unité composée en produit d'unités de référence des grandeurs
      * physiques de base.
      * Cette méthode regroupe les exposants associés à chaque unité de référence
-     * @return \Unit\ComposedUnit $newUnit
+     * @return \Unit\Domain\Unit\ComposedUnit $newUnit
      */
     public function getNormalizedUnit()
     {
@@ -281,7 +274,7 @@ class ComposedUnit
                     $normalizedUnit->components[] = $unitArray;
                 }
             }
-            usort($normalizedUnit->components, array('Unit\ComposedUnit', 'orderComponents'));
+            usort($normalizedUnit->components, array('Unit\Domain\Unit\ComposedUnit', 'orderComponents'));
             $normalizedUnit->setRef();
             return $normalizedUnit;
         }
@@ -405,7 +398,7 @@ class ComposedUnit
      * Méthode qui permet de retourner le produit des unités sous la forme
      *  d'une unité normalisée.
      * @param array $operandes : (API_Unit $unit, int signExponent)
-     * @return \Unit\ComposedUnit
+     * @return \Unit\Domain\Unit\ComposedUnit
      */
     public function multiply(array $operandes)
     {

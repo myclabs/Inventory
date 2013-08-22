@@ -16,9 +16,6 @@ namespace Unit\Domain\Unit;
  */
 class DiscreteUnit extends Unit
 {
-    /**
-     * Constructeur
-     */
     public function __construct()
     {
         // Le Symbole n'etant pas utile dans les unités discretes, il vaut le nom.
@@ -67,6 +64,14 @@ class DiscreteUnit extends Unit
             throw new \Core_Exception_InvalidArgument('Units need to be the same');
         }
         return 1;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEquivalentUnits()
+    {
+        return [];
     }
 
 }

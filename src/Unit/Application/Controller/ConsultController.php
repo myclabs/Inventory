@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 use Unit\Domain\Unit\StandardUnit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\UnitSystem;
-use Unit\ComposedUnit;
+use Unit\Domain\Unit\ComposedUnit;
 
 /**
  * Unit_ConsultController
