@@ -123,8 +123,6 @@ class DW_Model_Repository_Report extends Core_Model_Repository
 
             // Calcul de l'incertitude relative.
             foreach ($ratioValues as $denominatorIdentifier => $ratioValue) {
-                $ratioValues[$denominatorIdentifier]['uncertainty'] = sqrt($ratioValue['uncertainty']);
-                $ratioValues[$denominatorIdentifier]['uncertainty'] /= $ratioValue['value'];
                 if ($ratioValue['value'] != 0) {
                     $ratioValues[$denominatorIdentifier]['uncertainty'] = sqrt($ratioValue['uncertainty']);
                     $ratioValues[$denominatorIdentifier]['uncertainty'] /= $ratioValue['value'];
