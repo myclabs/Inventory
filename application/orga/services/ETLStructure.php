@@ -1013,27 +1013,35 @@ class Orga_Service_ETLStructure
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            // Début de transaction.
-            $this->entityManager->beginTransaction();
+            try {
+                // Début de transaction.
+                $this->entityManager->beginTransaction();
 
-            $this->etlDataService->clearDWResultsForCell($cell);
-            $this->entityManager->flush();
+                $this->etlDataService->clearDWResultsForCell($cell);
+                $this->entityManager->flush();
 
-            $this->updateCellDWCubeLabel($cell);
-            $this->resetDWCube(
-                $cell->getDWCube(),
-                $cell->getGranularity()->getOrganization(),
-                array(
-                    'axes' => $cell->getGranularity()->getAxes(),
-                    'members' => $cell->getMembers()
-                )
-            );
+                $this->updateCellDWCubeLabel($cell);
+                $this->resetDWCube(
+                    $cell->getDWCube(),
+                    $cell->getGranularity()->getOrganization(),
+                    array(
+                        'axes' => $cell->getGranularity()->getAxes(),
+                        'members' => $cell->getMembers()
+                    )
+                );
 
-            $this->etlDataService->populateDWResultsForCell($cell);
-            $this->entityManager->flush();
+                $this->etlDataService->populateDWResultsForCell($cell);
+                $this->entityManager->flush();
 
-            // Fin de transaction.
-            $this->entityManager->commit();
+                // Fin de transaction.
+                $this->entityManager->commit();
+            } catch (ErrorException $e) {
+                // Annulation de la transaction.
+                $this->entityManager->rollback();
+
+                throw $e;
+            }
+
         }
     }
 
