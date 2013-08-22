@@ -34,6 +34,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
             $isRatio = true;
             $numeratorConversionFactor = $numerator->getRatioUnit()->getConversionFactor($numerator->getUnit()->getRef());
             $denominatorConversionFactor = $denominator->getRatioUnit()->getConversionFactor($denominator->getUnit()->getRef());
+            $conversionFactor = $numeratorConversionFactor / $denominatorConversionFactor;
             // Tableau des identifiants des valeurs du dénominateurs indexées par l'identifiant de celle du numérateur.
             $membersLink = array();
         } else {
@@ -80,12 +81,11 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                     $membersLink[$identifierValue] = $parentMembersId;
                 }
             }
-            $resultValue = $result->getValue()->getDigitalValue();
-            if ($isRatio) {
-                $resultValue *= $numeratorConversionFactor;
-            }
-            $values[$identifierValue]['value'] += $resultValue;
-            $values[$identifierValue]['uncertainty'] += pow(($result->getValue()->getRelativeUncertainty() * $resultValue), 2);
+            $values[$identifierValue]['value'] += $result->getValue()->getDigitalValue();
+            $values[$identifierValue]['uncertainty'] += pow(
+                ($result->getValue()->getRelativeUncertainty() * $result->getValue()->getDigitalValue()),
+                2
+            );
         }
 
         // Calcul de l'incertitude relative.
@@ -119,12 +119,11 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                 if (!isset($ratioValues[$identifierValue])) {
                     $ratioValues[$identifierValue] = array('value' => 0, 'uncertainty' => 0);
                 }
-                $resultValue = $result->getValue()->getDigitalValue();
-                if ($isRatio) {
-                    $resultValue *= $denominatorConversionFactor;
-                }
-                $ratioValues[$identifierValue]['value'] += $resultValue;
-                $ratioValues[$identifierValue]['uncertainty'] += pow(($result->getValue()->getRelativeUncertainty() * $resultValue), 2);
+                $ratioValues[$identifierValue]['value'] += $result->getValue()->getDigitalValue();
+                $ratioValues[$identifierValue]['uncertainty'] += pow(
+                    ($result->getValue()->getRelativeUncertainty() * $result->getValue()->getDigitalValue()),
+                    2
+                );
             }
 
             // Calcul de l'incertitude relative.
@@ -147,6 +146,8 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                         +
                         pow($ratioValues[$denominatorIdentifier]['uncertainty'], 2)
                     );
+                    // Conversion dans l'unité pour ratio.
+                    $values[$numeratorIdentifier]['values'] *= $conversionFactor;
                 } else {
                     // Mettre la valeur à 0 !
                     $values[$numeratorIdentifier]['value'] = 0;
