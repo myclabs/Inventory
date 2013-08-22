@@ -127,7 +127,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                     $ratioValues[$denominatorIdentifier]['uncertainty'] = sqrt($ratioValue['uncertainty']);
                     $ratioValues[$denominatorIdentifier]['uncertainty'] /= $ratioValue['value'];
                 } else {
-                    $ratioValues[$denominatorIdentifier]['uncertainty'] /= 0;
+                    $ratioValues[$denominatorIdentifier]['uncertainty'] = 0;
                 }
             }
 
