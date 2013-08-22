@@ -344,7 +344,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $report->setNumerator($numeratorIndicator);
 
             if (($xmlIndicators->length > 1)) {
-                $xmlDenominator = $xmlIndicators->item(0);
+                $xmlDenominator = $xmlIndicators->item(1);
                 $denominatorIndicator = DW_Model_Indicator::loadByRefAndCube(
                     'classif_'.$xmlDenominator->getAttribute('ref'),
                     $cube
