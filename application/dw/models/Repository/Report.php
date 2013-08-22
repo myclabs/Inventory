@@ -32,8 +32,8 @@ class DW_Model_Repository_Report extends Core_Model_Repository
 
         if ($denominator !== null) {
             $isRatio = true;
-            $numeratorConversionFactor = $numerator->getUnit()->getConversionFactor($numerator->getRatioUnit()->getRef());
-            $denominatorConversionFactor = $denominator->getUnit()->getConversionFactor($denominator->getRatioUnit()->getRef());
+            $numeratorConversionFactor = $numerator->getRatioUnit()->getConversionFactor($numerator->getUnit()->getRef());
+            $denominatorConversionFactor = $denominator->getRatioUnit()->getConversionFactor($denominator->getUnit()->getRef());
             // Tableau des identifiants des valeurs du dénominateurs indexées par l'identifiant de celle du numérateur.
             $membersLink = array();
         } else {
