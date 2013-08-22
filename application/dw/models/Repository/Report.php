@@ -147,9 +147,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                         pow($ratioValues[$denominatorIdentifier]['uncertainty'], 2)
                     );
                     // Conversion dans l'unité pour ratio.
-                    $values[$numeratorIdentifier]['values'] *= $conversionFactor;
+                    $values[$numeratorIdentifier]['value'] *= $conversionFactor;
                 } else {
-                    // Mettre la valeur à 0 !
+                    // Mettre la valeur à 0 !f
                     $values[$numeratorIdentifier]['value'] = 0;
                     $values[$numeratorIdentifier]['uncertainty'] = 0;
                 }
