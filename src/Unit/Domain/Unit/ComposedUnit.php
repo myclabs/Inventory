@@ -16,9 +16,9 @@ use Unit\IncompatibleUnitsException;
  *
  * Value Object
  *
- * @author     valentin.claras
- * @author     hugo.charbonnier
- * @author     yoann.croizer
+ * @author valentin.claras
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
 class ComposedUnit
 {
@@ -37,7 +37,7 @@ class ComposedUnit
     protected $components = [];
 
     /**
-     * @param string $ref
+     * @param string|null $ref
      */
     public function __construct($ref = null)
     {
@@ -81,10 +81,10 @@ class ComposedUnit
         }
 
         // Tableau qui contiendra les symboles des unités chargés du model Unit.
-        $componentUnits = array();
+        $componentUnits = [];
         // On parse chaque Ref composantes de l'unité composée.
         //  Pour chaque ref, on charge l'unité correspondante ou onr enseigne l'exposant.
-        $unitArray = array();
+        $unitArray = [];
         foreach ($componentRefs as $ref) {
             // Traitement des exposants.
             if (preg_match('#\^-?[0-9]+#', $ref)) {
@@ -97,7 +97,7 @@ class ComposedUnit
                         $unitArray['exponent'] = '1';
                     }
                     $componentUnits[] = $unitArray;
-                    $unitArray = array();
+                    $unitArray = [];
                 }
                 $unitArray['unit'] = Unit::loadByRef($ref);
             }
@@ -114,7 +114,7 @@ class ComposedUnit
 
     /**
      * Récupère le ref d'une unité composé
-     * @return String $ref
+     * @return string $ref
      */
     public function getRef()
     {
@@ -123,10 +123,11 @@ class ComposedUnit
 
     /**
      * Permet de mettre à jour la valeur de l'attribut ref.
-     * @param null|String $ref Nouveau ref de l'unité
      *
      * Si le ref passé en paramètre est null, on test si le tableau des unités est remplit.
      *  S'il est rempli on s'en sert pour construire le ref. Sinon on met le ref null.
+     *
+     * @param null|string $ref Nouveau ref de l'unité
      */
     public function setRef($ref = null)
     {
@@ -154,7 +155,7 @@ class ComposedUnit
 
     /**
      * Cette méthode renvoie le facteur de conversion "global" associé à une unité composée
-     * @return float  $conversionFactor Facteur de conversion global
+     * @return float $conversionFactor Facteur de conversion global
      */
     public function getConversionFactor()
     {
@@ -162,13 +163,11 @@ class ComposedUnit
         foreach ($this->components as $unitArray) {
             if ($unitArray['unit'] instanceof StandardUnit) {
                 $conversionFactor *= pow($unitArray['unit']->getMultiplier(), $unitArray['exponent']);
-            } else {
-                if ($unitArray['unit'] instanceof ExtendedUnit) {
-                    $conversionFactorUnitStandard = $unitArray['unit']->getStandardUnit()->getMultiplier();
-                    $conversionFactorUnitExtension = $unitArray['unit']->getExtension()->getMultiplier();
-                    $conversionFactUnit = $conversionFactorUnitStandard * $conversionFactorUnitExtension;
-                    $conversionFactor *= pow($conversionFactUnit, $unitArray['exponent']);
-                }
+            } elseif ($unitArray['unit'] instanceof ExtendedUnit) {
+                $conversionFactorUnitStandard = $unitArray['unit']->getStandardUnit()->getMultiplier();
+                $conversionFactorUnitExtension = $unitArray['unit']->getExtension()->getMultiplier();
+                $conversionFactUnit = $conversionFactorUnitStandard * $conversionFactorUnitExtension;
+                $conversionFactor *= pow($conversionFactUnit, $unitArray['exponent']);
             }
         }
         return $conversionFactor;
@@ -176,7 +175,7 @@ class ComposedUnit
 
     /**
      * Récupère le symbole d'une unité.
-     * @return String
+     * @return string
      */
     public function getSymbol()
     {
@@ -218,32 +217,29 @@ class ComposedUnit
     /**
      * Cette méthode permet de vérifier que deux unités sont compatibles.
      * Cette méthode sera notamment appelée avant des calculs de sommes.
-     * @param \Unit\Domain\Unit\ComposedUnit $unit
+     * @param ComposedUnit $unit
      * @return bool
      */
     public function isEquivalent(ComposedUnit $unit)
     {
-        $unit1 = $this->getNormalizedUnit();
-        $unit2 = $unit->getNormalizedUnit();
-
-        if ($unit1 != $unit2) {
-            return false;
-        } else {
+        if ($this->getNormalizedUnit() == $unit->getNormalizedUnit()) {
             return true;
         }
+
+        return false;
     }
 
     /**
      * On converti une unité composée en produit d'unités de référence des grandeurs
      * physiques de base.
      * Cette méthode regroupe les exposants associés à chaque unité de référence
-     * @return \Unit\Domain\Unit\ComposedUnit $newUnit
+     * @throws \Core_Exception_NotFound
+     * @return ComposedUnit $newUnit
      */
     public function getNormalizedUnit()
     {
-        $tabUnites = array();
-        $standardUnits = array();
-        $otherUnits = array();
+        $standardUnits = [];
+        $otherUnits = [];
         $normalizedUnit = new ComposedUnit();
 
         // On traite chacune des unités de l'unité composé pour récupérer
@@ -352,45 +348,39 @@ class ComposedUnit
         if (($unitArrayA['exponent'] * $unitArrayB['exponent']) < 0) {
             if ($unitArrayA['exponent'] > $unitArrayB['exponent']) {
                 return -1;
-            } else {
-                if ($unitArrayA['exponent'] < $unitArrayB['exponent']) {
-                    return 1;
-                }
+            }
+            if ($unitArrayA['exponent'] < $unitArrayB['exponent']) {
+                return 1;
             }
         } else {
             $classA = get_class($unitArrayA['unit']);
             $classB = get_class($unitArrayB['unit']);
+
             if ($classA == $classB) {
                 $idA = $unitArrayA['unit']->getKey();
                 $idB = $unitArrayB['unit']->getKey();
                 if ($idA['id'] < $idB['id']) {
                     return -1;
-                } else {
-                    if ($idA['id'] > $idB['id']) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
                 }
-            } else {
-                if ($classA == 'Unit\Domain\DiscreteUnit') {
-                    return -1;
-                } else {
-                    if ($classA == 'Unit\Domain\StandardUnit') {
-                        return 1;
-                    } else {
-                        if ($classB == 'Unit\Domain\StandardUnit') {
-                            return -1;
-                        } else {
-                            if ($classB == 'Unit\Domain\DiscreteUnit') {
-                                return 1;
-                            } else {
-                                return 0;
-                            }
-                        }
-                    }
+                if ($idA['id'] > $idB['id']) {
+                    return 1;
                 }
+                return 0;
             }
+
+            if ($classA == 'Unit\Domain\DiscreteUnit') {
+                return -1;
+            }
+            if ($classA == 'Unit\Domain\StandardUnit') {
+                return 1;
+            }
+            if ($classB == 'Unit\Domain\StandardUnit') {
+                return -1;
+            }
+            if ($classB == 'Unit\Domain\DiscreteUnit') {
+                return 1;
+            }
+            return 0;
         }
     }
 
@@ -398,7 +388,7 @@ class ComposedUnit
      * Méthode qui permet de retourner le produit des unités sous la forme
      *  d'une unité normalisée.
      * @param array $operandes : (API_Unit $unit, int signExponent)
-     * @return \Unit\Domain\Unit\ComposedUnit
+     * @return ComposedUnit
      */
     public function multiply(array $operandes)
     {
@@ -421,7 +411,8 @@ class ComposedUnit
      * Sert à ajouter des unités entre elles. Renvoi une unité composée
      * de l'unité de référence de la grandeur physique de base.
      * @param array $components
-     * @return String $unitResult
+     * @throws IncompatibleUnitsException
+     * @return string $unitResult
      */
     public function calculateSum($components)
     {
@@ -447,7 +438,7 @@ class ComposedUnit
      */
     public function reverseUnit()
     {
-        $newComponents = array();
+        $newComponents = [];
         // Pour chaque composant de l'unité on inverse son exposant.
         foreach ($this->components as $unitArray) {
             $unitArray['exponent'] *= -1;
