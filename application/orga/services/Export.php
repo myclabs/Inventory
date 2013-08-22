@@ -482,14 +482,8 @@ function getInputValues(AF_Model_Input $input)
         case 'AF_Model_Input_Numeric':
             /** @var AF_Model_Input_Numeric $input */
             $inputValue = $input->getValue();
-            /** @var \Unit\UnitAPI $baseComponentUnit */
-            $baseComponentUnit = $input->getComponent()->getUnit();
-            $conversionFactor = $inputValue->getUnit()->getConversionFactor($baseComponentUnit->getRef());
-            $baseConvertedValue = new Calc_UnitValue(
-                $baseComponentUnit,
-                $inputValue->getDigitalValue() * $conversionFactor,
-                $inputValue->getRelativeUncertainty(). $conversionFactor
-            );
+            $conversionFactor = $inputValue->getUnit()->getConversionFactor($input->getComponent()->getUnit()->getRef());
+            $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
             return [
                 $inputValue->getDigitalValue(),
                 $inputValue->getRelativeUncertainty(),
