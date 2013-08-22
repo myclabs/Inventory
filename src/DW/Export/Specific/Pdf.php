@@ -185,18 +185,17 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                             $results = $report->getValues();
 
                             if (($report->getDenominator() !== null)) {
-                                $unit = \Unit\UnitAPI::multiply(
-                                    [ 'unit' => $report->getNumerator()->getUnit(), 'signExponent' => 1 ],
-                                    [ 'unit' => $report->getDenominator()->getUnit(), 'signExponent' => -1 ]
-                                );
+                                $unit = $report->getNumerator()->getRatioUnit()->getSymbol()
+                                    . ' / ' .
+                                    $report->getDenominator()->getRatioUnit()->getSymbol();
                             } else {
-                                $unit = $report->getNumerator()->getUnit();
+                                $unit = $report->getNumerator()->getUnit()->getSymbol();
                             }
                             $this->html .= $report->getLabel().' : '.
                             $locale->formatNumber(array_pop($results)['value'], 3).
                             // On n'affiche pas l'incertitude
                             //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                            ' '.$unit->getSymbol();
+                            ' '.$unit;
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
