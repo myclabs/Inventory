@@ -78,7 +78,7 @@ class UnitAPI
      * sous forme de chaîne de caractères. La variable booléenne $html si elle est à "true" permet de
      * transformer par exemple un exposant de la forme m^2 en m<sup>2</sup>.
      *
-     * @return UnitAPI unitSymbol
+     * @return String
      */
     public function getSymbol()
     {

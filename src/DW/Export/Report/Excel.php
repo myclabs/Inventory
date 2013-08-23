@@ -47,10 +47,9 @@ class DW_Export_Report_Excel extends Export_Excel
         );
 
         if ($report->getDenominator() === null) {
-            $valueUnit = $report->getNumerator()->getUnit()->getSymbol();
             $sheetData[] = array(
                 __('Classif', 'indicator', 'indicator'),
-                $report->getNumerator()->getLabel() . ' (' . $valueUnit . ')'
+                $report->getNumerator()->getLabel() . ' (' . $report->getValuesUnitSymbol() . ')'
             );
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
@@ -65,10 +64,9 @@ class DW_Export_Report_Excel extends Export_Excel
                 );
             }
         } else {
-            $valueUnit = $report->getNumerator()->getRatioUnit()->getSymbol();
             $sheetData[] = array(
                 __('DW', 'name', 'numerator'),
-                $report->getNumerator()->getLabel() . ' (' . $valueUnit . ')'
+                $report->getNumerator()->getLabel() . ' (' . $report->getNumerator()->getRatioUnit()->getSymbol() . ')'
             );
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
@@ -83,21 +81,20 @@ class DW_Export_Report_Excel extends Export_Excel
                 );
             }
 
-            $valueUnit .= '/' . $report->getDenominator()->getRatioUnit()->getSymbol();
             $sheetData[] = array(
                 __('DW', 'name', 'denominator'),
-                $report->getDenominator()->getLabel(). ' (' .  $valueUnit . ')'
+                $report->getDenominator()->getLabel(). ' (' .  $report->getDenominator()->getRatioUnit()->getSymbol() . ')'
             );
 
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
-                    __('UI', 'name', 'axis').' 1 '.__('UI', 'name', 'denominatorMin'),
+                    __('UI', 'name', 'axis').' 1 '.__('DW', 'name', 'denominatorMin'),
                     ($denominatorAxis1 !== null) ? $denominatorAxis1->getLabel() : '--'
                 );
             }
             if ($numeratorAxis2 !== null) {
                 $sheetData[] = array(
-                    __('UI', 'name', 'axis').' 2 '.__('UI', 'name', 'denominatorMin'),
+                    __('UI', 'name', 'axis').' 2 '.__('DW', 'name', 'denominatorMin'),
                     ($denominatorAxis2 !== null) ? $denominatorAxis2->getLabel() : '--'
                 );
             }
@@ -161,7 +158,7 @@ class DW_Export_Report_Excel extends Export_Excel
         }
 
         $sheetHeader[] = array(
-            __('UI', 'name', 'value') . ' (' . $valueUnit . ')',
+            __('UI', 'name', 'value') . ' (' . $report->getValuesUnitSymbol() . ')',
             array(
                 'font' => array('bold' => true),
                 'alignment' => array(
