@@ -1,81 +1,49 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Profiler
- */
+
+use Psr\Log\LoggerInterface;
 
 /**
  * Log des requêtes SQL dans un fichier
  *
- * @package    Core
- * @subpackage Profiler
+ * @author     matthieu.napoli
  */
 class Core_Profiler_File implements Doctrine\DBAL\Logging\SQLLogger
 {
     /**
-     * Fichier de log.
-     *
-     * Chemin relatif au dossier "application".
-     *
-     * @var string
+     * @var LoggerInterface
      */
-    protected $_fichierLog = '/../data/logs/queries.log';
+    private $logger;
 
-    /**
-     * Pointeur vers le fichier ouvert.
-     */
-    protected $_fichier;
+    private $timeStart;
 
 
-    /**
-     * Constructeur : Initialise le fichier de Log..
-     */
-    public function __construct()
+    public function __construct(LoggerInterface $logger)
     {
-        // Teste si le dossier existe.
-        if (! is_dir(dirname(APPLICATION_PATH.$this->_fichierLog))) {
-            if (! mkdir(dirname(APPLICATION_PATH.$this->_fichierLog), 0777, true)) {
-                Core_Error_Log::getInstance()->dump('Cannot use query profiler, dir "data/logs/" does not exist.');
-                return;
-            }
-        }
-        // Teste s'il est possible d'écrire dans le fichier.
-        if (! is_writable(APPLICATION_PATH.$this->_fichierLog)) {
-            if (!touch(APPLICATION_PATH.$this->_fichierLog)) {
-                Core_Error_Log::getInstance()->dump('Cannot use query profiler, file "queries.log" is not writable.');
-                return;
-            }
-        }
-
-        // Création du log
-        $this->_fichier = fopen(APPLICATION_PATH.$this->_fichierLog, 'w');
+        $this->logger = $logger;
     }
 
     /**
-     * Logs a SQL statement somewhere.
      * {@inheritdoc}
-     *
-     * @param string $sql The SQL to be executed.
-     * @param array $params The SQL parameters.
-     * @param array $types The SQL parameter types.
-     * @return void
      */
     public function startQuery($sql, array $params = null, array $types = null)
     {
-        $text = 'Query : '.$sql."\n\t".' with parameters : '. json_encode($params).' of type '.json_encode($types);
-        // Ecrit la requête dans le fichier
-        fputs($this->_fichier, $text."\n\n");
+        $this->logger->debug($sql);
+        $this->logger->debug("\tParameters: " . json_encode($params) . " of types: " . json_encode($types));
+
+        $this->timeStart = microtime(true);
     }
 
     /**
-     * Mark the last started query as stopped. This can be used for timing of queries.
      * {@inheritdoc}
-     *
-     * @return void
      */
     public function stopQuery()
     {
-    }
+        $time = round((microtime(true) - $this->timeStart) * 1000., 2);
 
+        $this->logger->debug("\tTime: $time ms" . PHP_EOL);
+
+        if ($time > 100) {
+            $this->logger->warning("WARNING: Query time over 100ms" . PHP_EOL);
+        }
+    }
 }

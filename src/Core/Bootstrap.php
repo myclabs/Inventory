@@ -11,6 +11,7 @@ use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -141,6 +142,13 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $logger->pushHandler(new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG));
 
         $this->container->set('Psr\Log\LoggerInterface', $logger);
+
+        // Log des requetes
+        $file = $this->container->get('log.query.file');
+        $queryLoggerHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+        $queryLoggerHandler->setFormatter(new LineFormatter("%message%" . PHP_EOL));
+        $queryLogger = new Logger('log.query', [$queryLoggerHandler]);
+        $this->container->set('log.query', $queryLogger);
     }
 
     /**
@@ -227,7 +235,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             case 'developpement':
             case 'testsunitaires':
                 // Requêtes placées dans un fichier.
-                $profiler = new Core_Profiler_File();
+                $profiler = $this->container->get('Core_Profiler_File');
                 break;
             default:
                 $profiler = null;

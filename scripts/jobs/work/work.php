@@ -14,7 +14,7 @@ require_once __DIR__ . '/../../../application/init.php';
 $container = Zend_Registry::get('container');
 
 // Modifie le logger par défaut
-$logger = new Logger('worker.log', [new StreamHandler('php://stdout', Logger::DEBUG)]);
+$logger = new Logger('log.worker', [new StreamHandler('php://stdout', Logger::DEBUG)]);
 $container->set('Psr\Log\LoggerInterface', $logger);
 
 /** @var Core_Work_Dispatcher $workDispatcher */
