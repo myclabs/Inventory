@@ -434,6 +434,16 @@ class AF_Model_AF extends Core_Model_Entity
     }
 
     /**
+     * @param AF_Model_Condition $condition
+     */
+    public function removeCondition(AF_Model_Condition $condition)
+    {
+        if ($this->conditions->contains($condition)) {
+            $this->conditions->removeElement($condition);
+        }
+    }
+
+    /**
      * Retourne le nombre de champs requis à la saisie de l'AF
      * @param AF_Model_InputSet|null $inputSet
      * @return int
