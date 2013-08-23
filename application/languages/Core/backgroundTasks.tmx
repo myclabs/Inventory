@@ -21,7 +21,7 @@ l'opération « [TASK_NAME] » a été effectuée en totalité sur l'applicati
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».
+operation "[TASK_NAME]" has been completed on application "[APPLICATION_NAME]".
                 </seg>
             </tuv>
         </tu>
@@ -43,7 +43,7 @@ l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'ap
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'application « [APPLICATION_NAME] ».
+an error occurred while performing operation « [TASK_NAME] » on application "[APPLICATION_NAME]".
                 </seg>
             </tuv>
         </tu>
