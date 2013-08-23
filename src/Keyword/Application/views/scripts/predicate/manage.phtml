@@ -5,33 +5,33 @@
  * @author bertrand.ferry
  * @package Keyword
  */
-?>
-    use Keyword\Domain\Keyword_Model_Predicate;
 
-    <div class="page-header">
+use Keyword\Domain\Predicate;
+?>
+<div class="page-header">
 	<h1><?=__('Keyword', 'name', 'predicates')?></h1>
 </div>
 <?php
     $datagrid = new UI_Datagrid('predicates', 'datagrid_predicate', 'keyword');
 
     $columnLabel = new UI_Datagrid_Col_Text('label', __('Keyword', 'predicate', 'directPredicateLabelHeader'));
-    $columnLabel->sortName = Keyword_Model_Predicate::QUERY_LABEL;
-    $columnLabel->filterName = Keyword_Model_Predicate::QUERY_LABEL;
+    $columnLabel->sortName = Predicate::QUERY_LABEL;
+    $columnLabel->filterName = Predicate::QUERY_LABEL;
     $columnLabel->editable = true;
 
     $columnRef = new UI_Datagrid_Col_Text('ref', __('Keyword', 'predicate', 'directPredicateIdentifierHeader'));
-    $columnRef->sortName = Keyword_Model_Predicate::QUERY_REF;
-    $columnRef->filterName = Keyword_Model_Predicate::QUERY_REF;
+    $columnRef->sortName = Predicate::QUERY_REF;
+    $columnRef->filterName = Predicate::QUERY_REF;
     $columnRef->editable = true;
 
     $columnReverseLabel = new UI_Datagrid_Col_Text('reverseLabel', __('Keyword', 'predicate', 'reversePredicateLabelHeader'));
-    $columnReverseLabel->sortName = Keyword_Model_Predicate::QUERY_REVERSE_LABEL;
-    $columnReverseLabel->filterName = Keyword_Model_Predicate::QUERY_REVERSE_LABEL;
+    $columnReverseLabel->sortName = Predicate::QUERY_REVERSE_LABEL;
+    $columnReverseLabel->filterName = Predicate::QUERY_REVERSE_LABEL;
     $columnReverseLabel->editable = true;
 
     $columnReverseRef = new UI_Datagrid_Col_Text('reverseRef', __('Keyword', 'predicate', 'reversePredicateIdentifierHeader'));
-    $columnReverseRef->sortName = Keyword_Model_Predicate::QUERY_REVERSE_REF;
-    $columnReverseRef->filterName = Keyword_Model_Predicate::QUERY_REVERSE_REF;
+    $columnReverseRef->sortName = Predicate::QUERY_REVERSE_REF;
+    $columnReverseRef->filterName = Predicate::QUERY_REVERSE_REF;
     $columnReverseRef->editable = true;
 
     $columnDescription = new UI_Datagrid_Col_LongText('description', __('UI', 'name', 'description'));

@@ -216,7 +216,8 @@ class Orga_OrganizationController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetOrganizationDWCubes',
-                    [$organization]
+                    [$organization],
+                    __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {

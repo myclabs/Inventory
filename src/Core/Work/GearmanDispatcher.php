@@ -1,5 +1,6 @@
 <?php
 
+use Core\Work\Notification\TaskNotifier;
 use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
@@ -7,7 +8,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Implémentation WorkDispatcher en utilisant Gearman
  *
- * @author matthieu.napoli
+ * @author  matthieu.napoli
  */
 class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 {
@@ -33,6 +34,11 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     private $entityManager;
 
     /**
+     * @var TaskNotifier
+     */
+    private $notifier;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -41,12 +47,14 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      * @Inject({"applicationName" = "application.name"})
      * @param string          $applicationName
      * @param EntityManager   $entityManager
+     * @param TaskNotifier    $notifier
      * @param LoggerInterface $logger
      */
-    public function __construct($applicationName, EntityManager $entityManager, LoggerInterface $logger)
+    public function __construct($applicationName, EntityManager $entityManager, TaskNotifier $notifier, LoggerInterface $logger)
     {
         $this->applicationName = $applicationName;
         $this->entityManager = $entityManager;
+        $this->notifier = $notifier;
         $this->logger = $logger;
     }
 
@@ -148,13 +156,35 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $this->entityManager->getConnection()->connect();
         $this->entityManager->beginTransaction();
 
-        // Exécute la tâche
-        $result = $worker->execute($task);
+        try {
+            // Exécute la tâche
+            $result = $worker->execute($task);
 
-        // Flush et vide l'entity manager
-        $this->entityManager->flush();
+            // Flush et vide l'entity manager
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            // Error notification
+            if ($task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
+                /** @var User_Model_User $user */
+                $user = User_Model_User::load($task->getContext()->getUserId());
+
+                $this->notifier->notifyTaskError($user, $task->getTaskLabel());
+            }
+
+            throw $e;
+        }
+
         $this->entityManager->commit();
         $this->entityManager->clear();
+
+        // Notification
+        if ($task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
+            /** @var User_Model_User $user */
+            $user = User_Model_User::load($task->getContext()->getUserId());
+
+            $this->notifier->notifyTaskFinished($user, $task->getTaskLabel());
+        }
+
         $this->entityManager->getConnection()->close();
 
         // Rétablit la locale
@@ -208,7 +238,15 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     private function saveContextInTask(Core_Work_Task $task)
     {
         $context = new Core_Work_TaskContext();
+
+        // Locale
         $context->setUserLocale(Core_Locale::loadDefault());
+
+        // User
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $context->setUserId($auth->getIdentity());
+        }
 
         $task->setContext($context);
     }

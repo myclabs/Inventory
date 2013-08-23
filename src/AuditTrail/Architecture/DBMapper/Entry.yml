@@ -19,6 +19,9 @@ AuditTrail\Domain\Entry:
     context:
       targetEntity: AuditTrail\Domain\Context\Context
       cascade: [ all ]
+      joinColumn:
+        # Suppression de l'entrée si le context est supprimé
+        onDelete: CASCADE
 
   manyToOne:
     user:

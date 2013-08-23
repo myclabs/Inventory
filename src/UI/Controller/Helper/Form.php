@@ -111,7 +111,7 @@ trait UI_Controller_Helper_Form
 
     /**
      * Return the Request object
-     * @return Zend_Controller_Request_Abstract
+     * @return Zend_Controller_Request_Http
      */
     abstract public function getRequest();
 

@@ -76,54 +76,50 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
+        // Validation
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-
         $userRoleRef = $this->getAddElementValue('userRole');
         if (empty($userRoleRef)) {
             $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             $role = User_Model_Role::loadByRef($userRoleRef);
         }
-
-        if (empty($this->_addErrorMessages)) {
-            if (User_Model_User::isEmailUsed($userEmail)) {
-                $user = User_Model_User::loadByEmail($userEmail);
-                if ($user->hasRole($role)) {
-                    $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
-                } else {
-                    $this->workDispatcher->runBackground(
-                        new Core_Work_ServiceCall_Task(
-                            'Orga_Service_ACLManager',
-                            'addCellUser',
-                            [$cell, $user, $role]
-                        )
-                    );
-                    $this->message = __('UI', 'message', 'addedLater');
-                }
-            } else {
-                $user = $this->userService->inviteUser(
-                    $userEmail,
-                    __('Orga', 'email', 'userRoleGivenAtCreation', array(
-                        'CELL' => $cell->getLabelExtended(),
-                        'ROLE' => __('Orga', 'role', $role->getName())
-                    ))
-                );
-                $this->message = __('Orga', 'role', 'userCreatedFromRessource');
-                $user->addRole(User_Model_Role::loadByRef('user'));
-
-                $this->workDispatcher->runBackground(
-                    new Core_Work_ServiceCall_Task(
-                        'Orga_Service_ACLManager',
-                        'addCellUser',
-                        [$cell, $user, $role, false]
-                    )
-                );
-            }
+        if (!empty($this->_addErrorMessages)) {
+            $this->send();
+            return;
         }
 
+        if (User_Model_User::isEmailUsed($userEmail)) {
+            $user = User_Model_User::loadByEmail($userEmail);
+            if ($user->hasRole($role)) {
+                $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
+                $this->send();
+                return;
+            }
+        } else {
+            $user = $this->userService->inviteUser(
+                $userEmail,
+                __('Orga', 'email', 'userRoleGivenAtCreation', array(
+                    'CELL' => $cell->getLabelExtended(),
+                    'ROLE' => __('Orga', 'role', $role->getName()),
+                ))
+            );
+            $user->addRole(User_Model_Role::loadByRef('user'));
+        }
+
+        $this->workDispatcher->runBackground(
+            new Core_Work_ServiceCall_Task(
+                'Orga_Service_ACLManager',
+                'addCellUser',
+                [$cell, $user, $role, false],
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+            )
+        );
+
+        $this->message = __('UI', 'message', 'addedLater');
         $this->send();
     }
 
@@ -150,7 +146,8 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             new Core_Work_ServiceCall_Task(
                 'Orga_Service_ACLManager',
                 'removeCellUser',
-                [$cell, $user, $role]
+                [$cell, $user, $role, false],
+                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
             )
         );
 

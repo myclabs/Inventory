@@ -37,14 +37,18 @@ class Orga_Work_Task_AddMember extends Core_Work_Task
      * @param string $ref
      * @param string $label
      * @param Orga_Model_Member[] $broaderMembers
+     * @param null|string $taskLabel
      */
-    public function __construct($axis, $ref, $label, $broaderMembers)
+    public function __construct($axis, $ref, $label, $broaderMembers, $taskLabel = null)
     {
         $this->idAxis = $axis->getId();
         $this->ref = $ref;
         $this->label = $label;
         foreach ($broaderMembers as $broaderMember) {
             $this->listBroaderMembers[] = $broaderMember->getId();
+        }
+        if ($taskLabel) {
+            $this->setTaskLabel($taskLabel);
         }
     }
 

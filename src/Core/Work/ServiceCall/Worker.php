@@ -1,15 +1,11 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
 
 use DI\Container;
 
 /**
  * Exécute l'appel d'une méthode d'un service
  *
- * @package Core
+ * @author  matthieu.napoli
  */
 class Core_Work_ServiceCall_Worker extends Core_Work_Worker
 {

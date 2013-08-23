@@ -521,12 +521,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "54551d32450ce0085c1e1a88e5145016a69ec765"
+                "reference": "877f7be4d0714d839ac10f4093806d1f68580dd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/54551d32450ce0085c1e1a88e5145016a69ec765",
-                "reference": "54551d32450ce0085c1e1a88e5145016a69ec765",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/877f7be4d0714d839ac10f4093806d1f68580dd2",
+                "reference": "877f7be4d0714d839ac10f4093806d1f68580dd2",
                 "shasum": ""
             },
             "require": {
@@ -538,7 +538,7 @@
                     "include/"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -554,7 +554,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2013-05-24 03:41:17"
+            "time": "2013-08-18 17:08:07"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -1840,7 +1840,7 @@
                 {
                     "name": "Anthon Pang",
                     "email": "apang@softwaredevelopment.ca",
-                    "role": "Fork Maintainer"
+                    "role": "developer"
                 }
             ],
             "description": "PHP WebDriver for Selenium 2",
@@ -1925,20 +1925,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaModel.git",
-                "reference": "5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076"
+                "reference": "82c1d7d3b9fdbc6928a0735b49b1558ecb156beb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/MetaModel/zipball/5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076",
-                "reference": "5c2ac6a913123ac4bd3c76ddffef7bee9fbdc076",
+                "url": "https://api.github.com/repos/mnapoli/MetaModel/zipball/82c1d7d3b9fdbc6928a0735b49b1558ecb156beb",
+                "reference": "82c1d7d3b9fdbc6928a0735b49b1558ecb156beb",
                 "shasum": ""
             },
             "require": {
-                "jms/parser-lib": "1.0.*",
+                "jms/parser-lib": "~1.0",
                 "symfony/property-access": "2.*"
             },
             "require-dev": {
-                "doctrine/orm": "2.3.*"
+                "doctrine/orm": "~2.3"
             },
             "type": "library",
             "autoload": {
@@ -1949,7 +1949,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-23 12:56:25"
+            "time": "2013-08-19 12:42:16"
         },
         {
             "name": "mnapoli/number-two",

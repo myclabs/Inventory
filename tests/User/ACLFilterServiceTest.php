@@ -118,14 +118,14 @@ class ACLFilterServiceTest extends Core_Test_TestCase
         $this->aclService->allow($admin, User_Model_Action_Default::VIEW(), $allUsersResource);
         $this->entityManager->flush();
 
-        // 2 droits par utilisateur (VIEW et EDIT sur eux-même) + (le droit qu'on a rajouté manuellement == 0)
+        // 2 droits par utilisateur (VIEW et EDIT sur eux-même)
         $this->assertEquals(2, $this->aclFilterService->getEntriesCount());
 
         // Ajoute un autre utilisateur
         $admin = $this->userService->createUser('user', 'user');
 
-        // 2 droits par utilisateur (VIEW et EDIT sur eux-même) + (le droit qu'on a rajouté manuellement == 0)
-        $this->assertEquals(2*2, $this->aclFilterService->getEntriesCount());
+        // 2 droits par utilisateur (VIEW et EDIT sur eux-même) + (admin voit user)
+        $this->assertEquals(2*2+1, $this->aclFilterService->getEntriesCount());
 
         // Fixtures
         $this->aclService->disallow($admin, User_Model_Action_Default::VIEW(), $allUsersResource);

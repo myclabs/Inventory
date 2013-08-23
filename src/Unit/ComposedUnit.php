@@ -20,6 +20,9 @@ use Unit\IncompatibleUnitsException;
 
 /**
  * Unité Composée
+ *
+ * Classe utilitaire (pas du modèle), utilisée par UnitAPI.
+ *
  * @package    Unit
  * @subpackage Model
  */
@@ -27,7 +30,7 @@ class ComposedUnit
 {
     /**
      * Référent textuel d'une unité composée.
-     * @var String
+     * @var string
      */
     protected $ref = null;
 

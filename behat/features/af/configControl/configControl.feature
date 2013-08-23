@@ -6,7 +6,7 @@ Feature: AF config control feature
 
   @javascript
   Scenario: AF config control empty form scenario
-    Given I am on "af/edit/menu/id/6"
+    Given I am on "af/edit/menu/id/7"
     And I wait for the page to finish loading
   # Vérification qu'on se trouve bien sur le bon formulaire
     Then I should see "Formulaire vide"

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="createOrganization">
+            <tuv xml:lang="fr">
+                <seg>Ajout de l’organisation : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of the organization: [LABEL]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addMember">
+            <tuv xml:lang="fr">
+                <seg>Ajout du membre : [MEMBER] à l’axe : [AXIS]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ajout du membre : [MEMBER] à l’axe : [AXIS]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularity">
+            <tuv xml:lang="fr">
+                <seg>Ajout de la granularité : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ajout de la granularité : [LABEL]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addRoleToUser">
+            <tuv xml:lang="fr">
+                <seg>Ajout du rôle : [ROLE] à l’utilisateur : [USER]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Ajout du rôle : [ROLE] à l’utilisateur : [USER]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="removeRoleFromUser">
+            <tuv xml:lang="fr">
+                <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetDWOrga">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d’analyse de l’organisation [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Régénération des données d’analyse de l’organisation [LABEL]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetDWCell">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetDWCell">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetDWCellAndResults">
+            <tuv xml:lang="fr">
+                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>
