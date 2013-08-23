@@ -3,12 +3,9 @@
  * Scripts dépilant la work queue
  */
 
-set_time_limit(0);
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
-/**
- * Détermine si l'application est lancée après le Bootstrap
- * @var bool
- */
 define('RUN', false);
 
 require_once __DIR__ . '/../../../application/init.php';
@@ -17,7 +14,8 @@ require_once __DIR__ . '/../../../application/init.php';
 $container = Zend_Registry::get('container');
 
 // Modifie le logger par défaut
-$container->set('Psr\Log\LoggerInterface', $container->get('worker.log'));
+$logger = new Logger('worker.log', [new StreamHandler('php://stdout', Logger::DEBUG)]);
+$container->set('Psr\Log\LoggerInterface', $logger);
 
 /** @var Core_Work_Dispatcher $workDispatcher */
 $workDispatcher = $container->get('Core_Work_Dispatcher');

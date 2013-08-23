@@ -4,19 +4,6 @@ enable.acl: true
 # Logs normaux
 log.file: "data/logs/error.log"
 
-# Logs des workers
-worker.log.name: "log.worker"
-worker.log:
-  class: Monolog\Logger
-  constructor:
-    name: worker.log.name
-  methods:
-    pushHandler: worker.log.handler
-worker.log.handler:
-  class: Monolog\Handler\StreamHandler
-  constructor:
-    stream: "php://stdout"
-
 # Définit dans le bootstrap:
 # application.name:
 # email.contact.address:
