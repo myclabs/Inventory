@@ -63,7 +63,7 @@ class ErrorController extends Core_Controller
      */
     public function getError()
     {
-        $log = Core_Error_Log::getInstance();
+        $logger = Core_Error_Log::getInstance();
 
         // Récupération de l'erreur.
         $error = $this->getParam('error_handler');
@@ -76,13 +76,15 @@ class ErrorController extends Core_Controller
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
                 // 404 Not found
-                $log->logException($error->exception);
+                $logger->logException($error->exception);
                 $errorInfos['code'] = 404;
                 $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'pageNotFound');
                 break;
             default:
                 // 403 Forbidden
                 if ($error->exception instanceof ForbiddenException) {
+                    $logger->info('403 Access denied to: ' . $_SERVER['REQUEST_URI']
+                        . ' from ' . $_SERVER['REMOTE_ADDR']);
                     $errorInfos['code'] = 403;
                     $errorInfos['message'] = $error->exception->getMessage();
                     // 400 Bad request
@@ -91,12 +93,12 @@ class ErrorController extends Core_Controller
                     $errorInfos['message'] = $error->exception->getMessage();
                     // 404 Not found
                 } elseif ($error->exception instanceof Core_Exception_NotFound) {
-                    $log->logException($error->exception);
+                    $logger->logException($error->exception);
                     $errorInfos['code'] = 500;
                     $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'applicationError');
                     // 500 Server error
                 } else {
-                    $log->logException($error->exception);
+                    $logger->logException($error->exception);
                     $errorInfos['code'] = 500;
                     $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'applicationError');
                 }

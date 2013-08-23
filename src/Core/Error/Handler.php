@@ -1,18 +1,23 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Error
- */
+
+use Psr\Log\LoggerInterface;
 
 /**
  * Gestion des erreurs et des exceptions
  *
- * @package    Core
- * @subpackage Error
+ * @author matthieu.napoli
  */
 class Core_Error_Handler
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Gestionnaire d'exception.
@@ -21,7 +26,7 @@ class Core_Error_Handler
      *
      * @return void
      */
-    public static function myExceptionHandler($e)
+    public function myExceptionHandler($e)
     {
         try {
             // Log de l'erreur.
@@ -52,14 +57,15 @@ class Core_Error_Handler
      *
      * Cette fonction ne reçoit pas les erreurs fatales.
      *
-     * @param int 	 $errno   Code de l'erreur.
+     * @param int    $errno   Code de l'erreur.
      * @param string $errstr  Message de l'erreur.
      * @param string $errfile Fichier contenant l'erreur.
-     * @param int	 $errline Numéro de ligne où apparaît l'erreur.
+     * @param int    $errline Numéro de ligne où apparaît l'erreur.
      *
+     * @throws ErrorException
      * @return bool Renvoie true une fois l'erreur capturée.
      */
-    public static function myErrorHandler($errno = 0, $errstr = null, $errfile = null, $errline = null)
+    public function myErrorHandler($errno = 0, $errstr = null, $errfile = null, $errline = null)
     {
         // Ne log pas l'erreur (cas où une fonction est précédée de
         // l'opérateur @ (qui met temporairement error_reporting à 0).
@@ -74,7 +80,7 @@ class Core_Error_Handler
             case E_DEPRECATED:
             case E_USER_DEPRECATED:
                 // Log de l'erreur
-                Core_Error_Log::getInstance()->warning("$errstr in $errfile line $errline");
+                $this->logger->warning("$errstr in $errfile line $errline");
                 $e = new ErrorException("$errstr in $errfile line $errline", 0, $errno, $errfile, $errline);
                 Core_Error_Log::getInstance()->logException($e);
                 // Ne pas exécuter le gestionnaire interne de PHP.
@@ -92,7 +98,7 @@ class Core_Error_Handler
      *
      * @return void
      */
-    public static function myShutdownFunction()
+    public function myShutdownFunction()
     {
         // Teste si il y'a eu une erreur fatale.
         $isError = false;

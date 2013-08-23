@@ -5,6 +5,7 @@
  * @subpackage Bootstrap
  */
 
+use Core\Log\ExtendedLineFormatter;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
@@ -12,9 +13,11 @@ use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
@@ -139,7 +142,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         // Log dans un fichier
         $file = $this->container->get('log.file');
-        $logger->pushHandler(new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG));
+        $loggerHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+        $loggerHandler->setFormatter(new ExtendedLineFormatter());
+        $logger->pushHandler($loggerHandler);
+        /** @noinspection PhpParamsInspection */
+        $logger->pushProcessor(new PsrLogMessageProcessor());
 
         $this->container->set('Psr\Log\LoggerInterface', $logger);
 
@@ -156,15 +163,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initErrorHandler()
     {
-        if ((APPLICATION_ENV == 'developpement')
-         || (APPLICATION_ENV == 'script')
-         || (APPLICATION_ENV == 'test')
-         || (APPLICATION_ENV == 'production')
-        ) {
+        if (APPLICATION_ENV != 'testsunitaires') {
+            $errorHandler = $this->container->get('Core_Error_Handler');
             // Fonctions de gestion des erreurs
-            set_error_handler(array('Core_Error_Handler','myErrorHandler'));
-            set_exception_handler(array('Core_Error_Handler','myExceptionHandler'));
-            register_shutdown_function(array('Core_Error_Handler','myShutdownFunction'));
+            set_error_handler(array($errorHandler, 'myErrorHandler'));
+            set_exception_handler(array($errorHandler, 'myExceptionHandler'));
+            register_shutdown_function(array($errorHandler, 'myShutdownFunction'));
         }
     }
 
