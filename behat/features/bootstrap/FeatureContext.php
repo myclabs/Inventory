@@ -129,6 +129,7 @@ class FeatureContext extends MinkContext
     {
         $name = $this->fixStepArgument($name);
         $node = $this->findLinkOrButton($name);
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();
@@ -234,6 +235,7 @@ class FeatureContext extends MinkContext
                 $this->getSession());
         }
 
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();
