@@ -1,20 +1,15 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Controller
- */
 
 use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 
 /**
  * Classe abstraite de contrôleur.
  *
  * Les droits sont vérifiés automatiquement avant qu'une action soit appelée.
  *
- * @package    Core
- * @subpackage Controller
+ * @author matthieu.napoli
  */
 abstract class Core_Controller extends Zend_Controller_Action
 {
@@ -24,6 +19,12 @@ abstract class Core_Controller extends Zend_Controller_Action
      * @var EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @Inject
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * Helper pour les redirections.

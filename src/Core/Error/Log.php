@@ -124,6 +124,7 @@ class Core_Error_Log
      * Log une erreur
      *
      * @param string $message
+     * @deprecated
      */
     public function error($message)
     {
@@ -134,6 +135,7 @@ class Core_Error_Log
      * Log un warning
      *
      * @param string $message
+     * @deprecated
      */
     public function warning($message)
     {
@@ -144,6 +146,7 @@ class Core_Error_Log
      * Log un message d'information
      *
      * @param string $message
+     * @deprecated
      */
     public function info($message)
     {
@@ -154,6 +157,7 @@ class Core_Error_Log
      * Log un message de debug
      *
      * @param string $message
+     * @deprecated
      */
     public function debug($message)
     {

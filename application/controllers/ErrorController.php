@@ -1,8 +1,9 @@
 <?php
+
 use User\ForbiddenException;
 
 /**
- * Classe de gestion des erreurs de requetes
+ * Classe de gestion des erreurs
  */
 class ErrorController extends Core_Controller
 {
@@ -83,7 +84,7 @@ class ErrorController extends Core_Controller
             default:
                 // 403 Forbidden
                 if ($error->exception instanceof ForbiddenException) {
-                    $logger->info('403 Access denied to: ' . $_SERVER['REQUEST_URI']
+                    $this->logger->info('403 Access denied to: ' . $_SERVER['REQUEST_URI']
                         . ' from ' . $_SERVER['REMOTE_ADDR']);
                     $errorInfos['code'] = 403;
                     $errorInfos['message'] = $error->exception->getMessage();
