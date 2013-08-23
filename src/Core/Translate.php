@@ -1,8 +1,6 @@
 <?php
-/**
- * @package    Core
- * @subpackage Translate
- */
+
+use Psr\Log\LoggerInterface;
 
 include_once('TranslateAdapter.php');
 
@@ -25,18 +23,15 @@ function __($package, $file, $ref, array $replacements=array())
 
 
 /**
- * Classe Translate.
- *
- * @package    Core
- * @subpackage Translate
+ * Classe Translate
  */
 class Core_Translate extends Zend_Translate
 {
 
     // Emplacement des traductions.
     const registryKey = 'Core_Translate';
-    const dataFolder = '/languages';
-    const adapter = 'Core_Translate_Adapter_Tmx';
+    const DATA_FOLDER = '/languages';
+    const ADAPTER_CLASS = 'Core_Translate_Adapter_Tmx';
 
     private $options = array(
         'scan' => 'directory',
@@ -46,10 +41,7 @@ class Core_Translate extends Zend_Translate
         'useId' => true
     );
 
-    /**
-     * Constructeur
-     */
-    public function __construct()
+    public function __construct(LoggerInterface $logger)
     {
         // Création des options
         // Si on est en environnement de dev ou de test, on log les traductions manquantes
@@ -79,12 +71,15 @@ class Core_Translate extends Zend_Translate
             Zend_Translate::setCache($cache);
         }
 
-        $this->options['adapter'] = $this::adapter;
-        $this->options['content'] = APPLICATION_PATH.$this::dataFolder;
+        $this->options['adapter'] = $this::ADAPTER_CLASS;
+        $this->options['content'] = APPLICATION_PATH.$this::DATA_FOLDER;
         $this->options['locale'] = 'auto';
 
         parent::__construct($this->options);
 
+        /** @var Core_Translate_Adapter_Tmx $adapter */
+        $adapter = $this->getAdapter();
+        $adapter->setLogger($logger);
     }
 
     /**
@@ -95,10 +90,10 @@ class Core_Translate extends Zend_Translate
      */
     public function addModule($moduleName, $moduleDir)
     {
-        if (is_dir($moduleDir.'/application'.$this::dataFolder)) {
-            $chemin = $moduleDir.'/application'.$this::dataFolder;
+        if (is_dir($moduleDir.'/application'.$this::DATA_FOLDER)) {
+            $chemin = $moduleDir.'/application'.$this::DATA_FOLDER;
         } else {
-            Core_Tools::dump($moduleDir.'/application'.$this::dataFolder);
+            Core_Tools::dump($moduleDir.'/application'.$this::DATA_FOLDER);
             throw new Core_Exception_NotFound("Le répertoire '".$moduleDir."' est introuvable.");
         }
 
