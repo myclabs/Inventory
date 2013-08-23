@@ -423,23 +423,27 @@ class Unit_Test_UnitAPITest extends Core_Test_TestCase
     }
 
     /**
-     * Test de la fonction getSamePhysicalQuantityUnits()
+     * Test de la fonction getCompatibleUnits()
      */
-    public function testGetSamePhysicalQuantityUnitsStandardUnit()
+    public function testGetCompatibleUnitsStandardUnit()
     {
         $unit1 = new UnitAPI('kg');
-        $results = $unit1->getSamePhysicalQuantityUnits();
+        $results = $unit1->getCompatibleUnits();
         $this->assertCount(1, $results);
         $this->assertContains(new UnitAPI('g'), $results, null, false, false);
     }
 
     /**
-     * Test de la fonction getSamePhysicalQuantityUnits()
+     * Test de la fonction getCompatibleUnits()
      */
-    public function testGetSamePhysicalQuantityUnitsComposedUnit()
+    public function testGetCompatibleUnitsComposedUnit()
     {
         $unit2 = new UnitAPI('kg.s^2');
-//        $this->assertCount(0, $unit2->getSamePhysicalQuantityUnits());
+        $results = $unit2->getCompatibleUnits();
+        $this->assertCount(3, $results);
+        $this->assertContains(new UnitAPI('kg.an^2'), $results, null, false, false);
+        $this->assertContains(new UnitAPI('g.s^2'), $results, null, false, false);
+        $this->assertContains(new UnitAPI('g.an^2'), $results, null, false, false);
     }
 
     protected function tearDown()

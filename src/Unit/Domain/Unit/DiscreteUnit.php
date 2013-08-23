@@ -69,7 +69,7 @@ class DiscreteUnit extends Unit
     /**
      * {@inheritdoc}
      */
-    public function getEquivalentUnits()
+    public function getCompatibleUnits()
     {
         return [];
     }

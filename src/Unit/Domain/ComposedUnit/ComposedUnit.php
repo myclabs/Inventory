@@ -1,7 +1,8 @@
 <?php
 
-namespace Unit\Domain\Unit;
+namespace Unit\Domain\ComposedUnit;
 
+use Core_Tools;
 use Unit\Domain\Unit\Unit;
 use Unit\Domain\Unit\ExtendedUnit;
 use Unit\Domain\PhysicalQuantity;
@@ -217,7 +218,7 @@ class ComposedUnit
     /**
      * Cette méthode permet de vérifier que deux unités sont compatibles.
      * Cette méthode sera notamment appelée avant des calculs de sommes.
-     * @param ComposedUnit $unit
+     * @param \Unit\Domain\ComposedUnit\ComposedUnit $unit
      * @return bool
      */
     public function isEquivalent(ComposedUnit $unit)
@@ -234,7 +235,7 @@ class ComposedUnit
      * physiques de base.
      * Cette méthode regroupe les exposants associés à chaque unité de référence
      * @throws \Core_Exception_NotFound
-     * @return ComposedUnit $newUnit
+     * @return \Unit\Domain\ComposedUnit\ComposedUnit $newUnit
      */
     public function getNormalizedUnit()
     {
@@ -270,7 +271,7 @@ class ComposedUnit
                     $normalizedUnit->components[] = $unitArray;
                 }
             }
-            usort($normalizedUnit->components, array('Unit\Domain\Unit\ComposedUnit', 'orderComponents'));
+            usort($normalizedUnit->components, array('Unit\Domain\ComposedUnit\ComposedUnit', 'orderComponents'));
             $normalizedUnit->setRef();
             return $normalizedUnit;
         }
@@ -388,7 +389,7 @@ class ComposedUnit
      * Méthode qui permet de retourner le produit des unités sous la forme
      *  d'une unité normalisée.
      * @param array $operandes : (API_Unit $unit, int signExponent)
-     * @return ComposedUnit
+     * @return \Unit\Domain\ComposedUnit\ComposedUnit
      */
     public function multiply(array $operandes)
     {
@@ -448,6 +449,65 @@ class ComposedUnit
         $this->components = $newComponents;
         // Permet de modifier la ref de l'unité inversé grace au nouveau tableau de composants.
         $this->setRef();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCompatibleUnits()
+    {
+        /*
+         * Pour "m.s^-1"
+         * Exemple : [
+         *   0 => [ [m, 1], [km, 1] ],
+         *   1 => [ [s, -1], [h, -1] ]
+         * ]
+         */
+        $allComponentsPossible = [];
+
+        // Pour chaque composant, trouve les unités alternatives
+        foreach ($this->components as $component) {
+            /** @var Unit $unit */
+            $unit = $component['unit'];
+            $exponent = $component['exponent'];
+
+            // Trouve les unités compatibles du composant en cours et ajoute l'exposant
+            $compatibleUnits = array_map(
+                function (Unit $unit) use($exponent) {
+                    return [
+                        'unit' => $unit,
+                        'exponent' => $exponent,
+                    ];
+                },
+                $unit->getCompatibleUnits()
+            );
+
+            $allComponentsPossible[] = array_merge([$component], $compatibleUnits);
+        }
+
+        /*
+         * Exemple : [
+         *   0 => [ [m, 1], [s, -1] ],
+         *   1 => [ [m, 1], [h, -1] ],
+         *   2 => [ [km, 1], [s, -1] ],
+         *   3 => [ [km, 1], [h, -1] ]
+         * ]
+         */
+        $combinations = Core_Tools::arrayCartesianProduct($allComponentsPossible);
+
+        // Exclue l'unité courante (première ligne)
+        unset($combinations[0]);
+
+        // Transforme chaque entrée en ComposedUnit
+        return array_map(
+            function ($components) {
+                $unit = new ComposedUnit();
+                $unit->components = $components;
+                $unit->setRef();
+                return $unit;
+            },
+            $combinations
+        );
     }
 
 }

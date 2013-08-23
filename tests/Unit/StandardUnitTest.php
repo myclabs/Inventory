@@ -611,7 +611,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
      */
     public function testGetEquivalentUnits()
     {
-        $results = $this->_massStandardUnit2->getEquivalentUnits();
+        $results = $this->_massStandardUnit2->getCompatibleUnits();
 
         $this->assertCount(1, $results);
         $this->assertContains($this->_massStandardUnit, $results);

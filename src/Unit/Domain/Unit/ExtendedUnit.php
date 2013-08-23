@@ -159,7 +159,7 @@ class ExtendedUnit extends Unit
     /**
      * {@inheritdoc}
      */
-    public function getEquivalentUnits()
+    public function getCompatibleUnits()
     {
         return [];
     }

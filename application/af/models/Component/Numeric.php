@@ -290,7 +290,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
         $unitComponent->addOption($option);
 
         // Ajoute les unités compatibles
-        foreach ($baseUnit->getSamePhysicalQuantityUnits() as $compatibleUnit) {
+        foreach ($baseUnit->getCompatibleUnits() as $compatibleUnit) {
             $option = new UI_Form_Element_Option($this->ref . '_unit_' . $compatibleUnit->getRef(),
                 $compatibleUnit->getRef(), $compatibleUnit->getSymbol());
             $unitComponent->addOption($option);

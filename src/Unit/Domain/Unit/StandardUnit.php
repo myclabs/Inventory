@@ -176,7 +176,7 @@ class StandardUnit extends Unit
     /**
      * {@inheritdoc}
      */
-    public function getEquivalentUnits()
+    public function getCompatibleUnits()
     {
         $units = $this->getPhysicalQuantity()->getUnits();
 

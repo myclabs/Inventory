@@ -131,6 +131,6 @@ abstract class Unit extends Core_Model_Entity
      * Renvoie la liste des unités compatibles, càd de même grandeur physique.
      * @return Unit[]
      */
-    abstract public function getEquivalentUnits();
+    abstract public function getCompatibleUnits();
 
 }

@@ -1,25 +1,17 @@
 <?php
-/**
- * @author     valentin.claras
- * @author     hugo.charbonnier
- * @author     yoann.croizer
- * @package    Unit
- * @subpackage API
- */
 
 namespace Unit;
 
 use Core_Exception;
-use Core_Model_Query;
 use Unit\Domain\Unit\Unit;
 use Unit\IncompatibleUnitsException;
-use Unit\Domain\Unit\StandardUnit;
-use Unit\Domain\Unit\ComposedUnit;
+use Unit\Domain\ComposedUnit\ComposedUnit;
 
 /**
  * API
- * @package    Unit
- * @subpackage API
+ * @author     valentin.claras
+ * @author     hugo.charbonnier
+ * @author     yoann.croizer
  */
 class UnitAPI
 {
@@ -83,7 +75,7 @@ class UnitAPI
      */
     public function getSymbol()
     {
-        $composedUnit = new Domain\Unit\ComposedUnit($this->ref);
+        $composedUnit = new ComposedUnit($this->ref);
         return $composedUnit->getSymbol();
     }
 
@@ -95,8 +87,8 @@ class UnitAPI
      */
     public function isEquivalent($ref)
     {
-        $composedUnit = new Domain\Unit\ComposedUnit($this->ref);
-        return $composedUnit->isEquivalent(new Domain\Unit\ComposedUnit($ref));
+        $composedUnit = new ComposedUnit($this->ref);
+        return $composedUnit->isEquivalent(new ComposedUnit($ref));
     }
 
     /**
@@ -111,7 +103,7 @@ class UnitAPI
      */
     public function getConversionFactor($refUnit = null)
     {
-        $unit1 = new Domain\Unit\ComposedUnit($this->ref);
+        $unit1 = new ComposedUnit($this->ref);
         $factor1 = $unit1->getConversionFactor();
 
         // Dans le cas ou on veut passer l'unité apellé dans l'unité passée en paramètre
@@ -153,7 +145,7 @@ class UnitAPI
      */
     public static function calculateSum($components)
     {
-        $unit = new Domain\Unit\ComposedUnit();
+        $unit = new ComposedUnit();
         $result = $unit->calculateSum($components);
         $api = new UnitAPI($result->getRef());
         return $api;
@@ -163,15 +155,15 @@ class UnitAPI
      * Renvoie la liste des refs des unités compatibles, càd de même grandeur physique.
      * @return UnitAPI[]
      */
-    public function getSamePhysicalQuantityUnits()
+    public function getCompatibleUnits()
     {
-        $unit = Unit::loadByRef($this->getRef());
+        $unit = new ComposedUnit($this->getRef());
 
         return array_map(
-            function (Unit $unit) {
+            function (ComposedUnit $unit) {
                 return new UnitAPI($unit->getRef());
             },
-            $unit->getEquivalentUnits()
+            $unit->getCompatibleUnits()
         );
     }
 
@@ -192,7 +184,7 @@ class UnitAPI
      */
     public function reverse()
     {
-        $composedUnit = new Domain\Unit\ComposedUnit($this->getRef());
+        $composedUnit = new ComposedUnit($this->getRef());
         $composedUnit->reverseUnit();
         return new UnitAPI($composedUnit->getRef());
     }
