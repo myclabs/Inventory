@@ -7,6 +7,7 @@
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
+use Unit\UnitAPI;
 
 /**
  * Saisie des AF
@@ -305,10 +306,11 @@ class AF_InputController extends Core_Controller
             } catch (Core_Exception_InvalidArgument $e) {
                 $errorMessages[$fullRef] = __('UI', 'formValidation', 'invalidNumber');
             }
+            // Incertitude
             $relativeUncertainty = null;
             if ($component->getWithUncertainty()) {
                 try {
-                    $childInputContent = current($inputContent['children']);
+                    $childInputContent = $inputContent['children']['percent' . $fullRef . '_child'];
                     $relativeUncertainty = $locale->readInteger($childInputContent['value']);
                     if ($relativeUncertainty < 0) {
                         $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
@@ -317,8 +319,11 @@ class AF_InputController extends Core_Controller
                     $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
                 }
             }
+            // Choix de l'unite
+            $childUnitInputContent = $inputContent['children'][$fullRef . '_unit_child'];
+            $selectedUnit = new UnitAPI($childUnitInputContent['value']);
             $input->setValue(
-                new Calc_UnitValue($component->getUnit(), $value, $relativeUncertainty)
+                new Calc_UnitValue($selectedUnit, $value, $relativeUncertainty)
             );
         } elseif ($component instanceof AF_Model_Component_Text) {
             // Champ texte
