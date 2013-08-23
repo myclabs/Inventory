@@ -121,50 +121,6 @@ class Core_Error_Log
     }
 
     /**
-     * Log une erreur
-     *
-     * @param string $message
-     * @deprecated
-     */
-    public function error($message)
-    {
-        $this->logger->error($message);
-    }
-
-    /**
-     * Log un warning
-     *
-     * @param string $message
-     * @deprecated
-     */
-    public function warning($message)
-    {
-        $this->logger->warning($message);
-    }
-
-    /**
-     * Log un message d'information
-     *
-     * @param string $message
-     * @deprecated
-     */
-    public function info($message)
-    {
-        $this->logger->info($message);
-    }
-
-    /**
-     * Log un message de debug
-     *
-     * @param string $message
-     * @deprecated
-     */
-    public function debug($message)
-    {
-        $this->logger->debug($message);
-    }
-
-    /**
      * Envoie les headers.
      *
      * Ceci est nécessaire pour garantir que le débuggage dans Firebug est possible

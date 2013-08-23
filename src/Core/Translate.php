@@ -93,7 +93,6 @@ class Core_Translate extends Zend_Translate
         if (is_dir($moduleDir.'/application'.$this::DATA_FOLDER)) {
             $chemin = $moduleDir.'/application'.$this::DATA_FOLDER;
         } else {
-            Core_Tools::dump($moduleDir.'/application'.$this::DATA_FOLDER);
             throw new Core_Exception_NotFound("Le répertoire '".$moduleDir."' est introuvable.");
         }
 
