@@ -13,7 +13,7 @@ use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Handler\ChromePHPHandler;
 use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -138,13 +138,15 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         // Log FirePHP
         if ($configuration->log->firephp) {
-            $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_FIREBUG);
+            ini_set('html_errors', false);
+            $logger->pushHandler(new FirePHPHandler());
+            $logger->pushHandler(new ChromePHPHandler());
         }
         // Log dans un fichier
         $file = $this->container->get('log.file');
-        $loggerHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
-        $loggerHandler->setFormatter(new ExtendedLineFormatter());
-        $logger->pushHandler($loggerHandler);
+        $fileHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+        $fileHandler->setFormatter(new ExtendedLineFormatter());
+        $logger->pushHandler($fileHandler);
         /** @noinspection PhpParamsInspection */
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
