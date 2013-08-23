@@ -6,6 +6,7 @@
 use Core\Log\ExtendedLineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 define('RUN', false);
 
