@@ -1,9 +1,4 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Tool
- */
 
 use Netcarver\Textile;
 
@@ -12,8 +7,7 @@ use Netcarver\Textile;
  *
  * Toutes ses méthodes sont statiques pour des raisons de simplicité.
  *
- * @package    Core
- * @subpackage Tool
+ * @author     matthieu.napoli
  */
 abstract class Core_Tools
 {
@@ -46,20 +40,20 @@ abstract class Core_Tools
      * La chaine générée a une longueur maximale de 32 caractères et ne contient que
      * des caractères alphanumériques.
      *
-     * @param string $nbCaracteres Nombre de caractères de la chaine générée, valeur par défaut, et maximum : 32.
+     * @param int $count Nombre de caractères de la chaine générée, valeur par défaut, et maximum : 32.
      *
      * @return string Chaine de caractère.
      */
-    public static function generateString($nbCaracteres = 32)
+    public static function generateString($count = 32)
     {
-        $caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        $longueur = mb_strlen($caracteres);
+        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        $charsLength = mb_strlen($chars);
         srand((double) microtime() * 1000000);
-        $chaine = '';
-        for ($i = 0; $i < $nbCaracteres; $i++) {
-            $chaine .= $caracteres[rand(0, $longueur - 1)];
+        $str = '';
+        for ($i = 0; $i < $count; $i++) {
+            $str .= $chars[rand(0, $charsLength - 1)];
         }
-        return $chaine;
+        return $str;
     }
 
     /**
@@ -68,6 +62,7 @@ abstract class Core_Tools
      * @param string $ref
      *
      * @throws Core_Exception_User
+     * @return bool
      */
     public static function checkRef($ref)
     {
