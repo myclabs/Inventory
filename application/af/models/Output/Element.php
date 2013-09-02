@@ -50,10 +50,9 @@ class AF_Model_Output_Element extends Core_Model_Entity
     protected $indexes;
 
     /**
-     * Libellé de l'algo
-     * @var string
+     * @var Algo_Model_Numeric
      */
-    protected $label;
+    protected $algo;
 
     /**
      * @var Calc_Value
@@ -68,15 +67,15 @@ class AF_Model_Output_Element extends Core_Model_Entity
      * @param Algo_Model_Output         $algoOutput
      * @param AF_Model_InputSet         $inputSet
      */
-    public function __construct(AF_Model_Output_OutputSet $outputSet, $algoOutput = null, $inputSet = null)
+    public function __construct(AF_Model_Output_OutputSet $outputSet, Algo_Model_Output $algoOutput = null,
+        AF_Model_InputSet $inputSet = null)
     {
         $this->indexes = new ArrayCollection();
         $this->outputSet = $outputSet;
         $this->inputSet = $inputSet;
         if ($algoOutput) {
-            $this->label = $algoOutput->getLabel();
+            $this->algo = $algoOutput->getAlgo();
             $this->value = $algoOutput->getValue();
-            $this->setContextIndicator($algoOutput->getContextIndicator());
 
             foreach ($algoOutput->getClassifMembers() as $member) {
                 $index = new AF_Model_Output_Index($member->getAxis(), $member);
@@ -92,19 +91,7 @@ class AF_Model_Output_Element extends Core_Model_Entity
      */
     public function getContextIndicator()
     {
-        if (!$this->refContext || !$this->refIndicator) {
-            return null;
-        }
-        return Classif_Model_ContextIndicator::loadByRef($this->refContext, $this->refIndicator);
-    }
-
-    /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
-     */
-    public function setContextIndicator(Classif_Model_ContextIndicator $contextIndicator)
-    {
-        $this->refContext = $contextIndicator->getContext()->getRef();
-        $this->refIndicator = $contextIndicator->getIndicator()->getRef();
+        return $this->algo->getContextIndicator();
     }
 
     /**
@@ -135,7 +122,7 @@ class AF_Model_Output_Element extends Core_Model_Entity
      */
     public function getLabel()
     {
-        return $this->label;
+        return $this->algo->getLabel();
     }
 
     /**
