@@ -1,6 +1,9 @@
 <?php
 
 use Netcarver\Textile;
+use NumberTwo\Filter\DoctrineCollectionFilter;
+use NumberTwo\Filter\DoctrineProxyFilter;
+use NumberTwo\NumberTwo;
 
 /**
  * Classe regroupant des fonctions utilitaires transverses.
@@ -33,7 +36,9 @@ abstract class Core_Tools
         /** @var \Psr\Log\LoggerInterface $logger */
         $logger = $container->get('Psr\Log\LoggerInterface');
 
-        $logger->debug('', ['var' => $var]);
+        $filters = [new DoctrineCollectionFilter(), new DoctrineProxyFilter()];
+
+        $logger->debug(NumberTwo::dump($var, 3, $filters));
     }
 
     /**

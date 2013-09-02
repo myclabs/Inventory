@@ -5,6 +5,7 @@
  * @subpackage Bootstrap
  */
 
+use Core\Log\ChromePHPFormatter;
 use Core\Log\ExtendedLineFormatter;
 use DI\Container;
 use DI\ContainerBuilder;
@@ -140,7 +141,9 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         if ($configuration->log->firephp) {
             ini_set('html_errors', false);
             $logger->pushHandler(new FirePHPHandler());
-            $logger->pushHandler(new ChromePHPHandler());
+            $chromePHPHandler = new ChromePHPHandler();
+            $chromePHPHandler->setFormatter(new ChromePHPFormatter());
+            $logger->pushHandler($chromePHPHandler);
         }
         // Log dans un fichier
         $file = $this->container->get('log.file');
