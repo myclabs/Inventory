@@ -30,7 +30,7 @@ abstract class Core_Model_Entity
      *
      * @return void
      */
-    public final function save()
+    public function save()
     {
         self::getEntityManager()->persist($this);
     }
@@ -40,7 +40,7 @@ abstract class Core_Model_Entity
      *
      * @return void
      */
-    public final function delete()
+    public function delete()
     {
         self::getEntityManager()->remove($this);
     }

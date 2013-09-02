@@ -1,6 +1,6 @@
 Unit\Domain\Unit\StandardUnit:
   type: entity
-  repositoryClass: \Core_Model_Repository
+  repositoryClass: Unit\Architecture\Repository\DoctrineUnitRepository
   table: Unit_StandardUnit
 
   fields:

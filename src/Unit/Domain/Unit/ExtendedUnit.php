@@ -18,11 +18,6 @@ use Unit\Domain\UnitExtension;
  */
 class ExtendedUnit extends Unit
 {
-    // Constantes de tri et filtres.
-    const QUERY_EXTENSION = 'extension';
-    const QUERY_UNIT_STANDARD = 'standardUnit';
-
-
     /**
      * Coefficient mutliplicateur d'une unité Etendue.
      * Permet de connaitre le rapport entre deux unités étendues

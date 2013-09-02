@@ -19,11 +19,6 @@ use Unit\Domain\UnitSystem;
  */
 class StandardUnit extends Unit
 {
-    // Constantes de tri et filtres.
-    const QUERY_MULTIPLIER = 'multiplier';
-    const QUERY_PHYSICALQUANTITY = 'physicalQuantity';
-    const QUERY_UNITSYSTEM = 'unitSystem';
-
     /**
      * Coefficient mutliplicateur d'une unité standard.
      * Permet par exemple de savoir le rapport entre km et m.
@@ -43,27 +38,6 @@ class StandardUnit extends Unit
      */
     protected $unitSystem = null;
 
-
-    /**
-     * Renvoie la référence de la pool active.
-     *  Il s'agit de l'entityManager correspondant.
-     *
-     * @return string
-     */
-    public static function getActivePoolName()
-    {
-        return Unit::getActivePoolName();
-    }
-
-    /**
-     * Retourne l'objet Unit à partir de son référent textuel.
-     * @param string $ref
-     * @return \Unit\Domain\Unit\StandardUnit
-     */
-    public static function loadByRef($ref)
-    {
-        return parent::loadByRef($ref);
-    }
 
     /**
      * Défini le coefficient multiplicateur de l'unité.
@@ -172,4 +146,14 @@ class StandardUnit extends Unit
         return $tabResults;
     }
 
+    /**
+     * @todo Supprimer
+     * @return StandardUnit[]
+     */
+    public static function findByPhysicalQuantity(PhysicalQuantity $physicalQuantity)
+    {
+        /** @var UnitRepository $repository */
+        $repository = self::getEntityRepository();
+        return $repository->findByPhysicalQuantity($physicalQuantity);
+    }
 }

@@ -48,17 +48,6 @@ class UnitSystem extends Core_Model_Entity
 
 
     /**
-     * Renvoie la référence de la pool active.
-     *  Il s'agit de l'entityManager correspondant.
-     *
-     * @return string
-     */
-    public static function getActivePoolName()
-    {
-        return Unit::getActivePoolName();
-    }
-
-    /**
      * Retourne l'objet Unit à partir de son référent textuel.
      * @param string $ref
      * @return \Unit\Domain\UnitSystem
