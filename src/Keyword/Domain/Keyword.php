@@ -15,16 +15,8 @@ use Doctrine\Common\Collections\Collection;
  * @author bertrand.ferry
  * @author maxime.fourt
  */
-class Keyword extends Core_Model_Entity
+class Keyword
 {
-
-    use Core_Model_Entity_Translatable;
-
-    // Constantes de tri et filtres.
-    const QUERY_ID = 'id';
-    const QUERY_REF = 'ref';
-    const QUERY_LABEL = 'label';
-
     /**
      * Identifiant unique du Keyword.
      *
@@ -69,47 +61,47 @@ class Keyword extends Core_Model_Entity
         $this->objectAssociation = new ArrayCollection();
         $this->subjectAssociation = new ArrayCollection();
     }
-
-    /**
-     * Retourne le mot-cle correspondant a la reference.
-     *
-     * @param string $ref
-     *
-     * @return Keyword
-     */
-    public static function loadByRef($ref)
-    {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref));
-    }
-
-    /**
-     * Charge la liste des Keyword ne possédant pas d'association en tant qu'objet.
-     *
-     * @param Core_Model_Query $queryParameters
-     *
-     * @return Keyword[]
-     */
-    public static function loadListRoots($queryParameters = null)
-    {
-        if ($queryParameters == null) {
-            $queryParameters = new Core_Model_Query();
-            $queryParameters->order->addOrder(self::QUERY_LABEL);
-        }
-
-        return self::getEntityRepository()->loadListRoots($queryParameters);
-    }
-
-    /**
-     * Charge la liste des Keyword répondant à la requête donnée.
-     *
-     * @param string $expressionQuery
-     *
-     * @return Keyword[]
-     */
-    public static function loadListMatchingQuery($expressionQuery)
-    {
-        return self::getEntityRepository()->loadListMatchingQuery($expressionQuery);
-    }
+//
+//    /**
+//     * Retourne le mot-cle correspondant a la reference.
+//     *
+//     * @param string $ref
+//     *
+//     * @return Keyword
+//     */
+//    public static function loadByRef($ref)
+//    {
+//        return self::getEntityRepository()->loadBy(array('ref' => $ref));
+//    }
+//
+//    /**
+//     * Charge la liste des Keyword ne possédant pas d'association en tant qu'objet.
+//     *
+//     * @param Core_Model_Query $queryParameters
+//     *
+//     * @return Keyword[]
+//     */
+//    public static function loadListRoots($queryParameters = null)
+//    {
+//        if ($queryParameters == null) {
+//            $queryParameters = new Core_Model_Query();
+//            $queryParameters->order->addOrder(self::QUERY_LABEL);
+//        }
+//
+//        return self::getEntityRepository()->loadListRoots($queryParameters);
+//    }
+//
+//    /**
+//     * Charge la liste des Keyword répondant à la requête donnée.
+//     *
+//     * @param string $expressionQuery
+//     *
+//     * @return Keyword[]
+//     */
+//    public static function loadListMatchingQuery($expressionQuery)
+//    {
+//        return self::getEntityRepository()->loadListMatchingQuery($expressionQuery);
+//    }
 
     /**
      * Modifie la reference du Keyword.
