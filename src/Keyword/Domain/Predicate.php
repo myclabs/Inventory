@@ -2,28 +2,15 @@
 
 namespace Keyword\Domain;
 
-use Core_Model_Entity;
 use Core_Exception_UndefinedAttribute;
-use Core_Model_Entity_Translatable;
 
 /**
  * Classe metier de Predicate.
  * @author valentin.claras
  * @author bertrand.ferry
  */
-class Predicate extends Core_Model_Entity
+class Predicate
 {
-
-    use Core_Model_Entity_Translatable;
-
-    // Constantes de tri et filtres.
-    const QUERY_ID = 'id';
-    const QUERY_REF = 'ref';
-    const QUERY_LABEL = 'label';
-    const QUERY_REVERSE_REF = 'reverseRef';
-    const QUERY_REVERSE_LABEL = 'reverseLabel';
-    const QUERY_DESCRIPTION = 'description';
-
     /**
      * Identifiant unique du predicat.
      *
@@ -66,33 +53,43 @@ class Predicate extends Core_Model_Entity
      */
     protected $description = '';
 
+//
+//    /**
+//     * Retourne le predicat correspondant a la reference donnée.
+//     *
+//     * @param string $ref
+//     *
+//     * @return Predicate
+//     */
+//    public static function loadByRef($ref)
+//    {
+//        return self::getEntityRepository()->loadBy(array('ref' => $ref));
+//    }
+//
+//    /**
+//     * Retourne le predicat correspondant a la reference inverse donnée.
+//     *
+//     * @param string $reverseRef
+//     *
+//     * @return Predicate
+//     */
+//    public static function loadByReverseRef($reverseRef)
+//    {
+//        return self::getEntityRepository()->loadBy(array('reverseRef' => $reverseRef));
+//    }
 
     /**
-     * Retourne le predicat correspondant a la reference donnée.
+     * Renvoi l'identifiant unique du Predicate.
      *
-     * @param string $ref
-     *
-     * @return Predicate
+     * @return int
      */
-    public static function loadByRef($ref)
+    public function getId()
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref));
+        return $this->id;
     }
 
     /**
-     * Retourne le predicat correspondant a la reference inverse donnée.
-     *
-     * @param string $reverseRef
-     *
-     * @return Predicate
-     */
-    public static function loadByReverseRef($reverseRef)
-    {
-        return self::getEntityRepository()->loadBy(array('reverseRef' => $reverseRef));
-    }
-
-    /**
-     * Défini la référence du Keyword.
+     * Défini la référence du Predicate.
      *
      * @param string $ref
      */
@@ -102,20 +99,21 @@ class Predicate extends Core_Model_Entity
     }
 
     /**
-     * Renvoi la référence du Keyword.
+     * Renvoi la référence du Predicate.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getRef()
     {
         if ($this->ref === null) {
-            throw new Core_Exception_UndefinedAttribute('The predicate reference has not been defined yet.');
+            throw new \Core_Exception_UndefinedAttribute('The predicate reference has not been defined yet.');
         }
         return $this->ref;
     }
 
     /**
-     * Défini le label.
+     * Modifie le label du Predicate.
      *
      * @param string $label
      */
@@ -125,20 +123,21 @@ class Predicate extends Core_Model_Entity
     }
 
     /**
-     * Renvoi le label.
+     * Renvoi le label du Predicate.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getLabel()
     {
         if ($this->label === null) {
-            throw new Core_Exception_UndefinedAttribute('The predicate label has not been defined yet.');
+            throw new \Core_Exception_UndefinedAttribute('The predicate label has not been defined yet.');
         }
         return $this->label;
     }
 
     /**
-     * Défini la référence inverse.
+     * Défini la référence inverse du Predicate.
      *
      * @param string $revRef
      */
@@ -148,20 +147,21 @@ class Predicate extends Core_Model_Entity
     }
 
     /**
-     * Renvoi la référence inverse.
+     * Renvoi la référence inverse du Predicate.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getReverseRef()
     {
         if ($this->ref === null) {
-            throw new Core_Exception_UndefinedAttribute('The predicate reverse reference has not been defined yet.');
+            throw new \Core_Exception_UndefinedAttribute('The predicate reverse reference has not been defined yet.');
         }
         return $this->reverseRef;
     }
 
     /**
-     * Défini le label inverse.
+     * Défini le label inverse du Predicate.
      *
      * @param string $revLabel
      */
@@ -171,20 +171,21 @@ class Predicate extends Core_Model_Entity
     }
 
     /**
-     * Renvoi le label inverse.
+     * Renvoi le label inverse du Predicate.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getReverseLabel()
     {
         if ($this->reverseLabel === null) {
-            throw new Core_Exception_UndefinedAttribute('The predicate reverse label has not been defined yet.');
+            throw new \Core_Exception_UndefinedAttribute('The predicate reverse label has not been defined yet.');
         }
         return $this->reverseLabel;
     }
 
     /**
-     * Défini la description.
+     * Défini la description du Predicate.
      *
      * @param string $description
      */
@@ -194,7 +195,7 @@ class Predicate extends Core_Model_Entity
     }
 
     /**
-     * Renvoi la description.
+     * Renvoi la description du Predicate.
      *
      * @return string
      */

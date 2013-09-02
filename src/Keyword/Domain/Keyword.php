@@ -3,9 +3,6 @@
 namespace Keyword\Domain;
 
 use Core_Exception_UndefinedAttribute;
-use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
-use Core_Model_Query;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -104,8 +101,19 @@ class Keyword
 //    }
 
     /**
+     * Renvoi l'identifiant unique du Keyword.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Modifie la reference du Keyword.
      *
+     * @param string $ref
      * @param string $ref
      */
     public function setRef($ref)
@@ -116,6 +124,7 @@ class Keyword
     /**
      * Renvoi la référence du Keyword.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getRef()
@@ -127,6 +136,8 @@ class Keyword
     }
 
     /**
+     * Modifie le label du Keyword.
+     *
      * @param string $label
      */
     public function setLabel($label)
@@ -135,22 +146,17 @@ class Keyword
     }
 
     /**
+     * Renvoi le label du Keyword.
+     *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getLabel()
     {
-        if ($this->ref === null) {
+        if ($this->label === null) {
             throw new Core_Exception_UndefinedAttribute('The keyword label has not been defined yet.');
         }
         return $this->label;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCapitalizedLabel()
-    {
-        return ucfirst($this->getLabel());
     }
 
     /**
@@ -196,9 +202,7 @@ class Keyword
      */
     public function countAssociationsAsObject()
     {
-        $queryFilterThisAsAsubject = new Core_Model_Query();
-        $queryFilterThisAsAsubject->filter->addCondition(Association::QUERY_OBJECT, $this);
-        return Association::countTotal($queryFilterThisAsAsubject);
+        return $this->objectAssociation->count();
     }
 
     /**
@@ -254,9 +258,7 @@ class Keyword
      */
     public function countAssociationsAsSubject()
     {
-        $queryFilterThisAsAsubject = new Core_Model_Query();
-        $queryFilterThisAsAsubject->filter->addCondition(Association::QUERY_SUBJECT, $this);
-        return Association::countTotal($queryFilterThisAsAsubject);
+        return $this->subjectAssociation->count();
     }
 
     /**
@@ -277,26 +279,6 @@ class Keyword
     public function countAssociations()
     {
         return $this->countAssociationsAsObject() + $this->countAssociationsAsSubject();
-    }
-
-    /**
-     * Retourne l'alias de la classe quand elle agit en tant que Subject dans un Association.
-     *
-     * @return string
-     */
-    public static function getAliasAsSubject()
-    {
-        return self::getAlias() . '_AsS';
-    }
-
-    /**
-     * Retourne l'alias de la classe quand elle agit en tant que Subject dans un Association.
-     *
-     * @return string
-     */
-    public static function getAliasAsObject()
-    {
-        return self::getAlias() . '_AsO';
     }
 
 }

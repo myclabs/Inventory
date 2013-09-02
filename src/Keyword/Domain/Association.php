@@ -2,14 +2,13 @@
 
 namespace Keyword\Domain;
 
-use Core_Model_Entity;
 use Core_Exception_TooMany;
 use Core_Exception_UndefinedAttribute;
 
 /**
  * @author valentin.claras
  */
-class Association extends Core_Model_Entity
+class Association
 {
     // Constantes de tri et filtres.
     const QUERY_SUBJECT = 'subject';
@@ -45,24 +44,35 @@ class Association extends Core_Model_Entity
     protected $predicate = null;
 
 
+//    /**
+//     * Renvoie une Association en fonction des refs de ces composants
+//     *
+//     * @param string $subjectKeywordRef
+//     * @param string $objectKeywordRef
+//     * @param string $predicateRef
+//     *
+//     * @return Association
+//     */
+//    public static function loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef)
+//    {
+//        return self::getEntityRepository()->loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef);
+//    }
+
     /**
-     * Renvoie une Association en fonction des refs de ces composants
+     * Renvoi l'identifiant unique de l'Association.
      *
-     * @param string $subjectKeywordRef
-     * @param string $objectKeywordRef
-     * @param string $predicateRef
-     *
-     * @return Association
+     * @return int
      */
-    public static function loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef)
+    public function getId()
     {
-        return self::getEntityRepository()->loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef);
+        return $this->id;
     }
 
     /**
      * Défini le Keyword sujet.
      *
      * @param Keyword $subjectKeyword
+     * @throws \Core_Exception_TooMany
      */
     public function setSubject(Keyword $subjectKeyword)
     {
@@ -78,6 +88,7 @@ class Association extends Core_Model_Entity
     /**
      * Renvoi le Keyword sujet.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return Keyword
      */
     public function getSubject()
@@ -92,6 +103,7 @@ class Association extends Core_Model_Entity
      * Défini le Keyword objet.
      *
      * @param Keyword $objectKeyword
+     * @throws \Core_Exception_TooMany
      */
     public function setObject(Keyword $objectKeyword)
     {
@@ -107,6 +119,7 @@ class Association extends Core_Model_Entity
     /**
      * Renvoi le Keyword sujet.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return Keyword
      */
     public function getObject()
@@ -130,6 +143,7 @@ class Association extends Core_Model_Entity
     /**
      * Renvoi le Predicate.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return Predicate
      */
     public function getPredicate()
