@@ -3,111 +3,73 @@
 use User\ForbiddenException;
 
 /**
- * Classe de gestion des erreurs
+ * Controleur de gestion des erreurs
  */
 class ErrorController extends Core_Controller
 {
 
     /**
-     * Tableau regroupant les informations utiles de l'erreur.
-     * @var array
-     */
-    public $error;
-
-    /**
-     * (non-PHPdoc)
-     * @see Core_Controller_Error::errorAction()
+     * Action appelée en cas d'erreur dans l'application
      */
     public function errorAction()
     {
-        $this->error = $this->getError();
-
-        // Désactivation du l'ensemble du rendu pour n'afficher que l'erreur.
-        $this->getResponse()->setBody(null, null);
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            // Dans le cas d'une reqeste Ajax on désactive la vue.
-            $this->getHelper('viewRenderer')->setNoRender();
-        } else {
-            // Passage de l'erreur à la vue.
-            $this->view->error = $this->error;
-        }
-
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            // Envoie du message directement dans la réponse.
-            $ajaxResponse = new stdClass();
-            $ajaxResponse->message = $this->error['message'];
-            // Tri des erreurs pour choisir l'image.
-            $ajaxResponse->typeError = $this->getAlertType();
-            // Affichage des informations complémentaires de l'erreur sous forme Json.
-            $this->_helper->layout()->disableLayout();
-            echo json_encode($ajaxResponse);
-        } else {
-            UI_Message::addMessageStatic($this->error['message'], $this->getAlertType());
-        }
-    }
-
-    /**
-     * Renvoie le type de message pour l'affichage.
-     * @return string
-     */
-    protected function getAlertType()
-    {
-        return UI_Message::getTypeByHTTPCode($this->error['code']);
-    }
-
-    /**
-     * Fonction renvoyant l'erreur sous forme de tableau.
-     *
-     * Le tableau contient le code de l'erreur et le message.
-     *
-     * @return array
-     */
-    public function getError()
-    {
-        $logger = Core_Error_Log::getInstance();
-
-        // Récupération de l'erreur.
         $error = $this->getParam('error_handler');
-
-        $errorInfos = array(
-            'error' => $error,
-        );
+        /** @var \Exception $exception */
+        $exception = $error->exception;
 
         switch ($error->type) {
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
                 // 404 Not found
-                $logger->logException($error->exception);
-                $errorInfos['code'] = 404;
-                $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'pageNotFound');
+                $this->logger->warning('404 Page not found: ' . $_SERVER['REQUEST_URI'], ['exception' => $exception]);
+                $httpStatus = 404;
+                $errorMessage = __('Core', 'exception', 'pageNotFound');
                 break;
             default:
-                // 403 Forbidden
-                if ($error->exception instanceof ForbiddenException) {
-                    $this->logger->info('403 Access denied to: ' . $_SERVER['REQUEST_URI']
+                if ($exception instanceof ForbiddenException) {
+                    // 403 Forbidden
+                    $this->logger->info('403 Access denied to ' . $_SERVER['REQUEST_URI']
                         . ' from ' . $_SERVER['REMOTE_ADDR']);
-                    $errorInfos['code'] = 403;
-                    $errorInfos['message'] = $error->exception->getMessage();
+                    $httpStatus = 403;
+                    $errorMessage = $exception->getMessage();
+                } elseif ($exception instanceof Core_Exception_User) {
                     // 400 Bad request
-                } elseif ($error->exception instanceof Core_Exception_User) {
-                    $errorInfos['code'] = 400;
-                    $errorInfos['message'] = $error->exception->getMessage();
-                    // 404 Not found
-                } elseif ($error->exception instanceof Core_Exception_NotFound) {
-                    $logger->logException($error->exception);
-                    $errorInfos['code'] = 500;
-                    $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'applicationError');
-                    // 500 Server error
+                    $this->logger->info('400 Bad request', ['exception' => $exception]);
+                    $httpStatus = 400;
+                    $errorMessage = $exception->getMessage();
                 } else {
-                    $logger->logException($error->exception);
-                    $errorInfos['code'] = 500;
-                    $errorInfos['message'] = Core_Translate::get('Core', 'exception', 'applicationError');
+                    // 500 Server error
+                    $this->logger->error($exception->getMessage(), ['exception' => $exception]);
+                    $httpStatus = 500;
+                    $errorMessage = __('Core', 'exception', 'applicationError');
                 }
                 break;
         }
 
-        $this->getResponse()->setHttpResponseCode($errorInfos['code']);
-        return $errorInfos;
+        $this->getResponse()->setHttpResponseCode($httpStatus);
+
+        // Désactivation du l'ensemble du rendu pour n'afficher que l'erreur.
+        $this->getResponse()->setBody(null, null);
+
+        // Requete AJAX
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $this->getHelper('viewRenderer')->setNoRender();
+            $this->_helper->layout()->disableLayout();
+
+            // Envoie du message directement dans la réponse
+            $ajaxResponse = new stdClass();
+            $ajaxResponse->message = $errorMessage;
+            $ajaxResponse->typeError = UI_Message::getTypeByHTTPCode($httpStatus);
+            echo json_encode($ajaxResponse);
+            return;
+        }
+
+        UI_Message::addMessageStatic($errorMessage, UI_Message::getTypeByHTTPCode($httpStatus));
+
+        $this->view->assign('errorMessage', $errorMessage);
+        $this->view->assign('httpStatus', $httpStatus);
+        $this->view->assign('exception', $exception);
+        $this->view->assign('requestParams', $error->request->getParams());
     }
 
 }

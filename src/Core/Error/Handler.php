@@ -31,8 +31,6 @@ class Core_Error_Handler
         try {
             // Log de l'erreur.
             Core_Error_Log::getInstance()->logException($e);
-            // Envoi des headers (sinon aucun message d'erreur ne parvient à firebug).
-            Core_Error_Log::getInstance()->flushHeaders();
             exit(1);
         } catch (Zend_Wildfire_Exception $exception) {
             $message = "<strong>".$e->getMessage()."</strong> <br>";
