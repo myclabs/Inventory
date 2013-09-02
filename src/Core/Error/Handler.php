@@ -29,15 +29,9 @@ class Core_Error_Handler
     public function myExceptionHandler($e)
     {
         try {
-            // Log de l'erreur.
-            Core_Error_Log::getInstance()->logException($e);
+            // Log de l'erreur
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
             exit(1);
-        } catch (Zend_Wildfire_Exception $exception) {
-            $message = "<strong>".$e->getMessage()."</strong> <br>";
-            $message .= nl2br($e);
-            $message .= "<br><br>Impossible d'envoyer cette exception via Firebug car les";
-            $message .= " objets 'Header' n'ont pas encore été créés (erreur dans le Bootstrap)";
-            die ($message);
         } catch (Exception $exception) {
             $message = "Erreur dans le gestionnaire d'exception<br>";
             $message .= "<strong>Exception originale :</strong> <br>";
@@ -45,7 +39,7 @@ class Core_Error_Handler
             $message .= nl2br($e);
             $message .= "<br><br>Exception dans le gestionnaire d'exception :<br>";
             $message .= nl2br($exception);
-            die ($message);
+            die($message);
         }
     }
 
@@ -70,6 +64,9 @@ class Core_Error_Handler
         if (error_reporting() == 0) {
             return true;
         }
+
+        $e = new ErrorException("$errstr in $errfile line $errline", 0, $errno, $errfile, $errline);
+
         // Lance une exception pour les erreurs (pas pour les notices ou autre)
         switch ($errno) {
             case E_NOTICE:
@@ -78,14 +75,12 @@ class Core_Error_Handler
             case E_DEPRECATED:
             case E_USER_DEPRECATED:
                 // Log de l'erreur
-                $this->logger->warning("$errstr in $errfile line $errline");
-                $e = new ErrorException("$errstr in $errfile line $errline", 0, $errno, $errfile, $errline);
-                Core_Error_Log::getInstance()->logException($e);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 // Ne pas exécuter le gestionnaire interne de PHP.
                 return true;
             default:
                 // Transforme l'erreur en exception.
-                throw new ErrorException("$errstr in $errfile line $errline", 0, $errno, $errfile, $errline);
+                throw $e;
         }
     }
 
@@ -115,10 +110,8 @@ class Core_Error_Handler
         if ($isError) {
             // Transforme l'erreur en exception.
             $e = new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line']);
-            // Log de l'exception.
-            Core_Error_Log::getInstance()->logException($e);
-            // Envoi des headers (sinon aucun message d'erreur ne parvient à firebug).
-            Core_Error_Log::getInstance()->flushHeaders();
+            // Log de l'erreur
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
     }
 

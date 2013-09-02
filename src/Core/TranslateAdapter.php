@@ -60,7 +60,6 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
             xml_parser_free($this->_file);
             require_once 'Zend/Translate/Exception.php';
             $exception = new Zend_Translate_Exception($ex);
-            Core_Error_Log::getInstance()->logException($exception);
             throw $exception;
 
         }

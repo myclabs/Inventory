@@ -28,9 +28,6 @@ class Core_Error_Log
         return $instance;
     }
 
-    /**
-     * Constructeur.
-     */
     protected function __construct()
     {
         $this->_zendLogger = new Zend_Log();
@@ -53,13 +50,4 @@ class Core_Error_Log
         $this->logger->debug('', ['var' => $var]);
     }
 
-    /**
-     * Log d'une exception.
-     *
-     * @param Exception $e
-     */
-    public function logException($e)
-    {
-        $this->logger->error($e->getMessage(), ['exception' => $e]);
-    }
 }

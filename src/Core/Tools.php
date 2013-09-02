@@ -26,12 +26,14 @@ abstract class Core_Tools
      * @codeCoverageIgnore
      *
      * @param mixed $var Variable à afficher.
-     *
-     * @return void
      */
     public static function dump($var)
     {
-        Core_Error_Log::getInstance()->dump($var);
+        $container = Zend_Registry::get('container');
+        /** @var \Psr\Log\LoggerInterface $logger */
+        $logger = $container->get('Psr\Log\LoggerInterface');
+
+        $logger->debug('', ['var' => $var]);
     }
 
     /**
