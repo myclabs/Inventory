@@ -29,16 +29,9 @@ class Algo_Model_Output
     protected $sourceValue;
 
     /**
-     * Indicator indexing the value
-     * @var Classif_Model_ContextIndicator
+     * @var Algo_Model_Numeric
      */
-    protected $contextIndicator;
-
-    /**
-     * The algo label
-     * @var string
-     */
-    protected $label;
+    protected $algo;
 
     /**
      * Members indexing the value
@@ -50,19 +43,16 @@ class Algo_Model_Output
     /**
      * Create a new Algo_Model_Output with an indicator
      * and (possibly) indexing members as an array
-     * @param Calc_UnitValue                 $value          The value's value
-     * @param Classif_Model_ContextIndicator $contextIndicator
-     * @param Classif_Model_Member[]         $classifMembers
-     * @param string                         $label          The algo's label
+     * @param Calc_UnitValue         $value
+     * @param Algo_Model_Numeric     $algo
+     * @param Classif_Model_Member[] $classifMembers
      */
-    public function __construct(Calc_UnitValue $value, Classif_Model_ContextIndicator $contextIndicator,
-                                array $classifMembers, $label
-    ) {
+    public function __construct(Calc_UnitValue $value, Algo_Model_Numeric $algo, array $classifMembers) {
         $this->sourceValue = clone $value;
-        $this->contextIndicator = $contextIndicator;
-        $this->label = $label;
-        $unit = $contextIndicator->getIndicator()->getUnit();
+        $this->algo = $algo;
+        $unit = $algo->getContextIndicator()->getIndicator()->getUnit();
         // Get the value using the conversionFactor
+        // TODO use Unit conversion API
         $conversionFactor = $unit->getConversionFactor($this->sourceValue->getUnit()->getRef());
         $this->value = new Calc_Value(
             $value->getDigitalValue() * $conversionFactor,
@@ -92,24 +82,6 @@ class Algo_Model_Output
     }
 
     /**
-     * Return the label
-     * @return string
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
-    /**
-     * Set the label
-     * @param string $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = (string) $label;
-    }
-
-    /**
      * Return the source value (i.e.: before the normalization with the indicator's unit)
      * @return Calc_UnitValue
      */
@@ -128,23 +100,6 @@ class Algo_Model_Output
     }
 
     /**
-     * Return the indicator indexing the value
-     * @return Classif_Model_ContextIndicator
-     */
-    public function getContextIndicator()
-    {
-        return $this->contextIndicator;
-    }
-
-    /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
-     */
-    public function setContextIndicator(Classif_Model_ContextIndicator $contextIndicator)
-    {
-        $this->contextIndicator = $contextIndicator;
-    }
-
-    /**
      * Add a member to the value index
      * @param Classif_Model_Member $member
      */
@@ -160,6 +115,14 @@ class Algo_Model_Output
     public function getClassifMembers()
     {
         return $this->classifMembers;
+    }
+
+    /**
+     * @return Algo_Model_Numeric
+     */
+    public function getAlgo()
+    {
+        return $this->algo;
     }
 
 }

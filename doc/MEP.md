@@ -1,5 +1,10 @@
 # Mise en production
 
+## Bug 6387 (version inconnue ?)
+
+- Build update
+- Relancer tous les calculs via l'interface
+
 ## 2.3
 
 - Installer APC
