@@ -130,8 +130,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $configuration = Zend_Registry::get('configuration');
 
         $logger = new Logger('log');
-        $errorLog = Core_Error_Log::getInstance();
-        $errorLog->setLogger($logger);
         // Si on est en tests unitaires
         if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'script')) {
             // Log vers la console
