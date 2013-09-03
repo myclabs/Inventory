@@ -68,6 +68,10 @@ class AF_Service_InputService
                 $inputSet->setCalculationComplete(true);
                 $inputSet->getOutputSet()->calculateTotals();
             } catch (Algo_Model_ExecutionException $e) {
+                $ref = $inputSet->getAF()->getRef();
+                Core_Error_Log::getInstance()->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
+                Core_Error_Log::getInstance()->logException($e);
+
                 $inputSet->setCalculationComplete(false);
                 $inputSet->clearOutputSet();
             }
