@@ -231,7 +231,7 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
         $this->assertEquals($j->getName(), 'J');
         $this->assertEquals($j->getModifier(), Component::MODIFIER_ADD);
 
-        $expression = new Numeric('A * B + C * (D - E)');
+        $expression = new Numeric('(A * B + C * (D - E))');
         $rootPlusNode = $expression->createTree();
 
         $rootPlusChildren = $rootPlusNode->getChildren();
