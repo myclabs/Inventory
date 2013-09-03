@@ -149,13 +149,18 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
      */
     public function getNbRequiredFields(AF_Model_InputSet $inputSet = null)
     {
+        if (! $this->getRequired()) {
+            return 0;
+        }
+
         if ($inputSet) {
             $input = $inputSet->getInputForComponent($this);
-            // Si la saisie est cachée ou non obligatoire : 0 champs requis
-            if ($input && ($input->isHidden() || !$this->getRequired())) {
+            // Si la saisie est cachée : 0 champs requis
+            if ($input && $input->isHidden()) {
                 return 0;
             }
         }
+
         return 1;
     }
 
