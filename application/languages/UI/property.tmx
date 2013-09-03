@@ -21,7 +21,7 @@
         </tu>
         <tu tuid="closed">
             <tuv xml:lang="fr">
-                <seg>Clôturé</seg>
+                <seg>Fermé</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Closed</seg>
@@ -177,6 +177,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Not up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="open">
+            <tuv xml:lang="fr">
+                <seg>Ouvert</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Open</seg>
             </tuv>
         </tu>
         <tu tuid="optional">
