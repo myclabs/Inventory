@@ -7,7 +7,6 @@ use Core_Exception_UndefinedAttribute;
 /**
  * Classe metier de Predicate.
  * @author valentin.claras
- * @author bertrand.ferry
  */
 class Predicate
 {
@@ -53,30 +52,22 @@ class Predicate
      */
     protected $description = '';
 
-//
-//    /**
-//     * Retourne le predicat correspondant a la reference donnée.
-//     *
-//     * @param string $ref
-//     *
-//     * @return Predicate
-//     */
-//    public static function loadByRef($ref)
-//    {
-//        return self::getEntityRepository()->loadBy(array('ref' => $ref));
-//    }
-//
-//    /**
-//     * Retourne le predicat correspondant a la reference inverse donnée.
-//     *
-//     * @param string $reverseRef
-//     *
-//     * @return Predicate
-//     */
-//    public static function loadByReverseRef($reverseRef)
-//    {
-//        return self::getEntityRepository()->loadBy(array('reverseRef' => $reverseRef));
-//    }
+
+    /**
+     * Constructeur de la classe Predicate.
+     *
+     * @param string $ref
+     * @param string $reverseRef
+     * @param string $label
+     * @param string $reverseLabel
+     */
+    public function __construct($ref, $reverseRef, $label='', $reverseLabel='')
+    {
+        $this->setRef(is_null($ref) ? \Core_Tools::checkRef($label) : $ref);
+        $this->setLabel($label);
+        $this->setReverseRef(is_null($reverseRef) ? \Core_Tools::checkRef($reverseLabel) : $reverseRef);
+        $this->setReverseLabel($label);
+    }
 
     /**
      * Renvoi l'identifiant unique du Predicate.
@@ -92,9 +83,13 @@ class Predicate
      * Défini la référence du Predicate.
      *
      * @param string $ref
+     * @throws \Core_Exception_InvalidArgument
      */
     public function setRef($ref)
     {
+        if (is_null($ref)) {
+            throw new \Core_Exception_InvalidArgument("A Predicate's ref can't be empty.");
+        }
         $this->ref = $ref;
     }
 
@@ -106,9 +101,6 @@ class Predicate
      */
     public function getRef()
     {
-        if ($this->ref === null) {
-            throw new \Core_Exception_UndefinedAttribute('The predicate reference has not been defined yet.');
-        }
         return $this->ref;
     }
 
@@ -130,9 +122,6 @@ class Predicate
      */
     public function getLabel()
     {
-        if ($this->label === null) {
-            throw new \Core_Exception_UndefinedAttribute('The predicate label has not been defined yet.');
-        }
         return $this->label;
     }
 
@@ -140,23 +129,23 @@ class Predicate
      * Défini la référence inverse du Predicate.
      *
      * @param string $revRef
+     * @throws \Core_Exception_InvalidArgument
      */
     public function setReverseRef($revRef)
     {
+        if (is_null($revRef)) {
+            throw new \Core_Exception_InvalidArgument("A Predicate's reverse ref can't be empty.");
+        }
         $this->reverseRef = $revRef;
     }
 
     /**
      * Renvoi la référence inverse du Predicate.
      *
-     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getReverseRef()
     {
-        if ($this->ref === null) {
-            throw new \Core_Exception_UndefinedAttribute('The predicate reverse reference has not been defined yet.');
-        }
         return $this->reverseRef;
     }
 
@@ -173,14 +162,10 @@ class Predicate
     /**
      * Renvoi le label inverse du Predicate.
      *
-     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getReverseLabel()
     {
-        if ($this->reverseLabel === null) {
-            throw new \Core_Exception_UndefinedAttribute('The predicate reverse label has not been defined yet.');
-        }
         return $this->reverseLabel;
     }
 

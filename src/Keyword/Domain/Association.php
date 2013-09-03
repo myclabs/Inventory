@@ -2,7 +2,6 @@
 
 namespace Keyword\Domain;
 
-use Core_Exception_TooMany;
 use Core_Exception_UndefinedAttribute;
 
 /**
@@ -10,18 +9,6 @@ use Core_Exception_UndefinedAttribute;
  */
 class Association
 {
-    // Constantes de tri et filtres.
-    const QUERY_SUBJECT = 'subject';
-    const QUERY_OBJECT = 'object';
-    const QUERY_PREDICATE = 'predicate';
-
-    /**
-     * Identifiant unique du Keyword.
-     *
-     * @var int
-     */
-    protected $id;
-
     /**
      * Keyword sujet de l'association.
      *
@@ -44,19 +31,22 @@ class Association
     protected $predicate = null;
 
 
-//    /**
-//     * Renvoie une Association en fonction des refs de ces composants
-//     *
-//     * @param string $subjectKeywordRef
-//     * @param string $objectKeywordRef
-//     * @param string $predicateRef
-//     *
-//     * @return Association
-//     */
-//    public static function loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef)
-//    {
-//        return self::getEntityRepository()->loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef);
-//    }
+    /**
+     * Constructeur de la class Association.
+     *
+     * @param Keyword $subjectKeyword
+     * @param Predicate $predicate
+     * @param Keyword $objectKeyword
+     */
+    public function __construct(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
+    {
+        $this->subject = $subjectKeyword;
+        $this->predicate = $predicate;
+        $this->object = $objectKeyword;
+
+        $subjectKeyword->addAssociationAsSubject($this);
+        $objectKeyword->addAssociationAsObject($this);
+    }
 
     /**
      * Renvoi l'identifiant unique de l'Association.
@@ -69,51 +59,13 @@ class Association
     }
 
     /**
-     * Défini le Keyword sujet.
-     *
-     * @param Keyword $subjectKeyword
-     * @throws \Core_Exception_TooMany
-     */
-    public function setSubject(Keyword $subjectKeyword)
-    {
-        if ($this->subject !== $subjectKeyword) {
-            if ($this->subject !== null) {
-                throw new Core_Exception_TooMany('The subject has already been defined.');
-            }
-            $this->subject = $subjectKeyword;
-            $subjectKeyword->addAssociationAsSubject($this);
-        }
-    }
-
-    /**
      * Renvoi le Keyword sujet.
      *
-     * @throws \Core_Exception_UndefinedAttribute
      * @return Keyword
      */
     public function getSubject()
     {
-        if ($this->subject === null) {
-            throw new Core_Exception_UndefinedAttribute('The subject keyword has not been defined yet.');
-        }
         return $this->subject;
-    }
-
-    /**
-     * Défini le Keyword objet.
-     *
-     * @param Keyword $objectKeyword
-     * @throws \Core_Exception_TooMany
-     */
-    public function setObject(Keyword $objectKeyword)
-    {
-        if ($this->object !== $objectKeyword) {
-            if ($this->object !== null) {
-                throw new Core_Exception_TooMany('The object has already been defined.');
-            }
-            $this->object = $objectKeyword;
-            $objectKeyword->addAssociationAsObject($this);
-        }
     }
 
     /**
@@ -124,9 +76,6 @@ class Association
      */
     public function getObject()
     {
-        if ($this->object === null) {
-            throw new Core_Exception_UndefinedAttribute('The object keyword has not been defined yet.');
-        }
         return $this->object;
     }
 
@@ -148,9 +97,6 @@ class Association
      */
     public function getPredicate()
     {
-        if ($this->predicate === null) {
-            throw new Core_Exception_UndefinedAttribute('The predicate has not been defined yet.');
-        }
         return $this->predicate;
     }
 

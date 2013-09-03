@@ -9,8 +9,6 @@ use Doctrine\Common\Collections\Collection;
 /**
  * Classe metier de Keyword.
  * @author valentin.claras
- * @author bertrand.ferry
- * @author maxime.fourt
  */
 class Keyword
 {
@@ -26,7 +24,7 @@ class Keyword
      *
      * @var string
      */
-    protected $ref = null;
+    protected $ref;
 
     /**
      * Label du Keyword.
@@ -51,14 +49,20 @@ class Keyword
 
 
     /**
-     * Constructeur.
+     * Constructeur de la classe Keyword.
+     *
+     * @param string $ref
+     * @param string $label
      */
-    public function __construct()
+    public function __construct($ref, $label='')
     {
         $this->objectAssociation = new ArrayCollection();
         $this->subjectAssociation = new ArrayCollection();
+
+        $this->setRef(is_null($ref) ? \Core_Tools::checkRef($label) : $ref);
+        $this->setLabel($label);
     }
-//
+
 //    /**
 //     * Retourne le mot-cle correspondant a la reference.
 //     *
@@ -70,7 +74,7 @@ class Keyword
 //    {
 //        return self::getEntityRepository()->loadBy(array('ref' => $ref));
 //    }
-//
+
 //    /**
 //     * Charge la liste des Keyword ne possédant pas d'association en tant qu'objet.
 //     *
@@ -87,18 +91,6 @@ class Keyword
 //
 //        return self::getEntityRepository()->loadListRoots($queryParameters);
 //    }
-//
-//    /**
-//     * Charge la liste des Keyword répondant à la requête donnée.
-//     *
-//     * @param string $expressionQuery
-//     *
-//     * @return Keyword[]
-//     */
-//    public static function loadListMatchingQuery($expressionQuery)
-//    {
-//        return self::getEntityRepository()->loadListMatchingQuery($expressionQuery);
-//    }
 
     /**
      * Renvoi l'identifiant unique du Keyword.
@@ -114,10 +106,13 @@ class Keyword
      * Modifie la reference du Keyword.
      *
      * @param string $ref
-     * @param string $ref
+     * @throws \Core_Exception_InvalidArgument
      */
     public function setRef($ref)
     {
+        if (is_null($ref)) {
+            throw new \Core_Exception_InvalidArgument("A Keyword's ref can't be empty.");
+        }
         $this->ref = $ref;
     }
 
@@ -129,9 +124,6 @@ class Keyword
      */
     public function getRef()
     {
-        if ($this->ref === null) {
-            throw new Core_Exception_UndefinedAttribute('The keyword reference has not been defined yet.');
-        }
         return $this->ref;
     }
 
@@ -153,9 +145,6 @@ class Keyword
      */
     public function getLabel()
     {
-        if ($this->label === null) {
-            throw new Core_Exception_UndefinedAttribute('The keyword label has not been defined yet.');
-        }
         return $this->label;
     }
 
@@ -163,9 +152,14 @@ class Keyword
      * Ajoute une Association où le Keyword agit en tant qu'object.
      *
      * @param Association $association
+     * @throws Core_Exception_InvalidArgument
      */
     public function addAssociationAsObject(Association $association)
     {
+        if ($association->getObject() !== $this) {
+            throw new Core_Exception_InvalidArgument();
+        }
+
         if (!($this->hasAssociationAsObject($association))) {
             $this->objectAssociation->add($association);
             $association->setObject($this);
@@ -219,12 +213,16 @@ class Keyword
      * Ajoute une Association où le Keyword agit en tant que sujet.
      *
      * @param Association $association
+     * @throws Core_Exception_InvalidArgument
      */
     public function addAssociationAsSubject(Association $association)
     {
+        if ($association->getSubject() !== $this) {
+            throw new Core_Exception_InvalidArgument();
+        }
+
         if (!($this->hasAssociationsAsSubject($association))) {
             $this->subjectAssociation->add($association);
-            $association->setSubject($this);
         }
     }
 
