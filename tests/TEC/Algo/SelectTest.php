@@ -81,7 +81,6 @@ class TEC_Test_AlgoSelect extends PHPUnit_Framework_TestCase
     {
         $expression = new Select('a:(b:(c:o1);d:o2);:o3;:o4;');
         $this->assertEquals($expression->correctBrackets(), 'a:(b:(c:o1);d:o2);:o3;:o4;');
-        return $expression;
     }
 
     /**
@@ -89,12 +88,11 @@ class TEC_Test_AlgoSelect extends PHPUnit_Framework_TestCase
      *
      * @depends testCorrectBrackets
      *
-     * @param Select $expression
-     *
      * @return Select
      */
-    public function testCreateTree($expression)
+    public function testCreateTree()
     {
+        $expression = new Select('a:(b:(c:o1);d:o2);:o3;:o4;');
         $rootNode = $expression->createTree();
 
         $rootChildren = $rootNode->getChildren();
@@ -155,19 +153,16 @@ class TEC_Test_AlgoSelect extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('TEC\Component\Leaf', $o4);
         $this->assertSame($o4->getParent(), $rootNode);
         $this->assertEquals($o4->getName(), 'o4');
-
-        return $expression;
     }
 
     /**
      * Test la méthode
      *
      * @depends testCreateTree
-     *
-     * @param Select $expression
      */
-    public function testGetTreeAsString(Select $expression)
+    public function testGetTreeAsString()
     {
+        $expression = new Select('a:(b:(c:o1);d:o2);:o3;:o4;');
         $treeAsString = $expression->convertTreeToString();
         $expectedString = 'a : (b : (c : o1) ; d : o2) ; : o3 ; : o4';
         $this->assertEquals($expectedString, $treeAsString);
@@ -177,11 +172,10 @@ class TEC_Test_AlgoSelect extends PHPUnit_Framework_TestCase
      * Test la méthode
      *
      * @depends testCreateTree
-     *
-     * @param Select $expression
      */
-    public function testGetTreeAsGraph(Select $expression)
+    public function testGetTreeAsGraph()
     {
+        $expression = new Select('a:(b:(c:o1);d:o2);:o3;:o4;');
         $treeAsGraph = $expression->convertTreeToGraph();
         $expectedGraph = '[{v:"-0",f:"a ?"},"",""],'
                         .'[{v:"-0-0",f:"b ?"},"-0",""],'

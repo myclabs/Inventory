@@ -151,7 +151,7 @@ abstract class Algo
                     // Traitement de la sous expression.
                     $reformBrackets = $this->reformBrackets($insideExpression);
                     $insideExpression = $reformBrackets['expression'];
-                    if ($lastSymbol !== $reformBrackets['topLevelSymbol']) {
+                    if ($lastSymbol !== $reformBrackets['topLevelSymbol'] && $lastSymbol !== null) {
                         $insideExpression = '(' . $insideExpression . ')';
                     } else {
                         $lastBracketSymbol = $reformBrackets['topLevelSymbol'];
