@@ -30,8 +30,22 @@ Feature: General data simulation feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 1 of the "listScenarios" datagrid should contain:
-      | labelScenario | advancementInput | stateInput |
-      | bbb           |                  |            |
+      | labelScenario | advancementInput | stateInput        |
+      | bbb           | 0%               | Saisie incomplète |
+  # Accès à la saisie
+    When I click "Cliquer pour accéder" in the row 1 of the "listScenarios" datagrid
+    Then I should see "bbb aaa | Données générales"
+  # Saisie et enregistrement
+    When I fill in "Chiffre d'affaire" with "1"
+    And I click "Aperçu des résultats"
+    Then I should see "Total : 1 k€"
+    When I click "Enregistrer"
+    Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
+  # Retour à la page des scénarios
+    When I click "Quitter"
+    Then the row 1 of the "listScenarios" datagrid should contain:
+      | advancementInput | stateInput        |
+      | 100%             | Saisie complète   |
 
   @javascript
   Scenario: Creation of a simulation scenario and of a simulation scenario, incorrect input
@@ -66,5 +80,3 @@ Feature: General data simulation feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "listSet" datagrid should contain 0 row
-
-

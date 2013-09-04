@@ -96,7 +96,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
                 $data['totalValueGESInput'] = $this->cellNumber(null);
                 $data['totalUncertaintyGESInput'] = $this->cellNumber(null);
             }
-            $data['link'] = $this->cellLink('simulation/scenario/details?idScenario='.$scenario->getKey()['id'], __('UI', 'name', 'input'), 'share-alt');
+            $data['link'] = $this->cellLink('simulation/scenario/details?idScenario='.$scenario->getKey()['id'], __('UI', 'datagridContent', 'linkLabel'), 'share-alt');
             $this->addLine($data);
         }
 
