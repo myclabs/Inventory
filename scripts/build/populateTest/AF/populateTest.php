@@ -165,6 +165,19 @@ class AF_PopulateTest extends AF_Populate
         // Formulaire vide
         $aF_vide = $this->createAF($category_cont_formulaire, 'formulaire_vide', 'Formulaire vide');
 
+        // Forfait émissions en fonction de la marque
+        $aF_forfait_marque = $this->createAF($category_cont_formulaire, 'formulaire_forfait_marque', 'Forfait émissions en fonction de la marque');
+        // Composants
+        $numericInput_sans_effet = $this->createNumericInput($aF_forfait_marque, $aF_forfait_marque->getRootGroup(), 'sans_effet', 'Champ sans effet', 'kiloeuro', null, null, true, false);
+        // Algos
+        $aF_forfait_marque->getMainAlgo()->setExpression(':algo_numerique_forfait_marque;');
+        $this->createAlgoNumericParameter($aF_forfait_marque, 'algo_numerique_forfait_marque', 'Algo forfait émissions fonction marque', 'forfait_emissions_fonction_marque');
+        $this->createAlgoSelectTextkeyContextValue($aF_forfait_marque, 'algo_determination_marque', 'marque', 'marque_a');
+        // Coordonnées des algorithmes numériques de type paramètre
+        $this->createAlgoCoordinateForAlgoParameter($aF_forfait_marque->getAlgoByRef('algo_numerique_forfait_marque'), ['marque' => $aF_forfait_marque->getAlgoByRef('algo_determination_marque')]);
+        // Indexation
+        $this->createFixedIndexForAlgoNumeric($aF_forfait_marque->getAlgoByRef('algo_numerique_forfait_marque'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
+
         $entityManager->flush();
 
         echo "\t\tAF created".PHP_EOL;

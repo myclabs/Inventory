@@ -50,6 +50,7 @@ class Orga_PopulateTest extends Orga_Populate
         $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
         $member_categorie_energie = $this->createMember($axis_categorie, 'energie', 'Énergie');
         $member_categorie_test_affichage = $this->createMember($axis_categorie, 'test_affichage', 'Test affichage');
+        $member_categorie_forfait_marque = $this->createMember($axis_categorie, 'forfait_marque', 'Forfait marque');
 
         // Création des granularités.
         $granularityGlobal = $this->createGranularity($organization, [],                                                        true,  true,  true,  true,   true,  false, false, false);
@@ -91,6 +92,8 @@ class Orga_PopulateTest extends Orga_Populate
         $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_energie], $granularity_annee_site_categorie, 'combustion_combustible_unite_masse');
         // Test affichage
         $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'formulaire_tous_types_champ');
+        // Forfait marque
+        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_forfait_marque], $granularity_annee_site_categorie, 'formulaire_forfait_marque');
         // Test affichage sous-formulaire répété tout type de champ
         $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2013, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'formulaire_s_f_r_tous_types_champ');
 
