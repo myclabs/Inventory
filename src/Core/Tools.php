@@ -1,19 +1,16 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Tool
- */
 
 use Netcarver\Textile;
+use NumberTwo\Filter\DoctrineCollectionFilter;
+use NumberTwo\Filter\DoctrineProxyFilter;
+use NumberTwo\NumberTwo;
 
 /**
  * Classe regroupant des fonctions utilitaires transverses.
  *
  * Toutes ses méthodes sont statiques pour des raisons de simplicité.
  *
- * @package    Core
- * @subpackage Tool
+ * @author     matthieu.napoli
  */
 abstract class Core_Tools
 {
@@ -32,12 +29,16 @@ abstract class Core_Tools
      * @codeCoverageIgnore
      *
      * @param mixed $var Variable à afficher.
-     *
-     * @return void
      */
     public static function dump($var)
     {
-        Core_Error_Log::getInstance()->dump($var);
+        $container = Zend_Registry::get('container');
+        /** @var \Psr\Log\LoggerInterface $logger */
+        $logger = $container->get('Psr\Log\LoggerInterface');
+
+        $filters = [new DoctrineCollectionFilter(), new DoctrineProxyFilter()];
+
+        $logger->debug(NumberTwo::dump($var, 3, $filters));
     }
 
     /**
@@ -46,20 +47,20 @@ abstract class Core_Tools
      * La chaine générée a une longueur maximale de 32 caractères et ne contient que
      * des caractères alphanumériques.
      *
-     * @param string $nbCaracteres Nombre de caractères de la chaine générée, valeur par défaut, et maximum : 32.
+     * @param int $count Nombre de caractères de la chaine générée, valeur par défaut, et maximum : 32.
      *
      * @return string Chaine de caractère.
      */
-    public static function generateString($nbCaracteres = 32)
+    public static function generateString($count = 32)
     {
-        $caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        $longueur = mb_strlen($caracteres);
+        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        $charsLength = mb_strlen($chars);
         srand((double) microtime() * 1000000);
-        $chaine = '';
-        for ($i = 0; $i < $nbCaracteres; $i++) {
-            $chaine .= $caracteres[rand(0, $longueur - 1)];
+        $str = '';
+        for ($i = 0; $i < $count; $i++) {
+            $str .= $chars[rand(0, $charsLength - 1)];
         }
-        return $chaine;
+        return $str;
     }
 
     /**
@@ -68,6 +69,7 @@ abstract class Core_Tools
      * @param string $ref
      *
      * @throws Core_Exception_User
+     * @return bool
      */
     public static function checkRef($ref)
     {

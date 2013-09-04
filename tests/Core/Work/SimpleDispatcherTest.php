@@ -86,8 +86,11 @@ class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
 
     public function testRunServiceCall()
     {
+        /** @var \Psr\Log\LoggerInterface $logger */
+        $logger = $this->getMockForAbstractClass('Psr\Log\LoggerInterface');
+
         $dispatcher = new Core_Work_SimpleDispatcher();
-        $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container()));
+        $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container(), $logger));
 
         $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
 
