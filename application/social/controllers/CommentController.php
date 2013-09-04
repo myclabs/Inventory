@@ -15,6 +15,11 @@ class Social_CommentController extends Core_Controller
     use UI_Controller_Helper_Form;
 
     /**
+     * @var Social_Service_CommentService
+     */
+    private $commentService;
+
+    /**
      * Retourne la vue d'un commentaire après son ajout
      * @Secure("loggedIn")
      */
@@ -28,6 +33,14 @@ class Social_CommentController extends Core_Controller
 
         $this->setFormMessage(__('UI', 'message', 'added'));
         $this->sendFormResponse($data);
+    }
+
+    /**
+     * @Secure("deleteComment")
+     */
+    public function deleteCommentAction()
+    {
+        $this->commentService->deleteComment($this->getParam('id'));
     }
 
 }

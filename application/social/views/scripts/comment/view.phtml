@@ -2,7 +2,11 @@
 /** @var $comment Social_Model_Comment */
 $comment = $this->comment;
 $locale = Core_Locale::loadDefault();
+
+$canEdit = $this->isAllowed(User_Model_Action_Default::EDIT(), $comment);
+$canDelete = $this->isAllowed(User_Model_Action_Default::DELETE(), $comment);
 ?>
+
 <blockquote>
     <p>
         <?=Core_Tools::textile($comment->getText())?>
@@ -10,5 +14,27 @@ $locale = Core_Locale::loadDefault();
     <small>
         <?=__('Social', 'comment', 'by')?> <strong><?=$comment->getAuthor()->getName()?></strong>
         <?=__('Social', 'comment', 'dated')?> <?=$comment->getCreationDate()->format('d M Y')?>
+
+        <?php if ($canEdit) : ?>
+            <button type="button" class="editComment btn btn-mini" data-comment-id="<?=$comment->getId()?>">
+                <i class="icon-edit"></i>
+                <?=__('UI', 'verb', 'edit')?>
+            </button>
+        <?php endif; ?>
+
+        <?php if ($canDelete) : ?>
+            <button type="button" class="deleteComment btn btn-mini" data-comment-id="<?=$comment->getId()?>">
+                <i class="icon-trash"></i>
+                <?=__('UI', 'verb', 'delete')?>
+            </button>
+        <?php endif; ?>
     </small>
 </blockquote>
+
+<script>
+    // Delete a comment
+    $(".deleteComment").click(function() {
+        var commentId = $(this).data('comment-id');
+        console.log(commentId);
+    });
+</script>

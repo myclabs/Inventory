@@ -25,6 +25,12 @@ class Orga_Tab_InputController extends Core_Controller
     private $aclService;
 
     /**
+     * @Inject
+     * @var Social_Service_CommentService
+     */
+    private $commentService;
+
+    /**
      * Action fournissant la vue des documents pour l'input.
      * @Secure("viewCell")
      */
@@ -67,9 +73,7 @@ class Orga_Tab_InputController extends Core_Controller
         if (!$this->hasFormError()) {
 
             // Ajoute le commentaire
-            $comment = new Social_Model_Comment($author);
-            $comment->setText($content);
-            $comment->save();
+            $comment = $this->commentService->addComment($author, $content);
             $cell->addSocialCommentForInputSetPrimary($comment);
             $cell->save();
 
