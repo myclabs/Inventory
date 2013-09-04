@@ -173,7 +173,7 @@ qui officia deserunt mollit anim id est laborum.',
         $this->createUser('emmanuel.risler.pro@gmail.com');
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
-        $this->addOrganizationAdministrator('admin', $organization);
+        $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);
         $this->addOrganizationAdministrator('administrateur.organisation@toto.com', $organization);
         // Ajout d'un role sur une cellule à un utilisateur existant.
 
