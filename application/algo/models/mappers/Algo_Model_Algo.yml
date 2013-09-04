@@ -13,6 +13,7 @@ Algo_Model_Algo:
     selection_textkey: Algo_Model_Selection_TextKey
     selection_textkey_input: Algo_Model_Selection_TextKey_Input
     selection_textkey_expression: Algo_Model_Selection_TextKey_Expression
+    selection_textkey_contextvalue: Algo_Model_Selection_TextKey_ContextValue
     condition: Algo_Model_Condition
     condition_elementary: Algo_Model_Condition_Elementary
     condition_elementary_numeric: Algo_Model_Condition_Elementary_Numeric
