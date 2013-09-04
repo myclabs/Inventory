@@ -72,7 +72,7 @@ class AF_Service_InputService
                 $af->execute($inputSet);
                 $inputSet->setCalculationComplete(true);
                 $inputSet->getOutputSet()->calculateTotals();
-            } catch (Algo_Model_ExecutionException $e) {
+            } catch (Exception $e) {
                 $ref = $inputSet->getAF()->getRef();
                 Core_Error_Log::getInstance()->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
                 Core_Error_Log::getInstance()->logException($e);
