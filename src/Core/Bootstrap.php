@@ -130,10 +130,19 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $configuration = Zend_Registry::get('configuration');
 
         $logger = new Logger('log');
-        // Si on est en tests unitaires
-        if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'script')) {
-            // Log vers la console
-            $logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+
+        // Log vers la console
+        if ($configuration->log->stdout) {
+            $loggerHandler = new StreamHandler('php://stdout', Logger::DEBUG);
+            $loggerHandler->setFormatter(new ExtendedLineFormatter());
+            $logger->pushHandler($loggerHandler);
+        }
+        // Log dans un fichier
+        if ($configuration->log->file) {
+            $file = $this->container->get('log.file');
+            $fileHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+            $fileHandler->setFormatter(new ExtendedLineFormatter());
+            $logger->pushHandler($fileHandler);
         }
         // Log FirePHP
         if ($configuration->log->firephp) {
@@ -143,11 +152,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $chromePHPHandler->setFormatter(new ChromePHPFormatter());
             $logger->pushHandler($chromePHPHandler);
         }
-        // Log dans un fichier
-        $file = $this->container->get('log.file');
-        $fileHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
-        $fileHandler->setFormatter(new ExtendedLineFormatter());
-        $logger->pushHandler($fileHandler);
+
         /** @noinspection PhpParamsInspection */
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
