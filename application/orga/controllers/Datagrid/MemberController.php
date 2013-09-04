@@ -172,7 +172,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         } catch (ErrorException $e) {
             $this->entityManager->rollback();
 
-            throw new Core_Exception_User('UI', 'exception', 'deleteMemberWithUsersToCells');
+            throw new Core_Exception_User('Orga', 'member', 'deleteMemberWithUsersToCells');
         }
 
         $this->send();
