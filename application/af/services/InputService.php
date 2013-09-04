@@ -54,8 +54,9 @@ class AF_Service_InputService
      * Si la saisie est incomplète, les résultats seront vidés.
      *
      * @param AF_Model_InputSet_Primary $inputSet
+     * @param AF_Model_AF $aF
      */
-    public function updateResults(AF_Model_InputSet_Primary $inputSet)
+    public function updateResults(AF_Model_InputSet_Primary $inputSet, AF_Model_AF $aF=null)
     {
         // MAJ le pourcentage de complétion
         $inputSet->updateCompletion();
@@ -64,7 +65,11 @@ class AF_Service_InputService
         if ($inputSet->isInputComplete()) {
             // Calcule les résultats
             try {
-                $inputSet->getAF()->execute($inputSet);
+                if ($aF !== null) {
+                    $aF->execute($inputSet);
+                } else {
+                    $inputSet->getAF()->execute($inputSet);
+                }
                 $inputSet->setCalculationComplete(true);
                 $inputSet->getOutputSet()->calculateTotals();
             } catch (Algo_Model_ExecutionException $e) {
