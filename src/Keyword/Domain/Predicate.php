@@ -2,6 +2,7 @@
 
 namespace Keyword\Domain;
 
+use Core\Domain\Translatable\TranslatableEntity;
 use Core_Exception_UndefinedAttribute;
 
 /**
@@ -10,6 +11,8 @@ use Core_Exception_UndefinedAttribute;
  */
 class Predicate
 {
+    use TranslatableEntity;
+
     /**
      * Identifiant unique du predicat.
      *

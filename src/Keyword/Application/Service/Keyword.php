@@ -10,23 +10,17 @@ use Keyword\Domain\Keyword;
 class KeywordDTO
 {
     /**
-     * Referent textuel du Keyword.
-     *
      * @var string
      */
-    protected $ref = '';
+    protected $ref;
 
     /**
-     * Label du Keyword.
-     *
      * @var string
      */
     protected $label;
 
 
     /**
-     * Constructeur.
-     *
      * @param Keyword $keyword
      */
     public function __construct(Keyword $keyword)
@@ -36,8 +30,14 @@ class KeywordDTO
     }
 
     /**
-     * Retourne le label du mot-cle (ou null si le mot-cle n'est pas valide).
-     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->ref;
+    }
+
+    /**
      * @return string Label
      */
     public function getRef()
@@ -46,8 +46,6 @@ class KeywordDTO
     }
 
     /**
-     * Retourne le label du mot-cle.
-     *
      * @return string Label
      */
     public function getLabel()

@@ -2,6 +2,7 @@
 /**
  * @package Keyword
  */
+
 use Keyword\Domain\Association;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\Predicate;
@@ -12,6 +13,25 @@ use Keyword\Domain\Predicate;
  */
 class Keyword_Populate extends Core_Script_Action
 {
+    /**
+     * @var \Keyword\Domain\KeywordRepository
+     */
+    protected $keywordRepository;
+
+    /**
+     * @var \Keyword\Domain\PredicateRepository
+     */
+    protected $predicateRepository;
+
+
+    function __construct()
+    {
+        $entityManagers = Zend_Registry::get('EntityManagers');
+        /** @var $entityManager \Doctrine\ORM\EntityManager */
+        $entityManager = $entityManagers['default'];
+        $this->keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $this->predicateRepository = $entityManager->getRepository('\Keyword\Domain\Predicate');
+    }
 
     /**
      * {@inheritdoc}
@@ -31,6 +51,10 @@ class Keyword_Populate extends Core_Script_Action
         // Création des mot-clefs.
         //  + createKeyword : -
         // Params : ref, label
+
+
+        $entityManager->flush();
+
 
         // Création des associations.
         //  + createAssociation : -
@@ -52,13 +76,9 @@ class Keyword_Populate extends Core_Script_Action
      */
     protected function createPredicate($ref, $label, $reverseRef, $reverseLabel, $description=null)
     {
-        $predicate = new Predicate();
-        $predicate->setRef($ref);
-        $predicate->setLabel($label);
-        $predicate->setReverseRef($reverseRef);
-        $predicate->setReverseLabel($reverseLabel);
+        $predicate = new Predicate($ref, $reverseRef, $label, $reverseLabel);
         $predicate->setDescription($description);
-        $predicate->save();
+        $this->predicateRepository->add($predicate);
         return $predicate;
     }
 
@@ -69,10 +89,8 @@ class Keyword_Populate extends Core_Script_Action
      */
     protected function createKeyword($ref, $label)
     {
-        $keyword = new Keyword();
-        $keyword->setRef($ref);
-        $keyword->setLabel($label);
-        $keyword->save();
+        $keyword = new Keyword($ref, $label);
+        $this->keywordRepository->add($keyword);
         return $keyword;
     }
 
@@ -83,11 +101,7 @@ class Keyword_Populate extends Core_Script_Action
      */
     protected function createAssociation(Keyword $subject, Predicate $predicate, Keyword $object)
     {
-        $assocation = new Association();
-        $assocation->setSubject($subject);
-        $assocation->setPredicate($predicate);
-        $assocation->setObject($object);
-        $assocation->save();
+        $assocation = new Association($subject, $predicate, $object);
     }
 
 }

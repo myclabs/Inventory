@@ -2,7 +2,7 @@
 
 namespace Keyword\Domain;
 
-use Core_Exception_UndefinedAttribute;
+use Core\Domain\Translatable\TranslatableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -12,6 +12,8 @@ use Doctrine\Common\Collections\Collection;
  */
 class Keyword
 {
+    use TranslatableEntity;
+
     /**
      * Identifiant unique du Keyword.
      *
@@ -38,14 +40,14 @@ class Keyword
      *
      * @var Collection
      */
-    protected $objectAssociation;
+    protected $objectAssociations;
 
     /**
      * Collection des associations avec les autres Keyword en tant que subjet.
      *
      * @var Collection
      */
-    protected $subjectAssociation;
+    protected $subjectAssociations;
 
 
     /**
@@ -56,10 +58,10 @@ class Keyword
      */
     public function __construct($ref, $label='')
     {
-        $this->objectAssociation = new ArrayCollection();
-        $this->subjectAssociation = new ArrayCollection();
+        $this->objectAssociations = new ArrayCollection();
+        $this->subjectAssociations = new ArrayCollection();
 
-        $this->setRef(is_null($ref) ? \Core_Tools::checkRef($label) : $ref);
+        $this->setRef(is_null($ref) ? \Core_Tools::refactor($label) : $ref);
         $this->setLabel($label);
     }
 
@@ -152,17 +154,16 @@ class Keyword
      * Ajoute une Association où le Keyword agit en tant qu'object.
      *
      * @param Association $association
-     * @throws Core_Exception_InvalidArgument
+     * @throws \Core_Exception_InvalidArgument
      */
     public function addAssociationAsObject(Association $association)
     {
         if ($association->getObject() !== $this) {
-            throw new Core_Exception_InvalidArgument();
+            throw new \Core_Exception_InvalidArgument();
         }
 
         if (!($this->hasAssociationAsObject($association))) {
-            $this->objectAssociation->add($association);
-            $association->setObject($this);
+            $this->objectAssociations->add($association);
         }
     }
 
@@ -175,7 +176,7 @@ class Keyword
      */
     public function hasAssociationAsObject(Association $association)
     {
-        return $this->objectAssociation->contains($association);
+        return $this->objectAssociations->contains($association);
     }
 
 
@@ -186,7 +187,7 @@ class Keyword
      */
     public function hasAssociationsAsObject()
     {
-        return !$this->objectAssociation->isEmpty();
+        return !$this->objectAssociations->isEmpty();
     }
 
     /**
@@ -196,7 +197,7 @@ class Keyword
      */
     public function countAssociationsAsObject()
     {
-        return $this->objectAssociation->count();
+        return $this->objectAssociations->count();
     }
 
     /**
@@ -206,23 +207,23 @@ class Keyword
      */
     public function getAssociationsAsObject()
     {
-        return $this->objectAssociation->toArray();
+        return $this->objectAssociations->toArray();
     }
 
     /**
      * Ajoute une Association où le Keyword agit en tant que sujet.
      *
      * @param Association $association
-     * @throws Core_Exception_InvalidArgument
+     * @throws \Core_Exception_InvalidArgument
      */
     public function addAssociationAsSubject(Association $association)
     {
         if ($association->getSubject() !== $this) {
-            throw new Core_Exception_InvalidArgument();
+            throw new \Core_Exception_InvalidArgument();
         }
 
         if (!($this->hasAssociationsAsSubject($association))) {
-            $this->subjectAssociation->add($association);
+            $this->subjectAssociations->add($association);
         }
     }
 
@@ -235,7 +236,7 @@ class Keyword
      */
     public function hasAssociationAsSubject(Association $association)
     {
-        return $this->subjectAssociation->contains($association);
+        return $this->subjectAssociations->contains($association);
     }
 
 
@@ -246,7 +247,7 @@ class Keyword
      */
     public function hasAssociationsAsSubject()
     {
-        return !$this->subjectAssociation->isEmpty();
+        return !$this->subjectAssociations->isEmpty();
     }
 
     /**
@@ -256,7 +257,7 @@ class Keyword
      */
     public function countAssociationsAsSubject()
     {
-        return $this->subjectAssociation->count();
+        return $this->subjectAssociations->count();
     }
 
     /**
@@ -266,7 +267,7 @@ class Keyword
      */
     public function getAssociationsAsSubject()
     {
-        return $this->subjectAssociation->toArray();
+        return $this->subjectAssociations->toArray();
     }
 
     /**

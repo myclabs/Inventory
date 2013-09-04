@@ -34,6 +34,10 @@ class Keyword_PopulateTest extends Keyword_Populate
         $keyword_amont_combustion = $this->createKeyword('amont_combustion', 'amont de la combustion');
         $keyword_combustion = $this->createKeyword('combustion', 'combustion');
 
+
+        $entityManager->flush();
+
+
         // Création des associations.
         $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_gaz_naturel_);
         $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_charbon);
