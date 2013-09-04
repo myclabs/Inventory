@@ -33,11 +33,12 @@ class EmailTaskNotifier implements TaskNotifier
      */
     public function notifyTaskFinished(User_Model_User $user, $taskLabel)
     {
-        $subject = __('Core', 'backgroundTasks', 'emailNotificationTitle', ['TASK_NAME' => $taskLabel]);
+        // TODO enlever la locale quand http://dev.myc-sense.com:3000/issues/6415 est fait
+        $subject = __('Core', 'backgroundTasks', 'emailNotificationTitle', ['TASK_NAME' => $taskLabel], \Core_Locale::loadDefault());
         $content = __('Core', 'backgroundTasks', 'emailNotificationContent', [
             'TASK_NAME'        => $taskLabel,
             'APPLICATION_NAME' => $this->applicationName,
-        ]);
+        ], \Core_Locale::loadDefault());
 
         $this->userService->sendEmail($user, $subject, $content);
     }
@@ -47,11 +48,12 @@ class EmailTaskNotifier implements TaskNotifier
      */
     function notifyTaskError(User_Model_User $user, $taskLabel)
     {
-        $subject = __('Core', 'backgroundTasks', 'emailNotificationErrorTitle', ['TASK_NAME' => $taskLabel]);
+        // TODO enlever la locale quand http://dev.myc-sense.com:3000/issues/6415 est fait
+        $subject = __('Core', 'backgroundTasks', 'emailNotificationErrorTitle', ['TASK_NAME' => $taskLabel], \Core_Locale::loadDefault());
         $content = __('Core', 'backgroundTasks', 'emailNotificationErrorContent', [
              'TASK_NAME'        => $taskLabel,
              'APPLICATION_NAME' => $this->applicationName,
-         ]);
+         ], \Core_Locale::loadDefault());
 
         $this->userService->sendEmail($user, $subject, $content);
     }

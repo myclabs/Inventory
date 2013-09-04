@@ -138,7 +138,6 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 
         // Change la locale
         if ($task->getContext() && $task->getContext()->getUserLocale()) {
-            Core_Error_Log::getInstance()->info("Switching to locale " . $task->getContext()->getUserLocale()->getId());
             $oldDefaultLocale = Core_Locale::loadDefault();
             Core_Locale::setDefault($task->getContext()->getUserLocale());
         } else {
