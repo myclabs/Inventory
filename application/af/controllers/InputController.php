@@ -220,12 +220,20 @@ class AF_InputController extends Core_Controller
      */
     public function inputHistoryAction()
     {
-        /** @var $input AF_Model_Input */
-        $input = AF_Model_Input::load($this->getParam('idInput'));
+        $idInput = $this->getParam('idInput', null);
 
-        $entries = $this->inputHistoryService->getInputHistory($input);
+        // Pour gérer le cas où on demande l'historique dans l'interface de test des AF
+        if ($idInput !== null) {
+            /** @var $input AF_Model_Input */
+            $input = AF_Model_Input::load($this->getParam('idInput'));
 
-        $this->view->assign('component', $input->getComponent());
+            $entries = $this->inputHistoryService->getInputHistory($input);
+
+            $this->view->assign('component', $input->getComponent());
+        } else {
+            $entries = [];
+        }
+
         $this->view->assign('entries', $entries);
         $this->_helper->layout->disableLayout();
     }
@@ -315,8 +323,10 @@ class AF_InputController extends Core_Controller
         } elseif ($component instanceof AF_Model_Component_Text) {
             // Champ texte
             $input = new AF_Model_Input_Text($inputSet, $component);
-            if (isset($inputContent['value'])) {
+            if (!empty($inputContent['value'])) {
                 $input->setValue($inputContent['value']);
+            } elseif ($component->getRequired()) {
+                $errorMessages[$fullRef] = __("UI", "formValidation", "emptyRequiredField");
             }
         } elseif ($component instanceof AF_Model_Component_Checkbox) {
             // Champ checkbox

@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Keyword\Domain\Keyword;
 
 /**
  * @package Techno
@@ -60,7 +61,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
             $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             try {
-                $value = Keyword_Model_Keyword::loadByRef($refValue);
+                $value = Keyword::loadByRef($refValue);
             } catch (Core_Exception_NotFound $e) {
                 $this->setAddElementErrorMessage('value', __('Techno', 'formValidation', 'unknownKeywordRef'));
             }
@@ -96,7 +97,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
         switch($this->update['column']) {
             case 'value':
                 try {
-                    $keyword = Keyword_Model_Keyword::loadByRef($newValue);
+                    $keyword = Keyword::loadByRef($newValue);
                     $tag->setValue($keyword);
                     $this->data = $keyword->getRef();
                 } catch (Core_Exception_NotFound $e) {

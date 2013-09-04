@@ -6,12 +6,17 @@
  * @package Algo
  */
 
+use Exec\Execution\Select;
+use Exec\Provider\ValueInterface;
+use TEC\Exception\InvalidExpressionException;
+use TEC\Expression;
+
 /**
  * @package    Algo
  * @subpackage Keyword
  */
 class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextKey
-    implements Exec_Interface_ValueProvider
+    implements ValueInterface
 {
 
     /**
@@ -20,17 +25,16 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
     protected $expression;
 
     /**
-     * @var TEC_Model_Expression
-     */
-    protected $tecExpression;
-
-    /**
      * {@inheritdoc}
      */
     public function execute(Algo_Model_InputSet $inputSet)
     {
         $this->inputSet = $inputSet;
-        $executionSelect = new Exec_Execution_Select($this->tecExpression);
+
+        // Construit l'arbre
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+
+        $executionSelect = new Select($tecExpression);
         return $executionSelect->executeExpression($this);
     }
 
@@ -55,7 +59,9 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
     public function checkConfig()
     {
         $errors = parent::checkConfig();
-        $executionSelect = new Exec_Execution_Select($this->tecExpression);
+
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+        $executionSelect = new Select($tecExpression);
 
         return array_merge($errors, $executionSelect->getErrors($this));
     }
@@ -89,22 +95,20 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
      */
     public function getExpression()
     {
-        return $this->expression;
+        $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
+        return $tecExpression->getAsString();
     }
 
     /**
      * @param string $expression
-     * @throws TEC_Model_InvalidExpressionException
+     * @throws InvalidExpressionException
      */
     public function setExpression($expression)
     {
-        $tecExpression = new TEC_Model_Expression();
-        $tecExpression->setType(TEC_Model_Expression::TYPE_SELECT);
-        $tecExpression->setExpression($expression);
+        $tecExpression = new Expression($expression, Expression::TYPE_SELECT);
         $tecExpression->check();
         // Expression OK
         $this->expression = (string) $expression;
-        $this->tecExpression = $tecExpression;
     }
 
 }

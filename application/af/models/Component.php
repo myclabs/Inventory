@@ -268,7 +268,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -280,7 +280,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -288,7 +288,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -296,7 +296,7 @@ abstract class AF_Model_Component extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {
@@ -343,10 +343,11 @@ abstract class AF_Model_Component extends Core_Model_Entity
     protected function getHistoryComponent(AF_Model_Input $input)
     {
         $historyButton = new UI_HTML_Button('<i class="icon-time"></i>');
-        $historyButton->addAttribute('title', __('AF', 'inputInput', 'valueHistory'));
+        $historyButton->addAttribute('title', __('UI', 'history', 'valueHistory'));
         $historyButton->addAttribute('class', 'input-history');
         $historyButton->addAttribute('data-input-id', $input->getId());
         $historyButton->addAttribute('data-toggle', 'button');
+        $historyButton->addAttribute('data-container', 'body');
 
         return new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
     }

@@ -17,6 +17,11 @@ class Core_Work_TaskContext
     private $userLocaleId;
 
     /**
+     * @var int
+     */
+    private $userId;
+
+    /**
      * @param Core_Locale $userLocale
      */
     public function setUserLocale(Core_Locale $userLocale)
@@ -30,5 +35,21 @@ class Core_Work_TaskContext
     public function getUserLocale()
     {
         return Core_Locale::load($this->userLocaleId);
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
     }
 }

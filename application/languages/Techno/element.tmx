@@ -5,6 +5,14 @@
     
         <!-- Messages -->
 
+        <tu tuid="element">
+            <tuv xml:lang="fr">
+                <seg>Élément</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Element</seg>
+            </tuv>
+        </tu>
         <tu tuid="incompatibleUnit">
             <tuv xml:lang="fr">
                 <seg>Merci de saisir une unité associée à la même grandeur physique que l'unité initiale.</seg>

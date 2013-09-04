@@ -21,7 +21,33 @@ class Classif_Populate extends Core_Script_Action
         $entityManager = $entityManagers['default'];
 
 
+        // Création des axes.
+        //  + createAxis : -
+        // Params : ref, label
+        // OptionalParams : Axis parent=null
 
+        // Création des membres.
+        //  + createMember : -
+        // Params : Axis, ref, label
+        // OptionalParams : [Member] parents=[]
+
+        // Création des indicateurs.
+        //  + createIndicator : -
+        // Params : ref, label, unitRef
+        // OptionalParams : ratioUnitRef=unitRef
+
+        // Création des contextes.
+        //  + createContext : -
+        // Params : ref, label
+
+
+        $entityManager->flush();
+
+
+        // Création des contexte-indicateurs.
+        //  + createContextIndicator : -
+        // Params : Context, Indicator
+        // OptionalParams : [Axis]=[]
 
 
         $entityManager->flush();

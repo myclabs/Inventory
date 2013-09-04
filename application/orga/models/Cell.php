@@ -7,6 +7,8 @@
  * @subpackage Model
  */
 
+use Doc\Domain\Bibliography;
+use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -24,6 +26,10 @@ class Orga_Model_Cell extends Core_Model_Entity
     const QUERY_MEMBERS_HASHKEY = 'membersHashKey';
     const QUERY_INVENTORYSTATUS = 'inventoryStatus';
     const QUERY_AFINPUTSETPRIMARY = 'aFInputSetPrimary';
+
+    // Séparateur des labels des membres dans le label de la cellule.
+    const  LABEL_SEPARATOR = ' | ';
+
 
     /**
      * Etat non débuté de l'inventaire.
@@ -110,7 +116,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Librairie utilisée pour stocker les documents des InputSets de la cellule et des cellules enfants.
      *
-     * @var Doc_Model_Library
+     * @var Library
      */
     protected $docLibraryForAFInputSetsPrimary = null;
 
@@ -124,7 +130,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Bibliographie utiliséepar l'InputSets de la cellule.
      *
-     * @var Doc_Model_Bibliography
+     * @var Bibliography
      */
     protected $docBibliographyForAFInputSetPrimary = null;
 
@@ -152,7 +158,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Collection des Docs des GenericAction liées à la cellule.
      *
-     * @var Doc_Model_Library
+     * @var Library
      */
     protected $docLibraryForSocialGenericActions = null;
 
@@ -166,7 +172,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Collection des Document liés aux ContextAction.
      *
-     * @var Doc_Model_Library
+     * @var Library
      */
     protected $docLibraryForSocialContextActions = null;
 
@@ -193,25 +199,27 @@ class Orga_Model_Cell extends Core_Model_Entity
         $this->updateMembersHashKey();
         $this->updateHierarchy();
 
+        // Création du cube de DW.
+        $this->createDWCube();
         // Création du CellsGroup.
         foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
             $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);
         }
         // Création de la Bibliography des Input.
         if ($this->granularity->getInputConfigGranularity() !== null) {
-            $this->docBibliographyForAFInputSetPrimary = new Doc_Model_Bibliography();
+            $this->docBibliographyForAFInputSetPrimary = new Bibliography();
         }
         // Création de la Library des Input.
         if ($this->granularity->getCellsWithInputDocuments()) {
-            $this->docLibraryForAFInputSetsPrimary = new Doc_Model_Library();
+            $this->docLibraryForAFInputSetsPrimary = new Library();
         }
         // Création de la Library des GenericAction.
         if ($this->granularity->getCellsWithSocialGenericActions()) {
-            $this->docLibraryForSocialGenericActions = new Doc_Model_Library();
+            $this->docLibraryForSocialGenericActions = new Library();
         }
         // Création de la Library des ContextAction.
         if ($this->granularity->getCellsWithInputDocuments()) {
-            $this->docLibraryForSocialContextActions = new Doc_Model_Library();
+            $this->docLibraryForSocialContextActions = new Library();
         }
     }
 
@@ -255,11 +263,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Charge la Cell correspondant à une Library de Doc utilisé pour les AFInputSetsPrimary.
      *
-     * @param Doc_Model_Library $docLibrary
+     * @param Library $docLibrary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByDocLibraryForAFInputSetsPrimary(Doc_Model_Library $docLibrary)
+    public static function loadByDocLibraryForAFInputSetsPrimary(Library $docLibrary)
     {
         return self::getEntityRepository()->loadBy(array('docLibraryForAFInputSetsPrimary' => $docLibrary));
     }
@@ -267,11 +275,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Charge la Cell correspondant à une Library de Doc utilisé pour les SocialGenericAction.
      *
-     * @param Doc_Model_Library $docLibrary
+     * @param Library $docLibrary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByDocLibraryForSocialGenericAction(Doc_Model_Library $docLibrary)
+    public static function loadByDocLibraryForSocialGenericAction(Library $docLibrary)
     {
         return self::getEntityRepository()->loadBy(array('docLibraryForSocialGenericAction' => $docLibrary));
     }
@@ -279,11 +287,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Charge la Cell correspondant à une Library de Doc utilisé pour les SocialContextAction.
      *
-     * @param Doc_Model_Library $docLibrary
+     * @param Library $docLibrary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByDocLibraryForSocialContextAction(Doc_Model_Library $docLibrary)
+    public static function loadByDocLibraryForSocialContextAction(Library $docLibrary)
     {
         return self::getEntityRepository()->loadBy(array('docLibraryForSocialContextAction' => $docLibrary));
     }
@@ -503,7 +511,7 @@ class Orga_Model_Cell extends Core_Model_Entity
             $labels[] = $member->getLabel();
         }
 
-        return implode(' | ', $labels);
+        return implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
@@ -522,7 +530,7 @@ class Orga_Model_Cell extends Core_Model_Entity
             $labels[] = $member->getExtendedLabel();
         }
 
-        return implode(' | ', $labels);
+        return implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
@@ -919,11 +927,9 @@ class Orga_Model_Cell extends Core_Model_Entity
 
         if (empty($cellsGroup)) {
             throw new Core_Exception_NotFound("No 'Orga_Model_CellsGroup' for input Granularity " . $inputGranularity);
-        } else {
-            if (count($cellsGroup) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity "
-                    . $inputGranularity);
-            }
+        } elseif (count($cellsGroup) > 1) {
+            throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity "
+                . $inputGranularity);
         }
 
         return array_pop($cellsGroup);
@@ -1000,11 +1006,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Spécifie la DocLibrary pour les AFInputSetPrimary de la cellule.
      *
-     * @param Doc_Model_Library $docLibrary
+     * @param Library $docLibrary
      *
      * @throws Core_Exception_Duplicate
      */
-    public function setDocLibraryForAFInputSetsPrimary(Doc_Model_Library $docLibrary=null)
+    public function setDocLibraryForAFInputSetsPrimary(Library $docLibrary=null)
     {
         if ($this->docLibraryForAFInputSetsPrimary !== $docLibrary) {
             if ($this->docLibraryForAFInputSetsPrimary !== null) {
@@ -1019,7 +1025,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return Doc_Model_Library
+     * @return Library
      */
     public function getDocLibraryForAFInputSetsPrimary()
     {
@@ -1034,11 +1040,11 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Spécifie la DocBibliography pour l'AFInputSetPrimary de la cellule.
      *
-     * @param Doc_Model_Bibliography $docBibliography
+     * @param Bibliography $docBibliography
      *
      * @throws Core_Exception_Duplicate
      */
-    public function setDocBibliographyForAFInputSetPrimary(Doc_Model_Bibliography $docBibliography=null)
+    public function setDocBibliographyForAFInputSetPrimary(Bibliography $docBibliography=null)
     {
         if ($this->docBibliographyForAFInputSetPrimary !== $docBibliography) {
             if ($this->docBibliographyForAFInputSetPrimary !== null) {
@@ -1053,7 +1059,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return Doc_Model_Bibliography
+     * @return Bibliography
      */
     public function getDocBibliographyForAFInputSetPrimary()
     {
@@ -1255,7 +1261,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         foreach ($this->getAFInputSetPrimary()->getOutputSet()->getElements() as $outputElement) {
             $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getRef();
             try {
-                $dWIndicator = DW_Model_Indicator::loadByRefAndCube('classif_'.$refClassifIndicator, $dWCube);
+                $dWIndicator = DW_Model_Indicator::loadByRefAndCube($refClassifIndicator, $dWCube);
             } catch (Core_Exception_NotFound $e) {
                 // Indexation selon l'indicateur de classif non trouvée. Impossible de créer le résultat.
                 continue;
@@ -1266,8 +1272,8 @@ class Orga_Model_Cell extends Core_Model_Entity
 
             foreach ($outputElement->getIndexes() as $outputIndex) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndCube('classif_'.$outputIndex->getRefAxis(), $dWCube);
-                    $dWMember = DW_Model_Member::loadByRefAndAxis('classif_'.$outputIndex->getRefMember(), $dWAxis);
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube('c_'.$outputIndex->getRefAxis(), $dWCube);
+                    $dWMember = DW_Model_Member::loadByRefAndAxis($outputIndex->getRefMember(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
                     // Indexation selon classif non trouvée.
@@ -1275,8 +1281,8 @@ class Orga_Model_Cell extends Core_Model_Entity
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
                     try {
-                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube('classif_'.$classifParentMember->getAxis()->getRef(), $dWCube);
-                        $dWParentMember = DW_Model_Member::loadByRefAndAxis('classif_'.$classifParentMember->getRef(), $dWBroaderAxis);
+                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube('c_'.$classifParentMember->getAxis()->getRef(), $dWCube);
+                        $dWParentMember = DW_Model_Member::loadByRefAndAxis($classifParentMember->getRef(), $dWBroaderAxis);
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
                         // Indexation selon classif non trouvée.
@@ -1292,8 +1298,8 @@ class Orga_Model_Cell extends Core_Model_Entity
             }
             foreach ($indexingMembers as $indexingMember) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndCube('orga_'.$indexingMember->getAxis()->getRef(), $dWCube);
-                    $dWMember = DW_Model_Member::loadByRefAndAxis('orga_'.$indexingMember->getRef(), $dWAxis);
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube('o_'.$indexingMember->getAxis()->getRef(), $dWCube);
+                    $dWMember = DW_Model_Member::loadByRefAndAxis($indexingMember->getRef(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
                     // Indexation selon orga non trouvée.
@@ -1401,9 +1407,9 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Spécifie la DocLibrary pour les SocialGenericAction de la cellule.
      *
-     * @param Doc_Model_Library $docLibrary
+     * @param Library $docLibrary
      */
-    public function setDocLibraryForSocialGenericAction(Doc_Model_Library $docLibrary=null)
+    public function setDocLibraryForSocialGenericAction(Library $docLibrary=null)
     {
         if ($this->docLibraryForSocialGenericActions !== $docLibrary) {
             if ($this->docLibraryForSocialGenericActions !== null) {
@@ -1419,7 +1425,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return Doc_Model_Library
+     * @return Library
      */
     public function getDocLibraryForSocialGenericAction()
     {
@@ -1490,9 +1496,9 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Spécifie la DocLibrary pour les SocialContextAction de la cellule.
      *
-     * @param Doc_Model_Library $docLibrary
+     * @param Library $docLibrary
      */
-    public function setDocLibraryForSocialContextAction(Doc_Model_Library $docLibrary=null)
+    public function setDocLibraryForSocialContextAction(Library $docLibrary=null)
     {
         if ($this->docLibraryForSocialContextActions !== $docLibrary) {
             if ($this->docLibraryForSocialContextActions !== null) {
@@ -1507,7 +1513,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return Doc_Model_Library
+     * @return Library
      */
     public function getDocLibraryForSocialContextAction()
     {

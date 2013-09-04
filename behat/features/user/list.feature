@@ -1,18 +1,17 @@
 @dbEmpty
-Feature: Users
-  User management.
+Feature: User list feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: User list
+  Scenario: User list content scenario
     Given I am on "user/profile/list"
     Then I should see the "users" datagrid
-    And the "users" datagrid should contain 10 row
+    And the "users" datagrid should contain 1 row
     And the row 1 of the "users" datagrid should contain:
       | nom            | email | emailValidated | enabled | detailsUser |
-      | Administrateur | admin | Non effectuée  | Activé  | Éditer      |
+      | Administrateur | admin | Effectuée  | Activé  | Éditer      |
 
   @javascript
   Scenario: Adding user with empty form

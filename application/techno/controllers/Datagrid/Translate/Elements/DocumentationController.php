@@ -65,7 +65,7 @@ class Techno_Datagrid_Translate_Elements_DocumentationController extends UI_Cont
     public function updateelementAction()
     {
         $element = Techno_Model_Element::load($this->update['index']);
-        $element->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $element->reloadWithLocale(Core_Locale::load($this->update['column']));
         $element->setDocumentation($this->update['value']);
         $this->data = $this->cellLongText(
             'techno/datagrid_translate_elements_documentation/view/id/'.$element->getId().'/locale/'.$this->update['column'],

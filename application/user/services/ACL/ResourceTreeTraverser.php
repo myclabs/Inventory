@@ -19,21 +19,21 @@ interface User_Service_ACL_ResourceTreeTraverser
 {
 
     /**
-     * Trouve les ressources parent d'une ressource
+     * Trouve toutes les ressources parent d'une ressource (récursivement)
      *
      * @param User_Model_Resource_Entity $resource
      *
-     * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
+     * @return User_Model_Resource_Entity[]
      */
-    function getParentResources(User_Model_Resource_Entity $resource);
+    function getAllParentResources(User_Model_Resource_Entity $resource);
 
     /**
-     * Trouve les ressources filles d'une ressource
+     * Trouve toutes les ressources filles d'une ressource (récursivement)
      *
      * @param User_Model_Resource_Entity $resource
      *
-     * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
+     * @return User_Model_Resource_Entity[]
      */
-    function getChildResources(User_Model_Resource_Entity $resource);
+    function getAllChildResources(User_Model_Resource_Entity $resource);
 
 }

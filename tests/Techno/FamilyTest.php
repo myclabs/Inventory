@@ -3,6 +3,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 
 /**
  * @package Techno
@@ -25,7 +26,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         foreach (Techno_Model_Meaning::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
+        foreach (Keyword::loadList() as $o) {
             $o->delete();
         }
         foreach (Techno_Model_Family_Cell::loadList() as $o) {
@@ -142,12 +143,12 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     public function testCells1Dimension1()
     {
         $meaning1 = Techno_Test_MeaningTest::generateObject();
-        $keyword1 = new Keyword_Model_Keyword();
+        $keyword1 = new Keyword();
         $keyword1->setLabel('Label test');
         $keyword1->setRef(Core_Tools::generateString(10));
         $keyword1->setRef('key1');
         $keyword1->save();
-        $keyword2 = new Keyword_Model_Keyword();
+        $keyword2 = new Keyword();
         $keyword2->setLabel('Label test');
         $keyword2->setRef('key2');
         $keyword2->save();
@@ -195,11 +196,11 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     {
         $meaning1 = Techno_Test_MeaningTest::generateObject();
         $meaning2 = Techno_Test_MeaningTest::generateObject();
-        $keyword1 = new Keyword_Model_Keyword();
+        $keyword1 = new Keyword();
         $keyword1->setLabel('Label test');
         $keyword1->setRef(Core_Tools::generateString(10));
         $keyword1->save();
-        $keyword2 = new Keyword_Model_Keyword();
+        $keyword2 = new Keyword();
         $keyword2->setLabel('Label test');
         $keyword2->setRef(Core_Tools::generateString(10));
         $keyword2->save();
@@ -245,19 +246,19 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     {
         $meaning1 = Techno_Test_MeaningTest::generateObject();
         $meaning2 = Techno_Test_MeaningTest::generateObject();
-        $keyword1 = new Keyword_Model_Keyword();
+        $keyword1 = new Keyword();
         $keyword1->setLabel('Label test');
         $keyword1->setRef(Core_Tools::generateString(10));
         $keyword1->save();
-        $keyword2 = new Keyword_Model_Keyword();
+        $keyword2 = new Keyword();
         $keyword2->setLabel('Label test');
         $keyword2->setRef(Core_Tools::generateString(10));
         $keyword2->save();
-        $keyword3 = new Keyword_Model_Keyword();
+        $keyword3 = new Keyword();
         $keyword3->setLabel('Label test');
         $keyword3->setRef(Core_Tools::generateString(10));
         $keyword3->save();
-        $keyword4 = new Keyword_Model_Keyword();
+        $keyword4 = new Keyword();
         $keyword4->setLabel('Label test');
         $keyword4->setRef(Core_Tools::generateString(10));
         $keyword4->save();
@@ -316,15 +317,15 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $meaning1 = Techno_Test_MeaningTest::generateObject();
         $meaning2 = Techno_Test_MeaningTest::generateObject();
         $meaning3 = Techno_Test_MeaningTest::generateObject();
-        $keyword1 = new Keyword_Model_Keyword();
+        $keyword1 = new Keyword();
         $keyword1->setLabel('Label test');
         $keyword1->setRef(Core_Tools::generateString(10));
         $keyword1->save();
-        $keyword2 = new Keyword_Model_Keyword();
+        $keyword2 = new Keyword();
         $keyword2->setLabel('Label test');
         $keyword2->setRef(Core_Tools::generateString(10));
         $keyword2->save();
-        $keyword3 = new Keyword_Model_Keyword();
+        $keyword3 = new Keyword();
         $keyword3->setLabel('Label test');
         $keyword3->setRef(Core_Tools::generateString(10));
         $keyword3->save();
@@ -382,7 +383,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     {
         $meaning1 = Techno_Test_MeaningTest::generateObject();
         $meaning2 = Techno_Test_MeaningTest::generateObject();
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label test');
         $keyword->setRef(Core_Tools::generateString(10));
         $keyword->save();

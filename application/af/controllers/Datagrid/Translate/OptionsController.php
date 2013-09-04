@@ -56,7 +56,7 @@ class AF_Datagrid_Translate_OptionsController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         $option = AF_Model_Component_Select_Option::load($this->update['index']);
-        $option->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $option->reloadWithLocale(Core_Locale::load($this->update['column']));
         $option->setLabel($this->update['value']);
         $this->data = $option->getLabel();
 

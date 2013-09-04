@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Keyword\Domain\Keyword;
 
 /**
  * @package Techno
@@ -61,9 +62,9 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
             $this->setAddElementErrorMessage('refKeyword', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $keyword = Keyword_Model_Keyword::loadByRef($refKeyword);
+            $keyword = Keyword::loadByRef($refKeyword);
         } catch(Core_Exception_NotFound $e) {
-            $this->setAddElementErrorMessage('refKeyword', __('Techno', 'formValidation', 'unknownKeywordRef'));
+            $this->setAddElementErrorMessage('refKeyword', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -118,7 +119,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
                 break;
             case 'refKeyword':
                 try {
-                    $keyword = Keyword_Model_Keyword::loadByRef($newValue);
+                    $keyword = Keyword::loadByRef($newValue);
                     $member->setKeyword($keyword);
                     $this->data = $keyword->getRef();
                 } catch (Core_Exception_NotFound $e) {

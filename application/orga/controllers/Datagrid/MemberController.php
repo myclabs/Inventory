@@ -33,7 +33,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewOrganization")
+     * @Secure("viewMembers")
      */
     public function getelementsAction()
     {
@@ -83,7 +83,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Ajoute un nouvel element.
-     * @Secure("editOrganization")
+     * @Secure("editMembers")
      */
     public function addelementAction()
     {
@@ -137,7 +137,8 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                         $axis,
                         $ref,
                         $label,
-                        $broaderMembers
+                        $broaderMembers,
+                        __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
                     )
                 );
                 $this->message = __('UI', 'message', 'addedLater');
@@ -149,7 +150,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Supprime un element.
-     * @Secure("editOrganization")
+     * @Secure("editMembers")
      */
     public function deleteelementAction()
     {
@@ -166,7 +167,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Modifie les valeurs d'un element.
-     * @Secure("editOrganization")
+     * @Secure("editMembers")
      */
     public function updateelementAction()
     {
@@ -221,7 +222,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Renvoie la liste des parents éligibles pour un membre.
-     * @Secure("viewOrganization")
+     * @Secure("viewMembers")
      */
     public function getparentsAction()
     {

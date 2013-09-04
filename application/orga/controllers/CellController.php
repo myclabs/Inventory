@@ -50,7 +50,6 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
-        $idOrganization = $organization->getId();
 
         $this->view->cell = $cell;
 
@@ -177,7 +176,7 @@ class Orga_CellController extends Core_Controller
             }
             $analysisTab->label = __('DW', 'name', 'analyses');
             $analysisTab->dataSource = 'orga/tab_celldetails/analyses/idCell/'.$idCell;
-            $analysisTab->useCache = true;
+            $analysisTab->useCache = !$isUserAllowedToEditOrganization;
             $this->view->tabView->addTab($analysisTab);
         }
 
@@ -233,7 +232,7 @@ class Orga_CellController extends Core_Controller
         if ($tab === 'history') {
             $historyTab->active = true;
         }
-        $historyTab->label = __('UI', 'name', 'history');
+        $historyTab->label =  __('UI', 'history', 'history');
         $historyTab->dataSource = 'orga/tab_celldetails/history?idCell='.$idCell;
         $this->view->tabView->addTab($historyTab);
 
@@ -366,14 +365,15 @@ class Orga_CellController extends Core_Controller
         );
 
         $aFViewConfiguration = new AF_ViewConfiguration();
-        if ($isUserAllowedToInputCell) {
+        if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::STATUS_CLOSED)) {
             $aFViewConfiguration->setMode(AF_ViewConfiguration::MODE_WRITE);
         } else {
             $aFViewConfiguration->setMode(AF_ViewConfiguration::MODE_READ);
         }
         $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $aFViewConfiguration->addToActionStack('inputsave', 'cell', 'orga', array('idCell' => $idCell));
-        $aFViewConfiguration->setExitUrl('orga/cell/details?idCell='.$this->getParam('fromIdCell'));
+        $aFViewConfiguration->setExitUrl($this->_helper->url('details', 'cell', 'orga',
+                ['idCell' => $this->getParam('fromIdCell')]));
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
         $aFViewConfiguration->addBaseTabs();
@@ -437,7 +437,8 @@ class Orga_CellController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenDWCubes',
-                    [$cell]
+                    [$cell],
+                    __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {
@@ -460,7 +461,8 @@ class Orga_CellController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenCalculationsAndDWCubes',
-                    [$cell]
+                    [$cell],
+                    __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {
@@ -522,7 +524,7 @@ class Orga_CellController extends Core_Controller
         }
 
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getOrganization()->getId().'/'.
+            $cell->getGranularity()->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
             $specificReportsDirectoryPath.$this->getParam('export').'.xml',

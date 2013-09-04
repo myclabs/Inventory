@@ -41,7 +41,7 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
      * Pourcentage de complétion de la saisie
      * @var int|null
      */
-    private $completion;
+    protected $completion;
 
     /**
      * Tableau de clés-valeurs définies par le contexte
@@ -244,14 +244,6 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
     public function isInputComplete()
     {
         return $this->getCompletion() == 100;
-    }
-
-    /**
-     * @return bool True si les calculs de l'AF sont fait
-     */
-    public function isCalculationComplete()
-    {
-        return $this->isInputComplete();
     }
 
     /**

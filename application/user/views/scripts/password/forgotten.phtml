@@ -1,0 +1,45 @@
+<div class="page-header">
+    <h1><?=__('User', 'resetPassword', 'pageTitle')?></h1>
+</div>
+<p>
+    <label class="badge">1</label>
+    <?=__('User', 'resetPassword', 'captchaFormDescriptionSentence')?>
+</p>
+
+<?php
+$form = new UI_Form('passwordForgotten');
+$form->setAction('user/password/forgotten');
+
+$email = new UI_Form_Element_Pattern_Email('email');
+$email->setLabel(__('UI', 'name', 'emailAddress'));
+$email->setRequired();
+$form->addElement($email);
+
+$captcha = new UI_Form_Element_Captcha('captcha', 'user/captcha/newimage');
+$captcha->setLabel(__('User', 'resetPassword', 'captchaFieldLabel'));
+$captcha->setRequired();
+$form->addElement($captcha);
+
+$form->addSubmitButton(__('UI', 'verb', 'validate'));
+
+$form->display();
+?>
+
+<p>
+    <label class="badge">2</label>
+    <?=__('User', 'resetPassword', 'confirmationFormDescriptionSentence')?>
+</p>
+
+<?php
+$resetCodeForm = new UI_Form('passwordResetCode');
+$resetCodeForm->setAction('user/password/reset');
+$resetCodeForm->setAjax(false);
+
+$code = new UI_Form_Element_Text('code');
+$code->setLabel(__('User', 'resetPassword', 'confirmationCodeLabel'));
+$code->setRequired();
+$resetCodeForm->addElement($code);
+
+$resetCodeForm->addSubmitButton(__('UI', 'verb', 'validate'));
+
+$resetCodeForm->display();

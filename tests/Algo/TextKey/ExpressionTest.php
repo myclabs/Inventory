@@ -6,6 +6,9 @@
  * @package Algo
  */
 
+use Keyword\Domain\Keyword;
+use TEC\Expression;
+
 /**
  * Creation of the Test Suite.
  *
@@ -27,7 +30,7 @@ class TextKey_ExpressionTest
 
 	/**
 	 * Permet de générer un objet de base sur lequel on pourra travailler
-	 * @return TEC_Model_Expression $o
+	 * @return Expression $o
 	 */
 	public static function generateExpression()
 	{
@@ -56,16 +59,13 @@ class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
 		foreach (Algo_Model_Algo::loadList() as $o) {
 			$o->delete();
 		}
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
+        foreach (Keyword::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_ContextIndicator::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {
-            $o->delete();
-        }
-        foreach (TEC_Model_Expression::loadList() as $o) {
             $o->delete();
         }
 		$entityManagers = Zend_Registry::get('EntityManagers');
@@ -91,7 +91,7 @@ class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
 		$this->entityManager->flush();
 
 		$this->assertEquals('test', $o->getRef());
-		$this->assertEquals($expression, $o->getExpression());
+		$this->assertEquals($expression, str_replace(' ', '', $o->getExpression()));
 
 		return $o;
     }

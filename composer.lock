@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "0d7249f9e0b4b55e2462cda9b16832f2",
+    "hash": "6d4a204c2e9f2bb84448d11dcaf8b954",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -521,12 +521,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "54551d32450ce0085c1e1a88e5145016a69ec765"
+                "reference": "877f7be4d0714d839ac10f4093806d1f68580dd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/54551d32450ce0085c1e1a88e5145016a69ec765",
-                "reference": "54551d32450ce0085c1e1a88e5145016a69ec765",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/877f7be4d0714d839ac10f4093806d1f68580dd2",
+                "reference": "877f7be4d0714d839ac10f4093806d1f68580dd2",
                 "shasum": ""
             },
             "require": {
@@ -538,7 +538,7 @@
                     "include/"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -554,7 +554,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2013-05-24 03:41:17"
+            "time": "2013-08-18 17:08:07"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -638,16 +638,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.2.x-dev",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f"
+                "reference": "3.3.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/2816aacfc9d461a54b563df9ecc6ba25e937e91f",
-                "reference": "2816aacfc9d461a54b563df9ecc6ba25e937e91f",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/3.3.0",
+                "reference": "3.3.0",
                 "shasum": ""
             },
             "require": {
@@ -677,24 +677,24 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-07-12 13:14:27"
+            "time": "2013-07-30 16:04:56"
         },
         {
             "name": "mnapoli/php-di-zf1",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI-ZF1.git",
-                "reference": "1.0.0"
+                "reference": "1.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/1.0.0",
-                "reference": "1.0.0",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/1.1.0",
+                "reference": "1.1.0",
                 "shasum": ""
             },
             "require": {
-                "mnapoli/php-di": "3.*",
+                "mnapoli/php-di": "~3.3",
                 "zendframework/zendframework1": "1.12.*"
             },
             "type": "library",
@@ -708,24 +708,8 @@
                 "MIT"
             ],
             "description": "Integrates PHP-DI to Zend Framework 1",
-            "homepage": "http://mnapoli.github.com/PHP-DI-ZF1/",
-            "time": "2013-06-11 11:19:12"
-        },
-        {
-            "name": "mridgway/zendx_doctrine2",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git://github.com/mridgway/ZendX_Doctrine2.git",
-                "reference": "e8168e33e4ec9599a74de089f7a774d2c85fa0f0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "ZendX": "lib/"
-                }
-            },
-            "time": "2013-05-16 17:33:55"
+            "homepage": "http://mnapoli.github.io/PHP-DI-ZF1/",
+            "time": "2013-08-12 07:23:17"
         },
         {
             "name": "myclabs/array-comparator",
@@ -764,16 +748,16 @@
         },
         {
             "name": "myclabs/php-enum",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/php-enum.git",
-                "reference": "1.1.0"
+                "reference": "1.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/1.1.0",
-                "reference": "1.1.0",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/1.2.0",
+                "reference": "1.2.0",
                 "shasum": ""
             },
             "type": "library",
@@ -791,7 +775,7 @@
             "keywords": [
                 "enum"
             ],
-            "time": "2013-03-20 22:20:22"
+            "time": "2013-07-24 12:08:12"
         },
         {
             "name": "netcarver/textile",
@@ -1078,24 +1062,24 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.3.1",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "v2.3.1"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "symfony/event-dispatcher": ">=2.1,<3.0"
+                "symfony/event-dispatcher": "~2.1"
             },
             "suggest": {
                 "symfony/event-dispatcher": ""
@@ -1111,7 +1095,7 @@
                     "Symfony\\Component\\Console\\": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1127,28 +1111,28 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-11 07:15:14"
+            "time": "2013-07-21 12:12:18"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.3.1",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "v2.3.1"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "symfony/dependency-injection": ">=2.0,<3.0"
+                "symfony/dependency-injection": "~2.0"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -1181,21 +1165,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-13 14:36:40"
+            "time": "2013-07-21 12:12:18"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.3.1",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "v2.3.1"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -1212,7 +1196,7 @@
                     "Symfony\\Component\\Yaml\\": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1228,21 +1212,21 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-10 18:12:13"
+            "time": "2013-07-21 12:12:18"
         },
         {
             "name": "zendframework/zend-code",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/Code",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendCode.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1276,21 +1260,21 @@
                 "code",
                 "zf2"
             ],
-            "time": "2013-06-12 19:48:38"
+            "time": "2013-06-20 18:00:54"
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/EventManager",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendEventManager.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1321,17 +1305,17 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "release-2.2.1"
+                "reference": "release-2.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/release-2.2.1",
-                "reference": "release-2.2.1",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/release-2.2.2",
+                "reference": "release-2.2.2",
                 "shasum": ""
             },
             "require": {
@@ -1361,7 +1345,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2013-06-12 19:46:58"
+            "time": "2013-06-20 18:01:22"
         },
         {
             "name": "zendframework/zendframework1",
@@ -1712,74 +1696,26 @@
             "time": "2013-06-02 19:09:45"
         },
         {
-            "name": "behat/mink-zombie-driver",
-            "version": "dev-RequestHeaders",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mnapoli/MinkZombieDriver.git",
-                "reference": "38f48a20e18fcf45e1b44d0ba892737e84038903"
-            },
-            "require": {
-                "behat/mink": "~1.5.0",
-                "php": ">=5.3.1",
-                "symfony/process": "~2.1"
-            },
-            "type": "mink-driver",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Behat\\Mink\\Driver": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Pascal Cremer",
-                    "email": "b00gizm@gmail.com",
-                    "homepage": "http://github.com/b00gizm"
-                },
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com",
-                    "homepage": "http://everzet.com"
-                }
-            ],
-            "description": "Zombie.js driver for Mink framework",
-            "homepage": "http://mink.behat.org/",
-            "keywords": [
-                "ajax",
-                "browser",
-                "headless",
-                "javascript",
-                "testing",
-                "zombie"
-            ],
-            "time": "2013-07-09 10:21:44"
-        },
-        {
             "name": "instaclick/php-webdriver",
-            "version": "1.0.14",
+            "version": "1.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/instaclick/php-webdriver.git",
-                "reference": "1.0.14"
+                "reference": "1.0.16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/instaclick/php-webdriver/zipball/1.0.14",
-                "reference": "1.0.14",
+                "url": "https://api.github.com/repos/instaclick/php-webdriver/zipball/1.0.16",
+                "reference": "1.0.16",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "php": ">=5.3.2"
             },
+            "bin": [
+                "bin/webunit"
+            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1804,18 +1740,53 @@
                 {
                     "name": "Anthon Pang",
                     "email": "apang@softwaredevelopment.ca",
-                    "role": "Fork Maintainer"
+                    "role": "developer"
                 }
             ],
             "description": "PHP WebDriver for Selenium 2",
-            "homepage": "http://instaclick.com/torontotechjobs/",
+            "homepage": "http://instaclick.com/",
             "keywords": [
                 "browser",
                 "selenium",
                 "webdriver",
                 "webtest"
             ],
-            "time": "2013-06-12 03:00:14"
+            "time": "2013-08-08 13:56:39"
+        },
+        {
+            "name": "jms/parser-lib",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/schmittjoh/parser-lib",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/schmittjoh/parser-lib/archive/1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": ""
+            },
+            "require": {
+                "phpoption/phpoption": ">=0.9,<2.0-dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "JMS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache2"
+            ],
+            "description": "A library for easily creating recursive-descent parsers.",
+            "time": "2012-11-18 18:08:43"
         },
         {
             "name": "mnapoli/metaconsole",
@@ -1823,11 +1794,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaConsole.git",
-                "reference": "4896995d8970a597aa422cffe1cf62327a98091f"
+                "reference": "2ddbd9edcc7fb4c1274da7664a5932bed3616ba2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/2ddbd9edcc7fb4c1274da7664a5932bed3616ba2",
+                "reference": "2ddbd9edcc7fb4c1274da7664a5932bed3616ba2",
+                "shasum": ""
             },
             "require": {
                 "mnapoli/metamodel": "dev-master",
-                "mnapoli/number-two": "0.1.*",
+                "mnapoli/number-two": "0.2.*",
                 "symfony/console": "2.3.*"
             },
             "require-dev": {
@@ -1839,7 +1816,8 @@
                     "MetaConsole": "src/"
                 }
             },
-            "time": "2013-07-16 17:44:39"
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2013-07-25 07:37:03"
         },
         {
             "name": "mnapoli/metamodel",
@@ -1847,10 +1825,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaModel.git",
-                "reference": "6efa7c24e346cf9154080e85f1fe74bcd8c8f041"
+                "reference": "82c1d7d3b9fdbc6928a0735b49b1558ecb156beb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/MetaModel/zipball/82c1d7d3b9fdbc6928a0735b49b1558ecb156beb",
+                "reference": "82c1d7d3b9fdbc6928a0735b49b1558ecb156beb",
+                "shasum": ""
             },
             "require": {
-                "doctrine/orm": "2.3.*"
+                "jms/parser-lib": "~1.0",
+                "symfony/property-access": "2.*"
+            },
+            "require-dev": {
+                "doctrine/orm": "~2.3"
             },
             "type": "library",
             "autoload": {
@@ -1860,20 +1848,21 @@
                     "UnitTest": "tests/"
                 }
             },
-            "time": "2013-07-15 20:24:22"
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2013-08-19 12:42:16"
         },
         {
             "name": "mnapoli/number-two",
-            "version": "0.1.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.1.0"
+                "reference": "0.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.1.0",
-                "reference": "0.1.0",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
+                "reference": "0.2.1",
                 "shasum": ""
             },
             "type": "library",
@@ -1884,21 +1873,81 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-16 17:37:26"
+            "license": [
+                "MIT"
+            ],
+            "description": "NumberTwo is a classy variable dumper",
+            "homepage": "https://github.com/mnapoli/NumberTwo",
+            "keywords": [
+                "debug",
+                "dump",
+                "var_dump",
+                "variable"
+            ],
+            "time": "2013-07-25 07:40:43"
+        },
+        {
+            "name": "phpoption/phpoption",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/php-option.git",
+                "reference": "1.2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/1.2.0",
+                "reference": "1.2.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "PhpOption\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache2"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes M. Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "http://jmsyst.com",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Option Type for PHP",
+            "keywords": [
+                "language",
+                "option",
+                "php",
+                "type"
+            ],
+            "time": "2013-03-25 02:51:40"
         },
         {
             "name": "symfony/config",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "v2.3.2"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/v2.3.2",
-                "reference": "v2.3.2",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -1932,21 +1981,21 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-11 19:36:36"
+            "time": "2013-08-06 05:49:23"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/CssSelector",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/CssSelector.git",
-                "reference": "v2.3.2"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/CssSelector/zipball/v2.3.2",
-                "reference": "v2.3.2",
+                "url": "https://api.github.com/repos/symfony/CssSelector/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -1983,21 +2032,21 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-01 12:24:43"
+            "time": "2013-07-21 12:12:18"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "v2.3.2"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/v2.3.2",
-                "reference": "v2.3.2",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -2039,21 +2088,21 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-07 15:47:47"
+            "time": "2013-07-25 17:13:25"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.3.1",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "v2.3.1"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -2086,21 +2135,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-04 15:02:05"
+            "time": "2013-07-21 12:12:18"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.3.1",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "v2.3.1"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -2133,21 +2182,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-02 12:05:51"
+            "time": "2013-07-21 12:12:18"
         },
         {
-            "name": "symfony/process",
-            "version": "v2.3.1",
-            "target-dir": "Symfony/Component/Process",
+            "name": "symfony/property-access",
+            "version": "v2.3.3",
+            "target-dir": "Symfony/Component/PropertyAccess",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Process.git",
-                "reference": "v2.3.1"
+                "url": "https://github.com/symfony/PropertyAccess.git",
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/symfony/PropertyAccess/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -2161,7 +2210,7 @@
             },
             "autoload": {
                 "psr-0": {
-                    "Symfony\\Component\\Process\\": ""
+                    "Symfony\\Component\\PropertyAccess\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2178,31 +2227,42 @@
                     "homepage": "http://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony Process Component",
+            "description": "Symfony PropertyAccess Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-06 20:03:44"
+            "keywords": [
+                "access",
+                "array",
+                "extraction",
+                "index",
+                "injection",
+                "object",
+                "property",
+                "property path",
+                "reflection"
+            ],
+            "time": "2013-08-02 20:53:38"
         },
         {
             "name": "symfony/translation",
-            "version": "v2.3.1",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/Translation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "v2.3.1"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "symfony/config": ">=2.0,<3.0",
-                "symfony/yaml": ">=2.2,<3.0"
+                "symfony/config": "~2.0",
+                "symfony/yaml": "~2.2"
             },
             "suggest": {
                 "symfony/config": "",
@@ -2235,7 +2295,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-13 14:36:40"
+            "time": "2013-08-02 20:53:38"
         }
     ],
     "aliases": [
@@ -2250,10 +2310,7 @@
     "stability-flags": {
         "doctrine/common": 20,
         "pear/console_commandline": 20,
-        "mridgway/zendx_doctrine2": 20,
         "dompdf/dompdf": 20,
-        "mnapoli/php-di": 20,
-        "behat/mink-zombie-driver": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": {

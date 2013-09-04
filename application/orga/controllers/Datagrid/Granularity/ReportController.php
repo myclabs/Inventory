@@ -28,7 +28,7 @@ class Orga_Datagrid_Granularity_ReportController extends UI_Controller_Datagrid
             $data['index'] = $report->getId();
             $data['label'] = $report->getLabel();
             $urlDetails = $granuarityReportBaseUrl.'/idGranularity/'.$this->getParam('idGranularity').'/idReport/'.$data['index'];
-            $data['details'] = $this->cellLink($urlDetails, __('UI', 'name', 'details'), 'share-alt');
+            $data['details'] = $this->cellLink($urlDetails);
             $this->addline($data);
         }
         $this->send(true);

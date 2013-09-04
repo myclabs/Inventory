@@ -33,7 +33,7 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
     {
         foreach (Classif_Model_Member::loadList($this->request) as $member) {
             $data = array();
-            $data['index'] = $member->getRef();
+            $data['index'] = $member->getId();
             $data['identifier'] = $member->getAxis()->getRef().' | '.$member->getRef();
 
             foreach (Zend_Registry::get('languages') as $language) {
@@ -55,8 +55,8 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
      */
     public function updateelementAction()
     {
-        $member = Classif_Model_Member::loadByRef($this->update['index']);
-        $member->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $member = Classif_Model_Member::load($this->update['index']);
+        $member->reloadWithLocale(Core_Locale::load($this->update['column']));
         $member->setLabel($this->update['value']);
         $this->data = $member->getLabel();
 

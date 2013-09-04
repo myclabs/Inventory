@@ -10,17 +10,20 @@ killall() {
     echo DONE
 }
 
+# Git pull
+git pull
+
 # Start virtual display
 #Xvfb :99 -ac > /dev/null 2>&1 &
 #export DISPLAY=:99
 
 # Start selenium server
-java -jar selenium-server-standalone.jar > /dev/null 2>&1 &
+java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
-sleep 2
+sleep 5
 
 # Zombie.js
 #export NODE_PATH=/usr/local/lib/node_modules
 
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml -f failed
+php ../vendor/behat/behat/bin/behat --config behat.yml --rerun failed.txt && rm failed.txt

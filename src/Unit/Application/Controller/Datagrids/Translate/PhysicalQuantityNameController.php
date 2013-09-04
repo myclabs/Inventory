@@ -16,7 +16,7 @@ class Unit_Datagrids_Translate_PhysicalQuantityNameController extends UI_Control
 {
 
     /**
-     * @Secure("viewTechno")
+     * @Secure("viewUnit")
      */
     public function getelementsAction()
     {

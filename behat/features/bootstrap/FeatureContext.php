@@ -30,6 +30,14 @@ class FeatureContext extends MinkContext
     /**
      * @BeforeScenario
      */
+    public function setWindowSize()
+    {
+        $this->getSession()->resizeWindow(1280, 1024);
+    }
+
+    /**
+     * @BeforeScenario
+     */
     public function setLanguage()
     {
 //        $this->getSession()->setRequestHeader('Accept-Language', 'fr');
@@ -67,6 +75,8 @@ class FeatureContext extends MinkContext
      */
     public function waitForPageToFinishLoading()
     {
+        $this->getSession()->wait(50);
+
         // Chargements AJAX
         $jqueryOK = '0 === jQuery.active';
         $datagridOK = '$(".yui-dt-message:contains(\"Chargement\"):visible").length == 0';
@@ -103,7 +113,7 @@ class FeatureContext extends MinkContext
 
         $errorMessage = $this->getSession()->evaluateScript("return $expression;");
 
-        if ($errorMessage != $error) {
+        if (strpos($errorMessage, $error) === false) {
             throw new ExpectationException("No error message '$error' for field '$field'.\n"
                 . "Error message found: '$errorMessage'.\n"
                 . "Javascript expression: '$expression'.", $this->getSession());
@@ -132,9 +142,21 @@ class FeatureContext extends MinkContext
     public function clickElement($selector)
     {
         $node = $this->findElement($selector);
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * Focus on an element found using CSS selectors.
+     *
+     * @When /^(?:|I )focus on element "(?P<selector>(?:[^"]|\\")*)"$/
+     */
+    public function focusOnElement($selector)
+    {
+        $node = $this->findElement($selector);
+        $node->focus();
     }
 
     /**
@@ -185,15 +207,11 @@ class FeatureContext extends MinkContext
     public function toggleCollapse($label)
     {
         $label = $this->fixStepArgument($label);
-        $node = $this->findElement('legend:contains("' . $label . '")');
-
-        if ($node === null) {
-            throw new ExpectationException("No collapse with label '$label' was found.",
-                $this->getSession());
-        }
+        $node = $this->findElement('//legend[text()[normalize-space(.)="' . $label . '"]]', 'xpath');
 
         $node->click();
 
+        // Animation
         $this->wait(0.1);
         $this->waitForPageToFinishLoading();
     }
@@ -266,18 +284,19 @@ class FeatureContext extends MinkContext
     /**
      * Finds element with specified selector.
      *
-     * @param string $cssSelector
+     * @param string $selector
+     * @param string $type
      *
      * @throws Behat\Mink\Exception\ExpectationException
      * @return NodeElement
      */
-    protected function findElement($cssSelector)
+    protected function findElement($selector, $type = 'css')
     {
         /** @var NodeElement[] $nodes */
-        $nodes = $this->getSession()->getPage()->findAll('css', $cssSelector);
+        $nodes = $this->getSession()->getPage()->findAll($type, $selector);
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No element matches selector '$cssSelector'.",
+            throw new ExpectationException("No element matches selector '$selector'.",
                 $this->getSession());
         }
 
@@ -286,13 +305,13 @@ class FeatureContext extends MinkContext
             });
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No element matching '$cssSelector' is visible.",
+            throw new ExpectationException("No element matching '$selector' is visible.",
                 $this->getSession());
         }
 
         if (count($nodes) > 1) {
             $nb = count($nodes);
-            throw new ExpectationException("Too many ($nb) elements matching '$cssSelector' are visible.",
+            throw new ExpectationException("Too many ($nb) elements matching '$selector' are visible.",
                 $this->getSession());
         }
 

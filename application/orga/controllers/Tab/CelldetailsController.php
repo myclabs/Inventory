@@ -38,7 +38,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
     /**
      * Confguration du projet.
-     * @Secure("editOrganization")
+     * @Secure("editCell")
      */
     public function orgaAction()
     {
@@ -47,12 +47,24 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
 
+        $connectedUser = $this->_helper->auth();
+
         $this->view->idCell = $idCell;
         $this->view->idOrganization = $organization->getId();
-        if ($granularity->getRef() === 'global') {
-            $this->view->isGlobal = true;
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
+        $isUserAllowedToEditCell = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $cell
+        );
+        if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && ($granularity->getRef() === 'global')) {
+            $this->view->displayOrganizationTabs = true;
         } else {
-            $this->view->isGlobal = false;
+            $this->view->displayOrganizationTabs = false;
         }
         $this->view->hasChildCells = ($cell->countTotalChildCells() > 0);
 
@@ -319,7 +331,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $organization = $cell->getGranularity()->getOrganization();
-        $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+        try {
+            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = false;
+        }
 
         $listDatagridConfiguration = array();
         $listInputGranularities = $organization->getInputGranularities();
@@ -330,7 +346,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             }
         );
         foreach ($listInputGranularities as $inputGranularity) {
-            if ($cell->getGranularity()->isBroaderThan($inputGranularity)) {
+            if ($cell->getGranularity()->isBroaderThan($inputGranularity)
+                || ($cell->getGranularity()->getRef() === $inputGranularity->getRef())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
                     'aFGranularity'.$idCell.'Input'.$inputGranularity->getId(),
                     'datagrid_cell_afgranularities_input',
@@ -340,8 +357,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $idCell);
 
-                if ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
-                    || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
+                if ($granularityForInventoryStatus && ($inputGranularity->isNarrowerThan($granularityForInventoryStatus)
+                    || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef())) {
                     $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('Orga', 'inventory', 'inventoryStatus'));
                     $columnStateOrga->withEmptyElement = false;
                     $columnStateOrga->list = array(
@@ -353,13 +370,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
                     $columnStateOrga->editable = false;
                     $datagridConfiguration->datagrid->addCol($columnStateOrga);
-
-                    $colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'input', 'inputProgress'));
-                    $colAdvancementInput->filterName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
-                    $colAdvancementInput->sortName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
-                    $colAdvancementInput->entityAlias = AF_Model_InputSet_Primary::getAlias();
-                    $datagridConfiguration->datagrid->addCol($colAdvancementInput);
                 }
+
+                $colAdvancementInput = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'input', 'inputProgress'));
+                $colAdvancementInput->filterName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
+                $colAdvancementInput->sortName = AF_Model_InputSet_Primary::QUERY_COMPLETION;
+                $colAdvancementInput->entityAlias = AF_Model_InputSet_Primary::getAlias();
+                $datagridConfiguration->datagrid->addCol($colAdvancementInput);
 
                 $columnStateInput = new UI_Datagrid_Col_List('stateInput', __('Orga', 'input', 'inputStatus'));
                 $imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
@@ -444,7 +461,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             );
             $reportCanBeUpdated = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                User_Model_Action_Default::EDIT(),
+                Orga_Action_Report::EDIT(),
                 $reportResource
             );
         } else {

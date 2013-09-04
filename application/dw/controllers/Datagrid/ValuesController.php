@@ -38,6 +38,8 @@ class DW_Datagrid_ValuesController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
+        $this->entityManager->clear();
+
         $this->send();
     }
 }

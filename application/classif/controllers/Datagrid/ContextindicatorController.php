@@ -83,7 +83,7 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
 
                 try {
                     if ($this->getAddElementValue('axes') != null) {
-                        foreach (explode(',', $this->getAddElementValue('axes')) as $refAxis) {
+                        foreach ($this->getAddElementValue('axes') as $refAxis) {
                             $axis = Classif_Model_Axis::loadByRef($refAxis);
                             $contextIndicator->addAxis($axis);
                         }
@@ -92,7 +92,7 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
                     $contextIndicator->save();
                     $this->message = __('UI', 'message', 'added');
                 } catch (Core_Exception_InvalidArgument $e) {
-                    $this->setAddElementErrorMessage('axes', __('Classif', 'contextIndicator', 'AxesMustBeTransverse'));
+                    $this->setAddElementErrorMessage('axes', __('Classif', 'contextIndicator', 'axesMustBeTransverse'));
                 }
             }
         }
@@ -157,7 +157,7 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
                     try {
                         $contextIndicator->addAxis($axis);
                     } catch (Core_Exception_InvalidArgument $e) {
-                        throw new Core_Exception_User('Classif', 'contextIndicator', 'AxesMustBeTransverse');
+                        throw new Core_Exception_User('Classif', 'contextIndicator', 'axesMustBeTransverse');
                     }
                 }
                 break;

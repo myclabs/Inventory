@@ -88,16 +88,18 @@
 
         <!-- Expressions -->
 
+        <!-- Abandon guillemets français ici car sinon besoin utilisation espaces insécables, pénible à gérer avec behat -->
         <tu tuid="expressionTextIdentifierSelectionAddPanelTitle">
+
             <tuv xml:lang="fr">
-                <seg>Ajout d'un algorithme de sélection d’identifiant de type « expression »</seg>
+                <seg>Ajout d'un algorithme de sélection d’identifiant de type expression</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Creation of an identifier selection algorithm of "expression" type</seg>
             </tuv>
         </tu>
 
-        <!-- A partir d'une saisie de champ de sélection simple -->
+    <!-- A partir d'une saisie de champ de sélection simple -->
 
         <tu tuid="singleSelectionInputTextIdentifierSelectionAddPanelTitle">
             <tuv xml:lang="fr">

@@ -101,7 +101,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
         Zend_Registry::set('container', $this->container);
 
+        // Copie des éléments de configuration dans le container
         $this->container->set('application.name', $configuration->get('applicationName', ''));
+        $this->container->set('email.contact.address', $configuration->emails->contact->adress);
+        $this->container->set('email.noreply.name', $configuration->emails->noreply->name);
+        $this->container->set('email.noreply.address', $configuration->emails->noreply->adress);
 
         // Configuration pour injecter dans les controleurs (intégration ZF1)
         $dispatcher = new \DI\ZendFramework1\Dispatcher();
@@ -216,9 +220,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         switch (APPLICATION_ENV) {
             case 'test':
             case 'developpement':
-                // Requêtes transmises à Firebug.
-                $profiler = new ZendX\Doctrine2\FirebugProfiler();
-                break;
             case 'testsunitaires':
                 // Requêtes placées dans un fichier.
                 $profiler = new Core_Profiler_File();
@@ -292,7 +293,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Extension de traduction de champs
         $translatableListener = new Gedmo\Translatable\TranslatableListener();
         $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
-        $translatableListener->setDefaultLocale('fr');
+        $translatableListener->setDefaultLocale(Zend_Registry::get('configuration')->translation->defaultLocale);
+        $translatableListener->setPersistDefaultLocaleTranslation(true);
         $translatableListener->setTranslationFallback(true);
         $em->getEventManager()->addEventSubscriber($translatableListener);
         Zend_Registry::set('doctrineTranslate', $translatableListener);
@@ -320,18 +322,19 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         $useGearman = $useGearman && extension_loaded('gearman');
 
-        if ($useGearman) {
-            $this->container->set('Core_Work_Dispatcher')
-                            ->bindTo('Core_Work_GearmanDispatcher');
-        } else {
-            $this->container->set('Core_Work_Dispatcher')
-                            ->bindTo('Core_Work_SimpleDispatcher');
-        }
-        $workDispatcher = $this->container->get('Core_Work_Dispatcher');
-        Zend_Registry::set('workDispatcher', $workDispatcher);
+        $this->container->set('Core_Work_Dispatcher', function(Container $c) use ($useGearman) {
+                if ($useGearman) {
+                    $implementation = 'Core_Work_GearmanDispatcher';
+                } else {
+                    $implementation = 'Core_Work_SimpleDispatcher';
+                }
+                /** @var Core_Work_Dispatcher $workDispatcher */
+                $workDispatcher = $c->get($implementation);
+                // Register workers
+                $workDispatcher->registerWorker($this->container->get('Core_Work_ServiceCall_Worker'));
 
-        // Register workers
-        $workDispatcher->registerWorker($this->container->get('Core_Work_ServiceCall_Worker'));
+                return $workDispatcher;
+            });
     }
 
     /**

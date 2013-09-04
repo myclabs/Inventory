@@ -16,20 +16,20 @@ Feature: Organizational subunits tab feature
     Then I should see the "child_c1_g8" datagrid
     And the row 1 of the "child_c1_g8" datagrid should contain:
       | annee | site | categorie |
-      | 2013 | Annecy| Énergie |
+      | 2012 | Annecy| Énergie |
     And I should not see "Navigation"
   # Filtres
     # TODO : tester filtres
     # When I open collapse "Filtres"
   # Ouverture d'un volet pour une granularité navigable
-    When I open collapse "Zone | Marque"
-    Then I should see the "child_c1_g2" datagrid
-    And the row 1 of the "child_c1_g2" datagrid should contain:
-      | zone | marque | link |
-      | Europe | Marque A | Aller à |
+    When I open collapse "Site"
+    Then I should see the "child_c1_g3" datagrid
+    And the row 1 of the "child_c1_g3" datagrid should contain:
+      | site |  link |
+      | Annecy | Aller à |
   # Lien vers cellule
-    When I click "Aller à" in the row 1 of the "child_c1_g2" datagrid
-    Then I should see "Europe | Marque A Organisation avec données"
+    When I click "Aller à" in the row 1 of the "child_c1_g3" datagrid
+    Then I should see "Annecy Organisation avec données"
 
   @javascript
   Scenario: Nonglobal cell subunits tab scenario
@@ -45,10 +45,10 @@ Feature: Organizational subunits tab feature
     And I wait 2 seconds
     And I open collapse "Année | Site"
     Then I should see the "child_c3_g7" datagrid
-    And the "child_c3_g7" datagrid should contain 1 row
+    And the "child_c3_g7" datagrid should contain 2 row
     And the row 1 of the "child_c3_g7" datagrid should contain:
       | annee | site    |
-      | 2013 | Grenoble |
+      | 2012 | Grenoble |
 
   @javascript
   Scenario: Check that nonrelevant cells and cells included in a nonrelevant cell are hidden in the subunits tab

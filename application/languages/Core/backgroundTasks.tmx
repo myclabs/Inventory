@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="emailNotificationTitle">
+            <tuv xml:lang="fr">
+                <seg>L'opération "[TASK_NAME]" a été effectuée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The operation "[TASK_NAME]" has been executed</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="emailNotificationContent">
+            <tuv xml:lang="fr">
+                <seg>l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="emailNotificationErrorTitle">
+            <tuv xml:lang="fr">
+                <seg>L'opération "[TASK_NAME]" a été stoppée à cause d'une erreur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The operation "[TASK_NAME]" stopped because of an error</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="emailNotificationErrorContent">
+            <tuv xml:lang="fr">
+                <seg>l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'application « [APPLICATION_NAME] ».</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'application « [APPLICATION_NAME] ».</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

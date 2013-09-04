@@ -13,11 +13,10 @@ Feature: Organization administrator feature
     Then I should see the "organizations" datagrid
     And the "organizations" datagrid should contain 1 row
   # Accès à l'organisation
-    When I click "Détails" in the row 1 of the "organizations" datagrid
+    When I click "Cliquer pour accéder" in the row 1 of the "organizations" datagrid
     Then I should see "Vue globale Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
-    And the "aFGranularity1Input8" datagrid should contain 3 row
   # Accès à l'onglet "Configuration"
     When I open tab "Organisation"
     And I open tab "Configuration"

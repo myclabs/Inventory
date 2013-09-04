@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Keyword\Domain\Keyword;
 
 /**
  * Controleur des familles
@@ -97,7 +98,7 @@ class Techno_FamilyController extends Core_Controller
     {
         $this->view->family = Techno_Model_Family::load($this->getParam('id'));
         $this->view->meanings = Techno_Model_Meaning::loadList();
-        $this->view->keywords = Keyword_Model_Keyword::loadList();
+        $this->view->keywords = Keyword::loadList();
         $this->_helper->layout()->disableLayout();
     }
 

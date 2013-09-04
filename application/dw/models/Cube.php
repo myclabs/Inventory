@@ -15,6 +15,8 @@ use Doctrine\Common\Collections\Criteria;
  */
 class DW_Model_Cube extends Core_Model_Entity
 {
+    use Core_Model_Entity_Translatable;
+
     /**
      * Identifiant unique du Cube.
      *

@@ -18,6 +18,6 @@ class AuditTrail_EntryTest extends Core_Test_TestCase
         $entry = new Entry('foo', $context);
 
         $this->assertNotNull($entry->getDate());
-        $this->assertGreaterThanOrEqual(new DateTime(), $entry->getDate());
+        $this->assertLessThanOrEqual(new DateTime(), $entry->getDate());
     }
 }

@@ -3,6 +3,7 @@
  * @author  matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 
 /**
  * @package Techno
@@ -79,7 +80,7 @@ class Techno_Test_Family_DimensionSetUp extends PHPUnit_Framework_TestCase
         foreach (Techno_Model_Meaning::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
+        foreach (Keyword::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -195,7 +196,7 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
         foreach (Techno_Model_Meaning::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
+        foreach (Keyword::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');

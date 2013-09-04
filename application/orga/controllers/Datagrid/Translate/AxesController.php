@@ -61,7 +61,7 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         $axis = Orga_Model_Axis::loadByRefAndOrganization($this->update['index'], Orga_Model_Organization::load($this->getParam('idOrganization')));
-        $axis->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $axis->reloadWithLocale(Core_Locale::load($this->update['column']));
         $axis->setLabel($this->update['value']);
         $this->data = $axis->getLabel();
 

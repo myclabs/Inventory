@@ -106,7 +106,6 @@ class UI_Form_Element
             $this->_zendFormElement->setAttrib('required', 'required');
         }
 
-
         $this->setDefaultDecorators();
     }
 
@@ -234,14 +233,11 @@ class UI_Form_Element
         foreach ($this->children as $child) {
             $child->getElement()->setReadOnly();
         }
-        // Select multi checkbox
-        if ($this->_zendFormElement instanceof UI_Form_Element_MultiCheckbox) {
-            foreach ($this->_zendFormElement->getOptions() as $option) {
-                $option->disabled = true;
-            }
-        }
-        // Select single radio
-        if ($this->_zendFormElement instanceof UI_Form_Element_Radio) {
+        // Select
+        if ($this->_zendFormElement instanceof UI_Form_Element_MultiCheckbox
+            || $this->_zendFormElement instanceof UI_Form_Element_Radio
+            || $this->_zendFormElement instanceof UI_Form_Element_Select
+            || $this->_zendFormElement instanceof UI_Form_Element_MultiSelect) {
             foreach ($this->_zendFormElement->getOptions() as $option) {
                 $option->disabled = true;
             }

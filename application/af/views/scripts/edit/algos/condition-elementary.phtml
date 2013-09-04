@@ -23,7 +23,7 @@ $datagrid->addCol($refColumn);
 $inputColumn = new UI_Datagrid_Col_List('input', __('UI', 'name', 'field'));
 $inputColumn->editable = false;
 $inputColumn->dynamicList = true;
-$inputColumn->list = $this->baseUrl('af/datagrid_edit_algos_condition-elementary/get-field-list/');
+$inputColumn->list = $this->baseUrl('af/datagrid_edit_algos_condition-elementary/get-field-list');
 $datagrid->addCol($inputColumn);
 
 // Relation

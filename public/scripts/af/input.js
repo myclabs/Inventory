@@ -4,7 +4,7 @@
  */
 
 /**
- * @namespace
+ * @namespace AF
  */
 var AF = AF || {};
 
@@ -107,7 +107,7 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
 			that.hasChanges = true;
 			that.inputProgress.setStatus(AF.InputProgress.Status.IN_PROGRESS);
 			that.form.find(".inputExit").addClass("btn-danger");
-			that.form.find(".inputSave").prop("disabled", false);
+			that.form.find(".inputSave").prop("disabled", false).addClass("btn-primary");
 			that.form.find(".inputReset").prop("disabled", false);
 		});
 	});
@@ -121,7 +121,7 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
     var popoverDefaultContent = '<p class="text-center"><img src="images/ui/ajax-loader.gif"></p>';
     $(".input-history").popover({
         placement: 'bottom',
-        title: __('AF', 'inputInput', 'valueHistory'),
+        title: __('UI', 'history', 'valueHistory'),
         html: true,
         content: popoverDefaultContent
     }).click(function() {
@@ -221,7 +221,7 @@ AF.Input.prototype = {
 
 		// Réinitialise l'aspect des boutons
 		this.form.find(".inputExit").removeClass("btn-danger");
-		this.form.find(".inputSave").button("reset");
+		this.form.find(".inputSave").button("reset").removeClass("btn-primary");
 		// @see https://github.com/twitter/bootstrap/issues/6242
 		setTimeout(function() {
 			that.form.find(".inputSave").prop("disabled", true);
