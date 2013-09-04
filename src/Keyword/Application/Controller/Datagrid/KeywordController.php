@@ -59,7 +59,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
 
-        $refErrors = $this->keywordService->getErrorMessageForNewRef($ref);
+        $refErrors = $this->keywordService->getErrorMessageForRef($ref);
         if ($refErrors != null) {
             $this->setAddElementErrorMessage('ref', $refErrors);
         }

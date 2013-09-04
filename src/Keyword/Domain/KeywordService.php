@@ -27,47 +27,13 @@ class KeywordService
     }
 
     /**
-     * Retourne le Keyword correspondant à la ref donnée.
-     *
-     * @param string $ref
-     * @return Keyword
-     */
-    public function get($ref)
-    {
-        return $this->keywordRepository->getOneByRef($ref);
-    }
-
-    /**
-     * Ajoute un Keyword.
-     *
-     * @param Keyword $keyword
-     */
-    public function add($keyword)
-    {
-        $this->checkRef($keyword->getRef());
-        $this->keywordRepository->add($keyword);
-    }
-
-    /**
-     * Supprime un Keyword.
-     *
-     * @param Keyword $keyword
-     *
-     * @return string Le label du Keyword.
-     */
-    public function remove($keyword)
-    {
-        $this->keywordRepository->remove($keyword);
-    }
-
-    /**
      * Renoie les messages d'erreur concernant la validation d'une ref.
      *
      * @param string $ref
      *
      * @return mixed string null
      */
-    public function getErrorMessageForNewRef($ref)
+    public function getErrorMessageForRef($ref)
     {
         try {
             \Core_Tools::checkRef($ref);
@@ -93,7 +59,7 @@ class KeywordService
      *
      * @throws \Core_Exception_User
      */
-    private function checkRef($ref)
+    public function checkRef($ref)
     {
         \Core_Tools::checkRef($ref);
         if ($ref === 'this') {
@@ -105,6 +71,40 @@ class KeywordService
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
         }
+    }
+
+    /**
+     * Retourne le Keyword correspondant à la ref donnée.
+     *
+     * @param string $ref
+     * @return Keyword
+     */
+    public function get($ref)
+    {
+        return $this->keywordRepository->getOneByRef($ref);
+    }
+
+    /**
+     * Ajoute un Keyword.
+     *
+     * @param Keyword $keyword
+     */
+    public function add(Keyword $keyword)
+    {
+        $this->checkRef($keyword->getRef());
+        $this->keywordRepository->add($keyword);
+    }
+
+    /**
+     * Supprime un Keyword.
+     *
+     * @param Keyword $keyword
+     *
+     * @return string Le label du Keyword.
+     */
+    public function remove(Keyword $keyword)
+    {
+        $this->keywordRepository->remove($keyword);
     }
 
 }
