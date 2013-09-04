@@ -92,6 +92,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $diConfig = $configuration->get('di', null);
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
             // Si cache, on utilise APC
+            // TODO à améliorer quand https://github.com/mnapoli/PHP-DI/issues/108 corrigé
             $builder->setDefinitionCache(new ApcCache());
         }
 
