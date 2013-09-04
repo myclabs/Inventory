@@ -12,7 +12,7 @@ $datagrid->initialLoading = false;
 $datagrid->addParam('id', $af->getId());
 $datagrid->pagination = false;
 $datagrid->addElements = true;
-$datagrid->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'blahblah');
+$datagrid->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'orgaCoordinateTextkeySelectionAddPanelTitle');
 $datagrid->deleteElements = true;
 
 // Ref
@@ -21,12 +21,12 @@ $refColumn->editable = true;
 $datagrid->addCol($refColumn);
 
 // Name
-$nameColumn = new UI_Datagrid_Col_Text('name', __('AF', 'configInteraction', 'orgaCoordinate'));
+$nameColumn = new UI_Datagrid_Col_Text('name', __('AF', 'configTreatmentDatagrid', 'orgaAxisHeader'));
 $nameColumn->editable = true;
 $datagrid->addCol($nameColumn);
 
 // Default value
-$defaultValueColumn = new UI_Datagrid_Col_Text('defaultValue', __('AF', 'configInteraction', 'defaultValue'));
+$defaultValueColumn = new UI_Datagrid_Col_Text('defaultValue', __('AF', 'configTreatmentDatagrid', 'defaultValueHeader'));
 $defaultValueColumn->editable = true;
 $datagrid->addCol($defaultValueColumn);
 

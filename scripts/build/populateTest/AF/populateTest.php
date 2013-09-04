@@ -119,18 +119,25 @@ class AF_PopulateTest extends AF_Populate
         $aF_test->getMainAlgo()->setExpression(':c_n;');
         $this->createAlgoNumericExpression($aF_test, 'expression_num', 'Expression numérique', 'c_n*parametre', 't_co2e');
         $this->createAlgoNumericParameter($aF_test, 'parametre', 'Paramètre', 'combustion_combustible_unite_masse');
+        $this->createAlgoNumericParameter($aF_test, 'parametre_2', 'Paramètre 2', 'masse_volumique_combustible');
         $this->createAlgoNumericConstant($aF_test, 'constante', 'Constante', 12345.6789, 5.9, 't_co2e.passager^-1.km^-1');
         $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel', 'a:(b:(c:d;e:(f:g;:h)))');
         $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel_index_algo', 'a:b');
         $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel_coord_param', 'a:b');
+        $this->createAlgoSelectTextkeyContextValue($aF_test, 'orga_coordinate', 'axis_ref_1', 'dafault_value_1');
+        $this->createAlgoSelectTextkeyContextValue($aF_test, 'orga_coordinate_coord_param', 'axis_ref_2', 'dafault_value_2');
+        $this->createAlgoSelectTextkeyContextValue($aF_test, 'orga_coordinate_index_algo', 'axis_ref_3', 'dafault_value_3');
         $this->createAlgoConditionExpression($aF_test, 'cond_comp', 'cond_el|condition_inexistante');
         $this->createAlgoConditionElementary($aF_test, $c_s_s_util_cond_el_trait, 'cond_el');
         // Coordonnées des algorithmes numériques de type paramètre
         $this->createFixedCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre'), ['combustible' => 'charbon']);
         $this->createAlgoCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre'), ['processus' => $aF_test->getAlgoByRef('expression_sel_coord_param')]);
+        $this->createAlgoCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre_2'), ['combustible' => $aF_test->getAlgoByRef('orga_coordinate_coord_param')]);
         // Indexation des algorithmes numériques
         $this->createFixedIndexForAlgoNumeric($aF_test->getAlgoByRef('c_n'), 'general', 'ges', ['gaz' => 'co2']);
         $this->createAlgoIndexForAlgoNumeric($aF_test->getAlgoByRef('c_n'), 'general', 'ges', ['poste_article_75' => $aF_test->getAlgoByRef('expression_sel_index_algo')]);
+        $this->createAlgoIndexForAlgoNumeric($aF_test->getAlgoByRef('c_n'), 'general', 'ges', ['gaz' => $aF_test->getAlgoByRef('orga_coordinate_index_algo')]);
+
 
 //        $this->createAlgoSelectTextkeyExpression($aF_combustion_combustible_unite_masse, 'refa2', 'expression');
 //        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3');
