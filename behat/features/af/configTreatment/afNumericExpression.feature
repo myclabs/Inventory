@@ -22,11 +22,11 @@ Feature: AF numeric expression algo feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Algos ordonnés suivant l'ordre de création, vérification des valeurs par défaut
-  # TODO : éclaircir cette histoire d'ordre lois
-    And the row 2 of the "algoNumericExpression" datagrid should contain:
+  # TODO : éclaircir cette histoire d'ordre
+    And the row 1 of the "algoNumericExpression" datagrid should contain:
       | label | ref  | unit          |
       | AAA   | aaa  | t équ. CO2/m³ |
-    When I click "Expression" in the row 2 of the "algoNumericExpression" datagrid
+    When I click "Expression" in the row 1 of the "algoNumericExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "(a / (b * c)) + d - (e * f / (g - h))"
     #And I click element "#algoNumericExpression_expression_popup .close:contains('×')"

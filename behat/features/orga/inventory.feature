@@ -41,4 +41,4 @@ Feature: Organization inventory tab feature
     And I open tab "Collectes"
     Then the "inventories6" datagrid should contain a row:
       | annee | inventoryStatus | advancementInput | advancementFinishedInput |
-      | 2012  | Ouvert          | 66%              | 33%                      |
+      | 2012  | Ouvert          | 50%              | 25%                      |

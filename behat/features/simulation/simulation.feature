@@ -4,8 +4,9 @@ Feature: General data simulation feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @skipped
   Scenario: Creation of a simulation scenario, correct input
+  # #6411 Impossible d'enregistrer un scénario
   # Accès à l'onglet "Simulations"
     Given I am on "simulation/set/manage"
     And I wait for the page to finish loading

@@ -35,7 +35,8 @@ Feature: History of values of a field feature
 
   @javascript
   Scenario: Input history scenario, display of history for various kinds of input fiels
-    Given I am on "orga/cell/input/idCell/32/fromIdCell/1"
+  # Cellule : 2012 | Chambéry | Test affichage
+    Given I am on "orga/cell/input/idCell/35/fromIdCell/1"
     And I wait for the page to finish loading
   # Attente pour voir si ça aide à passer sur serveur dédié
     And I wait 5 seconds
@@ -75,7 +76,8 @@ Feature: History of values of a field feature
 
   @javascript
   Scenario: Input history scenario, display of history for a repeated subform containing various types of fields, one repetition
-    Given I am on "orga/cell/input/idCell/38/fromIdCell/1"
+  # Cellule : 2013 | Annecy | Test affichage
+    Given I am on "orga/cell/input/idCell/44/fromIdCell/1"
     And I wait for the page to finish loading
   # Ajout attente pour voir si ça aide à faire passer le test sur serveur distant
     And I wait 5 seconds

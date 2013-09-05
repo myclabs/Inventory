@@ -15,5 +15,4 @@ Feature: Feedback feature
     And I check "J'ai une amélioration à proposer"
     And I fill in "details" with "Test automatique behat."
     And I click "Envoyer"
-    # Then the following message is shown and closed: "Votre retour a été enregistré, merci."
     Then I should see "Votre retour a été enregistré, merci."
