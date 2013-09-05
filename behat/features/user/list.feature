@@ -10,8 +10,8 @@ Feature: User list feature
     Then I should see the "users" datagrid
     And the "users" datagrid should contain 1 row
     And the row 1 of the "users" datagrid should contain:
-      | nom            | email               | emailValidated | enabled | detailsUser |
-      | Administrateur | admin@myc-sense.com | Effectuée      | Activé  | Éditer      |
+      | prenom         | nom     | email               | emailValidated | enabled | detailsUser |
+      | Administrateur | Système | admin@myc-sense.com | Effectuée      | Activé  | Éditer      |
 
   @javascript
   Scenario: Adding user with empty form
