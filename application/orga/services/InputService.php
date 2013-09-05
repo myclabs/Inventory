@@ -1,12 +1,11 @@
 <?php
-/**
- * @author  matthieu.napoli
- */
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Service responsable de la gestion des saisies
+ *
+ * @author  matthieu.napoli
  */
 class Orga_Service_InputService
 {
@@ -106,5 +105,26 @@ class Orga_Service_InputService
                 new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
             );
         }
+    }
+
+    /**
+     * Met à jour les résultats d'une saisie
+     *
+     * @param Orga_Model_Cell           $cell
+     * @param AF_Model_InputSet_Primary $inputSet
+     */
+    public function updateResults(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $inputSet)
+    {
+        // Injecte les coordonnées orga à la saisie en tant que ContextValue
+        foreach ($cell->getMembers() as $member) {
+            $inputSet->setContextValue($member->getAxis()->getRef(), $member->getRef());
+            // Membres parents
+            foreach ($member->getAllParents() as $parentMember) {
+                $inputSet->setContextValue($parentMember->getAxis()->getRef(), $parentMember->getRef());
+            }
+        }
+
+        // Met à jour les résultats
+        $this->afInputService->updateResults($inputSet);
     }
 }

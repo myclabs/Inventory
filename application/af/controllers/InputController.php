@@ -166,18 +166,11 @@ class AF_InputController extends Core_Controller
 
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->isInputComplete = $inputSet->isInputComplete();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->af = $af;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->updateInputProgress = true;
 
         $data = $this->view->render('af/display-results.phtml');
 
         // Force le statut en success (sinon les handlers JS ne sont pas exécutés)
         $this->setFormMessage(null, UI_Message::TYPE_SUCCESS);
-
         $this->sendFormResponse($data);
     }
 
