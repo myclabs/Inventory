@@ -61,6 +61,16 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
     }
 
     /**
+     * @param Predicate $entity
+     */
+    public function add($entity)
+    {
+        $this->checkRef($entity->getRef());
+        $this->checkRef($entity->getReverseRef());
+        parent::add($entity);
+    }
+
+    /**
      * Retourne un Predicate grâce à son ref.
      *
      * @param string $predicateRef

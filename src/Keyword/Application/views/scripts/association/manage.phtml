@@ -50,3 +50,11 @@ use Keyword\Domain\AssociationRepository;
     $datagrid->addElements = true;
     $datagrid->addPanelTitle = __('Keyword', 'relation', 'addPanelTitle');
     $datagrid->display();
+
+?>
+<script type="text/javascript">
+    $('#association_addPanel').on('hide', function() {
+        $('#association_subject_addForm').trigger('change');
+        $('#association_object_addForm').trigger('change');
+    });
+</script>

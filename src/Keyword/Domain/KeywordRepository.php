@@ -55,6 +55,6 @@ interface KeywordRepository extends EntityRepository
      * @param TranslatableEntity $entity Entité du Repository
      * @param \Core_Locale|null $locale Si null, utilise la locale par défaut
      */
-    function changeLocale(TranslatableEntity $entity, \Core_Locale $locale);
+    function changeLocale($entity, \Core_Locale $locale);
 
 }

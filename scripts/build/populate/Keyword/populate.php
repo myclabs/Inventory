@@ -23,6 +23,11 @@ class Keyword_Populate extends Core_Script_Action
      */
     protected $predicateRepository;
 
+    /**
+     * @var \Keyword\Domain\AssociationRepository
+     */
+    protected $associationRepository;
+
 
     function __construct()
     {
@@ -101,7 +106,7 @@ class Keyword_Populate extends Core_Script_Action
      */
     protected function createAssociation(Keyword $subject, Predicate $predicate, Keyword $object)
     {
-        $assocation = new Association($subject, $predicate, $object);
+        $this->associationRepository->add(new Association($subject, $predicate, $object));
     }
 
 }

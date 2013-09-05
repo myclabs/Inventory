@@ -26,7 +26,7 @@ trait TranslatableEntity
      */
     public function setTranslationLocale(\Core_Locale $locale = null)
     {
-        if ($locale && $locale->getId() != $this->translationLocale->getId()) {
+        if ($locale !== null && $locale->getId() != $this->translationLocale) {
             $this->translationLocale = $locale->getId();
         } else {
             $this->translationLocale = null;

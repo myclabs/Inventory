@@ -52,6 +52,71 @@ class DoctrineAssociationRepository extends DoctrineEntityRepository implements 
             Association::getAlias() . '.' . Association::QUERY_PREDICATE,
             Predicate::getAlias()
         );
+    }*/
+
+    /**
+     * Renoie les messages d'erreur concernant la validation d'une Association.
+     *
+     * @param Association $association
+     *
+     * @return mixed string null
+     */
+    public function getErrorMessageForAssociation(Association $association)
+    {
+        if ($association->getSubject() === $association->getObject()) {
+            return __('Keyword', 'relation', 'subjectSameAsObject', array('REF' => $association->getSubject()->getRef()));
+        }
+        try {
+            $this->getOneBySubjectPredicateObject($association->getSubject(), $association->getPredicate(), $association->getObject());
+            return __('Keyword', 'relation', 'associationAlreadyExists');
+        } catch (\Core_Exception_NotFound $e) {
+            // Valide.
+        }
+        try {
+            $this->getOneBySubjectPredicateObject($association->getObject(), $association->getPredicate(), $association->getSubject());
+            return __('Keyword', 'relation', 'associationAlreadyExists');
+        } catch (\Core_Exception_NotFound $e) {
+            // Valide.
+        }
+
+        return null;
+    }
+
+    /**
+     * Vérifie la disponibilité d'une Association.
+     *
+     * @param Association $association
+     *
+     * @throws \Core_Exception_User
+     */
+    public function checkAssociation(Association $association)
+    {
+        if ($association->getSubject() === $association->getObject()) {
+            throw new \Core_Exception_User(
+                'Keyword', 'relation', 'subjectSameAsObject', array('REF' => $association->getSubject()->getRef())
+            );
+        }
+        try {
+            $this->getOneBySubjectPredicateObject($association->getSubject(), $association->getPredicate(), $association->getObject());
+            throw new \Core_Exception_User('Keyword', 'relation', 'associationAlreadyExists');
+        } catch (\Core_Exception_NotFound $e) {
+            // Valide.
+        }
+        try {
+            $this->getOneBySubjectPredicateObject($association->getObject(), $association->getPredicate(), $association->getSubject());
+            throw new \Core_Exception_User('Keyword', 'relation', 'associationAlreadyExists');
+        } catch (\Core_Exception_NotFound $e) {
+            // Valide.
+        }
+    }
+
+    /**
+     * @param Association $entity
+     */
+    public function add($entity)
+    {
+        $this->checkAssociation($entity);
+        parent::add($entity);
     }
 
     /**
@@ -66,7 +131,9 @@ class DoctrineAssociationRepository extends DoctrineEntityRepository implements 
      */
     public function getOneBySubjectPredicateObject(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
-        return $this->findOneBy(['subject' => $subjectKeyword, 'predicate' => $predicate, 'object' => $objectKeyword]);
+        return $this->getOneBy(
+            ['subject' => $subjectKeyword->getId(), 'predicate' => $predicate->getId(), 'object' => $objectKeyword->getId()]
+        );
     }
 
 }

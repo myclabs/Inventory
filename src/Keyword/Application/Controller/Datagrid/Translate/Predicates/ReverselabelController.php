@@ -7,7 +7,9 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 use Keyword\Domain\Predicate;
+use Keyword\Domain\PredicateRepository;
 
 /**
  * Classe du controller du datagrid des traductions des labels inversés des predicates.
@@ -16,6 +18,12 @@ use Keyword\Domain\Predicate;
  */
 class Keyword_Datagrid_Translate_Predicates_ReverselabelController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var PredicateRepository
+     */
+    private $predicateRepository;
+
     /**
      * Désactivation du fallback des traductions.
      */
@@ -32,19 +40,19 @@ class Keyword_Datagrid_Translate_Predicates_ReverselabelController extends UI_Co
      */
     public function getelementsAction()
     {
-        foreach (Predicate::loadList($this->request) as $predicate) {
+        foreach ($this->predicateRepository->getAll($this->request) as $predicate) {
             $data = array();
-            $data['index'] = $predicate->getReverseRef();
+            $data['index'] = $predicate->getRef();
             $data['identifier'] = $predicate->getReverseRef();
 
             foreach (Zend_Registry::get('languages') as $language) {
-                $locale = Core_Locale::load($language);
-                $predicate->reloadWithLocale($locale);
+                $locale = \Core_Locale::load($language);
+                $this->predicateRepository->changeLocale($predicate, $locale);
                 $data[$language] = $predicate->getReverseLabel();
             }
             $this->addline($data);
         }
-        $this->totalElements = Predicate::countTotal($this->request);
+        $this->totalElements = $this->predicateRepository->count($this->request);
 
         $this->send();
     }
@@ -56,8 +64,8 @@ class Keyword_Datagrid_Translate_Predicates_ReverselabelController extends UI_Co
      */
     public function updateelementAction()
     {
-        $predicate = Predicate::loadByReverseRef($this->update['index']);
-        $predicate->reloadWithLocale(Core_Locale::load($this->update['column']));
+        $predicate = $this->predicateRepository->getOneByRef($this->update['index']);
+        $this->predicateRepository->changeLocale($predicate, \Core_Locale::load($this->update['column']));
         $predicate->setReverseLabel($this->update['value']);
         $this->data = $predicate->getReverseLabel();
 

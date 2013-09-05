@@ -179,7 +179,6 @@ class Keyword
         return $this->objectAssociations->contains($association);
     }
 
-
     /**
      * Vérifie si le Keyword possède au moins une association en tant qu'objet.
      *
@@ -238,7 +237,6 @@ class Keyword
     {
         return $this->subjectAssociations->contains($association);
     }
-
 
     /**
      * Vérifie si le Keyword possède au moins une association en tant que sujet.

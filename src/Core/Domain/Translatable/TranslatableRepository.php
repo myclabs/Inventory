@@ -19,7 +19,7 @@ trait TranslatableRepository
      * @param TranslatableEntity $entity Entité du Repository
      * @param \Core_Locale|null $locale Si null, utilise la locale par défaut
      */
-    public function changeLocale(TranslatableEntity $entity, \Core_Locale $locale = null)
+    public function changeLocale($entity, \Core_Locale $locale = null)
     {
         $entity->setTranslationLocale($locale);
         $this->getEntityManager()->refresh($entity);
