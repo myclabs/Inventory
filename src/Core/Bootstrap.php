@@ -167,7 +167,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Définition du cache en fonction de l'environement.
         switch (APPLICATION_ENV) {
             case 'production':
-                $doctrineCache = new ArrayCache();
+                $doctrineCache = new ApcCache();
                 $doctrineAutoGenerateProxy = false;
                 break;
             default:
@@ -227,7 +227,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 break;
             default:
                 $profiler = null;
-            break;
+                break;
         }
         $doctrineConfig->setSQLLogger($profiler);
 
