@@ -65,6 +65,15 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     }
 
     /**
+     * @param Keyword $entity
+     */
+    public function add($entity)
+    {
+        $this->checkRef($entity->getRef());
+        parent::add($entity);
+    }
+
+    /**
      * Retourne un Keyword grâce à son ref.
      *
      * @param string $keywordRef

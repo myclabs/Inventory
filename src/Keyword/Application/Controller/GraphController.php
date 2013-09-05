@@ -7,7 +7,9 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 use Keyword\Domain\Keyword;
+use Keyword\Domain\KeywordRepository;
 
 /**
  * Controlleur permettant de gérer les Keyword.
@@ -16,13 +18,19 @@ use Keyword\Domain\Keyword;
 class Keyword_GraphController extends Core_Controller
 {
     /**
+     * @Inject
+     * @var KeywordRepository
+     */
+    protected $keywordRepository;
+
+    /**
      * Graphe des Keyword, racine.
      *
      * @Secure("viewKeyword")
      */
     public function rootAction()
     {
-        $this->view->rootKeywords = Keyword::loadListRoots();
+        $this->view->rootKeywords = $this->keywordRepository->getRoots();
     }
 
     /**
@@ -51,7 +59,7 @@ class Keyword_GraphController extends Core_Controller
             $this->redirect('keyword/graph/root');
         }
         try {
-            $this->view->keyword = Keyword::loadByRef($refCurrentKeyword);
+            $this->view->keyword = $this->keywordRepository->getOneByRef($refCurrentKeyword);
         } catch (Core_Exception_NotFound $e) {
             UI_Message::addMessageStatic(__('Keyword', 'graph', 'nonExistentKeyword'));
             $this->redirect('keyword/graph/root');
@@ -86,9 +94,7 @@ class Keyword_GraphController extends Core_Controller
         $listKeywords = array();
 
         $ref = $this->getParam('q');
-        $queryMatch = new Core_Model_Query();
-        $queryMatch->filter->addCondition(Keyword::QUERY_LABEL, $ref, Core_Model_Filter::OPERATOR_CONTAINS);
-        foreach (Keyword::loadList($queryMatch) as $keyword) {
+        foreach ($this->keywordRepository->getAll() as $keyword) {
             $listKeywords[] = array('id' => $keyword->getRef(), 'text' => $keyword->getLabel());
         }
 

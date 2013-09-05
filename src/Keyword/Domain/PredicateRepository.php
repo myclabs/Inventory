@@ -3,7 +3,9 @@
 namespace Keyword\Domain;
 
 use Core\Domain\EntityRepository;
-use Core_Exception_NotFound;
+use Core\Domain\Translatable\TranslatableEntity;
+use Core\Domain\Translatable\TranslatableRepository;
+use Keyword\Domain\Predicate;
 
 /**
  * Gère les Predicate.
@@ -13,6 +15,8 @@ interface PredicateRepository extends EntityRepository
 {
     const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
+    const QUERY_REVERSE_REF = 'reverseRef';
+    const QUERY_REVERSE_LABEL = 'reverseLabel';
 
     /**
      * Renoie les messages d'erreur concernant la validation d'une ref.

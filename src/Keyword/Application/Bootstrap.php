@@ -31,5 +31,11 @@ class Bootstrap extends Core_Package_Bootstrap
                 return $c->get('Doctrine\ORM\EntityManager')->getRepository('Keyword\Domain\Predicate');
             }
         );
+        $this->container->set(
+            'Keyword\Domain\AssociationRepository',
+            function(Container $c) {
+                return $c->get('Doctrine\ORM\EntityManager')->getRepository('Keyword\Domain\Association');
+            }
+        );
     }
 }

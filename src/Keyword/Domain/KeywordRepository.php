@@ -5,6 +5,7 @@ namespace Keyword\Domain;
 use Core\Domain\EntityRepository;
 use Core\Domain\Translatable\TranslatableEntity;
 use Core\Domain\Translatable\TranslatableRepository;
+use Keyword\Domain\Keyword;
 
 /**
  * Gère les Keyword.

@@ -8,8 +8,10 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Keyword\Domain\KeywordRepository;
+use Keyword\Domain\PredicateRepository;
 use Keyword\Domain\Association;
-use Keyword\Domain\AssociationService;
+use Keyword\Domain\AssociationRepository;
 
 /**
  * Classe controleur de la datagrid de Association.
@@ -19,9 +21,21 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var AssociationService
+     * @var KeywordRepository
      */
-    private $associationService;
+    private $keywordRepository;
+
+    /**
+     * @Inject
+     * @var PredicateRepository
+     */
+    private $predicateRepository;
+
+    /**
+     * @Inject
+     * @var AssociationRepository
+     */
+    private $associationRepository;
 
     /**
      * Methode appelee pour remplir le tableau.
@@ -30,7 +44,8 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        foreach (Association::loadList($this->request) as $association) {
+        /** @var Association $association */
+        foreach ($this->associationRepository->getAll($this->request) as $association) {
             $data = array();
 
             $refSubject = $association->getSubject()->getRef();
@@ -44,7 +59,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = Association::countTotal($this->request);
+        $this->totalElements = $this->associationRepository->count($this->request);
         $this->send();
     }
 
@@ -60,27 +75,25 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         $refObject = $this->getAddElementValue('object');
         $refPredicate = $this->getAddElementValue('predicate');
 
-        $subjectError = $this->associationService->getErrorMessageForAddSubject($refSubject);
-        if ($subjectError != null) {
-            $this->setAddElementErrorMessage('subject', $subjectError);
+        try {
+            $subject = $this->keywordRepository->getOneByRef($refSubject);
+        } catch (\Core_Exception_NotFound $e) {
+            $this->setAddElementErrorMessage('subject', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $objectError = $this->associationService->getErrorMessageForAddObject($refObject);
-        if ($objectError != null) {
-            $this->setAddElementErrorMessage('object', $objectError);
+        try {
+            $predicate = $this->predicateRepository->getOneByRef($refPredicate);
+        } catch (\Core_Exception_NotFound $e) {
+            $this->setAddElementErrorMessage('predicate', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $predicateError = $this->associationService->getErrorMessageForAddPredicate($refPredicate);
-        if ($predicateError != null) {
-            $this->setAddElementErrorMessage('predicate', $predicateError);
-        }
-        if (empty($this->_addErrorMessages)) {
-            $allError = $this->associationService->getErrorMessageForAdd($refSubject, $refObject, $refPredicate);
-            if ($allError != null) {
-                $this->setAddElementErrorMessage('predicate', $allError);
-            }
+        try {
+            $object = $this->keywordRepository->getOneByRef($refObject);
+        } catch (\Core_Exception_NotFound $e) {
+            $this->setAddElementErrorMessage('object', __('UI', 'formValidation', 'emptyRequiredField'));
         }
 
         if (empty($this->_addErrorMessages)) {
-            $this->associationService->add($refSubject, $refObject, $refPredicate);
+            $this->associationRepository->add(new Association($subject, $predicate, $object));
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -98,10 +111,22 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         if ($this->update['column'] !== 'predicate') {
             parent::updateelementAction();
         }
+
         list($refSubject, $refObject, $refPredicate) = explode('#', $this->update['index']);
+        $subject = $this->keywordRepository->getOneByRef($refSubject);
+        $predicate = $this->predicateRepository->getOneByRef($refPredicate);
+        $object = $this->keywordRepository->getOneByRef($refObject);
+        $association = $this->associationRepository->getOneBySubjectPredicateObject($subject, $predicate, $object);
+
         $newPredicate = $this->update['value'];
-        $this->associationService->updatePredicate($refSubject, $refObject, $refPredicate, $newPredicate);
-        $this->message = __('UI', 'message', 'updated');
+        try {
+            $newAssociation = $this->associationRepository->getOneBySubjectPredicateObject($subject, $newPredicate, $object);
+            throw new Core_Exception_User('', '', '');
+        } catch (\Core_Exception_NotFound $e) {
+            $association->setPredicate($newPredicate);
+            $this->entityManager->flush();
+            $this->message = __('UI', 'message', 'updated');
+        }
         $this->send();
     }
 
@@ -114,7 +139,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         list($refSubject, $refObject, $refPredicate) = explode('#', $this->delete);
-        $this->associationService->delete($refSubject, $refObject, $refPredicate);
+        $this->associationRepository->delete($refSubject, $refObject, $refPredicate);
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
