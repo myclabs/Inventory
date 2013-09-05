@@ -167,6 +167,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Définition du cache en fonction de l'environement.
         switch (APPLICATION_ENV) {
             case 'production':
+            case 'test':
                 $doctrineCache = new ApcCache();
                 $doctrineAutoGenerateProxy = false;
                 break;

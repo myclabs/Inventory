@@ -63,7 +63,7 @@ class Core_Translate extends Zend_Translate
         }
 
         // Paramétrage du cache si on est pas en développement ou test
-        if (APPLICATION_ENV == 'production') {
+        if (APPLICATION_ENV == 'production' || APPLICATION_ENV == 'test') {
             $cache = Core_Cache::factory('translate');
 
             if (!$cache) {
