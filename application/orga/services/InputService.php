@@ -95,7 +95,6 @@ class Orga_Service_InputService
         $this->workDispatcher->runBackground(
             new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'clearDWResultsFromCell', [$cell])
         );
-        $this->etlDataService->clearDWResultsFromCell($cell);
         if ($inputSet->isInputComplete()) {
             $this->workDispatcher->runBackground(
                 new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
