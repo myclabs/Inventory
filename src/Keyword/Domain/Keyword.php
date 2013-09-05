@@ -61,7 +61,7 @@ class Keyword
         $this->objectAssociations = new ArrayCollection();
         $this->subjectAssociations = new ArrayCollection();
 
-        $this->setRef(is_null($ref) ? \Core_Tools::refactor($label) : $ref);
+        $this->setRef(empty($ref) ? \Core_Tools::refactor($label) : $ref);
         $this->setLabel($label);
     }
 

@@ -66,10 +66,10 @@ class Predicate
      */
     public function __construct($ref, $reverseRef, $label='', $reverseLabel='')
     {
-        $this->setRef(is_null($ref) ? \Core_Tools::checkRef($label) : $ref);
+        $this->setRef(empty($ref) ? \Core_Tools::refactor($label) : $ref);
         $this->setLabel($label);
-        $this->setReverseRef(is_null($reverseRef) ? \Core_Tools::checkRef($reverseLabel) : $reverseRef);
-        $this->setReverseLabel($label);
+        $this->setReverseRef(empty($reverseRef) ? \Core_Tools::refactor($reverseLabel) : $reverseRef);
+        $this->setReverseLabel($reverseLabel);
     }
 
     /**
