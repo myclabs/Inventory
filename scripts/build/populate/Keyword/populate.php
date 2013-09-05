@@ -36,6 +36,7 @@ class Keyword_Populate extends Core_Script_Action
         $entityManager = $entityManagers['default'];
         $this->keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
         $this->predicateRepository = $entityManager->getRepository('\Keyword\Domain\Predicate');
+        $this->associationRepository = $entityManager->getRepository('\Keyword\Domain\Association');
     }
 
     /**

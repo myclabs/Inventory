@@ -1,6 +1,6 @@
 <?php
 
-namespace Keyword\Application;
+namespace Keyword\Application\Service;
 
 use Keyword\Domain\Keyword;
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace Keyword\Application;
+namespace Keyword\Application\Service;
 
+use Keyword\Domain\KeywordRepository;
 /**
  * Service Keyword.
  * @author valentin.claras
@@ -9,9 +10,18 @@ namespace Keyword\Application;
 class KeywordService
 {
     /**
-     * @var \Keyword\Domain\KeywordRepository
+     * @var KeywordRepository
      */
     protected $keywordRepository;
+
+
+    /**
+     * @param KeywordRepository $keywordRepository
+     */
+    public function __construct(KeywordRepository $keywordRepository)
+    {
+        $this->keywordRepository = $keywordRepository;
+    }
 
     /**
      * @param string $keywordRef
@@ -20,6 +30,18 @@ class KeywordService
     public function get($keywordRef)
     {
         return new KeywordDTO($this->keywordRepository->getOneByRef($keywordRef));
+    }
+
+    /**
+     * @return KeywordDTO[]
+     */
+    public function getAll()
+    {
+        $keywords = [];
+        foreach ($this->keywordRepository->getAll() as $keyword) {
+            $keywords[] = new KeywordDTO($keyword);
+        }
+        return $keywords;
     }
 
 }

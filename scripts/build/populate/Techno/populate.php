@@ -14,7 +14,7 @@ class Techno_Populate extends Core_Script_Action
     private $meanings = [];
 
     /**
-     * @var \Keyword\Application\KeywordService
+     * @var \Keyword\Application\Service\KeywordService
      */
     protected $keywordService;
 
@@ -23,7 +23,7 @@ class Techno_Populate extends Core_Script_Action
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('\Keyword\Application\KeywordService');
+        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
     }
 
     /**

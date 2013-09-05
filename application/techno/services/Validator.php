@@ -4,6 +4,8 @@
  * @package Techno
  */
 
+use Keyword\Application\Service\DepreciatedKeywordDTO;
+
 /**
  * Service de validation des données de Techno
  * @package Techno
@@ -23,8 +25,8 @@ class Techno_Service_Validator
         $meanings = Techno_Model_Meaning::loadList();
 
         foreach ($meanings as $meaning) {
-            $keyword = $meaning->validateKeyword();
-            if ($keyword === true) {
+            $keyword = $meaning->getKeyword();
+            if (! $keyword instanceof DepreciatedKeywordDTO) {
                 continue;
             }
             $errors[] = $keyword;
@@ -46,8 +48,8 @@ class Techno_Service_Validator
 
         foreach ($families as $family) {
             foreach ($family->getTags() as $tag) {
-                $keyword = $tag->validateKeyword();
-                if ($keyword === true) {
+                $keyword = $tag->getValue();
+                if (! $keyword instanceof DepreciatedKeywordDTO) {
                     continue;
                 }
                 $errors[] = [
@@ -75,8 +77,8 @@ class Techno_Service_Validator
         foreach ($families as $family) {
             foreach ($family->getDimensions() as $dimension) {
                 foreach ($dimension->getMembers() as $member) {
-                    $keyword = $member->validateKeyword();
-                    if ($keyword === true) {
+                    $keyword = $member->getKeyword();
+                    if (! $keyword instanceof DepreciatedKeywordDTO) {
                         continue;
                     }
                     $errors[] = [
