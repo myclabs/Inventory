@@ -203,14 +203,22 @@
                 <seg>E-mail address</seg>
             </tuv>
         </tu>
-		<tu tuid="errors">
-			<tuv xml:lang="fr">
-				<seg>Erreurs</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Errors</seg>
-			</tuv>
-		</tu>
+        <tu tuid="errors">
+            <tuv xml:lang="fr">
+                <seg>Erreurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Errors</seg>
+            </tuv>
+        </tu>
+        <tu tuid="exports">
+            <tuv xml:lang="fr">
+                <seg>Exports</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Exports</seg>
+            </tuv>
+        </tu>
         <tu tuid="field">
             <tuv xml:lang="fr">
                 <seg>Champ</seg>

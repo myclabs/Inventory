@@ -39,9 +39,9 @@ class Orga_ReferentialController extends Core_Controller
         // Formats d'exports.
         $this->view->defaultFormat = 'xlsx';
         $this->view->formats = [
-            'xlsx' => __('Orga', 'exports', 'xlsx'),
-            'xls' => __('Orga', 'exports', 'xls'),
-            'ods' => __('Orga', 'exports', 'ods'),
+            'xlsx' => __('UI', 'export', 'xlsx'),
+            'xls' => __('UI', 'export', 'xls'),
+            'ods' => __('UI', 'export', 'ods'),
         ];
 
         // Liste des exports.
