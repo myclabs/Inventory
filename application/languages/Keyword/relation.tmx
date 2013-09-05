@@ -38,14 +38,6 @@
                 <seg>Please select one of the existing predicates.</seg>
             </tuv>
         </tu>
-        <tu tuid="associationSubjectSameAsObject">
-            <tuv xml:lang="fr">
-                <seg></seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg></seg>
-            </tuv>
-        </tu>
         <tu tuid="associationAlreadyExists">
             <tuv xml:lang="fr">
                 <seg>Les deux mots clés indiqués sont déjà reliés par le même prédicat.</seg>
@@ -54,6 +46,15 @@
                 <seg>The two selected keywords are already linked by the same predicate.</seg>
             </tuv>
         </tu>
+        <tu tuid="subjectSameAsObject">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir des mots clés sujet et objet qui ne soient pas identiques.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please select non identical subject and object.</seg>
+            </tuv>
+        </tu>
+
 
     </body>
 </tmx>
