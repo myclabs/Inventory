@@ -8,9 +8,9 @@ namespace Keyword\Architecture\TypeMapping;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Keyword\Application\KeywordService;
-use Keyword\Application\KeywordDTO;
-use Keyword\Application\DepreciatedKeywordDTO;
+use Keyword\Application\Service\KeywordService;
+use Keyword\Application\Service\KeywordDTO;
+use Keyword\Application\Service\DepreciatedKeywordDTO;
 
 /**
  * Mapping d'un objet Value en champ de BDD
@@ -21,10 +21,15 @@ class DoctrineKeyword extends Type
     const TYPE_NAME = 'keyword_dto';
 
     /**
-     * @Inject
      * @var KeywordService
      */
     protected $keywordService;
+
+
+    public function setKeywordService(KeywordService $keywordService)
+    {
+        $this->keywordService = $keywordService;
+    }
 
     /**
      * @return string The name of the type being mapped
@@ -66,7 +71,7 @@ class DoctrineKeyword extends Type
         }
 
         try {
-            return new KeywordDTO($this->keywordService->get($value));
+            return $this->keywordService->get($value);
         } catch (\Core_Exception_NotFound $e) {
             return new DepreciatedKeywordDTO($value);
         }
@@ -83,7 +88,7 @@ class DoctrineKeyword extends Type
             return null;
         }
 
-        return $value->getRef();
+        return (string) $value;
     }
 
 }

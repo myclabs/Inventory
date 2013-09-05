@@ -144,6 +144,9 @@ class Bootstrap extends Core_Bootstrap
     protected function _initKeywordTypeMapping()
     {
         Type::addType(DoctrineKeyword::TYPE_NAME, '\Keyword\Architecture\TypeMapping\DoctrineKeyword');
+        /** @var DoctrineKeyword $doctrineKeyword */
+        $doctrineKeyword = Type::getType(DoctrineKeyword::TYPE_NAME);
+        $doctrineKeyword->setKeywordService($this->container->get('\Keyword\Application\Service\KeywordService'));
     }
 
     /**

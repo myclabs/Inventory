@@ -6,6 +6,18 @@ use Keyword\Domain\Keyword;
  */
 class AF_Populate extends Core_Script_Action
 {
+    /**
+     * @var \Keyword\Application\Service\KeywordService
+     */
+    protected $keywordService;
+
+
+    function __construct()
+    {
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
+        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+    }
 
     /**
      * {@inheritdoc}
@@ -499,7 +511,7 @@ class AF_Populate extends Core_Script_Action
             $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Fixed();
             $index->setDimension($dimension);
-            $index->setMember($dimension->getMember(Keyword::loadByRef($refMemberKeyword)));
+            $index->setMember($dimension->getMember($this->keywordService->get($refMemberKeyword)));
             $index->setAlgoParameter($parameter);
             $index->save();
         }
