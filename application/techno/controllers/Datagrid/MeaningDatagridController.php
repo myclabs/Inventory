@@ -8,7 +8,6 @@ use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Doctrine\DBAL\DBALException;
 use Keyword\Application\Service\KeywordService;
-use Keyword\Application\Service\DepreciatedKeywordDTO;
 
 /**
  * @package Techno
@@ -40,7 +39,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
             $data['ref'] = $meaning->getRef();
             // Seule les valeurs en erreur sont éditables
             $this->editableCell($data['ref'], false);
-            if ($meaning->getKeyword() instanceof DepreciatedKeywordDTO) {
+            if ($this->keywordService->exists($meaning->getKeyword())) {
                 $this->editableCell($data['ref'], true);
             }
             // Position

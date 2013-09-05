@@ -10,7 +10,6 @@ use \Doctrine\Common\Collections\Collection;
 use \Doctrine\Common\Collections\ArrayCollection;
 use \Doctrine\Common\Collections\Criteria;
 use Keyword\Application\Service\KeywordDTO;
-use Keyword\Application\Service\DepreciatedKeywordDTO;
 
 /**
  * Classe Dimension

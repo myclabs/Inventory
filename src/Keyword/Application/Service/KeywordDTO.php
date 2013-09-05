@@ -2,8 +2,6 @@
 
 namespace Keyword\Application\Service;
 
-use Keyword\Domain\Keyword;
-
 /**
  * @author valentin.claras
  */
@@ -21,12 +19,13 @@ class KeywordDTO
 
 
     /**
-     * @param Keyword $keyword
+     * @param string $ref
+     * @param string $label
      */
-    public function __construct(Keyword $keyword)
+    public function __construct($ref, $label='')
     {
-        $this->ref = $keyword->getRef();
-        $this->label = $keyword->getLabel();
+        $this->ref = $ref;
+        $this->label = $label;
     }
 
     /**

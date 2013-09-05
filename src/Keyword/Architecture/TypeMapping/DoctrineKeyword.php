@@ -10,7 +10,6 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Keyword\Application\Service\KeywordService;
 use Keyword\Application\Service\KeywordDTO;
-use Keyword\Application\Service\DepreciatedKeywordDTO;
 
 /**
  * Mapping d'un objet Value en champ de BDD
@@ -26,6 +25,9 @@ class DoctrineKeyword extends Type
     protected $keywordService;
 
 
+    /**
+     * @param KeywordService $keywordService
+     */
     public function setKeywordService(KeywordService $keywordService)
     {
         $this->keywordService = $keywordService;
@@ -70,11 +72,11 @@ class DoctrineKeyword extends Type
             return null;
         }
 
-        try {
+        $keyword = new KeywordDTO($value);
+        if ($this->keywordService->exists($keyword)) {
             return $this->keywordService->get($value);
-        } catch (\Core_Exception_NotFound $e) {
-            return new DepreciatedKeywordDTO($value);
         }
+        return $keyword;
     }
 
     /**

@@ -4,7 +4,7 @@
  * @package Techno
  */
 
-use Keyword\Application\Service\DepreciatedKeywordDTO;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * Service de validation des données de Techno
@@ -12,6 +12,19 @@ use Keyword\Application\Service\DepreciatedKeywordDTO;
  */
 class Techno_Service_Validator
 {
+    /**
+     * @var KeywordService
+     */
+    protected $keywordService;
+
+
+    /**
+     * @param KeywordService $keywordService
+     */
+    public function __construct(KeywordService $keywordService)
+    {
+        $this->keywordService = $keywordService;
+    }
 
     /**
      * Contrôle les références vers les mots-clés de Keyword
@@ -26,7 +39,7 @@ class Techno_Service_Validator
 
         foreach ($meanings as $meaning) {
             $keyword = $meaning->getKeyword();
-            if (! $keyword instanceof DepreciatedKeywordDTO) {
+            if ($this->keywordService->exists($keyword)) {
                 continue;
             }
             $errors[] = $keyword;
@@ -49,7 +62,7 @@ class Techno_Service_Validator
         foreach ($families as $family) {
             foreach ($family->getTags() as $tag) {
                 $keyword = $tag->getValue();
-                if (! $keyword instanceof DepreciatedKeywordDTO) {
+                if ($this->keywordService->exists($keyword)) {
                     continue;
                 }
                 $errors[] = [
@@ -78,7 +91,7 @@ class Techno_Service_Validator
             foreach ($family->getDimensions() as $dimension) {
                 foreach ($dimension->getMembers() as $member) {
                     $keyword = $member->getKeyword();
-                    if (! $keyword instanceof DepreciatedKeywordDTO) {
+                    if ($this->keywordService->exists($keyword)) {
                         continue;
                     }
                     $errors[] = [
