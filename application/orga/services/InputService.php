@@ -71,6 +71,10 @@ class Orga_Service_InputService
         // Injecte les coordonnées orga à la saisie en tant que ContextValue
         foreach ($cell->getMembers() as $member) {
             $newValues->setContextValue($member->getAxis()->getRef(), $member->getRef());
+            // Membres parents
+            foreach ($member->getAllParents() as $parentMember) {
+                $newValues->setContextValue($parentMember->getAxis()->getRef(), $parentMember->getRef());
+            }
         }
 
         if ($inputSet) {
