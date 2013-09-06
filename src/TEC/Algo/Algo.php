@@ -151,9 +151,7 @@ abstract class Algo
                     // Traitement de la sous expression.
                     $reformBrackets = $this->reformBrackets($insideExpression);
                     $insideExpression = $reformBrackets['expression'];
-                    if ((in_array($lastSymbol, array('*', '/', '&'))
-                            XOR in_array($reformBrackets['topLevelSymbol'], array('*', '/', '&')))
-                    ) {
+                    if ($lastSymbol !== $reformBrackets['topLevelSymbol'] && $lastSymbol !== null) {
                         $insideExpression = '(' . $insideExpression . ')';
                     } else {
                         $lastBracketSymbol = $reformBrackets['topLevelSymbol'];
@@ -164,7 +162,7 @@ abstract class Algo
                 case '+':
                 case '-':
                 case '|':
-                    // Stocxage du topLevelSybol.
+                    // Stockage du topLevelSybol.
                     $topLevelSymbol = $character;
                     // Traitement du dernier symbole.
                     if (in_array($lastSymbol, array('*', '/', '&'))) {
@@ -179,9 +177,9 @@ abstract class Algo
                     break;
                 case '*':
                 case '/':
-                case '&' :
-                    // Stocxage du topLevelSybol.
-                    if ($topLevelSymbol === null) {
+                case '&':
+                    // Stockage du topLevelSybol.
+                    if (($topLevelSymbol === null) || (($character === '*') && ($topLevelSymbol === '/'))) {
                         $topLevelSymbol = $character;
                     }
                     // Traitement du dernier symbole.

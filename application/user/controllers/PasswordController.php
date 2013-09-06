@@ -2,6 +2,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use User\AuthAdapter;
 
 /**
  * Contrôleur de gestion des mots de passe oubliés
@@ -137,9 +138,16 @@ class User_PasswordController extends UI_Controller_Captcha
         }
 
         if (! $this->hasFormError()) {
+            // Modifie le mot de passe
             $user->setPassword($password1);
             $user->eraseEmailKey();
             $this->entityManager->flush();
+
+            // Log in automatiquement l'utilisateur
+            $auth = Zend_Auth::getInstance();
+            $authAdapter = new AuthAdapter($user->getEmail(), $password1);
+            $auth->authenticate($authAdapter);
+
             UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
         }
 

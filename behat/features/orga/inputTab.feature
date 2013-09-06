@@ -66,16 +66,16 @@ Feature: Organization input tab feature
     When I open collapse "Année | Site"
     Then the "aFGranularity5Input7" datagrid should contain a row:
       | annee | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | En cours        | 100%             | Saisie complète |
+      | 2012  | Ouvert          | 100%             | Saisie complète |
   # Cas inventaire en cours, saisie incomplète / saisie terminée
     When I close collapse "Année | Site"
     When I open collapse "Année | Site | Catégorie"
     Then the "aFGranularity5Input8" datagrid should contain a row:
       | annee | categorie | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Énergie   | En cours        | 100%             | Saisie terminée |
+      | 2012  | Énergie   | Ouvert          | 100%             | Saisie terminée |
     And the "aFGranularity5Input8" datagrid should contain a row:
       | annee | categorie      | inventoryStatus | advancementInput | stateInput        |
-      | 2012  | Test affichage | En cours        | 14%              | Saisie incomplète |
+      | 2012  | Test affichage | Ouvert          | 14%              | Saisie incomplète |
   # Cas inventaire non lancé, inventaire clôturé
     When I click "Vue globale"
     And I select "Europe" from "zone"
@@ -84,7 +84,7 @@ Feature: Organization input tab feature
     And I open collapse "Année | Site"
     Then the "aFGranularity3Input7" datagrid should contain a row:
       | annee | site     | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Grenoble | Clôturé         | 100%             | Saisie terminée |
+      | 2012  | Grenoble | Fermé           | 100%             | Saisie terminée |
     And the "aFGranularity3Input7" datagrid should contain a row:
       | annee | site     | inventoryStatus | advancementInput | stateInput      |
       | 2013  | Grenoble | Non lancé       |                  |                 |

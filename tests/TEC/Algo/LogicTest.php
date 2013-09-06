@@ -101,10 +101,8 @@ class TEC_Test_AlgoLogic extends PHPUnit_Framework_TestCase
         $expression = new Logic('A&(B|C)&D');
         $this->assertEquals($expression->correctBrackets(), 'A&(B|C)&D');
 
-        // Expression utilisé pour le test suivant.
         $expression = new Logic('A|B&!C&D|!E|!F|G&!(H|I&J)');
         $this->assertEquals($expression->correctBrackets(), 'A|(B&!C&D)|!E|!F|(G&!(H|(I&J)))');
-        return $expression;
     }
 
     /**
@@ -112,12 +110,11 @@ class TEC_Test_AlgoLogic extends PHPUnit_Framework_TestCase
      *
      * @depends testCorrectBrackets
      *
-     * @param Logic $expression
-     *
      * @return Logic
      */
-    public function testCreateTree($expression)
+    public function testCreateTree()
     {
+        $expression = new Logic('A|B&!C&D|!E|!F|G&!(H|I&J)');
         $rootOrNode = $expression->createTree();
 
         $rootOrChildren = $rootOrNode->getChildren();
@@ -218,19 +215,16 @@ class TEC_Test_AlgoLogic extends PHPUnit_Framework_TestCase
         $this->assertSame($j->getParent(), $and411);
         $this->assertEquals($j->getName(), 'J');
         $this->assertNull($j->getModifier());
-
-        return $expression;
     }
 
     /**
      * Test la méthode
      *
      * @depends testCreateTree
-     *
-     * @param Logic $expression
      */
-    public function testGetTreeAsString(Logic $expression)
+    public function testGetTreeAsString()
     {
+        $expression = new Logic('A|B&!C&D|!E|!F|G&!(H|I&J)');
         $treeAsString = $expression->convertTreeToString();
         $expectedString = 'A | (B & !C & D) | !E | !F | (G & !(H | (I & J)))';
         $this->assertEquals($expectedString, $treeAsString);
@@ -240,11 +234,10 @@ class TEC_Test_AlgoLogic extends PHPUnit_Framework_TestCase
      * Test la méthode
      *
      * @depends testCreateTree
-     *
-     * @param Logic $expression
      */
-    public function testGetTreeAsGraph(Logic $expression)
+    public function testGetTreeAsGraph()
     {
+        $expression = new Logic('A|B&!C&D|!E|!F|G&!(H|I&J)');
         $treeAsGraph = $expression->convertTreeToGraph();
         $expectedGraph = '[{v:"0",f:"<b>OU</b>"},"",""],'
                             .'[{v:"0-0",f:"A"},"0",""],'

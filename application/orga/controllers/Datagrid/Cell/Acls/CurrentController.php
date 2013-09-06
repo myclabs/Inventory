@@ -101,11 +101,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             }
         } else {
             $user = $this->userService->inviteUser(
-                $userEmail,
-                __('Orga', 'email', 'userRoleGivenAtCreation', array(
-                    'CELL' => $cell->getLabelExtended(),
-                    'ROLE' => __('Orga', 'role', $role->getName()),
-                ))
+                $userEmail
             );
             $user->addRole(User_Model_Role::loadByRef('user'));
         }

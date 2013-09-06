@@ -54,9 +54,14 @@ class AF_Service_InputService
      * Si la saisie est incomplète, les résultats seront vidés.
      *
      * @param AF_Model_InputSet_Primary $inputSet
+     * @param AF_Model_AF               $af Permet d'uiliser un AF différent de celui de la saisie
      */
-    public function updateResults(AF_Model_InputSet_Primary $inputSet)
+    public function updateResults(AF_Model_InputSet_Primary $inputSet, AF_Model_AF $af = null)
     {
+        if (! $af) {
+            $af = $inputSet->getAF();
+        }
+
         // MAJ le pourcentage de complétion
         $inputSet->updateCompletion();
 
@@ -64,10 +69,14 @@ class AF_Service_InputService
         if ($inputSet->isInputComplete()) {
             // Calcule les résultats
             try {
-                $inputSet->getAF()->execute($inputSet);
+                $af->execute($inputSet);
                 $inputSet->setCalculationComplete(true);
                 $inputSet->getOutputSet()->calculateTotals();
-            } catch (Algo_Model_ExecutionException $e) {
+            } catch (Exception $e) {
+                $ref = $inputSet->getAF()->getRef();
+                Core_Error_Log::getInstance()->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
+                Core_Error_Log::getInstance()->logException($e);
+
                 $inputSet->setCalculationComplete(false);
                 $inputSet->clearOutputSet();
             }

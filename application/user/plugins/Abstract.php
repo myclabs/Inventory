@@ -93,7 +93,12 @@ abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
     {
         $auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity()) {
-            return User_Model_User::load($auth->getIdentity());
+            try {
+                return User_Model_User::load($auth->getIdentity());
+            } catch (Core_Exception_NotFound $e) {
+                $auth->clearIdentity();
+                return null;
+            }
         }
         return null;
     }

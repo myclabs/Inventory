@@ -15,10 +15,14 @@
 
         <tu tuid="emailNotificationContent">
             <tuv xml:lang="fr">
-                <seg>l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».</seg>
+                <seg>
+l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».
+                </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».</seg>
+                <seg>
+operation "[TASK_NAME]" has been completed on application "[APPLICATION_NAME]".
+                </seg>
             </tuv>
         </tu>
 
@@ -33,10 +37,14 @@
 
         <tu tuid="emailNotificationErrorContent">
             <tuv xml:lang="fr">
-                <seg>l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'application « [APPLICATION_NAME] ».</seg>
+                <seg>
+l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'application « [APPLICATION_NAME] ».
+                </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>l'opération « [TASK_NAME] » a été stoppée à cause d'une erreur sur l'application « [APPLICATION_NAME] ».</seg>
+                <seg>
+an error occurred while performing operation « [TASK_NAME] » on application "[APPLICATION_NAME]".
+                </seg>
             </tuv>
         </tu>
 

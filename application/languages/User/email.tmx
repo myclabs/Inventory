@@ -159,9 +159,6 @@ Cliquez sur le lien ci-dessous pour changer votre mot de passe :
 
 ou bien saisissez manuellement ce code dans la page de réinitialisation: [PASSWORD_RESET_CODE]
 
-Si vous n'êtes pas à l'origine de cette demande, merci de ne pas cliquer sur le lien ci-dessus et d’ignorer cet e-mail ;
-votre mot de passe ne sera pas modifié.
-
 Adresse de connexion (rappel) : [URL_APPLICATION]
                 </seg>
 			</tuv>
@@ -174,9 +171,6 @@ Click on the link below to change your password :
 [PASSWORD_RESET_LINK]
 
 or enter manually this code in the password reset page : [PASSWORD_RESET_CODE]
-
-If you are not behind this request, please do not click on the link above and ignore this e-mail; 
-your password will remain unchanged.
 
 Connection address (reminder): [URL_APPLICATION]
                 </seg>

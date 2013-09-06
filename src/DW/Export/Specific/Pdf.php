@@ -184,15 +184,11 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                             $results = $report->getValues();
 
-                            $unit = $report->getNumerator()->getUnit()->getSymbol();
-                            if (($report->getDenominator() !== null)) {
-                                $unit .= ' / '.$report->getDenominator()->getUnit()->getSymbol();
-                            }
                             $this->html .= $report->getLabel().' : '.
                             $locale->formatNumber(array_pop($results)['value'], 3).
                             // On n'affiche pas l'incertitude
                             //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                            ' '.$unit;
+                            ' '.$report->getValuesUnitSymbol();
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
@@ -341,7 +337,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $report->setNumerator($numeratorIndicator);
 
             if (($xmlIndicators->length > 1)) {
-                $xmlDenominator = $xmlIndicators->item(0);
+                $xmlDenominator = $xmlIndicators->item(1);
                 $denominatorIndicator = DW_Model_Indicator::loadByRefAndCube(
                     'classif_'.$xmlDenominator->getAttribute('ref'),
                     $cube
