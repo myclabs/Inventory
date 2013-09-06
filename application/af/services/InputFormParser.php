@@ -23,6 +23,24 @@ class AF_Service_InputFormParser
     {
         $inputSet = new AF_Model_InputSet_Primary($af);
 
+        $errorMessages = $this->doParseForm($formContent, $inputSet, $af);
+
+        return $inputSet;
+    }
+
+    /**
+     * Parse la soumission d'un AF pour remplir un InputSet
+     *
+     * @param array             $formContent Contenu du post du formulaire
+     * @param AF_Model_InputSet $inputSet
+     * @param AF_Model_AF       $af
+     *
+     * @return array
+     */
+    public function doParseForm(array $formContent, AF_Model_InputSet & $inputSet, AF_Model_AF $af)
+    {
+        $errorMessages = [];
+
         foreach ($formContent as $fullRef => $inputContent) {
             $refComponents = explode(UI_Generic::REF_SEPARATOR, $fullRef);
             $ref = $refComponents[count($refComponents) - 1];
@@ -50,11 +68,11 @@ class AF_Service_InputFormParser
 
             // Groupe
             if ($afComponent instanceof AF_Model_Component_Group) {
-                $errorMessages += $this->parseForm($inputContent['elements'], $inputSet, $af);
+                $errorMessages += $this->doParseForm($inputContent['elements'], $inputSet, $af);
             }
         }
 
-        return $inputSet;
+        return $errorMessages;
     }
 
     /**
@@ -150,7 +168,7 @@ class AF_Service_InputFormParser
         } elseif ($component instanceof AF_Model_Component_SubAF_NotRepeated) {
             // Sous-AF non répété
             $input = new AF_Model_Input_SubAF_NotRepeated($inputSet, $component);
-            $errorMessages += $this->parseForm($inputContent['elements'],
+            $errorMessages += $this->doParseForm($inputContent['elements'],
                 $input->getValue(),
                 $component->getCalledAF());
 
@@ -173,7 +191,7 @@ class AF_Service_InputFormParser
                                 break;
                             }
                         }
-                        $errorMessages += $this->parseForm($elements['elements'],
+                        $errorMessages += $this->doParseForm($elements['elements'],
                             $subInputSet,
                             $component->getCalledAF());
                     } else {
@@ -187,7 +205,7 @@ class AF_Service_InputFormParser
                                 break;
                             }
                         }
-                        $errorMessages += $this->parseForm($elements,
+                        $errorMessages += $this->doParseForm($elements,
                             $subInputSet,
                             $component->getCalledAF());
                         $input->addSubSet($subInputSet);
