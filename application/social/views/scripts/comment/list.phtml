@@ -1,6 +1,7 @@
 <?php
 /** @var $comments Social_Model_Comment[] */
 $comments = $this->comments;
+
 $endpointAdd = $this->endpointAdd;
 $endpointDelete = $this->endpointDelete;
 ?>
@@ -63,5 +64,19 @@ echo $form->render();
     // Cancel add a comment
     $("form#addComment").on("reset", function() {
         $("#addComment").hide(400);
+    });
+
+    // Delete a comment
+    $(".deleteComment").click(function() {
+        var commentBlock = $(this).closest("blockquote");
+        var commentId = commentBlock.data('comment-id');
+        setMask(true);
+        $.post("<?=$endpointDelete?>", {'id': commentId})
+            .done(function() {
+                setMask(false);
+                commentBlock.hide(400, function(){
+                    commentBlock.remove();
+                });
+            });
     });
 </script>

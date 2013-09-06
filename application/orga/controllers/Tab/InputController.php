@@ -52,7 +52,6 @@ class Orga_Tab_InputController extends Core_Controller
     }
 
     /**
-     * Action fournissant la vue des documents pour l'input.
      * @Secure("inputCell")
      */
     public function commentAddAction()
@@ -81,6 +80,20 @@ class Orga_Tab_InputController extends Core_Controller
             $this->forward('comment-added', 'comment', 'social', ['comment' => $comment]);
             return;
         }
+        $this->sendFormResponse();
+    }
+
+    /**
+     * @Secure("deleteComment")
+     */
+    public function commentDeleteAction()
+    {
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+        $comment = Social_Model_Comment::load($this->getParam('id'));
+
+        $cell->removeSocialCommentForInputSetPrimary($comment);
+        $this->commentService->deleteComment($comment->getId());
+
         $this->sendFormResponse();
     }
 
