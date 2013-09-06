@@ -4,7 +4,7 @@ Feature: General data simulation feature
   Background:
     Given I am logged in
 
-  @javascript @skipped
+  @javascript
   Scenario: Creation of a simulation scenario, correct input
   # #6411 Impossible d'enregistrer un scénario
   # Accès à l'onglet "Simulations"
