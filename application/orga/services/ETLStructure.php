@@ -18,6 +18,7 @@ class Orga_Service_ETLStructure
      * @var EntityManager
      */
     private $entityManager;
+
     /**
      * @var Orga_Service_ETLData
      */
@@ -112,7 +113,7 @@ class Orga_Service_ETLStructure
     public function populateCellDWCube(Orga_Model_Cell $cell)
     {
         $this->updateCellDWCubeLabel($cell);
-        $this->populateDWCubeWithClassifAndOrgaOrganization(
+        $this->populateDWCubeWithClassifAndOrga(
             $cell->getDWCube(),
             $cell->getGranularity()->getOrganization(),
             array(
@@ -130,7 +131,7 @@ class Orga_Service_ETLStructure
     public function populateGranularityDWCube(Orga_Model_Granularity $granularity)
     {
         $this->updateGranularityDWCubeLabel($granularity);
-        $this->populateDWCubeWithClassifAndOrgaOrganization(
+        $this->populateDWCubeWithClassifAndOrga(
             $granularity->getDWCube(),
             $granularity->getOrganization(),
             array(
@@ -237,7 +238,7 @@ class Orga_Service_ETLStructure
      * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      */
-    protected function populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters)
+    protected function populateDWCubeWithClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
     {
         $this->populateDWCubeWithOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters);
         $this->populateDWCubeWithClassif($dWCube);
@@ -245,7 +246,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif.
+     * Peuple le cube de DW avec un axe indiquant le status de l'AF.
      *
      * @param DW_Model_Cube $dWCube
      */
@@ -1090,7 +1091,7 @@ class Orga_Service_ETLStructure
         // Suppression des données du cube et vidage des Report.
         $this->entityManager->flush();
 
-        $this->populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilter);
+        $this->populateDWCubeWithClassifAndOrga($dWCube, $orgaOrganization, $orgaFilter);
         $dWCube->save();
 
         // Peuplement du cube effectif.

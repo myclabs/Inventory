@@ -108,7 +108,7 @@ class Simulation_Model_Set extends Core_Model_Entity
         /** @var Simulation_Service_ETLStructure $etlStructureService */
         $etlStructureService = $container->get('Simulation_Service_ETLStructure');
 
-        $etlStructureService->populateDWCubeWithClassif($this->dWCube);
+        $etlStructureService->populateSetDWCube($this);
     }
 
     /**
