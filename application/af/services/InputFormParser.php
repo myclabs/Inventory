@@ -37,14 +37,13 @@ class AF_Service_InputFormParser
      *
      * @return array
      */
-    public function doParseForm(array $formContent, AF_Model_InputSet & $inputSet, AF_Model_AF $af)
+    public function doParseForm(array $formContent, AF_Model_InputSet $inputSet, AF_Model_AF $af)
     {
         $errorMessages = [];
 
         foreach ($formContent as $fullRef => $inputContent) {
             $refComponents = explode(UI_Generic::REF_SEPARATOR, $fullRef);
             $ref = $refComponents[count($refComponents) - 1];
-            $number = null;
 
             // Si le ref est un numéro de sous-af répété
             if (is_numeric($ref)) {
@@ -82,6 +81,7 @@ class AF_Service_InputFormParser
      * @param array              $inputContent
      *
      * @throws InvalidArgumentException
+     * @throws Exception
      * @return array Error messages indexed by the field name
      */
     private function createInputFromComponent($fullRef, AF_Model_Component $component, AF_Model_InputSet $inputSet,
@@ -107,21 +107,36 @@ class AF_Service_InputFormParser
                 $errorMessages[$fullRef] = __('UI', 'formValidation', 'invalidNumber');
             }
             // Incertitude
-            $relativeUncertainty = null;
             if ($component->getWithUncertainty()) {
                 try {
-                    $childInputContent = $inputContent['children']['percent' . $fullRef . '_child'];
-                    $relativeUncertainty = $locale->readInteger($childInputContent['value']);
-                    if ($relativeUncertainty < 0) {
-                        $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
+                    $relativeUncertainty = null;
+                    foreach ($inputContent['children'] as $key => $childInputContent) {
+                        if (strpos($key, 'percent') !== false) {
+                            $relativeUncertainty = $locale->readInteger($childInputContent['value']);
+                            if ($relativeUncertainty < 0) {
+                                $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
+                                $relativeUncertainty = null;
+                            }
+                            break;
+                        }
                     }
                 } catch (Core_Exception_InvalidArgument $e) {
                     $errorMessages[$fullRef] = __("UI", "formValidation", "invalidUncertainty");
+                    $relativeUncertainty = null;
                 }
+            } else {
+                $relativeUncertainty = null;
             }
             // Choix de l'unite
-            $childUnitInputContent = $inputContent['children'][$fullRef . '_unit_child'];
-            $selectedUnit = new UnitAPI($childUnitInputContent['value']);
+            foreach ($inputContent['children'] as $key => $childUnitInputContent) {
+                if (strpos($key, 'unit') !== false) {
+                    $selectedUnit = new UnitAPI($childUnitInputContent['value']);
+                    break;
+                }
+            }
+            if (!isset($selectedUnit)) {
+                throw new Exception("Bonjour, il est temps de refactoriser un peu le parsing des soumissions de UI_Form");
+            }
             $input->setValue(
                 new Calc_UnitValue($selectedUnit, $value, $relativeUncertainty)
             );
@@ -176,13 +191,13 @@ class AF_Service_InputFormParser
             // Sous-AF répété
             $input = new AF_Model_Input_SubAF_Repeated($inputSet, $component);
             foreach ($inputContent['elements'] as $ref => $elements) {
-                list($number) = explode(UI_Generic::REF_SEPARATOR, strrev($ref), 2);
-                $number = strrev($number);
-                if (is_numeric($number)) {
+                list($repetitionNumber) = explode(UI_Generic::REF_SEPARATOR, strrev($ref), 2);
+                $repetitionNumber = strrev($repetitionNumber);
+                if (is_numeric($repetitionNumber)) {
                     $subInputSets = $input->getValue();
-                    if (isset($subInputSets[$number])) {
+                    if (isset($subInputSets[$repetitionNumber])) {
                         // La répétition existe déjà
-                        $subInputSet = $subInputSets[$number];
+                        $subInputSet = $subInputSets[$repetitionNumber];
                         // Free label
                         foreach ($elements as $subRef => $subInputContent) {
                             $refComponents = explode(UI_Generic::REF_SEPARATOR, $subRef);
