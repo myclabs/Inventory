@@ -98,11 +98,25 @@ Feature: Organization granularity feature
     And I open tab "Organisation"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
+  # Tentative de modifier de "oui" à "non" l'attribut "with roles" de la granularité "Site" (pour laquelle il existe des rôles)
     And the row 3 of the "granularity" datagrid should contain:
-      | axes  |
-      | Site  |
+      | axes |
+      | Site |
     When I set "Non" for column "aCL" of row 3 of the "granularity" datagrid
-    # Then the following message is shown and closed: ""
+    Then the following message is shown and closed: "Cette modification ne peut pas être effectuée, car il existe au moins un rôle associé à une unité organisationnelle de ce niveau organisationnel."
+  # À l'inverse, pour la granularité "Année", pas de pb
+    And the row 4 of the "granularity" datagrid should contain:
+      | axes  | aCL |
+      | Année | Non |
+    When I set "Oui" for column "aCL" of row 4 of the "granularity" datagrid with a confirmation message
+    Then the row 4 of the "granularity" datagrid should contain:
+      | axes  | aCL |
+      | Année | Oui |
+    When I set "Non" for column "aCL" of row 4 of the "granularity" datagrid with a confirmation message
+    Then the row 4 of the "granularity" datagrid should contain:
+      | axes  | aCL |
+      | Année | Non |
+
 
   @javascript
   Scenario: Deletion of a granularity (test on existing granularities)
@@ -211,7 +225,7 @@ Feature: Organization granularity feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
 
-  @javascript @skipped
+  @javascript
   Scenario: Deletion of a granularity 'with DW'
     #6300 : La suppression d'une granularité associée à des DWs entraîne une erreur
   # Suppression des rôles associés à la granularité "Site"
@@ -247,7 +261,7 @@ Feature: Organization granularity feature
     Then the row 3 of the "granularity" datagrid should contain:
       | axes |
       | site |
-    When I set "Non" for column "aCL" of row 3 of the "granularity" datagrid
+    When I set "Non" for column "aCL" of row 3 of the "granularity" datagrid with a confirmation message
     And I click "Supprimer" in the row 3 of the "granularity" datagrid
     And I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."

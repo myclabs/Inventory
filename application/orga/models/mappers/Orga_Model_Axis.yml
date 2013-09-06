@@ -78,8 +78,8 @@ Orga_Model_Axis:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      axisRefUniquenessInOrganization:
-          columns:
-              - ref
-              - idOrganization
+    axisRefUniquenessInOrganization:
+      columns:
+        - ref
+        - idOrganization
       

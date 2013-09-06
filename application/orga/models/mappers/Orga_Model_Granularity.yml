@@ -69,6 +69,7 @@ Orga_Model_Granularity:
       joinColumn:
         name: idInputConfigGranularity
         referencedColumnName: id
+        onDelete: CASCADE
         nullable: true
 
   oneToOne:
@@ -114,7 +115,7 @@ Orga_Model_Granularity:
     postLoad: [ postLoad ]
 
   uniqueConstraints:
-      granularityRefUniquenessInOrganization:
-          columns:
-              - ref
-              - idOrganization
+    granularityRefUniquenessInOrganization:
+      columns:
+        - ref
+        - idOrganization

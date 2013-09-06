@@ -1,5 +1,17 @@
 # Mise en production
 
+## 2.4
+
+- Déployer normalement l'application (avec build update)
+
+- Exécuter le script de migration PHP
+
+```
+sudo php scripts/migration/2.4/migrate.php
+```
+
+- Relancer tous les calculs via l'interface
+
 ## 2.3
 
 - Installer APC

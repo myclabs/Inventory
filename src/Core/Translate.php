@@ -13,14 +13,15 @@ include_once('TranslateAdapter.php');
  * @param string $package      Nom du module d'où est issue la traducation.
  * @param string $file         Nom du fichier tmx dans lequel chercher la traduction.
  * @param string $ref          Référence du texte (datagrids, champs etc...)
- * @param array  $replacements (optional) Tableau de remplacement à effectuer,
- *  ces remplacement prennent la forme suivante : array('RECHERCHE' => 'remplacement').
+ * @param array  $replacements (optionnel) Tableau de remplacement à effectuer,
+ *                             ces remplacement prennent la forme suivante : array('RECHERCHE' => 'remplacement').
  *
  * @return string Texte traduit
  */
-function __($package, $file, $ref, array $replacements=array())
+function __($package, $file, $ref, array $replacements = [])
 {
-    return Core_Translate::get($package, $file, $ref, $replacements);
+    // Force la locale par défaut, sinon Zend ne prend pas en compte les changements en cours d'exécution de l'appli
+    return Core_Translate::get($package, $file, $ref, $replacements, Core_Locale::loadDefault()->getId());
 }
 
 

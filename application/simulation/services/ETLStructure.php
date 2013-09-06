@@ -15,14 +15,14 @@ use Doctrine\ORM\EntityManager;
 class Simulation_Service_ETLStructure
 {
     /**
-     * @var Simulation_Service_ETLData
-     */
-    private $etlDataService;
-
-    /**
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * @var Simulation_Service_ETLData
+     */
+    private $etlDataService;
 
     /**
      * @param Simulation_Service_ETLData $etlDataService
@@ -30,8 +30,89 @@ class Simulation_Service_ETLStructure
      */
     public function __construct(Simulation_Service_ETLData $etlDataService, EntityManager $entityManager)
     {
-        $this->etlDataService = $etlDataService;
         $this->entityManager = $entityManager;
+        $this->etlDataService = $etlDataService;
+    }
+
+
+    /**
+     * Traduit les labels des objets originaux dans DW.
+     *
+     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
+     */
+    protected function translateEntity($originalEntity, $dWEntity)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
+
+        $originalTranslations = $translationRepository->findTranslations($originalEntity);
+
+        if (isset($originalTranslations[$defaultLocale])) {
+            $dWEntity->setLabel($originalTranslations[$defaultLocale]);
+        } else {
+            $dWEntity->setLabel($originalEntity->getLabel());
+        }
+        // Traductions.
+        foreach (Zend_Registry::get('languages') as $localeId) {
+            if (isset($originalTranslations[$localeId]['label'])) {
+                $translationRepository->translate(
+                    $dWEntity,
+                    'label',
+                    $localeId,
+                    $originalTranslations[$localeId]['label']
+                );
+            }
+        }
+    }
+
+    /**
+     * Vérifie que les traductions sont à jour entre les objets originaux et ceux de DW.
+     *
+     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
+     *
+     * @return bool
+     */
+    protected function areTranslationsDifferent($originalEntity, $dWEntity)
+    {
+        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+
+        $originalTranslations = $translationRepository->findTranslations($originalEntity);
+        $dWTranslations = $translationRepository->findTranslations($dWEntity);
+
+        // Traductions
+        foreach (Zend_Registry::get('languages') as $localeId) {
+            if (isset($originalTranslations[$localeId])) {
+                $originalLabel = $originalTranslations[$localeId]['label'];
+            } else {
+                $originalLabel = '';
+            }
+            if (isset($dWTranslations[$localeId])) {
+                $dWLabel = $dWTranslations[$localeId]['label'];
+            } else {
+                $dWLabel = '';
+            }
+
+            if($originalLabel != $dWLabel) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Peuple le cube de DW avec les données issues de Classif.
+     *
+     * @param Simulation_Model_Set $set
+     */
+    public function populateSetDWCube(Simulation_Model_Set $set)
+    {
+        $this->populateDWCubeWithClassif($set->getDWCube());
     }
 
     /**
@@ -41,7 +122,10 @@ class Simulation_Service_ETLStructure
      */
     public function populateDWCubeWithClassif($dWCube)
     {
-        foreach (Classif_Model_Indicator::loadList() as $classifIndicator) {
+        $queryOrdered = new Core_Model_Query();
+        $queryOrdered->order->addOrder(Classif_Model_Indicator::QUERY_POSITION);
+        foreach (Classif_Model_Indicator::loadList($queryOrdered) as $classifIndicator) {
+            /** @var Classif_Model_Indicator $classifIndicator */
             $this->copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube);
         }
 
@@ -52,6 +136,7 @@ class Simulation_Service_ETLStructure
             Core_Model_Filter::OPERATOR_NULL
         );
         foreach (Classif_Model_Axis::loadList($queryRootAxes) as $classifAxis) {
+            /** @var Classif_Model_Axis $classifAxis */
             $this->copyAxisAndMembersFromClassifToDW($classifAxis, $dWCube);
         }
     }
@@ -65,10 +150,10 @@ class Simulation_Service_ETLStructure
     private function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
     {
         $dWIndicator = new DW_Model_Indicator($dWCube);
-        $dWIndicator->setLabel($classifIndicator->getLabel());
         $dWIndicator->setRef($classifIndicator->getRef());
         $dWIndicator->setUnit($classifIndicator->getUnit());
         $dWIndicator->setRatioUnit($classifIndicator->getRatioUnit());
+        $this->translateEntity($classifIndicator, $dWIndicator);
     }
 
     /**
@@ -81,27 +166,31 @@ class Simulation_Service_ETLStructure
     private function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
     {
         $dWAxis = new DW_Model_Axis($dwCube);
-        $dWAxis->setLabel($classifAxis->getLabel());
         $dWAxis->setRef($classifAxis->getRef());
-        $associationArray['axes'][$classifAxis->getKey()['id']] = $dWAxis;
-        $classifNarrowerAxis = $classifAxis->getDirectNarrower();
-        if ($classifNarrowerAxis !== null) {
-            $dWAxis->setDirectNarrower($associationArray['axes'][$classifNarrowerAxis->getKey()['id']]);
+        $this->translateEntity($classifAxis, $dWAxis);
+
+        $associationArray['axes'][$classifAxis->getRef()] = $dWAxis;
+        $narrowerAxis = $classifAxis->getDirectNarrower();
+        if ($narrowerAxis !== null) {
+            $dWAxis->setDirectNarrower($associationArray['axes'][$narrowerAxis->getRef()]);
         }
 
         foreach ($classifAxis->getMembers() as $classifMember) {
             $dWMember = new DW_Model_Member($dWAxis);
-            $dWMember->setLabel($classifMember->getLabel());
             $dWMember->setRef($classifMember->getRef());
             $dWMember->setPosition($classifMember->getPosition());
-            $associationArray['members'][$classifMember->getKey()['id']] = $dWMember;
-            foreach ($classifMember->getDirectChildren() as $classifNarrowerMember) {
-                $dWMember->addDirectChild($associationArray['members'][$classifNarrowerMember->getKey()['id']]);
+            $this->translateEntity($classifMember, $dWMember);
+
+            $memberIdentifier = $classifMember->getAxis()->getRef().'_'.$classifMember->getRef();
+            $associationArray['members'][$memberIdentifier] = $dWMember;
+            foreach ($classifMember->getDirectChildren() as $narrowerClassifMember) {
+                $narrowerIdentifier = $narrowerClassifMember->getAxis()->getRef().'_'.$narrowerClassifMember->getRef();
+                $dWMember->addDirectChild($associationArray['members'][$narrowerIdentifier]);
             }
         }
 
-        foreach ($classifAxis->getDirectBroaders() as $classifBroaderAxis) {
-            $this->copyAxisAndMembersFromClassifToDW($classifBroaderAxis, $dwCube, $associationArray);
+        foreach ($classifAxis->getDirectBroaders() as $broaderClassifAxis) {
+            $this->copyAxisAndMembersFromClassifToDW($broaderClassifAxis, $dwCube, $associationArray);
         }
     }
 
@@ -143,6 +232,7 @@ class Simulation_Service_ETLStructure
         $dWIndicators = $dWCube->getIndicators();
 
         foreach (Classif_Model_Indicator::loadList() as $classifIndex => $classifIndicator) {
+            /** @var Classif_Model_Indicator $classifIndicator */
             foreach ($dWCube->getIndicators() as $dWIndex => $dWIndicator) {
                 if (!($this->isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator))) {
                     unset($classifIndicators[$classifIndex]);
@@ -169,9 +259,9 @@ class Simulation_Service_ETLStructure
     private function isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator)
     {
         if (($classifIndicator->getRef() !== $dWIndicator->getRef())
-            || ($classifIndicator->getLabel() !== $dWIndicator->getLabel())
             || ($classifIndicator->getUnit()->getRef() !== $dWIndicator->getUnit()->getRef())
             || ($classifIndicator->getRatioUnit()->getRef() !== $dWIndicator->getRatioUnit()->getRef())
+            || ($this->areTranslationsDifferent($classifIndicator, $dWIndicator))
         ) {
             return true;
         }
@@ -226,10 +316,10 @@ class Simulation_Service_ETLStructure
     private function isDWAxisDifferentFromClassif($dWAxis, $classifAxis)
     {
         if (($classifAxis->getRef() !== $dWAxis->getRef())
-            || ($classifAxis->getLabel() !== $dWAxis->getLabel())
             || ((($classifAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
                 && (($classifAxis->getDirectNarrower() === null) || ($dWAxis->getDirectNarrower() === null)
                     || ($classifAxis->getDirectNarrower()->getRef() !== $dWAxis->getDirectNarrower()->getRef())))
+            || ($this->areTranslationsDifferent($classifAxis, $dWAxis))
             || ($this->areDWMembersDifferentFromClassif($dWAxis, $classifAxis))
         ) {
             return true;
@@ -294,7 +384,7 @@ class Simulation_Service_ETLStructure
     private function isDWMemberDifferentFromClassif($dWMember, $classifMember)
     {
         if (($classifMember->getRef() !== $dWMember->getRef())
-            || ($classifMember->getLabel() !== $dWMember->getLabel())
+            || ($this->areTranslationsDifferent($classifMember, $dWMember))
         ) {
             return true;
         } else {
@@ -345,6 +435,8 @@ class Simulation_Service_ETLStructure
      */
     private function resetDWCube($dWCube)
     {
+        set_time_limit(0);
+
         $queryCube = new Core_Model_Query();
         $queryCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $dWCube);
         // Suppression des résultats.
@@ -377,11 +469,13 @@ class Simulation_Service_ETLStructure
                 $dWRootAxis->delete();
             }
         }
+        // Suppression des données du cube et vidage des Report.
         $this->entityManager->flush();
 
         $this->populateDWCubeWithClassif($dWCube);
         $dWCube->save();
 
+        // Peuplement du cube effectif.
         $this->entityManager->flush();
 
         // Copie des Reports.
@@ -394,6 +488,7 @@ class Simulation_Service_ETLStructure
             }
         }
 
+        // Copie des rapports.
         $this->entityManager->flush();
     }
 

@@ -26,16 +26,6 @@ $colStateInput->list = array(
 );
 $datagridListScenarios->addCol($colStateInput);
 
-$colTotalValueInput = new UI_Datagrid_Col_Number('totalValueGESInput', __('AF', 'inputList', 'GESTotalValueHeader'));
-$colTotalValueInput->editable = false;
-$colTotalValueInput->addable = false;
-$datagridListScenarios->addCol($colTotalValueInput);
-
-$colTotalUncertaintyInput = new UI_Datagrid_Col_Number('totalUncertaintyGESInput', __('UI', 'name', 'uncertainty') . ' (%)');
-$colTotalUncertaintyInput->editable = false;
-$colTotalUncertaintyInput->addable = false;
-$datagridListScenarios->addCol($colTotalUncertaintyInput);
-
 $colLinkEdit = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'input'));
 $colLinkEdit->addable = false;
 $datagridListScenarios->addCol($colLinkEdit);

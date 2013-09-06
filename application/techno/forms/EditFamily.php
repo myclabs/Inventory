@@ -27,19 +27,6 @@ class Techno_Form_EditFamily extends UI_Form
                                          ]));
         $this->setAjax(true);
 
-        // Type
-        $typeSelection = new UI_Form_Element_Select('type');
-        $typeSelection->setLabel('Type');
-        $typeSelection->getElement()->disabled = true;
-        $typeSelection->addOption(new UI_Form_Element_Option('coeff', 'coeff', __('Techno', 'name', 'coefficient')));
-        $typeSelection->addOption(new UI_Form_Element_Option('process', 'process', __('Techno', 'name', 'emissionFactor')));
-        if ($family instanceof Techno_Model_Family_Process) {
-            $typeSelection->setValue('process');
-        } else {
-            $typeSelection->setValue('coeff');
-        }
-        $this->addElement($typeSelection);
-
         // Libellé
         $label = new UI_Form_Element_Text('label');
         $label->setLabel(__('UI', 'name', 'label'));

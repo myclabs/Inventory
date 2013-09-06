@@ -1,0 +1,38 @@
+Doc\Domain\Document:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Doc_Document
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    name:
+      type: string
+      nullable: false
+    filePath:
+      type: string
+      nullable: false
+    description:
+      type: string
+      nullable: true
+    creationDate:
+      type: datetime
+      nullable: false
+
+  manyToOne:
+    library:
+      targetEntity: Doc\Domain\Library
+      inversedBy: documents
+      joinColumn:
+        name: idLibrary
+        referencedColumnName: id
+        nullable: false
+
+  manyToMany:
+    referencingBibliographies:
+      targetEntity: Doc\Domain\Bibliography
+      mappedBy: referencedDocuments

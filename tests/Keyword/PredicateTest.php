@@ -5,6 +5,7 @@
  * @package Keyword
  * @subpackage Test
  */
+use Keyword\Domain\Predicate;
 
 /**
  * Creation de la suite de test.
@@ -33,11 +34,11 @@ class Keyword_Test_PredicateTest
      * @param string $revLabel
      * @param string $description
      *
-     * @return Keyword_Model_Predicate
+     * @return Predicate
      */
     public static function generateObject($ref=null, $label=null, $revRef=null, $revLabel=null, $description=null)
     {
-        $o = new Keyword_Model_Predicate();
+        $o = new Predicate();
         $o->setRef(($ref ===null) ? 'ref' : $ref);
         $o->setLabel(($label ===null) ? 'label' : $label);
         $o->setReverseRef(($revRef ===null) ? 'revRef' : $revRef);
@@ -51,7 +52,7 @@ class Keyword_Test_PredicateTest
 
     /**
      * Suppression d'un objet cree avec generateObject.
-     * @param Keyword_Model_Predicate $o
+     * @param Predicate $o
      */
     public static function deleteObject($o)
     {
@@ -73,10 +74,10 @@ class Keyword_Test_PredicateSetUp extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Keyword_Model_Predicate en base, sinon suppression !
-        if (Keyword_Model_Predicate::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Predicate en base, sinon suppression !
+        if (Predicate::countTotal() > 0) {
             echo PHP_EOL . 'Des Keyword_Predicate restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Keyword_Model_Predicate::loadList() as $predicate) {
+            foreach (Predicate::loadList() as $predicate) {
                 $predicate->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -86,12 +87,12 @@ class Keyword_Test_PredicateSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * Test du Constructeur.
-     * @return Keyword_Model_Predicate
+     * @return Predicate
      */
     function testConstruct()
     {
-        $o = new Keyword_Model_Predicate();
-        $this->assertInstanceOf('Keyword_Model_Predicate', $o);
+        $o = new Predicate();
+        $this->assertInstanceOf('Keyword\Domain\Predicate', $o);
         $o->setRef('RefPredicateTest');
         $o->setLabel('LabelPredicateTest');
         $o->setReverseRef('ReverseRefPredicateTest');
@@ -107,15 +108,15 @@ class Keyword_Test_PredicateSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * Test dy chargement.
-     * @param Keyword_Model_Predicate $o
+     * @param Predicate $o
      * @depends testConstruct
      */
-    function testLoad(Keyword_Model_Predicate $o)
+    function testLoad(Predicate $o)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->clear($o);
-        $oLoaded = Keyword_Model_Predicate::load($o->getKey());
-        $this->assertInstanceOf('Keyword_Model_Predicate', $o);
+        $oLoaded = Predicate::load($o->getKey());
+        $this->assertInstanceOf('Keyword\Domain\Predicate', $o);
         $this->assertEquals($oLoaded->getKey(), $o->getKey());
         $this->assertEquals($oLoaded->getRef(), $o->getRef());
         $this->assertEquals($oLoaded->getLabel(), $o->getLabel());
@@ -127,10 +128,10 @@ class Keyword_Test_PredicateSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * Test de la suppression.
-     * @param Keyword_Model_Predicate $o
+     * @param Predicate $o
      * @depends testLoad
      */
-    function testDelete(Keyword_Model_Predicate $o)
+    function testDelete(Predicate $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -143,10 +144,10 @@ class Keyword_Test_PredicateSetUp extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Keyword_Model_Predicate en base, sinon suppression !
-        if (Keyword_Model_Predicate::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Predicate en base, sinon suppression !
+        if (Predicate::countTotal() > 0) {
             echo PHP_EOL . 'Des Keyword_Predicate restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Keyword_Model_Predicate::loadList() as $predicate) {
+            foreach (Predicate::loadList() as $predicate) {
                 $predicate->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -170,10 +171,10 @@ class Keyword_Test_PredicateOther extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Keyword_Model_Predicate en base, sinon suppression !
-        if (Keyword_Model_Predicate::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Predicate en base, sinon suppression !
+        if (Predicate::countTotal() > 0) {
             echo PHP_EOL . 'Des Keyword_Predicate restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Keyword_Model_Predicate::loadList() as $predicate) {
+            foreach (Predicate::loadList() as $predicate) {
                 $predicate->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');
@@ -195,7 +196,7 @@ class Keyword_Test_PredicateOther extends PHPUnit_Framework_TestCase
      */
     public function testGetNotDefinedRef()
     {
-        $predicate = new Keyword_Model_Predicate();
+        $predicate = new Predicate();
 
         try {
             $ref = $predicate->getRef();
@@ -213,7 +214,7 @@ class Keyword_Test_PredicateOther extends PHPUnit_Framework_TestCase
      */
     public function testGetNotDefinedLabel()
     {
-        $predicate = new Keyword_Model_Predicate();
+        $predicate = new Predicate();
 
         try {
             $ref = $predicate->getLabel();
@@ -231,7 +232,7 @@ class Keyword_Test_PredicateOther extends PHPUnit_Framework_TestCase
      */
     public function testGetNotDefinedReverseRef()
     {
-        $predicate = new Keyword_Model_Predicate();
+        $predicate = new Predicate();
 
         try {
             $ref = $predicate->getReverseRef();
@@ -249,7 +250,7 @@ class Keyword_Test_PredicateOther extends PHPUnit_Framework_TestCase
      */
     public function testGetNotDefinedReverseLabel()
     {
-        $predicate = new Keyword_Model_Predicate();
+        $predicate = new Predicate();
 
         try {
             $ref = $predicate->getReverseLabel();
@@ -266,7 +267,7 @@ class Keyword_Test_PredicateOther extends PHPUnit_Framework_TestCase
      */
     public function testLoadbyRef()
     {
-        $this->assertSame(Keyword_Model_Predicate::loadByRef('ref'), $this->predicate);
+        $this->assertSame(Predicate::loadByRef('ref'), $this->predicate);
     }
 
     /**
@@ -274,7 +275,7 @@ class Keyword_Test_PredicateOther extends PHPUnit_Framework_TestCase
      */
     public function testLoadbyReverseRef()
     {
-        $this->assertSame(Keyword_Model_Predicate::loadByReverseRef('revRef'), $this->predicate);
+        $this->assertSame(Predicate::loadByReverseRef('revRef'), $this->predicate);
     }
 
     /**
@@ -290,10 +291,10 @@ class Keyword_Test_PredicateOther extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Keyword_Model_Predicate en base, sinon suppression !
-        if (Keyword_Model_Predicate::countTotal() > 0) {
+        // Vérification qu'il ne reste aucun Predicate en base, sinon suppression !
+        if (Predicate::countTotal() > 0) {
             echo PHP_EOL . 'Des Keyword_Predicate restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Keyword_Model_Predicate::loadList() as $predicate) {
+            foreach (Predicate::loadList() as $predicate) {
                 $predicate->delete();
             }
             $entityManagers = Zend_Registry::get('EntityManagers');

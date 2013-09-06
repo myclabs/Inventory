@@ -4,6 +4,7 @@
  * @author  cyril.perraud
  * @package Algo
  */
+use Keyword\Domain\Keyword;
 
 /**
  * @package Algo
@@ -25,7 +26,7 @@ class Algo_Model_ParameterCoordinate_Fixed extends Algo_Model_ParameterCoordinat
         if (!$this->refMemberKeyword) {
             throw new Core_Exception_UndefinedAttribute("The member of the parameter coordinate is not defined");
         }
-        return Keyword_Model_Keyword::loadByRef($this->refMemberKeyword);
+        return Keyword::loadByRef($this->refMemberKeyword);
     }
 
     /**

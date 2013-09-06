@@ -31,7 +31,7 @@ Feature: History of values of a field feature
     When I click element "#chiffre_affaireHistory .btn"
     And I click "Quitter"
     And I open tab "Historique"
-    Then I should see "La saisie Europe | Marque B a été enregistrée pour la première fois par Administrateur."
+    Then I should see "La saisie Europe | Marque B a été enregistrée pour la première fois par Administrateur Système."
 
   @javascript
   Scenario: Input history scenario, display of history for various kinds of input fiels

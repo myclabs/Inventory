@@ -9,6 +9,7 @@
 use \Doctrine\Common\Collections\Collection;
 use \Doctrine\Common\Collections\ArrayCollection;
 use \Doctrine\Common\Collections\Criteria;
+use Keyword\Domain\Keyword;
 
 /**
  * Classe Dimension
@@ -159,11 +160,11 @@ class Techno_Model_Family_Dimension extends Core_Model_Entity
 
     /**
      * Retourne un membre de la dimension en le recherchant par son mot-clé
-     * @param Keyword_Model_Keyword $keyword
+     * @param Keyword $keyword
      * @throws Core_Exception_NotFound
      * @return Techno_Model_Family_Member
      */
-    public function getMember(Keyword_Model_Keyword $keyword)
+    public function getMember(Keyword $keyword)
     {
         // Filtre la collection sur le keyword du membre
         $results = $this->members->filter(
