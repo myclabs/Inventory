@@ -1,8 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Keyword
- */
 
 namespace Keyword\Architecture\TypeMapping;
 
@@ -12,8 +8,9 @@ use Keyword\Application\Service\KeywordService;
 use Keyword\Application\Service\KeywordDTO;
 
 /**
- * Mapping d'un objet Value en champ de BDD
- * @package Keyword
+ * Mapping d'un objet KeywordDTO en champ de BDD
+ *
+ * @author matthieu.napoli
  */
 class DoctrineKeyword extends Type
 {

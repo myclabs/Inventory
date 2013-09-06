@@ -6,6 +6,7 @@ use Core\Domain\DoctrineEntityRepository;
 use Core\Domain\Translatable\TranslatableRepository;
 use Core_Exception_NotFound;
 use Doctrine\ORM\QueryBuilder;
+use Gedmo\Translatable\TranslatableListener;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
 
@@ -18,11 +19,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     use TranslatableRepository;
 
     /**
-     * Renoie les messages d'erreur concernant la validation d'une ref.
-     *
-     * @param string $ref
-     *
-     * @return mixed string null
+     * {@inheritdoc}
      */
     public function getErrorMessageForRef($ref)
     {
@@ -35,7 +32,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
             return __('Keyword', 'list', 'keywordRefThis');
         }
         try {
-            $existingKeywordWithRef = $this->getOneByRef($ref);
+            $this->getOneByRef($ref);
             return __('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
@@ -44,11 +41,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     }
 
     /**
-     * Vérifie la disponibilité d'une référence pour un keyword.
-     *
-     * @param string $ref
-     *
-     * @throws \Core_Exception_User
+     * {@inheritdoc}
      */
     public function checkRef($ref)
     {
@@ -57,7 +50,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
             throw new \Core_Exception_User('Keyword', 'list', 'keywordRefThis');
         }
         try {
-            $existingKeywordWithRef = $this->getOneByRef($ref);
+            $this->getOneByRef($ref);
             throw new \Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
@@ -74,22 +67,15 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     }
 
     /**
-     * Retourne un Keyword grâce à son ref.
-     *
-     * @param string $keywordRef
-     * @throws \Core_Exception_NotFound
-     * @throws \Core_Exception_TooMany
-     * @return Keyword
+     * {@inheritdoc}
      */
-    public function getOneByRef($refKeyword)
+    public function getOneByRef($keywordRef)
     {
-        return $this->getOneBy(['ref' => $refKeyword]);
+        return $this->getOneBy(['ref' => $keywordRef]);
     }
 
     /**
-     * Charge la liste des Keyword ne possédant pas d'association en tant qu'objet.
-     *
-     * @return Keyword[]
+     * {@inheritdoc}
      */
     public function getRoots()
     {
@@ -105,7 +91,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
             'Gedmo\Translatable\Query\TreeWalker\TranslationWalker'
         );
         $query->setHint(
-            \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+            TranslatableListener::HINT_TRANSLATABLE_LOCALE,
             \Core_Locale::loadDefault()->getLanguage()
         );
 

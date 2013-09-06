@@ -25,7 +25,7 @@ interface PredicateRepository extends EntityRepository
      *
      * @return mixed string null
      */
-    public function getErrorMessageForRef($ref);
+    function getErrorMessageForRef($ref);
 
     /**
      * Vérifie la disponibilité d'une référence pour un prédicat.
@@ -34,7 +34,7 @@ interface PredicateRepository extends EntityRepository
      *
      * @throws \Core_Exception_User
      */
-    public function checkRef($ref);
+    function checkRef($ref);
 
     /**
      * Retourne un Predicate grâce à son ref.

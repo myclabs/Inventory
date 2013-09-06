@@ -1,17 +1,13 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Domain
- */
 
 namespace Core\Domain\Translatable;
 
+use Core_Locale;
+
 /**
- * Champs avec traductions
+ * Entité comprenant des champs traduits.
  *
- * @package    Core
- * @subpackage Domain
+ * @author matthieu.napoli
  */
 trait TranslatableEntity
 {
@@ -22,9 +18,9 @@ trait TranslatableEntity
 
 
     /**
-     * @param \Core_Locale|null $locale Si null, utilise la locale par défaut
+     * @param Core_Locale|null $locale Si null, utilise la locale par défaut
      */
-    public function setTranslationLocale(\Core_Locale $locale = null)
+    public function setTranslationLocale(Core_Locale $locale = null)
     {
         if ($locale !== null && $locale->getId() != $this->translationLocale) {
             $this->translationLocale = $locale->getId();
@@ -32,5 +28,4 @@ trait TranslatableEntity
             $this->translationLocale = null;
         }
     }
-
 }

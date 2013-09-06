@@ -22,10 +22,26 @@ class KeywordDTO
      * @param string $ref
      * @param string $label
      */
-    public function __construct($ref, $label='')
+    public function __construct($ref, $label = '')
     {
         $this->ref = $ref;
         $this->label = $label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 
     /**
@@ -35,21 +51,4 @@ class KeywordDTO
     {
         return $this->ref;
     }
-
-    /**
-     * @return string Label
-     */
-    public function getRef()
-    {
-        return $this->ref;
-    }
-
-    /**
-     * @return string Label
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
 }

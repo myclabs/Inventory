@@ -2,9 +2,8 @@
 
 namespace Keyword\Domain;
 
-use Core_Exception_UndefinedAttribute;
-
 /**
+ * Association entre des Keywords.
  * @author valentin.claras
  */
 class Association
@@ -14,26 +13,24 @@ class Association
      *
      * @var Keyword
      */
-    protected $subject = null;
+    protected $subject;
 
     /**
      * Keyword objet de l'association.
      *
      * @var Keyword
      */
-    protected $object = null;
+    protected $object;
 
     /**
-     * Predicate de l'association.
+     * Predicat de l'association.
      *
      * @var Predicate
      */
-    protected $predicate = null;
+    protected $predicate;
 
 
     /**
-     * Constructeur de la class Association.
-     *
      * @param Keyword $subjectKeyword
      * @param Predicate $predicate
      * @param Keyword $objectKeyword
@@ -69,9 +66,8 @@ class Association
     }
 
     /**
-     * Renvoi le Keyword sujet.
+     * Renvoi le sujet de l'association.
      *
-     * @throws \Core_Exception_UndefinedAttribute
      * @return Keyword
      */
     public function getObject()
@@ -80,24 +76,12 @@ class Association
     }
 
     /**
-     * Défini le Predicate.
+     * Renvoi le prédicat de l'association.
      *
-     * @param Predicate $predicate
-     */
-    public function setPredicate(Predicate $predicate)
-    {
-        $this->predicate = $predicate;
-    }
-
-    /**
-     * Renvoi le Predicate.
-     *
-     * @throws \Core_Exception_UndefinedAttribute
      * @return Predicate
      */
     public function getPredicate()
     {
         return $this->predicate;
     }
-
 }

@@ -45,7 +45,7 @@ class KeywordService
      */
     public function get($keywordRef)
     {
-        return $this->convertKeywordToDTO($this->keywordRepository->getOneByRef($keywordRef));
+        return $this->createDTO($this->keywordRepository->getOneByRef($keywordRef));
     }
 
     /**
@@ -55,7 +55,7 @@ class KeywordService
     {
         $keywords = [];
         foreach ($this->keywordRepository->getAll() as $keyword) {
-            $keywords[] = $this->convertKeywordToDTO($keyword);
+            $keywords[] = $this->createDTO($keyword);
         }
         return $keywords;
     }
@@ -64,9 +64,8 @@ class KeywordService
      * @param Keyword $keyword
      * @return KeywordDTO
      */
-    protected function convertKeywordToDTO(Keyword $keyword)
+    protected function createDTO(Keyword $keyword)
     {
         return new KeywordDTO($keyword->getRef(), $keyword->getLabel());
     }
-
 }

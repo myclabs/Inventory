@@ -1,28 +1,28 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Core
- * @subpackage Domain
- */
 
 namespace Core\Domain\Translatable;
 
+use Core_Locale;
+
 /**
- * Champs avec traductions
+ * Repository d'une entité contenant des champs traduits.
  *
- * @package    Core
- * @subpackage Domain
+ * @author valentin.claras
  */
 trait TranslatableRepository
 {
     /**
      * @param TranslatableEntity $entity Entité du Repository
-     * @param \Core_Locale|null $locale Si null, utilise la locale par défaut
+     * @param Core_Locale|null $locale Si null, utilise la locale par défaut
      */
-    public function changeLocale($entity, \Core_Locale $locale = null)
+    public function changeLocale($entity, Core_Locale $locale = null)
     {
         $entity->setTranslationLocale($locale);
         $this->getEntityManager()->refresh($entity);
     }
 
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected abstract function getEntityManager();
 }

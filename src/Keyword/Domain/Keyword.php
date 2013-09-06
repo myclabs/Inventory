@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Classe metier de Keyword.
+ * Entité Keyword.
  * @author valentin.claras
  */
 class Keyword
@@ -15,48 +15,39 @@ class Keyword
     use TranslatableEntity;
 
     /**
-     * Identifiant unique du Keyword.
-     *
      * @var int
      */
     protected $id;
 
     /**
      * Identifiant textuel du Keyword.
-     *
      * @var string
      */
     protected $ref;
 
     /**
-     * Label du Keyword.
-     *
      * @var string
      */
     protected $label;
 
     /**
-     * Collection des associations avec les autres Keyword en tant qu'objet.
-     *
-     * @var Collection
+     * Associations avec les autres Keyword en tant qu'objet.
+     * @var Collection|Association[]
      */
     protected $objectAssociations;
 
     /**
-     * Collection des associations avec les autres Keyword en tant que subjet.
-     *
-     * @var Collection
+     * Associations avec les autres Keyword en tant que subjet.
+     * @var Collection|Association[]
      */
     protected $subjectAssociations;
 
 
     /**
-     * Constructeur de la classe Keyword.
-     *
      * @param string $ref
      * @param string $label
      */
-    public function __construct($ref, $label='')
+    public function __construct($ref, $label = '')
     {
         $this->objectAssociations = new ArrayCollection();
         $this->subjectAssociations = new ArrayCollection();
@@ -95,8 +86,6 @@ class Keyword
 //    }
 
     /**
-     * Renvoi l'identifiant unique du Keyword.
-     *
      * @return int
      */
     public function getId()
@@ -130,8 +119,6 @@ class Keyword
     }
 
     /**
-     * Modifie le label du Keyword.
-     *
      * @param string $label
      */
     public function setLabel($label)
@@ -140,8 +127,6 @@ class Keyword
     }
 
     /**
-     * Renvoi le label du Keyword.
-     *
      * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
@@ -202,7 +187,7 @@ class Keyword
     /**
      * Renvoi le tableau des associations du Keyword en tant qu'objet.
      *
-     * @return array
+     * @return Association[]
      */
     public function getAssociationsAsObject()
     {
@@ -261,7 +246,7 @@ class Keyword
     /**
      * Renvoi le tableau des associations du Keyword en tant que sujet.
      *
-     * @return array
+     * @return Association[]
      */
     public function getAssociationsAsSubject()
     {

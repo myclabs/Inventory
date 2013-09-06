@@ -10,7 +10,8 @@ use Doctrine\ORM\QueryBuilder;
 use Core_Exception_NotFound;
 
 /**
- * Gère les Predicate.
+ * Gère les prédicats.
+ *
  * @author valentin.claras
  */
 class DoctrinePredicateRepository extends DoctrineEntityRepository implements PredicateRepository
@@ -18,11 +19,7 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
     use TranslatableRepository;
 
     /**
-     * Renoie les messages d'erreur concernant la validation d'une ref.
-     *
-     * @param string $ref
-     *
-     * @return mixed string null
+     * {@inheritdoc}
      */
     public function getErrorMessageForRef($ref)
     {
@@ -32,8 +29,8 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
             return $e->getMessage();
         }
         try {
-            $existingPredicateWithRef = $this->getOneByRef($ref);
-            $existingPredicateWithReverseRef = $this->getOneByReverseRef($ref);
+            $this->getOneByRef($ref);
+            $this->getOneByReverseRef($ref);
             return __('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
@@ -42,18 +39,14 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
     }
 
     /**
-     * Vérifie la disponibilité d'une référence pour un prédicat.
-     *
-     * @param string $ref
-     *
-     * @throws \Core_Exception_User
+     * {@inheritdoc}
      */
     public function checkRef($ref)
     {
         \Core_Tools::checkRef($ref);
         try {
-            $existingPredicateWithRef = $this->getOneByRef($ref);
-            $existingPredicateWithReverseRef = $this->getOneByReverseRef($ref);
+            $this->getOneByRef($ref);
+            $this->getOneByReverseRef($ref);
             throw new \Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
@@ -71,12 +64,7 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
     }
 
     /**
-     * Retourne un Predicate grâce à son ref.
-     *
-     * @param string $predicateRef
-     * @throws \Core_Exception_NotFound
-     * @throws \Core_Exception_TooMany
-     * @return Predicate
+     * {@inheritdoc}
      */
     public function getOneByRef($predicateRef)
     {
@@ -84,12 +72,7 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
     }
 
     /**
-     * Retourne un Predicate grâce à son ref.
-     *
-     * @param string $predicateReverseRef
-     * @throws \Core_Exception_NotFound
-     * @throws \Core_Exception_TooMany
-     * @return Predicate
+     * {@inheritdoc}
      */
     public function getOneByReverseRef($predicateReverseRef)
     {

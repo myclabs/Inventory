@@ -6,7 +6,7 @@ use Core\Domain\Translatable\TranslatableEntity;
 use Core_Exception_UndefinedAttribute;
 
 /**
- * Classe metier de Predicate.
+ * Entité Predicate.
  * @author valentin.claras
  */
 class Predicate
@@ -14,57 +14,47 @@ class Predicate
     use TranslatableEntity;
 
     /**
-     * Identifiant unique du predicat.
-     *
      * @var int
      */
-    protected $id = null;
+    protected $id;
 
     /**
      * Identifiant textuel du predicat.
-     *
      * @var string
      */
-    protected $ref = null;
+    protected $ref;
 
     /**
-     * Label du predicat.
-     *
      * @var string
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Referent textuel du predicat inverse.
-     *
      * @var string
      */
-    protected $reverseRef = null;
+    protected $reverseRef;
 
     /**
      * Label du predicat inverse.
-     *
      * @var string
      */
-    protected $reverseLabel = null;
+    protected $reverseLabel;
 
     /**
      * Description du predicat.
-     *
      * @var string
      */
-    protected $description = '';
+    protected $description;
 
 
     /**
-     * Constructeur de la classe Predicate.
-     *
      * @param string $ref
      * @param string $reverseRef
      * @param string $label
      * @param string $reverseLabel
      */
-    public function __construct($ref, $reverseRef, $label='', $reverseLabel='')
+    public function __construct($ref, $reverseRef, $label = '', $reverseLabel = '')
     {
         $this->setRef(empty($ref) ? \Core_Tools::refactor($label) : $ref);
         $this->setLabel($label);
@@ -73,8 +63,6 @@ class Predicate
     }
 
     /**
-     * Renvoi l'identifiant unique du Predicate.
-     *
      * @return int
      */
     public function getId()
@@ -108,8 +96,6 @@ class Predicate
     }
 
     /**
-     * Modifie le label du Predicate.
-     *
      * @param string $label
      */
     public function setLabel($label)
@@ -118,8 +104,6 @@ class Predicate
     }
 
     /**
-     * Renvoi le label du Predicate.
-     *
      * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */

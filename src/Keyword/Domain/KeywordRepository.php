@@ -17,13 +17,13 @@ interface KeywordRepository extends EntityRepository
     const QUERY_LABEL = 'label';
 
     /**
-     * Renoie les messages d'erreur concernant la validation d'une ref.
+     * Renvoie les messages d'erreur concernant la validation d'une ref.
      *
      * @param string $ref
      *
      * @return mixed string null
      */
-    public function getErrorMessageForRef($ref);
+    function getErrorMessageForRef($ref);
 
     /**
      * Vérifie la disponibilité d'une référence pour un keyword.
@@ -32,7 +32,7 @@ interface KeywordRepository extends EntityRepository
      *
      * @throws \Core_Exception_User
      */
-    public function checkRef($ref);
+    function checkRef($ref);
 
     /**
      * Retourne un Keyword grâce à son ref.
@@ -52,9 +52,8 @@ interface KeywordRepository extends EntityRepository
     function getRoots();
 
     /**
-     * @param TranslatableEntity $entity Entité du Repository
+     * @param TranslatableEntity $keyword
      * @param \Core_Locale|null $locale Si null, utilise la locale par défaut
      */
-    function changeLocale($entity, \Core_Locale $locale);
-
+    function changeLocale($keyword, \Core_Locale $locale);
 }
