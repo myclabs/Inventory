@@ -193,6 +193,7 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function dwcubesstateAction()
     {
+        set_time_limit(0);
         $this->sendJsonResponse(
             array(
                 'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
