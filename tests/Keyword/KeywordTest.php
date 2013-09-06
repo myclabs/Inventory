@@ -77,8 +77,18 @@ class Keyword_Test_AssociationEntity extends Core_Test_TestCase
     function testConstruct()
     {
         $Keyword1 = new Keyword('ref1');
+        $this->assertFalse($Keyword1->hasAssociationsAsSubject());
+        $this->assertFalse($Keyword1->hasAssociationsAsObject());
+        $this->assertEquals(0, $Keyword1->countAssociationsAsSubject());
+        $this->assertEquals(0, $Keyword1->countAssociationsAsObject());
+        $this->assertEquals(0, $Keyword1->countAssociations());
 
         $Keyword2 = new Keyword('ref2', 'Label');
+        $this->assertFalse($Keyword2->hasAssociationsAsSubject());
+        $this->assertFalse($Keyword2->hasAssociationsAsObject());
+        $this->assertEquals(0, $Keyword2->countAssociationsAsSubject());
+        $this->assertEquals(0, $Keyword2->countAssociationsAsObject());
+        $this->assertEquals(0, $Keyword2->countAssociations());
         
         $predicate1 = new Predicate('ref1', 'reverseref1');
         $predicate2 = new Predicate('ref2', 'reverseref2');
@@ -91,6 +101,18 @@ class Keyword_Test_AssociationEntity extends Core_Test_TestCase
         $this->assertTrue($Keyword2->hasAssociationAsObject($association));
         $association->setPredicate($predicate2);
         $this->assertSame($predicate2, $association->getPredicate());
+
+        $this->assertTrue($Keyword1->hasAssociationsAsSubject());
+        $this->assertFalse($Keyword1->hasAssociationsAsObject());
+        $this->assertEquals(1, $Keyword1->countAssociationsAsSubject());
+        $this->assertEquals(0, $Keyword1->countAssociationsAsObject());
+        $this->assertEquals(1, $Keyword1->countAssociations());
+        
+        $this->assertFalse($Keyword2->hasAssociationsAsSubject());
+        $this->assertTrue($Keyword2->hasAssociationsAsObject());
+        $this->assertEquals(0, $Keyword2->countAssociationsAsSubject());
+        $this->assertEquals(1, $Keyword2->countAssociationsAsObject());
+        $this->assertEquals(1, $Keyword2->countAssociations());
     }
 
 }
