@@ -193,6 +193,7 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function dwcubesstateAction()
     {
+        set_time_limit(0);
         $this->sendJsonResponse(
             array(
                 'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
@@ -216,7 +217,8 @@ class Orga_OrganizationController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetOrganizationDWCubes',
-                    [$organization]
+                    [$organization],
+                    __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {

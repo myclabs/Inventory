@@ -70,6 +70,8 @@
 
         <!-- Messages -->
 
+        <!-- Ajout -->
+
         <tu tuid="emptyGranularity">
             <tuv xml:lang="fr">
                 <seg>Merci de sélectionner au moins un axe.</seg>
@@ -94,6 +96,20 @@
                 <seg>Please select a set of axes without any pair of hierarchically linked axes.</seg>
             </tuv>
         </tu>
+
+        <!-- Modification -->
+
+        <tu tuid="roleExistsForCellAtThisGranularity">
+            <tuv xml:lang="fr">
+                <seg>Cette modification ne peut pas être effectuée, car il existe au moins un rôle associé à une unité organisationnelle de ce niveau organisationnel.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This change cannot be performed, since there exists at least one role for an organizational unit at this organizational level.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Suppression -->
+
         <tu tuid="granularityCantBeDeleted">
             <tuv xml:lang="fr">
                 <seg>Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé pour la configuration

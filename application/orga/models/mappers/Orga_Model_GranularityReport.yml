@@ -19,6 +19,7 @@ Orga_Model_GranularityReport:
         referencedColumnName: id
         nullable: true
         unique: true
+        onDelete: CASCADE
 
   manyToMany:
     cellDWReports:
@@ -28,6 +29,7 @@ Orga_Model_GranularityReport:
         joinColumns:
           idGranularityDWReport:
             referencedColumnName: id
+            onDelete: CASCADE
         inverseJoinColumns:
           idCellDWReport:
             referencedColumnName: id

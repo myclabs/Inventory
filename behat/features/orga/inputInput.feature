@@ -13,7 +13,7 @@ Feature: Organization input input feature
     Then I should see the "aFGranularity1Input7" datagrid
     And the row 3 of the "aFGranularity1Input7" datagrid should contain:
       | annee | site     | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Grenoble | Clôturé         | 100%             | Saisie terminée |
+      | 2012  | Grenoble | Fermé           | 100%             | Saisie terminée |
   # Accès à la saisie, inventaire clôturé
     When I click "Cliquer pour accéder" in the row 3 of the "aFGranularity1Input7" datagrid
   # TODO : tester le fait que le champ apparaît en consultation.

@@ -299,7 +299,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         );
         $columnStateOrga->list = array(
                 Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
-                Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
+                Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
                 Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
         );
         $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
@@ -363,7 +363,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     $columnStateOrga->withEmptyElement = false;
                     $columnStateOrga->list = array(
                         Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
-                        Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
+                        Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
                         Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'));
                     $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_BOX;
                     $columnStateOrga->filterName = Orga_Model_Cell::QUERY_INVENTORYSTATUS;

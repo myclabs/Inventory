@@ -1,0 +1,51 @@
+<?php
+/**
+ * Vue en édition presentant les association dans une datagrid.
+ * @author valentin.claras
+ * @author bertrand.ferry
+ * @package Keyword
+ */
+
+use Keyword\Domain\Predicate;
+use Keyword\Domain\Keyword;
+?>
+<div class="page-header">
+	<h1><?=__('Keyword', 'relation', 'pageTitle')?></h1>
+</div>
+<?php
+    $datagrid = new UI_Datagrid('association', 'datagrid_association', 'keyword');
+
+    $columnSubject = new UI_Datagrid_Col_List('subject', __('Keyword', 'name', 'subject'));
+    $columnSubject->list = $this->listKeywords;
+    $columnSubject->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
+    $columnSubject->sortName = Keyword::QUERY_LABEL;
+    $columnSubject->filterName = Keyword::QUERY_REF;
+    $columnSubject->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
+    $columnSubject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
+    $columnSubject->entityAlias = Keyword::getAliasAsSubject();
+
+    $columnObject = new UI_Datagrid_Col_List('object', __('Keyword', 'name', 'object'));
+    $columnObject->list = $this->listKeywords;
+    $columnObject->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
+    $columnObject->sortName = Keyword::QUERY_LABEL;
+    $columnObject->filterName = Keyword::QUERY_REF;
+    $columnObject->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
+    $columnObject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
+    $columnObject->entityAlias = Keyword::getAliasAsObject();
+
+    $columnPredicate = new UI_Datagrid_Col_List('predicate', __('Keyword', 'name', 'predicate'));
+    $columnPredicate->list = $this->listPredicates;
+    $columnPredicate->sortName = Predicate::QUERY_LABEL;
+    $columnPredicate->filterName = Predicate::QUERY_REF;
+    $columnPredicate->entityAlias = Predicate::getAlias();
+    $columnPredicate->editable = true;
+
+    $datagrid->addCol($columnSubject);
+    $datagrid->addCol($columnPredicate);
+    $datagrid->addCol($columnObject);
+
+    $datagrid->setDefaultSorting('predicate');
+    $datagrid->deleteElements = true;
+    $datagrid->addElements = true;
+    $datagrid->addPanelTitle = __('Keyword', 'relation', 'addPanelTitle');
+    $datagrid->display();

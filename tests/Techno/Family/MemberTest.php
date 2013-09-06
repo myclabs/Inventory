@@ -3,6 +3,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 
 /**
  * @package Techno
@@ -26,7 +27,7 @@ class Techno_Test_Family_MemberTest
      */
     public static function generateObject()
     {
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label');
         $keyword->setRef(Core_Tools::generateString(10));
         $keyword->save();
@@ -72,8 +73,8 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            foreach (Keyword_Model_Keyword::loadList() as $o) {
+        if (Keyword::countTotal() > 0) {
+            foreach (Keyword::loadList() as $o) {
                 $o->delete();
             }
         }
@@ -110,7 +111,7 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label');
         $keyword->setRef('keywordTest');
         $keyword->save();
@@ -124,7 +125,7 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
         $o->save();
         $this->entityManager->flush();
 
-        $this->assertInstanceOf('Keyword_Model_Keyword', $o->getKeyword());
+        $this->assertInstanceOf('Keyword\Domain\Keyword', $o->getKeyword());
         $this->assertEquals($keyword->getRef(), $o->getKeyword()->getRef());
         return $o;
     }
@@ -144,7 +145,7 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         // Keyword
-        $this->assertInstanceOf('Keyword_Model_Keyword', $oLoaded->getKeyword());
+        $this->assertInstanceOf('Keyword\Domain\Keyword', $oLoaded->getKeyword());
         $this->assertEquals($o->getKeyword()->getRef(), $oLoaded->getKeyword()->getRef());
         // Dimension
         $this->assertEquals($o->getDimension()->getKey(), $oLoaded->getDimension()->getKey());
@@ -193,8 +194,8 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
     public static  function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            foreach (Keyword_Model_Keyword::loadList() as $o) {
+        if (Keyword::countTotal() > 0) {
+            foreach (Keyword::loadList() as $o) {
                 $o->delete();
             }
         }
@@ -233,13 +234,13 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
     {
         $dimension = Techno_Test_Family_DimensionTest::generateObject();
 
-        $keyword1 = new Keyword_Model_Keyword();
+        $keyword1 = new Keyword();
         $keyword1->setLabel('Label');
         $keyword1->setRef(Core_Tools::generateString(10));
         $keyword1->save();
         $o1 = new Techno_Model_Family_Member($dimension, $keyword1);
         $o1->save();
-        $keyword2 = new Keyword_Model_Keyword();
+        $keyword2 = new Keyword();
         $keyword2->setLabel('Label');
         $keyword2->setRef(Core_Tools::generateString(10));
         $keyword2->save();
@@ -282,7 +283,7 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
     {
         // Fixtures
         $dimension = Techno_Test_Family_DimensionTest::generateObject();
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label');
         $keyword->setRef('keywordTest');
         $keyword->save();
@@ -310,7 +311,7 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
     {
         // Fixtures
         $dimension = Techno_Test_Family_DimensionTest::generateObject();
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label');
         $keyword->setRef('keywordTest');
         $keyword->save();

@@ -173,7 +173,7 @@ abstract class Core_Model_Entity
     public static function getAlias()
     {
         $className = get_called_class();
-        return strtolower(preg_replace('#[a-z]|((Model_))#', '', $className));
+        return strtolower(preg_replace(['#[a-z]|(Model_)|(Domain\\\)#', '#\\\#'], ['', '_'], $className));
     }
 
     /**

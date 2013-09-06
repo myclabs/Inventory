@@ -70,4 +70,7 @@ Orga_Model_Member:
 
   uniqueConstraints:
     memberRefUniquenessInAxisAndParentMembersSashKey:
-      columns: [ ref, parentMembersHashKey, idAxis ]
+      columns:
+        - ref
+        - parentMembersHashKey
+        - idAxis

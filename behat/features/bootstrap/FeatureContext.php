@@ -50,7 +50,7 @@ class FeatureContext extends MinkContext
     {
         return [
             new Step\Given('I am on "user/action/login?refer=index%2Faccueil"'),
-            new Step\Given('I fill in "email" with "admin"'),
+            new Step\Given('I fill in "email" with "admin@myc-sense.com"'),
             new Step\Given('I fill in "password" with "myc-53n53"'),
             new Step\Given('I press "connection"'),
             new Step\Given('I wait for page to finish loading'),
@@ -129,6 +129,7 @@ class FeatureContext extends MinkContext
     {
         $name = $this->fixStepArgument($name);
         $node = $this->findLinkOrButton($name);
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();
@@ -234,6 +235,7 @@ class FeatureContext extends MinkContext
                 $this->getSession());
         }
 
+        $node->focus();
         $node->click();
 
         $this->waitForPageToFinishLoading();

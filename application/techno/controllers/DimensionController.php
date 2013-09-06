@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Keyword\Domain\Keyword;
 
 /**
  * Controleur des dimensions
@@ -24,7 +25,7 @@ class Techno_DimensionController extends Core_Controller
         $idDimension = $this->getParam('id');
         $this->view->dimension = Techno_Model_Family_Dimension::load($idDimension);
         $this->view->family = $this->view->dimension->getFamily();
-        $this->view->keywords = Keyword_Model_Keyword::loadList();
+        $this->view->keywords = Keyword::loadList();
     }
 
     /**

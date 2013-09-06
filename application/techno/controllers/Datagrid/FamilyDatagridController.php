@@ -29,11 +29,6 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $data['category'] = $family->getCategory()->getId();
             $data['label'] = $family->getLabel();
             $data['ref'] = $family->getRef();
-            if ($family instanceof Techno_Model_Family_Coeff) {
-                $data['type'] = $this->cellList('coeff');
-            } else {
-                $data['type'] = $this->cellList('process');
-            }
             $data['unit'] = $family->getValueUnit()->getSymbol();
             $tags = [];
             foreach ($family->getTags() as $tag) {
@@ -79,10 +74,6 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
         if (empty($label)) {
             $this->setAddElementErrorMessage('label', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $type = $this->getAddElementValue('type');
-        if (empty($type)) {
-            $this->setAddElementErrorMessage('type', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
         $refUnit = $this->getAddElementValue('unit');
         if (empty($refUnit)) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -100,16 +91,7 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             /** @var $category Techno_Model_Category */
             $category = Techno_Model_Category::load($idCategory);
 
-            switch($type) {
-                case 'coeff':
-                    $family = new Techno_Model_Family_Coeff();
-                    break;
-                case 'process':
-                    $family = new Techno_Model_Family_Process();
-                    break;
-                default:
-                    throw new Core_Exception("Unknown family type");
-            }
+            $family = new Techno_Model_Family_Coeff();
             // Ref
             try {
                 $family->setRef($ref);

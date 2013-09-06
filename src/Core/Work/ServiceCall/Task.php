@@ -1,15 +1,9 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
-
-use Doctrine\ORM\EntityManager;
 
 /**
  * Représente l'appel d'une méthode d'un service
  *
- * @package Core
+ * @author  matthieu.napoli
  */
 class Core_Work_ServiceCall_Task extends Core_Work_Task
 {
@@ -30,15 +24,19 @@ class Core_Work_ServiceCall_Task extends Core_Work_Task
     private $parameters;
 
     /**
-     * @param string $serviceName Nom de la classe du service
-     * @param string $methodName  Nom de la méthode à appeler sur le service
-     * @param array  $parameters  Paramètres de l'appel à la méthode
+     * @param string      $serviceName Nom de la classe du service
+     * @param string      $methodName  Nom de la méthode à appeler sur le service
+     * @param array       $parameters  Paramètres de l'appel à la méthode
+     * @param null|string $taskLabel
      */
-    public function __construct($serviceName, $methodName, array $parameters = array())
+    public function __construct($serviceName, $methodName, array $parameters = array(), $taskLabel = null)
     {
         $this->serviceName = $serviceName;
         $this->methodName = $methodName;
         $this->parameters = $parameters;
+        if ($taskLabel) {
+            $this->setTaskLabel($taskLabel);
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
  * Creation of the Techno Meaning test.
  * @package Techno
  */
+use Keyword\Domain\Keyword;
 
 /**
  * Test Techno package.
@@ -26,7 +27,7 @@ class Techno_Test_MeaningTest
      */
     public static function generateObject()
     {
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label');
         $keyword->setRef(Core_Tools::generateString(10));
         $keyword->save();
@@ -73,8 +74,8 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            foreach (Keyword_Model_Keyword::loadList() as $o) {
+        if (Keyword::countTotal() > 0) {
+            foreach (Keyword::loadList() as $o) {
                 $o->delete();
             }
         }
@@ -96,7 +97,7 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $keyword = new Keyword_Model_Keyword();
+        $keyword = new Keyword();
         $keyword->setLabel('Label');
         $keyword->setRef(Core_Tools::generateString(20));
         $keyword->save();
@@ -124,7 +125,7 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Techno_Model_Meaning', $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
-        $this->assertInstanceOf('Keyword_Model_Keyword', $oLoaded->getKeyword());
+        $this->assertInstanceOf('Keyword\Domain\Keyword', $oLoaded->getKeyword());
         $this->assertEquals($o->getKeyword()->getRef(), $oLoaded->getKeyword()->getRef());
         return $oLoaded;
     }
@@ -149,11 +150,11 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
      */
     function testPosition()
     {
-        $keyword1 = new Keyword_Model_Keyword();
+        $keyword1 = new Keyword();
         $keyword1->setLabel('Label');
         $keyword1->setRef(Core_Tools::generateString(10));
         $keyword1->save();
-        $keyword2 = new Keyword_Model_Keyword();
+        $keyword2 = new Keyword();
         $keyword2->setLabel('Label');
         $keyword2->setRef(Core_Tools::generateString(10));
         $keyword2->save();

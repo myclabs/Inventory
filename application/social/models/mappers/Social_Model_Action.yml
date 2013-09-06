@@ -27,7 +27,7 @@ Social_Model_Action:
 
   oneToOne:
     documentBibliography:
-      targetEntity: Doc_Model_Bibliography
+      targetEntity: Doc\Domain\Bibliography
       joinColumn:
         name: idBibliography
         referencedColumnName: id

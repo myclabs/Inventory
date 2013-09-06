@@ -1,7 +1,7 @@
 /* Redéfinition de la largeur des label dans les formulaires */
 .form .control-label { width: 400px; }
 .form .controls { margin-left: 430px; }
-.form .controls > div { margin-right: 25px; }
+.form .controls > div { margin-right: 25px; vertical-align: top; }
 .form .controls > div:first-child { width: 380px; margin-right: 0px; }
 .form .input { display: inline-block; margin-right: 5px; }
 .form .input.hide { display: none; }
@@ -31,7 +31,7 @@
     margin-top: 0px;
 }
 
-.form div.input.large { width: auto; }
+.form div.input.large { width: auto; margin-right: 5px;}
 .form textarea { width: auto; height: auto; }
 
 /* Formulaires répétés : affichage des lignes*/

@@ -110,11 +110,14 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
         $this->assertEquals($expression->correctBrackets(), 'c*(a+b)');
         $expression = new Numeric('(a+b)*c');
         $this->assertEquals($expression->correctBrackets(), '(a+b)*c');
-
-        // Expression utilisé pour le test suivant.
+        $expression = new Numeric('a/(b+c+d)');
+        $this->assertEquals($expression->correctBrackets(), 'a/(b+c+d)');
+        $expression = new Numeric('a/(b*c*d)');
+        $this->assertEquals($expression->correctBrackets(), 'a/(b*c*d)');
+        $expression = new Numeric('a/(b/c*d)');
+        $this->assertEquals($expression->correctBrackets(), 'a/(b/c*d)');
         $expression = new Numeric('A+B/C*D-E-F+G/(H+I*J)');
         $this->assertEquals($expression->correctBrackets(), 'A+(B/C*D)-E-F+(G/(H+(I*J)))');
-        return $expression;
     }
 
     /**
@@ -122,12 +125,11 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
      *
      * @depends testCorrectBrackets
      *
-     * @param TEC__Algo_Select $expression
-     *
      * @return TEC__Algo_Select
      */
-    public function testCreateTree($expression)
+    public function testCreateTree()
     {
+        $expression = new Numeric('A+B/C*D-E-F+G/(H+I*J)');
         $rootPlusNode = $expression->createTree();
 
         $rootPlusChildren = $rootPlusNode->getChildren();
@@ -229,20 +231,86 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
         $this->assertEquals($j->getName(), 'J');
         $this->assertEquals($j->getModifier(), Component::MODIFIER_ADD);
 
-        return $expression;
+        $expression = new Numeric('(A * B + C * (D - E))');
+        $rootPlusNode = $expression->createTree();
+
+        $rootPlusChildren = $rootPlusNode->getChildren();
+        $this->assertInstanceOf('TEC\Component\Composite', $rootPlusNode);
+        $this->assertNull($rootPlusNode->getParent());
+        $this->assertEquals($rootPlusNode->getOperator(), Composite::OPERATOR_SUM);
+        $this->assertNull($rootPlusNode->getModifier());
+        $this->assertEquals(count($rootPlusChildren), 2);
+
+        $mul1 = $rootPlusChildren[0];
+        $mul1Children = $mul1->getChildren();
+        $this->assertInstanceOf('TEC\Component\Composite', $mul1);
+        $this->assertSame($mul1->getParent(), $rootPlusNode);
+        $this->assertEquals($mul1->getOperator(), Composite::OPERATOR_PRODUCT);
+        $this->assertEquals($mul1->getModifier(), Component::MODIFIER_ADD);
+        $this->assertEquals(count($mul1Children), 2);
+
+        $a = $mul1Children[0];
+        $this->assertInstanceOf('TEC\Component\Leaf', $a);
+        $this->assertSame($a->getParent(), $mul1);
+        $this->assertEquals($a->getName(), 'A');
+        $this->assertEquals($a->getModifier(), Component::MODIFIER_ADD);
+
+        $b = $mul1Children[1];
+        $this->assertInstanceOf('TEC\Component\Leaf', $b);
+        $this->assertSame($b->getParent(), $mul1);
+        $this->assertEquals($b->getName(), 'B');
+        $this->assertEquals($b->getModifier(), Component::MODIFIER_ADD);
+
+        $mul2 = $rootPlusChildren[1];
+        $mul2Children = $mul2->getChildren();
+        $this->assertInstanceOf('TEC\Component\Composite', $mul2);
+        $this->assertSame($mul2->getParent(), $rootPlusNode);
+        $this->assertEquals($mul2->getOperator(), Composite::OPERATOR_PRODUCT);
+        $this->assertEquals($mul2->getModifier(), Component::MODIFIER_ADD);
+        $this->assertEquals(count($mul1Children), 2);
+
+        $c = $mul2Children[0];
+        $this->assertInstanceOf('TEC\Component\Leaf', $c);
+        $this->assertSame($c->getParent(), $mul2);
+        $this->assertEquals($c->getName(), 'C');
+        $this->assertEquals($c->getModifier(), Component::MODIFIER_ADD);
+
+        $sum = $mul2Children[1];
+        $sumChildren = $sum->getChildren();
+        $this->assertInstanceOf('TEC\Component\Composite', $sum);
+        $this->assertSame($sum->getParent(), $mul2);
+        $this->assertEquals($sum->getOperator(), Composite::OPERATOR_SUM);
+        $this->assertEquals($sum->getModifier(), Component::MODIFIER_ADD);
+        $this->assertEquals(count($sumChildren), 2);
+
+        $d = $sumChildren[0];
+        $this->assertInstanceOf('TEC\Component\Leaf', $d);
+        $this->assertSame($d->getParent(), $sum);
+        $this->assertEquals($d->getName(), 'D');
+        $this->assertEquals($d->getModifier(), Component::MODIFIER_ADD);
+
+        $e = $sumChildren[1];
+        $this->assertInstanceOf('TEC\Component\Leaf', $e);
+        $this->assertSame($e->getParent(), $sum);
+        $this->assertEquals($e->getName(), 'E');
+        $this->assertEquals($e->getModifier(), Component::MODIFIER_SUB);
     }
 
     /**
      * Test la méthode
      *
      * @depends testCreateTree
-     *
-     * @param Numeric $expression
      */
-    public function testGetTreeAsString(Numeric $expression)
+    public function testGetTreeAsString()
     {
+        $expression = new Numeric('A+B/C*D-E-F+G/(H+I*J)');
         $treeAsString = $expression->convertTreeToString();
         $expectedString = 'A + (B * D / C) + (G / (H + (I * J))) - (E + F)';
+        $this->assertEquals($expectedString, $treeAsString);
+
+        $expression = new Numeric('(A*B+C*(D-E))');
+        $treeAsString = $expression->convertTreeToString();
+        $expectedString = '(A * B) + (C * (D - E))';
         $this->assertEquals($expectedString, $treeAsString);
     }
 
@@ -250,11 +318,10 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
      * Test la méthode
      *
      * @depends testCreateTree
-     *
-     * @param Numeric $expression
      */
-    public function testGetTreeAsGraph(Numeric $expression)
+    public function testGetTreeAsGraph()
     {
+        $expression = new Numeric('A+B/C*D-E-F+G/(H+I*J)');
         $treeAsGraph = $expression->convertTreeToGraph();
         $expectedGraph = '[{v:"0",f:"<b>Somme</b>"},"",""],'
                             .'[{v:"0-0",f:"+ A"},"0",""],'
