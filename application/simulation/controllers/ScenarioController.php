@@ -13,12 +13,11 @@ use DI\Annotation\Inject;
  */
 class Simulation_ScenarioController extends Core_Controller
 {
-
     /**
      * @Inject
-     * @var Simulation_Service_ETLData
+     * @var Simulation_Service_InputService
      */
-    private $etlDataService;
+    private $inputService;
 
     /**
      * Génération du formulaire d'une Simulation.
@@ -68,15 +67,18 @@ class Simulation_ScenarioController extends Core_Controller
      */
     public function saveAction()
     {
+        /** @var Simulation_Model_Scenario $scenario */
         $scenario = Simulation_Model_Scenario::load($this->getParam('idScenario'));
-        $inputSet = $this->getParam('inputSet');
+        $inputSetContainer = $this->getParam('inputSetContainer');
+        /** @var $newInputSet AF_Model_InputSet_Primary */
+        $newInputSet = $inputSetContainer->inputSet;
 
-        $scenario->setAFInputSetPrimary($inputSet);
+        $this->inputService->editInput($scenario, $newInputSet);
 
-        if ($inputSet->isInputComplete()) {
-            $this->etlDataService->clearDWResultsFromScenario($scenario);
-            $this->etlDataService->populateDWResultsFromScenario($scenario);
-        }
+        $this->entityManager->flush();
+
+        // Remplace l'input set temporaire par celui de la cellule
+        $inputSetContainer->inputSet = $scenario->getAFInputSetPrimary();
 
         $this->_helper->viewRenderer->setNoRender(true);
     }
