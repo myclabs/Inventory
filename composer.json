@@ -30,7 +30,6 @@
         "symfony/event-dispatcher": "2.3.*",
         "pear/console_commandline": "dev-trunk",
         "netcarver/textile": "3.5.*",
-        "phpoffice/phpexcel": "1.7.*",
         "dompdf/dompdf": "dev-master",
         "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
         "myclabs/array-comparator": "1.0.*",
