@@ -32,7 +32,9 @@
         "netcarver/textile": "3.5.*",
         "phpoffice/phpexcel": "1.7.*",
         "dompdf/dompdf": "dev-master",
+        "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
         "myclabs/array-comparator": "1.0.*",
+        "myclabs/xport": "dev-master",
         "myclabs/php-enum": "1.*",
         "mnapoli/php-di": "3.3.*",
         "mnapoli/php-di-zf1": "*"
@@ -50,6 +52,10 @@
         {
             "type": "git",
             "url": "git://github.com/myclabs/common.git"
+        },
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/PHPExcel.git"
         }
     ]
 }

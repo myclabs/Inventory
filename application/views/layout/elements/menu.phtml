@@ -258,6 +258,12 @@ if ($connectedUser) {
         ];
     }
 
+    $subMenuReferencial[] = [
+        'name' => '<i class="icon-download-alt"></i> '.__('Orga', 'referential', 'exports'),
+        'url' => 'orga/referential/exports',
+        'submenu' => null
+    ];
+
     $aclQuery = new Core_Model_Query();
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;

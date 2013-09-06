@@ -1,0 +1,38 @@
+sheets:
+
+
+  - foreach: granularities as granularity
+    do:
+      - label: "{{ granularity.label }}"
+
+        content:
+
+          - type: VerticalTable
+            columns:
+              - foreach: granularity.axes as axis
+                do:
+                  - label: "{{ axis.label }}"
+              - label: "{{ inputAncestor }}"
+              - label: "{{ inputLabel }}"
+              - label: "{{ inputType }}"
+              - label: "{{ inputValue }}"
+              - label: "{{ inputUncertainty }}"
+              - label: "{{ inputUnit }}"
+              - label: "{{ inputReferenceValue }}"
+              - label: "{{ inputReferenceUncertainty }}"
+              - label: "{{ inputReferenceUnit }}"
+            lines:
+              - foreach: getChildCellsForGranularity(cell, granularity) as childCell
+                do:
+                  - foreach: getCellInputs(childCell) as input
+                    do:
+                      - cells:
+                          - foreach: granularity.axes as axis
+                            do:
+                              - "{{ displayCellMemberForAxis(childCell, axis) }}"
+                          - "{{ input['ancestors'] }}"
+                          - "{{ input['label'] }}"
+                          - "{{ input['type'] }}"
+                          - foreach: input[values] as value
+                            do:
+                              - "{{ value }}"
