@@ -36,22 +36,22 @@ class KeywordExport
         $queryPredicateLabel = new \Core_Model_Query();
         $queryPredicateLabel->order->addOrder(Predicate::QUERY_LABEL);
         $modelBuilder->bind('predicates', Predicate::loadList($queryPredicateLabel));
-        $modelBuilder->bind('predicatesSheetLabel', __('Keyword', 'exports', 'predicatesSheetLabel'));
-        $modelBuilder->bind('predicateColumnDirectLabel', __('Keyword', 'exports', 'predicateColumnDirectLabel'));
-        $modelBuilder->bind('predicateColumnDirectRef', __('Keyword', 'exports', 'predicateColumnDirectRef'));
-        $modelBuilder->bind('predicateColumnReverseLabel', __('Keyword', 'exports', 'predicateColumnReverseLabel'));
-        $modelBuilder->bind('predicateColumnReverseRef', __('Keyword', 'exports', 'predicateColumnReverseRef'));
-        $modelBuilder->bind('predicateColumnDescription', __('Keyword', 'exports', 'predicateColumnDescription'));
+        $modelBuilder->bind('predicatesSheetLabel', __('Keyword', 'predicate', 'predicates'));
+        $modelBuilder->bind('predicateColumnDirectLabel', __('Keyword', 'predicate', 'directPredicateLabelHeader'));
+        $modelBuilder->bind('predicateColumnDirectRef', __('Keyword', 'predicate', 'directPredicateIdentifierHeader'));
+        $modelBuilder->bind('predicateColumnReverseLabel', __('Keyword', 'predicate', 'reversePredicateLabelHeader'));
+        $modelBuilder->bind('predicateColumnReverseRef', __('Keyword', 'predicate', 'reversePredicateIdentifierHeader'));
+        $modelBuilder->bind('predicateColumnDescription', __('UI', 'name', 'description'));
 
         // Keywords
         $queryKeywordLabel = new \Core_Model_Query();
         $queryKeywordLabel->order->addOrder(Keyword::QUERY_LABEL);
         $modelBuilder->bind('keywords', Keyword::loadList($queryKeywordLabel));
-        $modelBuilder->bind('keywordsSheetLabel', __('Keyword', 'exports', 'keywordsSheetLabel'));
-        $modelBuilder->bind('keywordColumnLabel', __('Keyword', 'exports', 'keywordColumnLabel'));
-        $modelBuilder->bind('keywordColumnRef', __('Keyword', 'exports', 'keywordColumnRef'));
-        $modelBuilder->bind('keywordColumnAssociationsAsSubject', __('Keyword', 'exports', 'keywordColumnAssociationsAsSubject'));
-        $modelBuilder->bind('keywordColumnAssociationsAsObject', __('Keyword', 'exports', 'keywordColumnAssociationsAsObject'));
+        $modelBuilder->bind('keywordsSheetLabel', __('Keyword', 'name', 'keywords'));
+        $modelBuilder->bind('keywordColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('keywordColumnRef', __('UI', 'name', 'identifier'));
+        $modelBuilder->bind('keywordColumnAssociationsAsSubject', __('Keyword', 'export', 'keywordColumnAssociationsAsSubject'));
+        $modelBuilder->bind('keywordColumnAssociationsAsObject', __('Keyword', 'export', 'keywordColumnAssociationsAsObject'));
 
         // Associations
         $queryAssociationLabels = new \Core_Model_Query();
@@ -66,10 +66,10 @@ class KeywordExport
             Keyword::getAliasAsObject()
         );
         $modelBuilder->bind('associations', Association::loadList($queryAssociationLabels));
-        $modelBuilder->bind('associationsSheetLabel', __('Keyword', 'exports', 'associationsSheetLabel'));
-        $modelBuilder->bind('associationColumnSubject', __('Keyword', 'exports', 'associationColumnSubject'));
-        $modelBuilder->bind('associationColumnPredicate', __('Keyword', 'exports', 'associationColumnPredicate'));
-        $modelBuilder->bind('associationColumnObject', __('Keyword', 'exports', 'associationColumnObject'));
+        $modelBuilder->bind('associationsSheetLabel', __('Keyword', 'relation', 'pageTitle'));
+        $modelBuilder->bind('associationColumnSubject', __('Keyword', 'name', 'subject'));
+        $modelBuilder->bind('associationColumnPredicate', __('Keyword', 'predicate', 'predicate'));
+        $modelBuilder->bind('associationColumnObject', __('Keyword', 'name', 'object'));
 
 
         switch ($format) {
