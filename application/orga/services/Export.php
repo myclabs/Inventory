@@ -32,19 +32,19 @@ class Orga_Service_Export
         $modelBuilder->bind('organization', $cell->getGranularity()->getOrganization());
 
         // Feuilles de l'Organization.
-        $modelBuilder->bind('organizationSheetLabel', __('Orga', 'exports', 'organizationSheetLabel'));
+        $modelBuilder->bind('organizationSheetLabel', __('Orga', 'organization', 'organization'));
 
-        $modelBuilder->bind('organizationColumnLabel', __('Orga', 'exports', 'organizationColumnLabel'));
-        $modelBuilder->bind('organizationColumnGranularityForInventoryStatus', __('Orga', 'exports', 'organizationColumnGranularityForInventoryStatus'));
-        $modelBuilder->bind('organizationInputGranularityColumnInput', __('Orga', 'exports', 'organizationInputGranularityColumnInput'));
-        $modelBuilder->bind('organizationInputGranularityColumnInputConfig', __('Orga', 'exports', 'organizationInputGranularityColumnInputConfig'));
+        $modelBuilder->bind('organizationColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('organizationColumnGranularityForInventoryStatus', __('Orga', 'configuration', 'granularityForInventoryStatus'));
+        $modelBuilder->bind('organizationInputGranularityColumnInput', __('Orga', 'inputGranularities', 'inputGranularity'));
+        $modelBuilder->bind('organizationInputGranularityColumnInputConfig', __('Orga', 'inputGranularities', 'inputConfigGranularity'));
 
         // Feuille des Axis.
-        $modelBuilder->bind('axesSheetLabel', __('Orga', 'exports', 'axesSheetLabel'));
+        $modelBuilder->bind('axesSheetLabel', __('UI', 'name', 'axes'));
 
-        $modelBuilder->bind('axisColumnLabel', __('Orga', 'exports', 'axisColumnLabel'));
-        $modelBuilder->bind('axisColumnRef', __('Orga', 'exports', 'axisColumnRef'));
-        $modelBuilder->bind('axisColumnNarrower', __('Orga', 'exports', 'axisColumnNarrower'));
+        $modelBuilder->bind('axisColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('axisColumnRef', __('UI', 'name', 'identifier'));
+        $modelBuilder->bind('axisColumnNarrower', __('Classif', 'export', 'axisColumnNarrower'));
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
             function(Orga_Model_Axis $axis) {
@@ -56,23 +56,23 @@ class Orga_Service_Export
         );
 
         // Feuille des Granularity.
-        $modelBuilder->bind('granularitiesSheetLabel', __('Orga', 'exports', 'granularitiesSheetLabel'));
+        $modelBuilder->bind('granularitiesSheetLabel', __('Orga', 'granularity', 'granularities'));
 
-        $modelBuilder->bind('granularityColumnLabel', __('Orga', 'exports', 'granularityColumnLabel'));
-        $modelBuilder->bind('granularityColumnNavigable', __('Orga', 'exports', 'granularityColumnNavigable'));
-        $modelBuilder->bind('granularityColumnOrgaTab', __('Orga', 'exports', 'granularityColumnOrgaTab'));
-        $modelBuilder->bind('granularityColumnACL', __('Orga', 'exports', 'granularityColumnACL'));
-        $modelBuilder->bind('granularityColumnAFTab', __('Orga', 'exports', 'granularityColumnAFTab'));
-        $modelBuilder->bind('granularityColumnDW', __('Orga', 'exports', 'granularityColumnDW'));
-        $modelBuilder->bind('granularityColumnGenericActions', __('Orga', 'exports', 'granularityColumnGenericActions'));
-        $modelBuilder->bind('granularityColumnContextActions', __('Orga', 'exports', 'granularityColumnContextActions'));
-        $modelBuilder->bind('granularityColumnInputDocuments', __('Orga', 'exports', 'granularityColumnInputDocuments'));
+        $modelBuilder->bind('granularityColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('granularityColumnNavigable', __('Orga', 'granularity', 'navigableHeader'));
+        $modelBuilder->bind('granularityColumnOrgaTab', __('Orga', 'organization', 'organization'));
+        $modelBuilder->bind('granularityColumnACL', __('user', 'role', 'roles'));
+        $modelBuilder->bind('granularityColumnAFTab', __('UI', 'name', 'forms'));
+        $modelBuilder->bind('granularityColumnDW', __('DW', 'name', 'analyses'));
+        $modelBuilder->bind('granularityColumnGenericActions', __('Social', 'actionTemplate', 'actionTemplates'));
+        $modelBuilder->bind('granularityColumnContextActions', __('Social', 'action', 'actions'));
+        $modelBuilder->bind('granularityColumnInputDocuments', __('Doc', 'name', 'documents'));
 
         // Feuille des Member.
-        $modelBuilder->bind('membersSheetLabel', __('Orga', 'exports', 'membersSheetLabel'));
+        $modelBuilder->bind('membersSheetLabel', __('UI', 'name', 'members'));
 
-        $modelBuilder->bind('memberColumnLabel', __('Orga', 'exports', 'memberColumnLabel'));
-        $modelBuilder->bind('memberColumnRef', __('Orga', 'exports', 'memberColumnRef'));
+        $modelBuilder->bind('memberColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'displayParentMemberForAxis',
             function(Orga_Model_member $member, Orga_Model_Axis $broaderAxis) {
@@ -86,10 +86,10 @@ class Orga_Service_Export
         );
 
         // Feuille de la pertinence des Cell.
-        $modelBuilder->bind('cellsRelevanceSheetLabel', __('Orga', 'exports', 'cellsRelevanceSheetLabel'));
+        $modelBuilder->bind('cellsRelevanceSheetLabel', __('Orga', 'cellRelevance', 'relevance'));
 
-        $modelBuilder->bind('cellColumnRelevant', __('Orga', 'exports', 'cellColumnRelevant'));
-        $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'exports', 'cellColumnAllParentsRelevant'));
+        $modelBuilder->bind('cellColumnRelevant', __('Orga', 'cellRelevance', 'relevance'));
+        $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader'));
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
             function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
@@ -136,10 +136,10 @@ class Orga_Service_Export
         $modelBuilder->bind('organization', $cell->getGranularity()->getOrganization());
 
         // Feuille des Member.
-        $modelBuilder->bind('membersSheetLabel', __('Orga', 'exports', 'membersSheetLabel'));
+        $modelBuilder->bind('membersSheetLabel', __('UI', 'name', 'members'));
 
-        $modelBuilder->bind('memberColumnLabel', __('Orga', 'exports', 'memberColumnLabel'));
-        $modelBuilder->bind('memberColumnRef', __('Orga', 'exports', 'memberColumnRef'));
+        $modelBuilder->bind('memberColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'getCellNarrowerAxes',
             function(Orga_Model_Cell $cell) {
@@ -188,10 +188,10 @@ class Orga_Service_Export
         );
 
         // Feuille de la pertinence des Cell.
-        $modelBuilder->bind('cellsRelevanceSheetLabel', __('Orga', 'exports', 'cellsRelevanceSheetLabel'));
+        $modelBuilder->bind('cellsRelevanceSheetLabel', __('Orga', 'cellRelevance', 'relevance'));
 
-        $modelBuilder->bind('cellColumnRelevant', __('Orga', 'exports', 'cellColumnRelevant'));
-        $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'exports', 'cellColumnAllParentsRelevant'));
+        $modelBuilder->bind('cellColumnRelevant', __('Orga', 'cellRelevance', 'relevance'));
+        $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader'));
         $modelBuilder->bindFunction(
             'getChildCellsForGranularity',
             function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
@@ -282,10 +282,10 @@ class Orga_Service_Export
                 return $users;
             }
         );
-        $modelBuilder->bind('userColumnFirstName', __('User', 'name', 'firstName'));
-        $modelBuilder->bind('userColumnLastName', __('User', 'name', 'lastName'));
-        $modelBuilder->bind('userColumnEmail', __('User', 'name', 'email'));
-        $modelBuilder->bind('userColumnRole', __('User', 'name', 'role'));
+        $modelBuilder->bind('userColumnFirstName', __('User', 'user', 'firstName'));
+        $modelBuilder->bind('userColumnLastName', __('User', 'user', 'lastName'));
+        $modelBuilder->bind('userColumnEmail', __('UI', 'name', 'emailAddress'));
+        $modelBuilder->bind('userColumnRole', __('User', 'role', 'role'));
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
             function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
