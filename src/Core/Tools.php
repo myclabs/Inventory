@@ -24,8 +24,6 @@ abstract class Core_Tools
     /**
      * Dump d'une variable.
      *
-     * Utilise Core_Error_Log::dump en simplifiant l'utilisation.
-     *
      * @codeCoverageIgnore
      *
      * @param mixed $var Variable à afficher.
