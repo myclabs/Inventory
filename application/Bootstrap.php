@@ -113,7 +113,7 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initI18n()
     {
-        Zend_Registry::set(Core_Translate::registryKey, new Core_Translate());
+        Zend_Registry::set(Core_Translate::registryKey, $this->container->get('Core_Translate'));
         Zend_Registry::set(Core_Locale::registryKey, Core_Locale::loadDefault());
     }
 
