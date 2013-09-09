@@ -201,8 +201,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         // Delete all
         Techno_Test_Family_CoeffTest::deleteObject($family);
         $meaning1->delete();
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef1));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef2));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
         $this->entityManager->flush();
     }
 
@@ -250,8 +250,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         Techno_Test_Family_CoeffTest::deleteObject($family);
         $meaning1->delete();
         $meaning2->delete();
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef1));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef2));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
         $this->entityManager->flush();
     }
 
@@ -313,10 +313,10 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         Techno_Test_Family_CoeffTest::deleteObject($family);
         $meaning1->delete();
         $meaning2->delete();
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef1));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef2));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef3));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef4));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef3));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef4));
         $this->entityManager->flush();
     }
 
@@ -375,9 +375,9 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $meaning1->delete();
         $meaning2->delete();
         $meaning3->delete();
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef1));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef2));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef3));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef3));
         $this->entityManager->flush();
     }
 
@@ -426,7 +426,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         Techno_Test_Family_CoeffTest::deleteObject($family);
         $meaning1->delete();
         $meaning2->delete();
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef));
         $this->entityManager->flush();
     }
 

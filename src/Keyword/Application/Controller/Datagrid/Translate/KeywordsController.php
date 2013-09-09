@@ -64,7 +64,7 @@ class Keyword_Datagrid_Translate_KeywordsController extends UI_Controller_Datagr
      */
     public function updateelementAction()
     {
-        $keyword = $this->keywordRepository->getOneByRef($this->update['index']);
+        $keyword = $this->keywordRepository->getByRef($this->update['index']);
         $this->keywordRepository->changeLocale($keyword, \Core_Locale::load($this->update['column']));
         $keyword->setLabel($this->update['value']);
         $this->data = $keyword->getLabel();

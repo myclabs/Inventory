@@ -76,17 +76,17 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         $refPredicate = $this->getAddElementValue('predicate');
 
         try {
-            $subject = $this->keywordRepository->getOneByRef($refSubject);
+            $subject = $this->keywordRepository->getByRef($refSubject);
         } catch (\Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('subject', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $predicate = $this->predicateRepository->getOneByRef($refPredicate);
+            $predicate = $this->predicateRepository->getByRef($refPredicate);
         } catch (\Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('predicate', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $object = $this->keywordRepository->getOneByRef($refObject);
+            $object = $this->keywordRepository->getByRef($refObject);
         } catch (\Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('object', __('UI', 'formValidation', 'emptyRequiredField'));
         }
@@ -124,12 +124,12 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         }
 
         list($refSubject, $refObject, $refPredicate) = explode('#', $this->update['index']);
-        $subject = $this->keywordRepository->getOneByRef($refSubject);
-        $predicate = $this->predicateRepository->getOneByRef($refPredicate);
-        $object = $this->keywordRepository->getOneByRef($refObject);
+        $subject = $this->keywordRepository->getByRef($refSubject);
+        $predicate = $this->predicateRepository->getByRef($refPredicate);
+        $object = $this->keywordRepository->getByRef($refObject);
         $association = $this->associationRepository->getOneBySubjectPredicateObject($subject, $predicate, $object);
 
-        $newPredicate = $this->predicateRepository->getOneByRef($this->update['value']);
+        $newPredicate = $this->predicateRepository->getByRef($this->update['value']);
         if ($newPredicate === $predicate) {
             $this->message = __('UI', 'message', 'updated');
         } else {
@@ -151,9 +151,9 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
     {
 
         list($refSubject, $refObject, $refPredicate) = explode('#', $this->delete);
-        $subject = $this->keywordRepository->getOneByRef($refSubject);
-        $predicate = $this->predicateRepository->getOneByRef($refPredicate);
-        $object = $this->keywordRepository->getOneByRef($refObject);
+        $subject = $this->keywordRepository->getByRef($refSubject);
+        $predicate = $this->predicateRepository->getByRef($refPredicate);
+        $object = $this->keywordRepository->getByRef($refObject);
         $association = $this->associationRepository->getOneBySubjectPredicateObject($subject, $predicate, $object);
         $this->associationRepository->remove($association);
         $this->message = __('UI', 'message', 'deleted');

@@ -46,16 +46,6 @@ class Association
     }
 
     /**
-     * Renvoi l'identifiant unique de l'Association.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Renvoi le Keyword sujet.
      *
      * @return Keyword

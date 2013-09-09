@@ -29,8 +29,8 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
             return $e->getMessage();
         }
         try {
-            $this->getOneByRef($ref);
-            $this->getOneByReverseRef($ref);
+            $this->getByRef($ref);
+            $this->getByReverseRef($ref);
             return __('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
@@ -45,8 +45,8 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
     {
         \Core_Tools::checkRef($ref);
         try {
-            $this->getOneByRef($ref);
-            $this->getOneByReverseRef($ref);
+            $this->getByRef($ref);
+            $this->getByReverseRef($ref);
             throw new \Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
@@ -66,7 +66,7 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
     /**
      * {@inheritdoc}
      */
-    public function getOneByRef($predicateRef)
+    public function getByRef($predicateRef)
     {
         return $this->getOneBy(['ref' => $predicateRef]);
     }
@@ -74,7 +74,7 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
     /**
      * {@inheritdoc}
      */
-    public function getOneByReverseRef($predicateReverseRef)
+    public function getByReverseRef($predicateReverseRef)
     {
         return $this->getOneBy(['reverseRef' => $predicateReverseRef]);
     }

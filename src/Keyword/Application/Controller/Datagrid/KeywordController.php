@@ -81,7 +81,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $this->keywordRepository->remove($this->keywordRepository->getOneByRef($this->delete));
+        $this->keywordRepository->remove($this->keywordRepository->getByRef($this->delete));
         $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
@@ -95,7 +95,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $keyword = $this->keywordRepository->getOneByRef($this->update['index']);
+        $keyword = $this->keywordRepository->getByRef($this->update['index']);
         $newValue = $this->update['value'];
 
         switch ($this->update['column']) {

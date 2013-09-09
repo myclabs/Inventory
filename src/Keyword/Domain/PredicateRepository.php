@@ -43,7 +43,7 @@ interface PredicateRepository extends EntityRepository
      * @throws \Core_Exception_NotFound
      * @return Predicate
      */
-    function getOneByRef($predicateRef);
+    function getByRef($predicateRef);
 
     /**
      * Retourne un Predicate grâce à son ref inverse.
@@ -52,7 +52,7 @@ interface PredicateRepository extends EntityRepository
      * @throws \Core_Exception_NotFound
      * @return Predicate
      */
-    function getOneByReverseRef($predicateReverseRef);
+    function getByReverseRef($predicateReverseRef);
 
     /**
      * @param TranslatableEntity $entity Entité du Repository

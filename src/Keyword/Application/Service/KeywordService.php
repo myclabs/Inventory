@@ -32,7 +32,7 @@ class KeywordService
     public function exists(KeywordDTO $keywordDTO)
     {
         try {
-            $this->keywordRepository->getOneByRef($keywordDTO->getRef());
+            $this->keywordRepository->getByRef($keywordDTO->getRef());
             return true;
         } catch (\Core_Exception_NotFound $e) {
             return false;
@@ -45,7 +45,7 @@ class KeywordService
      */
     public function get($keywordRef)
     {
-        return $this->createDTO($this->keywordRepository->getOneByRef($keywordRef));
+        return $this->createDTO($this->keywordRepository->getByRef($keywordRef));
     }
 
     /**

@@ -64,7 +64,7 @@ class Techno_Test_Family_MemberTest
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        $keywordRepository->remove($keywordRepository->getOneByRef($o->getKeyword()->getRef()));
+        $keywordRepository->remove($keywordRepository->getByRef($o->getKeyword()->getRef()));
         $entityManager->flush();
     }
 }
@@ -182,7 +182,7 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
     {
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
-        $keyword = $keywordRepository->getOneByRef($o->getKeyword()->getRef());
+        $keyword = $keywordRepository->getByRef($o->getKeyword()->getRef());
         $keywordRepository->remove($keyword);
         $o->delete();
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
@@ -304,8 +304,8 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $o1->getPosition());
 
         Techno_Test_Family_DimensionTest::deleteObject($dimension);
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef1));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef2));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
         $this->entityManager->flush();
     }
 
@@ -335,7 +335,7 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($dimension->hasMember($o));
 
         Techno_Test_Family_CoeffTest::deleteObject($dimension->getFamily());
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef));
         $this->entityManager->flush();
     }
 
@@ -365,7 +365,7 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
         Techno_Test_Family_DimensionTest::deleteObject($dimension);
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
                             $this->entityManager->getUnitOfWork()->getEntityState($o));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef));
         $this->entityManager->flush();
     }
 

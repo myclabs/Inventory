@@ -60,7 +60,7 @@ class Techno_Test_TagTest
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        $keywordRepository->remove($keywordRepository->getOneByRef($o->getValue()->getRef()));
+        $keywordRepository->remove($keywordRepository->getByRef($o->getValue()->getRef()));
         $entityManager->flush();
     }
 
@@ -181,7 +181,7 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
     {
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
-        $keyword = $keywordRepository->getOneByRef($o->getValue()->getRef());
+        $keyword = $keywordRepository->getByRef($o->getValue()->getRef());
         $keywordRepository->remove($keyword);
         $o->delete();
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,

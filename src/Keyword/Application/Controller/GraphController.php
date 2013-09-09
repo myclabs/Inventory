@@ -59,7 +59,7 @@ class Keyword_GraphController extends Core_Controller
             $this->redirect('keyword/graph/root');
         }
         try {
-            $this->view->keyword = $this->keywordRepository->getOneByRef($refCurrentKeyword);
+            $this->view->keyword = $this->keywordRepository->getByRef($refCurrentKeyword);
         } catch (Core_Exception_NotFound $e) {
             UI_Message::addMessageStatic(__('Keyword', 'graph', 'nonExistentKeyword'));
             $this->redirect('keyword/graph/root');

@@ -52,7 +52,7 @@ class Keyword
         $this->objectAssociations = new ArrayCollection();
         $this->subjectAssociations = new ArrayCollection();
 
-        $this->setRef(empty($ref) ? \Core_Tools::refactor($label) : $ref);
+        $this->setRef($ref);
         $this->setLabel($label);
     }
 
@@ -72,7 +72,7 @@ class Keyword
      */
     public function setRef($ref)
     {
-        if (is_null($ref)) {
+        if (empty($ref)) {
             throw new \Core_Exception_InvalidArgument("A Keyword's ref can't be empty.");
         }
         $this->ref = $ref;

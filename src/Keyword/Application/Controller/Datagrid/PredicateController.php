@@ -97,7 +97,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $this->predicateRepository->remove($this->predicateRepository->getOneByRef($this->delete));
+        $this->predicateRepository->remove($this->predicateRepository->getByRef($this->delete));
         $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
@@ -111,7 +111,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $predicate = $this->predicateRepository->getOneByRef($this->update['index']);
+        $predicate = $this->predicateRepository->getByRef($this->update['index']);
         $newValue = $this->update['value'];
 
         switch ($this->update['column']) {
@@ -152,7 +152,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function getdescriptionAction()
     {
-        $predicate = $this->predicateRepository->getOneByRef($this->getParam('ref'));
+        $predicate = $this->predicateRepository->getByRef($this->getParam('ref'));
         $this->data = Core_Tools::textile($predicate->getDescription());
         $this->send();
     }
@@ -164,7 +164,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function getbrutdescriptionAction()
     {
-        $predicate = $this->predicateRepository->getOneByRef($this->getParam('ref'));
+        $predicate = $this->predicateRepository->getByRef($this->getParam('ref'));
         $this->data = $predicate->getDescription();
         $this->send();
     }

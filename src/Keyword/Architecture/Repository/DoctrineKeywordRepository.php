@@ -32,7 +32,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
             return __('Keyword', 'list', 'keywordRefThis');
         }
         try {
-            $this->getOneByRef($ref);
+            $this->getByRef($ref);
             return __('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
@@ -50,7 +50,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
             throw new \Core_Exception_User('Keyword', 'list', 'keywordRefThis');
         }
         try {
-            $this->getOneByRef($ref);
+            $this->getByRef($ref);
             throw new \Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
             // Pas de Keyword trouvé.
@@ -69,7 +69,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     /**
      * {@inheritdoc}
      */
-    public function getOneByRef($keywordRef)
+    public function getByRef($keywordRef)
     {
         return $this->getOneBy(['ref' => $keywordRef]);
     }

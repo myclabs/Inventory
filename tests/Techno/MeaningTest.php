@@ -55,7 +55,7 @@ class Techno_Test_MeaningTest
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        $keywordRepository->remove($keywordRepository->getOneByRef($o->getKeyword()->getRef()));
+        $keywordRepository->remove($keywordRepository->getByRef($o->getKeyword()->getRef()));
         $o->delete();
         $entityManager->flush();
     }
@@ -156,7 +156,7 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
     {
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
-        $keyword = $keywordRepository->getOneByRef($o->getKeyword()->getRef());
+        $keyword = $keywordRepository->getByRef($o->getKeyword()->getRef());
         $keywordRepository->remove($keyword);
         $o->delete();
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
@@ -212,8 +212,8 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
 
         $o1->delete();
         $o2->delete();
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef1));
-        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef2));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
         $this->entityManager->flush();
     }
 

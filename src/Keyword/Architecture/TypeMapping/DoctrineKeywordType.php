@@ -12,7 +12,7 @@ use Keyword\Application\Service\KeywordDTO;
  *
  * @author matthieu.napoli
  */
-class DoctrineKeyword extends Type
+class DoctrineKeywordType extends Type
 {
     const TYPE_NAME = 'keyword_dto';
 

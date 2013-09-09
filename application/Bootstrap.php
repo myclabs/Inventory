@@ -6,7 +6,7 @@
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Keyword\Architecture\TypeMapping\DoctrineKeyword;
+use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
 
 /**
  * Application bootstrap
@@ -143,9 +143,9 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initKeywordTypeMapping()
     {
-        Type::addType(DoctrineKeyword::TYPE_NAME, '\Keyword\Architecture\TypeMapping\DoctrineKeyword');
-        /** @var DoctrineKeyword $doctrineKeyword */
-        $doctrineKeyword = Type::getType(DoctrineKeyword::TYPE_NAME);
+        Type::addType(DoctrineKeywordType::TYPE_NAME, '\Keyword\Architecture\TypeMapping\DoctrineKeywordType');
+        /** @var DoctrineKeywordType $doctrineKeyword */
+        $doctrineKeyword = Type::getType(DoctrineKeywordType::TYPE_NAME);
         $doctrineKeyword->setKeywordService($this->container->get('\Keyword\Application\Service\KeywordService'));
     }
 

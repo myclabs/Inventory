@@ -64,7 +64,7 @@ class Keyword_Datagrid_Translate_Predicates_ReverselabelController extends UI_Co
      */
     public function updateelementAction()
     {
-        $predicate = $this->predicateRepository->getOneByRef($this->update['index']);
+        $predicate = $this->predicateRepository->getByRef($this->update['index']);
         $this->predicateRepository->changeLocale($predicate, \Core_Locale::load($this->update['column']));
         $predicate->setReverseLabel($this->update['value']);
         $this->data = $predicate->getReverseLabel();
