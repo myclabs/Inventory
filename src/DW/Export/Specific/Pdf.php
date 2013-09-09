@@ -331,7 +331,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
             $xmlNumerator = $xmlIndicators->item(0);
             $numeratorIndicator = DW_Model_Indicator::loadByRefAndCube(
-                'classif_'.$xmlNumerator->getAttribute('ref'),
+                $xmlNumerator->getAttribute('ref'),
                 $cube
             );
             $report->setNumerator($numeratorIndicator);
@@ -339,7 +339,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             if (($xmlIndicators->length > 1)) {
                 $xmlDenominator = $xmlIndicators->item(1);
                 $denominatorIndicator = DW_Model_Indicator::loadByRefAndCube(
-                    'classif_'.$xmlDenominator->getAttribute('ref'),
+                    $xmlDenominator->getAttribute('ref'),
                     $cube
                 );
                 $report->setDenominator($denominatorIndicator);
@@ -349,7 +349,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
             $xmlNumerator = $xmlIndicators->item(0);
             $numeratorIndicator = DW_Model_Indicator::loadByRefAndCube(
-                'classif_'.$xmlNumerator->getAttribute('ref'),
+                $xmlNumerator->getAttribute('ref'),
                 $cube
             );
             $report->setNumerator($numeratorIndicator);
@@ -379,7 +379,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             if (($xmlIndicators->length > 1)) {
                 $xmlDenominator = $xmlIndicators->item(1);
                 $denominatorIndicator = DW_Model_Indicator::loadByRefAndCube(
-                    'classif_'.$xmlDenominator->getAttribute('ref'),
+                    $xmlDenominator->getAttribute('ref'),
                     $cube
                 );
                 $report->setDenominator($denominatorIndicator);
