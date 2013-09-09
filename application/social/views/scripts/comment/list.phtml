@@ -24,30 +24,32 @@ $endpointDelete = $this->endpointDelete;
 
 <?php
 // Désactivation de l'ajout de commentaires
-if ($endpointAdd === null) {
-    return;
-}
+if ($endpointAdd !== null) :
+    ?>
+    <p>
+        <button class="addComment btn" type="button"><?=__('Social', 'comment', 'addComment')?></button>
+    </p>
+    <?php
+endif;
 ?>
-
-<p>
-    <button class="addComment btn" type="button"><?=__('Social', 'comment', 'addComment')?></button>
-</p>
 
 <div class="commentForms">
     <?php
     // Add form
-    $form = new UI_Form('addCommentForm');
-    $form->setAction($endpointAdd);
-    $form->setAjax(true, 'addCommentSuccess');
-    $form->addClass('hide');
+    if ($endpointAdd !== null) {
+        $form = new UI_Form('addCommentForm');
+        $form->setAction($endpointAdd);
+        $form->setAjax(true, 'addCommentSuccess');
+        $form->addClass('hide');
 
-    $contentField = new UI_Form_Element_Textarea('addContent');
-    $contentField->setWithMarkItUp(true);
-    $form->addElement($contentField);
+        $contentField = new UI_Form_Element_Textarea('addContent');
+        $contentField->setWithMarkItUp(true);
+        $form->addElement($contentField);
 
-    $form->addSubmitButton(__('UI', 'verb', 'add'));
-    $form->addResetButton(__('UI', 'verb', 'cancel'));
-    echo $form->render();
+        $form->addSubmitButton(__('UI', 'verb', 'add'));
+        $form->addResetButton(__('UI', 'verb', 'cancel'));
+        echo $form->render();
+    }
 
     // Edit form
     $form = new UI_Form('editCommentForm');
@@ -65,22 +67,26 @@ if ($endpointAdd === null) {
 </div>
 
 <script>
-    // Add a comment
-    $(".addComment").click(function() {
-        $("#addCommentForm").show(400)
-            .find("#addContent").focus();
-    });
-    // Add a comment success callback
-    $.fn.addCommentSuccess = function(response) {
-        $("#addCommentForm")[0].reset();
-        var commentList = $(".commentList");
-        commentList.find(".noComments").remove();
-        commentList.append($(response.data));
-    };
-    // Cancel add a comment
-    $("#addCommentForm").on("reset", function() {
-        $("#addCommentForm").hide(400);
-    });
+    var addCommentEnabled = <?=json_encode($endpointAdd !== null)?>;
+
+    if (addCommentEnabled) {
+        // Add a comment
+        $(".addComment").click(function() {
+            $("#addCommentForm").show(400)
+                .find("#addContent").focus();
+        });
+        // Add a comment success callback
+        $.fn.addCommentSuccess = function(response) {
+            $("#addCommentForm")[0].reset();
+            var commentList = $(".commentList");
+            commentList.find(".noComments").remove();
+            commentList.append($(response.data));
+        };
+        // Cancel add a comment
+        $("#addCommentForm").on("reset", function() {
+            $("#addCommentForm").hide(400);
+        });
+    }
 
     var commentList = $(".commentList");
 
