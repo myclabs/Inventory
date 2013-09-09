@@ -37,7 +37,8 @@
         "myclabs/php-enum": "1.*",
         "mnapoli/php-di": "3.3.*",
         "mnapoli/php-di-zf1": "*",
-        "monolog/monolog": "~1.6.0",
+        "psr/log": "~1.0",
+        "monolog/monolog": "~1.6",
         "mnapoli/number-two": "~0.2"
 	},
     "require-dev": {
