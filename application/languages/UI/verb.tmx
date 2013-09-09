@@ -107,15 +107,23 @@
                 <seg>Expand all</seg>
             </tuv>
         </tu>
-		<tu tuid="exportToExcel">
-			<tuv xml:lang="fr">
-				<seg>Exporter au format Excel</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Export to Excel</seg>
-			</tuv>
-		</tu>
-		<tu tuid="exportToPDF">
+        <tu tuid="export">
+            <tuv xml:lang="fr">
+                <seg>Exporter</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Export</seg>
+            </tuv>
+        </tu>
+        <tu tuid="exportToExcel">
+            <tuv xml:lang="fr">
+                <seg>Exporter au format Excel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Export to Excel</seg>
+            </tuv>
+        </tu>
+        <tu tuid="exportToPDF">
 			<tuv xml:lang="fr">
 				<seg>Exporter au format PDF</seg>
 			</tuv>

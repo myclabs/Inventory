@@ -194,7 +194,7 @@ class Orga_CellController extends Core_Controller
         if ($tab === 'exports') {
             $exportsTab->active = true;
         }
-        $exportsTab->label = __('DW', 'name', 'exports');
+        $exportsTab->label = __('UI', 'name', 'exports');
         $exportsTab->dataSource = 'orga/tab_celldetails/exports/idCell/'.$idCell;
         $exportsTab->useCache = true;
         $this->view->tabView->addTab($exportsTab);

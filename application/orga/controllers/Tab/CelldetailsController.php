@@ -492,7 +492,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
     }
 
     /**
-     * Action fournissant la vue des actions génériques.
+     * Action fournissant la vue des exports.
      * @Secure("viewCell")
      */
     public function exportsAction()
@@ -515,9 +515,9 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         // Formats d'exports.
         $this->view->defaultFormat = 'xlsx';
         $this->view->formats = [
-            'xlsx' => __('Orga', 'exports', 'xlsx'),
-            'xls' => __('Orga', 'exports', 'xls'),
-            'ods' => __('Orga', 'exports', 'ods'),
+            'xlsx' => __('UI', 'export', 'xlsx'),
+            'xls' => __('UI', 'export', 'xls'),
+            'ods' => __('UI', 'export', 'ods'),
         ];
 
         // Liste des exports.
@@ -526,28 +526,28 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         // Orga Structure.
         if ($isUserAllowedToEditOrganization) {
             $this->view->exports['Organization'] = [
-                'label' => __('Orga', 'name', 'organization'),
+                'label' => __('Orga', 'organization', 'organization'),
             ];
         }
 
         // Orga Cell.
         $this->view->exports['Cell'] = [
-            'label' => __('Orga', 'name', 'cell'),
+            'label' => __('Orga', 'cell', 'subCells'),
         ];
 
         // Orga User.
         $this->view->exports['Users'] = [
-            'label' => __('User', 'name', 'users'),
+            'label' => __('User', 'role', 'roles'),
         ];
 
         // Orga Inputs.
         $this->view->exports['Inputs'] = [
-            'label' => __('Orga', 'name', 'inputs'),
+            'label' => __('UI', 'name', 'inputs'),
         ];
     }
 
     /**
-     * Action fournissant la vue des actions génériques.
+     * Action fournissant la génération des exports.
      * @Secure("viewCell")
      */
     public function exportAction()
