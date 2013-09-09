@@ -12,6 +12,7 @@ use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\ORM\Tools\Setup;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ChromePHPHandler;
@@ -191,13 +192,14 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Définition du cache en fonction de l'environement.
         switch (APPLICATION_ENV) {
+            case 'test':
             case 'production':
                 $doctrineCache = new ArrayCache();
-                $doctrineAutoGenerateProxy = false;
+                $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_NEVER;
                 break;
             default:
                 $doctrineCache = new ArrayCache();
-                $doctrineAutoGenerateProxy = true;
+                $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_EVAL;
                 break;
         }
 
@@ -234,13 +236,10 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrineConfig->setResultCacheImpl($doctrineCache);
         $doctrineConfig->setMetadataCacheImpl($doctrineCache);
         // Configuration des Proxies.
-        $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
         $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
-
-        // Configuration de l'autoloader spécial pour les Proxy
-        // @see http://www.doctrine-project.org/jira/browse/DDC-1698
-        Doctrine\ORM\Proxy\Autoloader::register($doctrineConfig->getProxyDir(), $doctrineConfig->getProxyNamespace());
+        // Ligne inutile mais bug, cf. http://www.doctrine-project.org/jira/browse/DCOM-210#comment-21061
+        $doctrineConfig->setProxyDir('/tmp/proxies');
 
         // Définition du sql profiler en fonction de l'environement.
         switch (APPLICATION_ENV) {

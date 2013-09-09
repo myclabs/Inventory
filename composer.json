@@ -21,29 +21,29 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "zendframework/zendframework1": "1.12.*",
-        "doctrine/orm": "2.3.*",
-        "doctrine/annotations": "1.*",
-        "doctrine/common": "dev-ChainDriverFix as 2.3.0",
-        "gedmo/doctrine-extensions": "2.3.6",
-        "symfony/yaml": "2.3.*",
-        "symfony/event-dispatcher": "2.3.*",
+        "zendframework/zendframework1": "~1.12",
+        "doctrine/orm": "~2.4",
+        "doctrine/annotations": "~1.0",
+        "doctrine/common": "~2.4",
+        "gedmo/doctrine-extensions": "~2.3",
+        "symfony/yaml": "~2.3",
+        "symfony/event-dispatcher": "~2.3",
         "pear/console_commandline": "dev-trunk",
-        "netcarver/textile": "3.5.*",
+        "netcarver/textile": "~3.5",
         "dompdf/dompdf": "dev-master",
         "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
         "myclabs/array-comparator": "1.0.*",
         "myclabs/xport": "dev-master",
         "myclabs/php-enum": "1.*",
-        "mnapoli/php-di": "3.3.*",
+        "mnapoli/php-di": "~3.3",
         "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",
-        "mnapoli/number-two": "~0.2"
-	},
+        "mnapoli/number-two": "~0.2.0"
+    },
     "require-dev": {
-        "behat/behat": "2.4.*",
-        "behat/mink": "1.5.*",
+        "behat/behat": "~2.4",
+        "behat/mink": "~1.5",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
         "mnapoli/metaconsole": "dev-master"
@@ -51,10 +51,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "repositories": [
-        {
-            "type": "git",
-            "url": "git://github.com/myclabs/common.git"
-        },
         {
             "type": "git",
             "url": "git://github.com/myclabs/PHPExcel.git"
