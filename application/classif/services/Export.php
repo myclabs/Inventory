@@ -28,21 +28,21 @@ class Classif_Service_Export
         $export = new PHPExcelExporter();
 
         // Feuilles des Context, Indicator, ContextIndicator.
-        $modelBuilder->bind('contextindicatorsSheetLabel', __('Classif', 'exports', 'indicatorSheetLabel'));
+        $modelBuilder->bind('contextindicatorsSheetLabel', __('Classif', 'indicator', 'indicators'));
 
-        $modelBuilder->bind('contextColumnLabel', __('Classif', 'exports', 'contextColumnLabel'));
-        $modelBuilder->bind('contextColumnRef', __('Classif', 'exports', 'contextColumnRef'));
+        $modelBuilder->bind('contextColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('contextColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bind('contexts', Classif_Model_Context::loadList());
 
-        $modelBuilder->bind('indicatorColumnLabel', __('Classif', 'exports', 'indicatorColumnLabel'));
-        $modelBuilder->bind('indicatorColumnRef', __('Classif', 'exports', 'indicatorColumnRef'));
-        $modelBuilder->bind('indicatorColumnUnit', __('Classif', 'exports', 'indicatorColumnUnit'));
-        $modelBuilder->bind('indicatorColumnRatioUnit', __('Classif', 'exports', 'indicatorColumnRatioUnit'));
+        $modelBuilder->bind('indicatorColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('indicatorColumnRef', __('UI', 'name', 'identifier'));
+        $modelBuilder->bind('indicatorColumnUnit', __('Unit', 'name', 'unit'));
+        $modelBuilder->bind('indicatorColumnRatioUnit', __('Unit', 'name', 'ratioUnit'));
         $modelBuilder->bind('indicators', Classif_Model_Indicator::loadList());
 
-        $modelBuilder->bind('contextindicatorColumnContext', __('Classif', 'exports', 'contextindicatorColumnContext'));
-        $modelBuilder->bind('contextindicatorColumnIndicator', __('Classif', 'exports', 'contextindicatorColumnIndicator'));
-        $modelBuilder->bind('contextindicatorColumnAxes', __('Classif', 'exports', 'contextindicatorColumnAxes'));
+        $modelBuilder->bind('contextindicatorColumnContext', __('Classif', 'context', 'context'));
+        $modelBuilder->bind('contextindicatorColumnIndicator', __('Classif', 'indicator', 'indicator'));
+        $modelBuilder->bind('contextindicatorColumnAxes', __('UI', 'name', 'axes'));
         $modelBuilder->bind('contextindicators', Classif_Model_ContextIndicator::loadList());
         $modelBuilder->bindFunction(
             'displayContextIndicatorAxes',
@@ -56,11 +56,11 @@ class Classif_Service_Export
         );
 
         // Feuille des Axis.
-        $modelBuilder->bind('axesSheetLabel', __('Classif', 'exports', 'axesSheetLabel'));
+        $modelBuilder->bind('axesSheetLabel', __('UI', 'name', 'axes'));
 
-        $modelBuilder->bind('axisColumnLabel', __('Classif', 'exports', 'axisColumnLabel'));
-        $modelBuilder->bind('axisColumnRef', __('Classif', 'exports', 'axisColumnRef'));
-        $modelBuilder->bind('axisColumnNarrower', __('Classif', 'exports', 'axisColumnNarrower'));
+        $modelBuilder->bind('axisColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('axisColumnRef', __('UI', 'name', 'identifier'));
+        $modelBuilder->bind('axisColumnNarrower', __('Classif', 'export', 'axisColumnNarrower'));
         $modelBuilder->bind('axes', Classif_Model_Axis::loadListOrderedAsAscendantTree());
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
@@ -73,10 +73,10 @@ class Classif_Service_Export
         );
 
         // Feuille des Member.
-        $modelBuilder->bind('membersSheetLabel', __('Classif', 'exports', 'membersSheetLabel'));
+        $modelBuilder->bind('membersSheetLabel', __('UI', 'name', 'members'));
 
-        $modelBuilder->bind('memberColumnLabel', __('Classif', 'exports', 'memberColumnLabel'));
-        $modelBuilder->bind('memberColumnRef', __('Classif', 'exports', 'memberColumnRef'));
+        $modelBuilder->bind('memberColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'displayParentMemberForAxis',
             function(Classif_Model_member $member, Classif_Model_Axis $broaderAxis) {
