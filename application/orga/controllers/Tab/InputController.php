@@ -63,11 +63,11 @@ class Orga_Tab_InputController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $author = $this->_helper->auth();
-        $formData = $this->getFormData('addComment');
+        $formData = $this->getFormData('addCommentForm');
 
-        $content = $formData->getValue('content');
+        $content = $formData->getValue('addContent');
         if (empty($content)) {
-            $this->addFormError('content', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->addFormError('addContent', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         if (!$this->hasFormError()) {
 

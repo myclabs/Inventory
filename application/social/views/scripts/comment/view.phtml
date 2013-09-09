@@ -7,7 +7,7 @@ $canEdit = $this->isAllowed(User_Model_Action_Default::EDIT(), $comment);
 $canDelete = $this->isAllowed(User_Model_Action_Default::DELETE(), $comment);
 ?>
 
-<blockquote data-comment-id="<?=$comment->getId()?>">
+<blockquote id="comment<?=$comment->getId()?>" data-comment-id="<?=$comment->getId()?>">
     <p>
         <?=Core_Tools::textile($comment->getText())?>
     </p>

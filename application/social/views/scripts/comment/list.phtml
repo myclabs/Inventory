@@ -33,50 +33,100 @@ if ($endpointAdd === null) {
     <button class="addComment btn" type="button"><?=__('Social', 'comment', 'addComment')?></button>
 </p>
 
-<?php
-$form = new UI_Form('addComment');
-$form->setAction($endpointAdd);
-$form->setAjax(true, 'addCommentSuccess');
-$form->addClass('hide');
+<div class="commentForms">
+    <?php
+    // Add form
+    $form = new UI_Form('addCommentForm');
+    $form->setAction($endpointAdd);
+    $form->setAjax(true, 'addCommentSuccess');
+    $form->addClass('hide');
 
-$contentField = new UI_Form_Element_Textarea('content');
-$contentField->setWithMarkItUp(true);
-$form->addElement($contentField);
+    $contentField = new UI_Form_Element_Textarea('addContent');
+    $contentField->setWithMarkItUp(true);
+    $form->addElement($contentField);
 
-$form->addSubmitButton(__('UI', 'verb', 'add'));
-$form->addResetButton(__('UI', 'verb', 'cancel'));
-echo $form->render();
-?>
+    $form->addSubmitButton(__('UI', 'verb', 'add'));
+    $form->addResetButton(__('UI', 'verb', 'cancel'));
+    echo $form->render();
+
+    // Edit form
+    $form = new UI_Form('editCommentForm');
+    $form->setAjax(true, 'editCommentSuccess');
+    $form->addClass('hide');
+
+    $contentField = new UI_Form_Element_Textarea('editContent');
+    $contentField->setWithMarkItUp(true);
+    $form->addElement($contentField);
+
+    $form->addSubmitButton(__('UI', 'verb', 'save'));
+    $form->addResetButton(__('UI', 'verb', 'cancel'));
+    echo $form->render();
+    ?>
+</div>
 
 <script>
     // Add a comment
     $(".addComment").click(function() {
-        $("#addComment").show(400)
-            .find("#content").focus();
+        $("#addCommentForm").show(400)
+            .find("#addContent").focus();
     });
     // Add a comment success callback
     $.fn.addCommentSuccess = function(response) {
-        $("#addComment")[0].reset();
+        $("#addCommentForm")[0].reset();
         var commentList = $(".commentList");
         commentList.find(".noComments").remove();
         commentList.append($(response.data));
     };
     // Cancel add a comment
-    $("form#addComment").on("reset", function() {
-        $("#addComment").hide(400);
+    $("#addCommentForm").on("reset", function() {
+        $("#addCommentForm").hide(400);
     });
 
+    var commentList = $(".commentList");
+
     // Delete a comment
-    $(".deleteComment").click(function() {
+    commentList.on("click", ".deleteComment", function() {
         var commentBlock = $(this).closest("blockquote");
         var commentId = commentBlock.data('comment-id');
         setMask(true);
         $.post("<?=$endpointDelete?>", {'id': commentId})
-            .done(function() {
-                setMask(false);
-                commentBlock.hide(400, function(){
-                    commentBlock.remove();
-                });
+        .done(function() {
+            setMask(false);
+            commentBlock.hide(400, function(){
+                commentBlock.remove();
             });
+        });
+    });
+
+    // Edit a comment
+    commentList.on("click", ".editComment", function() {
+        var commentBlock = $(this).closest("blockquote");
+        var commentId = commentBlock.data('comment-id');
+        setMask(true);
+        // Fetch the comments raw content
+        $.post("social/comment/get-comment-content", {'id': commentId})
+        .done(function(response) {
+            setMask(false);
+            // Init and moves the form
+            $("#editCommentForm").detach()
+                .appendTo('#comment' + commentId)
+                .attr('action', 'social/comment/edit-comment/id/' + commentId)
+                .show(400)
+                .find("#editContent").val(response.data).focus();
+        });
+    });
+    // Edit a comment success callback
+    $.fn.editCommentSuccess = function(response) {
+        var form = $("#editCommentForm");
+        form[0].reset();
+        // Move the form again
+        form.detach()
+            .appendTo('.commentForms');
+        // Replace the HTML element
+        $('#comment' + response.data.commentId).replaceWith($(response.data.html));
+    };
+    // Cancel edit a comment
+    $("#editCommentForm").on("reset", function() {
+        $("#editCommentForm").hide(400);
     });
 </script>
