@@ -8,6 +8,7 @@ use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Keyword\Domain\Predicate;
 use Keyword\Domain\PredicateRepository;
+use Keyword\Domain\KeywordRepository;
 
 /**
  * Classe controleur de la datagrid de Predicate.
@@ -20,6 +21,12 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      * @var PredicateRepository
      */
     private $predicateRepository;
+
+    /**
+     * @Inject
+     * @var KeywordRepository
+     */
+    private $keywordRepository;
 
     /**
      * (non-PHPdoc)
@@ -97,7 +104,12 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $this->predicateRepository->remove($this->predicateRepository->getByRef($this->delete));
+        //@todo A corriger une fois les nouvelles requêtes implémentées.
+        $predicate = $this->predicateRepository->getByRef($this->delete);
+        if ($this->keywordRepository->countAssociations() > 0) {
+            throw new \Core_Exception_User('Keyword', 'predicate', 'predicateUsedInAssociation', array('REF' => $predicate->getRef()));
+        }
+        $this->predicateRepository->remove($predicate);
         $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();

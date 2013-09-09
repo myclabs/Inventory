@@ -8,7 +8,6 @@
 
 use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\PredicateRepository;
-use Keyword\Domain\AssociationRepository;
 ?>
 <div class="page-header">
 	<h1><?=__('Keyword', 'relation', 'pageTitle')?></h1>
@@ -23,7 +22,7 @@ use Keyword\Domain\AssociationRepository;
     $columnSubject->filterName = KeywordRepository::QUERY_REF;
     $columnSubject->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
     $columnSubject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
-    $columnSubject->entityAlias = AssociationRepository::QUERY_KEYWORD_SUBJECT;
+    $columnSubject->entityAlias = KeywordRepository::QUERY_KEYWORD_SUBJECT;
 
     $columnObject = new UI_Datagrid_Col_List('object', __('Keyword', 'name', 'object'));
     $columnObject->list = $this->listKeywords;
@@ -32,13 +31,13 @@ use Keyword\Domain\AssociationRepository;
     $columnObject->filterName = KeywordRepository::QUERY_REF;
     $columnObject->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
     $columnObject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
-    $columnObject->entityAlias = AssociationRepository::QUERY_KEYWORD_OBJECT;
+    $columnObject->entityAlias = KeywordRepository::QUERY_KEYWORD_OBJECT;
 
     $columnPredicate = new UI_Datagrid_Col_List('predicate', __('Keyword', 'name', 'predicate'));
     $columnPredicate->list = $this->listPredicates;
     $columnPredicate->sortName = PredicateRepository::QUERY_LABEL;
     $columnPredicate->filterName = PredicateRepository::QUERY_REF;
-    $columnPredicate->entityAlias = AssociationRepository::QUERY_PREDICATE;
+    $columnPredicate->entityAlias = KeywordRepository::QUERY_PREDICATE;
 
     $datagrid->addCol($columnSubject);
     $datagrid->addCol($columnPredicate);

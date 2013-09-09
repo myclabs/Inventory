@@ -5,6 +5,8 @@ namespace Keyword\Domain;
 use Core\Domain\Translatable\TranslatableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Keyword\Domain\Predicate;
+use Keyword\Domain\Association;
 
 /**
  * Entité Keyword.
@@ -107,91 +109,33 @@ class Keyword
     }
 
     /**
-     * Ajoute une Association où le Keyword agit en tant qu'object.
-     *
-     * @param Association $association
-     * @throws \Core_Exception_InvalidArgument
-     */
-    public function addAssociationAsObject(Association $association)
-    {
-        if ($association->getObject() !== $this) {
-            throw new \Core_Exception_InvalidArgument();
-        }
-
-        if (!($this->hasAssociationAsObject($association))) {
-            $this->objectAssociations->add($association);
-        }
-    }
-
-    /**
-     * Vérifie sur le Keyword possède l'association donnée en tant qu'objet.
-     *
-     * @param Association $association
-     *
-     * @return bool
-     */
-    public function hasAssociationAsObject(Association $association)
-    {
-        return $this->objectAssociations->contains($association);
-    }
-
-    /**
-     * Vérifie si le Keyword possède au moins une association en tant qu'objet.
-     *
-     * @return bool
-     */
-    public function hasAssociationsAsObject()
-    {
-        return !$this->objectAssociations->isEmpty();
-    }
-
-    /**
-     * Compte le nombre de relation possédant ce Keyword en tant qu'objet.
-     *
-     * @return int
-     */
-    public function countAssociationsAsObject()
-    {
-        return $this->objectAssociations->count();
-    }
-
-    /**
-     * Renvoi le tableau des associations du Keyword en tant qu'objet.
-     *
-     * @return Association[]
-     */
-    public function getAssociationsAsObject()
-    {
-        return $this->objectAssociations->toArray();
-    }
-
-    /**
      * Ajoute une Association où le Keyword agit en tant que sujet.
      *
-     * @param Association $association
-     * @throws \Core_Exception_InvalidArgument
+     * @param Predicate $predicate
+     * @param Keyword $objectKeyword
+     * @return Association
      */
-    public function addAssociationAsSubject(Association $association)
+    public function addAssociationWith(Predicate $predicate, Keyword $objectKeyword)
     {
-        if ($association->getSubject() !== $this) {
-            throw new \Core_Exception_InvalidArgument();
-        }
-
-        if (!($this->hasAssociationsAsSubject($association))) {
-            $this->subjectAssociations->add($association);
-        }
+        $association = new Association($this, $predicate, $objectKeyword);
+        $this->subjectAssociations->add($association);
+        $objectKeyword->objectAssociations->add($association);
+        return $association;
     }
 
     /**
-     * Vérifie sur le Keyword possède l'association donnée en tant que sujet.
+     * Retire une Association où le Keyword agit en tant que sujet.
      *
      * @param Association $association
-     *
-     * @return bool
      */
-    public function hasAssociationAsSubject(Association $association)
+    public function removeAssociation(Association $association)
     {
-        return $this->subjectAssociations->contains($association);
+        if ($this->subjectAssociations->contains($association)) {
+            $this->subjectAssociations->removeElement($association);
+        }
+        if ($association->getObject()->objectAssociations->contains($association)) {
+            $association->getObject()->objectAssociations->removeElement($association);
+        }
     }
 
     /**
@@ -222,6 +166,36 @@ class Keyword
     public function getAssociationsAsSubject()
     {
         return $this->subjectAssociations->toArray();
+    }
+
+    /**
+     * Vérifie si le Keyword possède au moins une association en tant qu'objet.
+     *
+     * @return bool
+     */
+    public function hasAssociationsAsObject()
+    {
+        return !$this->objectAssociations->isEmpty();
+    }
+
+    /**
+     * Compte le nombre de relation possédant ce Keyword en tant qu'objet.
+     *
+     * @return int
+     */
+    public function countAssociationsAsObject()
+    {
+        return $this->objectAssociations->count();
+    }
+
+    /**
+     * Renvoi le tableau des associations du Keyword en tant qu'objet.
+     *
+     * @return Association[]
+     */
+    public function getAssociationsAsObject()
+    {
+        return $this->objectAssociations->toArray();
     }
 
     /**

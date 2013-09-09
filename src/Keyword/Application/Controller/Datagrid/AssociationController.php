@@ -32,12 +32,6 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
     private $predicateRepository;
 
     /**
-     * @Inject
-     * @var AssociationRepository
-     */
-    private $associationRepository;
-
-    /**
      * Methode appelee pour remplir le tableau.
      *
      * @Secure("viewKeyword")
@@ -45,7 +39,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         /** @var Association $association */
-        foreach ($this->associationRepository->getAll($this->request) as $association) {
+        foreach ($this->keywordRepository->getAllAssociations($this->request) as $association) {
             $data = array();
 
             $refSubject = $association->getSubject()->getRef();
@@ -59,7 +53,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = $this->associationRepository->count($this->request);
+        $this->totalElements = $this->keywordRepository->countAssociations($this->request);
         $this->send();
     }
 
@@ -92,16 +86,13 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            $association = new Association($subject, $predicate, $object);
-            $errorMessage = $this->associationRepository->getErrorMessageForAssociation($association);
+            $errorMessage = $this->keywordRepository->getErrorMessageForAssociation($subject, $predicate, $object);
             if ($errorMessage !== null) {
                 $this->setAddElementErrorMessage('subject', $errorMessage);
                 $this->setAddElementErrorMessage('predicate', $errorMessage);
                 $this->setAddElementErrorMessage('object', $errorMessage);
-                //@todo Supprimer le clear quand le plugin flush aura aussi été supprimé.
-                $this->entityManager->clear();
             } else {
-                $this->associationRepository->add($association);
+                $subject->addAssociationWith($predicate, $object);
                 $this->entityManager->flush();
                 $this->message = __('UI', 'message', 'added');
             }
@@ -127,14 +118,14 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         $subject = $this->keywordRepository->getByRef($refSubject);
         $predicate = $this->predicateRepository->getByRef($refPredicate);
         $object = $this->keywordRepository->getByRef($refObject);
-        $association = $this->associationRepository->getOneBySubjectPredicateObject($subject, $predicate, $object);
+        $association = $this->keywordRepository->getAssociationBySubjectPredicateObject($subject, $predicate, $object);
 
         $newPredicate = $this->predicateRepository->getByRef($this->update['value']);
         if ($newPredicate === $predicate) {
             $this->message = __('UI', 'message', 'updated');
         } else {
+            $this->keywordRepository->checkAssociation($subject, $newPredicate, $object);
             $association->setPredicate($newPredicate);
-            $this->associationRepository->checkAssociation($association);
             $this->entityManager->flush();
             $this->message = __('UI', 'message', 'updated');
         }
@@ -154,8 +145,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         $subject = $this->keywordRepository->getByRef($refSubject);
         $predicate = $this->predicateRepository->getByRef($refPredicate);
         $object = $this->keywordRepository->getByRef($refObject);
-        $association = $this->associationRepository->getOneBySubjectPredicateObject($subject, $predicate, $object);
-        $this->associationRepository->remove($association);
+        $subject->removeAssociation($this->keywordRepository->getAssociationBySubjectPredicateObject($subject, $predicate, $object));
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

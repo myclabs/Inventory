@@ -40,9 +40,6 @@ class Association
         $this->subject = $subjectKeyword;
         $this->predicate = $predicate;
         $this->object = $objectKeyword;
-
-        $subjectKeyword->addAssociationAsSubject($this);
-        $objectKeyword->addAssociationAsObject($this);
     }
 
     /**

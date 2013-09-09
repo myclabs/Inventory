@@ -7,8 +7,11 @@ use Core\Domain\Translatable\TranslatableRepository;
 use Core_Exception_NotFound;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Translatable\TranslatableListener;
-use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
+use Keyword\Architecture\Repository\DoctrineAssociationRepository;
+use Keyword\Domain\Keyword;
+use Keyword\Domain\Predicate;
+use Keyword\Domain\Association;
 
 /**
  * Gère les Keyword.
@@ -96,6 +99,73 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
         );
 
         return $query->getResult();
+    }
+
+    /**
+     * @return DoctrineAssociationRepository
+     */
+    protected function getAssociationRepository ()
+    {
+        return $this->getEntityManager()->getRepository('\Keyword\Domain\Association');
+    }
+
+    /**
+     * Renoie les messages d'erreur concernant la validation d'une Association.
+     *
+     * @param \Keyword\Domain\Keyword $subjectKeyword
+     * @param \Keyword\Domain\Predicate $predicate
+     * @param \Keyword\Domain\Keyword $objectKeyword
+     *
+     * @return mixed string null
+     */
+    public function getErrorMessageForAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
+    {
+        return $this->getAssociationRepository()->getErrorMessageForAssociation($subjectKeyword, $predicate, $objectKeyword);
+    }
+
+    /**
+     * Vérifie la disponibilité d'une Association.
+     *
+     * @param Keyword $subjectKeyword
+     * @param Predicate $predicate
+     * @param Association $objectKeyword
+     *
+     * @throws \Core_Exception_User
+     */
+    public function checkAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
+    {
+        $this->getAssociationRepository()->checkAssociation($subjectKeyword, $predicate, $objectKeyword);
+    }
+
+    /**
+     * @return Association[]
+     */
+    public function getAllAssociations()
+    {
+        return $this->getAssociationRepository()->getAll();
+    }
+
+    /**
+     * @return int
+     */
+    public function countAssociations()
+    {
+        return $this->getAssociationRepository()->count();
+    }
+
+    /**
+     * Charge une Association en fonction des refs de ses composants.
+     *
+     * @param Keyword $subjectKeyword
+     * @param Predicate $predicate
+     * @param Keyword $objectKeyword
+     * @throws \Core_Exception_NotFound
+     * @throws \Core_Exception_TooMany
+     * @return Association
+     */
+    public function getAssociationBySubjectPredicateObject(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
+    {
+        return $this->getAssociationRepository()->getBySubjectPredicateObject($subjectKeyword, $predicate, $objectKeyword);
     }
 
 }

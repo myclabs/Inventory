@@ -34,9 +34,9 @@ Keyword\Domain\Keyword:
       targetEntity: Keyword\Domain\Association
       mappedBy: object
       orphanRemoval: true
-      cascade: [ remove ]
+      cascade: [ all ]
     subjectAssociations:
       targetEntity: Keyword\Domain\Association
       mappedBy: subject
       orphanRemoval: true
-      cascade: [ remove ]
+      cascade: [ all ]

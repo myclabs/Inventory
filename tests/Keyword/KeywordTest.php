@@ -82,12 +82,10 @@ class Keyword_Test_AssociationEntity extends Core_Test_TestCase
         $predicate1 = new Predicate('ref1', 'reverseref1');
         $predicate2 = new Predicate('ref2', 'reverseref2');
 
-        $association = new Association($Keyword1, $predicate1, $Keyword2);
+        $association = $Keyword1->addAssociationWith($predicate1, $Keyword2);
         $this->assertSame($Keyword1, $association->getSubject());
         $this->assertSame($predicate1, $association->getPredicate());
         $this->assertSame($Keyword2, $association->getObject());
-        $this->assertTrue($Keyword1->hasAssociationAsSubject($association));
-        $this->assertTrue($Keyword2->hasAssociationAsObject($association));
         $association->setPredicate($predicate2);
         $this->assertSame($predicate2, $association->getPredicate());
 
@@ -96,7 +94,7 @@ class Keyword_Test_AssociationEntity extends Core_Test_TestCase
         $this->assertEquals(1, $Keyword1->countAssociationsAsSubject());
         $this->assertEquals(0, $Keyword1->countAssociationsAsObject());
         $this->assertEquals(1, $Keyword1->countAssociations());
-        
+
         $this->assertFalse($Keyword2->hasAssociationsAsSubject());
         $this->assertTrue($Keyword2->hasAssociationsAsObject());
         $this->assertEquals(0, $Keyword2->countAssociationsAsSubject());

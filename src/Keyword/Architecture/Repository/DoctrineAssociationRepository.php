@@ -3,77 +3,42 @@
 namespace Keyword\Architecture\Repository;
 
 use Core\Domain\DoctrineEntityRepository;
+use Core\Domain\Translatable\TranslatableRepository;
+use Core_Exception_NotFound;
 use Doctrine\ORM\QueryBuilder;
-use Keyword\Domain\Association;
-use Keyword\Domain\AssociationRepository;
+use Gedmo\Translatable\TranslatableListener;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\Predicate;
+use Keyword\Domain\Association;
 
 /**
- * Gère les Association.
+ * Gère les Keyword.
  * @author valentin.claras
  */
-class DoctrineAssociationRepository extends DoctrineEntityRepository implements AssociationRepository
+class DoctrineAssociationRepository extends DoctrineEntityRepository
 {
-    /**
-     * Effectue un leftJoin sur l'association avec Keyword en tant que sujet.
-     *
-     * @param QueryBuilder $queryBuilder
-     *
-    protected function leftJoinSubject(QueryBuilder $queryBuilder)
-    {
-        $queryBuilder->leftJoin(
-            Association::getAlias() . '.' . Association::QUERY_SUBJECT,
-            Keyword::getAliasAsSubject()
-        );
-    }
-
-    /**
-     * Effectue un leftJoin sur l'association avec Keyword en tant qu'objet.
-     *
-     * @param QueryBuilder $queryBuilder
-     *
-    protected function leftJoinObject(QueryBuilder $queryBuilder)
-    {
-        $queryBuilder->leftJoin(
-            Association::getAlias() . '.' . Association::QUERY_OBJECT,
-            Keyword::getAliasAsObject()
-        );
-    }
-
-    /**
-     * Effectue un leftJoin sur l'association avec Predicate.
-     *
-     * @param QueryBuilder $queryBuilder
-     *
-    protected function leftJoinPredicate(QueryBuilder $queryBuilder)
-    {
-        $queryBuilder->leftJoin(
-            Association::getAlias() . '.' . Association::QUERY_PREDICATE,
-            Predicate::getAlias()
-        );
-    }*/
-
     /**
      * Renoie les messages d'erreur concernant la validation d'une Association.
      *
-     * @param Association $association
+     * @param \Keyword\Domain\Keyword $subjectKeyword
+     * @param \Keyword\Domain\Predicate $predicate
+     * @param \Keyword\Domain\Keyword $objectKeyword
      *
      * @return mixed string null
      */
-    public function getErrorMessageForAssociation(Association $association)
+    public function getErrorMessageForAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
-        if ($association->getSubject() === $association->getObject()) {
-            return __('Keyword', 'relation', 'subjectSameAsObject', array('REF' => $association->getSubject()->getRef()));
+        if ($subjectKeyword === $objectKeyword) {
+            return __('Keyword', 'relation', 'subjectSameAsObject', array('REF' => $subjectKeyword->getRef()));
         }
         try {
-            $this->getOneBySubjectPredicateObject($association->getSubject(), $association->getPredicate(), $association->getObject());
+            $this->getBySubjectPredicateObject($subjectKeyword, $predicate, $objectKeyword);
             return __('Keyword', 'relation', 'associationAlreadyExists');
         } catch (\Core_Exception_NotFound $e) {
             // Valide.
         }
         try {
-            $this->getOneBySubjectPredicateObject($association->getObject(), $association->getPredicate(), $association->getSubject());
+            $this->getBySubjectPredicateObject($objectKeyword, $predicate, $subjectKeyword);
             return __('Keyword', 'relation', 'associationAlreadyExists');
         } catch (\Core_Exception_NotFound $e) {
             // Valide.
@@ -85,38 +50,31 @@ class DoctrineAssociationRepository extends DoctrineEntityRepository implements 
     /**
      * Vérifie la disponibilité d'une Association.
      *
-     * @param Association $association
+     * @param Keyword $subjectKeyword
+     * @param Predicate $predicate
+     * @param Keyword $objectKeyword
      *
      * @throws \Core_Exception_User
      */
-    public function checkAssociation(Association $association)
+    public function checkAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
-        if ($association->getSubject() === $association->getObject()) {
+        if ($subjectKeyword === $objectKeyword) {
             throw new \Core_Exception_User(
-                'Keyword', 'relation', 'subjectSameAsObject', array('REF' => $association->getSubject()->getRef())
+                'Keyword', 'relation', 'subjectSameAsObject', array('REF' => $subjectKeyword->getRef())
             );
         }
         try {
-            $this->getOneBySubjectPredicateObject($association->getSubject(), $association->getPredicate(), $association->getObject());
+            $this->getBySubjectPredicateObject($subjectKeyword, $predicate, $objectKeyword);
             throw new \Core_Exception_User('Keyword', 'relation', 'associationAlreadyExists');
         } catch (\Core_Exception_NotFound $e) {
             // Valide.
         }
         try {
-            $this->getOneBySubjectPredicateObject($association->getObject(), $association->getPredicate(), $association->getSubject());
+            $this->getBySubjectPredicateObject($objectKeyword, $predicate, $subjectKeyword);
             throw new \Core_Exception_User('Keyword', 'relation', 'associationAlreadyExists');
         } catch (\Core_Exception_NotFound $e) {
             // Valide.
         }
-    }
-
-    /**
-     * @param Association $entity
-     */
-    public function add($entity)
-    {
-        $this->checkAssociation($entity);
-        parent::add($entity);
     }
 
     /**
@@ -125,11 +83,9 @@ class DoctrineAssociationRepository extends DoctrineEntityRepository implements 
      * @param Keyword $subjectKeyword
      * @param Predicate $predicate
      * @param Keyword $objectKeyword
-     * @throws \Core_Exception_NotFound
-     * @throws \Core_Exception_TooMany
      * @return Association
      */
-    public function getOneBySubjectPredicateObject(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
+    public function getBySubjectPredicateObject(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
         return $this->getOneBy(
             ['subject' => $subjectKeyword->getId(), 'predicate' => $predicate->getId(), 'object' => $objectKeyword->getId()]
