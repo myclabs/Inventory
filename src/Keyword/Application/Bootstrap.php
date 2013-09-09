@@ -17,7 +17,7 @@ class Bootstrap extends Core_Package_Bootstrap
     /**
      * Enregistrement des repository
      */
-    protected function _initRepositories()
+    protected function _initKeywordRepositories()
     {
         $this->container->set(
             'Keyword\Domain\KeywordRepository',

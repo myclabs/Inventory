@@ -3,6 +3,8 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Application\Service\KeywordService;
+use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\Keyword;
 
 /**
@@ -27,12 +29,20 @@ class Techno_Test_Family_MemberTest
      */
     public static function generateObject()
     {
-        $keyword = new Keyword();
-        $keyword->setLabel('Label');
-        $keyword->setRef(Core_Tools::generateString(10));
-        $keyword->save();
-        $member = new Techno_Model_Family_Member(Techno_Test_Family_DimensionTest::generateObject(),
-                                                 $keyword);
+        $container = Zend_Registry::get('container');
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRef = strtolower(Core_Tools::generateString(10));
+        $keywordRepository->add(new Keyword($keywordRef, 'Label'));
+        $entityManager->flush();
+        /** @var KeywordService $keywordService */
+        $keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+        $member = new Techno_Model_Family_Member(
+            Techno_Test_Family_DimensionTest::generateObject(),
+            $keywordService->get($keywordRef)
+        );
         $member->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
@@ -50,9 +60,12 @@ class Techno_Test_Family_MemberTest
         $o->getDimension()->removeMember($o);
         // Delete fixtures
         Techno_Test_Family_DimensionTest::deleteObject($o->getDimension());
-        $o->getKeyword()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->remove($keywordRepository->getOneByRef($o->getKeyword()->getRef()));
+        $entityManager->flush();
     }
 }
 
@@ -68,14 +81,22 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
     private $entityManager;
 
     /**
+     * @var KeywordService
+     */
+    private $keywordService;
+
+    /**
      * Fonction appelee une fois, avant tous les tests
      */
     public static function setUpBeforeClass()
     {
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Keyword::countTotal() > 0) {
-            foreach (Keyword::loadList() as $o) {
-                $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
             }
         }
         if (Techno_Model_Family_Member::countTotal() > 0) {
@@ -93,8 +114,7 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
     }
 
     /**
@@ -102,8 +122,9 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = Zend_Registry::get('EntityManagers')['default'];
+        $container = Zend_Registry::get('container');
+        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
     }
 
     /**
@@ -111,22 +132,22 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $keyword = new Keyword();
-        $keyword->setLabel('Label');
-        $keyword->setRef('keywordTest');
-        $keyword->save();
+        $keywordRef = 'keywordtest';
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef, 'Label'));
         $this->entityManager->flush();
 
         $o = new Techno_Model_Family_Member(Techno_Test_Family_DimensionTest::generateObject(),
-                                            $keyword);
+                                            $this->keywordService->get($keywordRef));
 
-        $this->assertSame($keyword, $o->getKeyword());
+        $this->assertEquals($keywordRef, $o->getKeyword()->getRef());
 
         $o->save();
         $this->entityManager->flush();
 
-        $this->assertInstanceOf('Keyword\Domain\Keyword', $o->getKeyword());
-        $this->assertEquals($keyword->getRef(), $o->getKeyword()->getRef());
+        $this->assertInstanceOf('Keyword\Application\Service\KeywordDTO', $o->getKeyword());
+        $this->assertEquals($keywordRef, $o->getKeyword()->getRef());
         return $o;
     }
 
@@ -145,7 +166,7 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         // Keyword
-        $this->assertInstanceOf('Keyword\Domain\Keyword', $oLoaded->getKeyword());
+        $this->assertInstanceOf('Keyword\Application\Service\KeywordDTO', $oLoaded->getKeyword());
         $this->assertEquals($o->getKeyword()->getRef(), $oLoaded->getKeyword()->getRef());
         // Dimension
         $this->assertEquals($o->getDimension()->getKey(), $oLoaded->getDimension()->getKey());
@@ -159,6 +180,10 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
      */
     function testDelete($o)
     {
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keyword = $keywordRepository->getOneByRef($o->getKeyword()->getRef());
+        $keywordRepository->remove($keyword);
         $o->delete();
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
             $this->entityManager->getUnitOfWork()->getEntityState($o));
@@ -168,7 +193,6 @@ class Techno_Test_Family_MemberSetUp extends PHPUnit_Framework_TestCase
         $this->assertCount(0, $o->getDimension()->getMembers());
         // Delete fixtures
         Techno_Test_Family_DimensionTest::deleteObject($o->getDimension());
-        $o->getKeyword()->delete();
         $this->entityManager->flush();
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
             $this->entityManager->getUnitOfWork()->getEntityState($o));
@@ -189,14 +213,22 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
     private $entityManager;
 
     /**
+     * @var KeywordService
+     */
+    private $keywordService;
+
+    /**
      * Méthode appelée avant les tests
      */
     public static  function setUpBeforeClass()
     {
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Keyword::countTotal() > 0) {
-            foreach (Keyword::loadList() as $o) {
-                $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
             }
         }
         if (Techno_Model_Family_Member::countTotal() > 0) {
@@ -214,8 +246,7 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
     }
 
     /**
@@ -223,8 +254,9 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = Zend_Registry::get('EntityManagers')['default'];
+        $container = Zend_Registry::get('container');
+        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
     }
 
     /**
@@ -234,17 +266,17 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
     {
         $dimension = Techno_Test_Family_DimensionTest::generateObject();
 
-        $keyword1 = new Keyword();
-        $keyword1->setLabel('Label');
-        $keyword1->setRef(Core_Tools::generateString(10));
-        $keyword1->save();
-        $o1 = new Techno_Model_Family_Member($dimension, $keyword1);
+        $keywordRef1 = strtolower(Core_Tools::generateString(10));
+        $keywordRef2 = strtolower(Core_Tools::generateString(10));
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
+        $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
+        $this->entityManager->flush();
+
+        $o1 = new Techno_Model_Family_Member($dimension, $this->keywordService->get($keywordRef1));
         $o1->save();
-        $keyword2 = new Keyword();
-        $keyword2->setLabel('Label');
-        $keyword2->setRef(Core_Tools::generateString(10));
-        $keyword2->save();
-        $o2 = new Techno_Model_Family_Member($dimension, $keyword2);
+        $o2 = new Techno_Model_Family_Member($dimension, $this->keywordService->get($keywordRef2));
         $o2->save();
 
         $this->assertEquals(1, $o1->getPosition());
@@ -272,8 +304,9 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $o1->getPosition());
 
         Techno_Test_Family_DimensionTest::deleteObject($dimension);
-        $keyword1->delete();
-        $keyword2->delete();
+        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef2));
+        $this->entityManager->flush();
     }
 
     /**
@@ -283,10 +316,12 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
     {
         // Fixtures
         $dimension = Techno_Test_Family_DimensionTest::generateObject();
-        $keyword = new Keyword();
-        $keyword->setLabel('Label');
-        $keyword->setRef('keywordTest');
-        $keyword->save();
+
+        $keywordRef = strtolower(Core_Tools::generateString(10));
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef, 'Label'));
+        $this->entityManager->flush();
 
         // Charge la collection pour éviter le lazy-loading en dessous
         // (le lazy loading entrainerait le chargement depuis la BDD et donc la prise en compte
@@ -294,13 +329,13 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
         $members = $dimension->getMembers();
         $this->assertCount(0, $members);
 
-        $o = new Techno_Model_Family_Member($dimension, $keyword);
+        $o = new Techno_Model_Family_Member($dimension, $this->keywordService->get($keywordRef));
 
         // Vérifie que l'association a été affectée bidirectionnellement
         $this->assertTrue($dimension->hasMember($o));
 
         Techno_Test_Family_CoeffTest::deleteObject($dimension->getFamily());
-        $keyword->delete();
+        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef));
         $this->entityManager->flush();
     }
 
@@ -311,12 +346,14 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
     {
         // Fixtures
         $dimension = Techno_Test_Family_DimensionTest::generateObject();
-        $keyword = new Keyword();
-        $keyword->setLabel('Label');
-        $keyword->setRef('keywordTest');
-        $keyword->save();
 
-        $o = new Techno_Model_Family_Member($dimension, $keyword);
+        $keywordRef = strtolower(Core_Tools::generateString(10));
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef, 'Label'));
+        $this->entityManager->flush();
+
+        $o = new Techno_Model_Family_Member($dimension, $this->keywordService->get($keywordRef));
 
         // Vérification de la cascade de la persistence
         $dimension->save();
@@ -328,8 +365,7 @@ class Techno_Test_Family_MemberMetierTest extends PHPUnit_Framework_TestCase
         Techno_Test_Family_DimensionTest::deleteObject($dimension);
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
                             $this->entityManager->getUnitOfWork()->getEntityState($o));
-
-        $keyword->delete();
+        $keywordRepository->remove($keywordRepository->getOneByRef($keywordRef));
         $this->entityManager->flush();
     }
 

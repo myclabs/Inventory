@@ -76,6 +76,16 @@ class Association
     }
 
     /**
+     * Défini le Predicate.
+     *
+     * @param Predicate $predicate
+     */
+    public function setPredicate(Predicate $predicate)
+    {
+        $this->predicate = $predicate;
+    }
+
+    /**
      * Renvoi le prédicat de l'association.
      *
      * @return Predicate

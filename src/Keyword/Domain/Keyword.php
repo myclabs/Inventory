@@ -56,35 +56,6 @@ class Keyword
         $this->setLabel($label);
     }
 
-//    /**
-//     * Retourne le mot-cle correspondant a la reference.
-//     *
-//     * @param string $ref
-//     *
-//     * @return Keyword
-//     */
-//    public static function loadByRef($ref)
-//    {
-//        return self::getEntityRepository()->loadBy(array('ref' => $ref));
-//    }
-
-//    /**
-//     * Charge la liste des Keyword ne possédant pas d'association en tant qu'objet.
-//     *
-//     * @param Core_Model_Query $queryParameters
-//     *
-//     * @return Keyword[]
-//     */
-//    public static function loadListRoots($queryParameters = null)
-//    {
-//        if ($queryParameters == null) {
-//            $queryParameters = new Core_Model_Query();
-//            $queryParameters->order->addOrder(self::QUERY_LABEL);
-//        }
-//
-//        return self::getEntityRepository()->loadListRoots($queryParameters);
-//    }
-
     /**
      * @return int
      */
