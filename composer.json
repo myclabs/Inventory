@@ -21,9 +21,9 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "zendframework/zendframework1": "~1.12",
-        "doctrine/orm": "~2.4",
-        "doctrine/annotations": "1.*",
+        "zendframework/zendframework1": "1.12.*",
+        "doctrine/orm": "2.4.*",
+        "doctrine/annotations": "~1.0",
         "doctrine/common": "~2.4",
         "gedmo/doctrine-extensions": "~2.3",
         "symfony/yaml": "~2.3",
@@ -32,9 +32,9 @@
         "netcarver/textile": "~3.5",
         "phpoffice/phpexcel": "~1.7",
         "dompdf/dompdf": "dev-master",
-        "myclabs/array-comparator": "~1.0",
+        "myclabs/array-comparator": "1.0.*",
         "myclabs/php-enum": "1.*",
-        "mnapoli/php-di": "~3.3",
+        "mnapoli/php-di": "3.3.*",
         "mnapoli/php-di-zf1": "*"
     },
     "require-dev": {
