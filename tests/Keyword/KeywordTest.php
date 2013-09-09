@@ -49,17 +49,6 @@ class Keyword_Test_KeywordEntity extends Core_Test_TestCase
         $this->assertInstanceOf('Keyword\Domain\Keyword', $Keyword);
         $this->assertEquals('ref', $Keyword->getRef());
         $this->assertEquals('Label', $Keyword->getLabel());
-
-        $Keyword = new Keyword('', 'Label');
-        $this->assertInstanceOf('Keyword\Domain\Keyword', $Keyword);
-        $this->assertEquals('label', $Keyword->getRef());
-        $this->assertEquals('Label', $Keyword->getLabel());
-
-        $Keyword = new Keyword(null, 'Label');
-        $this->assertInstanceOf('Keyword\Domain\Keyword', $Keyword);
-        $this->assertEquals('label', $Keyword->getRef());
-        $this->assertEquals('Label', $Keyword->getLabel());
-
     }
 
 }
