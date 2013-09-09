@@ -346,15 +346,15 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('granularities', $granularities);
 
-        $modelBuilder->bind('inputAncestor', __('Orga', 'exports', 'inputColumnAncestors'));
-        $modelBuilder->bind('inputLabel', __('Orga', 'exports', 'inputColumnLabel'));
-        $modelBuilder->bind('inputType', __('Orga', 'exports', 'inputColumnType'));
-        $modelBuilder->bind('inputValue', __('Orga', 'exports', 'inputColumnValue'));
-        $modelBuilder->bind('inputUncertainty', __('Orga', 'exports', 'inputColumnUncertainty'));
-        $modelBuilder->bind('inputUnit', __('Orga', 'exports', 'inputColumnUnit'));
-        $modelBuilder->bind('inputReferenceValue', __('Orga', 'exports', 'inputColumnReferenceValue'));
-        $modelBuilder->bind('inputReferenceUncertainty', __('Orga', 'exports', 'inputColumnReferenceUncertainty'));
-        $modelBuilder->bind('inputReferenceUnit', __('Orga', 'exports', 'inputColumnReferenceUnit'));
+        $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'formSubForm'));
+        $modelBuilder->bind('inputLabel', __('UI', 'name', 'field'));
+        $modelBuilder->bind('inputType', __('Orga', 'export', 'fieldType'));
+        $modelBuilder->bind('inputValue', __('Orga', 'export', 'typedInValue'));
+        $modelBuilder->bind('inputUncertainty', __('UI', 'name', 'uncertainty'));
+        $modelBuilder->bind('inputUnit', __('Orga', 'export', 'choosedUnit'));
+        $modelBuilder->bind('inputReferenceValue', __('Orga', 'export', 'valueExpressedInDefaultUnit'));
+        // $modelBuilder->bind('inputReferenceUncertainty', __('Orga', 'export', 'blabla'));
+        $modelBuilder->bind('inputReferenceUnit', __('Orga', 'export', 'defaultUnit'));
 
         $modelBuilder->bindFunction(
             'getChildCellsForGranularity',
@@ -462,17 +462,17 @@ function getInputsDetails(AF_Model_Input $input, $prefix='')
 function getInputType (AF_Model_Input $input) {
     switch (get_class($input)) {
         case 'AF_Model_Input_Checkbox':
-            return __('Orga', 'exports', 'checkboxField');
+            return __('Orga', 'export', 'checkboxField');
         case 'AF_Model_Input_Select_Single':
-            return __('Orga', 'exports', 'singleSelectField');
+            return __('Orga', 'export', 'singleSelectField');
         case 'AF_Model_Input_Select_Multi':
-            return __('Orga', 'exports', 'multiSelectField');
+            return __('Orga', 'export', 'multiSelectField');
         case 'AF_Model_Input_Text':
-            return __('Orga', 'exports', 'textField');
+            return __('Orga', 'export', 'textField');
         case 'AF_Model_Input_Numeric':
-            return __('Orga', 'exports', 'numericField');
+            return __('Orga', 'export', 'numericField');
         default:
-            return __('Orga', 'exports', 'unknownFieldType');
+            return __('Orga', 'export', 'unknownFieldType');
     }
 }
 

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="formSubForm">
+            <tuv xml:lang="fr">
+                <seg>Formulaire / sous-formulaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Form / subform</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fieldType">
+            <tuv xml:lang="fr">
+                <seg>Type de champ</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Field type</seg>
+            </tuv>
+        </tu>
+        <tu tuid="typedInValue">
+            <tuv xml:lang="fr">
+                <seg>Valeur saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Typed in value</seg>
+            </tuv>
+        </tu>
+        <tu tuid="choosedUnit">
+            <tuv xml:lang="fr">
+                <seg>Unité choisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choosed unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="valueExpressedInDefaultUnit">
+            <tuv xml:lang="fr">
+                <seg>Valeur exprimée dans l'unité par défaut</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Value converted into default unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="defaultUnit">
+            <tuv xml:lang="fr">
+                <seg>Unité par défaut</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Initial value</seg>
+            </tuv>
+        </tu>
+
+        <!-- Types de champ -->
+        <tu tuid="numericField">
+            <tuv xml:lang="fr">
+                <seg>Numérique</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Numeric</seg>
+            </tuv>
+        </tu>
+        <tu tuid="singleSelectField">
+            <tuv xml:lang="fr">
+                <seg>Sélection simple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Single selection</seg>
+            </tuv>
+        </tu>
+        <tu tuid="multiSelectField">
+            <tuv xml:lang="fr">
+                <seg>Sélection multiple</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>multiple selection</seg>
+            </tuv>
+        </tu>
+        <tu tuid="checkboxField">
+            <tuv xml:lang="fr">
+                <seg>Booléen</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Boolean</seg>
+            </tuv>
+        </tu>
+        <tu tuid="textField">
+            <tuv xml:lang="fr">
+                <seg>Texte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Text</seg>
+            </tuv>
+        </tu>
+
+
+    </body>
+</tmx>
