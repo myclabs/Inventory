@@ -53,7 +53,6 @@ class Core_Work_SimpleDispatcher implements Core_Work_Dispatcher
     public function work()
     {
         // Rien à faire car les workers sont appelés directement par run()
-        Core_Error_Log::getInstance()->info("SimpleWorkDispatcher has nothing to do in worker mode");
     }
 
     /**
