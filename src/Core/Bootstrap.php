@@ -89,15 +89,18 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $builder = new ContainerBuilder();
         $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
-        // Cache basique, à remplacer
         $diConfig = $configuration->get('di', null);
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
-            // Si cache, on utilise APC
-            // TODO à améliorer quand https://github.com/mnapoli/PHP-DI/issues/108 corrigé
-            $builder->setDefinitionCache(new ApcCache());
+            $cache = new ApcCache();
+            $cache->setNamespace($configuration->get('applicationName', ''));
+            $builder->setDefinitionCache($cache);
         }
 
         $this->container = $builder->build();
+
+        if (isset($cache)) {
+            $this->container->set('Doctrine\Common\Cache\Cache', $cache);
+        }
 
         Zend_Registry::set('configuration', $configuration);
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
@@ -169,7 +172,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         switch (APPLICATION_ENV) {
             case 'test':
             case 'production':
-                $doctrineCache = new ArrayCache();
+            $cache = $this->container->get('Doctrine\Common\Cache\Cache');
                 $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_NEVER;
                 break;
             default:
@@ -195,7 +198,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrineConfig->newDefaultAnnotationDriver();
         $cachedAnnotationReader = new Doctrine\Common\Annotations\CachedReader(
             new Doctrine\Common\Annotations\AnnotationReader(),
-            $doctrineCache
+            $cache
         );
         Gedmo\DoctrineExtensions::registerMappingIntoDriverChainORM(
             $driverChain, // our metadata driver chain, to hook into
@@ -207,9 +210,9 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Configuration de Doctrine pour utiliser le cache
         //  pour la création des requêtes, des résults, et du parsing des Métadata.
-        $doctrineConfig->setQueryCacheImpl($doctrineCache);
-        $doctrineConfig->setResultCacheImpl($doctrineCache);
-        $doctrineConfig->setMetadataCacheImpl($doctrineCache);
+        $doctrineConfig->setQueryCacheImpl($cache);
+        $doctrineConfig->setResultCacheImpl($cache);
+        $doctrineConfig->setMetadataCacheImpl($cache);
         // Configuration des Proxies.
         $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
@@ -226,7 +229,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 break;
             default:
                 $profiler = null;
-            break;
+                break;
         }
         $doctrineConfig->setSQLLogger($profiler);
 
