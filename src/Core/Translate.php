@@ -55,18 +55,13 @@ class Core_Translate extends Zend_Translate
         }
 
         // Paramétrage du cache si on est pas en développement ou test
-        if (!(APPLICATION_ENV == 'developpement')
-            && !(APPLICATION_ENV == 'test')
-            && !(APPLICATION_ENV == 'testsunitaires')
-            && !(APPLICATION_ENV == 'script')
-            && !(APPLICATION_ENV == 'production')
-        ) {
+        if (APPLICATION_ENV == 'production' || APPLICATION_ENV == 'test') {
             $cache = Core_Cache::factory('translate');
 
             if (!$cache) {
-                throw new Core_Exception_NotFound('Le cache des traductions n\'a pas été créé '.
-                '(vérifiez que le dossier contenant le cache a été créé dans public/cache et '.
-                'qu\'il est accessible en écriture');
+                throw new Core_Exception_NotFound("Le cache des traductions n'a pas été créé "
+                    . "(vérifiez que le dossier contenant le cache a été créé dans public/cache et "
+                    . "qu'il est accessible en écriture)");
             }
 
             Zend_Translate::setCache($cache);
