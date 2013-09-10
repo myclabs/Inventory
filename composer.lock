@@ -37,7 +37,7 @@
                     "Doctrine\\Common\\Annotations\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -63,7 +63,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -173,7 +173,7 @@
                     "Doctrine\\Common\\Collections\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -199,7 +199,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -374,7 +374,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -398,9 +398,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -437,7 +437,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -454,7 +454,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -973,12 +973,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Xport.git",
-                "reference": "9b1a6519c39ca024558aba8fe53c12e3216fcd74"
+                "reference": "be8b3cded17017a97c3c92efa4c2a48777e4832a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Xport/zipball/9b1a6519c39ca024558aba8fe53c12e3216fcd74",
-                "reference": "9b1a6519c39ca024558aba8fe53c12e3216fcd74",
+                "url": "https://api.github.com/repos/myclabs/Xport/zipball/be8b3cded17017a97c3c92efa4c2a48777e4832a",
+                "reference": "be8b3cded17017a97c3c92efa4c2a48777e4832a",
                 "shasum": ""
             },
             "require": {
@@ -1011,7 +1011,7 @@
                 "pdf",
                 "xml"
             ],
-            "time": "2013-08-21 10:31:26"
+            "time": "2013-09-10 12:04:31"
         },
         {
             "name": "netcarver/textile",
@@ -1041,7 +1041,7 @@
                     "Netcarver\\Textile": "src/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1135,7 +1135,7 @@
                     "Console_CommandLine": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -1182,7 +1182,7 @@
                     "PEAR": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "."
             ],
@@ -1226,7 +1226,7 @@
                     "classes/"
                 ]
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1806,7 +1806,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],
