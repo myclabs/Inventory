@@ -504,8 +504,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $cell = Orga_Model_Cell::load($this->view->idCell);
         $organization = $cell->getGranularity()->getOrganization();
 
-        /** @var User_Model_User $connectedUser */
-        $connectedUser = $this->_helper->auth();
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $this->_helper->auth(),
             User_Model_Action_Default::EDIT(),
@@ -523,17 +521,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         // Liste des exports.
         $this->view->exports = [];
 
-        // Orga Structure.
-        if ($isUserAllowedToEditOrganization) {
+        if ($isUserAllowedToEditOrganization && !$cell->getGranularity()->hasAxes()) {
+            // Orga Structure.
             $this->view->exports['Organization'] = [
                 'label' => __('Orga', 'organization', 'organization'),
             ];
+        } else {
+            // Orga Cell.
+            $this->view->exports['Cell'] = [
+                'label' => __('Orga', 'organization', 'organization'),
+            ];
         }
-
-        // Orga Cell.
-        $this->view->exports['Cell'] = [
-            'label' => __('Orga', 'organization', 'organization'),
-        ];
 
         // Orga User.
         $this->view->exports['Users'] = [
