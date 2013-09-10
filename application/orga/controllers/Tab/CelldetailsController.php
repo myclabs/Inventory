@@ -532,7 +532,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         // Orga Cell.
         $this->view->exports['Cell'] = [
-            'label' => __('Orga', 'cell', 'subCells'),
+            'label' => __('Orga', 'organization', 'organization'),
         ];
 
         // Orga User.

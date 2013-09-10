@@ -38,9 +38,9 @@ class UnitExport
         $queryBasePhysicalQuantities->filter->addCondition(PhysicalQuantity::QUERY_ISBASE, true);
         $modelBuilder->bind('basePhysicalQuantities', PhysicalQuantity::loadList($queryBasePhysicalQuantities));
         $modelBuilder->bind('physicalQuantities', PhysicalQuantity::loadList());
-        $modelBuilder->bind('physicalQuantitiesSheetLabel', __('Unit', 'exports', 'physicalQuantitiesSheetLabel'));
-        $modelBuilder->bind('physicalQuantityColumnLabel', __('Unit', 'exports', 'physicalQuantityColumnLabel'));
-        $modelBuilder->bind('physicalQuantityColumnRef', __('Unit', 'exports', 'physicalQuantityColumnRef'));
+        $modelBuilder->bind('physicalQuantitiesSheetLabel', __('Unit', 'name', 'physicalQuantities'));
+        $modelBuilder->bind('physicalQuantityColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('physicalQuantityColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'displayNormalizedExponent',
             function (PhysicalQuantity $physicalQuantity, PhysicalQuantity $basePhysicalQuantity) {
@@ -55,27 +55,27 @@ class UnitExport
 
         // Standard Units
         $modelBuilder->bind('standardUnits', StandardUnit::loadList());
-        $modelBuilder->bind('standardUnitsSheetLabel', __('Unit', 'exports', 'standardUnitsSheetLabel'));
-        $modelBuilder->bind('standardUnitColumnLabel', __('Unit', 'exports', 'standardUnitColumnLabel'));
-        $modelBuilder->bind('standardUnitColumnRef', __('Unit', 'exports', 'standardUnitColumnRef'));
-        $modelBuilder->bind('standardUnitColumnSymbol', __('Unit', 'exports', 'standardUnitColumnSymbol'));
-        $modelBuilder->bind('standardUnitColumnPhysicalQuantity', __('Unit', 'exports', 'standardUnitColumnPhysicalQuantity'));
-        $modelBuilder->bind('standardUnitColumnMultiplier', __('Unit', 'exports', 'standardUnitColumnMultiplier'));
-        $modelBuilder->bind('standardUnitColumnSystem', __('Unit', 'exports', 'standardUnitColumnUnitSystem'));
+        $modelBuilder->bind('standardUnitsSheetLabel', __('Unit', 'name', 'standardUnits'));
+        $modelBuilder->bind('standardUnitColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('standardUnitColumnRef', __('UI', 'name', 'identifier'));
+        $modelBuilder->bind('standardUnitColumnSymbol', __('Unit', 'name', 'symbol'));
+        $modelBuilder->bind('standardUnitColumnPhysicalQuantity', __('Unit', 'name', 'physicalQuantity'));
+        $modelBuilder->bind('standardUnitColumnMultiplier', __('Unit', 'name', 'multiplier'));
+        $modelBuilder->bind('standardUnitColumnSystem', __('Unit', 'name', 'unitSystem'));
 
         // Extended Units
         $modelBuilder->bind('extendedUnits', ExtendedUnit::loadList());
-        $modelBuilder->bind('extendedUnitsSheetLabel', __('Unit', 'exports', 'extendedUnitsSheetLabel'));
-        $modelBuilder->bind('extendedUnitColumnLabel', __('Unit', 'exports', 'extendedUnitColumnLabel'));
-        $modelBuilder->bind('extendedUnitColumnRef', __('Unit', 'exports', 'extendedUnitColumnRef'));
-        $modelBuilder->bind('extendedUnitColumnSymbol', __('Unit', 'exports', 'extendedUnitColumnSymbol'));
-        $modelBuilder->bind('extendedUnitColumnMultiplier', __('Unit', 'exports', 'extendedUnitColumnMultiplier'));
+        $modelBuilder->bind('extendedUnitsSheetLabel', __('Unit', 'name', 'extendedUnits'));
+        $modelBuilder->bind('extendedUnitColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('extendedUnitColumnRef', __('UI', 'name', 'identifier'));
+        $modelBuilder->bind('extendedUnitColumnSymbol', __('Unit', 'name', 'symbol'));
+        $modelBuilder->bind('extendedUnitColumnMultiplier', __('Unit', 'name', 'multiplier'));
 
         // Discrete Units
         $modelBuilder->bind('discreteUnits', DiscreteUnit::loadList());
-        $modelBuilder->bind('discreteUnitsSheetLabel', __('Unit', 'exports', 'discreteUnitsSheetLabel'));
-        $modelBuilder->bind('discreteUnitColumnLabel', __('Unit', 'exports', 'discreteUnitColumnLabel'));
-        $modelBuilder->bind('discreteUnitColumnRef', __('Unit', 'exports', 'discreteUnitColumnRef'));
+        $modelBuilder->bind('discreteUnitsSheetLabel', __('Unit', 'name', 'discreteUnits'));
+        $modelBuilder->bind('discreteUnitColumnLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('discreteUnitColumnRef', __('UI', 'name', 'identifier'));
 
 
         switch ($format) {
