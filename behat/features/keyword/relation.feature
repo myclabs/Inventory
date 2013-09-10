@@ -22,7 +22,7 @@ Feature: Keywords relations
       | subject   | predicate            | object                 |
       | processus | est plus général que | amont de la combustion |
 
-  @javascript
+  @javascript @skipped
   Scenario: Creation of a keyword relation, incorrect input
   # refs #6419 Positionnement d'un message d'erreur dans le popup d'ajout d'une relation entre mots clés
     Given I am on "keyword/association/manage"
