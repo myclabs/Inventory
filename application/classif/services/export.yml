@@ -6,6 +6,7 @@ sheets:
     content:
 
       - type: VerticalTable
+        label: "{{ contextTableLabel }}"
         columns:
           - label: "{{ contextColumnLabel }}"
           - label: "{{ contextColumnRef }}"
@@ -17,6 +18,7 @@ sheets:
                   - "{{ context.ref }}"
 
       - type: VerticalTable
+        label: "{{ indicatorTableLabel }}"
         columns:
           - label: "{{ indicatorColumnLabel }}"
           - label: "{{ indicatorColumnRef }}"
@@ -32,6 +34,7 @@ sheets:
                   - "{{ indicator.ratioUnit }}"
 
       - type: VerticalTable
+        label: "{{ contextindicatorTableLabel }}"
         columns:
           - label: "{{ contextindicatorColumnContext }}"
           - label: "{{ contextindicatorColumnIndicator }}"
