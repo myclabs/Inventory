@@ -29,8 +29,8 @@ class Techno_Service_Export
 
         // Feuilles des Category.
         $modelBuilder->bind('categories', Techno_Model_Category::loadRootCategories());
-        $modelBuilder->bind('cellDigitalValue', __('Techno', 'exports', 'digitalValue'));
-        $modelBuilder->bind('cellRelativeUncertainty', __('Techno', 'exports', 'relativeUncertainty'));
+        $modelBuilder->bind('cellDigitalValue', __('UI', 'name', 'value'));
+        $modelBuilder->bind('cellRelativeUncertainty', '+/- (%)');
         $modelBuilder->bindFunction('getAllFamilies', 'getAllFamilies');
         $modelBuilder->bindFunction(
             'getFamilyLabel',

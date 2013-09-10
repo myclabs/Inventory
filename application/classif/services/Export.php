@@ -30,19 +30,19 @@ class Classif_Service_Export
         // Feuilles des Context, Indicator, ContextIndicator.
         $modelBuilder->bind('contextindicatorsSheetLabel', __('Classif', 'indicator', 'indicators'));
 
-        $modelBuilder->bind('contextTableLabel', __('Classif', 'exports', 'contextTable'));
+        $modelBuilder->bind('contextTableLabel', __('Classif', 'context', 'contexts'));
         $modelBuilder->bind('contextColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('contextColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bind('contexts', Classif_Model_Context::loadList());
 
-        $modelBuilder->bind('indicatorTableLabel', __('Classif', 'exports', 'indicatorTable'));
+        $modelBuilder->bind('indicatorTableLabel', __('Classif', 'indicator', 'indicators'));
         $modelBuilder->bind('indicatorColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('indicatorColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bind('indicatorColumnUnit', __('Unit', 'name', 'unit'));
         $modelBuilder->bind('indicatorColumnRatioUnit', __('Unit', 'name', 'ratioUnit'));
         $modelBuilder->bind('indicators', Classif_Model_Indicator::loadList());
 
-        $modelBuilder->bind('contextindicatorTableLabel', __('Classif', 'exports', 'contextindicatorTable'));
+        $modelBuilder->bind('contextindicatorTableLabel', __('Classif', 'contextIndicator', 'contextIndicators'));
         $modelBuilder->bind('contextindicatorColumnContext', __('Classif', 'context', 'context'));
         $modelBuilder->bind('contextindicatorColumnIndicator', __('Classif', 'indicator', 'indicator'));
         $modelBuilder->bind('contextindicatorColumnAxes', __('UI', 'name', 'axes'));
