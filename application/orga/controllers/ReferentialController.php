@@ -92,10 +92,10 @@ class Orga_ReferentialController extends Core_Controller
 
         switch ($export) {
             case 'Classif':
-                $exportService = new Classif_Service_Export();
-                $streamFunction = 'stream';
-                $baseFilename = 'Classif';
-                break;
+            $exportService = new Classif_Service_Export();
+            $streamFunction = 'stream';
+            $baseFilename = 'Classif';
+            break;
             case 'Techno':
                 $exportService = new Techno_Service_Export();
                 $streamFunction = 'stream';

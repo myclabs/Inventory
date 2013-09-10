@@ -27,7 +27,7 @@ class Techno_Service_Export
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
 
-        // Feuilles det Category.
+        // Feuilles des Category.
         $modelBuilder->bind('categories', Techno_Model_Category::loadRootCategories());
         $modelBuilder->bind('cellDigitalValue', __('Techno', 'exports', 'digitalValue'));
         $modelBuilder->bind('cellRelativeUncertainty', __('Techno', 'exports', 'relativeUncertainty'));
@@ -39,7 +39,8 @@ class Techno_Service_Export
 
                 $category = $family->getCategory();
                 while ($category->getParentCategory() !== null) {
-                    $label .= $category->getLabel().'/';
+                    $label .= $category->getLabel().' / ';
+                    $category = $category->getParentCategory();
                 }
                 $label .= $family->getLabel();
 
@@ -85,11 +86,11 @@ class Techno_Service_Export
 
 }
 
-function getAllFamilies(Techno_Model_Category $catgory)
+function getAllFamilies(Techno_Model_Category $category)
 {
     $families = [];
-    $families = array_merge($families, $catgory->getFamilies()->toArray());
-    foreach ($catgory->getChildCategories() as $childCategory) {
+    $families = array_merge($families, $category->getFamilies()->toArray());
+    foreach ($category->getChildCategories() as $childCategory) {
         $families = array_merge($families, getAllFamilies($childCategory));
     }
     return $families;
