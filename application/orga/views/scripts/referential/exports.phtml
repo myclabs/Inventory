@@ -16,7 +16,7 @@ foreach ($this->exports as $exportRef => $exportArray) { ?>
                 </span>
                 <input name="export" type="hidden" value="<?=$exportRef?>">
                 <?php if (count($this->formats) > 1) { ?>
-                <select name="format" class="input-small format">
+                <select name="format" class="input format">
                     <?php foreach($this->formats as $formatRef => $formatLabel) { ?>
                         <option value="<?=$formatRef?>"><?=$formatLabel?></option>
                     <?php } ?>
