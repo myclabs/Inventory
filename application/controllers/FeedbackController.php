@@ -8,7 +8,7 @@ use Core\Annotation\Secure;
 /**
  * @package Inventory
  */
-class FeedbackController extends Core_Controller_Ajax
+class FeedbackController extends Core_Controller
 {
 
     /**
@@ -19,7 +19,7 @@ class FeedbackController extends Core_Controller_Ajax
     {
         $subject = "Feedback utilisateur reçu";
 
-        $params = $this->_getAllParams();
+        $params = $this->getAllParams();
         unset($params['module']);
         unset($params['controller']);
         unset($params['action']);
