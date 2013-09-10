@@ -578,7 +578,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 break;
         }
 
-        $date = date(str_replace('&nbsp;', '', __('Orga', 'export', 'dateFormat')));
+        $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
         $filename = $date.'_'.$baseFilename.'.'.$format;
 
         if ($format = 'xlsx') {
