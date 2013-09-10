@@ -30,8 +30,8 @@ sheets:
               - cells:
                   - "{{ indicator.label }}"
                   - "{{ indicator.ref }}"
-                  - "{{ indicator.unit }}"
-                  - "{{ indicator.ratioUnit }}"
+                  - "{{ indicator.unit.symbol }}"
+                  - "{{ indicator.ratioUnit.symbol }}"
 
       - type: VerticalTable
         label: "{{ contextindicatorTableLabel }}"
