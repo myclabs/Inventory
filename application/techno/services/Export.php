@@ -46,12 +46,6 @@ class Techno_Service_Export
 
                 $label .= ' ('.$family->getUnit()->getSymbol().')';
 
-                if ($family instanceof Techno_Model_Family_Coeff) {
-                    $label .= ' - '.__('Techno', 'exports', 'coeff');
-                } else if ($family instanceof Techno_Model_Family_Process) {
-                    $label .= ' - '.__('Techno', 'exports', 'process');
-                }
-
                 return $label;
             }
         );
@@ -62,8 +56,8 @@ class Techno_Service_Export
                     if ($dimension->hasMember($member)) {
                         return $member->getLabel();
                     }
-                    return '';
                 }
+                return '';
             }
         );
 
