@@ -54,3 +54,21 @@ foreach ($this->exports as $exportRef => $exportArray) { ?>
         }
     );
 </script>
+
+<div id="exportCellAsExcelPopup" class="modal hide fade">
+    <div class="modal-body">
+        <p><?=__('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
+        <div class="progress progress-striped active">
+            <div class="bar" style="width: 100%;"></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'close')?></button>
+    </div>
+</div>
+
+<script>
+    $("#container_exports button.btn-primary[type=submit]").click(function(e) {
+        $('#exportCellAsExcelPopup').modal();
+    });
+</script>
