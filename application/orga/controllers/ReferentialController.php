@@ -118,12 +118,13 @@ class Orga_ReferentialController extends Core_Controller
         }
 
         $date = date(str_replace('&nbsp;', '', __('Orga', 'export', 'dateFormat')));
-        //@todo A supprimer. Pour éviter les erreurs de génération en attendant la traduction.
-        $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
         $filename = $date.'_'.$baseFilename.'.'.$format;
 
-        $contentType = "Content-type: application/vnd.ms-excel";
-//        $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        if ($format = 'xlsx') {
+            $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        } else {
+            $contentType = "Content-type: application/vnd.ms-excel";
+        }
         header($contentType);
         header('Content-Disposition:attachement;filename='.$filename);
         header('Cache-Control: max-age=0');
