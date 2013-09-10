@@ -172,11 +172,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         switch (APPLICATION_ENV) {
             case 'test':
             case 'production':
-            $cache = $this->container->get('Doctrine\Common\Cache\Cache');
+                $cache = $this->container->get('Doctrine\Common\Cache\Cache');
                 $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_NEVER;
                 break;
             default:
-                $doctrineCache = new ArrayCache();
+                $cache = new ArrayCache();
                 $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_EVAL;
                 break;
         }
