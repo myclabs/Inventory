@@ -1,24 +1,18 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Core
- * @subpackage EventDispatcher
- */
 
 /**
  * Observateur des classes
  *
- * @package    Core
- * @subpackage EventDispatcher
+ * @author valentin.claras
  */
 class Core_EventDispatcher
 {
     /**
      * List of all observable enteties referencing their observers
      *
-     * @var array() observable => observer[]
+     * @var array observable => observer[]
      */
-    protected $subjects = array();
+    protected $subjects = [];
 
     /**
      * Add a link between an observer and an observable.
@@ -40,7 +34,7 @@ class Core_EventDispatcher
     /**
      * Check if a link between an observer and an observable already exist.
      *
-     * @param srring $observerName
+     * @param string $observerName
      * @param string $observableName
      *
      * @return bool
