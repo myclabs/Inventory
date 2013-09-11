@@ -34,7 +34,7 @@ class AF_Model_Output_Index extends Core_Model_Entity
      * À supprimer quand le bug dans Doctrine aura disparu
      * @var AF_Model_Output_Element[]
      */
-    private $outputElements;
+    protected $outputElements;
 
 
     /**
