@@ -165,7 +165,10 @@ class Core_Error_Log
      */
     public function dump($var)
     {
-        $this->_zendLogger->log($var, Zend_Log::DEBUG);
+        try {
+            $this->_zendLogger->log($var, Zend_Log::DEBUG);
+        } catch (Exception $e) {
+        }
     }
 
     /**
@@ -179,7 +182,10 @@ class Core_Error_Log
         if ($this->_activation == false) {
             return;
         }
-        $this->_zendLogger->err($e);
+        try {
+            $this->_zendLogger->err($e);
+        } catch (Exception $e) {
+        }
     }
 
     /**
@@ -189,7 +195,10 @@ class Core_Error_Log
      */
     public function error($message)
     {
-        $this->_zendLogger->log($message, Zend_Log::ERR);
+        try {
+            $this->_zendLogger->log($message, Zend_Log::ERR);
+        } catch (Exception $e) {
+        }
     }
 
     /**
@@ -199,7 +208,10 @@ class Core_Error_Log
      */
     public function warning($message)
     {
-        $this->_zendLogger->log($message, Zend_Log::WARN);
+        try {
+            $this->_zendLogger->log($message, Zend_Log::WARN);
+        } catch (Exception $e) {
+        }
     }
 
     /**
@@ -209,7 +221,10 @@ class Core_Error_Log
      */
     public function info($message)
     {
-        $this->_zendLogger->log($message, Zend_Log::INFO);
+        try {
+            $this->_zendLogger->log($message, Zend_Log::INFO);
+        } catch (Exception $e) {
+        }
     }
 
     /**
@@ -219,7 +234,10 @@ class Core_Error_Log
      */
     public function debug($message)
     {
-        $this->_zendLogger->log($message, Zend_Log::DEBUG);
+        try {
+            $this->_zendLogger->log($message, Zend_Log::DEBUG);
+        } catch (Exception $e) {
+        }
     }
 
     /**
