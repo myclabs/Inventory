@@ -4,6 +4,7 @@ namespace Keyword\Domain;
 
 use Core\Domain\Criteria\CountCriteria;
 use Core\Domain\Criteria\OrderCriteria;
+use Doctrine\Common\Collections\Expr\Expression;
 
 /**
  * Criteria for filtering keywords
@@ -16,22 +17,12 @@ class KeywordCriteria
     use CountCriteria;
 
     /**
-     * @var string
+     * @var Expression
      */
     public $ref;
 
     /**
-     * @var
-     */
-    public $refOperator;
-
-    /**
-     * @var string
+     * @var Expression
      */
     public $label;
-
-    /**
-     * @var
-     */
-    public $labelOperator;
 }
