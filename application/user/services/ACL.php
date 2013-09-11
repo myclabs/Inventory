@@ -5,7 +5,7 @@
  * @subpackage Service
  */
 
-use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 
 /**
  * Droits d'accès
@@ -18,8 +18,18 @@ class User_Service_ACL
     /**
      * @var User_Service_ACL_ResourceTreeTraverser[]
      */
-    protected $resourceTreeTraversers = [];
+    private $resourceTreeTraversers = [];
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Vérifie une autorisation d'accès à une ressource
@@ -48,7 +58,12 @@ class User_Service_ACL
         if ($target instanceof User_Model_Resource) {
             $resources = [$target];
         } else {
-            $resources = [$this->getResourceForEntity($target)];
+            $resource = $this->getResourceForEntity($target);
+            if ($resource === null) {
+                $this->logger->notice('User_Service_ACL::isAllowed called on object without an associated resource');
+                return false;
+            }
+            $resources = [$resource];
         }
 
         // Héritage des ressources
