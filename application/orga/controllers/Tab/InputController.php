@@ -25,6 +25,12 @@ class Orga_Tab_InputController extends Core_Controller
     private $aclService;
 
     /**
+     * @Inject
+     * @var Social_Service_CommentService
+     */
+    private $commentService;
+
+    /**
      * Action fournissant la vue des documents pour l'input.
      * @Secure("viewCell")
      */
@@ -46,7 +52,6 @@ class Orga_Tab_InputController extends Core_Controller
     }
 
     /**
-     * Action fournissant la vue des documents pour l'input.
      * @Secure("inputCell")
      */
     public function commentAddAction()
@@ -58,18 +63,16 @@ class Orga_Tab_InputController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $author = $this->_helper->auth();
-        $formData = $this->getFormData('addComment');
+        $formData = $this->getFormData('addCommentForm');
 
-        $content = $formData->getValue('content');
+        $content = $formData->getValue('addContent');
         if (empty($content)) {
-            $this->addFormError('content', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->addFormError('addContent', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         if (!$this->hasFormError()) {
 
             // Ajoute le commentaire
-            $comment = new Social_Model_Comment($author);
-            $comment->setText($content);
-            $comment->save();
+            $comment = $this->commentService->addComment($author, $content);
             $cell->addSocialCommentForInputSetPrimary($comment);
             $cell->save();
 
@@ -77,6 +80,20 @@ class Orga_Tab_InputController extends Core_Controller
             $this->forward('comment-added', 'comment', 'social', ['comment' => $comment]);
             return;
         }
+        $this->sendFormResponse();
+    }
+
+    /**
+     * @Secure("deleteComment")
+     */
+    public function commentDeleteAction()
+    {
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+        $comment = Social_Model_Comment::load($this->getParam('id'));
+
+        $cell->removeSocialCommentForInputSetPrimary($comment);
+        $this->commentService->deleteComment($comment->getId());
+
         $this->sendFormResponse();
     }
 
