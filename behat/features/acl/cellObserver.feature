@@ -18,6 +18,7 @@ Feature: Cell observer feature
     And I click element "#chiffre_affaireHistory .btn"
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element
+    And I click element "#chiffre_affaireHistory .btn"
   # TODO : "Vue globale" non cliquable dans le volet de navigation
   # Accès à l'onglet "Collectes"
     When I click "Quitter"
