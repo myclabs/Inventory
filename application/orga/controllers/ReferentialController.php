@@ -92,10 +92,10 @@ class Orga_ReferentialController extends Core_Controller
 
         switch ($export) {
             case 'Classif':
-                $exportService = new Classif_Service_Export();
-                $streamFunction = 'stream';
-                $baseFilename = 'Classif';
-                break;
+            $exportService = new Classif_Service_Export();
+            $streamFunction = 'stream';
+            $baseFilename = 'Classif';
+            break;
             case 'Techno':
                 $exportService = new Techno_Service_Export();
                 $streamFunction = 'stream';
@@ -117,13 +117,14 @@ class Orga_ReferentialController extends Core_Controller
                 break;
         }
 
-        $date = date(str_replace('&nbsp;', '', __('Orga', 'export', 'dateFormat')));
-        //@todo A supprimer. Pour éviter les erreurs de génération en attendant la traduction.
         $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
         $filename = $date.'_'.$baseFilename.'.'.$format;
 
-        $contentType = "Content-type: application/vnd.ms-excel";
-//        $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        if ($format = 'xlsx') {
+            $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        } else {
+            $contentType = "Content-type: application/vnd.ms-excel";
+        }
         header($contentType);
         header('Content-Disposition:attachement;filename='.$filename);
         header('Cache-Control: max-age=0');

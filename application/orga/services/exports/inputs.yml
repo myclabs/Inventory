@@ -19,7 +19,6 @@ sheets:
               - label: "{{ inputUncertainty }}"
               - label: "{{ inputUnit }}"
               - label: "{{ inputReferenceValue }}"
-              - label: "{{ inputReferenceUncertainty }}"
               - label: "{{ inputReferenceUnit }}"
             lines:
               - foreach: getChildCellsForGranularity(cell, granularity) as childCell

@@ -14,7 +14,7 @@ sheets:
                 columns:
                   - foreach: family.dimensions as dimension
                     do:
-                      - label: "{{ dimension.label }}"
+                      - label: "{{ dimension.label|capitalize }}"
                   - label: "{{ cellDigitalValue }}"
                   - label: "{{ cellRelativeUncertainty }}"
                 lines:

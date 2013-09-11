@@ -353,7 +353,6 @@ class Orga_Service_Export
         $modelBuilder->bind('inputUncertainty', __('UI', 'name', 'uncertainty'));
         $modelBuilder->bind('inputUnit', __('Orga', 'export', 'choosedUnit'));
         $modelBuilder->bind('inputReferenceValue', __('Orga', 'export', 'valueExpressedInDefaultUnit'));
-        // $modelBuilder->bind('inputReferenceUncertainty', __('Orga', 'export', 'blabla'));
         $modelBuilder->bind('inputReferenceUnit', __('Orga', 'export', 'defaultUnit'));
 
         $modelBuilder->bindFunction(
@@ -487,10 +486,9 @@ function getInputValues(AF_Model_Input $input)
             return [
                 $inputValue->getDigitalValue(),
                 $inputValue->getRelativeUncertainty(),
-                $inputValue->getUnit(),
+                $inputValue->getUnit()->getSymbol(),
                 $baseConvertedValue->getDigitalValue(),
-                $baseConvertedValue->getRelativeUncertainty(),
-                $baseConvertedValue->getUnit(),
+                $baseConvertedValue->getUnit()->getSymbol(),
             ];
         case 'AF_Model_Input_Checkbox':
         case 'AF_Model_Input_Select_Multi':

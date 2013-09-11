@@ -47,7 +47,7 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
      * Tableau de clés-valeurs définies par le contexte
      * @var array
      */
-    private $contextValues;
+    protected $contextValues;
 
 
     /**

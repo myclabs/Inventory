@@ -16,7 +16,7 @@ foreach ($this->exports as $exportRef => $exportArray) { ?>
                 </span>
                 <input name="export" type="hidden" value="<?=$exportRef?>">
                 <?php if (count($this->formats) > 1) { ?>
-                <select name="format" class="input-small format">
+                <select name="format" class="input format">
                     <?php foreach($this->formats as $formatRef => $formatLabel) { ?>
                         <option value="<?=$formatRef?>"><?=$formatLabel?></option>
                     <?php } ?>
@@ -53,4 +53,22 @@ foreach ($this->exports as $exportRef => $exportArray) { ?>
             imgAddOn.attr('src', 'images/dw/'+$(this).val()+'.png');
         }
     );
+</script>
+
+<div id="exportReferentialAsExcelPopup" class="modal hide fade">
+    <div class="modal-body">
+        <p><?=__('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
+        <div class="progress progress-striped active">
+            <div class="bar" style="width: 100%;"></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'close')?></button>
+    </div>
+</div>
+
+<script>
+    $("button.btn-primary[type=submit]").click(function(e) {
+        $('#exportReferentialAsExcelPopup').modal();
+    });
 </script>

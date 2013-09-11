@@ -243,7 +243,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
         // Ligne inutile mais bug, cf. http://www.doctrine-project.org/jira/browse/DCOM-210#comment-21061
-        $doctrineConfig->setProxyDir('/tmp/proxies');
+        $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
 
         // Définition du sql profiler en fonction de l'environement.
         switch (APPLICATION_ENV) {

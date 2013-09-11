@@ -27,10 +27,10 @@ class Techno_Service_Export
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
 
-        // Feuilles det Category.
+        // Feuilles des Category.
         $modelBuilder->bind('categories', Techno_Model_Category::loadRootCategories());
-        $modelBuilder->bind('cellDigitalValue', __('Techno', 'exports', 'digitalValue'));
-        $modelBuilder->bind('cellRelativeUncertainty', __('Techno', 'exports', 'relativeUncertainty'));
+        $modelBuilder->bind('cellDigitalValue', __('UI', 'name', 'value'));
+        $modelBuilder->bind('cellRelativeUncertainty', '+/- (%)');
         $modelBuilder->bindFunction('getAllFamilies', 'getAllFamilies');
         $modelBuilder->bindFunction(
             'getFamilyLabel',
@@ -39,17 +39,12 @@ class Techno_Service_Export
 
                 $category = $family->getCategory();
                 while ($category->getParentCategory() !== null) {
-                    $label .= $category->getLabel().'/';
+                    $label .= $category->getLabel().' / ';
+                    $category = $category->getParentCategory();
                 }
                 $label .= $family->getLabel();
 
                 $label .= ' ('.$family->getUnit()->getSymbol().')';
-
-                if ($family instanceof Techno_Model_Family_Coeff) {
-                    $label .= ' - '.__('Techno', 'exports', 'coeff');
-                } else if ($family instanceof Techno_Model_Family_Process) {
-                    $label .= ' - '.__('Techno', 'exports', 'process');
-                }
 
                 return $label;
             }
@@ -61,8 +56,8 @@ class Techno_Service_Export
                     if ($dimension->hasMember($member)) {
                         return $member->getLabel();
                     }
-                    return '';
                 }
+                return '';
             }
         );
 
@@ -85,11 +80,11 @@ class Techno_Service_Export
 
 }
 
-function getAllFamilies(Techno_Model_Category $catgory)
+function getAllFamilies(Techno_Model_Category $category)
 {
     $families = [];
-    $families = array_merge($families, $catgory->getFamilies()->toArray());
-    foreach ($catgory->getChildCategories() as $childCategory) {
+    $families = array_merge($families, $category->getFamilies()->toArray());
+    foreach ($category->getChildCategories() as $childCategory) {
         $families = array_merge($families, getAllFamilies($childCategory));
     }
     return $families;
