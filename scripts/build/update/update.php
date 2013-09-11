@@ -49,7 +49,7 @@ class Inventory_Update extends Core_Script_Action
         echo "\t\tBase ".$connectionSettings->dbname." updated.".PHP_EOL;
 
         // Génère les proxies si ils sont écrits sur disque
-        switch (APPLICATION_ENV) {
+        switch ($environment) {
             case 'test':
             case 'production':
                 $this->generateProxies($entityManager);
