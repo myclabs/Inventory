@@ -11,13 +11,17 @@ Feature: Cell observer feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Europe | Marque A Organisation avec données"
+  # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
     When I wait 5 seconds
-    And I open collapse "Année | Site | Catégorie"
-    Then I should see the "aFGranularity2Input8" datagrid
-    # And the "aFGranularity2Input8" datagrid should contain 8 row
+    And I open collapse "Zone | Marque"
+    And I click "Cliquer pour accéder" in the row 1 of the "aFGranularity2Input2" datagrid
+    And I click element "#chiffre_affaireHistory .btn"
+    Then I should see "Historique des valeurs"
+    And I should see a "code:contains('10 k€ ± 15 %')" element
   # TODO : "Vue globale" non cliquable dans le volet de navigation
   # Accès à l'onglet "Collectes"
-    When I open tab "Collectes"
+    When I click "Quitter"
+    And I open tab "Collectes"
     Then I should see the "inventories6" datagrid
     # And the "inventories6" datagrid should contain 2 row
   # TODO : statut de la collecte non éditable
