@@ -2,8 +2,7 @@
 
 namespace Keyword\Domain;
 
-use Core\Domain\Criteria\CountCriteria;
-use Core\Domain\Criteria\OrderCriteria;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
 
 /**
@@ -11,18 +10,30 @@ use Doctrine\Common\Collections\Expr\Expression;
  *
  * @author matthieu.napoli
  */
-class KeywordCriteria
+class KeywordCriteria extends Criteria
 {
-    use OrderCriteria;
-    use CountCriteria;
-
     /**
-     * @var Expression
+     * @var Expression|null
      */
     public $ref;
 
     /**
-     * @var Expression
+     * @var Expression|null
      */
     public $label;
+
+    /**
+     * @return Expression|null
+     */
+    public function getWhereExpression()
+    {
+        if ($this->ref) {
+            $this->andWhere($this->ref);
+        }
+        if ($this->label) {
+            $this->andWhere($this->label);
+        }
+
+        return parent::getWhereExpression();
+    }
 }

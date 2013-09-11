@@ -15,6 +15,7 @@ use Keyword\Domain\Association;
  */
 interface KeywordRepository extends EntityRepository
 {
+    // TODO à supprimer
     const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
     const QUERY_KEYWORD_SUBJECT = 'subject';
