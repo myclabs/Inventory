@@ -2,6 +2,7 @@
 
 namespace Keyword\Domain;
 
+use Core\Criteria\FieldCriteria;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
 
@@ -13,25 +14,31 @@ use Doctrine\Common\Collections\Expr\Expression;
 class KeywordCriteria extends Criteria
 {
     /**
-     * @var Expression|null
+     * @var FieldCriteria
      */
     public $ref;
 
     /**
-     * @var Expression|null
+     * @var FieldCriteria
      */
     public $label;
+
+    public function __construct()
+    {
+        $this->ref = new FieldCriteria('ref');
+        $this->label = new FieldCriteria('label');
+    }
 
     /**
      * @return Expression|null
      */
     public function getWhereExpression()
     {
-        if ($this->ref) {
-            $this->andWhere($this->ref);
+        if ($this->ref->getExpression()) {
+            $this->andWhere($this->ref->getExpression());
         }
-        if ($this->label) {
-            $this->andWhere($this->label);
+        if ($this->label->getExpression()) {
+            $this->andWhere($this->label->getExpression());
         }
 
         return parent::getWhereExpression();
