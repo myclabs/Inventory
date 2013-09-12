@@ -414,6 +414,61 @@ class Orga_Service_Export
         );
     }
 
+    /**
+     * Exporte les Results de la version de orga.
+     *
+     * @param string $format
+     * @param Orga_Model_Cell $cell
+     */
+    public function streamResults($format, Orga_Model_Cell $cell)
+    {
+        $modelBuilder = new SpreadsheetModelBuilder();
+        $export = new PHPExcelExporter();
+
+        $modelBuilder->bind('cell', $cell);
+
+        $granularities = [];
+        if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
+            $granularities[] = $cell->getGranularity();
+        }
+        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            if ($narrowerGranularity->getInputConfigGranularity() !== null) {
+                $granularities[] = $narrowerGranularity;
+            }
+        }
+        $modelBuilder->bind('granularities', $granularities);
+
+        $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'formSubForm'));
+
+        $modelBuilder->bindFunction(
+            'getChildCellsForGranularity',
+            function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
+                if ($cell->getGranularity() === $granularity) {
+                    return [$cell];
+                } else {
+                    return $cell->getChildCellsForGranularity($granularity);
+                }
+            }
+        );
+
+
+        switch ($format) {
+            case 'xls':
+                $writer = new PHPExcel_Writer_Excel5();
+                break;
+            case 'xlsx':
+            default:
+                $writer = new PHPExcel_Writer_Excel2007();
+                break;
+        }
+
+        $export->export(
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/inputs.yml')),
+            'php://output',
+            $writer
+        );
+    }
+
 }
 
 function getInputsDetails(AF_Model_Input $input, $prefix='')
