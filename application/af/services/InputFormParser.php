@@ -215,7 +215,7 @@ class AF_Service_InputFormParser
                         // Free label
                         foreach ($elements as $subRef => $subInputContent) {
                             $refComponents = explode(UI_Generic::REF_SEPARATOR, $subRef);
-                            if ($refComponents[count($refComponents) - 1] == 'freeLabel') {
+                            if ($refComponents[count($refComponents) - 2] == 'freeLabel') {
                                 $subInputSet->setFreeLabel($subInputContent['value']);
                                 break;
                             }
