@@ -1221,13 +1221,15 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public function getPopulatingCells()
     {
-        // Renvoie une exception si la cellule ne possède pas de organization.
+        // Renvoie une exception si la cellule ne possède pas de cube de DW.
         $this->getDWCube();
 
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-            if ($inputGranularity->isNarrowerThan($this->getGranularity())) {
+            if ($inputGranularity->getRef() === $this->getGranularity()->getRef()) {
+                $populatingCells[] = $this;
+            } else if ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
                     $populatingCells[] = $inputChildCell;
                 }

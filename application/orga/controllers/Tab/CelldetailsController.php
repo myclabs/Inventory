@@ -542,6 +542,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->view->exports['Inputs'] = [
             'label' => __('UI', 'name', 'inputs'),
         ];
+
+        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+            // Orga Outputs.
+            $this->view->exports['Outputs'] = [
+                'label' => __('UI', 'name', 'outputs'),
+            ];
+        }
     }
 
     /**
@@ -571,6 +578,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             case 'Inputs':
                 $streamFunction = 'streamInputs';
                 $baseFilename = 'Inputs';
+                break;
+            case 'Outputs':
+                $streamFunction = 'streamOutputs';
+                $baseFilename = 'Outputs';
                 break;
             default:
                 UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);
