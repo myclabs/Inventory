@@ -55,3 +55,22 @@ Feature: Subforms input feature
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
     And I should see "100%"
 
+  @javascript
+  Scenario: Subform input scenario : display of free label in the result tab
+    Given I am on "af/edit/menu/id/3"
+    And I open tab "Composants"
+    And I open collapse "Sous-formulaires répétés"
+    And I set "Oui" for column "hasFreeLabel" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
+    And I click "Test"
+    And I click "Ajouter"
+    And I fill in "s_f_r__freeLabel__1" with "Blablablabla"
+    And I select "Charbon" from "s_f_r__nature_combustible__1"
+    And I fill in "s_f_r__quantite_combustible__1" with "10"
+    And I fill in "s_f_n_r__chiffre_affaire" with "10"
+  # Vérification que le libellé libre saisi "apparaît" dans l'onglet "Résultats"
+    And I click "Enregistrer"
+    And I open tab "Résultats"
+    Then I should see "Blablablabla"
+  # Vérification que le libellé libre saisi "apparaît" dans l'onglet "Détails calculs"
+    When I open tab "Détails calculs"
+    Then I should see "Blablablabla"
