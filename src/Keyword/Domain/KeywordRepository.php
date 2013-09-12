@@ -84,9 +84,10 @@ interface KeywordRepository extends EntityRepository
     public function checkAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword);
 
     /**
+     * @param AssociationCriteria $criteria
      * @return Association[]
      */
-    public function getAllAssociations();
+    public function getAllAssociations(AssociationCriteria $criteria = null);
 
     /**
      * @return int

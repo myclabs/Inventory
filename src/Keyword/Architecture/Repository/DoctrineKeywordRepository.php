@@ -7,6 +7,7 @@ use Core\Domain\Translatable\TranslatableRepository;
 use Core_Exception_NotFound;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Translatable\TranslatableListener;
+use Keyword\Domain\AssociationCriteria;
 use Keyword\Domain\KeywordRepository;
 use Keyword\Architecture\Repository\DoctrineAssociationRepository;
 use Keyword\Domain\Keyword;
@@ -138,10 +139,13 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     }
 
     /**
-     * @return Association[]
+     * {@inheritdoc}
      */
-    public function getAllAssociations()
+    public function getAllAssociations(AssociationCriteria $criteria = null)
     {
+        if ($criteria) {
+            return $this->getAssociationRepository()->matching($criteria);
+        }
         return $this->getAssociationRepository()->getAll();
     }
 

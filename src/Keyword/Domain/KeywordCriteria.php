@@ -5,6 +5,8 @@ namespace Keyword\Domain;
 use Core\Criteria\FieldCriteria;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
+use User_Model_Action;
+use User_Model_User;
 
 /**
  * Criteria for filtering keywords
