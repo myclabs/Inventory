@@ -100,7 +100,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
                 if ($value) {
                     $uiUncertaintyElement->setValue($locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty()));
                 }
-                $uiElement->getElement()->getaddElement($uiUncertaintyElement);
+                $uiElement->getElement()->addElement($uiUncertaintyElement);
             }
             // Historique de la valeur
             $uiElement->getElement()->addElement($this->getHistoryComponent($input));
