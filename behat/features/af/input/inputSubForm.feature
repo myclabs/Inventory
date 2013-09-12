@@ -58,6 +58,7 @@ Feature: Subforms input feature
   @javascript
   Scenario: Subform input scenario : display of free label in the result tab
     Given I am on "af/edit/menu/id/3"
+    And I wait for the page to finish loading
     And I open tab "Composants"
     And I open collapse "Sous-formulaires répétés"
     And I set "Oui" for column "hasFreeLabel" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
@@ -74,3 +75,30 @@ Feature: Subforms input feature
   # Vérification que le libellé libre saisi "apparaît" dans l'onglet "Détails calculs"
     When I open tab "Détails calculs"
     Then I should see "Blablablabla"
+
+  @javascript
+  Scenario: Subform input scenario : choice of units
+    Given I am on "af/af/test/id/3"
+    And I wait for the page to finish loading
+  # Saisie chiffre d'affaires avec unité modifiée
+    And I select "euro" from "s_f_n_r__chiffre_affaire_unit"
+    And I fill in "s_f_n_r__chiffre_affaire" with "1000"
+  # Saisie sous-formulaire répété avec unité modifiée
+    And I click "Ajouter"
+    And I select "Charbon" from "s_f_r__nature_combustible__1"
+    And I fill in "s_f_r__quantite_combustible__1" with "1000"
+    And I select "kg" from "s_f_r__quantite_combustible_unit__1"
+    And I click "Enregistrer"
+    And I open tab "Détails calculs"
+    And I open collapse "Sous-formulaire non répété"
+    And I open collapse "chiffre_affaire"
+  # Valeur récupérée dans la bonne unité
+    Then I should see "Valeur : 1 000 € ± %"
+    When I open collapse "Sous-formulaire répété #1"
+    And I open collapse "emissions_combustion"
+  # Calcul effectué avec la valeur récupérée dans la bonne unité
+    Then I should see "Valeur : 3,077 t équ. CO2 ± 20 %"
+  # Valeur récupérée dans la bonne unité
+    When I open collapse "quantite_combustible"
+    Then I should see "Valeur : 1 000 kg ± %"
+
