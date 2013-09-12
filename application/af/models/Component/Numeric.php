@@ -64,7 +64,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
     {
         $locale = Core_Locale::loadDefault();
 
-        $uiElement = new UI_Form_Element_Pattern_Value($this->ref);
+        $uiElement = new UI_Form_Element_Pattern_Value($this->ref, false);
         $uiElement->setLabel($this->label);
         $uiElement->getElement()->help = $this->help;
         $uiElement->setRequired($this->getRequired());
