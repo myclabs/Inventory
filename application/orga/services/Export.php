@@ -457,7 +457,7 @@ class Orga_Service_Export
         $modelBuilder->bind('resultUncertainty', __('Orga', 'export', 'resultUncertainty'));
 
         $modelBuilder->bindFunction(
-            'getResultsForIndicator',
+            'getOutputsForIndicator',
             function(Orga_Model_Cell $cell, Classif_Model_Indicator $indicator) {
                 $results = [];
                 try {
@@ -524,6 +524,16 @@ class Orga_Service_Export
                     default:
                         return '';
                 }
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayFreeLabel',
+            function(AF_Model_Output_Element $output) {
+                if ($output->getInputSet() instanceof AF_Model_InputSet_Sub) {
+                    return $output->getFreeLabel();
+                }
+                return '';
             }
         );
 

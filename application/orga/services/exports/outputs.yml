@@ -24,7 +24,7 @@ sheets:
             lines:
               - foreach: populatingCells as populatingCell
                 do:
-                  - foreach: getResultsForIndicator(populatingCell, indicator) as result
+                  - foreach: getOutputsForIndicator(populatingCell, indicator) as output
                     do:
                       - cells:
                           - foreach: orgaAxes as orgaAxis
@@ -32,10 +32,10 @@ sheets:
                               - "{{ displayMemberForOrgaAxis(populatingCell, orgaAxis) }}"
                           - foreach: classifAxes as classifAxis
                             do:
-                              - "{{ displayMemberForClassifAxis(result, classifAxis) }}"
+                              - "{{ displayMemberForClassifAxis(output, classifAxis) }}"
                           - "{{ displayInputStatus(populatingCell) }}"
-                          - "{{ result.label }}"
-                          - "" #"{{ result.freeLabel }}"
-                          - "{{ result.value.digitalValue }}"
-                          - "{{ displayRoundedValue(result.value.digitalValue) }}"
-                          - "{{ result.value.relativeUncertainty }}"
+                          - "{{ output.label }}"
+                          - "{{ displayFreeLabel(output) }}"
+                          - "{{ output.value.digitalValue }}"
+                          - "{{ displayRoundedValue(output.value.digitalValue) }}"
+                          - "{{ output.value.relativeUncertainty }}"
