@@ -10,7 +10,7 @@ php scripts/build/build.php -e testsunitaires populate
 # Start worker
 php scripts/jobs/work/work.php > /dev/null &
 
-phpunit -c phpunit-ci.xml
+phpunit -c phpunit.xml
 
 # Kill worker
 kill $!
