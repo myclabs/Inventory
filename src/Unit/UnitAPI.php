@@ -1,24 +1,17 @@
 <?php
-/**
- * @author     valentin.claras
- * @author     hugo.charbonnier
- * @author     yoann.croizer
- * @package    Unit
- * @subpackage API
- */
 
 namespace Unit;
 
 use Core_Exception;
-use Core_Model_Query;
+use Unit\Domain\Unit\Unit;
 use Unit\IncompatibleUnitsException;
-use Unit\Domain\Unit\StandardUnit;
-use Unit\ComposedUnit;
+use Unit\Domain\ComposedUnit\ComposedUnit;
 
 /**
  * API
- * @package    Unit
- * @subpackage API
+ * @author     valentin.claras
+ * @author     hugo.charbonnier
+ * @author     yoann.croizer
  */
 class UnitAPI
 {
@@ -160,25 +153,18 @@ class UnitAPI
 
     /**
      * Renvoie la liste des refs des unités compatibles, càd de même grandeur physique.
-     * @return array
+     * @return UnitAPI[]
      */
-    public function getSamePhysicalQuantityUnits()
+    public function getCompatibleUnits()
     {
-        $unit = StandardUnit::loadByRef($this->getRef());
+        $unit = new ComposedUnit($this->getRef());
 
-        $queryCompatibleUnits = new Core_Model_Query();
-        $queryCompatibleUnits->filter->addCondition(
-            StandardUnit::QUERY_PHYSICALQUANTITY,
-            $unit->getPhysicalQuantity()
+        return array_map(
+            function (ComposedUnit $unit) {
+                return new UnitAPI($unit->getRef());
+            },
+            $unit->getCompatibleUnits()
         );
-
-        $refs = array();
-
-        foreach (StandardUnit::loadList($queryCompatibleUnits) as $standardUnit) {
-            $refs[] = new UnitAPI($standardUnit->getRef());
-        }
-
-        return $refs;
     }
 
 

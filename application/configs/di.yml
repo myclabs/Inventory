@@ -1,11 +1,19 @@
+# Entrées définies dans le bootstrap:
+# application.name
+# email.contact.address
+# email.noreply.name
+# email.noreply.address
+# log.query
+
 # Activation des ACL
 enable.acl: true
 
-# Définit dans le bootstrap:
-# application.name:
-# email.contact.address:
-# email.noreply.name:
-# email.noreply.address:
+# Logs
+log.file: "data/logs/error.log"
+log.query.file: "data/logs/queries.log"
+Core_Profiler_File:
+  constructor:
+    logger: log.query
 
 # Notification des taches de fond
 Core\Work\Notification\TaskNotifier:

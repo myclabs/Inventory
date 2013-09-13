@@ -110,7 +110,7 @@ Feature: AF list edit feature
     Given I am on "af/af/list"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
-    And the "listAF" datagrid should contain 7 row
+    And the "listAF" datagrid should contain 8 row
     And I open collapse "Filtres"
   # Filtre sur le libellé
     And I fill in "listAF_label_filterForm" with "Formulaire vide"
@@ -122,7 +122,7 @@ Feature: AF list edit feature
   # Clic sur "Réinitialiser"
     When I open collapse "Filtres"
     And I click "Réinitialiser"
-    Then the "listAF" datagrid should contain 7 row
+    Then the "listAF" datagrid should contain 8 row
   # Filtre sur l'identifiant
     When I open collapse "Filtres"
     And I fill in "listAF_ref_filterForm" with "_test"

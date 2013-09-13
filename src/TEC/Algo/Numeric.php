@@ -137,6 +137,9 @@ class Numeric extends Algo
             }
             $addExpression = $this->getInsideExpression($addChildren, $addSymbol);
             if (trim($addExpression) !== '') {
+                if ($expression !== '') {
+                    $expression .= ' ';
+                }
                 $expression .= $addExpression;
             }
             $subExpression = $this->getInsideExpression($subChildren, $addSymbol);
@@ -147,7 +150,7 @@ class Numeric extends Algo
                 $expression .= $subSymbol . $subExpression;
             }
             if (($node->getParent() !== null) && ((trim($addExpression) !== '') || (trim($subExpression) !== ''))) {
-                $expression = ' (' . $expression . ')';
+                $expression = '(' . $expression . ')';
             }
         }
 

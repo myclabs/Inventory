@@ -22,7 +22,7 @@ Feature: AF numeric parameter algo feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Algos ordonnés suivant l'ordre alphabétique des identifiants ?
-    And the row 2 of the "algoNumericParameter" datagrid should contain:
+    And the "algoNumericParameter" datagrid should contain a row:
       | label | ref  | family         |
       | AAA   | aaa  | Masse volumique de combustible |
 
@@ -211,10 +211,10 @@ Feature: AF numeric parameter algo feature
     And I open collapse "Algorithmes numériques"
     And I open collapse "Paramètres"
     Then I should see the "algoNumericParameter" datagrid
-    And the "algoNumericParameter" datagrid should contain 1 row
+    And the "algoNumericParameter" datagrid should contain 2 row
   # Suppression sans obstacle
     When I click "Supprimer" in the row 1 of the "algoNumericParameter" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "algoNumericParameter" datagrid should contain 0 row
+    And the "algoNumericParameter" datagrid should contain 1 row

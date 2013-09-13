@@ -9,15 +9,15 @@
                 <seg>Ajout de l’organisation : [LABEL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of the organization: [LABEL]</seg>
+                <seg>Creation of organization: [LABEL]</seg>
             </tuv>
         </tu>
         <tu tuid="addMember">
             <tuv xml:lang="fr">
-                <seg>Ajout du membre : [MEMBER] à l’axe : [AXIS]</seg>
+                <seg>Ajout du membre :[MEMBER] à l’axe : [AXIS]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Ajout du membre : [MEMBER] à l’axe : [AXIS]</seg>
+                <seg>Creation of member: [MEMBER] into axis: [AXIS]</seg>
             </tuv>
         </tu>
         <tu tuid="addGranularity">
@@ -25,15 +25,15 @@
                 <seg>Ajout de la granularité : [LABEL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Ajout de la granularité : [LABEL]</seg>
+                <seg>Creation of granularity: [LABEL]</seg>
             </tuv>
         </tu>
         <tu tuid="addRoleToUser">
             <tuv xml:lang="fr">
-                <seg>Ajout du rôle : [ROLE] à l’utilisateur : [USER]</seg>
+                <seg>Attribution du rôle : [ROLE] à l’utilisateur : [USER]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Ajout du rôle : [ROLE] à l’utilisateur : [USER]</seg>
+                <seg>Creation of role: [ROLE] for user: [USER]</seg>
             </tuv>
         </tu>
         <tu tuid="removeRoleFromUser">
@@ -41,39 +41,31 @@
                 <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
+                <seg>Deletion of role: [ROLE] for user: [USER]</seg>
             </tuv>
         </tu>
         <tu tuid="resetDWOrga">
             <tuv xml:lang="fr">
-                <seg>Régénération des données d’analyse de l’organisation [LABEL]</seg>
+                <seg>Régénération des données d’analyse de l’organisation : [LABEL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Régénération des données d’analyse de l’organisation [LABEL]</seg>
+                <seg>Analysis data rebuild for organization: [LABEL]</seg>
             </tuv>
         </tu>
         <tu tuid="resetDWCell">
             <tuv xml:lang="fr">
-                <seg>Régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+                <seg>Régénération des données d’analyse de l’unité organisationnelle : [LABEL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
-            </tuv>
-        </tu>
-        <tu tuid="resetDWCell">
-            <tuv xml:lang="fr">
-                <seg>Régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+                <seg>Analysis data rebuild for organizational unit: [LABEL]</seg>
             </tuv>
         </tu>
         <tu tuid="resetDWCellAndResults">
             <tuv xml:lang="fr">
-                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle : [LABEL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle [LABEL]</seg>
+                <seg>Computations restart and analysis data rebuild for organizational unit: [LABEL]</seg>
             </tuv>
         </tu>
 

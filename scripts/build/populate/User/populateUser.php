@@ -30,8 +30,9 @@ class User_PopulateUser extends Core_Script_Action
         $roleAdmin = User_Model_Role::loadByRef('sysadmin');
 
         // Crée un admin
-        $admin = $userService->createUser('admin', 'myc-53n53');
-        $admin->setLastName('Administrateur');
+        $admin = $userService->createUser('admin@myc-sense.com', 'myc-53n53');
+        $admin->setLastName('Système');
+        $admin->setFirstName('Administrateur');
         $admin->addRole($roleAdmin);
         $admin->save();
 

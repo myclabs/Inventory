@@ -1,20 +1,15 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    User
- * @subpackage Service
- */
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Reader;
 use Core\Annotation\Secure;
+use Psr\Log\LoggerInterface;
 
 /**
  * Service gérant la sécurité pour les controleurs
  *
- * @package    User
- * @subpackage Service
+ * @author matthieu.napoli
  */
 class User_Service_ControllerSecurity
 {
@@ -24,6 +19,15 @@ class User_Service_ControllerSecurity
      */
     private $annotationReader;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Returns the security rule that applies to an action
@@ -112,7 +116,7 @@ class User_Service_ControllerSecurity
             require_once $controllerFile;
             return true;
         }
-        Core_Error_Log::getInstance()->warning('File ' . $controllerFile . ' not found');
+        $this->logger->warning('File ' . $controllerFile . ' not found');
         return false;
     }
 

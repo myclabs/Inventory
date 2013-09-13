@@ -1,8 +1,6 @@
 <?php
-/**
- * @package    Core
- * @subpackage Translate
- */
+
+use Psr\Log\LoggerInterface;
 
 /**
  * Classe Translate Adapter
@@ -22,6 +20,11 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
     private $_seg     = null;
     private $_content = null;
     private $_data    = array();
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * Charge les données depuis un fichier TMX.
@@ -57,7 +60,6 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
             xml_parser_free($this->_file);
             require_once 'Zend/Translate/Exception.php';
             $exception = new Zend_Translate_Exception($ex);
-            Core_Error_Log::getInstance()->logException($exception);
             throw $exception;
 
         }
@@ -70,8 +72,8 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
             // storing all the translations
             // But we should instead store the translations contained in a sub folder A into the
             // 'A' key of this data structure (i.e.: $this->_loadedData)
-            if (substr(dirname($filename), -strlen(Core_Translate::dataFolder), strlen(Core_Translate::dataFolder))
-                != Core_Translate::dataFolder
+            if (substr(dirname($filename), -strlen(Core_Translate::DATA_FOLDER), strlen(Core_Translate::DATA_FOLDER))
+                != Core_Translate::DATA_FOLDER
             ) {
                 $options['folder'] = basename(dirname($filename));
             }
@@ -293,7 +295,7 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
 
     }
 
-    /**
+    /*
      * Les méthodes qui suivent sont des copies de celles de l'adapter TMX de Zend-1.11.11
      */
 
@@ -439,20 +441,23 @@ class Core_Translate_Adapter_Tmx extends Zend_Translate_Adapter
      * Fin des méthodes copiées de l'adapter TMX de Zend
      */
 
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Logs a message when the log option is set
      *
      * @param string $message Message to log
-     * @param String $locale  Locale to log
+     * @param string $locale  Locale to log
      */
-    protected function _log($message, $locale) {
+    protected function _log($message, $locale)
+    {
         if ($this->_options['logUntranslated']) {
             $message = str_replace('%message%', $message, $this->_options['logMessage']);
             $message = str_replace('%locale%', $locale, $message);
-            /** @var $logger Core_Error_Log */
-            $logger = Core_Error_Log::getInstance();
-            $logger->warning($message);
+            $this->logger->warning($message);
         }
     }
 

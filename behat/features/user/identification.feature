@@ -13,7 +13,7 @@ Feature: Identification feature
   Scenario: Logging in with wrong password
     Given I am on the homepage
     And I wait for the page to finish loading
-    When I fill in "email" with "admin"
+    When I fill in "email" with "admin@myc-sense.com"
     And I fill in "password" with "blahblah"
     And I click "connection"
     Then I should see "Attention ! Le mot de passe indiqué est invalide."
@@ -22,7 +22,7 @@ Feature: Identification feature
   Scenario: Logging in correctly
     Given I am on the homepage
     And I wait for the page to finish loading
-    When I fill in "email" with "admin"
+    When I fill in "email" with "admin@myc-sense.com"
     And I fill in "password" with "myc-53n53"
     And I click "connection"
     Then I should see "Organisations"

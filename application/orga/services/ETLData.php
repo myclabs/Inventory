@@ -11,6 +11,19 @@
  */
 class Orga_Service_ETLData
 {
+    /**
+     * @var AF_Service_InputService
+     */
+    private $aFInputService;
+
+
+    /**
+     * @param AF_Service_InputService $aFService
+     */
+    public function __construct(AF_Service_InputService $aFService)
+    {
+        $this->aFInputService = $aFService;
+    }
 
     /**
      * Supprime l'ensemble des résultats de la Cell donnée.
@@ -89,20 +102,15 @@ class Orga_Service_ETLData
         }
 
         $inputGranularity = $cell->getGranularity();
-
-        $inputSet->updateCompletion();
-        if ($inputSet->isInputComplete()) {
-            if ($inputGranularity->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
-                $af = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
-            } else {
-                $af = $cell->getParentCellForGranularity(
-                    $inputGranularity->getInputConfigGranularity()
-                )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
-            }
-            // Exécute l'AF et calcule les totaux
-            $af->execute($inputSet);
-            $inputSet->getOutputSet()->calculateTotals();
+        if ($inputGranularity->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
+            $aF = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+        } else {
+            $aF = $cell->getParentCellForGranularity(
+                $inputGranularity->getInputConfigGranularity()
+            )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
         }
+
+        $this->aFInputService->updateResults($inputSet, $aF);
     }
 
 }

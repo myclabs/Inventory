@@ -10,6 +10,8 @@
 sudo php scripts/migration/2.4/migrate.php
 ```
 
+- Relancer tous les calculs via l'interface
+
 
 ## 2.3
 

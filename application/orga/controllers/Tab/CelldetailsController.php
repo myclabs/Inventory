@@ -299,7 +299,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         );
         $columnStateOrga->list = array(
                 Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
-                Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
+                Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
                 Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
         );
         $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
@@ -363,7 +363,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     $columnStateOrga->withEmptyElement = false;
                     $columnStateOrga->list = array(
                         Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
-                        Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'inProgress'),
+                        Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
                         Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'));
                     $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_BOX;
                     $columnStateOrga->filterName = Orga_Model_Cell::QUERY_INVENTORYSTATUS;
@@ -489,6 +489,112 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                     'viewConfiguration' => $viewConfiguration
                 ));
         }
+    }
+
+    /**
+     * Action fournissant la vue des exports.
+     * @Secure("viewCell")
+     */
+    public function exportsAction()
+    {
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+        $idCell = $this->getParam('idCell');
+        $this->view->idCell = $idCell;
+        $cell = Orga_Model_Cell::load($this->view->idCell);
+        $organization = $cell->getGranularity()->getOrganization();
+
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $this->_helper->auth(),
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
+
+        // Formats d'exports.
+        $this->view->defaultFormat = 'xlsx';
+        $this->view->formats = [
+            'xlsx' => __('UI', 'export', 'xlsx'),
+            'xls' => __('UI', 'export', 'xls'),
+            'ods' => __('UI', 'export', 'ods'),
+        ];
+
+        // Liste des exports.
+        $this->view->exports = [];
+
+        if ($isUserAllowedToEditOrganization && !$cell->getGranularity()->hasAxes()) {
+            // Orga Structure.
+            $this->view->exports['Organization'] = [
+                'label' => __('Orga', 'organization', 'organization'),
+            ];
+        } else {
+            // Orga Cell.
+            $this->view->exports['Cell'] = [
+                'label' => __('Orga', 'organization', 'organization'),
+            ];
+        }
+
+        // Orga User.
+        $this->view->exports['Users'] = [
+            'label' => __('User', 'role', 'roles'),
+        ];
+
+        // Orga Inputs.
+        $this->view->exports['Inputs'] = [
+            'label' => __('UI', 'name', 'inputs'),
+        ];
+    }
+
+    /**
+     * Action fournissant la génération des exports.
+     * @Secure("viewCell")
+     */
+    public function exportAction()
+    {
+        $idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $format = $this->getParam('format');
+
+        switch ($this->getParam('export')) {
+            case 'Organization':
+                $streamFunction = 'streamOrganization';
+                $baseFilename = 'Organization';
+                break;
+            case 'Cell':
+                $streamFunction = 'streamCell';
+                $baseFilename = 'Cell';
+                break;
+            case 'Users':
+                $streamFunction = 'streamUsers';
+                $baseFilename = 'Users';
+                break;
+            case 'Inputs':
+                $streamFunction = 'streamInputs';
+                $baseFilename = 'Inputs';
+                break;
+            default:
+                UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);
+                $this->redirect('orga/cell/details/idCell/'.$idCell.'/tab/exports');
+                break;
+        }
+
+        $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
+        $filename = $date.'_'.$baseFilename.'.'.$format;
+
+        if ($format = 'xlsx') {
+           $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        } else {
+            $contentType = "Content-type: application/vnd.ms-excel";
+        }
+        header($contentType);
+        header('Content-Disposition:attachement;filename='.$filename);
+        header('Cache-Control: max-age=0');
+
+        Zend_Layout::getMvcInstance()->disableLayout();
+        Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
+
+        $exportService = new Orga_Service_Export();
+        $exportService->$streamFunction($format, $cell);
     }
 
     /**

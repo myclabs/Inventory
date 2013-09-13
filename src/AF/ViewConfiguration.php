@@ -46,6 +46,12 @@ class AF_ViewConfiguration
     protected $actionStack;
 
     /**
+     * URL to call for the results preview
+     * @var string
+     */
+    protected $resultsPreviewUrl;
+
+    /**
      * Boolean that indicate if the configuration link should appear
      * @var bool
      */
@@ -265,6 +271,22 @@ class AF_ViewConfiguration
             $action['params'] = $params;
         }
         $this->actionStack[] = $action;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setResultsPreviewUrl($url)
+    {
+        $this->resultsPreviewUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResultsPreviewUrl()
+    {
+        return $this->resultsPreviewUrl;
     }
 
     /**
