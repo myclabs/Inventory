@@ -4,7 +4,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
-use Keyword\Domain\Keyword;
+use Keyword\Application\Service\KeywordDTO;
 
 /**
  * Classe Meaning
@@ -22,13 +22,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
 
     /**
      * Mot-clé associé
-     * @var string
-     */
-    protected $refKeyword;
-
-    /**
-     * Mot-clé associé (cache de l'objet)
-     * @var string
+     * @var KeywordDTO
      */
     protected $keyword;
 
@@ -39,21 +33,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
      */
     public static function loadByRef($refKeyword)
     {
-        return self::getEntityRepository()->loadBy(['refKeyword' => $refKeyword]);
-    }
-
-    /**
-     * Valide le mot-clé associé à la signification
-     * @return bool|string True si le mot-clé est valide, sinon retourne le mot-clé
-     */
-    public function validateKeyword()
-    {
-        try {
-            Keyword::loadByRef($this->refKeyword);
-        } catch (Core_Exception_NotFound $e) {
-            return $this->refKeyword;
-        }
-        return true;
+        return self::getEntityRepository()->loadBy(['keyword' => $refKeyword]);
     }
 
     /**
@@ -66,12 +46,11 @@ class Techno_Model_Meaning extends Core_Model_Entity
 
     /**
      * Affecte le mot-clé
-     * @param Keyword $keyword
+     * @param KeywordDTO $keyword
      */
-    public function setKeyword(Keyword $keyword)
+    public function setKeyword(KeywordDTO $keyword)
     {
         $this->keyword = $keyword;
-        $this->refKeyword = $keyword->getRef();
 
         // Update les coordonnées des cellules des familles
         if ($this->id !== null) {
@@ -91,13 +70,10 @@ class Techno_Model_Meaning extends Core_Model_Entity
 
     /**
      * Renvoie le mot-clé
-     * @return Keyword
+     * @return KeywordDTO
      */
     public function getKeyword()
     {
-        if ($this->keyword === null) {
-            $this->keyword = Keyword::loadByRef($this->refKeyword);
-        }
         return $this->keyword;
     }
 
@@ -106,7 +82,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
      */
     public function getRef()
     {
-        return $this->refKeyword;
+        return $this->keyword->getRef();
     }
 
     /**
@@ -114,12 +90,7 @@ class Techno_Model_Meaning extends Core_Model_Entity
      */
     public function getLabel()
     {
-        try {
-            $keyword = $this->getKeyword();
-            return $keyword->getLabel();
-        } catch (Core_Exception_NotFound $e) {
-            return $this->refKeyword;
-        }
+        return $this->keyword->getLabel();
     }
 
     /**

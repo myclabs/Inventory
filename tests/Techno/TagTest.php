@@ -3,6 +3,8 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Domain\KeywordRepository;
+use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\Keyword;
 
 /**
@@ -26,18 +28,23 @@ class Techno_Test_TagTest
      */
     public static function generateObject()
     {
-        $keyword = new Keyword();
-        $keyword->setLabel('Label test');
-        $keyword->setRef(Core_Tools::generateString(10));
-        $keyword->save();
+        $container = Zend_Registry::get('container');
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRef = strtolower(Core_Tools::generateString(10));
+        $keywordRepository->add(new Keyword($keywordRef, 'Label'));
+        $entityManager->flush();
+        /** @var KeywordService $keywordService */
+        $keywordService = $container->get('\Keyword\Application\Service\KeywordService');
         $meaningTest = new Techno_Test_MeaningTest();
         $meaning = $meaningTest->generateObject();
         $tag = new Techno_Model_Tag();
         $tag->setMeaning($meaning);
-        $tag->setValue($keyword);
+        $tag->setValue($keywordService->get($keywordRef));
         $tag->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
         return $tag;
     }
 
@@ -49,9 +56,12 @@ class Techno_Test_TagTest
     {
         $o->delete();
         Techno_Test_MeaningTest::deleteObject($o->getMeaning());
-        $o->getValue()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->remove($keywordRepository->getByRef($o->getValue()->getRef()));
+        $entityManager->flush();
     }
 
 }
@@ -61,17 +71,23 @@ class Techno_Test_TagTest
  */
 class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
 
     /**
+     * @var KeywordService
+     */
+    private $keywordService;
+
+    /**
      * Fonction appelee une fois, avant tous les tests
      */
     public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         if (Techno_Model_Tag::countTotal() > 0) {
             foreach (Techno_Model_Tag::loadList() as $o) {
@@ -83,13 +99,14 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        if (Keyword::countTotal() > 0) {
-            foreach (Keyword::loadList() as $o) {
-                $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
     }
 
     /**
@@ -97,8 +114,9 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = Zend_Registry::get('EntityManagers')['default'];
+        $container = Zend_Registry::get('container');
+        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
     }
 
     /**
@@ -106,28 +124,29 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        // Fixtures
-        $keyword = new Keyword();
-        $keyword->setLabel('Label');
-        $keyword->setRef('keywordTest2');
-        $keyword->save();
+        $keywordRef = 'keywordtest2';
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef, 'Label'));
+        $this->entityManager->flush();
+
         $meaningTest = new Techno_Test_MeaningTest();
         $meaning = $meaningTest->generateObject();
 
         $o = new Techno_Model_Tag();
         $o->setMeaning($meaning);
-        $o->setValue($keyword);
+        $o->setValue($this->keywordService->get($keywordRef));
 
         $this->assertSame($meaning, $o->getMeaning());
-        $this->assertSame($keyword, $o->getValue());
+        $this->assertEquals($keywordRef, $o->getValue()->getRef());
 
         $o->save();
         $this->entityManager->flush();
 
         $this->assertInstanceOf('Techno_Model_Meaning', $o->getMeaning());
         $this->assertEquals($meaning->getKey(), $o->getMeaning()->getKey());
-        $this->assertInstanceOf('Keyword\Domain\Keyword', $o->getValue());
-        $this->assertEquals($keyword->getRef(), $o->getValue()->getRef());
+        $this->assertInstanceOf('Keyword\Application\Service\KeywordDTO', $o->getValue());
+        $this->assertEquals($keywordRef, $o->getValue()->getRef());
         return $o;
     }
 
@@ -149,7 +168,7 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Techno_Model_Meaning', $oLoaded->getMeaning());
         $this->assertEquals($o->getMeaning()->getKey(), $oLoaded->getMeaning()->getKey());
         // getValue
-        $this->assertInstanceOf('Keyword\Domain\Keyword', $oLoaded->getValue());
+        $this->assertInstanceOf('Keyword\Application\Service\KeywordDTO', $oLoaded->getValue());
         $this->assertEquals($o->getValue()->getRef(), $oLoaded->getValue()->getRef());
         return $oLoaded;
     }
@@ -160,11 +179,14 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
      */
     function testDelete($o)
     {
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keyword = $keywordRepository->getByRef($o->getValue()->getRef());
+        $keywordRepository->remove($keyword);
         $o->delete();
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
             $this->entityManager->getUnitOfWork()->getEntityState($o));
         // Delete fixtures
-        $o->getValue()->delete();
         $meaningTest = new Techno_Test_MeaningTest();
         $meaningTest->deleteObject($o->getMeaning());
         $this->entityManager->flush();

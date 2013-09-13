@@ -1,26 +1,27 @@
 Keyword\Domain\Association:
   type: entity
-  repositoryClass: Keyword\Architecture\Repository\AssociationRepository
+  repositoryClass: Keyword\Architecture\Repository\DoctrineAssociationRepository
   table: Keyword_Association
 
   id:
-    id:
-      column: id
-      type: integer
-      generator:
-        strategy: AUTO
+    subject:
+      associationKey: true
+    object:
+      associationKey: true
+    predicate:
+      associationKey: true
 
   manyToOne:
     subject:
       targetEntity: Keyword\Domain\Keyword
-      inversedBy: subjectAssociation
+      inversedBy: subjectAssociations
       joinColumns:
         idSubjectKeyword:
           referencedColumnName: id
       nullable : false
     object:
       targetEntity: Keyword\Domain\Keyword
-      inversedBy: objectAssociation
+      inversedBy: objectAssociations
       joinColumns:
         idObjectKeyword:
           referencedColumnName: id

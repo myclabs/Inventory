@@ -37,6 +37,10 @@ class Keyword_PopulateTest extends Keyword_Populate
         $keyword_marque_a = $this->createKeyword('marque_a', 'marque A');
         $keyword_marque_b = $this->createKeyword('marque_b', 'marque B');
 
+
+        $entityManager->flush();
+
+
         // Création des associations.
         $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_gaz_naturel_);
         $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_charbon);

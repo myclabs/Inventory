@@ -6,8 +6,8 @@
  * @package Keyword
  */
 
-use Keyword\Domain\Predicate;
-use Keyword\Domain\Keyword;
+use Keyword\Domain\KeywordRepository;
+use Keyword\Domain\PredicateRepository;
 ?>
 <div class="page-header">
 	<h1><?=__('Keyword', 'relation', 'pageTitle')?></h1>
@@ -18,26 +18,26 @@ use Keyword\Domain\Keyword;
     $columnSubject = new UI_Datagrid_Col_List('subject', __('Keyword', 'name', 'subject'));
     $columnSubject->list = $this->listKeywords;
     $columnSubject->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
-    $columnSubject->sortName = Keyword::QUERY_LABEL;
-    $columnSubject->filterName = Keyword::QUERY_REF;
+    $columnSubject->sortName = KeywordRepository::QUERY_LABEL;
+    $columnSubject->filterName = KeywordRepository::QUERY_REF;
     $columnSubject->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
     $columnSubject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
-    $columnSubject->entityAlias = Keyword::getAliasAsSubject();
+    $columnSubject->entityAlias = KeywordRepository::QUERY_KEYWORD_SUBJECT;
 
     $columnObject = new UI_Datagrid_Col_List('object', __('Keyword', 'name', 'object'));
     $columnObject->list = $this->listKeywords;
     $columnObject->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
-    $columnObject->sortName = Keyword::QUERY_LABEL;
-    $columnObject->filterName = Keyword::QUERY_REF;
+    $columnObject->sortName = KeywordRepository::QUERY_LABEL;
+    $columnObject->filterName = KeywordRepository::QUERY_REF;
     $columnObject->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
     $columnObject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
-    $columnObject->entityAlias = Keyword::getAliasAsObject();
+    $columnObject->entityAlias = KeywordRepository::QUERY_KEYWORD_OBJECT;
 
     $columnPredicate = new UI_Datagrid_Col_List('predicate', __('Keyword', 'name', 'predicate'));
     $columnPredicate->list = $this->listPredicates;
-    $columnPredicate->sortName = Predicate::QUERY_LABEL;
-    $columnPredicate->filterName = Predicate::QUERY_REF;
-    $columnPredicate->entityAlias = Predicate::getAlias();
+    $columnPredicate->sortName = PredicateRepository::QUERY_LABEL;
+    $columnPredicate->filterName = PredicateRepository::QUERY_REF;
+    $columnPredicate->entityAlias = KeywordRepository::QUERY_PREDICATE;
     $columnPredicate->editable = true;
 
     $datagrid->addCol($columnSubject);
@@ -49,3 +49,11 @@ use Keyword\Domain\Keyword;
     $datagrid->addElements = true;
     $datagrid->addPanelTitle = __('Keyword', 'relation', 'addPanelTitle');
     $datagrid->display();
+
+?>
+<script type="text/javascript">
+    $('#association_addPanel').on('hide', function() {
+        $('#association_subject_addForm').trigger('change');
+        $('#association_object_addForm').trigger('change');
+    });
+</script>

@@ -4,6 +4,7 @@ use Core\Autoloader;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
 
 /**
  * Application bootstrap
@@ -134,6 +135,17 @@ class Bootstrap extends Core_Bootstrap
     {
         Type::addType(Calc_TypeMapping_Value::TYPE_NAME, 'Calc_TypeMapping_Value');
         Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, 'Calc_TypeMapping_UnitValue');
+    }
+
+    /**
+     * Initialise le mapping des types en BDD
+     */
+    protected function _initKeywordTypeMapping()
+    {
+        Type::addType(DoctrineKeywordType::TYPE_NAME, '\Keyword\Architecture\TypeMapping\DoctrineKeywordType');
+        /** @var DoctrineKeywordType $doctrineKeyword */
+        $doctrineKeyword = Type::getType(DoctrineKeywordType::TYPE_NAME);
+        $doctrineKeyword->setKeywordService($this->container->get('\Keyword\Application\Service\KeywordService'));
     }
 
     /**

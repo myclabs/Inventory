@@ -4,12 +4,27 @@
  * @package Techno
  */
 
+use Keyword\Application\Service\KeywordService;
+
 /**
  * Service de validation des données de Techno
  * @package Techno
  */
 class Techno_Service_Validator
 {
+    /**
+     * @var KeywordService
+     */
+    protected $keywordService;
+
+
+    /**
+     * @param KeywordService $keywordService
+     */
+    public function __construct(KeywordService $keywordService)
+    {
+        $this->keywordService = $keywordService;
+    }
 
     /**
      * Contrôle les références vers les mots-clés de Keyword
@@ -23,8 +38,8 @@ class Techno_Service_Validator
         $meanings = Techno_Model_Meaning::loadList();
 
         foreach ($meanings as $meaning) {
-            $keyword = $meaning->validateKeyword();
-            if ($keyword === true) {
+            $keyword = $meaning->getKeyword();
+            if ($this->keywordService->exists($keyword)) {
                 continue;
             }
             $errors[] = $keyword;
@@ -46,8 +61,8 @@ class Techno_Service_Validator
 
         foreach ($families as $family) {
             foreach ($family->getTags() as $tag) {
-                $keyword = $tag->validateKeyword();
-                if ($keyword === true) {
+                $keyword = $tag->getValue();
+                if ($this->keywordService->exists($keyword)) {
                     continue;
                 }
                 $errors[] = [
@@ -75,8 +90,8 @@ class Techno_Service_Validator
         foreach ($families as $family) {
             foreach ($family->getDimensions() as $dimension) {
                 foreach ($dimension->getMembers() as $member) {
-                    $keyword = $member->validateKeyword();
-                    if ($keyword === true) {
+                    $keyword = $member->getKeyword();
+                    if ($this->keywordService->exists($keyword)) {
                         continue;
                     }
                     $errors[] = [

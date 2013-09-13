@@ -9,7 +9,7 @@
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Keyword\Domain\Keyword;
-use Keyword\Domain\KeywordService;
+use Keyword\Domain\KeywordRepository;
 
 /**
  * Classe controleur de la datagrid de Keyword.
@@ -19,9 +19,9 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var KeywordService
+     * @var KeywordRepository
      */
-    private $keywordService;
+    private $keywordRepository;
 
     /**
      * (non-PHPdoc)
@@ -31,8 +31,8 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        foreach (Keyword::loadList($this->request) as $keyword) {
-            /** @var Keyword $keyword */
+        /** @var Keyword $keyword */
+        foreach ($this->keywordRepository->getAll($this->request) as $keyword) {
             $data = array();
 
             $data['index'] = $keyword->getRef();
@@ -44,7 +44,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = Keyword::countTotal($this->request);
+        $this->totalElements = $this->keywordRepository->count($this->request);
         $this->send();
     }
 
@@ -59,13 +59,14 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
 
-        $refErrors = $this->keywordService->getErrorMessageForNewRef($ref);
+        $refErrors = $this->keywordRepository->getErrorMessageForRef($ref);
         if ($refErrors != null) {
             $this->setAddElementErrorMessage('ref', $refErrors);
         }
 
         if (empty($this->_addErrorMessages)) {
-            $this->keywordService->add($ref, $label);
+            $this->keywordRepository->add(new Keyword($ref, $label));
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -80,7 +81,8 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $this->keywordService->delete($this->delete);
+        $this->keywordRepository->remove($this->keywordRepository->getByRef($this->delete));
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
@@ -93,18 +95,20 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $keywordRef = $this->update['index'];
+        $keyword = $this->keywordRepository->getByRef($this->update['index']);
         $newValue = $this->update['value'];
 
         switch ($this->update['column']) {
             case 'label':
-                $this->keywordService->updateLabel($keywordRef, $newValue);
+                $keyword->setLabel($newValue);
                 break;
             case 'ref':
-                $this->keywordService->updateRef($keywordRef, $newValue);
+                $this->keywordRepository->checkRef($newValue);
+                $keyword->setRef($newValue);
                 break;
             default:
         }
+        $this->entityManager->flush();
         $this->data = $newValue;
         $this->message = __('UI', 'message', 'updated');
 

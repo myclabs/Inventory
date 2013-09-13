@@ -24,6 +24,7 @@ class Orga_Service_ETLStructure
      */
     private $etlDataService;
 
+
     /**
      * @param EntityManager $entityManager
      * @param Orga_Service_ETLData $etlDataService
@@ -33,7 +34,6 @@ class Orga_Service_ETLStructure
         $this->entityManager = $entityManager;
         $this->etlDataService = $etlDataService;
     }
-
 
     /**
      * Traduit les labels des objets originaux dans DW.

@@ -4,7 +4,7 @@
  * @package    Techno
  * @subpackage Service
  */
-use Keyword\Domain\Keyword;
+use Keyword\Application\Service\KeywordDTO;
 
 /**
  * @package    Techno
@@ -38,7 +38,7 @@ class Techno_Service_Techno
     /**
      * Retourne la valeur dans une famille aux coordonnées spécifiées
      * @param Techno_Model_Family     $family
-     * @param Keyword[] $keywords Mot-clés des membres indexés par le ref des dimensions
+     * @param KeywordDTO[] $keywords Mot-clés des membres indexés par le ref des dimensions
      * @return null|Calc_UnitValue
      */
     public function getFamilyValueByCoordinates(Techno_Model_Family $family, array $keywords)

@@ -6,7 +6,7 @@
  * @package Keyword
  */
 
-use Keyword\Domain\Keyword;
+use Keyword\Domain\KeywordRepository;
 ?>
 <div class="page-header">
 	<h1><?=__('Keyword', 'list', 'pageTitle')?></h1>
@@ -15,12 +15,12 @@ use Keyword\Domain\Keyword;
     $datagrid = new UI_Datagrid('keywords', 'datagrid_keyword', 'keyword');
 
     $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
-    $columnLabel->sortName = Keyword::QUERY_LABEL;
-    $columnLabel->filterName = Keyword::QUERY_LABEL;
+    $columnLabel->sortName = KeywordRepository::QUERY_LABEL;
+    $columnLabel->filterName = KeywordRepository::QUERY_LABEL;
 
     $columnRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
-    $columnRef->sortName = Keyword::QUERY_REF;
-    $columnRef->filterName = Keyword::QUERY_REF;
+    $columnRef->sortName = KeywordRepository::QUERY_REF;
+    $columnRef->filterName = KeywordRepository::QUERY_REF;
 
     $columnNbRelations = new UI_Datagrid_Col_Number('nbRelations', __('Keyword', 'list', 'relationNumberHeader'));
     $columnNbRelations->valueAlignment = UI_Datagrid_Col_Text::DISPLAY_TEXT_CENTER;
