@@ -1,0 +1,28 @@
+sheets:
+
+
+  - foreach: categories as category
+    do:
+      - label: "{{ category.label }}"
+
+        content:
+
+          - foreach: getAllFamilies(category) as family
+            do:
+              - type: VerticalTable
+                label: "{{ getFamilyLabel(family) }}"
+                columns:
+                  - foreach: family.dimensions as dimension
+                    do:
+                      - label: "{{ dimension.label|capitalize }}"
+                  - label: "{{ cellDigitalValue }}"
+                  - label: "{{ cellRelativeUncertainty }}"
+                lines:
+                  - foreach: family.cells as cell
+                    do:
+                      - cells:
+                          - foreach: family.dimensions as dimension
+                            do:
+                              - "{{ displayCellMemberForDimension(cell, dimension) }}"
+                          - "{{ cell.chosenElement.value.digitalValue }}"
+                          - "{{ cell.chosenElement.value.relativeUncertainty }}"

@@ -5,12 +5,22 @@
  * @subpackage Bootstrap
  */
 
+use Core\Autoloader;
+use Core\Log\ChromePHPFormatter;
+use Core\Log\ExtendedLineFormatter;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\ORM\Tools\Setup;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\ChromePHPHandler;
+use Monolog\Handler\FirePHPHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
@@ -41,7 +51,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'UTF8',
                 'Container',
                 'Translations',
-                'ErrorLog',
+                'Log',
                 'ErrorHandler',
                 'FrontController',
                 'Doctrine',
@@ -63,7 +73,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         /** @noinspection PhpIncludeInspection */
         require PACKAGE_PATH . '/vendor/autoload.php';
-        Core_Autoloader::getInstance()->register();
+        Autoloader::getInstance()->register();
     }
 
     /**
@@ -88,14 +98,18 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $builder = new ContainerBuilder();
         $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
-        // Cache basique, à remplacer
         $diConfig = $configuration->get('di', null);
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
-            // Si cache, on utilise APC
-            $builder->setDefinitionCache(new ApcCache());
+            $cache = new ApcCache();
+            $cache->setNamespace($configuration->get('applicationName', ''));
+            $builder->setDefinitionCache($cache);
         }
 
         $this->container = $builder->build();
+
+        if (isset($cache)) {
+            $this->container->set('Doctrine\Common\Cache\Cache', $cache);
+        }
 
         Zend_Registry::set('configuration', $configuration);
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
@@ -117,25 +131,45 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * Log des erreurs
      */
-    protected function _initErrorLog()
+    protected function _initLog()
     {
-        $errorLog = Core_Error_Log::getInstance();
-        // Si on est en tests unitaires
-        if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'script')) {
-            // Prend en compte toutes les erreurs
-            error_reporting(E_ALL);
-            // Log vers la console
-            $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_CONSOLE);
-        }
-        // Si on est en développement ou test
-        if (APPLICATION_ENV == 'developpement') {
-            // Prend en compte toutes les erreurs
-            error_reporting(E_ALL);
-            // Log vers Firebug
-            $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_FIREBUG);
+        $configuration = Zend_Registry::get('configuration');
+
+        $logger = new Logger('log');
+
+        // Log vers la console
+        if ($configuration->log->stdout) {
+            $loggerHandler = new StreamHandler('php://stdout', Logger::DEBUG);
+            $loggerHandler->setFormatter(new ExtendedLineFormatter());
+            $logger->pushHandler($loggerHandler);
         }
         // Log dans un fichier
-        $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_FILE);
+        if ($configuration->log->file) {
+            $file = $this->container->get('log.file');
+            $fileHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+            $fileHandler->setFormatter(new ExtendedLineFormatter());
+            $logger->pushHandler($fileHandler);
+        }
+        // Log FirePHP
+        if ($configuration->log->firephp) {
+            ini_set('html_errors', false);
+            $logger->pushHandler(new FirePHPHandler());
+            $chromePHPHandler = new ChromePHPHandler();
+            $chromePHPHandler->setFormatter(new ChromePHPFormatter());
+            $logger->pushHandler($chromePHPHandler);
+        }
+
+        /** @noinspection PhpParamsInspection */
+        $logger->pushProcessor(new PsrLogMessageProcessor());
+
+        $this->container->set('Psr\Log\LoggerInterface', $logger);
+
+        // Log des requetes
+        $file = $this->container->get('log.query.file');
+        $queryLoggerHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+        $queryLoggerHandler->setFormatter(new LineFormatter("%message%" . PHP_EOL));
+        $queryLogger = new Logger('log.query', [$queryLoggerHandler]);
+        $this->container->set('log.query', $queryLogger);
     }
 
     /**
@@ -143,15 +177,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initErrorHandler()
     {
-        if ((APPLICATION_ENV == 'developpement')
-         || (APPLICATION_ENV == 'script')
-         || (APPLICATION_ENV == 'test')
-         || (APPLICATION_ENV == 'production')
-        ) {
+        if (APPLICATION_ENV != 'testsunitaires') {
+            $errorHandler = $this->container->get('Core_Error_Handler');
             // Fonctions de gestion des erreurs
-            set_error_handler(array('Core_Error_Handler','myErrorHandler'));
-            set_exception_handler(array('Core_Error_Handler','myExceptionHandler'));
-            register_shutdown_function(array('Core_Error_Handler','myShutdownFunction'));
+            set_error_handler(array($errorHandler, 'myErrorHandler'));
+            set_exception_handler(array($errorHandler, 'myExceptionHandler'));
+            register_shutdown_function(array($errorHandler, 'myShutdownFunction'));
         }
     }
 
@@ -165,13 +196,14 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Définition du cache en fonction de l'environement.
         switch (APPLICATION_ENV) {
+            case 'test':
             case 'production':
-                $doctrineCache = new ArrayCache();
-                $doctrineAutoGenerateProxy = false;
+                $cache = $this->container->get('Doctrine\Common\Cache\Cache');
+                $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_NEVER;
                 break;
             default:
-                $doctrineCache = new ArrayCache();
-                $doctrineAutoGenerateProxy = true;
+                $cache = new ArrayCache();
+                $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_EVAL;
                 break;
         }
 
@@ -192,7 +224,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrineConfig->newDefaultAnnotationDriver();
         $cachedAnnotationReader = new Doctrine\Common\Annotations\CachedReader(
             new Doctrine\Common\Annotations\AnnotationReader(),
-            $doctrineCache
+            $cache
         );
         Gedmo\DoctrineExtensions::registerMappingIntoDriverChainORM(
             $driverChain, // our metadata driver chain, to hook into
@@ -204,17 +236,14 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Configuration de Doctrine pour utiliser le cache
         //  pour la création des requêtes, des résults, et du parsing des Métadata.
-        $doctrineConfig->setQueryCacheImpl($doctrineCache);
-        $doctrineConfig->setResultCacheImpl($doctrineCache);
-        $doctrineConfig->setMetadataCacheImpl($doctrineCache);
+        $doctrineConfig->setQueryCacheImpl($cache);
+        $doctrineConfig->setResultCacheImpl($cache);
+        $doctrineConfig->setMetadataCacheImpl($cache);
         // Configuration des Proxies.
-        $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
         $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
-
-        // Configuration de l'autoloader spécial pour les Proxy
-        // @see http://www.doctrine-project.org/jira/browse/DDC-1698
-        Doctrine\ORM\Proxy\Autoloader::register($doctrineConfig->getProxyDir(), $doctrineConfig->getProxyNamespace());
+        // Ligne inutile mais bug, cf. http://www.doctrine-project.org/jira/browse/DCOM-210#comment-21061
+        $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
 
         // Définition du sql profiler en fonction de l'environement.
         switch (APPLICATION_ENV) {
@@ -222,11 +251,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             case 'developpement':
             case 'testsunitaires':
                 // Requêtes placées dans un fichier.
-                $profiler = new Core_Profiler_File();
+                $profiler = $this->container->get('Core_Profiler_File');
                 break;
             default:
                 $profiler = null;
-            break;
+                break;
         }
         $doctrineConfig->setSQLLogger($profiler);
 

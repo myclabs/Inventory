@@ -33,7 +33,7 @@ Feature: AF single selection field feature
   # Vérification de la création de l'algorithme de type "sélection d’identifiant à partir d'une saisie de champ de sélection simple" correspondant
     When I open tab "Traitement"
     And I open collapse "Algorithmes de sélection d’identifiant"
-    And I open collapse "A partir d'une saisie de champ de sélection simple"
+    And I open collapse "À partir d'une saisie de champ de sélection simple"
     Then I should see the "algoSelectionTextkeyInput" datagrid
   # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "sélection d'identifiant à partir d'une saisie de champ de sélection simple"
     And the "algoSelectionTextkeyInput" datagrid should contain a row:
@@ -91,8 +91,8 @@ Feature: AF single selection field feature
     When I set "Boutons radio" for column "type" of row 1 of the "selectSingleFieldDatagrid" datagrid with a confirmation message
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "selectSingleFieldDatagrid" datagrid should contain:
-      | label                          | ref                            | isVisible | enabled   | required   | defaultValue | type          |
-      | Champ sélection simple modifié | c_s_s_modifie | Masqué    | Désactivé | Facultatif | Option 1     | Boutons radio |
+      | label                          | ref                       | isVisible | enabled    | required | defaultValue | type          |
+      | Champ sélection simple modifié | c_s_s_modifie | Masqué    | Désactivé | Facultatif | Option 1 | Boutons radio |
     When I click "Aide" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#selectSingleFieldDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
@@ -100,7 +100,7 @@ Feature: AF single selection field feature
   # Vérification que les modifications on bien été prises en compte pour l'algo de type sélection d'identifiant correspondant
     When I open tab "Traitement"
     And I open collapse "Algorithmes de sélection d’identifiant"
-    And I open collapse "A partir d'une saisie de champ de sélection simple"
+    And I open collapse "À partir d'une saisie de champ de sélection simple"
     Then I should see the "algoSelectionTextkeyInput" datagrid
   # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "sélection d'identifiant à partir d'une saisie de champ de sélection simple"
     And the "algoSelectionTextkeyInput" datagrid should contain a row:
@@ -191,6 +191,6 @@ Feature: AF single selection field feature
   # Vérification que les suppressions ont bien été prises en compte pour les algos de type sélection d'identifiant correspondanti
     When I open tab "Traitement"
     And I open collapse "Algorithmes de sélection d’identifiant"
-    And I open collapse "A partir d'une saisie de champ de sélection simple"
+    And I open collapse "À partir d'une saisie de champ de sélection simple"
     Then I should see the "algoSelectionTextkeyInput" datagrid
     And the "algoSelectionTextkeyInput" datagrid should contain 2 row

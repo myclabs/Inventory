@@ -34,6 +34,8 @@ class Techno_PopulateTest extends Techno_Populate
             'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse', 'kg_co2e.t^-1', 'kg_co2e.kg^-1');
         $family_masse_volumique_combustible = $this->createFamilyCoef($categorie_contenant_famille,
             'masse_volumique_combustible', 'Masse volumique de combustible', 't.m3^-1', 'kg.m3^-1');
+        $family_forfait_emissions_fonction_marque = $this->createFamilyCoef($categorie_contenant_famille,
+            'forfait_emissions_fonction_marque', 'Forfait émissions en fonction de la marque', 't_co2e', 'kg_co2e');
         $family_vide = $this->createFamilyCoef($categorie_contenant_famille,
             'famille_test_vide', 'Famille test vide', 't', 'kg');
         $family_test = $this->createFamilyCoef($sous_categorie_contenant_famille,
@@ -52,6 +54,11 @@ class Techno_PopulateTest extends Techno_Populate
         // Masse volumique de combustible
         $this->createVerticalDimension($family_masse_volumique_combustible, 'combustible', ['charbon', 'gaz_naturel']);
         $this->createParameter($family_masse_volumique_combustible, ['charbon'], 900, 10);
+
+        // Forfait émissions en fonction de la marque
+        $this->createVerticalDimension($family_forfait_emissions_fonction_marque, 'marque', ['marque_a', 'marque_b']);
+        $this->createParameter($family_forfait_emissions_fonction_marque, ['marque_a'], 1, 10);
+        $this->createParameter($family_forfait_emissions_fonction_marque, ['marque_b'], 2, 10);
 
         // Famille test
         $this->createVerticalDimension($family_test, 'combustible', ['charbon', 'gaz_naturel']);

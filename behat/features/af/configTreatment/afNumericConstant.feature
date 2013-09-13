@@ -23,7 +23,7 @@ Feature: AF numeric constant algo feature
     And I fill in "algoNumericConstant_uncertainty_addForm" with "10,9999"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 2 of the "algoNumericConstant" datagrid should contain:
+    And the "algoNumericConstant" datagrid should contain a row:
       | label | ref | unit                   | value       | uncertainty |
       | AAA   | aaa | t équ. CO2/passager.km | 12 345,6789 | 10          |
   # Ajout avec libellé vide et incertitude  vide
@@ -34,10 +34,8 @@ Feature: AF numeric constant algo feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification contenu (algos ordonnés suivant l'ordre de création ?)
-    And the row 1 of the "algoNumericConstant" datagrid should contain:
-      | label | ref | unit                   | value       | uncertainty |
-      | AAA   | aaa | t équ. CO2/passager.km | 12 345,6789 | 10          |
-    And the row 2 of the "algoNumericConstant" datagrid should contain:
+  # Ordre non testé, car instabilités apparues
+    And the "algoNumericConstant" datagrid should contain a row:
       | label | ref | unit | value   | uncertainty |
       |       | aab | %    | 10,9999 | 0          |
 

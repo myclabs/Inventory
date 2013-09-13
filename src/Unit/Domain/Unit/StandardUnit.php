@@ -8,6 +8,7 @@
 
 namespace Unit\Domain\Unit;
 
+use Core_Model_Query;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\PhysicalQuantity\Component;
 use Unit\Domain\UnitSystem;
@@ -170,6 +171,22 @@ class StandardUnit extends Unit
         }
 
         return $tabResults;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCompatibleUnits()
+    {
+        $units = $this->getPhysicalQuantity()->getUnits();
+
+        // Filtre l'unité courante de la liste
+        return array_filter(
+            $units,
+            function (Unit $unit) {
+                return $unit !== $this;
+            }
+        );
     }
 
 }

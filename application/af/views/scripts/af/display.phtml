@@ -29,12 +29,13 @@ $baseTabs[AF_ViewConfiguration::TAB_INPUT]->label = __('UI', 'name', 'input');
 $baseTabs[AF_ViewConfiguration::TAB_INPUT]->useCache = true;
 $baseTabs[AF_ViewConfiguration::TAB_INPUT]->active = true;
 $urlArray = array(
-    'module'     => 'af',
-    'controller' => 'af',
-    'action'     => 'display-input',
-    'idAF'       => $af->getId(),
-    'mode'       => $viewConfiguration->getMode(),
-    'exitURL'    => urlencode($viewConfiguration->getExitURL()),
+    'module'            => 'af',
+    'controller'        => 'af',
+    'action'            => 'display-input',
+    'idAF'              => $af->getId(),
+    'mode'              => $viewConfiguration->getMode(),
+    'exitURL'           => urlencode($viewConfiguration->getExitURL()),
+    'resultsPreviewUrl' => urlencode(json_encode($viewConfiguration->getResultsPreviewUrl())),
 );
 $urlArray += $viewConfiguration->getUrlParams();
 if ($viewConfiguration->getIdInputSet()) {

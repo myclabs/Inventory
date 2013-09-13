@@ -13,15 +13,6 @@ AF_Model_Output_Element:
     value:
       type: calc_value
       nullable: false
-    label:
-      type: string
-      nullable: false
-    refContext:
-      type: string
-      nullable: true
-    refIndicator:
-      type: string
-      nullable: true
 
   manyToOne:
     outputSet:
@@ -37,6 +28,12 @@ AF_Model_Output_Element:
         name: idInputSet
         referencedColumnName: id
         nullable: false
+    algo:
+      targetEntity: Algo_Model_Numeric
+      joinColumn:
+        name: idAlgo
+        referencedColumnName: id
+        nullable: true
 
   manyToMany:
     indexes:

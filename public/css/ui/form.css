@@ -9,8 +9,6 @@
 .form .subGroup { margin-left: 40px; }
 .form .form-actions { padding-left: 426px; }
 .form .form-actions > * { margin: 0px 5px; }
-.form .controls > div.input label.checkbox input,
-.form .controls > div.input label.radio input { margin-top: 0px; margin-right: 5px; position: relative; top: -1px; vertical-align: bottom; }
 
 .form .subGroup .control-group > label { width: 360px; }
 .form .subGroup .control-group > .controls { margin-left: 390px; }

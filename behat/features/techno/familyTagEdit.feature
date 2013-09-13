@@ -6,7 +6,7 @@ Feature: Family tag edit feature
 
   @javascript
   Scenario: Create family tag, correct input
-    Given I am on "techno/family/edit/id/3"
+    Given I am on "techno/family/edit/id/4"
     And I wait for the page to finish loading
     Then I should see "Famille test vide"
     When I open tab "Général"
@@ -28,7 +28,7 @@ Feature: Family tag edit feature
 
   @javascript
   Scenario: Create family tag, incorrect input
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
     When I open tab "Général"

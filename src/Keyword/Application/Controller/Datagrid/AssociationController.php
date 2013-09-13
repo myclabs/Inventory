@@ -88,9 +88,12 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         if (empty($this->_addErrorMessages)) {
             $errorMessage = $this->keywordRepository->getErrorMessageForAssociation($subject, $predicate, $object);
             if ($errorMessage !== null) {
-                $this->setAddElementErrorMessage('subject', $errorMessage);
-                $this->setAddElementErrorMessage('predicate', $errorMessage);
-                $this->setAddElementErrorMessage('object', $errorMessage);
+                if ($refSubject === $refObject) {
+                    $this->setAddElementErrorMessage('subject', $errorMessage);
+                    $this->setAddElementErrorMessage('object', $errorMessage);
+                } else {
+                    $this->setAddElementErrorMessage('predicate', $errorMessage);
+                }
             } else {
                 $subject->addAssociationWith($predicate, $object);
                 $this->entityManager->flush();
