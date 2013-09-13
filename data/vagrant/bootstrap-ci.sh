@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Configuration pour les VM d'intégration continue
+
 BASEDIR=/vagrant/data/vagrant
 
 # For PHP 5.4
