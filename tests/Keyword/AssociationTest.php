@@ -1,4 +1,5 @@
 <?php
+use Keyword\Architecture\Repository\DoctrineAssociationRepository;
 use Keyword\Domain\AssociationCriteria;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
@@ -36,6 +37,7 @@ class Keyword_Test_AssociationTest extends Core_Test_TestCase
 
     public function testAssociationCriteria()
     {
+        /** @var DoctrineAssociationRepository $repository */
         $repository = $this->entityManager->getRepository('Keyword\Domain\Association');
 
         $criteria = new AssociationCriteria();
@@ -51,7 +53,7 @@ class Keyword_Test_AssociationTest extends Core_Test_TestCase
         $criteria = new AssociationCriteria();
         $criteria->objectRef->eq('foo');
         $associations = $repository->matching($criteria);
-//        $this->assertCount(0, $associations);
+        $this->assertCount(0, $associations);
     }
 
     public function tearDown()
