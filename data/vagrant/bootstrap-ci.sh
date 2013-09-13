@@ -4,6 +4,8 @@
 
 BASEDIR=/vagrant/data/vagrant
 
+apt-get update
+
 # For PHP 5.4
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php5
