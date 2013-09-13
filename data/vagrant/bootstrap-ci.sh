@@ -23,6 +23,8 @@ mysql -u root -e "FLUSH PRIVILEGES;"
 # PHP
 apt-get install -y php5 php5-curl php5-cli php5-dev php5-mysql php-pear php5-xdebug
 
+cp ${BASEDIR}/php.ini /etc/php5/cli/
+
 # Gearman
 apt-get install -y build-essential
 apt-get install -y gearman libgearman6 libgearman-dev gearman-tools gearman-job-server
