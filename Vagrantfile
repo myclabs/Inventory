@@ -3,8 +3,6 @@ Vagrant.configure("2") do |config|
     config.vm.box = "precise32"
     config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
-    config.vm.network :private_network, ip: "192.168.56.101"
-    config.vm.network :forwarded_port, guest: 80, host: 8000
     config.ssh.forward_agent = true
 
     config.vm.provider "virtualbox" do |v|
@@ -21,6 +19,8 @@ Vagrant.configure("2") do |config|
     end
 
     if tests == false
+        config.vm.network :private_network, ip: "192.168.56.101"
+        config.vm.network :forwarded_port, guest: 80, host: 8000
         config.vm.provision :shell, :path => "data/vagrant/bootstrap.sh"
     end
     if tests == true
