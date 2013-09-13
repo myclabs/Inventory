@@ -42,7 +42,7 @@ class Core_Script_Build
      *
      * @var array(packageName => array(actionName => Core_Script_Action))
      */
-    protected $_availableActionsDependencies = array();
+    protected $_availableActionsDependencies = [];
 
     /**
      * Console parser.
@@ -52,52 +52,38 @@ class Core_Script_Build
     protected $_parser;
 
     /**
-     * Constructor.
-     *  Define the CLI interface.
-     *
-     * @return void
+     * Define the CLI interface.
      */
     public function __construct()
     {
         // Available actions.
         $this->_availableActions = $this->getActions();
-        // Available actions in the dependencies.
-//        $this->_dependencies = Core_Package_Manager::getAllDependencies();
-//        foreach ($this->_dependencies as $dependency) {
-//            try {
-//                $actions = $this->getActions($dependency);
-//            } catch (Exception $e){
-//                $actions = array();
-//                echo 'Notice: No actions for '.$dependency->getName().PHP_EOL;
-//                echo "\t".$e->getMessage().PHP_EOL;
-//                echo '---------------------------'.PHP_EOL;
-//            }
-//            $this->_availableActionsDependencies[$dependency->getName()] = $actions;
-//        }
         // CLI parser.
         $this->_parser = new Console_CommandLine(array(
             'name' => "php build.php",
             'description' => "Run the build script.",
         ));
+
         $actionChoice = implode(', ', array_keys($this->_availableActions));
         $this->_parser->addArgument('actions', array(
             'description' => "Actions can be $actionChoice.",
             'multiple' => true,
             'optional' => false,
         ));
+
         $this->_parser->addOption('environment', array(
             'short_name'  => '-e',
             'long_name'   => '--environment',
             'description' => "Environments to use for Create action. Example: '-e developpement'. "
                             ."Default is '-e testsunitaires,developpement'",
-            'default'     => 'testsunitaires,developpement',
+            'default'     => APPLICATION_ENV,
         ));
     }
 
     /**
      * Run all the actions in the build directory
      *
-     * @return void
+     * @throws Core_Exception_InvalidArgument
      */
     public function run()
     {
@@ -130,28 +116,30 @@ class Core_Script_Build
     /**
      * Parse the environment option.
      *
-     * @param  string  $value Value given in CLI for the environment option.
+     * @param string $value Value given in CLI for the environment option.
      *
-     * @return array() Array of the multiple environments.
+     * @throws Core_Exception_InvalidArgument
+     * @return array Array of the multiple environments.
      */
     private function parseEnvironmentOption($value)
     {
-        $tab = explode(',', $value);
+        $environments = explode(',', $value);
 
-        foreach ($tab as $environment) {
-            if (!(in_array($environment, $this->acceptedEnvironments))) {
+        foreach ($environments as $environment) {
+            if (!in_array($environment, $this->acceptedEnvironments)) {
                 throw new Core_Exception_InvalidArgument(
                     'Possible values for -e are '.implode(',', $this->acceptedEnvironments).'. '.
                     'Values should be separated by a comma.');
             }
         }
 
-        return $tab;
+        return $environments;
     }
 
     /**
      * Returns the actions that exists in the build/ directory of the package
      *
+     * @throws Exception
      * @return array(actionName => Core_Script_Action)
      */
     private function getActions()
