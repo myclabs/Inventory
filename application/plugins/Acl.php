@@ -249,7 +249,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
 
     /**
      * @param Zend_Controller_Request_Abstract $request
-     * @throws User_Exception_Forbidden
+     * @throws ForbiddenException
      * @return Orga_Model_Cell
      */
     protected function getCell(Zend_Controller_Request_Abstract $request)
@@ -261,10 +261,6 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             } catch (Core_Exception_NotFound $e) {
                 // Pas une cellule.
             }
-        }
-        $idCell = $request->getParam('idCell');
-        if ($idCell !== null) {
-            return Orga_Model_Cell::load($idCell);
         }
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {

@@ -6,7 +6,7 @@ Feature: Input mandatory field display feature
 
   @javascript
   Scenario: Input mandatory field display scenario
-  # Accès interface de test
+  # Accès interface de test, formulaire "Formulaire avec tout type de champ"
     Given I am on "af/af/test/id/5"
     And I wait for the page to finish loading
   # Affichage des messages des champs au clic sur "Aperçu des résultats"
@@ -38,8 +38,8 @@ Feature: Input mandatory field display feature
   # Accès interface de test
     Given I am on "af/af/test/id/6"
     And I wait for the page to finish loading
-  # Attente pour voir si ça débloque traitement distant
-    And I wait 2 seconds
+  # Attente pour voir si ça débloque instabilité
+    And I wait 5 seconds
   # Ajout d'un bloc de répétition
     And I click "Ajouter"
   # Affichage des messages des champs au clic sur "Aperçu des résultats"

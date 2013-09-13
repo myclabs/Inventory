@@ -81,8 +81,16 @@ $algoSelectionTextKeyInputCollapse->title = __('AF', 'configTreatmentCollapse', 
 $algoSelectionTextKeyInputCollapse->body = $this->partial('edit/algos/selection-textkey-input.phtml',
                                                           ['af' => $af]);
 
+// Algorithmes de sélection de type "ContextValue"
+$algoSelectionTextKeyContextValueCollapse = new UI_HTML_Collapse('algoSelectionTextKeyContextValueCollapse');
+$algoSelectionTextKeyContextValueCollapse->foldedByDefault = true;
+$algoSelectionTextKeyContextValueCollapse->title = __('AF', 'configTreatmentCollapse', 'orgaCoordinateTextkeySelectionCollapse');
+$algoSelectionTextKeyContextValueCollapse->body = $this->partial('edit/algos/selection-textkey-context-value.phtml',
+    ['af' => $af]);
+
 $algoSelectionTextKeyCollapse->body = $algoSelectionTextKeyExpressionCollapse->render()
-    . $algoSelectionTextKeyInputCollapse->render();
+    . $algoSelectionTextKeyInputCollapse->render()
+    . $algoSelectionTextKeyContextValueCollapse->render();
 echo $algoSelectionTextKeyCollapse->render();
 
 
@@ -138,6 +146,11 @@ echo $algoConditionCollapse->render();
     $('#algoSelectionTextKeyInputCollapse').on('show', function(e) {
         if ($(e.target).attr('id') == 'algoSelectionTextKeyInputCollapse_wrapper') {
             algoSelectionTextkeyInput.filter();
+        }
+    });
+    $('#algoSelectionTextKeyContextValueCollapse').on('show', function(e) {
+        if ($(e.target).attr('id') == 'algoSelectionTextKeyContextValueCollapse_wrapper') {
+            algoSelectionTextkeyContextValue.filter();
         }
     });
     $('#algoConditionExpressionCollapse').on('show', function(e) {
