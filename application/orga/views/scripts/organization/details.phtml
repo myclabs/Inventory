@@ -99,7 +99,7 @@
                         var button = $('#organizationDWCubes');
                         if (response.organizationDWCubesState) {
                             button.attr('class', 'btn btn-success')
-                            button.children('i').attr('class', 'icon-info-sign');
+                            button.children('i').attr('class', 'icon-info-sign icon-white');
                             button.children('span').html('<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesUpToDate'), ENT_QUOTES)?>');
                         } else {
                             button.attr('class', 'btn btn-danger');
@@ -119,7 +119,7 @@
                         setMask(false);
                         var button = $('#organizationDWCubes');
                         button.attr('class', 'btn');
-                        button.children('i').attr('class', 'icon-info-sign');
+                        button.children('i').attr('class', 'icon-info-sign icon-white');
                         button.children('span').html('<?=htmlentities(__('Orga', 'configuration', 'dWCubesState'), ENT_QUOTES)?>');
                         addMessage('<?=htmlentities(__('UI', 'message', 'operationInProgress'), ENT_QUOTES)?>', 'success');
                         button.unbind('click');

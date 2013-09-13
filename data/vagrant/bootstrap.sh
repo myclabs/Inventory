@@ -61,6 +61,10 @@ cp ${BASEDIR}/phpmyadmin-config.inc.php /etc/phpmyadmin/config.inc.php
 #make
 #make install
 
+# Composer
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+
 # PHPUnit
 pear config-set auto_discover 1
 pear install pear.phpunit.de/PHPUnit
@@ -81,4 +85,4 @@ pear install pear.phpunit.de/PHPUnit
 #npm install -g zombie@1.4.1
 
 # Data
-php /vagrant/scripts/build/build.php create update
+# php /vagrant/scripts/build/build.php create update

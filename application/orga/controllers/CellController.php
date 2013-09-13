@@ -152,10 +152,13 @@ class Orga_CellController extends Core_Controller
         $inventoriesTab = new UI_Tab('inventories');
         try {
             $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+            $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
         } catch (Core_Exception_UndefinedAttribute $e) {
-            $granularityForInventoryStatus = null;
+            $crossedOrgaGranularity = null;
+        } catch (Core_Exception_NotFound $e) {
+            $crossedOrgaGranularity = null;
         }
-        if ($granularityForInventoryStatus === null) {
+        if ($crossedOrgaGranularity === null) {
             $inventoriesTab->disabled = true;
         } else if ($tab === 'inventories') {
             $inventoriesTab->active = true;
