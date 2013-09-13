@@ -156,4 +156,12 @@ class ExtendedUnit extends Unit
         return $extendedReferenceUnit;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getCompatibleUnits()
+    {
+        return [];
+    }
+
 }

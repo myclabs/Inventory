@@ -81,7 +81,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
                 $data['advancementInput'] = 0;
                 $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
             }
-            $data['link'] = $this->cellLink('simulation/scenario/details?idScenario='.$scenario->getKey()['id'], __('UI', 'name', 'input'), 'share-alt');
+            $data['link'] = $this->cellLink('simulation/scenario/details?idScenario='.$scenario->getKey()['id'], __('UI', 'datagridContent', 'linkLabel'), 'share-alt');
             $this->addLine($data);
         }
 

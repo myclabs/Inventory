@@ -41,7 +41,7 @@ Feature: Organization inventory tab feature
     And I open tab "Collectes"
     Then the "inventories6" datagrid should contain a row:
       | annee | inventoryStatus | advancementInput | advancementFinishedInput |
-      | 2012  | Ouvert          | 66%              | 33%                      |
+      | 2012  | Ouvert          | 50%              | 25%                      |
 
   @javascript
   Scenario: Display of the inventory datagrid in a cell with a granularity smaller than or equal to that of inventories
@@ -60,6 +60,3 @@ Feature: Organization inventory tab feature
     And the row 1 of the "inventories6" datagrid should contain:
       | inventoryStatus | advancementInput | advancementFinishedInput |
       | Ouvert          | 50%              | 16%                      |
-
-
-

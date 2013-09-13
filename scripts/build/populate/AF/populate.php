@@ -58,6 +58,7 @@ class AF_Populate extends Core_Script_Action
         //  + createFixedCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => refMemberKeyword]
         //  + createAlgoCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => Selection_TextKey algo]
         //  + createAlgoSelectTextkeyExpression : ref, expression
+        //  + createAlgoSelectTextkeyContextValue : ref, name, defaultValue
         //  + createAlgoConditionElementary : Component input, ref
         //  + createAlgoConditionExpression : ref, expression
         // OptionalParams : -
@@ -533,6 +534,24 @@ class AF_Populate extends Core_Script_Action
         $selectTextkeyExpression->setExpression($expression);
         $selectTextkeyExpression->save();
         $aF->addAlgo($selectTextkeyExpression);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string      $ref
+     * @param string      $name
+     * @param string|null $defaultValue
+     */
+    protected function createAlgoSelectTextkeyContextValue(AF_Model_AF $aF, $ref, $name, $defaultValue = null)
+    {
+        $algo = new Algo_Model_Selection_TextKey_ContextValue();
+        $algo->setRef($ref);
+        $algo->setName($name);
+        if ($defaultValue) {
+            $algo->setDefaultValue($defaultValue);
+        }
+        $algo->save();
+        $aF->addAlgo($algo);
     }
 
     /**

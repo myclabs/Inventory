@@ -956,6 +956,10 @@ class Orga_Service_ETLStructure
      */
     public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
+        /** @var Core_EventDispatcher $eventDispatcher */
+        $eventDispatcher = Zend_Registry::get('container')->get('Core_EventDispatcher');
+        $eventDispatcher->removeListener('Orga_Model_GranularityReport', 'DW_Model_Report');
+
         foreach ($granularity->getCells() as $cell) {
             $cell = Orga_Model_Cell::load($cell->getId());
             $this->resetCellDWCube($cell);
@@ -1014,27 +1018,35 @@ class Orga_Service_ETLStructure
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            // Début de transaction.
-            $this->entityManager->beginTransaction();
+            try {
+                // Début de transaction.
+                $this->entityManager->beginTransaction();
 
-            $this->etlDataService->clearDWResultsForCell($cell);
-            $this->entityManager->flush();
+                $this->etlDataService->clearDWResultsForCell($cell);
+                $this->entityManager->flush();
 
-            $this->updateCellDWCubeLabel($cell);
-            $this->resetDWCube(
-                $cell->getDWCube(),
-                $cell->getGranularity()->getOrganization(),
-                array(
-                    'axes' => $cell->getGranularity()->getAxes(),
-                    'members' => $cell->getMembers()
-                )
-            );
+                $this->updateCellDWCubeLabel($cell);
+                $this->resetDWCube(
+                    $cell->getDWCube(),
+                    $cell->getGranularity()->getOrganization(),
+                    array(
+                        'axes' => $cell->getGranularity()->getAxes(),
+                        'members' => $cell->getMembers()
+                    )
+                );
 
-            $this->etlDataService->populateDWResultsForCell($cell);
-            $this->entityManager->flush();
+                $this->etlDataService->populateDWResultsForCell($cell);
+                $this->entityManager->flush();
 
-            // Fin de transaction.
-            $this->entityManager->commit();
+                // Fin de transaction.
+                $this->entityManager->commit();
+            } catch (ErrorException $e) {
+                // Annulation de la transaction.
+                $this->entityManager->rollback();
+
+                throw $e;
+            }
+
         }
     }
 
