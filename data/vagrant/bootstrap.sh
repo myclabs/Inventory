@@ -50,16 +50,16 @@ apt-get install -q -y phpmyadmin
 cp ${BASEDIR}/phpmyadmin-config.inc.php /etc/phpmyadmin/config.inc.php
 
 # Gearman
-#apt-get install -y build-essential
-#apt-get install -y gearman libgearman6 libgearman-dev gearman-tools gearman-job-server
-#cd /tmp
-#wget http://pecl.php.net/get/gearman-1.0.3.tgz
-#tar -xzf gearman-1.0.3.tgz
-#cd gearman-1.0.3
-#phpize
-#./configure
-#make
-#make install
+apt-get install -y build-essential
+apt-get install -y gearman libgearman6 libgearman-dev gearman-tools gearman-job-server
+cd /tmp
+wget http://pecl.php.net/get/gearman-1.0.3.tgz
+tar -xzf gearman-1.0.3.tgz
+cd gearman-1.0.3
+phpize
+./configure
+make
+make install
 
 # Composer
 curl -sS https://getcomposer.org/installer | php
