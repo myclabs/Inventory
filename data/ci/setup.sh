@@ -1,6 +1,8 @@
 #!/bin/sh
 # Setup the application
 
+set -e
+
 cat > application/configs/application.ini <<EOL
 [production]
 [test : production]

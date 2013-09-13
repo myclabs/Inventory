@@ -1,6 +1,8 @@
 #!/bin/sh
 # Run tests for continuous integration
 
+set -e
+
 # Lance dans des process séparés sinon problèmes
 php scripts/build/build.php -e testsunitaires create update
 php scripts/build/build.php -e testsunitaires populate
