@@ -90,10 +90,10 @@ class Core_Script_Build
         $result = $this->_parser->parse();
 
         // Options.
-        $environments   = $this->parseEnvironmentOption($result->options['environment']);
+        $environments = $this->parseEnvironmentOption($result->options['environment']);
 
         // Actions.
-        $actions = array();
+        $actions = [];
         foreach ($result->args['actions'] as $actionName) {
             if (! isset($this->_availableActions[$actionName])) {
                 $actionChoice = implode(', ', array_keys($this->_availableActions));
