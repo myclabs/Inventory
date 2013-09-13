@@ -94,22 +94,22 @@ class Orga_ReferentialController extends Core_Controller
             case 'Classif':
             $exportService = new Classif_Service_Export();
             $streamFunction = 'stream';
-            $baseFilename = 'Classif';
+            $baseFilename = __('Classif', 'classification', 'classification');
             break;
             case 'Techno':
                 $exportService = new Techno_Service_Export();
                 $streamFunction = 'stream';
-                $baseFilename = 'Techno';
+                $baseFilename = __('UI', 'name', 'parameters');
                 break;
             case 'Keyword':
                 $exportService = new \Keyword\Application\Service\KeywordExport();
                 $streamFunction = 'stream';
-                $baseFilename = 'Keyword';
+                $baseFilename = __('Keyword', 'export', 'baseFileName');
                 break;
             case 'Unit':
                 $exportService = new \Unit\Application\Service\UnitExport();
                 $streamFunction = 'stream';
-                $baseFilename = 'Unit';
+                $baseFilename = __('Unit', 'name', 'units');
                 break;
             default:
                 UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);

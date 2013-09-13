@@ -346,11 +346,11 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('granularities', $granularities);
 
-        $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'formSubForm'));
+        $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'subForm'));
         $modelBuilder->bind('inputLabel', __('UI', 'name', 'field'));
         $modelBuilder->bind('inputType', __('Orga', 'export', 'fieldType'));
         $modelBuilder->bind('inputValue', __('Orga', 'export', 'typedInValue'));
-        $modelBuilder->bind('inputUncertainty', __('UI', 'name', 'uncertainty'));
+        $modelBuilder->bind('inputUncertainty', __('UI', 'name', 'uncertainty') . ' (%)');
         $modelBuilder->bind('inputUnit', __('Orga', 'export', 'choosedUnit'));
         $modelBuilder->bind('inputReferenceValue', __('Orga', 'export', 'valueExpressedInDefaultUnit'));
         $modelBuilder->bind('inputReferenceUnit', __('Orga', 'export', 'defaultUnit'));
@@ -449,12 +449,12 @@ class Orga_Service_Export
 
         $modelBuilder->bind('classifAxes', Classif_Model_Axis::loadListOrderedAsAscendantTree());
 
-        $modelBuilder->bind('inputStatus', __('Orga', 'export', 'inputStatus'));
-        $modelBuilder->bind('resultLabel', __('Orga', 'export', 'resultLabel'));
-        $modelBuilder->bind('resultFreeLabel', __('Orga', 'export', 'resultFreeLabel'));
-        $modelBuilder->bind('resultValue', __('Orga', 'export', 'resultValue'));
-        $modelBuilder->bind('resultRoundedValue', __('Orga', 'export', 'resultRoundedValue'));
-        $modelBuilder->bind('resultUncertainty', __('Orga', 'export', 'resultUncertainty'));
+        $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
+        $modelBuilder->bind('resultLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('resultFreeLabel', __('AF', 'inputInput', 'freeLabel'));
+        $modelBuilder->bind('resultValue', __('UI', 'name', 'value'));
+        $modelBuilder->bind('resultRoundedValue', __('Orga', 'export', 'roundedValue'));
+        $modelBuilder->bind('resultUncertainty', __('UI', 'name', 'uncertainty') . ' (%)');
 
         $modelBuilder->bindFunction(
             'getOutputsForIndicator',
