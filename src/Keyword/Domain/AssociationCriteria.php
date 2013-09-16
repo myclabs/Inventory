@@ -2,7 +2,7 @@
 
 namespace Keyword\Domain;
 
-use Core\Criteria\FieldCriteria;
+use Core\Criteria\FieldFilter;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
 use User_Model_Action;
@@ -16,25 +16,25 @@ use User_Model_User;
 class AssociationCriteria extends Criteria
 {
     /**
-     * @var FieldCriteria
+     * @var FieldFilter
      */
     public $subjectRef;
 
     /**
-     * @var FieldCriteria
+     * @var FieldFilter
      */
     public $predicate;
 
     /**
-     * @var FieldCriteria
+     * @var FieldFilter
      */
     public $objectRef;
 
     public function __construct()
     {
-        $this->subjectRef = new FieldCriteria('subject.ref');
-        $this->predicate = new FieldCriteria('predicate');
-        $this->objectRef = new FieldCriteria('object.ref');
+        $this->subjectRef = new FieldFilter('subject.ref');
+        $this->predicate = new FieldFilter('predicate');
+        $this->objectRef = new FieldFilter('object.ref');
     }
 
     /**

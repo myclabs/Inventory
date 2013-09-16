@@ -9,9 +9,18 @@ use Doctrine\Common\Collections\Expr\Value;
 /**
  * Field filtering
  *
+ * Usage inside a Criteria:
+ *
+ * <code>
+ * // Filter on a field
+ * $this->ref = new FieldFilter('ref');
+ * // Filter on the field of an association
+ * $this->subjectRef = new FieldFilter('subject.ref');
+ * </code>
+ *
  * @author matthieu.napoli
  */
-class FieldCriteria
+class FieldFilter
 {
     /**
      * @var string

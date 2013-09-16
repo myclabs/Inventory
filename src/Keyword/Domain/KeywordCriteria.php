@@ -2,7 +2,7 @@
 
 namespace Keyword\Domain;
 
-use Core\Criteria\FieldCriteria;
+use Core\Criteria\FieldFilter;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
 use User_Model_Action;
@@ -16,19 +16,19 @@ use User_Model_User;
 class KeywordCriteria extends Criteria
 {
     /**
-     * @var FieldCriteria
+     * @var FieldFilter
      */
     public $ref;
 
     /**
-     * @var FieldCriteria
+     * @var FieldFilter
      */
     public $label;
 
     public function __construct()
     {
-        $this->ref = new FieldCriteria('ref');
-        $this->label = new FieldCriteria('label');
+        $this->ref = new FieldFilter('ref');
+        $this->label = new FieldFilter('label');
     }
 
     /**
