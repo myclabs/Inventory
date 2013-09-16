@@ -313,7 +313,14 @@ AF.Input.prototype = {
      * @param button
      */
     loadInputHistory: function(inputId, button) {
-        $.get("af/input/input-history/id/" + this.id + "/idInputSet/" + this.idInputSet + "/idInput/" + inputId,
+        var url = "af/input/input-history/id/" + this.id + "/idInputSet/" + this.idInputSet + "/idInput/" + inputId;
+        for (var key in this.urlParams) {
+            if (this.urlParams.hasOwnProperty(key)) {
+                url += '/' + key + '/' + this.urlParams[key];
+            }
+        }
+
+        $.get(url,
             function (html) {
                 // Si visible (merci Bootstrap pour cette merde)
                 if (button.data('popover').tip().hasClass('in')) {

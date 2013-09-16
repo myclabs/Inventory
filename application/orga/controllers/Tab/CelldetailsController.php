@@ -37,6 +37,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
     private $entryRepository;
 
     /**
+     * @Secure("viewCell")
+     */
+    public function emptytabAction()
+    {
+    }
+
+    /**
      * Confguration du projet.
      * @Secure("editCell")
      */
@@ -272,8 +279,23 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
-        $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+        try {
+            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+            // Verification que la granularité croisée existe.
+            $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $crossedOrgaGranularity = null;
+        } catch (Core_Exception_NotFound $e) {
+            $crossedOrgaGranularity = null;
+        }
+        if ($crossedOrgaGranularity === null) {
+            $this->forward('emptytab', 'tab_celldetails', 'orga', array(
+                    'idCell' => $idCell,
+                    'display' => 'render',
+                )
+            );
+            return;
+        }
 
         $datagridConfiguration = new Orga_DatagridConfiguration(
             'inventories'.$granularityForInventoryStatus->getId(),
