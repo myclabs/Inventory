@@ -12,6 +12,10 @@ use Psr\Log\LoggerInterface;
  */
 class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 {
+    /**
+     * Temps d'attente max (en secondes) lorsqu'une tache est lancée. Au delà, on n'attends plus son résultat.
+     */
+    const TASK_WAIT_TIME = 5;
 
     /**
      * @var GearmanClient|null
@@ -83,11 +87,29 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
         $taskType = $this->prefixTaskType(get_class($task));
         $workload = serialize($task);
 
-        $this->getGearmanClient()->doBackground($taskType, $workload);
+        $job = $this->getGearmanClient()->doBackground($taskType, $workload);
 
         if ($this->getGearmanClient()->returnCode() != GEARMAN_SUCCESS) {
             throw new Core_Exception("Gearman error: " . $this->getGearmanClient()->returnCode());
         }
+
+        // Attend la fin de la tache ou le timeout défini dans TASK_WAIT_TIME
+        $running = true;
+        $timeStart = microtime(true);
+        $elapsedTime = 0;
+        while ($running && ($elapsedTime < self::TASK_WAIT_TIME)) {
+            sleep(3);
+
+            $status = $this->getGearmanClient()->jobStatus($job);
+            $known = $status[0];
+            if (!$known) {
+                throw new Core_Exception("The background Gearman job has disappeared: maybe it has crashed?");
+            }
+            $running = $status[1];
+            $elapsedTime = microtime(true) - $timeStart;
+        };
+
+        return !$running;
     }
 
     /**
