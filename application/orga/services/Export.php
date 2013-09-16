@@ -391,7 +391,6 @@ class Orga_Service_Export
                 foreach ($aFInputSetPrimary->getInputs() as $input) {
                     $inputs = array_merge($inputs, getInputsDetails($input));
                 }
-                Core_Tools::dump($inputs);
                 return $inputs;
             }
         );
@@ -638,11 +637,21 @@ function getInputValues(AF_Model_Input $input)
                 $baseConvertedValue->getDigitalValue(),
                 $baseConvertedValue->getUnit()->getSymbol(),
             ];
-        case 'AF_Model_Input_Checkbox':
         case 'AF_Model_Input_Select_Multi':
-            if (is_array($input->getValue)) {
-                return implode(', ', $input->getValue());
+            /** @var AF_Model_Input_Select_Multi $input */
+            if (is_array($input->getValue())) {
+                $labels = [];
+                foreach ($input->getValue() as $value) {
+                    $labels[] = $input->getComponent()->getOptionByRef($value)->getLabel();
+                }
+                return [implode(', ', $labels)];
             }
+        case 'AF_Model_Input_Select_Single':
+            /** @var AF_Model_Input_Select_Single $input */
+            return [$input->getComponent()->getOptionByRef($input->getValue())->getLabel()];
+        case 'AF_Model_Input_Checkbox':
+            /** @var AF_Model_Input_Checkbox $input */
+            return [($input->getValue()) ? __('Orga', 'export', 'boolValueTrue') : __('Orga', 'export', 'boolValueFalse')];
         default:
             return [$input->getValue()];
     }
