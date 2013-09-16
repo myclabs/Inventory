@@ -12,7 +12,7 @@ require_once __DIR__ . '/../../../application/init.php';
 /** @var DI\Container $container */
 $container = Zend_Registry::get('container');
 
-/** @var \Core\Work\Dispatcher\WorkDispatcher $workDispatcher */
-$workDispatcher = $container->get('Core\Work\WorkDispatcher');
+/** @var WorkDispatcher $workDispatcher */
+$workDispatcher = $container->get('Core\Work\Dispatcher\WorkDispatcher');
 
 $workDispatcher->work();
