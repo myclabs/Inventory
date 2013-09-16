@@ -563,40 +563,33 @@ class Orga_Service_Export
 
 }
 
-function getInputsDetails(AF_Model_Input $input, $prefix='')
+function getInputsDetails(AF_Model_Input $input, $path='')
 {
-    $ancestors = '';
-    $ancestor = $input->getComponent()->getGroup();
-    while ($ancestor !== null) {
-        if ($ancestor instanceof AF_Rep)
-        $ancestors = $ancestor->getLabel() . ' / ' . $ancestors;
-        $ancestor = $ancestor->getGroup();
-    }
-    $prefix .= $input->getComponent()->getAf()->getLabel() . ' / ' . $ancestors;
-
     if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
+        $labelSubAF = $input->getComponent()->getLabel();
         $subInputs = [];
         foreach ($input->getValue()->getInputs() as $subInput) {
             $subInputs = array_merge(
                 $subInputs,
-                getInputsDetails($subInput, $prefix)
+                getInputsDetails($subInput, $path . $labelSubAF . '/')
             );
         }
         return $subInputs;
     } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
+        $labelSubAF = $input->getComponent()->getLabel();
         $subInputs = [];
         foreach ($input->getValue() as $number => $subInputSet) {
             foreach ($subInputSet->getInputs() as $subInput) {
                 $subInputs = array_merge(
                     $subInputs,
-                    getInputsDetails($subInput, $prefix . ($number + 1) . ' / ')
+                    getInputsDetails($subInput, $path . $labelSubAF . '/' . ($number + 1) . ' / ')
                 );
             }
         }
         return $subInputs;
     } else {
         $a = [
-            'ancestors' => $prefix,
+            'ancestors' => $path,
             'label' => $input->getComponent()->getLabel(),
             'type' => getInputType($input),
             'values' => getInputValues($input)
