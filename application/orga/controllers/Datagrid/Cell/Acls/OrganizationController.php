@@ -6,6 +6,8 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Annotation\Inject;
 
 /**
@@ -24,7 +26,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 
@@ -95,7 +97,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         }
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'addOrganizationAdministrator',
                 [$organization, $user, false],
@@ -127,7 +129,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'removeOrganizationAdministrator',
                 [$organization, $user, false],

@@ -1,18 +1,30 @@
 <?php
 
+namespace Core\Work\Dispatcher;
+
 use Core\Work\Notification\TaskNotifier;
+use Core_Exception;
+use Core_Locale;
+use Core\Work\Task;
+use Core\Work\TaskContext;
+use Core\Work\Worker;
 use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
+use Exception;
+use GearmanClient;
+use GearmanJob;
+use GearmanWorker;
 use Psr\Log\LoggerInterface;
+use User_Model_User;
+use Zend_Auth;
 
 /**
  * Implémentation WorkDispatcher en utilisant Gearman
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
-class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
+class GearmanWorkDispatcher implements WorkDispatcher
 {
-
     /**
      * @var GearmanClient|null
      */
@@ -50,8 +62,12 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
      * @param TaskNotifier    $notifier
      * @param LoggerInterface $logger
      */
-    public function __construct($applicationName, EntityManager $entityManager, TaskNotifier $notifier, LoggerInterface $logger)
-    {
+    public function __construct(
+        $applicationName,
+        EntityManager $entityManager,
+        TaskNotifier $notifier,
+        LoggerInterface $logger
+    ) {
         $this->applicationName = $applicationName;
         $this->entityManager = $entityManager;
         $this->notifier = $notifier;
@@ -61,7 +77,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     /**
      * {@inheritdoc}
      */
-    public function run(Core_Work_Task $task)
+    public function run(Task $task)
     {
         $this->saveContextInTask($task);
 
@@ -76,7 +92,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     /**
      * {@inheritdoc}
      */
-    public function runBackground(Core_Work_Task $task)
+    public function runBackground(Task $task)
     {
         $this->saveContextInTask($task);
 
@@ -93,7 +109,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     /**
      * {@inheritdoc}
      */
-    public function registerWorker(Core_Work_Worker $worker)
+    public function registerWorker(Worker $worker)
     {
         $taskType = $this->prefixTaskType($worker->getTaskType());
 
@@ -133,15 +149,16 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 
     /**
      * Execute a job
-     * @param Core_Work_Worker $worker
-     * @param GearmanJob       $job
+     * @param Worker     $worker
+     * @param GearmanJob $job
+     * @throws \Exception
      * @return string Serialized job result
      */
-    private function executeWorker(Core_Work_Worker $worker, GearmanJob $job)
+    private function executeWorker(Worker $worker, GearmanJob $job)
     {
         $this->logger->info("Executing task " . $worker->getTaskType());
 
-        /** @var Core_Work_Task $task */
+        /** @var Task $task */
         $task = unserialize($job->workload());
 
         // Change la locale
@@ -233,11 +250,11 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
     }
 
     /**
-     * @param Core_Work_Task $task
+     * @param Task $task
      */
-    private function saveContextInTask(Core_Work_Task $task)
+    private function saveContextInTask(Task $task)
     {
-        $context = new Core_Work_TaskContext();
+        $context = new TaskContext();
 
         // Locale
         $context->setUserLocale(Core_Locale::loadDefault());
@@ -250,5 +267,4 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
 
         $task->setContext($context);
     }
-
 }

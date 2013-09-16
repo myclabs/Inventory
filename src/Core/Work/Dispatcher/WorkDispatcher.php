@@ -1,43 +1,42 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
+
+namespace Core\Work\Dispatcher;
+
+use Core\Work\Task;
+use Core\Work\Worker;
 
 /**
  * Service gérant l'exécution de tâches
  *
- * @package Core
+ * @author matthieu.napoli
  */
-interface Core_Work_Dispatcher
+interface WorkDispatcher
 {
-
     /**
      * Lance l'exxécution d'une tâche de manière synchrone (i.e. attends la fin de son exécution)
      *
-     * @param Core_Work_Task $task
+     * @param Task $task
      * @return mixed Résultat de la tache
      */
-    public function run(Core_Work_Task $task);
+    public function run(Task $task);
 
     /**
      * Lance l'exxécution d'une tâche de manière asynchrone (i.e. n'attends pas la fin de son exécution)
      *
-     * @param Core_Work_Task $task
+     * @param Task $task
      * @return void Pas de résultat retourné
      */
-    public function runBackground(Core_Work_Task $task);
+    public function runBackground(Task $task);
 
     /**
      * Enregistre un worker
      *
-     * @param Core_Work_Worker $worker
+     * @param Worker $worker
      */
-    public function registerWorker(Core_Work_Worker $worker);
+    public function registerWorker(Worker $worker);
 
     /**
      * Fait travailler les workers pour exécuter les tâches
      */
     public function work();
-
 }

@@ -1,35 +1,31 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Test
- */
 
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\Worker;
+use Core\Work\Task;
+use Core\Work\Dispatcher\SimpleWorkDispatcher;
+use Core\Work\ServiceCall\ServiceCallWorker;
 use DI\Container;
 
-/**
- * @package    Core
- * @subpackage Test
- */
 class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
 {
 
     public function testRegisterWorker()
     {
-        /** @var $dispatcher Core_Work_SimpleDispatcher */
-        $dispatcher = $this->getMockForAbstractClass('Core_Work_SimpleDispatcher');
+        /** @var $dispatcher SimpleWorkDispatcher */
+        $dispatcher = $this->getMockForAbstractClass('Core\Work\Dispatcher\SimpleWorkDispatcher');
 
-        $task = $this->getMockForAbstractClass('Core_Work_Task');
+        $task = $this->getMockForAbstractClass('Core\Work\Task');
 
-        $worker = $this->getMockForAbstractClass('Core_Work_Worker');
+        $worker = $this->getMockForAbstractClass('Core\Work\Worker');
         $worker->expects($this->once())
             ->method('getTaskType')
             ->will($this->returnValue(get_class($task)));
 
-        /** @var $worker Core_Work_Worker */
+        /** @var $worker Worker */
         $dispatcher->registerWorker($worker);
 
-        // Call Core_Work_SimpleDispatcher::getWorker()
+        // Call SimpleWorkDispatcher::getWorker()
         $class = new ReflectionClass($dispatcher);
         $method = $class->getMethod('getWorker');
         $method->setAccessible(true);
@@ -40,13 +36,13 @@ class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
 
     public function testRun()
     {
-        $dispatcher = new Core_Work_SimpleDispatcher();
+        $dispatcher = new SimpleWorkDispatcher();
 
-        /** @var $task Core_Work_Task */
-        $task = $this->getMockForAbstractClass('Core_Work_Task');
+        /** @var $task Task */
+        $task = $this->getMockForAbstractClass('Core\Work\Task');
 
         /** @var $worker PHPUnit_Framework_MockObject_MockObject */
-        $worker = $this->getMockForAbstractClass('Core_Work_Worker');
+        $worker = $this->getMockForAbstractClass('Core\Work\Worker');
         $worker->expects($this->once())
             ->method('getTaskType')
             ->will($this->returnValue(get_class($task)));
@@ -55,7 +51,7 @@ class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
             ->with($this->equalTo($task))
             ->will($this->returnValue('foo'));
 
-        /** @var $worker Core_Work_Worker */
+        /** @var $worker Worker */
         $dispatcher->registerWorker($worker);
 
         $this->assertEquals('foo', $dispatcher->run($task));
@@ -63,13 +59,13 @@ class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
 
     public function testRunBackground()
     {
-        $dispatcher = new Core_Work_SimpleDispatcher();
+        $dispatcher = new SimpleWorkDispatcher();
 
-        /** @var $task Core_Work_Task */
-        $task = $this->getMockForAbstractClass('Core_Work_Task');
+        /** @var $task Task */
+        $task = $this->getMockForAbstractClass('Core\Work\Task');
 
         /** @var $worker PHPUnit_Framework_MockObject_MockObject */
-        $worker = $this->getMockForAbstractClass('Core_Work_Worker');
+        $worker = $this->getMockForAbstractClass('Core\Work\Worker');
         $worker->expects($this->once())
             ->method('getTaskType')
             ->will($this->returnValue(get_class($task)));
@@ -78,7 +74,7 @@ class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
             ->with($this->equalTo($task))
             ->will($this->returnValue('foo'));
 
-        /** @var $worker Core_Work_Worker */
+        /** @var $worker Worker */
         $dispatcher->registerWorker($worker);
 
         $dispatcher->runBackground($task);
@@ -89,10 +85,10 @@ class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
         /** @var \Psr\Log\LoggerInterface $logger */
         $logger = $this->getMockForAbstractClass('Psr\Log\LoggerInterface');
 
-        $dispatcher = new Core_Work_SimpleDispatcher();
-        $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container(), $logger));
+        $dispatcher = new SimpleWorkDispatcher();
+        $dispatcher->registerWorker(new ServiceCallWorker(new Container(), $logger));
 
-        $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
+        $task = new ServiceCallTask('Inventory_Service_Test', 'doSomething', ['foo']);
 
         $result = $dispatcher->run($task);
 

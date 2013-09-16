@@ -7,6 +7,8 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Annotation\Inject;
 
 
@@ -33,7 +35,7 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var \Core\Work\Dispatcher\WorkDispatcher
      */
     private $workDispatcher;
 
@@ -214,7 +216,7 @@ class Orga_OrganizationController extends Core_Controller
         try {
             // Lance la tache en arrière plan
             $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
+                new ServiceCallTask(
                     'Orga_Service_ETLStructure',
                     'resetOrganizationDWCubes',
                     [$organization],

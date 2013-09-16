@@ -8,6 +8,8 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Annotation\Inject;
 
 /**
@@ -27,7 +29,7 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 
@@ -491,7 +493,7 @@ class Orga_CellController extends Core_Controller
         try {
             // Lance la tache en arrière plan
             $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
+                new ServiceCallTask(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenDWCubes',
                     [$cell],
@@ -515,7 +517,7 @@ class Orga_CellController extends Core_Controller
         try {
             // Lance la tache en arrière plan
             $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
+                new ServiceCallTask(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenCalculationsAndDWCubes',
                     [$cell],

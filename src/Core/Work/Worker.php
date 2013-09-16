@@ -1,15 +1,14 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
+
+namespace Core\Work;
+
+use Core\Work\Task;
 
 /**
- * @package Core
+ * @author matthieu.napoli
  */
-abstract class Core_Work_Worker
+abstract class Worker
 {
-
     /**
      * Retourne le type des tâches que le worker exécute
      *
@@ -20,9 +19,8 @@ abstract class Core_Work_Worker
     /**
      * Exécute une tâche
      *
-     * @param Core_Work_Task $task
+     * @param Task $task
      * @return mixed Résultat
      */
-    public abstract function execute(Core_Work_Task $task);
-
+    public abstract function execute(Task $task);
 }

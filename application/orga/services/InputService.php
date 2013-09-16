@@ -1,5 +1,7 @@
 <?php
 
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -25,7 +27,7 @@ class Orga_Service_InputService
     private $eventDispatcher;
 
     /**
-     * @var Core_Work_Dispatcher
+     * @var \Core\Work\Dispatcher\WorkDispatcher
      */
     private $workDispatcher;
 
@@ -33,13 +35,13 @@ class Orga_Service_InputService
      * @param AF_Service_InputService $afInputService
      * @param Orga_Service_ETLData    $etlDataService
      * @param EventDispatcher         $eventDispatcher
-     * @param Core_Work_Dispatcher    $workDispatcher
+     * @param \Core\Work\Dispatcher\WorkDispatcher    $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,
         Orga_Service_ETLData $etlDataService,
         EventDispatcher $eventDispatcher,
-        Core_Work_Dispatcher $workDispatcher
+        WorkDispatcher $workDispatcher
     ) {
         $this->afInputService = $afInputService;
         $this->etlDataService = $etlDataService;
@@ -98,11 +100,11 @@ class Orga_Service_InputService
 
         // Regénère DW
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'clearDWResultsFromCell', [$cell])
+            new ServiceCallTask('Orga_Service_ETLData', 'clearDWResultsFromCell', [$cell])
         );
         if ($inputSet->isInputComplete()) {
             $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
+                new ServiceCallTask('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
             );
         }
     }

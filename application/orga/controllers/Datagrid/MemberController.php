@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Annotation\Inject;
 
 /**
@@ -18,7 +19,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 

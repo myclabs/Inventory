@@ -1,16 +1,19 @@
 <?php
 
+namespace Core\Work\ServiceCall;
+
+use Core\Work\Worker;
+use Core\Work\Task;
 use DI\Container;
 use Psr\Log\LoggerInterface;
 
 /**
  * Exécute l'appel d'une méthode d'un service
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
-class Core_Work_ServiceCall_Worker extends Core_Work_Worker
+class ServiceCallWorker extends Worker
 {
-
     /**
      * @var Container
      */
@@ -36,14 +39,14 @@ class Core_Work_ServiceCall_Worker extends Core_Work_Worker
      */
     public function getTaskType()
     {
-        return 'Core_Work_ServiceCall_Task';
+        return 'Core\Work\ServiceCall\ServiceCallTask';
     }
 
     /**
      * {@inheritdoc}
-     * @param Core_Work_ServiceCall_Task $task
+     * @param ServiceCallTask $task
      */
-    public function execute(Core_Work_Task $task)
+    public function execute(Task $task)
     {
         $serviceName = $task->getServiceName();
         $methodName = $task->getMethodName();
@@ -59,5 +62,4 @@ class Core_Work_ServiceCall_Worker extends Core_Work_Worker
 
         return $return;
     }
-
 }

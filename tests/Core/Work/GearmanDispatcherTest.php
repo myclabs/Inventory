@@ -1,19 +1,11 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Test
- */
 
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\ServiceCall\ServiceCallWorker;
 use DI\Container;
 
-/**
- * @package    Core
- * @subpackage Test
- */
 class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
 {
-
     public function testRunServiceCall()
     {
         if (!extension_loaded('gearman')) {
@@ -23,14 +15,14 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
         /** @var \Psr\Log\LoggerInterface $logger */
         $logger = $this->getMockForAbstractClass('Psr\Log\LoggerInterface');
 
-        $dispatcher = $this->get('Core_Work_GearmanDispatcher');
-        $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container(), $logger));
+        $dispatcher = $this->get('Core\Work\Dispatcher\GearmanWorkDispatcher');
+        $dispatcher->registerWorker(new ServiceCallWorker(new Container(), $logger));
 
         $oldDefaultLocale = Core_Locale::loadDefault();
         $locale = Core_Locale::load('en');
         Core_Locale::setDefault($locale);
 
-        $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
+        $task = new ServiceCallTask('Inventory_Service_Test', 'doSomething', ['foo']);
 
         $result = $dispatcher->run($task);
 
@@ -41,5 +33,4 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
         // Restaure la locale par défaut
         Core_Locale::setDefault($oldDefaultLocale);
     }
-
 }

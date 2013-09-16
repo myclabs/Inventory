@@ -1,27 +1,30 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
+
+namespace Core\Work\Dispatcher;
+
+use Core\Work\Dispatcher\WorkDispatcher;
+use Core\Work\Dispatcher;
+use Core\Work\Task;
+use Core\Work\Worker;
 
 /**
  * Implémentation simpliste de WorkDispatcher: n'utilise pas de work queue, exécute directement les tâches
  *
- * @package Core
+ * @author matthieu.napoli
  */
-class Core_Work_SimpleDispatcher implements Core_Work_Dispatcher
+class SimpleWorkDispatcher implements Dispatcher\WorkDispatcher
 {
 
     /**
      * Workers indexés par le nom de la tâche qu'ils traitent
-     * @var Core_Work_Worker[]
+     * @var Worker[]
      */
     private $workers = [];
 
     /**
      * {@inheritdoc}
      */
-    public function run(Core_Work_Task $task)
+    public function run(Task $task)
     {
         $worker = $this->getWorker($task);
 
@@ -31,7 +34,7 @@ class Core_Work_SimpleDispatcher implements Core_Work_Dispatcher
     /**
      * {@inheritdoc}
      */
-    public function runBackground(Core_Work_Task $task)
+    public function runBackground(Task $task)
     {
         set_time_limit(0);
         $worker = $this->getWorker($task);
@@ -42,7 +45,7 @@ class Core_Work_SimpleDispatcher implements Core_Work_Dispatcher
     /**
      * {@inheritdoc}
      */
-    public function registerWorker(Core_Work_Worker $worker)
+    public function registerWorker(Worker $worker)
     {
         $this->workers[$worker->getTaskType()] = $worker;
     }
@@ -57,10 +60,10 @@ class Core_Work_SimpleDispatcher implements Core_Work_Dispatcher
 
     /**
      * Retourne le worker enregistré pour une tâche donnée
-     * @param Core_Work_Task $task
-     * @return Core_Work_Worker|null
+     * @param Task $task
+     * @return Worker|null
      */
-    private function getWorker(Core_Work_Task $task)
+    private function getWorker(Task $task)
     {
         $taskType = get_class($task);
 
