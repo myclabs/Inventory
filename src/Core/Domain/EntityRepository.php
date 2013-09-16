@@ -42,19 +42,19 @@ interface EntityRepository extends ObjectRepository, Selectable
      *
      * @param array|mixed $id
      *
-     * @throws \Core_Exception_NotFound The entity was not found
+     * @throws \Core_Exception_NotFound The entity was not found.
      * @return object
      */
-    function getOne($id);
+    function get($id);
 
     /**
      * Returns one element from the repository based on given criterias.
      *
      * @param array $criteria
      *
-     * @throws \Core_Exception_NotFound The entity was not found
-     * @throws \Core_Exception_TooMany Too many results were found for the given criterias
+     * @throws \Core_Exception_NotFound The entity was not found.
+     * @throws \Core_Exception_TooMany Too many results were found for the given criterias.
      * @return object
      */
-    function getOneBy(array $criteria);
+    function getBy(array $criteria);
 }

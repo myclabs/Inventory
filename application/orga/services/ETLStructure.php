@@ -956,6 +956,10 @@ class Orga_Service_ETLStructure
      */
     public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
+        /** @var Core_EventDispatcher $eventDispatcher */
+        $eventDispatcher = Zend_Registry::get('container')->get('Core_EventDispatcher');
+        $eventDispatcher->removeListener('Orga_Model_GranularityReport', 'DW_Model_Report');
+
         foreach ($granularity->getCells() as $cell) {
             $cell = Orga_Model_Cell::load($cell->getId());
             $this->resetCellDWCube($cell);

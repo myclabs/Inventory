@@ -48,6 +48,19 @@ class Core_EventDispatcher
     }
 
     /**
+     * Add a link between an observer and an observable.
+     *
+     * @param string $observerName
+     * @param string $observableName
+     */
+    public function removeListener($observerName, $observableName)
+    {
+        if ($this->hasListener($observerName, $observableName)) {
+            unset($this->subjects[$observableName][array_search($observerName, $this->subjects[$observableName])]);
+        }
+    }
+
+    /**
      * Triggered when an event is fired. It will alert all observers of the observable entity.
      *
      * @param Core_Model_Entity $observable

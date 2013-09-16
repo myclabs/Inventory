@@ -50,7 +50,7 @@ class DoctrineEntityRepository extends Doctrine\EntityRepository implements Enti
     /**
      * {@inheritdoc}
      */
-    public function getOne($id)
+    public function get($id)
     {
         $entity = $this->find($id);
 
@@ -68,7 +68,7 @@ class DoctrineEntityRepository extends Doctrine\EntityRepository implements Enti
     /**
      * {@inheritdoc}
      */
-    public function getOneBy(array $criteria)
+    public function getBy(array $criteria)
     {
         $entities = $this->findBy($criteria);
 

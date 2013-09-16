@@ -62,7 +62,7 @@ interface KeywordRepository extends EntityRepository
     function changeLocale($keyword, \Core_Locale $locale);
 
     /**
-     * Renoie les messages d'erreur concernant la validation d'une Association.
+     * Renvoie les messages d'erreur concernant la validation d'une Association.
      *
      * @param Keyword $subjectKeyword
      * @param Predicate $predicate
@@ -81,7 +81,7 @@ interface KeywordRepository extends EntityRepository
      *
      * @throws \Core_Exception_User
      */
-    public function checkAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword);
+    function checkAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword);
 
     /**
      * @param AssociationCriteria $criteria
@@ -104,5 +104,5 @@ interface KeywordRepository extends EntityRepository
      * @throws \Core_Exception_TooMany
      * @return Association
      */
-    public function getAssociationBySubjectPredicateObject(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword);
+    public function getAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword);
 }

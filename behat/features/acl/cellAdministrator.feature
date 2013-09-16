@@ -12,12 +12,16 @@ Feature: Cell administrator feature
   # On tombe sur la page de la cellule
     Then I should see "Europe | Marque A Organisation avec données"
     When I wait 5 seconds
-    And I open collapse "Année | Site | Catégorie"
-    Then I should see the "aFGranularity2Input8" datagrid
-  # Vérification que le libellé "Vue globale" est présent mais non cliquable
+  # Vérification que le libellé "Vue globale" est présent mais non cliquable dans le volet de navigation
   # Voir "Organization navigation scenario"
-    And I should see "Vue globale"
+    Then I should see "Vue globale"
     And I should not see a "#navigationParent a:contains('Vue globale')" element
+  # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
+    When I open collapse "Zone | Marque"
+    And I click "Cliquer pour accéder" in the row 1 of the "aFGranularity2Input2" datagrid
+    And I click element "#chiffre_affaireHistory .btn"
+    Then I should see "Historique des valeurs"
+    And I should see a "code:contains('10 k€ ± 15 %')" element
 
   @javascript
   Scenario: Several cells administrator login scenario
