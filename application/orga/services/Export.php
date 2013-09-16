@@ -389,7 +389,9 @@ class Orga_Service_Export
 
                 $inputs = [];
                 foreach ($aFInputSetPrimary->getInputs() as $input) {
-                    $inputs = array_merge($inputs, getInputsDetails($input));
+                    if (!$input instanceof AF_Model_Input_Group) {
+                        $inputs = array_merge($inputs, getInputsDetails($input));
+                    }
                 }
                 return $inputs;
             }
