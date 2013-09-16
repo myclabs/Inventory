@@ -5,6 +5,7 @@
  * @subpackage Bootstrap
  */
 
+use Core\Autoloader;
 use Core\Log\ChromePHPFormatter;
 use Core\Log\ExtendedLineFormatter;
 use Core\Work\Dispatcher\WorkDispatcher;
@@ -73,7 +74,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         /** @noinspection PhpIncludeInspection */
         require PACKAGE_PATH . '/vendor/autoload.php';
-        Core_Autoloader::getInstance()->register();
+        Autoloader::getInstance()->register();
     }
 
     /**

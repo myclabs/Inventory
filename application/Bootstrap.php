@@ -1,8 +1,6 @@
 <?php
-/**
- * Bootstrap
- */
 
+use Core\Autoloader;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -18,7 +16,7 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initModules()
     {
-        $autoloader = Core_Autoloader::getInstance();
+        $autoloader = Autoloader::getInstance();
         $frontController = Zend_Controller_Front::getInstance();
         /* @var $doctrineConfig Doctrine\ORM\Configuration */
         $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
