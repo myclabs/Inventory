@@ -7,7 +7,7 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use Core\Work\WorkDispatcher;
+use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Annotation\Inject;
 
 /**
@@ -26,7 +26,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var \Core\Work\Dispatcher\WorkDispatcher
      */
     private $workDispatcher;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Work;
+namespace Core\Work\Dispatcher;
 
 use Core\Work\Task;
 use Core\Work\Worker;

@@ -6,7 +6,7 @@
  */
 
 use Core\Annotation\Secure;
-use Core\Work\WorkDispatcher;
+use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Annotation\Inject;
 
 /**

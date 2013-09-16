@@ -1,8 +1,7 @@
 <?php
 
-namespace Core\Work;
+namespace Core\Work\Dispatcher;
 
-use Core\Work\WorkDispatcher;
 use Core\Work\Notification\TaskNotifier;
 use Core_Exception;
 use Core_Locale;

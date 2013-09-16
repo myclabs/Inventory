@@ -8,7 +8,7 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use Core\Work\WorkDispatcher;
+use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Annotation\Inject;
 
 
@@ -35,7 +35,7 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var \Core\Work\Dispatcher\WorkDispatcher
      */
     private $workDispatcher;
 

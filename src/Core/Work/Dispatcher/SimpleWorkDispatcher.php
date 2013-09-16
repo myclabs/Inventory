@@ -1,8 +1,9 @@
 <?php
 
-namespace Core\Work;
+namespace Core\Work\Dispatcher;
 
-use Core\Work\WorkDispatcher;
+use Core\Work\Dispatcher\WorkDispatcher;
+use Core\Work\Dispatcher;
 use Core\Work\Task;
 use Core\Work\Worker;
 
@@ -11,7 +12,7 @@ use Core\Work\Worker;
  *
  * @author matthieu.napoli
  */
-class SimpleWorkDispatcher implements WorkDispatcher
+class SimpleWorkDispatcher implements Dispatcher\WorkDispatcher
 {
 
     /**

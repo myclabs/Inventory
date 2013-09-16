@@ -7,7 +7,7 @@
 
 use Core\Log\ChromePHPFormatter;
 use Core\Log\ExtendedLineFormatter;
-use Core\Work\WorkDispatcher;
+use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
@@ -354,13 +354,13 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         $useGearman = $useGearman && extension_loaded('gearman');
 
-        $this->container->set('Core\Work\WorkDispatcher', function(Container $c) use ($useGearman) {
+        $this->container->set('Core\Work\Dispatcher\WorkDispatcher', function(Container $c) use ($useGearman) {
                 if ($useGearman) {
-                    $implementation = 'Core\Work\GearmanWorkDispatcher';
+                    $implementation = 'Core\Work\Dispatcher\GearmanWorkDispatcher';
                 } else {
-                    $implementation = 'Core\Work\SimpleWorkDispatcher';
+                    $implementation = 'Core\Work\Dispatcher\SimpleWorkDispatcher';
                 }
-                /** @var WorkDispatcher $workDispatcher */
+                /** @var \Core\Work\Dispatcher\WorkDispatcher $workDispatcher */
                 $workDispatcher = $c->get($implementation);
                 // Register workers
                 $workDispatcher->registerWorker($this->container->get('Core\Work\ServiceCall\ServiceCallWorker'));
