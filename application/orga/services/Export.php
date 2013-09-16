@@ -571,10 +571,12 @@ function getInputsDetails(AF_Model_Input $input, $path='')
         $labelSubAF = $input->getComponent()->getLabel();
         $subInputs = [];
         foreach ($input->getValue()->getInputs() as $subInput) {
-            $subInputs = array_merge(
-                $subInputs,
-                getInputsDetails($subInput, $path . $labelSubAF . '/')
-            );
+            if (!$subInput instanceof AF_Model_Input_Group) {
+                $subInputs = array_merge(
+                    $subInputs,
+                    getInputsDetails($subInput, $path . $labelSubAF . '/')
+                );
+            }
         }
         return $subInputs;
     } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
@@ -582,10 +584,12 @@ function getInputsDetails(AF_Model_Input $input, $path='')
         $subInputs = [];
         foreach ($input->getValue() as $number => $subInputSet) {
             foreach ($subInputSet->getInputs() as $subInput) {
-                $subInputs = array_merge(
-                    $subInputs,
-                    getInputsDetails($subInput, $path . $labelSubAF . '/' . ($number + 1) . ' / ')
-                );
+                if (!$subInput instanceof AF_Model_Input_Group) {
+                    $subInputs = array_merge(
+                        $subInputs,
+                        getInputsDetails($subInput, $path . $labelSubAF . '/' . ($number + 1) . ' / ')
+                    );
+                }
             }
         }
         return $subInputs;
