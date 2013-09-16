@@ -134,24 +134,25 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initLog()
     {
         $configuration = Zend_Registry::get('configuration');
+        $cli = (PHP_SAPI == 'cli');
 
         $logger = new Logger('log');
 
-        // Log vers la console
-        if ($configuration->log->stdout) {
+        // Log vers la console (si configuré ou PHP CLI)
+        if ($configuration->log->stdout || $cli) {
             $loggerHandler = new StreamHandler('php://stdout', Logger::DEBUG);
             $loggerHandler->setFormatter(new ExtendedLineFormatter());
             $logger->pushHandler($loggerHandler);
         }
         // Log dans un fichier
-        if ($configuration->log->file) {
+        if ($configuration->log->file && !$cli) {
             $file = $this->container->get('log.file');
             $fileHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
             $fileHandler->setFormatter(new ExtendedLineFormatter());
             $logger->pushHandler($fileHandler);
         }
         // Log FirePHP
-        if ($configuration->log->firephp) {
+        if ($configuration->log->firephp && !$cli) {
             ini_set('html_errors', false);
             $logger->pushHandler(new FirePHPHandler());
             $chromePHPHandler = new ChromePHPHandler();
@@ -165,11 +166,13 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->container->set('Psr\Log\LoggerInterface', $logger);
 
         // Log des requetes
-        $file = $this->container->get('log.query.file');
-        $queryLoggerHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
-        $queryLoggerHandler->setFormatter(new LineFormatter("%message%" . PHP_EOL));
-        $queryLogger = new Logger('log.query', [$queryLoggerHandler]);
-        $this->container->set('log.query', $queryLogger);
+        if ($configuration->log->queries) {
+            $file = $this->container->get('log.query.file');
+            $queryLoggerHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+            $queryLoggerHandler->setFormatter(new LineFormatter("%message%" . PHP_EOL));
+            $queryLogger = new Logger('log.query', [$queryLoggerHandler]);
+            $this->container->set('log.query', $queryLogger);
+        }
     }
 
     /**

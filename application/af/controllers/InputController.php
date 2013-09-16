@@ -210,7 +210,7 @@ class AF_InputController extends Core_Controller
     /**
      * Retourne l'historique des valeurs d'une saisie
      * AJAX
-     * @Secure("editInputAF")
+     * @Secure("viewCell")
      */
     public function inputHistoryAction()
     {

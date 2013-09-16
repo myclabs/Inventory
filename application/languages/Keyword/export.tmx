@@ -20,6 +20,14 @@
                 <seg>Number of relations as oject</seg>
             </tuv>
         </tu>
+        <tu tuid="baseFileName">
+            <tuv xml:lang="fr">
+                <seg>Ressources-semantiques</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Semantic-ressources</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>
