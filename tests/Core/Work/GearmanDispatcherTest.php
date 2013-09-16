@@ -5,6 +5,8 @@
  * @subpackage Test
  */
 
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\ServiceCall\ServiceCallWorker;
 use DI\Container;
 
 /**
@@ -23,14 +25,14 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
         /** @var \Psr\Log\LoggerInterface $logger */
         $logger = $this->getMockForAbstractClass('Psr\Log\LoggerInterface');
 
-        $dispatcher = $this->get('Core_Work_GearmanDispatcher');
-        $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container(), $logger));
+        $dispatcher = $this->get('Core\Work\GearmanWorkDispatcher');
+        $dispatcher->registerWorker(new ServiceCallWorker(new Container(), $logger));
 
         $oldDefaultLocale = Core_Locale::loadDefault();
         $locale = Core_Locale::load('en');
         Core_Locale::setDefault($locale);
 
-        $task = new Core_Work_ServiceCall_Task('Inventory_Service_Test', 'doSomething', ['foo']);
+        $task = new ServiceCallTask('Inventory_Service_Test', 'doSomething', ['foo']);
 
         $result = $dispatcher->run($task);
 

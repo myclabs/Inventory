@@ -4,13 +4,16 @@
  * @author  matthieu.napoli
  * @package Core
  */
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\Worker;
+use Core\Work\Task;
 
 /**
  * Exécute l'appel d'une méthode d'une entité.
  *
  * @package Core
  */
-class Orga_Work_Worker extends Core_Work_Worker
+class Orga_Work_Worker extends Worker
 {
 
     /**
@@ -23,9 +26,9 @@ class Orga_Work_Worker extends Core_Work_Worker
 
     /**
      * {@inheritdoc}
-     * @param Core_Work_ServiceCall_Task $task
+     * @param \Core\Work\ServiceCall\ServiceCallTask $task
      */
-    public function execute(Core_Work_Task $task)
+    public function execute(Task $task)
     {
         $task->execute();
     }

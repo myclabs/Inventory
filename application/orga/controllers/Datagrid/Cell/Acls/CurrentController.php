@@ -6,6 +6,8 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\WorkDispatcher;
 use DI\Annotation\Inject;
 
 /**
@@ -24,7 +26,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 
@@ -107,7 +109,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         }
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'addCellUser',
                 [$cell, $user, $role, false],
@@ -139,7 +141,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'removeCellUser',
                 [$cell, $user, $role, false],

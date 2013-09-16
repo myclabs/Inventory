@@ -1,13 +1,17 @@
 <?php
 
+namespace Core\Work\ServiceCall;
+
+use Core\Work\Task;
+use Core_Model_Entity;
+
 /**
  * Représente l'appel d'une méthode d'un service
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
-class Core_Work_ServiceCall_Task extends Core_Work_Task
+class ServiceCallTask extends Task
 {
-
     /**
      * @var string
      */
@@ -29,7 +33,7 @@ class Core_Work_ServiceCall_Task extends Core_Work_Task
      * @param array       $parameters  Paramètres de l'appel à la méthode
      * @param null|string $taskLabel
      */
-    public function __construct($serviceName, $methodName, array $parameters = array(), $taskLabel = null)
+    public function __construct($serviceName, $methodName, array $parameters = [], $taskLabel = null)
     {
         $this->serviceName = $serviceName;
         $this->methodName = $methodName;
@@ -75,5 +79,4 @@ class Core_Work_ServiceCall_Task extends Core_Work_Task
             }
         }
     }
-
 }

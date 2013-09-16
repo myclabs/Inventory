@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\WorkDispatcher;
 use DI\Annotation\Inject;
 
 /**
@@ -17,7 +18,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 

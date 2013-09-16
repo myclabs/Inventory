@@ -4,7 +4,7 @@
  * @package Orga
  */
 
-error_reporting(E_ALL);
+use Core\Work\WorkDispatcher;
 
 /**
  * @author valentin.claras
@@ -18,8 +18,8 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initOrgaWorker()
     {
-        /**@var Core_Work_Dispatcher $dispatcher */
-        $dispatcher = $this->container->get('Core_Work_Dispatcher');
+        /**@var WorkDispatcher $dispatcher */
+        $dispatcher = $this->container->get('Core\Work\WorkDispatcher');
         $dispatcher->registerWorker(new Orga_Work_WorkerGranularity());
         $dispatcher->registerWorker(new Orga_Work_WorkerMember());
         $dispatcher->registerWorker(new Orga_Work_Worker());

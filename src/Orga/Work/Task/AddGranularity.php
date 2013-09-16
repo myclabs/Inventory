@@ -3,13 +3,14 @@
  * @author  matthieu.napoli
  * @package Core
  */
+use Core\Work\Task;
 
 /**
  * Représente l'appel d'une méthode d'un service
  *
  * @package Core
  */
-class Orga_Work_Task_AddGranularity extends Core_Work_Task
+class Orga_Work_Task_AddGranularity extends Task
 {
 
     /**

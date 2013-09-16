@@ -5,6 +5,8 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\WorkDispatcher;
 use DI\Annotation\Inject;
 
 /**
@@ -21,7 +23,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 
@@ -102,7 +104,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
         $label = $this->getAddElementValue('label');
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            new ServiceCallTask(
                 'Orga_Service_OrganizationService',
                 'createOrganization',
                 [$administrator, $label],
@@ -123,7 +125,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($this->delete);
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            new ServiceCallTask(
                 'Orga_Service_OrganizationService',
                 'deleteOrganization',
                 [$organization]
