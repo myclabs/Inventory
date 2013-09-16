@@ -1,9 +1,4 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Test
- */
 
 use Core\Work\ServiceCall\ServiceCallTask;
 use Core\Work\Worker;
@@ -12,16 +7,12 @@ use Core\Work\Dispatcher\SimpleWorkDispatcher;
 use Core\Work\ServiceCall\ServiceCallWorker;
 use DI\Container;
 
-/**
- * @package    Core
- * @subpackage Test
- */
 class Core_Test_Work_SimpleDispatcherTest extends PHPUnit_Framework_TestCase
 {
 
     public function testRegisterWorker()
     {
-        /** @var $dispatcher \Core\Work\Dispatcher\SimpleWorkDispatcher */
+        /** @var $dispatcher SimpleWorkDispatcher */
         $dispatcher = $this->getMockForAbstractClass('Core\Work\Dispatcher\SimpleWorkDispatcher');
 
         $task = $this->getMockForAbstractClass('Core\Work\Task');
