@@ -2,7 +2,6 @@
 /**
  * @package Techno
  */
-use Keyword\Domain\Keyword;
 use Unit\UnitAPI;
 
 /**
@@ -74,6 +73,7 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
      */
     public static  function setUpBeforeClass()
     {
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         if (Techno_Model_Component::countTotal() > 0) {
             foreach (Techno_Model_Component::loadList() as $o) {
@@ -90,13 +90,14 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        if (Keyword::countTotal() > 0) {
-            foreach (Keyword::loadList() as $o) {
-                $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
     }
 
     /**
@@ -195,6 +196,7 @@ class Techno_Test_Family_ProcessMetierTest extends PHPUnit_Framework_TestCase
      */
     public static  function setUpBeforeClass()
     {
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         if (Techno_Model_Component::countTotal() > 0) {
             foreach (Techno_Model_Component::loadList() as $o) {
@@ -211,13 +213,14 @@ class Techno_Test_Family_ProcessMetierTest extends PHPUnit_Framework_TestCase
                 $o->delete();
             }
         }
-        if (Keyword::countTotal() > 0) {
-            foreach (Keyword::loadList() as $o) {
-                $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
             }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
     }
 
     /**

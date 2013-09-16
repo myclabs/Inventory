@@ -5,13 +5,19 @@
  */
 
 use Core\Annotation\Secure;
-use Keyword\Domain\Keyword;
+use DI\Annotation\Inject;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * @package Techno
  */
 class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var KeywordService
+     */
+    protected $keywordService;
 
     /**
      * Create an empty element for a cell
@@ -27,7 +33,7 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $members = [];
         $index = 0;
         foreach ($family->getDimensions() as $dimension) {
-            $members[] = $dimension->getMember(Keyword::loadByRef($coordinates[$index]));
+            $members[] = $dimension->getMember($this->keywordService->get($coordinates[$index]));
             $index++;
         }
         $cell = $family->getCell($members);
@@ -65,7 +71,7 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
         $members = [];
         $index = 0;
         foreach ($family->getDimensions() as $dimension) {
-            $members[] = $dimension->getMember(Keyword::loadByRef($coordinates[$index]));
+            $members[] = $dimension->getMember($this->keywordService->get($coordinates[$index]));
             $index++;
         }
         $cell = $family->getCell($members);

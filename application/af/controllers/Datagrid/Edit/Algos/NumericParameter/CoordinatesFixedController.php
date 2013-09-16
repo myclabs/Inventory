@@ -5,13 +5,19 @@
  */
 
 use Core\Annotation\Secure;
-use Keyword\Domain\Keyword;
+use DI\Annotation\Inject;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * @package AF
  */
 class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var KeywordService
+     */
+    protected $keywordService;
 
     /**
      * (non-PHPdoc)
@@ -86,7 +92,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
                 /** @var $member Techno_Model_Family_Member */
-                $keyword = Keyword::loadByRef($newValue);
+                $keyword = $this->keywordService->get($newValue);
                 $member = $coordinate->getDimension()->getMember($keyword);
                 $coordinate->setMember($member);
                 $this->data = $newValue;

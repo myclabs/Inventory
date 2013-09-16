@@ -2,77 +2,44 @@
 
 namespace Keyword\Domain;
 
-use Core_Model_Entity;
-use Core_Exception_TooMany;
-use Core_Exception_UndefinedAttribute;
-
 /**
+ * Association entre des Keywords.
  * @author valentin.claras
  */
-class Association extends Core_Model_Entity
+class Association
 {
-    // Constantes de tri et filtres.
-    const QUERY_SUBJECT = 'subject';
-    const QUERY_OBJECT = 'object';
-    const QUERY_PREDICATE = 'predicate';
-
-    /**
-     * Identifiant unique du Keyword.
-     *
-     * @var int
-     */
-    protected $id;
-
     /**
      * Keyword sujet de l'association.
      *
      * @var Keyword
      */
-    protected $subject = null;
+    protected $subject;
 
     /**
      * Keyword objet de l'association.
      *
      * @var Keyword
      */
-    protected $object = null;
+    protected $object;
 
     /**
-     * Predicate de l'association.
+     * Predicat de l'association.
      *
      * @var Predicate
      */
-    protected $predicate = null;
+    protected $predicate;
 
 
     /**
-     * Renvoie une Association en fonction des refs de ces composants
-     *
-     * @param string $subjectKeywordRef
-     * @param string $objectKeywordRef
-     * @param string $predicateRef
-     *
-     * @return Association
-     */
-    public static function loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef)
-    {
-        return self::getEntityRepository()->loadByRefs($subjectKeywordRef, $objectKeywordRef, $predicateRef);
-    }
-
-    /**
-     * Défini le Keyword sujet.
-     *
      * @param Keyword $subjectKeyword
+     * @param Predicate $predicate
+     * @param Keyword $objectKeyword
      */
-    public function setSubject(Keyword $subjectKeyword)
+    public function __construct(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
-        if ($this->subject !== $subjectKeyword) {
-            if ($this->subject !== null) {
-                throw new Core_Exception_TooMany('The subject has already been defined.');
-            }
-            $this->subject = $subjectKeyword;
-            $subjectKeyword->addAssociationAsSubject($this);
-        }
+        $this->subject = $subjectKeyword;
+        $this->predicate = $predicate;
+        $this->object = $objectKeyword;
     }
 
     /**
@@ -82,38 +49,16 @@ class Association extends Core_Model_Entity
      */
     public function getSubject()
     {
-        if ($this->subject === null) {
-            throw new Core_Exception_UndefinedAttribute('The subject keyword has not been defined yet.');
-        }
         return $this->subject;
     }
 
     /**
-     * Défini le Keyword objet.
-     *
-     * @param Keyword $objectKeyword
-     */
-    public function setObject(Keyword $objectKeyword)
-    {
-        if ($this->object !== $objectKeyword) {
-            if ($this->object !== null) {
-                throw new Core_Exception_TooMany('The object has already been defined.');
-            }
-            $this->object = $objectKeyword;
-            $objectKeyword->addAssociationAsObject($this);
-        }
-    }
-
-    /**
-     * Renvoi le Keyword sujet.
+     * Renvoi le sujet de l'association.
      *
      * @return Keyword
      */
     public function getObject()
     {
-        if ($this->object === null) {
-            throw new Core_Exception_UndefinedAttribute('The object keyword has not been defined yet.');
-        }
         return $this->object;
     }
 
@@ -128,16 +73,12 @@ class Association extends Core_Model_Entity
     }
 
     /**
-     * Renvoi le Predicate.
+     * Renvoi le prédicat de l'association.
      *
      * @return Predicate
      */
     public function getPredicate()
     {
-        if ($this->predicate === null) {
-            throw new Core_Exception_UndefinedAttribute('The predicate has not been defined yet.');
-        }
         return $this->predicate;
     }
-
 }
