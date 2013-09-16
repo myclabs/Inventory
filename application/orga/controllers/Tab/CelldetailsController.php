@@ -614,10 +614,16 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
         $filename = $date.'_'.$baseFilename.'.'.$format;
 
-        if ($format = 'xlsx') {
-           $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        } else {
-            $contentType = "Content-type: application/vnd.ms-excel";
+        switch ($format) {
+            case 'xlsx':
+                $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                break;
+            case 'xls':
+                $contentType = "Content-type: application/vnd.ms-excel";
+                break;
+            case 'ods':
+                $contentType = "Content-type: application/vnd.oasis.opendocument.spreadsheet";
+                break;
         }
         header($contentType);
         header('Content-Disposition:attachement;filename='.$filename);
