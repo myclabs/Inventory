@@ -647,7 +647,7 @@ function getInputValues(AF_Model_Input $input)
             /** @var AF_Model_Input_Select_Single $input */
             $value = $input->getValue();
             if (empty($value)) {
-                return '';
+                return [''];
             }
             return [$input->getComponent()->getOptionByRef($value)->getLabel()];
         case 'AF_Model_Input_Checkbox':
