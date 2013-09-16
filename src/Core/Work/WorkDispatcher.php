@@ -12,7 +12,6 @@ use Core\Work\Worker;
  */
 interface WorkDispatcher
 {
-
     /**
      * Lance l'exxécution d'une tâche de manière synchrone (i.e. attends la fin de son exécution)
      *
@@ -40,5 +39,4 @@ interface WorkDispatcher
      * Fait travailler les workers pour exécuter les tâches
      */
     public function work();
-
 }

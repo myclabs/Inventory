@@ -26,7 +26,6 @@ use Zend_Auth;
  */
 class GearmanWorkDispatcher implements WorkDispatcher
 {
-
     /**
      * @var GearmanClient|null
      */
@@ -151,8 +150,9 @@ class GearmanWorkDispatcher implements WorkDispatcher
 
     /**
      * Execute a job
-     * @param Worker $worker
-     * @param GearmanJob       $job
+     * @param Worker     $worker
+     * @param GearmanJob $job
+     * @throws \Exception
      * @return string Serialized job result
      */
     private function executeWorker(Worker $worker, GearmanJob $job)
@@ -268,5 +268,4 @@ class GearmanWorkDispatcher implements WorkDispatcher
 
         $task->setContext($context);
     }
-
 }
