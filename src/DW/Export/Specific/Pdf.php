@@ -357,7 +357,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $xmlNumeratorAxis = $xmlNumerator->getElementsByTagName('refAxis');
 
             $xmlNumeratorAxis1 = $xmlNumeratorAxis->item(0);
-            $prefix = $xmlNumeratorAxis1->getAttribute('source').'_';
+            $prefix = substr($xmlNumeratorAxis1->getAttribute('source'), 0, 1).'_';
             $report->setNumeratorAxis1(
                 DW_Model_Axis::loadByRefAndCube(
                     $prefix.$xmlNumeratorAxis1->firstChild->nodeValue,
@@ -367,7 +367,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
             if (($xmlNumeratorAxis->length > 1)) {
                 $xmlNumeratorAxis2 = $xmlNumeratorAxis->item(1);
-                $prefix = $xmlNumeratorAxis2->getAttribute('source').'_';
+                $prefix = substr($xmlNumeratorAxis2->getAttribute('source'), 0, 1).'_';
                 $report->setNumeratorAxis2(
                     DW_Model_Axis::loadByRefAndCube(
                         $prefix.$xmlNumeratorAxis2->firstChild->nodeValue,
@@ -387,7 +387,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                 $xmlDenominatorAxis = $xmlDenominator->getElementsByTagName('refAxis');
 
                 $xmlDenominatorAxis1 = $xmlDenominatorAxis->item(0);
-                $prefix = $xmlDenominatorAxis1->getAttribute('source').'_';
+                $prefix = substr($xmlDenominatorAxis1->getAttribute('source'), 0, 1).'_';
                 $report->setDenominatorAxis1(
                     DW_Model_Axis::loadByRefAndCube(
                         $prefix.$xmlDenominatorAxis1->firstChild->nodeValue,
@@ -397,7 +397,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                 if (($xmlDenominatorAxis->length > 1)) {
                     $xmlDenominatorAxis2 = $xmlDenominatorAxis->item(1);
-                    $prefix = $xmlDenominatorAxis2->getAttribute('source').'_';
+                    $prefix = substr($xmlDenominatorAxis2->getAttribute('source'), 0, 1).'_';
                     $report->setDenominatorAxis2(
                         DW_Model_Axis::loadByRefAndCube(
                             $prefix.$xmlDenominatorAxis2->firstChild->nodeValue,
@@ -424,7 +424,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         }
 
         foreach ($xmlReport->getElementsByTagName('filter') as $xmlFilter) {
-            $prefix = $xmlFilter->getAttribute('source').'_';
+            $prefix = substr($xmlFilter->getAttribute('source'), 0, 1).'_';
 
             /* @var DOMNode $xmlFilter */
             $axis = DW_Model_Axis::loadByRefAndCube(
@@ -436,7 +436,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                 /* @var DOMNode $xmlMember */
                 $filter->addMember(
                     DW_Model_Member::loadByRefAndAxis(
-                        $prefix.$xmlMember->firstChild->nodeValue,
+                        $xmlMember->firstChild->nodeValue,
                         $filter->getAxis()
                     )
                 );

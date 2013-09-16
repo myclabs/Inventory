@@ -4,12 +4,12 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="formSubForm">
+        <tu tuid="subForm">
             <tuv xml:lang="fr">
-                <seg>Formulaire / sous-formulaire</seg>
+                <seg>Sous-formulaire</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Form / subform</seg>
+                <seg>Subform</seg>
             </tuv>
         </tu>
         <tu tuid="fieldType">
@@ -92,6 +92,17 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Text</seg>
+            </tuv>
+        </tu>
+
+        <!-- Export des résultats -->
+
+        <tu tuid="roundedValue">
+            <tuv xml:lang="fr">
+                <seg>Valeur arrondie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Rounded value</seg>
             </tuv>
         </tu>
 

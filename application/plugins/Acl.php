@@ -298,10 +298,6 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         if ($idCell !== null) {
             return Orga_Model_Cell::load($idCell);
         }
-        $idCell = $request->getParam('idCell');
-        if ($idCell !== null) {
-            return Orga_Model_Cell::load($idCell);
-        }
 
         throw new ForbiddenException();
     }

@@ -40,7 +40,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
         $crossedGranularity = $granularityForInventoryStatus->getCrossedGranularity($granularity);
 
-        if ($cell->getGranularity()->getRef() === $granularityForInventoryStatus->getRef()) {
+        if ($cell->getGranularity()->getRef() === $crossedGranularity->getRef()) {
             $this->addLine($this->getLineData($cell, $crossedGranularity));
             $this->totalElements = 1;
         } else {
