@@ -532,7 +532,7 @@ class Orga_Service_Export
             'displayFreeLabel',
             function(AF_Model_Output_Element $output) {
                 if ($output->getInputSet() instanceof AF_Model_InputSet_Sub) {
-                    return $output->getFreeLabel();
+                    return $output->getInputSet()->getFreeLabel();
                 }
                 return '';
             }
