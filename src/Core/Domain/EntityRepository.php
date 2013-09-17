@@ -4,6 +4,8 @@ namespace Core\Domain;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\Common\Collections\Selectable;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Entity repository interface
@@ -57,4 +59,14 @@ interface EntityRepository extends ObjectRepository, Selectable
      * @return object
      */
     function getBy(array $criteria);
+
+    /**
+     * Selects all elements from a selectable that match the expression and
+     * returns a new collection containing these elements.
+     *
+     * @param Criteria $criteria
+     *
+     * @return Paginator
+     */
+    function matching(Criteria $criteria);
 }

@@ -161,7 +161,6 @@ abstract class Controller extends Core_Controller
                 foreach ($filters as $attributeName => $filterValue) {
                     foreach ($filterValue as $criteriaOperator => $value) {
                         if ($value !== null) {
-                            \Core_Tools::dump($attributeName.'-'.$criteriaName.'-'.$value);
                             $this->criteria->$attributeName->$criteriaOperator($value);
                         }
                     }

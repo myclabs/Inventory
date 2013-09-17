@@ -27,7 +27,7 @@ class KeywordCriteria extends Criteria
 
     public function __construct()
     {
-        $this->ref = new FieldFilter($this, 'ref');
-        $this->label = new FieldFilter($this, 'label');
+        $this->ref = new FieldFilter($this, 'this.ref');
+        $this->label = new FieldFilter($this, 'this.label');
     }
 }

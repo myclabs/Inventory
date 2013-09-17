@@ -32,8 +32,9 @@ class Keyword_Datagrid_KeywordController extends Controller
      */
     public function getelementsAction()
     {
+        $paginator = $this->keywordRepository->matching($this->criteria);
         /** @var Keyword $keyword */
-        foreach ($this->keywordRepository->matching($this->criteria) as $keyword) {
+        foreach ($paginator as $keyword) {
             $data = array();
 
             $data['index'] = $keyword->getRef();
@@ -45,7 +46,7 @@ class Keyword_Datagrid_KeywordController extends Controller
             $this->addLine($data);
         }
 
-        $this->totalElements = 150;//$this->keywordRepository->count($this->criteria);
+        $this->totalElements = count($paginator);
         $this->send();
     }
 
