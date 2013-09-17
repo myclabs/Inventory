@@ -101,11 +101,7 @@ class Core_Work_GearmanDispatcher implements Core_Work_Dispatcher
             sleep(3);
 
             $status = $this->getGearmanClient()->jobStatus($job);
-            $known = $status[0];
-            if (!$known) {
-                throw new Core_Exception("The background Gearman job has disappeared: maybe it has crashed?");
-            }
-            $running = $status[1];
+            $running = ($status[0] && $status[1]);
             $elapsedTime = microtime(true) - $timeStart;
         };
 
