@@ -27,22 +27,7 @@ class KeywordCriteria extends Criteria
 
     public function __construct()
     {
-        $this->ref = new FieldFilter('ref');
-        $this->label = new FieldFilter('label');
-    }
-
-    /**
-     * @return Expression|null
-     */
-    public function getWhereExpression()
-    {
-        if ($this->ref->getExpression()) {
-            $this->andWhere($this->ref->getExpression());
-        }
-        if ($this->label->getExpression()) {
-            $this->andWhere($this->label->getExpression());
-        }
-
-        return parent::getWhereExpression();
+        $this->ref = new FieldFilter($this, 'ref');
+        $this->label = new FieldFilter($this, 'label');
     }
 }

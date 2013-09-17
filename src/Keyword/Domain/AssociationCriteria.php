@@ -32,26 +32,8 @@ class AssociationCriteria extends Criteria
 
     public function __construct()
     {
-        $this->subjectRef = new FieldFilter('subject.ref');
-        $this->predicate = new FieldFilter('predicate');
-        $this->objectRef = new FieldFilter('object.ref');
-    }
-
-    /**
-     * @return Expression|null
-     */
-    public function getWhereExpression()
-    {
-        if ($this->subjectRef->getExpression()) {
-            $this->andWhere($this->subjectRef->getExpression());
-        }
-        if ($this->predicate->getExpression()) {
-            $this->andWhere($this->predicate->getExpression());
-        }
-        if ($this->objectRef->getExpression()) {
-            $this->andWhere($this->objectRef->getExpression());
-        }
-
-        return parent::getWhereExpression();
+        $this->subjectRef = new FieldFilter($this, 'subject.ref');
+        $this->predicate = new FieldFilter($this, 'predicate');
+        $this->objectRef = new FieldFilter($this, 'object.ref');
     }
 }

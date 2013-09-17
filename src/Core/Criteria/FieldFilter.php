@@ -2,9 +2,7 @@
 
 namespace Core\Criteria;
 
-use Doctrine\Common\Collections\Expr\Comparison;
-use Doctrine\Common\Collections\Expr\Expression;
-use Doctrine\Common\Collections\Expr\Value;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Field filtering
@@ -13,9 +11,9 @@ use Doctrine\Common\Collections\Expr\Value;
  *
  * <code>
  * // Filter on a field
- * $this->ref = new FieldFilter('ref');
+ * $this->ref = new FieldFilter($this, 'ref');
  * // Filter on the field of an association
- * $this->subjectRef = new FieldFilter('subject.ref');
+ * $this->subjectRef = new FieldFilter($this, 'subject.ref');
  * </code>
  *
  * @author matthieu.napoli
@@ -23,29 +21,23 @@ use Doctrine\Common\Collections\Expr\Value;
 class FieldFilter
 {
     /**
+     * @var Criteria
+     */
+    private $criteria;
+
+    /**
      * @var string
      */
     private $field;
 
     /**
-     * @var Expression|null
+     * @param Criteria $criteria
+     * @param string   $field
      */
-    private $expression;
-
-    /**
-     * @param string $field
-     */
-    public function __construct($field)
+    public function __construct(Criteria $criteria, $field)
     {
+        $this->criteria = $criteria;
         $this->field = (string) $field;
-    }
-
-    /**
-     * @return Expression|null
-     */
-    public function getExpression()
-    {
-        return $this->expression;
     }
 
     /**
@@ -53,7 +45,7 @@ class FieldFilter
      */
     public function eq($value)
     {
-        $this->expression = new Comparison($this->field, Comparison::EQ, new Value($value));
+        $this->criteria->andWhere($this->criteria->expr()->eq($this->field, $value));
     }
 
     /**
@@ -61,7 +53,7 @@ class FieldFilter
      */
     public function gt($value)
     {
-        $this->expression = new Comparison($this->field, Comparison::GT, new Value($value));
+        $this->criteria->andWhere($this->criteria->expr()->gt($this->field, $value));
     }
 
     /**
@@ -69,7 +61,7 @@ class FieldFilter
      */
     public function lt($value)
     {
-        $this->expression = new Comparison($this->field, Comparison::LT, new Value($value));
+        $this->criteria->andWhere($this->criteria->expr()->lt($this->field, $value));
     }
 
     /**
@@ -77,7 +69,7 @@ class FieldFilter
      */
     public function gte($value)
     {
-        $this->expression = new Comparison($this->field, Comparison::GTE, new Value($value));
+        $this->criteria->andWhere($this->criteria->expr()->gte($this->field, $value));
     }
 
     /**
@@ -85,7 +77,7 @@ class FieldFilter
      */
     public function lte($value)
     {
-        $this->expression = new Comparison($this->field, Comparison::LTE, new Value($value));
+        $this->criteria->andWhere($this->criteria->expr()->lte($this->field, $value));
     }
 
     /**
@@ -93,12 +85,12 @@ class FieldFilter
      */
     public function neq($value)
     {
-        $this->expression = new Comparison($this->field, Comparison::NEQ, new Value($value));
+        $this->criteria->andWhere($this->criteria->expr()->neq($this->field, $value));
     }
 
     public function isNull()
     {
-        $this->expression = new Comparison($this->field, Comparison::IS, new Value(null));
+        $this->criteria->andWhere($this->criteria->expr()->isNull($this->field));
     }
 
     /**
@@ -106,7 +98,7 @@ class FieldFilter
      */
     public function in(array $values)
     {
-        $this->expression = new Comparison($this->field, Comparison::IN, new Value($values));
+        $this->criteria->andWhere($this->criteria->expr()->in($this->field, $values));
     }
 
     /**
@@ -114,7 +106,7 @@ class FieldFilter
      */
     public function notIn(array $values)
     {
-        $this->expression = new Comparison($this->field, Comparison::NIN, new Value($values));
+        $this->criteria->andWhere($this->criteria->expr()->notIn($this->field, $values));
     }
 
     /**
@@ -122,6 +114,6 @@ class FieldFilter
      */
     public function contains($value)
     {
-        $this->expression = new Comparison($this->field, Comparison::CONTAINS, new Value($value));
+        $this->criteria->andWhere($this->criteria->expr()->contains($this->field, $value));
     }
 }
