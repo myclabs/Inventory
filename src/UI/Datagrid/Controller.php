@@ -175,10 +175,10 @@ abstract class Controller extends Core_Controller
                     $datagridSession['sortColumn'] = $sortName;
                     // Récupération de la direction du tri.
                     if ($this->getParam('sortDirection') === 'true') {
-                        $this->criteria->orderBy([$sortName => Criteria::ASC]);
+                        $this->criteria->orderBy([$this->criteria->$sortName->getField() => Criteria::ASC]);
                         $datagridSession['sortDirection'] = true;
                     } else {
-                        $this->criteria->orderBy([$sortName => Criteria::DESC]);
+                        $this->criteria->orderBy([$this->criteria->$sortName->getField() => Criteria::DESC]);
                         $datagridSession['sortDirection'] = false;
                     }
                 } else {

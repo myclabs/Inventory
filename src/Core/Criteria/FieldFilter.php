@@ -41,6 +41,14 @@ class FieldFilter
     }
 
     /**
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
      * @param mixed $value
      */
     public function eq($value)
