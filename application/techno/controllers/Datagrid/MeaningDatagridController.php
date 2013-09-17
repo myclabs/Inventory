@@ -5,14 +5,20 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 use Doctrine\DBAL\DBALException;
-use Keyword\Domain\Keyword;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * @package Techno
  */
 class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var KeywordService
+     */
+    protected $keywordService;
 
     /**
      * (non-PHPdoc)
@@ -33,9 +39,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
             $data['ref'] = $meaning->getRef();
             // Seule les valeurs en erreur sont éditables
             $this->editableCell($data['ref'], false);
-            try {
-                $meaning->getKeyword();
-            } catch (Core_Exception_NotFound $e) {
+            if ($this->keywordService->exists($meaning->getKeyword())) {
                 $this->editableCell($data['ref'], true);
             }
             // Position
@@ -62,7 +66,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $keyword = Keyword::loadByRef($refKeyword);
+            $keyword = $this->keywordService->get($refKeyword);
         } catch(Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
@@ -101,7 +105,7 @@ class Techno_Datagrid_MeaningDatagridController extends UI_Controller_Datagrid
         switch ($this->update['column']) {
             case 'ref':
                 try {
-                    $keyword = Keyword::loadByRef($newValue);
+                    $keyword = $this->keywordService->get($newValue);
                     $meaning->setKeyword($keyword);
                     $this->data = $keyword->getRef();
                 } catch (Core_Exception_NotFound $e) {

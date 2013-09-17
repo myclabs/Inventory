@@ -10,8 +10,8 @@ Techno_Model_Family_Member:
         strategy: AUTO
 
   fields:
-    refKeyword:
-      type: string
+    keyword:
+      type: keyword_dto
       nullable: false
     position:
       type: integer
@@ -34,7 +34,7 @@ Techno_Model_Family_Member:
 
   uniqueConstraints:
     uniqueMembers:
-      columns: [idDimension, refKeyword]
+      columns: [idDimension, keyword]
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

@@ -8,6 +8,7 @@
 use Core\Autoloader;
 use Core\Log\ChromePHPFormatter;
 use Core\Log\ExtendedLineFormatter;
+use Core\Mail\NullTransport;
 use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Container;
 use DI\ContainerBuilder;
@@ -182,7 +183,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initErrorHandler()
     {
         if (APPLICATION_ENV != 'testsunitaires') {
-            $errorHandler = $this->container->get('Core_Error_Handler');
+            $errorHandler = $this->container->get('Core\Log\ErrorHandler');
             // Fonctions de gestion des erreurs
             set_error_handler(array($errorHandler, 'myErrorHandler'));
             set_exception_handler(array($errorHandler, 'myExceptionHandler'));
@@ -195,6 +196,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initDoctrine()
     {
+        $configuration = Zend_Registry::get('configuration');
         // Création de la configuration de Doctrine.
         $doctrineConfig = new Doctrine\ORM\Configuration();
 
@@ -249,19 +251,10 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Ligne inutile mais bug, cf. http://www.doctrine-project.org/jira/browse/DCOM-210#comment-21061
         $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
 
-        // Définition du sql profiler en fonction de l'environement.
-        switch (APPLICATION_ENV) {
-            case 'test':
-            case 'developpement':
-            case 'testsunitaires':
-                // Requêtes placées dans un fichier.
-                $profiler = $this->container->get('Core_Profiler_File');
-                break;
-            default:
-                $profiler = null;
-                break;
+        // Log des requêtes
+        if ($configuration->log->queries) {
+            $doctrineConfig->setSQLLogger($this->container->get('Core\Log\QueryLogger'));
         }
-        $doctrineConfig->setSQLLogger($profiler);
 
         // Enregistrement de la configuration Doctrine dans le Registry.
         //  Utile pour créer d'autres EntityManager.
@@ -422,8 +415,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initMail()
     {
-        if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'script')) {
-            Zend_Mail::setDefaultTransport(new Core_Mail_Transport_Debug());
+        if (APPLICATION_ENV == 'testsunitaires') {
+            Zend_Mail::setDefaultTransport(new NullTransport());
         }
     }
 

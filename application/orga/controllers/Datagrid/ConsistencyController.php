@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 
 /**
  * Controller du datagrid de coherence
@@ -14,6 +15,11 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_ConsistencyController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var Orga_OrganizationConsistency
+     */
+    private $organizationConsistency;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -30,8 +36,9 @@ class Orga_Datagrid_ConsistencyController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        $consistency = Orga_OrganizationConsistency::getInstance()->check($organization);
+        $consistency = $this->organizationConsistency->check($organization);
 
         $data['index'] = 1;
         $data['diagnostic'] = $consistency['okAxis'];

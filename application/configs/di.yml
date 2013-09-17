@@ -11,7 +11,7 @@ enable.acl: true
 # Logs
 log.file: "data/logs/error.log"
 log.query.file: "data/logs/queries.log"
-Core_Profiler_File:
+Core\Log\QueryLogger:
   constructor:
     logger: log.query
 

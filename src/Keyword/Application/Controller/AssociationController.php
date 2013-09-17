@@ -6,8 +6,11 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 use Keyword\Domain\Keyword;
+use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\Predicate;
+use Keyword\Domain\PredicateRepository;
 
 /**
  * Controlleur permettant de gérer les associations entre Keyword.
@@ -16,6 +19,17 @@ use Keyword\Domain\Predicate;
 class Keyword_AssociationController extends Core_Controller
 {
     /**
+     * @Inject
+     * @var KeywordRepository
+     */
+    protected $keywordRepository;
+    /**
+     * @Inject
+     * @var PredicateRepository
+     */
+    protected $predicateRepository;
+
+    /**
      * Liste des associations en consultation.
      *
      * @Secure("viewKeyword")
@@ -23,11 +37,11 @@ class Keyword_AssociationController extends Core_Controller
     public function listAction()
     {
         $this->view->listKeywords = array();
-        foreach (Keyword::loadList() as $keyword) {
+        foreach ($this->keywordRepository->getAll() as $keyword) {
             $this->view->listKeywords[$keyword->getRef()] = $keyword->getLabel();
         }
         $this->view->listPredicates = array();
-        foreach (Predicate::loadList() as $predicate) {
+        foreach ($this->predicateRepository->getAll() as $predicate) {
             $this->view->listPredicates[$predicate->getRef()] = $predicate->getLabel();
         }
     }
@@ -40,11 +54,11 @@ class Keyword_AssociationController extends Core_Controller
     public function manageAction()
     {
         $this->view->listKeywords = array();
-        foreach (Keyword::loadList() as $keyword) {
+        foreach ($this->keywordRepository->getAll() as $keyword) {
             $this->view->listKeywords[$keyword->getRef()] = $keyword->getLabel();
         }
         $this->view->listPredicates = array();
-        foreach (Predicate::loadList() as $predicate) {
+        foreach ($this->predicateRepository->getAll() as $predicate) {
             $this->view->listPredicates[$predicate->getRef()] = $predicate->getLabel();
         }
     }
