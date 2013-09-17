@@ -413,7 +413,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initMail()
     {
-        if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'script')) {
+        if (APPLICATION_ENV == 'testsunitaires') {
             Zend_Mail::setDefaultTransport(new Core_Mail_Transport_Debug());
         }
     }
