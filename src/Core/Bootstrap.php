@@ -182,7 +182,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initErrorHandler()
     {
         if (APPLICATION_ENV != 'testsunitaires') {
-            $errorHandler = $this->container->get('Core_Error_Handler');
+            $errorHandler = $this->container->get('Core\Log\ErrorHandler');
             // Fonctions de gestion des erreurs
             set_error_handler(array($errorHandler, 'myErrorHandler'));
             set_exception_handler(array($errorHandler, 'myExceptionHandler'));
