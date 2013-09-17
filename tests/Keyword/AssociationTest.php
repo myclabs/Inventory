@@ -45,13 +45,13 @@ class Keyword_Test_AssociationTest extends Core_Test_TestCase
         $this->assertCount(1, $associations);
 
         $criteria = new AssociationCriteria();
-        $criteria->subjectRef->contains('fo');
+        $criteria->subjectRef->eq('foo');
         $associations = $repository->matching($criteria);
         $this->assertCount(1, $associations);
 
         // TODO continuer les tests quand 2.7 mergée sur cette branche
         $criteria = new AssociationCriteria();
-        $criteria->objectRef->eq('foo');
+        $criteria->objectRef->eq('fo');
         $associations = $repository->matching($criteria);
         $this->assertCount(0, $associations);
     }
