@@ -1,13 +1,16 @@
 <?php
 
+namespace Core\Log;
+
+use Doctrine;
 use Psr\Log\LoggerInterface;
 
 /**
  * Log des requêtes SQL dans un fichier
  *
- * @author     matthieu.napoli
+ * @author matthieu.napoli
  */
-class Core_Profiler_File implements Doctrine\DBAL\Logging\SQLLogger
+class QueryLogger implements Doctrine\DBAL\Logging\SQLLogger
 {
     /**
      * @var LoggerInterface

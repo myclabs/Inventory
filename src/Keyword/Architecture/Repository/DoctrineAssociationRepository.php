@@ -100,7 +100,6 @@ class DoctrineAssociationRepository extends DoctrineEntityRepository
             ->join('association.subject', 'subject')
             ->join('association.object', 'object');
 
-        // TODO ajouter le criteria au $qb (une fois que 2.7 sera mergé dans cette branche)
         $qb->addCriteria($criteria);
 
         return $qb->getQuery()->getResult();
