@@ -75,7 +75,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
      */
     public function getByRef($keywordRef)
     {
-        return $this->getOneBy(['ref' => $keywordRef]);
+        return $this->getBy(['ref' => $keywordRef]);
     }
 
     /**
@@ -111,13 +111,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     }
 
     /**
-     * Renoie les messages d'erreur concernant la validation d'une Association.
-     *
-     * @param \Keyword\Domain\Keyword $subjectKeyword
-     * @param \Keyword\Domain\Predicate $predicate
-     * @param \Keyword\Domain\Keyword $objectKeyword
-     *
-     * @return mixed string null
+     * {@inheritdoc}
      */
     public function getErrorMessageForAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
@@ -125,13 +119,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     }
 
     /**
-     * Vérifie la disponibilité d'une Association.
-     *
-     * @param Keyword $subjectKeyword
-     * @param Predicate $predicate
-     * @param Association $objectKeyword
-     *
-     * @throws \Core_Exception_User
+     * {@inheritdoc}
      */
     public function checkAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
@@ -150,7 +138,7 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function countAssociations()
     {
@@ -158,16 +146,9 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     }
 
     /**
-     * Charge une Association en fonction des refs de ses composants.
-     *
-     * @param Keyword $subjectKeyword
-     * @param Predicate $predicate
-     * @param Keyword $objectKeyword
-     * @throws \Core_Exception_NotFound
-     * @throws \Core_Exception_TooMany
-     * @return Association
+     * {@inheritdoc}
      */
-    public function getAssociationBySubjectPredicateObject(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
+    public function getAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
         return $this->getAssociationRepository()->getBySubjectPredicateObject($subjectKeyword, $predicate, $objectKeyword);
     }

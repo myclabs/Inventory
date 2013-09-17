@@ -37,6 +37,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
     private $entryRepository;
 
     /**
+     * @Secure("viewCell")
+     */
+    public function emptytabAction()
+    {
+    }
+
+    /**
      * Confguration du projet.
      * @Secure("editCell")
      */
@@ -272,8 +279,23 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
-        $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
-        $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+        try {
+            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+            // Verification que la granularité croisée existe.
+            $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $crossedOrgaGranularity = null;
+        } catch (Core_Exception_NotFound $e) {
+            $crossedOrgaGranularity = null;
+        }
+        if ($crossedOrgaGranularity === null) {
+            $this->forward('emptytab', 'tab_celldetails', 'orga', array(
+                    'idCell' => $idCell,
+                    'display' => 'render',
+                )
+            );
+            return;
+        }
 
         $datagridConfiguration = new Orga_DatagridConfiguration(
             'inventories'.$granularityForInventoryStatus->getId(),
@@ -542,6 +564,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->view->exports['Inputs'] = [
             'label' => __('UI', 'name', 'inputs'),
         ];
+
+        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+            // Orga Outputs.
+            $this->view->exports['Outputs'] = [
+                'label' => __('UI', 'name', 'results'),
+            ];
+        }
     }
 
     /**
@@ -558,19 +587,23 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         switch ($this->getParam('export')) {
             case 'Organization':
                 $streamFunction = 'streamOrganization';
-                $baseFilename = 'Organization';
+                $baseFilename = __('Orga', 'organization', 'organization');
                 break;
             case 'Cell':
                 $streamFunction = 'streamCell';
-                $baseFilename = 'Cell';
+                $baseFilename = __('Orga', 'organization', 'organization');
                 break;
             case 'Users':
                 $streamFunction = 'streamUsers';
-                $baseFilename = 'Users';
+                $baseFilename = __('User', 'role', 'roles');
                 break;
             case 'Inputs':
                 $streamFunction = 'streamInputs';
-                $baseFilename = 'Inputs';
+                $baseFilename = __('UI', 'name', 'inputs');
+                break;
+            case 'Outputs':
+                $streamFunction = 'streamOutputs';
+                $baseFilename = __('UI', 'name', 'results');
                 break;
             default:
                 UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);

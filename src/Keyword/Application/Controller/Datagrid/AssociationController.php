@@ -121,7 +121,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         $subject = $this->keywordRepository->getByRef($refSubject);
         $predicate = $this->predicateRepository->getByRef($refPredicate);
         $object = $this->keywordRepository->getByRef($refObject);
-        $association = $this->keywordRepository->getAssociationBySubjectPredicateObject($subject, $predicate, $object);
+        $association = $this->keywordRepository->getAssociation($subject, $predicate, $object);
 
         $newPredicate = $this->predicateRepository->getByRef($this->update['value']);
         if ($newPredicate === $predicate) {
@@ -148,7 +148,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
         $subject = $this->keywordRepository->getByRef($refSubject);
         $predicate = $this->predicateRepository->getByRef($refPredicate);
         $object = $this->keywordRepository->getByRef($refObject);
-        $subject->removeAssociation($this->keywordRepository->getAssociationBySubjectPredicateObject($subject, $predicate, $object));
+        $subject->removeAssociation($this->keywordRepository->getAssociation($subject, $predicate, $object));
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

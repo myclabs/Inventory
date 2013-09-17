@@ -64,7 +64,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
     {
         $locale = Core_Locale::loadDefault();
 
-        $uiElement = new UI_Form_Element_Pattern_Value($this->ref, $this->withUncertainty);
+        $uiElement = new UI_Form_Element_Pattern_Value($this->ref, false);
         $uiElement->setLabel($this->label);
         $uiElement->getElement()->help = $this->help;
         $uiElement->setRequired($this->getRequired());
@@ -90,26 +90,34 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             }
             // Valeur
             if ($value) {
-                $uiElement->setValue([
-                    $locale->formatNumberForInput($value->getDigitalValue()),
-                    $locale->formatNumberForInput($value->getRelativeUncertainty())
-                ]);
+                $uiElement->setValue($locale->formatNumberForInput($value->getDigitalValue()));
             }
             // Unité
             $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $selectedUnit));
+            // Incertitude
+            if ($this->withUncertainty) {
+                $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent'.$this->ref);
+                if ($value) {
+                    $uiUncertaintyElement->setValue($locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty()));
+                }
+                $uiElement->getElement()->addElement($uiUncertaintyElement);
+            }
             // Historique de la valeur
             $uiElement->getElement()->addElement($this->getHistoryComponent($input));
         } else {
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;
             // Valeur
-            $uiElement->setValue([
-                $locale->formatNumberForInput($this->defaultValue->getDigitalValue()),
-                $locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty())
-            ]);
+            $uiElement->setValue($locale->formatNumberForInput($this->defaultValue->getDigitalValue()));
             // Unité
             if ($this->unit !== null) {
                 $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $this->unit));
+            }
+            // Incertitude
+            if ($this->withUncertainty) {
+                $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent'.$this->ref);
+                $uiUncertaintyElement->setValue($locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty()));
+                $uiElement->getElement()->addElement($uiUncertaintyElement);
             }
         }
         // Actions

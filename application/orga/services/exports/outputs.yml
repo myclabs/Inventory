@@ -1,0 +1,41 @@
+sheets:
+
+
+  - foreach: indicators as indicator
+    do:
+      - label: "{{ indicator.label }}"
+
+        content:
+
+          - type: VerticalTable
+            columns:
+              - foreach: orgaAxes as orgaAxis
+                do:
+                  - label: "{{ orgaAxis.label }}"
+              - foreach: classifAxes as classifAxis
+                do:
+                  - label: "{{ classifAxis.label }}"
+              - label: "{{ inputStatus }}"
+              - label: "{{ resultLabel }}"
+              - label: "{{ resultFreeLabel }}"
+              - label: "{{ resultValue }}"
+              - label: "{{ resultRoundedValue }}"
+              - label: "{{ resultUncertainty }}"
+            lines:
+              - foreach: populatingCells as populatingCell
+                do:
+                  - foreach: getOutputsForIndicator(populatingCell, indicator) as output
+                    do:
+                      - cells:
+                          - foreach: orgaAxes as orgaAxis
+                            do:
+                              - "{{ displayMemberForOrgaAxis(populatingCell, orgaAxis) }}"
+                          - foreach: classifAxes as classifAxis
+                            do:
+                              - "{{ displayMemberForClassifAxis(output, classifAxis) }}"
+                          - "{{ displayInputStatus(populatingCell) }}"
+                          - "{{ output.label }}"
+                          - "{{ displayFreeLabel(output) }}"
+                          - "{{ output.value.digitalValue }}"
+                          - "{{ displayRoundedValue(output.value.digitalValue) }}"
+                          - "{{ output.value.relativeUncertainty }}"

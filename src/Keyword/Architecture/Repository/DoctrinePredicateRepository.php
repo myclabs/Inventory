@@ -68,7 +68,7 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
      */
     public function getByRef($predicateRef)
     {
-        return $this->getOneBy(['ref' => $predicateRef]);
+        return $this->getBy(['ref' => $predicateRef]);
     }
 
     /**
@@ -76,7 +76,7 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
      */
     public function getByReverseRef($predicateReverseRef)
     {
-        return $this->getOneBy(['reverseRef' => $predicateReverseRef]);
+        return $this->getBy(['reverseRef' => $predicateReverseRef]);
     }
 
 }

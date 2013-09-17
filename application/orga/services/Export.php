@@ -346,11 +346,11 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('granularities', $granularities);
 
-        $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'formSubForm'));
+        $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'subForm'));
         $modelBuilder->bind('inputLabel', __('UI', 'name', 'field'));
         $modelBuilder->bind('inputType', __('Orga', 'export', 'fieldType'));
         $modelBuilder->bind('inputValue', __('Orga', 'export', 'typedInValue'));
-        $modelBuilder->bind('inputUncertainty', __('UI', 'name', 'uncertainty'));
+        $modelBuilder->bind('inputUncertainty', __('UI', 'name', 'uncertainty') . ' (%)');
         $modelBuilder->bind('inputUnit', __('Orga', 'export', 'choosedUnit'));
         $modelBuilder->bind('inputReferenceValue', __('Orga', 'export', 'valueExpressedInDefaultUnit'));
         $modelBuilder->bind('inputReferenceUnit', __('Orga', 'export', 'defaultUnit'));
@@ -409,6 +409,154 @@ class Orga_Service_Export
 
         $export->export(
             $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/inputs.yml')),
+            'php://output',
+            $writer
+        );
+    }
+
+    /**
+     * Exporte les Outputs de la version de orga.
+     *
+     * @param string $format
+     * @param Orga_Model_Cell $cell
+     */
+    public function streamOutputs($format, Orga_Model_Cell $cell)
+    {
+        $modelBuilder = new SpreadsheetModelBuilder();
+        $export = new PHPExcelExporter();
+
+        $modelBuilder->bind('cell', $cell);
+        $modelBuilder->bind('populatingCells', $cell->getPopulatingCells() );
+
+        $modelBuilder->bind('indicators', Classif_Model_Indicator::loadList());
+
+        $queryOrganizationAxes = new Core_Model_Query();
+        $queryOrganizationAxes->filter->addCondition(Orga_Model_Axis::QUERY_ORGANIZATION, $cell->getGranularity()->getOrganization());
+        $queryOrganizationAxes->order->addOrder(Orga_Model_Axis::QUERY_NARROWER);
+        $queryOrganizationAxes->order->addOrder(Orga_Model_Axis::QUERY_POSITION);
+        $orgaAxes = [];
+        foreach ($cell->getGranularity()->getOrganization()->getAxes() as $organizationAxis) {
+            foreach ($cell->getGranularity()->getAxes() as $granularityAxis) {
+                if ($organizationAxis->isNarrowerThan($granularityAxis)) {
+                    continue;
+                } elseif (!($organizationAxis->isTransverse([$$granularityAxis]))) {
+                    continue 2;
+                }
+            }
+            $orgaAxes[] = $organizationAxis;
+        }
+        $modelBuilder->bind('orgaAxes', $orgaAxes);
+
+        $modelBuilder->bind('classifAxes', Classif_Model_Axis::loadListOrderedAsAscendantTree());
+
+        $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
+        $modelBuilder->bind('resultLabel', __('UI', 'name', 'label'));
+        $modelBuilder->bind('resultFreeLabel', __('AF', 'inputInput', 'freeLabel'));
+        $modelBuilder->bind('resultValue', __('UI', 'name', 'value'));
+        $modelBuilder->bind('resultRoundedValue', __('Orga', 'export', 'roundedValue'));
+        $modelBuilder->bind('resultUncertainty', __('UI', 'name', 'uncertainty') . ' (%)');
+
+        $modelBuilder->bindFunction(
+            'getOutputsForIndicator',
+            function(Orga_Model_Cell $cell, Classif_Model_Indicator $indicator) {
+                $results = [];
+                try {
+                    if ($cell->getAFInputSetPrimary()->getOutputSet() !== null) {
+                        foreach ($cell->getAFInputSetPrimary()->getOutputSet()->getElements() as $result) {
+                            if ($result->getContextIndicator()->getIndicator() === $indicator) {
+                                $results[] = $result;
+                            }
+                        }
+                    }
+                } catch (Core_Exception_UndefinedAttribute $e) {
+                    // Pas de saisie.
+                }
+                return $results;
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayMemberForOrgaAxis',
+            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+                foreach ($cell->getMembers() as $cellMember) {
+                    if ($cellMember->getAxis() === $axis) {
+                        return $cellMember->getLabel();
+                    } else if ($cellMember->getAxis()->isBroaderThan($axis)) {
+                        try {
+                            return $cellMember->getParentForAxis($axis);
+                        } catch (Core_Exception_NotFound $e) {
+                            // Pas de parent pour cet axe.
+                        }
+                    }
+                }
+                return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayMemberForClassifAxis',
+            function(AF_Model_Output_Element $output, Classif_Model_Axis $axis) {
+                try {
+                    return $output->getIndexForAxis($axis)->getMember()->getLabel();
+                } catch (Core_Exception_NotFound $e) {
+                    // Pas d'indexation suivant cet axe.
+                }
+                return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayInputStatus',
+            function(Orga_Model_Cell $cell) {
+                switch ($cell->getAFInputSetPrimary()->getStatus()) {
+                    case AF_Model_InputSet_Primary::STATUS_FINISHED:
+                        return __('AF', 'inputInput', 'statusFinished');
+                        break;
+                    case AF_Model_InputSet_Primary::STATUS_COMPLETE:
+                        return __('AF', 'inputInput', 'statusComplete');
+                        break;
+                    case AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE:
+                        return __('AF', 'inputInput', 'statusCalculationIncomplete');
+                        break;
+                    case AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
+                        return __('AF', 'inputInput', 'statusInputIncomplete');
+                        break;
+                    default:
+                        return '';
+                }
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayFreeLabel',
+            function(AF_Model_Output_Element $output) {
+                if ($output->getInputSet() instanceof AF_Model_InputSet_Sub) {
+                    return $output->getFreeLabel();
+                }
+                return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayRoundedValue',
+            function($value) {
+                return round($value, floor(3 - log10(abs($value))));
+            }
+        );
+
+
+        switch ($format) {
+            case 'xls':
+                $writer = new PHPExcel_Writer_Excel5();
+                break;
+            case 'xlsx':
+            default:
+                $writer = new PHPExcel_Writer_Excel2007();
+                break;
+        }
+
+        $export->export(
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/outputs.yml')),
             'php://output',
             $writer
         );
