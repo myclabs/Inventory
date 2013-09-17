@@ -5,8 +5,10 @@ namespace Keyword\Architecture\Repository;
 use Core\Domain\DoctrineEntityRepository;
 use Core\Domain\Translatable\TranslatableRepository;
 use Core_Exception_NotFound;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Translatable\TranslatableListener;
+use Keyword\Domain\AssociationCriteria;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\Predicate;
 use Keyword\Domain\Association;
@@ -90,6 +92,17 @@ class DoctrineAssociationRepository extends DoctrineEntityRepository
         return $this->getOneBy(
             ['subject' => $subjectKeyword->getId(), 'predicate' => $predicate->getId(), 'object' => $objectKeyword->getId()]
         );
+    }
+
+    public function matching(Criteria $criteria)
+    {
+        $qb = $this->createQueryBuilder('association')
+            ->join('association.subject', 'subject')
+            ->join('association.object', 'object');
+
+        $qb->addCriteria($criteria);
+
+        return $qb->getQuery()->getResult();
     }
 
 }
