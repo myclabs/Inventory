@@ -1,13 +1,17 @@
 <?php
 
+namespace Core\Mail;
+
+use Zend_Mail_Transport_Abstract;
+
 /**
  * Classe de transport de mail pour le debug : n'envoie le mail nulle part
  *
  * @package    Core
  * @subpackage Mail
- * @uses Zend_Mail_Transport_Abstract
+ * @uses       Zend_Mail_Transport_Abstract
  */
-class Core_Mail_Transport_Debug extends Zend_Mail_Transport_Abstract
+class NullTransport extends Zend_Mail_Transport_Abstract
 {
 
     /**

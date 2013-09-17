@@ -8,6 +8,7 @@
 use Core\Autoloader;
 use Core\Log\ChromePHPFormatter;
 use Core\Log\ExtendedLineFormatter;
+use Core\Mail\NullTransport;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
@@ -414,7 +415,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initMail()
     {
         if (APPLICATION_ENV == 'testsunitaires') {
-            Zend_Mail::setDefaultTransport(new Core_Mail_Transport_Debug());
+            Zend_Mail::setDefaultTransport(new NullTransport());
         }
     }
 
