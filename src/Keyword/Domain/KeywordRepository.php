@@ -15,6 +15,7 @@ use Keyword\Domain\Association;
  */
 interface KeywordRepository extends EntityRepository
 {
+    // TODO à supprimer
     const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
     const QUERY_KEYWORD_SUBJECT = 'subject';
@@ -83,9 +84,10 @@ interface KeywordRepository extends EntityRepository
     function checkAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword);
 
     /**
+     * @param AssociationCriteria $criteria
      * @return Association[]
      */
-    public function getAllAssociations();
+    public function getAllAssociations(AssociationCriteria $criteria = null);
 
     /**
      * @return int
