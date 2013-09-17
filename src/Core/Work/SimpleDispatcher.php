@@ -37,6 +37,8 @@ class Core_Work_SimpleDispatcher implements Core_Work_Dispatcher
         $worker = $this->getWorker($task);
 
         $worker->execute($task);
+
+        return true;
     }
 
     /**

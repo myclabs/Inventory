@@ -24,7 +24,7 @@ interface Core_Work_Dispatcher
      * Lance l'exxécution d'une tâche de manière asynchrone (i.e. n'attends pas la fin de son exécution)
      *
      * @param Core_Work_Task $task
-     * @return void Pas de résultat retourné
+     * @return boolean True: tache exécutée, False: tache en cours d'exécution
      */
     public function runBackground(Core_Work_Task $task);
 
