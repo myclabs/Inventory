@@ -1,9 +1,12 @@
 <?php
 /**
- * @author matthieu.napoli
+ * @author  matthieu.napoli
  * @package Core
  */
 
+namespace Core\TypeMapping;
+
+use Core_Locale;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
@@ -11,7 +14,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
  * Mapping d'un objet Locale en champ de BDD
  * @package Core
  */
-class Core_TypeMapping_Locale extends Type
+class LocaleMapping extends Type
 {
 
     const TYPE_NAME = 'core_locale';
@@ -25,7 +28,7 @@ class Core_TypeMapping_Locale extends Type
     }
 
     /**
-     * @param array $fieldDeclaration
+     * @param array            $fieldDeclaration
      * @param AbstractPlatform $platform
      * @return string
      */
@@ -45,7 +48,7 @@ class Core_TypeMapping_Locale extends Type
     }
 
     /**
-     * @param string $value
+     * @param string           $value
      * @param AbstractPlatform $platform
      * @return Core_Locale
      */
@@ -58,7 +61,7 @@ class Core_TypeMapping_Locale extends Type
     }
 
     /**
-     * @param Core_Locale $value
+     * @param Core_Locale      $value
      * @param AbstractPlatform $platform
      * @return string
      */
