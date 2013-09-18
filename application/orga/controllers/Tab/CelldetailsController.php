@@ -282,13 +282,13 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         try {
             $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
             // Verification que la granularité croisée existe.
-            $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+            $crossedGranularityForinventoryStatus = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
         } catch (Core_Exception_UndefinedAttribute $e) {
-            $crossedOrgaGranularity = null;
+            $crossedGranularityForinventoryStatus = null;
         } catch (Core_Exception_NotFound $e) {
-            $crossedOrgaGranularity = null;
+            $crossedGranularityForinventoryStatus = null;
         }
-        if ($crossedOrgaGranularity === null) {
+        if ($crossedGranularityForinventoryStatus === null) {
             $this->forward('emptytab', 'tab_celldetails', 'orga', array(
                     'idCell' => $idCell,
                     'display' => 'render',
@@ -297,48 +297,66 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             return;
         }
 
-        $datagridConfiguration = new Orga_DatagridConfiguration(
-            'inventories'.$granularityForInventoryStatus->getId(),
-            'datagrid_cell_inventories',
-            'orga',
-            $cell,
-            $crossedOrgaGranularity
-        );
-        $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
+        $granularitiesForInventoryStatus = [$crossedGranularityForinventoryStatus];
+        foreach ($cell->getGranularity()->getOrganization()->getGranularities() as $granularity) {
+            if ($granularity->getCellsWithACL() && $granularity->isNarrowerThan($granularityForInventoryStatus)) {
+                try {
+                    $granularitiesForInventoryStatus[] = $granularity->getCrossedGranularity($cell->getGranularity());
+                } catch (Core_Exception_NotFound $e) {
+                    // Pas de granularité croisée.
+                }
+            }
+        }
 
-        // Column Statut
-        $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('UI', 'name', 'status'));
-        $columnStateOrga->withEmptyElement = false;
+        $listDatagridConfiguration = [];
+        foreach ($granularitiesForInventoryStatus as $crossedGranularity) {
+            $datagridConfiguration = new Orga_DatagridConfiguration(
+                'inventories'.$crossedGranularity->getId(),
+                'datagrid_cell_inventories',
+                'orga',
+                $cell,
+                $crossedGranularity
+            );
+            $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
 
-        $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
-            $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
-            $cell
-        );
-        $columnStateOrga->editable = ($isUserAllowedToInputInventoryStatus
-            && (($cell->getGranularity()->isBroaderThan($granularityForInventoryStatus))
-                || ($cell->getGranularity() === $granularityForInventoryStatus))
-        );
-        $columnStateOrga->list = array(
+            // Column Statut
+            $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('UI', 'name', 'status'));
+            $columnStateOrga->withEmptyElement = false;
+
+            $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
+                $this->_helper->auth(),
+                Orga_Action_Cell::INPUT(),
+                $cell
+            );
+            $columnStateOrga->editable = ($isUserAllowedToInputInventoryStatus
+                && $crossedGranularity === $crossedGranularityForinventoryStatus
+                && (($cell->getGranularity()->isBroaderThan($granularityForInventoryStatus))
+                    || ($cell->getGranularity() === $granularityForInventoryStatus))
+            );
+            $columnStateOrga->list = array(
                 Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
                 Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
                 Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
-        );
-        $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
-        $columnStateOrga->filterName = Orga_Model_Cell::QUERY_INVENTORYSTATUS;
-        $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
-        $datagridConfiguration->datagrid->addCol($columnStateOrga);
+            );
+            $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
+            $columnStateOrga->filterName = Orga_Model_Cell::QUERY_INVENTORYSTATUS;
+            $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
+            $datagridConfiguration->datagrid->addCol($columnStateOrga);
 
-        $columnAdvencementInputs = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'inventory', 'completeInputPercentageHeader'));
-        $datagridConfiguration->datagrid->addCol($columnAdvencementInputs);
+            $columnAdvencementInputs = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'inventory', 'completeInputPercentageHeader'));
+            $datagridConfiguration->datagrid->addCol($columnAdvencementInputs);
 
-        $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'inventory', 'finishedInputPercentageHeader'));
-        $datagridConfiguration->datagrid->addCol($columnAdvencementFinishedInputs);
+            $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'inventory', 'finishedInputPercentageHeader'));
+            $datagridConfiguration->datagrid->addCol($columnAdvencementFinishedInputs);
+
+            $labelDatagrid = $crossedGranularity->getLabel();
+            $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+        }
 
         $this->forward('child', 'cell', 'orga', array(
-            'idCell' => $idCell,
-            'datagridConfiguration' => $datagridConfiguration,
-            'display' => 'render',
+                'idCell' => $idCell,
+                'datagridConfiguration' => $listDatagridConfiguration,
+                'display' => 'render',
         ));
     }
 

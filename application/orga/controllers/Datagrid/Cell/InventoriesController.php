@@ -35,10 +35,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
 
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $granularity = $cell->getGranularity();
-        $organization = $granularity->getOrganization();
-        $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
-        $crossedGranularity = $granularityForInventoryStatus->getCrossedGranularity($granularity);
+        $crossedGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
         if ($cell->getGranularity()->getRef() === $crossedGranularity->getRef()) {
             $this->addLine($this->getLineData($cell, $crossedGranularity));
