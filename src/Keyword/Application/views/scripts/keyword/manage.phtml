@@ -6,7 +6,7 @@
  * @package Keyword
  */
 
-use Keyword\Domain\KeywordRepository;
+use Keyword\Domain\KeywordCriteria;
 use UI\Datagrid\Datagrid;
 use UI\Datagrid\Column\TextColumn;
 use UI\Datagrid\Column\NumberColumn;
@@ -20,13 +20,13 @@ use UI\Datagrid\Column\LinkColumn;
     $datagrid->criteriaName = '\Keyword\Domain\KeywordCriteria';
 
     $columnLabel = new TextColumn('label', __('UI', 'name', 'label'));
-    $columnLabel->criteriaAttribute = KeywordRepository::QUERY_LABEL;
-    $columnLabel->criteriaOrderEnabled = true;
+    $columnLabel->criteriaFilterAttribute = KeywordCriteria::QUERY_LABEL;
+    $columnLabel->criteriaOrderAttribute = KeywordCriteria::QUERY_LABEL;
     $columnLabel->editable = true;
 
     $columnRef = new TextColumn('ref', __('UI', 'name', 'identifier'));
-    $columnRef->criteriaAttribute = KeywordRepository::QUERY_REF;
-    $columnRef->criteriaOrderEnabled = true;
+    $columnRef->criteriaFilterAttribute = KeywordCriteria::QUERY_REF;
+    $columnRef->criteriaOrderAttribute = KeywordCriteria::QUERY_REF;
     $columnRef->editable = true;
 
     $columnNbRelations = new NumberColumn('nbRelations', __('Keyword', 'list', 'relationNumberHeader'));

@@ -6,32 +6,35 @@
  * @package Keyword
  */
 
-use Keyword\Domain\PredicateRepository;
+use Keyword\Domain\PredicateCriteria;
+use UI\Datagrid\Datagrid;
+use UI\Datagrid\Column\TextColumn;
+use UI\Datagrid\Column\LongTextColumn;
 ?>
 <div class="page-header">
 	<h1><?=__('Keyword', 'name', 'predicates')?></h1>
 </div>
 <?php
-    $datagrid = new UI_Datagrid('predicates', 'datagrid_predicate', 'keyword');
+    $datagrid = new Datagrid('predicates', 'datagrid_predicate', 'keyword');
+    $datagrid->criteriaName = '\Keyword\Domain\PredicateCriteria';
 
-    $columnLabel = new UI_Datagrid_Col_Text('label', __('Keyword', 'predicate', 'directPredicateLabelHeader'));
-    $columnLabel->sortName = PredicateRepository::QUERY_LABEL;
-    $columnLabel->filterName = PredicateRepository::QUERY_LABEL;
+    $columnLabel = new TextColumn('label', __('Keyword', 'predicate', 'directPredicateLabelHeader'));
+    $columnLabel->criteriaFilterAttribute = PredicateCriteria::QUERY_LABEL;
+    $columnLabel->criteriaOrderAttribute = PredicateCriteria::QUERY_LABEL;
 
-    $columnRef = new UI_Datagrid_Col_Text('ref', __('Keyword', 'predicate', 'directPredicateIdentifierHeader'));
-    $columnRef->sortName = PredicateRepository::QUERY_REF;
-    $columnRef->filterName = PredicateRepository::QUERY_REF;
-    $columnRef->editable = true;
+    $columnRef = new TextColumn('ref', __('Keyword', 'predicate', 'directPredicateIdentifierHeader'));
+    $columnRef->criteriaFilterAttribute = PredicateCriteria::QUERY_REF;
+    $columnRef->criteriaOrderAttribute = PredicateCriteria::QUERY_REF;
 
-    $columnReverseLabel = new UI_Datagrid_Col_Text('reverseLabel', __('Keyword', 'predicate', 'reversePredicateLabelHeader'));
-    $columnReverseLabel->sortName = PredicateRepository::QUERY_REVERSE_LABEL;
-    $columnReverseLabel->filterName = PredicateRepository::QUERY_REVERSE_LABEL;
+    $columnReverseLabel = new TextColumn('reverseLabel', __('Keyword', 'predicate', 'reversePredicateLabelHeader'));
+    $columnReverseLabel->criteriaFilterAttribute = PredicateCriteria::QUERY_REVERSE_LABEL;
+    $columnReverseLabel->criteriaOrderAttribute = PredicateCriteria::QUERY_REVERSE_LABEL;
 
-    $columnReverseRef = new UI_Datagrid_Col_Text('reverseRef', __('Keyword', 'predicate', 'reversePredicateIdentifierHeader'));
-    $columnReverseRef->sortName = PredicateRepository::QUERY_REVERSE_REF;
-    $columnReverseRef->filterName = PredicateRepository::QUERY_REVERSE_REF;
+    $columnReverseRef = new TextColumn('reverseRef', __('Keyword', 'predicate', 'reversePredicateIdentifierHeader'));
+    $columnReverseRef->criteriaFilterAttribute = PredicateCriteria::QUERY_REVERSE_REF;
+    $columnReverseRef->criteriaOrderAttribute = PredicateCriteria::QUERY_REVERSE_REF;
 
-    $columnDescription = new UI_Datagrid_Col_LongText('predicateDescription', __('UI', 'name', 'description'));
+    $columnDescription = new LongTextColumn('description', __('UI', 'name', 'description'));
     $columnDescription->popup->title = __('UI', 'name', 'description');
     $columnDescription->defaultValue = '<i class="icon-zoom-in"></i> ' . __('UI', 'name', 'description');
 

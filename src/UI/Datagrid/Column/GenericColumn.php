@@ -148,14 +148,12 @@ abstract class GenericColumn
     public $displayLabelEditable = true;
 
     /**
-     * Nom du criteria de la colonne.
-     *
-     * Ce nom sera passé directement à l'objet requete par le controleur Datagrid.
+     * Nom du criteria de la colonne pour le filtrage.
      * Par defaut vaut null et empèche le filtrage.
      *
      * @var   string
      */
-    public $criteriaAttribute = null;
+    public $criteriaFilterAttribute = null;
 
     /**
      * Nom de l'opérateur criteria utilisé lors du filtre sur cette colonne.
@@ -166,12 +164,12 @@ abstract class GenericColumn
     public $criteriaFilterOperator = null;
 
     /**
-     * Définis si le tri est possible sur cette colonne..
-     * Par defaut vaut false et empèche le tri.
+     * Nom du criteria de la colonne pour le tri.
+     * Par defaut vaut null et empèche le tri.
      *
-     * @var   bool
+     * @var   string
      */
-    public $criteriaOrderEnabled = false;
+    public $criteriaOrderAttribute = null;
 
 
     /**
@@ -281,7 +279,7 @@ abstract class GenericColumn
         $definition .= 'key:"'.$this->id.'", ';
         $definition .= 'label:"<span>'.$this->label.'</span>", ';
         $definition .= 'formatter:"format'.$datagrid->id.$this->id.'"';
-        if ($this->criteriaOrderEnabled === true) {
+        if ($this->criteriaOrderAttribute !== null) {
             $definition .= $this->getSortOption($datagrid);
         } else {
             $definition .= ', sortable:false';
@@ -322,7 +320,7 @@ abstract class GenericColumn
      */
     public function getFullSortName(Datagrid $datagrid)
     {
-        return $this->criteriaAttribute;
+        return $this->criteriaOrderAttribute;
     }
 
     /**
@@ -334,7 +332,7 @@ abstract class GenericColumn
      */
     public function getFullFilterName(Datagrid $datagrid)
     {
-        return $this->criteriaAttribute;
+        return $this->criteriaFilterAttribute;
     }
 
     /**

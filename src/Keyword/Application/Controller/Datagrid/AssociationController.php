@@ -8,16 +8,16 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use UI\Datagrid\Controller;
 use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\PredicateRepository;
 use Keyword\Domain\Association;
-use Keyword\Domain\AssociationRepository;
 
 /**
  * Classe controleur de la datagrid de Association.
  * @package Keyword
  */
-class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
+class Keyword_Datagrid_AssociationController extends Controller
 {
     /**
      * @Inject
@@ -38,8 +38,9 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        $paginator = $this->keywordRepository->associationsMatching($this->criteria);
         /** @var Association $association */
-        foreach ($this->keywordRepository->getAllAssociations($this->request) as $association) {
+        foreach ($paginator as $association) {
             $data = array();
 
             $refSubject = $association->getSubject()->getRef();
@@ -53,7 +54,7 @@ class Keyword_Datagrid_AssociationController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = $this->keywordRepository->countAssociations($this->request);
+        $this->totalElements = count($paginator);
         $this->send();
     }
 

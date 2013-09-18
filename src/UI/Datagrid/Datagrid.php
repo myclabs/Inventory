@@ -536,7 +536,7 @@ class Datagrid extends UI_Generic
     {
         foreach ($this->_cols as $column) {
             // Vérification que le nom du tri est bien défini pour cette colonne
-            if (($column->id === $idColumn) && ($column->criteriaOrderEnabled !== null)) {
+            if (($column->id === $idColumn) && ($column->criteriaOrderAttribute !== null)) {
                 $this->_defaultSorting['state'] = true;
                 $this->_defaultSorting['column'] = $idColumn;
                 $this->_defaultSorting['direction'] = $sortDirection;
@@ -617,7 +617,7 @@ class Datagrid extends UI_Generic
             return true;
         } else {
             foreach ($this->_cols as $column) {
-                if ($column->criteriaAttribute !== null) {
+                if ($column->criteriaFilterAttribute !== null) {
                     return true;
                 }
             }
@@ -656,7 +656,7 @@ class Datagrid extends UI_Generic
         $filters = array_merge($this->_cols, $this->_customFilters);
         /** @var Column\GenericColumn $column */
         foreach ($filters as $column) {
-            if ($column->criteriaAttribute !== null) {
+            if ($column->criteriaFilterAttribute !== null) {
                 if (isset($datagridSession['filters'][$column->getFullFilterName($this)])) {
                     $defaultValue = $datagridSession['filters'][$column->getFullFilterName($this)];
                 } else {
@@ -699,7 +699,7 @@ class Datagrid extends UI_Generic
         $filters = array_merge($this->_cols, $this->_customFilters);
         /** @var Column\GenericColumn $column */
         foreach ($filters as $column) {
-            if ($column->criteriaAttribute !== null) {
+            if ($column->criteriaFilterAttribute !== null) {
                 if (isset($datagridSession['filters'][$column->getFullFilterName($this)])) {
                     $defaultValue = $datagridSession['filters'][$column->getFullFilterName($this)];
                 } else {
@@ -717,7 +717,7 @@ class Datagrid extends UI_Generic
         // Ajout de la fonction Reinitialiser à la datagrid
         $filterScript .= $this->id.'.resetFilter = function() {';
         foreach ($filters as $column) {
-            if ($column->criteriaAttribute !== null) {
+            if ($column->criteriaFilterAttribute !== null) {
                 $filterScript .= $column->getResettingFilter($this);
             }
         }
@@ -1003,7 +1003,7 @@ class Datagrid extends UI_Generic
             $filters = array_merge($this->_cols, $this->_customFilters);
             /** @var Column\GenericColumn $column */
             foreach ($filters as $column) {
-                if ($column->criteriaAttribute !== null) {
+                if ($column->criteriaFilterAttribute !== null) {
                     $datagridScript .= $column->getFilterValue($this);
                 }
             }
@@ -1147,7 +1147,7 @@ class Datagrid extends UI_Generic
                         $this->_defaultSorting['column'] = $column->id;
                     }
                 } else if ($column->id === $this->_defaultSorting['column']) {
-                    if ($column->criteriaOrderEnabled !== null) {
+                    if ($column->criteriaOrderAttribute !== null) {
                         $initialSortName = $column->getFullSortName($this);
                     } else {
                         throw new Core_Exception_InvalidArgument(
@@ -1272,7 +1272,7 @@ class Datagrid extends UI_Generic
         $datagridScript .= '};';
         // Affichage en cas de tri sur une colonne.
         foreach ($this->_cols as $column) {
-            if ($column->criteriaOrderEnabled !== null) {
+            if ($column->criteriaOrderAttribute !== null) {
                 $datagridScript .= 'this.Datagrid.doBeforeSortColumn = this.StartLoading;';
                 break;
             }

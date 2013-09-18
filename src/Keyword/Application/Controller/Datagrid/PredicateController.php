@@ -6,15 +6,17 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use UI\Datagrid\Controller;
 use Keyword\Domain\Predicate;
 use Keyword\Domain\PredicateRepository;
 use Keyword\Domain\KeywordRepository;
+use Keyword\Domain\AssociationCriteria;
 
 /**
  * Classe controleur de la datagrid de Predicate.
  * @package Keyword
  */
-class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
+class Keyword_Datagrid_PredicateController extends Controller
 {
     /**
      * @Inject
@@ -36,8 +38,9 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        $paginator = $this->predicateRepository->matching($this->criteria);
         /** @var Predicate $predicate */
-        foreach ($this->predicateRepository->getAll($this->request) as $predicate) {
+        foreach ($paginator as $predicate) {
             /** @var Predicate $predicate */
             $data = array();
 
@@ -54,7 +57,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = $this->predicateRepository->count($this->request);
+        $this->totalElements = count($paginator);
         $this->send();
     }
 
@@ -104,9 +107,10 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        //@todo A corriger une fois les nouvelles requêtes implémentées.
         $predicate = $this->predicateRepository->getByRef($this->delete);
-        if ($this->keywordRepository->countAssociations() > 0) {
+        $criteria = new AssociationCriteria();
+        $criteria->predicateRef->eq($predicate->getRef());
+        if (count($this->keywordRepository->associationsMatching($criteria)) > 0) {
             throw new \Core_Exception_User('Keyword', 'predicate', 'predicateUsedInAssociation', array('REF' => $predicate->getRef()));
         }
         $this->predicateRepository->remove($predicate);

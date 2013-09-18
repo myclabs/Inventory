@@ -85,8 +85,6 @@ class DoctrineEntityRepository extends Doctrine\EntityRepository implements Enti
         return $entities[0];
     }
 
-
-    /**
     /**
      * Selects all elements from a selectable that match the expression and
      * returns a new collection containing these elements.
