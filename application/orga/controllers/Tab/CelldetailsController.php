@@ -186,9 +186,48 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
             if ($narrowerGranularity->getCellsWithACL()) {
+                // Datagrid des utilisateurs des cellules enfants.
                 $datagridConfiguration = new Orga_DatagridConfiguration(
-                    'granularityACL'.$narrowerGranularity->getId(),
-                    'datagrid_cell_acls_child',
+                    'granularityUserACL'.$narrowerGranularity->getId(),
+                    'datagrid_cell_acls_childusers',
+                    'orga',
+                    $cell,
+                    $narrowerGranularity
+                );
+                $datagridConfiguration->datagrid->addParam('idCell', $idCell);
+
+                $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
+                $columnUserFirstName->addable = false;
+                $datagridConfiguration->datagrid->addCol($columnUserFirstName);
+
+                $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
+                $columnUserLastName->addable = false;
+                $datagridConfiguration->datagrid->addCol($columnUserLastName);
+
+                $columnUserEmail = new UI_Datagrid_Col_Text('userEmail', __('UI', 'name', 'emailAddress'));
+                $datagridConfiguration->datagrid->addCol($columnUserEmail);
+
+                $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
+                $columnRole->list = array();
+                foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
+                    if ($role instanceof User_Model_Role) {
+                        $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
+                    }
+                }
+                $datagridConfiguration->datagrid->addCol($columnRole);
+
+                $datagridConfiguration->datagrid->pagination = true;
+                $datagridConfiguration->datagrid->addElements = true;
+                $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addUserPanelTitle');
+                $datagridConfiguration->datagrid->deleteElements = true;
+
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' ' . __('Orga', 'role', 'userDetails');
+                $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+
+                // Datagrid des cellules enfants avec le nombre d'utilisteur pour chacune.
+                $datagridConfiguration = new Orga_DatagridConfiguration(
+                    'granularityCellACL'.$narrowerGranularity->getId(),
+                    'datagrid_cell_acls_childcells',
                     'orga',
                     $cell,
                     $narrowerGranularity
@@ -202,7 +241,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $columnDetails->popup->addAttribute('class', 'large');
                 $datagridConfiguration->datagrid->addCol($columnDetails);
 
-                $labelDatagrid = $narrowerGranularity->getLabel();
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' ' . __('Orga', 'role', 'cellDetails');
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
             }
         }

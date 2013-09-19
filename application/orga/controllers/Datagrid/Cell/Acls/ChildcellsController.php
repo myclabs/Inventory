@@ -13,7 +13,7 @@ use Core\Annotation\Secure;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
+class Orga_Datagrid_Cell_Acls_ChildcellsController extends UI_Controller_Datagrid
 {
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
