@@ -38,7 +38,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $crossedGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
         if ($cell->getGranularity()->getRef() === $crossedGranularity->getRef()) {
-            $this->addLine($this->addLineData($cell, $crossedGranularity));
+            $this->addLineData($cell, $crossedGranularity);
             $this->totalElements = 1;
         } else {
             $customParameters = array();
@@ -139,9 +139,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             if ($totalChildInputCells > 0) {
                 $data['advancementInput'] *= 100. / $totalChildInputCells;
                 $data['advancementFinishedInput'] *= 100. / $totalChildInputCells;
-            } else {
-                // Pas de cellules enfantes de saisie pour cette cellule.
-                return;
             }
         }
 

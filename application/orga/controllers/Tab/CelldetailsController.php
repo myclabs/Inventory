@@ -341,8 +341,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $columnStateOrga->withEmptyElement = false;
             $columnStateOrga->editable = ($isUserAllowedToInputInventoryStatus
                 && ($crossedGranularity === $granularityForInventoryStatus)
-                && (($cellGranularity->isBroaderThan($granularityForInventoryStatus))
-                    || ($cellGranularity === $granularityForInventoryStatus))
             );
             $columnStateOrga->list = array(
                 Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
