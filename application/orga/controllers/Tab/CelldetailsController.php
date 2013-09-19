@@ -298,10 +298,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $granularitiesForInventoryStatus = [$crossedGranularityForinventoryStatus];
-        foreach ($cell->getGranularity()->getOrganization()->getGranularities() as $granularity) {
-            if ($granularity->getCellsWithACL() && $granularity->isNarrowerThan($granularityForInventoryStatus)) {
+        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            if ($narrowerGranularity->getCellsWithACL() && $narrowerGranularity->isNavigable()) {
                 try {
-                    $granularitiesForInventoryStatus[] = $granularity->getCrossedGranularity($cell->getGranularity());
+                    $granularitiesForInventoryStatus[] = $granularityForInventoryStatus->getCrossedGranularity($narrowerGranularity);
                 } catch (Core_Exception_NotFound $e) {
                     // Pas de granularité croisée.
                 }
@@ -310,6 +310,9 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $listDatagridConfiguration = [];
         foreach ($granularitiesForInventoryStatus as $crossedGranularity) {
+            if (isset($listDatagridConfiguration[$crossedGranularity->getLabel()])) {
+                continue;
+            }
             $datagridConfiguration = new Orga_DatagridConfiguration(
                 'inventories'.$crossedGranularity->getId(),
                 'datagrid_cell_inventories',
