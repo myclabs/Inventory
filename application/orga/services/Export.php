@@ -658,7 +658,7 @@ function getInputValues(AF_Model_Input $input)
             return [$input->getComponent()->getOptionByRef($value)->getLabel()];
         case 'AF_Model_Input_Checkbox':
             /** @var AF_Model_Input_Checkbox $input */
-            return [($input->getValue()) ? __('Orga', 'export', 'boolValueTrue') : __('Orga', 'export', 'boolValueFalse')];
+            return [($input->getValue()) ? __('UI', 'property', 'checked') : __('UI', 'property', 'unchecked')];
         default:
             return [$input->getValue()];
     }
