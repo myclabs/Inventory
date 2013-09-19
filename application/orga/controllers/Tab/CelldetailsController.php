@@ -304,8 +304,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         } catch (Core_Exception_NotFound $e) {
             // Pas de granularité croisée.
         }
-        foreach ($cellGranularity->getOrganization()->getGranularities() as $granularity) {
-            if ($granularity->getCellsWithACL() && $granularity->isNavigable() && !$granularity->isBroaderThan($cellGranularity)) {
+        foreach ($cellGranularity->getNarrowerGranularities() as $granularity) {
+            if ($granularity->getCellsWithACL() && $granularity->isNavigable()) {
                 try {
                     $crossedGranularitiesForInventoryStatus[] = $granularityForInventoryStatus->getCrossedGranularity($granularity);
                 } catch (Core_Exception_NotFound $e) {
