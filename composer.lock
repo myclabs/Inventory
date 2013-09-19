@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "48b48fd1fede457a82ded01e99491fc6",
+    "hash": "2e50fcbe8e450cee046649ee1a5064e7",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -979,6 +979,46 @@
             "time": "2013-07-24 12:08:12"
         },
         {
+            "name": "myclabs/work",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/Work.git",
+                "reference": "0de935ea554ce17717db1c6e2da73bc0752f4f70"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/Work/zipball/0de935ea554ce17717db1c6e2da73bc0752f4f70",
+                "reference": "0de935ea554ce17717db1c6e2da73bc0752f4f70",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "videlalvaro/php-amqplib": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MyCLabs": "src/",
+                    "FunctionalTest": "tests/",
+                    "UnitTest": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Work queue library letting you run distributed tasks using a generic abstraction",
+            "keywords": [
+                "distributed",
+                "rabbitmq",
+                "task",
+                "work",
+                "work queue"
+            ],
+            "time": "2013-09-19 09:51:11"
+        },
+        {
             "name": "myclabs/xport",
             "version": "dev-master",
             "source": {
@@ -1647,6 +1687,48 @@
                 "templating"
             ],
             "time": "2013-08-03 15:35:31"
+        },
+        {
+            "name": "videlalvaro/php-amqplib",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/videlalvaro/php-amqplib.git",
+                "reference": "adc2a425ab214517a5e76557a9370bdc6f212576"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/adc2a425ab214517a5e76557a9370bdc6f212576",
+                "reference": "adc2a425ab214517a5e76557a9370bdc6f212576",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PhpAmqpLib": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Alvaro Videla"
+                }
+            ],
+            "description": "This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/videlalvaro/php-amqplib/",
+            "keywords": [
+                "message",
+                "queue",
+                "rabbitmq"
+            ],
+            "time": "2013-06-17 19:25:27"
         },
         {
             "name": "zendframework/zend-code",
@@ -2551,6 +2633,7 @@
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "myclabs/xport": 20,
+        "myclabs/work": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": {
