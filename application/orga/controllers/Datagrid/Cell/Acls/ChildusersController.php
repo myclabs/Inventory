@@ -111,7 +111,6 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         } else {
             $baseUserRoleRef = explode('_', $userRoleRef)[0];
             $role = User_Model_Role::loadByRef($baseUserRoleRef.'_'.$granularityCell->getId());
-            Core_Tools::dump($role);
         }
         if (!empty($this->_addErrorMessages)) {
             $this->send();
