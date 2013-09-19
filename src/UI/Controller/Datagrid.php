@@ -496,12 +496,12 @@ abstract class UI_Controller_Datagrid extends Core_Controller
     /**
      * Ajoute une ligne à la réponse.
      *
-     * @param array $ligne Ligne de la Datagrid à ajouter aux données.
+     * @param array $line Ligne de la Datagrid à ajouter aux données.
      *
      */
-    public function addLine($ligne)
+    public function addLine($line)
     {
-        $this->data[] = $ligne;
+        $this->data[] = $line;
     }
 
     /**

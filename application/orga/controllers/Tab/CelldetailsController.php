@@ -278,17 +278,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
+        $cellGranularity = $cell->getGranularity();
+
+        $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
+            $this->_helper->auth(),
+            Orga_Action_Cell::INPUT(),
+            $cell
+        );
 
         try {
-            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
-            // Verification que la granularité croisée existe.
-            $crossedGranularityForinventoryStatus = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+            $granularityForInventoryStatus = $cellGranularity->getOrganization()->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
-            $crossedGranularityForinventoryStatus = null;
-        } catch (Core_Exception_NotFound $e) {
-            $crossedGranularityForinventoryStatus = null;
-        }
-        if ($crossedGranularityForinventoryStatus === null) {
             $this->forward('emptytab', 'tab_celldetails', 'orga', array(
                     'idCell' => $idCell,
                     'display' => 'render',
@@ -297,19 +297,33 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             return;
         }
 
-        $granularitiesForInventoryStatus = [$crossedGranularityForinventoryStatus];
-        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            if ($narrowerGranularity->getCellsWithACL() && $narrowerGranularity->isNavigable()) {
+        $crossedGranularitiesForInventoryStatus = [];
+        // Verification que la granularité croisée existe.
+        try {
+            $crossedGranularitiesForInventoryStatus[] = $granularityForInventoryStatus->getCrossedGranularity($cellGranularity);
+        } catch (Core_Exception_NotFound $e) {
+            // Pas de granularité croisée.
+        }
+        foreach ($cellGranularity->getOrganization()->getGranularities() as $granularity) {
+            if ($granularity->getCellsWithACL() && $granularity->isNavigable() && !$granularity->isBroaderThan($cellGranularity)) {
                 try {
-                    $granularitiesForInventoryStatus[] = $granularityForInventoryStatus->getCrossedGranularity($narrowerGranularity);
+                    $crossedGranularitiesForInventoryStatus[] = $granularityForInventoryStatus->getCrossedGranularity($granularity);
                 } catch (Core_Exception_NotFound $e) {
                     // Pas de granularité croisée.
                 }
             }
         }
+        if (empty($crossedGranularitiesForInventoryStatus)) {
+            $this->forward('emptytab', 'tab_celldetails', 'orga', array(
+                    'idCell' => $idCell,
+                    'display' => 'render',
+                )
+            );
+            return;
+        }
 
         $listDatagridConfiguration = [];
-        foreach ($granularitiesForInventoryStatus as $crossedGranularity) {
+        foreach ($crossedGranularitiesForInventoryStatus as $crossedGranularity) {
             if (isset($listDatagridConfiguration[$crossedGranularity->getLabel()])) {
                 continue;
             }
@@ -325,16 +339,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             // Column Statut
             $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('UI', 'name', 'status'));
             $columnStateOrga->withEmptyElement = false;
-
-            $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
-                $this->_helper->auth(),
-                Orga_Action_Cell::INPUT(),
-                $cell
-            );
             $columnStateOrga->editable = ($isUserAllowedToInputInventoryStatus
-                && $crossedGranularity === $crossedGranularityForinventoryStatus
-                && (($cell->getGranularity()->isBroaderThan($granularityForInventoryStatus))
-                    || ($cell->getGranularity() === $granularityForInventoryStatus))
+                && ($crossedGranularity === $granularityForInventoryStatus)
+                && (($cellGranularity->isBroaderThan($granularityForInventoryStatus))
+                    || ($cellGranularity === $granularityForInventoryStatus))
             );
             $columnStateOrga->list = array(
                 Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
