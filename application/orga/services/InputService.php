@@ -1,7 +1,7 @@
 <?php
 
 use Core\Work\ServiceCall\ServiceCallTask;
-use Core\Work\Dispatcher\WorkDispatcher;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -27,7 +27,7 @@ class Orga_Service_InputService
     private $eventDispatcher;
 
     /**
-     * @var \Core\Work\Dispatcher\WorkDispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 
@@ -35,7 +35,7 @@ class Orga_Service_InputService
      * @param AF_Service_InputService $afInputService
      * @param Orga_Service_ETLData    $etlDataService
      * @param EventDispatcher         $eventDispatcher
-     * @param \Core\Work\Dispatcher\WorkDispatcher    $workDispatcher
+     * @param WorkDispatcher          $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,

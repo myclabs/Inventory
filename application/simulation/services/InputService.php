@@ -4,7 +4,7 @@
  */
 
 use Core\Work\ServiceCall\ServiceCallTask;
-use Core\Work\Dispatcher\WorkDispatcher;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -28,10 +28,15 @@ class Simulation_Service_InputService
     private $eventDispatcher;
 
     /**
-     * @param AF_Service_InputService $afInputService
-     * @param Simulation_Service_ETLData    $etlDataService
-     * @param EventDispatcher         $eventDispatcher
-     * @param \Core\Work\Dispatcher\WorkDispatcher    $workDispatcher
+     * @var WorkDispatcher
+     */
+    private $workDispatcher;
+
+    /**
+     * @param AF_Service_InputService    $afInputService
+     * @param Simulation_Service_ETLData $etlDataService
+     * @param EventDispatcher            $eventDispatcher
+     * @param WorkDispatcher             $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,

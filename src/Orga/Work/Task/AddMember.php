@@ -1,44 +1,39 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
-use Core\Work\Task;
 
-/**
- * Représente l'appel d'une méthode d'un service
- *
- * @package Core
- */
-class Orga_Work_Task_AddMember extends Task
+use Core\Work\BaseTaskInterface;
+use Core\Work\BaseTaskTrait;
+use MyCLabs\Work\Task\Task;
+
+class Orga_Work_Task_AddMember implements Task, BaseTaskInterface
 {
+    use BaseTaskTrait;
 
     /**
      * @var string
      */
-    private $idAxis;
+    public $idAxis;
 
     /**
      * @var string
      */
-    private $ref;
+    public $ref;
 
     /**
      * @var string
      */
-    private $label;
+    public $label;
 
     /**
      * @var array
      */
-    private $listBroaderMembers = array();
+    public $listBroaderMembers = [];
 
     /**
-     * @param Orga_Model_Axis $axis
-     * @param string $ref
-     * @param string $label
+     * @param Orga_Model_Axis     $axis
+     * @param string              $ref
+     * @param string              $label
      * @param Orga_Model_Member[] $broaderMembers
-     * @param null|string $taskLabel
+     * @param null|string         $taskLabel
      */
     public function __construct($axis, $ref, $label, $broaderMembers, $taskLabel = null)
     {
@@ -52,22 +47,4 @@ class Orga_Work_Task_AddMember extends Task
             $this->setTaskLabel($taskLabel);
         }
     }
-
-    /**
-     * Execute
-     */
-    public function execute()
-    {
-        $member = new Orga_Model_Member(Orga_Model_Axis::load($this->idAxis));
-        $member->setRef($this->ref);
-        $member->setLabel($this->label);
-        foreach ($this->listBroaderMembers as $idBroaderMember) {
-            $member->addDirectParent(Orga_Model_Member::load($idBroaderMember));
-        }
-        $member->save();
-
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-    }
-
 }

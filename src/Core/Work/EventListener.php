@@ -2,14 +2,20 @@
 
 namespace Core\Work;
 
+use Core\Work\Notification\TaskNotifier;
+use Core\Work\ServiceCall\ServiceCallTask;
+use Core_Locale;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use MyCLabs\Work\Task\Task;
 use Psr\Log\LoggerInterface;
+use User_Model_User;
+use Zend_Auth;
 
 /**
  * @author matthieu.napoli
  */
-class EventListener extends \MyCLabs\Work\Worker\EventListener
+class EventListener extends \MyCLabs\Work\EventListener
 {
     /**
      * @var LoggerInterface
@@ -21,10 +27,60 @@ class EventListener extends \MyCLabs\Work\Worker\EventListener
      */
     private $entityManager;
 
-    public function __construct(LoggerInterface $logger, EntityManager $entityManager)
+    /**
+     * @var TaskNotifier
+     */
+    private $notifier;
+
+    public function __construct(LoggerInterface $logger, EntityManager $entityManager, TaskNotifier $notifier)
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
+        $this->notifier = $notifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeTaskDispatched(Task $task)
+    {
+        // Sauvegarde le contexte
+        if ($task instanceof BaseTaskInterface) {
+            $context = new TaskContext();
+
+            // Locale
+            $context->setUserLocale(Core_Locale::loadDefault());
+
+            // User
+            $auth = Zend_Auth::getInstance();
+            if ($auth->hasIdentity()) {
+                $context->setUserId($auth->getIdentity());
+            }
+
+            $task->setContext($context);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeTaskSerialization(Task $task)
+    {
+        // Traitement spécial pour les entités Doctrine
+        if ($task instanceof ServiceCallTask) {
+            $task->detachEntities($this->entityManager);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function afterTaskUnserialization(Task $task)
+    {
+        // Traitement spécial pour les entités Doctrine
+        if ($task instanceof ServiceCallTask) {
+            $task->mergeEntities($this->entityManager);
+        }
     }
 
     /**
@@ -34,8 +90,12 @@ class EventListener extends \MyCLabs\Work\Worker\EventListener
     {
         $this->logger->info("Executing task {task}", ['task' => (string) $task]);
 
-        // Change la locale
-        // TODO
+        if ($task instanceof BaseTaskInterface) {
+            // Change la locale
+            if ($task->getContext() && $task->getContext()->getUserLocale()) {
+                Core_Locale::setDefault($task->getContext()->getUserLocale());
+            }
+        }
 
         // Connexion BDD et transaction
         $this->entityManager->getConnection()->connect();
@@ -47,10 +107,19 @@ class EventListener extends \MyCLabs\Work\Worker\EventListener
      */
     public function onTaskSuccess(Task $task)
     {
-        $this->entityManager->flush();
-
         // Commit transaction
+        $this->entityManager->flush();
         $this->entityManager->commit();
+
+        if ($task instanceof BaseTaskInterface) {
+            // Notification
+            if ($task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
+                /** @var User_Model_User $user */
+                $user = User_Model_User::load($task->getContext()->getUserId());
+
+                $this->notifier->notifyTaskFinished($user, $task->getTaskLabel());
+            }
+        }
 
         $this->logger->info("Task {task} executed", ['task' => (string) $task]);
     }
@@ -61,5 +130,15 @@ class EventListener extends \MyCLabs\Work\Worker\EventListener
     public function onTaskException(Task $task, Exception $e)
     {
         $this->logger->error("Error while executing task {task}", ['exception' => $e, 'task' => (string) $task]);
+
+        if ($task instanceof BaseTaskInterface) {
+            // Error notification
+            if ($task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
+                /** @var User_Model_User $user */
+                $user = User_Model_User::load($task->getContext()->getUserId());
+
+                $this->notifier->notifyTaskError($user, $task->getTaskLabel());
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ use Core\Work\TaskContext;
  *
  * @author matthieu.napoli
  */
-abstract class Task
+trait BaseTaskTrait
 {
     /**
      * @var TaskContext|null
@@ -54,5 +54,13 @@ abstract class Task
     public function setTaskLabel($taskLabel)
     {
         $this->taskLabel = $taskLabel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return get_class();
     }
 }

@@ -1,14 +1,7 @@
 <?php
-/**
- * @author valentin.claras
- * @package Orga
- */
-
-use Core\Work\Dispatcher\WorkDispatcher;
 
 /**
  * @author valentin.claras
- * @package Orga
  */
 class Orga_Bootstrap extends Core_Package_Bootstrap
 {
@@ -18,11 +11,20 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initOrgaWorker()
     {
-        /**@var \Core\Work\Dispatcher\WorkDispatcher $dispatcher */
-        $dispatcher = $this->container->get('Core\Work\Dispatcher\WorkDispatcher');
-        $dispatcher->registerWorker(new Orga_Work_WorkerGranularity());
-        $dispatcher->registerWorker(new Orga_Work_WorkerMember());
-        $dispatcher->registerWorker(new Orga_Work_Worker());
+        /**@var \MyCLabs\Work\Worker\Worker $worker */
+        $worker = $this->container->get('MyCLabs\Work\Worker\Worker');
+        $worker->registerTaskExecutor(
+            'Orga_Work_Task_AddGranularity',
+            $this->container->get('Orga_Work_TaskExecutor_AddGranularityExecutor')
+        );
+        $worker->registerTaskExecutor(
+            'Orga_Work_Task_AddMember',
+            $this->container->get('Orga_Work_TaskExecutor_AddMemberExecutor')
+        );
+        $worker->registerTaskExecutor(
+            'Orga_Work_Task_SetGranularityCellsGenerateDWCubes',
+            $this->container->get('Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor')
+        );
     }
 
     /**

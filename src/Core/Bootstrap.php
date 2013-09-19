@@ -9,7 +9,6 @@ use Core\Autoloader;
 use Core\Log\ChromePHPFormatter;
 use Core\Log\ExtendedLineFormatter;
 use Core\Mail\NullTransport;
-use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
@@ -23,6 +22,13 @@ use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use MyCLabs\Work\Dispatcher\RabbitMQWorkDispatcher;
+use MyCLabs\Work\Dispatcher\SimpleWorkDispatcher;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use MyCLabs\Work\TaskExecutor\ServiceCallExecutor;
+use MyCLabs\Work\Worker\RabbitMQWorker;
+use MyCLabs\Work\Worker\SimpleWorker;
+use PhpAmqpLib\Connection\AMQPConnection;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
@@ -58,7 +64,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'FrontController',
                 'Doctrine',
                 'DefaultEntityManager',
-                'WorkDispatcher',
+                'Work',
                 // Il faut initialiser le front controller pour que l'ajout de dossiers
                 // de controleurs soit pris en compte
             );
@@ -337,30 +343,53 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * Work dispatcher
      */
-    protected function _initWorkDispatcher()
+    protected function _initWork()
     {
-        // Détermine si on utilise gearman
+        // Détermine si on utilise RabbitMQ
         $configuration = Zend_Registry::get('configuration');
-        if (isset($configuration->gearman) && isset($configuration->gearman->enabled)) {
-            $useGearman = (bool) $configuration->gearman->enabled;
+        if (isset($configuration->rabbitmq) && isset($configuration->rabbitmq->enabled)) {
+            $useRabbitMQ = (bool) $configuration->rabbitmq->enabled;
         } else {
-            $useGearman = true;
+            $useRabbitMQ = false;
         }
-        $useGearman = $useGearman && extension_loaded('gearman');
 
-        $this->container->set('Core\Work\Dispatcher\WorkDispatcher', function(Container $c) use ($useGearman) {
-                if ($useGearman) {
-                    $implementation = 'Core\Work\Dispatcher\GearmanWorkDispatcher';
-                } else {
-                    $implementation = 'Core\Work\Dispatcher\SimpleWorkDispatcher';
-                }
-                /** @var \Core\Work\Dispatcher\WorkDispatcher $workDispatcher */
-                $workDispatcher = $c->get($implementation);
-                // Register workers
-                $workDispatcher->registerWorker($this->container->get('Core\Work\ServiceCall\ServiceCallWorker'));
+        $this->container->set('MyCLabs\Work\Dispatcher\WorkDispatcher', function(Container $c) use ($useRabbitMQ) {
+            if ($useRabbitMQ) {
+                // Connexion RabbitMQ
+                // TODO factoriser
+                $queue = $c->get('application.name') . '-work';
+                $connection = new AMQPConnection('localhost', 5672, 'guest', 'guest');
+                $channel = $connection->channel();
+                $channel->queue_declare($queue, false, false, false, false);
 
-                return $workDispatcher;
-            });
+                $workDispatcher = new RabbitMQWorkDispatcher($channel, $queue);
+                $workDispatcher->addEventListener($this->container->get('Core\Work\EventListener'));
+            } else {
+                $workDispatcher = new SimpleWorkDispatcher(new SimpleWorker());
+            }
+
+            return $workDispatcher;
+        });
+
+        $this->container->set('MyCLabs\Work\Worker\Worker', function(Container $c) use ($useRabbitMQ) {
+            if ($useRabbitMQ) {
+                // Connexion RabbitMQ
+                // TODO factoriser
+                $queue = $c->get('application.name') . '-work';
+                $connection = new AMQPConnection('localhost', 5672, 'guest', 'guest');
+                $channel = $connection->channel();
+                $channel->queue_declare($queue, false, false, false, false);
+
+                $worker = new RabbitMQWorker($channel, $queue);
+                $worker->addEventListener($this->container->get('Core\Work\EventListener'));
+            } else {
+                $worker = new SimpleWorker();
+            }
+
+            $worker->registerTaskExecutor('Core\Work\ServiceCall\ServiceCallTask', new ServiceCallExecutor($c));
+
+            return $worker;
+        });
     }
 
     /**

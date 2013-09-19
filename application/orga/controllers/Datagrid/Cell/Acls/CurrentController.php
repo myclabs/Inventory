@@ -7,8 +7,8 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use Core\Work\Dispatcher\WorkDispatcher;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.
@@ -26,7 +26,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var \Core\Work\Dispatcher\WorkDispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 

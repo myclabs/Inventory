@@ -2,80 +2,38 @@
 
 namespace Core\Work\ServiceCall;
 
-use Core\Work\Task;
+use Core\Work\BaseTaskInterface;
+use Core\Work\BaseTaskTrait;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\UnitOfWork;
+use MyCLabs\Work\Task\ServiceCall;
 use Core_Model_Entity;
 
 /**
- * Représente l'appel d'une méthode d'un service
+ * Représente l'appel d'une méthode d'un service.
  *
  * @author matthieu.napoli
  */
-class ServiceCallTask extends Task
+class ServiceCallTask extends ServiceCall implements BaseTaskInterface
 {
-    /**
-     * @var string
-     */
-    private $serviceName;
+    use BaseTaskTrait;
 
-    /**
-     * @var string
-     */
-    private $methodName;
-
-    /**
-     * @var array
-     */
-    private $parameters;
-
-    /**
-     * @param string      $serviceName Nom de la classe du service
-     * @param string      $methodName  Nom de la méthode à appeler sur le service
-     * @param array       $parameters  Paramètres de l'appel à la méthode
-     * @param null|string $taskLabel
-     */
-    public function __construct($serviceName, $methodName, array $parameters = [], $taskLabel = null)
+    public function detachEntities(EntityManager $entityManager)
     {
-        $this->serviceName = $serviceName;
-        $this->methodName = $methodName;
-        $this->parameters = $parameters;
-        if ($taskLabel) {
-            $this->setTaskLabel($taskLabel);
+        foreach ($this->parameters as $parameter) {
+            // Vérifie que c'est une entité Doctrine
+            if (! $entityManager->getMetadataFactory()->isTransient($parameter)) {
+                $entityManager->detach($parameter);
+            }
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getServiceName()
+    public function mergeEntities(EntityManager $entityManager)
     {
-        return $this->serviceName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMethodName()
-    {
-        return $this->methodName;
-    }
-
-    /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * Déserialisation
-     */
-    public function __wakeup()
-    {
-        // Après sérialisation, recharge les entités
-        foreach ($this->parameters as $index => $parameter) {
-            if ($parameter instanceof Core_Model_Entity) {
-                $this->parameters[$index] = $parameter::load($parameter->getKey());
+        foreach ($this->parameters as $parameter) {
+            // Vérifie que c'est une entité Doctrine
+            if (! $entityManager->getMetadataFactory()->isTransient($parameter)) {
+                $entityManager->merge($parameter);
             }
         }
     }

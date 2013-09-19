@@ -984,12 +984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Work.git",
-                "reference": "0de935ea554ce17717db1c6e2da73bc0752f4f70"
+                "reference": "fd9997be7738b06d1126d166fe06dcc6d395c0d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Work/zipball/0de935ea554ce17717db1c6e2da73bc0752f4f70",
-                "reference": "0de935ea554ce17717db1c6e2da73bc0752f4f70",
+                "url": "https://api.github.com/repos/myclabs/Work/zipball/fd9997be7738b06d1126d166fe06dcc6d395c0d1",
+                "reference": "fd9997be7738b06d1126d166fe06dcc6d395c0d1",
                 "shasum": ""
             },
             "require": {
@@ -1016,7 +1016,7 @@
                 "work",
                 "work queue"
             ],
-            "time": "2013-09-19 09:51:11"
+            "time": "2013-09-19 15:42:34"
         },
         {
             "name": "myclabs/xport",

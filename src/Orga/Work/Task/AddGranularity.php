@@ -1,76 +1,71 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
-use Core\Work\Task;
 
-/**
- * Représente l'appel d'une méthode d'un service
- *
- * @package Core
- */
-class Orga_Work_Task_AddGranularity extends Task
+use Core\Work\BaseTaskInterface;
+use Core\Work\BaseTaskTrait;
+use MyCLabs\Work\Task\Task;
+
+class Orga_Work_Task_AddGranularity implements Task, BaseTaskInterface
 {
+    use BaseTaskTrait;
 
     /**
      * @var string
      */
-    private $idOrganization;
+    public $idOrganization;
 
     /**
      * @var array
      */
-    private $listAxes = array();
+    public $listAxes = [];
 
     /**
      * @var bool
      */
-    private $navigability;
+    public $navigability;
 
     /**
      * @var bool
      */
-    private $orgaTab;
+    public $orgaTab;
 
     /**
      * @var bool
      */
-    private $aCL;
+    public $acl;
 
     /**
      * @var bool
      */
-    private $aFTab;
+    public $afTab;
 
     /**
      * @var bool
      */
-    private $dW;
+    public $dw;
 
     /**
      * @var bool
      */
-    private $genericActions;
+    public $genericActions;
 
     /**
      * @var bool
      */
-    private $contextActions;
+    public $contextActions;
 
     /**
      * @var bool
      */
-    private $inputDocuments;
+    public $inputDocuments;
 
     /**
      * @param Orga_Model_Organization $organization
      * @param Orga_Model_Axis[] $listAxes
      * @param bool $navigability
      * @param bool $orgaTab
-     * @param bool $aCL
-     * @param bool $aFTab
-     * @param bool $dW
+     * @param bool $acl
+     * @param bool $afTab
+     * @param bool $dw
      * @param bool $genericActions
      * @param bool $contextActions
      * @param bool $inputDocuments
@@ -81,9 +76,9 @@ class Orga_Work_Task_AddGranularity extends Task
         $listAxes,
         $navigability,
         $orgaTab,
-        $aCL,
-        $aFTab,
-        $dW,
+        $acl,
+        $afTab,
+        $dw,
         $genericActions,
         $contextActions,
         $inputDocuments,
@@ -95,9 +90,9 @@ class Orga_Work_Task_AddGranularity extends Task
         }
         $this->navigability = $navigability;
         $this->orgaTab = $orgaTab;
-        $this->aCL = $aCL;
-        $this->aFTab = $aFTab;
-        $this->dW = $dW;
+        $this->acl = $acl;
+        $this->afTab = $afTab;
+        $this->dw = $dw;
         $this->genericActions = $genericActions;
         $this->contextActions = $contextActions;
         $this->inputDocuments = $inputDocuments;
@@ -105,30 +100,4 @@ class Orga_Work_Task_AddGranularity extends Task
             $this->setTaskLabel($taskLabel);
         }
     }
-
-    /**
-     * Execute
-     */
-    public function execute()
-    {
-        $organization = Orga_Model_Organization::load($this->idOrganization);
-        $axes = array();
-        foreach ($this->listAxes as $idAxis) {
-            $axes[] = Orga_Model_Axis::load($idAxis);
-        }
-        $granularity = new Orga_Model_Granularity($organization, $axes);
-        $granularity->setNavigability($this->navigability);
-        $granularity->setCellsWithOrgaTab($this->orgaTab);
-        $granularity->setCellsWithACL($this->aCL);
-        $granularity->setCellsWithAFConfigTab($this->aFTab);
-        $granularity->setCellsGenerateDWCubes($this->dW);
-        $granularity->setCellsWithSocialGenericActions($this->genericActions);
-        $granularity->setCellsWithSocialContextActions($this->contextActions);
-        $granularity->setCellsWithInputDocuments($this->inputDocuments);
-        $granularity->save();
-
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-    }
-
 }
