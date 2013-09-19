@@ -53,8 +53,8 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
                 if ($linkedIdentity instanceof User_Model_Role) {
                     $userNumber = 0;
                     foreach ($linkedIdentity->getUsers() as $user) {
-                        if ($linkedIdentity->getRef() === 'cellDataProviderAdministrator_'.$childCell->getId()
-                            || $linkedIdentity->getRef() === 'cellDataProviderContributor_'.$childCell->getId()) {
+                        if ($linkedIdentity->getRef() === 'cellAdministrator_'.$childCell->getId()
+                            || $linkedIdentity->getRef() === 'cellContributor_'.$childCell->getId()) {
                             $listAdministrator[] = $user->getName();
                         }
                         $userNumber ++;
