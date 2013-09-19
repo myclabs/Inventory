@@ -3,7 +3,7 @@
  * Scripts dépilant la work queue
  */
 
-use Core\Work\Dispatcher\WorkDispatcher;
+use MyCLabs\Work\Worker\Worker;
 
 define('RUN', false);
 
@@ -12,7 +12,8 @@ require_once __DIR__ . '/../../../application/init.php';
 /** @var DI\Container $container */
 $container = Zend_Registry::get('container');
 
-/** @var WorkDispatcher $workDispatcher */
-$workDispatcher = $container->get('Core\Work\Dispatcher\WorkDispatcher');
+/** @var Worker $worker */
+$worker = $container->get('MyCLabs\Work\Worker\Worker');
 
-$workDispatcher->work();
+// Traite une seule tache
+$worker->work(1);
