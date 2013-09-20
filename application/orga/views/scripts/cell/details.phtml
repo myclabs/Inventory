@@ -11,12 +11,14 @@
     <h1><?=$this->pageTitle?></h1>
 </div>
 <div class="row-fluid">
+<? if ($this->displayNavigationPanel !== false) { ?>
     <div class="well span" id="navigationPanel">
 <?= $this->partial('cell/navigation.phtml', ['cell' => $this->cell, 'isParentCellReachable' => $this->isParentCellReachable])?>
     </div>
     <div id="navigationClose" class="span">
         <i class="icon-indent-right"> </i>
     </div>
+<? } ?>
     <div id="navigationContent" class="span">
 <?php
 

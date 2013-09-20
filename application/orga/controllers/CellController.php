@@ -73,6 +73,7 @@ class Orga_CellController extends Core_Controller
         $this->view->tabView = new UI_Tab_View('container');
         $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$organization->getLabel().'</small>';
         $this->view->isParentCellReachable = array();
+        $this->view->displayNavigationPanel = false;
         foreach ($cell->getParentCells() as $parentCell) {
             $isUserAllowedToViewParentCell = $this->aclService->isAllowed(
                 $connectedUser,
@@ -81,6 +82,16 @@ class Orga_CellController extends Core_Controller
             );
             if (!$isUserAllowedToViewParentCell) {
                 $this->view->isParentCellReachable[$parentCell->getMembersHashKey()] = false;
+            } else {
+                $this->view->displayNavigationPanel = true;
+            }
+        }
+        if ($this->view->displayNavigationPanel === false) {
+            foreach ($organization->getGranularities() as $organizationGranularity) {
+                if ($organizationGranularity->isNarrowerThan($granularity) && $organizationGranularity->isNavigable()) {
+                    $this->view->displayNavigationPanel = true;
+                    break;
+                }
             }
         }
 
