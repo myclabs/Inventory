@@ -41,7 +41,7 @@ class Orga_ReferentialController extends Core_Controller
         $this->view->formats = [
             'xlsx' => __('UI', 'export', 'xlsx'),
             'xls' => __('UI', 'export', 'xls'),
-            'ods' => __('UI', 'export', 'ods'),
+//            'ods' => __('UI', 'export', 'ods'),
         ];
 
         // Liste des exports.
@@ -120,10 +120,16 @@ class Orga_ReferentialController extends Core_Controller
         $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
         $filename = $date.'_'.$baseFilename.'.'.$format;
 
-        if ($format = 'xlsx') {
-            $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        } else {
-            $contentType = "Content-type: application/vnd.ms-excel";
+        switch ($format) {
+            case 'xlsx':
+                $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                break;
+            case 'xls':
+                $contentType = "Content-type: application/vnd.ms-excel";
+                break;
+            case 'ods':
+                $contentType = "Content-type: application/vnd.oasis.opendocument.spreadsheet";
+                break;
         }
         header($contentType);
         header('Content-Disposition:attachement;filename='.$filename);

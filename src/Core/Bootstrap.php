@@ -252,7 +252,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Log des requêtes
         if ($configuration->log->queries) {
-            $doctrineConfig->setSQLLogger($this->container->get('Core\Log\QueryLogger'));
+            $doctrineConfig->setSQLLogger($this->container->get('Core_Profiler_File'));
         }
 
         // Enregistrement de la configuration Doctrine dans le Registry.
