@@ -1,5 +1,19 @@
 # Mise en production
 
+
+## 2.7
+
+- Déployer l'application sans build update
+
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/2.7/migrate.sql
+```
+
+- Effectuer un build update
+
+
 ## 2.5
 
 - Déployer normalement l'application (avec build update)
@@ -9,6 +23,7 @@
 ```
 scripts/migration/2.5/migrate.sql
 ```
+
 
 ## 2.4
 
