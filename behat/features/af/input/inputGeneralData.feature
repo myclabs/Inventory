@@ -110,3 +110,32 @@ Feature: General data input feature
   # Bouton "Quitter" (colorié en gris), retour direct au datagrid des formulaires
     When I click "Quitter"
     Then I should see the "listAF" datagrid
+
+  @javascript
+  Scenario: General data change input unit scenario
+    Given I am on "af/af/test/id/2"
+    And I wait for the page to finish loading
+  # Saisie valeur
+    When I fill in "chiffre_affaire" with "1000"
+  # Choix unité de saisie
+    And I select "euro" from "chiffre_affaire_unit"
+  # Aperçu des résultats
+    And I click "Aperçu des résultats"
+    Then I should see "Total : 1 k€"
+  # Enregistrement et contenu de l'onglet "Résultats"
+    When I click "Enregistrer"
+    And I open tab "Résultats"
+    Then I should see "Total : 1 k€"
+  # Contenu de l'onglet "Détails calculs$
+    When I open tab "Détails calculs"
+    And I open collapse "Formulaire maître"
+    And I open collapse "chiffre_affaire"
+    Then I should see "Valeur : 1 000 € ± %"
+  # Revenir sur la saisie et vérifier que l'unité choisie est toujours bien sélectionnée
+    When I open tab "Saisie"
+    And I click "Quitter"
+    And I click "Test" in the row 2 of the "listAF" datagrid
+    And I click "Aperçu des résultats"
+    Then I should see "Total : 1 k€"
+
+

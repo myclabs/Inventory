@@ -205,4 +205,31 @@ abstract class Core_Tools
         return $newArray;
     }
 
+    /**
+     * Produit cartésien de tableaux.
+     *
+     * Produit toutes les combinaisons possibles entre les entrées de plusieurs tableaux.
+     * @see http://stackoverflow.com/questions/8567082/how-to-generate-in-php-all-combinations-of-items-in-multiple-arrays
+     * @param array[] $arrays Tableau de tableaux
+     * @return array Tableau des combinaisons
+     */
+    public static function arrayCartesianProduct($arrays)
+    {
+        if (count($arrays) == 0) {
+            return array(array());
+        }
+
+        $array = array_shift($arrays);
+        $c = self::arrayCartesianProduct($arrays);
+        $return = [];
+
+        foreach ($array as $v) {
+            foreach ($c as $p) {
+                $return[] = array_merge(array($v), $p);
+            }
+        }
+
+        return $return;
+    }
+
 }

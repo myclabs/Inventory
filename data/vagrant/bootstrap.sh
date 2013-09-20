@@ -2,17 +2,12 @@
 
 BASEDIR=/vagrant/data/vagrant
 
-apt-get update
-
 # For PHP 5.4
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php5
 apt-get update
 
-apt-get install -y bash-completion curl lynx unzip
-
-# SCM
-apt-get install -y git
+apt-get install -y curl lynx unzip git
 
 # Shell
 apt-get install -y zsh
@@ -61,6 +56,10 @@ cp ${BASEDIR}/phpmyadmin-config.inc.php /etc/phpmyadmin/config.inc.php
 #make
 #make install
 
+# Composer
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+
 # PHPUnit
 pear config-set auto_discover 1
 pear install pear.phpunit.de/PHPUnit
@@ -81,4 +80,4 @@ pear install pear.phpunit.de/PHPUnit
 #npm install -g zombie@1.4.1
 
 # Data
-php /vagrant/scripts/build/build.php create update
+# php /vagrant/scripts/build/build.php create update

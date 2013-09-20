@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Unit\Domain\PhysicalQuantity\Component;
 use Unit\Domain\Unit\StandardUnit;
+use Unit\Domain\Unit\Unit;
 
 /**
  * Grandeur Physique
@@ -237,6 +238,18 @@ class PhysicalQuantity extends Core_Model_Entity
     public function getPhysicalQuantityComponents()
     {
         return $this->physicalQuantityComponents->toArray();
+    }
+
+    /**
+     * @todo Transformer ça en association dans le modèle
+     * @return Unit[]
+     */
+    public function getUnits()
+    {
+        $query = new \Core_Model_Query();
+        $query->filter->addCondition(StandardUnit::QUERY_PHYSICALQUANTITY, $this);
+
+        return StandardUnit::loadList($query);
     }
 
 }

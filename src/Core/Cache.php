@@ -60,9 +60,9 @@ abstract class Core_Cache extends Zend_Cache
         'read_control' => true,
         'read_control_type' => 'adler32',
         'hashed_directory_level' => 0,
-        'hashed_directory_umask' => 0700,
+        'hashed_directory_perm' => 0700,
         'file_name_prefix' => 'Core_Cache',
-        'cache_file_umask' => 0600,
+        'cache_file_perm' => 0600,
         'metadatas_array_max_size' => 100
     );
 

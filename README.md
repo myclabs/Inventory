@@ -39,6 +39,12 @@ Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](h
 vagrant up
 ```
 
+There is an alternative configuration for continuous integration (only for running tests):
+
+```shell
+vagrant up tests
+```
+
 The website is accessible at [http://localhost:8000/inventory/](http://localhost:8000/inventory/).
 
 PhpMyAdmin is accessible at [http://localhost:8000/phpmyadmin/](http://localhost:8000/phpmyadmin/).

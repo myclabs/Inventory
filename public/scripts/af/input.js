@@ -16,9 +16,10 @@ var AF = AF || {};
  * @param {int|null} idInputSet ID de l'inputSet, ou null si inputSet en session
  * @param {string} exitURL URL où envoyer l'utilisateur lors du clic sur le bouton "Exit"
  * @param {object} urlParams Paramètres d'URL additionnels à utiliser
+ * @param {string} resultsPreviewUrl
  * @constructor
  */
-AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
+AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams, resultsPreviewUrl) {
 	var that = this;
 
 	/**
@@ -55,6 +56,12 @@ AF.Input = function(id, ref, mode, idInputSet, exitURL, urlParams) {
 	 * @type {string}
 	 */
 	this.exitURL = exitURL;
+
+    /**
+	 * Results preview submit URL
+	 * @type {string}
+	 */
+	this.resultsPreviewUrl = resultsPreviewUrl;
 
 	/**
 	 * Est-ce que la saisie a été modifiée
@@ -249,7 +256,12 @@ AF.Input.prototype = {
 	previewResults: function() {
 		this.form.find(".inputPreview").button("loading");
 		// Définit une nouvelle URL pour le submit
-		var url = "af/input/results-preview/id/" + this.id;
+        var url;
+        if (this.resultsPreviewUrl) {
+            url = this.resultsPreviewUrl + "/id/" + this.id;
+        } else {
+            url = "af/input/results-preview/id/" + this.id;
+        }
 		for (var key in this.urlParams) {
             if (this.urlParams.hasOwnProperty(key)) {
 			    url += '/' + key + '/' + this.urlParams[key];
@@ -301,7 +313,14 @@ AF.Input.prototype = {
      * @param button
      */
     loadInputHistory: function(inputId, button) {
-        $.get("af/input/input-history/id/" + this.id + "/idInputSet/" + this.idInputSet + "/idInput/" + inputId,
+        var url = "af/input/input-history/id/" + this.id + "/idInputSet/" + this.idInputSet + "/idInput/" + inputId;
+        for (var key in this.urlParams) {
+            if (this.urlParams.hasOwnProperty(key)) {
+                url += '/' + key + '/' + this.urlParams[key];
+            }
+        }
+
+        $.get(url,
             function (html) {
                 // Si visible (merci Bootstrap pour cette merde)
                 if (button.data('popover').tip().hasClass('in')) {

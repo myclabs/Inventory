@@ -67,9 +67,9 @@ class Core_Translate extends Zend_Translate
             $cache = Core_Cache::factory('translate');
 
             if (!$cache) {
-                throw new Core_Exception_NotFound('Le cache des traductions n\'a pas été créé '.
-                '(vérifiez que le dossier contenant le cache a été créé dans public/cache et '.
-                'qu\'il est accessible en écriture');
+                throw new Core_Exception_NotFound("Le cache des traductions n'a pas été créé "
+                    . "(vérifiez que le dossier contenant le cache a été créé dans public/cache et "
+                    . "qu'il est accessible en écriture)");
             }
 
             Zend_Translate::setCache($cache);

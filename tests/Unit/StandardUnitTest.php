@@ -1,21 +1,15 @@
 <?php
-/**
- * Test de l'objet métier Unit_Standard
- * @author valentin.claras
- * @author hugo.charboniere
- * @author yoann.croizer
- * @package Unit
- * @subpackage Test
- */
+
 use Unit\Domain\Unit\Unit;
 use Unit\Domain\Unit\StandardUnit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\UnitSystem;
 
 /**
- * StandardUnitTest
- * @package Unit
- * @subpackage Test
+ * Test de l'objet métier StandardUnit
+ * @author valentin.claras
+ * @author hugo.charboniere
+ * @author yoann.croizer
  */
 class Unit_Test_StandardUnitTest
 {
@@ -91,42 +85,27 @@ class Unit_Test_StandardUnitSetUp extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        $entityManagers = Zend_Registry::get('EntityManagers');
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $entityManagers['default'];
         if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit::loadList() as $unit) {
-                $unit->delete();
+            foreach (Unit::loadList() as $o) {
+                $o->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $em->flush();
         }
-        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
         if (PhysicalQuantity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
-                $physicalQuantity->delete();
+            foreach (PhysicalQuantity::loadList() as $o) {
+                $o->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $em->flush();
         }
-        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
         if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (UnitSystem::loadList() as $systemunit) {
-                $systemunit->delete();
+            foreach (UnitSystem::loadList() as $o) {
+                $o->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $em->flush();
         }
-    }
-
-
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
-    protected function setUp()
-    {
-
     }
 
     /**
@@ -139,7 +118,6 @@ class Unit_Test_StandardUnitSetUp extends PHPUnit_Framework_TestCase
         $physicalQuantity = Unit_Test_PhysicalQuantityTest::generateObject();
 
         $o = new StandardUnit();
-        $this->assertInstanceOf('Unit\Domain\Unit\StandardUnit', $o);
         $o->setRef('RefStandardUnit');
         $o->setName('NameStandardUnit');
         $o->setSymbol('StandardUnit');
@@ -160,7 +138,7 @@ class Unit_Test_StandardUnitSetUp extends PHPUnit_Framework_TestCase
      * @depends testConstruct
      * @param StandardUnit $o
      */
-    function testLoad($o)
+    function testLoad(StandardUnit $o)
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->clear($o);
@@ -194,43 +172,33 @@ class Unit_Test_StandardUnitSetUp extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Méthode appelée à la fin des test
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
      * Function called once, after all the tests
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
+        $entityManagers = Zend_Registry::get('EntityManagers');
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $entityManagers['default'];
         if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
+            echo PHP_EOL . 'Des Unit restants ont été trouvé après les tests, suppression en cours !';
             foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $em->flush();
         }
-        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
         if (PhysicalQuantity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
+            echo PHP_EOL . 'Des PhysicalQuantity restants ont été trouvé après les tests, suppression en cours !';
             foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $em->flush();
         }
-        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
         if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
+            echo PHP_EOL . 'Des UnitSystem restants ont été trouvé après les tests, suppression en cours !';
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            $em->flush();
         }
     }
 }
@@ -241,22 +209,68 @@ class Unit_Test_StandardUnitSetUp extends PHPUnit_Framework_TestCase
  */
 class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var UnitSystem
+     */
     protected $unitSystem1;
+    /**
+     * @var UnitSystem
+     */
     protected $unitSystem2;
 
+    /**
+     * @var PhysicalQuantity
+     */
     protected $_lengthPhysicalQuantity;
+    /**
+     * @var PhysicalQuantity
+     */
     protected $_massPhysicalQuantity;
+    /**
+     * @var PhysicalQuantity
+     */
     protected $_timePhysicalQuantity;
+    /**
+     * @var PhysicalQuantity
+     */
     protected $_cashPhysicalQuantity;
 
+    /**
+     * @var StandardUnit
+     */
     protected $_lengthStandardUnit;
+    /**
+     * @var StandardUnit
+     */
     protected $_cashStandardUnit;
+    /**
+     * @var StandardUnit
+     */
     protected $_timeStandardUnit;
+    /**
+     * @var StandardUnit
+     */
     protected $_massStandardUnit;
+    /**
+     * @var StandardUnit
+     */
+    protected $_massStandardUnit2;
 
+    /**
+     * @var StandardUnit
+     */
     protected $standardUnit1;
+    /**
+     * @var StandardUnit
+     */
     protected $standardUnit2;
+    /**
+     * @var PhysicalQuantity
+     */
     protected $physicalQuantity1;
+    /**
+     * @var PhysicalQuantity
+     */
     protected $physicalQuantity2;
 
     /**
@@ -396,6 +410,17 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
         $entityManagers['default']->flush();
         $this->_massPhysicalQuantity->setReferenceUnit($this->_massStandardUnit);
 
+        $this->_massStandardUnit2 = new StandardUnit();
+        $this->_massStandardUnit2->setMultiplier(1000);
+        $this->_massStandardUnit2->setName('Ton');
+        $this->_massStandardUnit2->setSymbol('t');
+        $this->_massStandardUnit2->setRef('t');
+        $this->_massStandardUnit2->setPhysicalQuantity($this->_massPhysicalQuantity);
+        $this->_massStandardUnit2->setUnitSystem($this->unitSystem1);
+        $this->_massStandardUnit2->save();
+        $entityManagers['default']->flush();
+        $this->_massPhysicalQuantity->setReferenceUnit($this->_massStandardUnit);
+
         $this->_timeStandardUnit = new StandardUnit();
         $this->_timeStandardUnit->setMultiplier(1);
         $this->_timeStandardUnit->setName('Seconde');
@@ -443,45 +468,45 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
     /**
      * test de la méthode loadByRef()
      */
-     function testLoadByRef()
-     {
+    public function testLoadByRef()
+    {
         $o = StandardUnit::loadByRef('j');
         $this->assertInstanceOf('Unit\Domain\Unit\StandardUnit', $o);
         $this->assertSame($o, $this->standardUnit1);
-     }
+    }
 
     /**
      * test des méthodes get et set grandeur physique
      */
-     function testSetGetGrandeurPhysique()
-     {
-         $unit = $this->standardUnit1;
-         $this->assertNotEquals(array(), $unit->getPhysicalQuantity()->getKey());
+    public function testSetGetGrandeurPhysique()
+    {
+        $unit = $this->standardUnit1;
+        $this->assertNotEquals(array(), $unit->getPhysicalQuantity()->getKey());
 
-         $grandeurPhysique1 = $this->physicalQuantity1;
-         $this->assertEquals($grandeurPhysique1->getKey(), $unit->getPhysicalQuantity()->getKey());
+        $grandeurPhysique1 = $this->physicalQuantity1;
+        $this->assertEquals($grandeurPhysique1->getKey(), $unit->getPhysicalQuantity()->getKey());
 
-         $grandeurPhysique2 = $this->physicalQuantity2;
-         $unit->setPhysicalQuantity($grandeurPhysique2);
-         $this->assertEquals($grandeurPhysique2->getKey(), $unit->getPhysicalQuantity()->getKey());
+        $grandeurPhysique2 = $this->physicalQuantity2;
+        $unit->setPhysicalQuantity($grandeurPhysique2);
+        $this->assertEquals($grandeurPhysique2->getKey(), $unit->getPhysicalQuantity()->getKey());
 
-         // Test de l'exception levée lorsque qu'il n'y a pas de grandeur physique
-         // associée à une unité standard.
-         $unitTest = new StandardUnit();
-         try {
-             $unitTest->getPhysicalQuantity();
-         } catch (Core_Exception_UndefinedAttribute $e) {
-             $this->assertEquals('Physical Quantity has not be defined', $e->getMessage());
-         }
-         $unitTest->delete();
-     }
+        // Test de l'exception levée lorsque qu'il n'y a pas de grandeur physique
+        // associée à une unité standard.
+        $unitTest = new StandardUnit();
+        try {
+            $unitTest->getPhysicalQuantity();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->assertEquals('Physical Quantity has not be defined', $e->getMessage());
+        }
+        $unitTest->delete();
+    }
 
 
     /**
-     * test des méthodes get et set system Unite
+     * test des méthodes get et set system Unit
      */
-     function testSetGetSystemeUnite()
-     {
+    public function testSetGetUnitSystem()
+    {
         $unit = $this->standardUnit1;
         $this->assertNotEquals(array(), $unit->getUnitSystem()->getKey());
 
@@ -494,20 +519,20 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         // Test des cas particuliers :
         $unitTest = new StandardUnit();
-        try{
+        try {
             $unitTest->getUnitSystem();
         } catch (Core_Exception_UndefinedAttribute $e) {
             $this->assertEquals('System Unit has not be defined', $e->getMessage());
         }
         $unitTest->delete();
-     }
+    }
 
 
     /**
      * test des  méthodes set et get ReferenceUnit
      */
-     function testGetReferenceUnit()
-     {
+    public function testGetReferenceUnit()
+    {
         $unit = $this->standardUnit1;
         $referenceUnit = $this->standardUnit2;
         $this->physicalQuantity1->setReferenceUnit($this->standardUnit2);
@@ -515,91 +540,83 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
         $this->assertEquals($unit->getReferenceUnit()->getKey(), $this->standardUnit2->getKey());
 
         $this->physicalQuantity1->setReferenceUnit(null);
-     }
+    }
 
     /**
      * Test de la fonction getConversionFactor()
      */
-     function testGetFacteurConversion()
-     {
-          //Test bon fonctionnement.
-          //Le facteur de conversion d'une unité avec elle même et forcément 1.
-          $unit = $this->standardUnit1;
-          $result = $unit->getConversionFactor($unit);
-          $this->assertEquals(1, $result);
+    public function testGetConversionFactor()
+    {
+        //Test bon fonctionnement.
+        //Le facteur de conversion d'une unité avec elle même et forcément 1.
+        $unit = $this->standardUnit1;
+        $result = $unit->getConversionFactor($unit);
+        $this->assertEquals(1, $result);
 
-          //Test erreur.
-          //Deux unités qui ne sont pas associées à la même grandeur physique n'ont pas de facteur de conversion.
-          $unit2 = $this->standardUnit2;
+        //Test erreur.
+        //Deux unités qui ne sont pas associées à la même grandeur physique n'ont pas de facteur de conversion.
+        $unit2 = $this->standardUnit2;
 
-          // $unit et $unit2 ne sont pas associé à la même grandeur physique
-          try {
-             $result = $unit->getConversionFactor($unit2);
-          } catch (Core_Exception_InvalidArgument $e) {
-             $this->assertEquals('Units need to have same PhysicalQuantity.', $e->getMessage());
-          }
-     }
+        // $unit et $unit2 ne sont pas associé à la même grandeur physique
+        try {
+            $result = $unit->getConversionFactor($unit2);
+        } catch (Core_Exception_InvalidArgument $e) {
+            $this->assertEquals('Units need to have same PhysicalQuantity.', $e->getMessage());
+        }
+    }
 
 
     /**
      * Test de la méthode loadList() et de la méthode countTotal()
      */
-     function testLoadListAndCountTotal()
-     {
+    public function testLoadListAndCountTotal()
+    {
         $listStandardUnit = StandardUnit::loadList();
         $totalCount = StandardUnit::countTotal();
-        $this->assertEquals($totalCount, 6);
+        $this->assertEquals(7, $totalCount);
         $this->assertEquals($totalCount, count($listStandardUnit));
-        $this->assertSame($listStandardUnit[0], $this->_lengthStandardUnit);
-        $this->assertSame($listStandardUnit[1], $this->_massStandardUnit);
-        $this->assertSame($listStandardUnit[2], $this->_timeStandardUnit);
-        $this->assertSame($listStandardUnit[3], $this->_cashStandardUnit);
-        $this->assertSame($listStandardUnit[4], $this->standardUnit1);
-        $this->assertSame($listStandardUnit[5], $this->standardUnit2);
+        $this->assertContains($this->_lengthStandardUnit, $listStandardUnit);
+        $this->assertContains($this->_massStandardUnit, $listStandardUnit);
+        $this->assertContains($this->_massStandardUnit2, $listStandardUnit);
+        $this->assertContains($this->_timeStandardUnit, $listStandardUnit);
+        $this->assertContains($this->_cashStandardUnit, $listStandardUnit);
+        $this->assertContains($this->standardUnit1, $listStandardUnit);
+        $this->assertContains($this->standardUnit2, $listStandardUnit);
+    }
 
-        // Ajout d'une unité standard et d'une discrète. Vérification de la liste d'unité standard.
-        $standardUnit = Unit_Test_StandardUnitTest::generateObject('StandardLoadListAndCountTotal');
-        $discreteUnit = Unit_Test_DiscreteUnitTest::generateObject('DiscreteLoadListAndCountTotal');
+    /**
+     * Test la méthode getNormalizedUnit().
+     */
+    public function testGetNormalizedUnit()
+    {
+        $arrayNormalizedStandardUnit1 = array(
+            array('unit' => $this->_lengthStandardUnit, 'exponent' => 2),
+            array('unit' => $this->_massStandardUnit, 'exponent' => 1),
+            array('unit' => $this->_timeStandardUnit, 'exponent' => -2),
+            array('unit' => $this->_cashStandardUnit, 'exponent' => 0),
+        );
+        $this->assertEquals($this->standardUnit1->getNormalizedUnit(), $arrayNormalizedStandardUnit1);
 
-        $listStandardUnit = StandardUnit::loadList();
-        $totalCount = StandardUnit::countTotal();
-        $this->assertEquals(Unit::countTotal(), 8);
-        $this->assertEquals($totalCount, 7);
-        $this->assertEquals($totalCount, count($listStandardUnit));
-        $this->assertSame($listStandardUnit[0], $this->_lengthStandardUnit);
-        $this->assertSame($listStandardUnit[1], $this->_massStandardUnit);
-        $this->assertSame($listStandardUnit[2], $this->_timeStandardUnit);
-        $this->assertSame($listStandardUnit[3], $this->_cashStandardUnit);
-        $this->assertSame($listStandardUnit[4], $this->standardUnit1);
-        $this->assertSame($listStandardUnit[5], $this->standardUnit2);
-        $this->assertSame($listStandardUnit[6], $standardUnit);
+        $arrayNormalizedStandardUnit2 = array(
+            array('unit' => $this->_massStandardUnit, 'exponent' => 1),
+            array('unit' => $this->_lengthStandardUnit, 'exponent' => 0),
+            array('unit' => $this->_timeStandardUnit, 'exponent' => 0),
+            array('unit' => $this->_cashStandardUnit, 'exponent' => 0),
+        );
+        $this->assertEquals($this->standardUnit2->getNormalizedUnit(), $arrayNormalizedStandardUnit2);
+    }
 
-        Unit_Test_StandardUnitTest::deleteObject($standardUnit);
-        Unit_Test_DiscreteUnitTest::deleteObject($discreteUnit);
-     }
+    /**
+     * Test la méthode getEquivalentUnits().
+     */
+    public function testGetEquivalentUnits()
+    {
+        $results = $this->_massStandardUnit2->getCompatibleUnits();
 
-     /**
-      * Test la méthode getNormalizedUnit().
-      */
-     function testGetNormalizedUnit()
-     {
-         $arrayNormalizedStandardUnit1 = array(
-                 array('unit' => $this->_lengthStandardUnit, 'exponent' => 2),
-                 array('unit' => $this->_massStandardUnit, 'exponent' => 1),
-                 array('unit' => $this->_timeStandardUnit, 'exponent' => -2),
-                 array('unit' => $this->_cashStandardUnit, 'exponent' => 0),
-             );
-         $this->assertEquals($this->standardUnit1->getNormalizedUnit(), $arrayNormalizedStandardUnit1);
-
-
-         $arrayNormalizedStandardUnit2 = array(
-                 array('unit' => $this->_massStandardUnit, 'exponent' => 1),
-                 array('unit' => $this->_lengthStandardUnit, 'exponent' => 0),
-                 array('unit' => $this->_timeStandardUnit, 'exponent' => 0),
-                 array('unit' => $this->_cashStandardUnit, 'exponent' => 0),
-             );
-         $this->assertEquals($this->standardUnit2->getNormalizedUnit(), $arrayNormalizedStandardUnit2);
-     }
+        $this->assertCount(1, $results);
+        $this->assertContains($this->_massStandardUnit, $results);
+        $this->assertNotContains($this->_massStandardUnit2, $results);
+    }
 
 
     /**
@@ -619,6 +636,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         $this->_lengthStandardUnit->delete();
         $this->_massStandardUnit->delete();
+        $this->_massStandardUnit2->delete();
         $this->_timeStandardUnit->delete();
         $this->_cashStandardUnit->delete();
 

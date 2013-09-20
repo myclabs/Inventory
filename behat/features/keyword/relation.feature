@@ -5,28 +5,49 @@ Feature: Keywords relations
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a keyword relation
+  Scenario: Creation of a keyword relation, correct input
     Given I am on "keyword/association/manage"
     Then I should see the "association" datagrid
-  # Ajout d'une relation, champs non renseignés
+  # Popup d'ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une relation entre mots clés"
+  # Ajout, saisie valide
+    And I select "processus" from "association_subject_addForm"
+    And I select "est plus général que" from "association_predicate_addForm"
+    And I select "amont de la combustion" from "association_object_addForm"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Vérification ligne ajoutée bien présente dans le datagrid
+    And the "association" datagrid should contain a row:
+      | subject   | predicate            | object                 |
+      | processus | est plus général que | amont de la combustion |
+
+  @javascript @skipped
+  Scenario: Creation of a keyword relation, incorrect input
+  # refs #6419 Positionnement d'un message d'erreur dans le popup d'ajout d'une relation entre mots clés
+    Given I am on "keyword/association/manage"
+    Then I should see the "association" datagrid
+  # Popup d'ajout
+    When I click "Ajouter"
+  # Ajout, champs non renseignés
     When I click "Valider"
     Then the field "association_subject_addForm" should have error: "Merci de renseigner ce champ."
     And the field "association_predicate_addForm" should have error: "Merci de renseigner ce champ."
     And the field "association_object_addForm" should have error: "Merci de renseigner ce champ."
-  # Ajout d'une relation, relation déjà existante
-    When I fill in "association_subject_addForm" with "combustible"
+  # Ajout, relation déjà existante
+    When I select "combustible" from "association_subject_addForm"
     And I select "est plus général que" from "association_predicate_addForm"
     And I select "gaz naturel" from "association_object_addForm"
     And I click "Valider"
-    Then the field "association_predicate_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
-  # Ajout d'une relation, saisie valide
-    When I fill in "association_subject_addForm" with "processus"
-    And I select "est plus général que" from "association_predicate_addForm"
-    And I fill in "association_object_addForm" with "amont_combustion"
+    Then the field "association_subject_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
+    And the field "association_predicate_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
+    And the field "association_object_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
+  # Ajout, mots clés sujet et objet identigues
+    When I select "combustible" from "association_object_addForm"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
+    Then the field "association_subject_addForm" should have error: "Merci de saisir des mots clés sujet et objet qui ne soient pas identiques."
+    And the field "association_predicate_addForm" should have error: "Merci de saisir des mots clés sujet et objet qui ne soient pas identiques."
+    And the field "association_object_addForm" should have error: "Merci de saisir des mots clés sujet et objet qui ne soient pas identiques."
 
   @javascript
   Scenario: Edition of a keyword relation
