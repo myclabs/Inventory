@@ -1,5 +1,9 @@
 <?php
 
+namespace Core\Log;
+
+use ErrorException;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -7,7 +11,7 @@ use Psr\Log\LoggerInterface;
  *
  * @author matthieu.napoli
  */
-class Core_Error_Handler
+class ErrorHandler
 {
     /**
      * @var LoggerInterface
@@ -35,7 +39,7 @@ class Core_Error_Handler
         } catch (Exception $exception) {
             $message = "Erreur dans le gestionnaire d'exception<br>";
             $message .= "<strong>Exception originale :</strong> <br>";
-            $message .= "<strong>".$e->getMessage()."</strong> <br>";
+            $message .= "<strong>" . $e->getMessage() . "</strong> <br>";
             $message .= nl2br($e);
             $message .= "<br><br>Exception dans le gestionnaire d'exception :<br>";
             $message .= nl2br($exception);
@@ -97,7 +101,7 @@ class Core_Error_Handler
         $isError = false;
         $error = error_get_last();
         if ($error) {
-            switch($error['type']) {
+            switch ($error['type']) {
                 case E_ERROR:
                 case E_CORE_ERROR:
                 case E_USER_ERROR:

@@ -1,6 +1,6 @@
 Keyword\Domain\Keyword:
   type: entity
-  repositoryClass: Keyword\Architecture\Repository\KeywordRepository
+  repositoryClass: Keyword\Architecture\Repository\DoctrineKeywordRepository
   table: Keyword_Keyword
 
   gedmo:
@@ -30,11 +30,13 @@ Keyword\Domain\Keyword:
         - translatable
 
   oneToMany:
-    objectAssociation:
+    objectAssociations:
       targetEntity: Keyword\Domain\Association
       mappedBy: object
-      cascade: [ remove ]
-    subjectAssociation:
+      orphanRemoval: true
+      cascade: [ all ]
+    subjectAssociations:
       targetEntity: Keyword\Domain\Association
       mappedBy: subject
-      cascade: [ remove ]
+      orphanRemoval: true
+      cascade: [ all ]

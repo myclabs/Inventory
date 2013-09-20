@@ -1,15 +1,14 @@
 <?php
-/**
- * @author matthieu.napoli
- * @author valentin.claras
- * @package User
- */
+
+use Core\TypeMapping\LocaleMapping;
+use Doctrine\DBAL\Types\Type;
 use User\ACL\EntityManagerListener;
 use User\ACL\TypeMapping\ActionType;
 
 /**
  * Bootstrap
- * @package User
+ * @author matthieu.napoli
+ * @author valentin.claras
  */
 class User_Bootstrap extends Core_Package_Bootstrap
 {
@@ -27,8 +26,8 @@ class User_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initUserTypeMapping()
     {
-        \Doctrine\DBAL\Types\Type::addType(Core_TypeMapping_Locale::TYPE_NAME, 'Core_TypeMapping_Locale');
-        \Doctrine\DBAL\Types\Type::addType(ActionType::TYPE_NAME, 'User\ACL\TypeMapping\ActionType');
+        Type::addType(LocaleMapping::TYPE_NAME, 'Core\TypeMapping\LocaleMapping');
+        Type::addType(ActionType::TYPE_NAME, 'User\ACL\TypeMapping\ActionType');
     }
 
     /**
