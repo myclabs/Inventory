@@ -193,6 +193,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initDoctrine()
     {
+        $configuration = Zend_Registry::get('configuration');
         // Création de la configuration de Doctrine.
         $doctrineConfig = new Doctrine\ORM\Configuration();
 
@@ -247,19 +248,10 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Ligne inutile mais bug, cf. http://www.doctrine-project.org/jira/browse/DCOM-210#comment-21061
         $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
 
-        // Définition du sql profiler en fonction de l'environement.
-        switch (APPLICATION_ENV) {
-            case 'test':
-            case 'developpement':
-            case 'testsunitaires':
-                // Requêtes placées dans un fichier.
-                $profiler = $this->container->get('Core_Profiler_File');
-                break;
-            default:
-                $profiler = null;
-                break;
+        // Log des requêtes
+        if ($configuration->log->queries) {
+            $doctrineConfig->setSQLLogger($this->container->get('Core_Profiler_File'));
         }
-        $doctrineConfig->setSQLLogger($profiler);
 
         // Enregistrement de la configuration Doctrine dans le Registry.
         //  Utile pour créer d'autres EntityManager.
