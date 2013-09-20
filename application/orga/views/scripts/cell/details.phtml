@@ -16,7 +16,9 @@
 <?= $this->partial('cell/navigation.phtml', ['cell' => $this->cell, 'isParentCellReachable' => $this->isParentCellReachable])?>
     </div>
     <div id="navigationClose" class="span">
-        <i class="icon-indent-right"> </i>
+        <i class="icon-arrow-down"></i>
+        <span><?=__('Orga', 'navigation', 'hideOrganization')?></span>
+        <i class="icon-arrow-down"></i>
     </div>
 <? } ?>
     <div id="navigationContent" class="span">
@@ -27,15 +29,16 @@ $this->tabView->display();
 $script = '';
 $script .= '$(\'#navigationClose\').click(';
 $script .= 'function() {';
-$script .= 'if ($(\'#navigationClose i:first-child\').hasClass(\'icon-indent-right\')) {';
-$script .= '$(\'#navigationClose i:first-child\').removeClass(\'icon-indent-right\');';
-$script .= '$(\'#navigationClose i:first-child\').addClass(\'icon-indent-left\');';
-$script .= '$(\'#navigationPanel\').animate({width: "toggle"}, 50);';
+$script .= 'if ($(\'#navigationPanel\').css(\'display\') == \'none\') {';
+$script .= '$(\'#navigationClose i\').removeClass(\'icon-arrow-up\');';
+$script .= '$(\'#navigationClose i\').addClass(\'icon-arrow-down\');';
+$script .= '$(\'#navigationClose span\').html(\''.__('Orga', 'navigation', 'hideOrganization').'\');';
 $script .= '} else {';
-$script .= '$(\'#navigationClose i:first-child\').removeClass(\'icon-indent-left\');';
-$script .= '$(\'#navigationClose i:first-child\').addClass(\'icon-indent-right\');';
-$script .= '$(\'#navigationPanel\').animate({width: "toggle"}, 50);';
+$script .= '$(\'#navigationClose i\').removeClass(\'icon-arrow-down\');';
+$script .= '$(\'#navigationClose i\').addClass(\'icon-arrow-up\');';
+$script .= '$(\'#navigationClose span\').html(\''.__('Orga', 'navigation', 'displayOrganization').'\');';
 $script .= '}';
+$script .= '$(\'#navigationPanel\').animate({width: "toggle"}, 50);';
 $script .= '});';
 
 $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
