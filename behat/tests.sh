@@ -17,6 +17,8 @@ git pull
 #Xvfb :99 -ac > /dev/null 2>&1 &
 #export DISPLAY=:99
 
+export DISPLAY=:0
+
 # Start selenium server
 java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
