@@ -105,23 +105,11 @@ class EventListener extends \MyCLabs\Work\EventListener
     /**
      * {@inheritdoc}
      */
-    public function onTaskSuccess(Task $task)
+    public function beforeTaskFinished(Task $task)
     {
         // Commit transaction
         $this->entityManager->flush();
         $this->entityManager->commit();
-
-        if ($task instanceof BaseTaskInterface) {
-            // Notification
-            if ($task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
-                /** @var User_Model_User $user */
-                $user = User_Model_User::load($task->getContext()->getUserId());
-
-                $this->notifier->notifyTaskFinished($user, $task->getTaskLabel());
-            }
-        }
-
-        $this->logger->info("Task {task} executed", ['task' => (string) $task]);
     }
 
     /**
@@ -138,6 +126,24 @@ class EventListener extends \MyCLabs\Work\EventListener
                 $user = User_Model_User::load($task->getContext()->getUserId());
 
                 $this->notifier->notifyTaskError($user, $task->getTaskLabel());
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onTaskSuccess(Task $task, $dispatcherNotified)
+    {
+        $this->logger->info("Task {task} executed", ['task' => (string) $task]);
+
+        if ($task instanceof BaseTaskInterface) {
+            // Notification
+            if (!$dispatcherNotified && $task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
+                /** @var User_Model_User $user */
+                $user = User_Model_User::load($task->getContext()->getUserId());
+
+                $this->notifier->notifyTaskFinished($user, $task->getTaskLabel());
             }
         }
     }
