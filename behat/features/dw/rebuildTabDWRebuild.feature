@@ -11,12 +11,13 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Axes"
-    And I wait 5 seconds
+    And I wait 3 seconds
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I fill in "addAxis_label" with "Test"
     And I fill in "addAxis_ref" with "test"
     And I click "Valider"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
     When I reload the page
@@ -39,11 +40,13 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     And I wait for the page to finish loading
     And I open tab "Organisation"
     And I open tab "Axes"
+    And I wait 3 seconds
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I fill in "addAxis_label" with "Test"
     And I fill in "addAxis_ref" with "test"
     And I click "Valider"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
     When I reload the page
@@ -52,6 +55,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
   # Régénération
     When I open tab "Reconst. données"
     And I click "Relancer les calculs et régénérer les données d'analyse"
+    And I wait 5 seconds
     Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
   # Vérification que la régénération a bien fonctionné
     When I am on "orga/cell/details/idCell/1/tab/analyses"

@@ -110,6 +110,7 @@ class AF_Service_InputFormParser
             if ($component->getWithUncertainty()) {
                 try {
                     $relativeUncertainty = null;
+                    // TODO à virer une fois http://dev.myc-sense.com:3000/issues/6422
                     foreach ($inputContent['children'] as $key => $childInputContent) {
                         if (strpos($key, 'percent') !== false) {
                             $relativeUncertainty = $locale->readInteger($childInputContent['value']);
@@ -128,8 +129,9 @@ class AF_Service_InputFormParser
                 $relativeUncertainty = null;
             }
             // Choix de l'unite
+            // TODO à virer une fois http://dev.myc-sense.com:3000/issues/6422
             foreach ($inputContent['children'] as $key => $childUnitInputContent) {
-                if (strpos($key, 'unit') !== false) {
+                if (strpos($key, '_unit_') !== false) {
                     $selectedUnit = new UnitAPI($childUnitInputContent['value']);
                     break;
                 }
