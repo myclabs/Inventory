@@ -14,6 +14,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
   # Ajout axe
     When I am on "classif/axis/manage"
     And I wait for the page to finish loading
+    And I wait 3 seconds
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I fill in "label" with "Test"
