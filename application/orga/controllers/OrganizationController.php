@@ -39,6 +39,12 @@ class Orga_OrganizationController extends Core_Controller
     private $workDispatcher;
 
     /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
+
+    /**
      * Redirection sur la liste.
      * @Secure("loggedIn")
      */
@@ -212,20 +218,26 @@ class Orga_OrganizationController extends Core_Controller
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new ServiceCallTask(
-                    'Orga_Service_ETLStructure',
-                    'resetOrganizationDWCubes',
-                    [$organization],
-                    __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function() {
+            // TODO
+        };
+        $timeout = function() {
+            // TODO
+        };
+        $error = function() {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array());
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetOrganizationDWCubes',
+            [$organization],
+            __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
+        $this->sendJsonResponse([]);
     }
 
     /**

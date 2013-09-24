@@ -115,13 +115,13 @@ class EventListener extends \MyCLabs\Work\EventListener
     /**
      * {@inheritdoc}
      */
-    public function onTaskException(Task $task, Exception $e)
+    public function onTaskError(Task $task, Exception $e, $dispatcherNotified)
     {
         $this->logger->error("Error while executing task {task}", ['exception' => $e, 'task' => (string) $task]);
 
         if ($task instanceof BaseTaskInterface) {
             // Error notification
-            if ($task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
+            if (!$dispatcherNotified && $task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
                 /** @var User_Model_User $user */
                 $user = User_Model_User::load($task->getContext()->getUserId());
 

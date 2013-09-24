@@ -34,6 +34,12 @@ class Orga_CellController extends Core_Controller
     private $workDispatcher;
 
     /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
+
+    /**
      * @Inject
      * @var Orga_Service_InputService
      */
@@ -490,20 +496,24 @@ class Orga_CellController extends Core_Controller
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new ServiceCallTask(
-                    'Orga_Service_ETLStructure',
-                    'resetCellAndChildrenDWCubes',
-                    [$cell],
-                    __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function() {
+            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage')]);
+        };
+        $timeout = function() {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
+        };
+        $error = function() {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetCellAndChildrenDWCubes',
+            [$cell],
+            __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -514,20 +524,24 @@ class Orga_CellController extends Core_Controller
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new ServiceCallTask(
-                    'Orga_Service_ETLStructure',
-                    'resetCellAndChildrenCalculationsAndDWCubes',
-                    [$cell],
-                    __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function() {
+            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'outputDataRebuildConfirmationMessage')]);
+        };
+        $timeout = function() {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
+        };
+        $error = function() {
             throw new Core_Exception_User('DW', 'rebuild', 'outputDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetCellAndChildrenCalculationsAndDWCubes',
+            [$cell],
+            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
