@@ -219,10 +219,10 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $success = function() {
-            // TODO
+            $this->sendJsonResponse(__('UI', 'message', 'updated'));
         };
         $timeout = function() {
-            // TODO
+            $this->sendJsonResponse(__('UI', 'message', 'operationInProgress'));
         };
         $error = function() {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
@@ -236,8 +236,6 @@ class Orga_OrganizationController extends Core_Controller
             __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-
-        $this->sendJsonResponse([]);
     }
 
     /**
