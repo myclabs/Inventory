@@ -19,6 +19,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I fill in "label" with "Test"
     And I fill in "ref" with "test"
     And I click "Valider"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
     When I am on "orga/cell/details/idCell/1/tab/analyses"
