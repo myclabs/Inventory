@@ -22,7 +22,7 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
     {
         foreach ($this->parameters as $parameter) {
             // Vérifie que c'est une entité Doctrine
-            if (! $entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
+            if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
                 $entityManager->detach($parameter);
             }
         }
@@ -32,7 +32,7 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
     {
         foreach ($this->parameters as $parameter) {
             // Vérifie que c'est une entité Doctrine
-            if (! $entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
+            if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
                 $entityManager->merge($parameter);
             }
         }
