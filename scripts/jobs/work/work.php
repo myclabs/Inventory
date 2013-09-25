@@ -17,3 +17,5 @@ $worker = $container->get('MyCLabs\Work\Worker\Worker');
 
 // Traite une seule tache
 $worker->work(1);
+
+exit(0);
