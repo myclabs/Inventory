@@ -15,11 +15,6 @@ class Orga_Service_InputService
     private $afInputService;
 
     /**
-     * @var Orga_Service_ETLData
-     */
-    private $etlDataService;
-
-    /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
@@ -31,18 +26,15 @@ class Orga_Service_InputService
 
     /**
      * @param AF_Service_InputService $afInputService
-     * @param Orga_Service_ETLData    $etlDataService
      * @param EventDispatcher         $eventDispatcher
      * @param Core_Work_Dispatcher    $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,
-        Orga_Service_ETLData $etlDataService,
         EventDispatcher $eventDispatcher,
         Core_Work_Dispatcher $workDispatcher
     ) {
         $this->afInputService = $afInputService;
-        $this->etlDataService = $etlDataService;
         $this->eventDispatcher = $eventDispatcher;
         $this->workDispatcher = $workDispatcher;
     }
