@@ -112,8 +112,9 @@ class Orga_Service_InputService
      *
      * @param Orga_Model_Cell           $cell
      * @param AF_Model_InputSet_Primary $inputSet
+     * @param AF_Model_AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
      */
-    public function updateResults(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $inputSet)
+    public function updateResults(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $inputSet, AF_Model_AF $af = null)
     {
         // Injecte les coordonnées orga à la saisie en tant que ContextValue
         foreach ($cell->getMembers() as $member) {
@@ -125,6 +126,6 @@ class Orga_Service_InputService
         }
 
         // Met à jour les résultats
-        $this->afInputService->updateResults($inputSet);
+        $this->afInputService->updateResults($inputSet, $af);
     }
 }
