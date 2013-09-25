@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de la classe Colonne Texte.
+ * Fichier de la classe TextColumn.
  *
  * @author     valentin.claras
  *
@@ -8,17 +8,20 @@
  * @subpackage Datagrid
  */
 
+namespace UI\Datagrid\Column;
+
+use UI\Datagrid\Datagrid;
+use UI_Form_Element_Text;
+
 /**
- * Description of colonne texte.
+ * Description of TextColumn.
  *
  * Une classe permettant de générer une colonne contenant des textes.
- *
- * @deprecated
  *
  * @package    UI
  * @subpackage Datagrid
  */
-class UI_Datagrid_Col_Text extends UI_Datagrid_Col_Generic
+class TextColumn extends GenericColumn
 {
     /**
      * Définition du mot clef du filtre pour l'égalité.
@@ -29,30 +32,21 @@ class UI_Datagrid_Col_Text extends UI_Datagrid_Col_Generic
 
 
      /**
-      * Constructeur de la classe ColonneTexte.
-      *
-      * @param string $id    Identifiant unique de la colonne.
-      * @param string $label Texte afiché en titre de la colone.
+      * {@inheritdoc}
       */
     public function __construct($id=null, $label=null)
     {
         parent::__construct($id, $label);
-        // Définition du type de la classe.
-        $this->_type = self::TYPE_COL_TEXT;
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_LEFT;
         $this->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
-        $this->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
+        $this->criteriaFilterOperator = 'contains';
     }
 
     /**
-     * Méthode renvoyant le formatter de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFormatter($datagrid)
+    public function getFormatter(Datagrid $datagrid)
     {
         $format = '';
 
@@ -70,13 +64,9 @@ class UI_Datagrid_Col_Text extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant l'appel à l'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditorValue($datagrid)
+    public function getEditorValue(Datagrid $datagrid)
     {
         $editorValue = '';
 
@@ -94,22 +84,17 @@ class UI_Datagrid_Col_Text extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant le champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     * @param array $defaultValue Valeur par défaut du filtre (=null).
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getFilterFormElement($datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
     {
         $filterFormElement = new UI_Form_Element_Text($this->getFilterFormId($datagrid));
         $filterFormElement->setLabel($this->getFilterFormLabel());
         $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
 
         // Récupération des valeurs par défaut.
-        if (isset($defaultValue[$this->filterOperator])) {
-            $filterFormElement->setValue($defaultValue[$this->filterOperator]);
+        if (isset($defaultValue[$this->criteriaFilterOperator])) {
+            $filterFormElement->setValue($defaultValue[$this->criteriaFilterOperator]);
         }
 
         $filterFormElement->getElement()->addSuffix($this->getResetFieldFilterFormSuffix($datagrid));
@@ -118,13 +103,9 @@ class UI_Datagrid_Col_Text extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant le champs du formulaire d'ajout de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getAddFormElement($datagrid)
+    public function getAddFormElement(Datagrid $datagrid)
     {
         $addFormElement = new UI_Form_Element_Text($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());

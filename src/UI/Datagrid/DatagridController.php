@@ -8,18 +8,29 @@
  * @subpackage Controller
  */
 
+namespace UI\Datagrid;
+
+use Core_Controller;
+use Doctrine\Common\Collections\Criteria;
+use Zend_Registry;
+use Zend_Session_Namespace;
+use Zend_Controller_Front;
+use Zend_Json;
+use Core_Locale;
+use Core_Date;
+use DateTime;
+use Core_Exception_InvalidHTTPQuery;
+
 /**
- * Description of Controller_Datagrid.
+ * Description of Datagrid\Controller.
  *
  * Classe générique des controleurs de la Datagrid.
  * La classe donne accès à des méthodes permettant de récupérer, envoyer et modifier les données.
  *
- * @deprecated
- *
  * @package    UI
  * @subpackage Datagrid
  */
-abstract class UI_Controller_Datagrid extends Core_Controller
+abstract class DatagridController extends Core_Controller
 {
     /**
      * Identifiant de la Datagrid.
@@ -31,9 +42,9 @@ abstract class UI_Controller_Datagrid extends Core_Controller
     /**
      * Objet Requête.
      *
-     * @var   Core_Model_Query
+     * @var   Criteria
      */
-    public $request = null;
+    public $criteria = null;
 
     /**
      * Tableau des champs du formulaire d'ajout.
@@ -105,7 +116,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
         $this->_helper->layout()->disableLayout();
 
         // Récupération de l'identifiant de la Datagrid en cour d'utilisation.
-        $this->id = $this->_getParam('idDatagrid');
+        $this->id = $this->getParam('idDatagrid');
 
         // Chargement des paramètres en fonction de l'action.
         $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -124,17 +135,19 @@ abstract class UI_Controller_Datagrid extends Core_Controller
                 $datagridSession = &$zendSessionDatagrid->$idDatagrid;
 
                 // Création d'un objet Requête.
-                $this->request = new Core_Model_Query();
+                $criteriaName = $this->getParam('criteriaName');
+                /** @var Criteria criteria */
+                $this->criteria = new $criteriaName();
 
                 // Récupération du nombre d'éléments à renvoyer.
-                if (($this->_getParam('nbElements') !== 'null') && ($this->_getParam('nbElements') !== 'false')) {
-                    $this->request->totalElements = (int) $this->_getParam('nbElements');
+                if (($this->getParam('nbElements') !== 'null') && ($this->getParam('nbElements') !== 'false')) {
+                    $this->criteria->setMaxResults((int) $this->getParam('nbElements'));
                     // Sauvegarde du nombre d'élément de la pagination.
-                    $datagridSession['nbElements'] = (int) $this->_getParam('nbElements');
+                    $datagridSession['nbElements'] = (int) $this->getParam('nbElements');
                     // Récupération de l'élément de départ.
-                    $this->request->startIndex = (int) $this->_getParam('startIndex');
+                    $this->criteria->setFirstResult((int) $this->getParam('startIndex'));
                     // Sauvegarde de la page de départ.
-                    $datagridSession['startIndex'] = (int) $this->_getParam('startIndex');
+                    $datagridSession['startIndex'] = (int) $this->getParam('startIndex');
                 } else {
                     // Sauvegarde de l'abscence de pagination.
                     $datagridSession['nbElements'] = null;
@@ -144,54 +157,53 @@ abstract class UI_Controller_Datagrid extends Core_Controller
 
                 /* Filtre */
                 // Récupération du filtre.
-                $filtres = Zend_Json::decode($this->_getParam('filters'), Zend_Json::TYPE_ARRAY);
-                foreach ($filtres as $filterName => $filterValue) {
-                    list($alias, $filterName) = explode('.', $filterName);
-                    $alias = (empty($alias)) ? null : $alias;
-                    foreach ($filterValue as $operator => $value) {
+                $filters = Zend_Json::decode($this->getParam('filters'), Zend_Json::TYPE_ARRAY);
+                foreach ($filters as $attributeName => $filterValue) {
+                    foreach ($filterValue as $criteriaOperator => $value) {
                         if ($value !== null) {
-                            $this->request->filter->addCondition($filterName, $value, $operator, $alias);
+                            $this->criteria->$attributeName->$criteriaOperator($value);
                         }
                     }
                 }
                 // Sauvegarde du filtre.
-                $datagridSession['filters'] = $filtres;
+                $datagridSession['filters'] = $filters;
 
                 /* Tri */
                 // Définition de la colonne de tri et sauvegarde du tri.
-                if ($this->_getParam('sortColumn') !== 'null') {
-                    $datagridSession['sortColumn'] = $this->_getParam('sortColumn');
-                    list($alias, $sortName) = explode('.', $this->_getParam('sortColumn'));
-                    $alias = (empty($alias)) ? null : $alias;
+                if ($this->getParam('sortColumn') !== 'null') {
+                    $sortName = $this->getParam('sortColumn');
+                    $datagridSession['sortColumn'] = $sortName;
                     // Récupération de la direction du tri.
-                    if ($this->_getParam('sortDirection') === 'true') {
-                        $this->request->order->addOrder($sortName, Core_Model_Order::ORDER_ASC, $alias);
+                    if ($this->getParam('sortDirection') === 'true') {
+                        $this->criteria->orderBy([$this->criteria->$sortName->getField() => Criteria::ASC]);
                         $datagridSession['sortDirection'] = true;
                     } else {
-                        $this->request->order->addOrder($sortName, Core_Model_Order::ORDER_DESC, $alias);
+                        $this->criteria->orderBy([$this->criteria->$sortName->getField() => Criteria::DESC]);
                         $datagridSession['sortDirection'] = false;
                     }
+                } else {
+                    $datagridSession['sortColumn'] = null;
                 }
                 break;
 
             case 'addelement':
                 // Récupération des champs du formulaire.
-                $this->_add = Zend_Json::decode($this->_getParam($this->id.'_addForm'), Zend_Json::TYPE_ARRAY);
+                $this->_add = Zend_Json::decode($this->getParam($this->id.'_addForm'), Zend_Json::TYPE_ARRAY);
                 break;
 
             case 'deleteelement':
                 // Récupération de l'index de l'élément à supprimer.
-                $this->delete = $this->_getParam('index');
+                $this->delete = $this->getParam('index');
                 break;
 
             case 'updateelement':
                 $this->update = array();
                 // Récupération de l'index de l'élément à mettre à jour.
-                $this->update['index'] = $this->_getParam('index');
+                $this->update['index'] = $this->getParam('index');
                 // Récupération de l'attribut de l'élément à mettre à jour.
-                $this->update['column'] = $this->_getParam('column');
+                $this->update['column'] = $this->getParam('column');
                 // Récupération de la nouvelle valeur de l'élément à mettre à jour.
-                $this->update['value'] = str_replace('<br>', PHP_EOL, $this->_getParam('value'));
+                $this->update['value'] = str_replace('<br>', PHP_EOL, $this->getParam('value'));
                 break;
 
             default :
@@ -206,7 +218,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *  $this->request.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
@@ -233,7 +245,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *  $this->delete.
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information.
      *
@@ -256,7 +268,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *  $this->update['value'].
      *
      * Récupération des arguments de la manière suivante :
-     *  $this->_getParam('nomArgument').
+     *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *
@@ -309,7 +321,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *
      * @return array
      */
-    public function cellDate($date, $content=null)
+    public function cellDate(DateTime $date, $content=null)
     {
         //@todo Date -> Datagrid::cellDate -> afficher la date au format de l'utilisateur.
         if ($date instanceof Core_Date) {

@@ -5,14 +5,12 @@ namespace Keyword\Architecture\Repository;
 use Core\Domain\DoctrineEntityRepository;
 use Core\Domain\Translatable\TranslatableRepository;
 use Core_Exception_NotFound;
-use Doctrine\ORM\QueryBuilder;
 use Gedmo\Translatable\TranslatableListener;
 use Keyword\Domain\AssociationCriteria;
 use Keyword\Domain\KeywordRepository;
 use Keyword\Architecture\Repository\DoctrineAssociationRepository;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\Predicate;
-use Keyword\Domain\Association;
 
 /**
  * Gère les Keyword.
@@ -129,11 +127,8 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     /**
      * {@inheritdoc}
      */
-    public function getAllAssociations(AssociationCriteria $criteria = null)
+    public function getAllAssociations()
     {
-        if ($criteria) {
-            return $this->getAssociationRepository()->matching($criteria);
-        }
         return $this->getAssociationRepository()->getAll();
     }
 
@@ -143,6 +138,14 @@ class DoctrineKeywordRepository extends DoctrineEntityRepository implements Keyw
     public function countAssociations()
     {
         return $this->getAssociationRepository()->count();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function associationsMatching(AssociationCriteria $criteria)
+    {
+        return $this->getAssociationRepository()->matching($criteria);
     }
 
     /**

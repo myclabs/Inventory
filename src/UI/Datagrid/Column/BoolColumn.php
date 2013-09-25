@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de la classe Colonne Booleen.
+ * Fichier de la classe BoolColumn.
  *
  * @author     valentin.claras
  *
@@ -8,17 +8,23 @@
  * @subpackage Datagrid
  */
 
+namespace UI\Datagrid\Column;
+
+use UI\Datagrid\Datagrid;
+use UI_Form_Element_HTML;
+use UI_Form_Element_Radio;
+use UI_Form_Element_Option;
+use UI_HTML_Button;
+
 /**
- * Description of colonne bool.
+ * Description of BoolColumn.
  *
- * Une classe permettant de générer une colonne contenant des bools.
- *
- * @deprecated
+ * Une classe permettant de générer une colonne contenant des booleens.
  *
  * @package    UI
  * @subpackage Datagrid
  */
-class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
+class BoolColumn extends GenericColumn
 {
     /**
      * Définition du mot clef du filtre pour l'égalité.
@@ -57,20 +63,15 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
 
 
      /**
-      * Constructeur de la classe Col_Bool.
-      *
-      * @param string $id    Identifiant unique de la colonne.
-      * @param string $label Texte afiché en titre de la colone.
+      * {@inheritdoc}
       */
     public function __construct($id=null, $label=null)
     {
         parent::__construct($id, $label);
-        // Définition du type de la classe.
-        $this->_type = self::TYPE_COL_BOOL;
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
         $this->keywordFilterEqual = __('UI', 'datagridFilter', 'ColBoolEqual');
-        $this->filterOperator = Core_Model_Filter::OPERATOR_EQUAL;
+        $this->criteriaFilterOperator = 'eq';
         $this->textTrue = __('UI', 'property', 'true');
         $this->textFalse = __('UI', 'property', 'false');
         $this->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'true');
@@ -78,13 +79,9 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant le formatter de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFormatter($datagrid)
+    public function getFormatter(Datagrid $datagrid)
     {
         $format = '';
 
@@ -103,13 +100,9 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant les options d'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditableOption($datagrid)
+    public function getEditableOption(Datagrid $datagrid)
     {
         $editOption = '';
 
@@ -127,13 +120,9 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant l'appel à l'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditorValue($datagrid)
+    public function getEditorValue(Datagrid $datagrid)
     {
         $editorValue = '';
 
@@ -161,14 +150,9 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant le champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     * @param array $defaultValue Valeur par défaut du filtre (=null).
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getFilterFormElement($datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
     {
         $filterFormElement = new UI_Form_Element_Radio($this->getFilterFormId($datagrid));
         $filterFormElement->setLabel($this->getFilterFormLabel());
@@ -182,8 +166,8 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
         $filterFormElement->addOption($optionFalse);
 
         // Récupération des valeurs par défaut.
-        if (isset($defaultValue[$this->filterOperator])) {
-            $filterFormElement->setValue($defaultValue[$this->filterOperator]);
+        if (isset($defaultValue[$this->criteriaFilterOperator])) {
+            $filterFormElement->setValue($defaultValue[$this->criteriaFilterOperator]);
         }
 
         $resetButton = new UI_HTML_Button();
@@ -201,13 +185,9 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant la valeur du champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFilterValue($datagrid)
+    public function getFilterValue(Datagrid $datagrid)
     {
         $filterValue = '';
 
@@ -218,7 +198,7 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
 
         // Ajout au filtre.
         $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
-        $filterValue .= '\"'.$this->filterOperator.'\":" + inputOptions.val() + "';
+        $filterValue .= '\"'.$this->criteriaFilterOperator.'\":" + inputOptions.val() + "';
         $filterValue .= '},";';
 
         $filterValue .= '}';
@@ -227,13 +207,9 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant la réinitialisation des champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getResettingFilter($datagrid)
+    public function getResettingFilter(Datagrid $datagrid)
     {
         $resetFields = '';
 
@@ -243,13 +219,9 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant le champs du formulaire d'ajout de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getAddFormElement($datagrid)
+    public function getAddFormElement(Datagrid $datagrid)
     {
         $addFormElement = new UI_Form_Element_Radio($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());

@@ -32,7 +32,3 @@ Keyword\Domain\Association:
         idPredicate:
           referencedColumnName: id
       nullable : false
-
-  uniqueConstraints:
-    associationUniqueness:
-      columns: idSubjectKeyword, idObjectKeyword, idPredicate

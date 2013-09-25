@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de la classe Colonne.
+ * Fichier de la classe GenericColumn.
  *
  * @author     valentin.claras
  *
@@ -8,98 +8,21 @@
  * @subpackage Datagrid
  */
 
+namespace UI\Datagrid\Column;
+
+use UI\Datagrid\Datagrid;
+use UI_Form_ZendElement;
+
 /**
  * Description of colonne.
  *
  * Une classe mère (abstraite) permettant de générer une colonne.
  *
- * @deprecated
- *
  * @package    UI
  * @subpackage Datagrid
  */
-abstract class UI_Datagrid_Col_Generic
+abstract class GenericColumn
 {
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de booléens.
-     *
-     * @see UI_Datagrid_Col_Bool
-     */
-    const TYPE_COL_BOOL = 'UI_Datagrid_Col_Bool';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de dates.
-     *
-     * @see UI_Datagrid_Col_Date
-     */
-    const TYPE_COL_DATE = 'UI_Datagrid_Col_Date';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de liens.
-     *
-     * @see UI_Datagrid_Col_Link
-     */
-    const TYPE_COL_LINK = 'UI_Datagrid_Col_Link';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de listes.
-     *
-     * @see UI_Datagrid_Col_List
-     */
-    const TYPE_COL_LIST = 'UI_Datagrid_Col_List';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de texte.
-     *
-     * @see UI_Datagrid_Col_LongText
-     */
-    const TYPE_COL_LONGTEXT = 'UI_Datagrid_Col_LongText';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de chiffres.
-     *
-     * @see UI_Datagrid_Col_Number
-     */
-    const TYPE_COL_NUMBER = 'UI_Datagrid_Col_Number';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de gestion d'ordre.
-     *
-     * @see UI_Datagrid_Col_Order
-     */
-    const TYPE_COL_ORDER = 'UI_Datagrid_Col_Order';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de pourcentage.
-     *
-     * @see UI_Datagrid_Col_Percent
-     */
-    const TYPE_COL_PERCENT = 'UI_Datagrid_Col_Percent';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de popups.
-     *
-     * @see UI_Datagrid_Col_Popup
-     */
-    const TYPE_COL_POPUP = 'UI_Datagrid_Col_Popup';
-
-    /**
-     * Constante definissant un type de colonne.
-     * ici une colonne de texte.
-     *
-     * @see UI_Datagrid_Col_Text
-     */
-    const TYPE_COL_TEXT = 'UI_Datagrid_Col_Text';
-
     /**
      * Constante definissant la classe positionnant les textes
      * ici une clase positionant le texte à gauche.
@@ -124,13 +47,6 @@ abstract class UI_Datagrid_Col_Generic
      * @var   string
      */
     public $valueAlignment = null;
-
-    /**
-     * Définition de la constante utilisé pour le filtre sur la colonne.
-     *
-     * @var   string
-     */
-    public $filterOperator = null;
 
     /**
      * Pseudo constante redéfinissable
@@ -168,36 +84,6 @@ abstract class UI_Datagrid_Col_Generic
      * @var   string
      */
     public $id = null;
-
-    /**
-     * Nom du tri de la colonne.
-     *
-     * Ce nom sera passé directement à l'objet requete par le controleur Datagrid.
-     * Par defaut vaut null et empèche le tri.
-     *
-     * @var   string
-     */
-    public $sortName = null;
-
-    /**
-     * Nom du filtre de la colonne.
-     *
-     * Ce nom sera passé directement à l'objet requete par le controleur Datagrid.
-     * Par defaut vaut null et empèche le filtrage.
-     *
-     * @var   string
-     */
-    public $filterName = null;
-
-    /**
-     * Alias métier qui sera  de la colonne.
-     *
-     * L'alias sera passé directement à l'objet requete par le controleur Datagrid.
-     * Par defaut vaut null, l'alias sera donc celui utilisé par défaut lors de la rquête.
-     *
-     * @var   string
-     */
-    public $entityAlias = null;
 
     /**
      * Label de la colonne.
@@ -262,21 +148,28 @@ abstract class UI_Datagrid_Col_Generic
     public $displayLabelEditable = true;
 
     /**
-     * Type de colonne.
+     * Nom du criteria de la colonne pour le filtrage.
+     * Par defaut vaut null et empèche le filtrage.
      *
-     * Permet de connaître le type de la colonne depuis la classe mère.
-     *
-     * @var   const
-     *
-     * @see   TYPE_COL_BOOLEEN
-     * @see   TYPE_COL_DATE
-     * @see   TYPE_COL_LIEN
-     * @see   TYPE_COL_LISTE
-     * @see   TYPE_COL_NOMBRE
-     * @see   TYPE_COL_POPUP
-     * @see   TYPE_COL_TEXTE
+     * @var   string
      */
-    protected $_type = null;
+    public $criteriaFilterAttribute = null;
+
+    /**
+     * Nom de l'opérateur criteria utilisé lors du filtre sur cette colonne.
+     * Par defaut vaut null et empèche le filtre.
+     *
+     * @var   string
+     */
+    public $criteriaFilterOperator = null;
+
+    /**
+     * Nom du criteria de la colonne pour le tri.
+     * Par defaut vaut null et empèche le tri.
+     *
+     * @var   string
+     */
+    public $criteriaOrderAttribute = null;
 
 
     /**
@@ -296,31 +189,13 @@ abstract class UI_Datagrid_Col_Generic
     }
 
     /**
-     * Fonction permettant de connaître le type de la colonne.
-     *
-     * @return const
-     *
-     * @see   TYPE_COL_BOOLEEN
-     * @see   TYPE_COL_DATE
-     * @see   TYPE_COL_LIEN
-     * @see   TYPE_COL_LISTE
-     * @see   TYPE_COL_NOMBRE
-     * @see   TYPE_COL_POPUP
-     * @see   TYPE_COL_TEXTE
-     */
-    public function getType()
-    {
-        return $this->_type;
-    }
-
-    /**
      * Méthode renvoyant le formatter de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string chaîne javascript du formatter de la colonne YUI.
      */
-    public function getFormattingFunction($datagrid)
+    public function getFormattingFunction(Datagrid $datagrid)
     {
         $format = '';
 
@@ -342,20 +217,20 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant le formatter de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    abstract protected function getFormatter($datagrid);
+    abstract protected function getFormatter(Datagrid $datagrid);
 
     /**
      * Méthode renvoyant d'éventuelles fonctions complémentaires nécéssaires à la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    protected function getComplementaryFunction($datagrid)
+    protected function getComplementaryFunction(Datagrid $datagrid)
     {
         return '';
     }
@@ -392,11 +267,11 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant la définition de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    public function getDefinition($datagrid)
+    public function getDefinition(Datagrid $datagrid)
     {
         $definition = '';
 
@@ -404,7 +279,7 @@ abstract class UI_Datagrid_Col_Generic
         $definition .= 'key:"'.$this->id.'", ';
         $definition .= 'label:"<span>'.$this->label.'</span>", ';
         $definition .= 'formatter:"format'.$datagrid->id.$this->id.'"';
-        if ($this->sortName !== null) {
+        if ($this->criteriaOrderAttribute !== null) {
             $definition .= $this->getSortOption($datagrid);
         } else {
             $definition .= ', sortable:false';
@@ -420,11 +295,11 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant les options de tri de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    protected function getSortOption($datagrid)
+    protected function getSortOption(Datagrid $datagrid)
     {
         $sortOption = '';
 
@@ -439,35 +314,35 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant le nom complet de tri.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    public function getFullSortName($datagrid)
+    public function getFullSortName(Datagrid $datagrid)
     {
-        return $this->entityAlias.'.'.$this->sortName;
+        return $this->criteriaOrderAttribute;
     }
 
     /**
      * Méthode renvoyant le nom complet de filtre.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    public function getFullFilterName($datagrid)
+    public function getFullFilterName(Datagrid $datagrid)
     {
-        return $this->entityAlias.'.'.$this->filterName;
+        return $this->criteriaFilterAttribute;
     }
 
     /**
      * Méthode renvoyant les options d'édition de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    protected function getEditableOption($datagrid)
+    protected function getEditableOption(Datagrid $datagrid)
     {
         $editOption = '';
 
@@ -483,11 +358,11 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant l'appel à l'édition de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    public function getEditor($datagrid)
+    public function getEditor(Datagrid $datagrid)
     {
         $editor = '';
 
@@ -502,30 +377,30 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant l'appel à l'édition de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    abstract protected function getEditorValue($datagrid);
+    abstract protected function getEditorValue(Datagrid $datagrid);
 
     /**
      * Méthode renvoyant le champs du filtre de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      * @param array $defaultValue Valeur par défaut du filtre (=null).
      *
-     * @return Zend_Form_Element
+     * @return UI_Form_ZendElement
      */
-    abstract public function getFilterFormElement($datagrid, $defaultValue=null);
+    abstract public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null);
 
     /**
      * Méthode renvoyant l'id du filtre.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    public function getFilterFormId($datagrid)
+    public function getFilterFormId(Datagrid $datagrid)
     {
         return $datagrid->id.'_'.$this->id.'_filterForm';
     }
@@ -547,11 +422,11 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant le suffix de reset du champs du filtre.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    protected function getResetFieldFilterFormSuffix($datagrid)
+    protected function getResetFieldFilterFormSuffix(Datagrid $datagrid)
     {
         $resetField = '';
 
@@ -567,11 +442,11 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant la valeur du champs du filtre de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    public function getFilterValue($datagrid)
+    public function getFilterValue(Datagrid $datagrid)
     {
         $filterValue = '';
 
@@ -580,7 +455,7 @@ abstract class UI_Datagrid_Col_Generic
 
         // Ajout au filtre.
         $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
-        $filterValue .= '\"'.$this->filterOperator.'\":\"" + $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
+        $filterValue .= '\"'.$this->criteriaFilterOperator.'\":\"" + $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
         $filterValue .= '},";';
 
         $filterValue .= '}';
@@ -591,11 +466,11 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant la réinitialisation des champs du filtre de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    public function getResettingFilter($datagrid)
+    public function getResettingFilter(Datagrid $datagrid)
     {
         $resetFields = '';
 
@@ -607,20 +482,20 @@ abstract class UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant le champs du formulaire d'ajout de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
-     * @return Zend_Form_Element
+     * @return UI_Form_ZendElement
      */
-    abstract public function getAddFormElement($datagrid);
+    abstract public function getAddFormElement(Datagrid $datagrid);
 
     /**
      * Méthode renvoyant l'id du formulaire d'ajout.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return string
      */
-    public function getAddFormElementId($datagrid)
+    public function getAddFormElementId(Datagrid $datagrid)
     {
         return $datagrid->id.'_'.$this->id.'_addForm';
     }

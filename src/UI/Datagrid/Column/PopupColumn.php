@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de la classe Colonne Popup.
+ * Fichier de la classe PopupColumn.
  *
  * @author     valentin.claras
  *
@@ -8,17 +8,20 @@
  * @subpackage Datagrid
  */
 
+namespace UI\Datagrid\Column;
+
+use UI\Datagrid\Datagrid;
+use UI_Popup_Ajax;
+
 /**
- * Description of colonne popup.
+ * Description of PopupColumn.
  *
  * Une classe permettant de générer une colonne contenant des popups.
- *
- * @deprecated
  *
  * @package    UI
  * @subpackage Datagrid
  */
-class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
+class PopupColumn extends GenericColumn
 {
     /**
      * Définition de la valeur par defaut qui sera affiché dans la cellule.
@@ -44,8 +47,6 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
     public function __construct($id=null, $label=null)
     {
         parent::__construct($id, $label);
-        // Définition du type de la classe.
-        $this->_type = self::TYPE_COL_POPUP;
         $this->popup = new UI_Popup_Ajax('temp');
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
@@ -55,11 +56,11 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
     /**
      * Méthode renvoyant le popup de la colonne.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      *
      * @return UI_Popup_Ajax
      */
-    public function getPopup($datagrid)
+    public function getPopup(Datagrid $datagrid)
     {
         if ($this->popup === null) {
             $this->popup = new UI_Popup_Ajax($datagrid->id.'_'.$this->id.'_popup');
@@ -71,13 +72,9 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant le formatter de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFormatter($datagrid)
+    public function getFormatter(Datagrid $datagrid)
     {
         $format = '';
 
@@ -102,9 +99,7 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Ajoute l'icone d'édition à la cellule.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function addEditableFormatter()
     {
@@ -113,79 +108,54 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant les options d'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditableOption($datagrid)
+    public function getEditableOption(Datagrid $datagrid)
     {
         // Pas d'édition possible sur des popups.
         return '';
     }
 
     /**
-     * Méthode renvoyant l'appel à l'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditorValue($datagrid)
+    public function getEditorValue(Datagrid $datagrid)
     {
         // Pas d'édition possible sur des popups.
         return '';
     }
 
     /**
-     * Méthode renvoyant le champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     * @param array $defaultValue Valeur par défaut du filtre (=null).
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getFilterFormElement($datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
     {
         // Pas de filtre possible sur des popups.
         return null;
     }
 
     /**
-     * Méthode renvoyant la valeur du champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFilterValue($datagrid)
+    public function getFilterValue(Datagrid $datagrid)
     {
         // Pas de filtre possible sur des popups.
         return '';
     }
 
     /**
-     * Méthode renvoyant la réinitialisation des champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getResettingFilter($datagrid)
+    public function getResettingFilter(Datagrid $datagrid)
     {
         // Pas de filtre posible sur des popups.
         return '';
     }
 
     /**
-     * Méthode renvoyant le champs du formulaire d'ajout de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getAddFormElement($datagrid)
+    public function getAddFormElement(Datagrid $datagrid)
     {
         // Pas d'ajout possible sur des popups.
         return null;

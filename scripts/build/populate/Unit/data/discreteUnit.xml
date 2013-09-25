@@ -29,8 +29,8 @@
 
     <discreteUnit ref="devise">
         <name>
-            <fr>devise ci-dessus</fr>
-            <en>currency above</en>
+            <fr>devise</fr>
+            <en>currency</en>
         </name>
     </discreteUnit>
 

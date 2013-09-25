@@ -2,12 +2,20 @@
 
 BASEDIR=/vagrant/data/vagrant
 
+apt-get update
+
 # For PHP 5.4
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php5
+
+# RabbitMQ
+echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
+wget http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+apt-key add rabbitmq-signing-key-public.asc
+
 apt-get update
 
-apt-get install -y curl lynx unzip git
+apt-get install -y curl git rabbitmq-server
 
 # Shell
 apt-get install -y zsh
@@ -66,6 +74,3 @@ pear install pear.phpunit.de/PHPUnit
 
 #apt-get install -y nodejs npm
 #npm install -g zombie@1.4.1
-
-# Data
-# php /vagrant/scripts/build/build.php create update

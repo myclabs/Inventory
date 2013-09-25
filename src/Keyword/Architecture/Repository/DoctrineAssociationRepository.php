@@ -6,9 +6,7 @@ use Core\Domain\DoctrineEntityRepository;
 use Core\Domain\Translatable\TranslatableRepository;
 use Core_Exception_NotFound;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\QueryBuilder;
-use Gedmo\Translatable\TranslatableListener;
-use Keyword\Domain\AssociationCriteria;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\Predicate;
 use Keyword\Domain\Association;
@@ -94,15 +92,23 @@ class DoctrineAssociationRepository extends DoctrineEntityRepository
         );
     }
 
+    /**
+     * Selects all elements from a selectable that match the expression and
+     * returns a new collection containing these elements.
+     *
+     * @param Criteria $criteria
+     *
+     * @return Paginator
+     */
     public function matching(Criteria $criteria)
     {
-        $qb = $this->createQueryBuilder('association')
-            ->join('association.subject', 'subject')
-            ->join('association.object', 'object');
+        $queryBuilder = $this->createQueryBuilder('this')
+            ->join('this.subject', 'subject')
+            ->join('this.predicate', 'predicate')
+            ->join('this.object', 'object');
+        $queryBuilder->addCriteria($criteria);
 
-        $qb->addCriteria($criteria);
-
-        return $qb->getQuery()->getResult();
+        return new Paginator($queryBuilder, false);
     }
 
 }

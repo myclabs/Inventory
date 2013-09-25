@@ -18,7 +18,7 @@ sheets:
               - label: "{{ inputStatus }}"
               - label: "{{ resultLabel }}"
               - label: "{{ resultFreeLabel }}"
-              - label: "{{ resultValue }}"
+              - label: "{{ resultValue }} ({{ indicator.unit.symbol }})"
               - label: "{{ resultRoundedValue }}"
               - label: "{{ resultUncertainty }}"
             lines:

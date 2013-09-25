@@ -10,6 +10,7 @@ use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
+use Keyword\Domain\KeywordCriteria;
 
 /**
  * Controlleur permettant de gérer les Keyword.
@@ -93,8 +94,9 @@ class Keyword_GraphController extends Core_Controller
     {
         $listKeywords = array();
 
-        $ref = $this->getParam('q');
-        foreach ($this->keywordRepository->getAll() as $keyword) {
+        $criteria = new KeywordCriteria();
+        $criteria->label->contains($this->getParam('q'));
+        foreach ($this->keywordRepository->matching($criteria) as $keyword) {
             $listKeywords[] = array('id' => $keyword->getRef(), 'text' => $keyword->getLabel());
         }
 

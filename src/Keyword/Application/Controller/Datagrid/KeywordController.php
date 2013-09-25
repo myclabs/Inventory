@@ -8,6 +8,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use UI\Datagrid\DatagridController;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
 
@@ -15,7 +16,7 @@ use Keyword\Domain\KeywordRepository;
  * Classe controleur de la datagrid de Keyword.
  * @package Keyword
  */
-class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
+class Keyword_Datagrid_KeywordController extends DatagridController
 {
     /**
      * @Inject
@@ -31,8 +32,9 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        $paginator = $this->keywordRepository->matching($this->criteria);
         /** @var Keyword $keyword */
-        foreach ($this->keywordRepository->getAll($this->request) as $keyword) {
+        foreach ($paginator as $keyword) {
             $data = array();
 
             $data['index'] = $keyword->getRef();
@@ -44,7 +46,7 @@ class Keyword_Datagrid_KeywordController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = $this->keywordRepository->count($this->request);
+        $this->totalElements = count($paginator);
         $this->send();
     }
 

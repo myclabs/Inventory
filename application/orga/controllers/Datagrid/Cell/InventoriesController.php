@@ -96,12 +96,15 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             $data[$member->getAxis()->getRef()] = $member->getRef();
         }
 
-        if ($crossedGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
-            $cellInventoryStatus = $cell;
+        if ($crossedGranularity === $granularityForInventoryStatus) {
+            $data['inventoryStatus'] = $cell->getInventoryStatus();
         } else {
-            $cellInventoryStatus = $cell->getParentCellForGranularity($granularityForInventoryStatus);
+            try {
+                $data['inventoryStatus'] = $cell->getParentCellForGranularity($granularityForInventoryStatus)->getInventoryStatus();
+            } catch (Core_Exception_NotFound $e) {
+                $data['inventoryStatus'] = Orga_Model_Cell::STATUS_NOTLAUNCHED;
+            }
         }
-        $data['inventoryStatus'] = $cellInventoryStatus->getInventoryStatus();
         if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
             $data['advancementInput'] = 0;
             $data['advancementFinishedInput'] = 0;

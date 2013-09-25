@@ -3,6 +3,8 @@
 namespace Core\Domain;
 
 use Doctrine\ORM as Doctrine;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Implementation of a repository using Doctrine
@@ -81,6 +83,22 @@ class DoctrineEntityRepository extends Doctrine\EntityRepository implements Enti
         }
 
         return $entities[0];
+    }
+
+    /**
+     * Selects all elements from a selectable that match the expression and
+     * returns a new collection containing these elements.
+     *
+     * @param Criteria $criteria
+     *
+     * @return Paginator
+     */
+    public function matching(Criteria $criteria)
+    {
+        $queryBuilder = $this->createQueryBuilder('this');
+        $queryBuilder->addCriteria($criteria);
+
+        return new Paginator($queryBuilder, false);
     }
 
     /**

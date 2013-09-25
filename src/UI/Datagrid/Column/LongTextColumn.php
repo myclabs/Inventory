@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de la classe Colonne de Texte Long.
+ * Fichier de la classe LongTextColumn.
  *
  * @author     valentin.claras
  *
@@ -8,17 +8,20 @@
  * @subpackage Datagrid
  */
 
+namespace UI\Datagrid\Column;
+
+use UI\Datagrid\Datagrid;
+use UI_Form_Element_Textarea;
+
 /**
- * Description of colonne texte long.
+ * Description of LongTextColumn.
  *
  * Une classe permettant de générer une colonne contenant des textes longs.
- *
- * @deprecated
  *
  * @package    UI
  * @subpackage Datagrid
  */
-class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
+class LongTextColumn extends PopupColumn
 {
     /**
      * Définition du message affiché lors du chargement du texte brute.
@@ -45,16 +48,11 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
 
 
      /**
-      * Constructeur de la classe ColonneTexte.
-      *
-      * @param string $id    Identifiant unique de la colonne.
-      * @param string $label Texte afiché en titre de la colone.
+      * {@inheritdoc}
       */
     public function __construct($id=null, $label=null)
     {
         parent::__construct($id, $label);
-        // Définition du type de la classe.
-        $this->_type = self::TYPE_COL_LONGTEXT;
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_LEFT;
         $this->defaultValue = '<i class="icon-zoom-in"></i> '.__('UI', 'name', 'details');
@@ -63,13 +61,9 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
     }
 
     /**
-     * Méthode renvoyant le formatter de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFormatter($datagrid)
+    public function getFormatter(Datagrid $datagrid)
     {
         $format = '';
 
@@ -92,23 +86,17 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
     }
 
     /**
-     * Ajoute l'icone d'édition à la cellule.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function addEditableFormatter()
     {
-        return UI_Datagrid_Col_Generic::addEditableFormatter();
+        return GenericColumn::addEditableFormatter();
     }
 
     /**
-     * Méthode renvoyant les options d'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditableOption($datagrid)
+    public function getEditableOption(Datagrid $datagrid)
     {
         $editOption = '';
 
@@ -122,13 +110,9 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
     }
 
     /**
-     * Méthode renvoyant l'appel à l'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditorValue($datagrid)
+    public function getEditorValue(Datagrid $datagrid)
     {
         $editorValue = '';
 
@@ -168,13 +152,9 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
     }
 
     /**
-     * Méthode renvoyant le champs du formulaire d'ajout de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getAddFormElement($datagrid)
+    public function getAddFormElement(Datagrid $datagrid)
     {
         $addFormElement = new UI_Form_Element_Textarea($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());

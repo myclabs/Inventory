@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de la classe Colonne Percent.
+ * Fichier de la classe PercentColumn.
  *
  * @author     valentin.claras
  *
@@ -8,17 +8,19 @@
  * @subpackage Datagrid
  */
 
+namespace UI\Datagrid\Column;
+
+use UI\Datagrid\Datagrid;
+
 /**
- * Description of colonne percent.
+ * Description of PercentColumn.
  *
  * Une classe permettant de générer une colonne contenant un pourcentage.
- *
- * @deprecated
  *
  * @package    UI
  * @subpackage Datagrid
  */
-class UI_Datagrid_Col_Percent extends UI_Datagrid_Col_Number
+class PercentColumn extends NumberColumn
 {
     /**
      * Définit l'élément placé avant l'affichage de la valeur.
@@ -38,16 +40,11 @@ class UI_Datagrid_Col_Percent extends UI_Datagrid_Col_Number
 
 
      /**
-      * Constructeur de la classe Col_Percent.
-      *
-      * @param string $id    Identifiant unique de la colonne.
-      * @param string $label Texte afiché en titre de la colone.
+      * {@inheritdoc}
       */
     public function __construct($id=null, $label=null)
     {
         parent::__construct($id, $label);
-        // Définition du type de la classe.
-        $this->_type = self::TYPE_COL_PERCENT;
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_LEFT;
         $this->keywordFilterEqual = __('UI', 'datagridFilter', 'ColPercentEqual');
@@ -56,13 +53,9 @@ class UI_Datagrid_Col_Percent extends UI_Datagrid_Col_Number
     }
 
     /**
-     * Méthode renvoyant le formatter de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFormatter($datagrid)
+    public function getFormatter(Datagrid $datagrid)
     {
         $format = '';
 
@@ -96,9 +89,7 @@ class UI_Datagrid_Col_Percent extends UI_Datagrid_Col_Number
     }
 
     /**
-     * Ajoute l'icone d'édition à la cellule.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function addEditableFormatter()
     {
@@ -107,39 +98,27 @@ class UI_Datagrid_Col_Percent extends UI_Datagrid_Col_Number
     }
 
     /**
-     * Méthode renvoyant les options d'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    protected function getEditableOption($datagrid)
+    protected function getEditableOption(Datagrid $datagrid)
     {
         // Pas d'édition possible sur des pourcentages.
         return '';
     }
 
     /**
-     * Méthode renvoyant l'appel à l'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditorValue($datagrid)
+    public function getEditorValue(Datagrid $datagrid)
     {
         // Pas d'édition possible sur des pourcentages.
         return '';
     }
 
     /**
-     * Méthode renvoyant le champs du formulaire d'ajout de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getAddFormElement($datagrid)
+    public function getAddFormElement(Datagrid $datagrid)
     {
         // Pas d'ajout possible sur des pourcentages.
         return null;

@@ -6,7 +6,6 @@ use Core\Domain\Translatable\TranslatableRepository;
 use Keyword\Domain\Predicate;
 use Keyword\Domain\PredicateRepository;
 use Core\Domain\DoctrineEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Core_Exception_NotFound;
 
 /**

@@ -5,6 +5,7 @@ namespace Keyword\Domain;
 use Core\Domain\EntityRepository;
 use Core\Domain\Translatable\TranslatableEntity;
 use Core\Domain\Translatable\TranslatableRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\Predicate;
 use Keyword\Domain\Association;
@@ -15,13 +16,6 @@ use Keyword\Domain\Association;
  */
 interface KeywordRepository extends EntityRepository
 {
-    // TODO à supprimer
-    const QUERY_REF = 'ref';
-    const QUERY_LABEL = 'label';
-    const QUERY_KEYWORD_SUBJECT = 'subject';
-    const QUERY_PREDICATE = 'predicate';
-    const QUERY_KEYWORD_OBJECT = 'object';
-
     /**
      * Renvoie les messages d'erreur concernant la validation d'une ref.
      *
@@ -84,15 +78,20 @@ interface KeywordRepository extends EntityRepository
     function checkAssociation(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword);
 
     /**
-     * @param AssociationCriteria $criteria
      * @return Association[]
      */
-    public function getAllAssociations(AssociationCriteria $criteria = null);
+    public function getAllAssociations();
 
     /**
      * @return int
      */
     public function countAssociations();
+
+    /**
+     * @param AssociationCriteria $criteria
+     * @return Paginator
+     */
+    public function associationsMatching(AssociationCriteria $criteria);
 
     /**
      * Charge une Association en fonction des refs de ses composants.

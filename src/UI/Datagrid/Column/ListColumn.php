@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier de la classe Colonne Liste.
+ * Fichier de la classe ListColumn.
  *
  * @author     valentin.claras
  *
@@ -8,17 +8,27 @@
  * @subpackage Datagrid
  */
 
+namespace UI\Datagrid\Column;
+
+use UI\Datagrid\Datagrid;
+use UI_Form_Element_MultiCheckbox;
+use UI_Form_Element_MultiSelect;
+use UI_Form_Element_Radio;
+use UI_Form_Element_Select;
+use UI_Form_Element_Option;
+use UI_Form_Element_Pattern_AjaxAutocomplete;
+use UI_Form_Element_HTML;
+use UI_HTML_Button;
+
 /**
- * Description of colonne liste.
+ * Description of ListeColumn.
  *
  * Une classe permettant de générer une colonne contenant des listes.
- *
- * @deprecated
  *
  * @package    UI
  * @subpackage Datagrid
  */
-class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
+class ListColumn extends GenericColumn
 {
     /**
      * Constante definissant le type de champs à utiliser.
@@ -49,7 +59,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
      * L'usage des champs BOX ne fonctionnent pas pour les listes dynamiques.
      * L'usage des champs AUTOCOMPLETE ne fonctionnent pas pour les listes multiples.
      *
-     * @var const
+     * @var string
      */
     public $fieldType = null;
 
@@ -58,7 +68,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
      * L'usage des champs BOX ne fonctionnent pas pour les listes dynamiques.
      * Par défaut le type de champs est celui de $fieldType.
      *
-     * @var const
+     * @var string
      */
     public $fieldTypeFilter = null;
 
@@ -148,20 +158,15 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
 
 
      /**
-      * Constructeur de la classe ColList.
-      *
-      * @param string $id    Identifiant unique de la colonne.
-      * @param string $label Texte afiché en titre de la colone.
+      * {@inheritdoc}
       */
     public function __construct($id=null, $label=null)
     {
         parent::__construct($id, $label);
-        // Définition du type de la classe.
-        $this->_type = self::TYPE_COL_LIST;
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_LEFT;
         $this->keywordFilterEqual = __('UI', 'datagridFilter', 'ColListEqual');
-        $this->filterOperator = Core_Model_Filter::OPERATOR_EQUAL;
+        $this->criteriaFilterOperator = 'eq';
         $this->fieldType = self::FIELD_LIST;
         $this->separatorMultiple = ', ';
         $this->loadingText = __('UI', 'loading', 'loading');
@@ -171,24 +176,20 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     /**
      * Créer l'url de base nécessaire à la récupération de la liste dynamique.
      *
-     * @param UI_Datagrid $datagrid
+     * @param Datagrid $datagrid
      * @param string $source
      *
      * @return string
      */
-    protected function getUrlDynamicList($datagrid, $source)
+    protected function getUrlDynamicList(Datagrid $datagrid, $source)
     {
         return $this->list . $datagrid->encodeParameters() . '/source/' . $source;
     }
 
     /**
-     * Méthode renvoyant le formatter de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFormatter($datagrid)
+    public function getFormatter(Datagrid $datagrid)
     {
         $format = '';
 
@@ -262,13 +263,9 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant d'éventuelles fonctions complémentaires nécéssaires à la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    protected function getComplementaryFunction($datagrid)
+    protected function getComplementaryFunction(Datagrid $datagrid)
     {
         $complementaryScript = '';
         
@@ -313,13 +310,9 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant les options d'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditableOption($datagrid)
+    public function getEditableOption(Datagrid $datagrid)
     {
         if (($this->dynamicList === true) && ($this->fieldType === self::FIELD_AUTOCOMPLETE)) {
             return parent::getEditableOption($datagrid);
@@ -370,13 +363,9 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant l'appel à l'édition de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getEditorValue($datagrid)
+    public function getEditorValue(Datagrid $datagrid)
     {
         $editorValue = '';
 
@@ -555,14 +544,9 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant le champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     * @param array $defaultValue Valeur par défaut du filtre (=null).
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getFilterFormElement($datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
     {
         if ($this->dynamicList === true) {
             return null;
@@ -599,8 +583,8 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
         }
 
         // Récupération des valeurs par défaut.
-        if (isset($defaultValue[$this->filterOperator])) {
-            $filterFormElement->setValue($defaultValue[$this->filterOperator]);
+        if (isset($defaultValue[$this->criteriaFilterOperator])) {
+            $filterFormElement->setValue($defaultValue[$this->criteriaFilterOperator]);
         }
         if ($this->getFilterFieldType() === self::FIELD_BOX) {
             $resetButton = new UI_HTML_Button();
@@ -630,13 +614,9 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant la valeur du champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFilterValue($datagrid)
+    public function getFilterValue(Datagrid $datagrid)
     {
         $filterValue = '';
 
@@ -660,7 +640,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
 
             // Ajout au filtre.
             $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
-            $filterValue .= '\"'.$this->filterOperator.'\":" + selectedOptions + "';
+            $filterValue .= '\"'.$this->criteriaFilterOperator.'\":" + selectedOptions + "';
             $filterValue .= '},";';
 
             $filterValue .= '}';
@@ -671,7 +651,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
 
             // Ajout au filtre.
             $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
-            $filterValue .= '\"'.$this->filterOperator.'\":\"" ';
+            $filterValue .= '\"'.$this->criteriaFilterOperator.'\":\"" ';
             $filterValue .= '+ $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
             $filterValue .= '},";';
 
@@ -682,13 +662,9 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant la réinitialisation des champs du filtre de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getResettingFilter($datagrid)
+    public function getResettingFilter(Datagrid $datagrid)
     {
         $resetFields = '';
 
@@ -709,13 +685,9 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     }
 
     /**
-     * Méthode renvoyant le champs du formulaire d'ajout de la colonne.
-     *
-     * @param UI_Datagrid $datagrid
-     *
-     * @return Zend_Form_Element
+     * {@inheritdoc}
      */
-    public function getAddFormElement($datagrid)
+    public function getAddFormElement(Datagrid $datagrid)
     {
         if ($this->dynamicList === true) {
             if ($this->fieldType === self::FIELD_AUTOCOMPLETE) {

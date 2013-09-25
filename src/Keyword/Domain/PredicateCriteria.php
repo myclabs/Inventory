@@ -10,10 +10,12 @@ use Doctrine\Common\Collections\Criteria;
  *
  * @author matthieu.napoli
  */
-class KeywordCriteria extends Criteria
+class PredicateCriteria extends Criteria
 {
     const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
+    const QUERY_REVERSE_REF = 'reverseRef';
+    const QUERY_REVERSE_LABEL = 'reverseLabel';
 
     /**
      * @var FieldFilter
@@ -25,9 +27,21 @@ class KeywordCriteria extends Criteria
      */
     public $label;
 
+    /**
+     * @var FieldFilter
+     */
+    public $reverseRef;
+
+    /**
+     * @var FieldFilter
+     */
+    public $reverseLabel;
+
     public function __construct()
     {
         $this->ref = new FieldFilter($this, 'this.ref');
         $this->label = new FieldFilter($this, 'this.label');
+        $this->reverseRef = new FieldFilter($this, 'this.reversRef');
+        $this->reverseLabel = new FieldFilter($this, 'this.reverseLabel');
     }
 }
