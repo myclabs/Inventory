@@ -366,6 +366,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $connection = $c->get('PhpAmqpLib\Connection\AMQPConnection');
             $channel = $connection->channel();
             $channel->queue_declare($queue, false, false, false, false);
+            return $channel;
         });
 
         $this->container->set('MyCLabs\Work\Dispatcher\WorkDispatcher', function(Container $c) use ($useRabbitMQ) {
