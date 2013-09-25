@@ -30,7 +30,7 @@ use Core_Exception_InvalidHTTPQuery;
  * @package    UI
  * @subpackage Datagrid
  */
-abstract class Controller extends Core_Controller
+abstract class DatagridController extends Core_Controller
 {
     /**
      * Identifiant de la Datagrid.

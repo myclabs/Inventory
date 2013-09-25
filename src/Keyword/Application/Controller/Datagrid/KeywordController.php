@@ -8,7 +8,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use UI\Datagrid\Controller;
+use UI\Datagrid\DatagridController;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
 
@@ -16,7 +16,7 @@ use Keyword\Domain\KeywordRepository;
  * Classe controleur de la datagrid de Keyword.
  * @package Keyword
  */
-class Keyword_Datagrid_KeywordController extends Controller
+class Keyword_Datagrid_KeywordController extends DatagridController
 {
     /**
      * @Inject

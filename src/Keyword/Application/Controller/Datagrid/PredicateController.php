@@ -6,7 +6,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use UI\Datagrid\Controller;
+use UI\Datagrid\DatagridController;
 use Keyword\Domain\Predicate;
 use Keyword\Domain\PredicateRepository;
 use Keyword\Domain\KeywordRepository;
@@ -16,7 +16,7 @@ use Keyword\Domain\AssociationCriteria;
  * Classe controleur de la datagrid de Predicate.
  * @package Keyword
  */
-class Keyword_Datagrid_PredicateController extends Controller
+class Keyword_Datagrid_PredicateController extends DatagridController
 {
     /**
      * @Inject
