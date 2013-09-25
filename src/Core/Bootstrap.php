@@ -389,6 +389,18 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             }
 
             $worker->registerTaskExecutor('Core\Work\ServiceCall\ServiceCallTask', new ServiceCallExecutor($c));
+            $worker->registerTaskExecutor(
+                'Orga_Work_Task_AddGranularity',
+                $this->container->get('Orga_Work_TaskExecutor_AddGranularityExecutor')
+            );
+            $worker->registerTaskExecutor(
+                'Orga_Work_Task_AddMember',
+                $this->container->get('Orga_Work_TaskExecutor_AddMemberExecutor')
+            );
+            $worker->registerTaskExecutor(
+                'Orga_Work_Task_SetGranularityCellsGenerateDWCubes',
+                $this->container->get('Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor')
+            );
 
             return $worker;
         });

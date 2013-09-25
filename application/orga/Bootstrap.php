@@ -7,27 +7,6 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
 {
 
     /**
-     * Enregistre les Workers
-     */
-    protected function _initOrgaWorker()
-    {
-        /**@var \MyCLabs\Work\Worker\Worker $worker */
-        $worker = $this->container->get('MyCLabs\Work\Worker\Worker');
-        $worker->registerTaskExecutor(
-            'Orga_Work_Task_AddGranularity',
-            $this->container->get('Orga_Work_TaskExecutor_AddGranularityExecutor')
-        );
-        $worker->registerTaskExecutor(
-            'Orga_Work_Task_AddMember',
-            $this->container->get('Orga_Work_TaskExecutor_AddMemberExecutor')
-        );
-        $worker->registerTaskExecutor(
-            'Orga_Work_Task_SetGranularityCellsGenerateDWCubes',
-            $this->container->get('Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor')
-        );
-    }
-
-    /**
      * Enregistre les Observers de Intégration.
      */
     protected function _initOrgaObservers()
