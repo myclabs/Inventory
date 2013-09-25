@@ -29,7 +29,7 @@ work.waitDelay: 5
 # Connexion RabbitMQ
 PhpAmqpLib\Connection\AMQPConnection:
   constructor:
-    - rabbitmq.host
-    - rabbitmq.port
-    - rabbitmq.user
-    - rabbitmq.password
+    host: rabbitmq.host
+    port: rabbitmq.port
+    user: rabbitmq.user
+    password: rabbitmq.password
