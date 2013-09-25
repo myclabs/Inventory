@@ -14,6 +14,8 @@
  * Classe générique des controleurs de la Datagrid.
  * La classe donne accès à des méthodes permettant de récupérer, envoyer et modifier les données.
  *
+ * @deprecated
+ *
  * @package    UI
  * @subpackage Datagrid
  */
