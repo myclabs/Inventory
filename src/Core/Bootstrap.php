@@ -346,44 +346,45 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initWork()
     {
         // Détermine si on utilise RabbitMQ
+        $useRabbitMQ = false;
         $configuration = Zend_Registry::get('configuration');
         if (isset($configuration->rabbitmq) && isset($configuration->rabbitmq->enabled)) {
             $useRabbitMQ = (bool) $configuration->rabbitmq->enabled;
-        } else {
-            $useRabbitMQ = false;
+            if ($useRabbitMQ) {
+                $this->container->set('rabbitmq.host', $configuration->rabbitmq->host);
+                $this->container->set('rabbitmq.port', $configuration->rabbitmq->port);
+                $this->container->set('rabbitmq.user', $configuration->rabbitmq->user);
+                $this->container->set('rabbitmq.password', $configuration->rabbitmq->password);
+            }
         }
+
+        // Connexion RabbitMQ
+        $this->container->set('rabbitmq.queue', $this->container->get('application.name') . '-work');
+        $this->container->set('PhpAmqpLib\Channel\AMQPChannel', function(Container $c) {
+            $queue = $c->get('rabbitmq.queue');
+            /** @var AMQPConnection $connection */
+            $connection = $c->get('PhpAmqpLib\Connection\AMQPConnection');
+            $channel = $connection->channel();
+            $channel->queue_declare($queue, false, false, false, false);
+        });
 
         $this->container->set('MyCLabs\Work\Dispatcher\WorkDispatcher', function(Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
-                // Connexion RabbitMQ
-                // TODO factoriser
-                $queue = $c->get('application.name') . '-work';
-                $connection = new AMQPConnection('localhost', 5672, 'guest', 'guest');
-                $channel = $connection->channel();
-                $channel->queue_declare($queue, false, false, false, false);
-
-                $workDispatcher = new RabbitMQWorkDispatcher($channel, $queue);
+                $channel = $c->get('PhpAmqpLib\Channel\AMQPChannel');
+                $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
                 $workDispatcher->addEventListener($this->container->get('Core\Work\EventListener'));
-            } else {
-                $workDispatcher = new SimpleWorkDispatcher(new SimpleWorker());
+                return $workDispatcher;
             }
-
-            return $workDispatcher;
+            return $c->get('MyCLabs\Work\Dispatcher\SimpleWorkDispatcher');
         });
 
         $this->container->set('MyCLabs\Work\Worker\Worker', function(Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
-                // Connexion RabbitMQ
-                // TODO factoriser
-                $queue = $c->get('application.name') . '-work';
-                $connection = new AMQPConnection('localhost', 5672, 'guest', 'guest');
-                $channel = $connection->channel();
-                $channel->queue_declare($queue, false, false, false, false);
-
-                $worker = new RabbitMQWorker($channel, $queue);
+                $channel = $c->get('PhpAmqpLib\Channel\AMQPChannel');
+                $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));
                 $worker->addEventListener($this->container->get('Core\Work\EventListener'));
             } else {
-                $worker = new SimpleWorker();
+                $worker = $c->get('MyCLabs\Work\Worker\SimpleWorker');
             }
 
             $worker->registerTaskExecutor('Core\Work\ServiceCall\ServiceCallTask', new ServiceCallExecutor($c));
