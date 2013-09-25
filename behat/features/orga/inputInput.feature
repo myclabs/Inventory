@@ -31,7 +31,7 @@ Feature: Organization input input feature
     When I open tab "Commentaires"
     Then I should see "Aucun commentaire."
     When I click "Ajouter un commentaire"
-    And I fill in "content" with "h1. Un _chouette_ commentaire."
+    And I fill in "addContent" with "h1. Un _chouette_ commentaire."
     And I click element "#Ajouter"
     Then I should see "Un chouette commentaire."
   # Retour à l'onglet "Saisie" et quitter la page
