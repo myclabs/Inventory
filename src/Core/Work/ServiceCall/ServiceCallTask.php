@@ -27,4 +27,12 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
             }
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return "ServiceCallTask($this->serviceName::$this->methodName)";
+    }
 }
