@@ -20,10 +20,10 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
 
     public function mergeEntities(EntityManager $entityManager)
     {
-        foreach ($this->parameters as $parameter) {
+        foreach ($this->parameters as $i => $parameter) {
             // Vérifie que c'est une entité Doctrine
             if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
-                $entityManager->merge($parameter);
+                $this->parameters[$i] = $entityManager->merge($parameter);
             }
         }
     }
