@@ -66,10 +66,6 @@ class EventListener extends \MyCLabs\Work\EventListener
      */
     public function beforeTaskSerialization(Task $task)
     {
-        // Traitement spécial pour les entités Doctrine
-        if ($task instanceof ServiceCallTask) {
-            $task->detachEntities($this->entityManager);
-        }
     }
 
     /**

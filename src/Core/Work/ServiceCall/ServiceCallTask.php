@@ -18,16 +18,6 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
 {
     use BaseTaskTrait;
 
-    public function detachEntities(EntityManager $entityManager)
-    {
-        foreach ($this->parameters as $parameter) {
-            // Vérifie que c'est une entité Doctrine
-            if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
-                $entityManager->detach($parameter);
-            }
-        }
-    }
-
     public function mergeEntities(EntityManager $entityManager)
     {
         foreach ($this->parameters as $parameter) {
