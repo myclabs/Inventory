@@ -249,7 +249,9 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
         $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
-        DoctrineProxyAutoloader::register($doctrineConfig->getProxyDir(), $doctrineConfig->getProxyNamespace());
+        if (! $doctrineAutoGenerateProxy) {
+            DoctrineProxyAutoloader::register($doctrineConfig->getProxyDir(), $doctrineConfig->getProxyNamespace());
+        }
 
         // Log des requêtes
         if ($configuration->log->queries) {
