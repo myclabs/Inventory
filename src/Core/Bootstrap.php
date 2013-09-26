@@ -1,9 +1,4 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Bootstrap
- */
 
 use Core\Autoloader;
 use Core\Log\ChromePHPFormatter;
@@ -15,6 +10,7 @@ use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
+use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\Tools\Setup;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ChromePHPHandler;
@@ -24,7 +20,6 @@ use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
 use MyCLabs\Work\Dispatcher\RabbitMQWorkDispatcher;
 use MyCLabs\Work\Dispatcher\SimpleWorkDispatcher;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use MyCLabs\Work\TaskExecutor\ServiceCallExecutor;
 use MyCLabs\Work\Worker\RabbitMQWorker;
 use MyCLabs\Work\Worker\SimpleWorker;
@@ -33,8 +28,7 @@ use PhpAmqpLib\Connection\AMQPConnection;
 /**
  * Classe de bootstrap : initialisation de l'application.
  *
- * @package    Core
- * @subpackage Bootstrap
+ * @author matthieu.napoli
  */
 abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
@@ -61,12 +55,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'Translations',
                 'Log',
                 'ErrorHandler',
+                // Il faut initialiser le front controller pour que l'ajout de dossiers
+                // de controleurs soit pris en compte
                 'FrontController',
                 'Doctrine',
                 'DefaultEntityManager',
                 'Work',
-                // Il faut initialiser le front controller pour que l'ajout de dossiers
-                // de controleurs soit pris en compte
             );
             parent::_bootstrap($resources);
             // Lance toutes les autres méthodes (moins prioritaires)
@@ -254,8 +248,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Configuration des Proxies.
         $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
-        // Ligne inutile mais bug, cf. http://www.doctrine-project.org/jira/browse/DCOM-210#comment-21061
         $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
+        DoctrineProxyAutoloader::register($doctrineConfig->getProxyDir(), $doctrineConfig->getProxyNamespace());
 
         // Log des requêtes
         if ($configuration->log->queries) {
