@@ -23,7 +23,7 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
         foreach ($this->parameters as $i => $parameter) {
             // Vérifie que c'est une entité Doctrine
             if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
-                $this->parameters[$i] = $entityManager->merge($parameter);
+                $this->parameters[$i] = $entityManager->find(get_class($parameter), $parameter->getId());
             }
         }
     }
