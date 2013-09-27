@@ -104,7 +104,7 @@ Feature: AF single selection field feature
     Then I should see the "algoSelectionTextkeyInput" datagrid
   # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "sélection d'identifiant à partir d'une saisie de champ de sélection simple"
     And the "algoSelectionTextkeyInput" datagrid should contain a row:
-      | ref                            | input                          |
+      | ref           | input                          |
       | c_s_s_modifie | Champ sélection simple modifié |
 
   @javascript
