@@ -200,7 +200,9 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Condition_Elementary')) {
                 throw new Core_Exception_User('AF', 'configComponentMessage',
-                                              'fieldUsedByInteractionConditionDeletionDenied');
+                    'fieldUsedByInteractionConditionDeletionDenied');
+            } elseif ($e->isSourceEntityInstanceOf('Algo_Model_ParameterCoordinate_Algo')) {
+                throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByIndexation');
             }
             throw $e;
         }
