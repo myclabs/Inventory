@@ -219,20 +219,18 @@ Feature: AF single selection field feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car il est utilisé pour l'indexation d'au moins un algorithme numérique ou la détermination d'au moins une coordonnée d'algorithme de type paramètre."
     And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+
+  @javascript
+  Scenario: Deletion of a single selection field scenario, 3
+  # Algo de sélection simple utilisé comme coordonnée de paramètre ou indexation d'algorithme numérique
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
   # Modifier la config pour que l'algo de sélection simple "c_s_s" soit utilisé comme membre d'axe de classification pour l'indexation d'un algo numérique
-  # (mais plus comme coordonnée de paramètre).
-    When I open tab "Traitement"
-  # Le volet "Paramètres" est déjà ouvert, pas la peine de le rouvrir
-  # On supprime l'utilisation de "c_s_s" comme coordonnée de paramètre
-    And I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
-    And I set "c_s_s_cible_setvalue" for column "algo" of row 1 of the "coordinatesAlgo" datagrid
-    And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
-    And I wait 5 seconds
-    Then the following message is shown and closed: "Modification effectuée."
-    When I close collapse "Paramètres"
-  # On ajoute l'utilisation de "c_s_s" pour l'indexation d'un algo numérique
+    And I open tab "Traitement"
+    And I open collapse "Algorithmes numériques"
     And I open collapse "Saisies de champs numériques"
     And I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
+    Then I should see the "algoResultIndexes" datagrid
     And I set "c_s_s" for column "value" of row 2 of the "algoResultIndexes" datagrid
     And I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
     And I wait 5 seconds
@@ -240,7 +238,9 @@ Feature: AF single selection field feature
   # Tentative de suppression du champ de sélection simple
     When I open tab "Composants"
     And I open collapse "Champs de sélection simple"
-    And I click "Supprimer" in the row 1 of the "selectSingleFieldDatagrid" datagrid
+    Then I should see the "selectSingleFieldDatagrid" datagrid
+    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    When I click "Supprimer" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car il est utilisé pour l'indexation d'au moins un algorithme numérique ou la détermination d'au moins une coordonnée d'algorithme de type paramètre."
