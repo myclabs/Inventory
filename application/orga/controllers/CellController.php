@@ -362,12 +362,6 @@ class Orga_CellController extends Core_Controller
             $columnRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
             $datagridConfiguration->datagrid->addCol($columnRelevant);
 
-            $columnAllParentsRelevant = new UI_Datagrid_Col_Bool('allParentsRelevant');
-            $columnAllParentsRelevant->label = __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader');
-            $columnAllParentsRelevant->editable = false;
-            $columnAllParentsRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'allParentCellsRelevantProperty');
-            $columnAllParentsRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'notAllParentCellsRelevantProperty');
-            $datagridConfiguration->datagrid->addCol($columnAllParentsRelevant);
             $listDatagridConfiguration[$narrowerGranularity->getLabel()] = $datagridConfiguration;
         }
 
