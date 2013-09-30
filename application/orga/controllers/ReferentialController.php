@@ -83,6 +83,8 @@ class Orga_ReferentialController extends Core_Controller
      */
     public function exportAction()
     {
+        set_time_limit(0);
+
         $export = $this->getParam('export');
         $format = $this->getParam('format');
         if ($this->hasParam('version')) {

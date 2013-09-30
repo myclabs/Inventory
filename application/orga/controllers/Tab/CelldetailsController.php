@@ -579,6 +579,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      */
     public function exportAction()
     {
+        set_time_limit(0);
+
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 
