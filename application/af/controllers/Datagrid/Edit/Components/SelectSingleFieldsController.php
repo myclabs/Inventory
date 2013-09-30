@@ -203,6 +203,8 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                     'fieldUsedByInteractionConditionDeletionDenied');
             } elseif ($e->isSourceEntityInstanceOf('Algo_Model_ParameterCoordinate_Algo')) {
                 throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByIndexation');
+            } elseif ($e->isSourceEntityInstanceOf('Algo_Model_Index_Algo')) {
+                throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByIndexation');
             }
             throw $e;
         }
