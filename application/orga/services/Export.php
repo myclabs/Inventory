@@ -594,9 +594,14 @@ function getInputsDetails(AF_Model_Input $input, $path='')
         }
         return $subInputs;
     } else {
+        if ($input->getComponent() !== null) {
+            $componentLabel = $input->getComponent()->getLabel();
+        } else {
+            $componentLabel = $input->getRefComponent();
+        }
         $a = [
             'ancestors' => $path,
-            'label' => $input->getComponent()->getLabel(),
+            'label' => $componentLabel,
             'type' => getInputType($input),
             'values' => getInputValues($input)
         ];
