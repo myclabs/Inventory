@@ -567,38 +567,36 @@ class Orga_Service_Export
 
 function getInputsDetails(AF_Model_Input $input, $path='')
 {
+    if ($input->getComponent() !== null) {
+        $componentLabel = $input->getComponent()->getLabel();
+    } else {
+        $componentLabel = __('Orga', 'exports', 'unknowComponent', ['COMPONENT' => $input->getRefComponent()]);
+    }
     if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
-        $labelSubAF = $input->getComponent()->getLabel();
         $subInputs = [];
         foreach ($input->getValue()->getInputs() as $subInput) {
             if (!$subInput instanceof AF_Model_Input_Group) {
                 $subInputs = array_merge(
                     $subInputs,
-                    getInputsDetails($subInput, $path . $labelSubAF . '/')
+                    getInputsDetails($subInput, $path . $componentLabel . '/')
                 );
             }
         }
         return $subInputs;
     } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
-        $labelSubAF = $input->getComponent()->getLabel();
         $subInputs = [];
         foreach ($input->getValue() as $number => $subInputSet) {
             foreach ($subInputSet->getInputs() as $subInput) {
                 if (!$subInput instanceof AF_Model_Input_Group) {
                     $subInputs = array_merge(
                         $subInputs,
-                        getInputsDetails($subInput, $path . $labelSubAF . '/' . ($number + 1) . ' / ')
+                        getInputsDetails($subInput, $path . $componentLabel . '/' . ($number + 1) . ' / ')
                     );
                 }
             }
         }
         return $subInputs;
     } else {
-        if ($input->getComponent() !== null) {
-            $componentLabel = $input->getComponent()->getLabel();
-        } else {
-            $componentLabel = $input->getRefComponent();
-        }
         $a = [
             'ancestors' => $path,
             'label' => $componentLabel,
@@ -628,43 +626,54 @@ function getInputType (AF_Model_Input $input) {
 
 function getInputValues(AF_Model_Input $input)
 {
+    $inputValue = $input->getValue();
     switch (get_class($input)) {
         case 'AF_Model_Input_Numeric':
             /** @var AF_Model_Input_Numeric $input */
-            $inputValue = $input->getValue();
-            $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
-            $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
+            if ($input->getComponent() !== null) {
+                $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
+                $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
+                return [
+                    $inputValue->getDigitalValue(),
+                    $inputValue->getRelativeUncertainty(),
+                    $inputValue->getUnit()->getSymbol(),
+                    $baseConvertedValue->getDigitalValue(),
+                    $baseConvertedValue->getUnit()->getSymbol(),
+                ];
+            }
             return [
                 $inputValue->getDigitalValue(),
                 $inputValue->getRelativeUncertainty(),
                 $inputValue->getUnit()->getSymbol(),
-                $baseConvertedValue->getDigitalValue(),
-                $baseConvertedValue->getUnit()->getSymbol(),
             ];
         case 'AF_Model_Input_Select_Multi':
             /** @var AF_Model_Input_Select_Multi $input */
-            if (is_array($input->getValue())) {
-                $labels = [];
-                foreach ($input->getValue() as $value) {
-                    if (empty($value)) {
-                        $labels[] = '';
-                    } else {
-                        $labels[] = $input->getComponent()->getOptionByRef($value)->getLabel();
+            if (is_array($inputValue)) {
+                if ($input->getComponent() !== null) {
+                    $labels = [];
+                    foreach ($inputValue as $value) {
+                        if (empty($value)) {
+                            $labels[] = '';
+                        } else {
+                            $labels[] = $input->getComponent()->getOptionByRef($value)->getLabel();
+                        }
                     }
+                    return [implode(', ', $labels)];
                 }
-                return [implode(', ', $labels)];
+                return [implode(', ', $inputValue)];
             }
         case 'AF_Model_Input_Select_Single':
             /** @var AF_Model_Input_Select_Single $input */
-            $value = $input->getValue();
             if (empty($value)) {
                 return [''];
+            } else if ($input->getComponent() !== null) {
+                return [$input->getComponent()->getOptionByRef($value)->getLabel()];
             }
-            return [$input->getComponent()->getOptionByRef($value)->getLabel()];
+            return [$value];
         case 'AF_Model_Input_Checkbox':
             /** @var AF_Model_Input_Checkbox $input */
-            return [($input->getValue()) ? __('UI', 'property', 'checked') : __('UI', 'property', 'unchecked')];
+            return [($inputValue) ? __('UI', 'property', 'checked') : __('UI', 'property', 'unchecked')];
         default:
-            return [$input->getValue()];
+            return [$inputValue];
     }
 }
