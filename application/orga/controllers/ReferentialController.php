@@ -37,10 +37,10 @@ class Orga_ReferentialController extends Core_Controller
         $connectedUser = $this->_helper->auth();
 
         // Formats d'exports.
-        $this->view->defaultFormat = 'xlsx';
+        $this->view->defaultFormat = 'xls';
         $this->view->formats = [
-            'xlsx' => __('UI', 'export', 'xlsx'),
             'xls' => __('UI', 'export', 'xls'),
+//            'xlsx' => __('UI', 'export', 'xlsx'),
 //            'ods' => __('UI', 'export', 'ods'),
         ];
 

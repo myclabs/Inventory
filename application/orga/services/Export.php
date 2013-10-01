@@ -570,7 +570,7 @@ function getInputsDetails(AF_Model_Input $input, $path='')
     if ($input->getComponent() !== null) {
         $componentLabel = $input->getComponent()->getLabel();
     } else {
-        $componentLabel = __('Orga', 'exports', 'unknowComponent', ['COMPONENT' => $input->getRefComponent()]);
+        $componentLabel = __('Orga', 'export', 'unknowComponent', ['COMPONENT' => $input->getRefComponent()]);
     }
     if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
         $subInputs = [];

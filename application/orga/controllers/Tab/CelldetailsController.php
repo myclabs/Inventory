@@ -533,10 +533,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         );
 
         // Formats d'exports.
-        $this->view->defaultFormat = 'xlsx';
+        $this->view->defaultFormat = 'xls';
         $this->view->formats = [
-            'xlsx' => __('UI', 'export', 'xlsx'),
             'xls' => __('UI', 'export', 'xls'),
+//            'xlsx' => __('UI', 'export', 'xlsx'),
 //            'ods' => __('UI', 'export', 'ods'),
         ];
 
