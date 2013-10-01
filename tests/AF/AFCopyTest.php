@@ -10,8 +10,11 @@ class AFCopyTest extends Core_Test_TestCase
     {
         parent::setUp();
 
-        foreach (AF_Model_AF::loadList() as $af) {
-            $af->delete();
+        foreach (AF_Model_Component::loadList() as $o) {
+            $o->delete();
+        }
+        foreach (AF_Model_AF::loadList() as $o) {
+            $o->delete();
         }
         $this->entityManager->flush();
     }
@@ -26,6 +29,7 @@ class AFCopyTest extends Core_Test_TestCase
         $component1 = new AF_Model_Component_Numeric();
         $component1->setRef('component1');
         $component1->setUnit(new UnitAPI('m'));
+        $component1->setAf($oldAF);
         $component1->save();
         $oldAF->addComponent($component1);
 
@@ -63,6 +67,9 @@ class AFCopyTest extends Core_Test_TestCase
             $this->assertNotSame($oldAlgo, $newAlgo);
             $this->assertInstanceOf(get_class($oldAlgo), $newAlgo);
         }
+
+        $component1->delete();
+        $this->entityManager->flush();
 
         $oldAF->delete();
         $this->entityManager->flush();
