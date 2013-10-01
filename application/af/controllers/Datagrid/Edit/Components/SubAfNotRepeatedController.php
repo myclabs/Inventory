@@ -138,7 +138,11 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
                 break;
         }
         $subAF->save();
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        }
         $this->message = __('UI', 'message', 'updated');
         $this->send();
     }

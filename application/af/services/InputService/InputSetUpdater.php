@@ -1,15 +1,11 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
 use ArrayComparator\ArrayComparator;
 
 /**
  * Helper mettant à jour un InputSet à partir d'un autre InputSet
  *
- * @package AF
+ * @author  matthieu.napoli
  */
 class AF_Service_InputService_InputSetUpdater extends ArrayComparator
 {
@@ -45,7 +41,11 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
      */
     public function run()
     {
+        // Copie les saisies
         $this->compare($this->inputSet->getInputs(), $this->newValues->getInputs());
+
+        // Copie les "ContextValue"
+        $this->inputSet->setContextValues($this->newValues->getContextValues());
     }
 
     /**

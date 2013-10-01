@@ -5,428 +5,101 @@
  * @package Keyword
  * @subpackage Test
  */
+use Keyword\Domain\Keyword;
+use Keyword\Domain\Predicate;
+use Keyword\Domain\Association;
 
 /**
- * Creation de la suite de test
+ * Creation de la suite de test.
  * @package Keyword
  * @subpackage Test
  */
-class Keyword_Test_KeywordTest
+class Keyword_Test_KeywordTest extends Core_Test_TestCase
 {
     /**
-     * Creation de la suite de test
+     * Creation de la suite de test.
      */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Keyword_Test_KeywordSetUp');
-        $suite->addTestSuite('Keyword_Test_KeywordOther');
-        $suite->addTestSuite('Keyword_Test_KeywordAssociation');
+        $suite->addTestSuite('Keyword_Test_KeywordEntity');
+        $suite->addTestSuite('Keyword_Test_AssociationEntity');
         return $suite;
-    }
-
-    /**
-     * Generation de l'objet de test.
-     *
-     * @param string $ref
-     * @param string $label
-     *
-     * @return Keyword_Model_Keyword
-     */
-    public static function generateObject($ref=null, $label=null)
-    {
-        $o = new Keyword_Model_Keyword();
-        $o->setRef(($ref ===null) ? 'ref' : $ref);
-        $o->setLabel(($label ===null) ? 'label' : $label);
-        $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-        return $o;
-    }
-
-    /**
-     * Suppression d'un objet cree avec generateObject
-     * @param Keyword_Model_Keyword $o
-     */
-
-    public static function deleteObject($o)
-    {
-        $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
     }
 }
 
 /**
- * Test de la creation/modification/suppression de l'entite
  * @package Keyword
  * @subpackage Test
  */
-class Keyword_Test_KeywordSetUp extends PHPUnit_Framework_TestCase
+class Keyword_Test_KeywordEntity extends Core_Test_TestCase
 {
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun Keyword_Model_Keyword en base, sinon suppression !
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Keyword restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Keyword_Model_Keyword::loadList() as $keyword) {
-                $keyword->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
 
     /**
-     * Test du Constructeur.
-     * @return Keyword_Model_Keyword
+     *
      */
     function testConstruct()
     {
-        $o = new Keyword_Model_Keyword();
-        $this->assertInstanceOf('Keyword_Model_Keyword', $o);
-        $o->setRef('RefKeywordTest');
-        $o->setLabel('LabelKeywordTest');
-        $this->assertEquals(array(), $o->getKey());
-        $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-        $this->assertNotEquals(array(), $o->getKey());
-        return $o;
+        $Keyword = new Keyword('ref');
+        $this->assertInstanceOf('Keyword\Domain\Keyword', $Keyword);
+        $this->assertEquals('ref', $Keyword->getRef());
+        $this->assertEquals('', $Keyword->getLabel());
+
+        $Keyword = new Keyword('ref', 'Label');
+        $this->assertInstanceOf('Keyword\Domain\Keyword', $Keyword);
+        $this->assertEquals('ref', $Keyword->getRef());
+        $this->assertEquals('Label', $Keyword->getLabel());
     }
 
-    /**
-     * Test dy chargement.
-     * @depends testConstruct
-     * @param Keyword_Model_Keyword $o
-     * @return Keyword_Model_Keyword
-     */
-    function testLoad(Keyword_Model_Keyword $o)
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear($o);
-        $oLoaded = Keyword_Model_Keyword::load($o->getKey());
-        $this->assertInstanceOf('Keyword_Model_Keyword', $o);
-        $this->assertEquals($oLoaded->getKey(), $o->getKey());
-        $this->assertEquals($oLoaded->getRef(), $o->getRef());
-        $this->assertEquals($oLoaded->getLabel(), $o->getLabel());
-        return $oLoaded;
-    }
-
-    /**
-     * Test de la suppression.
-     * @param Keyword_Model_Keyword $o
-     * @depends testLoad
-     */
-    function testDelete(Keyword_Model_Keyword $o)
-    {
-        $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-        $this->assertEquals(array(), $o->getKey());
-    }
-
-    /**
-     * Fonction appelee une fois, apres tous les tests
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun Keyword_Model_Keyword en base, sinon suppression !
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Keyword restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Keyword_Model_Keyword::loadList() as $keyword) {
-                $keyword->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
 }
 
 /**
- * Tests de la classe Keyword
  * @package Keyword
  * @subpackage Test
  */
-class Keyword_Test_KeywordOther extends PHPUnit_Framework_TestCase
+class Keyword_Test_AssociationEntity extends Core_Test_TestCase
 {
-    // Objet de test
-    protected $keyword;
 
     /**
-     * Fonction appelee une fois, avant tous les tests
+     *
      */
-    public static function setUpBeforeClass()
+    function testConstruct()
     {
-        // Vérification qu'il ne reste aucun Keyword_Model_Keyword en base, sinon suppression !
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Keyword restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Keyword_Model_Keyword::loadList() as $keyword) {
-                $keyword->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
+        $Keyword1 = new Keyword('ref1');
+        $this->assertFalse($Keyword1->hasAssociationsAsSubject());
+        $this->assertFalse($Keyword1->hasAssociationsAsObject());
+        $this->assertEquals(0, $Keyword1->countAssociationsAsSubject());
+        $this->assertEquals(0, $Keyword1->countAssociationsAsObject());
+        $this->assertEquals(0, $Keyword1->countAssociations());
+
+        $Keyword2 = new Keyword('ref2', 'Label');
+        $this->assertFalse($Keyword2->hasAssociationsAsSubject());
+        $this->assertFalse($Keyword2->hasAssociationsAsObject());
+        $this->assertEquals(0, $Keyword2->countAssociationsAsSubject());
+        $this->assertEquals(0, $Keyword2->countAssociationsAsObject());
+        $this->assertEquals(0, $Keyword2->countAssociations());
+        
+        $predicate1 = new Predicate('ref1', 'reverseref1');
+        $predicate2 = new Predicate('ref2', 'reverseref2');
+
+        $association = $Keyword1->addAssociationWith($predicate1, $Keyword2);
+        $this->assertSame($Keyword1, $association->getSubject());
+        $this->assertSame($predicate1, $association->getPredicate());
+        $this->assertSame($Keyword2, $association->getObject());
+        $association->setPredicate($predicate2);
+        $this->assertSame($predicate2, $association->getPredicate());
+
+        $this->assertTrue($Keyword1->hasAssociationsAsSubject());
+        $this->assertFalse($Keyword1->hasAssociationsAsObject());
+        $this->assertEquals(1, $Keyword1->countAssociationsAsSubject());
+        $this->assertEquals(0, $Keyword1->countAssociationsAsObject());
+        $this->assertEquals(1, $Keyword1->countAssociations());
+
+        $this->assertFalse($Keyword2->hasAssociationsAsSubject());
+        $this->assertTrue($Keyword2->hasAssociationsAsObject());
+        $this->assertEquals(0, $Keyword2->countAssociationsAsSubject());
+        $this->assertEquals(1, $Keyword2->countAssociationsAsObject());
+        $this->assertEquals(1, $Keyword2->countAssociations());
     }
 
-    /**
-     * Fonction appelee avant chaque test
-     */
-    protected function setUp()
-    {
-        $this->keyword = Keyword_Test_KeywordTest::generateObject();
-    }
-
-    /**
-     * Test l'exception obtenue lors d'un getRef sans ref définie.
-     * @expectedException Core_Exception_UndefinedAttribute
-     */
-    public function testGetNotDefinedRef()
-    {
-        $keyword = new Keyword_Model_Keyword();
-
-        try {
-            $ref = $keyword->getRef();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            if ($e->getMessage() === 'The keyword reference has not been defined yet.') {
-                throw $e;
-            }
-        }
-        $this->fail();
-    }
-
-    /**
-     * Test l'exception obtenue lors d'un getLabel sans label définie.
-     * @expectedException Core_Exception_UndefinedAttribute
-     */
-    public function testGetNotDefinedLabel()
-    {
-        $keyword = new Keyword_Model_Keyword();
-
-        try {
-            $ref = $keyword->getLabel();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            if ($e->getMessage() === 'The keyword label has not been defined yet.') {
-                throw $e;
-            }
-        }
-        $this->fail();
-    }
-
-    /**
-     * Test de loadByRef
-     */
-    public function testLoadByRef()
-    {
-        $this->assertSame(Keyword_Model_Keyword::loadByRef($this->keyword->getRef()), $this->keyword);
-    }
-
-    /**
-     * Fonction appelee apres chaque test
-     */
-    protected function tearDown()
-    {
-        // Supprime l'objet de test
-        Keyword_Test_KeywordTest::deleteObject($this->keyword);
-    }
-
-    /**
-     * Fonction appelee une fois, apres tous les tests
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun Keyword_Model_Keyword en base, sinon suppression !
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Keyword restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Keyword_Model_Keyword::loadList() as $keyword) {
-                $keyword->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
-}
-
-/**
- * Tests de la classe Keyword
- * @package Keyword
- * @subpackage Test
- */
-class Keyword_Test_KeywordAssociation extends PHPUnit_Framework_TestCase
-{
-    // Objet de test
-    protected $keyword1;
-    protected $keyword2;
-    protected $predicate12;
-    protected $predicate21;
-
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun Keyword_Model_Association en base, sinon suppression !
-        if (Keyword_Model_Association::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Association restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Keyword_Model_Association::loadList() as $association) {
-                $association->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Keyword_Model_Keyword en base, sinon suppression !
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Keyword restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Keyword_Model_Keyword::loadList() as $keyword) {
-                $keyword->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Keyword_Model_Predicate en base, sinon suppression !
-        if (Keyword_Model_Predicate::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Predicate restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Keyword_Model_Predicate::loadList() as $predicate) {
-                $predicate->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
-
-    /**
-     * Fonction appelee avant chaque test
-     */
-    protected function setUp()
-    {
-        $this->keyword1 = Keyword_Test_KeywordTest::generateObject('subject');
-        $this->keyword2 = Keyword_Test_KeywordTest::generateObject('object');
-        $this->predicate12 = Keyword_Test_PredicateTest::generateObject('1', '1', 'rev1', 'rev1');
-        $this->predicate21 = Keyword_Test_PredicateTest::generateObject('2', '2', 'rev2', 'rev2');
-    }
-
-    /**
-     * Test les associations du côté des keywords.
-     */
-    public function testAssociation()
-    {
-        $this->assertFalse($this->keyword1->hasAssociationsAsSubject());
-        $this->assertFalse($this->keyword1->hasAssociationsAsObject());
-        $this->assertFalse($this->keyword2->hasAssociationsAsSubject());
-        $this->assertFalse($this->keyword2->hasAssociationsAsObject());
-
-        $association1 = new Keyword_Model_Association();
-        $association1->setSubject($this->keyword1);
-        $association1->setObject($this->keyword2);
-        $association1->setPredicate($this->predicate12);
-        $association1->save();
-        $association2 = new Keyword_Model_Association();
-        $association2->setSubject($this->keyword2);
-        $association2->setObject($this->keyword1);
-        $association2->setPredicate($this->predicate21);
-        $association2->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-
-        $this->assertTrue($this->keyword1->hasAssociationAsSubject($association1));
-        $this->assertFalse($this->keyword1->hasAssociationAsSubject($association2));
-        $this->assertFalse($this->keyword1->hasAssociationAsObject($association1));
-        $this->assertTrue($this->keyword1->hasAssociationAsObject($association2));
-        $this->assertFalse($this->keyword2->hasAssociationAsSubject($association1));
-        $this->assertTrue($this->keyword2->hasAssociationAsSubject($association2));
-        $this->assertTrue($this->keyword2->hasAssociationAsObject($association1));
-        $this->assertFalse($this->keyword2->hasAssociationAsObject($association2));
-
-        $this->assertEquals($this->keyword1->getAssociationsAsSubject(), array($association1));
-        $this->assertEquals($this->keyword1->getAssociationsAsObject(), array($association2));
-        $this->assertEquals($this->keyword2->getAssociationsAsSubject(), array($association2));
-        $this->assertEquals($this->keyword2->getAssociationsAsObject(), array($association1));
-
-        $this->assertEquals($this->keyword1->countAssociationsAsSubject(), 1);
-        $this->assertEquals($this->keyword1->countAssociationsAsObject(), 1);
-        $this->assertEquals($this->keyword1->countAssociations(), 2);
-        $this->assertEquals($this->keyword2->countAssociationsAsSubject(), 1);
-        $this->assertEquals($this->keyword2->countAssociationsAsObject(), 1);
-        $this->assertEquals($this->keyword2->countAssociations(), 2);
-
-        $association1->delete();
-        $association2->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-
-        $this->assertFalse($this->keyword1->hasAssociationsAsSubject());
-        $this->assertFalse($this->keyword1->hasAssociationsAsObject());
-        $this->assertFalse($this->keyword2->hasAssociationsAsSubject());
-        $this->assertFalse($this->keyword2->hasAssociationsAsObject());
-        $this->assertEmpty($this->keyword1->getAssociationsAsSubject());
-        $this->assertEmpty($this->keyword1->getAssociationsAsObject());
-        $this->assertEmpty($this->keyword2->getAssociationsAsSubject());
-        $this->assertEmpty($this->keyword2->getAssociationsAsObject());
-    }
-
-    /**
-     * Test le chargement des keywords racines.
-     */
-    public function testLoadListRoots()
-    {
-        $association1 = new Keyword_Model_Association();
-        $association1->setSubject($this->keyword1);
-        $association1->setObject($this->keyword2);
-        $association1->setPredicate($this->predicate12);
-        $association1->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-
-        $this->assertEquals(Keyword_Model_Keyword::loadListRoots(), array($this->keyword1));
-
-    }
-
-    /**
-     * Fonction appelee apres chaque test
-     */
-    protected function tearDown()
-    {
-        // Supprime l'objet de test
-        Keyword_Test_KeywordTest::deleteObject($this->keyword1);
-        Keyword_Test_KeywordTest::deleteObject($this->keyword2);
-        Keyword_Test_PredicateTest::deleteObject($this->predicate12);
-        Keyword_Test_PredicateTest::deleteObject($this->predicate21);
-    }
-
-    /**
-     * Fonction appelee une fois, apres tous les tests
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun Keyword_Model_Association en base, sinon suppression !
-        if (Keyword_Model_Association::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Association restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Keyword_Model_Association::loadList() as $association) {
-                $association->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Keyword_Model_Keyword en base, sinon suppression !
-        if (Keyword_Model_Keyword::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Keyword restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Keyword_Model_Keyword::loadList() as $keyword) {
-                $keyword->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Keyword_Model_Predicate en base, sinon suppression !
-        if (Keyword_Model_Predicate::countTotal() > 0) {
-            echo PHP_EOL . 'Des Keyword_Predicate restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Keyword_Model_Predicate::loadList() as $predicate) {
-                $predicate->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
 }

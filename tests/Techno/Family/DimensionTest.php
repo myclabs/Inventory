@@ -69,6 +69,7 @@ class Techno_Test_Family_DimensionSetUp extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Techno_Model_Component::loadList() as $o) {
             $o->delete();
@@ -79,11 +80,14 @@ class Techno_Test_Family_DimensionSetUp extends PHPUnit_Framework_TestCase
         foreach (Techno_Model_Meaning::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
-            $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
+            }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
     }
 
     /**
@@ -182,6 +186,7 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Techno_Model_Family_Dimension::loadList() as $o) {
             $o->delete();
@@ -195,11 +200,14 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
         foreach (Techno_Model_Meaning::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
-            $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
+            }
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
     }
 
     /**

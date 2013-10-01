@@ -41,6 +41,9 @@ foreach ($this->axes as $axis) {
     if ($this->idCell !== null) {
         $datagridAxisMembers->addParam('idCell', $this->idCell);
     }
+    if (!empty($this->idCell)) {
+        $datagridAxisMembers->pagination = false;
+    }
     $datagridAxisMembers->addParam('idOrganization', $this->idOrganization);
     $datagridAxisMembers->addParam('refAxis', $axis->getRef());
     $datagridAxisMembers->initialLoading = false;

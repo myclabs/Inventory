@@ -47,6 +47,25 @@
             </tuv>
         </tu>
 
+        <!-- Export tableur -->
+
+        <tu tuid="predicate">
+            <tuv xml:lang="fr">
+                <seg>Prédicat</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Prédicate</seg>
+            </tuv>
+        </tu>
+        <tu tuid="predicates">
+            <tuv xml:lang="fr">
+                <seg>Prédicats</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Prédicates</seg>
+            </tuv>
+        </tu>
+
         <!-- Messages -->
 
         <tu tuid="refIsSameAsRevRef">
@@ -65,7 +84,6 @@
                 <seg>This predicate cannot be deleted, since it is involved in (at least) one relation between keywords.</seg>
             </tuv>
         </tu>
-
 
     </body>
 </tmx>

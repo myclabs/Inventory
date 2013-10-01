@@ -5,6 +5,7 @@
 
 require_once __DIR__ . '/../../populate/Orga/populate.php';
 
+use Unit\UnitAPI;
 
 /**
  * Remplissage de la base de données avec des données de test
@@ -58,7 +59,7 @@ class Orga_PopulateTestDWUpToDate extends Orga_Populate
 
         // Ajout d'un role sun une organisation à un utilisateur existant.
         // Params : email, Organization
-        $this->addOrganizationAdministrator('admin', $organization);
+        $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);
 
         // Ajout d'un role sur une cellule à un utilisateur existant.
         // Params : email, Granularity, [Member]

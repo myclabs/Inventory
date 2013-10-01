@@ -8,6 +8,7 @@
 
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
+use Unit\IncompatibleUnitsException;
 
 /**
  * Classe du controller du datagrid des indicateurs
@@ -135,7 +136,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 if ($unit->exists()) {
                     try {
                         $indicator->setUnit($unit);
-                    } catch (Unit_Exception_IncompatibleUnits $e) {
+                    } catch (IncompatibleUnitsException $e) {
                         throw new Core_Exception_User('Unit', 'message', 'incompatibleUnits');
                     }
                     $this->message = __('UI', 'message', 'updated');
@@ -148,7 +149,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 if ($ratioUnit->exists()) {
                     try {
                         $indicator->setRatioUnit($ratioUnit);
-                    } catch (Unit_Exception_IncompatibleUnits $e) {
+                    } catch (IncompatibleUnitsException $e) {
                         throw new Core_Exception_User('Unit', 'message', 'incompatibleUnits');
                     }
                     $this->message = __('UI', 'message', 'updated');

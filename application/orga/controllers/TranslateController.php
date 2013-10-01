@@ -46,4 +46,16 @@ class Orga_TranslateController extends Core_Controller
         $this->view->axes = $organization->getLastOrderedAxes();
     }
 
+    /**
+     * Liste des libellés des DW_Model_Report issus des DW des Granularity en mode traduction.
+     *
+     * @Secure("editOrganization")
+     */
+    public function granularityreportsAction()
+    {
+        $this->view->idOrganization = $this->getParam('idOrganization');
+        $organization = Orga_Model_Organization::load($this->view->idOrganization);
+        $this->view->granularities = $organization->getGranularities();
+    }
+
 }

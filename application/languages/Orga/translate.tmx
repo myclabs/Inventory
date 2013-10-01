@@ -19,5 +19,13 @@
                 <seg>Organizational members</seg>
             </tuv>
         </tu>
+        <tu tuid="granularityReports">
+            <tuv xml:lang="fr">
+                <seg>Analyses préconfigurées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Preconfigured analyses</seg>
+            </tuv>
+        </tu>
     </body>
 </tmx>

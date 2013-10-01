@@ -24,9 +24,9 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
 
     /**
      * @Inject
-     * @var Orga_Service_ACLManager
+     * @var Core_Work_Dispatcher
      */
-    private $aclManager;
+    private $workDispatcher;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -70,79 +70,40 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
     function addelementAction()
     {
         $idOrganization = $this->getParam('idOrganization');
-        $organizationAdministratorRole = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
+        $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->send();
+            return;
         }
 
-        if (empty($this->_addErrorMessages)) {
-            $this->entityManager->beginTransaction();
-
-            if (User_Model_User::isEmailUsed($userEmail)) {
-                $user = User_Model_User::loadByEmail($userEmail);
-                if ($user->hasRole($organizationAdministratorRole)) {
-                    $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
-                } else {
-                    set_time_limit(0);
-                    try {
-                        $this->entityManager->flush();
-
-                        $this->aclManager->addOrganizationAdministrator(
-                            $organization,
-                            $user
-                        );
-                        $this->entityManager->flush();
-
-                        $this->entityManager->commit();
-                    } catch (Exception $e) {
-                        $this->entityManager->rollback();
-                        $this->entityManager->clear();
-
-                        throw $e;
-                    }
-                    $this->userService->sendEmail(
-                        $user,
-                        __('User', 'email', 'subjectAccessRightsChange'),
-                        __('Orga', 'email', 'userOrganizationAdministratorRoleAdded', array(
-                            'ORGANIZATION' => $organization->getLabel(),
-                        ))
-                    );
-                    $this->message = __('Orga', 'role', 'roleAddedToExistingUser');
-                }
-            } else {
-                $user = $this->userService->inviteUser(
-                    $userEmail,
-                    __('Orga', 'email', 'userOrganizationAdministratorRoleGivenAtCreation', array(
-                        'ORGANIZATION' => $organization->getLabel(),
-                        'ROLE' => __('Orga', 'role', $organizationAdministratorRole->getName())
-                    ))
-                );
-                $this->message = __('Orga', 'role', 'userCreatedFromRessource');
-                $user->addRole(User_Model_Role::loadByRef('user'));
-
-                set_time_limit(0);
-                try {
-                    $this->entityManager->flush();
-
-                    $this->aclManager->addOrganizationAdministrator(
-                        $organization,
-                        $user
-                    );
-                    $this->entityManager->flush();
-
-                    $this->entityManager->commit();
-                } catch (Exception $e) {
-                    $this->entityManager->rollback();
-                    $this->entityManager->clear();
-
-                    throw $e;
-                }
+        if (User_Model_User::isEmailUsed($userEmail)) {
+            $user = User_Model_User::loadByEmail($userEmail);
+            if ($user->hasRole($role)) {
+                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                $this->send();
+                return;
             }
+        } else {
+            $user = $this->userService->inviteUser(
+                $userEmail
+            );
+            $user->addRole(User_Model_Role::loadByRef('user'));
         }
 
+        $this->workDispatcher->runBackground(
+            new Core_Work_ServiceCall_Task(
+                'Orga_Service_ACLManager',
+                'addOrganizationAdministrator',
+                [$organization, $user, false],
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+            )
+        );
+
+        $this->message = __('UI', 'message', 'addedLater');
         $this->send();
     }
 
@@ -163,35 +124,18 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $idOrganization = $this->getParam('idOrganization');
         $organization = Orga_Model_Organization::load($idOrganization);
         $user = User_Model_User::load($this->delete);
+        $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
 
-        set_time_limit(0);
-        $this->entityManager->beginTransaction();
-        try {
-            $this->entityManager->flush();
-
-            $this->aclManager->removeOrganizationAdministrator(
-                $organization,
-                $user
-            );
-            $this->entityManager->flush();
-
-            $this->entityManager->commit();
-        } catch (Exception $e) {
-            $this->entityManager->rollback();
-            $this->entityManager->clear();
-
-            throw $e;
-        }
-
-        $this->userService->sendEmail(
-            $user,
-            __('User', 'email', 'subjectAccessRightsChange'),
-            __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', array(
-                'ORGANIZATION' => $organization->getLabel(),
-            ))
+        $this->workDispatcher->runBackground(
+            new Core_Work_ServiceCall_Task(
+                'Orga_Service_ACLManager',
+                'removeOrganizationAdministrator',
+                [$organization, $user, false],
+                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+            )
         );
 
-        $this->message = __('Orga', 'role', 'userRoleRemovedFromUser');
+        $this->message = __('UI', 'message', 'deletedLater');
         $this->send();
     }
 

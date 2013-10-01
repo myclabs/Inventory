@@ -6,6 +6,9 @@
  * @package Algo
  */
 
+use Keyword\Domain\Keyword;
+use TEC\Expression;
+
 /**
  * Creation of the Test Suite.
  *
@@ -27,7 +30,7 @@ class TextKey_ExpressionTest
 
 	/**
 	 * Permet de générer un objet de base sur lequel on pourra travailler
-	 * @return TEC_Model_Expression $o
+	 * @return Expression $o
 	 */
 	public static function generateExpression()
 	{
@@ -49,6 +52,8 @@ class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
 	 */
 	public static function setUpBeforeClass()
 	{
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
 		// Vérification qu'il ne reste aucun objet en base, sinon suppression
 		foreach (Algo_Model_Set::loadList() as $o) {
 			$o->delete();
@@ -56,8 +61,12 @@ class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
 		foreach (Algo_Model_Algo::loadList() as $o) {
 			$o->delete();
 		}
-        foreach (Keyword_Model_Keyword::loadList() as $o) {
-            $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
+            }
         }
         foreach (Classif_Model_ContextIndicator::loadList() as $o) {
             $o->delete();
@@ -65,11 +74,7 @@ class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
         }
-        foreach (TEC_Model_Expression::loadList() as $o) {
-            $o->delete();
-        }
-		$entityManagers = Zend_Registry::get('EntityManagers');
-		$entityManagers['default']->flush();
+		$entityManager->flush();
 	}
 
 
@@ -91,7 +96,7 @@ class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
 		$this->entityManager->flush();
 
 		$this->assertEquals('test', $o->getRef());
-		$this->assertEquals($expression, $o->getExpression());
+		$this->assertEquals($expression, str_replace(' ', '', $o->getExpression()));
 
 		return $o;
     }

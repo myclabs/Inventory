@@ -3,6 +3,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Application\Service\KeywordDTO;
 ?>
 
 <div class="page-header">
@@ -25,7 +26,7 @@ $refColumn->editable = true;
 $refColumn->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $refColumn->list = [];
 foreach ($this->keywords as $keyword) {
-    /** @var $keyword Keyword_Model_Keyword */
+    /** @var $keyword KeywordDTO */
     $refColumn->list[$keyword->getRef()] = $keyword->getRef();
 }
 $datagrid->addCol($refColumn);

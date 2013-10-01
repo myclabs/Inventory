@@ -5,6 +5,7 @@
  * @package Techno
  * @subpackage Family
  */
+use Keyword\Application\Service\KeywordDTO;
 
 /**
  * Classe Member
@@ -23,13 +24,7 @@ class Techno_Model_Family_Member extends Core_Model_Entity
 
     /**
      * Mot-clé associé
-     * @var string
-     */
-    protected $refKeyword;
-
-    /**
-     * Mot-clé associé (cache de l'objet)
-     * @var Keyword_Model_Keyword
+     * @var KeywordDTO
      */
     protected $keyword;
 
@@ -49,31 +44,16 @@ class Techno_Model_Family_Member extends Core_Model_Entity
     /**
      * Construction d'un membre
      * @param Techno_Model_Family_Dimension $dimension
-     * @param Keyword_Model_Keyword $keyword
+     * @param KeywordDTO $keyword
      */
-    public function __construct(Techno_Model_Family_Dimension $dimension, Keyword_Model_Keyword $keyword)
+    public function __construct(Techno_Model_Family_Dimension $dimension, KeywordDTO $keyword)
     {
         $this->keyword = $keyword;
-        $this->refKeyword = $keyword->getRef();
         $this->dimension = $dimension;
         // Ajout réciproque à la dimension
         $dimension->addMember($this);
     }
 
-
-    /**
-     * Valide le mot-clé associé au membre
-     * @return bool|string True si le mot-clé est valide, sinon retourne le mot-clé
-     */
-    public function validateKeyword()
-    {
-        try {
-            Keyword_Model_Keyword::loadByRef($this->refKeyword);
-        } catch (Core_Exception_NotFound $e) {
-            return $this->refKeyword;
-        }
-        return true;
-    }
 
     /**
      * @return int
@@ -84,11 +64,10 @@ class Techno_Model_Family_Member extends Core_Model_Entity
     }
 
     /**
-     * @param Keyword_Model_Keyword $keyword
+     * @param KeywordDTO $keyword
      */
-    public function setKeyword(Keyword_Model_Keyword $keyword)
+    public function setKeyword(KeywordDTO $keyword)
     {
-        $this->refKeyword = $keyword->getRef();
         $this->keyword = $keyword;
 
         // Update les coordonnées des cellules
@@ -98,13 +77,10 @@ class Techno_Model_Family_Member extends Core_Model_Entity
     }
 
     /**
-     * @return Keyword_Model_Keyword
+     * @return KeywordDTO
      */
     public function getKeyword()
     {
-        if ($this->keyword === null) {
-            $this->keyword = Keyword_Model_Keyword::loadByRef($this->refKeyword);
-        }
         return $this->keyword;
     }
 
@@ -113,7 +89,7 @@ class Techno_Model_Family_Member extends Core_Model_Entity
      */
     public function getRef()
     {
-        return $this->refKeyword;
+        return $this->keyword->getRef();
     }
 
     /**
@@ -121,12 +97,7 @@ class Techno_Model_Family_Member extends Core_Model_Entity
      */
     public function getLabel()
     {
-        try {
-            $keyword = $this->getKeyword();
-            return $keyword->getLabel();
-        } catch (Core_Exception_NotFound $e) {
-            return $this->refKeyword;
-        }
+        return $this->keyword->getLabel();
     }
 
     /**
@@ -145,7 +116,7 @@ class Techno_Model_Family_Member extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un persist de l'objet (défini dans le mapper).
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()
     {
@@ -157,7 +128,7 @@ class Techno_Model_Family_Member extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un update de l'objet (défini dans le mapper).
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
      */
     public function preUpdate()
     {
@@ -165,7 +136,7 @@ class Techno_Model_Family_Member extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé avant un delete de l'objet (défini dans le mapper).
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
     public function preDelete()
     {
@@ -173,7 +144,7 @@ class Techno_Model_Family_Member extends Core_Model_Entity
     }
 
     /**
-     * Fonction appelé après un load de l'objet (défini dans le mapper).
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
      */
     public function postLoad()
     {

@@ -33,7 +33,7 @@ Orga_Model_CellsGroup:
     preRemove: [ preDelete ]
 
   uniqueConstraints:
-      CellAFUniqueness:
-          columns:
-              - idContainerCell
-              - idInputGranularity
+    CellAFUniqueness:
+      columns:
+        - idContainerCell
+        - idInputGranularity

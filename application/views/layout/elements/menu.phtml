@@ -1,7 +1,16 @@
 <?php
 if (Zend_Auth::getInstance()->hasIdentity()) {
-    $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+    try {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+    } catch (Core_Exception_NotFound $e) {
+        $connectedUser = null;
+    }
+} else {
+    $connectedUser = null;
+}
 
+if ($connectedUser) {
     $container = Zend_Registry::get('container');
     /** @var User_Service_ACL $aclService */
     $aclService = $container->get('User_Service_ACL');
@@ -197,27 +206,62 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         ];
     }
 
+    if ($isAllowedToEditReferential) {
+        $subMenuReferencial[] = [
+            'name' => __('Unit', 'name', 'units'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Unit', 'name', 'standardUnits'),
+                    'url' => 'unit/consult/standardunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'extendedUnits'),
+                    'url' => 'unit/consult/extendedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'discreteUnits'),
+                    'url' => 'unit/consult/discreteunits'
+                ],
+                [
+                    'name' => __('Unit', 'composedUnitIdentifier', 'menuLinkLabel'),
+                    'url' => 'unit/consult/composedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'physicalQuantities'),
+                    'url' => 'unit/consult/physicalquantities'
+                ],
+            ]
+        ];
+    } else {
+        $subMenuReferencial[] = [
+            'name' => __('Unit', 'name', 'units'),
+            'url' => '#',
+            'submenu' => [
+                [
+                    'name' => __('Unit', 'name', 'standardUnits'),
+                    'url' => 'unit/consult/standardunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'extendedUnits'),
+                    'url' => 'unit/consult/extendedunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'discreteUnits'),
+                    'url' => 'unit/consult/discreteunits'
+                ],
+                [
+                    'name' => __('Unit', 'name', 'physicalQuantities'),
+                    'url' => 'unit/consult/physicalquantities'
+                ],
+            ]
+        ];
+    }
+
     $subMenuReferencial[] = [
-        'name' => __('Unit', 'name', 'units'),
-        'url' => '#',
-        'submenu' => [
-            [
-                'name' => __('Unit', 'name', 'standardUnits'),
-                'url' => 'unit/consult/standardunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'extendedUnits'),
-                'url' => 'unit/consult/extendedunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'discreteUnits'),
-                'url' => 'unit/consult/discreteunits'
-            ],
-            [
-                'name' => __('Unit', 'name', 'physicalQuantities'),
-                'url' => 'unit/consult/physicalquantities'
-            ],
-        ]
+        'name' => '<i class="icon-download-alt"></i> '.__('UI', 'name', 'exports'),
+        'url' => 'orga/referential/exports',
+        'submenu' => null
     ];
 
     $aclQuery = new Core_Model_Query();

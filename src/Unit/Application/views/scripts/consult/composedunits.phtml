@@ -1,0 +1,27 @@
+<?php
+/**
+ * Liste exemple de ComposedUnit.
+ * @author valentin.claras
+ * @package Unit
+ * @subpackage View
+ */
+?>
+<div class="page-header">
+    <h1><?=__('Unit', 'composedUnitIdentifier', 'pageTitle')?></h1>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th><?=__('Unit', 'name', 'symbol')?></th>
+        <th><?=__('UI', 'name', 'identifier')?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php /** @var \Unit\Domain\ComposedUnit\ComposedUnit $composedUnit */ foreach ($this->composedUnits as $composedUnit) { ?>
+        <tr>
+            <td><?=$composedUnit->getSymbol()?></td>
+            <td><?=$composedUnit->getRef()?></td>
+        </tr>
+    <?php } ?>
+    </tbody>
+</table>

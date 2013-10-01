@@ -1,30 +1,33 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Service responsable de la gestion des saisies des AF
  *
- * @package AF
+ * @author  matthieu.napoli
  */
 class AF_Service_InputService
 {
-
     /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
 
     /**
-     * @param EventDispatcher $eventDispatcher
+     * @var LoggerInterface
      */
-    public function __construct(EventDispatcher $eventDispatcher)
+    private $logger;
+
+    /**
+     * @param EventDispatcher $eventDispatcher
+     * @param LoggerInterface $logger
+     */
+    public function __construct(EventDispatcher $eventDispatcher, LoggerInterface $logger)
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     /**
@@ -54,17 +57,31 @@ class AF_Service_InputService
      * Si la saisie est incomplète, les résultats seront vidés.
      *
      * @param AF_Model_InputSet_Primary $inputSet
+     * @param AF_Model_AF               $af Permet d'uiliser un AF différent de celui de la saisie
      */
-    public function updateResults(AF_Model_InputSet_Primary $inputSet)
+    public function updateResults(AF_Model_InputSet_Primary $inputSet, AF_Model_AF $af = null)
     {
+        if (! $af) {
+            $af = $inputSet->getAF();
+        }
+
         // MAJ le pourcentage de complétion
         $inputSet->updateCompletion();
 
         // Si la saisie est complète
         if ($inputSet->isInputComplete()) {
             // Calcule les résultats
-            $inputSet->getAF()->execute($inputSet);
-            $inputSet->getOutputSet()->calculateTotals();
+            try {
+                $af->execute($inputSet);
+                $inputSet->setCalculationComplete(true);
+                $inputSet->getOutputSet()->calculateTotals();
+            } catch (Exception $e) {
+                $ref = $inputSet->getAF()->getRef();
+                $this->logger->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
+
+                $inputSet->setCalculationComplete(false);
+                $inputSet->clearOutputSet();
+            }
         } else {
             $inputSet->clearOutputSet();
         }

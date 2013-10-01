@@ -17,10 +17,12 @@ git pull
 #Xvfb :99 -ac > /dev/null 2>&1 &
 #export DISPLAY=:99
 
-# Start selenium server
-java -jar selenium-server-standalone.jar > /dev/null 2>&1 &
+export DISPLAY=:0
 
-sleep 2
+# Start selenium server
+java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
+
+sleep 5
 
 # Zombie.js
 #export NODE_PATH=/usr/local/lib/node_modules

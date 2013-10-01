@@ -3,6 +3,8 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Application\Service\KeywordDTO;
+
 /** @var $family Techno_Model_Family */
 $family = $this->family;
 /** @var $dimension Techno_Model_Family_Dimension */
@@ -13,8 +15,19 @@ $dimension = $this->dimension;
     <h1><?=__('Techno', 'dimension', 'pageTitle')?></h1>
 </div>
 
-<p><?=__('Techno', 'name', 'family') . __('UI', 'other', ':') . ' ' . $family->getLabel()?></p>
-<p><?=__('Techno', 'name', 'meaning') . __('UI', 'other', ':') . ' ' . $dimension->getLabel()?></p>
+<p>
+    <a class="btn btn-primary" href="techno/family/edit/id/<?=$family->getId()?>">
+        <i class="icon-white icon-arrow-left"></i>
+        <?=__('Techno', 'dimension', 'returnToFamily')?></a>
+</p>
+<p>
+    <strong><?=__('Techno', 'name', 'family') . __('UI', 'other', ':')?></strong>
+    <?=$family->getLabel()?>
+</p>
+<p>
+    <strong><?=__('Techno', 'name', 'meaning') . __('UI', 'other', ':')?></strong>
+    <?=$dimension->getLabel()?>
+</p>
 
 
 <?php
@@ -52,7 +65,7 @@ $refKeywordColumn->editable = true;
 $refKeywordColumn->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $refKeywordColumn->list = [];
 foreach ($this->keywords as $keyword) {
-    /** @var $keyword Keyword_Model_Keyword */
+    /** @var $keyword KeywordDTO */
     $refKeywordColumn->list[$keyword->getRef()] = $keyword->getRef();
 }
 $datagrid->addCol($refKeywordColumn);

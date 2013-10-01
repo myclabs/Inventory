@@ -5,6 +5,8 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * Controleur des familles
@@ -14,6 +16,12 @@ class Techno_FamilyController extends Core_Controller
 {
 
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var KeywordService
+     */
+    protected $keywordService;
 
     /**
      * Arbre des familles en édition
@@ -97,7 +105,7 @@ class Techno_FamilyController extends Core_Controller
     {
         $this->view->family = Techno_Model_Family::load($this->getParam('id'));
         $this->view->meanings = Techno_Model_Meaning::loadList();
-        $this->view->keywords = Keyword_Model_Keyword::loadList();
+        $this->view->keywords = $this->keywordService->getAll();
         $this->_helper->layout()->disableLayout();
     }
 
@@ -119,6 +127,7 @@ class Techno_FamilyController extends Core_Controller
         }
         $this->view->mode = $mode;
         $this->view->family = Techno_Model_Family::load($this->getParam('id'));
+        $this->view->keywordService = $this->keywordService;
         $this->_helper->layout()->disableLayout();
     }
 

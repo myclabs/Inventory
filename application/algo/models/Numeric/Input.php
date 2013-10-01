@@ -35,8 +35,8 @@ class Algo_Model_Numeric_Input extends Algo_Model_Numeric
     {
         /** @var $input Algo_Model_Input_Numeric */
         $input = $inputSet->getInputByRef($this->inputRef);
-        if (!$input) {
-            throw new Core_Exception_NotFound("Il n'y a pas d'input avec le ref " . $this->inputRef);
+        if (! $input) {
+            return new Calc_UnitValue($this->unit, 0, 0);
         }
         return $input->getValue();
     }

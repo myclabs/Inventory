@@ -5,7 +5,7 @@
  * @subpackage Service
  */
 
-use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 
 /**
  * Droits d'accès
@@ -18,8 +18,18 @@ class User_Service_ACL
     /**
      * @var User_Service_ACL_ResourceTreeTraverser[]
      */
-    protected $resourceTreeTraversers = [];
+    private $resourceTreeTraversers = [];
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Vérifie une autorisation d'accès à une ressource
@@ -46,23 +56,28 @@ class User_Service_ACL
         }
 
         if ($target instanceof User_Model_Resource) {
-            $resources = array($target);
+            $resources = [$target];
         } else {
-            $resources = array($this->getResourceForEntity($target));
+            $resource = $this->getResourceForEntity($target);
+            if ($resource === null) {
+                $this->logger->notice('User_Service_ACL::isAllowed called on object without an associated resource');
+                return false;
+            }
+            $resources = [$resource];
         }
 
-        while (count($resources) > 0) {
-            foreach ($resources as $resource) {
-                foreach ($identities as $identity) {
-                    // Cherche l'autorisation
-                    $authorization = User_Model_Authorization::search($identity, $action, $resource);
-                    if ($authorization) {
-                        return true;
-                    }
+        // Héritage des ressources
+        $resources = array_merge($resources, $this->getAllParentResources($resources));
+
+        // TODO Éviter la boucle en faisant 1 seule requête BDD
+        foreach ($resources as $resource) {
+            foreach ($identities as $identity) {
+                // Cherche l'autorisation
+                $authorization = User_Model_Authorization::search($identity, $action, $resource);
+                if ($authorization) {
+                    return true;
                 }
             }
-            // Héritage des ressources
-            $resources = $this->getParentResources($resources);
         }
 
         // Aucune règle trouvée
@@ -152,8 +167,8 @@ class User_Service_ACL
         }
 
         // Autorisations héritées des ressources parent
-        foreach ($this->getParentResources([$resource]) as $parentResource) {
-            $authorizations += $this->getAllAuthorizationsForResource($parentResource);
+        foreach ($this->getAllParentResources([$resource]) as $parentResource) {
+            $authorizations = array_merge($authorizations, $this->getAllAuthorizationsForResource($parentResource));
         }
 
         return $authorizations;
@@ -198,7 +213,7 @@ class User_Service_ACL
             $resource = $authorization['resource'];
             /** @var $action User_Model_Action */
             $action = $authorization['action'];
-            $children = $this->getChildResources([$resource]);
+            $children = $this->getAllChildResources([$resource]);
             foreach ($children as $childResource) {
                 $key = $action->getValue() . '-' . $childResource->getId();
                 $allAuthorizations[$key] = [
@@ -248,19 +263,23 @@ class User_Service_ACL
      * @param User_Model_Resource[] $resources
      * @return User_Model_Resource_Entity[] ressources parents
      */
-    public function getParentResources(array $resources)
+    public function getAllParentResources(array $resources)
     {
         $parentResources = [];
+
         foreach ($resources as $resource) {
-            if ($resource instanceof User_Model_Resource_Entity) {
-                $resourceResolver = $this->getResourceTreeTraverser($resource);
-                if ($resourceResolver) {
-                    // Pour chaque ressource, récupère tous ses parents
-                    $parentResources += $resourceResolver->getParentResources($resource);
-                }
+            if (!$resource instanceof User_Model_Resource_Entity) {
+                continue;
+            }
+            $resourceResolver = $this->getResourceTreeTraverser($resource);
+            if ($resourceResolver) {
+                // Pour chaque ressource, récupère tous ses parents
+                $parentResources = array_merge($parentResources, $resourceResolver->getAllParentResources($resource));
             }
         }
-        return $parentResources;
+
+        // Supprime les doublons
+        return Core_Tools::arrayFilterDuplicates($parentResources);
     }
 
     /**
@@ -268,19 +287,23 @@ class User_Service_ACL
      * @param User_Model_Resource[] $resources
      * @return User_Model_Resource_Entity[] ressources enfant
      */
-    public function getChildResources(array $resources)
+    public function getAllChildResources(array $resources)
     {
         $childResources = [];
+
         foreach ($resources as $resource) {
-            if ($resource instanceof User_Model_Resource_Entity) {
-                $resourceResolver = $this->getResourceTreeTraverser($resource);
-                if ($resourceResolver) {
-                    // Pour chaque ressource, récupère tous ses parents
-                    $childResources += $resourceResolver->getChildResources($resource);
-                }
+            if (!$resource instanceof User_Model_Resource_Entity) {
+                continue;
+            }
+            $resourceResolver = $this->getResourceTreeTraverser($resource);
+            if ($resourceResolver) {
+                // Pour chaque ressource, récupère tous ses parents
+                $childResources = array_merge($childResources, $resourceResolver->getAllChildResources($resource));
             }
         }
-        return $childResources;
+
+        // Supprime les doublons
+        return Core_Tools::arrayFilterDuplicates($childResources);
     }
 
 }

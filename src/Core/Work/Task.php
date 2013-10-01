@@ -1,13 +1,9 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
 
 /**
  * Représente une tâche abstraite
  *
- * @package Core
+ * @author  matthieu.napoli
  */
 abstract class Core_Work_Task
 {
@@ -15,6 +11,12 @@ abstract class Core_Work_Task
      * @var Core_Work_TaskContext|null
      */
     private $context;
+
+    /**
+     * "Label" of the task for user notifications. If null, no notifications are sent.
+     * @var null|string
+     */
+    private $taskLabel;
 
     /**
      * @param Core_Work_TaskContext|null $context
@@ -30,5 +32,23 @@ abstract class Core_Work_Task
     public function getContext()
     {
         return $this->context;
+    }
+
+    /**
+     * "Label" of the task for user notifications. If null, no notifications are sent.
+     * @return null|string
+     */
+    public function getTaskLabel()
+    {
+        return $this->taskLabel;
+    }
+
+    /**
+     * "Label" of the task for user notifications. If null, no notifications are sent.
+     * @param null|string $taskLabel
+     */
+    public function setTaskLabel($taskLabel)
+    {
+        $this->taskLabel = $taskLabel;
     }
 }

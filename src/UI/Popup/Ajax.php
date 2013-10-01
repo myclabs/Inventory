@@ -64,7 +64,7 @@ class UI_Popup_Ajax extends UI_Popup_Generic
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->loadingText = __('UI', 'loading', 'loading').'<br>';
         $this->loadingImage = new UI_HTML_Image('images/ui/ajax-loader_large.gif', __('UI', 'loading', 'loading'));
-        $this->errorText = __('UI', 'loading', 'error').'<br>';
+        $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error')).'<br>';
     }
 
     /**

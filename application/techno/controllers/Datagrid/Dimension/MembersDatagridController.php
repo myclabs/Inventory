@@ -5,12 +5,19 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * @package Techno
  */
 class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var KeywordService
+     */
+    protected $keywordService;
 
     /**
      * (non-PHPdoc)
@@ -30,9 +37,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
             $data['refKeyword'] = $this->cellList($member->getRef());
             // Seule les valeurs en erreur sont éditables
             $this->editableCell($data['refKeyword'], false);
-            try {
-                $member->getKeyword();
-            } catch (Core_Exception_NotFound $e) {
+            if ($this->keywordService->exists($member->getKeyword())) {
                 $this->editableCell($data['refKeyword'], true);
             }
             // Position
@@ -61,9 +66,9 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
             $this->setAddElementErrorMessage('refKeyword', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $keyword = Keyword_Model_Keyword::loadByRef($refKeyword);
+            $keyword = $this->keywordService->get($refKeyword);
         } catch(Core_Exception_NotFound $e) {
-            $this->setAddElementErrorMessage('refKeyword', __('Techno', 'formValidation', 'unknownKeywordRef'));
+            $this->setAddElementErrorMessage('refKeyword', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -118,7 +123,7 @@ class Techno_Datagrid_Dimension_MembersDatagridController extends UI_Controller_
                 break;
             case 'refKeyword':
                 try {
-                    $keyword = Keyword_Model_Keyword::loadByRef($newValue);
+                    $keyword = $this->keywordService->get($newValue);
                     $member->setKeyword($keyword);
                     $this->data = $keyword->getRef();
                 } catch (Core_Exception_NotFound $e) {

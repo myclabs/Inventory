@@ -14,6 +14,8 @@
  * Classe générique des controleurs de la Datagrid.
  * La classe donne accès à des méthodes permettant de récupérer, envoyer et modifier les données.
  *
+ * @deprecated
+ *
  * @package    UI
  * @subpackage Datagrid
  */
@@ -302,8 +304,8 @@ abstract class UI_Controller_Datagrid extends Core_Controller
     /**
      * Formate les données à renvoyer pour une cellule date.
      *
-     * @param Date|DateTime $date Valeur d'une colonne date.
-     * @param string        $content Affichage dans la colonne.
+     * @param DateTime $date Valeur d'une colonne date.
+     * @param string   $content Affichage dans la colonne.
      *
      * @return array
      */
@@ -381,16 +383,12 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *
      * @return array
      */
-    public function cellNumber($number, $significantFigures=3, $numberDecimal=null)
+    public function cellNumber($number, $significantFigures=null, $numberDecimal=null)
     {
-        if (is_int($number)) {
-            $value = $number;
-        } else {
-            $value = (float) $number;
-        }
         $locale = Core_Locale::loadDefault();
-        $content = $locale->formatNumber($value, $significantFigures, $numberDecimal);
-        return $this->baseCell($value, $content);
+        $content = $locale->formatNumber($number, $significantFigures, $numberDecimal);
+        $number = $locale->formatNumberForInput($number);
+        return $this->baseCell($number, $content);
     }
 
     /**
@@ -412,9 +410,6 @@ abstract class UI_Controller_Datagrid extends Core_Controller
         }
         if ($percent < 0) {
             $percent = abs($percent);
-        }
-        if ($percent > 100) {
-            $percent %= 100;
         }
         return $this->baseCell($percent, $color);
     }

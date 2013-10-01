@@ -1,0 +1,34 @@
+Keyword\Domain\Association:
+  type: entity
+  repositoryClass: Keyword\Architecture\Repository\DoctrineAssociationRepository
+  table: Keyword_Association
+
+  id:
+    subject:
+      associationKey: true
+    object:
+      associationKey: true
+    predicate:
+      associationKey: true
+
+  manyToOne:
+    subject:
+      targetEntity: Keyword\Domain\Keyword
+      inversedBy: subjectAssociations
+      joinColumns:
+        idSubjectKeyword:
+          referencedColumnName: id
+      nullable : false
+    object:
+      targetEntity: Keyword\Domain\Keyword
+      inversedBy: objectAssociations
+      joinColumns:
+        idObjectKeyword:
+          referencedColumnName: id
+      nullable : false
+    predicate:
+      targetEntity: Keyword\Domain\Predicate
+      joinColumns:
+        idPredicate:
+          referencedColumnName: id
+      nullable : false

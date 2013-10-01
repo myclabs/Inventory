@@ -8,6 +8,7 @@
 
 namespace Unit\Domain\Unit;
 
+use Core_Model_Query;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\PhysicalQuantity\Component;
 use Unit\Domain\UnitSystem;
@@ -27,7 +28,7 @@ class StandardUnit extends Unit
     /**
      * Coefficient mutliplicateur d'une unité standard.
      * Permet par exemple de savoir le rapport entre km et m.
-     * @var int
+     * @var float
      */
     protected $multiplier = null;
 
@@ -67,7 +68,7 @@ class StandardUnit extends Unit
 
     /**
      * Défini le coefficient multiplicateur de l'unité.
-     * @param int $multiplier
+     * @param float $multiplier
      */
     public function setMultiplier($multiplier)
     {
@@ -77,7 +78,7 @@ class StandardUnit extends Unit
     /**
      * Renvoie le coefficient multiplicateur.
      * @throws \Core_Exception_UndefinedAttribute
-     * @return int
+     * @return float
      */
     public function getMultiplier()
     {
@@ -170,6 +171,22 @@ class StandardUnit extends Unit
         }
 
         return $tabResults;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCompatibleUnits()
+    {
+        $units = $this->getPhysicalQuantity()->getUnits();
+
+        // Filtre l'unité courante de la liste
+        return array_filter(
+            $units,
+            function (Unit $unit) {
+                return $unit !== $this;
+            }
+        );
     }
 
 }

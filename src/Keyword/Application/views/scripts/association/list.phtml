@@ -1,0 +1,45 @@
+<?php
+/**
+ * Vue en consultation presentant les association dans une datagrid.
+ * @author valentin.claras
+ * @author bertrand.ferry
+ * @package Keyword
+ */
+
+use Keyword\Domain\AssociationCriteria;
+use UI\Datagrid\Datagrid;
+use UI\Datagrid\Column\ListColumn;
+?>
+<div class="page-header">
+	<h1><?=__('Keyword', 'relation', 'pageTitle')?></h1>
+</div>
+<?php
+    $datagrid = new Datagrid('association', 'datagrid_association', 'keyword');
+    $datagrid->criteriaName = '\Keyword\Domain\AssociationCriteria';
+
+    $columnSubject = new ListColumn('subject', __('Keyword', 'name', 'subject'));
+    $columnSubject->list = $this->listKeywords;
+    $columnSubject->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
+    $columnSubject->criteriaFilterAttribute = AssociationCriteria::QUERY_KEYWORD_SUBJECT_REF;
+    $columnSubject->criteriaOrderAttribute = AssociationCriteria::QUERY_KEYWORD_SUBJECT_LABEL;
+    $columnSubject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
+
+    $columnPredicate = new ListColumn('predicate', __('Keyword', 'name', 'predicate'));
+    $columnPredicate->list = $this->listPredicates;
+    $columnPredicate->criteriaFilterAttribute = AssociationCriteria::QUERY_PREDICATE_REF;
+    $columnPredicate->criteriaOrderAttribute = AssociationCriteria::QUERY_PREDICATE_LABEL;
+    $columnPredicate->editable = true;
+
+    $columnObject = new ListColumn('object', __('Keyword', 'name', 'object'));
+    $columnObject->list = $this->listKeywords;
+    $columnObject->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
+    $columnObject->criteriaFilterAttribute = AssociationCriteria::QUERY_KEYWORD_OBJECT_REF;
+    $columnObject->criteriaOrderAttribute = AssociationCriteria::QUERY_KEYWORD_OBJECT_LABEL;
+    $columnObject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
+
+    $datagrid->addCol($columnSubject);
+    $datagrid->addCol($columnPredicate);
+    $datagrid->addCol($columnObject);
+
+    $datagrid->setDefaultSorting('predicate');
+    $datagrid->display();

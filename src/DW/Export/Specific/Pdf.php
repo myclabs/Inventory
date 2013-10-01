@@ -13,6 +13,11 @@
 class DW_Export_Specific_Pdf extends Export_Pdf
 {
     /**
+     * @var DW_Model_Report[]
+     */
+    private $reports = [];
+
+    /**
      * Constructeur de la classe.
      *
      * @param string $xmlPath
@@ -179,15 +184,11 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                             $results = $report->getValues();
 
-                            $unit = $report->getNumerator()->getUnit()->getSymbol();
-                            if (($report->getDenominator() !== null)) {
-                                $unit .= ' / '.$report->getDenominator()->getUnit()->getSymbol();
-                            }
                             $this->html .= $report->getLabel().' : '.
                             $locale->formatNumber(array_pop($results)['value'], 3).
                             // On n'affiche pas l'incertitude
                             //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                            ' '.$unit;
+                            ' '.$report->getValuesUnitSymbol();
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
@@ -308,6 +309,8 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         }
 
         $this->html .= '</html>';
+
+        $this->clearReports();
     }
 
     /**
@@ -328,15 +331,15 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
             $xmlNumerator = $xmlIndicators->item(0);
             $numeratorIndicator = DW_Model_Indicator::loadByRefAndCube(
-                'classif_'.$xmlNumerator->getAttribute('ref'),
+                $xmlNumerator->getAttribute('ref'),
                 $cube
             );
             $report->setNumerator($numeratorIndicator);
 
             if (($xmlIndicators->length > 1)) {
-                $xmlDenominator = $xmlIndicators->item(0);
+                $xmlDenominator = $xmlIndicators->item(1);
                 $denominatorIndicator = DW_Model_Indicator::loadByRefAndCube(
-                    'classif_'.$xmlDenominator->getAttribute('ref'),
+                    $xmlDenominator->getAttribute('ref'),
                     $cube
                 );
                 $report->setDenominator($denominatorIndicator);
@@ -346,7 +349,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
             $xmlNumerator = $xmlIndicators->item(0);
             $numeratorIndicator = DW_Model_Indicator::loadByRefAndCube(
-                'classif_'.$xmlNumerator->getAttribute('ref'),
+                $xmlNumerator->getAttribute('ref'),
                 $cube
             );
             $report->setNumerator($numeratorIndicator);
@@ -354,7 +357,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $xmlNumeratorAxis = $xmlNumerator->getElementsByTagName('refAxis');
 
             $xmlNumeratorAxis1 = $xmlNumeratorAxis->item(0);
-            $prefix = $xmlNumeratorAxis1->getAttribute('source').'_';
+            $prefix = substr($xmlNumeratorAxis1->getAttribute('source'), 0, 1).'_';
             $report->setNumeratorAxis1(
                 DW_Model_Axis::loadByRefAndCube(
                     $prefix.$xmlNumeratorAxis1->firstChild->nodeValue,
@@ -364,7 +367,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
             if (($xmlNumeratorAxis->length > 1)) {
                 $xmlNumeratorAxis2 = $xmlNumeratorAxis->item(1);
-                $prefix = $xmlNumeratorAxis2->getAttribute('source').'_';
+                $prefix = substr($xmlNumeratorAxis2->getAttribute('source'), 0, 1).'_';
                 $report->setNumeratorAxis2(
                     DW_Model_Axis::loadByRefAndCube(
                         $prefix.$xmlNumeratorAxis2->firstChild->nodeValue,
@@ -376,7 +379,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             if (($xmlIndicators->length > 1)) {
                 $xmlDenominator = $xmlIndicators->item(1);
                 $denominatorIndicator = DW_Model_Indicator::loadByRefAndCube(
-                    'classif_'.$xmlDenominator->getAttribute('ref'),
+                    $xmlDenominator->getAttribute('ref'),
                     $cube
                 );
                 $report->setDenominator($denominatorIndicator);
@@ -384,7 +387,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                 $xmlDenominatorAxis = $xmlDenominator->getElementsByTagName('refAxis');
 
                 $xmlDenominatorAxis1 = $xmlDenominatorAxis->item(0);
-                $prefix = $xmlDenominatorAxis1->getAttribute('source').'_';
+                $prefix = substr($xmlDenominatorAxis1->getAttribute('source'), 0, 1).'_';
                 $report->setDenominatorAxis1(
                     DW_Model_Axis::loadByRefAndCube(
                         $prefix.$xmlDenominatorAxis1->firstChild->nodeValue,
@@ -394,7 +397,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                 if (($xmlDenominatorAxis->length > 1)) {
                     $xmlDenominatorAxis2 = $xmlDenominatorAxis->item(1);
-                    $prefix = $xmlDenominatorAxis2->getAttribute('source').'_';
+                    $prefix = substr($xmlDenominatorAxis2->getAttribute('source'), 0, 1).'_';
                     $report->setDenominatorAxis2(
                         DW_Model_Axis::loadByRefAndCube(
                             $prefix.$xmlDenominatorAxis2->firstChild->nodeValue,
@@ -421,7 +424,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         }
 
         foreach ($xmlReport->getElementsByTagName('filter') as $xmlFilter) {
-            $prefix = $xmlFilter->getAttribute('source').'_';
+            $prefix = substr($xmlFilter->getAttribute('source'), 0, 1).'_';
 
             /* @var DOMNode $xmlFilter */
             $axis = DW_Model_Axis::loadByRefAndCube(
@@ -433,15 +436,25 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                 /* @var DOMNode $xmlMember */
                 $filter->addMember(
                     DW_Model_Member::loadByRefAndAxis(
-                        $prefix.$xmlMember->firstChild->nodeValue,
+                        $xmlMember->firstChild->nodeValue,
                         $filter->getAxis()
                     )
                 );
             }
-            $report->addFilter($filter);
         }
 
+        $this->reports[] = $report;
         return $report;
+    }
+
+    /**
+     * Supprime tous ler reports créés durant l'export.
+     */
+    protected function clearReports()
+    {
+        foreach ($this->reports as $report) {
+            $report->getCube()->removeReport($report);
+        }
     }
 
     /**

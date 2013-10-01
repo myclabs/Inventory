@@ -24,6 +24,9 @@ AF_Model_InputSet:
     completion:
       type: integer
       nullable: true
+    contextValues:
+      type: array
+      nullable: true
 
   oneToMany:
     inputs:

@@ -40,7 +40,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
         $crossedGranularity = $granularityForInventoryStatus->getCrossedGranularity($granularity);
 
-        if ($cell->getGranularity()->getRef() === $granularityForInventoryStatus->getRef()) {
+        if ($cell->getGranularity()->getRef() === $crossedGranularity->getRef()) {
             $this->addLine($this->getLineData($cell, $crossedGranularity));
             $this->totalElements = 1;
         } else {
@@ -96,19 +96,35 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             $data[$member->getAxis()->getRef()] = $member->getRef();
         }
 
-        if ($crossedGranularity->getRef() === $granularityForInventoryStatus->getRef()) {
-            $cellInventoryStatus = $cell;
+        if ($crossedGranularity === $granularityForInventoryStatus) {
+            $data['inventoryStatus'] = $cell->getInventoryStatus();
         } else {
-            $cellInventoryStatus = $cell->getParentCellForGranularity($granularityForInventoryStatus);
+            try {
+                $data['inventoryStatus'] = $cell->getParentCellForGranularity($granularityForInventoryStatus)->getInventoryStatus();
+            } catch (Core_Exception_NotFound $e) {
+                $data['inventoryStatus'] = Orga_Model_Cell::STATUS_NOTLAUNCHED;
+            }
         }
-        $data['inventoryStatus'] = $cellInventoryStatus->getInventoryStatus();
         if ($data['inventoryStatus'] !== Orga_Model_Cell::STATUS_NOTLAUNCHED) {
             $data['advancementInput'] = 0;
             $data['advancementFinishedInput'] = 0;
 
             $totalChildInputCells = 0;
             foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-                if ($inputGranularity->isNarrowerThan($cell->getGranularity())) {
+                if ($inputGranularity === $cell->getGranularity()) {
+                    try {
+                        $afInputSetPrimary = $cell->getAFInputSetPrimary();
+                        if ($afInputSetPrimary->isInputComplete()) {
+                            $data['advancementInput'] ++;
+                        }
+                        if ($afInputSetPrimary->isFinished()) {
+                            $data['advancementFinishedInput'] ++;
+                        }
+                    } catch (Core_Exception_UndefinedAttribute $e) {
+                        // Pas de saisie pour l'instant = pas d'avancement.
+                    }
+                    $totalChildInputCells ++;
+                } elseif ($inputGranularity->isNarrowerThan($cell->getGranularity())) {
                     $inputCells = $cell->getChildCellsForGranularity($inputGranularity);
                     foreach ($inputCells as $inputCell) {
                         try {

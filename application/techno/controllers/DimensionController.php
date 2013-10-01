@@ -5,6 +5,8 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * Controleur des dimensions
@@ -12,6 +14,11 @@ use Core\Annotation\Secure;
  */
 class Techno_DimensionController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var KeywordService
+     */
+    protected $keywordService;
 
     use UI_Controller_Helper_Form;
 
@@ -24,7 +31,7 @@ class Techno_DimensionController extends Core_Controller
         $idDimension = $this->getParam('id');
         $this->view->dimension = Techno_Model_Family_Dimension::load($idDimension);
         $this->view->family = $this->view->dimension->getFamily();
-        $this->view->keywords = Keyword_Model_Keyword::loadList();
+        $this->view->keywords = $this->keywordService->getAll();
     }
 
     /**

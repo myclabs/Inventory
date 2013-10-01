@@ -56,7 +56,7 @@ class Techno_Datagrid_Translate_CategoriesController extends UI_Controller_Datag
     public function updateelementAction()
     {
         $category = Techno_Model_Category::load($this->update['index']);
-        $category->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $category->reloadWithLocale(Core_Locale::load($this->update['column']));
         $category->setLabel($this->update['value']);
         $this->data = $category->getLabel();
 

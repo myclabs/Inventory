@@ -4,6 +4,7 @@
  * @author  cyril.perraud
  * @package Algo
  */
+use Keyword\Domain\Keyword;
 
 /**
  * Classe qui permet de récupérer les coordonnées d'un élément d'une famille
@@ -39,7 +40,7 @@ abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
     /**
      * Renvoie le membre de famille associé au parameterCoordinate
      * @param Algo_Model_InputSet|null $inputSet
-     * @return Keyword_Model_Keyword
+     * @return Keyword
      */
     public abstract function getMemberKeyword(Algo_Model_InputSet $inputSet = null);
 

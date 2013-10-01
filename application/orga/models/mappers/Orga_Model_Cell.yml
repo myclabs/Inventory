@@ -33,7 +33,7 @@ Orga_Model_Cell:
 
   oneToOne:
     docLibraryForAFInputSetsPrimary:
-      targetEntity: Doc_Model_Library
+      targetEntity: Doc\Domain\Library
       joinColumn:
         name: idDocLibraryForAFInputSetsPrimary
         referencedColumnName: id
@@ -50,7 +50,7 @@ Orga_Model_Cell:
       orphanRemoval: true
       cascade: [ persist, remove ]
     docBibliographyForAFInputSetPrimary:
-      targetEntity: Doc_Model_Bibliography
+      targetEntity: Doc\Domain\Bibliography
       joinColumn:
         name: idDocBibliographyForAFInputSetPrimary
         referencedColumnName: id
@@ -68,7 +68,7 @@ Orga_Model_Cell:
       orphanRemoval: true
       cascade: [ persist, remove ]
     docLibraryForSocialGenericActions:
-      targetEntity: Doc_Model_Library
+      targetEntity: Doc\Domain\Library
       joinColumn:
         name: idDocLibraryForSocialGenericActions
         referencedColumnName: id
@@ -77,7 +77,7 @@ Orga_Model_Cell:
       orphanRemoval: true
       cascade: [ persist, remove ]
     docLibraryForSocialContextActions:
-      targetEntity: Doc_Model_Library
+      targetEntity: Doc\Domain\Library
       joinColumn:
         name: idDocLibraryForSocialContextActions
         referencedColumnName: id
@@ -162,9 +162,11 @@ Orga_Model_Cell:
           idCell:
             referencedColumnName: id
             nullable: false
+            onDelete: CASCADE
         inverseJoinColumns:
           idDWResult:
             referencedColumnName: id
             nullable: false
             unique: true
+            onDelete: CASCADE
       cascade: [ persist, remove ]

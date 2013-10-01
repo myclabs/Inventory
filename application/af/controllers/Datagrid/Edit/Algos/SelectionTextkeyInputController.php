@@ -29,6 +29,12 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyInputController extends UI_Controll
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
+                try {
+                    $component = AF_Model_Component_Select_Single::loadByRef($algo->getInputRef(), $af);
+                    $data['input'] = $component->getLabel();
+                } catch (Core_Exception_NotFound $e) {
+                    $data['input'] = null;
+                }
                 $this->addLine($data);
             }
         }

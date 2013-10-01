@@ -35,15 +35,23 @@
             <tuv xml:lang="en">
                 <seg>Identifier selection algorithms</seg>
             </tuv>
-        </tu>      
+        </tu>
         <tu tuid="inputTextkeySelectionCollapse">
             <tuv xml:lang="fr">
-                <seg>A partir d'une saisie de champ de sélection simple</seg>
+                <seg>À partir d'une saisie de champ de sélection simple</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Based on a single selection field</seg>
             </tuv>
-        </tu>   
+        </tu>
+        <tu tuid="orgaCoordinateTextkeySelectionCollapse">
+            <tuv xml:lang="fr">
+                <seg>Coordonnées organisationnelles</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational coordinates</seg>
+            </tuv>
+        </tu>
         
     </body>
 </tmx>

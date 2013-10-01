@@ -1,11 +1,9 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 /** @var $action AF_Model_Action */
 $action = $this->action;
 $af = $action->getTargetComponent()->getAf();
+
+$locale = Core_Locale::loadDefault();
 
 $form = new UI_Form('updateAction');
 $form->setAjax(false);
@@ -16,7 +14,7 @@ if ($action instanceof AF_Model_Action_SetValue_Numeric) {
     // Valeur numerique
     $numericValue = new UI_Form_Element_Text('numericValue');
     $numericValue->setLabel(__('AF', 'configInteractionDatagrid', 'valueToBeAssignedLabel'));
-    $numericValue->setValue($action->getValue()->getDigitalValue());
+    $numericValue->setValue($locale->formatNumberForInput($action->getValue()->getDigitalValue()));
     $form->addElement($numericValue);
     // Incertitude
     $numericUncertainty = new UI_Form_Element_Text('numericUncertainty');
@@ -51,7 +49,9 @@ if ($action instanceof AF_Model_Action_SetValue_Select_Single) {
         $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());
         $selectOptionValue->addOption($uiOption);
     }
-    $selectOptionValue->setValue($action->getOption()->getId());
+    if ($action->getOption()) {
+        $selectOptionValue->setValue($action->getOption()->getId());
+    }
     $form->addElement($selectOptionValue);
 }
 

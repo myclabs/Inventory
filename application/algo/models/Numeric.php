@@ -72,7 +72,7 @@ abstract class Algo_Model_Numeric extends Algo_Model_Algo
         foreach ($this->indexes as $resultIndex) {
             $classifMembers[] = $resultIndex->getClassifMember($inputSet);
         }
-        return new Algo_Model_Output($result, $this->getContextIndicator(), $classifMembers, $this->label);
+        return new Algo_Model_Output($result, $this, $classifMembers);
     }
 
     /**

@@ -23,24 +23,29 @@ class Keyword_PopulateTest extends Keyword_Populate
 
 
         // Création des prédicats.
-        // Params : ref, label, reverseRef, reverseLabel
-        // OptionalParams : description=null
         $predicate_est_plus_general_que = $this->createPredicate('est_plus_general_que', 'est plus général que', 'est_plus_specifique_que', 'est plus spécifique que');
         $predicate_contient = $this->createPredicate('contient', 'contient', 'fait_partie_de', 'fait partie de', 'Blabla');
 
         // Création des mot-clefs.
-        // Params : ref, label
         $keyword_combustible = $this->createKeyword('combustible', 'combustible');
         $keyword_gaz_naturel_ = $this->createKeyword('gaz_naturel', 'gaz naturel');
         $keyword_charbon = $this->createKeyword('charbon', 'charbon');
         $keyword_processus = $this->createKeyword('processus', 'processus');
         $keyword_amont_combustion = $this->createKeyword('amont_combustion', 'amont de la combustion');
         $keyword_combustion = $this->createKeyword('combustion', 'combustion');
+        $keyword_marque = $this->createKeyword('marque', 'marque');
+        $keyword_marque_a = $this->createKeyword('marque_a', 'marque A');
+        $keyword_marque_b = $this->createKeyword('marque_b', 'marque B');
+
+
+        $entityManager->flush();
+
 
         // Création des associations.
-        // Params : Keyword subject, Predicate, Keyword object
         $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_gaz_naturel_);
         $this->createAssociation($keyword_combustible, $predicate_est_plus_general_que, $keyword_charbon);
+        $this->createAssociation($keyword_marque, $predicate_est_plus_general_que, $keyword_marque_a);
+        $this->createAssociation($keyword_marque, $predicate_est_plus_general_que, $keyword_marque_b);
 
 
         $entityManager->flush();

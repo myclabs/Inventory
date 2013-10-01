@@ -56,7 +56,7 @@ class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Data
     public function updateelementAction()
     {
         $indicator = Classif_Model_Indicator::loadByRef($this->update['index']);
-        $indicator->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $indicator->reloadWithLocale(Core_Locale::load($this->update['column']));
         $indicator->setLabel($this->update['value']);
         $this->data = $indicator->getLabel();
 

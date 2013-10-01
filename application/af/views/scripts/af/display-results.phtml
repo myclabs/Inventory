@@ -1,11 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  yoann.croizer
- * @package AF
- */
-/** @var $af AF_Model_AF */
-$af = $this->af;
 /** @var $inputSet AF_Model_InputSet_Primary|null */
 $inputSet = $this->inputSet;
 $locale = Core_Locale::loadDefault();
@@ -13,6 +6,11 @@ $locale = Core_Locale::loadDefault();
 
 if (!$inputSet || !$inputSet->isInputComplete()) {
     echo '<p>' . __('AF', 'inputInput', 'incompleteInput') . '</p>';
+    return;
+}
+
+if (!$inputSet->isCalculationComplete()) {
+    echo '<p>' . __('AF', 'inputInput', 'completeInputIncompleteCalculations') . '</p>';
     return;
 }
 

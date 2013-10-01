@@ -88,16 +88,18 @@
 
         <!-- Expressions -->
 
+        <!-- Abandon guillemets français ici car sinon besoin utilisation espaces insécables, pénible à gérer avec behat -->
         <tu tuid="expressionTextIdentifierSelectionAddPanelTitle">
+
             <tuv xml:lang="fr">
-                <seg>Ajout d'un algorithme de sélection d’identifiant de type « expression »</seg>
+                <seg>Ajout d'un algorithme de sélection d’identifiant de type expression</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Creation of an identifier selection algorithm of "expression" type</seg>
             </tuv>
         </tu>
 
-        <!-- A partir d'une saisie de champ de sélection simple -->
+    <!-- A partir d'une saisie de champ de sélection simple -->
 
         <tu tuid="singleSelectionInputTextIdentifierSelectionAddPanelTitle">
             <tuv xml:lang="fr">
@@ -105,6 +107,33 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Creation of an identifier selection algorithm based on a single selection input</seg>
+            </tuv>
+        </tu>
+
+        <!-- Coordonnée organisationnelle -->
+
+        <tu tuid="orgaAxisHeader">
+            <tuv xml:lang="fr">
+                <seg>Axe organisationnel (identifiant)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational axis (identifier)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="defaultValueHeader">
+            <tuv xml:lang="fr">
+                <seg>Valeur par défaut</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Default value</seg>
+            </tuv>
+        </tu>
+        <tu tuid="orgaCoordinateTextkeySelectionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un algorithme de sélection d’identifiant de type « coordonnée organisationnelle »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an identifier selection algorithm of "organizational coordinate" type</seg>
             </tuv>
         </tu>
 

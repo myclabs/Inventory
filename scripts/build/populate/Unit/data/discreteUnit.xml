@@ -27,10 +27,10 @@
         </name>
     </discreteUnit>
 
-    <discreteUnit ref="logement">
+    <discreteUnit ref="devise">
         <name>
-            <fr>logement</fr>
-            <en>housing</en>
+            <fr>devise</fr>
+            <en>currency</en>
         </name>
     </discreteUnit>
 
@@ -38,6 +38,13 @@
         <name>
             <fr>homme</fr>
             <en>man</en>
+        </name>
+    </discreteUnit>
+
+    <discreteUnit ref="logement">
+        <name>
+            <fr>logement</fr>
+            <en>housing</en>
         </name>
     </discreteUnit>
 

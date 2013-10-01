@@ -51,6 +51,7 @@ When I wait [for] 5 seconds
 
 When I click "button/link"
 When I click element "css selector"
+When I focus on element "css selector"
 When I open collapse "label"
 When I close collapse "label"
 When I open tab "label"
@@ -68,10 +69,14 @@ Then I should see the popup "Popup title"
 # Datagrid
 Then I should see the "users" datagrid
 Then the "users" datagrid should contain 1 row
+Then the "users" datagrid should contain a row:
+  | nom            | email | detailsUser |
+  | Administrateur | admin | Éditer      |
 Then the row 1 of the "users" datagrid should contain:
   | nom            | email | detailsUser |
   | Administrateur | admin | Éditer      |
 Then [the] column "name" of [the] row 2 of the "users" datagrid should contain "Bob"
 Then I set "value" for [the] column "label" of [the] row 1 of the "keywords" datagrid [with a confirmation message]
+Then I additionally select "value" for [the] column "label" of [the] row 1 of the "keywords" datagrid [with a confirmation message]
 When I click "Supprimer" in the row 5 of the "users" datagrid
 ```

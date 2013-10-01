@@ -1,21 +1,27 @@
 <?php
 /**
- * @author valentin.claras
- * @author yoann.croizer
- * @author hugo.charbonnier
- * @package Exec
+ * @author     valentin.claras
+ * @package    Exec
+ * @subpackage Execution
  */
 
+namespace Exec;
+
+use Exec\Provider\ValueInterface;
+use TEC\Expression;
+use TEC\Component\Component;
+
 /**
- * classe Exec_Execution
- * @package Exec
+ * classe Execution
+ * @package    Exec
+ * @subpackage Execution
  */
-abstract class Exec_Execution
+abstract class Execution
 {
     /**
      * L'expression à partir de laquelle l'arbre est construit.
      *
-     * @var TEC_Model_Expression
+     * @var Expression
      */
     protected $expression;
 
@@ -23,16 +29,16 @@ abstract class Exec_Execution
     /**
      * Constructeur de la classe.
      *
-     * @param TEC_Model_Expression $expression
+     * @param Expression $expression
      */
-    public function __construct(TEC_Model_Expression $expression)
+    public function __construct(Expression $expression)
     {
         $this->expression = $expression;
     }
 
     /**
      * Renvoi l'attribut protégé expression
-     * @return TEC_Model_Expression
+     * @return Expression
      */
     public function getExpression()
     {
@@ -42,11 +48,11 @@ abstract class Exec_Execution
     /**
      * Parcourt l'arbre d'éxécution des opérations de l'arbres et vérifie la valeur.
      *
-     * @param Exec_Interface_ValueProvider $valueProvider
+     * @param \Exec\Provider\ValueInterface $valueProvider
      *
      * @return array
      */
-    public function getErrors(Exec_Interface_ValueProvider $valueProvider)
+    public function getErrors(ValueInterface $valueProvider)
     {
         return $this->getErrorsFromComponent($this->expression->getRootNode(), $valueProvider);
     }
@@ -54,11 +60,11 @@ abstract class Exec_Execution
     /**
      * Parcourt l'arbre d'éxécution des opérations de l'arbres et parse les valeurs.
      *
-     * @param Exec_Interface_ValueProvider $valueProvider
+     * @param \Exec\Provider\ValueInterface $valueProvider
      *
      * @return mixed
      */
-    public function executeExpression(Exec_Interface_ValueProvider $valueProvider)
+    public function executeExpression(ValueInterface $valueProvider)
     {
         return $this->executeComponent($this->expression->getRootNode(), $valueProvider);
     }
@@ -66,23 +72,27 @@ abstract class Exec_Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
      *
-     * @param TEC_Model_Component          $node
-     * @param Exec_Interface_ValueProvider $valueProvider
+     * @param Component $node
+     * @param \Exec\Provider\ValueInterface $valueProvider
      *
      * @return array
      */
-    protected abstract function getErrorsFromComponent(TEC_Model_Component $node,
-                                                       Exec_Interface_ValueProvider $valueProvider);
+    protected abstract function getErrorsFromComponent(
+        Component $node,
+        ValueInterface $valueProvider
+    );
 
     /**
      * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
      *
-     * @param TEC_Model_Component          $node
-     * @param Exec_Interface_ValueProvider $valueProvider
+     * @param Component $node
+     * @param \Exec\Provider\ValueInterface $valueProvider
      *
      * @return mixed
      */
-    protected abstract function executeComponent(TEC_Model_Component $node,
-                                                 Exec_Interface_ValueProvider $valueProvider);
+    protected abstract function executeComponent(
+        Component $node,
+        ValueInterface $valueProvider
+    );
 
 }

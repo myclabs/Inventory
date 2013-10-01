@@ -76,7 +76,7 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
         if (!$this->isHidden()) {
             /** @var $component AF_Model_Component_Numeric */
             $component = $this->getComponent();
-            if ($component->getRequired() && count($this->value) > 0) {
+            if ($component && $component->getRequired() && count($this->value) > 0) {
                 return 1;
             }
         }
@@ -93,7 +93,7 @@ class AF_Model_Input_Select_Multi extends AF_Model_Input implements Algo_Model_I
             return false;
         }
 
-        if ($input instanceof AF_Model_Input_Select_Single) {
+        if ($input instanceof AF_Model_Input_Select_Multi) {
             return $this->getValue() === $input->getValue();
         }
 

@@ -56,17 +56,19 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
      *
      * @param string            $event
      * @param Core_Model_Entity $subject
-     * @param array                $arguments
+     * @param array             $arguments
      */
     public static function applyEvent($event, $subject, $arguments = array())
     {
         switch ($event) {
             case DW_Model_Report::EVENT_SAVE:
                 try {
-                    // Nécessaire pour détecter d'où est issu le Report
-                    $granularity = Orga_Model_Granularity::loadByDWCube($subject->getCube());
-                    $granularityReport = new Orga_Model_GranularityReport($subject);
-                    $granularityReport->save();
+                    // Nécessaire pour détecter d'où est issu le Report.
+                    if ($subject->getCube()->getId() !== null) {
+                        $granularity = Orga_Model_Granularity::loadByDWCube($subject->getCube());
+                        $granularityReport = new Orga_Model_GranularityReport($subject);
+                        $granularityReport->save();
+                    }
                 } catch (Core_Exception_NotFound $e) {
                     // Le Report n'est pas issue d'un Cube de Granularity.
                 }
@@ -91,6 +93,12 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                     $granularityReport->delete();
                 } catch (Core_Exception_NotFound $e) {
                     // Le Report n'est pas issue d'un Cube de Granularity.
+                    foreach (self::loadList() as $granularityReport) {
+                        /** @var self $granularityReport */
+                        if ($granularityReport->hasCellDWReport($subject)) {
+                            $granularityReport->removeCellDWReport($subject);
+                        }
+                    }
                 }
                 break;
         }
@@ -118,6 +126,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     public static function isDWReportCopiedFromGranularityDWReport(DW_Model_Report $dWReport)
     {
         foreach (self::loadList() as $granularityReport) {
+            /** @var self $granularityReport */
             if ($granularityReport->hasCellDWReport($dWReport)) {
                 return true;
             }

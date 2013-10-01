@@ -26,14 +26,6 @@
 
         <!-- Paramètres -->
 
-        <tu tuid="unrecognizedFamily">
-            <tuv xml:lang="fr">
-                <seg>Merci de saisir un identifiant de famille valide.</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Please provide a valid family identifier.</seg>
-            </tuv>
-        </tu>
         <!-- Algorithmes de sélection d'identifiant -->
 
         <tu tuid="algoUsed">

@@ -11,6 +11,8 @@
 /**
  * Description of colonne order.
  *
+ * @deprecated
+ *
  * @package    UI
  * @subpackage Datagrid
  *
@@ -205,7 +207,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $this->filterOperatorLower = Core_Model_Filter::OPERATOR_LOWER;
         $this->filterOperatorHigher = Core_Model_Filter::OPERATOR_HIGHER;
         $this->loadingText = __('UI', 'loading', 'loading');
-        $this->errorText = __('UI', 'loading', 'error');
+        $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
         $this->labelGoFirst = '<i class="icon-fast-backward"></i>';
         $this->labelForbiddenGoFirst = '<i class="icon-fast-backward icon-white"></i>';
         $this->labelGoUp = '<i class="icon-step-backward"></i>';

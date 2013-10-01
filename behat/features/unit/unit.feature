@@ -18,7 +18,7 @@ Feature: Unit feature
   # Encodage de caractères
     And I should see "ℓ"
   # Séparateur de décimale
-    And the row 7 of the "ListStandardUnits" datagrid should contain:
+    And the row 8 of the "ListStandardUnits" datagrid should contain:
     | name     | ref | symbol | physicalQuantity | multiplier   | unitSystem    |
     | gramme   | g   | g      | Masse            | 0,001        | International |
 
@@ -67,7 +67,8 @@ Feature: Unit feature
       | name  |
       | heure |
   # Filtre sur le symbole
-    When I fill in "ListStandardUnits_name_filterForm" with ""
+    When I open collapse "Filtres"
+    And I fill in "ListStandardUnits_name_filterForm" with ""
     And I fill in "ListStandardUnits_symbol_filterForm" with "km"
     And I click "Filtrer"
     And I wait 5 seconds
@@ -76,7 +77,8 @@ Feature: Unit feature
       | name      |
       | kilomètre |
   # Filtre sur la grandeur physique
-    When I fill in "ListStandardUnits_symbol_filterForm" with ""
+    When I open collapse "Filtres"
+    And I fill in "ListStandardUnits_symbol_filterForm" with ""
     And I select "Vitesse" from "ListStandardUnits_physicalQuantity_filterForm"
     And I click "Filtrer"
     Then the "ListStandardUnits" datagrid should contain 2 row
@@ -84,22 +86,23 @@ Feature: Unit feature
       | name              |
       | mètre par seconde |
   # Filtre sur le système d'unités
-    When I select "" from "ListStandardUnits_physicalQuantity_filterForm"
+    When I open collapse "Filtres"
+    And I select "" from "ListStandardUnits_physicalQuantity_filterForm"
     And I select "Anglo-saxon" from "ListStandardUnits_unitSystem_filterForm"
     And I click "Filtrer"
-    Then the "ListStandardUnits" datagrid should contain 1 row
+    Then the "ListStandardUnits" datagrid should contain 2 row
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name |
-      | nœud |
+      | mile |
   # Filtre toujours présent quand on quitte la page puis qu'on y revient
     When I am on "unit/consult/physicalquantities"
     And I wait for the page to finish loading
     And I am on "unit/consult/standardunits"
     And I wait for the page to finish loading
-    Then the "ListStandardUnits" datagrid should contain 1 row
+    Then the "ListStandardUnits" datagrid should contain 2 row
     And the row 1 of the "ListStandardUnits" datagrid should contain:
       | name |
-      | nœud |
+      | mile |
   # Lien "Réinitialiser"
     When I open collapse "Filtres"
     And I click "Réinitialiser"

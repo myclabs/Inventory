@@ -10,8 +10,8 @@ Techno_Model_Meaning:
         strategy: AUTO
 
   fields:
-    refKeyword:
-      type: string
+    keyword:
+      type: keyword_dto
       unique: true
     position:
       type: integer

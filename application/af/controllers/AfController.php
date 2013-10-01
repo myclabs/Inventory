@@ -98,6 +98,7 @@ class AF_AfController extends Core_Controller
         $af = AF_Model_AF::load($this->getParam('idAF'));
         $actionStack = json_decode($this->getParam('actionStack'));
         $exitURL = urldecode($this->getParam('exitURL'));
+        $resultsPreviewUrl = json_decode(urldecode($this->getParam('resultsPreviewUrl')));
         $mode = $this->getParam('mode');
         $idInputSet = $this->getParam('idInputSet');
         if ($idInputSet) {
@@ -115,6 +116,8 @@ class AF_AfController extends Core_Controller
         $this->view->mode = $mode;
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->exitURL = $exitURL;
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->view->resultsPreviewUrl = $resultsPreviewUrl;
         // Génère le formulaire
         $form = $af->generateForm($inputSet, $mode);
         $form->setAjax(true, 'inputSavedHandler');
@@ -129,6 +132,7 @@ class AF_AfController extends Core_Controller
             $urlParams['idAF'],
             $urlParams['actionStack'],
             $urlParams['exitURL'],
+            $urlParams['resultsPreviewUrl'],
             $urlParams['mode'],
             $urlParams['idInputSet']
         );
@@ -188,8 +192,6 @@ class AF_AfController extends Core_Controller
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->isInputComplete = $inputSet ? $inputSet->isInputComplete() : false;
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->af = $af;
         $this->_helper->layout->disableLayout();

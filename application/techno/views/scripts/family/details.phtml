@@ -20,17 +20,14 @@ $family = $this->family;
         <?php
         $category = $family->getCategory();
         if ($category) {
-            echo $category->getLabel();
+            $categories = '';
+            while ($category) {
+                $categories = $category->getLabel() . ' / ' . $categories;
+                $category = $category->getParentCategory();
+            }
+            echo substr($categories, 0, -3);
         } else {
             echo '<span class="muted">'.__('UI', 'other', 'noneFem').'</span>';
-        }
-        ?>
-        | <strong><?=__('UI', 'name', 'type') . __('UI', 'other', ':')?></strong>
-        <?php
-        if ($family instanceof Techno_Model_Family_Coeff) {
-            echo __('Techno', 'name', 'coefficient');
-        } else {
-            echo __('Techno', 'name', 'emissionFactor');
         }
         ?>
         | <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>

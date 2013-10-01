@@ -91,9 +91,11 @@
         ?>
         <script type="text/javascript">
             var checkOrganizationDWCubesState = function() {
+                setMask(true);
                 $.get(
                     'orga/organization/dwcubesstate/idOrganization/<?=$this->idOrganization?>',
                     function (response) {
+                        setMask(false);
                         var button = $('#organizationDWCubes');
                         if (response.organizationDWCubesState) {
                             button.attr('class', 'btn btn-success')
@@ -107,21 +109,23 @@
                             button.bind('click', resetOrganizationDWCubes);
                         }
                     }
-                ).fail(errorHandler);
+                ).fail(function(o) { setMask(false); errorHandler(o); });
             };
             var resetOrganizationDWCubes = function() {
+                setMask(true);
                 $.get(
                     'orga/organization/resetdwcubes/idOrganization/<?=$this->idOrganization?>',
                     function (response) {
+                        setMask(false);
                         var button = $('#organizationDWCubes');
                         button.attr('class', 'btn');
-                        button.children('i').attr('class', 'icon-leaf');
+                        button.children('i').attr('class', 'icon-info-sign icon-white');
                         button.children('span').html('<?=htmlentities(__('Orga', 'configuration', 'dWCubesState'), ENT_QUOTES)?>');
                         addMessage('<?=htmlentities(__('UI', 'message', 'operationInProgress'), ENT_QUOTES)?>', 'success');
                         button.unbind('click');
                         button.bind('click', checkOrganizationDWCubesState);
                     }
-                ).fail(errorHandler);
+                ).fail(function(o) { setMask(false); errorHandler(o); });
             };
             $('#organizationDWCubes').unbind('click').bind('click', checkOrganizationDWCubesState);
         </script>

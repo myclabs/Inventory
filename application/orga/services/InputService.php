@@ -1,12 +1,11 @@
 <?php
-/**
- * @author  matthieu.napoli
- */
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Service responsable de la gestion des saisies
+ *
+ * @author  matthieu.napoli
  */
 class Orga_Service_InputService
 {
@@ -26,18 +25,26 @@ class Orga_Service_InputService
     private $eventDispatcher;
 
     /**
+     * @var Core_Work_Dispatcher
+     */
+    private $workDispatcher;
+
+    /**
      * @param AF_Service_InputService $afInputService
      * @param Orga_Service_ETLData    $etlDataService
      * @param EventDispatcher         $eventDispatcher
+     * @param Core_Work_Dispatcher    $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,
         Orga_Service_ETLData $etlDataService,
-        EventDispatcher $eventDispatcher
+        EventDispatcher $eventDispatcher,
+        Core_Work_Dispatcher $workDispatcher
     ) {
         $this->afInputService = $afInputService;
         $this->etlDataService = $etlDataService;
         $this->eventDispatcher = $eventDispatcher;
+        $this->workDispatcher = $workDispatcher;
     }
 
     /**
@@ -60,17 +67,22 @@ class Orga_Service_InputService
             $inputSet = null;
         }
 
-        // Modification de la saisie
-        if ($inputSet) {
-            $this->afInputService->editInputSet($inputSet, $newValues);
-
-            // Lance l'évènement
-            $event = new Orga_Service_InputEditedEvent($cell);
-            $this->eventDispatcher->dispatch($event::NAME, $event);
+        // Injecte les coordonnées orga à la saisie en tant que ContextValue
+        foreach ($cell->getMembers() as $member) {
+            $newValues->setContextValue($member->getAxis()->getRef(), $member->getRef());
+            // Membres parents
+            foreach ($member->getAllParents() as $parentMember) {
+                $newValues->setContextValue($parentMember->getAxis()->getRef(), $parentMember->getRef());
+            }
         }
 
-        // Création de la saisie
-        if (!$inputSet) {
+        if ($inputSet) {
+            // Modification de la saisie
+            $this->afInputService->editInputSet($inputSet, $newValues);
+
+            $event = new Orga_Service_InputEditedEvent($cell);
+        } else {
+            // Création de la saisie
             $inputSet = $newValues;
 
             // Sauvegarde et attache à la cellule
@@ -78,14 +90,41 @@ class Orga_Service_InputService
             $cell->setAFInputSetPrimary($inputSet);
             $this->afInputService->updateResults($inputSet);
 
-            // Lance l'évènement
             $event = new Orga_Service_InputCreatedEvent($cell);
-            $this->eventDispatcher->dispatch($event::NAME, $event);
         }
 
-        $this->etlDataService->clearDWResultsFromCell($cell);
+        // Lance l'évènement
+        $this->eventDispatcher->dispatch($event::NAME, $event);
+
+        // Regénère DW
+        $this->workDispatcher->runBackground(
+            new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'clearDWResultsFromCell', [$cell])
+        );
         if ($inputSet->isInputComplete()) {
-            $this->etlDataService->populateDWResultsFromCell($cell);
+            $this->workDispatcher->runBackground(
+                new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
+            );
         }
+    }
+
+    /**
+     * Met à jour les résultats d'une saisie
+     *
+     * @param Orga_Model_Cell           $cell
+     * @param AF_Model_InputSet_Primary $inputSet
+     */
+    public function updateResults(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $inputSet)
+    {
+        // Injecte les coordonnées orga à la saisie en tant que ContextValue
+        foreach ($cell->getMembers() as $member) {
+            $inputSet->setContextValue($member->getAxis()->getRef(), $member->getRef());
+            // Membres parents
+            foreach ($member->getAllParents() as $parentMember) {
+                $inputSet->setContextValue($parentMember->getAxis()->getRef(), $parentMember->getRef());
+            }
+        }
+
+        // Met à jour les résultats
+        $this->afInputService->updateResults($inputSet);
     }
 }

@@ -5,6 +5,7 @@
  * @subpackage Plugin
  */
 
+use Doc\Domain\Library;
 use User\ForbiddenException;
 
 /**
@@ -128,7 +129,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
 
     /**
      * @param Zend_Controller_Request_Abstract $request
-     * @throws User_Exception_Forbidden
+     * @throws ForbiddenException
      * @return Orga_Model_Organization
      */
     protected function getOrganization(Zend_Controller_Request_Abstract $request)
@@ -147,6 +148,33 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         }
 
         throw new ForbiddenException();
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function viewMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return ($this->viewOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function editMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return (
+            $this->editOrganizationRule($identity, $request)
+            || $this->aclService->isAllowed(
+                $identity,
+                User_Model_Action_Default::EDIT(),
+                Orga_Model_Cell::load($request->getParam('idCell'))
+            )
+        );
     }
 
     /**
@@ -220,8 +248,40 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
+     * @param User_Model_SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
-     * @throws User_Exception_Forbidden
+     * @return bool
+     */
+    protected function editCommentRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $comment = Social_Model_Comment::load($request->getParam('id'));
+
+        return $this->aclService->isAllowed(
+            $identity,
+            User_Model_Action_Default::EDIT(),
+            $comment
+        );
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    protected function deleteCommentRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $comment = Social_Model_Comment::load($request->getParam('id'));
+
+        return $this->aclService->isAllowed(
+            $identity,
+            User_Model_Action_Default::DELETE(),
+            $comment
+        );
+    }
+
+    /**
+     * @param Zend_Controller_Request_Abstract $request
+     * @throws ForbiddenException
      * @return Orga_Model_Cell
      */
     protected function getCell(Zend_Controller_Request_Abstract $request)
@@ -233,10 +293,6 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             } catch (Core_Exception_NotFound $e) {
                 // Pas une cellule.
             }
-        }
-        $idCell = $request->getParam('idCell');
-        if ($idCell !== null) {
-            return Orga_Model_Cell::load($idCell);
         }
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
@@ -357,28 +413,6 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             User_Model_Action_Default::DELETE(),
             User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load($idReport))
         );
-    }
-
-    /**
-     * @param Zend_Controller_Request_Abstract $request
-     * @return DW_Model_Report
-     */
-    protected function getReport(Zend_Controller_Request_Abstract $request)
-    {
-        $idReport = $request->getParam('idReport');
-        if ($idReport !== null) {
-            return DW_Model_Report::load($idReport);
-        }
-        $hashReport = $request->getParam('hashReport');
-        if ($hashReport !== null) {
-            $configuration = Zend_Registry::get('configuration');
-            $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
-            $zendSessionReport = new Zend_Session_Namespace($sessionName);
-
-            return DW_Model_Report::getFromString($zendSessionReport->$hashReport);
-        }
-
-        throw new ForbiddenException();
     }
 
     /**
@@ -614,7 +648,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     protected function getCellFromLibrary(Zend_Controller_Request_Abstract $request)
     {
         $idLibrary = $request->getParam('id');
-        $library = Doc_Model_Library::load($idLibrary);
+        $library = Library::load($idLibrary);
 
         try {
             return Orga_Model_Cell::loadByDocLibraryForAFInputSetsPrimary($library);

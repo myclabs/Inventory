@@ -99,16 +99,12 @@ class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
     public function testFloatAndNullValues()
     {
         $value = new Calc_Value(0, 0);
-        $this->assertEquals(0, $value->getDigitalValue());
         $this->assertSame(0., $value->getDigitalValue());
-        $this->assertEquals(0, $value->getRelativeUncertainty());
-        $this->assertSame(0., $value->getRelativeUncertainty());
+        $this->assertSame(0, $value->getRelativeUncertainty());
 
         $value = new Calc_Value('0', '0');
-        $this->assertEquals(0, $value->getDigitalValue());
         $this->assertSame(0., $value->getDigitalValue());
-        $this->assertEquals(0, $value->getRelativeUncertainty());
-        $this->assertSame(0., $value->getRelativeUncertainty());
+        $this->assertSame(0, $value->getRelativeUncertainty());
 
         $value = new Calc_Value();
         $this->assertSame(null, $value->getDigitalValue());
