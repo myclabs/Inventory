@@ -1,7 +1,7 @@
 <?php
 
 use DeepCopy\DeepCopy;
-use DeepCopy\Filter\Doctrine\CollectionFilter;
+use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyMatcher;
@@ -24,7 +24,7 @@ class AF_Service_AFCopyService
         $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher('AF_Model_AF', 'category'));
 
         // Doctrine collections
-        $deepCopy->addFilter(new CollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
+        $deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
 
         $newAF = $deepCopy->copy($af);
 

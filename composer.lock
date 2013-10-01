@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "268e38dd8d729f714d4183bfb4e2bd19",
+    "hash": "4147aaa4903ee2cd7d1d602db81c3470",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -949,16 +949,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "d1c61c33f0c97a61dba83d1c00241bfee6b5e564"
+                "reference": "2c8df9f6a975b8cb2d619a9722ded6f23a104294"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/d1c61c33f0c97a61dba83d1c00241bfee6b5e564",
-                "reference": "d1c61c33f0c97a61dba83d1c00241bfee6b5e564",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/2c8df9f6a975b8cb2d619a9722ded6f23a104294",
+                "reference": "2c8df9f6a975b8cb2d619a9722ded6f23a104294",
                 "shasum": ""
             },
             "require": {
@@ -987,7 +987,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2013-07-23 11:10:48"
+            "time": "2013-10-01 10:30:23"
         },
         {
             "name": "myclabs/php-enum",
@@ -2593,7 +2593,6 @@
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "myclabs/xport": 20,
-        "myclabs/deep-copy": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": {

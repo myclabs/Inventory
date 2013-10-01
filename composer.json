@@ -35,7 +35,7 @@
         "myclabs/array-comparator": "1.0.*",
         "myclabs/xport": "dev-master",
         "myclabs/php-enum": "1.*",
-        "myclabs/deep-copy": "dev-master",
+        "myclabs/deep-copy": "1.*",
         "mnapoli/php-di": "3.4.*",
         "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
