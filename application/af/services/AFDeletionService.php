@@ -1,22 +1,25 @@
 <?php
 
-use DI\Annotation\Inject;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Service de suppression d'un AF
  *
  * Ce service devrait à terme passer dans la couche architecture, dans le repository des AF (à créer)
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
 class AF_Service_AFDeletionService
 {
-
     /**
-     * @Inject
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     private $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * Supprime un AF.
@@ -81,5 +84,4 @@ class AF_Service_AFDeletionService
 
         $group->delete();
     }
-
 }
