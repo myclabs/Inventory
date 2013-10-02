@@ -84,6 +84,7 @@ class Orga_ReferentialController extends Core_Controller
     public function exportAction()
     {
         set_time_limit(0);
+        PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip);
 
         $export = $this->getParam('export');
         $format = $this->getParam('format');

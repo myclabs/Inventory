@@ -580,6 +580,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
     public function exportAction()
     {
         set_time_limit(0);
+        PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip);
 
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
