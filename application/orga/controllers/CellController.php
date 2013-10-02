@@ -27,6 +27,12 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
+     * @var Orga_Service_ETLStructure
+     */
+    private $etlStructureService;
+
+    /**
+     * @Inject
      * @var Core_Work_Dispatcher
      */
     private $workDispatcher;
@@ -486,27 +492,17 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
-     * Réinitialise le DW du Cell donné et ceux des cellules enfants.
-     * @Secure("editCell")
+     * Vérifie le statut du Cube de DW de la Cell donné.
+     * @Secure("viewCell")
      */
-    public function resetdwsAction()
+    public function dwcubestateAction()
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
-
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
-                    'Orga_Service_ETLStructure',
-                    'resetCellAndChildrenDWCubes',
-                    [$cell],
-                    __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
-            throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
+        if ($this->etlStructureService->isCellDWCubeUpToDate($cell)) {
+            $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'analysisTabRebuildOk'), 'status' => 'success'));
+        } else {
+            $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'analysisTabRebuildAlert'), 'status' => 'error'));
         }
-        $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
     }
 
     /**
