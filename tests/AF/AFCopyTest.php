@@ -26,12 +26,20 @@ class AFCopyTest extends Core_Test_TestCase
         $oldAF->setDocumentation('documentation');
         $oldAF->save();
 
-        $component1 = new AF_Model_Component_Numeric();
-        $component1->setRef('component1');
-        $component1->setUnit(new UnitAPI('m'));
-        $component1->setAf($oldAF);
-        $component1->save();
-        $oldAF->addComponent($component1);
+        $component = new AF_Model_Component_Numeric();
+        $component->setRef('component1');
+        $component->setUnit(new UnitAPI('m'));
+        $component->setAf($oldAF);
+        $component->save();
+        $oldAF->addComponent($component);
+
+        $condition = new AF_Model_Condition_Elementary_Numeric();
+        $condition->setRef('condition1');
+        $condition->setAf($oldAF);
+        $condition->setField($component);
+        $condition->setRelation(AF_Model_Condition_Elementary_Numeric::RELATION_EQUAL);
+        $condition->setValue(0);
+        $oldAF->addCondition($condition);
 
         $this->entityManager->flush();
 
@@ -58,6 +66,14 @@ class AFCopyTest extends Core_Test_TestCase
             $this->assertSame($newAF, $newSubComponent->getAf());
         }
 
+        // Component
+        /** @var AF_Model_Component_Numeric $component2 */
+        $component2 = $newAF->getRootGroup()->getSubComponentsRecursive()[0];
+        $this->assertNotSame($component, $component2);
+        $this->assertSame($newAF, $component2->getAf());
+        $this->assertEquals($component->getRef(), $component2->getRef());
+        $this->assertEquals($component->getUnit(), $component2->getUnit());
+
         // Algos
         $this->assertNotSame($oldAF->getMainAlgo(), $newAF->getMainAlgo());
         $this->assertInstanceOf(get_class($oldAF->getMainAlgo()), $newAF->getMainAlgo());
@@ -68,7 +84,19 @@ class AFCopyTest extends Core_Test_TestCase
             $this->assertInstanceOf(get_class($oldAlgo), $newAlgo);
         }
 
-        $component1->delete();
+        // Condition
+        $this->assertSameSize($oldAF->getConditions(), $newAF->getConditions());
+        /** @var AF_Model_Condition_Elementary_Numeric $condition2 */
+        $condition2 = $newAF->getConditions()[0];
+        $this->assertNotSame($condition, $condition2);
+        $this->assertSame($newAF, $condition2->getAf());
+        $this->assertSame($component2, $condition2->getField());
+        $this->assertSame($condition->getRef(), $condition2->getRef());
+        $this->assertSame($condition->getValue(), $condition2->getValue());
+        $this->assertSame($condition->getRelation(), $condition2->getRelation());
+
+        $condition->delete();
+        $component->delete();
         $this->entityManager->flush();
 
         $oldAF->delete();
