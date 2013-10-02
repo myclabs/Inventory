@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="keywordColumnAssociationsAsSubject">
+            <tuv xml:lang="fr">
+                <seg>Nombre de relations en tant que sujet</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of relations as subject</seg>
+            </tuv>
+        </tu>
+        <tu tuid="keywordColumnAssociationsAsObject">
+            <tuv xml:lang="fr">
+                <seg>Nombre de relations en tant qu'objet</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of relations as oject</seg>
+            </tuv>
+        </tu>
+        <tu tuid="baseFileName">
+            <tuv xml:lang="fr">
+                <seg>Ressources-semantiques</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Semantic-ressources</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

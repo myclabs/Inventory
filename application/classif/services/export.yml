@@ -1,0 +1,91 @@
+sheets:
+
+
+  - label: "{{ contextindicatorsSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        label: "{{ contextTableLabel }}"
+        columns:
+          - label: "{{ contextColumnLabel }}"
+          - label: "{{ contextColumnRef }}"
+        lines:
+          - foreach: contexts as context
+            do:
+              - cells:
+                  - "{{ context.label }}"
+                  - "{{ context.ref }}"
+
+      - type: VerticalTable
+        label: "{{ indicatorTableLabel }}"
+        columns:
+          - label: "{{ indicatorColumnLabel }}"
+          - label: "{{ indicatorColumnRef }}"
+          - label: "{{ indicatorColumnUnit }}"
+          - label: "{{ indicatorColumnRatioUnit }}"
+        lines:
+          - foreach: indicators as indicator
+            do:
+              - cells:
+                  - "{{ indicator.label }}"
+                  - "{{ indicator.ref }}"
+                  - "{{ indicator.unit.symbol }}"
+                  - "{{ indicator.ratioUnit.symbol }}"
+
+      - type: VerticalTable
+        label: "{{ contextindicatorTableLabel }}"
+        columns:
+          - label: "{{ contextindicatorColumnContext }}"
+          - label: "{{ contextindicatorColumnIndicator }}"
+          - label: "{{ contextindicatorColumnAxes }}"
+        lines:
+          - foreach: contextindicators as contextindicator
+            do:
+              - cells:
+                  - "{{ contextindicator.context.label }}"
+                  - "{{ contextindicator.indicator.label }}"
+                  - "{{ displayContextIndicatorAxes(contextindicator) }}"
+
+
+  - label: "{{ axesSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ axisColumnLabel }}"
+          - label: "{{ axisColumnRef }}"
+          - label: "{{ axisColumnNarrower }}"
+        lines:
+          - foreach: axes as axis
+            do:
+              - cells:
+                  - "{{ axis.label }}"
+                  - "{{ axis.ref }}"
+                  - "{{ displayAxisDirectNarrower(axis) }}"
+
+
+  - label: "{{ membersSheetLabel }}"
+
+    content:
+
+      - foreach: axes as axis
+        do:
+          - type: VerticalTable
+            label: "{{ axis.label }}"
+            columns:
+              - label: "{{ memberColumnLabel }}"
+              - label: "{{ memberColumnRef }}"
+              - foreach: axis.directBroaders as broaderAxis
+                do:
+                  - label: "{{ broaderAxis.label }}"
+            lines:
+              - foreach: axis.members as member
+                do:
+                  - cells:
+                      - "{{ member.label }}"
+                      - "{{ member.ref }}"
+                      - foreach: axis.directBroaders as broaderAxis
+                        do:
+                          - "{{ displayParentMemberForAxis(member, broaderAxis) }}"

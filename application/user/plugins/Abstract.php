@@ -4,6 +4,8 @@
  * @package    User
  * @subpackage Plugin
  */
+
+use Psr\Log\LoggerInterface;
 use User\ForbiddenException;
 
 /**
@@ -26,15 +28,23 @@ abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
     protected $aclService;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param User_Service_ControllerSecurity $controllerSecurityService
      * @param User_Service_ACL                $aclService
+     * @param LoggerInterface                 $logger
      */
     public function __construct(
         User_Service_ControllerSecurity $controllerSecurityService,
-        User_Service_ACL $aclService
+        User_Service_ACL $aclService,
+        LoggerInterface $logger
     ) {
         $this->controllerSecurityService = $controllerSecurityService;
         $this->aclService = $aclService;
+        $this->logger = $logger;
     }
 
     /**
@@ -108,7 +118,8 @@ abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
             $securityRule = $this->controllerSecurityService->getSecurityRule($module, $controller, $action);
         } catch (Exception $e) {
             // En cas d'erreur, on loggue et on refuse l'accès.
-            Core_Error_Log::getInstance()->logException($e);
+            $this->logger->error('Error while checking user authorizations in the pre-controller plugin',
+                ['exception' => $e]);
             return false;
         }
         // Pas de SecurityRule => accès refusé
@@ -131,7 +142,8 @@ abstract class User_Plugin_Abstract extends Zend_Controller_Plugin_Abstract
             return $this->$methodName($user, $request);
         } catch (Exception $e) {
             // En cas d'erreur, on loggue et on refuse l'accès.
-            Core_Error_Log::getInstance()->logException($e);
+            $this->logger->error('Error while checking user authorizations in the pre-controller plugin',
+                ['exception' => $e]);
             return false;
         }
     }
