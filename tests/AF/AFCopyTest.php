@@ -50,6 +50,7 @@ class AFCopyTest extends Core_Test_TestCase
         $this->assertInstanceOf(get_class($oldAF), $newAF);
 
         $this->assertNull($newAF->getId());
+        $this->assertNull($newAF->getPosition());
         $this->assertEquals('new_ref', $newAF->getRef());
         $this->assertEquals($oldAF->getLabel(), $newAF->getLabel());
         $this->assertEquals($oldAF->getDocumentation(), $newAF->getDocumentation());
@@ -64,6 +65,8 @@ class AFCopyTest extends Core_Test_TestCase
             $newAF->getRootGroup()->getSubComponentsRecursive());
         foreach ($newAF->getRootGroup()->getSubComponentsRecursive() as $newSubComponent) {
             $this->assertSame($newAF, $newSubComponent->getAf());
+            $this->assertNull($newSubComponent->getId());
+            $this->assertNull($newSubComponent->getPosition());
         }
 
         // Component
@@ -82,6 +85,7 @@ class AFCopyTest extends Core_Test_TestCase
             $newAlgo = $newAF->getAlgoByRef($oldAlgo->getRef());
             $this->assertNotSame($oldAlgo, $newAlgo);
             $this->assertInstanceOf(get_class($oldAlgo), $newAlgo);
+            $this->assertNull($newAlgo->getId());
         }
 
         // Condition
@@ -89,6 +93,7 @@ class AFCopyTest extends Core_Test_TestCase
         /** @var AF_Model_Condition_Elementary_Numeric $condition2 */
         $condition2 = $newAF->getConditions()[0];
         $this->assertNotSame($condition, $condition2);
+        $this->assertNull($condition2->getId());
         $this->assertSame($newAF, $condition2->getAf());
         $this->assertSame($component2, $condition2->getField());
         $this->assertSame($condition->getRef(), $condition2->getRef());

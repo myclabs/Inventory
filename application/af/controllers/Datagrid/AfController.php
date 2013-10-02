@@ -36,17 +36,25 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                                                                            'controller' => 'edit',
                                                                            'action'     => 'menu',
                                                                            'id'         => $af->getId(),
-                )),
+                                                                      )),
                 __('UI', 'name', 'configuration'), 'share-alt'
-                );
+            );
             $data['test'] = $this->cellLink($this->view->url(array(
                                                                   'module'     => 'af',
                                                                   'controller' => 'af',
                                                                   'action'     => 'test',
                                                                   'id'         => $af->getId(),
-                )),
+                                                             )),
                 __('UI', 'name', 'test'), 'share-alt'
-                );
+            );
+            $data['duplicate'] = $this->cellLink($this->view->url(array(
+                                                                  'module'     => 'af',
+                                                                  'controller' => 'af',
+                                                                  'action'     => 'duplicate',
+                                                                  'id'         => $af->getId(),
+                                                             )),
+                __('UI', 'verb', 'duplicate'), 'plus-sign'
+            );
             $this->addLine($data);
         }
         $this->totalElements = AF_Model_AF::countTotal($this->request);

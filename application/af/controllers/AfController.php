@@ -23,6 +23,12 @@ class AF_AfController extends Core_Controller
     private $inputSetSessionStorage;
 
     /**
+     * @Inject
+     * @var AF_Service_AFCopyService
+     */
+    private $afCopyService;
+
+    /**
      * Liste des AF
      * @Secure("editAF")
      */
@@ -222,6 +228,25 @@ class AF_AfController extends Core_Controller
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->algo = $algo;
         $this->_helper->layout->disableLayout();
+    }
+
+    /**
+     * Duplique un AF
+     * @Secure("editAF")
+     */
+    public function duplicateAction()
+    {
+        /** @var $af AF_Model_AF */
+        $af = AF_Model_AF::load($this->getParam('id'));
+
+        $newRef = $af->getRef() . '_copy';
+        $newAF = $this->afCopyService->copyAF($af, $newRef);
+
+        $newAF->save();
+        $this->entityManager->flush();
+
+        UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
+        $this->redirect('af/af/list');
     }
 
 }

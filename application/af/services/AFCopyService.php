@@ -19,12 +19,14 @@ class AF_Service_AFCopyService
 
         // ID null
         $deepCopy->addFilter(new SetNullFilter(), new PropertyNameMatcher('id'));
-
+        // Position
+        $deepCopy->addFilter(new SetNullFilter(), new PropertyNameMatcher('position'));
         // Keep AF category
         $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher('AF_Model_AF', 'category'));
-
         // Doctrine collections
         $deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
+        // SubAF
+        $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher('AF_Model_Component_SubAF', 'calledAF'));
 
         $newAF = $deepCopy->copy($af);
 
