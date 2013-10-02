@@ -15,11 +15,6 @@ class Orga_Service_InputService
     private $afInputService;
 
     /**
-     * @var Orga_Service_ETLData
-     */
-    private $etlDataService;
-
-    /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
@@ -31,18 +26,15 @@ class Orga_Service_InputService
 
     /**
      * @param AF_Service_InputService $afInputService
-     * @param Orga_Service_ETLData    $etlDataService
      * @param EventDispatcher         $eventDispatcher
      * @param Core_Work_Dispatcher    $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,
-        Orga_Service_ETLData $etlDataService,
         EventDispatcher $eventDispatcher,
         Core_Work_Dispatcher $workDispatcher
     ) {
         $this->afInputService = $afInputService;
-        $this->etlDataService = $etlDataService;
         $this->eventDispatcher = $eventDispatcher;
         $this->workDispatcher = $workDispatcher;
     }
@@ -112,8 +104,9 @@ class Orga_Service_InputService
      *
      * @param Orga_Model_Cell           $cell
      * @param AF_Model_InputSet_Primary $inputSet
+     * @param AF_Model_AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
      */
-    public function updateResults(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $inputSet)
+    public function updateResults(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $inputSet, AF_Model_AF $af = null)
     {
         // Injecte les coordonnées orga à la saisie en tant que ContextValue
         foreach ($cell->getMembers() as $member) {
@@ -125,6 +118,6 @@ class Orga_Service_InputService
         }
 
         // Met à jour les résultats
-        $this->afInputService->updateResults($inputSet);
+        $this->afInputService->updateResults($inputSet, $af);
     }
 }

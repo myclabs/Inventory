@@ -37,10 +37,10 @@ class Orga_ReferentialController extends Core_Controller
         $connectedUser = $this->_helper->auth();
 
         // Formats d'exports.
-        $this->view->defaultFormat = 'xlsx';
+        $this->view->defaultFormat = 'xls';
         $this->view->formats = [
-            'xlsx' => __('UI', 'export', 'xlsx'),
             'xls' => __('UI', 'export', 'xls'),
+//            'xlsx' => __('UI', 'export', 'xlsx'),
 //            'ods' => __('UI', 'export', 'ods'),
         ];
 
@@ -83,6 +83,9 @@ class Orga_ReferentialController extends Core_Controller
      */
     public function exportAction()
     {
+        set_time_limit(0);
+        PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip);
+
         $export = $this->getParam('export');
         $format = $this->getParam('format');
         if ($this->hasParam('version')) {

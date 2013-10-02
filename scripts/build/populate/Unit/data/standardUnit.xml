@@ -26,12 +26,12 @@
 
     <standardUnit ref="un">
         <name>
-            <fr> </fr>
-            <en> </en>
+            <fr>un</fr>
+            <en>one</en>
         </name>
         <symbol>
-            <fr> </fr>
-            <en> </en>
+            <fr>un</fr>
+            <en>one</en>
         </symbol>
         <quantityRef>sans_dimension</quantityRef>
         <multiplier>1</multiplier>

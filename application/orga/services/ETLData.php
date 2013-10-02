@@ -12,17 +12,17 @@
 class Orga_Service_ETLData
 {
     /**
-     * @var AF_Service_InputService
+     * @var Orga_Service_InputService
      */
-    private $aFInputService;
+    private $inputService;
 
 
     /**
-     * @param AF_Service_InputService $aFService
+     * @param Orga_Service_InputService $inputService
      */
-    public function __construct(AF_Service_InputService $aFService)
+    public function __construct(Orga_Service_InputService $inputService)
     {
-        $this->aFInputService = $aFService;
+        $this->inputService = $inputService;
     }
 
     /**
@@ -103,14 +103,14 @@ class Orga_Service_ETLData
 
         $inputGranularity = $cell->getGranularity();
         if ($inputGranularity->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
-            $aF = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+            $af = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
         } else {
-            $aF = $cell->getParentCellForGranularity(
+            $af = $cell->getParentCellForGranularity(
                 $inputGranularity->getInputConfigGranularity()
             )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
         }
 
-        $this->aFInputService->updateResults($inputSet, $aF);
+        $this->inputService->updateResults($cell, $inputSet, $af);
     }
 
 }

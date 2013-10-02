@@ -6,18 +6,18 @@
 
         <tu tuid="xlsx">
             <tuv xml:lang="fr">
-                <seg>Excel 2010</seg>
+                <seg>Excel 2007</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Excel 2010</seg>
+                <seg>Excel 2007</seg>
             </tuv>
         </tu>
         <tu tuid="xls">
             <tuv xml:lang="fr">
-                <seg>Excel 2007</seg>
+                <seg>Excel</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Excel 2007</seg>
+                <seg>Excel</seg>
             </tuv>
         </tu>
         <tu tuid="ods">

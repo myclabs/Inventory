@@ -4,6 +4,15 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="unknowComponent">
+            <tuv xml:lang="fr">
+                <seg>Le composant ({COMPONENT}) est introuvable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The component ({COMPONENT}) can not be found</seg>
+            </tuv>
+        </tu>
+
         <tu tuid="subForm">
             <tuv xml:lang="fr">
                 <seg>Sous-formulaire</seg>
@@ -105,7 +114,6 @@
                 <seg>Rounded value</seg>
             </tuv>
         </tu>
-
 
     </body>
 </tmx>
