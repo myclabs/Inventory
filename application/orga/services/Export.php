@@ -440,7 +440,7 @@ class Orga_Service_Export
             foreach ($cell->getGranularity()->getAxes() as $granularityAxis) {
                 if ($organizationAxis->isNarrowerThan($granularityAxis)) {
                     continue;
-                } elseif (!($organizationAxis->isTransverse([$$granularityAxis]))) {
+                } elseif (!($organizationAxis->isTransverse([$granularityAxis]))) {
                     continue 2;
                 }
             }
