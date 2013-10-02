@@ -166,6 +166,12 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 && $e->getSourceField() == 'calledAF') {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByOtherAF');
             }
+            if ($e->isSourceEntityInstanceOf('Orga_Model_CellsGroup')) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByOrga');
+            }
+            if ($e->isSourceEntityInstanceOf('AF_Model_Output_Element')) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
+            }
             throw $e;
         }
         $this->message = __('UI', 'message', 'deleted');

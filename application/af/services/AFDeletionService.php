@@ -32,12 +32,19 @@ class AF_Service_AFDeletionService
     {
         $this->entityManager->beginTransaction();
 
-//        $this->deleteActionsAndConditions($af);
-//
-//        $this->entityManager->flush();
+        $this->deleteActionsAndConditions($af);
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        $af = AF_Model_AF::load($af->getId());
 
-//        $this->deleteGroup($af->getRootGroup());
+        $this->deleteGroupContent($af->getRootGroup());
+        $this->entityManager->flush();
 
+        $this->deleteAlgos($af);
+        $this->entityManager->flush();
+
+        $this->entityManager->clear();
+        $af = AF_Model_AF::load($af->getId());
         $af->delete();
 
         $this->entityManager->flush();
@@ -65,23 +72,23 @@ class AF_Service_AFDeletionService
     {
         $algoSet = $af->getMainAlgo()->getSet();
 
-        $algoSet->delete();
-
-        $af->setMainAlgo(null);
+        foreach ($algoSet->getAlgos() as $algo) {
+            if ($af->getMainAlgo() !== $algo) {
+                $algo->delete();
+            }
+        }
     }
 
-    private function deleteGroup(AF_Model_Component_Group $group)
+    private function deleteGroupContent(AF_Model_Component_Group $group)
     {
         foreach ($group->getSubComponents() as $subComponent) {
             if ($subComponent instanceof AF_Model_Component_Group) {
-                $this->deleteGroup($subComponent);
+                $this->deleteGroupContent($subComponent);
+                $subComponent->delete();
             } else {
                 $subComponent->delete();
-                $subComponent->setAf(null);
                 $group->removeSubComponent($subComponent);
             }
         }
-
-        $group->delete();
     }
 }
