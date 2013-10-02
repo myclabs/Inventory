@@ -62,8 +62,15 @@ Destroy the VM:
 vagrant destroy
 ```
 
-### Tests
+## Tests
 
 ```shell
+cd inventory/
 phpunit
 ```
+
+## Logs
+
+- **error.log**: application log
+- **queries.log**: query log
+- **worker.log**: while running in worker mode, logs are on the standard output, but redirected to this file by supervisor

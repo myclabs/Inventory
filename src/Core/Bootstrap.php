@@ -5,6 +5,8 @@
  * @subpackage Bootstrap
  */
 
+use Core\Log\ChromePHPFormatter;
+use Core\Log\ExtendedLineFormatter;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
@@ -12,6 +14,12 @@ use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\ORM\Tools\Setup;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\ChromePHPHandler;
+use Monolog\Handler\FirePHPHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
@@ -42,7 +50,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'UTF8',
                 'Container',
                 'Translations',
-                'ErrorLog',
+                'Log',
                 'ErrorHandler',
                 'FrontController',
                 'Doctrine',
@@ -122,25 +130,48 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * Log des erreurs
      */
-    protected function _initErrorLog()
+    protected function _initLog()
     {
-        $errorLog = Core_Error_Log::getInstance();
-        // Si on est en tests unitaires
-        if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'script')) {
-            // Prend en compte toutes les erreurs
-            error_reporting(E_ALL);
-            // Log vers la console
-            $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_CONSOLE);
-        }
-        // Si on est en développement ou test
-        if (APPLICATION_ENV == 'developpement') {
-            // Prend en compte toutes les erreurs
-            error_reporting(E_ALL);
-            // Log vers Firebug
-            $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_FIREBUG);
+        $configuration = Zend_Registry::get('configuration');
+        $cli = (PHP_SAPI == 'cli');
+
+        $logger = new Logger('log');
+
+        // Log vers la console (si configuré ou PHP CLI)
+        if ($configuration->log->stdout || $cli) {
+            $loggerHandler = new StreamHandler('php://stdout', Logger::DEBUG);
+            $loggerHandler->setFormatter(new ExtendedLineFormatter());
+            $logger->pushHandler($loggerHandler);
         }
         // Log dans un fichier
-        $errorLog->addDestinationLogs(Core_Error_Log::DESTINATION_FILE);
+        if ($configuration->log->file && !$cli) {
+            $file = $this->container->get('log.file');
+            $fileHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+            $fileHandler->setFormatter(new ExtendedLineFormatter());
+            $logger->pushHandler($fileHandler);
+        }
+        // Log FirePHP
+        if ($configuration->log->firephp && !$cli) {
+            ini_set('html_errors', false);
+            $logger->pushHandler(new FirePHPHandler());
+            $chromePHPHandler = new ChromePHPHandler();
+            $chromePHPHandler->setFormatter(new ChromePHPFormatter());
+            $logger->pushHandler($chromePHPHandler);
+        }
+
+        /** @noinspection PhpParamsInspection */
+        $logger->pushProcessor(new PsrLogMessageProcessor());
+
+        $this->container->set('Psr\Log\LoggerInterface', $logger);
+
+        // Log des requetes
+        if ($configuration->log->queries) {
+            $file = $this->container->get('log.query.file');
+            $queryLoggerHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
+            $queryLoggerHandler->setFormatter(new LineFormatter("%message%" . PHP_EOL));
+            $queryLogger = new Logger('log.query', [$queryLoggerHandler]);
+            $this->container->set('log.query', $queryLogger);
+        }
     }
 
     /**
@@ -148,15 +179,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initErrorHandler()
     {
-        if ((APPLICATION_ENV == 'developpement')
-         || (APPLICATION_ENV == 'script')
-         || (APPLICATION_ENV == 'test')
-         || (APPLICATION_ENV == 'production')
-        ) {
+        if (APPLICATION_ENV != 'testsunitaires') {
+            $errorHandler = $this->container->get('Core_Error_Handler');
             // Fonctions de gestion des erreurs
-            set_error_handler(array('Core_Error_Handler','myErrorHandler'));
-            set_exception_handler(array('Core_Error_Handler','myExceptionHandler'));
-            register_shutdown_function(array('Core_Error_Handler','myShutdownFunction'));
+            set_error_handler(array($errorHandler, 'myErrorHandler'));
+            set_exception_handler(array($errorHandler, 'myExceptionHandler'));
+            register_shutdown_function(array($errorHandler, 'myShutdownFunction'));
         }
     }
 
@@ -165,6 +193,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initDoctrine()
     {
+        $configuration = Zend_Registry::get('configuration');
         // Création de la configuration de Doctrine.
         $doctrineConfig = new Doctrine\ORM\Configuration();
 
@@ -219,19 +248,10 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Ligne inutile mais bug, cf. http://www.doctrine-project.org/jira/browse/DCOM-210#comment-21061
         $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
 
-        // Définition du sql profiler en fonction de l'environement.
-        switch (APPLICATION_ENV) {
-            case 'test':
-            case 'developpement':
-            case 'testsunitaires':
-                // Requêtes placées dans un fichier.
-                $profiler = new Core_Profiler_File();
-                break;
-            default:
-                $profiler = null;
-                break;
+        // Log des requêtes
+        if ($configuration->log->queries) {
+            $doctrineConfig->setSQLLogger($this->container->get('Core_Profiler_File'));
         }
-        $doctrineConfig->setSQLLogger($profiler);
 
         // Enregistrement de la configuration Doctrine dans le Registry.
         //  Utile pour créer d'autres EntityManager.

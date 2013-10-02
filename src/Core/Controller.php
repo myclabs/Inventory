@@ -1,20 +1,15 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Controller
- */
 
 use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 
 /**
  * Classe abstraite de contrôleur.
  *
  * Les droits sont vérifiés automatiquement avant qu'une action soit appelée.
  *
- * @package    Core
- * @subpackage Controller
+ * @author matthieu.napoli
  */
 abstract class Core_Controller extends Zend_Controller_Action
 {
@@ -24,6 +19,12 @@ abstract class Core_Controller extends Zend_Controller_Action
      * @var EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @Inject
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * Helper pour les redirections.
@@ -55,12 +56,10 @@ abstract class Core_Controller extends Zend_Controller_Action
         // Toute cette manipulation est nécessaire pour contourner
         //  un bug de Zend Framework (les headers firebug ne sont pas envoyés sinon).
         //@see http://framework.zend.com/issues/browse/ZF-4134
-
         /** @var Zend_Controller_Action_Helper_Json $json */
         $json = $this->getHelper('Json');
         $json->suppressExit = true;
         $json->sendJson($reponse);
-        Zend_Wildfire_Channel_HttpHeaders::getInstance()->flush();
     }
 
 }

@@ -19,8 +19,12 @@ class Core_Test_Work_GearmanDispatcherTest extends Core_Test_TestCase
         if (!extension_loaded('gearman')) {
             $this->markTestSkipped('Extension Gearman non installée');
         }
+
+        /** @var \Psr\Log\LoggerInterface $logger */
+        $logger = $this->getMockForAbstractClass('Psr\Log\LoggerInterface');
+
         $dispatcher = $this->get('Core_Work_GearmanDispatcher');
-        $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container()));
+        $dispatcher->registerWorker(new Core_Work_ServiceCall_Worker(new Container(), $logger));
 
         $oldDefaultLocale = Core_Locale::loadDefault();
         $locale = Core_Locale::load('en');

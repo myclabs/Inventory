@@ -1,30 +1,33 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Service responsable de la gestion des saisies des AF
  *
- * @package AF
+ * @author  matthieu.napoli
  */
 class AF_Service_InputService
 {
-
     /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
 
     /**
-     * @param EventDispatcher $eventDispatcher
+     * @var LoggerInterface
      */
-    public function __construct(EventDispatcher $eventDispatcher)
+    private $logger;
+
+    /**
+     * @param EventDispatcher $eventDispatcher
+     * @param LoggerInterface $logger
+     */
+    public function __construct(EventDispatcher $eventDispatcher, LoggerInterface $logger)
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     /**
@@ -74,8 +77,7 @@ class AF_Service_InputService
                 $inputSet->getOutputSet()->calculateTotals();
             } catch (Exception $e) {
                 $ref = $inputSet->getAF()->getRef();
-                Core_Error_Log::getInstance()->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
-                Core_Error_Log::getInstance()->logException($e);
+                $this->logger->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
 
                 $inputSet->setCalculationComplete(false);
                 $inputSet->clearOutputSet();
