@@ -18,10 +18,12 @@ class Orga_Service_ETLStructure
      * @var EntityManager
      */
     private $entityManager;
+
     /**
      * @var Orga_Service_ETLData
      */
     private $etlDataService;
+
 
     /**
      * @param EntityManager $entityManager
@@ -33,7 +35,6 @@ class Orga_Service_ETLStructure
         $this->etlDataService = $etlDataService;
     }
 
-
     /**
      * Traduit les labels des objets originaux dans DW.
      *
@@ -44,14 +45,16 @@ class Orga_Service_ETLStructure
     {
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
-        // Pour l'instant seule moyen de traduire la langue par défaut.
-        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        $dWEntity->setLabel($originalEntity->getLabel());
-        // Traductions
+        if (isset($originalTranslations[$defaultLocale])) {
+            $dWEntity->setLabel($originalTranslations[$defaultLocale]);
+        } else {
+            $dWEntity->setLabel($originalEntity->getLabel());
+        }
+        // Traductions.
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
                 $translationRepository->translate(
@@ -80,12 +83,6 @@ class Orga_Service_ETLStructure
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
         $dWTranslations = $translationRepository->findTranslations($dWEntity);
 
-        // Pour l'instant seule moyen de comparer la langue par défaut.
-        //  Ne fonctionne que si l'utilisateur est dans la langue par défaut.
-        //@todo Corriger le problème de langue par défaut et de non traduction de cette même langue.
-        if ($originalEntity->getLabel() !== $dWEntity->getLabel()) {
-            return true;
-        }
         // Traductions
         foreach (Zend_Registry::get('languages') as $localeId) {
             if (isset($originalTranslations[$localeId])) {
@@ -116,7 +113,7 @@ class Orga_Service_ETLStructure
     public function populateCellDWCube(Orga_Model_Cell $cell)
     {
         $this->updateCellDWCubeLabel($cell);
-        $this->populateDWCubeWithClassifAndOrgaOrganization(
+        $this->populateDWCubeWithClassifAndOrga(
             $cell->getDWCube(),
             $cell->getGranularity()->getOrganization(),
             array(
@@ -134,7 +131,7 @@ class Orga_Service_ETLStructure
     public function populateGranularityDWCube(Orga_Model_Granularity $granularity)
     {
         $this->updateGranularityDWCubeLabel($granularity);
-        $this->populateDWCubeWithClassifAndOrgaOrganization(
+        $this->populateDWCubeWithClassifAndOrga(
             $granularity->getDWCube(),
             $granularity->getOrganization(),
             array(
@@ -166,11 +163,13 @@ class Orga_Service_ETLStructure
                     $originalTranslations = $translationRepository->findTranslations($member);
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } else {
+                    } elseif (isset($originalTranslations[$defaultLocale])) {
                         $labelParts[] = $originalTranslations[$defaultLocale]['label'];
+                    } else {
+                        $labelParts[] = $member->getLabel();
                     }
                 }
-                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels);
+                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);
             }
         }
 
@@ -203,8 +202,10 @@ class Orga_Service_ETLStructure
                     $originalTranslations = $translationRepository->findTranslations($axis);
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } else {
+                    } elseif (isset($originalTranslations[$defaultLocale])) {
                         $labelParts[] = $originalTranslations[$defaultLocale]['label'];
+                    } else {
+                        $labelParts[] = $axis->getLabel();
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
@@ -237,7 +238,7 @@ class Orga_Service_ETLStructure
      * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      */
-    protected function populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters)
+    protected function populateDWCubeWithClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
     {
         $this->populateDWCubeWithOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters);
         $this->populateDWCubeWithClassif($dWCube);
@@ -245,7 +246,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif.
+     * Peuple le cube de DW avec un axe indiquant le status de l'AF.
      *
      * @param DW_Model_Cube $dWCube
      */
@@ -943,15 +944,7 @@ class Orga_Service_ETLStructure
             $granularity = Orga_Model_Granularity::load($granularity->getId());
 
             if ($granularity->getCellsGenerateDWCubes()) {
-                $this->resetGranularityDWCubes(Orga_Model_Granularity::load($granularity->getId()));
-
-                foreach ($granularity->getCells() as $cell) {
-                    // Optimisation de la mémoire.
-                    $this->entityManager->clear();
-                    $cell = Orga_Model_Cell::load($cell->getId());
-
-                    $this->resetCellDWCube($cell);
-                }
+                $this->resetGranularityAndCellsDWCubes($granularity);
             }
         }
     }
@@ -961,8 +954,21 @@ class Orga_Service_ETLStructure
      *
      * @param Orga_Model_Granularity $granularity
      */
-    public function resetGranularityDWCubes(Orga_Model_Granularity $granularity)
+    public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
+        /** @var Core_EventDispatcher $eventDispatcher */
+        $eventDispatcher = Zend_Registry::get('container')->get('Core_EventDispatcher');
+        $eventDispatcher->removeListener('Orga_Model_GranularityReport', 'DW_Model_Report');
+
+        foreach ($granularity->getCells() as $cell) {
+            $cell = Orga_Model_Cell::load($cell->getId());
+            $this->resetCellDWCube($cell);
+
+            // Optimisation de la mémoire.
+            $this->entityManager->clear();
+        }
+
+        $granularity = Orga_Model_Granularity::load($granularity->getId());
         $this->updateGranularityDWCubeLabel($granularity);
         $this->resetDWCube(
             $granularity->getDWCube(),
@@ -1012,27 +1018,35 @@ class Orga_Service_ETLStructure
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            // Début de transaction.
-            $this->entityManager->beginTransaction();
+            try {
+                // Début de transaction.
+                $this->entityManager->beginTransaction();
 
-            $this->etlDataService->clearDWResultsForCell($cell);
-            $this->entityManager->flush();
+                $this->etlDataService->clearDWResultsForCell($cell);
+                $this->entityManager->flush();
 
-            $this->updateCellDWCubeLabel($cell);
-            $this->resetDWCube(
-                $cell->getDWCube(),
-                $cell->getGranularity()->getOrganization(),
-                array(
-                    'axes' => $cell->getGranularity()->getAxes(),
-                    'members' => $cell->getMembers()
-                )
-            );
+                $this->updateCellDWCubeLabel($cell);
+                $this->resetDWCube(
+                    $cell->getDWCube(),
+                    $cell->getGranularity()->getOrganization(),
+                    array(
+                        'axes' => $cell->getGranularity()->getAxes(),
+                        'members' => $cell->getMembers()
+                    )
+                );
 
-            $this->etlDataService->populateDWResultsForCell($cell);
-            $this->entityManager->flush();
+                $this->etlDataService->populateDWResultsForCell($cell);
+                $this->entityManager->flush();
 
-            // Fin de transaction.
-            $this->entityManager->commit();
+                // Fin de transaction.
+                $this->entityManager->commit();
+            } catch (ErrorException $e) {
+                // Annulation de la transaction.
+                $this->entityManager->rollback();
+
+                throw $e;
+            }
+
         }
     }
 
@@ -1081,7 +1095,7 @@ class Orga_Service_ETLStructure
         // Suppression des données du cube et vidage des Report.
         $this->entityManager->flush();
 
-        $this->populateDWCubeWithClassifAndOrgaOrganization($dWCube, $orgaOrganization, $orgaFilter);
+        $this->populateDWCubeWithClassifAndOrga($dWCube, $orgaOrganization, $orgaFilter);
         $dWCube->save();
 
         // Peuplement du cube effectif.

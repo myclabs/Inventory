@@ -6,6 +6,18 @@ use Keyword\Domain\Keyword;
  */
 class AF_Populate extends Core_Script_Action
 {
+    /**
+     * @var \Keyword\Application\Service\KeywordService
+     */
+    protected $keywordService;
+
+
+    function __construct()
+    {
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
+        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+    }
 
     /**
      * {@inheritdoc}
@@ -58,6 +70,7 @@ class AF_Populate extends Core_Script_Action
         //  + createFixedCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => refMemberKeyword]
         //  + createAlgoCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => Selection_TextKey algo]
         //  + createAlgoSelectTextkeyExpression : ref, expression
+        //  + createAlgoSelectTextkeyContextValue : ref, name, defaultValue
         //  + createAlgoConditionElementary : Component input, ref
         //  + createAlgoConditionExpression : ref, expression
         // OptionalParams : -
@@ -499,7 +512,7 @@ class AF_Populate extends Core_Script_Action
             $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Fixed();
             $index->setDimension($dimension);
-            $index->setMember($dimension->getMember(Keyword::loadByRef($refMemberKeyword)));
+            $index->setMember($dimension->getMember($this->keywordService->get($refMemberKeyword)));
             $index->setAlgoParameter($parameter);
             $index->save();
         }
@@ -533,6 +546,24 @@ class AF_Populate extends Core_Script_Action
         $selectTextkeyExpression->setExpression($expression);
         $selectTextkeyExpression->save();
         $aF->addAlgo($selectTextkeyExpression);
+    }
+
+    /**
+     * @param AF_Model_AF $aF
+     * @param string      $ref
+     * @param string      $name
+     * @param string|null $defaultValue
+     */
+    protected function createAlgoSelectTextkeyContextValue(AF_Model_AF $aF, $ref, $name, $defaultValue = null)
+    {
+        $algo = new Algo_Model_Selection_TextKey_ContextValue();
+        $algo->setRef($ref);
+        $algo->setName($name);
+        if ($defaultValue) {
+            $algo->setDefaultValue($defaultValue);
+        }
+        $algo->save();
+        $aF->addAlgo($algo);
     }
 
     /**

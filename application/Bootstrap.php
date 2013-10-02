@@ -1,11 +1,10 @@
 <?php
-/**
- * Bootstrap
- */
 
+use Core\Autoloader;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
 
 /**
  * Application bootstrap
@@ -18,7 +17,7 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initModules()
     {
-        $autoloader = Core_Autoloader::getInstance();
+        $autoloader = Autoloader::getInstance();
         $frontController = Zend_Controller_Front::getInstance();
         /* @var $doctrineConfig Doctrine\ORM\Configuration */
         $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
@@ -113,7 +112,7 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initI18n()
     {
-        Zend_Registry::set(Core_Translate::registryKey, new Core_Translate());
+        Zend_Registry::set(Core_Translate::registryKey, $this->container->get('Core_Translate'));
         Zend_Registry::set(Core_Locale::registryKey, Core_Locale::loadDefault());
     }
 
@@ -126,6 +125,7 @@ class Bootstrap extends Core_Bootstrap
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
+        $view->registerHelper($this->container->get('User_ViewHelper_IsAllowed', true), 'isAllowed');
     }
 
     /**
@@ -135,6 +135,17 @@ class Bootstrap extends Core_Bootstrap
     {
         Type::addType(Calc_TypeMapping_Value::TYPE_NAME, 'Calc_TypeMapping_Value');
         Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, 'Calc_TypeMapping_UnitValue');
+    }
+
+    /**
+     * Initialise le mapping des types en BDD
+     */
+    protected function _initKeywordTypeMapping()
+    {
+        Type::addType(DoctrineKeywordType::TYPE_NAME, '\Keyword\Architecture\TypeMapping\DoctrineKeywordType');
+        /** @var DoctrineKeywordType $doctrineKeyword */
+        $doctrineKeyword = Type::getType(DoctrineKeywordType::TYPE_NAME);
+        $doctrineKeyword->setKeywordService($this->container->get('\Keyword\Application\Service\KeywordService'));
     }
 
     /**

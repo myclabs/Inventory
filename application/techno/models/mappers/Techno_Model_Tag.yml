@@ -10,7 +10,7 @@ Techno_Model_Tag:
 
   fields:
     value:
-      type: string
+      type: keyword_dto
 
   manyToOne:
     meaning:

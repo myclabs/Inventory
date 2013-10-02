@@ -5,13 +5,19 @@
  */
 
 use Core\Annotation\Secure;
-use Keyword\Domain\Keyword;
+use DI\Annotation\Inject;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * @package Techno
  */
 class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var KeywordService
+     */
+    protected $keywordService;
 
     /**
      * (non-PHPdoc)
@@ -61,7 +67,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
             $this->setAddElementErrorMessage('value', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             try {
-                $value = Keyword::loadByRef($refValue);
+                $value = $this->keywordService->get($refValue);
             } catch (Core_Exception_NotFound $e) {
                 $this->setAddElementErrorMessage('value', __('Techno', 'formValidation', 'unknownKeywordRef'));
             }
@@ -97,7 +103,7 @@ class Techno_Datagrid_Family_TagsDatagridController extends UI_Controller_Datagr
         switch($this->update['column']) {
             case 'value':
                 try {
-                    $keyword = Keyword::loadByRef($newValue);
+                    $keyword = $this->keywordService->get($newValue);
                     $tag->setValue($keyword);
                     $this->data = $keyword->getRef();
                 } catch (Core_Exception_NotFound $e) {

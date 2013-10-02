@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Unit\Domain\PhysicalQuantity\Component;
 use Unit\Domain\Unit\StandardUnit;
+use Unit\Domain\Unit\Unit;
 
 /**
  * Grandeur Physique
@@ -40,20 +41,20 @@ class PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Référent textuel d'une gandeur physique
-     * @var String
+     * @var string
      */
     protected $ref;
 
     /**
      *
      * Nom d'une grandeur physique
-     * @var String
+     * @var string
      */
     protected $name;
 
     /**
      * Symbole d'une grandeur physique
-     * @var String
+     * @var string
      */
     protected $symbol;
 
@@ -73,14 +74,11 @@ class PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Permet de connaitre la composition d'une grandeur physique derivee en grandeur physique de base.
-     * @var Collection
+     * @var Collection|Component[]
      */
     protected $physicalQuantityComponents;
 
 
-    /**
-     * Construit l'objet et l'enregistre dans l'EntityManager.
-     */
     public function __construct()
     {
         $this->physicalQuantityComponents = new ArrayCollection();
@@ -93,6 +91,7 @@ class PhysicalQuantity extends Core_Model_Entity
      */
     public function preDelete()
     {
+        // TODO remplacer par un cascade ?
         $this->deletePhysicalQuantityComponents();
     }
 
@@ -111,7 +110,7 @@ class PhysicalQuantity extends Core_Model_Entity
     /**
      * Charge une Grandeur physique par son Reférent textuel.
      * @param String $ref
-     * @return \Unit\Domain\PhysicalQuantity
+     * @return PhysicalQuantity
      */
     public static function loadByRef($ref)
     {
@@ -210,8 +209,10 @@ class PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Ajoute une ligne au tableau  $_composedPhysicalQuantities
-     * @param \Unit\Domain\PhysicalQuantity $basePhysicalQuantity
-     * @param int                                      $exponent
+     * @param PhysicalQuantity $basePhysicalQuantity
+     * @param int              $exponent
+     * @throws \Core_Exception_NotFound
+     * @throws \Core_Exception_InvalidArgument
      */
     public function addPhysicalQuantityComponent(PhysicalQuantity $basePhysicalQuantity, $exponent)
     {
@@ -232,11 +233,23 @@ class PhysicalQuantity extends Core_Model_Entity
 
     /**
      * Récupère la composition en grandeurs physiques de base d'une grandeur physique
-     * @return \Unit\Domain\PhysicalQuantity[]
+     * @return PhysicalQuantity[]
      */
     public function getPhysicalQuantityComponents()
     {
         return $this->physicalQuantityComponents->toArray();
+    }
+
+    /**
+     * @todo Transformer ça en association dans le modèle
+     * @return Unit[]
+     */
+    public function getUnits()
+    {
+        $query = new \Core_Model_Query();
+        $query->filter->addCondition(StandardUnit::QUERY_PHYSICALQUANTITY, $this);
+
+        return StandardUnit::loadList($query);
     }
 
 }

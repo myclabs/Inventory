@@ -1,3 +1,15 @@
+<?php
+if (Zend_Auth::getInstance()->hasIdentity()) {
+    try {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+    } catch (Core_Exception_NotFound $e) {
+        $connectedUser = null;
+    }
+} else {
+    $connectedUser = null;
+}
+?>
 <footer>
 
     <div class="feedback-form"></div>
@@ -5,8 +17,7 @@
         $(function() {
             var url = "<?=$this->baseUrl('feedback/submit')?>";
             <?php
-            if (Zend_Auth::getInstance()->hasIdentity()) {
-                $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+            if ($connectedUser) {
                 $userEmail = $connectedUser->getEmail();
                 echo "var data = {user: '$userEmail'};";
             } else {

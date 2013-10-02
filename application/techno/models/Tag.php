@@ -4,7 +4,7 @@
  * @author matthieu.napoli
  * @package Techno
  */
-use Keyword\Domain\Keyword;
+use Keyword\Application\Service\KeywordDTO;
 
 /**
  * Classe Tag
@@ -26,24 +26,10 @@ class Techno_Model_Tag extends Core_Model_Entity
 
     /**
      * Reference de la valeur du mot-clé
-     * @var string
+     * @var KeywordDTO
      */
     protected $value;
 
-
-    /**
-     * Valide le mot-clé associé au tag
-     * @return bool|string True si le mot-clé est valide, sinon retourne le mot-clé
-     */
-    public function validateKeyword()
-    {
-        try {
-            Keyword::loadByRef($this->value);
-        } catch (Core_Exception_NotFound $e) {
-            return $this->value;
-        }
-        return true;
-    }
 
     /**
      * @return int
@@ -73,34 +59,29 @@ class Techno_Model_Tag extends Core_Model_Entity
 
     /**
      * Affecte le mot-clé
-     * @param Keyword $value
+     * @param KeywordDTO $value
      */
-    public function setValue(Keyword $value)
+    public function setValue(KeywordDTO $value)
     {
-        $this->value = $value->getRef();
+        $this->value = $value;
     }
 
     /**
      * Renvoie le mot clé
-     * @return Keyword
+     * @return KeywordDTO
      */
     public function getValue()
     {
-        return Keyword::loadByRef($this->value);
+        return $this->value;
     }
 
     /**
      * Renvoie le label de la valeur du tag
-     * @return Keyword
+     * @return KeywordDTO
      */
     public function getValueLabel()
     {
-        try {
-            $keyword = $this->getValue();
-            return $keyword->getLabel();
-        } catch (Core_Exception_NotFound $e) {
-            return $this->value;
-        }
+        return $this->getValue()->getLabel();
     }
 
 }

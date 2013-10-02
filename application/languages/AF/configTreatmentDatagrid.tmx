@@ -110,5 +110,32 @@
             </tuv>
         </tu>
 
+        <!-- Coordonnée organisationnelle -->
+
+        <tu tuid="orgaAxisHeader">
+            <tuv xml:lang="fr">
+                <seg>Axe organisationnel (identifiant)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational axis (identifier)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="defaultValueHeader">
+            <tuv xml:lang="fr">
+                <seg>Valeur par défaut</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Default value</seg>
+            </tuv>
+        </tu>
+        <tu tuid="orgaCoordinateTextkeySelectionAddPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un algorithme de sélection d’identifiant de type « coordonnée organisationnelle »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an identifier selection algorithm of "organizational coordinate" type</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

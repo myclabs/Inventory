@@ -6,7 +6,7 @@ Feature: Family dimension list edit feature
 
   @javascript
   Scenario: Create family dimension, correct input
-    Given I am on "techno/family/edit/id/3"
+    Given I am on "techno/family/edit/id/4"
     And I wait for the page to finish loading
     Then I should see "Famille test vide"
     When I open tab "Général"
@@ -26,7 +26,7 @@ Feature: Family dimension list edit feature
 
   @javascript
   Scenario: Create family dimension, incorrect input
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
     When I open tab "Général"
@@ -46,7 +46,7 @@ Feature: Family dimension list edit feature
 
   @javascript
   Scenario: Edit family dimension in family dimension datagrid
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
     When I open tab "Général"
@@ -68,7 +68,7 @@ Feature: Family dimension list edit feature
 
   @javascript
   Scenario: Link toward the page of one of the family dimensions, and return
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
     When I open tab "Général"
@@ -85,7 +85,7 @@ Feature: Family dimension list edit feature
 
   @javascript
   Scenario: Delete family dimension
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
     When I open tab "Général"

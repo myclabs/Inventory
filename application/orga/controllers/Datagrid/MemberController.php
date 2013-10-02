@@ -137,7 +137,8 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                         $axis,
                         $ref,
                         $label,
-                        $broaderMembers
+                        $broaderMembers,
+                        __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
                     )
                 );
                 $this->message = __('UI', 'message', 'addedLater');
@@ -159,8 +160,21 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             throw new Core_Exception_User('Orga', 'member', 'memberHasChild');
         }
 
-        $member->delete();
-        $this->message = __('UI', 'message', 'deleted', array('LABEL' => $member->getLabel()));
+        try {
+            $this->entityManager->beginTransaction();
+
+            $member->delete();
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+
+            $this->message = __('UI', 'message', 'deleted', array('LABEL' => $member->getLabel()));
+        } catch (ErrorException $e) {
+            $this->entityManager->rollback();
+
+            throw new Core_Exception_User('Orga', 'member', 'deleteMemberWithUsersToCells');
+        }
+
         $this->send();
     }
 

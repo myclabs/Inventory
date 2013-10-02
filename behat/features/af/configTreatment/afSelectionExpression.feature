@@ -21,10 +21,10 @@ Feature: AF selection expression algo feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Algos ordonnés suivant l'ordre de création
-    And the row 4 of the "algoSelectionTextkeyExpression" datagrid should contain:
+    And the row 1 of the "algoSelectionTextkeyExpression" datagrid should contain:
       | ref  |
       | aaa  |
-    When I click "Expression" in the row 4 of the "algoSelectionTextkeyExpression" datagrid
+    When I click "Expression" in the row 1 of the "algoSelectionTextkeyExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "a : (b : (c : d ; e : (f : g ; : h)))"
 

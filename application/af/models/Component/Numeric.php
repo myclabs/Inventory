@@ -64,7 +64,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
     {
         $locale = Core_Locale::loadDefault();
 
-        $uiElement = new UI_Form_Element_Pattern_Value($this->ref, $this->withUncertainty);
+        $uiElement = new UI_Form_Element_Pattern_Value($this->ref, false);
         $uiElement->setLabel($this->label);
         $uiElement->getElement()->help = $this->help;
         $uiElement->setRequired($this->getRequired());
@@ -80,12 +80,27 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
         if ($input) {
             $uiElement->getElement()->disabled = $input->isDisabled();
             $uiElement->getElement()->hidden = $input->isHidden();
+            $value = $input->getValue();
+            $selectedUnit = $input->getValue()->getUnit();
+            // Si l'unité du champ n'est plus compatible avec l'ancienne saisie
+            if (!$selectedUnit->isEquivalent($this->unit->getRef())) {
+                // Ignore l'ancienne saisie
+                $value = $this->defaultValue;
+                $selectedUnit = $this->unit;
+            }
             // Valeur
-            if ($input->getValue()) {
-                $uiElement->setValue([
-                    $locale->formatNumberForInput($input->getValue()->getDigitalValue()),
-                    $locale->formatNumberForInput($input->getValue()->getRelativeUncertainty())
-                ]);
+            if ($value) {
+                $uiElement->setValue($locale->formatNumberForInput($value->getDigitalValue()));
+            }
+            // Unité
+            $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $selectedUnit));
+            // Incertitude
+            if ($this->withUncertainty) {
+                $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent'.$this->ref);
+                if ($value) {
+                    $uiUncertaintyElement->setValue($locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty()));
+                }
+                $uiElement->getElement()->addElement($uiUncertaintyElement);
             }
             // Historique de la valeur
             $uiElement->getElement()->addElement($this->getHistoryComponent($input));
@@ -93,14 +108,17 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             $uiElement->getElement()->disabled = !$this->enabled;
             $uiElement->getElement()->hidden = !$this->visible;
             // Valeur
-            $uiElement->setValue([
-                $locale->formatNumberForInput($this->defaultValue->getDigitalValue()),
-                $locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty())
-            ]);
-        }
-        // Unité
-        if ($this->unit !== null) {
-            $uiElement->getElement()->addSuffix($this->unit->getSymbol());
+            $uiElement->setValue($locale->formatNumberForInput($this->defaultValue->getDigitalValue()));
+            // Unité
+            if ($this->unit !== null) {
+                $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $this->unit));
+            }
+            // Incertitude
+            if ($this->withUncertainty) {
+                $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent'.$this->ref);
+                $uiUncertaintyElement->setValue($locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty()));
+                $uiElement->getElement()->addElement($uiUncertaintyElement);
+            }
         }
         // Actions
         foreach ($this->actions as $action) {
@@ -139,13 +157,18 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
      */
     public function getNbRequiredFields(AF_Model_InputSet $inputSet = null)
     {
+        if (! $this->getRequired()) {
+            return 0;
+        }
+
         if ($inputSet) {
             $input = $inputSet->getInputForComponent($this);
-            // Si la saisie est cachée ou non obligatoire : 0 champs requis
-            if ($input && ($input->isHidden() || !$this->getRequired())) {
+            // Si la saisie est cachée : 0 champs requis
+            if ($input && $input->isHidden()) {
                 return 0;
             }
         }
+
         return 1;
     }
 
@@ -262,6 +285,34 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
     public function setRequired($required)
     {
         $this->required = (bool) $required;
+    }
+
+    /**
+     * Retourne le composant UI pour le choix de l'unité de la saisie
+     * @param UnitAPI $baseUnit
+     * @param UnitAPI $selectedUnit
+     * @return Zend_Form_Element
+     */
+    protected function getUnitComponent(UnitAPI $baseUnit, UnitAPI $selectedUnit)
+    {
+        $unitComponent = new UI_Form_Element_Select($this->ref . '_unit');
+
+        // Ajoute l'unité de base
+        $option = new UI_Form_Element_Option($this->ref . '_unit_' . $baseUnit->getRef(), $baseUnit->getRef(),
+            $baseUnit->getSymbol());
+        $unitComponent->addOption($option);
+
+        // Ajoute les unités compatibles
+        foreach ($baseUnit->getCompatibleUnits() as $compatibleUnit) {
+            $option = new UI_Form_Element_Option($this->ref . '_unit_' . $compatibleUnit->getRef(),
+                $compatibleUnit->getRef(), $compatibleUnit->getSymbol());
+            $unitComponent->addOption($option);
+        }
+
+        // Sélection
+        $unitComponent->setValue($selectedUnit->getRef());
+
+        return $unitComponent;
     }
 
 }

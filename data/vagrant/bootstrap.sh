@@ -7,12 +7,15 @@ apt-get update
 # For PHP 5.4
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php5
+
+# RabbitMQ
+echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
+wget http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+apt-key add rabbitmq-signing-key-public.asc
+
 apt-get update
 
-apt-get install -y bash-completion curl lynx unzip
-
-# SCM
-apt-get install -y git
+apt-get install -y curl git rabbitmq-server
 
 # Shell
 apt-get install -y zsh
@@ -49,17 +52,9 @@ echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf
 apt-get install -q -y phpmyadmin
 cp ${BASEDIR}/phpmyadmin-config.inc.php /etc/phpmyadmin/config.inc.php
 
-# Gearman
-#apt-get install -y build-essential
-#apt-get install -y gearman libgearman6 libgearman-dev gearman-tools gearman-job-server
-#cd /tmp
-#wget http://pecl.php.net/get/gearman-1.0.3.tgz
-#tar -xzf gearman-1.0.3.tgz
-#cd gearman-1.0.3
-#phpize
-#./configure
-#make
-#make install
+# Composer
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
 
 # PHPUnit
 pear config-set auto_discover 1
@@ -79,6 +74,3 @@ pear install pear.phpunit.de/PHPUnit
 
 #apt-get install -y nodejs npm
 #npm install -g zombie@1.4.1
-
-# Data
-php /vagrant/scripts/build/build.php create update

@@ -119,18 +119,25 @@ class AF_PopulateTest extends AF_Populate
         $aF_test->getMainAlgo()->setExpression(':c_n;');
         $this->createAlgoNumericExpression($aF_test, 'expression_num', 'Expression numérique', 'c_n*parametre', 't_co2e');
         $this->createAlgoNumericParameter($aF_test, 'parametre', 'Paramètre', 'combustion_combustible_unite_masse');
+        $this->createAlgoNumericParameter($aF_test, 'parametre_2', 'Paramètre 2', 'masse_volumique_combustible');
         $this->createAlgoNumericConstant($aF_test, 'constante', 'Constante', 12345.6789, 5.9, 't_co2e.passager^-1.km^-1');
         $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel', 'a:(b:(c:d;e:(f:g;:h)))');
         $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel_index_algo', 'a:b');
         $this->createAlgoSelectTextkeyExpression($aF_test, 'expression_sel_coord_param', 'a:b');
+        $this->createAlgoSelectTextkeyContextValue($aF_test, 'orga_coordinate', 'axis_ref_1', 'dafault_value_1');
+        $this->createAlgoSelectTextkeyContextValue($aF_test, 'orga_coordinate_coord_param', 'axis_ref_2', 'dafault_value_2');
+        $this->createAlgoSelectTextkeyContextValue($aF_test, 'orga_coordinate_index_algo', 'axis_ref_3', 'dafault_value_3');
         $this->createAlgoConditionExpression($aF_test, 'cond_comp', 'cond_el|condition_inexistante');
         $this->createAlgoConditionElementary($aF_test, $c_s_s_util_cond_el_trait, 'cond_el');
         // Coordonnées des algorithmes numériques de type paramètre
         $this->createFixedCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre'), ['combustible' => 'charbon']);
         $this->createAlgoCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre'), ['processus' => $aF_test->getAlgoByRef('expression_sel_coord_param')]);
+        $this->createAlgoCoordinateForAlgoParameter($aF_test->getAlgoByRef('parametre_2'), ['combustible' => $aF_test->getAlgoByRef('orga_coordinate_coord_param')]);
         // Indexation des algorithmes numériques
         $this->createFixedIndexForAlgoNumeric($aF_test->getAlgoByRef('c_n'), 'general', 'ges', ['gaz' => 'co2']);
         $this->createAlgoIndexForAlgoNumeric($aF_test->getAlgoByRef('c_n'), 'general', 'ges', ['poste_article_75' => $aF_test->getAlgoByRef('expression_sel_index_algo')]);
+        $this->createAlgoIndexForAlgoNumeric($aF_test->getAlgoByRef('c_n'), 'general', 'ges', ['gaz' => $aF_test->getAlgoByRef('orga_coordinate_index_algo')]);
+
 
 //        $this->createAlgoSelectTextkeyExpression($aF_combustion_combustible_unite_masse, 'refa2', 'expression');
 //        $this->createAlgoConditionElementary($aF_combustion_combustible_unite_masse, $booleanInput, 'refa3');
@@ -141,16 +148,35 @@ class AF_PopulateTest extends AF_Populate
 
         // Composants
         $c_n = $this->createNumericInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', null, null, true, true, true, null, true);
-        $c_s_s_liste = $this->createSelectInputList($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_s_liste', 'Champ sélection simple (liste déroulante)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
-        $c_s_s_bouton = $this->createSelectInputRadio($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_s_bouton', 'Champ sélection simple (boutons radio)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
-        $c_s_m_checkbox = $this->createSelectInputBoxes($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_m_checkbox', 'Champ sélection multiple (checkboxes)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
-        $c_s_m_list = $this->createSelectInputMulti($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_m_list', 'Champ sélection multiple (liste)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
+        $c_s_s_liste = $this->createSelectInputList($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_s_liste', 'Champ sélection simple (liste déroulante)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
+        $c_s_s_bouton = $this->createSelectInputRadio($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_s_bouton', 'Champ sélection simple (boutons radio)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
+        $c_s_m_checkbox = $this->createSelectInputBoxes($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_m_checkbox', 'Champ sélection multiple (checkboxes)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
+        $c_s_m_liste = $this->createSelectInputMulti($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_m_liste', 'Champ sélection multiple (liste)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
         $c_b_test = $this->createBooleanInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_b', 'Champ booléen', false, true, null, true);
         $c_t_c = $this->createShortTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_c', 'Champ texte court', true, true, null, true);
         $c_t_l = $this->createLongTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_l', 'Champ texte long', true, true, null, true);
 
+        // Formulaire avec sous-formulaire répété contenant tous types de champs
+        $aF_sous_AF_tous_types_champs = $this->createAF($category_cont_formulaire, 'formulaire_s_f_r_tous_types_champ', 'Formulaire avec sous-formulaire répété contenant tout type de champ');
+
+        // Composants
+        $s_f_r_t_t_c = $this->createSubAFRepeated($aF_sous_AF_tous_types_champs, $aF_sous_AF_tous_types_champs->getRootGroup(), 's_f_r_t_t_c', 'Sous-formulaire répété tout type de champ', $aF_tous_types_champs);
+
         // Formulaire vide
         $aF_vide = $this->createAF($category_cont_formulaire, 'formulaire_vide', 'Formulaire vide');
+
+        // Forfait émissions en fonction de la marque
+        $aF_forfait_marque = $this->createAF($category_cont_formulaire, 'formulaire_forfait_marque', 'Forfait émissions en fonction de la marque');
+        // Composants
+        $numericInput_sans_effet = $this->createNumericInput($aF_forfait_marque, $aF_forfait_marque->getRootGroup(), 'sans_effet', 'Champ sans effet', 'kiloeuro', null, null, true, false);
+        // Algos
+        $aF_forfait_marque->getMainAlgo()->setExpression(':algo_numerique_forfait_marque;');
+        $this->createAlgoNumericParameter($aF_forfait_marque, 'algo_numerique_forfait_marque', 'Algo forfait émissions fonction marque', 'forfait_emissions_fonction_marque');
+        $this->createAlgoSelectTextkeyContextValue($aF_forfait_marque, 'algo_determination_marque', 'marque', 'marque_a');
+        // Coordonnées des algorithmes numériques de type paramètre
+        $this->createAlgoCoordinateForAlgoParameter($aF_forfait_marque->getAlgoByRef('algo_numerique_forfait_marque'), ['marque' => $aF_forfait_marque->getAlgoByRef('algo_determination_marque')]);
+        // Indexation
+        $this->createFixedIndexForAlgoNumeric($aF_forfait_marque->getAlgoByRef('algo_numerique_forfait_marque'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
 
         $entityManager->flush();
 

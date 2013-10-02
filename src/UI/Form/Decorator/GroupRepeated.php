@@ -128,6 +128,8 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
 
         $content .= '<script>'.$deleteScript.$addScript.'</script>';
 
+        $this->resetChildZendElements();
+
         return $content;
     }
 
@@ -152,6 +154,19 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
 
         $zendElement->setAttrib('id', $zendElement->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
         $zendElement->setName($zendElement->getName().self::OCCURRENCE_SEPARATOR.$occurrence);
+
+        foreach ($zendElement->getElement()->children as $childZendElement) {
+            $childZendElement->setAttrib('id', $childZendElement->getId().self::OCCURRENCE_SEPARATOR.$occurrence);
+            $childZendElement->setName($childZendElement->getName().self::OCCURRENCE_SEPARATOR.$occurrence);
+        }
+    }
+
+    protected function resetChildZendElements()
+    {
+        foreach ($this->getElement()->getElement()->children as $childZendElement) {
+            $childZendElement->setAttrib('id', substr_replace($childZendElement->getId(), '', strpos($childZendElement->getId(), self::OCCURRENCE_SEPARATOR.'0'), 3));
+            $childZendElement->setName(substr_replace($childZendElement->getId(), '', strpos($childZendElement->getName(), self::OCCURRENCE_SEPARATOR.'0'), 3));
+        }
     }
 
 }

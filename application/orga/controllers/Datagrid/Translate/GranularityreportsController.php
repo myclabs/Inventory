@@ -64,7 +64,7 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
     public function updateelementAction()
     {
         $report = DW_Model_Report::load($this->update['index']);
-        $report->setTranslationLocale(Core_Locale::load($this->update['column']));
+        $report->reloadWithLocale(Core_Locale::load($this->update['column']));
         $report->setLabel($this->update['value']);
         $this->data = $report->getLabel();
 

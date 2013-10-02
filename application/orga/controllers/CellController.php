@@ -17,6 +17,8 @@ use DI\Annotation\Inject;
  */
 class Orga_CellController extends Core_Controller
 {
+    use UI_Controller_Helper_Form;
+
     /**
      * @Inject
      * @var User_Service_ACL
@@ -34,6 +36,12 @@ class Orga_CellController extends Core_Controller
      * @var Orga_Service_InputService
      */
     private $inputService;
+
+    /**
+     * @Inject
+     * @var AF_Service_InputFormParser
+     */
+    private $inputFormParser;
 
     /**
      * Affiche le détail d'une cellule.
@@ -144,10 +152,13 @@ class Orga_CellController extends Core_Controller
         $inventoriesTab = new UI_Tab('inventories');
         try {
             $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+            $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
         } catch (Core_Exception_UndefinedAttribute $e) {
-            $granularityForInventoryStatus = null;
+            $crossedOrgaGranularity = null;
+        } catch (Core_Exception_NotFound $e) {
+            $crossedOrgaGranularity = null;
         }
-        if ($granularityForInventoryStatus === null) {
+        if ($crossedOrgaGranularity === null) {
             $inventoriesTab->disabled = true;
         } else if ($tab === 'inventories') {
             $inventoriesTab->active = true;
@@ -179,6 +190,17 @@ class Orga_CellController extends Core_Controller
             $analysisTab->useCache = !$isUserAllowedToEditOrganization;
             $this->view->tabView->addTab($analysisTab);
         }
+
+
+        // TAB EXPORTS
+        $exportsTab = new UI_Tab('exports');
+        if ($tab === 'exports') {
+            $exportsTab->active = true;
+        }
+        $exportsTab->label = __('UI', 'name', 'exports');
+        $exportsTab->dataSource = 'orga/tab_celldetails/exports/idCell/'.$idCell;
+        $exportsTab->useCache = true;
+        $this->view->tabView->addTab($exportsTab);
 
 
         // TAB GENERIC ACTIONS
@@ -372,7 +394,9 @@ class Orga_CellController extends Core_Controller
         }
         $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $aFViewConfiguration->addToActionStack('inputsave', 'cell', 'orga', array('idCell' => $idCell));
-        $aFViewConfiguration->setExitUrl('orga/cell/details?idCell='.$this->getParam('fromIdCell'));
+        $aFViewConfiguration->setResultsPreviewUrl('orga/cell/inputpreview');
+        $aFViewConfiguration->setExitUrl($this->_helper->url('details', 'cell', 'orga',
+                ['idCell' => $this->getParam('fromIdCell')]));
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
         $aFViewConfiguration->addBaseTabs();
@@ -423,6 +447,40 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
+     * Fonction de preview des résultats d'un AF.
+     * @see \AF_InputController::resultsPreviewAction
+     * @Secure("inputCell")
+     */
+    public function inputpreviewAction()
+    {
+        /** @var $af AF_Model_AF */
+        $af = AF_Model_AF::load($this->getParam('id'));
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+
+        // Form data
+        $formContent = json_decode($this->getParam($af->getRef()), true);
+        $errorMessages = [];
+
+        // Remplit l'InputSet
+        $inputSet = $this->inputFormParser->parseForm($formContent, $af, $errorMessages);
+        $this->inputService->updateResults($cell, $inputSet);
+
+        $this->addFormErrors($errorMessages);
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->view->inputSet = $inputSet;
+
+        // Moche mais sinon je me petit-suicide
+        $this->view->addScriptPath(APPLICATION_PATH . '/af/views/scripts/');
+        $data = $this->view->render('af/display-results.phtml');
+
+        // Force le statut en success (sinon les handlers JS ne sont pas exécutés)
+        $this->setFormMessage(null, UI_Message::TYPE_SUCCESS);
+        $this->sendFormResponse($data);
+    }
+
+    /**
      * Réinitialise le DW du Cell donné et ceux des cellules enfants.
      * @Secure("editCell")
      */
@@ -436,7 +494,8 @@ class Orga_CellController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenDWCubes',
-                    [$cell]
+                    [$cell],
+                    __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {
@@ -459,7 +518,8 @@ class Orga_CellController extends Core_Controller
                 new Core_Work_ServiceCall_Task(
                     'Orga_Service_ETLStructure',
                     'resetCellAndChildrenCalculationsAndDWCubes',
-                    [$cell]
+                    [$cell],
+                    __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
                 )
             );
         } catch (Core_Exception_NotFound $e) {

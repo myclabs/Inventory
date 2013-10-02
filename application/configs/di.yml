@@ -1,2 +1,24 @@
+# Entrées définies dans le bootstrap:
+# application.name
+# email.contact.address
+# email.noreply.name
+# email.noreply.address
+# log.query
+
 # Activation des ACL
 enable.acl: true
+
+# Logs
+log.file: "data/logs/error.log"
+log.query.file: "data/logs/queries.log"
+Core\Log\QueryLogger:
+  constructor:
+    logger: log.query
+
+# Notification des taches de fond
+Core\Work\Notification\TaskNotifier:
+  class: Core\Work\Notification\EmailTaskNotifier
+Core\Work\Notification\EmailTaskNotifier:
+  constructor:
+    userService: User_Service_User
+    applicationName: email.noreply.name

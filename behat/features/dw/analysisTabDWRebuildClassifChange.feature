@@ -14,11 +14,13 @@ Feature: Analysis data rebuild after a change in classification data feature (an
   # Ajout axe
     When I am on "classif/axis/manage"
     And I wait for the page to finish loading
+    And I wait 3 seconds
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I fill in "label" with "Test"
     And I fill in "ref" with "test"
     And I click "Valider"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
     When I am on "orga/cell/details/idCell/1/tab/analyses"
@@ -37,6 +39,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     Then I should see the popup "Édition d'un axe"
     When I fill in "editAxis_label" with "Test modifié"
     And I click "Confirmer"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I am on "orga/cell/details/idCell/1/tab/analyses"
@@ -55,6 +58,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     Then I should see the popup "Édition d'un axe"
     When I fill in "editAxis_ref" with "test_modifie"
     And I click "Confirmer"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I am on "orga/cell/details/idCell/1/tab/analyses"
@@ -73,6 +77,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     Then I should see the popup "Édition d'un axe"
     When I select "Aucun" from "editAxis_changeParent"
     And I click "Confirmer"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
     When I am on "orga/cell/details/idCell/1/tab/analyses"
@@ -91,6 +96,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     Then I should see the popup "Édition d'un axe"
     When I check "Premier"
     And I click "Confirmer"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification : la modification n'est pas détectée (normal)
     When I am on "orga/cell/details/idCell/1/tab/analyses"
@@ -104,6 +110,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Suppression effectuée."
   # Détection axe organisationnel supprimé
     When I am on "orga/cell/details/idCell/1/tab/analyses"

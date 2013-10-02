@@ -5,41 +5,35 @@
  * @author bertrand.ferry
  * @package Keyword
  */
+
+use Keyword\Domain\AssociationCriteria;
+use UI\Datagrid\Datagrid;
+use UI\Datagrid\Column\ListColumn;
 ?>
-    use Keyword\Domain\Keyword_Model_Predicate;
-
-    use Keyword\Domain\Keyword_Model_Keyword;
-
-    <div class="page-header">
+<div class="page-header">
 	<h1><?=__('Keyword', 'relation', 'pageTitle')?></h1>
 </div>
 <?php
-    $datagrid = new UI_Datagrid('association', 'datagrid_association', 'keyword');
+    $datagrid = new Datagrid('association', 'datagrid_association', 'keyword');
+    $datagrid->criteriaName = '\Keyword\Domain\AssociationCriteria';
 
-    $columnSubject = new UI_Datagrid_Col_List('subject', __('Keyword', 'name', 'subject'));
+    $columnSubject = new ListColumn('subject', __('Keyword', 'name', 'subject'));
     $columnSubject->list = $this->listKeywords;
     $columnSubject->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
-    $columnSubject->sortName = Keyword_Model_Keyword::QUERY_LABEL;
-    $columnSubject->filterName = Keyword_Model_Keyword::QUERY_REF;
-    $columnSubject->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
-    $columnSubject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
-    $columnSubject->entityAlias = Keyword_Model_Keyword::getAliasAsSubject();
+    $columnSubject->criteriaFilterAttribute = AssociationCriteria::QUERY_KEYWORD_SUBJECT_REF;
+    $columnSubject->criteriaOrderAttribute = AssociationCriteria::QUERY_KEYWORD_SUBJECT_LABEL;
 
-    $columnObject = new UI_Datagrid_Col_List('object', __('Keyword', 'name', 'object'));
+    $columnPredicate = new ListColumn('predicate', __('Keyword', 'name', 'predicate'));
+    $columnPredicate->list = $this->listPredicates;
+    $columnPredicate->criteriaFilterAttribute = AssociationCriteria::QUERY_PREDICATE_REF;
+    $columnPredicate->criteriaOrderAttribute = AssociationCriteria::QUERY_PREDICATE_LABEL;
+    $columnPredicate->editable = true;
+
+    $columnObject = new ListColumn('object', __('Keyword', 'name', 'object'));
     $columnObject->list = $this->listKeywords;
     $columnObject->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
-    $columnObject->sortName = Keyword_Model_Keyword::QUERY_LABEL;
-    $columnObject->filterName = Keyword_Model_Keyword::QUERY_REF;
-    $columnObject->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
-    $columnObject->keywordFilterEqual = __('UI', 'datagridFilter', 'ColTextEqual');
-    $columnObject->entityAlias = Keyword_Model_Keyword::getAliasAsObject();
-
-    $columnPredicate = new UI_Datagrid_Col_List('predicate', __('Keyword', 'name', 'predicate'));
-    $columnPredicate->list = $this->listPredicates;
-    $columnPredicate->sortName = Keyword_Model_Predicate::QUERY_LABEL;
-    $columnPredicate->filterName = Keyword_Model_Predicate::QUERY_REF;
-    $columnPredicate->entityAlias = Keyword_Model_Predicate::getAlias();
-    $columnPredicate->editable = true;
+    $columnObject->criteriaFilterAttribute = AssociationCriteria::QUERY_KEYWORD_OBJECT_REF;
+    $columnObject->criteriaOrderAttribute = AssociationCriteria::QUERY_KEYWORD_OBJECT_LABEL;
 
     $datagrid->addCol($columnSubject);
     $datagrid->addCol($columnPredicate);
@@ -50,3 +44,11 @@
     $datagrid->addElements = true;
     $datagrid->addPanelTitle = __('Keyword', 'relation', 'addPanelTitle');
     $datagrid->display();
+
+?>
+<script type="text/javascript">
+    $('#association_addPanel').on('hide', function() {
+        $('#association_subject_addForm').trigger('change');
+        $('#association_object_addForm').trigger('change');
+    });
+</script>

@@ -23,13 +23,18 @@ class DW_Model_Repository_Report extends Core_Model_Repository
      */
     public function getValuesForReport($report)
     {
+        $numerator = $report->getNumerator();
+        $denominator = $report->getDenominator();
         $numeratorAxis1 = $report->getNumeratorAxis1();
         $numeratorAxis2 = $report->getNumeratorAxis2();
         $denominatorAxis1 = $report->getDenominatorAxis1();
         $denominatorAxis2 = $report->getDenominatorAxis2();
 
-        if ($report->getDenominator() !== null) {
+        if ($denominator !== null) {
             $isRatio = true;
+            $numeratorConversionFactor = $numerator->getRatioUnit()->getConversionFactor($numerator->getUnit()->getRef());
+            $denominatorConversionFactor = $denominator->getRatioUnit()->getConversionFactor($denominator->getUnit()->getRef());
+            $conversionFactor = $numeratorConversionFactor / $denominatorConversionFactor;
             // Tableau des identifiants des valeurs du dénominateurs indexées par l'identifiant de celle du numérateur.
             $membersLink = array();
         } else {
@@ -40,7 +45,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
 
         // Calcul des valeurs des numérateurs.
         $numeratorResults = $this->getResultForIndicatorAndAxes(
-            $report->getNumerator(),
+            $numerator,
             array($numeratorAxis1, $numeratorAxis2),
             $report->getFilters()
         );
@@ -98,8 +103,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
             $ratioValues = array();
 
             $denominatorResults = $this->getResultForIndicatorAndAxes(
-                $report->getDenominator(),
-                array($denominatorAxis1, $denominatorAxis2)
+                $denominator,
+                array($denominatorAxis1, $denominatorAxis2),
+                $report->getFilters()
             );
 
             // Tableau des identifiants des valeur des ratios (enfants) indxant l'identifiant des numérateurs (parents).
@@ -123,13 +129,11 @@ class DW_Model_Repository_Report extends Core_Model_Repository
 
             // Calcul de l'incertitude relative.
             foreach ($ratioValues as $denominatorIdentifier => $ratioValue) {
-                $ratioValues[$denominatorIdentifier]['uncertainty'] = sqrt($ratioValue['uncertainty']);
-                $ratioValues[$denominatorIdentifier]['uncertainty'] /= $ratioValue['value'];
                 if ($ratioValue['value'] != 0) {
                     $ratioValues[$denominatorIdentifier]['uncertainty'] = sqrt($ratioValue['uncertainty']);
                     $ratioValues[$denominatorIdentifier]['uncertainty'] /= $ratioValue['value'];
                 } else {
-                    $ratioValues[$denominatorIdentifier]['uncertainty'] /= 0;
+                    $ratioValues[$denominatorIdentifier]['uncertainty'] = 0;
                 }
             }
 
@@ -143,8 +147,10 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                         +
                         pow($ratioValues[$denominatorIdentifier]['uncertainty'], 2)
                     );
+                    // Conversion dans l'unité pour ratio.
+                    $values[$numeratorIdentifier]['value'] *= $conversionFactor;
                 } else {
-                    // Mettre la valeur à 0 !
+                    // Mettre la valeur à 0 !f
                     $values[$numeratorIdentifier]['value'] = 0;
                     $values[$numeratorIdentifier]['uncertainty'] = 0;
                 }

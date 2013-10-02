@@ -6,7 +6,7 @@ Feature: Family element tab edit feature
 
   @javascript
   Scenario: Family edit, tab element, display
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
   # Vérification qu'on tombe bien sur l'onglet "Éléments"
   # Séparateur décimal en français
@@ -20,7 +20,7 @@ Feature: Family element tab edit feature
 
   @javascript
   Scenario: Family edit, creation of an element scenario, correct input
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
   # Ajout d'un élément
     When I click element "#elements-gaz_naturel-combustion .btn:contains('Ajouter')"
@@ -35,7 +35,7 @@ Feature: Family element tab edit feature
 
   @javascript
   Scenario: Family edit, creation of an element scenario, incorrect input
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
   # Ajout d'un élément
     When I click element "#elements-gaz_naturel-combustion .btn:contains('Ajouter')"
@@ -58,7 +58,7 @@ Feature: Family element tab edit feature
 
   @javascript
   Scenario: Family edit, edition of an element scenario, correct input
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
   # Édition d'un élément
     When I click element "#elements-charbon-combustion a"
@@ -72,7 +72,7 @@ Feature: Family element tab edit feature
 
   @javascript
   Scenario: Family edit, edition of an element scenario, incorrect input
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
   # Édition d'un élément
     When I click element "#elements-charbon-combustion a"
@@ -97,7 +97,7 @@ Feature: Family element tab edit feature
 
   @javascript
   Scenario: Family edit, deletion of an element scenario
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
   # Édition d'un élément
     When I click element "#elements-charbon-combustion a"

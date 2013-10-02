@@ -37,7 +37,7 @@ class AF_Model_Input_Text extends AF_Model_Input implements Algo_Model_Input_Num
         if (!$this->isHidden()) {
             /** @var $component AF_Model_Component_Text */
             $component = $this->getComponent();
-            if ($component->getRequired() && $this->value != null) {
+            if ($component && $component->getRequired() && $this->value != null) {
                 return 1;
             }
         }

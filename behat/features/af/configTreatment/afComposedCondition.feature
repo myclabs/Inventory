@@ -19,11 +19,11 @@ Feature: AF composed condition for treatment feature
     And I fill in "algoConditionExpression_expression_addForm" with "a&(b|c)&d"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Conditions composées ordonnées suivant l'ordre de création (en fait non ?)
-    And the row 2 of the "algoConditionExpression" datagrid should contain:
+  # Conditions composées ordonnées suivant l'ordre de création (en fait non ?) (en fait si ?)
+    And the row 1 of the "algoConditionExpression" datagrid should contain:
       | ref |
       | aaa |
-    When I click "Expression" in the row 2 of the "algoConditionExpression" datagrid
+    When I click "Expression" in the row 1 of the "algoConditionExpression" datagrid
     Then I should see the popup "Expression"
     And I should see "a & (b | c) & d"
 

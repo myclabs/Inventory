@@ -77,26 +77,11 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
                 }
                 $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
                 $data['stateInput'] = $aFInputSetPrimary->getStatus();
-                $gesIndicator = Classif_Model_Indicator::loadByRef('ges');
-                $output = null;
-                if ($aFInputSetPrimary->getOutputSet() !== null) {
-                    $output = $aFInputSetPrimary->getOutputSet()->getTotalByIndicator($gesIndicator);
-                }
-                if ($output !== null) {
-                    $value = $output->getValue();
-                    $data['totalValueGESInput'] = $this->cellNumber($value->digitalValue);
-                    $data['totalUncertaintyGESInput'] = $this->cellNumber($value->relativeUncertainty, null, 0);
-                } else {
-                    $data['totalValueGESInput'] = $this->cellNumber(0);
-                    $data['totalUncertaintyGESInput'] = $this->cellNumber(0, null, 0);
-                }
             } catch (Core_Exception_UndefinedAttribute $e) {
                 $data['advancementInput'] = 0;
                 $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
-                $data['totalValueGESInput'] = $this->cellNumber(null);
-                $data['totalUncertaintyGESInput'] = $this->cellNumber(null);
             }
-            $data['link'] = $this->cellLink('simulation/scenario/details?idScenario='.$scenario->getKey()['id'], __('UI', 'name', 'input'), 'share-alt');
+            $data['link'] = $this->cellLink('simulation/scenario/details?idScenario='.$scenario->getKey()['id'], __('UI', 'datagridContent', 'linkLabel'), 'share-alt');
             $this->addLine($data);
         }
 

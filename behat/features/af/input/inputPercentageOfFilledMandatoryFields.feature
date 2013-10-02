@@ -5,7 +5,7 @@ Feature: Percentage of filled mandatory fields feature
     Given I am logged in
 
   @javascript
-  Scenario: Percentage of filled mandatory fields scenario, all fiels are mandatory
+  Scenario: Percentage of filled mandatory fields scenario, all fiels are mandatory scenario
   # Accès interface de test
     Given I am on "af/af/test/id/5"
     And I wait for the page to finish loading
@@ -15,7 +15,7 @@ Feature: Percentage of filled mandatory fields feature
     Then the "#tabs_tabInput .inputProgress .bar" element should contain "14%"
 
   @javascript
-  Scenario: Percentage of filled mandatory fields scenario, some fiels are mandatory some are not, 1
+  Scenario: Percentage of filled mandatory fields scenario, some fiels are mandatory some are not scenario, 1
   # Accès à l'interface de configuration, onglet "Composants"
     Given I am on "af/edit/menu/id/5"
     And I wait for the page to finish loading
@@ -34,7 +34,7 @@ Feature: Percentage of filled mandatory fields feature
     Then the "#tabs_tabInput .inputProgress .bar" element should contain "20%"
 
   @javascript
-  Scenario: Percentage of filled mandatory fields scenario, some fiels are mandatory some are not, 2
+  Scenario: Percentage of filled mandatory fields scenario, some fiels are mandatory some are not scenario, 2
   # Accès à l'interface de configuration, onglet "Composants"
     Given I am on "af/edit/menu/id/5"
     And I wait for the page to finish loading
@@ -55,7 +55,7 @@ Feature: Percentage of filled mandatory fields feature
 
 
   @javascript
-  Scenario: Percentage of filled mandatory fields scenario, no field is mandatory
+  Scenario: Percentage of filled mandatory fields scenario, no field is mandatory scenario
   # Accès à l'interface de configuration, onglet "Composants"
     Given I am on "af/edit/menu/id/5"
     And I wait for the page to finish loading
@@ -84,4 +84,17 @@ Feature: Percentage of filled mandatory fields feature
   # La saisie est complète
     Then the "#tabs_tabInput .inputProgress .bar" element should contain "100%"
 
-
+  @javascript
+  Scenario: Percentage of filled mandatory fields scenario, all fields are mandatory and completed scenario
+    Given I am on "af/af/test/id/5"
+    And I wait for the page to finish loading
+    And I fill in "c_n" with "10"
+    And I select "Option 1" from "c_s_s_liste"
+    And I check "c_s_s_bouton_opt_1"
+    And I check "c_s_m_checkbox_opt_1"
+    And I additionally select "Option 1" from "c_s_m_liste"
+    And I fill in "c_t_c" with "Blabla"
+    And I fill in "c_t_l" with "Blabla"
+    And I click "Enregistrer"
+    Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
+    And the "#tabs_tabInput .inputProgress .bar" element should contain "100%"

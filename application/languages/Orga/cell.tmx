@@ -20,6 +20,14 @@
                 <seg>Sub-units</seg>
             </tuv>
         </tu>
+        <tu tuid="subCells">
+            <tuv xml:lang="fr">
+                <seg>Sous-unités</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sub-units</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>

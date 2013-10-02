@@ -1,9 +1,9 @@
 /* Redéfinition de la largeur des label dans les formulaires */
 .form .control-label { width: 400px; }
 .form .controls { margin-left: 430px; }
-.form .controls > div { margin-right: 25px; }
+.form .controls > div { margin-right: 25px; vertical-align: top; }
 .form .controls > div:first-child { width: 380px; margin-right: 0px; }
-.form .input { display: inline-block; }
+.form .input { display: inline-block; margin-right: 5px; }
 .form .input.hide { display: none; }
 .form .incertitude { width: 30px; }
 .form .subGroup { margin-left: 40px; }
@@ -31,6 +31,7 @@
     margin-top: 0px;
 }
 
+.form div.input.large { width: auto; margin-right: 5px;}
 .form textarea { width: auto; height: auto; }
 
 /* Formulaires répétés : affichage des lignes*/
@@ -39,6 +40,10 @@
 .form .repeatedGroup table.repeatedGroup .controls { margin-left: 0px; }
 .form .repeatedGroup table.repeatedGroup .controls > div { margin-right: 0px; }
 .form .repeatedGroup table.repeatedGroup .controls > div:first-child { width: auto; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child input { width: 100px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:not(:first-child) { margin: 2px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child select { width: 150px; }
+.form .repeatedGroup table.repeatedGroup .controls .input:first-child textarea { width: 150px; }
 .form .repeatedGroup table.repeatedGroup .controls .input +.input { margin-left: 5px; }
 .form .repeatedGroup table.repeatedGroup .controls .input +.input { margin-left: 5px; }
 
@@ -200,7 +205,7 @@
 
 /* Redéfinition du champs markItUp */
 .form .markItUp { width: auto; border: none; }
-.form .markItUp .markItUpContainer { width: 760px; padding: 0px; border: inherit; background: none; }
+.form .markItUp .markItUpContainer { padding: 0px; border: inherit; background: none; }
 .markItUp textarea { width: 98%; padding: 1%; background: none;
  /* Réécritue des règles de twitter bootstrap */
   background-color: #ffffff;

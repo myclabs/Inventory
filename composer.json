@@ -1,45 +1,49 @@
 {
-	"autoload": {
-		"psr-0": {
-			"Core": "src/",
-			"UI": "src/",
-			"Unit": "src/",
-			"User": "src/",
-			"TEC": "src/",
-			"Calc": "src/",
-			"Exec": "src/",
-			"Export": "src/",
-			"Keyword": "src/",
-			"Doc": "src/",
-			"DW": "src/",
-			"Algo": "src/",
-			"AF": "src/",
-			"Orga": "src/",
-			"Inventory": "src/",
+    "autoload": {
+        "psr-0": {
+            "Core": "src/",
+            "UI": "src/",
+            "Unit": "src/",
+            "User": "src/",
+            "TEC": "src/",
+            "Calc": "src/",
+            "Exec": "src/",
+            "Export": "src/",
+            "Keyword": "src/",
+            "Doc": "src/",
+            "DW": "src/",
+            "Algo": "src/",
+            "AF": "src/",
+            "Orga": "src/",
+            "Inventory": "src/",
             "AuditTrail": "src/"
-		}
-	},
-	"require": {
-		"php": ">=5.4.0",
-		"zendframework/zendframework1": "1.12.*",
-		"doctrine/orm": "2.3.*",
-		"doctrine/annotations": "1.*",
-		"doctrine/common": "dev-ChainDriverFix as 2.3.0",
-		"gedmo/doctrine-extensions": "2.3.6",
-		"symfony/yaml": "2.3.*",
-        "symfony/event-dispatcher": "2.3.*",
-		"pear/console_commandline": "dev-trunk",
-		"netcarver/textile": "3.5.*",
-		"phpoffice/phpexcel": "1.7.*",
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "zendframework/zendframework1": "1.12.*",
+        "doctrine/orm": "dev-CriteriaContains as 2.4.99",
+        "doctrine/annotations": "~1.0",
+        "doctrine/common": "dev-ProxyStaticProperties as 2.4.1",
+        "gedmo/doctrine-extensions": "~2.3",
+        "symfony/yaml": "~2.3",
+        "symfony/event-dispatcher": "~2.3",
+        "pear/console_commandline": "dev-trunk",
+        "netcarver/textile": "~3.5",
         "dompdf/dompdf": "dev-master",
+        "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
         "myclabs/array-comparator": "1.0.*",
+        "myclabs/xport": "dev-master",
         "myclabs/php-enum": "1.*",
-        "mnapoli/php-di": "3.3.*",
-        "mnapoli/php-di-zf1": "*"
-	},
+        "mnapoli/php-di": "3.4.*",
+        "mnapoli/php-di-zf1": "*",
+        "psr/log": "~1.0",
+        "monolog/monolog": "~1.6",
+        "mnapoli/number-two": "~0.2.0"
+    },
     "require-dev": {
-        "behat/behat": "2.4.*",
-        "behat/mink": "1.5.*",
+        "behat/behat": "~2.4",
+        "behat/mink": "~1.5",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
         "mnapoli/metaconsole": "dev-master"
@@ -49,7 +53,15 @@
     "repositories": [
         {
             "type": "git",
+            "url": "git://github.com/myclabs/PHPExcel.git"
+        },
+        {
+            "type": "git",
             "url": "git://github.com/myclabs/common.git"
+        },
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/doctrine2.git"
         }
     ]
 }

@@ -8,13 +8,13 @@ namespace AuditTrail\Architecture\Repository;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\Entry;
 use AuditTrail\Domain\EntryRepository;
-use Core\Model\EntityRepository;
+use Core\Domain\DoctrineEntityRepository;
 use Orga_Model_Cell;
 
 /**
  * Audit trail entry repository
  */
-class DoctrineEntryRepository extends EntityRepository implements EntryRepository
+class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryRepository
 {
     /**
      * @param int $count
@@ -41,7 +41,7 @@ class DoctrineEntryRepository extends EntityRepository implements EntryRepositor
             ->setMaxResults($count);
 
         if ($context->getCell()) {
-            $cells = $this->getAllChildCells($context->getCell());
+            $cells = $context->getCell()->getChildCells();
             $cells[] = $context->getCell();
 
             // Requete moche à cause de limitation Doctrine avec CTI
@@ -54,21 +54,5 @@ class DoctrineEntryRepository extends EntityRepository implements EntryRepositor
         }
 
         return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param Orga_Model_Cell $cell
-     * @return Orga_Model_Cell[]
-     */
-    private function getAllChildCells(Orga_Model_Cell $cell)
-    {
-        $childCells = [];
-
-        foreach ($cell->getChildCells() as $childCell) {
-            $childCells[] = $childCell;
-            $childCells = array_merge($childCells, $this->getAllChildCells($childCell));
-        }
-
-        return $childCells;
     }
 }

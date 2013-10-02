@@ -5,30 +5,35 @@
  * @author bertrand.ferry
  * @package Keyword
  */
-?>
-    use Keyword\Domain\Keyword_Model_Keyword;
 
-    <div class="page-header">
+use Keyword\Domain\KeywordCriteria;
+use UI\Datagrid\Datagrid;
+use UI\Datagrid\Column\TextColumn;
+use UI\Datagrid\Column\NumberColumn;
+use UI\Datagrid\Column\LinkColumn;
+?>
+<div class="page-header">
 	<h1><?=__('Keyword', 'list', 'pageTitle')?></h1>
 </div>
 <?php
-    $datagrid = new UI_Datagrid('keywords', 'datagrid_keyword', 'keyword');
+    $datagrid = new Datagrid('keywords', 'datagrid_keyword', 'keyword');
+    $datagrid->criteriaName = '\Keyword\Domain\KeywordCriteria';
 
-    $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
-    $columnLabel->sortName = Keyword_Model_Keyword::QUERY_LABEL;
-    $columnLabel->filterName = Keyword_Model_Keyword::QUERY_LABEL;
+    $columnLabel = new TextColumn('label', __('UI', 'name', 'label'));
+    $columnLabel->criteriaFilterAttribute = KeywordCriteria::QUERY_LABEL;
+    $columnLabel->criteriaOrderAttribute = KeywordCriteria::QUERY_LABEL;
     $columnLabel->editable = true;
 
-    $columnRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
-    $columnRef->sortName = Keyword_Model_Keyword::QUERY_REF;
-    $columnRef->filterName = Keyword_Model_Keyword::QUERY_REF;
+    $columnRef = new TextColumn('ref', __('UI', 'name', 'identifier'));
+    $columnRef->criteriaFilterAttribute = KeywordCriteria::QUERY_REF;
+    $columnRef->criteriaOrderAttribute = KeywordCriteria::QUERY_REF;
     $columnRef->editable = true;
 
-    $columnNbRelations = new UI_Datagrid_Col_Number('nbRelations', __('Keyword', 'list', 'relationNumberHeader'));
+    $columnNbRelations = new NumberColumn('nbRelations', __('Keyword', 'list', 'relationNumberHeader'));
     $columnNbRelations->valueAlignment = UI_Datagrid_Col_Text::DISPLAY_TEXT_CENTER;
     $columnNbRelations->addable = false;
 
-    $columnLinkToGraph = new UI_Datagrid_Col_Link('linkToGraph', __('UI', 'name', 'graph'));
+    $columnLinkToGraph = new LinkColumn('linkToGraph', __('UI', 'name', 'graph'));
     $columnLinkToGraph->defaultValue = '<i class=icon-share-alt></i> '. __('UI', 'name', 'graph');
 
     $datagrid->addCol($columnLabel);

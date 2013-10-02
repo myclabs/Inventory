@@ -99,7 +99,8 @@ Feature: AF structure feature
   # Modification du parent d'un composant (depuis la racine)
     And I click "Champ sélection multiple"
     Then I should see the popup "Déplacement dans la structure du formulaire"
-    When I select "Groupe contenant un champ" from "afTree_changeParent"
+    When I wait 5 seconds
+    And I select "Groupe contenant un champ" from "afTree_changeParent"
     And I click "Confirmer"
     And I wait 10 seconds
     Then the following message is shown and closed: "Modification effectuée."
@@ -107,7 +108,8 @@ Feature: AF structure feature
     When I wait 10 seconds
     And I click "Champ numérique cible activation"
     Then I should see the popup "Déplacement dans la structure du formulaire"
-    When I select "Racine" from "afTree_changeParent"
+    When I wait 5 seconds
+    And I select "Racine" from "afTree_changeParent"
     And I click "Confirmer"
     And I wait 10 seconds
     Then the following message is shown and closed: "Modification effectuée."

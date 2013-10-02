@@ -33,7 +33,6 @@ Feature: Meanings datagrid feature
 
   @javascript
   Scenario: Deletion of a meaning
-  Creation of a meaning
     Given I am on "techno/meaning/list"
     And I wait for the page to finish loading
     Then I should see the "meaningDatagrid" datagrid
@@ -53,11 +52,11 @@ Feature: Meanings datagrid feature
     And I select "charbon" from "meaningDatagrid_ref_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 3 of the "meaningDatagrid" datagrid should contain:
+    And the row 4 of the "meaningDatagrid" datagrid should contain:
       | label   | ref     |
       | charbon | charbon |
   # Suppression
-    When I click "Supprimer" in the row 3 of the "meaningDatagrid" datagrid
+    When I click "Supprimer" in the row 4 of the "meaningDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."

@@ -5,8 +5,8 @@ Feature: Family one dimension edit feature
     Given I am logged in
 
   @javascript
-  Scenario: Add member, correct input
-    Given I am on "techno/dimension/details/id/4"
+  Scenario: Add member to a family dimension, correct input
+    Given I am on "techno/dimension/details/id/5"
     And I wait for the page to finish loading
   # Affichage famille et en-tête
     Then I should see "Famille : Famille test non vide"
@@ -25,7 +25,7 @@ Feature: Family one dimension edit feature
       | amont de la combustion | amont_combustion |
 
   @javascript
-  Scenario: Add member, incorrect input
+  Scenario: Add member to a family dimension, incorrect input
     Given I am on "techno/dimension/details/id/4"
     And I wait for the page to finish loading
     And I click "Ajouter"

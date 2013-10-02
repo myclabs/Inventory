@@ -180,17 +180,6 @@ class DW_Export_Report_Pdf extends Export_Pdf
         $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
         $this->html .= '<i>' . __('UI', 'name', 'date') . __('UI', 'other', ':') . $date . '</i>';
 
-        if ($report->getDenominator() != null ) {
-            $unit = $report->getNumerator()->getRatioUnit();
-            $unitDenominator = $report->getDenominator()->getRatioUnit();
-            $unitSymbol = $unit->getSymbol().' / '.$unitDenominator->getSymbol();
-        } else {
-            $unit = $report->getNumerator()->getUnit();
-            $unitSymbol = $unit->getSymbol();
-        }
-
-
-
 
         $this->html .= '<div class="data">';
         $this->html .= '<h3>'.__('DW', 'name', 'chart').'</h3>';
@@ -209,7 +198,7 @@ class DW_Export_Report_Pdf extends Export_Pdf
         if ($numeratorAxis2 !== null) {
             $this->html .= '<th>'.$numeratorAxis2->getLabel().'</th>';
         }
-        $this->html .= '<th>'.__('UI', 'name', 'value').' ('. $unitSymbol .')</th>';
+        $this->html .= '<th>'.__('UI', 'name', 'value').' ('. $report->getValuesUnitSymbol() .')</th>';
         $this->html .= '<th>'.__('UI', 'name', 'uncertainty').' (%)</th>';
         $this->html .= '</tr>';
 

@@ -927,11 +927,9 @@ class Orga_Model_Cell extends Core_Model_Entity
 
         if (empty($cellsGroup)) {
             throw new Core_Exception_NotFound("No 'Orga_Model_CellsGroup' for input Granularity " . $inputGranularity);
-        } else {
-            if (count($cellsGroup) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity "
-                    . $inputGranularity);
-            }
+        } elseif (count($cellsGroup) > 1) {
+            throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity "
+                . $inputGranularity);
         }
 
         return array_pop($cellsGroup);
@@ -1223,13 +1221,15 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public function getPopulatingCells()
     {
-        // Renvoie une exception si la cellule ne possède pas de organization.
+        // Renvoie une exception si la cellule ne possède pas de cube de DW.
         $this->getDWCube();
 
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-            if ($inputGranularity->isNarrowerThan($this->getGranularity())) {
+            if ($inputGranularity->getRef() === $this->getGranularity()->getRef()) {
+                $populatingCells[] = $this;
+            } else if ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
                     $populatingCells[] = $inputChildCell;
                 }
@@ -1263,7 +1263,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         foreach ($this->getAFInputSetPrimary()->getOutputSet()->getElements() as $outputElement) {
             $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getRef();
             try {
-                $dWIndicator = DW_Model_Indicator::loadByRefAndCube('classif_'.$refClassifIndicator, $dWCube);
+                $dWIndicator = DW_Model_Indicator::loadByRefAndCube($refClassifIndicator, $dWCube);
             } catch (Core_Exception_NotFound $e) {
                 // Indexation selon l'indicateur de classif non trouvée. Impossible de créer le résultat.
                 continue;
@@ -1274,8 +1274,8 @@ class Orga_Model_Cell extends Core_Model_Entity
 
             foreach ($outputElement->getIndexes() as $outputIndex) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndCube('classif_'.$outputIndex->getRefAxis(), $dWCube);
-                    $dWMember = DW_Model_Member::loadByRefAndAxis('classif_'.$outputIndex->getRefMember(), $dWAxis);
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube('c_'.$outputIndex->getRefAxis(), $dWCube);
+                    $dWMember = DW_Model_Member::loadByRefAndAxis($outputIndex->getRefMember(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
                     // Indexation selon classif non trouvée.
@@ -1283,8 +1283,8 @@ class Orga_Model_Cell extends Core_Model_Entity
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
                     try {
-                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube('classif_'.$classifParentMember->getAxis()->getRef(), $dWCube);
-                        $dWParentMember = DW_Model_Member::loadByRefAndAxis('classif_'.$classifParentMember->getRef(), $dWBroaderAxis);
+                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube('c_'.$classifParentMember->getAxis()->getRef(), $dWCube);
+                        $dWParentMember = DW_Model_Member::loadByRefAndAxis($classifParentMember->getRef(), $dWBroaderAxis);
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
                         // Indexation selon classif non trouvée.
@@ -1300,8 +1300,8 @@ class Orga_Model_Cell extends Core_Model_Entity
             }
             foreach ($indexingMembers as $indexingMember) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndCube('orga_'.$indexingMember->getAxis()->getRef(), $dWCube);
-                    $dWMember = DW_Model_Member::loadByRefAndAxis('orga_'.$indexingMember->getRef(), $dWAxis);
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube('o_'.$indexingMember->getAxis()->getRef(), $dWCube);
+                    $dWMember = DW_Model_Member::loadByRefAndAxis($indexingMember->getRef(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
                     // Indexation selon orga non trouvée.

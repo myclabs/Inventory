@@ -37,30 +37,6 @@ if (!$this->isDWCubeUpToDate) { ?>
 </div>
 <?php } ?>
 
-<a id="exportAsExcel" href="dw/cube/export/idCube/<?=$this->idCube?>" class="btn">
-    <img src="images/dw/xls.png" alt="xls" />
-    <?=__('DW', 'reportList', 'detailedSpreadsheetExport')?>
-</a>
-<div id="exportAsExcelPopup" class="modal hide fade">
-    <div class="modal-body">
-        <p><?=__('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
-        <div class="progress progress-striped active">
-            <div class="bar" style="width: 100%;"></div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'close')?></button>
-    </div>
-</div>
-
-<script>
-    $("#exportAsExcel").click(function(e) {
-        $('#exportAsExcelPopup').modal();
-    });
-</script>
-
-<hr/>
-
 <?php
 $datagrid = new UI_Datagrid('report', 'datagrid_cell_report', 'orga');
 
