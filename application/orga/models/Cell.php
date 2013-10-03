@@ -11,6 +11,7 @@ use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Definit une cellule organisationnelle.
@@ -1125,6 +1126,26 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getSocialCommentsForInputSetPrimary()
     {
         return $this->socialCommentsForAFInputSetPrimary->toArray();
+    }
+
+    /**
+     * Renvoi les derniers commentaires pour cette cellule et ses sous-cellules.
+     *
+     * @param int $count
+     * @return Social_Model_Comment[]
+     */
+    public function getLatestComments($count)
+    {
+        $comments = clone $this->socialCommentsForAFInputSetPrimary;
+        foreach ($this->getChildCells() as $subCell) {
+            foreach ($subCell->getSocialCommentsForInputSetPrimary() as $comment) {
+                $comments->add($comment);
+            }
+        }
+        $criteria = Criteria::create();
+        $criteria->orderBy(['creationDate' => Criteria::DESC]);
+        $criteria->setMaxResults($count);
+        return $comments->matching($criteria);
     }
 
     /**

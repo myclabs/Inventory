@@ -9,6 +9,7 @@ use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Controlleur des onglets des détails d'une cellule.
@@ -781,6 +782,23 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->assign('idCell', $this->getParam('idCell'));
         $this->view->assign('entries', $entries);
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+    }
+
+    /**
+     * Action fournissant la vue des commentaires de la cellule.
+     * @Secure("viewCell")
+     */
+    public function commentsAction()
+    {
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+
+        $comments = $cell->getLatestComments(20);
+
+        $this->view->assign('idCell', $this->getParam('idCell'));
+        $this->view->assign('comments', $comments);
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
     }

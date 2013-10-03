@@ -1,0 +1,26 @@
+<?php
+
+$locale = Core_Locale::loadDefault();
+
+$idCell = isset($this->idCell) ? $this->idCell : null;
+
+/** @var Social_Model_Comment[] $comments */
+$comments = $this->comments;
+?>
+
+<?php if (count($comments) === 0) : ?>
+    <p class="muted">
+        <?=__('Social', 'comment', 'noComment')?>
+    </p>
+<?php endif; ?>
+
+<ul>
+    <?php foreach ($comments as $comment) : ?>
+        <li>
+            <?=$locale->formatDateTime($comment->getCreationDate())?>
+            <?=__('UI', 'other', 'by')?>
+            <?=$comment->getAuthor()->getName()?><?=__('UI', 'other', ':')?>
+            « <?=Core_Tools::truncateString($comment->getText(), 200)?> »
+        </li>
+    <?php endforeach; ?>
+</ul>
