@@ -87,11 +87,9 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
             $selectField->setEnabled($this->getAddElementValue('enabled'));
             $selectField->setRequired($this->getAddElementValue('required'));
             $selectField->setType($type);
-            $af->getRootGroup()->addSubComponent($selectField);
             $af->addComponent($selectField);
 
             $selectField->save();
-            $af->getRootGroup()->save();
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {

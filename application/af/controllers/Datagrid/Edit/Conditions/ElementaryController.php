@@ -113,6 +113,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
             $condition->setField($field);
             $condition->setAf($af);
             $condition->save();
+            $af->addCondition($condition);
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
