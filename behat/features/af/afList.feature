@@ -147,7 +147,7 @@ Feature: AF list edit feature
     And I click "Filtrer"
     Then the "listAF" datagrid should contain 5 row
 
-  @javascript @skipped
+  @javascript
   Scenario: Deletion of an A form from AF list
     #6193 	Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
     Given I am on "af/af/list"

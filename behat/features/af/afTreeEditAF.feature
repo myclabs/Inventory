@@ -66,7 +66,7 @@ Feature: AF tree edit AF feature
     And I click "Confirmer"
     Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire."
 
-  @javascript @skipped
+  @javascript
   Scenario: Deletion of an AF in AF tree edit, authorized
     #6193 	Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
     Given I am on "af/af/tree"
