@@ -1,0 +1,119 @@
+<?php
+/** @var $keywordMeaningsErrors string[] */
+use Techno\Domain\Family\Family;
+use Techno\Domain\Family\Dimension;
+use Techno\Domain\Tag;
+
+$keywordMeaningsErrors = $this->keywordMeaningsErrors;
+/** @var $keywordFamilyTagsErrors array */
+$keywordFamilyTagsErrors = $this->keywordFamilyTagsErrors;
+/** @var $keywordFamilyMembersErrors array */
+$keywordFamilyMembersErrors = $this->keywordFamilyMembersErrors;
+?>
+
+<div class="page-header">
+    <h1><?=__('Techno', 'control', 'pageTitle')?></h1>
+</div>
+
+
+<h2><?=__('Techno', 'control', 'controlMeaningsKeywords')?></h2>
+
+
+<?php if (count($keywordMeaningsErrors) > 0) : ?>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th><?=__('Techno', 'control', 'invalidKeywordRef')?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($keywordMeaningsErrors as $keyword) : ?>
+            <tr>
+                <td><?=$keyword?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+<?php else : ?>
+
+    <p><?=__('Techno', 'control', 'noError')?></p>
+
+<?php endif; ?>
+
+
+<h2><?=__('Techno', 'control', 'controlTagsKeywords')?></h2>
+
+
+<?php if (count($keywordFamilyTagsErrors) > 0) : ?>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th><?=__('Techno', 'name', 'family')?></th>
+            <th><?=__('Techno', 'name', 'tag')?></th>
+            <th><?=__('Techno', 'control', 'invalidKeywordRef')?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($keywordFamilyTagsErrors as $array) : ?>
+            <?php
+            /** @var $family Family */
+            $family = $array['family'];
+            /** @var $dimension Tag */
+            $dimension = $array['tag'];
+            $keyword = $array['keyword'];
+            ?>
+            <tr>
+                <td><?=$family->getLabel()?></td>
+                <td><?=$dimension->getMeaning()->getLabel()?></td>
+                <td><?=$keyword?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+<?php else : ?>
+
+    <p><?=__('Techno', 'control', 'noError')?></p>
+
+<?php endif; ?>
+
+
+<h2><?=__('Techno', 'control', 'controlMembersKeywords')?></h2>
+
+
+<?php if (count($keywordFamilyMembersErrors) > 0) : ?>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th><?=__('Techno', 'name', 'family')?></th>
+            <th><?=__('Techno', 'name', 'dimension')?></th>
+            <th><?=__('Techno', 'control', 'invalidKeywordRef')?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($keywordFamilyMembersErrors as $array) : ?>
+            <?php
+            /** @var $family Family */
+            $family = $array['family'];
+            /** @var $tag Dimension */
+            $dimension = $array['dimension'];
+            $keyword = $array['keyword'];
+            ?>
+            <tr>
+                <td><?=$family->getLabel()?></td>
+                <td><?=$dimension->getMeaning()->getLabel()?></td>
+                <td><?=$keyword?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+<?php else : ?>
+
+    <p><?=__('Techno', 'control', 'noError')?></p>
+
+<?php endif; ?>

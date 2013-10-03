@@ -3,9 +3,17 @@
  * @author matthieu.napoli
  * @package Techno
  */
+
 use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\Keyword;
+use Techno\Domain\Family\Family;
+use Techno\Domain\Family\Cell;
+use Techno\Domain\Family\Dimension;
+use Techno\Domain\Family\Member;
+use Techno\Domain\Meaning;
+use Techno\Domain\Tag;
+use Techno\Domain\Component;
 
 /**
  * @package Techno
@@ -26,32 +34,32 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Techno_Model_Component::loadList() as $o) {
+        foreach (Component::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Tag::loadList() as $o) {
+        foreach (Tag::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Meaning::loadList() as $o) {
+        foreach (Meaning::loadList() as $o) {
             $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $entityManager->getRepository('Keyword\Domain\Keyword');
         if ($keywordRepository->count() > 0) {
             foreach ($keywordRepository->getAll() as $o) {
                 $keywordRepository->remove($o);
             }
         }
-        foreach (Techno_Model_Family_Cell::loadList() as $o) {
+        foreach (Cell::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Family_Member::loadList() as $o) {
+        foreach (Member::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Family_Dimension::loadList() as $o) {
+        foreach (Dimension::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Family::loadList() as $o) {
+        foreach (Family::loadList() as $o) {
             $o->delete();
         }
         $entityManager->flush();
@@ -61,7 +69,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     {
         parent::setUp();
         $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+        $this->keywordService = $container->get('Keyword\Application\Service\KeywordService');
     }
 
     /**
@@ -69,8 +77,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
      */
     public function testRef()
     {
-        /** @var $o Techno_Model_Family */
-        $o = $this->getMockForAbstractClass('Techno_Model_Family');
+        /** @var $o Family */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Family\Family');
         $o->setRef("test");
         $this->assertEquals("test", $o->getRef());
     }
@@ -80,8 +88,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
      */
     public function testLabel()
     {
-        /** @var $o Techno_Model_Family */
-        $o = $this->getMockForAbstractClass('Techno_Model_Family');
+        /** @var $o Family */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Family\Family');
         $o->setLabel("Label");
         $this->assertEquals("Label", $o->getLabel());
     }
@@ -94,8 +102,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $tag1 = Techno_Test_TagTest::generateObject();
         $tag2 = Techno_Test_TagTest::generateObject();
 
-        /** @var $o Techno_Model_Family */
-        $o = $this->getMockForAbstractClass('Techno_Model_Family');
+        /** @var $o Family */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Family\Family');
         $this->assertNotNull($o->getCellsCommonTags());
         // Add
         $o->addCellsCommonTag($tag1);
@@ -121,8 +129,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $dimension1 = Techno_Test_Family_DimensionTest::generateObject();
         $dimension2 = Techno_Test_Family_DimensionTest::generateObject();
 
-        /** @var $o Techno_Model_Family */
-        $o = $this->getMockForAbstractClass('Techno_Model_Family');
+        /** @var $o Family */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Family\Family');
         $this->assertNotNull($o->getDimensions());
         // Add
         $o->addDimension($dimension1);
@@ -141,8 +149,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
      */
     public function testCells1()
     {
-        /** @var $o Techno_Model_Family */
-        $o = $this->getMockForAbstractClass('Techno_Model_Family');
+        /** @var $o Family */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Family\Family');
         $o->getCell(['foo', 'bar']);
     }
 
@@ -151,8 +159,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
      */
     public function testCells2()
     {
-        /** @var $o Techno_Model_Family */
-        $o = $this->getMockForAbstractClass('Techno_Model_Family');
+        /** @var $o Family */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Family\Family');
         $o->getCell([]);
     }
 
@@ -165,7 +173,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $keywordRef1 = strtolower(Core_Tools::generateString(10));
         $keywordRef2 = strtolower(Core_Tools::generateString(10));
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
         $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
         $this->entityManager->flush();
@@ -173,19 +181,19 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
         // 1 dimension
-        $dimension1 = new Techno_Model_Family_Dimension($family, $meaning1,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1,
+                                                        Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
 
         // 1er membre
-        $member1 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef1));
+        $member1 = new Member($dimension1, $this->keywordService->get($keywordRef1));
         $family->save();
         $this->assertAttributeCount(1, 'cells', $family);
         $this->entityManager->flush();
 
         // 2è membre
-        $member2 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef2));
+        $member2 = new Member($dimension1, $this->keywordService->get($keywordRef2));
         $family->save();
         $this->assertAttributeCount(2, 'cells', $family);
         $this->entityManager->flush();
@@ -194,8 +202,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(2, 'cells', $family);
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member1]));
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member2]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member1]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member2]));
         $this->assertNotSame($family->getCell([$member1]), $family->getCell([$member2]));
 
         // Delete all
@@ -216,24 +224,24 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $keywordRef1 = strtolower(Core_Tools::generateString(10));
         $keywordRef2 = strtolower(Core_Tools::generateString(10));
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
         $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
         $this->entityManager->flush();
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
-        $dimension1 = new Techno_Model_Family_Dimension($family, $meaning1,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1,
+                                                        Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef1));
+        $member11 = new Member($dimension1, $this->keywordService->get($keywordRef1));
 
-        $dimension2 = new Techno_Model_Family_Dimension($family, $meaning2,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
+        $dimension2 = new Dimension($family, $meaning2,
+                                                        Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef2));
+        $member21 = new Member($dimension2, $this->keywordService->get($keywordRef2));
 
         $family->save();
         $this->entityManager->flush();
@@ -242,8 +250,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(1, 'cells', $family);
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member11, $member21]));
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member21, $member11]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member21]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member21, $member11]));
         $this->assertSame($family->getCell([$member11, $member21]), $family->getCell([$member21, $member11]));
 
         // Delete all
@@ -267,7 +275,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $keywordRef3 = strtolower(Core_Tools::generateString(10));
         $keywordRef4 = strtolower(Core_Tools::generateString(10));
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
         $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
         $keywordRepository->add(new Keyword($keywordRef3, 'Label'));
@@ -276,19 +284,19 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
-        $dimension1 = new Techno_Model_Family_Dimension($family, $meaning1,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1,
+                                                        Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef1));
-        $member12 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef2));
+        $member11 = new Member($dimension1, $this->keywordService->get($keywordRef1));
+        $member12 = new Member($dimension1, $this->keywordService->get($keywordRef2));
 
-        $dimension2 = new Techno_Model_Family_Dimension($family, $meaning2,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
+        $dimension2 = new Dimension($family, $meaning2,
+                                                        Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef3));
-        $member22 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef4));
+        $member21 = new Member($dimension2, $this->keywordService->get($keywordRef3));
+        $member22 = new Member($dimension2, $this->keywordService->get($keywordRef4));
 
         $family->save();
         $this->entityManager->flush();
@@ -297,13 +305,13 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(4, 'cells', $family);
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member11, $member21]));
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member21, $member11]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member21]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member21, $member11]));
         $this->assertSame($family->getCell([$member11, $member21]), $family->getCell([$member21, $member11]));
 
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member12, $member21]));
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member11, $member22]));
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member12, $member22]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member12, $member21]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member22]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member12, $member22]));
 
         $this->assertNotSame($family->getCell([$member11, $member21]), $family->getCell([$member12, $member21]));
         $this->assertNotSame($family->getCell([$member11, $member21]), $family->getCell([$member11, $member22]));
@@ -332,7 +340,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $keywordRef2 = strtolower(Core_Tools::generateString(10));
         $keywordRef3 = strtolower(Core_Tools::generateString(10));
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
         $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
         $keywordRepository->add(new Keyword($keywordRef3, 'Label'));
@@ -340,23 +348,23 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
-        $dimension1 = new Techno_Model_Family_Dimension($family, $meaning1,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1,
+                                                        Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef1));
+        $member11 = new Member($dimension1, $this->keywordService->get($keywordRef1));
 
-        $dimension2 = new Techno_Model_Family_Dimension($family, $meaning2,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $dimension2 = new Dimension($family, $meaning2,
+                                                        Dimension::ORIENTATION_HORIZONTAL);
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef2));
+        $member21 = new Member($dimension2, $this->keywordService->get($keywordRef2));
 
-        $dimension3 = new Techno_Model_Family_Dimension($family, $meaning3,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
+        $dimension3 = new Dimension($family, $meaning3,
+                                                        Dimension::ORIENTATION_VERTICAL);
         $dimension3->save();
         $this->entityManager->flush();
-        $member31 = new Techno_Model_Family_Member($dimension3, $this->keywordService->get($keywordRef3));
+        $member31 = new Member($dimension3, $this->keywordService->get($keywordRef3));
 
         $family->save();
         $this->entityManager->flush();
@@ -365,8 +373,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(1, 'cells', $family);
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member11, $member21, $member31]));
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member31, $member21, $member11]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member21, $member31]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member31, $member21, $member11]));
         $this->assertSame($family->getCell([$member11, $member21, $member31]),
                           $family->getCell([$member31, $member21, $member11]));
 
@@ -393,23 +401,23 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $meaning2 = Techno_Test_MeaningTest::generateObject();
         $keywordRef = strtolower(Core_Tools::generateString(10));
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRepository->add(new Keyword($keywordRef, 'Label'));
         $this->entityManager->flush();
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
-        $dimension1 = new Techno_Model_Family_Dimension($family, $meaning1,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1,
+                                                        Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef));
+        $member11 = new Member($dimension1, $this->keywordService->get($keywordRef));
 
-        $dimension2 = new Techno_Model_Family_Dimension($family, $meaning2,
-                                                        Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
+        $dimension2 = new Dimension($family, $meaning2,
+                                                        Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef));
+        $member21 = new Member($dimension2, $this->keywordService->get($keywordRef));
 
         $family->save();
         $this->entityManager->flush();
@@ -418,8 +426,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(1, 'cells', $family);
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member11, $member21]));
-        $this->assertInstanceOf('Techno_Model_Family_Cell', $family->getCell([$member21, $member11]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member21]));
+        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member21, $member11]));
         $this->assertSame($family->getCell([$member11, $member21]), $family->getCell([$member21, $member11]));
 
         // Delete all

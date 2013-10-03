@@ -1,4 +1,0 @@
-Techno_Model_Element:
-  type: entity
-  repositoryClass: Core_Model_Repository
-  table: Techno_Element

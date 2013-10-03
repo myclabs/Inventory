@@ -1,8 +1,0 @@
-Techno_Model_Element_Coeff:
-  type: entity
-  repositoryClass: Core_Model_Repository
-  table: Techno_Element_Coeff
-
-  fields:
-    value:
-      type: calc_value

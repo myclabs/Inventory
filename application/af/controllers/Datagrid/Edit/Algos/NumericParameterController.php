@@ -8,6 +8,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Techno\Application\Service\Techno_Service_Techno;
 
 /**
  * @package AF

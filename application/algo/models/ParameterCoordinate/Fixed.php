@@ -5,6 +5,7 @@
  * @package Algo
  */
 use Keyword\Application\Service\KeywordDTO;
+use Techno\Domain\Family\Member;
 
 /**
  * @package Algo
@@ -38,9 +39,9 @@ class Algo_Model_ParameterCoordinate_Fixed extends Algo_Model_ParameterCoordinat
     }
 
     /**
-     * @param Techno_Model_Family_Member $member
+     * @param Member $member
      */
-    public function setMember(Techno_Model_Family_Member $member)
+    public function setMember(Member $member)
     {
         $this->refMemberKeyword = $member->getKeyword()->getRef();
     }

@@ -5,6 +5,8 @@
  * @package Algo
  */
 use Keyword\Domain\Keyword;
+use Techno\Application\Service\Techno_Service_Techno;
+use Techno\Domain\Family\Dimension;
 
 /**
  * Classe qui permet de récupérer les coordonnées d'un élément d'une famille
@@ -32,7 +34,7 @@ abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
 
     /**
      * Lazy loading @see $refDimensionMeaning
-     * @var Techno_Model_Family_Dimension
+     * @var Dimension
      */
     protected $dimension;
 
@@ -53,7 +55,7 @@ abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
     }
 
     /**
-     * @return Techno_Model_Family_Dimension
+     * @return Dimension
      */
     public function getDimension()
     {
@@ -69,9 +71,9 @@ abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
     }
 
     /**
-     * @param Techno_Model_Family_Dimension $dimension
+     * @param Dimension $dimension
      */
-    public function setDimension(Techno_Model_Family_Dimension $dimension)
+    public function setDimension(Dimension $dimension)
     {
         $this->refDimensionMeaning = $dimension->getMeaning()->getKeyword()->getRef();
         $this->dimension = $dimension;

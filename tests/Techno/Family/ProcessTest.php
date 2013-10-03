@@ -2,6 +2,10 @@
 /**
  * @package Techno
  */
+use Techno\Domain\Family\ProcessFamily;
+use Techno\Domain\Meaning;
+use Techno\Domain\Tag;
+use Techno\Domain\Component;
 use Unit\UnitAPI;
 
 /**
@@ -23,7 +27,7 @@ class Techno_Test_Family_ProcessTest
 
     /**
      * Generation of a test object
-     * @return Techno_Model_Family_Process
+     * @return ProcessFamily
      */
     public static function generateObject()
     {
@@ -31,7 +35,7 @@ class Techno_Test_Family_ProcessTest
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
 
-        $o = new Techno_Model_Family_Process();
+        $o = new ProcessFamily();
         $o->setRef(Core_Tools::generateString(10));
         $o->setBaseUnit($baseUnit);
         $o->setUnit($unit);
@@ -46,7 +50,7 @@ class Techno_Test_Family_ProcessTest
 
     /**
      * Deletion of an object created with generateObject
-     * @param Techno_Model_Family_Process $o
+     * @param ProcessFamily $o
      */
     public static function deleteObject($o)
     {
@@ -56,13 +60,8 @@ class Techno_Test_Family_ProcessTest
     }
 }
 
-/**
- * Test des méthodes de base de l'objet métier Techno_Model_Family_Process
- * @package Techno
- */
 class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -75,18 +74,18 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
     {
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Techno_Model_Component::countTotal() > 0) {
-            foreach (Techno_Model_Component::loadList() as $o) {
+        if (Component::countTotal() > 0) {
+            foreach (Component::loadList() as $o) {
                 $o->delete();
             }
         }
-        if (Techno_Model_Tag::countTotal() > 0) {
-            foreach (Techno_Model_Tag::loadList() as $o) {
+        if (Tag::countTotal() > 0) {
+            foreach (Tag::loadList() as $o) {
                 $o->delete();
             }
         }
-        if (Techno_Model_Meaning::countTotal() > 0) {
-            foreach (Techno_Model_Meaning::loadList() as $o) {
+        if (Meaning::countTotal() > 0) {
+            foreach (Meaning::loadList() as $o) {
                 $o->delete();
             }
         }
@@ -110,7 +109,7 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Techno_Model_Family_Process
+     * @return ProcessFamily
      */
     function testConstruct()
     {
@@ -118,7 +117,7 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
 
-        $o = new Techno_Model_Family_Process();
+        $o = new ProcessFamily();
         $o->setRef('family');
         $o->setBaseUnit($baseUnit);
         $o->setUnit($unit);
@@ -136,16 +135,16 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Techno_Model_Family_Process $o
-     * @return Techno_Model_Family_Process
+     * @param ProcessFamily $o
+     * @return ProcessFamily
      */
     public function testLoad($o)
     {
-        $this->entityManager->clear('Techno_Model_Component');
-        /** @var $oLoaded Techno_Model_Family_Process */
-        $oLoaded = Techno_Model_Family_Process::load($o->getKey());
+        $this->entityManager->clear('Techno\Domain\Component');
+        /** @var $oLoaded ProcessFamily */
+        $oLoaded = ProcessFamily::load($o->getKey());
 
-        $this->assertInstanceOf('Techno_Model_Family_Process', $oLoaded);
+        $this->assertInstanceOf('Techno\Domain\Family\ProcessFamily', $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         // getBaseUnit
@@ -165,7 +164,7 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testLoad
-     * @param Techno_Model_Family_Process $o
+     * @param ProcessFamily $o
      */
     function testDelete($o)
     {
@@ -179,13 +178,8 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
 
 }
 
-/**
- * Test des fonctionnalités de l'objet métier Techno_Model_Family_Process
- * @package Techno
- */
 class Techno_Test_Family_ProcessMetierTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -198,18 +192,18 @@ class Techno_Test_Family_ProcessMetierTest extends PHPUnit_Framework_TestCase
     {
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Techno_Model_Component::countTotal() > 0) {
-            foreach (Techno_Model_Component::loadList() as $o) {
+        if (Component::countTotal() > 0) {
+            foreach (Component::loadList() as $o) {
                 $o->delete();
             }
         }
-        if (Techno_Model_Tag::countTotal() > 0) {
-            foreach (Techno_Model_Tag::loadList() as $o) {
+        if (Tag::countTotal() > 0) {
+            foreach (Tag::loadList() as $o) {
                 $o->delete();
             }
         }
-        if (Techno_Model_Meaning::countTotal() > 0) {
-            foreach (Techno_Model_Meaning::loadList() as $o) {
+        if (Meaning::countTotal() > 0) {
+            foreach (Meaning::loadList() as $o) {
                 $o->delete();
             }
         }
@@ -241,7 +235,7 @@ class Techno_Test_Family_ProcessMetierTest extends PHPUnit_Framework_TestCase
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
 
-        $o = new Techno_Model_Family_Process();
+        $o = new ProcessFamily();
         $o->setRef('family');
         $o->setBaseUnit($baseUnit);
         $o->setUnit($unit);

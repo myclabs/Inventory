@@ -1,0 +1,4 @@
+Techno\Domain\Family\CoeffFamily:
+  type: entity
+  repositoryClass: \Techno\Architecture\Repository\FamilyRepository
+  table: Techno_Family_Coeff

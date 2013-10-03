@@ -3,6 +3,8 @@
  * @package Techno
  */
 
+use Techno\Domain\Component;
+use Techno\Domain\Element\ProcessElement;
 use Unit\UnitAPI;
 
 /**
@@ -23,14 +25,14 @@ class Techno_Test_Element_ProcessTest
 
     /**
      * Generation of a test object
-     * @return Techno_Model_Element_Process
+     * @return ProcessElement
      */
     public static function generateObject()
     {
         $value = new Calc_Value(10, 20);
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
-        $o = new Techno_Model_Element_Process();
+        $o = new ProcessElement();
         $o->setValue($value);
         $o->setBaseUnit($baseUnit);
         $o->setUnit($unit);
@@ -42,7 +44,7 @@ class Techno_Test_Element_ProcessTest
 
     /**
      * Deletion of an object created with generateObject
-     * @param Techno_Model_Element_Process $o
+     * @param ProcessElement $o
      */
     public static function deleteObject($o)
     {
@@ -53,10 +55,6 @@ class Techno_Test_Element_ProcessTest
 
 }
 
-/**
- * Test des méthodes de base de l'objet métier Techno_Model_Element_Process
- * @package Techno
- */
 class Techno_Test_Element_ProcessSetUp extends PHPUnit_Framework_TestCase
 {
 
@@ -71,8 +69,8 @@ class Techno_Test_Element_ProcessSetUp extends PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Techno_Model_Component::countTotal() > 0) {
-            foreach (Techno_Model_Component::loadList() as $o) {
+        if (Component::countTotal() > 0) {
+            foreach (Component::loadList() as $o) {
                 $o->delete();
             }
         }
@@ -90,7 +88,7 @@ class Techno_Test_Element_ProcessSetUp extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Techno_Model_Element_Process
+     * @return ProcessElement
      */
     public function testConstruct()
     {
@@ -99,7 +97,7 @@ class Techno_Test_Element_ProcessSetUp extends PHPUnit_Framework_TestCase
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
 
-        $o = new Techno_Model_Element_Process();
+        $o = new ProcessElement();
 
         $this->assertInstanceOf('Calc_Value', $o->getValue());
 
@@ -121,16 +119,16 @@ class Techno_Test_Element_ProcessSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Techno_Model_Element_Process $o
-     * @return Techno_Model_Element_Process
+     * @param ProcessElement $o
+     * @return ProcessElement
      */
     public function testLoad($o)
     {
-        $this->entityManager->clear('Techno_Model_Component');
-        /** @var $oLoaded Techno_Model_Element_Process */
-        $oLoaded = Techno_Model_Element_Process::load($o->getKey());
+        $this->entityManager->clear('Techno\Domain\Component');
+        /** @var $oLoaded ProcessElement */
+        $oLoaded = ProcessElement::load($o->getKey());
 
-        $this->assertInstanceOf('Techno_Model_Element_Process', $oLoaded);
+        $this->assertInstanceOf('Techno\Domain\Element\ProcessElement', $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         // getValue
@@ -148,8 +146,8 @@ class Techno_Test_Element_ProcessSetUp extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param Techno_Model_Element_Process $o
-     * @return Techno_Model_Element_Process
+     * @param ProcessElement $o
+     * @return ProcessElement
      * @depends testLoad
      */
     public function testDelete($o)

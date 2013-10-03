@@ -8,6 +8,8 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Techno\Application\Service\Techno_Service_Techno;
+use Techno\Domain\Family\Family;
 use Unit\UnitAPI;
 
 /**
@@ -141,7 +143,7 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
     }
 
     /**
-     * @return Techno_Model_Family
+     * @return Family
      */
     public function getFamily()
     {
@@ -154,9 +156,9 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
     }
 
     /**
-     * @param Techno_Model_Family $family
+     * @param Family $family
      */
-    public function setFamily(Techno_Model_Family $family)
+    public function setFamily(Family $family)
     {
         $this->familyRef = $family->getRef();
         // Supprime les coordonnées pour l'ancienne famille
