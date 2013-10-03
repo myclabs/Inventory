@@ -507,12 +507,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->idCell = $cell->getId();
         $this->view->idCube = $cell->getDWCube()->getId();
-        $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate($cell);
-        $this->view->dWCubesCanBeReset = $this->aclService->isAllowed(
-            $this->_helper->auth(),
-            User_Model_Action_Default::EDIT(),
-            $cell
-        );
 
         $this->view->specificExports = array();
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
