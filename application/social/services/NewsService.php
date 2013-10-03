@@ -1,17 +1,12 @@
 <?php
+
 /**
+ * Service d'accès au news.
+ *
  * @author matthieu.napoli
- * @package Social
- * @subpackage Service
  */
-
-/**
- * @package Social
- * @subpackage Service
- */
-class Social_Service_News
+class Social_Service_NewsService
 {
-
     /**
      * @param int $count
      * @return Social_Model_News[]
@@ -24,5 +19,4 @@ class Social_Service_News
         $news = Social_Model_News::loadList($query);
         return $news;
     }
-
 }

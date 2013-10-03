@@ -1,6 +1,5 @@
 <?php
 /**
- * @author     matthieu.napoli
  * @package    Social
  * @subpackage Service
  */
@@ -8,10 +7,11 @@
 use Doctrine\ORM\EntityManager;
 
 /**
- * @package    Social
- * @subpackage Service
+ * Service de gestion des messages entre utilisateurs.
+ *
+ * @author matthieu.napoli
  */
-class Social_Service_Message
+class Social_Service_MessageService
 {
     /**
      * @var EntityManager

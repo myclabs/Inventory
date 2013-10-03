@@ -16,7 +16,7 @@ class Social_Datagrid_Message_OutboxController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Social_Service_Message
+     * @var Social_Service_MessageService
      */
     private $messageService;
 
