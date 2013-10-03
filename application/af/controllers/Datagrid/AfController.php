@@ -6,6 +6,7 @@
  * @package AF
  */
 
+use DI\Annotation\Inject;
 use Core\Annotation\Secure;
 
 /**
@@ -15,6 +16,12 @@ use Core\Annotation\Secure;
  */
 class AF_Datagrid_AfController extends UI_Controller_Datagrid
 {
+
+    /**
+     * @Inject
+     * @var AF_Service_AFDeletionService
+     */
+    private $afDeletionService;
 
     /**
      * (non-PHPdoc)
@@ -36,17 +43,25 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                                                                            'controller' => 'edit',
                                                                            'action'     => 'menu',
                                                                            'id'         => $af->getId(),
-                )),
+                                                                      )),
                 __('UI', 'name', 'configuration'), 'share-alt'
-                );
+            );
             $data['test'] = $this->cellLink($this->view->url(array(
                                                                   'module'     => 'af',
                                                                   'controller' => 'af',
                                                                   'action'     => 'test',
                                                                   'id'         => $af->getId(),
-                )),
+                                                             )),
                 __('UI', 'name', 'test'), 'share-alt'
-                );
+            );
+            $data['duplicate'] = $this->cellLink($this->view->url(array(
+                                                                  'module'     => 'af',
+                                                                  'controller' => 'af',
+                                                                  'action'     => 'duplicate',
+                                                                  'id'         => $af->getId(),
+                                                             )),
+                __('UI', 'verb', 'duplicate'), 'plus-sign'
+            );
             $this->addLine($data);
         }
         $this->totalElements = AF_Model_AF::countTotal($this->request);
@@ -151,13 +166,19 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     {
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('index'));
-        $af->delete();
         try {
+            $this->afDeletionService->deleteAF($af);
             $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Component_SubAF')
                 && $e->getSourceField() == 'calledAF') {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByOtherAF');
+            }
+            if ($e->isSourceEntityInstanceOf('Orga_Model_CellsGroup')) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByOrga');
+            }
+            if ($e->isSourceEntityInstanceOf('AF_Model_Output_Element')) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
             }
             throw $e;
         }

@@ -19,6 +19,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I fill in "addAxis_label" with "Test"
     And I fill in "addAxis_ref" with "test"
     And I click "Valider"
+    And I wait 3 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
     When I reload the page

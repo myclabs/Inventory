@@ -61,7 +61,10 @@ abstract class AF_Model_Condition extends Core_Model_Entity
      */
     public function setAf(AF_Model_AF $af)
     {
-        $this->af = $af;
+        if ($this->af !== $af) {
+            $this->af = $af;
+            $af->addCondition($this);
+        }
     }
 
     /**

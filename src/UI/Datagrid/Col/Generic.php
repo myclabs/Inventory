@@ -13,6 +13,8 @@
  *
  * Une classe mère (abstraite) permettant de générer une colonne.
  *
+ * @deprecated
+ *
  * @package    UI
  * @subpackage Datagrid
  */

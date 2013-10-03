@@ -86,11 +86,9 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
             $calledAF = AF_Model_AF::load($this->getAddElementValue('targetAF'));
             $subAF->setCalledAF($calledAF);
             $subAF->setWithFreeLabel($this->getAddElementValue('hasFreeLabel'));
-            $af->getRootGroup()->addSubComponent($subAF);
             $af->addComponent($subAF);
 
             $subAF->save();
-            $af->getRootGroup()->save();
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {

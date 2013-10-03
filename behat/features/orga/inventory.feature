@@ -59,4 +59,4 @@ Feature: Organization inventory tab feature
     And the "inventories6" datagrid should contain 1 row
     And the row 1 of the "inventories6" datagrid should contain:
       | inventoryStatus | advancementInput | advancementFinishedInput |
-      | Ouvert          | 50%              | 16%                      |
+      | Ouvert          | 37%              | 12%                      |

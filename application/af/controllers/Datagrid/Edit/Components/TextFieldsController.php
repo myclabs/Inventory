@@ -79,11 +79,9 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
             $field->setHelp($this->getAddElementValue('help'));
             $field->setEnabled($this->getAddElementValue('enabled'));
             $field->setRequired($this->getAddElementValue('required'));
-            $af->getRootGroup()->addSubComponent($field);
             $af->addComponent($field);
 
             $field->save();
-            $af->getRootGroup()->save();
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {

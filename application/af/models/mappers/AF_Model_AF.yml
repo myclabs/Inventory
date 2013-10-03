@@ -63,8 +63,7 @@ AF_Model_AF:
         name: idMainAlgo
         referencedColumnName: id
         nullable: false
-      cascade: [ all ]
-      orphanRemoval: true
+      cascade: [ persist ]
 
   oneToMany:
     components:

@@ -13,6 +13,8 @@
  *
  * Une classe permettant de générer une colonne contenant un pourcentage.
  *
+ * @deprecated
+ *
  * @package    UI
  * @subpackage Datagrid
  */

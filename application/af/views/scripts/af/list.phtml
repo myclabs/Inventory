@@ -48,4 +48,7 @@ $datagrid->addCol($configurationColumn);
 $testColumn = new UI_Datagrid_Col_Link('test', __('UI', 'name', 'test'));
 $datagrid->addCol($testColumn);
 
+$duplicateColumn = new UI_Datagrid_Col_Link('duplicate', __('UI', 'verb', 'duplicate'));
+$datagrid->addCol($duplicateColumn);
+
 $datagrid->display();

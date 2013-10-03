@@ -8,7 +8,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use UI\Datagrid\Controller;
+use UI\Datagrid\DatagridController;
 use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\PredicateRepository;
 use Keyword\Domain\Association;
@@ -17,7 +17,7 @@ use Keyword\Domain\Association;
  * Classe controleur de la datagrid de Association.
  * @package Keyword
  */
-class Keyword_Datagrid_AssociationController extends Controller
+class Keyword_Datagrid_AssociationController extends DatagridController
 {
     /**
      * @Inject

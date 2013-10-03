@@ -84,20 +84,17 @@ class InputServiceTest extends Core_Test_TestCase
         $this->comp1->setRef('comp1');
         $this->comp1->setUnit(new UnitAPI('m'));
         $this->af->addComponent($this->comp1);
-        $this->af->getRootGroup()->addSubComponent($this->comp1);
 
         $this->comp2 = new AF_Model_Component_Checkbox();
         $this->comp2->setAf($this->af);
         $this->comp2->setRef('comp2');
         $this->af->addComponent($this->comp2);
-        $this->af->getRootGroup()->addSubComponent($this->comp2);
 
         $this->comp3 = new AF_Model_Component_Numeric();
         $this->comp3->setAf($this->af);
         $this->comp3->setRef('comp3');
         $this->comp3->setUnit(new UnitAPI('m'));
         $this->af->addComponent($this->comp3);
-        $this->af->getRootGroup()->addSubComponent($this->comp3);
 
         $this->af->save();
         $this->entityManager->flush();
