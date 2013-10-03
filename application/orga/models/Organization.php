@@ -105,6 +105,7 @@ class Orga_Model_Organization extends Core_Model_Entity
      * @param Orga_Model_Axis $axis
      *
      * @throws Core_Exception_InvalidArgument
+     * @throws Core_Exception_Duplicate
      */
     public function addAxis(Orga_Model_Axis $axis)
     {
@@ -112,7 +113,10 @@ class Orga_Model_Organization extends Core_Model_Entity
             throw new Core_Exception_InvalidArgument();
         }
 
-        if (!$this->hasAxis($axis)) {
+        try {
+            $this->getAxisByRef($axis->getRef());
+            throw new Core_Exception_Duplicate('An Axis with ref "'.$axis->getRef().'" already exists in the Organization');
+        } catch (Core_Exception_NotFound $e) {
             $this->axes->add($axis);
             $this->orderGranularities();
         }
@@ -180,11 +184,11 @@ class Orga_Model_Organization extends Core_Model_Entity
     /**
      * Renvoie les Axis du Organization.
      *
-     * @return Orga_Model_Axis[]
+     * @return Collection|Orga_Model_Axis[]
      */
     public function getAxes()
     {
-        return $this->axes->toArray();
+        return $this->axes;
     }
 
     /**
@@ -194,17 +198,10 @@ class Orga_Model_Organization extends Core_Model_Entity
      */
     public function getRootAxes()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create()->where(
-            Doctrine\Common\Collections\Criteria::expr()->isNull('directNarrower')
-        );
-        $rootAxes = $this->axes->matching($criteria)->toArray();
-
-        uasort(
-            $rootAxes,
-            function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
-        );
-
-        return $rootAxes;
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->where(Doctrine\Common\Collections\Criteria::expr()->isNull('directNarrower'));
+        $criteria->orderBy(['position' => 'ASC']);
+        return $this->axes->matching($criteria)->toArray();
     }
 
     /**
@@ -214,14 +211,9 @@ class Orga_Model_Organization extends Core_Model_Entity
      */
     public function getFirstOrderedAxes()
     {
-        $axes = array();
-        foreach ($this->getRootAxes() as $rootAxis) {
-            $axes[] = $rootAxis;
-            foreach ($rootAxis->getAllBroadersFirstOrdered() as $recursiveBroader) {
-                $axes[] = $recursiveBroader;
-            }
-        }
-        return $axes;
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->orderBy(['position' => 'ASC']);
+        return $this->axes->matching($criteria)->toArray();
     }
 
     /**
@@ -231,33 +223,9 @@ class Orga_Model_Organization extends Core_Model_Entity
      */
     public function getLastOrderedAxes()
     {
-        $axes = array();
-        foreach ($this->getRootAxes() as $rootAxis) {
-            foreach ($rootAxis->getAllBroadersLastOrdered() as $recursiveBroader) {
-                $axes[] = $recursiveBroader;
-            }
-            $axes[] = $rootAxis;
-        }
+        $axes = $this->getFirstOrderedAxes();
+        @uasort($axes, ['Orga_Model_Axis', 'lastOrderedAxes']);
         return $axes;
-    }
-
-    /**
-     * Indique la position globale d'un Axis donnés dans le Organization.
-     *
-     * @param Orga_Model_Axis $askingAxis
-     *
-     * @return int
-     */
-    public function getAxisGlobalPosition(Orga_Model_Axis $askingAxis)
-    {
-        $globalPosition = 1;
-
-        foreach ($this->getFirstOrderedAxes() as $axis) {
-            if ($askingAxis->getRef() === $axis->getRef()) {
-                return $globalPosition;
-            }
-            $globalPosition++;
-        }
     }
 
     /**
@@ -344,11 +312,11 @@ class Orga_Model_Organization extends Core_Model_Entity
     /**
      * Renvoie un tableau des Granularity du Organization.
      *
-     * @return Orga_Model_Granularity[]
+     * @return Collection|Orga_Model_Granularity[]
      */
     public function getGranularities()
     {
-        return $this->granularities->toArray();
+        return $this->granularities;
     }
 
     /**
@@ -436,12 +404,8 @@ class Orga_Model_Organization extends Core_Model_Entity
      */
     public function getInputGranularities()
     {
-        //@todo Supprimer getGranularities quand il sera possible de filtrer isNotNull sur une collection non initialisée.
-        //Update Un fix a été fait dans la 2.4, attendre une version stable.
-        $this->getGranularities();
-        $criteria = Doctrine\Common\Collections\Criteria::create()->where(
-            Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null)
-        );
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->where(Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null));
         return $this->granularities->matching($criteria)->toArray();
     }
 

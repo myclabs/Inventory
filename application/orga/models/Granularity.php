@@ -308,7 +308,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         $axesRefParts = array();
         // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-        @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+        @uasort($axes, ['Orga_Model_Axis', 'firstOrderedAxes']);
         foreach ($axes as $axis) {
             $axesRefParts[] = $axis->getRef();
         }
@@ -343,7 +343,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $labelParts = array();
             $axes = $this->getAxes();
             // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-            @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+            @uasort($axes, array('Orga_Model_Axis', 'firstOrderedAxes'));
             foreach ($axes as $axis) {
                 $labelParts[] = $axis->getLabel();
             }

@@ -123,7 +123,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Collection des SocialComment utilisés pour l'AFInputSetPrimary de la cellule.
      *
-     * @var Collection|Social_Model_Comment
+     * @var Collection|Social_Model_Comment[]
      */
     protected $socialCommentsForAFInputSetPrimary = null;
 

@@ -28,6 +28,10 @@ Orga_Model_Axis:
       nullable: false
       gedmo:
         - translatable
+    tag:
+      column: tag
+      type: text
+      nullable: false
     contextualizing:
       column: contextualizing
       type: boolean
