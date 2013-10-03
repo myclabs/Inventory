@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "603291c90eb2e8ae096158c5b7ae0dd2",
+    "hash": "2140e0a5a70ff915face4821f05095de",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -547,12 +547,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "3a8a09240159ac084f0c4b607eb12ca83ddbe318"
+                "reference": "54a1e833e63496965e7e0c13ee239191d36cca47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/3a8a09240159ac084f0c4b607eb12ca83ddbe318",
-                "reference": "3a8a09240159ac084f0c4b607eb12ca83ddbe318",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/54a1e833e63496965e7e0c13ee239191d36cca47",
+                "reference": "54a1e833e63496965e7e0c13ee239191d36cca47",
                 "shasum": ""
             },
             "require": {
@@ -580,7 +580,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2013-09-04 20:59:58"
+            "time": "2013-10-03 03:27:40"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -969,7 +969,7 @@
         },
         {
             "name": "myclabs/xport",
-            "version": "dev-master",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Xport.git",
@@ -1590,16 +1590,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.13.2",
+            "version": "v1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "6d6a1009427d1f398c9d40904147bf9f723d5755"
+                "reference": "224fc55635d544a2ec8edb3592be18db5a093f59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/6d6a1009427d1f398c9d40904147bf9f723d5755",
-                "reference": "6d6a1009427d1f398c9d40904147bf9f723d5755",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/224fc55635d544a2ec8edb3592be18db5a093f59",
+                "reference": "224fc55635d544a2ec8edb3592be18db5a093f59",
                 "shasum": ""
             },
             "require": {
@@ -1608,7 +1608,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13-dev"
+                    "dev-master": "1.14-dev"
                 }
             },
             "autoload": {
@@ -1635,7 +1635,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-08-03 15:35:31"
+            "time": "2013-10-03 06:41:20"
         },
         {
             "name": "zendframework/zend-code",
@@ -2532,7 +2532,6 @@
         "pear/console_commandline": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
-        "myclabs/xport": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": {
