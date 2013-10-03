@@ -792,14 +792,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      */
     public function commentsAction()
     {
-        /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        $comments = $cell->getLatestComments(20);
-
         $this->view->assign('idCell', $this->getParam('idCell'));
-        $this->view->assign('comments', $comments);
-        // Désactivation du layout.
+        $this->view->assign('comments', $cell->getInputSetLatestComments(20));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -817,9 +813,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $granularity = $cell->getGranularity();
 
         if ($granularity->getCellsGenerateDWCubes()) {
-            $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate(
-                $cell
-            );
+            $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate($cell);
         }
     }
 

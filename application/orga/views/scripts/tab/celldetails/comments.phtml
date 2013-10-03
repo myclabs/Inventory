@@ -1,10 +1,6 @@
 <?php
-
 $locale = Core_Locale::loadDefault();
-
-$idCell = isset($this->idCell) ? $this->idCell : null;
-
-/** @var Social_Model_Comment[] $comments */
+/** @var Orga_Model_InputComment[]|Social_Model_Comment[] $comments */
 $comments = $this->comments;
 ?>
 
@@ -18,9 +14,14 @@ $comments = $this->comments;
     <?php foreach ($comments as $comment) : ?>
         <li>
             <?=$locale->formatDateTime($comment->getCreationDate())?>
-            <?=__('UI', 'other', 'by')?>
-            <?=$comment->getAuthor()->getName()?><?=__('UI', 'other', ':')?>
-            « <?=Core_Tools::truncateString($comment->getText(), 200)?> »
+
+            <?=__('Social', 'comment', 'by')?>
+            <?=$comment->getAuthor()->getName()?>
+
+            <?=__('Orga', 'input', 'aboutInput')?>
+            <?=$comment->getCell()->getLabel()?><?=__('UI', 'other', ':')?>
+
+            « <?=Core_Tools::truncateString($comment->getText(), 200)?> ».
         </li>
     <?php endforeach; ?>
 </ul>
