@@ -1,18 +1,11 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
+
 use Techno\Domain\Family\Family;
 use Techno\Domain\Component;
 use Unit\UnitAPI;
 
-/**
- * @package Techno
- */
 class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * Test de la documentation
      */
@@ -103,5 +96,4 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
         Techno_Test_TagTest::deleteObject($tag1);
         Techno_Test_TagTest::deleteObject($tag2);
     }
-
 }

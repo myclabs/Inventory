@@ -1,16 +1,11 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Core
- */
 
 /**
  * Classe de test de base
- * @package Core
+ * @author matthieu.napoli
  */
 abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -34,8 +29,6 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
     {
         /** @var $container \DI\Container */
         $container = Zend_Registry::get('container');
-
         return $container->get($name);
     }
-
 }

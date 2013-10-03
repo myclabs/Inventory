@@ -1,8 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\KeywordRepository;
@@ -15,20 +11,13 @@ use Techno\Domain\Meaning;
 use Techno\Domain\Tag;
 use Techno\Domain\Component;
 
-/**
- * @package Techno
- */
 class Techno_Test_FamilyTest extends Core_Test_TestCase
 {
-
     /**
      * @var KeywordService
      */
     private $keywordService;
 
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
     public static function setUpBeforeClass()
     {
         /** @var \Doctrine\ORM\EntityManager $entityManager */
@@ -45,10 +34,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         }
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('Keyword\Domain\Keyword');
-        if ($keywordRepository->count() > 0) {
-            foreach ($keywordRepository->getAll() as $o) {
-                $keywordRepository->remove($o);
-            }
+        foreach ($keywordRepository->getAll() as $o) {
+            $keywordRepository->remove($o);
         }
         foreach (Cell::loadList() as $o) {
             $o->delete();
@@ -68,8 +55,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     public function setUp()
     {
         parent::setUp();
-        $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('Keyword\Application\Service\KeywordService');
+        $this->keywordService = $this->get('Keyword\Application\Service\KeywordService');
     }
 
     /**
@@ -181,8 +167,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
         // 1 dimension
-        $dimension1 = new Dimension($family, $meaning1,
-                                                        Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1, Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
 
@@ -231,14 +216,12 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
-        $dimension1 = new Dimension($family, $meaning1,
-                                                        Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1, Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
         $member11 = new Member($dimension1, $this->keywordService->get($keywordRef1));
 
-        $dimension2 = new Dimension($family, $meaning2,
-                                                        Dimension::ORIENTATION_VERTICAL);
+        $dimension2 = new Dimension($family, $meaning2, Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
         $member21 = new Member($dimension2, $this->keywordService->get($keywordRef2));
@@ -284,15 +267,13 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
-        $dimension1 = new Dimension($family, $meaning1,
-                                                        Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1, Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
         $member11 = new Member($dimension1, $this->keywordService->get($keywordRef1));
         $member12 = new Member($dimension1, $this->keywordService->get($keywordRef2));
 
-        $dimension2 = new Dimension($family, $meaning2,
-                                                        Dimension::ORIENTATION_VERTICAL);
+        $dimension2 = new Dimension($family, $meaning2, Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
         $member21 = new Member($dimension2, $this->keywordService->get($keywordRef3));
@@ -348,20 +329,17 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
-        $dimension1 = new Dimension($family, $meaning1,
-                                                        Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1, Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
         $member11 = new Member($dimension1, $this->keywordService->get($keywordRef1));
 
-        $dimension2 = new Dimension($family, $meaning2,
-                                                        Dimension::ORIENTATION_HORIZONTAL);
+        $dimension2 = new Dimension($family, $meaning2, Dimension::ORIENTATION_HORIZONTAL);
         $dimension2->save();
         $this->entityManager->flush();
         $member21 = new Member($dimension2, $this->keywordService->get($keywordRef2));
 
-        $dimension3 = new Dimension($family, $meaning3,
-                                                        Dimension::ORIENTATION_VERTICAL);
+        $dimension3 = new Dimension($family, $meaning3, Dimension::ORIENTATION_VERTICAL);
         $dimension3->save();
         $this->entityManager->flush();
         $member31 = new Member($dimension3, $this->keywordService->get($keywordRef3));
@@ -407,14 +385,12 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
-        $dimension1 = new Dimension($family, $meaning1,
-                                                        Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, $meaning1, Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
         $member11 = new Member($dimension1, $this->keywordService->get($keywordRef));
 
-        $dimension2 = new Dimension($family, $meaning2,
-                                                        Dimension::ORIENTATION_VERTICAL);
+        $dimension2 = new Dimension($family, $meaning2, Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
         $member21 = new Member($dimension2, $this->keywordService->get($keywordRef));
@@ -437,5 +413,4 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $keywordRepository->remove($keywordRepository->getByRef($keywordRef));
         $this->entityManager->flush();
     }
-
 }

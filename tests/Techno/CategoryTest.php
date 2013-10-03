@@ -1,13 +1,8 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
+
+use Doctrine\ORM\UnitOfWork;
 use Techno\Domain\Category;
 
-/**
- * @package Techno
- */
 class Techno_Test_CategoryTest
 {
     /**
@@ -43,42 +38,18 @@ class Techno_Test_CategoryTest
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
     }
-
 }
 
-/**
- *  @package Techno
- */
-class Techno_Test_CategorySetUp extends PHPUnit_Framework_TestCase
+class Techno_Test_CategorySetUp extends Core_Test_TestCase
 {
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Category::countTotal() > 0) {
-            foreach (Category::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Category::loadList() as $o) {
+            $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
-    }
-
-    /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
     }
 
     /**
@@ -119,11 +90,8 @@ class Techno_Test_CategorySetUp extends PHPUnit_Framework_TestCase
     function testDelete($o)
     {
         $o->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
-
 }

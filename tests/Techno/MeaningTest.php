@@ -1,17 +1,11 @@
 <?php
-/**
- * Creation of the Techno Meaning test.
- * @package Techno
- */
+
+use Doctrine\ORM\UnitOfWork;
 use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
 use Techno\Domain\Meaning;
 
-/**
- * Test Techno package.
- * @package Techno
- */
 class Techno_Test_MeaningTest
 {
     /**
@@ -62,24 +56,13 @@ class Techno_Test_MeaningTest
     }
 }
 
-/**
- *  @package Techno
- */
-class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
+class Techno_Test_MeaningSetUp extends Core_Test_TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
     /**
      * @var KeywordService
      */
     private $keywordService;
 
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
     public static function setUpBeforeClass()
     {
         /** @var \Doctrine\ORM\EntityManager $entityManager */
@@ -100,14 +83,10 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
         $entityManager->flush();
     }
 
-    /**
-     * Set up
-     */
     public function setUp()
     {
-        $this->entityManager = Zend_Registry::get('EntityManagers')['default'];
-        $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('Keyword\Application\Service\KeywordService');
+        parent::setUp();
+        $this->keywordService = $this->get('Keyword\Application\Service\KeywordService');
     }
 
     /**
@@ -160,11 +139,9 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
         $keyword = $keywordRepository->getByRef($o->getKeyword()->getRef());
         $keywordRepository->remove($keyword);
         $o->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
 
     /**
@@ -217,5 +194,4 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
         $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
         $this->entityManager->flush();
     }
-
 }

@@ -1,16 +1,9 @@
 <?php
-/**
- * @package Techno
- */
+
 use Techno\Domain\Family\Cell;
 
-/**
- * Test Cell class
- * @package Techno
- */
 class Techno_Test_Family_CellTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * Teste la génération de la hash key
      */
@@ -55,5 +48,4 @@ class Techno_Test_Family_CellTest extends PHPUnit_Framework_TestCase
         Techno_Test_Family_MemberTest::deleteObject($member1);
         Techno_Test_Family_MemberTest::deleteObject($member2);
     }
-
 }

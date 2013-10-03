@@ -1,17 +1,12 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
+
+use Doctrine\ORM\UnitOfWork;
 use Keyword\Domain\KeywordRepository;
 use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\Keyword;
 use Techno\Domain\Meaning;
 use Techno\Domain\Tag;
 
-/**
- * @package Techno
- */
 class Techno_Test_TagTest
 {
     /**
@@ -65,66 +60,44 @@ class Techno_Test_TagTest
         $keywordRepository->remove($keywordRepository->getByRef($o->getValue()->getRef()));
         $entityManager->flush();
     }
-
 }
 
-/**
- *  @package Techno
- */
-class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
+class Techno_Test_TagSetUp extends Core_Test_TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
     /**
      * @var KeywordService
      */
     private $keywordService;
 
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
     public static function setUpBeforeClass()
     {
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Tag::countTotal() > 0) {
-            foreach (Tag::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Tag::loadList() as $o) {
+            $o->delete();
         }
-        if (Meaning::countTotal() > 0) {
-            foreach (Meaning::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Meaning::loadList() as $o) {
+            $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('Keyword\Domain\Keyword');
-        if ($keywordRepository->count() > 0) {
-            foreach ($keywordRepository->getAll() as $o) {
-                $keywordRepository->remove($o);
-            }
+        foreach ($keywordRepository->getAll() as $o) {
+            $keywordRepository->remove($o);
         }
         $entityManager->flush();
     }
 
-    /**
-     * Set up
-     */
     public function setUp()
     {
-        $this->entityManager = Zend_Registry::get('EntityManagers')['default'];
-        $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('Keyword\Application\Service\KeywordService');
+        parent::setUp();
+        $this->keywordService = $this->get('Keyword\Application\Service\KeywordService');
     }
 
     /**
      * @return Tag
      */
-    function testConstruct()
+    public function testConstruct()
     {
         $keywordRef = 'keywordtest2';
         /** @var KeywordRepository $keywordRepository */
@@ -157,7 +130,7 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
      * @param Tag $o
      * @return Tag
      */
-    function testLoad($o)
+    public function testLoad($o)
     {
         $this->entityManager->clear('Techno\Domain\Tag');
         /** @var $oLoaded Tag */
@@ -179,21 +152,18 @@ class Techno_Test_TagSetUp extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param Tag $o
      */
-    function testDelete($o)
+    public function testDelete($o)
     {
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keyword = $keywordRepository->getByRef($o->getValue()->getRef());
         $keywordRepository->remove($keyword);
         $o->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
         // Delete fixtures
         $meaningTest = new Techno_Test_MeaningTest();
         $meaningTest->deleteObject($o->getMeaning());
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
-
 }

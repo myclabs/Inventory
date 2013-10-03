@@ -1,17 +1,13 @@
 <?php
-/**
-* @package Techno
-*/
+
+use Doctrine\ORM\UnitOfWork;
+use Keyword\Domain\KeywordRepository;
 use Techno\Domain\Family\CoeffFamily;
 use Techno\Domain\Meaning;
 use Techno\Domain\Tag;
 use Techno\Domain\Component;
 use Unit\UnitAPI;
 
-/**
- * Test Family Coeff Class
- * @package Techno
- */
 class Techno_Test_Family_CoeffTest
 {
     /**
@@ -60,35 +56,21 @@ class Techno_Test_Family_CoeffTest
     }
 }
 
-class Techno_Test_Family_CoeffSetUpTest extends PHPUnit_Framework_TestCase
+class Techno_Test_Family_CoeffSetUpTest extends Core_Test_TestCase
 {
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant les tests
-     */
-    public static  function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Component::countTotal() > 0) {
-            foreach (Component::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Component::loadList() as $o) {
+            $o->delete();
         }
-        if (Tag::countTotal() > 0) {
-            foreach (Tag::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Tag::loadList() as $o) {
+            $o->delete();
         }
-        if (Meaning::countTotal() > 0) {
-            foreach (Meaning::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Meaning::loadList() as $o) {
+            $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
@@ -101,18 +83,9 @@ class Techno_Test_Family_CoeffSetUpTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
      * @return CoeffFamily
      */
-    function testConstruct()
+    public function testConstruct()
     {
         // Fixtures
         $baseUnit = new UnitAPI('m');
@@ -163,50 +136,34 @@ class Techno_Test_Family_CoeffSetUpTest extends PHPUnit_Framework_TestCase
         return $oLoaded;
     }
 
-     /**
-      * @depends testLoad
-      * @param CoeffFamily $o
-      */
-     function testDelete($o)
-     {
-         $o->delete();
-         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-                             $this->entityManager->getUnitOfWork()->getEntityState($o));
-         $this->entityManager->flush();
-         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                             $this->entityManager->getUnitOfWork()->getEntityState($o));
-     }
-
+    /**
+     * @depends testLoad
+     * @param CoeffFamily $o
+     */
+    public function testDelete($o)
+    {
+        $o->delete();
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->entityManager->flush();
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
+    }
 }
 
-class Techno_Test_Family_CoeffMetierTest extends PHPUnit_Framework_TestCase
+class Techno_Test_Family_CoeffMetierTest extends Core_Test_TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant les tests
-     */
-    public static  function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Component::countTotal() > 0) {
-            foreach (Component::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Component::loadList() as $o) {
+            $o->delete();
         }
-        if (Tag::countTotal() > 0) {
-            foreach (Tag::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Tag::loadList() as $o) {
+            $o->delete();
         }
-        if (Meaning::countTotal() > 0) {
-            foreach (Meaning::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Meaning::loadList() as $o) {
+            $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
@@ -219,18 +176,9 @@ class Techno_Test_Family_CoeffMetierTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
      * Teste les champs qui peuvent être vides
      */
-    function testNullableFields()
+    public function testNullableFields()
     {
         // Fixtures
         $baseUnit = new UnitAPI('m');
@@ -245,5 +193,4 @@ class Techno_Test_Family_CoeffMetierTest extends PHPUnit_Framework_TestCase
         $o->delete();
         $this->entityManager->flush();
     }
-
 }

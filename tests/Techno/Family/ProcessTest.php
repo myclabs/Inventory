@@ -1,17 +1,13 @@
 <?php
-/**
- * @package Techno
- */
+
+use Doctrine\ORM\UnitOfWork;
+use Keyword\Domain\KeywordRepository;
 use Techno\Domain\Family\ProcessFamily;
 use Techno\Domain\Meaning;
 use Techno\Domain\Tag;
 use Techno\Domain\Component;
 use Unit\UnitAPI;
 
-/**
- * Test Family Process Class
- * @package Techno
- */
 class Techno_Test_Family_ProcessTest
 {
     /**
@@ -52,7 +48,7 @@ class Techno_Test_Family_ProcessTest
      * Deletion of an object created with generateObject
      * @param ProcessFamily $o
      */
-    public static function deleteObject($o)
+    public static function deleteObject(ProcessFamily $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -60,34 +56,21 @@ class Techno_Test_Family_ProcessTest
     }
 }
 
-class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
+class Techno_Test_Family_ProcessSetUpTest extends Core_Test_TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant les tests
-     */
     public static  function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Component::countTotal() > 0) {
-            foreach (Component::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Component::loadList() as $o) {
+            $o->delete();
         }
-        if (Tag::countTotal() > 0) {
-            foreach (Tag::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Tag::loadList() as $o) {
+            $o->delete();
         }
-        if (Meaning::countTotal() > 0) {
-            foreach (Meaning::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Meaning::loadList() as $o) {
+            $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
@@ -100,18 +83,9 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
      * @return ProcessFamily
      */
-    function testConstruct()
+    public function testConstruct()
     {
         // Fixtures
         $baseUnit = new UnitAPI('m');
@@ -166,70 +140,43 @@ class Techno_Test_Family_ProcessSetUpTest extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param ProcessFamily $o
      */
-    function testDelete($o)
+    public function testDelete($o)
     {
         $o->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
-
 }
 
-class Techno_Test_Family_ProcessMetierTest extends PHPUnit_Framework_TestCase
+class Techno_Test_Family_ProcessMetierTest extends Core_Test_TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant les tests
-     */
-    public static  function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Component::countTotal() > 0) {
-            foreach (Component::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Component::loadList() as $o) {
+            $o->delete();
         }
-        if (Tag::countTotal() > 0) {
-            foreach (Tag::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Tag::loadList() as $o) {
+            $o->delete();
         }
-        if (Meaning::countTotal() > 0) {
-            foreach (Meaning::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Meaning::loadList() as $o) {
+            $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        if ($keywordRepository->count() > 0) {
-            foreach ($keywordRepository->getAll() as $o) {
-                $keywordRepository->remove($o);
-            }
+        foreach ($keywordRepository->getAll() as $o) {
+            $keywordRepository->remove($o);
         }
         $entityManager->flush();
     }
 
     /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
      * Teste les champs qui peuvent être vides
      */
-    function testNullableFields()
+    public function testNullableFields()
     {
         // Fixtures
         $baseUnit = new UnitAPI('m');
@@ -244,5 +191,4 @@ class Techno_Test_Family_ProcessMetierTest extends PHPUnit_Framework_TestCase
         $o->delete();
         $this->entityManager->flush();
     }
-
 }
