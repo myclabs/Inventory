@@ -1,20 +1,12 @@
 <?php
-/**
- * @author valentin.claras
- * @package Techno
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 
 /**
- * Techno_TranslateController
- * @package Techno
- * @subpackage Controller
+ * @author valentin.claras
  */
 class Techno_TranslateController extends Core_Controller
 {
-
     /**
      * Liste des libellés des catégories en mode traduction.
      *
@@ -50,5 +42,4 @@ class Techno_TranslateController extends Core_Controller
     public function elementsDocumentationAction()
     {
     }
-
 }

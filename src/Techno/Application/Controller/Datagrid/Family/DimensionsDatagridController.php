@@ -1,8 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Family;
@@ -10,14 +6,11 @@ use Techno\Domain\Family\Dimension;
 use Techno\Domain\Meaning;
 
 /**
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editTechno")
      */
     public function getelementsAction()
@@ -46,8 +39,6 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editTechno")
      */
     public function addelementAction()
@@ -83,8 +74,6 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editTechno")
      */
     public function updateelementAction()
@@ -125,8 +114,6 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editTechno")
      */
     public function deleteelementAction()
@@ -140,5 +127,4 @@ class Techno_Datagrid_Family_DimensionsDatagridController extends UI_Controller_
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
-
 }

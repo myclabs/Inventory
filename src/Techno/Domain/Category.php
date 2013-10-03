@@ -54,10 +54,14 @@ class Category extends Core_Model_Entity
     protected $families;
 
 
-    public function __construct()
+    /**
+     * @param string|null $label
+     */
+    public function __construct($label = null)
     {
         $this->childCategories = new ArrayCollection();
         $this->families = new ArrayCollection();
+        $this->label = $label;
     }
 
     /**

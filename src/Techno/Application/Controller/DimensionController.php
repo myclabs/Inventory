@@ -1,8 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
@@ -11,7 +7,7 @@ use Techno\Domain\Family\Dimension;
 
 /**
  * Controleur des dimensions
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_DimensionController extends Core_Controller
 {
@@ -52,5 +48,4 @@ class Techno_DimensionController extends Core_Controller
         $this->setFormMessage(__('UI', 'message', 'updated'));
         $this->sendFormResponse();
     }
-
 }

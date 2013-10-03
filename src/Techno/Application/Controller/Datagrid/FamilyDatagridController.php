@@ -1,8 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Family;
@@ -11,14 +7,11 @@ use Techno\Domain\Family\CoeffFamily;
 use Unit\UnitAPI;
 
 /**
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("viewTechno")
      */
     public function getelementsAction()
@@ -58,8 +51,6 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editTechno")
      */
     public function addelementAction()
@@ -118,5 +109,4 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
         }
         $this->send();
     }
-
 }

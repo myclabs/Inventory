@@ -1,19 +1,14 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Family;
 use Unit\UnitAPI;
 
 /**
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_Form_EditFamilyController extends Core_Controller
 {
-
     use UI_Controller_Helper_Form;
 
     /**
@@ -22,9 +17,8 @@ class Techno_Form_EditFamilyController extends Core_Controller
      */
     public function submitAction()
     {
-        $idFamily = $this->getParam('id');
         /** @var $family Family */
-        $family = Family::load($idFamily);
+        $family = Family::load($this->getParam('id'));
         // Validation du formulaire
         $formData = $this->getFormData('editFamily');
         $label = $formData->getValue('label');
@@ -66,5 +60,4 @@ class Techno_Form_EditFamilyController extends Core_Controller
         }
         $this->sendFormResponse();
     }
-
 }

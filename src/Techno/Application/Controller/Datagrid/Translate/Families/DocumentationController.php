@@ -1,18 +1,11 @@
 <?php
-/**
- * Classe Techno_Datagrid_Translate_Families_DocumentationController
- * @author valentin.claras
- * @package Techno
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Family;
 
 /**
  * Classe du controller du datagrid des traductions des documentations des family.
- * @package Techno
- * @subpackage Controller
+ * @author valentin.claras
  */
 class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Controller_Datagrid
 {
@@ -33,6 +26,7 @@ class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Cont
     public function getelementsAction()
     {
         foreach (Family::loadList($this->request) as $family) {
+            /** @var Family $family */
             $data = array();
             $data['index'] = $family->getId();
             $data['identifier'] = $family->getRef();

@@ -82,8 +82,7 @@ class Techno_Populate extends Core_Script_Action
      */
     protected function createCategory($label, Category $parent=null)
     {
-        $category = new Category();
-        $category->setLabel($label);
+        $category = new Category($label);
         if ($parent !== null) {
             $category->setParentCategory($parent);
         }

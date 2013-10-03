@@ -1,15 +1,11 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use Keyword\Application\Service\KeywordService;
 
 /**
  * Controleur des significations
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_MeaningController extends Core_Controller
 {
@@ -27,5 +23,4 @@ class Techno_MeaningController extends Core_Controller
     {
         $this->view->keywords = $this->keywordService->getAll();
     }
-
 }

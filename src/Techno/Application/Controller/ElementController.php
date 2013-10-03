@@ -1,8 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Element\Element;
@@ -12,11 +8,10 @@ use Unit\UnitAPI;
 
 /**
  * Controleur des éléments
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_ElementController extends Core_Controller
 {
-
     use UI_Controller_Helper_Form;
 
     /**
@@ -87,5 +82,4 @@ class Techno_ElementController extends Core_Controller
             ]
         );
     }
-
 }

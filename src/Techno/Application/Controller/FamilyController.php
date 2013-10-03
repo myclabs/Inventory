@@ -1,8 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
@@ -13,11 +9,10 @@ use Techno\Domain\Category;
 
 /**
  * Controleur des familles
- * @package Techno
+ * @author  matthieu.napoli
  */
 class Techno_FamilyController extends Core_Controller
 {
-
     use UI_Controller_Helper_Form;
 
     /**

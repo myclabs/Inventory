@@ -1,18 +1,11 @@
 <?php
-/**
- * Classe Techno_Datagrid_Translate_CategoriesController
- * @author valentin.claras
- * @package Techno
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Category;
 
 /**
  * Classe du controller du datagrid des traductions des categories.
- * @package Techno
- * @subpackage Controller
+ * @author valentin.claras
  */
 class Techno_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
 {
@@ -33,6 +26,7 @@ class Techno_Datagrid_Translate_CategoriesController extends UI_Controller_Datag
     public function getelementsAction()
     {
         foreach (Category::loadList($this->request) as $category) {
+            /** @var Category $category */
             $data = array();
             $data['index'] = $category->getId();
             $data['identifier'] = $category->getId();

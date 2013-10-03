@@ -1,8 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
@@ -13,7 +9,7 @@ use Techno\Domain\Family\Family;
 use Techno\Domain\Family\ProcessFamily;
 
 /**
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
 {
@@ -29,9 +25,8 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
      */
     public function addElementAction()
     {
-        $idFamily = $this->getParam('id');
         /** @var $family Family */
-        $family = Family::load($idFamily);
+        $family = Family::load($this->getParam('id'));
         // Récupère la cellule
         $coordinates = explode('#', $this->getParam('coordinates'));
         $members = [];
@@ -67,9 +62,8 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
      */
     public function deleteElementAction()
     {
-        $idFamily = $this->getParam('idFamily');
         /** @var $family Family */
-        $family = Family::load($idFamily);
+        $family = Family::load($this->getParam('idFamily'));
         // Récupère la cellule
         $coordinates = explode('-', $this->getParam('coordinates'));
         $members = [];
@@ -91,5 +85,4 @@ class Techno_Tmd_FamilyElementsTmdController extends Core_Controller
             $this->sendJsonResponse(['message' => '']);
         }
     }
-
 }

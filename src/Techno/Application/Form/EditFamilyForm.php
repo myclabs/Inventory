@@ -15,8 +15,8 @@ use UI_Form_Element_Hidden;
 class EditFamilyForm extends UI_Form
 {
     /**
-     * @param string              $ref
-     * @param \Techno\Domain\Family\Family $family
+     * @param string $ref
+     * @param Family $family
      */
     public function __construct($ref, Family $family)
     {

@@ -1,19 +1,14 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Techno\Domain\ValidationService;
 
 /**
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_ValidationController extends Core_Controller
 {
-
     /**
      * @Inject
      * @var ValidationService
@@ -29,5 +24,4 @@ class Techno_ValidationController extends Core_Controller
         $this->view->keywordFamilyTagsErrors = $this->validationService->validateFamilyTagsKeywords();
         $this->view->keywordFamilyMembersErrors = $this->validationService->validateFamilyMembersKeywords();
     }
-
 }

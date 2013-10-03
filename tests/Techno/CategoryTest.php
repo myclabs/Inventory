@@ -86,8 +86,7 @@ class Techno_Test_CategorySetUp extends PHPUnit_Framework_TestCase
      */
     function testConstruct()
     {
-        $o = new Category();
-        $o->setLabel("Test");
+        $o = new Category("Test");
         $o->save();
         $this->entityManager->flush();
 

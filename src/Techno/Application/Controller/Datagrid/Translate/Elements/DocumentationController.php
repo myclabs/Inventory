@@ -1,18 +1,11 @@
 <?php
-/**
- * Classe Techno_Datagrid_Translate_Elements_DocumentationController
- * @author valentin.claras
- * @package Techno
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Element\Element;
 
 /**
  * Classe du controller du datagrid des traductions des documentations des element.
- * @package Techno
- * @subpackage Controller
+ * @author valentin.claras
  */
 class Techno_Datagrid_Translate_Elements_DocumentationController extends UI_Controller_Datagrid
 {
@@ -33,6 +26,7 @@ class Techno_Datagrid_Translate_Elements_DocumentationController extends UI_Cont
     public function getelementsAction()
     {
         foreach (Element::loadList($this->request) as $element) {
+            /** @var Element $element */
             $data = array();
             $data['index'] = $element->getId();
             $data['identifier'] = $element->getId();

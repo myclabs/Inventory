@@ -1,8 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Family;
@@ -11,14 +7,11 @@ use Techno\Domain\Family\ProcessFamily;
 
 /**
  * Controller de l'arbre des familles
- * @package Techno
+ * @author matthieu.napoli
  */
 class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::getnodesAction()
      * @Secure("viewTechno")
      */
     public function getnodesAction()
@@ -64,8 +57,6 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::getlistparentsAction()
      * @Secure("viewTechno")
      */
     public function getlistparentsAction()
@@ -84,8 +75,6 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::getlistsiblingsAction()
      * @Secure("editAF")
      */
     public function getlistsiblingsAction()
@@ -137,8 +126,6 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::addnodeAction()
      * @Secure("editTechno")
      */
     public function addnodeAction()
@@ -151,8 +138,7 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
             return;
         }
 
-        $category = new Category();
-        $category->setLabel($label);
+        $category = new Category($label);
         $category->save();
         $this->entityManager->flush();
 
