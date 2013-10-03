@@ -12,10 +12,11 @@ use Techno\Domain\Family\Family;
 use Techno\Domain\Meaning;
 
 /**
- * Service haut niveau pour accéder en lecture aux données de techno
+ * Service haut niveau pour accéder en lecture aux données de techno.
+ *
  * @author matthieu.napoli
  */
-class Techno_Service_Techno
+class TechnoService
 {
     /**
      * Retourne une famille

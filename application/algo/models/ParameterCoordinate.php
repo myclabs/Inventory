@@ -5,7 +5,7 @@
  * @package Algo
  */
 use Keyword\Domain\Keyword;
-use Techno\Application\Service\Techno_Service_Techno;
+use Techno\Application\Service\TechnoService;
 use Techno\Domain\Family\Dimension;
 
 /**
@@ -62,8 +62,8 @@ abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
         if (!$this->dimension) {
             /** @var \DI\Container $container */
             $container = Zend_Registry::get('container');
-            /** @var Techno_Service_Techno $technoService */
-            $technoService = $container->get('Techno_Service_Techno');
+            /** @var TechnoService $technoService */
+            $technoService = $container->get('Techno\Application\Service\TechnoService');
             $meaning = $technoService->getMeaning($this->refDimensionMeaning);
             $this->dimension = $this->getAlgoParameter()->getFamily()->getDimensionByMeaning($meaning);
         }
