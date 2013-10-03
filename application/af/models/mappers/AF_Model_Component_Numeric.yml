@@ -7,6 +7,9 @@ AF_Model_Component_Numeric:
     unit:
       type: unit_api
       nullable: false
+    unitSelection:
+      type: boolean
+      nullable: true
     withUncertainty:
       type: boolean
       nullable: false
