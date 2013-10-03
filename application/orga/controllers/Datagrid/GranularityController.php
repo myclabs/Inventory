@@ -89,7 +89,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 
         foreach ($refAxes as $refAxis) {
             $refGranularity .= $refAxis . '|';
-            $axis = Orga_Model_Axis::loadByRefAndOrganization($refAxis, $organization);
+            $axis = $organization->getAxisByRef($refAxis);
             // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
             if (!$axis->isTransverse($listAxes)) {
                 $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'));

@@ -240,7 +240,7 @@ class Orga_Test_AxisOthers extends PHPUnit_Framework_TestCase
      */
     public function testLoadByRefAndOrganization()
     {
-        $o = Orga_Model_Axis::loadByRefAndOrganization($this->axis->getRef(), $this->organization);
+        $o = $this->organization->getAxisByRef($this->axis->getRef());
         $this->assertSame($this->axis, $o);
     }
 

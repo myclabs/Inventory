@@ -139,19 +139,6 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Charge un Axis en fonction de sa référence et son organization.
-     *
-     * @param string $ref
-     * @param Orga_Model_Organization $organization
-     *
-     * @return Orga_Model_Axis
-     */
-    public static function loadByRefAndOrganization($ref, $organization)
-    {
-        return $organization->getAxisByRef($ref);
-    }
-
-    /**
      * Met à jour les hashKey des membres et des cellules.
      */
     protected function updateMembersAndCellsHashKey()

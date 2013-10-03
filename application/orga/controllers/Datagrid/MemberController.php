@@ -38,7 +38,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
+        $axis = $organization->getAxisByRef($this->getParam('refAxis'));
 
         $this->request->filter->addCondition(Orga_Model_Member::QUERY_AXIS, $axis);
         $this->request->order->addOrder(Orga_Model_Member::QUERY_REF);
@@ -88,7 +88,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
     public function addelementAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
+        $axis = $organization->getAxisByRef($this->getParam('refAxis'));
 
         $label = $this->getAddElementValue('label');
         $ref = $this->getAddElementValue('ref');
@@ -185,7 +185,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        $axis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), $organization);
+        $axis = $organization->getAxisByRef($this->getParam('refAxis'));
         $member = Orga_Model_Member::load($this->update['index']);
 
         switch ($this->update['column']) {
@@ -209,7 +209,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             default:
                 $refBroaderAxis = substr($this->update['column'], 7);
                 try {
-                    $broaderAxis = Orga_Model_Axis::loadByRefAndOrganization($refBroaderAxis, $organization);
+                    $broaderAxis = $organization->getAxisByRef($refBroaderAxis);
                 } catch (Core_Exception_NotFound $e) {
                     parent::updateelementAction();
                 }
@@ -240,7 +240,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
     public function getparentsAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        $broaderAxis = Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refParentAxis'), $organization);
+        $broaderAxis = $organization->getAxisByRef($this->getParam('refParentAxis'));
 
         $members = $broaderAxis->getMembers();
         $idCell = $this->getParam('idCell');
