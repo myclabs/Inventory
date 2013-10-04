@@ -2,6 +2,8 @@
 
 namespace Keyword\Application\Service;
 
+use Keyword\Domain\Keyword;
+
 /**
  * @author valentin.claras
  */
@@ -17,6 +19,15 @@ class KeywordDTO
      */
     protected $label;
 
+    /**
+     * Construit un DTO à partir d'un Keyword
+     * @param Keyword $keyword
+     * @return KeywordDTO
+     */
+    public static function fromKeyword(Keyword $keyword)
+    {
+        return new self($keyword->getRef(), $keyword->getLabel());
+    }
 
     /**
      * @param string $ref
