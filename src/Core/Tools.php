@@ -75,6 +75,8 @@ abstract class Core_Tools
             throw new Core_Exception_User('Core', 'exception', 'emptyRequiredField');
         } elseif (!preg_match('#^[a-z0-9_]+$#', $ref)) {
             throw new Core_Exception_User('Core', 'exception', 'unauthorizedRef');
+        } elseif (strlen($ref) > 255) {
+            throw new Core_Exception_User('Core', 'exception', 'tooLongRef');
         }
 
         return true;
