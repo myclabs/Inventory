@@ -16,10 +16,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Orga_Model_Member extends Core_Model_Entity
 {
-
+    use Core_Strategy_Ordered;
     use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
+    const QUERY_TAG = 'tag';
     const QUERY_REF = 'ref';
     const QUERY_PARENTMEMBERS_HASHKEY = 'parentMembersHashKey';
     const QUERY_LABEL = 'label';
@@ -62,6 +63,13 @@ class Orga_Model_Member extends Core_Model_Entity
     protected $axis;
 
     /**
+     * Tag identifiant le membre dans la hiérarchie de l'organization.
+     *
+     * @var string
+     */
+    protected $tag = null;
+
+    /**
      * Collection des Member parents du Member courant.
      *
      * @var Collection|Orga_Model_Member[]
@@ -87,14 +95,40 @@ class Orga_Model_Member extends Core_Model_Entity
      * Constructeur de la classe Member.
      *
      * @param Orga_Model_Axis $axis
+     * @param Orga_Model_Member[] $directParentMembers
+     *
+     * @throws Core_Exception_InvalidArgument
      */
-    public function __construct(Orga_Model_Axis $axis)
+    public function __construct(Orga_Model_Axis $axis, array $directParentMembers)
     {
         $this->directParents = new ArrayCollection();
         $this->directChildren = new ArrayCollection();
         $this->cells = new ArrayCollection();
 
         $this->axis = $axis;
+
+        foreach ($directParentMembers as $directParentMember) {
+            if (!($this->hasDirectParent($directParentMember))) {
+                if ($directParentMember->getAxis()->getDirectNarrower() !== $this->getAxis()) {
+                    throw new Core_Exception_InvalidArgument('A direct parent Member needs to comes from a broader axis.');
+                }
+                try {
+                    $this->getDirectParentForAxis($directParentMember->getAxis());
+                    throw new Core_Exception_InvalidArgument('A direct parent from the same axis as already be given as parent.');
+                } catch (Core_Exception_NotFound $e) {
+                    $this->directParents->add($directParentMember);
+                }
+            }
+        }
+        if ($this->directParents->count() !== count($this->axis->getDirectBroaders())) {
+            throw new Core_Exception_InvalidArgument('A member needs one parent for each broader axis of his own axis.');
+        }
+        foreach ($directParentMembers as $directParentMember) {
+            $directParentMember->addDirectChild($this);
+        }
+        $this->setPosition();
+        $this->updateHashKeys();
+
         $axis->addMember($this);
     }
 
@@ -125,16 +159,19 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Charge l'objet en fonction de sa ref complète et son Axis.
-     *
-     * @param string $completeRef
-     * @param Orga_Model_Axis $axis
-     *
-     * @return Orga_Model_Member
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
      */
-    public static function loadByCompleteRefAndAxis($completeRef, Orga_Model_Axis $axis)
+    public function preDelete()
     {
-        return $axis->getMemberByCompleteRef($completeRef);
+        $this->deletePosition();
+    }
+
+    /**
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
+     */
+    public function postLoad()
+    {
+        $this->updateCachePosition();
     }
 
     /**
@@ -167,7 +204,10 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function orderMembers(Orga_Model_Member $a, Orga_Model_Member $b)
     {
-        return $a->getAxis()->getGlobalPosition() - $b->getAxis()->getGlobalPosition();
+        if ($a->getAxis() === $b->getAxis())  {
+            return strcmp($a->tag, $b->tag);
+        }
+        return Orga_Model_Axis::firstOrderAxes($a->getAxis(), $b->getAxis());
     }
 
     /**
@@ -178,9 +218,9 @@ class Orga_Model_Member extends Core_Model_Entity
     protected function checkRefUniqueness()
     {
         try {
-            $member = $this->getAxis()->getMemberByCompleteRef($this->getCompleteRef());
+            $memberFound = $this->getAxis()->getMemberByCompleteRef($this->getCompleteRef());
 
-            if ($member !== $this) {
+            if ($memberFound !== $this) {
                 throw new Core_Exception_TooMany(
                     'Ref "'.$this->getCompleteRef().'" already used with same contextualizing parent members.'
                 );
@@ -191,12 +231,40 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Met à jour la hatsKey des cellules du membre.
+     * Permet une surcharge facile pour lancer des évents après qu'un objet ait été déplacé.
      */
-    protected function updateCellsMembersHashKey()
+    protected function hasMove()
     {
-        foreach ($this->cells as $cell) {
-            $cell->updateMembersHashKey();
+        $this->updateHashKeys();
+    }
+
+    /**
+     * Met à jour les hashKey des membres et des cellules.
+     */
+    public function updateHashKeys()
+    {
+        $this->updateTag();
+        $this->updateParentMembersHashKey();
+        $this->updateCellsHierarchy();
+    }
+
+    /**
+     * Mets à jour la hashKey des membres parents contextualisants.
+     */
+    public function updateParentMembersHashKey()
+    {
+        $this->parentMembersHashKey = self::buildParentMembersHashKey($this->getContextualizingParents());
+
+        $this->updateDirectChildrenMembersParentMembersHashKey();
+    }
+
+    /**
+     * Mets à jour la hashKey des membres enfants.
+     */
+    public function updateDirectChildrenMembersParentMembersHashKey()
+    {
+        foreach ($this->getDirectChildren() as $childMember) {
+            $childMember->updateParentMembersHashKey();
         }
     }
 
@@ -207,33 +275,6 @@ class Orga_Model_Member extends Core_Model_Entity
     {
         foreach ($this->cells as $cell) {
             $cell->updateHierarchy();
-            foreach ($cell->getChildCells() as $childCell) {
-                $childCell->updateHierarchy();
-            }
-        }
-    }
-
-    /**
-     * Permet une surcharge facile pour lancer des évents après qu'un objet ait été déplacé.
-     */
-    protected function hasMove()
-    {
-        $this->updateCellsMembersHashKey();
-    }
-
-    /**
-     * Mets à jour la hashKey des membres parents contextualisants.
-     */
-    public function updateParentMembersHashKey()
-    {
-        $this->parentMembersHashKey = self::buildParentMembersHashKey($this->getContextualizingParents());
-
-        foreach ($this->getDirectChildren() as $childMember) {
-            $childMember->updateParentMembersHashKey();
-        }
-
-        foreach ($this->getCells() as $cell) {
-            $cell->updateMembersHashKey();
         }
     }
 
@@ -256,7 +297,7 @@ class Orga_Model_Member extends Core_Model_Entity
     {
         $this->ref = $ref;
 
-        $this->updateParentMembersHashKey();
+        $this->updateHashKeys();
     }
 
     /**
@@ -340,17 +381,72 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
+     * Mets à jour le tag du membre.
+     */
+    public function updateTag()
+    {
+        if (!$this->hasDirectParents()) {
+            $this->tag = '/';
+        } else {
+            $pathTags = [];
+            foreach ($this->getDirectParents() as $directParentMember) {
+                foreach (explode('|', $directParentMember->getTag()) as $pathTag) {
+                    $pathTags[] = $pathTag;
+                }
+            }
+            $this->tag = implode($this->getMemberTag() . '/|', $pathTags);
+        }
+        $this->tag .= $this->getMemberTag() . '/';
+
+        foreach ($this->getDirectChildren() as $directChildMember) {
+            $directChildMember->updateTag();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getMemberTag()
+    {
+        return $this->getAxis()->getTag() . ':' . ($this->getAxis()->isMemberPositionning() ? $this->getPosition() . '-' : '') . $this->getRef();
+    }
+
+    /**
+     * Renvoie le tag de l'axe.
+     *
+     * @return string
+     */
+    public function getTag()
+    {
+        return $this->tag;
+    }
+
+    /**
      * Ajoute un Member donné aux parents directs du Member courant.
      *
-     * @param Orga_Model_Member $parentMember
+     * @param Orga_Model_Member $directParentMember
+     *
+     * @throws Core_Exception_InvalidArgument
      */
-    public function addDirectParent(Orga_Model_Member $parentMember)
+    public function addDirectParent(Orga_Model_Member $directParentMember)
     {
-        if (!($this->hasDirectParent($parentMember))) {
-            $this->directParents->add($parentMember);
-            $parentMember->addDirectChild($this);
-            $this->updateParentMembersHashKey();
-            $this->updateCellsHierarchy();
+        if (!($this->hasDirectParent($directParentMember))) {
+            if ($directParentMember->getAxis()->getDirectNarrower() !== $this->getAxis()) {
+                throw new Core_Exception_InvalidArgument('A direct parent Member needs to comes from a broader axis');
+            }
+            try {
+                $oldDirectParentMember = $this->getDirectParentForAxis($directParentMember->getAxis());
+                $this->deletePosition();
+                $this->directParents->removeElement($oldDirectParentMember);
+                $oldDirectParentMember->removeDirectChild($this);
+            } catch (Core_Exception_NotFound $e) {
+                $this->deletePosition();
+                // Pas d'ancien membre parent pour cet axe.
+            }
+            $this->directParents->add($directParentMember);
+            $directParentMember->addDirectChild($this);
+            $this->addPosition();
+            $this->updateHashKeys();
         }
     }
 
@@ -369,15 +465,16 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Retire un Member donné des parents directs du Member courant.
      *
-     * @param Orga_Model_Member $parentMember
+     * @param Orga_Model_Member $directParentMember
      */
-    public function removeDirectParent(Orga_Model_Member $parentMember)
+    public function removeDirectParent(Orga_Model_Member $directParentMember)
     {
-        if ($this->hasDirectParent($parentMember)) {
-            $this->directParents->removeElement($parentMember);
-            $parentMember->removeDirectChild($this);
-            $this->updateParentMembersHashKey();
-            $this->updateCellsHierarchy();
+        if ($this->hasDirectParent($directParentMember)) {
+            $this->deletePosition();
+            $this->directParents->removeElement($directParentMember);
+            $directParentMember->removeDirectChild($this);
+            $this->addPosition();
+            $this->updateHashKeys();
         }
     }
 
@@ -394,11 +491,41 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Renvoie un tableau des Member parents directs.
      *
-     * @return Orga_Model_Member[]
+     * @return Collection|Orga_Model_Member[]
      */
     public function getDirectParents()
     {
-        return $this->directParents->toArray();
+        return $this->directParents;
+    }
+
+    /**
+     * Renvoie le membre parent direct correspondant à l'axe donné.
+     *
+     * @param Orga_Model_Axis $axis
+     *
+     * @throws Core_Exception_InvalidArgument
+     * @throws Core_Exception_NotFound
+     * @throws Core_Exception_TooMany
+     *
+     * @return Orga_Model_Member
+     */
+    public function getDirectParentForAxis(Orga_Model_Axis $axis)
+    {
+        if ($this->axis->hasDirectBroader($axis)) {
+            throw new Core_Exception_InvalidArgument('The given Axis is not a broader of the Member\'s Axis');
+        }
+
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->where($criteria->expr()->eq('axis', $axis));
+        $member = $this->directParents->matching($criteria)->toArray();
+
+        if (count($member) === 0) {
+            throw new Core_Exception_NotFound("No direct parent Member matching Axis " . $axis->getRef());
+        } else if (count($member) > 1) {
+            throw new Core_Exception_TooMany("Too many direct parent Member matching Axis " . $axis->getRef());
+        }
+
+        return array_pop($member);
     }
 
     /**
@@ -416,6 +543,41 @@ class Orga_Model_Member extends Core_Model_Entity
             }
         }
         return $parents;
+    }
+
+    /**
+     * Renvoie le membre parent correspondant à l'axe donné.
+     *
+     * @param Orga_Model_Axis $axis
+     *
+     * @throws Core_Exception_InvalidArgument
+     * @throws Core_Exception_NotFound
+     * @throws Core_Exception_TooMany
+     *
+     * @return Orga_Model_Member
+     */
+    public function getParentForAxis(Orga_Model_Axis $axis)
+    {
+        if (!$this->axis->isNarrowerThan($axis)) {
+            throw new Core_Exception_InvalidArgument('The given Axis is not a broader of the Member\'s Axis');
+        }
+
+        $parentMemberTag = $axis->getTag() . ':' . ($axis->isMemberPositionning() ? '[0-9]+-' : '');
+        $parentMemberPathTags = preg_match('#([^|]*\/'.$parentMemberTag.'[a-z]+\/)#', $this->tag);
+
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        foreach ($parentMemberPathTags as $pathTag) {
+            $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
+        }
+        $member = $axis->getMembers()->matching($criteria)->toArray();
+
+        if (count($member) === 0) {
+            throw new Core_Exception_NotFound("No parent Member matching Axis " . $axis->getRef());
+        } else if (count($member) > 1) {
+            throw new Core_Exception_TooMany("Too many direct parent Member matching Axis " . $axis->getRef());
+        }
+
+        return array_pop($member);
     }
 
     /**
@@ -438,26 +600,6 @@ class Orga_Model_Member extends Core_Model_Entity
         }
 
         return $contextualizingParentMembers;
-    }
-
-    /**
-     * Renvoie le Member parent pour l'Axis donné.
-     *
-     * @param Orga_Model_Axis $axis
-     *
-     * @throws Core_Exception_NotFound No parent member for the given axis
-     * @return Orga_Model_Member[]
-     */
-    public function getParentForAxis(Orga_Model_Axis $axis)
-    {
-        foreach ($this->directParents as $directParent) {
-            if ($directParent->getAxis() === $axis) {
-                return $directParent;
-            } elseif ($axis->isBroaderThan($directParent->getAxis())) {
-                return $directParent->getParentForAxis($axis);
-            }
-        }
-        throw new Core_Exception_NotFound('There is no parent member for the given axis');
     }
 
     /**
@@ -515,24 +657,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function getDirectChildren()
     {
-        return $this->directChildren->toArray();
-    }
-
-    /**
-     * Renvoie un tableau contenant tous les Member enfants de Member courant.
-     *
-     * @return Orga_Model_Member[]
-     */
-    public function getAllChildren()
-    {
-        $children = [];
-        foreach ($this->directChildren as $directChild) {
-            $children[] = $directChild;
-            foreach ($directChild->getAllChildren() as $recursiveChildren) {
-                $children[] = $recursiveChildren;
-            }
-        }
-        return $children;
+        return $this->directChildren;
     }
 
     /**
@@ -540,19 +665,21 @@ class Orga_Model_Member extends Core_Model_Entity
      *
      * @param Orga_Model_Axis $axis
      *
+     * @throws Core_Exception_InvalidArgument
+     *
      * @return Orga_Model_Member[]
      */
     public function getChildrenForAxis(Orga_Model_Axis $axis)
     {
-        if ($this->getAxis()->getDirectNarrower() === $axis) {
-            return $this->getDirectChildren();
-        } else {
-            $children = [];
-            foreach ($this->directChildren as $directChild) {
-                $children = array_merge($children, $directChild->getChildrenForAxis($axis));
-            }
-            return array_unique($children, SORT_REGULAR);
+        if (!$this->axis->isBroaderThan($axis)) {
+            throw new Core_Exception_InvalidArgument('The given Axis is not a narrower of the Member\'s Axis');
         }
+
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        foreach (explode('|', $this->tag) as $pathTag) {
+            $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
+        }
+        return $axis->getMembers()->matching($criteria)->toArray();
     }
 
     /**
@@ -583,19 +710,6 @@ class Orga_Model_Member extends Core_Model_Entity
     public function hasCell(Orga_Model_Cell $cell)
     {
         return $this->cells->contains($cell);
-    }
-
-    /**
-     * Retire la Cell donnée des Cells utilisant ce Member.
-     *
-     * @param Orga_Model_Cell $cell
-     */
-    public function removeCell(Orga_Model_Cell $cell)
-    {
-        if ($this->hasCell($cell)) {
-            $this->cells->removeElement($cell);
-            $cell->removeMember($this);
-        }
     }
 
     /**

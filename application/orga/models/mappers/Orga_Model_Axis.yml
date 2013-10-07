@@ -36,6 +36,10 @@ Orga_Model_Axis:
       column: contextualizing
       type: boolean
       nullable: false
+    memberPositionning:
+      column: memberPositionning
+      type: boolean
+      nullable: false
     position:
       column: position
       type: integer
@@ -69,7 +73,7 @@ Orga_Model_Axis:
       orphanRemoval: true
       cascade: [ persist, remove ]
       orderBy:
-        ref: ASC
+        tag: ASC
 
   manyToMany:
     granularities:

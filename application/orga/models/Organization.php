@@ -151,9 +151,9 @@ class Orga_Model_Organization extends Core_Model_Entity
         $axis = $this->axes->matching($criteria)->toArray();
 
         if (count($axis) === 0) {
-            throw new Core_Exception_NotFound("No 'Orga_Model_Axis' matching " . $ref);
+            throw new Core_Exception_NotFound("No Axis in Organization matching ref " . $ref);
         } else if (count($axis) > 1) {
-            throw new Core_Exception_TooMany("Too many 'Orga_Model_Axis' matching " . $ref);
+            throw new Core_Exception_TooMany("Too many Axis in Organization matching " . $ref);
         }
 
         return array_pop($axis);
@@ -277,10 +277,10 @@ class Orga_Model_Organization extends Core_Model_Entity
         $granularity = $this->granularities->matching($criteria)->toArray();
 
         if (empty($granularity)) {
-            throw new Core_Exception_NotFound("No 'Orga_Model_Granularity' matching " . $ref);
+            throw new Core_Exception_NotFound("No Granularity in Organization matching ref " . $ref);
         } else {
             if (count($granularity) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_Granularity' matching " . $ref);
+                throw new Core_Exception_TooMany("Too many Granularity in Organization matching ref " . $ref);
             }
         }
 

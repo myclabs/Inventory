@@ -224,19 +224,6 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
-     * Charge une Cell en fonction de sa Granularity et de ses Member.
-     *
-     * @param Orga_Model_Granularity $granularity
-     * @param Orga_Model_Member[]    $listMembers
-     *
-     * @return Orga_Model_Cell
-     */
-    public static function loadByGranularityAndListMembers(Orga_Model_Granularity $granularity, $listMembers)
-    {
-        return $granularity->getCellByMembers($listMembers);
-    }
-
-    /**
      * Charge la Cell correspondant à un Primary Set AF.
      *
      * @param AF_Model_InputSet_Primary $aFInputSetPrimary
@@ -747,78 +734,6 @@ class Orga_Model_Cell extends Core_Model_Entity
                 'members'     => $childMembersForGranularity
             )
         );
-        return self::getEntityRepository()->countTotalByMembers($childMembers, $queryParameters);
-    }
-
-    /**
-     * Renvoie les Cell enfantes pour toutes les Granularity narrower.
-     *
-     * @param Core_Model_Query $queryParameters
-     *
-     * @return Orga_Model_Cell[]
-     */
-    public function loadChildCells(Core_Model_Query $queryParameters = null)
-    {
-        if ($queryParameters === null) {
-            $queryParameters = new Core_Model_Query();
-            $queryParameters->order->addOrder(self::QUERY_MEMBERS_HASHKEY);
-        }
-
-        $childMembers = array();
-        foreach ($this->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            $childMembersForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
-            // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
-            foreach ($childMembersForGranularity as $childAxisMembersForGranularity) {
-                if (empty($childAxisMembersForGranularity)) {
-                    continue 2;
-                }
-            }
-
-            $childMembers[] = array(
-                'granularity' => $narrowerGranularity,
-                'members'     => $childMembersForGranularity
-            );
-        }
-
-        if (empty($childMembers)) {
-            return array();
-        }
-        return self::getEntityRepository()->loadByMembers($childMembers, $queryParameters);
-    }
-
-    /**
-     * Compte le total des Cell enfantes pour toutes les Granularity narrower.
-     *
-     * @param Core_Model_Query $queryParameters
-     *
-     * @return int
-     */
-    public function countTotalChildCells(Core_Model_Query $queryParameters = null)
-    {
-        if ($queryParameters === null) {
-            $queryParameters = new Core_Model_Query();
-            $queryParameters->order->addOrder(self::QUERY_MEMBERS_HASHKEY);
-        }
-
-        $childMembers = array();
-        foreach ($this->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            $childMembersForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
-            // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
-            foreach ($childMembersForGranularity as $childAxisMembersForGranularity) {
-                if (empty($childAxisMembersForGranularity)) {
-                    continue 2;
-                }
-            }
-
-            $childMembers[] = array(
-                'granularity' => $narrowerGranularity,
-                'members'     => $childMembersForGranularity
-            );
-        }
-
-        if (empty($childMembers)) {
-            return 0;
-        }
         return self::getEntityRepository()->countTotalByMembers($childMembers, $queryParameters);
     }
 

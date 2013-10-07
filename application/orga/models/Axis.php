@@ -23,6 +23,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
+    const QUERY_TAG = 'tag';
     const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
     const QUERY_POSITION = 'position';
@@ -85,6 +86,13 @@ class Orga_Model_Axis extends Core_Model_Entity
      * @var bool
      */
     protected $contextualizing = false;
+
+    /**
+     * Définit si l'Axis courant permet le positionnement des Member. (ou ordre alphabétique)
+     *
+     * @var bool
+     */
+    protected $memberPositionning = false;
 
     /**
      * Collection des Member de l'Axis courant.
@@ -152,10 +160,17 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Met à jour les hashKey des membres et des cellules.
      */
-    protected function updateMembersAndCellsHashKey()
+    public function updateHashKeys()
     {
+        $this->updateTag();
         foreach ($this->getMembers() as $member) {
-            $member->updateParentMembersHashKey();
+            $member->updateHashKeys();
+        }
+        foreach ($this->granularities as $granularity) {
+            $granularity->updateRef();
+            foreach ($granularity->getCells() as $cell) {
+                $cell->updateMembersHashKey();
+            }
         }
     }
 
@@ -180,15 +195,9 @@ class Orga_Model_Axis extends Core_Model_Entity
     {
         if ($ref === 'global') {
             throw new Core_Exception_InvalidArgument('An Axis ref cannot be "global".');
-        } else {
-            $broadersAxes = $this->getAllBroadersFirstOrdered();
+        } else if ($this->ref !== $ref) {
             $this->ref = $ref;
-            foreach ($broadersAxes as $broadersAxis) {
-                $broadersAxis->updateTag();
-            }
-            foreach ($this->granularities as $granularity) {
-                $granularity->updateRef();
-            }
+            $this->updateHashKeys();
         }
     }
 
@@ -235,14 +244,26 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Mets à jour le tag de l'axe.
      */
-    protected function updateTag()
+    public function updateTag()
     {
         if ($this->directNarrower === null) {
             $this->tag = '/';
         } else {
             $this->tag = $this->directNarrower->tag;
         }
-        $this->tag .= $this->getPosition() . '-' . $this->getRef() . '/';
+        $this->tag .= $this->getAxisTag() . '/';
+
+        foreach ($this->getDirectBroaders() as $directBroaderAxis) {
+            $directBroaderAxis->updateTag();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getAxisTag()
+    {
+        return $this->getPosition() . '-' . $this->getRef();
     }
 
     /**
@@ -276,7 +297,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     protected function hasMove()
     {
-        $this->updateMembersAndCellsHashKey();
+        $this->updateHashKeys();
     }
 
     /**
@@ -315,10 +336,15 @@ class Orga_Model_Axis extends Core_Model_Entity
      * Définit l'axe narrower de l'axe courant.
      *
      * @param Orga_Model_Axis $narrowerAxis
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function setDirectNarrower(Orga_Model_Axis $narrowerAxis=null)
     {
         if ($this->directNarrower !== $narrowerAxis) {
+            if ($narrowerAxis->isBroaderThan($this)) {
+                throw new Core_Exception_InvalidArgument('The given Axis is broader than the current one.');
+            }
             if ($this->directNarrower !== null) {
                 $this->directNarrower->removeDirectBroader($this);
             }
@@ -396,9 +422,9 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getDirectBroaders()
     {
-        $directBroaders = $this->directBroaders->toArray();
-        @uasort($directBroaders, ['Orga_Model_Axis', 'orderAxes']);
-        return $directBroaders;
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->orderBy(['tag' => 'ASC']);
+        return $this->directBroaders->matching($criteria);
     }
 
     /**
@@ -427,7 +453,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Définit si l'Axis.
+     * Définit si l'Axis contextualise ses membres.
      *
      * @param bool $contextualizing
      */
@@ -436,7 +462,9 @@ class Orga_Model_Axis extends Core_Model_Entity
         if ($this->contextualizing !== $contextualizing) {
             $this->contextualizing = $contextualizing;
 
-            $this->updateMembersAndCellsHashKey();
+            foreach ($this->getMembers() as $member) {
+                $member->updateDirectChildrenMembersParentMembersHashKey();
+            }
         }
     }
 
@@ -448,6 +476,32 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function isContextualizing()
     {
         return $this->contextualizing;
+    }
+
+    /**
+     * Définit si l'Axis permet le positionnement de ses membres.
+     *
+     * @param bool $memberPositionning
+     */
+    public function setMemberPositionning($memberPositionning)
+    {
+        if ($this->memberPositionning !== $memberPositionning) {
+            $this->memberPositionning = $memberPositionning;
+
+            foreach ($this->getMembers() as $member) {
+                $member->updateHashKeys();
+            }
+        }
+    }
+
+    /**
+     * Indique si l'axe permet le positionnement de ses membres.
+     *
+     * @return bool
+     */
+    public function isMemberPositionning()
+    {
+        return $this->memberPositionning;
     }
 
     /**
@@ -504,10 +558,10 @@ class Orga_Model_Axis extends Core_Model_Entity
         $member = $this->members->matching($criteria)->toArray();
 
         if (empty($member)) {
-            throw new Core_Exception_NotFound("No 'Orga_Model_Member' matching " . $completeRef);
+            throw new Core_Exception_NotFound("No Member matching complete ref " . $completeRef);
         } else {
             if (count($member) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_Member' matching " . $completeRef);
+                throw new Core_Exception_TooMany("Too many Member matching complete ref " . $completeRef);
             }
         }
 

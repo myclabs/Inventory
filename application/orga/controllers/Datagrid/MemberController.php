@@ -108,7 +108,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 continue;
             } else {
                 try {
-                    $broaderMember = Orga_Model_Member::loadByCompleteRefAndAxis($refBroaderMember, $directBroaderAxis);
+                    $broaderMember = $directBroaderAxis->getMemberByCompleteRef($refBroaderMember);
                     $broaderMembers[] = $broaderMember;
                 } catch (Core_Exception_NotFound $e) {
                     $this->setAddElementErrorMessage($formFieldRef, __('UI', 'exception', 'unknownError'));
@@ -126,10 +126,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
         if (empty($this->_addErrorMessages)) {
             try {
-                Orga_Model_Member::loadByCompleteRefAndAxis(
-                    $ref . '#' . Orga_Model_Member::buildParentMembersHashKey($contextualizingMembers),
-                    $axis
-                );
+                $axis->getMemberByCompleteRef($ref . '#' . Orga_Model_Member::buildParentMembersHashKey($contextualizingMembers));
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
                 $this->workDispatcher->runBackground(
@@ -198,7 +195,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 try {
                     $completeRef = Orga_Model_Member::buildParentMembersHashKey($member->getContextualizingParents());
                     $completeRef = $this->update['value'] . '#' . $completeRef;
-                    if (Orga_Model_Member::loadByCompleteRefAndAxis($completeRef, $axis) !== $member) {
+                    if ($axis->getMemberByCompleteRef($completeRef) !== $member) {
                         throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
                     }
                 } catch (Core_Exception_NotFound $e) {
@@ -222,7 +219,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     }
                 }
                 if (!empty($this->update['value'])) {
-                    $parentMember = Orga_Model_Member::loadByCompleteRefAndAxis($this->update['value'], $broaderAxis);
+                    $parentMember = $broaderAxis->getMemberByCompleteRef($this->update['value']);
                     $member->addDirectParent($parentMember);
                 }
                 $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));

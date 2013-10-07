@@ -262,7 +262,7 @@ class Orga_Test_MemberOthers extends PHPUnit_Framework_TestCase
      */
     public function testLoadByRef()
     {
-        $o = Orga_Model_Member::loadByCompleteRefAndAxis($this->member->getCompleteRef(), $this->member->getAxis());
+        $o = $this->member->getAxis()->getMemberByCompleteRef($this->member->getCompleteRef());
         $this->assertSame($this->member, $o);
     }
 
