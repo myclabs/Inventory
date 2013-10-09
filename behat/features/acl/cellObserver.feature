@@ -29,13 +29,13 @@ Feature: Cell observer feature
   # Accès à l'onglet "Analyses"
     When I open tab "Analyses"
     Then I should see the "report" datagrid
-  # Clic sur "Export Excel détaillé"
-    When I click "Export Excel détaillé"
-    Then I should see "La génération du fichier est en cours. Une fenêtre de téléchargement devrait apparaître d'ici quelques secondes, merci de patienter."
+  # Accès à l'onglet "Exports"
+    When I open tab "Exports"
+    # TODO : accès aux exports
   # Les autres onglets de la page d'une cellule sont absents
-    # TODO And I should not see "Organisation"
-    And I should not see "Rôles"
-    And I should not see "Reconst. données"
+    And I should not see a "#container a:contains('Organisation')" element
+    And I should not see a "#container a:contains('Rôles')" element
+    And I should not see a "#container a:contains('Reconst. données')" element
 
   @javascript
   Scenario: Observer of several cells

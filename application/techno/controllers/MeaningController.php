@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 use Keyword\Application\Service\KeywordService;
 
 /**
@@ -27,5 +28,4 @@ class Techno_MeaningController extends Core_Controller
     {
         $this->view->keywords = $this->keywordService->getAll();
     }
-
 }

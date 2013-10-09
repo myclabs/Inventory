@@ -22,7 +22,7 @@ export DISPLAY=:0
 # Start selenium server
 java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
-sleep 5
+sleep 8
 
 # Zombie.js
 #export NODE_PATH=/usr/local/lib/node_modules

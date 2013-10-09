@@ -31,6 +31,22 @@
                 <seg>This form cannot be deleted, since it is used as a subform by another form.</seg>
             </tuv>
         </tu>
+        <tu tuid="afUsedByOrga">
+            <tuv xml:lang="fr">
+                <seg>Ce formulaire ne peut pas être supprimé car il est utilisé par des organisations.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This form cannot be deleted because it is used by one or more organizations.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="afUsedByInput">
+            <tuv xml:lang="fr">
+                <seg>Ce formulaire ne peut pas être supprimé car des saisies y sont associées.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This form cannot be deleted because it is linked by inputs.</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>

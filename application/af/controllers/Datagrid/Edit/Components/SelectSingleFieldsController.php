@@ -91,11 +91,9 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
             $selectField->setEnabled($this->getAddElementValue('enabled'));
             $selectField->setRequired($this->getAddElementValue('required'));
             $selectField->setType($type);
-            $af->getRootGroup()->addSubComponent($selectField);
             $af->addComponent($selectField);
 
             $selectField->save();
-            $af->getRootGroup()->save();
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
@@ -200,7 +198,11 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Condition_Elementary')) {
                 throw new Core_Exception_User('AF', 'configComponentMessage',
-                                              'fieldUsedByInteractionConditionDeletionDenied');
+                    'fieldUsedByInteractionConditionDeletionDenied');
+            } elseif ($e->isSourceEntityInstanceOf('Algo_Model_ParameterCoordinate_Algo')) {
+                throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByIndexation');
+            } elseif ($e->isSourceEntityInstanceOf('Algo_Model_Index_Algo')) {
+                throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByIndexation');
             }
             throw $e;
         }

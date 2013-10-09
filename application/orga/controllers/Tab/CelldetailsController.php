@@ -533,10 +533,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         );
 
         // Formats d'exports.
-        $this->view->defaultFormat = 'xlsx';
+        $this->view->defaultFormat = 'xls';
         $this->view->formats = [
-            'xlsx' => __('UI', 'export', 'xlsx'),
             'xls' => __('UI', 'export', 'xls'),
+//            'xlsx' => __('UI', 'export', 'xlsx'),
 //            'ods' => __('UI', 'export', 'ods'),
         ];
 
@@ -579,6 +579,9 @@ class Orga_Tab_CelldetailsController extends Core_Controller
      */
     public function exportAction()
     {
+        set_time_limit(0);
+        PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip);
+
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
 

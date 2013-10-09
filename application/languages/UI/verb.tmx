@@ -227,5 +227,13 @@
                 <seg>Validate</seg>
             </tuv>
         </tu>
+        <tu tuid="duplicate">
+            <tuv xml:lang="fr">
+                <seg>Dupliquer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Dupliquer</seg>
+            </tuv>
+        </tu>
 	</body>
 </tmx>

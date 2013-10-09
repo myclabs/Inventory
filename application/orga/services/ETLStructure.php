@@ -478,6 +478,7 @@ class Orga_Service_ETLStructure
                     $granularityReportAsString
                 )
             );
+            $this->translateEntity($granularityReport->getGranularityDWReport(), $cellDWReport);
             $this->entityManager->flush($cellDWReport);
         }
     }

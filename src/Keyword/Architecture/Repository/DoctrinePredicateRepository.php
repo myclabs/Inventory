@@ -29,6 +29,11 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
         }
         try {
             $this->getByRef($ref);
+            return __('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
+        } catch (\Core_Exception_NotFound $e) {
+            // Pas de Keyword trouvé.
+        }
+        try {
             $this->getByReverseRef($ref);
             return __('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {
@@ -45,6 +50,11 @@ class DoctrinePredicateRepository extends DoctrineEntityRepository implements Pr
         \Core_Tools::checkRef($ref);
         try {
             $this->getByRef($ref);
+            throw new \Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
+        } catch (\Core_Exception_NotFound $e) {
+            // Pas de Keyword trouvé.
+        }
+        try {
             $this->getByReverseRef($ref);
             throw new \Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier', array('REF' => $ref));
         } catch (\Core_Exception_NotFound $e) {

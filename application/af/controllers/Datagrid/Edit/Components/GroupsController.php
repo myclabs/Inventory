@@ -77,10 +77,8 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
             $group->setFoldaway($foldaway);
             $group->setVisible($isVisible);
             $group->setHelp($this->getAddElementValue('help'));
-            $af->getRootGroup()->addSubComponent($group);
             $group->save();
             $af->addComponent($group);
-            $af->getRootGroup()->save();
 
             try {
                 $this->entityManager->flush();
