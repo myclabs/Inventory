@@ -33,7 +33,7 @@
         "dompdf/dompdf": "dev-master",
         "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
         "myclabs/array-comparator": "1.0.*",
-        "myclabs/xport": "dev-master",
+        "myclabs/xport": "0.2.0",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
         "mnapoli/php-di": "3.5.*",
