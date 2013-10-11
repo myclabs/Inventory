@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e8ee94627c3550800b10f2da17fe7473",
+    "hash": "8ced7f9bbe329a79dcdb57b54dbbd979",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -292,12 +292,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "3c811d7d8192a76f2eec96747741669c9298f60e"
+                "reference": "a619261b6b96341951f93d228493818ba334d0f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/3c811d7d8192a76f2eec96747741669c9298f60e",
-                "reference": "3c811d7d8192a76f2eec96747741669c9298f60e",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/a619261b6b96341951f93d228493818ba334d0f6",
+                "reference": "a619261b6b96341951f93d228493818ba334d0f6",
                 "shasum": ""
             },
             "require": {
@@ -354,7 +354,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-10-07 18:23:26"
+            "time": "2013-10-09 16:42:00"
         },
         {
             "name": "doctrine/inflector",
@@ -777,16 +777,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "14ea2c8e131689633b0d3da567a365a6a4cae5d3"
+                "reference": "c33f4efffd4f64c351dc25907622f54e4ad04374"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/14ea2c8e131689633b0d3da567a365a6a4cae5d3",
-                "reference": "14ea2c8e131689633b0d3da567a365a6a4cae5d3",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/c33f4efffd4f64c351dc25907622f54e4ad04374",
+                "reference": "c33f4efffd4f64c351dc25907622f54e4ad04374",
                 "shasum": ""
             },
             "require": {
@@ -816,7 +816,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-09-24 17:33:08"
+            "time": "2013-10-11 10:13:25"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -1062,16 +1062,16 @@
         },
         {
             "name": "myclabs/xport",
-            "version": "dev-master",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Xport.git",
-                "reference": "7651038120c1231401a6c417d03adc9efe54ea78"
+                "reference": "7dd0d5df89e3ea04e7d2f6e18fbc818082dd0a98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Xport/zipball/7651038120c1231401a6c417d03adc9efe54ea78",
-                "reference": "7651038120c1231401a6c417d03adc9efe54ea78",
+                "url": "https://api.github.com/repos/myclabs/Xport/zipball/7dd0d5df89e3ea04e7d2f6e18fbc818082dd0a98",
+                "reference": "7dd0d5df89e3ea04e7d2f6e18fbc818082dd0a98",
                 "shasum": ""
             },
             "require": {
@@ -1104,7 +1104,7 @@
                 "pdf",
                 "xml"
             ],
-            "time": "2013-10-04 08:35:58"
+            "time": "2013-09-30 08:41:16"
         },
         {
             "name": "netcarver/textile",
@@ -1471,7 +1471,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
@@ -1524,7 +1524,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
@@ -1578,7 +1578,7 @@
         },
         {
             "name": "symfony/property-access",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/PropertyAccess",
             "source": {
                 "type": "git",
@@ -1636,7 +1636,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
@@ -2347,7 +2347,7 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
@@ -2395,7 +2395,7 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/CssSelector",
             "source": {
                 "type": "git",
@@ -2446,17 +2446,17 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "1370fae4bbfbd9d2163b26050d352985ba041c31"
+                "reference": "81620c3551d411b0f7ec3bd6e978000569ec004a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/1370fae4bbfbd9d2163b26050d352985ba041c31",
-                "reference": "1370fae4bbfbd9d2163b26050d352985ba041c31",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/81620c3551d411b0f7ec3bd6e978000569ec004a",
+                "reference": "81620c3551d411b0f7ec3bd6e978000569ec004a",
                 "shasum": ""
             },
             "require": {
@@ -2498,11 +2498,11 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2013-09-19 09:45:20"
+            "time": "2013-09-26 22:39:53"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
@@ -2549,7 +2549,7 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
@@ -2596,17 +2596,17 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Translation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "609dbde849d6a02be3f4a7ae29841d1d3db64d87"
+                "reference": "6aedcff5ea623316dbf2112b78f2f63a257aab01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/609dbde849d6a02be3f4a7ae29841d1d3db64d87",
-                "reference": "609dbde849d6a02be3f4a7ae29841d1d3db64d87",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/6aedcff5ea623316dbf2112b78f2f63a257aab01",
+                "reference": "6aedcff5ea623316dbf2112b78f2f63a257aab01",
                 "shasum": ""
             },
             "require": {
@@ -2647,7 +2647,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2013-09-19 09:45:20"
+            "time": "2013-10-10 13:12:30"
         }
     ],
     "aliases": [
@@ -2677,7 +2677,6 @@
         "pear/console_commandline": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
-        "myclabs/xport": 20,
         "myclabs/work": 20,
         "mnapoli/metaconsole": 20
     },
