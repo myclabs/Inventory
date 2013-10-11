@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a19e11f00f682d87fbf340eff8929c23",
+    "hash": "da60b6ecfd22e8996f2a8c1858dec8c4",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -777,7 +777,7 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "dev-master",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
@@ -2583,12 +2583,6 @@
             "alias_normalized": "1.7.99.0",
             "version": "dev-WriterExcel5OptionalConstructor",
             "package": "phpoffice/phpexcel"
-        },
-        {
-            "alias": "3.5.0",
-            "alias_normalized": "3.5.0.0",
-            "version": "9999999-dev",
-            "package": "mnapoli/php-di"
         }
     ],
     "minimum-stability": "dev",
@@ -2599,7 +2593,6 @@
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "myclabs/xport": 20,
-        "mnapoli/php-di": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": {
