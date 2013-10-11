@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8ced7f9bbe329a79dcdb57b54dbbd979",
+    "hash": "8a22181178d0e399b57be632ee7631d5",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1022,7 +1022,7 @@
         },
         {
             "name": "myclabs/work",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Work.git",
@@ -2677,7 +2677,6 @@
         "pear/console_commandline": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
-        "myclabs/work": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": {
