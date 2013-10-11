@@ -40,7 +40,8 @@
         "mnapoli/php-di-zf1": "~1.0",
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",
-        "mnapoli/number-two": "~0.2.0"
+        "mnapoli/number-two": "~0.2.0",
+        "myclabs/work": "dev-master"
     },
     "require-dev": {
         "behat/behat": "~2.4",

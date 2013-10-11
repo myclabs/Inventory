@@ -3,6 +3,31 @@
 
 ## 2.7
 
+- Désinstaller Gearman (cf. la procédure d'installation sur le wiki)
+
+- Installer RabbitMQ
+
+```shell
+$ sudo su
+$ echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
+$ wget http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+$ apt-key add rabbitmq-signing-key-public.asc
+$ apt-get update
+$ apt-get install -y rabbitmq-server
+```
+
+- Mettre à jour les confs supervisor (`/etc/supervisor/conf.d/*.conf`) pour ajouter :
+
+```
+autorestart=true
+```
+
+puis exécuter :
+
+```shell
+$ sudo supervisorctl reload
+```
+
 - Déployer l'application sans build update
 
 - Exécuter le script de migration SQL
