@@ -1,9 +1,4 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Bootstrap
- */
 
 use Core\Autoloader;
 use Core\Log\ChromePHPFormatter;
@@ -15,6 +10,7 @@ use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
+use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\Tools\Setup;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ChromePHPHandler;
@@ -22,12 +18,17 @@ use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use MyCLabs\Work\Dispatcher\RabbitMQWorkDispatcher;
+use MyCLabs\Work\Dispatcher\SimpleWorkDispatcher;
+use MyCLabs\Work\TaskExecutor\ServiceCallExecutor;
+use MyCLabs\Work\Worker\RabbitMQWorker;
+use MyCLabs\Work\Worker\SimpleWorker;
+use PhpAmqpLib\Connection\AMQPConnection;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
  *
- * @package    Core
- * @subpackage Bootstrap
+ * @author matthieu.napoli
  */
 abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
@@ -54,12 +55,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'Translations',
                 'Log',
                 'ErrorHandler',
+                // Il faut initialiser le front controller pour que l'ajout de dossiers
+                // de controleurs soit pris en compte
                 'FrontController',
                 'Doctrine',
                 'DefaultEntityManager',
-                'WorkDispatcher',
-                // Il faut initialiser le front controller pour que l'ajout de dossiers
-                // de controleurs soit pris en compte
+                'Work',
             );
             parent::_bootstrap($resources);
             // Lance toutes les autres méthodes (moins prioritaires)
@@ -247,8 +248,10 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Configuration des Proxies.
         $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
-        // Ligne inutile mais bug, cf. http://www.doctrine-project.org/jira/browse/DCOM-210#comment-21061
         $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
+        if (! $doctrineAutoGenerateProxy) {
+            DoctrineProxyAutoloader::register($doctrineConfig->getProxyDir(), $doctrineConfig->getProxyNamespace());
+        }
 
         // Log des requêtes
         if ($configuration->log->queries) {
@@ -336,30 +339,68 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * Work dispatcher
      */
-    protected function _initWorkDispatcher()
+    protected function _initWork()
     {
-        // Détermine si on utilise gearman
+        // Détermine si on utilise RabbitMQ
+        $useRabbitMQ = false;
         $configuration = Zend_Registry::get('configuration');
-        if (isset($configuration->gearman) && isset($configuration->gearman->enabled)) {
-            $useGearman = (bool) $configuration->gearman->enabled;
-        } else {
-            $useGearman = true;
+        if (isset($configuration->rabbitmq) && isset($configuration->rabbitmq->enabled)) {
+            $useRabbitMQ = (bool) $configuration->rabbitmq->enabled;
+            if ($useRabbitMQ) {
+                $this->container->set('rabbitmq.host', $configuration->rabbitmq->host);
+                $this->container->set('rabbitmq.port', $configuration->rabbitmq->port);
+                $this->container->set('rabbitmq.user', $configuration->rabbitmq->user);
+                $this->container->set('rabbitmq.password', $configuration->rabbitmq->password);
+            }
         }
-        $useGearman = $useGearman && extension_loaded('gearman');
 
-        $this->container->set('Core_Work_Dispatcher', function(Container $c) use ($useGearman) {
-                if ($useGearman) {
-                    $implementation = 'Core_Work_GearmanDispatcher';
-                } else {
-                    $implementation = 'Core_Work_SimpleDispatcher';
-                }
-                /** @var Core_Work_Dispatcher $workDispatcher */
-                $workDispatcher = $c->get($implementation);
-                // Register workers
-                $workDispatcher->registerWorker($this->container->get('Core_Work_ServiceCall_Worker'));
+        // Connexion RabbitMQ
+        $this->container->set('rabbitmq.queue', $this->container->get('application.name') . '-work');
+        $this->container->set('PhpAmqpLib\Channel\AMQPChannel', function(Container $c) {
+            $queue = $c->get('rabbitmq.queue');
+            /** @var AMQPConnection $connection */
+            $connection = $c->get('PhpAmqpLib\Connection\AMQPConnection');
+            $channel = $connection->channel();
+            // Queue durable (= sauvegardée sur disque)
+            $channel->queue_declare($queue, false, true);
+            return $channel;
+        });
 
+        $this->container->set('MyCLabs\Work\Dispatcher\WorkDispatcher', function(Container $c) use ($useRabbitMQ) {
+            if ($useRabbitMQ) {
+                $channel = $c->get('PhpAmqpLib\Channel\AMQPChannel');
+                $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
+                $workDispatcher->addEventListener($this->container->get('Core\Work\EventListener'));
                 return $workDispatcher;
-            });
+            }
+            return $c->get('MyCLabs\Work\Dispatcher\SimpleWorkDispatcher');
+        });
+
+        $this->container->set('MyCLabs\Work\Worker\Worker', function(Container $c) use ($useRabbitMQ) {
+            if ($useRabbitMQ) {
+                $channel = $c->get('PhpAmqpLib\Channel\AMQPChannel');
+                $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));
+                $worker->addEventListener($this->container->get('Core\Work\EventListener'));
+            } else {
+                $worker = $c->get('MyCLabs\Work\Worker\SimpleWorker');
+            }
+
+            $worker->registerTaskExecutor('Core\Work\ServiceCall\ServiceCallTask', new ServiceCallExecutor($c));
+            $worker->registerTaskExecutor(
+                'Orga_Work_Task_AddGranularity',
+                $this->container->get('Orga_Work_TaskExecutor_AddGranularityExecutor')
+            );
+            $worker->registerTaskExecutor(
+                'Orga_Work_Task_AddMember',
+                $this->container->get('Orga_Work_TaskExecutor_AddMemberExecutor')
+            );
+            $worker->registerTaskExecutor(
+                'Orga_Work_Task_SetGranularityCellsGenerateDWCubes',
+                $this->container->get('Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor')
+            );
+
+            return $worker;
+        });
     }
 
     /**

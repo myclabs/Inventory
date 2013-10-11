@@ -1,15 +1,15 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Core
- */
+
+namespace Core\Work;
+
+use Core_Locale;
 
 /**
  * Représente le contexte d'exécution d'une tâche
  *
- * @package Core
+ * @author matthieu.napoli
  */
-class Core_Work_TaskContext
+class TaskContext
 {
     /**
      * @var string
