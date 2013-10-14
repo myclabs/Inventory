@@ -26,9 +26,9 @@ class Unit_ConsultController extends Core_Controller
      */
     public function physicalquantitiesAction()
     {
-        $this->view->listStandardUnits = array();
-        /* @var $standardUnit StandardUnit */
+        $this->view->listStandardUnits = [];
         foreach (StandardUnit::loadList() as $standardUnit) {
+            /* @var $standardUnit StandardUnit */
             $idStandardUnit = $standardUnit->getKey();
             $this->view->listStandardUnits[$idStandardUnit['id']] = $standardUnit->getName();
         }
