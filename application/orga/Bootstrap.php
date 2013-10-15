@@ -13,9 +13,9 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
     {
         if (APPLICATION_ENV != 'testsunitaires') {
             /** @var Core_EventDispatcher $eventDispatcher */
-            $eventDispatcher = $this->container->get('Core_EventDispatcher');
+            $eventDispatcher = $this->container->get(Core_EventDispatcher::class);
 
-            $eventDispatcher->addListener('Orga_Model_GranularityReport', 'DW_Model_Report');
+            $eventDispatcher->addListener(Orga_Model_GranularityReport::class, DW_Model_Report::class);
         }
     }
 
@@ -25,12 +25,12 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
     protected function _initOrgaACLResourceTreeTraverser()
     {
         /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
-        $resourceTreeTraverser = $this->container->get('Orga_Service_ACLManager');
+        $resourceTreeTraverser = $this->container->get(Orga_Service_ACLManager::class);
         /** @var $aclService User_Service_ACL */
-        $aclService = $this->container->get('User_Service_ACL');
+        $aclService = $this->container->get(User_Service_ACL::class);
 
-        $aclService->setResourceTreeTraverser("Orga_Model_Cell", $resourceTreeTraverser);
-        $aclService->setResourceTreeTraverser("DW_Model_Report", $resourceTreeTraverser);
+        $aclService->setResourceTreeTraverser(Orga_Model_Cell::class, $resourceTreeTraverser);
+        $aclService->setResourceTreeTraverser(DW_Model_Report::class, $resourceTreeTraverser);
     }
 
     /**
@@ -50,7 +50,7 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
         ];
 
         if (APPLICATION_ENV != 'testsunitaires') {
-            $aclManager = $this->container->get('Orga_Service_ACLManager');
+            $aclManager = $this->container->get(Orga_Service_ACLManager::class);
 
             $entityManager->getEventManager()->addEventListener($events, $aclManager);
         }

@@ -2,7 +2,8 @@
 /**
  * @package Techno
  */
-use Keyword\Domain\Keyword;
+
+use Keyword\Application\Service\KeywordService;
 
 /**
  * Remplissage de la base de données avec des données de test
@@ -23,7 +24,7 @@ class Techno_Populate extends Core_Script_Action
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+        $this->keywordService = $container->get(KeywordService::class);
     }
 
     /**

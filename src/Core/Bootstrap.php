@@ -2,16 +2,26 @@
 
 use Core\Autoloader;
 use Core\Log\ChromePHPFormatter;
+use Core\Log\ErrorHandler;
 use Core\Log\ExtendedLineFormatter;
+use Core\Log\QueryLogger;
 use Core\Mail\NullTransport;
+use Core\Work\EventListener;
+use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\YamlDriver;
+use Gedmo\Loggable\LoggableListener;
+use Gedmo\Translatable\TranslatableListener;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ChromePHPHandler;
 use Monolog\Handler\FirePHPHandler;
@@ -20,10 +30,14 @@ use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
 use MyCLabs\Work\Dispatcher\RabbitMQWorkDispatcher;
 use MyCLabs\Work\Dispatcher\SimpleWorkDispatcher;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use MyCLabs\Work\TaskExecutor\ServiceCallExecutor;
 use MyCLabs\Work\Worker\RabbitMQWorker;
 use MyCLabs\Work\Worker\SimpleWorker;
+use MyCLabs\Work\Worker\Worker;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
+use Psr\Log\LoggerInterface;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
@@ -32,7 +46,6 @@ use PhpAmqpLib\Connection\AMQPConnection;
  */
 abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
-
     /**
      * @var Container
      */
@@ -48,7 +61,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             parent::_bootstrap($resource);
         } else {
             // Lance les méthodes prioritaires
-            $resources = array(
+            $resources = [
                 'Autoloader',
                 'UTF8',
                 'Container',
@@ -61,7 +74,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'Doctrine',
                 'DefaultEntityManager',
                 'Work',
-            );
+            ];
             parent::_bootstrap($resources);
             // Lance toutes les autres méthodes (moins prioritaires)
             parent::_bootstrap();
@@ -110,7 +123,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->container = $builder->build();
 
         if (isset($cache)) {
-            $this->container->set('Doctrine\Common\Cache\Cache', $cache);
+            $this->container->set(Cache::class, $cache);
         }
 
         Zend_Registry::set('configuration', $configuration);
@@ -165,7 +178,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         /** @noinspection PhpParamsInspection */
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
-        $this->container->set('Psr\Log\LoggerInterface', $logger);
+        $this->container->set(LoggerInterface::class, $logger);
 
         // Log des requetes
         if ($configuration->log->queries) {
@@ -183,11 +196,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initErrorHandler()
     {
         if (APPLICATION_ENV != 'testsunitaires') {
-            $errorHandler = $this->container->get('Core\Log\ErrorHandler');
+            $errorHandler = $this->container->get(ErrorHandler::class);
             // Fonctions de gestion des erreurs
-            set_error_handler(array($errorHandler, 'myErrorHandler'));
-            set_exception_handler(array($errorHandler, 'myExceptionHandler'));
-            register_shutdown_function(array($errorHandler, 'myShutdownFunction'));
+            set_error_handler([$errorHandler, 'myErrorHandler']);
+            set_exception_handler([$errorHandler, 'myExceptionHandler']);
+            register_shutdown_function([$errorHandler, 'myShutdownFunction']);
         }
     }
 
@@ -204,7 +217,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         switch (APPLICATION_ENV) {
             case 'test':
             case 'production':
-                $cache = $this->container->get('Doctrine\Common\Cache\Cache');
+                $cache = $this->container->get(Cache::class);
                 $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_NEVER;
                 break;
             default:
@@ -216,22 +229,14 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Choix du driver utilisé par le schema.
         //  Utilisation d'un driver YAML.
         //  Les fichiers de mapping porteront l'extension '.yml'.
-        $doctrineYAMLDriver = new Doctrine\ORM\Mapping\Driver\YamlDriver(
-            array(
-                 APPLICATION_PATH . '/models/mappers'
-            ),
-            '.yml'
-        );
+        $doctrineYAMLDriver = new YamlDriver([APPLICATION_PATH . '/models/mappers'], '.yml');
 
         // Annotations pour les extensions Doctrine
         $driverChain = new \Doctrine\ORM\Mapping\Driver\DriverChain();
         $driverChain->setDefaultDriver($doctrineYAMLDriver);
         // Juste pour enregistrer les annotations doctrine dans le registry
         $doctrineConfig->newDefaultAnnotationDriver();
-        $cachedAnnotationReader = new Doctrine\Common\Annotations\CachedReader(
-            new Doctrine\Common\Annotations\AnnotationReader(),
-            $cache
-        );
+        $cachedAnnotationReader = new CachedReader(new AnnotationReader(), $cache);
         Gedmo\DoctrineExtensions::registerMappingIntoDriverChainORM(
             $driverChain, // our metadata driver chain, to hook into
             $cachedAnnotationReader // our cached annotation reader
@@ -255,7 +260,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Log des requêtes
         if ($configuration->log->queries) {
-            $doctrineConfig->setSQLLogger($this->container->get('Core\Log\QueryLogger'));
+            $doctrineConfig->setSQLLogger($this->container->get(QueryLogger::class));
         }
 
         // Enregistrement de la configuration Doctrine dans le Registry.
@@ -272,9 +277,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Enregistrement de l'entityManager par défault dans le Registry.
         // Les prochains devront être ajouté au tableau.
-        $entityManagers = array('default' => $entityManager);
-        Zend_Registry::set('EntityManagers', $entityManagers);
-        $this->container->set('Doctrine\ORM\EntityManager', $entityManager);
+        Zend_Registry::set('EntityManagers', ['default' => $entityManager]);
+        $this->container->set(EntityManager::class, $entityManager);
     }
 
     /**
@@ -283,7 +287,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initLoggableExtension()
     {
         $front = Zend_Controller_Front::getInstance();
-        $front->registerPlugin($this->container->get('Inventory_Plugin_LoggableExtensionConfigurator'));
+        $front->registerPlugin($this->container->get(Inventory_Plugin_LoggableExtensionConfigurator::class));
     }
 
     /**
@@ -300,17 +304,17 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $connectionSettings = Zend_Registry::get('configuration')->doctrine->default->connection;
         }
 
-        $connectionArray = array(
+        $connectionArray = [
             'driver'        => $connectionSettings->driver,
             'user'          => $connectionSettings->user,
             'password'      => $connectionSettings->password,
             'dbname'        => $connectionSettings->dbname,
             'host'          => $connectionSettings->host,
             'port'          => $connectionSettings->port,
-            'driverOptions' => array(
+            'driverOptions' => [
                 1002 => 'SET NAMES utf8'
-            ),
-        );
+            ],
+        ];
 
         /* @var $doctrineConfig Doctrine\ORM\Configuration */
         $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
@@ -319,19 +323,19 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $em = Core_ORM_EntityManager::create($connectionArray, $doctrineConfig);
 
         // Extension de traduction de champs
-        $translatableListener = new Gedmo\Translatable\TranslatableListener();
+        $translatableListener = new TranslatableListener();
         $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
         $translatableListener->setDefaultLocale(Zend_Registry::get('configuration')->translation->defaultLocale);
         $translatableListener->setPersistDefaultLocaleTranslation(true);
         $translatableListener->setTranslationFallback(true);
         $em->getEventManager()->addEventSubscriber($translatableListener);
         Zend_Registry::set('doctrineTranslate', $translatableListener);
-        $this->container->set('Gedmo\Translatable\TranslatableListener', $translatableListener);
+        $this->container->set(TranslatableListener::class, $translatableListener);
 
         // Extension de versionnement de champs
-        $loggableListener = new Gedmo\Loggable\LoggableListener();
+        $loggableListener = new LoggableListener();
         $em->getEventManager()->addEventSubscriber($loggableListener);
-        $this->container->set('Gedmo\Loggable\LoggableListener', $loggableListener);
+        $this->container->set(LoggableListener::class, $loggableListener);
 
         return $em;
     }
@@ -356,47 +360,47 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Connexion RabbitMQ
         $this->container->set('rabbitmq.queue', $this->container->get('application.name') . '-work');
-        $this->container->set('PhpAmqpLib\Channel\AMQPChannel', function(Container $c) {
+        $this->container->set(AMQPChannel::class, function(Container $c) {
             $queue = $c->get('rabbitmq.queue');
             /** @var AMQPConnection $connection */
-            $connection = $c->get('PhpAmqpLib\Connection\AMQPConnection');
+            $connection = $c->get(AMQPConnection::class);
             $channel = $connection->channel();
             // Queue durable (= sauvegardée sur disque)
             $channel->queue_declare($queue, false, true);
             return $channel;
         });
 
-        $this->container->set('MyCLabs\Work\Dispatcher\WorkDispatcher', function(Container $c) use ($useRabbitMQ) {
+        $this->container->set(WorkDispatcher::class, function(Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
-                $channel = $c->get('PhpAmqpLib\Channel\AMQPChannel');
+                $channel = $c->get(AMQPChannel::class);
                 $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
-                $workDispatcher->addEventListener($this->container->get('Core\Work\EventListener'));
+                $workDispatcher->addEventListener($this->container->get(EventListener::class));
                 return $workDispatcher;
             }
-            return $c->get('MyCLabs\Work\Dispatcher\SimpleWorkDispatcher');
+            return $c->get(SimpleWorkDispatcher::class);
         });
 
-        $this->container->set('MyCLabs\Work\Worker\Worker', function(Container $c) use ($useRabbitMQ) {
+        $this->container->set(Worker::class, function(Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
-                $channel = $c->get('PhpAmqpLib\Channel\AMQPChannel');
+                $channel = $c->get(AMQPChannel::class);
                 $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));
-                $worker->addEventListener($this->container->get('Core\Work\EventListener'));
+                $worker->addEventListener($this->container->get(EventListener::class));
             } else {
-                $worker = $c->get('MyCLabs\Work\Worker\SimpleWorker');
+                $worker = $c->get(SimpleWorker::class);
             }
 
-            $worker->registerTaskExecutor('Core\Work\ServiceCall\ServiceCallTask', new ServiceCallExecutor($c));
+            $worker->registerTaskExecutor(ServiceCallTask::class, new ServiceCallExecutor($c));
             $worker->registerTaskExecutor(
-                'Orga_Work_Task_AddGranularity',
-                $this->container->get('Orga_Work_TaskExecutor_AddGranularityExecutor')
+                Orga_Work_Task_AddGranularity::class,
+                $this->container->get(Orga_Work_TaskExecutor_AddGranularityExecutor::class)
             );
             $worker->registerTaskExecutor(
-                'Orga_Work_Task_AddMember',
-                $this->container->get('Orga_Work_TaskExecutor_AddMemberExecutor')
+                Orga_Work_Task_AddMember::class,
+                $this->container->get(Orga_Work_TaskExecutor_AddMemberExecutor::class)
             );
             $worker->registerTaskExecutor(
-                'Orga_Work_Task_SetGranularityCellsGenerateDWCubes',
-                $this->container->get('Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor')
+                Orga_Work_Task_SetGranularityCellsGenerateDWCubes::class,
+                $this->container->get(Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor::class)
             );
 
             return $worker;

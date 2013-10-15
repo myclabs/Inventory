@@ -3,9 +3,12 @@
  * @package Keyword
  */
 
+use Keyword\Architecture\Repository\DoctrineAssociationRepository;
 use Keyword\Domain\Association;
 use Keyword\Domain\Keyword;
+use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\Predicate;
+use Keyword\Domain\PredicateRepository;
 
 /**
  * Remplissage de la base de données avec des données de test
@@ -14,17 +17,17 @@ use Keyword\Domain\Predicate;
 class Keyword_Populate extends Core_Script_Action
 {
     /**
-     * @var \Keyword\Domain\KeywordRepository
+     * @var KeywordRepository
      */
     protected $keywordRepository;
 
     /**
-     * @var \Keyword\Domain\PredicateRepository
+     * @var PredicateRepository
      */
     protected $predicateRepository;
 
     /**
-     * @var \Keyword\Domain\AssociationRepository
+     * @var DoctrineAssociationRepository
      */
     protected $associationRepository;
 
@@ -34,9 +37,9 @@ class Keyword_Populate extends Core_Script_Action
         $entityManagers = Zend_Registry::get('EntityManagers');
         /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = $entityManagers['default'];
-        $this->keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        $this->predicateRepository = $entityManager->getRepository('\Keyword\Domain\Predicate');
-        $this->associationRepository = $entityManager->getRepository('\Keyword\Domain\Association');
+        $this->keywordRepository = $entityManager->getRepository(Keyword::class);
+        $this->predicateRepository = $entityManager->getRepository(Predicate::class);
+        $this->associationRepository = $entityManager->getRepository(Association::class);
     }
 
     /**
