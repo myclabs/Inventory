@@ -1,7 +1,9 @@
 <?php
+
 use Keyword\Domain\Keyword;
 use Techno\Domain\Family\Family;
 use Techno\Domain\Meaning;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * Remplissage de la base de données avec des données de test
@@ -9,7 +11,7 @@ use Techno\Domain\Meaning;
 class AF_Populate extends Core_Script_Action
 {
     /**
-     * @var \Keyword\Application\Service\KeywordService
+     * @var KeywordService
      */
     protected $keywordService;
 
@@ -18,7 +20,7 @@ class AF_Populate extends Core_Script_Action
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+        $this->keywordService = $container->get(KeywordService::class);
     }
 
     /**
@@ -585,16 +587,16 @@ class AF_Populate extends Core_Script_Action
     protected function createAlgoConditionElementary(AF_Model_AF $aF, AF_Model_Component $component, $ref)
     {
         switch (get_class($component)) {
-            case 'AF_Model_Component_Numeric':
+            case AF_Model_Component_Numeric::class:
                 $conditionElementary = new Algo_Model_Condition_Elementary_Numeric();
                 break;
-            case 'AF_Model_Component_Checkbox':
+            case AF_Model_Component_Checkbox::class:
                 $conditionElementary = new Algo_Model_Condition_Elementary_Boolean();
                 break;
-            case 'AF_Model_Component_Select_Single':
+            case AF_Model_Component_Select_Single::class:
                 $conditionElementary = new Algo_Model_Condition_Elementary_Select_Single();
                 break;
-            case 'AF_Model_Component_Select_Multi':
+            case AF_Model_Component_Select_Multi::class:
                 $conditionElementary = new Algo_Model_Condition_Elementary_Select_Multi();
                 break;
             default:
@@ -617,16 +619,16 @@ class AF_Populate extends Core_Script_Action
     protected function createConditionElementary(AF_Model_AF $aF, $ref, AF_Model_Component_Field $component)
     {
         switch (get_class($component)) {
-            case 'AF_Model_Component_Numeric':
+            case AF_Model_Component_Numeric::class:
                 $condition = new AF_Model_Condition_Elementary_Numeric();
                 break;
-            case 'AF_Model_Component_Checkbox':
+            case AF_Model_Component_Checkbox::class:
                 $condition = new AF_Model_Condition_Elementary_Checkbox();
                 break;
-            case 'AF_Model_Component_Select_Single':
+            case AF_Model_Component_Select_Single::class:
                 $condition = new AF_Model_Condition_Elementary_Select_Single();
                 break;
-            case 'AF_Model_Component_Select_Multi':
+            case AF_Model_Component_Select_Multi::class:
                 $condition = new AF_Model_Condition_Elementary_Select_Multi();
                 break;
             default:
@@ -690,15 +692,15 @@ class AF_Populate extends Core_Script_Action
     {
         if ($type == AF_Model_Action::TYPE_SETVALUE) {
             switch (get_class($component)) {
-                case 'AF_Model_Component_Numeric':
+                case AF_Model_Component_Numeric::class:
                     $action = new AF_Model_Action_SetValue_Numeric();
                     $action->setValue($value);
                     break;
-                case 'AF_Model_Component_Checkbox':
+                case AF_Model_Component_Checkbox::class:
                     $action = new AF_Model_Action_SetValue_Checkbox();
                     $action->setChecked($value);
                     break;
-                case 'AF_Model_Component_Select_Single':
+                case AF_Model_Component_Select_Single::class:
                     $action = new AF_Model_Action_SetValue_Select_Single();
                     $action->setOption($value);
                     break;

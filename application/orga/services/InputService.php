@@ -1,5 +1,7 @@
 <?php
 
+use Core\Work\ServiceCall\ServiceCallTask;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -20,19 +22,19 @@ class Orga_Service_InputService
     private $eventDispatcher;
 
     /**
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
 
     /**
      * @param AF_Service_InputService $afInputService
      * @param EventDispatcher         $eventDispatcher
-     * @param Core_Work_Dispatcher    $workDispatcher
+     * @param WorkDispatcher          $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,
         EventDispatcher $eventDispatcher,
-        Core_Work_Dispatcher $workDispatcher
+        WorkDispatcher $workDispatcher
     ) {
         $this->afInputService = $afInputService;
         $this->eventDispatcher = $eventDispatcher;
@@ -90,11 +92,11 @@ class Orga_Service_InputService
 
         // Regénère DW
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'clearDWResultsFromCell', [$cell])
+            new ServiceCallTask('Orga_Service_ETLData', 'clearDWResultsFromCell', [$cell])
         );
         if ($inputSet->isInputComplete()) {
             $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
+                new ServiceCallTask('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
             );
         }
     }

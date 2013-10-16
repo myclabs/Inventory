@@ -8,7 +8,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Classe controleur de cell.
@@ -33,9 +35,15 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * @Inject
@@ -79,7 +87,6 @@ class Orga_CellController extends Core_Controller
         $this->view->tabView = new UI_Tab_View('container');
         $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$organization->getLabel().'</small>';
         $this->view->isParentCellReachable = array();
-        $this->view->displayNavigationPanel = false;
         foreach ($cell->getParentCells() as $parentCell) {
             $isUserAllowedToViewParentCell = $this->aclService->isAllowed(
                 $connectedUser,
@@ -88,16 +95,6 @@ class Orga_CellController extends Core_Controller
             );
             if (!$isUserAllowedToViewParentCell) {
                 $this->view->isParentCellReachable[$parentCell->getMembersHashKey()] = false;
-            } else {
-                $this->view->displayNavigationPanel = true;
-            }
-        }
-        if ($this->view->displayNavigationPanel === false) {
-            foreach ($organization->getGranularities() as $organizationGranularity) {
-                if ($organizationGranularity->isNarrowerThan($granularity) && $organizationGranularity->isNavigable()) {
-                    $this->view->displayNavigationPanel = true;
-                    break;
-                }
             }
         }
 
@@ -276,16 +273,6 @@ class Orga_CellController extends Core_Controller
         $this->view->tabView->addTab($historyTab);
 
 
-        // TAB COMMENTAIRES
-        $commentsTab = new UI_Tab('comments');
-        if ($tab === 'comments') {
-            $commentsTab->active = true;
-        }
-        $commentsTab->label =  __('Social', 'comment', 'comments');
-        $commentsTab->dataSource = 'orga/tab_celldetails/comments?idCell='.$idCell;
-        $this->view->tabView->addTab($commentsTab);
-
-
         // TAB ADMINISTRATION
         if ($isUserAllowedToEditOrganization) {
             $administrationTab = new UI_Tab('administration');
@@ -378,6 +365,12 @@ class Orga_CellController extends Core_Controller
             $columnRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
             $datagridConfiguration->datagrid->addCol($columnRelevant);
 
+            $columnAllParentsRelevant = new UI_Datagrid_Col_Bool('allParentsRelevant');
+            $columnAllParentsRelevant->label = __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader');
+            $columnAllParentsRelevant->editable = false;
+            $columnAllParentsRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'allParentCellsRelevantProperty');
+            $columnAllParentsRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'notAllParentCellsRelevantProperty');
+            $datagridConfiguration->datagrid->addCol($columnAllParentsRelevant);
             $listDatagridConfiguration[$narrowerGranularity->getLabel()] = $datagridConfiguration;
         }
 
@@ -523,20 +516,24 @@ class Orga_CellController extends Core_Controller
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
-                    'Orga_Service_ETLStructure',
-                    'resetCellAndChildrenCalculationsAndDWCubes',
-                    [$cell],
-                    __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function() {
+            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'outputDataRebuildConfirmationMessage')]);
+        };
+        $timeout = function() {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
+        };
+        $error = function() {
             throw new Core_Exception_User('DW', 'rebuild', 'outputDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetCellAndChildrenCalculationsAndDWCubes',
+            [$cell],
+            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**

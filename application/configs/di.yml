@@ -22,3 +22,14 @@ Core\Work\Notification\EmailTaskNotifier:
   constructor:
     userService: User_Service_User
     applicationName: email.noreply.name
+
+# Délai d'attente pour les taches de fond (attend 5 secondes)
+work.waitDelay: 5
+
+# Connexion RabbitMQ
+PhpAmqpLib\Connection\AMQPConnection:
+  constructor:
+    host: rabbitmq.host
+    port: rabbitmq.port
+    user: rabbitmq.user
+    password: rabbitmq.password

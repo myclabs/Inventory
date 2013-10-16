@@ -24,7 +24,7 @@ class User_PopulateUser extends Core_Script_Action
         $entityManager = $entityManagers['default'];
 
         /** @var $userService User_Service_User */
-        $userService = $container->get('User_Service_User');
+        $userService = $container->get(User_Service_User::class);
 
         // Charge les roles
         $roleAdmin = User_Model_Role::loadByRef('sysadmin');

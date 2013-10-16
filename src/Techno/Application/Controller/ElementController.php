@@ -40,7 +40,7 @@ class Techno_ElementController extends Core_Controller
         // Validation du formulaire
         try {
             $digitalValue = $locale->readNumber($formData->getValue('digitalValue'));
-            if (empty($digitalValue) && ($digitalValue!== 0)) {
+            if (is_null($digitalValue)) {
                 $this->addFormError('digitalValue', __('UI', 'formValidation', 'emptyRequiredField'));
             }
         } catch (Core_Exception_InvalidArgument $e) {

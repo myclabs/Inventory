@@ -1,14 +1,18 @@
 <?php
 
+namespace Core\Work;
+
+use Core\Work\TaskContext;
+
 /**
  * Représente une tâche abstraite
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
-abstract class Core_Work_Task
+trait BaseTaskTrait
 {
     /**
-     * @var Core_Work_TaskContext|null
+     * @var TaskContext|null
      */
     private $context;
 
@@ -19,7 +23,7 @@ abstract class Core_Work_Task
     private $taskLabel;
 
     /**
-     * @param Core_Work_TaskContext|null $context
+     * @param TaskContext|null $context
      */
     public function setContext($context)
     {
@@ -27,7 +31,7 @@ abstract class Core_Work_Task
     }
 
     /**
-     * @return Core_Work_TaskContext|null
+     * @return TaskContext|null
      */
     public function getContext()
     {
@@ -50,5 +54,13 @@ abstract class Core_Work_Task
     public function setTaskLabel($taskLabel)
     {
         $this->taskLabel = $taskLabel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return get_class();
     }
 }

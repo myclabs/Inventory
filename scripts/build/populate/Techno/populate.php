@@ -1,7 +1,6 @@
 <?php
-/**
- * @package Techno
- */
+
+use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\Keyword;
 use Techno\Domain\Element\CoeffElement;
 use Techno\Domain\Element\ProcessElement;
@@ -32,7 +31,7 @@ class Techno_Populate extends Core_Script_Action
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+        $this->keywordService = $container->get(KeywordService::class);
     }
 
     /**

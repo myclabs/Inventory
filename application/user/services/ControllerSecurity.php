@@ -1,9 +1,9 @@
 <?php
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Reader;
 use Core\Annotation\Secure;
+use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -84,7 +84,8 @@ class User_Service_ControllerSecurity
     {
         if ($this->annotationReader == null) {
             AnnotationRegistry::registerFile(PACKAGE_PATH . '/src/Core/Annotation/Secure.php');
-            $this->annotationReader = new AnnotationReader();
+            $this->annotationReader = new SimpleAnnotationReader();
+            $this->annotationReader->addNamespace('Core\Annotation');
         }
         return $this->annotationReader;
     }

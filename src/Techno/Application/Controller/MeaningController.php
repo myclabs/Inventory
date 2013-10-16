@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use DI\Annotation\Inject;
 use Keyword\Application\Service\KeywordService;
 
 /**

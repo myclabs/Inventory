@@ -1,4 +1,6 @@
 <?php
+use Unit\UnitAPI;
+
 /**
  * @package Classif
  */
@@ -106,9 +108,9 @@ class Classif_Populate extends Core_Script_Action
         $indicator = new Classif_Model_Indicator();
         $indicator->setRef($ref);
         $indicator->setLabel($label);
-        $indicator->setUnit(new \Unit\UnitAPI($unitRef));
+        $indicator->setUnit(new UnitAPI($unitRef));
         if ($ratioUnitRef !== null) {
-            $indicator->setRatioUnit(new \Unit\UnitAPI($ratioUnitRef));
+            $indicator->setRatioUnit(new UnitAPI($ratioUnitRef));
         } else {
             $indicator->setRatioUnit($indicator->getUnit());
         }

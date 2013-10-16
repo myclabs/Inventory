@@ -73,16 +73,16 @@ class Inventory_PopulateTest extends Core_Script_Populate
             Doctrine\ORM\Events::onFlush,
             Doctrine\ORM\Events::postFlush,
         ];
-        $entityManager->getEventManager()->addEventListener($events, $container->get('Orga_Service_ACLManager'));
+        $entityManager->getEventManager()->addEventListener($events, $container->get(Orga_Service_ACLManager::class));
 
         // Ajout de treeTraverser.
         /** @var $aclService User_Service_ACL */
-        $aclService = $container->get('User_Service_ACL');
-        $aclService->setResourceTreeTraverser("Orga_Model_Cell", $container->get('Orga_Service_ACLManager'));
+        $aclService = $container->get(User_Service_ACL::class);
+        $aclService->setResourceTreeTraverser(Orga_Model_Cell::class, $container->get(Orga_Service_ACLManager::class));
 
         // Désactivation du filtre des ACL.
         /** @var $aclFilterService User_Service_ACLFilter */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        $aclFilterService = $container->get(User_Service_ACLFilter::class);
         $aclFilterService->enabled = false;
 
         // Filtre des ACL
@@ -104,7 +104,7 @@ class Inventory_PopulateTest extends Core_Script_Populate
 
         // Résactivation du filtre des ACL.
         /** @var $aclFilterService User_Service_ACLFilter */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        $aclFilterService = $container->get(User_Service_ACLFilter::class);
         $aclFilterService->enabled = true;
         echo "\tRégénération des ACL…";
         $aclFilterService->generate();

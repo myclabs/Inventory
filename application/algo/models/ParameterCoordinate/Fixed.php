@@ -1,18 +1,14 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  cyril.perraud
- * @package Algo
- */
+
 use Keyword\Application\Service\KeywordDTO;
 use Techno\Domain\Family\Member;
 
 /**
- * @package Algo
+ * @author matthieu.napoli
+ * @author cyril.perraud
  */
 class Algo_Model_ParameterCoordinate_Fixed extends Algo_Model_ParameterCoordinate
 {
-
     /**
      * @var string|null
      */
@@ -24,7 +20,7 @@ class Algo_Model_ParameterCoordinate_Fixed extends Algo_Model_ParameterCoordinat
      */
     public function getMemberKeyword(Algo_Model_InputSet $inputSet = null)
     {
-        if (!$this->refMemberKeyword) {
+        if (! $this->refMemberKeyword) {
             throw new Core_Exception_UndefinedAttribute("The member of the parameter coordinate is not defined");
         }
         return new KeywordDTO($this->refMemberKeyword);
@@ -78,5 +74,4 @@ class Algo_Model_ParameterCoordinate_Fixed extends Algo_Model_ParameterCoordinat
 
         return $errors;
     }
-
 }

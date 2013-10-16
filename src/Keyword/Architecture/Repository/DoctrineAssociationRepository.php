@@ -87,7 +87,7 @@ class DoctrineAssociationRepository extends DoctrineEntityRepository
      */
     public function getBySubjectPredicateObject(Keyword $subjectKeyword, Predicate $predicate, Keyword $objectKeyword)
     {
-        return $this->getOneBy(
+        return $this->getBy(
             ['subject' => $subjectKeyword->getId(), 'predicate' => $predicate->getId(), 'object' => $objectKeyword->getId()]
         );
     }

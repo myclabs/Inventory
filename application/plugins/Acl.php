@@ -48,7 +48,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      */
     public function editOrganizationsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
-        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
+        $organizationResource = User_Model_Resource_Entity::loadByEntityName(Orga_Model_Organization::class);
 
         $isIdentityAbleToCreateOrganizations = $this->aclService->isAllowed(
             $identity,
@@ -81,7 +81,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         return $this->aclService->isAllowed(
             $identity,
             User_Model_Action_Default::CREATE(),
-            User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization')
+            User_Model_Resource_Entity::loadByEntityName(Orga_Model_Organization::class)
         );
     }
 
