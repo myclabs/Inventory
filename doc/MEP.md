@@ -3,32 +3,16 @@
 
 ## 2.7
 
-- Désinstaller Gearman (cf. la procédure d'installation sur le wiki)
+- Mettre hors ligne la prod actuelle (sauf stations de montagne et spiritueux)
 
-- Installer RabbitMQ
+- Installer les projets sur le nouveau serveur
 
-```shell
-$ sudo su
-$ echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
-$ wget http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
-$ apt-key add rabbitmq-signing-key-public.asc
-$ apt-get update
-$ apt-get install -y rabbitmq-server
-```
+- Copier les BDD
 
-- Mettre à jour les confs supervisor (`/etc/supervisor/conf.d/*.conf`) pour ajouter :
-
-```
-autorestart=true
-```
-
-puis exécuter :
-
-```shell
-$ sudo supervisorctl reload
-```
-
-- Déployer l'application sans build update
+- Copier les fichiers
+  - `data/documents`
+  - `data/specificExports`
+  - `public/temp` ?
 
 - Exécuter le script de migration SQL
 
@@ -36,7 +20,9 @@ $ sudo supervisorctl reload
 scripts/migration/2.7/migrate.sql
 ```
 
-- Effectuer un build update
+- Déployer la version avec build update
+
+- Configurer les noms de domaine pour pointer vers le nouveau serveur
 
 
 ## 2.5
