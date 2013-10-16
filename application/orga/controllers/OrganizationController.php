@@ -182,16 +182,25 @@ class Orga_OrganizationController extends Core_Controller
         $user = $this->_helper->auth();
         $label = $this->getParam('label');
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_OrganizationService',
-                'createOrganization',
-                [$user, $label],
-                __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
-            )
-        );
+        $success = function() {
+            UI_Message::addMessageStatic(__('UI', 'message', 'added'));
+        };
+        $timeout = function() {
+            UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'));
+        };
+        $error = function() {
+            throw new Core_Exception("Error in the background task");
+        };
 
-        UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'));
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'createOrganization',
+            [$user, $label],
+            __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->redirect('orga/organization/manage');
     }
 
@@ -202,15 +211,24 @@ class Orga_OrganizationController extends Core_Controller
     {
         $organization = Orga_Model_Organization::load($this->_getParam('idOrganization'));
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_OrganizationService',
-                'deleteOrganization',
-                [$organization]
-            )
-        );
+        $success = function() {
+            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'));
+        };
+        $timeout = function() {
+            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'));
+        };
+        $error = function() {
+            throw new Core_Exception("Error in the background task");
+        };
 
-        UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'));
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'deleteOrganization',
+            [$organization]
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->redirect('orga/organization/manage');
     }
 
