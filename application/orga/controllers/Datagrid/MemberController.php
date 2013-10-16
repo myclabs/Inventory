@@ -8,6 +8,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Enter description here ...
@@ -18,9 +19,15 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -132,16 +139,25 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 );
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                $this->workDispatcher->runBackground(
-                    new Orga_Work_Task_AddMember(
-                        $axis,
-                        $ref,
-                        $label,
-                        $broaderMembers,
-                        __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
-                    )
+                $success = function() {
+                    $this->message = __('UI', 'message', 'added');
+                };
+                $timeout = function() {
+                    $this->message = __('UI', 'message', 'addedLater');
+                };
+                $error = function() {
+                    throw new Core_Exception("Error in the background task");
+                };
+
+                // Lance la tache en arrière plan
+                $task = new Orga_Work_Task_AddMember(
+                    $axis,
+                    $ref,
+                    $label,
+                    $broaderMembers,
+                    __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
                 );
-                $this->message = __('UI', 'message', 'addedLater');
+                $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
             }
         }
 

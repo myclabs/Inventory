@@ -26,8 +26,8 @@ class User_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initUserTypeMapping()
     {
-        Type::addType(LocaleMapping::TYPE_NAME, 'Core\TypeMapping\LocaleMapping');
-        Type::addType(ActionType::TYPE_NAME, 'User\ACL\TypeMapping\ActionType');
+        Type::addType(LocaleMapping::TYPE_NAME, LocaleMapping::class);
+        Type::addType(ActionType::TYPE_NAME, ActionType::class);
     }
 
     /**
@@ -36,12 +36,12 @@ class User_Bootstrap extends Core_Package_Bootstrap
     protected function _initACLUserResourceTreeTraverser()
     {
         /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
-        $usersResourceTreeTraverser = $this->container->get('User_Service_ACL_UsersResourceTreeTraverser');
+        $usersResourceTreeTraverser = $this->container->get(User_Service_ACL_UsersResourceTreeTraverser::class);
 
         /** @var $aclService User_Service_ACL */
-        $aclService = $this->container->get('User_Service_ACL');
-        $aclService->setResourceTreeTraverser("User_Model_User", $usersResourceTreeTraverser);
-        $aclService->setResourceTreeTraverser("User_Model_Role", $usersResourceTreeTraverser);
+        $aclService = $this->container->get(User_Service_ACL::class);
+        $aclService->setResourceTreeTraverser(User_Model_User::class, $usersResourceTreeTraverser);
+        $aclService->setResourceTreeTraverser(User_Model_Role::class, $usersResourceTreeTraverser);
     }
 
     /**
@@ -61,7 +61,7 @@ class User_Bootstrap extends Core_Package_Bootstrap
         ];
 
         /** @var EntityManagerListener $aclEntityManagerListener */
-        $aclEntityManagerListener = $this->container->get('User\ACL\EntityManagerListener');
+        $aclEntityManagerListener = $this->container->get(EntityManagerListener::class);
 
         $entityManager->getEventManager()->addEventListener($events, $aclEntityManagerListener);
     }

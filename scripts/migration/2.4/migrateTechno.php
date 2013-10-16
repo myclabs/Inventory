@@ -1,18 +1,26 @@
 <?php
 // Entity Manager
+use Techno\Domain\Element\CoeffElement;
+use Techno\Domain\Element\ProcessElement;
+use Techno\Domain\Family\CoeffFamily;
+use Techno\Domain\Family\Dimension;
+use Techno\Domain\Family\Member;
+use Techno\Domain\Family\ProcessFamily;
+use Techno\Domain\Tag;
+
 $entityManagers = Zend_Registry::get('EntityManagers');
 /** @var $entityManager \Doctrine\ORM\EntityManager */
 $entityManager = $entityManagers['default'];
 
 $entityManager->beginTransaction();
 
-/** @var Techno_Model_Family_Process[] $families */
-$families = Techno_Model_Family_Process::loadList();
+/** @var ProcessFamily[] $families */
+$families = ProcessFamily::loadList();
 
 foreach ($families as $processFamily) {
     echo "Creating " . $processFamily->getRef() . PHP_EOL;
 
-    $coeffFamily = new Techno_Model_Family_Coeff();
+    $coeffFamily = new CoeffFamily();
     $coeffFamily->setRef($processFamily->getRef());
 
     // Renomme l'ancienne famille
@@ -33,7 +41,7 @@ foreach ($families as $processFamily) {
 
     // Tags
     foreach ($processFamily->getTags() as $tag) {
-        $newTag = new Techno_Model_Tag();
+        $newTag = new Tag();
         $newTag->setValue($tag->getValue());
         $newTag->setMeaning($tag->getMeaning());
         $coeffFamily->addTag($newTag);
@@ -41,7 +49,7 @@ foreach ($families as $processFamily) {
 
     // Dimensions
     foreach ($processFamily->getDimensions() as $dimension) {
-        $newDimension = new Techno_Model_Family_Dimension(
+        $newDimension = new Dimension(
             $coeffFamily,
             $dimension->getMeaning(),
             $dimension->getOrientation(),
@@ -49,7 +57,7 @@ foreach ($families as $processFamily) {
         );
         // Members
         foreach ($dimension->getMembers() as $member) {
-            $newMember = new Techno_Model_Family_Member($newDimension, $member->getKeyword());
+            $newMember = new Member($newDimension, $member->getKeyword());
             $newDimension->addMember($newMember);
             $newMember->save();
         }
@@ -60,11 +68,11 @@ foreach ($families as $processFamily) {
     // Elements
     $countElements = 0;
     foreach ($processFamily->getCells() as $cell) {
-        /** @var Techno_Model_Element_Process $chosenElement */
+        /** @var ProcessElement $chosenElement */
         $chosenElement = $cell->getChosenElement();
         if ($chosenElement) {
             $countElements++;
-            $element = new Techno_Model_Element_Coeff();
+            $element = new CoeffElement();
             $element->setValue(clone $chosenElement->getValue());
             $element->setBaseUnit(clone $coeffFamily->getBaseUnit());
             $element->setUnit(clone $coeffFamily->getUnit());

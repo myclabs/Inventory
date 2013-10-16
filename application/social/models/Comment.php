@@ -10,7 +10,6 @@
  */
 class Social_Model_Comment extends Social_Model_Text
 {
-
     /**
      * {@inheritdoc}
      * @param User_Model_User $author Auteur (obligatoire)
@@ -19,5 +18,4 @@ class Social_Model_Comment extends Social_Model_Text
     {
         parent::__construct($author);
     }
-
 }

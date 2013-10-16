@@ -1,23 +1,18 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
+
+use Techno\Domain\Family\Family;
+use Techno\Domain\Component;
 use Unit\UnitAPI;
 
-/**
- * @package Techno
- */
 class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * Test de la documentation
      */
     public function testDocumentation()
     {
-        /** @var $o Techno_Model_Family */
-        $o = $this->getMockForAbstractClass('Techno_Model_Component');
+        /** @var $o Family */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Component');
         $o->setDocumentation("Documentation");
         $this->assertEquals("Documentation", $o->getDocumentation());
     }
@@ -27,8 +22,8 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
      */
     public function testBaseUnit1()
     {
-        /** @var $o Techno_Model_Component */
-        $o = $this->getMockForAbstractClass('Techno_Model_Component');
+        /** @var $o Component */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Component');
         $baseUnit = new UnitAPI('m');
         $o->setBaseUnit($baseUnit);
         $this->assertSame($baseUnit, $o->getBaseUnit());
@@ -39,8 +34,8 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
      */
     public function testBaseUnit2()
     {
-        /** @var $o Techno_Model_Component */
-        $o = $this->getMockForAbstractClass('Techno_Model_Component');
+        /** @var $o Component */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Component');
         $o->getBaseUnit();
     }
 
@@ -49,8 +44,8 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
      */
     public function testUnit1()
     {
-        /** @var $o Techno_Model_Component */
-        $o = $this->getMockForAbstractClass('Techno_Model_Component');
+        /** @var $o Component */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Component');
         $o->setBaseUnit(new UnitAPI('m'));
         $o->setUnit(new UnitAPI('g'));
     }
@@ -60,8 +55,8 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
      */
     public function testUnit2()
     {
-        /** @var $o Techno_Model_Component */
-        $o = $this->getMockForAbstractClass('Techno_Model_Component');
+        /** @var $o Component */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Component');
         $o->setUnit(new UnitAPI('g'));
     }
 
@@ -70,8 +65,8 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
      */
     public function testUnit3()
     {
-        /** @var $o Techno_Model_Component */
-        $o = $this->getMockForAbstractClass('Techno_Model_Component');
+        /** @var $o Component */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Component');
         $o->getUnit();
     }
 
@@ -83,8 +78,8 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
         $tag1 = Techno_Test_TagTest::generateObject();
         $tag2 = Techno_Test_TagTest::generateObject();
 
-        /** @var $o Techno_Model_Component */
-        $o = $this->getMockForAbstractClass('Techno_Model_Component');
+        /** @var $o Component */
+        $o = $this->getMockForAbstractClass('Techno\Domain\Component');
         $this->assertNotNull($o->getTags());
         // Add
         $o->addTag($tag1);
@@ -101,5 +96,4 @@ class Techno_Test_ComponentTest extends PHPUnit_Framework_TestCase
         Techno_Test_TagTest::deleteObject($tag1);
         Techno_Test_TagTest::deleteObject($tag2);
     }
-
 }

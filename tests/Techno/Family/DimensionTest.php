@@ -1,12 +1,12 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Techno
- */
 
-/**
- * @package Techno
- */
+use Doctrine\ORM\UnitOfWork;
+use Keyword\Domain\KeywordRepository;
+use Techno\Domain\Family\Dimension;
+use Techno\Domain\Meaning;
+use Techno\Domain\Tag;
+use Techno\Domain\Component;
+
 class Techno_Test_Family_DimensionTest
 {
     /**
@@ -22,15 +22,14 @@ class Techno_Test_Family_DimensionTest
 
     /**
      * Génere un objet dérivé prêt à l'emploi pour les tests.
-     * @return Techno_Model_Family_Dimension
+     * @return Dimension
      */
     public static function generateObject()
     {
         // Fixtures
         $family = Techno_Test_Family_CoeffTest::generateObject();
         $meaning = Techno_Test_MeaningTest::generateObject();
-        $o = new Techno_Model_Family_Dimension($family, $meaning,
-                                               Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $o = new Dimension($family, $meaning, Dimension::ORIENTATION_HORIZONTAL);
         $o->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
@@ -39,7 +38,7 @@ class Techno_Test_Family_DimensionTest
 
     /**
      * Deletion of an object created with generateObject
-     * @param Techno_Model_Family_Dimension $o
+     * @param Dimension $o
      */
     public static function deleteObject($o)
     {
@@ -50,34 +49,22 @@ class Techno_Test_Family_DimensionTest
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
     }
-
 }
 
-/**
- * @package Techno
- */
-class Techno_Test_Family_DimensionSetUp extends PHPUnit_Framework_TestCase
+class Techno_Test_Family_DimensionSetUp extends Core_Test_TestCase
 {
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
     public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Techno_Model_Component::loadList() as $o) {
+        foreach (Component::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Tag::loadList() as $o) {
+        foreach (Tag::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Meaning::loadList() as $o) {
+        foreach (Meaning::loadList() as $o) {
             $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
@@ -91,113 +78,88 @@ class Techno_Test_Family_DimensionSetUp extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set up
+     * @return Dimension
      */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
-     * @return Techno_Model_Family_Dimension
-     */
-    function testConstruct()
+    public function testConstruct()
     {
         // Fixtures
         $family = Techno_Test_Family_CoeffTest::generateObject();
         $meaning = Techno_Test_MeaningTest::generateObject();
 
-        $o = new Techno_Model_Family_Dimension($family, $meaning,
-                                               Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $o = new Dimension($family, $meaning, Dimension::ORIENTATION_HORIZONTAL);
 
         $this->assertSame($family, $o->getFamily());
         $this->assertSame($meaning, $o->getMeaning());
-        $this->assertEquals(Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL, $o->getOrientation());
+        $this->assertEquals(Dimension::ORIENTATION_HORIZONTAL, $o->getOrientation());
 
         $o->save();
         $this->entityManager->flush();
 
-        $this->assertInstanceOf('Techno_Model_Family', $o->getFamily());
+        $this->assertInstanceOf('Techno\Domain\Family\Family', $o->getFamily());
         $this->assertEquals($family->getRef(), $o->getFamily()->getRef());
-        $this->assertInstanceOf('Techno_Model_Meaning', $o->getMeaning());
+        $this->assertInstanceOf('Techno\Domain\Meaning', $o->getMeaning());
         $this->assertEquals($meaning->getKey(), $o->getMeaning()->getKey());
         return $o;
     }
 
     /**
      * @depends testConstruct
-     * @param Techno_Model_Family_Dimension $o
-     * @return Techno_Model_Family_Dimension
+     * @param Dimension $o
+     * @return Dimension
      */
-    function testLoad($o)
+    public function testLoad($o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Techno_Model_Family_Dimension */
-        $oLoaded = Techno_Model_Family_Dimension::load($o->getKey());
+        /** @var $oLoaded Dimension */
+        $oLoaded = Dimension::load($o->getKey());
 
-        $this->assertInstanceOf('Techno_Model_Family_Dimension', $oLoaded);
+        $this->assertInstanceOf('Techno\Domain\Family\Dimension', $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         // getFamily
-        $this->assertInstanceOf('Techno_Model_Family', $oLoaded->getFamily());
+        $this->assertInstanceOf('Techno\Domain\Family\Family', $oLoaded->getFamily());
         $this->assertEquals($o->getFamily()->getRef(), $oLoaded->getFamily()->getRef());
         // getMeaning
-        $this->assertInstanceOf('Techno_Model_Meaning', $oLoaded->getMeaning());
+        $this->assertInstanceOf('Techno\Domain\Meaning', $oLoaded->getMeaning());
         $this->assertEquals($o->getMeaning()->getKey(), $oLoaded->getMeaning()->getKey());
         return $oLoaded;
     }
 
     /**
      * @depends testLoad
-     * @param Techno_Model_Family_Dimension $o
+     * @param Dimension $o
      */
-    function testDelete($o)
+    public function testDelete($o)
     {
         $o->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
         // Remove from the family to avoid cascade problems
         $o->getFamily()->removeDimension($o);
         // Delete fixtures
         Techno_Test_Family_CoeffTest::deleteObject($o->getFamily());
         Techno_Test_MeaningTest::deleteObject($o->getMeaning());
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
-
 }
 
-/**
- * Test des fonctionnalités de l'objet métier Techno_Model_Family_Dimension
- * @package Techno
- */
-class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
+class Techno_Test_Family_DimensionMetier extends Core_Test_TestCase
 {
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant les tests
-     */
     public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Techno_Model_Family_Dimension::loadList() as $o) {
+        foreach (Dimension::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Component::loadList() as $o) {
+        foreach (Component::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Tag::loadList() as $o) {
+        foreach (Tag::loadList() as $o) {
             $o->delete();
         }
-        foreach (Techno_Model_Meaning::loadList() as $o) {
+        foreach (Meaning::loadList() as $o) {
             $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
@@ -211,18 +173,9 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
      * Teste l'association à sa famille
      */
-    function testBidirectionalFamilyAssociation()
+    public function testBidirectionalFamilyAssociation()
     {
         // Fixtures
         $family = Techno_Test_Family_CoeffTest::generateObject();
@@ -233,8 +186,7 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
         // de l'association BDD même si elle n'était pas faite au niveau PHP)
         $family->getDimensions();
 
-        $o = new Techno_Model_Family_Dimension($family, $meaning,
-                                               Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $o = new Dimension($family, $meaning, Dimension::ORIENTATION_HORIZONTAL);
 
         // Vérifie que l'association a été affectée bidirectionnellement
         $this->assertTrue($family->hasDimension($o));
@@ -246,25 +198,22 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
     /**
      * Teste la persistence en cascade depuis la famille
      */
-    function testCascadeFromFamily()
+    public function testCascadeFromFamily()
     {
         // Fixtures
         $family = Techno_Test_Family_CoeffTest::generateObject();
         $meaning = Techno_Test_MeaningTest::generateObject();
 
-        $o = new Techno_Model_Family_Dimension($family, $meaning,
-                                               Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $o = new Dimension($family, $meaning, Dimension::ORIENTATION_HORIZONTAL);
 
         // Vérification de la cascade de la persistence
         $family->save();
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_MANAGED,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_MANAGED, $this->entityManager->getUnitOfWork()->getEntityState($o));
 
         // Vérification de la cascade de la suppression
         Techno_Test_Family_CoeffTest::deleteObject($family);
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
 
         Techno_Test_MeaningTest::deleteObject($meaning);
     }
@@ -272,7 +221,7 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
     /**
      * Test de la position
      */
-    function testPosition()
+    public function testPosition()
     {
         // Fixtures
         $family = Techno_Test_Family_CoeffTest::generateObject();
@@ -281,17 +230,13 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
         $meaning3 = Techno_Test_MeaningTest::generateObject();
         $meaning4 = Techno_Test_MeaningTest::generateObject();
 
-        $o1 = new Techno_Model_Family_Dimension($family, $meaning1,
-                                                Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $o1 = new Dimension($family, $meaning1, Dimension::ORIENTATION_HORIZONTAL);
         $o1->save();
-        $o2 = new Techno_Model_Family_Dimension($family, $meaning2,
-                                                Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
+        $o2 = new Dimension($family, $meaning2, Dimension::ORIENTATION_HORIZONTAL);
         $o2->save();
-        $o3 = new Techno_Model_Family_Dimension($family, $meaning3,
-                                                Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
+        $o3 = new Dimension($family, $meaning3, Dimension::ORIENTATION_VERTICAL);
         $o3->save();
-        $o4 = new Techno_Model_Family_Dimension($family, $meaning4,
-                                                Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
+        $o4 = new Dimension($family, $meaning4, Dimension::ORIENTATION_VERTICAL);
         $o4->save();
         $this->entityManager->flush();
 
@@ -334,5 +279,4 @@ class Techno_Test_Family_DimensionMetier extends PHPUnit_Framework_TestCase
         Techno_Test_MeaningTest::deleteObject($meaning3);
         Techno_Test_MeaningTest::deleteObject($meaning4);
     }
-
 }

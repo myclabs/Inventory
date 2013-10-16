@@ -5,6 +5,7 @@
  */
 
 use Core\Annotation\Secure;
+use Techno\Domain\Family\Dimension;
 
 /**
  * @package AF
@@ -60,8 +61,8 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            /** @var $dimension Techno_Model_Family_Dimension */
-            $dimension = Techno_Model_Family_Dimension::load($idDimension);
+            /** @var $dimension Dimension */
+            $dimension = Dimension::load($idDimension);
             /** @var $algoKeyword Algo_Model_Selection_TextKey */
             $algoKeyword = Algo_Model_Selection_TextKey::load($idAlgoKeyword);
             $coordinate = new Algo_Model_ParameterCoordinate_Algo();

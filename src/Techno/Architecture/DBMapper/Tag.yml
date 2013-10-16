@@ -1,0 +1,19 @@
+Techno\Domain\Tag:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Techno_Tag
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    value:
+      type: keyword_dto
+
+  manyToOne:
+    meaning:
+      column: idMeaning
+      targetEntity: Techno\Domain\Meaning

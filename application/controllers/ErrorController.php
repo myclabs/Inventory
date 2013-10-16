@@ -66,10 +66,12 @@ class ErrorController extends Core_Controller
 
         UI_Message::addMessageStatic($errorMessage, UI_Message::getTypeByHTTPCode($httpStatus));
 
-        $this->view->assign('errorMessage', $errorMessage);
-        $this->view->assign('httpStatus', $httpStatus);
-        $this->view->assign('exception', $exception);
-        $this->view->assign('requestParams', $error->request->getParams());
+        if ($this->view) {
+            $this->view->assign('errorMessage', $errorMessage);
+            $this->view->assign('httpStatus', $httpStatus);
+            $this->view->assign('exception', $exception);
+            $this->view->assign('requestParams', $error->request->getParams());
+        }
     }
 
 }

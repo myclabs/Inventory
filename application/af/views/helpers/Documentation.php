@@ -6,6 +6,7 @@
  * @package    AF
  * @subpackage View
  */
+use Techno\Domain\Family\Family;
 
 /**
  * @package    AF
@@ -76,7 +77,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
     /**
      * Permet de récupérer la liste des familles de paramètres de techno
      * @param AF_Model_Af $af
-     * @return Techno_Model_Family[]
+     * @return Family[]
      */
     protected function getFamilyList(AF_Model_Af $af)
     {

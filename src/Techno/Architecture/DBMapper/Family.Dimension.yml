@@ -1,0 +1,54 @@
+Techno\Domain\Family\Dimension:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Techno_Family_Dimension
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    position:
+      type: integer
+      nullable: false
+    orientation:
+      type: integer
+    query:
+      type: string
+      nullable: true
+
+  manyToOne:
+    family:
+      targetEntity: Techno\Domain\Family\Family
+      inversedBy: dimensions
+      joinColumn:
+        name: idFamily
+        referencedColumnName: id
+        nullable: false
+    meaning:
+      targetEntity: Techno\Domain\Meaning
+      joinColumn:
+        name: idMeaning
+        referencedColumnName: id
+        nullable: false
+
+  oneToMany:
+    members:
+      targetEntity: Techno\Domain\Family\Member
+      mappedBy: dimension
+      cascade: [ all ]
+      orphanRemoval: true
+      orderBy:
+        position: ASC
+
+  uniqueConstraints:
+    family_meaning:
+      columns: [idFamily, idMeaning]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

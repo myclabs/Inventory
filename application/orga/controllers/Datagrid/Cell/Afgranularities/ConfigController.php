@@ -26,7 +26,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
         $inputGranularity = Orga_Model_Granularity::load($this->getParam('idInputGranularity'));
 
         if ($cell->getGranularity()->getRef() === $inputConfigGranularity->getRef()) {
-            $this->addLine($this->getLineData($cell, $inputGranularity));
+            $this->addLineData($cell, $inputGranularity);
             $this->totalElements = 1;
         } else {
             $customParameters = array();
@@ -58,7 +58,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
                 Orga_Model_Cell::getAlias()
             );
             foreach ($cell->loadChildCellsForGranularity($inputConfigGranularity, $this->request) as $configChildCell) {
-                $this->addLine($this->getLineData($configChildCell, $inputGranularity));
+                $this->addLineData($configChildCell, $inputGranularity);
             }
             $this->totalElements = $cell->countTotalChildCellsForGranularity($inputConfigGranularity, $this->request);
         }
@@ -71,7 +71,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
      * @param Orga_Model_Granularity $inputGranularity
      * @return array
      */
-    private function getLineData(Orga_Model_Cell $cell, Orga_Model_Granularity $inputGranularity)
+    private function addLineData(Orga_Model_Cell $cell, Orga_Model_Granularity $inputGranularity)
     {
         $data = array();
         $data['index'] = $cell->getId();
@@ -85,7 +85,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
             // Aucun AF n'a encore été spécifié pour cette cellule et granularité.
         }
 
-        return $data;
+        $this->addLine($data);
     }
 
     /**

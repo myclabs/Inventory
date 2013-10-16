@@ -1,6 +1,8 @@
-#navigationClose { width: 25px; margin-left: 0px; cursor: pointer; }
+#navigationClose { width: 250px; height:35px; margin-left: 25px; margin-right: -225px; cursor: pointer; font-style: italic; font-size: large; }
+#navigationClose i { margin-top: 8px; }
+#navigationClose { transform-origin: 0px 0px; transform: rotate(90deg); }
 
-#navigationPanel { min-width: 200px; max-width: 350px; width: auto; padding: 1%; }
+#navigationPanel { min-width: 200px; max-width: 350px; width: auto; padding: 1%; margin-left: -25px; }
 
 #navigationCurrent { font-weight: bold; font-size: 1.1em; }
 

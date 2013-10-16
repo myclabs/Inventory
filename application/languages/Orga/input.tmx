@@ -20,6 +20,14 @@
                 <seg>Input progress</seg>
             </tuv>
         </tu>
+        <tu tuid="aboutInput">
+            <tuv xml:lang="fr">
+                <seg>à propos de la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>about the input</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>

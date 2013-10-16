@@ -6,7 +6,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.
@@ -24,9 +26,15 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -106,16 +114,24 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             $user->addRole(User_Model_Role::loadByRef('user'));
         }
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_ACLManager',
-                'addCellUser',
-                [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-            )
-        );
+        $success = function() {
+            $this->message = __('UI', 'message', 'added');
+        };
+        $timeout = function() {
+            $this->message = __('UI', 'message', 'addedLater');
+        };
+        $error = function() {
+            throw new Core_Exception("Error in the background task");
+        };
 
-        $this->message = __('UI', 'message', 'addedLater');
+        $task = new ServiceCallTask(
+            'Orga_Service_ACLManager',
+            'addCellUser',
+            [$cell, $user, $role, false],
+            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->send();
     }
 
@@ -138,16 +154,24 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         $role = User_Model_Role::loadByRef($userRoleRef);
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_ACLManager',
-                'removeCellUser',
-                [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-            )
-        );
+        $success = function() {
+            $this->message = __('UI', 'message', 'deleted');
+        };
+        $timeout = function() {
+            $this->message = __('UI', 'message', 'deletedLater');
+        };
+        $error = function() {
+            throw new Core_Exception("Error in the background task");
+        };
 
-        $this->message = __('UI', 'message', 'deletedLater');
+        $task = new ServiceCallTask(
+            'Orga_Service_ACLManager',
+            'removeCellUser',
+            [$cell, $user, $role, false],
+            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->send();
     }
 

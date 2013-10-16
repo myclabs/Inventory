@@ -7,7 +7,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\ViewModel\OrganizationViewModel;
 
 /**
@@ -33,9 +35,15 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Redirection sur la liste.
@@ -298,20 +306,24 @@ class Orga_OrganizationController extends Core_Controller
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
-                    'Orga_Service_ETLStructure',
-                    'resetOrganizationDWCubes',
-                    [$organization],
-                    __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function() {
+            $this->sendJsonResponse(__('UI', 'message', 'updated'));
+        };
+        $timeout = function() {
+            $this->sendJsonResponse(__('UI', 'message', 'operationInProgress'));
+        };
+        $error = function() {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array());
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetOrganizationDWCubes',
+            [$organization],
+            __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
