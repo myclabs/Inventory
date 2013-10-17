@@ -45,7 +45,7 @@ class EmailTaskNotifier implements TaskNotifier
     /**
      * {@inheritdoc}
      */
-    function notifyTaskError(User_Model_User $user, $taskLabel)
+    public function notifyTaskError(User_Model_User $user, $taskLabel)
     {
         $subject = __('Core', 'backgroundTasks', 'emailNotificationErrorTitle', ['TASK_NAME' => $taskLabel]);
         $content = __('Core', 'backgroundTasks', 'emailNotificationErrorContent', [
