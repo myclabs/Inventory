@@ -138,7 +138,7 @@ class EventListener extends \MyCLabs\Work\EventListener
                 $user = User_Model_User::load($task->getContext()->getUserId());
 
                 $this->logger->info(
-                    "Task {task} executed, notifying {user} by mail ",
+                    "Task {task} executed, notifying {user} by mail",
                     ['task' => (string) $task, 'user' => $user->getEmail()]
                 );
 
