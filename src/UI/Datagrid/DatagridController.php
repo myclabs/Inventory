@@ -135,7 +135,7 @@ abstract class DatagridController extends Core_Controller
                 $datagridSession = &$zendSessionDatagrid->$idDatagrid;
 
                 // Création d'un objet Requête.
-                $criteriaName = $this->getParam('criteriaName');
+                $criteriaName = str_replace('|', '\\', $this->getParam('criteriaName'));
                 /** @var Criteria criteria */
                 $this->criteria = new $criteriaName();
 
