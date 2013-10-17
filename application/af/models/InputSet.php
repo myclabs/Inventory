@@ -56,7 +56,7 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
     public function __construct(AF_Model_AF $af)
     {
         $this->inputs = new ArrayCollection();
-        $this->refAF = $af->getRef();
+        $this->setAF($af);
     }
 
     /**
@@ -252,6 +252,14 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
     public function getAF()
     {
         return AF_Model_AF::loadByRef($this->refAF);
+    }
+
+    /**
+     * @param AF_Model_AF $af
+     */
+    public function setAF(AF_Model_AF $af)
+    {
+        $this->refAF = $af->getRef();
     }
 
     /**
