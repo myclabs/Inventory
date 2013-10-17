@@ -148,7 +148,7 @@ Feature: AF list edit feature
     Then the "listAF" datagrid should contain 5 row
 
   @javascript
-  Scenario: Deletion of an A form from AF list
+  Scenario: Deletion of an AF form from AF list
     #6193 	Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
     Given I am on "af/af/list"
     And I wait for the page to finish loading
@@ -165,7 +165,7 @@ Feature: AF list edit feature
     And the row 5 of the "listAF" datagrid should contain:
       | label                                               |
       | Formulaire avec tout type de champ |
-    And the row 6 of the "listAF" datagrid should contain:
+    And the row 7 of the "listAF" datagrid should contain:
       | label                                               |
       | Formulaire vide |
   # Suppression, formulaire utilisé comme sous-formulaire (non répété)
@@ -179,7 +179,7 @@ Feature: AF list edit feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire."
   # Suppression sans obstacle, formulaire vide
-    When I click "Supprimer" in the row 6 of the "listAF" datagrid
+    When I click "Supprimer" in the row 7 of the "listAF" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
