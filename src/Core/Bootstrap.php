@@ -360,7 +360,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Connexion RabbitMQ
         $this->container->set('rabbitmq.queue', $this->container->get('application.name') . '-work');
-        $this->container->set(AMQPChannel::class, function(Container $c) {
+        $this->container->set(AMQPChannel::class, function (Container $c) {
             $queue = $c->get('rabbitmq.queue');
             /** @var AMQPConnection $connection */
             $connection = $c->get(AMQPConnection::class);
@@ -370,7 +370,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             return $channel;
         });
 
-        $this->container->set(WorkDispatcher::class, function(Container $c) use ($useRabbitMQ) {
+        $this->container->set(WorkDispatcher::class, function (Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
                 $channel = $c->get(AMQPChannel::class);
                 $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
@@ -380,7 +380,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             return $c->get(SimpleWorkDispatcher::class);
         });
 
-        $this->container->set(Worker::class, function(Container $c) use ($useRabbitMQ) {
+        $this->container->set(Worker::class, function (Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
                 $channel = $c->get(AMQPChannel::class);
                 $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));
