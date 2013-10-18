@@ -6,20 +6,29 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use Keyword\Domain\PredicateService;
+use UI\Datagrid\DatagridController;
 use Keyword\Domain\Predicate;
+use Keyword\Domain\PredicateRepository;
+use Keyword\Domain\KeywordRepository;
+use Keyword\Domain\AssociationCriteria;
 
 /**
  * Classe controleur de la datagrid de Predicate.
  * @package Keyword
  */
-class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
+class Keyword_Datagrid_PredicateController extends DatagridController
 {
     /**
      * @Inject
-     * @var PredicateService
+     * @var PredicateRepository
      */
-    private $predicateService;
+    private $predicateRepository;
+
+    /**
+     * @Inject
+     * @var KeywordRepository
+     */
+    private $keywordRepository;
 
     /**
      * (non-PHPdoc)
@@ -29,7 +38,9 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        foreach (Predicate::loadList($this->request) as $predicate) {
+        $paginator = $this->predicateRepository->matching($this->criteria);
+        /** @var Predicate $predicate */
+        foreach ($paginator as $predicate) {
             /** @var Predicate $predicate */
             $data = array();
 
@@ -46,7 +57,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = Predicate::countTotal($this->request);
+        $this->totalElements = count($paginator);
         $this->send();
     }
 
@@ -60,25 +71,28 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
     {
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
-        $revRef = $this->getAddElementValue('reverseRef');
-        $revLabel = $this->getAddElementValue('reverseLabel');
+        $reverseRef = $this->getAddElementValue('reverseRef');
+        $reverseLabel = $this->getAddElementValue('reverseLabel');
         $description = $this->getAddElementValue('description');
 
-        $refErrors = $this->predicateService->getErrorMessageForNewRef($ref);
+        $refErrors = $this->predicateRepository->getErrorMessageForRef($ref);
         if ($refErrors != null) {
             $this->setAddElementErrorMessage('ref', $refErrors);
         }
-        $revRefErrors = $this->predicateService->getErrorMessageForNewReverseRef($revRef);
+        $revRefErrors = $this->predicateRepository->getErrorMessageForRef($reverseRef);
         if ($revRefErrors != null) {
             $this->setAddElementErrorMessage('reverseRef', $revRefErrors);
         }
-        if ($ref === $revRef) {
+        if ($ref === $reverseRef) {
             $this->setAddElementErrorMessage('ref', __('Keyword', 'predicate', 'refIsSameAsRevRef'));
             $this->setAddElementErrorMessage('reverseRef', __('Keyword', 'predicate', 'refIsSameAsRevRef'));
         }
 
         if (empty($this->_addErrorMessages)) {
-            $this->predicateService->add($ref, $label, $revRef, $revLabel, $description);
+            $predicate = new Predicate($ref, $reverseRef, $label, $reverseLabel);
+            $predicate->setDescription($description);
+            $this->predicateRepository->add($predicate);
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -93,7 +107,14 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $this->predicateService->delete($this->delete);
+        $predicate = $this->predicateRepository->getByRef($this->delete);
+        $criteria = new AssociationCriteria();
+        $criteria->predicateRef->eq($predicate->getRef());
+        if (count($this->keywordRepository->associationsMatching($criteria)) > 0) {
+            throw new \Core_Exception_User('Keyword', 'predicate', 'predicateUsedInAssociation', array('REF' => $predicate->getRef()));
+        }
+        $this->predicateRepository->remove($predicate);
+        $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
@@ -106,24 +127,30 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $predicateRef = $this->update['index'];
+        $predicate = $this->predicateRepository->getByRef($this->update['index']);
         $newValue = $this->update['value'];
 
         switch ($this->update['column']) {
             case 'label':
-                $this->predicateService->updateLabel($predicateRef, $newValue);
+                $predicate->setLabel($newValue);
                 break;
             case 'reverseLabel':
-                $this->predicateService->updateReverseLabel($predicateRef, $newValue);
+                $predicate->setReverseLabel($newValue);
                 break;
             case 'ref':
-                $this->predicateService->updateRef($predicateRef, $newValue);
+                if ($newValue !== $predicate->getRef()) {
+                    $this->predicateRepository->checkRef($newValue);
+                    $predicate->setRef($newValue);
+                }
                 break;
             case 'reverseRef':
-                $this->predicateService->updateReverseRef($predicateRef, $newValue);
+                if ($newValue !== $predicate->getReverseRef()) {
+                    $this->predicateRepository->checkRef($newValue);
+                    $predicate->setReverseRef($newValue);
+                }
                 break;
             case 'description':
-                $this->predicateService->updateDescription($predicateRef, $newValue);
+                $predicate->setDescription($newValue);
                 break;
             default:
                 break;
@@ -141,7 +168,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function getdescriptionAction()
     {
-        $predicate = Predicate::loadByRef($this->getParam('ref'));
+        $predicate = $this->predicateRepository->getByRef($this->getParam('ref'));
         $this->data = Core_Tools::textile($predicate->getDescription());
         $this->send();
     }
@@ -153,7 +180,7 @@ class Keyword_Datagrid_PredicateController extends UI_Controller_Datagrid
      */
     public function getbrutdescriptionAction()
     {
-        $predicate = Predicate::loadByRef($this->getParam('ref'));
+        $predicate = $this->predicateRepository->getByRef($this->getParam('ref'));
         $this->data = $predicate->getDescription();
         $this->send();
     }

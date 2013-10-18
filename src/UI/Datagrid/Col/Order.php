@@ -11,6 +11,8 @@
 /**
  * Description of colonne order.
  *
+ * @deprecated
+ *
  * @package    UI
  * @subpackage Datagrid
  *

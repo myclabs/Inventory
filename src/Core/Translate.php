@@ -1,5 +1,6 @@
 <?php
 
+use Core\Cache;
 use Psr\Log\LoggerInterface;
 
 include_once('TranslateAdapter.php');

@@ -22,7 +22,7 @@
     "require": {
         "php": ">=5.4.0",
         "zendframework/zendframework1": "1.12.*",
-        "doctrine/orm": "2.4.*",
+        "doctrine/orm": "dev-CriteriaContains as 2.4.99",
         "doctrine/annotations": "~1.0",
         "doctrine/common": "dev-ProxyStaticProperties as 2.4.1",
         "gedmo/doctrine-extensions": "~2.3",
@@ -35,6 +35,7 @@
         "myclabs/array-comparator": "1.0.*",
         "myclabs/xport": "0.2.0",
         "myclabs/php-enum": "1.*",
+        "myclabs/deep-copy": "1.*",
         "mnapoli/php-di": "3.4.*",
         "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
@@ -58,6 +59,10 @@
         {
             "type": "git",
             "url": "git://github.com/myclabs/common.git"
+        },
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/doctrine2.git"
         }
     ]
 }

@@ -1,6 +1,6 @@
 Keyword\Domain\Predicate:
   type: entity
-  repositoryClass: \Core_Model_Repository
+  repositoryClass: \Keyword\Architecture\Repository\DoctrinePredicateRepository
   table: Keyword_Predicate
 
   gedmo:

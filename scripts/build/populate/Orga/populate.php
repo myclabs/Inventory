@@ -386,7 +386,7 @@ class Orga_Populate extends Core_Script_Action
         $user = User_Model_User::loadByEmail($email);
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $container->get('Orga_Service_ACLManager')->addOrganizationAdministrator($organization, $user);
+        $container->get('Orga_Service_ACLManager')->addOrganizationAdministrator($organization, $user, false);
     }
 
     /**

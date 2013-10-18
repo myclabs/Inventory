@@ -78,6 +78,7 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
                 return;
             }
             $condition->save();
+            $af->addCondition($condition);
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {

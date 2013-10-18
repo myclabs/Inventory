@@ -109,11 +109,9 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $defaultValue = new Calc_Value($digitalValue, $relativeUncertainty);
             $numericField->setDefaultValue($defaultValue);
             $numericField->setDefaultValueReminder($this->getAddElementValue('defaultValueReminder'));
-            $af->getRootGroup()->addSubComponent($numericField);
             $af->addComponent($numericField);
 
             $numericField->save();
-            $af->getRootGroup()->save();
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {

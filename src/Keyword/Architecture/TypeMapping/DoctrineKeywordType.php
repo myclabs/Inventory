@@ -1,20 +1,34 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Core
- */
+
+namespace Keyword\Architecture\TypeMapping;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Keyword\Application\Service\KeywordService;
+use Keyword\Application\Service\KeywordDTO;
 
 /**
- * Mapping d'un objet Locale en champ de BDD
- * @package Core
+ * Mapping d'un objet KeywordDTO en champ de BDD
+ *
+ * @author matthieu.napoli
  */
-class Core_TypeMapping_Locale extends Type
+class DoctrineKeywordType extends Type
 {
+    const TYPE_NAME = 'keyword_dto';
 
-    const TYPE_NAME = 'core_locale';
+    /**
+     * @var KeywordService
+     */
+    protected $keywordService;
+
+
+    /**
+     * @param KeywordService $keywordService
+     */
+    public function setKeywordService(KeywordService $keywordService)
+    {
+        $this->keywordService = $keywordService;
+    }
 
     /**
      * @return string The name of the type being mapped
@@ -45,29 +59,35 @@ class Core_TypeMapping_Locale extends Type
     }
 
     /**
-     * @param string $value
+     * @param string|null $value
      * @param AbstractPlatform $platform
-     * @return Core_Locale
+     * @return KeywordDTO|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         if ($value === null) {
             return null;
         }
-        return Core_Locale::load($value);
+
+        $keyword = new KeywordDTO($value);
+        if ($this->keywordService->exists($keyword)) {
+            return $this->keywordService->get($value);
+        }
+        return $keyword;
     }
 
     /**
-     * @param Core_Locale $value
+     * @param KeywordDTO|null $value
      * @param AbstractPlatform $platform
-     * @return string
+     * @return string|null
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if ($value === null) {
             return null;
         }
-        return $value->getId();
+
+        return (string) $value;
     }
 
 }

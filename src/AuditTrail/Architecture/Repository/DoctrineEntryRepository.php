@@ -8,13 +8,13 @@ namespace AuditTrail\Architecture\Repository;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\Entry;
 use AuditTrail\Domain\EntryRepository;
-use Core\Model\EntityRepository;
+use Core\Domain\DoctrineEntityRepository;
 use Orga_Model_Cell;
 
 /**
  * Audit trail entry repository
  */
-class DoctrineEntryRepository extends EntityRepository implements EntryRepository
+class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryRepository
 {
     /**
      * @param int $count

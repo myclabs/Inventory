@@ -9,7 +9,7 @@
 use \Doctrine\Common\Collections\Collection;
 use \Doctrine\Common\Collections\ArrayCollection;
 use \Doctrine\Common\Collections\Criteria;
-use Keyword\Domain\Keyword;
+use Keyword\Application\Service\KeywordDTO;
 
 /**
  * Classe Dimension
@@ -160,11 +160,11 @@ class Techno_Model_Family_Dimension extends Core_Model_Entity
 
     /**
      * Retourne un membre de la dimension en le recherchant par son mot-clé
-     * @param Keyword $keyword
+     * @param KeywordDTO $keyword
      * @throws Core_Exception_NotFound
      * @return Techno_Model_Family_Member
      */
-    public function getMember(Keyword $keyword)
+    public function getMember(KeywordDTO $keyword)
     {
         // Filtre la collection sur le keyword du membre
         $results = $this->members->filter(
@@ -175,7 +175,7 @@ class Techno_Model_Family_Dimension extends Core_Model_Entity
         if (count($results) > 0) {
             return $results->first();
         }
-        throw new Core_Exception_NotFound("Le membre $keyword est introuvable dans cette dimension");
+        throw new Core_Exception_NotFound("Le membre $keyword->getRef() est introuvable dans cette dimension");
     }
 
     /**

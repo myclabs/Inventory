@@ -14,6 +14,19 @@ class Techno_Populate extends Core_Script_Action
     private $meanings = [];
 
     /**
+     * @var \Keyword\Application\Service\KeywordService
+     */
+    protected $keywordService;
+
+
+    function __construct()
+    {
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
+        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function runEnvironment($environment)
@@ -154,12 +167,12 @@ class Techno_Populate extends Core_Script_Action
     {
         if (!isset($this->meanings[$refKeyword])) {
             $this->meanings[$refKeyword] = new Techno_Model_Meaning();
-            $this->meanings[$refKeyword]->setKeyword(Keyword::loadByRef($refKeyword));
+            $this->meanings[$refKeyword]->setKeyword($this->keywordService->get($refKeyword));
             $this->meanings[$refKeyword]->save();
         }
         $dimension = new Techno_Model_Family_Dimension($family, $this->meanings[$refKeyword], $orientation);
         foreach ($keywordMembers as $refKeyword) {
-            $member = new Techno_Model_Family_Member($dimension, Keyword::loadByRef($refKeyword));
+            $member = new Techno_Model_Family_Member($dimension, $this->keywordService->get($refKeyword));
             $member->save();
             $dimension->addMember($member);
         }

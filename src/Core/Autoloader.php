@@ -1,17 +1,15 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Autoloader
- */
+
+namespace Core;
+
+use Exception;
 
 /**
  * Autoloader de classes
  *
- * @package    Core
- * @subpackage Autoloader
+ * @author matthieu.napoli
  */
-class Core_Autoloader
+class Autoloader
 {
 
     /**
@@ -23,7 +21,7 @@ class Core_Autoloader
 
     /**
      * Returns the instance of the Autoloader
-     * @return Core_Autoloader
+     * @return Autoloader
      */
     public static function getInstance()
     {
@@ -45,6 +43,7 @@ class Core_Autoloader
     /**
      * Autoload the class
      * @param string $class
+     * @throws \Exception
      * @return bool
      */
     public function autoload($class)
@@ -52,14 +51,18 @@ class Core_Autoloader
         foreach ($this->autoloadConfigurations as $configuration) {
             switch ($configuration['type']) {
                 case 'module':
-                    $return = $this->autoloadModule($class,
-                                                    $configuration['namespace'],
-                                                    $configuration['basePath']);
+                    $return = $this->autoloadModule(
+                        $class,
+                        $configuration['namespace'],
+                        $configuration['basePath']
+                    );
                     break;
                 case 'namespace':
-                    $return = $this->autoloadNamespace($class,
-                                                       $configuration['namespace'],
-                                                       $configuration['basePath']);
+                    $return = $this->autoloadNamespace(
+                        $class,
+                        $configuration['namespace'],
+                        $configuration['basePath']
+                    );
                     break;
                 default:
                     throw new Exception("Autoloader error");
@@ -105,15 +108,6 @@ class Core_Autoloader
             'namespace' => $namespace,
             'basePath'  => $basePath,
         );
-    }
-
-    /**
-     * Add a path to the include path
-     * @param string $basePath
-     */
-    public function addIncludePath($basePath)
-    {
-        // TODO Modify include path
     }
 
     /**

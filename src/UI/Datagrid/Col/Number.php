@@ -13,6 +13,8 @@
  *
  * Une classe permettant de générer une colonne contenant des nombres.
  *
+ * @deprecated
+ *
  * @package    UI
  * @subpackage Datagrid
  */
