@@ -82,7 +82,7 @@ Feature: AF tree edit AF feature
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
+    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé car il est utilisé par des organisations."
   # Suppression sans obstacle, "Formulaire avec sous-formulaires"
     When I click "Formulaire avec sous-formulaires"
     And I click "Supprimer"
