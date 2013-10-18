@@ -38,10 +38,21 @@ Feature: Organization datagrid feature
     Then I should see "La structure des données d'analyse de l'organisation est à jour"
 
   @javascript
-  Scenario: Deletion of an organization
+  Scenario: Deletion of an organization scenario
   # Affichage datagrid des organisations
     When I am on "orga/organization/manage"
     And I wait for the page to finish loading
     Then I should see the "organizations" datagrid
-    When I click "Supprimer" in the row 1 of the "organizations" datagrid
-  # TODO: suppression d'une organisation
+  # Ajout d'une organisation, pour la supprimer ensuite
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'une organisation"
+    When I fill in "Libellé" with "AAA"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+  # Suppression de l'organisation ajoutée
+    When I click "Supprimer" in the row 2 of the "organizations" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Suppression effectuée"
+    And I should not see "AAA"
+  # TODO : tester la suppression d'une organisation non vide
