@@ -76,7 +76,7 @@ Feature: AF tree edit AF feature
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click "Confirmer"
-    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire."
+    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé car il est utilisé par des organisations."
   # Tentative de suppression, formulaire utilisé pour la configuration d'une organisation
     When I click "Forfait émissions en fonction de la marque"
     And I click "Supprimer"
