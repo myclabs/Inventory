@@ -383,15 +383,13 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initSessionNamespace()
     {
-        if (APPLICATION_ENV != 'testsunitaires') {
-            $auth = Zend_Auth::getInstance();
-            $name = $this->container->get('application.name');
-            if ($name == '') {
-                $configuration = Zend_Registry::get('configuration');
-                $name = $configuration->sessionStorage->name;
-            }
-            $auth->setStorage(new Zend_Auth_Storage_Session($name));
+        $auth = Zend_Auth::getInstance();
+        $name = $this->container->get('application.name');
+        if ($name == '') {
+            $configuration = Zend_Registry::get('configuration');
+            $name = $configuration->sessionStorage->name;
         }
+        $auth->setStorage(new Zend_Auth_Storage_Session($name));
     }
 
     /**
