@@ -79,7 +79,7 @@ Feature: Cell administrator feature
     And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label | ref | broaderpays | broadermarque |
       | AAA   | aaa | France      | Marque A      |
@@ -107,7 +107,7 @@ Feature: Cell administrator feature
     And I fill in "listMemberspays_ref_addForm" with "aaa"
     And I fill in "listMemberspays_broaderzone_addForm" with "europe#"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the "listMemberspays" datagrid should contain 2 row
     And the row 1 of the "listMemberspays" datagrid should contain:
       | label | ref | broaderzone |
