@@ -652,9 +652,27 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function removeMember(Orga_Model_Member $member)
     {
         if ($this->hasMember($member)) {
+            $cellChildCells = [];
+            foreach ($member->getCells() as $cell) {
+                $cellChildCells[$cell->getMembersHashKey()] = $cell->getChildCells();
+            }
+
             $this->members->removeElement($member);
             foreach ($member->getDirectChildren() as $directChildMember) {
                 $directChildMember->removeDirectParentForAxis($member);
+            }
+            foreach ($this->granularities as $granularity) {
+                $granularity->removeCellsFromMember($member);
+            }
+
+            /** @var Orga_Model_Cell[] $childCells */
+            foreach ($cellChildCells as $childCells) {
+                foreach ($childCells as $childCell) {
+                    if (!$childCell->hasMember($member)) {
+                        // Inutile de mettre à jour les cellules possédant ce membre.
+                        $childCell->updateHierarchy();
+                    }
+                }
             }
         }
     }

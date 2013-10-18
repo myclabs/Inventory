@@ -313,8 +313,19 @@ class Orga_Model_Organization extends Core_Model_Entity
     public function removeGranularity(Orga_Model_Granularity $granularity)
     {
         if ($this->hasGranularity($granularity)) {
+            $cellChildCells = [];
+            foreach ($granularity->getCells() as $cell) {
+                $cellChildCells[$cell->getMembersHashKey()] = $cell->getChildCells();
+            }
+
             $this->granularities->removeElement($granularity);
-            //@todo gérer la suppression.
+
+            /** @var Orga_Model_Cell[] $childCells */
+            foreach ($cellChildCells as $childCells) {
+                foreach ($childCells as $childCell) {
+                    $childCell->updateHierarchy();
+                }
+            }
         }
     }
 

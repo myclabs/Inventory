@@ -373,6 +373,28 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
+     * Supprime une cellule.
+     *
+     * @param Orga_Model_Cell $cell
+     */
+    protected function removeCell(Orga_Model_Cell $cell)
+    {
+        $this->cells->removeElement($cell);
+    }
+
+    /**
+     * Supprime les cellules liées à un membre.
+     *
+     * @param Orga_Model_Member $member
+     */
+    public function removeCellsFromMember(Orga_Model_Member $member)
+    {
+        foreach ($this->getCellsByMembers([$member]) as $cell) {
+            $this->cells->removeElement($cell);
+        }
+    }
+
+    /**
      * Renvoie un tableau des Cell de la Granularity.
      *
      * @return Collection|Orga_Model_Cell[]
