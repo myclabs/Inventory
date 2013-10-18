@@ -32,17 +32,17 @@ $membersTab->dataSource = 'orga/member/manage/idOrganization/'.$this->idOrganiza
 $membersTab->useCache = false;
 $tabView->addTab($membersTab);
 
-if ($this->hasChildCells) {
+if ($this->hasChildCells || $this->displayOrganizationTabs) {
     $childCellsTab = new UI_Tab('childCells');
     $childCellsTab->label = __('Orga', 'cell', 'subCells');
     $childCellsTab->dataSource = 'orga/cell/child/idCell/'.$this->idCell.'/display/render';
-    $childCellsTab->useCache = false;
+    $childCellsTab->useCache = !$this->displayOrganizationTabs;
     $tabView->addTab($childCellsTab);
 
     $relevanceTab = new UI_Tab('relevant');
     $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');
     $relevanceTab->dataSource = 'orga/cell/relevant/idCell/'.$this->idCell.'/display/render';
-    $relevanceTab->useCache = false;
+    $relevanceTab->useCache = !$this->displayOrganizationTabs;
     $tabView->addTab($relevanceTab);
 }
 

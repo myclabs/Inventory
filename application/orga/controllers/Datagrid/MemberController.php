@@ -65,7 +65,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             foreach ($axis->getDirectBroaders() as $broaderAxis) {
                 $cellAxis = $this->cellList(null, '');
                 foreach ($parentMembers as $parentMember) {
-                    if (in_array($parentMember, $broaderAxis->getMembers())) {
+                    if (in_array($parentMember, $broaderAxis->getMembers()->toArray())) {
                         $cellAxis = $this->cellList($parentMember->getRef(), $parentMember->getLabel());
                     }
                 }
@@ -105,7 +105,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             $formFieldRef = 'broader'.$directBroaderAxis->getRef();
             $refBroaderMember = $this->getAddElementValue($formFieldRef);
             if (empty($refBroaderMember)) {
-                continue;
+                $this->setAddElementErrorMessage($formFieldRef, __('Core', 'exception', 'emptyRequiredField'));
             } else {
                 try {
                     $broaderMember = $directBroaderAxis->getMemberByCompleteRef($refBroaderMember);
@@ -215,7 +215,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                         && ($parentMember->getRef() === $this->update['value'])) {
                         break 2;
                     } else if ($parentMember->getAxis()->getRef() === $refBroaderAxis) {
-                        $member->removeDirectParent($parentMember);
+                        $member->removeDirectParentForAxis($parentMember);
                     }
                 }
                 if (!empty($this->update['value'])) {
@@ -263,7 +263,6 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             }
         }
 
-        $this->addElementAutocompleteList('', '');
         foreach ($members as $eligibleParentMember) {
             $this->addElementAutocompleteList($eligibleParentMember->getCompleteRef(), $eligibleParentMember->getLabel());
         }

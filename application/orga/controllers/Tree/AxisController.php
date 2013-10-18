@@ -77,17 +77,18 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         }
 
         if (empty($this->_formErrorMessages)) {
-            $axis = new Orga_Model_Axis($organization);
+            if ($this->getAddElementValue('addAxis_parent') != null) {
+                $narrower = $organization->getAxisByRef($this->getAddElementValue('addAxis_parent'));
+                $axis = new Orga_Model_Axis($organization, $narrower);
+            } else {
+                $axis = new Orga_Model_Axis($organization);
+            }
             $axis->setRef($this->getAddElementValue('addAxis_ref'));
             $axis->setLabel($this->getAddElementValue('addAxis_label'));
             if ($this->getAddElementValue('addAxis_contextualizing') === 'contextualizing') {
                 $axis->setContextualize(true);
             } else {
                 $axis->setContextualize(false);
-            }
-            if ($this->getAddElementValue('addAxis_parent') != null) {
-                $narrower = $organization->getAxisByRef($this->getAddElementValue('addAxis_parent'));
-                $narrower->addDirectBroader($axis);
             }
             $axis->save();
 

@@ -2,590 +2,716 @@
 /**
  * Class Orga_Test_MemberTest
  * @author valentin.claras
- * @author sidoine.Tardieu
  * @package    Orga
  * @subpackage Test
  */
 
-// require_once dirname(__FILE__).'/AxisTest.php';
-
 /**
- * Creation de la suite de test concernant les Member.
+ * Test Member class.
  * @package    Orga
  * @subpackage Test
  */
 class Orga_Test_MemberTest
 {
     /**
-     * Creation de la suite de test
+     * Creation of the test suite
      */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Orga_Test_MemberSetUp');
-        $suite->addTestSuite('Orga_Test_MemberOthers');
+        $suite->addTestSuite('Orga_Test_MemberAttributes');
+        $suite->addTestSuite('Orga_Test_MemberTag');
+        $suite->addTestSuite('Orga_Test_MemberHierarchy');
         return $suite;
     }
 
-    /**
-     * Generation de l'objet de test
-     * @param string $refMember
-     * @param string $labelMember
-     * @param Orga_Model_Axis $axis
-     * @return Orga_Model_Member
-     */
-    public static function generateObject($refMember='RefTestMember', $labelMember='LabelMember', $axis=null)
-    {
-        if ($axis === null) {
-            $axis = Orga_Test_AxisTest::generateObject();
-        }
-        $o = new Orga_Model_Member($axis);
-        $o->setRef($refMember);
-        $o->setLabel($labelMember);
-        $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-        return $o;
-    }
-
-    /**
-     * Suppression d'un objet cree avec generateObject
-     * @param Orga_Model_Member $o
-     * @param bool $deleteAxis
-     */
-    public static function deleteObject($o, $deleteAxis=true)
-    {
-        if ($deleteAxis === true) {
-            $o->getAxis()->delete();
-        } else {
-            $o->delete();
-        }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-    }
 }
 
-/**
- * Test de la creation/modification/suppression de l'entite
- * @package Organization
- * @subpackage Test
- */
-class Orga_Test_MemberSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
-        if (Orga_Model_Member::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Member restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Member::loadList() as $member) {
-                $member->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
-        if (Orga_Model_Axis::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Axis::loadList() as $axis) {
-                $axis->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
-        if (Orga_Model_Organization::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Organization::loadList() as $organization) {
-                $organization->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
-
-    /**
-     * Test le constructeur.
-     *
-     * @return Orga_Model_Member
-     */
-    function testConstruct()
-    {
-        $axis = Orga_Test_AxisTest::generateObject();
-        $o = new Orga_Model_Member($axis);
-        $o->setRef('RefTestMember');
-        $o->setLabel('LabalTestMember');
-        $this->assertInstanceOf('Orga_Model_Member', $o);
-        $this->assertEquals($o->getKey(), array());
-        $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-        $this->assertNotEquals(array(), $o->getKey());
-        return $o;
-    }
-
-    /**
-     * @depends testConstruct
-     * @param Orga_Model_Member $o
-     */
-    function testLoad(Orga_Model_Member $o)
-    {
-         $oLoaded = Orga_Model_Member::load($o->getKey());
-         $this->assertInstanceOf('Orga_Model_Member', $o);
-         $this->assertEquals($oLoaded->getKey(), $o->getKey());
-         $this->assertEquals($oLoaded->getRef(), $o->getRef());
-         $this->assertEquals($oLoaded->getLabel(), $o->getLabel());
-         $this->assertSame($oLoaded->getAxis(), $o->getAxis());
-         return $oLoaded;
-    }
-
-    /**
-     * @depends testLoad
-     * @param Orga_Model_Member $o
-     */
-    function testDelete(Orga_Model_Member $o)
-    {
-        $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-        $this->assertEquals(array(), $o->getKey());
-        Orga_Test_AxisTest::deleteObject($o->getAxis());
-    }
-
-    /**
-     * Fonction appelee une fois, apres tous les tests
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
-        if (Orga_Model_Member::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Member restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Member::loadList() as $member) {
-                $member->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
-        if (Orga_Model_Axis::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Axis restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Axis::loadList() as $axis) {
-                $axis->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
-        if (Orga_Model_Organization::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Organization::loadList() as $organization) {
-                $organization->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
-}
-
-/**
- * Tests de la classe Organization
- * @package Organization
- * @subpackage Test
- */
-class Orga_Test_MemberOthers extends PHPUnit_Framework_TestCase
+class Orga_Test_MemberAttributes extends Core_Test_TestCase
 {
     /**
      * @var Orga_Model_Organization
      */
     protected $organization;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis1;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis11;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis12;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis2;
 
+    /**
+     * Set up
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->organization = new Orga_Model_Organization();
+
+        $this->axis1 = new Orga_Model_Axis($this->organization);
+        $this->axis1->setRef('ref_1');
+        $this->axis1->setLabel('Label 1');
+
+        $this->axis11 = new Orga_Model_Axis($this->organization, $this->axis1);
+        $this->axis11->setRef('ref_11');
+        $this->axis11->setLabel('Label 11');
+
+        $this->axis12 = new Orga_Model_Axis($this->organization, $this->axis1);
+        $this->axis12->setRef('ref_12');
+        $this->axis12->setLabel('Label 12');
+
+        $this->axis2 = new Orga_Model_Axis($this->organization);
+        $this->axis2->setRef('ref_2');
+        $this->axis2->setLabel('Label 2');
+    }
+
+    function testConstruct()
+    {
+        $member2a = new Orga_Model_Member($this->axis2);
+        $this->assertSame($this->axis2, $member2a->getAxis());
+
+        $member11a = new Orga_Model_Member($this->axis11);
+        $this->assertSame($this->axis11, $member11a->getAxis());
+
+        $member11b = new Orga_Model_Member($this->axis11);
+        $this->assertSame($this->axis11, $member11b->getAxis());
+
+        $member12a = new Orga_Model_Member($this->axis12);
+        $this->assertSame($this->axis12, $member12a->getAxis());
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage A member needs one parent for each broader axis of his own axis.
+     */
+    function testConstructWithMissingParentsEmpty()
+    {
+        $member1a = new Orga_Model_Member($this->axis1);
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage A direct parent Member needs to comes from a broader axis.
+     */
+    function testConstructWithMissingParentsWrong()
+    {
+        $member2a = new Orga_Model_Member($this->axis2);
+        $member11a = new Orga_Model_Member($this->axis11);
+
+        $member1a = new Orga_Model_Member($this->axis1, [$member2a, $member11a]);
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage A direct parent from the same axis as already be given as parent.
+     */
+    function testConstructWithMissingParentsDuplicate()
+    {
+        $member11a = new Orga_Model_Member($this->axis11);
+        $member11b = new Orga_Model_Member($this->axis11);
+        $member12a = new Orga_Model_Member($this->axis12);
+
+        $member1a = new Orga_Model_Member($this->axis1, [$member11a, $member11b, $member12a]);
+    }
+
+    function testConstructWithParents()
+    {
+        $member11a = new Orga_Model_Member($this->axis11);
+        $member12a = new Orga_Model_Member($this->axis12);
+
+        $member1a = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+
+        $this->assertSame($this->axis1, $member1a->getAxis());
+        $this->assertSame([$member11a, $member12a], $member1a->getDirectParents()->toArray());
+    }
+
+    function testGetContextualizingParents()
+    {
+        $axis111 = new Orga_Model_Axis($this->organization, $this->axis11);
+        $axis1111 = new Orga_Model_Axis($this->organization, $axis111);
+
+        $this->axis1->setContextualize(true);
+        $this->axis11->setContextualize(true);
+        $axis111->setContextualize(false);
+        $axis1111->setContextualize(true);
+        $this->axis12->setContextualize(true);
+        $this->axis2->setContextualize(true);
+
+        $member1111a = new Orga_Model_Member($axis1111);
+        $member1111a->setRef('ref1111_a');
+
+        $member111a = new Orga_Model_Member($axis111, [$member1111a]);
+        $member111a->setRef('ref111_a');
+        $member111b = new Orga_Model_Member($axis111, [$member1111a]);
+        $member111b->setRef('ref111_b');
+
+        $member11a = new Orga_Model_Member($this->axis11, [$member111a]);
+        $member11a->setRef('ref11_a');
+        $member11b = new Orga_Model_Member($this->axis11, [$member111b]);
+        $member11b->setRef('ref11_b');
+        $member12a = new Orga_Model_Member($this->axis12);
+        $member12a->setRef('ref12_a');
+
+        $member1a = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+        $member1a->setRef('ref1_a');
+        $member1b = new Orga_Model_Member($this->axis1, [$member11b, $member12a]);
+        $member1b->setRef('ref1_b');
+        $member1c = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+        $member1c->setRef('ref1_c');
+
+        $member2a = new Orga_Model_Member($this->axis2);
+        $member2a->setRef('ref2_a');
+
+        $this->assertSame([$member11a, $member1111a, $member12a], $member1a->getContextualizingParents());
+        $this->assertSame([$member11b, $member1111a, $member12a], $member1b->getContextualizingParents());
+        $this->assertSame([$member11a, $member1111a, $member12a], $member1c->getContextualizingParents());
+        $this->assertSame([$member1111a], $member11a->getContextualizingParents());
+        $this->assertSame([$member1111a], $member11b->getContextualizingParents());
+        $this->assertSame([$member1111a], $member111a->getContextualizingParents());
+        $this->assertSame([$member1111a], $member111b->getContextualizingParents());
+        $this->assertSame([], $member1111a->getContextualizingParents());
+        $this->assertSame([], $member12a->getContextualizingParents());
+        $this->assertSame([], $member2a->getContextualizingParents());
+    }
+
+    function testSetRef()
+    {
+        $member2a = new Orga_Model_Member($this->axis2);
+        $member2a->setRef('ref2_a');
+        $this->assertSame('ref2_a', $member2a->getRef());
+    }
+
+    /**
+     * @expectedException Core_Exception_Duplicate
+     * @expectedExceptionMessage A Member with ref "ref2_dup" already exists in this Axis
+     */
+    function testSetRefDuplicate()
+    {
+        $member2a = new Orga_Model_Member($this->axis2);
+        $member2a->setRef('ref2_dup');
+
+        $member2b = new Orga_Model_Member($this->axis2);
+        $member2b->setRef('ref2_dup');
+    }
+
+    /**
+     * @expectedException Core_Exception_Duplicate
+     * @expectedExceptionMessage A Member with ref "ref1_dup" already exists in this Axis
+     */
+    function testSetRefDuplicateNoContextualizingParents()
+    {
+        $member11a = new Orga_Model_Member($this->axis11);
+        $member11a->setRef('ref11_a');
+        $member11b = new Orga_Model_Member($this->axis11);
+        $member11b->setRef('ref11_b');
+        $member12a = new Orga_Model_Member($this->axis12);
+        $member12a->setRef('ref12_a');
+
+        $member1a = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+        $member1a->setRef('ref1_dup');
+        $member1b = new Orga_Model_Member($this->axis1, [$member11b, $member12a]);
+        $member1b->setRef('ref1_dup');
+    }
+
+    function testSetRefContextualizingParents()
+    {
+        $this->axis11->setContextualize(true);
+        $this->axis12->setContextualize(true);
+
+        $member11a = new Orga_Model_Member($this->axis11);
+        $member11a->setRef('ref11_a');
+        $member11b = new Orga_Model_Member($this->axis11);
+        $member11b->setRef('ref11_b');
+        $member12a = new Orga_Model_Member($this->axis12);
+        $member12a->setRef('ref12_a');
+
+        $member1a = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+        $member1a->setRef('ref1_context');
+        $this->assertSame('ref1_context', $member1a->getRef());
+        $member1b = new Orga_Model_Member($this->axis1, [$member11b, $member12a]);
+        $member1b->setRef('ref1_context');
+        $this->assertSame('ref1_context', $member1b->getRef());
+    }
+
+    /**
+     * @expectedException Core_Exception_Duplicate
+     * @expectedExceptionMessage A Member with ref "ref1_context" already exists in this Axis
+     */
+    function testSetRefDuplicateContextualizingParents()
+    {
+        $this->axis11->setContextualize(true);
+        $this->axis12->setContextualize(true);
+
+        $member11a = new Orga_Model_Member($this->axis11);
+        $member11a->setRef('ref11_a');
+        $member11b = new Orga_Model_Member($this->axis11);
+        $member11b->setRef('ref11_b');
+        $member12a = new Orga_Model_Member($this->axis12);
+        $member12a->setRef('ref12_a');
+
+        $member1a = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+        $member1a->setRef('ref1_context');
+        $member1b = new Orga_Model_Member($this->axis1, [$member11b, $member12a]);
+        $member1b->setRef('ref1_context');
+        $member1c = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+        $member1c->setRef('ref1_context');
+    }
+
+    function testGetExtendedLabel()
+    {
+        $this->axis11->setContextualize(true);
+        $this->axis12->setContextualize(true);
+
+        $member11a = new Orga_Model_Member($this->axis11);
+        $member11a->setRef('ref11_a');
+        $member11a->setLabel('Label 11 A');
+        $member11b = new Orga_Model_Member($this->axis11);
+        $member11b->setRef('ref11_b');
+        $member11b->setLabel('Label 11 B');
+        $member12a = new Orga_Model_Member($this->axis12);
+        $member12a->setRef('ref12_a');
+        $member12a->setLabel('Label 12 A');
+
+        $member1a = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+        $member1a->setRef('ref1_a');
+        $member1a->setLabel('Label 1 A');
+        $member1b = new Orga_Model_Member($this->axis1, [$member11b, $member12a]);
+        $member1b->setRef('ref1_b');
+        $member1b->setLabel('Label 1 B');
+        $member1c = new Orga_Model_Member($this->axis1, [$member11a, $member12a]);
+        $member1c->setLabel('Label 1 C');
+
+        $this->assertSame('Label 11 A', $member11a->getExtendedLabel());
+        $this->assertSame('Label 11 B', $member11b->getExtendedLabel());
+        $this->assertSame('Label 12 A', $member12a->getExtendedLabel());
+        $this->assertSame('Label 1 A (Label 11 A, Label 12 A)', $member1a->getExtendedLabel());
+        $this->assertSame('Label 1 B (Label 11 B, Label 12 A)', $member1b->getExtendedLabel());
+        $this->assertSame('Label 1 C (Label 11 A, Label 12 A)', $member1c->getExtendedLabel());
+    }
+
+}
+
+class Orga_Test_MemberTag extends Core_Test_TestCase
+{
+    /**
+     * @var Orga_Model_Organization
+     */
+    protected $organization;
     /**
      * @var Orga_Model_Axis
      */
     protected $axis;
-
     /**
      * @var Orga_Model_Member
      */
     protected $member;
 
     /**
-     * Fonction appelee une fois, avant tous les tests
+     * Set up
      */
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-        // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
-        if (Orga_Model_Member::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Member restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Member::loadList() as $member) {
-                $member->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
-        if (Orga_Model_Axis::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Axis::loadList() as $axis) {
-                $axis->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
-        if (Orga_Model_Organization::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Organization::loadList() as $organization) {
-                $organization->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
+        parent::setUp();
+
+        $this->organization = new Orga_Model_Organization();
+
+        $this->axis = new Orga_Model_Axis($this->organization);
+        $this->axis->setRef('ref');
+        $this->axis->setLabel('Label');
+
+        $this->member = new Orga_Model_Member($this->axis);
+        $this->member->setRef('ref_member');
+        $this->member->setLabel('Member');
+    }
+
+    public function testGetMemberTag()
+    {
+        $newMember = new Orga_Model_Member($this->axis);
+        $newMember->setRef('ref_new');
+
+        $this->assertSame('1-ref:ref_member', $this->member->getMemberTag());
+        $this->assertSame('1-ref:ref_new', $newMember->getMemberTag());
+
+        $this->axis->setMemberPositioning(true);
+
+        $this->assertSame('1-ref:1-ref_member', $this->member->getMemberTag());
+        $this->assertSame('1-ref:2-ref_new', $newMember->getMemberTag());
+
+        $this->axis->setMemberPositioning(false);
+
+        $this->assertSame('1-ref:ref_member', $this->member->getMemberTag());
+        $this->assertSame('1-ref:ref_new', $newMember->getMemberTag());
+    }
+
+    public function testGetTag()
+    {
+        $newMember = new Orga_Model_Member($this->axis);
+        $newMember->setRef('ref_new');
+
+        $this->assertSame('/1-ref:ref_member', $this->member->getTag());
+        $this->assertSame('/1-ref:ref_new', $newMember->getTag());
+
+        $axisA = new Orga_Model_Axis($this->organization, $this->axis);
+        $axisA->setRef('ref_a');
+        $axisA->setMemberPositioning(true);
+
+        $axisB = new Orga_Model_Axis($this->organization, $this->axis);
+        $axisB->setRef('ref_b');
+
+        $memberA1 = new Orga_Model_Member($axisA);
+        $memberA1->setRef('refa_1');
+        $memberA1->setLabel('Label A 1');
+        $memberA2 = new Orga_Model_Member($axisA);
+        $memberA2->setRef('refa_2');
+
+        $memberB1 = new Orga_Model_Member($axisB);
+        $memberB1->setRef('refb_1');
+
+        $this->member->setDirectParentForAxis($memberA1);
+        $this->member->setDirectParentForAxis($memberB1);
+        $newMember->setDirectParentForAxis($memberA2);
+        $newMember->setDirectParentForAxis($memberB1);
+
+        $this->assertSame('/1-ref_a:1-refa_1/1-ref:ref_member&/2-ref_b:refb_1/1-ref:ref_member', $this->member->getTag());
+        $this->assertSame('/1-ref_a:2-refa_2/1-ref:ref_new&/2-ref_b:refb_1/1-ref:ref_new', $newMember->getTag());
+        $this->assertSame('/1-ref_a:1-refa_1', $memberA1->getTag());
+        $this->assertSame('/1-ref_a:2-refa_2', $memberA2->getTag());
+        $this->assertSame('/2-ref_b:refb_1', $memberB1->getTag());
+
+        $axisAA = new Orga_Model_Axis($this->organization, $axisA);
+        $axisAA->setRef('ref_aa');
+        $axisAA->setContextualize(true);
+
+        $memberAA1 = new Orga_Model_Member($axisAA);
+        $memberAA1->setRef('refaa_1');
+        $memberAA2 = new Orga_Model_Member($axisAA);
+        $memberAA2->setRef('refaa_2');
+
+        $memberA1->setDirectParentForAxis($memberAA1);
+        $memberA2->setDirectParentForAxis($memberAA1);
+
+        $memberA1bis = new Orga_Model_Member($axisA, [$memberAA2]);
+        $memberA1bis->setRef('refa_1');
+
+        $member3 = new Orga_Model_Member($this->axis, [$memberA1bis, $memberB1]);
+        $member3->setRef('ref_3');
+
+        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:1-refa_1/1-ref:ref_member&/2-ref_b:refb_1/1-ref:ref_member', $this->member->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:2-refa_2/1-ref:ref_new&/2-ref_b:refb_1/1-ref:ref_new', $newMember->getTag());
+        $this->assertSame('/1-ref_aa:refaa_2/1-ref_a:1-refa_1/1-ref:ref_3&/2-ref_b:refb_1/1-ref:ref_3', $member3->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:1-refa_1', $memberA1->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:2-refa_2', $memberA2->getTag());
+        $this->assertSame('/1-ref_aa:refaa_2/1-ref_a:1-refa_1', $memberA1bis->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1', $memberAA1->getTag());
+        $this->assertSame('/1-ref_aa:refaa_2', $memberAA2->getTag());
+        $this->assertSame('/2-ref_b:refb_1', $memberB1->getTag());
+    }
+
+}
+
+class Orga_Test_MemberHierarchy extends Core_Test_TestCase
+{
+    /**
+     * @var Orga_Model_Organization
+     */
+    protected $organization;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis1;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis11;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis111;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis12;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis2;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1c;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1d;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1e;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1f;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11c;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member111a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member111b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member12a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member12b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member2a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member2b;
+
+    /**
+     * Set up
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->organization = new Orga_Model_Organization();
+
+        $this->axis1 = new Orga_Model_Axis($this->organization);
+        $this->axis1->setRef('ref_1');
+        $this->axis1->setLabel('Label 1');
+
+        $this->axis11 = new Orga_Model_Axis($this->organization, $this->axis1);
+        $this->axis11->setRef('ref_11');
+        $this->axis11->setLabel('Label 11');
+
+        $this->axis111 = new Orga_Model_Axis($this->organization, $this->axis11);
+        $this->axis111->setRef('ref_111');
+        $this->axis111->setLabel('Label 111');
+
+        $this->axis12 = new Orga_Model_Axis($this->organization, $this->axis1);
+        $this->axis12->setRef('ref_12');
+        $this->axis12->setLabel('Label 12');
+
+        $this->axis2 = new Orga_Model_Axis($this->organization);
+        $this->axis2->setRef('ref_2');
+        $this->axis2->setLabel('Label 2');
+
+        $this->member111a = new Orga_Model_Member($this->axis111);
+        $this->member111a->setRef('ref111_a');
+        $this->member111a->setLabel('Label 111 A');
+        $this->member111b = new Orga_Model_Member($this->axis111);
+        $this->member111b->setRef('ref111_b');
+        $this->member111b->setLabel('Label 111 B');
+
+        $this->member11a = new Orga_Model_Member($this->axis11, [$this->member111a]);
+        $this->member11a->setRef('ref11_a');
+        $this->member11a->setLabel('Label 11 A');
+        $this->member11b = new Orga_Model_Member($this->axis11, [$this->member111b]);
+        $this->member11b->setRef('ref11_b');
+        $this->member11b->setLabel('Label 11 B');
+        $this->member11c = new Orga_Model_Member($this->axis11, [$this->member111b]);
+        $this->member11c->setRef('ref11_c');
+        $this->member11c->setLabel('Label 11 C');
+
+        $this->member12a = new Orga_Model_Member($this->axis12);
+        $this->member12a->setRef('ref12_a');
+        $this->member12a->setLabel('Label 12 A');
+        $this->member12b = new Orga_Model_Member($this->axis12);
+        $this->member12b->setRef('ref12_b');
+        $this->member12b->setLabel('Label 12 B');
+
+        $this->member1a = new Orga_Model_Member($this->axis1, [$this->member11a, $this->member12a]);
+        $this->member1a->setRef('ref1_a');
+        $this->member1a->setLabel('Label 1 A');
+        $this->member1b = new Orga_Model_Member($this->axis1, [$this->member11a, $this->member12b]);
+        $this->member1b->setRef('ref1_b');
+        $this->member1b->setLabel('Label 1 B');
+        $this->member1c = new Orga_Model_Member($this->axis1, [$this->member11b, $this->member12a]);
+        $this->member1c->setRef('ref1_c');
+        $this->member1c->setLabel('Label 1 C');
+        $this->member1d = new Orga_Model_Member($this->axis1, [$this->member11b, $this->member12b]);
+        $this->member1d->setRef('ref1_d');
+        $this->member1d->setLabel('Label 1 D');
+        $this->member1e = new Orga_Model_Member($this->axis1, [$this->member11c, $this->member12a]);
+        $this->member1e->setRef('ref1_e');
+        $this->member1e->setLabel('Label 1 E');
+        $this->member1f = new Orga_Model_Member($this->axis1, [$this->member11c, $this->member12b]);
+        $this->member1f->setRef('ref1_f');
+        $this->member1f->setLabel('Label 1 F');
+
+        $this->member2a = new Orga_Model_Member($this->axis2);
+        $this->member2a->setRef('ref2_a');
+        $this->member2a->setLabel('Label 2 A');
+        $this->member2b = new Orga_Model_Member($this->axis2);
+        $this->member2b->setRef('ref2_b');
+        $this->member2b->setLabel('Label 2 B');
+    }
+
+    public function testGetDirectParentForAxis()
+    {
+        $this->assertSame($this->member11a, $this->member1a->getDirectParentForAxis($this->axis11));
+        $this->assertSame($this->member12a, $this->member1a->getDirectParentForAxis($this->axis12));
+        $this->assertSame($this->member11a, $this->member1b->getDirectParentForAxis($this->axis11));
+        $this->assertSame($this->member12b, $this->member1b->getDirectParentForAxis($this->axis12));
+        $this->assertSame($this->member11b, $this->member1c->getDirectParentForAxis($this->axis11));
+        $this->assertSame($this->member12a, $this->member1c->getDirectParentForAxis($this->axis12));
+        $this->assertSame($this->member11b, $this->member1d->getDirectParentForAxis($this->axis11));
+        $this->assertSame($this->member12b, $this->member1d->getDirectParentForAxis($this->axis12));
+        $this->assertSame($this->member11c, $this->member1e->getDirectParentForAxis($this->axis11));
+        $this->assertSame($this->member12a, $this->member1e->getDirectParentForAxis($this->axis12));
+        $this->assertSame($this->member11c, $this->member1f->getDirectParentForAxis($this->axis11));
+        $this->assertSame($this->member12b, $this->member1f->getDirectParentForAxis($this->axis12));
+        $this->assertSame($this->member111a, $this->member11a->getDirectParentForAxis($this->axis111));
+        $this->assertSame($this->member111b, $this->member11b->getDirectParentForAxis($this->axis111));
+        $this->assertSame($this->member111b, $this->member11c->getDirectParentForAxis($this->axis111));
     }
 
     /**
-     * Fonction appelee avant chaque test
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage The given Axis is not a direct broader of the Member's Axis
      */
-    protected function setUp()
+    public function testGetDirectParentForAxisNotBroader()
     {
-        // Crée un objet de test
-        $this->member = Orga_Test_MemberTest::generateObject();
-        $this->axis = $this->member->getAxis();
-        $this->organization = $this->axis->getOrganization();
+        $this->member1a->getDirectParentForAxis($this->axis2);
     }
 
     /**
-     * Function testLoadByRef
-     *  Test le chargement par reference
+     * @expectedException Core_Exception_NotFound
+     * @expectedExceptionMessage No direct parent Member matching Axis "new".
      */
-    public function testLoadByRef()
+    public function testGetDirectParentForAxisNoMember()
     {
-        $o = $this->member->getAxis()->getMemberByCompleteRef($this->member->getCompleteRef());
-        $this->assertSame($this->member, $o);
+        $newBroaderAxis = new Orga_Model_Axis($this->organization, $this->axis2);
+        $newBroaderAxis->setRef('new');
+
+        $this->member2a->getDirectParentForAxis($newBroaderAxis);
+    }
+
+    public function testGetAllParents()
+    {
+        $this->assertSame([$this->member11a, $this->member111a, $this->member12a], $this->member1a->getAllParents());
+        $this->assertSame([$this->member11a, $this->member111a, $this->member12b], $this->member1b->getAllParents());
+        $this->assertSame([$this->member11b, $this->member111b, $this->member12a], $this->member1c->getAllParents());
+        $this->assertSame([$this->member11b, $this->member111b, $this->member12b], $this->member1d->getAllParents());
+        $this->assertSame([$this->member11c, $this->member111b, $this->member12a], $this->member1e->getAllParents());
+        $this->assertSame([$this->member11c, $this->member111b, $this->member12b], $this->member1f->getAllParents());
+        $this->assertSame([$this->member111a], $this->member11a->getAllParents());
+        $this->assertSame([$this->member111b], $this->member11b->getAllParents());
+        $this->assertSame([$this->member111b], $this->member11c->getAllParents());
+        $this->assertSame([], $this->member111a->getAllParents());
+        $this->assertSame([], $this->member111b->getAllParents());
+        $this->assertSame([], $this->member12a->getAllParents());
+        $this->assertSame([], $this->member12b->getAllParents());
+        $this->assertSame([], $this->member2a->getAllParents());
+        $this->assertSame([], $this->member2b->getAllParents());
+    }
+
+    public function testGetParentForAxis()
+    {
+        $this->assertSame($this->member11a, $this->member1a->getParentForAxis($this->axis11));
+        $this->assertSame($this->member111a, $this->member1a->getParentForAxis($this->axis111));
+        $this->assertSame($this->member12a, $this->member1a->getParentForAxis($this->axis12));
+        $this->assertSame($this->member11a, $this->member1b->getParentForAxis($this->axis11));
+        $this->assertSame($this->member111a, $this->member1b->getParentForAxis($this->axis111));
+        $this->assertSame($this->member12b, $this->member1b->getParentForAxis($this->axis12));
+        $this->assertSame($this->member11b, $this->member1c->getParentForAxis($this->axis11));
+        $this->assertSame($this->member111b, $this->member1c->getParentForAxis($this->axis111));
+        $this->assertSame($this->member12a, $this->member1c->getParentForAxis($this->axis12));
+        $this->assertSame($this->member11b, $this->member1d->getParentForAxis($this->axis11));
+        $this->assertSame($this->member111b, $this->member1d->getParentForAxis($this->axis111));
+        $this->assertSame($this->member12b, $this->member1d->getParentForAxis($this->axis12));
+        $this->assertSame($this->member11c, $this->member1e->getParentForAxis($this->axis11));
+        $this->assertSame($this->member111b, $this->member1e->getParentForAxis($this->axis111));
+        $this->assertSame($this->member12a, $this->member1e->getParentForAxis($this->axis12));
+        $this->assertSame($this->member11c, $this->member1f->getParentForAxis($this->axis11));
+        $this->assertSame($this->member111b, $this->member1f->getParentForAxis($this->axis111));
+        $this->assertSame($this->member12b, $this->member1f->getParentForAxis($this->axis12));
+        $this->assertSame($this->member111a, $this->member11a->getParentForAxis($this->axis111));
+        $this->assertSame($this->member111b, $this->member11b->getParentForAxis($this->axis111));
+        $this->assertSame($this->member111b, $this->member11c->getParentForAxis($this->axis111));
     }
 
     /**
-     * Tests all functions relative to Children and Parents Members.
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage The given Axis is not a broader of the Member's Axis
      */
-    public function testManagerChildrenAndParents()
+    public function testGetParentForAxisNotBroader()
     {
-        $member1 = Orga_Test_MemberTest::generateObject('RefMemberManageChildren1', 'LabelMemberManageChildren1', $this->axis);
-        $member11 = Orga_Test_MemberTest::generateObject('RefMemberManageChildren11', 'LabelMemberManageChildren11', $this->axis);
-        $member2 = Orga_Test_MemberTest::generateObject('RefMemberManageChildren2', 'LabelMemberManageChildren2', $this->axis);
-        $member21 = Orga_Test_MemberTest::generateObject('RefMemberManageChildren21', 'LabelMemberManageChildren21', $this->axis);
-        $member22 = Orga_Test_MemberTest::generateObject('RefMemberManageChildren22', 'LabelMemberManageChildren22', $this->axis);
-        $member3 = Orga_Test_MemberTest::generateObject('RefMemberManageChildren3', 'LabelMemberManageChildren3', $this->axis);
-
-        // HasDirectParents.
-        $this->assertFalse($member1->hasDirectParents());
-        $this->assertFalse($member11->hasDirectParents());
-        $this->assertFalse($member2->hasDirectParents());
-        $this->assertFalse($member21->hasDirectParents());
-        $this->assertFalse($member22->hasDirectParents());
-        $this->assertFalse($member3->hasDirectParents());
-        // HasDirectParent.
-        $this->assertFalse($member1->hasDirectParent($this->member));
-        $this->assertFalse($member11->hasDirectParent($this->member));
-        $this->assertFalse($member2->hasDirectParent($this->member));
-        $this->assertFalse($member21->hasDirectParent($this->member));
-        $this->assertFalse($member22->hasDirectParent($this->member));
-        $this->assertFalse($member3->hasDirectParent($this->member));
-        // GetDirectParent.
-        $this->assertEmpty($member1->getDirectParents());
-        $this->assertEmpty($member11->getDirectParents());
-        $this->assertEmpty($member2->getDirectParents());
-        $this->assertEmpty($member21->getDirectParents());
-        $this->assertEmpty($member22->getDirectParents());
-        $this->assertEmpty($member3->getDirectParents());
-        // GetAllParent.
-        $this->assertEmpty($member1->getAllParents());
-        $this->assertEmpty($member11->getAllParents());
-        $this->assertEmpty($member2->getAllParents());
-        $this->assertEmpty($member21->getAllParents());
-        $this->assertEmpty($member22->getAllParents());
-        $this->assertEmpty($member3->getAllParents());
-        // HasDirectChildren.
-        $this->assertFalse($member1->hasDirectChildren());
-        $this->assertFalse($member11->hasDirectChildren());
-        $this->assertFalse($member2->hasDirectChildren());
-        $this->assertFalse($member21->hasDirectChildren());
-        $this->assertFalse($member22->hasDirectChildren());
-        $this->assertFalse($member3->hasDirectChildren());
-        // HasDirectChild.
-        $this->assertFalse($member1->hasDirectChild($this->member));
-        $this->assertFalse($member11->hasDirectChild($this->member));
-        $this->assertFalse($member2->hasDirectChild($this->member));
-        $this->assertFalse($member21->hasDirectChild($this->member));
-        $this->assertFalse($member22->hasDirectChild($this->member));
-        $this->assertFalse($member3->hasDirectChild($this->member));
-        // GetDirectChildren.
-        $this->assertEmpty($member1->getDirectChildren());
-        $this->assertEmpty($member11->getDirectChildren());
-        $this->assertEmpty($member2->getDirectChildren());
-        $this->assertEmpty($member21->getDirectChildren());
-        $this->assertEmpty($member22->getDirectChildren());
-        $this->assertEmpty($member3->getDirectChildren());
-        // GetAllChildren.
-        $this->assertEmpty($member1->getAllChildren());
-        $this->assertEmpty($member11->getAllChildren());
-        $this->assertEmpty($member2->getAllChildren());
-        $this->assertEmpty($member21->getAllChildren());
-        $this->assertEmpty($member22->getAllChildren());
-        $this->assertEmpty($member3->getAllChildren());
-
-        $member1->addDirectParent($this->member);
-        $member11->addDirectParent($member1);
-
-        // HasDirectParents.
-        $this->assertTrue($member1->hasDirectParents());
-        $this->assertTrue($member11->hasDirectParents());
-        $this->assertFalse($member2->hasDirectParents());
-        $this->assertFalse($member21->hasDirectParents());
-        $this->assertFalse($member22->hasDirectParents());
-        $this->assertFalse($member3->hasDirectParents());
-        // HasDirectParent.
-        $this->assertTrue($member1->hasDirectParent($this->member));
-        $this->assertFalse($member11->hasDirectParent($this->member));
-        $this->assertTrue($member11->hasDirectParent($member1));
-        $this->assertFalse($member2->hasDirectParent($this->member));
-        $this->assertFalse($member21->hasDirectParent($this->member));
-        $this->assertFalse($member22->hasDirectParent($this->member));
-        $this->assertFalse($member3->hasDirectParent($this->member));
-        // GetDirectParent.
-        $this->assertEquals(array($this->member), $member1->getDirectParents());
-        $this->assertEquals(array($member1), $member11->getDirectParents());
-        $this->assertEmpty($member2->getDirectParents());
-        $this->assertEmpty($member21->getDirectParents());
-        $this->assertEmpty($member22->getDirectParents());
-        $this->assertEmpty($member3->getDirectParents());
-        // GetAllParent.
-        $this->assertEquals(array($this->member), $member1->getAllParents());
-        $this->assertEquals(array($member1, $this->member), $member11->getAllParents());
-        $this->assertEmpty($member2->getAllParents());
-        $this->assertEmpty($member21->getAllParents());
-        $this->assertEmpty($member22->getAllParents());
-        $this->assertEmpty($member3->getAllParents());
-        // HasDirectChildren.
-        $this->assertTrue($member1->hasDirectChildren());
-        $this->assertFalse($member11->hasDirectChildren());
-        $this->assertFalse($member2->hasDirectChildren());
-        $this->assertFalse($member21->hasDirectChildren());
-        $this->assertFalse($member22->hasDirectChildren());
-        $this->assertFalse($member3->hasDirectChildren());
-        // HasDirectChild.
-        $this->assertFalse($member1->hasDirectChild($this->member));
-        $this->assertTrue($member1->hasDirectChild($member11));
-        $this->assertFalse($member11->hasDirectChild($this->member));
-        $this->assertFalse($member2->hasDirectChild($this->member));
-        $this->assertFalse($member21->hasDirectChild($this->member));
-        $this->assertFalse($member22->hasDirectChild($this->member));
-        $this->assertFalse($member3->hasDirectChild($this->member));
-        // GetDirectChildren.
-        $this->assertEquals(array($member11), $member1->getDirectChildren());
-        $this->assertEmpty($member11->getDirectChildren());
-        $this->assertEmpty($member2->getDirectChildren());
-        $this->assertEmpty($member21->getDirectChildren());
-        $this->assertEmpty($member22->getDirectChildren());
-        $this->assertEmpty($member3->getDirectChildren());
-        // GetAllChildren.
-        $this->assertEquals(array($member11), $member1->getAllChildren());
-        $this->assertEmpty($member11->getAllChildren());
-        $this->assertEmpty($member2->getAllChildren());
-        $this->assertEmpty($member21->getAllChildren());
-        $this->assertEmpty($member22->getAllChildren());
-        $this->assertEmpty($member3->getAllChildren());
-
-        $member2->addDirectParent($this->member);
-        $member21->addDirectParent($member2);
-        $member22->addDirectParent($member2);
-        $member3->addDirectChild($this->member);
-
-        // HasDirectParent.
-        $this->assertTrue($member1->hasDirectParent($this->member));
-        $this->assertFalse($member11->hasDirectParent($this->member));
-        $this->assertTrue($member11->hasDirectParent($member1));
-        $this->assertTrue($member2->hasDirectParent($this->member));
-        $this->assertFalse($member21->hasDirectParent($this->member));
-        $this->assertTrue($member21->hasDirectParent($member2));
-        $this->assertFalse($member22->hasDirectParent($this->member));
-        $this->assertTrue($member22->hasDirectParent($member2));
-        $this->assertFalse($member3->hasDirectParent($this->member));
-        // GetDirectParent.
-        $this->assertEquals(array($this->member), $member1->getDirectParents());
-        $this->assertEquals(array($member1), $member11->getDirectParents());
-        $this->assertEquals(array($this->member), $member2->getDirectParents());
-        $this->assertEquals(array($member2), $member21->getDirectParents());
-        $this->assertEquals(array($member2), $member22->getDirectParents());
-        $this->assertEmpty($member3->getDirectParents());
-        // GetAllParent.
-        $this->assertEquals(array($this->member, $member3), $member1->getAllParents());
-        $this->assertEquals(array($member1, $this->member, $member3), $member11->getAllParents());
-        $this->assertEquals(array($this->member, $member3), $member2->getAllParents());
-        $this->assertEquals(array($member2, $this->member, $member3), $member21->getAllParents());
-        $this->assertEquals(array($member2, $this->member, $member3), $member22->getAllParents());
-        $this->assertEmpty($member3->getAllParents());
-        // HasDirectChildren.
-        $this->assertTrue($member1->hasDirectChildren());
-        $this->assertFalse($member11->hasDirectChildren());
-        $this->assertTrue($member2->hasDirectChildren());
-        $this->assertFalse($member21->hasDirectChildren());
-        $this->assertFalse($member22->hasDirectChildren());
-        $this->assertTrue($member3->hasDirectChildren());
-        // HasDirectChild.
-        $this->assertFalse($member1->hasDirectChild($this->member));
-        $this->assertTrue($member1->hasDirectChild($member11));
-        $this->assertFalse($member11->hasDirectChild($this->member));
-        $this->assertFalse($member2->hasDirectChild($this->member));
-        $this->assertTrue($member2->hasDirectChild($member21));
-        $this->assertTrue($member2->hasDirectChild($member22));
-        $this->assertFalse($member21->hasDirectChild($this->member));
-        $this->assertFalse($member22->hasDirectChild($this->member));
-        $this->assertTrue($member3->hasDirectChild($this->member));
-        // GetDirectChildren.
-        $this->assertEquals(array($member11), $member1->getDirectChildren());
-        $this->assertEmpty($member11->getDirectChildren());
-        $this->assertEquals(array($member21, $member22), $member2->getDirectChildren());
-        $this->assertEmpty($member21->getDirectChildren());
-        $this->assertEmpty($member22->getDirectChildren());
-        $this->assertEquals(array($this->member), $member3->getDirectChildren());
-        // GetAllChildren.
-        $this->assertEquals(array($member11), $member1->getAllChildren());
-        $this->assertEmpty($member11->getAllChildren());
-        $this->assertEquals(array($member21, $member22), $member2->getAllChildren());
-        $this->assertEmpty($member21->getAllChildren());
-        $this->assertEmpty($member22->getAllChildren());
-        $this->assertEquals(array($this->member, $member1, $member11, $member2, $member21, $member22), $member3->getAllChildren());
+        $this->member1a->getParentForAxis($this->axis2);
     }
 
     /**
-     * Test the member function to get parent or children for a given Axis.
+     * @expectedException Core_Exception_NotFound
+     * @expectedExceptionMessage No parent Member matching Axis "new".
      */
-    public function testGetParentAndChildrenForAxis()
+    public function testGetParentForAxisNoMember()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
+        $newBroaderAxis = new Orga_Model_Axis($this->organization, $this->axis111);
+        $newBroaderAxis->setRef('new');
 
-        $axisA = Orga_Test_AxisTest::generateObject('a', 'a', $this->organization);
-        $axisB = Orga_Test_AxisTest::generateObject('b', 'b', $this->organization);
-        $axisC = Orga_Test_AxisTest::generateObject('c', 'c', $this->organization);
-        $axisD = Orga_Test_AxisTest::generateObject('d', 'd', $this->organization);
-        $axisE = Orga_Test_AxisTest::generateObject('e', 'e', $this->organization);
-        $axisF = Orga_Test_AxisTest::generateObject('f', 'f', $this->organization);
-        $axisG = Orga_Test_AxisTest::generateObject('g', 'g', $this->organization);
-        $axisH = Orga_Test_AxisTest::generateObject('h', 'h', $this->organization);
+        $this->member1a->getParentForAxis($newBroaderAxis);
+    }
 
-        $axisB->setDirectNarrower($axisA);
-        $axisC->setDirectNarrower($axisA);
-        $axisD->setDirectNarrower($axisC);
-        $axisE->setDirectNarrower($axisC);
-        $axisF->setDirectNarrower($axisD);
-        $axisG->setDirectNarrower($axisE);
-        $axisH->setDirectNarrower($axisE);
-        $entityManagers['default']->flush();
-
-        $memberA1 = Orga_Test_MemberTest::generateObject('a1', 'a1', $axisA);
-        $memberA2 = Orga_Test_MemberTest::generateObject('a2', 'a2', $axisA);
-        $memberA3 = Orga_Test_MemberTest::generateObject('a3', 'a3', $axisA);
-        $memberB1 = Orga_Test_MemberTest::generateObject('b1', 'b1', $axisB);
-        $memberB2 = Orga_Test_MemberTest::generateObject('b2', 'b2', $axisB);
-        $memberC1 = Orga_Test_MemberTest::generateObject('c1', 'c1', $axisC);
-        $memberC2 = Orga_Test_MemberTest::generateObject('c2', 'c2', $axisC);
-        $memberC3 = Orga_Test_MemberTest::generateObject('c3', 'c3', $axisC);
-        $memberD1 = Orga_Test_MemberTest::generateObject('d1', 'd1', $axisD);
-        $memberD2 = Orga_Test_MemberTest::generateObject('d2', 'd2', $axisD);
-        $memberE1 = Orga_Test_MemberTest::generateObject('e1', 'e1', $axisE);
-        $memberE2 = Orga_Test_MemberTest::generateObject('e2', 'e2', $axisE);
-        $memberF1 = Orga_Test_MemberTest::generateObject('f1', 'f1', $axisF);
-        $memberF2 = Orga_Test_MemberTest::generateObject('f2', 'f2', $axisF);
-        $memberG1 = Orga_Test_MemberTest::generateObject('g1', 'g1', $axisG);
-        $memberH1 = Orga_Test_MemberTest::generateObject('h1', 'h1', $axisH);
-        $memberH2 = Orga_Test_MemberTest::generateObject('h2', 'h2', $axisH);
-
-
-        $memberA1->addDirectParent($memberB1);
-        $memberA2->addDirectParent($memberB2);
-        $memberA3->addDirectParent($memberB1);
-        $memberA1->addDirectParent($memberC1);
-        $memberA2->addDirectParent($memberC2);
-        $memberA3->addDirectParent($memberC3);
-        $memberC1->addDirectParent($memberD1);
-        $memberC2->addDirectParent($memberD1);
-        $memberC3->addDirectParent($memberD2);
-        $memberC1->addDirectParent($memberE1);
-        $memberC2->addDirectParent($memberE2);
-        $memberC3->addDirectParent($memberE2);
-        $memberD1->addDirectParent($memberF1);
-        $memberD2->addDirectParent($memberF2);
-        $memberE1->addDirectParent($memberG1);
-        $memberE2->addDirectParent($memberG1);
-        $memberE1->addDirectParent($memberH1);
-        $memberE2->addDirectParent($memberH2);
-        $entityManagers['default']->flush();
-
-        $this->assertEquals($memberA1->getParentForAxis($axisF), $memberF1);
-        $this->assertEquals($memberA2->getParentForAxis($axisF), $memberF1);
-        $this->assertEquals($memberA3->getParentForAxis($axisF), $memberF2);
-
-        $this->assertEquals($memberA1->getParentForAxis($axisG), $memberG1);
-        $this->assertEquals($memberA2->getParentForAxis($axisG), $memberG1);
-        $this->assertEquals($memberA3->getParentForAxis($axisG), $memberG1);
-
-        $this->assertEquals($memberA1->getParentForAxis($axisH), $memberH1);
-        $this->assertEquals($memberA2->getParentForAxis($axisH), $memberH2);
-        $this->assertEquals($memberA3->getParentForAxis($axisH), $memberH2);
-
-
-        $this->assertEquals($memberF1->getChildrenForAxis($axisA), array($memberA1, $memberA2));
-        $this->assertEquals($memberF2->getChildrenForAxis($axisA), array($memberA3));
-
-        $this->assertEquals($memberG1->getChildrenForAxis($axisA), array($memberA1, $memberA2, $memberA3));
-
-        $this->assertEquals($memberH1->getChildrenForAxis($axisA), array($memberA1));
-        $this->assertEquals($memberH2->getChildrenForAxis($axisA), array($memberA2, $memberA3));
+    public function getChildrenForAxis()
+    {
+        $this->assertSame([$this->member1a], $this->member11a->getChildrenForAxis($this->axis1));
+        $this->assertSame([$this->member1b], $this->member11b->getChildrenForAxis($this->axis1));
+        $this->assertSame([$this->member1b], $this->member11c->getChildrenForAxis($this->axis1));
+        $this->assertSame([$this->member11a], $this->member111a->getChildrenForAxis($this->axis11));
+        $this->assertSame([$this->member1a, $this->member1b], $this->member111a->getChildrenForAxis($this->axis1));
+        $this->assertSame([$this->member11b, $this->member11c], $this->member111b->getChildrenForAxis($this->axis11));
+        $this->assertSame([$this->member1c, $this->member1d, $this->member1e, $this->member1f], $this->member111b->getChildrenForAxis($this->axis1));
+        $this->assertSame([$this->member1a, $this->member1c, $this->member1e], $this->member12a->getChildrenForAxis($this->axis1));
+        $this->assertSame([$this->member1b, $this->member1d, $this->member1f], $this->member12b->getChildrenForAxis($this->axis1));
     }
 
     /**
-     * Fonction appelee apres tous chaques test
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage The given Axis is not a narrower of the Member's Axis
      */
-    protected function tearDown()
+    public function testGetChildrenForAxisNotNarrower()
     {
-        Orga_Test_OrganizationTest::deleteObject($this->organization);
+        $this->member1a->getChildrenForAxis($this->axis2);
     }
-
-    /**
-     * Fonction appelee une fois, apres tous les tests
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
-        if (Orga_Model_Member::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Member restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Member::loadList() as $member) {
-                $member->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
-        if (Orga_Model_Axis::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Axis restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Axis::loadList() as $axis) {
-                $axis->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
-        if (Orga_Model_Organization::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Organization::loadList() as $organization) {
-                $organization->delete();
-            }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
-        }
-    }
-
 
 }

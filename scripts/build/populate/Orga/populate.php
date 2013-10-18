@@ -122,13 +122,9 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function createMember(Orga_Model_Axis $axis, $ref, $label, array $parents=[])
     {
-        $member = new Orga_Model_Member($axis);
+        $member = new Orga_Model_Member($axis, $parents);
         $member->setRef($ref);
         $member->setLabel($label);
-        foreach ($parents as $directParent)
-        {
-            $member->addDirectParent($directParent);
-        }
         $member->save();
         return $member;
     }

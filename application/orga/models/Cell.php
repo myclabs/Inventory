@@ -21,13 +21,15 @@ class Orga_Model_Cell extends Core_Model_Entity
 {
     // Constantes de tris et de filtres.
     const QUERY_GRANULARITY = 'granularity';
+    const QUERY_TAG = 'tag';
+    const QUERY_MEMBERS_HASHKEY = 'membersHashKey';
     const QUERY_RELEVANT = 'relevant';
     const QUERY_ALLPARENTSRELEVANT = 'allParentsRelevant';
-    const QUERY_MEMBERS_HASHKEY = 'membersHashKey';
     const QUERY_INVENTORYSTATUS = 'inventoryStatus';
     const QUERY_AFINPUTSETPRIMARY = 'aFInputSetPrimary';
 
-    // Séparateur des labels des membres dans le label de la cellule.
+    // Séparateur des refs et labels des axes dans le label de la cellule.
+    const  REF_SEPARATOR = '|';
     const  LABEL_SEPARATOR = ' | ';
 
 
@@ -69,11 +71,18 @@ class Orga_Model_Cell extends Core_Model_Entity
     protected $members = array();
 
     /**
-     * Représentation en chaine de caractère des membres de la cellule.
+     * Représentation simplifié en chaine de caractère des membres de la cellule.
      *
      * @var string
      */
     protected $membersHashKey = '';
+
+    /**
+     * Tag identifiant la cellule dans la hiérarchie de l'organization.
+     *
+     * @var string
+     */
+    protected $tag = '';
 
     /**
      * Définit si la cellule est pertinente.
@@ -196,8 +205,7 @@ class Orga_Model_Cell extends Core_Model_Entity
             $this->members->add($member);
             $member->addCell($this);
         }
-        $this->updateMembersHashKey();
-        $this->updateHierarchy();
+        $this->updateTags();
 
         // Création du cube de DW.
         $this->createDWCube();
@@ -336,6 +344,16 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
+     * Met à jour la HashKey et le ta de la cellule.
+     */
+    public function updateTags()
+    {
+        $this->updateMembersHashKey();
+        $this->updateTag();
+        $this->updateHierarchy();
+    }
+
+    /**
      * Met à jour la member hashKey de la cellule.
      */
     public function updateMembersHashKey()
@@ -364,15 +382,42 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public static function buildMembersHashKey($listMembers)
     {
-        // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-        @uasort($listMembers, array('Orga_Model_Member', 'orderMembers'));
+        @usort($listMembers, ['Orga_Model_Member', 'orderMembers']);
         $membersRef = [];
 
         foreach ($listMembers as $member) {
             $membersRef[] = $member->getCompleteRef();
         }
 
-        return implode('|', $membersRef);
+        return sha1(implode(self::REF_SEPARATOR, $membersRef));
+    }
+
+    /**
+     * Met à jour la member hashKey de la cellule.
+     */
+    public function updateTag()
+    {
+        if (!$this->hasMembers()) {
+            $this->tag = Orga_Model_Organization::PATH_SEPARATOR;
+        } else {
+            $membersTagParts = array();
+            $members = $this->getMembers();
+            @usort($members, ['Orga_Model_Member', 'orderMembers']);
+            foreach ($members as $member) {
+                $membersTagParts[] = $member->getTag();
+            }
+            $this->tag =  implode(Orga_Model_Organization::PATH_JOIN, $membersTagParts);
+        }
+    }
+
+    /**
+     * Retourne la clé de hashage des membres de la cellule.
+     *
+     * @return string
+     */
+    public function getTag()
+    {
+        return $this->tag;
     }
 
     /**
@@ -391,8 +436,14 @@ class Orga_Model_Cell extends Core_Model_Entity
                 foreach ($this->getChildCells() as $childCell) {
                     $childAccess = $relevant;
                     if ($childAccess) {
-                        foreach ($childCell->getParentCells() as $parentCell) {
-                            if (!($parentCell->getRelevant())) {
+                        foreach ($childCell->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
+                            try {
+                                $parentCell= $childCell->getParentCellForGranularity($broaderGranularity);
+                            } catch (Core_Exception_NotFound $e) {
+                                // Pas de cellule parente pour cette granularité.
+                                $parentCell = null;
+                            }
+                            if (($parentCell === null) || (!$parentCell->getRelevant())) {
                                 $childAccess = false;
                                 break;
                             }
@@ -412,44 +463,6 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getRelevant()
     {
         return $this->relevant;
-    }
-
-    /**
-     * Met à jour l'attribut allParentsRelevant.
-     */
-    public function updateHierarchy()
-    {
-        // Mise à jour de la pertinence.
-        $access = true;
-        foreach ($this->getParentCells() as $parentCell) {
-            if (!($parentCell->getRelevant())) {
-                $access = false;
-                break;
-            }
-        }
-        $this->setAllParentsRelevant($access);
-
-        // Mise à jour du status de l'inventaire.
-        try {
-            $granularityForInventoryStatus = $this->granularity->getOrganization()->getGranularityForInventoryStatus();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            // La granularité des inventaires n'a pas encoré été choisie.
-            $granularityForInventoryStatus = null;
-        }
-        // Définition du statut de l'inventaire.
-        if (($granularityForInventoryStatus)
-            && ($this->granularity !== $granularityForInventoryStatus)
-            && ($this->granularity->isNarrowerThan($granularityForInventoryStatus))
-        ) {
-            // Cherche la cellule parent dans la granularité de définition des statut des inventaires
-            try {
-                $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
-                $this->updateInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
-            } catch (Core_Exception_NotFound $e) {
-                // Il n'y a pas de cellules parentes.
-                $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
-            }
-        }
     }
 
     /**
@@ -483,6 +496,102 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
+     * Désactive la cellule (utilisé dans le cas d'une hiérarchie cassée).
+     */
+    public function disable()
+    {
+        $this->allParentsRelevant = false;
+    }
+
+    /**
+     * Réactive la cellule et met à jour la pertinence de ses cellules parentes.
+     */
+    public function enable()
+    {
+        $access = true;
+        foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
+            try {
+                $parentCell= $this->getParentCellForGranularity($broaderGranularity);
+            } catch (Core_Exception_NotFound $e) {
+                // Pas de cellule parente pour cette granularité.
+                $parentCell = null;
+            } catch (Core_Exception_TooMany $e) {
+                // Pas de cellule parente pour cette granularité.
+                $parentCell = null;
+            }
+            if (($parentCell === null) || (!$parentCell->getRelevant())) {
+                $access = false;
+                break;
+            }
+        }
+        $this->allParentsRelevant = $access;
+    }
+
+    /**
+     * Met à jour les attributs dépendants de la hiérarchie.
+     */
+    public function updateHierarchy()
+    {
+        // Mise à jour de la pertinence.
+        $this->enable();
+
+        // Mise à jour du status de l'inventaire.
+        try {
+            $granularityForInventoryStatus = $this->granularity->getOrganization()->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            // La granularité des inventaires n'a pas encoré été choisie.
+            $granularityForInventoryStatus = null;
+        }
+        // Définition du statut de l'inventaire.
+        if (($granularityForInventoryStatus)
+            && ($this->granularity !== $granularityForInventoryStatus)
+            && ($this->granularity->isNarrowerThan($granularityForInventoryStatus))
+        ) {
+            // Cherche la cellule parent dans la granularité de définition des statut des inventaires
+            try {
+                $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
+                $this->updateInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
+            } catch (Core_Exception_NotFound $e) {
+                // Il n'y a pas de cellules parentes.
+                $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
+            }
+        }
+
+        // Vérification des bibliothèques.
+        if ($this->getGranularity()->getInputConfigGranularity() !== null) {
+            $parentDocLibraryForAFInputSetsPrimary = $this->getParentDocLibraryForAFInputSetsPrimary();
+            $docBibliographyForAFInputSetPrimary = $this->getDocBibliographyForAFInputSetPrimary();
+            foreach ($docBibliographyForAFInputSetPrimary->getReferencedDocuments() as $document) {
+                if (!$parentDocLibraryForAFInputSetsPrimary->hasDocument($document)) {
+                    $docBibliographyForAFInputSetPrimary->unreferenceDocument($document);
+                }
+            }
+        }
+        if ($this->getGranularity()->getCellsWithSocialGenericActions()) {
+            $parentDocLibraryForSocialGenericAction = $this->getParentDocLibraryForSocialGenericAction();
+            foreach ($this->getSocialGenericActions() as $socialGenericAction) {
+                $docBibliographyForSocialGenericAction = $socialGenericAction->getDocumentBibliography();
+                foreach ($docBibliographyForSocialGenericAction->getReferencedDocuments() as $document) {
+                    if (!$parentDocLibraryForSocialGenericAction->hasDocument($document)) {
+                        $docBibliographyForSocialGenericAction->unreferenceDocument($document);
+                    }
+                }
+            }
+        }
+        if ($this->getGranularity()->getInputConfigGranularity()) {
+            $parentDocLibraryForSocialContextAction = $this->getParentDocLibraryForSocialContextAction();
+            foreach ($this->getSocialContextActions() as $sociaContextAction) {
+                $docBibliographyForSocialContextAction = $sociaContextAction->getDocumentBibliography();
+                foreach ($docBibliographyForSocialContextAction->getReferencedDocuments() as $document) {
+                    if (!$parentDocLibraryForSocialContextAction->hasDocument($document)) {
+                        $docBibliographyForSocialContextAction->unreferenceDocument($document);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Renvoie le label de la Cell. Basée sur les labels des Member.
      *
      * @return string
@@ -494,7 +603,9 @@ class Orga_Model_Cell extends Core_Model_Entity
         }
 
         $labels = [];
-        foreach ($this->members as $member) {
+        $members = $this->getMembers();
+        @usort($members, ['Orga_Model_Member', 'orderMembers']);
+        foreach ($members as $member) {
             $labels[] = $member->getLabel();
         }
 
@@ -506,14 +617,16 @@ class Orga_Model_Cell extends Core_Model_Entity
      *
      * @return string
      */
-    public function getLabelExtended()
+    public function getExtendedLabel()
     {
         if ($this->members->isEmpty()) {
             return __('Orga', 'navigation', 'labelGlobalCellExtended');
         }
 
         $labels = [];
-        foreach ($this->members as $member) {
+        $members = $this->getMembers();
+        @usort($members, ['Orga_Model_Member', 'orderMembers']);
+        foreach ($members as $member) {
             $labels[] = $member->getExtendedLabel();
         }
 
@@ -570,11 +683,11 @@ class Orga_Model_Cell extends Core_Model_Entity
                         );
                     }
                 } else if ($member->getAxis() === $narrowerAxis) {
-                    $childMembers[$refNarrowerAxis] = array($member);
+                    $childMembers[$refNarrowerAxis] = [$member];
                 }
             }
             if (!isset($childMembers[$refNarrowerAxis])) {
-                $childMembers[$refNarrowerAxis] = $narrowerAxis->getMembers();
+                $childMembers[$refNarrowerAxis] = $narrowerAxis->getMembers()->toArray();
             }
         }
 
@@ -592,7 +705,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getParentCellForGranularity(Orga_Model_Granularity $broaderGranularity)
     {
         if (!$this->getGranularity()->isNarrowerThan($broaderGranularity)) {
-            throw new Core_Exception_InvalidArgument('The given granularity is not broader than the current');
+            throw new Core_Exception_InvalidArgument('The given granularity is not broader than the current.');
         }
 
         return $broaderGranularity->getCellByMembers($this->getParentMembersForGranularity($broaderGranularity));
@@ -606,6 +719,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getParentCells()
     {
         $parentCells = array();
+
         foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
             try {
                 $parentCells[] = $this->getParentCellForGranularity($broaderGranularity);
@@ -623,27 +737,21 @@ class Orga_Model_Cell extends Core_Model_Entity
      * @param Orga_Model_Granularity $narrowerGranularity
      *
      * @throws Core_Exception_InvalidArgument The given granularity is not narrower than the current
-     * @return Orga_Model_Cell[]
+     * @return Collection|Orga_Model_Cell[]
      */
     public function getChildCellsForGranularity(Orga_Model_Granularity $narrowerGranularity)
     {
-        if (!($this->getGranularity()->isBroaderThan($narrowerGranularity))) {
-            throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current');
+        if (!$narrowerGranularity->isNarrowerThan($this->getGranularity())) {
+            throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current.');
         }
 
-        $childMembersByAxisForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
-        $childMembersForGranularity = [];
-        // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
-        foreach ($childMembersByAxisForGranularity as $childAxisMembersForGranularity) {
-            if (empty($childAxisMembersForGranularity)) {
-                return [];
-            }
-            foreach ($childAxisMembersForGranularity as $childAxisMemberForGranularity) {
-                $childMembersForGranularity[] = $childAxisMemberForGranularity;
-            }
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getTag()) as $pathTag) {
+            $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
         }
-
-        return $narrowerGranularity->getCellsByMembers($childMembersForGranularity);
+        //@todo Ordre des Cellules suivant les tag (?Position- & Ref) !== ordre réel (Position || Label).
+        $criteria->orderBy(['tag' => 'ASC']);
+        return $narrowerGranularity->getCells()->matching($criteria);
     }
 
     /**
@@ -657,7 +765,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         $childCells = [];
 
         foreach ($this->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            $childCells = array_merge($childCells, $this->getChildCellsForGranularity($narrowerGranularity));
+            $childCells = array_merge($childCells, $this->getChildCellsForGranularity($narrowerGranularity)->toArray());
         }
 
         return $childCells;
@@ -679,7 +787,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         }
         if ($queryParameters === null) {
             $queryParameters = new Core_Model_Query();
-            $queryParameters->order->addOrder(self::QUERY_MEMBERS_HASHKEY);
+            $queryParameters->order->addOrder('tag');
         }
 
         $childMembersForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
@@ -712,7 +820,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function countTotalChildCellsForGranularity($narrowerGranularity, Core_Model_Query $queryParameters = null)
     {
         if (!($this->getGranularity()->isBroaderThan($narrowerGranularity))) {
-            throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current');
+            throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current.');
         }
         if ($queryParameters === null) {
             $queryParameters = new Core_Model_Query();
@@ -738,6 +846,20 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
+     * Compte le total des Cell enfantes.
+     *
+     * @return int
+     */
+    public function countTotalChildCells()
+    {
+        $totalChildCells = 0;
+        foreach ($this->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            $totalChildCells += $this->countTotalChildCellsForGranularity($narrowerGranularity);
+        }
+        return $totalChildCells;
+    }
+
+    /**
      * Spécifie la statut de l'inventaire de la cellule.
      *
      * @param string $inventoryStatus
@@ -752,17 +874,13 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function setInventoryStatus($inventoryStatus)
     {
         if ($this->getGranularity() !== $this->getGranularity()->getOrganization()->getGranularityForInventoryStatus()) {
-            throw new Core_Exception(
-                "Le statut de l'inventaire ne peut être défini que pour les cellules de la granularité des inventaires."
-            );
+            throw new Core_Exception('Inventory status can only be defined in the inventory granularity.');
         }
 
         if ($this->inventoryStatus !== $inventoryStatus) {
             $acceptedStatus = [self::STATUS_ACTIVE, self::STATUS_CLOSED, self::STATUS_NOTLAUNCHED];
             if (! in_array($inventoryStatus, $acceptedStatus)) {
-                throw new Core_Exception_InvalidArgument(
-                    "Le statut de l'inventaire doit être une constante de la classe STATUS_[..]"
-                );
+                throw new Core_Exception_InvalidArgument('Inventory status must be a class constant (STATUS_[..]).');
             }
 
             $this->inventoryStatus = $inventoryStatus;
@@ -841,10 +959,9 @@ class Orga_Model_Cell extends Core_Model_Entity
         $cellsGroup = $this->cellsGroups->matching($criteria)->toArray();
 
         if (empty($cellsGroup)) {
-            throw new Core_Exception_NotFound("No 'Orga_Model_CellsGroup' for input Granularity " . $inputGranularity);
+            throw new Core_Exception_NotFound('No CellsGroup for input Granularity "'.$inputGranularity.'".');
         } elseif (count($cellsGroup) > 1) {
-            throw new Core_Exception_TooMany("Too many 'Orga_Model_CellsGroup' for input Granularity "
-                . $inputGranularity);
+            throw new Core_Exception_TooMany('Too many CellsGroup for input Granularity "'.$inputGranularity.'".');
         }
 
         return array_pop($cellsGroup);
@@ -894,7 +1011,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         if ($this->aFInputSetPrimary !== $aFInputSetPrimary) {
             if (($this->aFInputSetPrimary !== null) && ($aFInputSetPrimary !== null)) {
-                throw new Core_Exception_Duplicate("Impossible de redéfinir l'InputSetPrimary, il a déjà été défini");
+                throw new Core_Exception_Duplicate('InputSetPrimary as already be defined.');
             }
             if ($this->aFInputSetPrimary !== null) {
                 $this->aFInputSetPrimary->delete();
@@ -913,7 +1030,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getAFInputSetPrimary()
     {
         if ($this->aFInputSetPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute("L'InputSetPrimary n'a pas été défini");
+            throw new Core_Exception_UndefinedAttribute('InputSetPrimary has not be defined.');
         }
         return $this->aFInputSetPrimary;
     }
@@ -945,11 +1062,30 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getDocLibraryForAFInputSetsPrimary()
     {
         if ($this->docLibraryForAFInputSetsPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute(
-                "La Doc Library pour les AF InputSet Primary n'a pas été définie"
-            );
+            throw new Core_Exception_UndefinedAttribute('Doc Library for InputSetPrimary has not be defined.');
         }
         return $this->docLibraryForAFInputSetsPrimary;
+    }
+
+    /**
+     * Renvoi la première Library parente trouvé pour la Bibliography de l'AFInputSetsPrimary.
+     *
+     * @throws Core_Exception_NotFound
+     *
+     * @return Library
+     */
+    public function getParentDocLibraryForAFInputSetsPrimary()
+    {
+        if ($this->getGranularity()->getCellsWithInputDocuments()) {
+            return $this->getDocLibraryForAFInputSetsPrimary();
+        } else {
+            foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
+                if ($broaderGranularity->getCellsWithInputDocuments()) {
+                    return $this->getParentCellForGranularity($broaderGranularity)->getDocLibraryForAFInputSetsPrimary();
+                }
+            }
+        }
+        throw new Core_Exception_NotFound('No broader Granularity provides a Library for the AFInputSetsPrimary.');
     }
 
     /**
@@ -979,9 +1115,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getDocBibliographyForAFInputSetPrimary()
     {
         if ($this->docBibliographyForAFInputSetPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute(
-                "La Doc Bibliography pour l'AF InputSet Primary n'a pas été défini"
-            );
+            throw new Core_Exception_UndefinedAttribute('Doc Bibliography for InputSetPrimary has not be defined.');
         }
         return $this->docBibliographyForAFInputSetPrimary;
     }
@@ -1095,7 +1229,7 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getDWCube()
     {
         if ($this->dWCube === null) {
-            throw new Core_Exception_UndefinedAttribute('La Granularity de la Cell ne génère pas de DWCube');
+            throw new Core_Exception_UndefinedAttribute('DW Cube has not be defined.');
         }
         return $this->dWCube;
     }
@@ -1347,11 +1481,30 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getDocLibraryForSocialGenericAction()
     {
         if ($this->docLibraryForSocialGenericActions === null) {
-            throw new Core_Exception_UndefinedAttribute(
-                "La Doc Library pour les Social Generic Actions n'a pas été définie"
-            );
+            throw new Core_Exception_UndefinedAttribute('Doc Library for Social GenericActions has not be defined.');
         }
         return $this->docLibraryForSocialGenericActions;
+    }
+
+    /**
+     * Renvoi la première Library parente trouvé pour la Bibliography de les SocialGenericAction.
+     *
+     * @throws Core_Exception_NotFound
+     *
+     * @return Library
+     */
+    public function getParentDocLibraryForSocialGenericAction()
+    {
+        if ($this->getGranularity()->getCellsWithSocialGenericActions()) {
+            return $this->getDocLibraryForSocialGenericAction();
+        } else {
+            foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
+                if ($broaderGranularity->getCellsWithSocialGenericActions()) {
+                    return $this->getParentCellForGranularity($broaderGranularity)->getDocLibraryForSocialGenericAction();
+                }
+            }
+        }
+        throw new Core_Exception_NotFound('No broader Granularity provides a Library for the SocialGenericAction.');
     }
 
     /**
@@ -1435,11 +1588,30 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getDocLibraryForSocialContextAction()
     {
         if ($this->docLibraryForSocialContextActions === null) {
-            throw new Core_Exception_UndefinedAttribute(
-                "La Doc Library pour les Social Context Actions n'a pas été définie"
-            );
+            throw new Core_Exception_UndefinedAttribute('Doc Library for Social ContextActions has not be defined.');
         }
         return $this->docLibraryForSocialContextActions;
+    }
+
+    /**
+     * Renvoi la première Library parente trouvé pour la Bibliography de l'SocialContextAction.
+     *
+     * @throws Core_Exception_NotFound
+     *
+     * @return Library
+     */
+    public function getParentDocLibraryForSocialContextAction()
+    {
+        if ($this->getGranularity()->getCellsWithSocialContextActions()) {
+            return $this->getDocLibraryForSocialContextAction();
+        } else {
+            foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
+                if ($broaderGranularity->getCellsWithSocialContextActions()) {
+                    return $this->getParentCellForGranularity($broaderGranularity)->getDocLibraryForSocialContextAction();
+                }
+            }
+        }
+        throw new Core_Exception_NotFound('No broader Granularity provides a Library for the SocialContextAction.');
     }
 
     /**

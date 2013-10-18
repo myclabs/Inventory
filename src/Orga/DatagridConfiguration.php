@@ -64,7 +64,7 @@ class Orga_DatagridConfiguration
         $columnAxis->list = array();
 
         if ($axis->hasMembers()) {
-            $childMembers = $axis->getMembers();
+            $childMembers = $axis->getMembers()->toArray();
             foreach ($cell->getMembers() as $cellMember) {
                 if ($cellMember->getAxis()->isBroaderThan($axis)) {
                     $childMembers = array_intersect($childMembers, $cellMember->getChildrenForAxis($axis));

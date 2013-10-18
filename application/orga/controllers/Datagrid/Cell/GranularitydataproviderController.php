@@ -78,7 +78,7 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
     public function updateelementAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        $granularity = Orga_Model_Granularity::loadByRefAndOrganization($this->update['index'], $organization);
+        $granularity = $organization->getGranularityByRef($this->update['index']);
 
         switch ($this->update['column']) {
             case 'cellsWithACL':

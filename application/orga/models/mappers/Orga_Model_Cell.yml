@@ -17,6 +17,10 @@ Orga_Model_Cell:
       type: string
       length: 7650
       nullable: false
+    tag:
+      column: tag
+      type: text
+      nullable: false
     relevant:
       column: relevant
       type: boolean

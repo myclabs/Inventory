@@ -20,7 +20,7 @@ class Orga_Test_ACLTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-//        $suite->addTestSuite('Orga_Test_ACL');
+        $suite->addTestSuite('Orga_Test_ACL');
         return $suite;
     }
 
@@ -250,56 +250,6 @@ class Orga_Test_ACL extends Core_Test_TestCase
         /** @var Core_EventDispatcher $eventDispatcher */
         $eventDispatcher = $container->get('Core_EventDispatcher');
         $eventDispatcher->addListener('Orga_Model_GranularityReport', 'DW_Model_Report');
-
-        // Vérification qu'il ne reste aucun User_Model_User en base, sinon suppression !
-        if (User_Model_User::countTotal() > 0) {
-            echo PHP_EOL . 'Des User_User restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (User_Model_User::loadList() as $user) {
-                $user->delete();
-            }
-            $entityManager->flush();
-        }
-
-        // Vérification qu'il ne reste aucun Orga_Model_Cell en base, sinon suppression !
-        if (Orga_Model_Cell::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cell restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Cell::loadList() as $cell) {
-                $cell->delete();
-            }
-            $entityManager->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Granularity en base, sinon suppression !
-        if (Orga_Model_Granularity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Granularity restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Granularity::loadList() as $granularity) {
-                $granularity->delete();
-            }
-            $entityManager->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
-        if (Orga_Model_Member::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Member restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Member::loadList() as $member) {
-                $member->delete();
-            }
-            $entityManager->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
-        if (Orga_Model_Axis::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Axis::loadList() as $axis) {
-                $axis->delete();
-            }
-            $entityManager->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
-        if (Orga_Model_Organization::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Organization::loadList() as $organization) {
-                $organization->delete();
-            }
-            $entityManager->flush();
-        }
     }
 
     /**
@@ -307,6 +257,7 @@ class Orga_Test_ACL extends Core_Test_TestCase
      */
     public function setUp()
     {
+        $this->markTestSkipped('Test fonctionnant, mais long, donc désactivé (setUp)');
         parent::setUp();
 
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -325,7 +276,9 @@ class Orga_Test_ACL extends Core_Test_TestCase
         // Création de l'organization (proche de populateTest au 08/08/2013).
         $this->organization = new Orga_Model_Organization();
         $this->organization->setLabel('ACL Test');
+        $this->organization->save();
 
+        // Nécéssaire du fait du bug Doctrine inserant les granularités avant les organisations.
         $entityManager->flush();
 
         // Création d'un ensemble d'axes.
@@ -341,22 +294,19 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->axisSite->setLabel('Site');
 
         // Pays.
-        $this->axisPays = new Orga_Model_Axis($this->organization);
+        $this->axisPays = new Orga_Model_Axis($this->organization, $this->axisSite);
         $this->axisPays->setRef('pays');
         $this->axisPays->setLabel('Pays');
-        $this->axisPays->setDirectNarrower($this->axisSite);
 
         // Zone.
-        $this->axisZone = new Orga_Model_Axis($this->organization);
+        $this->axisZone = new Orga_Model_Axis($this->organization, $this->axisPays);
         $this->axisZone->setRef('zone');
         $this->axisZone->setLabel('Zone');
-        $this->axisZone->setDirectNarrower($this->axisPays);
 
         // Marque.
-        $this->axisMarque = new Orga_Model_Axis($this->organization);
+        $this->axisMarque = new Orga_Model_Axis($this->organization, $this->axisSite);
         $this->axisMarque->setRef('marque');
         $this->axisMarque->setLabel('Marque');
-        $this->axisMarque->setDirectNarrower($this->axisSite);
 
         // Catégories.
         $this->axisCategorie = new Orga_Model_Axis($this->organization);
@@ -382,18 +332,15 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->memberZoneSudamerique->setLabel('Amerique du Sud');
 
         // Pays.
-        $this->memberPaysFrance = new Orga_Model_Member($this->axisPays);
+        $this->memberPaysFrance = new Orga_Model_Member($this->axisPays, [$this->memberZoneEurope]);
         $this->memberPaysFrance->setRef('france');
         $this->memberPaysFrance->setLabel('France');
-        $this->memberPaysFrance->addDirectParent($this->memberZoneEurope);
-        $this->memberPaysAllemagne = new Orga_Model_Member($this->axisPays);
+        $this->memberPaysAllemagne = new Orga_Model_Member($this->axisPays, [$this->memberZoneEurope]);
         $this->memberPaysAllemagne->setRef('allemagne');
         $this->memberPaysAllemagne->setLabel('Allemagne');
-        $this->memberPaysAllemagne->addDirectParent($this->memberZoneEurope);
-        $this->memberPaysPerou = new Orga_Model_Member($this->axisPays);
+        $this->memberPaysPerou = new Orga_Model_Member($this->axisPays, [$this->memberZoneSudamerique]);
         $this->memberPaysPerou->setRef('perou');
         $this->memberPaysPerou->setLabel('Pérou');
-        $this->memberPaysPerou->addDirectParent($this->memberZoneSudamerique);
 
         // Marques.
         $this->memberMarqueA = new Orga_Model_Member($this->axisMarque);
@@ -404,26 +351,18 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->memberMarqueB->setLabel('B');
 
         // Sites.
-        $this->memberSiteAnnecy = new Orga_Model_Member($this->axisSite);
+        $this->memberSiteAnnecy = new Orga_Model_Member($this->axisSite, [$this->memberPaysFrance, $this->memberMarqueA]);
         $this->memberSiteAnnecy->setRef('annecy');
         $this->memberSiteAnnecy->setLabel('Annecy');
-        $this->memberSiteAnnecy->addDirectParent($this->memberPaysFrance);
-        $this->memberSiteAnnecy->addDirectParent($this->memberMarqueA);
-        $this->memberSiteChambery = new Orga_Model_Member($this->axisSite);
+        $this->memberSiteChambery = new Orga_Model_Member($this->axisSite, [$this->memberPaysFrance, $this->memberMarqueA]);
         $this->memberSiteChambery->setRef('chambery');
         $this->memberSiteChambery->setLabel('Chambery');
-        $this->memberSiteChambery->addDirectParent($this->memberPaysFrance);
-        $this->memberSiteChambery->addDirectParent($this->memberMarqueA);
-        $this->memberSiteBerlin = new Orga_Model_Member($this->axisSite);
+        $this->memberSiteBerlin = new Orga_Model_Member($this->axisSite, [$this->memberPaysAllemagne, $this->memberMarqueB]);
         $this->memberSiteBerlin->setRef('berlin');
         $this->memberSiteBerlin->setLabel('Berlin');
-        $this->memberSiteBerlin->addDirectParent($this->memberPaysAllemagne);
-        $this->memberSiteBerlin->addDirectParent($this->memberMarqueB);
-        $this->memberSiteLima = new Orga_Model_Member($this->axisSite);
+        $this->memberSiteLima = new Orga_Model_Member($this->axisSite, [$this->memberPaysPerou, $this->memberMarqueB]);
         $this->memberSiteLima->setRef('lima');
         $this->memberSiteLima->setLabel('Lima');
-        $this->memberSiteLima->addDirectParent($this->memberPaysPerou);
-        $this->memberSiteLima->addDirectParent($this->memberMarqueB);
 
         // Catégories.
         $this->memberCategorieEnergie = new Orga_Model_Member($this->axisCategorie);
@@ -441,17 +380,20 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $this->granularityGlobale->setCellsWithOrgaTab(true);
         $this->granularityGlobale->setCellsWithACL(true);
         $this->granularityGlobale->setCellsWithAFConfigTab(true);
+        $this->granularityGlobale->setCellsGenerateDWCubes(true);
 
         // Création de la granularité zone marque.
         $this->granularityZoneMarque = new Orga_Model_Granularity($this->organization, [$this->axisZone, $this->axisMarque]);
         $this->granularityZoneMarque->setNavigability(true);
         $this->granularityZoneMarque->setCellsWithOrgaTab(true);
         $this->granularityZoneMarque->setCellsWithACL(true);
+        $this->granularityZoneMarque->setCellsGenerateDWCubes(true);
 
         // Création de la granularité site.
         $this->granularitySite = new Orga_Model_Granularity($this->organization, [$this->axisSite]);
         $this->granularitySite->setNavigability(true);
         $this->granularitySite->setCellsWithACL(true);
+        $this->granularitySite->setCellsGenerateDWCubes(true);
 
         // Création de la granularité année.
         $this->granularityAnnee = new Orga_Model_Granularity($this->organization, [$this->axisAnnee]);
@@ -516,15 +458,8 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         $entityManager->flush();
 
+
         // Ajout des rapports préconfigurés.
-
-        $this->granularityGlobale->setCellsGenerateDWCubes(true);
-        $this->granularityZoneMarque->setCellsGenerateDWCubes(true);
-        $this->granularitySite->setCellsGenerateDWCubes(true);
-
-        $this->organization->save();
-
-        $entityManager->flush();
 
         $reportGlobale = new DW_Model_Report($this->granularityGlobale->getDWCube());
         $reportGlobale->setLabel('Test Globale');
@@ -6315,101 +6250,63 @@ class Orga_Test_ACL extends Core_Test_TestCase
      */
     protected function tearDown()
     {
-        parent::tearDown();
+        /** @var \DI\Container $container */
+        $container = Zend_Registry::get('container');
 
-        $this->userService->deleteUser($this->organizationAdministrator);
-        $this->userService->deleteUser($this->globaleCellAdministrator);
-        $this->userService->deleteUser($this->europeaCellContributor);
-        $this->userService->deleteUser($this->sudameriquebCellObserver);
-        $this->userService->deleteUser($this->annecyCellAdministrator);
-        $this->userService->deleteUser($this->berlinCellObserver);
-        $this->userService->deleteUser($this->limaCellContributor);
+        /** @var Orga_Service_ACLManager $aclManagerService */
+        $aclManagerService = $container->get('Orga_Service_ACLManager');
+        $aclManagerService->removeOrganizationAdministrator($this->organization, $this->organizationAdministrator, false);
+        $aclManagerService->removeCellAdministrator(
+            $this->granularityGlobale->getCellByMembers([]), $this->globaleCellAdministrator, false
+        );
+        $aclManagerService->removeCellContributor(
+            $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueA]), $this->europeaCellContributor, 'contributor'
+        );
+        $aclManagerService->removeCellObserver(
+            $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]), $this->sudameriquebCellObserver, 'observer'
+        );
+        $aclManagerService->removeCellAdministrator(
+            $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]), $this->annecyCellAdministrator, 'administrator'
+        );
+        $aclManagerService->removeCellContributor(
+            $this->granularitySite->getCellByMembers([$this->memberSiteLima]), $this->limaCellContributor, 'contributor'
+        );
+        $aclManagerService->removeCellObserver(
+            $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]), $this->berlinCellObserver, 'observer'
+        );
 
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $this->organization = Orga_Model_Organization::load($this->organization->getId());
-        foreach ($this->organization->getGranularities() as $granularity) {
+        $this->userService->deleteUser(User_Model_User::load($this->organizationAdministrator->getId()));
+        $this->userService->deleteUser(User_Model_User::load($this->globaleCellAdministrator->getId()));
+        $this->userService->deleteUser(User_Model_User::load($this->europeaCellContributor->getId()));
+        $this->userService->deleteUser(User_Model_User::load($this->sudameriquebCellObserver->getId()));
+        $this->userService->deleteUser(User_Model_User::load($this->annecyCellAdministrator->getId()));
+        $this->userService->deleteUser(User_Model_User::load($this->berlinCellObserver->getId()));
+        $this->userService->deleteUser(User_Model_User::load($this->limaCellContributor->getId()));
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        foreach (Orga_Model_GranularityReport::loadList() as $granularityReport) {
+            $granularityReport->delete();
+        }
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        foreach (Orga_Model_Organization::load($this->organization->getId())->getGranularities() as $granularity) {
             $granularity->delete();
         }
 
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $this->organization = Orga_Model_Organization::load($this->organization->getId());
-        $this->organization->delete();
+        Orga_Model_Organization::load($this->organization->getId())->delete();
 
         $this->entityManager->flush();
-    }
-
-    /**
-     * Fonction appelee une fois, apres tous les tests
-     */
-    public static function tearDownAfterClass()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
-
-        /** @var Orga_Service_ACLManager $aclManagerService */
-        $aclManagerService = $container->get('Orga_Service_ACLManager');
-        $entityManager->getEventManager()->removeEventListener(
-            [Doctrine\ORM\Events::onFlush, Doctrine\ORM\Events::postFlush],
-            $aclManagerService
-        );
-
-        // Vérification qu'il ne reste aucun User_Model_User en base, sinon suppression !
-        if (User_Model_User::countTotal() > 0) {
-            echo PHP_EOL . 'Des User_User restants ont été trouvé après les tests, suppression en cours !';
-            foreach (User_Model_User::loadList() as $user) {
-                $user->delete();
-            }
-            $entityManager->flush();
-        }
-
-        // Vérification qu'il ne reste aucun Orga_Model_Cell en base, sinon suppression !
-        if (Orga_Model_Cell::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cell restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Cell::loadList() as $cell) {
-                $cell->delete();
-            }
-            $entityManager->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Granularity en base, sinon suppression !
-        if (Orga_Model_Granularity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Granularity restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Granularity::loadList() as $granularity) {
-                $granularity->delete();
-            }
-            $entityManager->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
-        if (Orga_Model_Member::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Member restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Member::loadList() as $member) {
-                $member->delete();
-            }
-            $entityManager->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
-        if (Orga_Model_Axis::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Axis restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Axis::loadList() as $axis) {
-                $axis->delete();
-            }
-            $entityManager->flush();
-        }
-        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
-        if (Orga_Model_Organization::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Orga_Model_Organization::loadList() as $organization) {
-                $organization->delete();
-            }
-            $entityManager->flush();
-        }
+        $this->entityManager->clear();
     }
 
 }

@@ -38,7 +38,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_ORGANIZATION, $organization);
-        $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
+        $this->request->order->addOrder(Orga_Model_Granularity::QUERY_TAG);
         /**@var Orga_Model_Granularity $granularity */
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
             $data = array();
@@ -101,7 +101,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         $refGranularity = substr($refGranularity, 0, -1);
 
         try {
-            Orga_Model_Granularity::loadByRefAndOrganization($refGranularity, $organization);
+            $organization->getGranularityByRef($refGranularity);
             $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'));
         } catch (Core_Exception_NotFound $e) {
             // La granularité n'existe pas déjà.

@@ -57,12 +57,14 @@ class Orga_Work_Task_AddMember extends Core_Work_Task
      */
     public function execute()
     {
-        $member = new Orga_Model_Member(Orga_Model_Axis::load($this->idAxis));
+        $broaderMembers = [];
+        foreach ($this->listBroaderMembers as $idBroaderMember) {
+            $broaderMembers[] = Orga_Model_Member::load($idBroaderMember);
+        }
+
+        $member = new Orga_Model_Member(Orga_Model_Axis::load($this->idAxis), $broaderMembers);
         $member->setRef($this->ref);
         $member->setLabel($this->label);
-        foreach ($this->listBroaderMembers as $idBroaderMember) {
-            $member->addDirectParent(Orga_Model_Member::load($idBroaderMember));
-        }
         $member->save();
 
         $entityManagers = Zend_Registry::get('EntityManagers');

@@ -16,8 +16,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Orga_Model_Organization extends Core_Model_Entity
 {
-
     use Core_Model_Entity_Translatable;
+
+    // Constantes de path des Axis, Member, Granularity et Cell.
+    const PATH_SEPARATOR = '/';
+    const PATH_JOIN = '&';
 
     /**
      * Identifiant unique du Organization.
@@ -83,9 +86,6 @@ class Orga_Model_Organization extends Core_Model_Entity
      */
     public function setLabel($label)
     {
-        if (!is_string($label)) {
-            throw new Core_Exception_InvalidArgument("Le label d'un Organization doit être une chaîne de caractères");
-        }
         $this->label = $label;
     }
 
@@ -112,13 +112,8 @@ class Orga_Model_Organization extends Core_Model_Entity
         if ($axis->getOrganization() !== $this) {
             throw new Core_Exception_InvalidArgument();
         }
-
-        try {
-            $this->getAxisByRef($axis->getRef());
-            throw new Core_Exception_Duplicate('An Axis with ref "'.$axis->getRef().'" already exists in the Organization');
-        } catch (Core_Exception_NotFound $e) {
+        if (!$this->hasAxis($axis)) {
             $this->axes->add($axis);
-            $this->orderGranularities();
         }
     }
 
@@ -151,9 +146,9 @@ class Orga_Model_Organization extends Core_Model_Entity
         $axis = $this->axes->matching($criteria)->toArray();
 
         if (count($axis) === 0) {
-            throw new Core_Exception_NotFound("No Axis in Organization matching ref " . $ref);
+            throw new Core_Exception_NotFound('No Axis in Organization matching ref "'.$ref.'".');
         } else if (count($axis) > 1) {
-            throw new Core_Exception_TooMany("Too many Axis in Organization matching " . $ref);
+            throw new Core_Exception_TooMany('Too many Axis in Organization matching "'.$ref.'".');
         }
 
         return array_pop($axis);
@@ -167,7 +162,30 @@ class Orga_Model_Organization extends Core_Model_Entity
     public function removeAxis(Orga_Model_Axis $axis)
     {
         if ($this->hasAxis($axis)) {
+            $narrowerAxis = $axis->getDirectNarrower();
+            // Déplacement des broaders au narrower.
+            foreach ($axis->getDirectBroaders() as $broaderAxis) {
+                $broaderAxis->moveTo($narrowerAxis);
+            }
+            // Déplacement de l'axe à la racine pour retirer du narrower et placer à la fin.
+            if ($narrowerAxis !== null) {
+                $axis->moveTo();
+                foreach ($axis->getMembers() as $axisMember) {
+                    foreach ($axisMember->getDirectChildren() as $childMember) {
+                        $childMember->removeDirectParentForAxis($axisMember);
+                    }
+                }
+            } else {
+                $axis->setPosition($axis->getLastEligiblePosition());
+            }
+
             $this->axes->removeElement($axis);
+            $axis->removeFromOrganization();
+
+            // Suppression des granularités liés.
+            foreach ($axis->getGranularities() as $granularity) {
+                $this->removeGranularity($granularity);
+            }
         }
     }
 
@@ -188,7 +206,9 @@ class Orga_Model_Organization extends Core_Model_Entity
      */
     public function getAxes()
     {
-        return $this->axes;
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->orderBy(['narrowerTag' => 'ASC']);
+        return $this->axes->matching($criteria);
     }
 
     /**
@@ -212,7 +232,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     public function getFirstOrderedAxes()
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->orderBy(['position' => 'ASC']);
+        $criteria->orderBy(['narrowerTag' => 'ASC']);
         return $this->axes->matching($criteria)->toArray();
     }
 
@@ -224,7 +244,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     public function getLastOrderedAxes()
     {
         $axes = $this->getFirstOrderedAxes();
-        @uasort($axes, ['Orga_Model_Axis', 'lastOrderedAxes']);
+        @usort($axes, ['Orga_Model_Axis', 'lastOrderAxes']);
         return $axes;
     }
 
@@ -243,8 +263,6 @@ class Orga_Model_Organization extends Core_Model_Entity
 
         if (!$this->hasGranularity($granularity)) {
             $this->granularities->add($granularity);
-            $granularity->setPosition();
-            $this->orderGranularities();
         }
     }
 
@@ -277,10 +295,10 @@ class Orga_Model_Organization extends Core_Model_Entity
         $granularity = $this->granularities->matching($criteria)->toArray();
 
         if (empty($granularity)) {
-            throw new Core_Exception_NotFound("No Granularity in Organization matching ref " . $ref);
+            throw new Core_Exception_NotFound('No Granularity in Organization matching ref "'.$ref.'".');
         } else {
             if (count($granularity) > 1) {
-                throw new Core_Exception_TooMany("Too many Granularity in Organization matching ref " . $ref);
+                throw new Core_Exception_TooMany('Too many Granularity in Organization matching ref "'.$ref.'".');
             }
         }
 
@@ -296,6 +314,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     {
         if ($this->hasGranularity($granularity)) {
             $this->granularities->removeElement($granularity);
+            //@todo gérer la suppression.
         }
     }
 
@@ -316,7 +335,9 @@ class Orga_Model_Organization extends Core_Model_Entity
      */
     public function getGranularities()
     {
-        return $this->granularities;
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->orderBy(['tag' => 'ASC']);
+        return $this->granularities->matching($criteria);
     }
 
     /**
@@ -390,9 +411,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     public function getGranularityForInventoryStatus()
     {
         if ($this->granularityForInventoryStatus === null) {
-            throw new Core_Exception_UndefinedAttribute(
-                "Le niveau organisationnel des inventaires n'a pas été défini."
-            );
+            throw new Core_Exception_UndefinedAttribute('Granularity for inventory status has not been chosen.');
         }
         return $this->granularityForInventoryStatus;
     }
@@ -406,6 +425,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->where(Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null));
+        $criteria->orderBy(['tag' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
     }
 
