@@ -243,14 +243,14 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     public function deletenodeAction()
     {
         $node = $this->fromTreeId($this->idNode);
-        if ($node instanceof AF_Model_Category) {
-            $node->delete();
-        } else {
-            $this->afDeletionService->deleteAF($node);
-        }
 
         try {
-            $this->entityManager->flush();
+            if ($node instanceof AF_Model_Category) {
+                $node->delete();
+                $this->entityManager->flush();
+            } else {
+                $this->afDeletionService->deleteAF($node);
+            }
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Component_SubAF')
                 && $e->getSourceField() == 'calledAF') {
