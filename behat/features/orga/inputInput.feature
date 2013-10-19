@@ -5,7 +5,30 @@ Feature: Organization input input feature
     Given I am logged in
 
   @javascript
-  Scenario: Display of existing input for a closed inventory
+  Scenario: Global administrator direct access to input scenario
+    Given I am on "inventory/orga/cell/input/idCell/31/fromIdCell/1"
+    And I wait for the page to finish loading
+    Then I should see "Saisie 2012 | Annecy | Énergie"
+
+  @javascript
+  Scenario: Display of existing input with correct values and uncertainties scenario
+    Given I am on "orga/cell/details/idCell/1"
+    And I wait for the page to finish loading
+    And I open collapse "Année | Site | Catégorie"
+    And I click "Cliquer pour accéder" in the row 1 of the "aFGranularity1Input8" datagrid
+    Then I should see "Saisie 2012 | Annecy | Énergie"
+    And the "quantite_combustible" field should contain "10"
+    And the "percentquantite_combustible" field should contain "15"
+  # Vérification dans l'onglet "Détails calculs" que c'est bien cette valeur et cette incertitude qu'on devrait voir
+    When I open tab "Détails calculs"
+    And I open collapse "Formulaire maître"
+    And I open collapse "emissions_combustion"
+    And I open collapse "quantite_combustible"
+    Then I should see "Valeur : 10 t ± 15 %"
+
+
+  @javascript
+  Scenario: Display of existing input for a closed inventory scenario
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open collapse "Année | Site"
