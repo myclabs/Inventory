@@ -609,7 +609,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     {
         $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
-        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
+        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCellByMembers([]);
         $user->removeRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
