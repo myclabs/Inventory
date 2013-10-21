@@ -98,7 +98,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             if ($this->withUncertainty) {
                 $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent'.$this->ref);
                 if ($value) {
-                    $uiUncertaintyElement->setValue($locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty()));
+                    $uiUncertaintyElement->setValue($locale->formatNumberForInput($value->getRelativeUncertainty()));
                 }
                 $uiElement->getElement()->addElement($uiUncertaintyElement);
             }
