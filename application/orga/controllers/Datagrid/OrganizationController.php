@@ -115,8 +115,8 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
         $timeout = function () {
             $this->message = __('UI', 'message', 'addedLater');
         };
-        $error = function () {
-            throw new Core_Exception("Error in the background task");
+        $error = function (Exception $e) {
+            throw $e;
         };
 
         // Lance la tache en arrière plan
@@ -145,8 +145,8 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
         $timeout = function () {
             $this->message = __('UI', 'message', 'deletedLater');
         };
-        $error = function () {
-            throw new Core_Exception("Error in the background task");
+        $error = function (Exception $e) {
+            throw $e;
         };
 
         // Lance la tache en arrière plan
