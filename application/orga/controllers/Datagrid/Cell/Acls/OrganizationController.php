@@ -100,16 +100,17 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 $userEmail
             );
             $user->addRole(User_Model_Role::loadByRef('user'));
+            $this->entityManager->flush();
         }
 
-        $success = function() {
+        $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->message = __('UI', 'message', 'addedLater');
         };
-        $error = function() {
-            throw new Core_Exception("Error in the background task");
+        $error = function (Exception $e) {
+            throw $e;
         };
 
         $task = new ServiceCallTask(
@@ -142,14 +143,14 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $user = User_Model_User::load($this->delete);
         $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
 
-        $success = function() {
+        $success = function () {
             $this->message = __('UI', 'message', 'deleted');
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->message = __('UI', 'message', 'deletedLater');
         };
-        $error = function() {
-            throw new Core_Exception("Error in the background task");
+        $error = function (Exception $e) {
+            throw $e;
         };
 
         $task = new ServiceCallTask(

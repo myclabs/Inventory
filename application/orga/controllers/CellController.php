@@ -524,13 +524,13 @@ class Orga_CellController extends Core_Controller
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        $success = function() {
+        $success = function () {
             $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'outputDataRebuildConfirmationMessage')]);
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
         };
-        $error = function() {
+        $error = function () {
             throw new Core_Exception_User('DW', 'rebuild', 'outputDataRebuildFailMessage');
         };
 

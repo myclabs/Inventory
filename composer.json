@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "zendframework/zendframework1": "1.12.*",
         "doctrine/orm": "dev-CriteriaContains as 2.4.99",
         "doctrine/annotations": "~1.0",
@@ -41,7 +41,7 @@
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",
         "mnapoli/number-two": "~0.2.0",
-        "myclabs/work": "~0.1.0"
+        "myclabs/work": "~0.2.0"
     },
     "require-dev": {
         "behat/behat": "~2.4",
