@@ -1308,13 +1308,6 @@ class Orga_Model_Cell extends Core_Model_Entity
                 $dWResult->addMember($inputStatusDWAxis->getMemberByRef('completed'));
             }
 
-            if ($dWResult->getIndicator()->getCube() === $this->dWCube) {
-                Core_Tools::dump($dWResult->getValue()->getDigitalValue());
-                Core_Tools::dump($dWResult->getIndicator()->getLabel());
-                foreach ($dWResult->getMembers() as $member) {
-                    Core_Tools::dump($member->getLabel());
-                }
-            }
             $this->dWResults->add($dWResult);
         }
     }
