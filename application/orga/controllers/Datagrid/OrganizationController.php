@@ -8,7 +8,6 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use MyCLabs\Work\Task\Task;
 
 /**
  * Controller de projet
@@ -75,13 +74,13 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
                 if ($numberCellUserCanSee > 1) {
                     $isConnectedUserAbleToSeeManyCells = true;
                     break;
-                } else if ($numberCellUserCanSee == 1) {
+                } elseif ($numberCellUserCanSee == 1) {
                     break;
                 }
             }
             if ($isConnectedUserAbleToSeeManyCells) {
                 $data['details'] = $this->cellLink('orga/organization/cells/idOrganization/'.$organization->getId());
-            } else if ($numberCellUserCanSee == 1) {
+            } elseif ($numberCellUserCanSee == 1) {
                 $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
                 $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getId());
             }
@@ -110,13 +109,13 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
         $administrator = $this->_helper->auth();
         $label = $this->getAddElementValue('label');
 
-        $success = function() {
+        $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->message = __('UI', 'message', 'addedLater');
         };
-        $error = function() {
+        $error = function () {
             throw new Core_Exception("Error in the background task");
         };
 
@@ -140,13 +139,13 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
     {
         $organization = Orga_Model_Organization::load($this->delete);
 
-        $success = function() {
+        $success = function () {
             $this->message = __('UI', 'message', 'deleted');
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->message = __('UI', 'message', 'deletedLater');
         };
-        $error = function() {
+        $error = function () {
             throw new Core_Exception("Error in the background task");
         };
 
@@ -160,5 +159,4 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
 
         $this->send();
     }
-
 }
