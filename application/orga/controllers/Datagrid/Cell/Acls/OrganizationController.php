@@ -100,6 +100,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 $userEmail
             );
             $user->addRole(User_Model_Role::loadByRef('user'));
+            $this->entityManager->flush();
         }
 
         $success = function () {
