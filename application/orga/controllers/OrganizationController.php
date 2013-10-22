@@ -182,14 +182,14 @@ class Orga_OrganizationController extends Core_Controller
         $user = $this->_helper->auth();
         $label = $this->getParam('label');
 
-        $success = function() {
+        $success = function () {
             UI_Message::addMessageStatic(__('UI', 'message', 'added'));
         };
-        $timeout = function() {
+        $timeout = function () {
             UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'));
         };
-        $error = function() {
-            throw new Core_Exception("Error in the background task");
+        $error = function (Exception $e) {
+            throw $e;
         };
 
         // Lance la tache en arrière plan
@@ -211,14 +211,14 @@ class Orga_OrganizationController extends Core_Controller
     {
         $organization = Orga_Model_Organization::load($this->_getParam('idOrganization'));
 
-        $success = function() {
+        $success = function () {
             UI_Message::addMessageStatic(__('UI', 'message', 'deleted'));
         };
-        $timeout = function() {
+        $timeout = function () {
             UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'));
         };
-        $error = function() {
-            throw new Core_Exception("Error in the background task");
+        $error = function (Exception $e) {
+            throw $e;
         };
 
         // Lance la tache en arrière plan
