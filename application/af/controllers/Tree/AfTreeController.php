@@ -12,6 +12,11 @@ use Core\Annotation\Secure;
  */
 class AF_Tree_AfTreeController extends UI_Controller_Tree
 {
+    /**
+     * @Inject
+     * @var AF_Service_AFDeletionService
+     */
+    private $afDeletionService;
 
     /**
      * (non-PHPdoc)
@@ -238,14 +243,24 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     public function deletenodeAction()
     {
         $node = $this->fromTreeId($this->idNode);
-        $node->delete();
 
         try {
-            $this->entityManager->flush();
+            if ($node instanceof AF_Model_Category) {
+                $node->delete();
+                $this->entityManager->flush();
+            } else {
+                $this->afDeletionService->deleteAF($node);
+            }
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Component_SubAF')
                 && $e->getSourceField() == 'calledAF') {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByOtherAF');
+            }
+            if ($e->isSourceEntityInstanceOf('Orga_Model_CellsGroup')) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByOrga');
+            }
+            if ($e->isSourceEntityInstanceOf('AF_Model_Output_Element')) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
             }
             throw new Core_Exception_User('AF', 'formTree', 'categoryHasChild');
         }

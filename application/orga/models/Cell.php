@@ -1226,14 +1226,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         $populatedDWCubes = array();
 
         if ($this->getGranularity()->getCellsGenerateDWCubes()) {
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
-            /** @var Orga_Service_ETLStructure $etlStructureService */
-            $etlStructureService = $container->get('Orga_Service_ETLStructure');
-
-            if ($etlStructureService->isCellDWCubeUpToDate($this)) {
-                $populatedDWCubes[] = $this->getDWCube();
-            }
+            $populatedDWCubes[] = $this->getDWCube();
         }
 
         foreach ($this->getParentCells() as $parentCell) {
@@ -1258,7 +1251,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-            if ($inputGranularity->getRef() === $this->getGranularity()->getRef()) {
+            if ($inputGranularity === $this->getGranularity()) {
                 $populatingCells[] = $this;
             } else if ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {

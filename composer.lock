@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8a22181178d0e399b57be632ee7631d5",
+    "hash": "8cc867ff41117fa1ea9c9bf69d4a3ecc",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1022,16 +1022,16 @@
         },
         {
             "name": "myclabs/work",
-            "version": "0.1.0",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Work.git",
-                "reference": "6804e5b882bc552fe3ec7a3a816516788cc50635"
+                "reference": "52605e123352daf195debfdf8e517b9fa5e1926e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Work/zipball/6804e5b882bc552fe3ec7a3a816516788cc50635",
-                "reference": "6804e5b882bc552fe3ec7a3a816516788cc50635",
+                "url": "https://api.github.com/repos/myclabs/Work/zipball/52605e123352daf195debfdf8e517b9fa5e1926e",
+                "reference": "52605e123352daf195debfdf8e517b9fa5e1926e",
                 "shasum": ""
             },
             "require": {
@@ -1058,7 +1058,7 @@
                 "work",
                 "work queue"
             ],
-            "time": "2013-09-25 16:13:16"
+            "time": "2013-10-21 09:01:28"
         },
         {
             "name": "myclabs/xport",
@@ -1683,16 +1683,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.14.0",
+            "version": "v1.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "224fc55635d544a2ec8edb3592be18db5a093f59"
+                "reference": "8873d7593ad7c120004f177c0fd01459b383c9cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/224fc55635d544a2ec8edb3592be18db5a093f59",
-                "reference": "224fc55635d544a2ec8edb3592be18db5a093f59",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/8873d7593ad7c120004f177c0fd01459b383c9cb",
+                "reference": "8873d7593ad7c120004f177c0fd01459b383c9cb",
                 "shasum": ""
             },
             "require": {
@@ -1728,7 +1728,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-10-03 06:41:20"
+            "time": "2013-10-15 19:17:38"
         },
         {
             "name": "videlalvaro/php-amqplib",
@@ -2680,7 +2680,7 @@
         "mnapoli/metaconsole": 20
     },
     "platform": {
-        "php": ">=5.4.0"
+        "php": ">=5.5.0"
     },
     "platform-dev": [
 

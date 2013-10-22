@@ -360,7 +360,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Connexion RabbitMQ
         $this->container->set('rabbitmq.queue', $this->container->get('application.name') . '-work');
-        $this->container->set(AMQPChannel::class, function(Container $c) {
+        $this->container->set(AMQPChannel::class, function (Container $c) {
             $queue = $c->get('rabbitmq.queue');
             /** @var AMQPConnection $connection */
             $connection = $c->get(AMQPConnection::class);
@@ -370,21 +370,21 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             return $channel;
         });
 
-        $this->container->set(WorkDispatcher::class, function(Container $c) use ($useRabbitMQ) {
+        $this->container->set(WorkDispatcher::class, function (Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
                 $channel = $c->get(AMQPChannel::class);
                 $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
                 $workDispatcher->addEventListener($this->container->get(EventListener::class));
                 return $workDispatcher;
             }
-            return $c->get(SimpleWorkDispatcher::class);
+            return new SimpleWorkDispatcher($c->get(Worker::class));
         });
 
-        $this->container->set(Worker::class, function(Container $c) use ($useRabbitMQ) {
+        $this->container->set(Worker::class, function (Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
                 $channel = $c->get(AMQPChannel::class);
                 $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));
-                $worker->addEventListener($this->container->get(EventListener::class));
+                $worker->addEventListener($c->get(EventListener::class));
             } else {
                 $worker = $c->get(SimpleWorker::class);
             }
@@ -392,15 +392,15 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $worker->registerTaskExecutor(ServiceCallTask::class, new ServiceCallExecutor($c));
             $worker->registerTaskExecutor(
                 Orga_Work_Task_AddGranularity::class,
-                $this->container->get(Orga_Work_TaskExecutor_AddGranularityExecutor::class)
+                $c->get(Orga_Work_TaskExecutor_AddGranularityExecutor::class)
             );
             $worker->registerTaskExecutor(
                 Orga_Work_Task_AddMember::class,
-                $this->container->get(Orga_Work_TaskExecutor_AddMemberExecutor::class)
+                $c->get(Orga_Work_TaskExecutor_AddMemberExecutor::class)
             );
             $worker->registerTaskExecutor(
                 Orga_Work_Task_SetGranularityCellsGenerateDWCubes::class,
-                $this->container->get(Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor::class)
+                $c->get(Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor::class)
             );
 
             return $worker;

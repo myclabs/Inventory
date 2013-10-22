@@ -5,9 +5,7 @@ namespace Core\Work\ServiceCall;
 use Core\Work\BaseTaskInterface;
 use Core\Work\BaseTaskTrait;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\UnitOfWork;
 use MyCLabs\Work\Task\ServiceCall;
-use Core_Model_Entity;
 
 /**
  * Représente l'appel d'une méthode d'un service.
@@ -17,6 +15,19 @@ use Core_Model_Entity;
 class ServiceCallTask extends ServiceCall implements BaseTaskInterface
 {
     use BaseTaskTrait;
+
+    /**
+     * @param string $serviceName Name of the service class
+     * @param string $methodName  Name of the method to call
+     * @param array  $parameters  Parameters for the method call, must be serializable
+     * @param string $taskLabel   Nom de la tache pour le système de notification
+     */
+    public function __construct($serviceName, $methodName, array $parameters = [], $taskLabel = null)
+    {
+        parent::__construct($serviceName, $methodName, $parameters);
+
+        $this->setTaskLabel($taskLabel);
+    }
 
     public function mergeEntities(EntityManager $entityManager)
     {
@@ -33,6 +44,6 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
      */
     public function __toString()
     {
-        return "ServiceCallTask($this->serviceName::$this->methodName)";
+        return "$this->serviceName::$this->methodName";
     }
 }

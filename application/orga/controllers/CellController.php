@@ -29,12 +29,6 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var Orga_Service_ETLStructure
-     */
-    private $etlStructureService;
-
-    /**
-     * @Inject
      * @var WorkDispatcher
      */
     private $workDispatcher;
@@ -495,17 +489,31 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
-     * Vérifie le statut du Cube de DW de la Cell donné.
-     * @Secure("viewCell")
+     * Réinitialise le DW du Cell donné et ceux des cellules enfants.
+     * @Secure("editCell")
      */
-    public function dwcubestateAction()
+    public function resetdwsAction()
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
-        if ($this->etlStructureService->isCellDWCubeUpToDate($cell)) {
-            $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'analysisTabRebuildOk'), 'status' => 'success'));
-        } else {
-            $this->sendJsonResponse(array('message' => __('DW', 'rebuild', 'analysisTabRebuildAlert'), 'status' => 'error'));
-        }
+
+        $success = function () {
+            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage')]);
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
+        };
+        $error = function () {
+            throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetCellAndChildrenDWCubes',
+            [$cell],
+            __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -516,13 +524,13 @@ class Orga_CellController extends Core_Controller
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        $success = function() {
+        $success = function () {
             $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'outputDataRebuildConfirmationMessage')]);
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
         };
-        $error = function() {
+        $error = function () {
             throw new Core_Exception_User('DW', 'rebuild', 'outputDataRebuildFailMessage');
         };
 

@@ -22,7 +22,7 @@ Feature: Organizational member feature
     And I fill in "listMemberssite_ref_addForm" with "aaa"
     And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
   # Affichage suivant l'ordre alphabétique des identifiants
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label  | ref | broaderpays |

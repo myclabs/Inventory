@@ -131,16 +131,23 @@ class EventListener extends \MyCLabs\Work\EventListener
      */
     public function onTaskSuccess(Task $task, $dispatcherNotified)
     {
-        $this->logger->info("Task {task} executed", ['task' => (string) $task]);
-
         if ($task instanceof BaseTaskInterface) {
             // Notification
             if (!$dispatcherNotified && $task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
                 /** @var User_Model_User $user */
                 $user = User_Model_User::load($task->getContext()->getUserId());
 
+                $this->logger->info(
+                    "Task {task} executed, notifying {user} by mail",
+                    ['task' => (string) $task, 'user' => $user->getEmail()]
+                );
+
                 $this->notifier->notifyTaskFinished($user, $task->getTaskLabel());
+
+                return;
             }
         }
+
+        $this->logger->info("Task {task} executed", ['task' => (string) $task]);
     }
 }

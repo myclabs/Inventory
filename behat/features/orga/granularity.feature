@@ -29,7 +29,7 @@ Feature: Organization granularity feature
   # Nécessité d'une attente longue du fait de la présence du masque de chargement, pour que le scénario passe en local (affichage du message de confirmation).
   # Test effectué en local le 06/09/2013 : 1'05 pour le traitement. Ci-dessous temps d'attente de 1'20 pour avoir un peu de marge.
     And I wait 80 seconds
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 2 of the "granularity" datagrid should contain:
       | axes | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
       | Zone | Navigable  | Oui     | Oui | Oui   | Oui | Oui            | Oui            | Oui            |
@@ -186,7 +186,7 @@ Feature: Organization granularity feature
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Axe vide" from "granularity_axes_addForm"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 2 of the "granularity" datagrid should contain:
       | axes     |
       | Axe vide |
@@ -214,7 +214,7 @@ Feature: Organization granularity feature
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Axe vide" from "granularity_axes_addForm"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 2 of the "granularity" datagrid should contain:
       | axes     |
       | Axe vide |

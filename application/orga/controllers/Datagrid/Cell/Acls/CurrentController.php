@@ -49,7 +49,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
      *
      * @Secure("allowCell")
      */
-    function getelementsAction()
+    public function getelementsAction()
     {
         $idCell = $this->getParam('idCell');
         $cellACLResource = User_Model_Resource_Entity::loadByEntity(Orga_Model_Cell::load($idCell));
@@ -80,7 +80,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
      * @see setAddElementErrorMessage
      * @Secure("allowCell")
      */
-    function addelementAction()
+    public function addelementAction()
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
@@ -114,14 +114,14 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             $user->addRole(User_Model_Role::loadByRef('user'));
         }
 
-        $success = function() {
+        $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->message = __('UI', 'message', 'addedLater');
         };
-        $error = function() {
-            throw new Core_Exception("Error in the background task");
+        $error = function (Exception $e) {
+            throw $e;
         };
 
         $task = new ServiceCallTask(
@@ -147,21 +147,21 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
      * Renvoie un message d'information.
      * @Secure("allowCell")
      */
-    function deleteelementAction()
+    public function deleteelementAction()
     {
         list($userRoleRef, $userId) = explode('#', $this->delete);
         $user = User_Model_User::load($userId);
         $role = User_Model_Role::loadByRef($userRoleRef);
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        $success = function() {
+        $success = function () {
             $this->message = __('UI', 'message', 'deleted');
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->message = __('UI', 'message', 'deletedLater');
         };
-        $error = function() {
-            throw new Core_Exception("Error in the background task");
+        $error = function (Exception $e) {
+            throw $e;
         };
 
         $task = new ServiceCallTask(
@@ -174,5 +174,4 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 
         $this->send();
     }
-
 }

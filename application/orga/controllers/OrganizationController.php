@@ -95,10 +95,10 @@ class Orga_OrganizationController extends Core_Controller
             || ($isConnectedUserAbleToSeeManyOrganizations)
         ) {
             $this->redirect('orga/organization/manage');
-        } else if ($isConnectedUserAbleToSeeManyCells) {
+        } elseif ($isConnectedUserAbleToSeeManyCells) {
             $organizationArray = Orga_Model_Organization::loadList($aclQuery);
             $this->redirect('orga/organization/cells/idOrganization/'.array_pop($organizationArray)->getId());
-        } else if (count($listCellResource) == 1) {
+        } elseif (count($listCellResource) == 1) {
             $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getId());
         } else {
             $this->forward('noaccess', 'organization', 'orga');
@@ -286,7 +286,10 @@ class Orga_OrganizationController extends Core_Controller
             try {
                 $organization->setGranularityForInventoryStatus($granularityForInventoryStatus);
             } catch (Core_Exception_InvalidArgument $e) {
-                $this->addFormError('granularityForInventoryStatus', __('Orga', 'exception', 'broaderInputGranularity'));
+                $this->addFormError(
+                    'granularityForInventoryStatus',
+                    __('Orga', 'exception', 'broaderInputGranularity')
+                );
             }
         }
 
@@ -307,13 +310,11 @@ class Orga_OrganizationController extends Core_Controller
     public function dwcubesstateAction()
     {
         set_time_limit(0);
-        $this->sendJsonResponse(
-            array(
-                'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
-                    Orga_Model_Organization::load($this->getParam('idOrganization'))
-                )
+        $this->sendJsonResponse([
+            'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
+                Orga_Model_Organization::load($this->getParam('idOrganization'))
             )
-        );
+        ]);
     }
 
     /**
@@ -324,13 +325,13 @@ class Orga_OrganizationController extends Core_Controller
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        $success = function() {
+        $success = function () {
             $this->sendJsonResponse(__('UI', 'message', 'updated'));
         };
-        $timeout = function() {
+        $timeout = function () {
             $this->sendJsonResponse(__('UI', 'message', 'operationInProgress'));
         };
-        $error = function() {
+        $error = function () {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
         };
 
@@ -395,6 +396,5 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function noaccessAction()
     {
-
     }
 }

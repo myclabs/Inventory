@@ -58,7 +58,7 @@ class Orga_Service_InputService
 
         // Si l'AF de la cellule a été changé, on discarde l'ancienne saisie
         if ($inputSet && $inputSet->getAF() !== $newValues->getAF()) {
-            $inputSet = null;
+            $inputSet->setAF($newValues->getAF());
         }
 
         // Injecte les coordonnées orga à la saisie en tant que ContextValue

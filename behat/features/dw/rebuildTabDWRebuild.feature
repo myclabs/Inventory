@@ -27,7 +27,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     When I open tab "Reconst. données"
     And I click "Régénérer les données d'analyse"
     And I wait 5 seconds
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
   # Vérification que la régénération a bien fonctionné
     When I reload the page
     And I wait for the page to finish loading
@@ -57,7 +57,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     When I open tab "Reconst. données"
     And I click "Relancer les calculs et régénérer les données d'analyse"
     And I wait 5 seconds
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Relance des calculs et régénération des données d'analyse effectuées."
   # Vérification que la régénération a bien fonctionné
     When I am on "orga/cell/details/idCell/1/tab/analyses"
     And I wait for the page to finish loading
@@ -70,7 +70,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     And I open tab "Reconst. données"
     And I click "Régénérer les données d'analyse"
     And I wait 5 seconds
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
   # Vérification que la régénération a bien fonctionné
     When I open tab "Analyses"
     Then I should see the "report" datagrid
@@ -95,7 +95,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     And I click "Relancer les calculs et régénérer les données d'analyse"
   # Apparemment, besoin d'un peu d'attente pour que ça passe en local
     And I wait 5 seconds
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Relance des calculs et régénération des données d'analyse effectuées."
   # Vérification que la régénération a bien fonctionné
     When I open tab "Analyses"
     Then I should see the "report" datagrid

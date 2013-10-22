@@ -16,7 +16,6 @@ use Core\Annotation\Secure;
  */
 class AF_Datagrid_AfController extends UI_Controller_Datagrid
 {
-
     /**
      * @Inject
      * @var AF_Service_AFDeletionService
@@ -168,7 +167,6 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
         $af = AF_Model_AF::load($this->getParam('index'));
         try {
             $this->afDeletionService->deleteAF($af);
-            $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf('AF_Model_Component_SubAF')
                 && $e->getSourceField() == 'calledAF') {
