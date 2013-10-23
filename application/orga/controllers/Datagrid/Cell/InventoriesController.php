@@ -32,7 +32,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
      */
     function getelementsAction()
     {
-
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $crossedGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
@@ -144,6 +143,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                 $data['advancementFinishedInput'] *= 100. / $totalChildInputCells;
             }
         }
+        $data['users'] = $this->cellPopup('orga/datagrid_cell_inventories/getusersdetails/idCell/'.$cell->getId());
 
         $this->addLine($data);
     }
@@ -179,6 +179,59 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $this->message = __('UI', 'message', 'updated');
 
         $this->send();
+    }
+
+    /**
+     * @secure("viewCell")
+     */
+    function getusersdetailsAction()
+    {
+        $idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($idCell);
+        $granularity = $cell->getGranularity();
+
+        $this->view->acls = [];
+        foreach ($granularity->getOrganization()->getGranularities() as $granularityACL) {
+            if ($granularityACL->getCellsWithACL()) {
+                Core_Tools::dump($granularityACL->getLabel());
+                $granularityACLs = [];
+                if ($granularityACL->isBroaderThan($granularity)) {
+                    $parentCell = $cell->getParentCellForGranularity($granularityACL);
+                    $cellResource = User_Model_Resource_Entity::loadByEntity($parentCell);
+                    $this->addUserToArray($cellResource, $granularityACLs);
+                } else if ($granularityACL === $granularity) {
+                    $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
+                    $this->addUserToArray($cellResource, $granularityACLs);
+                } else if ($granularityACL->isNarrowerThan($granularityACL)) {
+                    foreach ($cell->getChildCellsForGranularity($granularityACL) as $childCell) {
+                        $cellResource = User_Model_Resource_Entity::loadByEntity($childCell);
+                        $this->addUserToArray($cellResource, $granularityACLs);
+                    }
+                }
+                if (!empty($granularityACLs)) {
+                    $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param User_Model_Resource_Entity $cellResource
+     * @param $granularityACLs
+     */
+    protected function addUserToArray(User_Model_Resource_Entity $cellResource, &$granularityACLs)
+    {
+        foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {
+            if ($securityIdentity instanceof User_Model_Role) {
+                $roleUsers = [];
+                foreach ($securityIdentity->getUsers() as $user) {
+                    $roleUsers[] = $user->getEmail();
+                }
+                if (!empty($roleUsers)) {
+                    $granularityACLs[$securityIdentity->getName()] = $roleUsers;
+                }
+            }
+        }
     }
 
 
