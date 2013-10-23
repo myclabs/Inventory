@@ -224,7 +224,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 break;
         }
         /** @see AbstractProxyFactory */
-        $doctrineAutoGenerateProxy = $configuration->doctrine->proxies->mode;
+        $doctrineAutoGenerateProxy = (int) $configuration->doctrine->proxies->mode;
 
         // Choix du driver utilisé par le schema.
         //  Utilisation d'un driver YAML.
