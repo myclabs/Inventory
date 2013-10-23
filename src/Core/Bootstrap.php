@@ -218,13 +218,13 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             case 'test':
             case 'production':
                 $cache = $this->container->get(Cache::class);
-                $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_NEVER;
                 break;
             default:
                 $cache = new ArrayCache();
-                $doctrineAutoGenerateProxy = AbstractProxyFactory::AUTOGENERATE_EVAL;
                 break;
         }
+        /** @see AbstractProxyFactory */
+        $doctrineAutoGenerateProxy = $configuration->doctrine->proxies->mode;
 
         // Choix du driver utilisé par le schema.
         //  Utilisation d'un driver YAML.
@@ -254,7 +254,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
         $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
         $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
-        if (! $doctrineAutoGenerateProxy) {
+        if ($doctrineAutoGenerateProxy !== AbstractProxyFactory::AUTOGENERATE_EVAL) {
             DoctrineProxyAutoloader::register($doctrineConfig->getProxyDir(), $doctrineConfig->getProxyNamespace());
         }
 
