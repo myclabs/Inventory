@@ -1,0 +1,105 @@
+<?php
+$inventoryStatusList = [
+    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
+    Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
+    Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
+];
+$columnStateInput = new UI_Datagrid_Col_List('stateInput', __('Orga', 'input', 'inputStatus'));
+$imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
+$imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
+$imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incompletecomplete');
+$imageInputIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+$imageInputNotStarted = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+$inputStatusList = [
+    AF_Model_InputSet_Primary::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
+    AF_Model_InputSet_Primary::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
+    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => $imageCalculationIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusCalculationIncomplete'),
+    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
+    null => $imageInputNotStarted->render() . ' ' . __('AF', 'inputInput', 'statusNotStarted')
+];
+$inputStatusStyleList = [
+    AF_Model_InputSet_Primary::STATUS_FINISHED => 'progress-success',
+    AF_Model_InputSet_Primary::STATUS_COMPLETE => 'progress-warning',
+    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'progress-danger',
+    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'progress-danger',
+    null => 'progress-danger'
+]
+?>
+<div class="page-header">
+    <h1><?=$this->pageTitle?></h1>
+</div>
+<?php
+foreach ($this->inputCells as $granularityCells) {
+?>
+<h3>
+    <?=$granularityCells['granularityLabel']?>
+    <small>
+        <a href="#">
+            <i class="icon-search"></i>
+            Voir les données
+        </a>
+    </small>
+</h3>
+<div class="row-fluid">
+    <?php
+    $cellNumber = 0;
+    /** @var $inputCell Orga_Model_Cell */
+    foreach ($granularityCells['cells'] as $inputCell) {
+        if ($inputCell->getInventoryStatus() == Orga_Model_Cell::STATUS_ACTIVE) {
+            try {
+                $aFInputPrimarySet = $inputCell->getAFInputSetPrimary();
+                $inputCompletePercentage = $aFInputPrimarySet->getCompletion();
+                $inputStatus = $aFInputPrimarySet->getStatus();
+            } catch (Core_Exception_UndefinedAttribute $e) {
+                $inputCompletePercentage = 0;
+                $inputStatus = null;
+            }
+    ?>
+    <div class="span4 well">
+        <h3><a href="orga/cell/input/idCell/23/fromIdCell/<?=$inputCell->getId()?>"><?=$inputCell->getLabel()?></a></h3>
+        <p>
+            <a data-toggle="modal" data-target="#<?=$inputCell->getId()?>administrators" href="#"
+                ><i class="icon-search"></i>
+                Contacter les administrateurs
+            </a>
+        </p>
+        <p class="hide">
+            <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
+            <?=$inventoryStatusList[$inputCell->getInventoryStatus()]?>
+        </p>
+        <p>
+            <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
+            <?=$inputStatusList[$inputStatus]?>
+        </p>
+        <div class="progress <?=$inputStatusStyleList[$inputStatus]?>">
+            <div class="bar" style="width: <?=$inputCompletePercentage?>%"><?=$inputCompletePercentage?> %</div>
+        </div>
+    </div>
+    <div id="<?=$inputCell->getId()?>administrators" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>Administrateur de <?=$inputCell->getLabel()?></h4>
+        </div>
+        <div class="modal-body">
+<pre>administrator@parentcell.com
+administrator@organization.com
+administrator@site.com</pre>
+        </div>
+    </div>
+            <?php
+            $cellNumber++;
+            if ($cellNumber >= 3) {
+                $cellNumber = 0;
+            ?>
+</div>
+<div class="row-fluid">
+            <?php
+            }
+        }
+    }
+    ?>
+</div>
+<hr>
+<?php
+}
+?>

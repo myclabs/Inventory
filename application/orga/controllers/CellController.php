@@ -617,4 +617,32 @@ class Orga_CellController extends Core_Controller
         }
     }
 
+    /**
+     * @Secure("inputCell")
+     */
+    public function inputsAction()
+    {
+        $idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($idCell);
+        $granularity = $cell->getGranularity();
+
+        $this->pageTitle = $cell->getLabel();
+
+        $this->view->inputCells = [];
+        if ($granularity->getInputConfigGranularity() !== null) {
+            $this->view->inputCells[] = [
+                'granularityLabel' => $granularity->getLabel(),
+                'cells' => $cell
+            ];
+        }
+        foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
+            if ($narrowerGranularity->getInputConfigGranularity() != null) {
+                $this->view->inputCells[] = [
+                    'granularityLabel' => $narrowerGranularity->getLabel(),
+                    'cells' => $cell->getChildCellsForGranularity($narrowerGranularity)
+                ];
+            }
+        }
+    }
+
 }
