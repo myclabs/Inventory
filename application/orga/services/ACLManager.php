@@ -580,8 +580,6 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
             $userEmail
         );
         $user->addRole(User_Model_Role::loadByRef('user'));
-        $this->entityManager->flush();
-
 
         call_user_func_array(['Orga_Service_ACLManager', $functionName], [$orgaElement, $user, false]);
     }
