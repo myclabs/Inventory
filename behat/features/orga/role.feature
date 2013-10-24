@@ -38,7 +38,7 @@ Feature: Organization role feature
     And I click "Supprimer" in the row 3 of the "organizationACL1" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Suppression effectuée."
   # Ajout, format email correct, utilisateur existant
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un administrateur d'organisation (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)"
@@ -89,7 +89,7 @@ Feature: Organization role feature
     And I click "Supprimer" in the row 3 of the "granularityACL1" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Suppression effectuée."
   # Ajout, format email correct, utilisateur existant
     When I click "Ajouter"
     And I fill in "granularityACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
