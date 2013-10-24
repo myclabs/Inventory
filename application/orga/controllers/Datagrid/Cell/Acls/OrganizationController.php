@@ -120,7 +120,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 'Orga_Service_ACLManager',
                 'createUserAndAddRole',
                 [$user, 'addOrganizationAdministrator', $organization],
-                __('Orga', 'backgroundTasks', 'createUserWithRole', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
             );
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         }
@@ -147,23 +147,30 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $user = User_Model_User::load($this->delete);
         $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
 
-        $success = function () {
-            $this->message = __('UI', 'message', 'deleted');
-        };
-        $timeout = function () {
-            $this->message = __('UI', 'message', 'deletedLater');
-        };
-        $error = function (Exception $e) {
-            throw $e;
-        };
+        $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
-        $task = new ServiceCallTask(
-            'Orga_Service_ACLManager',
-            'removeOrganizationAdministrator',
-            [$organization, $user, false],
-            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCellByMembers([]);
+        $user->removeRole(
+            User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+//
+//        $success = function () {
+//            $this->message = __('UI', 'message', 'deleted');
+//        };
+//        $timeout = function () {
+//            $this->message = __('UI', 'message', 'deletedLater');
+//        };
+//        $error = function (Exception $e) {
+//            throw $e;
+//        };
+//
+//        $task = new ServiceCallTask(
+//            'Orga_Service_ACLManager',
+//            'removeOrganizationAdministrator',
+//            [$organization, $user, false],
+//            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+//        );
+//        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
