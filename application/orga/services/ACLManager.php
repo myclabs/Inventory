@@ -570,6 +570,22 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
 
     /**
+     * @param string $userEmail
+     * @param string $functionName
+     * @param array $parameters
+     */
+    public function createUserAndAddRole($userEmail, $functionName, $parameters)
+    {
+        $user = $this->userService->inviteUser(
+            $userEmail
+        );
+        $user->addRole(User_Model_Role::loadByRef('user'));
+        $this->entityManager->flush();
+
+        call_user_func_array(['Orga_Service_ACLManager', $functionName], $parameters);
+    }
+
+    /**
      * Ajoute au projet donné, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Organization $organization

@@ -88,21 +88,6 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             return;
         }
 
-        if (User_Model_User::isEmailUsed($userEmail)) {
-            $user = User_Model_User::loadByEmail($userEmail);
-            if ($user->hasRole($role)) {
-                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
-                $this->send();
-                return;
-            }
-        } else {
-            $user = $this->userService->inviteUser(
-                $userEmail
-            );
-            $user->addRole(User_Model_Role::loadByRef('user'));
-            $this->entityManager->flush();
-        }
-
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
@@ -113,13 +98,29 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             throw $e;
         };
 
-        $task = new ServiceCallTask(
-            'Orga_Service_ACLManager',
-            'addOrganizationAdministrator',
-            [$organization, $user, false],
-            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-        );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        if (User_Model_User::isEmailUsed($userEmail)) {
+            $user = User_Model_User::loadByEmail($userEmail);
+            if ($user->hasRole($role)) {
+                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                $this->send();
+                return;
+            }
+            $task = new ServiceCallTask(
+                'Orga_Service_ACLManager',
+                'addOrganizationAdministrator',
+                [$organization, $user, false],
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+            );
+            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        } else {
+            $task = new ServiceCallTask(
+                'Orga_Service_ACLManager',
+                'createUserAndAddRole',
+                [$userEmail, 'addOrganizationAdministrator', [$organization]],
+                __('Orga', 'backgroundTasks', 'createUserWithRole', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
+            );
+            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        }
 
         $this->send();
     }
