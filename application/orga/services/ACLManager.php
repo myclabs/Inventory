@@ -570,15 +570,12 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
 
     /**
-     * @param string $userEmail
+     * @param User_Model_User $user
      * @param string $functionName
      * @param Orga_Model_Organization|Orga_Model_Cell $orgaElement
      */
-    public function createUserAndAddRole($userEmail, $functionName, $orgaElement)
+    public function createUserAndAddRole(User_Model_User $user, $functionName, $orgaElement)
     {
-        $user = $this->userService->inviteUser(
-            $userEmail
-        );
         $user->addRole(User_Model_Role::loadByRef('user'));
 
         call_user_func_array(['Orga_Service_ACLManager', $functionName], [$orgaElement, $user, false]);

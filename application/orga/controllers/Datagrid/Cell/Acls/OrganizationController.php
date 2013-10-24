@@ -113,10 +113,13 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             );
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         } else {
+            $user = $this->userService->inviteUser(
+                $userEmail
+            );
             $task = new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'createUserAndAddRole',
-                [$userEmail, 'addOrganizationAdministrator', $organization],
+                [$user, 'addOrganizationAdministrator', $organization],
                 __('Orga', 'backgroundTasks', 'createUserWithRole', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
             );
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
