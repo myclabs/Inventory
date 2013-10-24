@@ -1,0 +1,88 @@
+<style>
+    .button-label { float: left; text-align: right; width: 160px; }
+</style>
+
+<form class="form-horizontal">
+    <ul class="nav nav-tabs" id="tab">
+        <li class="active"><a href="#organization" data-toggle="tab">Organisation</a></li>
+        <li class="disabled"><a href="#" data-toggle="tab"> >>> </a></li>
+        <li class="disabled"><a href="#axes" data-toggle="tab">Axes</a></li>
+        <li class="disabled"><a href="#" data-toggle="tab"> >>> </a></li>
+        <li class="disabled"><a href="#granularities" data-toggle="tab">Granularités</a></li>
+        <li class="disabled"><a href="#" data-toggle="tab"> >>> </a></li>
+        <li class="disabled"><a href="#members" data-toggle="tab">Éléments</a></li>
+        <li class="disabled"><a href="#" data-toggle="tab"> >>> </a></li>
+        <li class="disabled"><a href="#dw" data-toggle="tab">Données</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="organization">
+            <div class="control-group">
+                <label class="control-label" for="label">Nom de projet ?</label>
+                <div class="controls">
+                    <input type="text" id="label" placeholder="nom">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="type">Type de projet ?</label>
+                <div class="controls">
+                    <select id="type">
+                        <option value="collecte">Collecte</option>
+                        <option value="collecte">Reporting</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-primary next">Suivant <i class="icon-chevron-right icon-white"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="axes">
+            <div class="control-group">
+                <button class="control-label btn btn-warning pull-left previous">Précédent</button></label>
+                <div class="controls">
+                    <button class="btn btn-primary pull-right next">Suivant</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="button-label">
+                    <button class="btn btn-warning previous"><i class="icon-chevron-left icon-white"></i> Précédent</button></label>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary next">Suivant <i class="icon-chevron-right icon-white"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="granularities">
+
+        </div>
+        <div class="tab-pane" id="members">
+
+        </div>
+        <div class="tab-pane" id="dw">
+
+        </div>
+    </div>
+</form>
+
+<script>
+    $('#tab a').click(function(e) { e.preventDefault(); });
+    $('.next').click(function(e) {
+        e.preventDefault();
+        $('#tab li.active').addClass('disabled');
+        $('#tab li.active').next().next().children('a').tab('show');
+        $('#tab li.active').removeClass('disabled');
+    });
+    $('.previous').click(function(e) {
+        e.preventDefault();
+        $('#tab li.active').addClass('disabled');
+        $('#tab li.active').prev().prev().children('a').tab('show');
+        $('#tab li.active').removeClass('disabled');
+    });
+    $('#organizationType').change(function(e) {
+
+    });
+</script>

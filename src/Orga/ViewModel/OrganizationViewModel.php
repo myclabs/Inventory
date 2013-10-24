@@ -20,6 +20,11 @@ class OrganizationViewModel
     /**
      * @var boolean
      */
+    public $canBeEdited;
+
+    /**
+     * @var boolean
+     */
     public $canBeDeleted;
 
     /**

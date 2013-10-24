@@ -22,6 +22,15 @@ $organizations = $this->organizations;
                     </a>
                 </div>
             <?php endif; ?>
+            <?php if ($organization->canBeEdited) : ?>
+                <div class="pull-right">
+                    <a class="editOrganization btn btn-small btn-info"
+                       href="orga/organization/edit?idOrganization=<?=$organization->id?>">
+                        <i class="icon-cog icon-white"></i>
+                        <?=__('UI', 'verb', 'edit')?>
+                    </a>
+                </div>
+            <?php endif; ?>
 
             <h3>
                 <a href="<?=$organization->link?>"><?=$organization->label?></a>
@@ -42,7 +51,10 @@ $organizations = $this->organizations;
 
     <?php if ($this->canCreateOrganization) : ?>
         <p>
-            <?=$this->button(__('UI', 'verb', 'add'), 'plus-sign')->showPopup('addOrgaPopup')?>
+            <a href="orga/organization/add" target="_blank" class="btn">
+                <i class="icon-plus-sign"></i>
+                <?=__('UI', 'verb', 'add')?>
+            </a>
         </p>
     <?php endif; ?>
 </div>
@@ -59,20 +71,20 @@ $organizations = $this->organizations;
 </script>
 
 <?php
-// Popup d'ajout
-$popup = new UI_Popup_Static('addOrgaPopup');
-$popup->title = __('UI', 'name', 'addition');
-
-$addForm = new UI_Form('addOrgaForm');
-$addForm->setAction('orga/organization/add');
-$addForm->setAjax(false);
-$labelInput = new UI_Form_Element_Text('label');
-$labelInput->setLabel(__('UI', 'name', 'label'));
-$labelInput->setRequired(true);
-$addForm->addElement($labelInput);
-
-$popup->footer = $this->button(__('UI', 'verb', 'validate'), null, ['class' => 'btn-primary'])->submitForm('addOrgaForm')->__toString()
-    . $this->button(__('UI', 'verb', 'cancel'))->closePopup('addOrgaPopup')->__toString();
-
-$popup->body = $addForm->render();
-$popup->display();
+//// Popup d'ajout
+//$popup = new UI_Popup_Static('addOrgaPopup');
+//$popup->title = __('UI', 'name', 'addition');
+//
+//$addForm = new UI_Form('addOrgaForm');
+//$addForm->setAction('orga/organization/add');
+//$addForm->setAjax(false);
+//$labelInput = new UI_Form_Element_Text('label');
+//$labelInput->setLabel(__('UI', 'name', 'label'));
+//$labelInput->setRequired(true);
+//$addForm->addElement($labelInput);
+//
+//$popup->footer = $this->button(__('UI', 'verb', 'validate'), null, ['class' => 'btn-primary'])->submitForm('addOrgaForm')->__toString()
+//    . $this->button(__('UI', 'verb', 'cancel'))->closePopup('addOrgaPopup')->__toString();
+//
+//$popup->body = $addForm->render();
+//$popup->display();

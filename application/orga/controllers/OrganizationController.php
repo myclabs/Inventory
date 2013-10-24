@@ -131,6 +131,11 @@ class Orga_OrganizationController extends Core_Controller
                 },
                 $organization->getRootAxes()
             );
+            $viewModel->canBeEdited = $this->aclService->isAllowed(
+                $connectedUser,
+                User_Model_Action_Default::EDIT(),
+                $organization
+            );
             $viewModel->canBeDeleted = $this->aclService->isAllowed(
                 $connectedUser,
                 User_Model_Action_Default::DELETE(),
@@ -179,29 +184,29 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function addAction()
     {
-        $user = $this->_helper->auth();
-        $label = $this->getParam('label');
-
-        $success = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'added'));
-        };
-        $timeout = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'));
-        };
-        $error = function (Exception $e) {
-            throw $e;
-        };
-
-        // Lance la tache en arrière plan
-        $task = new ServiceCallTask(
-            'Orga_Service_OrganizationService',
-            'createOrganization',
-            [$user, $label],
-            __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
-        );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-
-        $this->redirect('orga/organization/manage');
+//        $user = $this->_helper->auth();
+//        $label = $this->getParam('label');
+//
+//        $success = function () {
+//            UI_Message::addMessageStatic(__('UI', 'message', 'added'));
+//        };
+//        $timeout = function () {
+//            UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'));
+//        };
+//        $error = function (Exception $e) {
+//            throw $e;
+//        };
+//
+//        // Lance la tache en arrière plan
+//        $task = new ServiceCallTask(
+//            'Orga_Service_OrganizationService',
+//            'createOrganization',
+//            [$user, $label],
+//            __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
+//        );
+//        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+//
+//        $this->redirect('orga/organization/manage');
     }
 
     /**
