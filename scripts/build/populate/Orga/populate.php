@@ -218,19 +218,19 @@ class Orga_Populate extends Core_Script_Action
 
             if ($component instanceof AF_Model_Component_Numeric) {
                 // Champ numérique
-                $inputType = 'AF_Model_Input_Numeric';
+                $inputType = AF_Model_Input_Numeric::class;
             } elseif ($component instanceof AF_Model_Component_Text) {
                 // Champ texte
-                $inputType = 'AF_Model_Input_Text';
+                $inputType = AF_Model_Input_Text::class;
             } elseif ($component instanceof AF_Model_Component_Checkbox) {
                 // Champ checkbox
-                $inputType = 'AF_Model_Input_Checkbox';
+                $inputType = AF_Model_Input_Checkbox::class;
             } elseif ($component instanceof AF_Model_Component_Select_Single) {
                 // Champ de sélection simple
-                $inputType = 'AF_Model_Input_Select_Single';
+                $inputType = AF_Model_Input_Select_Single::class;
             } elseif ($component instanceof AF_Model_Component_Select_Multi) {
                 // Champ de sélection multiple
-                $inputType = 'AF_Model_Input_Select_Multi';
+                $inputType = AF_Model_Input_Select_Multi::class;
             }
 
             $input = new $inputType($inputSetPrimary, $component);
@@ -238,14 +238,14 @@ class Orga_Populate extends Core_Script_Action
         }
 
         /* @var AF_Service_InputService $inputService */
-        $inputService = $container->get('AF_Service_InputService');
+        $inputService = $container->get(AF_Service_InputService::class);
         $inputService->updateResults($inputSetPrimary);
         $inputSetPrimary->markAsFinished($finished);
         $inputSetPrimary->save();
 
         $inputCell->setAFInputSetPrimary($inputSetPrimary);
         /* @var Orga_Service_ETLData $eTLDataService */
-        $eTLDataService = $container->get('Orga_Service_ETLData');
+        $eTLDataService = $container->get(Orga_Service_ETLData::class);
         $eTLDataService->populateDWResultsFromCell($inputCell);
     }
 
@@ -377,7 +377,7 @@ class Orga_Populate extends Core_Script_Action
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $container->get('User_Service_User')->createUser($email, $email);
+        $container->get(User_Service_User::class)->createUser($email, $email);
     }
 
     /**
@@ -389,7 +389,7 @@ class Orga_Populate extends Core_Script_Action
         $user = User_Model_User::loadByEmail($email);
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $container->get('Orga_Service_ACLManager')->addOrganizationAdministrator($organization, $user);
+        $container->get(Orga_Service_ACLManager::class)->addOrganizationAdministrator($organization, $user, false);
     }
 
     /**

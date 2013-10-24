@@ -25,18 +25,6 @@ apt-get install -y php5 php5-curl php5-cli php5-dev php5-mysql php-pear php5-xde
 
 cp ${BASEDIR}/php.ini /etc/php5/cli/
 
-# Gearman
-apt-get install -y build-essential
-apt-get install -y gearman libgearman6 libgearman-dev gearman-tools gearman-job-server
-cd /tmp
-wget http://pecl.php.net/get/gearman-1.0.3.tgz
-tar -xzf gearman-1.0.3.tgz
-cd gearman-1.0.3
-phpize
-./configure
-make
-make install
-
 # Composer
 curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer

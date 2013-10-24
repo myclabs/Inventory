@@ -20,12 +20,12 @@
         }
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "zendframework/zendframework1": "1.12.*",
-        "doctrine/orm": "2.4.*",
+        "doctrine/orm": "dev-CriteriaContains as 2.4.99",
         "doctrine/annotations": "~1.0",
         "doctrine/common": "dev-ProxyStaticProperties as 2.4.1",
-        "gedmo/doctrine-extensions": "~2.3",
+        "gedmo/doctrine-extensions": "dev-OptimizedTranslatable as 2.99",
         "symfony/yaml": "~2.3",
         "symfony/event-dispatcher": "~2.3",
         "pear/console_commandline": "dev-trunk",
@@ -35,11 +35,13 @@
         "myclabs/array-comparator": "1.0.*",
         "myclabs/xport": "0.2.0",
         "myclabs/php-enum": "1.*",
-        "mnapoli/php-di": "3.4.*",
-        "mnapoli/php-di-zf1": "*",
+        "myclabs/deep-copy": "1.*",
+        "mnapoli/php-di": "3.5.*",
+        "mnapoli/php-di-zf1": "~1.0",
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",
-        "mnapoli/number-two": "~0.2.0"
+        "mnapoli/number-two": "~0.2.0",
+        "myclabs/work": "~0.2.0"
     },
     "require-dev": {
         "behat/behat": "~2.4",
@@ -58,6 +60,14 @@
         {
             "type": "git",
             "url": "git://github.com/myclabs/common.git"
+        },
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/doctrine2.git"
+        },
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/DoctrineExtensions.git"
         }
     ]
 }

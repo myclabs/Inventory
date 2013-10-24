@@ -30,6 +30,6 @@ Feature: Rebuild of dataware from the configuration tab feature
   # Régénération
     When I click "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez les mettre à jour."
     And I wait 10 seconds
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour"

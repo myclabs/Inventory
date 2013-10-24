@@ -122,23 +122,17 @@ class User_Service_User
         if (empty($config->emails->contact->adress)) {
             throw new Core_Exception("Le courriel de 'contact' n'a pas été défini");
         }
-        $emailSubject = __('User',
-                         'email',
-                         'subjectAccountCreated',
-                         array(
-                              'APPLICATION_NAME' => $config->emails->noreply->name
-                         ));
-        $emailContent = __('User',
-                               'email',
-                               'bodyAccountCreated',
-                               array(
-                                    'PASSWORD'         => $password,
-                                    'EMAIL'            => $email,
-                                    'CONTACT_NAME'     => $config->emails->contact->name,
-                               	    'CONTACT_ADDRESS'  => $config->emails->contact->adress,
-                                    'URL_APPLICATION'  => $url,
-                                    'APPLICATION_NAME' => $config->emails->noreply->name
-                               ));
+        $emailSubject = __('User', 'email', 'subjectAccountCreated', [
+            'APPLICATION_NAME' => $config->emails->noreply->name,
+        ]);
+        $emailContent = __('User', 'email', 'bodyAccountCreated', [
+            'PASSWORD'         => $password,
+            'EMAIL'            => $email,
+            'CONTACT_NAME'     => $config->emails->contact->name,
+            'CONTACT_ADDRESS'  => $config->emails->contact->adress,
+            'URL_APPLICATION'  => $url,
+            'APPLICATION_NAME' => $config->emails->noreply->name,
+        ]);
         $emailContent .= $extraContent;
 
         $this->sendEmail($user, $emailSubject, $emailContent);
@@ -185,13 +179,10 @@ class User_Service_User
         if (empty($config->emails->contact->adress)) {
             throw new Core_Exception('Le courriel de "contact" n\'a pas été défini !');
         }
-        return __('User',
-                  'email',
-                  'defaultContentConclusion',
-                  array(
-                       'CONTACT_NAME' => $config->emails->contact->name,
-                       'CONTACT_ADDRESS' => $config->emails->contact->adress
-                  ));
+        return __('User', 'email', 'defaultContentConclusion', [
+            'CONTACT_NAME' => $config->emails->contact->name,
+            'CONTACT_ADDRESS' => $config->emails->contact->adress,
+        ]);
     }
 
     /**
@@ -201,12 +192,9 @@ class User_Service_User
     protected function getEmailFooter()
     {
         $config = Zend_Registry::get('configuration');
-        return __('User',
-                  'email',
-                  'footMailContentDefault',
-                  array(
-                       'APPLICATION_NAME' => $config->emails->noreply->name
-                  ));
+        return __('User', 'email', 'footMailContentDefault', [
+            'APPLICATION_NAME' => $config->emails->noreply->name,
+        ]);
     }
 
     /**
@@ -217,5 +205,4 @@ class User_Service_User
         $entityManagers = Zend_Registry::get('EntityManagers');
         return $entityManagers['default'];
     }
-
 }

@@ -22,7 +22,7 @@ Feature: Keywords relations
       | subject   | predicate            | object                 |
       | processus | est plus général que | amont de la combustion |
 
-  @javascript @skipped
+  @javascript
   Scenario: Creation of a keyword relation, incorrect input
   # refs #6419 Positionnement d'un message d'erreur dans le popup d'ajout d'une relation entre mots clés
     Given I am on "keyword/association/manage"
@@ -39,14 +39,11 @@ Feature: Keywords relations
     And I select "est plus général que" from "association_predicate_addForm"
     And I select "gaz naturel" from "association_object_addForm"
     And I click "Valider"
-    Then the field "association_subject_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
-    And the field "association_predicate_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
-    And the field "association_object_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
+    Then the field "association_predicate_addForm" should have error: "Les deux mots clés indiqués sont déjà reliés par le même prédicat."
   # Ajout, mots clés sujet et objet identigues
     When I select "combustible" from "association_object_addForm"
     And I click "Valider"
     Then the field "association_subject_addForm" should have error: "Merci de saisir des mots clés sujet et objet qui ne soient pas identiques."
-    And the field "association_predicate_addForm" should have error: "Merci de saisir des mots clés sujet et objet qui ne soient pas identiques."
     And the field "association_object_addForm" should have error: "Merci de saisir des mots clés sujet et objet qui ne soient pas identiques."
 
   @javascript

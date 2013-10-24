@@ -1,19 +1,12 @@
 <?php
-/**
- * Liste les StandardUnit.
- * @author valentin.claras
- * @package Unit
- * @subpackage View
- */
-
 use Unit\Domain\Unit\StandardUnit;
 ?>
 
-    <div class="page-header">
-	<h1><?=__('Unit', 'name', 'standardUnits')?></h1>
+<div class="page-header">
+    <h1><?=__('Unit', 'name', 'standardUnits')?></h1>
 </div>
-<?
 
+<?
 $datagrid = new UI_Datagrid ('ListStandardUnits', 'datagrids_standardunits', 'unit');
 
 $nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));

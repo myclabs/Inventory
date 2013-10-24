@@ -5,7 +5,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Controller de projet
@@ -21,9 +23,15 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Methode appelee pour remplir le tableau.
@@ -66,13 +74,13 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
                 if ($numberCellUserCanSee > 1) {
                     $isConnectedUserAbleToSeeManyCells = true;
                     break;
-                } else if ($numberCellUserCanSee == 1) {
+                } elseif ($numberCellUserCanSee == 1) {
                     break;
                 }
             }
             if ($isConnectedUserAbleToSeeManyCells) {
                 $data['details'] = $this->cellLink('orga/organization/cells/idOrganization/'.$organization->getId());
-            } else if ($numberCellUserCanSee == 1) {
+            } elseif ($numberCellUserCanSee == 1) {
                 $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
                 $data['details'] = $this->cellLink('orga/cell/details/idCell/'.array_pop($cellWithAccess)->getId());
             }
@@ -101,16 +109,25 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
         $administrator = $this->_helper->auth();
         $label = $this->getAddElementValue('label');
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_OrganizationService',
-                'createOrganization',
-                [$administrator, $label],
-                __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
-            )
-        );
+        $success = function () {
+            $this->message = __('UI', 'message', 'added');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'addedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
 
-        $this->message = __('UI', 'message', 'addedLater');
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'createOrganization',
+            [$administrator, $label],
+            __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->send();
     }
 
@@ -122,16 +139,24 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
     {
         $organization = Orga_Model_Organization::load($this->delete);
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_OrganizationService',
-                'deleteOrganization',
-                [$organization]
-            )
-        );
+        $success = function () {
+            $this->message = __('UI', 'message', 'deleted');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'deletedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
 
-        $this->message = __('UI', 'message', 'deletedLater');
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'deleteOrganization',
+            [$organization]
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->send();
     }
-
 }

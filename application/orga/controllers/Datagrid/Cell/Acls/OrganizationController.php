@@ -6,7 +6,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Controlleur du Datagrid listant les Roles du projet d'une cellule.
@@ -24,9 +26,15 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -80,6 +88,16 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             return;
         }
 
+        $success = function () {
+            $this->message = __('UI', 'message', 'added');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'addedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
         if (User_Model_User::isEmailUsed($userEmail)) {
             $user = User_Model_User::loadByEmail($userEmail);
             if ($user->hasRole($role)) {
@@ -87,23 +105,26 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 $this->send();
                 return;
             }
-        } else {
-            $user = $this->userService->inviteUser(
-                $userEmail
-            );
-            $user->addRole(User_Model_Role::loadByRef('user'));
-        }
-
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            $task = new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'addOrganizationAdministrator',
                 [$organization, $user, false],
                 __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-            )
-        );
+            );
+            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        } else {
+            $user = $this->userService->inviteUser(
+                $userEmail
+            );
+            $task = new ServiceCallTask(
+                'Orga_Service_ACLManager',
+                'createUserAndAddRole',
+                [$user, 'addOrganizationAdministrator', $organization],
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
+            );
+            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        }
 
-        $this->message = __('UI', 'message', 'addedLater');
         $this->send();
     }
 
@@ -126,16 +147,36 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $user = User_Model_User::load($this->delete);
         $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_ACLManager',
-                'removeOrganizationAdministrator',
-                [$organization, $user, false],
-                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-            )
-        );
+        //@see http://supervision.myc-sense.com:3000/issues/6582
+        //  Sans worker la suppression s'effectue correctement mais échoue avec.
 
-        $this->message = __('UI', 'message', 'deletedLater');
+        // sans worker.
+//        $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
+//
+//        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCellByMembers([]);
+//        $user->removeRole(
+//            User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
+//        );
+
+        // worker.
+        $success = function () {
+            $this->message = __('UI', 'message', 'deleted');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'deletedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        $task = new ServiceCallTask(
+            'Orga_Service_ACLManager',
+            'removeOrganizationAdministrator',
+            [$organization, $user, false],
+            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->send();
     }
 

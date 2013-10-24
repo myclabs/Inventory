@@ -6,12 +6,12 @@
 namespace AuditTrail\Domain;
 
 use AuditTrail\Domain\Context\OrganizationContext;
-use Core\Model\EntityRepositoryInterface;
+use Core\Domain\EntityRepository;
 
 /**
  * Audit trail entry repository
  */
-interface EntryRepository extends EntityRepositoryInterface
+interface EntryRepository extends EntityRepository
 {
     /**
      * @param int $count

@@ -116,8 +116,7 @@
         </tu>
  
          <!-- Messages de confirmation -->
-         <!--  
-        
+
         <tu tuid="analysisDataRebuildConfirmationMessage">
             <tuv xml:lang="fr">
                 <seg>Régénération des données d'analyse effectuée.</seg>
@@ -134,7 +133,6 @@
                 <seg>Computations restart and analysis data rebuild performed.</seg>
             </tuv>
         </tu>
-        -->
 
          <!-- Messages d'erreur -->
         

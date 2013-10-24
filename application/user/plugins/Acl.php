@@ -13,7 +13,6 @@
  */
 class User_Plugin_Acl extends User_Plugin_Abstract
 {
-
     /**
      * @param User_Model_SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
@@ -21,9 +20,11 @@ class User_Plugin_Acl extends User_Plugin_Abstract
      */
     public function createUserRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed($identity,
-                                            User_Model_Action_Default::CREATE(),
-                                            User_Model_Resource_Entity::loadByEntityName('User_Model_User'));
+        return $this->aclService->isAllowed(
+            $identity,
+            User_Model_Action_Default::CREATE(),
+            User_Model_Resource_Entity::loadByEntityName(User_Model_User::class)
+        );
     }
 
     /**
@@ -39,9 +40,7 @@ class User_Plugin_Acl extends User_Plugin_Abstract
         } else {
             $user = $identity;
         }
-        return $this->aclService->isAllowed($identity,
-                                            User_Model_Action_Default::EDIT(),
-                                            $user);
+        return $this->aclService->isAllowed($identity, User_Model_Action_Default::EDIT(), $user);
     }
 
     /**
@@ -52,9 +51,7 @@ class User_Plugin_Acl extends User_Plugin_Abstract
     public function disableUserRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $user = User_Model_User::load($request->getParam('id'));
-        return $this->aclService->isAllowed($identity,
-                                            User_Model_Action_Default::DELETE(),
-                                            $user);
+        return $this->aclService->isAllowed($identity, User_Model_Action_Default::DELETE(), $user);
     }
 
     /**
@@ -65,9 +62,7 @@ class User_Plugin_Acl extends User_Plugin_Abstract
     public function enableUserRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $user = User_Model_User::load($request->getParam('id'));
-        return $this->aclService->isAllowed($identity,
-                                            User_Model_Action_Default::UNDELETE(),
-                                            $user);
+        return $this->aclService->isAllowed($identity, User_Model_Action_Default::UNDELETE(), $user);
     }
 
     /**
@@ -77,7 +72,7 @@ class User_Plugin_Acl extends User_Plugin_Abstract
      */
     public function viewAllUsersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
-        $resource = User_Model_Resource_Entity::loadByEntityName('User_Model_User');
+        $resource = User_Model_Resource_Entity::loadByEntityName(User_Model_User::class);
         return $this->aclService->isAllowed($identity, User_Model_Action_Default::VIEW(), $resource);
     }
 

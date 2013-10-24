@@ -3,6 +3,8 @@
  * @author matthieu.napoli
  * @package Techno
  */
+use Keyword\Application\Service\KeywordService;
+use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\Keyword;
 
 /**
@@ -12,10 +14,17 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
 {
 
     /**
+     * @var KeywordService
+     */
+    private $keywordService;
+
+    /**
      * Fonction appelee une fois, avant tous les tests
      */
     public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Techno_Model_Component::loadList() as $o) {
             $o->delete();
@@ -26,8 +35,12 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         foreach (Techno_Model_Meaning::loadList() as $o) {
             $o->delete();
         }
-        foreach (Keyword::loadList() as $o) {
-            $o->delete();
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        if ($keywordRepository->count() > 0) {
+            foreach ($keywordRepository->getAll() as $o) {
+                $keywordRepository->remove($o);
+            }
         }
         foreach (Techno_Model_Family_Cell::loadList() as $o) {
             $o->delete();
@@ -41,8 +54,14 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         foreach (Techno_Model_Family::loadList() as $o) {
             $o->delete();
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $entityManager->flush();
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        $container = Zend_Registry::get('container');
+        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
     }
 
     /**
@@ -143,15 +162,13 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     public function testCells1Dimension1()
     {
         $meaning1 = Techno_Test_MeaningTest::generateObject();
-        $keyword1 = new Keyword();
-        $keyword1->setLabel('Label test');
-        $keyword1->setRef(Core_Tools::generateString(10));
-        $keyword1->setRef('key1');
-        $keyword1->save();
-        $keyword2 = new Keyword();
-        $keyword2->setLabel('Label test');
-        $keyword2->setRef('key2');
-        $keyword2->save();
+        $keywordRef1 = strtolower(Core_Tools::generateString(10));
+        $keywordRef2 = strtolower(Core_Tools::generateString(10));
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
+        $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
+        $this->entityManager->flush();
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
@@ -162,13 +179,13 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $this->entityManager->flush();
 
         // 1er membre
-        $member1 = new Techno_Model_Family_Member($dimension1, $keyword1);
+        $member1 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef1));
         $family->save();
         $this->assertAttributeCount(1, 'cells', $family);
         $this->entityManager->flush();
 
         // 2è membre
-        $member2 = new Techno_Model_Family_Member($dimension1, $keyword2);
+        $member2 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef2));
         $family->save();
         $this->assertAttributeCount(2, 'cells', $family);
         $this->entityManager->flush();
@@ -184,8 +201,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         // Delete all
         Techno_Test_Family_CoeffTest::deleteObject($family);
         $meaning1->delete();
-        $keyword1->delete();
-        $keyword2->delete();
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
         $this->entityManager->flush();
     }
 
@@ -196,14 +213,13 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     {
         $meaning1 = Techno_Test_MeaningTest::generateObject();
         $meaning2 = Techno_Test_MeaningTest::generateObject();
-        $keyword1 = new Keyword();
-        $keyword1->setLabel('Label test');
-        $keyword1->setRef(Core_Tools::generateString(10));
-        $keyword1->save();
-        $keyword2 = new Keyword();
-        $keyword2->setLabel('Label test');
-        $keyword2->setRef(Core_Tools::generateString(10));
-        $keyword2->save();
+        $keywordRef1 = strtolower(Core_Tools::generateString(10));
+        $keywordRef2 = strtolower(Core_Tools::generateString(10));
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
+        $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
+        $this->entityManager->flush();
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
@@ -211,13 +227,13 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
                                                         Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Techno_Model_Family_Member($dimension1, $keyword1);
+        $member11 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef1));
 
         $dimension2 = new Techno_Model_Family_Dimension($family, $meaning2,
                                                         Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Techno_Model_Family_Member($dimension2, $keyword2);
+        $member21 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef2));
 
         $family->save();
         $this->entityManager->flush();
@@ -234,8 +250,8 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         Techno_Test_Family_CoeffTest::deleteObject($family);
         $meaning1->delete();
         $meaning2->delete();
-        $keyword1->delete();
-        $keyword2->delete();
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
         $this->entityManager->flush();
     }
 
@@ -246,22 +262,17 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     {
         $meaning1 = Techno_Test_MeaningTest::generateObject();
         $meaning2 = Techno_Test_MeaningTest::generateObject();
-        $keyword1 = new Keyword();
-        $keyword1->setLabel('Label test');
-        $keyword1->setRef(Core_Tools::generateString(10));
-        $keyword1->save();
-        $keyword2 = new Keyword();
-        $keyword2->setLabel('Label test');
-        $keyword2->setRef(Core_Tools::generateString(10));
-        $keyword2->save();
-        $keyword3 = new Keyword();
-        $keyword3->setLabel('Label test');
-        $keyword3->setRef(Core_Tools::generateString(10));
-        $keyword3->save();
-        $keyword4 = new Keyword();
-        $keyword4->setLabel('Label test');
-        $keyword4->setRef(Core_Tools::generateString(10));
-        $keyword4->save();
+        $keywordRef1 = strtolower(Core_Tools::generateString(10));
+        $keywordRef2 = strtolower(Core_Tools::generateString(10));
+        $keywordRef3 = strtolower(Core_Tools::generateString(10));
+        $keywordRef4 = strtolower(Core_Tools::generateString(10));
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
+        $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
+        $keywordRepository->add(new Keyword($keywordRef3, 'Label'));
+        $keywordRepository->add(new Keyword($keywordRef4, 'Label'));
+        $this->entityManager->flush();
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
@@ -269,15 +280,15 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
                                                         Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Techno_Model_Family_Member($dimension1, $keyword1);
-        $member12 = new Techno_Model_Family_Member($dimension1, $keyword2);
+        $member11 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef1));
+        $member12 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef2));
 
         $dimension2 = new Techno_Model_Family_Dimension($family, $meaning2,
                                                         Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Techno_Model_Family_Member($dimension2, $keyword3);
-        $member22 = new Techno_Model_Family_Member($dimension2, $keyword4);
+        $member21 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef3));
+        $member22 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef4));
 
         $family->save();
         $this->entityManager->flush();
@@ -302,10 +313,10 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         Techno_Test_Family_CoeffTest::deleteObject($family);
         $meaning1->delete();
         $meaning2->delete();
-        $keyword1->delete();
-        $keyword2->delete();
-        $keyword3->delete();
-        $keyword4->delete();
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef3));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef4));
         $this->entityManager->flush();
     }
 
@@ -317,18 +328,15 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $meaning1 = Techno_Test_MeaningTest::generateObject();
         $meaning2 = Techno_Test_MeaningTest::generateObject();
         $meaning3 = Techno_Test_MeaningTest::generateObject();
-        $keyword1 = new Keyword();
-        $keyword1->setLabel('Label test');
-        $keyword1->setRef(Core_Tools::generateString(10));
-        $keyword1->save();
-        $keyword2 = new Keyword();
-        $keyword2->setLabel('Label test');
-        $keyword2->setRef(Core_Tools::generateString(10));
-        $keyword2->save();
-        $keyword3 = new Keyword();
-        $keyword3->setLabel('Label test');
-        $keyword3->setRef(Core_Tools::generateString(10));
-        $keyword3->save();
+        $keywordRef1 = strtolower(Core_Tools::generateString(10));
+        $keywordRef2 = strtolower(Core_Tools::generateString(10));
+        $keywordRef3 = strtolower(Core_Tools::generateString(10));
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
+        $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
+        $keywordRepository->add(new Keyword($keywordRef3, 'Label'));
+        $this->entityManager->flush();
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
@@ -336,19 +344,19 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
                                                         Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Techno_Model_Family_Member($dimension1, $keyword1);
+        $member11 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef1));
 
         $dimension2 = new Techno_Model_Family_Dimension($family, $meaning2,
                                                         Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Techno_Model_Family_Member($dimension2, $keyword2);
+        $member21 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef2));
 
         $dimension3 = new Techno_Model_Family_Dimension($family, $meaning3,
                                                         Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
         $dimension3->save();
         $this->entityManager->flush();
-        $member31 = new Techno_Model_Family_Member($dimension3, $keyword3);
+        $member31 = new Techno_Model_Family_Member($dimension3, $this->keywordService->get($keywordRef3));
 
         $family->save();
         $this->entityManager->flush();
@@ -367,9 +375,9 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         $meaning1->delete();
         $meaning2->delete();
         $meaning3->delete();
-        $keyword1->delete();
-        $keyword2->delete();
-        $keyword3->delete();
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef1));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef3));
         $this->entityManager->flush();
     }
 
@@ -383,10 +391,11 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
     {
         $meaning1 = Techno_Test_MeaningTest::generateObject();
         $meaning2 = Techno_Test_MeaningTest::generateObject();
-        $keyword = new Keyword();
-        $keyword->setLabel('Label test');
-        $keyword->setRef(Core_Tools::generateString(10));
-        $keyword->save();
+        $keywordRef = strtolower(Core_Tools::generateString(10));
+        /** @var KeywordRepository $keywordRepository */
+        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository->add(new Keyword($keywordRef, 'Label'));
+        $this->entityManager->flush();
 
         $family = Techno_Test_Family_CoeffTest::generateObject();
 
@@ -394,13 +403,13 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
                                                         Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL);
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Techno_Model_Family_Member($dimension1, $keyword);
+        $member11 = new Techno_Model_Family_Member($dimension1, $this->keywordService->get($keywordRef));
 
         $dimension2 = new Techno_Model_Family_Dimension($family, $meaning2,
                                                         Techno_Model_Family_Dimension::ORIENTATION_VERTICAL);
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Techno_Model_Family_Member($dimension2, $keyword);
+        $member21 = new Techno_Model_Family_Member($dimension2, $this->keywordService->get($keywordRef));
 
         $family->save();
         $this->entityManager->flush();
@@ -417,7 +426,7 @@ class Techno_Test_FamilyTest extends Core_Test_TestCase
         Techno_Test_Family_CoeffTest::deleteObject($family);
         $meaning1->delete();
         $meaning2->delete();
-        $keyword->delete();
+        $keywordRepository->remove($keywordRepository->getByRef($keywordRef));
         $this->entityManager->flush();
     }
 

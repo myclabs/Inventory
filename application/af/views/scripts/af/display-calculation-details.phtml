@@ -123,7 +123,11 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
 {
     $view = Zend_Controller_Action_HelperBroker::getStaticHelper('Layout')->getView();
 
+    $container = Zend_Registry::get('container');
+    /** @var Keyword\Application\Service\KeywordService $keywordService */
+    $keywordService = $container->get('Keyword\Application\Service\KeywordService');
     $locale = Core_Locale::loadDefault();
+
     $title = $algo->getRef();
     if ($algo instanceof Algo_Model_Numeric) {
         $title .= " <small>" . $algo->getLabel() . "</small>";
@@ -166,10 +170,14 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
         $collapse->body .= '</p>';
         $collapse->body .= '<ul>';
         foreach ($algo->getParameterCoordinates() as $parameterCoordinate) {
+            $memberKeyword = $parameterCoordinate->getMemberKeyword($inputSet);
+            if ($keywordService->exists($memberKeyword)) {
+                $memberKeyword = $keywordService->get($memberKeyword->getRef());
+            }
             $collapse->body .= '<li>';
             $collapse->body .= ucfirst($parameterCoordinate->getDimension()->getLabel())
                 . __('UI', 'other', ':')
-                . $parameterCoordinate->getMemberKeyword($inputSet)->getLabel();
+                . $memberKeyword->getLabel();
             $collapse->body .= '</li>';
         }
         $collapse->body .= '</ul>';

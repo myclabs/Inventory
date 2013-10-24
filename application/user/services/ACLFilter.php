@@ -6,7 +6,6 @@
  */
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -84,10 +83,11 @@ class User_Service_ACLFilter
      * @param bool                         $generateResourcesHierarchy
      * @param bool                         $cleanResourceFilter
      */
-    public function generateForResources(array $resources,
-                                         $generateResourcesHierarchy = true,
-                                         $cleanResourceFilter = true)
-    {
+    public function generateForResources(
+        array $resources,
+        $generateResourcesHierarchy = true,
+        $cleanResourceFilter = true
+    ) {
         if (!$this->enabled) {
             return;
         }
@@ -121,9 +121,10 @@ class User_Service_ACLFilter
      * @param boolean                    $generateResourcesHierarchy
      * @param boolean                    $cleanResourceFilter
      */
-    public function generateForResource(User_Model_Resource_Entity $resource,
-                                           $generateResourcesHierarchy = true,
-                                           $cleanResourceFilter = true
+    public function generateForResource(
+        User_Model_Resource_Entity $resource,
+        $generateResourcesHierarchy = true,
+        $cleanResourceFilter = true
     ) {
         // Teste si le cache est activé
         if (!$this->enabled) {
@@ -261,11 +262,13 @@ class User_Service_ACLFilter
 
         // Ignore les ressources qui n'ont pas d'entité attribuée
         if ($resource->getEntityIdentifier() !== null) {
-            $this->connection->delete(self::TABLE_NAME,
-                                      [
-                                          'entityName'       => $resource->getEntityName(),
-                                          'entityIdentifier' => $resource->getEntityIdentifier(),
-                                      ]);
+            $this->connection->delete(
+                self::TABLE_NAME,
+                [
+                    'entityName'       => $resource->getEntityName(),
+                    'entityIdentifier' => $resource->getEntityIdentifier(),
+                ]
+            );
         }
 
         // Répète la même chose pour les ressources filles
@@ -366,5 +369,4 @@ class User_Service_ACLFilter
         ];
         $this->connection->insert(self::TABLE_NAME, $data);
     }
-
 }

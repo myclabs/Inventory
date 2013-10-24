@@ -33,12 +33,12 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
             $data = [];
             $data['index'] = $condition->getId();
             $data['ref'] = $condition->getRef();
-            $data['expression'] = $this->cellLongText('af/edit_conditions/popup-condition-expression/id/'
-                                                          . $condition->getId(),
-                                                      'af/datagrid_edit_conditions_expression/get-raw-expression/id/'
-                                                          . $condition->getId(),
-                                                      __('TEC', 'name', 'expression'),
-                                                      'zoom-in');
+            $data['expression'] = $this->cellLongText(
+                'af/edit_conditions/popup-condition-expression/id/' . $condition->getId(),
+                'af/datagrid_edit_conditions_expression/get-raw-expression/id/' . $condition->getId(),
+                __('TEC', 'name', 'expression'),
+                'zoom-in'
+            );
             $this->addLine($data);
         }
         $this->send();
@@ -67,17 +67,19 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
                 $this->send();
                 return;
             }
-            $condition->setAf($af);
             try {
                 $condition->setExpression($this->getAddElementValue('expression'));
             } catch (InvalidExpressionException $e) {
-                $this->setAddElementErrorMessage('expression',
-                                                 __('AF', 'configTreatmentMessage', 'invalidExpression')
-                                                     . "<br>" . implode("<br>", $e->getErrors()));
+                $this->setAddElementErrorMessage(
+                    'expression',
+                    __('AF', 'configTreatmentMessage', 'invalidExpression') . "<br>" . implode("<br>", $e->getErrors())
+                );
                 $this->send();
                 return;
             }
+            $condition->setAf($af);
             $condition->save();
+            $af->addCondition($condition);
             try {
                 $this->entityManager->flush();
             } catch (Core_ORM_DuplicateEntryException $e) {
@@ -109,15 +111,19 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
                 try {
                     $condition->setExpression($newValue);
                 } catch (InvalidExpressionException $e) {
-                    throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
-                                                  ['ERRORS' => implode("<br>", $e->getErrors())]);
+                    throw new Core_Exception_User(
+                        'AF',
+                        'configTreatmentMessage',
+                        'invalidExpressionWithErrors',
+                        ['ERRORS' => implode("<br>", $e->getErrors())]
+                    );
                 }
-                $this->data = $this->cellLongText('af/edit_conditions/popup-condition-expression/id/'
-                                                      . $condition->getId(),
-                                                  'af/datagrid_edit_conditions_expression/get-raw-expression/id/'
-                                                      . $condition->getId(),
-                                                  __('TEC', 'name', 'expression'),
-                                                  'zoom-in');
+                $this->data = $this->cellLongText(
+                    'af/edit_conditions/popup-condition-expression/id/' . $condition->getId(),
+                    'af/datagrid_edit_conditions_expression/get-raw-expression/id/' . $condition->getId(),
+                    __('TEC', 'name', 'expression'),
+                    'zoom-in'
+                );
                 break;
         }
         $condition->save();
@@ -161,5 +167,4 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
         $this->data = $condition->getExpression();
         $this->send();
     }
-
 }

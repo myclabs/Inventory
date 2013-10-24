@@ -7,8 +7,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
-
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * @author valentin.claras
@@ -33,9 +34,15 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Redirection sur la liste.
@@ -87,10 +94,10 @@ class Orga_OrganizationController extends Core_Controller
             || ($isConnectedUserAbleToSeeManyOrganizations)
         ) {
             $this->redirect('orga/organization/manage');
-        } else if ($isConnectedUserAbleToSeeManyCells) {
+        } elseif ($isConnectedUserAbleToSeeManyCells) {
             $organizationArray = Orga_Model_Organization::loadList($aclQuery);
             $this->redirect('orga/organization/cells/idOrganization/'.array_pop($organizationArray)->getId());
-        } else if (count($listCellResource) == 1) {
+        } elseif (count($listCellResource) == 1) {
             $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getId());
         } else {
             $this->forward('noaccess', 'organization', 'orga');
@@ -173,7 +180,10 @@ class Orga_OrganizationController extends Core_Controller
             try {
                 $organization->setGranularityForInventoryStatus($granularityForInventoryStatus);
             } catch (Core_Exception_InvalidArgument $e) {
-                $this->addFormError('granularityForInventoryStatus', __('Orga', 'exception', 'broaderInputGranularity'));
+                $this->addFormError(
+                    'granularityForInventoryStatus',
+                    __('Orga', 'exception', 'broaderInputGranularity')
+                );
             }
         }
 
@@ -194,13 +204,11 @@ class Orga_OrganizationController extends Core_Controller
     public function dwcubesstateAction()
     {
         set_time_limit(0);
-        $this->sendJsonResponse(
-            array(
-                'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
-                    Orga_Model_Organization::load($this->getParam('idOrganization'))
-                )
+        $this->sendJsonResponse([
+            'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
+                Orga_Model_Organization::load($this->getParam('idOrganization'))
             )
-        );
+        ]);
     }
 
     /**
@@ -211,20 +219,24 @@ class Orga_OrganizationController extends Core_Controller
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
-                    'Orga_Service_ETLStructure',
-                    'resetOrganizationDWCubes',
-                    [$organization],
-                    __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function () {
+            $this->sendJsonResponse(__('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage'));
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'operationInProgress'));
+        };
+        $error = function () {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array());
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetOrganizationDWCubes',
+            [$organization],
+            __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -278,6 +290,5 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function noaccessAction()
     {
-
     }
 }

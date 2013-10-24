@@ -23,7 +23,7 @@ class User_PopulateAcl extends Core_Script_Action
         $entityManager = $entityManagers['default'];
 
         /** @var $aclService User_Service_ACL */
-        $aclService = $container->get('User_Service_ACL');
+        $aclService = $container->get(User_Service_ACL::class);
 
         // ROLES
 
@@ -46,7 +46,7 @@ class User_PopulateAcl extends Core_Script_Action
 
         // Tous les utilisateurs.
         $resourceAllUsers = new User_Model_Resource_Entity();
-        $resourceAllUsers->setEntityName("User_Model_User");
+        $resourceAllUsers->setEntityName(User_Model_User::class);
         $resourceAllUsers->save();
 
         // Tous les utilisateurs normaux.
@@ -61,7 +61,7 @@ class User_PopulateAcl extends Core_Script_Action
 
         // Toutes les organisations.
         $resourceAllOrganizations = new User_Model_Resource_Entity();
-        $resourceAllOrganizations->setEntityName('Orga_Model_Organization');
+        $resourceAllOrganizations->setEntityName(Orga_Model_Organization::class);
         $resourceAllOrganizations->save();
 
         $entityManager->flush();

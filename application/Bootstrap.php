@@ -1,24 +1,23 @@
 <?php
-/**
- * Bootstrap
- */
 
+use Core\Autoloader;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
+use Keyword\Application\Service\KeywordService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
 
 /**
  * Application bootstrap
  */
 class Bootstrap extends Core_Bootstrap
 {
-
     /**
      * Add and Configure all modules dependencies.
      */
     protected function _initModules()
     {
-        $autoloader = Core_Autoloader::getInstance();
+        $autoloader = Autoloader::getInstance();
         $frontController = Zend_Controller_Front::getInstance();
         /* @var $doctrineConfig Doctrine\ORM\Configuration */
         $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
@@ -113,7 +112,7 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initI18n()
     {
-        Zend_Registry::set(Core_Translate::registryKey, $this->container->get('Core_Translate'));
+        Zend_Registry::set(Core_Translate::registryKey, $this->container->get(Core_Translate::class));
         Zend_Registry::set(Core_Locale::registryKey, Core_Locale::loadDefault());
     }
 
@@ -126,7 +125,7 @@ class Bootstrap extends Core_Bootstrap
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
-        $view->registerHelper($this->container->get('User_ViewHelper_IsAllowed', true), 'isAllowed');
+        $view->registerHelper($this->container->get(User_ViewHelper_IsAllowed::class, true), 'isAllowed');
     }
 
     /**
@@ -134,8 +133,19 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initCalcTypeMapping()
     {
-        Type::addType(Calc_TypeMapping_Value::TYPE_NAME, 'Calc_TypeMapping_Value');
-        Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, 'Calc_TypeMapping_UnitValue');
+        Type::addType(Calc_TypeMapping_Value::TYPE_NAME, Calc_TypeMapping_Value::class);
+        Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, Calc_TypeMapping_UnitValue::class);
+    }
+
+    /**
+     * Initialise le mapping des types en BDD
+     */
+    protected function _initKeywordTypeMapping()
+    {
+        Type::addType(DoctrineKeywordType::TYPE_NAME, DoctrineKeywordType::class);
+        /** @var DoctrineKeywordType $doctrineKeyword */
+        $doctrineKeyword = Type::getType(DoctrineKeywordType::TYPE_NAME);
+        $doctrineKeyword->setKeywordService($this->container->get(KeywordService::class));
     }
 
     /**
@@ -146,8 +156,8 @@ class Bootstrap extends Core_Bootstrap
         $front = Zend_Controller_Front::getInstance();
         // Plugin des Acl
         if ($this->container->get('enable.acl')) {
-            $front->registerPlugin($this->container->get('Inventory_Plugin_Acl'));
-            Zend_Registry::set('pluginAcl', 'User_Plugin_Acl');
+            $front->registerPlugin($this->container->get(Inventory_Plugin_Acl::class));
+            Zend_Registry::set('pluginAcl', User_Plugin_Acl::class);
         }
     }
 
@@ -157,15 +167,15 @@ class Bootstrap extends Core_Bootstrap
     protected function _initEventListeners()
     {
         /** @var EventDispatcher $eventDispatcher */
-        $eventDispatcher = $this->container->get('Symfony\Component\EventDispatcher\EventDispatcher');
+        $eventDispatcher = $this->container->get(EventDispatcher::class);
 
         // User events (plus prioritaire)
-        $userEventListener = $this->container->get('User\Event\EventListener', true);
+        $userEventListener = $this->container->get(User\Event\EventListener::class, true);
         $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
         $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
 
         // AuditTrail
-        $auditTrailListener = $this->container->get('AuditTrail\Application\Service\EventListener', true);
+        $auditTrailListener = $this->container->get(AuditTrail\Application\Service\EventListener::class, true);
         $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
         $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }

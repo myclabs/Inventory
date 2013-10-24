@@ -61,7 +61,6 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $foldaway = $this->getAddElementValue('foldaway');
         $isVisible = $this->getAddElementValue('isVisible');
         if (empty($this->_addErrorMessages)) {
             $group = new AF_Model_Component_Group();
@@ -74,13 +73,10 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 return;
             }
             $group->setLabel($this->getAddElementValue('label'));
-            $group->setFoldaway($foldaway);
             $group->setVisible($isVisible);
             $group->setHelp($this->getAddElementValue('help'));
-            $af->getRootGroup()->addSubComponent($group);
             $group->save();
             $af->addComponent($group);
-            $af->getRootGroup()->save();
 
             try {
                 $this->entityManager->flush();

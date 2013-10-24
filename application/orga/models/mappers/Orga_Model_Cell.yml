@@ -170,3 +170,7 @@ Orga_Model_Cell:
             unique: true
             onDelete: CASCADE
       cascade: [ persist, remove ]
+
+  indexes:
+    membersHashKey:
+      columns: [membersHashKey]

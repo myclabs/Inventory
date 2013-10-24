@@ -23,3 +23,7 @@ User_Model_Resource:
       mappedBy: resource
       cascade: [ all ]
       orphanRemoval: true
+
+  indexes:
+    index1:
+      columns: [entityName, entityIdentifier]

@@ -7,13 +7,7 @@ set -e
 php scripts/build/build.php -e testsunitaires create update
 php scripts/build/build.php -e testsunitaires populate
 
-# Start worker
-php scripts/jobs/work/work.php > /dev/null &
-
 phpunit -c phpunit.xml
-
-# Kill worker
-kill $!
 
 php scripts/build/build.php -e testsunitaires create update
 

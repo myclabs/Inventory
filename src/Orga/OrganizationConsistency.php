@@ -9,7 +9,7 @@
  * Controller du datagrid de coherence
  * @package Orga
  */
-class Orga_OrganizationConsistency extends Core_Model_Entity_Singleton
+class Orga_OrganizationConsistency
 {
     /**
      * Methode qui vérifie la cohérence d'un cube.

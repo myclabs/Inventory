@@ -5,7 +5,8 @@
  */
 
 use Core\Annotation\Secure;
-use Keyword\Domain\Keyword;
+use DI\Annotation\Inject;
+use Keyword\Application\Service\KeywordService;
 
 /**
  * Controleur des significations
@@ -13,6 +14,11 @@ use Keyword\Domain\Keyword;
  */
 class Techno_MeaningController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var KeywordService
+     */
+    protected $keywordService;
 
     /**
      * Liste des significations
@@ -20,7 +26,6 @@ class Techno_MeaningController extends Core_Controller
      */
     public function listAction()
     {
-        $this->view->keywords = Keyword::loadList();
+        $this->view->keywords = $this->keywordService->getAll();
     }
-
 }

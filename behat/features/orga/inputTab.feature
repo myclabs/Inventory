@@ -32,7 +32,7 @@ Feature: Organization input tab feature
     Then I should see the popup "Ajout d'une organisation"
     When I fill in "Libellé" with "Test"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 2 of the "organizations" datagrid should contain:
       | label  |
       | Test   |

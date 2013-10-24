@@ -7,6 +7,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Datagrid de granularity
@@ -17,9 +18,15 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -108,22 +115,32 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            $this->workDispatcher->runBackground(
-                new Orga_Work_Task_AddGranularity(
-                    $organization,
-                    $listAxes,
-                    (bool) $this->getAddElementValue('navigable'),
-                    (bool) $this->getAddElementValue('orgaTab'),
-                    (bool) $this->getAddElementValue('aCL'),
-                    (bool) $this->getAddElementValue('aFTab'),
-                    (bool) $this->getAddElementValue('dW'),
-                    (bool) $this->getAddElementValue('genericActions'),
-                    (bool) $this->getAddElementValue('contextActions'),
-                    (bool) $this->getAddElementValue('inputDocuments'),
-                    __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $listAxes)])
-                )
+            $success = function () {
+                $this->message = __('UI', 'message', 'added');
+            };
+            $timeout = function () {
+                $this->message = __('UI', 'message', 'addedLater');
+            };
+            $error = function (Exception $e) {
+                throw $e;
+            };
+
+            // Lance la tache en arrière plan
+            $task = new Orga_Work_Task_AddGranularity(
+                $organization,
+                $listAxes,
+                (bool) $this->getAddElementValue('navigable'),
+                (bool) $this->getAddElementValue('orgaTab'),
+                (bool) $this->getAddElementValue('aCL'),
+                (bool) $this->getAddElementValue('aFTab'),
+                (bool) $this->getAddElementValue('dW'),
+                (bool) $this->getAddElementValue('genericActions'),
+                (bool) $this->getAddElementValue('contextActions'),
+                (bool) $this->getAddElementValue('inputDocuments'),
+                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $listAxes)])
             );
-            $this->message = __('UI', 'message', 'addedLater');
+            set_time_limit(0);
+            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         }
 
         $this->send();

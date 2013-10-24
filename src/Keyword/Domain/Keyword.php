@@ -2,135 +2,92 @@
 
 namespace Keyword\Domain;
 
-use Core_Exception_UndefinedAttribute;
-use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
-use Core_Model_Query;
+use Core\Domain\Translatable\TranslatableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Keyword\Domain\Predicate;
+use Keyword\Domain\Association;
 
 /**
- * Classe metier de Keyword.
+ * Entité Keyword.
  * @author valentin.claras
- * @author bertrand.ferry
- * @author maxime.fourt
  */
-class Keyword extends Core_Model_Entity
+class Keyword
 {
-
-    use Core_Model_Entity_Translatable;
-
-    // Constantes de tri et filtres.
-    const QUERY_ID = 'id';
-    const QUERY_REF = 'ref';
-    const QUERY_LABEL = 'label';
+    use TranslatableEntity;
 
     /**
-     * Identifiant unique du Keyword.
-     *
      * @var int
      */
     protected $id;
 
     /**
      * Identifiant textuel du Keyword.
-     *
      * @var string
      */
-    protected $ref = null;
+    protected $ref;
 
     /**
-     * Label du Keyword.
-     *
      * @var string
      */
     protected $label;
 
     /**
-     * Collection des associations avec les autres Keyword en tant qu'objet.
-     *
-     * @var Collection
+     * Associations avec les autres Keyword en tant qu'objet.
+     * @var Collection|Association[]
      */
-    protected $objectAssociation;
+    protected $objectAssociations;
 
     /**
-     * Collection des associations avec les autres Keyword en tant que subjet.
-     *
-     * @var Collection
+     * Associations avec les autres Keyword en tant que subjet.
+     * @var Collection|Association[]
      */
-    protected $subjectAssociation;
+    protected $subjectAssociations;
 
 
     /**
-     * Constructeur.
-     */
-    public function __construct()
-    {
-        $this->objectAssociation = new ArrayCollection();
-        $this->subjectAssociation = new ArrayCollection();
-    }
-
-    /**
-     * Retourne le mot-cle correspondant a la reference.
-     *
      * @param string $ref
-     *
-     * @return Keyword
+     * @param string $label
      */
-    public static function loadByRef($ref)
+    public function __construct($ref, $label = '')
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref));
+        $this->objectAssociations = new ArrayCollection();
+        $this->subjectAssociations = new ArrayCollection();
+
+        $this->setRef($ref);
+        $this->setLabel($label);
     }
 
     /**
-     * Charge la liste des Keyword ne possédant pas d'association en tant qu'objet.
-     *
-     * @param Core_Model_Query $queryParameters
-     *
-     * @return Keyword[]
+     * @return int
      */
-    public static function loadListRoots($queryParameters = null)
+    public function getId()
     {
-        if ($queryParameters == null) {
-            $queryParameters = new Core_Model_Query();
-            $queryParameters->order->addOrder(self::QUERY_LABEL);
-        }
-
-        return self::getEntityRepository()->loadListRoots($queryParameters);
-    }
-
-    /**
-     * Charge la liste des Keyword répondant à la requête donnée.
-     *
-     * @param string $expressionQuery
-     *
-     * @return Keyword[]
-     */
-    public static function loadListMatchingQuery($expressionQuery)
-    {
-        return self::getEntityRepository()->loadListMatchingQuery($expressionQuery);
+        return $this->id;
     }
 
     /**
      * Modifie la reference du Keyword.
      *
      * @param string $ref
+     * @throws \Core_Exception_InvalidArgument
      */
     public function setRef($ref)
     {
+        if (empty($ref)) {
+            throw new \Core_Exception_InvalidArgument("A Keyword's ref can't be empty.");
+        }
         $this->ref = $ref;
     }
 
     /**
      * Renvoi la référence du Keyword.
      *
+     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getRef()
     {
-        if ($this->ref === null) {
-            throw new Core_Exception_UndefinedAttribute('The keyword reference has not been defined yet.');
-        }
         return $this->ref;
     }
 
@@ -143,107 +100,43 @@ class Keyword extends Core_Model_Entity
     }
 
     /**
+     * @throws \Core_Exception_UndefinedAttribute
      * @return string
      */
     public function getLabel()
     {
-        if ($this->ref === null) {
-            throw new Core_Exception_UndefinedAttribute('The keyword label has not been defined yet.');
-        }
         return $this->label;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCapitalizedLabel()
-    {
-        return ucfirst($this->getLabel());
-    }
-
-    /**
-     * Ajoute une Association où le Keyword agit en tant qu'object.
-     *
-     * @param Association $association
-     */
-    public function addAssociationAsObject(Association $association)
-    {
-        if (!($this->hasAssociationAsObject($association))) {
-            $this->objectAssociation->add($association);
-            $association->setObject($this);
-        }
-    }
-
-    /**
-     * Vérifie sur le Keyword possède l'association donnée en tant qu'objet.
-     *
-     * @param Association $association
-     *
-     * @return bool
-     */
-    public function hasAssociationAsObject(Association $association)
-    {
-        return $this->objectAssociation->contains($association);
-    }
-
-
-    /**
-     * Vérifie si le Keyword possède au moins une association en tant qu'objet.
-     *
-     * @return bool
-     */
-    public function hasAssociationsAsObject()
-    {
-        return !$this->objectAssociation->isEmpty();
-    }
-
-    /**
-     * Compte le nombre de relation possédant ce Keyword en tant qu'objet.
-     *
-     * @return int
-     */
-    public function countAssociationsAsObject()
-    {
-        $queryFilterThisAsAsubject = new Core_Model_Query();
-        $queryFilterThisAsAsubject->filter->addCondition(Association::QUERY_OBJECT, $this);
-        return Association::countTotal($queryFilterThisAsAsubject);
-    }
-
-    /**
-     * Renvoi le tableau des associations du Keyword en tant qu'objet.
-     *
-     * @return array
-     */
-    public function getAssociationsAsObject()
-    {
-        return $this->objectAssociation->toArray();
     }
 
     /**
      * Ajoute une Association où le Keyword agit en tant que sujet.
      *
-     * @param Association $association
+     * @param Predicate $predicate
+     * @param Keyword $objectKeyword
+     * @return Association
      */
-    public function addAssociationAsSubject(Association $association)
+    public function addAssociationWith(Predicate $predicate, Keyword $objectKeyword)
     {
-        if (!($this->hasAssociationsAsSubject($association))) {
-            $this->subjectAssociation->add($association);
-            $association->setSubject($this);
-        }
+        $association = new Association($this, $predicate, $objectKeyword);
+        $this->subjectAssociations->add($association);
+        $objectKeyword->objectAssociations->add($association);
+        return $association;
     }
 
     /**
-     * Vérifie sur le Keyword possède l'association donnée en tant que sujet.
+     * Retire une Association où le Keyword agit en tant que sujet.
      *
      * @param Association $association
-     *
-     * @return bool
      */
-    public function hasAssociationAsSubject(Association $association)
+    public function removeAssociation(Association $association)
     {
-        return $this->subjectAssociation->contains($association);
+        if ($this->subjectAssociations->contains($association)) {
+            $this->subjectAssociations->removeElement($association);
+        }
+        if ($association->getObject()->objectAssociations->contains($association)) {
+            $association->getObject()->objectAssociations->removeElement($association);
+        }
     }
-
 
     /**
      * Vérifie si le Keyword possède au moins une association en tant que sujet.
@@ -252,7 +145,7 @@ class Keyword extends Core_Model_Entity
      */
     public function hasAssociationsAsSubject()
     {
-        return !$this->subjectAssociation->isEmpty();
+        return !$this->subjectAssociations->isEmpty();
     }
 
     /**
@@ -262,19 +155,47 @@ class Keyword extends Core_Model_Entity
      */
     public function countAssociationsAsSubject()
     {
-        $queryFilterThisAsAsubject = new Core_Model_Query();
-        $queryFilterThisAsAsubject->filter->addCondition(Association::QUERY_SUBJECT, $this);
-        return Association::countTotal($queryFilterThisAsAsubject);
+        return $this->subjectAssociations->count();
     }
 
     /**
      * Renvoi le tableau des associations du Keyword en tant que sujet.
      *
-     * @return array
+     * @return Association[]
      */
     public function getAssociationsAsSubject()
     {
-        return $this->subjectAssociation->toArray();
+        return $this->subjectAssociations->toArray();
+    }
+
+    /**
+     * Vérifie si le Keyword possède au moins une association en tant qu'objet.
+     *
+     * @return bool
+     */
+    public function hasAssociationsAsObject()
+    {
+        return !$this->objectAssociations->isEmpty();
+    }
+
+    /**
+     * Compte le nombre de relation possédant ce Keyword en tant qu'objet.
+     *
+     * @return int
+     */
+    public function countAssociationsAsObject()
+    {
+        return $this->objectAssociations->count();
+    }
+
+    /**
+     * Renvoi le tableau des associations du Keyword en tant qu'objet.
+     *
+     * @return Association[]
+     */
+    public function getAssociationsAsObject()
+    {
+        return $this->objectAssociations->toArray();
     }
 
     /**
@@ -285,26 +206,6 @@ class Keyword extends Core_Model_Entity
     public function countAssociations()
     {
         return $this->countAssociationsAsObject() + $this->countAssociationsAsSubject();
-    }
-
-    /**
-     * Retourne l'alias de la classe quand elle agit en tant que Subject dans un Association.
-     *
-     * @return string
-     */
-    public static function getAliasAsSubject()
-    {
-        return self::getAlias() . '_AsS';
-    }
-
-    /**
-     * Retourne l'alias de la classe quand elle agit en tant que Subject dans un Association.
-     *
-     * @return string
-     */
-    public static function getAliasAsObject()
-    {
-        return self::getAlias() . '_AsO';
     }
 
 }
