@@ -9,6 +9,10 @@ use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
+use User\Domain\ACL\ACLService;
 
 /**
  * Controlleur des onglets des détails d'une cellule.
@@ -20,7 +24,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 {
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -60,12 +64,12 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->view->idOrganization = $organization->getId();
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $organization
         );
         $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $cell
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && ($granularity->getRef() === 'global')) {
@@ -98,17 +102,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $cellACLResource = User_Model_Resource_Entity::loadByEntity($cell);
+        $cellACLResource = EntityResource::loadByEntity($cell);
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
-        $organizationResource = User_Model_Resource_Entity::loadByEntity($organization);
+        $organizationResource = EntityResource::loadByEntity($organization);
 
         $listDatagridConfiguration = array();
 
         if (count($granularity->getAxes()) === 0) {
             $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                User_Model_Action_Default::EDIT(),
+                DefaultAction::EDIT(),
                 $organizationResource
             );
         } else {
@@ -169,7 +173,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
             $columnRole->list = array();
             foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
-                if ($role instanceof User_Model_Role) {
+                if ($role instanceof Role) {
                     $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
                 }
             }
@@ -444,7 +448,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate($cell);
         $this->view->dWCubesCanBeReset = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $cell
         );
 
@@ -478,7 +482,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         if ($this->hasParam('idReport')) {
-            $reportResource = User_Model_Resource_Entity::loadByEntity(
+            $reportResource = EntityResource::loadByEntity(
                 DW_Model_Report::load($this->getParam('idReport'))
             );
             $reportCanBeUpdated = $this->aclService->isAllowed(
@@ -491,8 +495,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
         $reportCanBeSaveAs = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            User_Model_Action_Default::VIEW(),
-            User_Model_Resource_Entity::loadByEntity($cell)
+            DefaultAction::VIEW(),
+            EntityResource::loadByEntity($cell)
         );
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getLabelExtended().'</small>');
@@ -528,7 +532,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $organization
         );
 

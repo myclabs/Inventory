@@ -1,4 +1,8 @@
 <?php
+use User\Domain\ACL\Resource;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\ACLFilterService;
+
 /**
  * @package    User
  * @subpackage Test
@@ -24,7 +28,7 @@ class ResourceEntityTest
 
     /**
      * Génère un objet pret à l'emploi pour les tests
-     * @return User_Model_Resource_Entity Objet généré
+     * @return EntityResource Objet généré
      */
     public static function generateObject()
     {
@@ -33,7 +37,7 @@ class ResourceEntityTest
         $entity->save();
         $entityManagers['default']->flush();
 
-        $resource = new User_Model_Resource_Entity();
+        $resource = new EntityResource();
         $resource->setEntity($entity);
         $resource->save();
         $entityManagers['default']->flush();
@@ -42,7 +46,7 @@ class ResourceEntityTest
 
     /**
      * Supprime un objet de test généré avec generateObject()
-     * @param User_Model_Resource_Entity $resource l'objet de test a supprimer
+     * @param EntityResource $resource l'objet de test a supprimer
      */
     public static function deleteObject($resource)
     {
@@ -55,7 +59,7 @@ class ResourceEntityTest
 }
 
 /**
- * Test des méthodes base de l'objet User_Model_Resource
+ * Test des méthodes base de l'objet Resource
  * @package    User
  * @subpackage Test
  */
@@ -71,7 +75,7 @@ class ResourceEntitySetUpTest extends Core_Test_TestCase
         foreach (Inventory_Model_SimpleExample::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource_Entity::loadList() as $o) {
+        foreach (EntityResource::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -80,7 +84,7 @@ class ResourceEntitySetUpTest extends Core_Test_TestCase
 
 
     /**
-     * @return User_Model_Resource
+     * @return Resource
      */
     function testConstruct()
     {
@@ -88,7 +92,7 @@ class ResourceEntitySetUpTest extends Core_Test_TestCase
         $entity->save();
         $this->entityManager->flush();
 
-        $o = new User_Model_Resource_Entity();
+        $o = new EntityResource();
         $o->setEntity($entity);
         $o->save();
         $this->entityManager->flush();
@@ -100,14 +104,14 @@ class ResourceEntitySetUpTest extends Core_Test_TestCase
 
     /**
      * @depends testConstruct
-     * @param User_Model_Resource $o
-     * @return User_Model_Resource
+     * @param Resource $o
+     * @return Resource
      */
-    function testLoad(User_Model_Resource $o)
+    function testLoad(Resource $o)
     {
-        /** @var $oLoaded User_Model_Resource */
-        $oLoaded = User_Model_Resource::load($o->getId());
-        $this->assertInstanceOf('User_Model_Resource', $oLoaded);
+        /** @var $oLoaded Resource */
+        $oLoaded = Resource::load($o->getId());
+        $this->assertInstanceOf(Resource::class, $oLoaded);
         // Vérification des attributs
         $this->assertEquals($o->getId(), $oLoaded->getId());
         return $oLoaded;
@@ -115,9 +119,9 @@ class ResourceEntitySetUpTest extends Core_Test_TestCase
 
     /**
      * @depends testLoad
-     * @param User_Model_Resource $o
+     * @param Resource $o
      */
-    function testDelete(User_Model_Resource $o)
+    function testDelete(Resource $o)
     {
         $o->delete();
         $this->entityManager->flush();
@@ -127,7 +131,7 @@ class ResourceEntitySetUpTest extends Core_Test_TestCase
 }
 
 /**
- * Test des méthodes métier de l'objet User_Model_Resource
+ * Test des méthodes métier de l'objet Resource
  * @package    User
  * @subpackage Test
  */
@@ -141,15 +145,15 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Inventory_Model_SimpleExample::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource_Entity::loadList() as $o) {
+        foreach (EntityResource::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -165,7 +169,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
         $entity->save();
         $this->entityManager->flush();
 
-        $resource = new User_Model_Resource_Entity();
+        $resource = new EntityResource();
         $resource->setEntity($entity);
 
         $this->assertEquals(get_class($entity), $resource->getEntityName());
@@ -181,7 +185,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
     public function testSetEntityNotPersisted()
     {
         $entity = new Inventory_Model_SimpleExample();
-        $resource = new User_Model_Resource_Entity();
+        $resource = new EntityResource();
         $resource->setEntity($entity);
     }
 
@@ -190,7 +194,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
      */
     public function testGetEntityNotSet()
     {
-        $resource = new User_Model_Resource_Entity();
+        $resource = new EntityResource();
         $this->assertNull($resource->getEntity());
     }
 
@@ -203,12 +207,12 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
         $entity->save();
         $this->entityManager->flush();
 
-        $resource = new User_Model_Resource_Entity();
+        $resource = new EntityResource();
         $resource->setEntity($entity);
         $resource->save();
         $this->entityManager->flush();
 
-        $loadedResource = User_Model_Resource_Entity::loadByEntity($entity);
+        $loadedResource = EntityResource::loadByEntity($entity);
         $this->assertSame($resource, $loadedResource);
         $this->assertEquals($resource->getEntityName(), $loadedResource->getEntityName());
         $this->assertEquals($resource->getEntityIdentifier(), $loadedResource->getEntityIdentifier());
@@ -227,7 +231,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
         $entity->save();
         $this->entityManager->flush();
 
-        $loadedResource = User_Model_Resource_Entity::loadByEntity($entity);
+        $loadedResource = EntityResource::loadByEntity($entity);
         $this->assertNull($loadedResource);
 
         $entity->delete();
@@ -239,8 +243,7 @@ class ResourceEntityMetierTest extends Core_Test_TestCase
      */
     public function testLoadByEntityNameNotFound()
     {
-        $loadedResource = User_Model_Resource_Entity::loadByEntityName("foo");
+        $loadedResource = EntityResource::loadByEntityName("foo");
         $this->assertNull($loadedResource);
     }
-
 }

@@ -1,4 +1,15 @@
 <?php
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Resource;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
+use User\Domain\ACL\SecurityIdentity;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\ACLFilterService;
+use User\Domain\User;
+use User\Domain\UserService;
+
 /**
  * @author matthieu.napoli
  * @package User
@@ -16,17 +27,17 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
 {
 
     /**
-     * @var User_Service_User
+     * @var UserService
      */
     protected $userService;
 
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     protected $aclService;
 
     /**
-     * @var User_Service_ACLFilter
+     * @var ACLFilterService
      */
     protected $aclFilterService;
 
@@ -34,18 +45,18 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->userService = $this->get('User_Service_User');
-        $this->aclService = $this->get('User_Service_ACL');
-        $this->aclFilterService = $this->get('User_Service_ACLFilter');
+        $this->userService = $this->get(UserService::class);
+        $this->aclService = $this->get(ACLService::class);
+        $this->aclFilterService = $this->get(ACLFilterService::class);
         $this->aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (User_Model_Authorization::loadList() as $o) {
+        foreach (Authorization::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource::loadList() as $o) {
+        foreach (Resource::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_SecurityIdentity::loadList() as $o) {
+        foreach (SecurityIdentity::loadList() as $o) {
             $o->delete();
         }
         foreach (Inventory_Model_SimpleExample::loadList() as $o) {
@@ -104,7 +115,7 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
      */
     private function fixtureDeletion1()
     {
-        $user = User_Model_User::loadByEmail('user');
+        $user = User::loadByEmail('user');
         $this->userService->deleteUser($user);
     }
 
@@ -150,11 +161,11 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
     private function fixtureGeneration2()
     {
         $user = $this->userService->createUser('user', 'user');
-        $resource = new User_Model_Resource_Entity();
-        $resource->setEntityName('User_Model_User');
+        $resource = new EntityResource();
+        $resource->setEntityName(User::class);
         $resource->save();
         $this->entityManager->flush();
-        $this->aclService->allow($user, User_Model_Action_Default::VIEW(), $resource);
+        $this->aclService->allow($user, DefaultAction::VIEW(), $resource);
         $this->entityManager->flush();
     }
 
@@ -163,9 +174,9 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
      */
     private function fixtureDeletion2()
     {
-        $user = User_Model_User::loadByEmail('user');
-        $resource = User_Model_Resource_Entity::loadByEntityName('User_Model_User');
-        $this->aclService->disallow($user, User_Model_Action_Default::VIEW(), $resource);
+        $user = User::loadByEmail('user');
+        $resource = EntityResource::loadByEntityName(User::class);
+        $this->aclService->disallow($user, DefaultAction::VIEW(), $resource);
         $this->userService->deleteUser($user);
         $resource->delete();
         $this->entityManager->flush();
@@ -216,16 +227,16 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
     {
         $user = $this->userService->createUser('user', 'user');
 
-        $roleSuperAdmin = new User_Model_Role('superAdmin');
+        $roleSuperAdmin = new Role('superAdmin');
         $roleSuperAdmin->save();
-        $roleAdmin = new User_Model_Role('projectAdmin');
+        $roleAdmin = new Role('projectAdmin');
         $roleAdmin->save();
         $this->entityManager->flush();
 
         $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $this->entityManager->flush();
-        $resource = new User_Model_Resource_Entity();
+        $resource = new EntityResource();
         $resource->setEntity($entity);
         $resource->save();
         $this->entityManager->flush();
@@ -235,8 +246,8 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
         $user->addRole($roleAdmin);
         $this->entityManager->flush();
 
-        $this->aclService->allow($roleSuperAdmin, User_Model_Action_Default::VIEW(), $resource);
-        $this->aclService->allow($roleAdmin, User_Model_Action_Default::VIEW(), $resource);
+        $this->aclService->allow($roleSuperAdmin, DefaultAction::VIEW(), $resource);
+        $this->aclService->allow($roleAdmin, DefaultAction::VIEW(), $resource);
         $this->entityManager->flush();
     }
 
@@ -245,11 +256,11 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
      */
     private function fixtureDeletion3()
     {
-        $user = User_Model_User::loadByEmail('user');
+        $user = User::loadByEmail('user');
         $entity = Inventory_Model_SimpleExample::loadList()[0];
-        $resource = User_Model_Resource_Entity::loadByEntity($entity);
+        $resource = EntityResource::loadByEntity($entity);
         foreach ($user->getRoles() as $role) {
-            $this->aclService->disallow($role, User_Model_Action_Default::VIEW(), $resource);
+            $this->aclService->disallow($role, DefaultAction::VIEW(), $resource);
             $user->removeRole($role);
             $role->delete();
         }
@@ -306,19 +317,19 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
     {
         $user = $this->userService->createUser('user', 'user');
 
-        $roleSuperAdmin = new User_Model_Role('superAdmin');
+        $roleSuperAdmin = new Role('superAdmin');
         $roleSuperAdmin->save();
         $this->entityManager->flush();
 
         $entity = new Inventory_Model_SimpleExample();
         $entity->save();
         $this->entityManager->flush();
-        $resource = new User_Model_Resource_Entity();
+        $resource = new EntityResource();
         $resource->setEntity($entity);
         $resource->save();
         $this->entityManager->flush();
 
-        $this->aclService->allow($roleSuperAdmin, User_Model_Action_Default::VIEW(), $resource);
+        $this->aclService->allow($roleSuperAdmin, DefaultAction::VIEW(), $resource);
         $this->entityManager->flush();
 
         $user->addRole($roleSuperAdmin);
@@ -330,11 +341,11 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
      */
     private function fixtureDeletion4()
     {
-        $user = User_Model_User::loadByEmail('user');
+        $user = User::loadByEmail('user');
         $entity = Inventory_Model_SimpleExample::loadList()[0];
-        $resource = User_Model_Resource_Entity::loadByEntity($entity);
+        $resource = EntityResource::loadByEntity($entity);
         foreach ($user->getRoles() as $role) {
-            $this->aclService->disallow($role, User_Model_Action_Default::VIEW(), $resource);
+            $this->aclService->disallow($role, DefaultAction::VIEW(), $resource);
             $user->removeRole($role);
             $role->delete();
         }
@@ -387,17 +398,17 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
     {
         $user = $this->userService->createUser('user', 'user');
 
-        $roleSuperAdmin = new User_Model_Role('superAdmin');
+        $roleSuperAdmin = new Role('superAdmin');
         $roleSuperAdmin->save();
         $this->entityManager->flush();
 
-        $resource = new User_Model_Resource_Entity();
-        $resource->setEntityName('User_Model_User');
+        $resource = new EntityResource();
+        $resource->setEntityName(User::class);
         $resource->save();
 
         $this->entityManager->flush();
 
-        $this->aclService->allow($roleSuperAdmin, User_Model_Action_Default::VIEW(), $resource);
+        $this->aclService->allow($roleSuperAdmin, DefaultAction::VIEW(), $resource);
         $this->entityManager->flush();
 
         $user->addRole($roleSuperAdmin);
@@ -409,10 +420,10 @@ class ACLFilterGenerationTest extends Core_Test_TestCase
      */
     private function fixtureDeletion5()
     {
-        $user = User_Model_User::loadByEmail('user');
-        $role = User_Model_Role::loadByRef('superAdmin');
-        $resource = User_Model_Resource_Entity::loadByEntityName('User_Model_User');
-        $this->aclService->disallow($user, User_Model_Action_Default::VIEW(), $resource);
+        $user = User::loadByEmail('user');
+        $role = Role::loadByRef('superAdmin');
+        $resource = EntityResource::loadByEntityName(User::class);
+        $this->aclService->disallow($user, DefaultAction::VIEW(), $resource);
         $this->userService->deleteUser($user);
         $role->delete();
         $resource->delete();

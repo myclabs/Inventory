@@ -8,6 +8,8 @@
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
 
 /**
  * Datagrid de granularity
@@ -213,9 +215,9 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 break;
             case 'aCL':
                 foreach ($granularity->getCells() as $cell) {
-                    $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
+                    $cellResource = EntityResource::loadByEntity($cell);
                     foreach ($cellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                        if (!($linkedIdentity instanceof User_Model_Role) || (count($linkedIdentity->getUsers()) > 0)) {
+                        if (!($linkedIdentity instanceof Role) || (count($linkedIdentity->getUsers()) > 0)) {
                             throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
                         }
                     }

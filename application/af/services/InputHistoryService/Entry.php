@@ -1,4 +1,6 @@
 <?php
+use User\Domain\User;
+
 /**
  * @author matthieu.napoli
  */
@@ -24,11 +26,11 @@ class AF_Service_InputHistoryService_Entry
     private $value;
 
     /**
-     * @var User_Model_User|null
+     * @var User|null
      */
     private $author;
 
-    public function __construct(AF_Model_Input $input, DateTime $loggedAt, $value, User_Model_User $author = null)
+    public function __construct(AF_Model_Input $input, DateTime $loggedAt, $value, User $author = null)
     {
         $this->input = $input;
         $this->loggedAt = $loggedAt;
@@ -61,7 +63,7 @@ class AF_Service_InputHistoryService_Entry
     }
 
     /**
-     * @return User_Model_User|null
+     * @return User|null
      */
     public function getAuthor()
     {

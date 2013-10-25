@@ -1,4 +1,10 @@
 <?php
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Resource;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\ACLFilterService;
+
 /**
  * @package    User
  * @subpackage Test
@@ -12,7 +18,7 @@ class ResourceTest extends Core_Test_TestCase
 {
 
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     protected $aclService;
 
@@ -20,15 +26,15 @@ class ResourceTest extends Core_Test_TestCase
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Inventory_Model_SimpleExample::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource::loadList() as $o) {
+        foreach (Resource::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -39,7 +45,7 @@ class ResourceTest extends Core_Test_TestCase
     {
         parent::setUp();
         // Service des ACL
-        $this->aclService = $this->get('User_Service_ACL');
+        $this->aclService = $this->get(ACLService::class);
     }
 
 
@@ -48,14 +54,14 @@ class ResourceTest extends Core_Test_TestCase
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $authorization = $this->aclService->allow($role, User_Model_Action_Default::VIEW(), $resource);
+        $authorization = $this->aclService->allow($role, DefaultAction::VIEW(), $resource);
         $this->entityManager->flush();
 
         $authorizations = $resource->getDirectAuthorizations();
 
         $this->assertCount(1, $authorizations);
         foreach ($authorizations as $a) {
-            $this->assertInstanceOf('User_Model_Authorization', $authorization);
+            $this->assertInstanceOf(Authorization::class, $authorization);
             $this->assertEquals($authorization, $a);
         }
 
@@ -68,7 +74,7 @@ class ResourceTest extends Core_Test_TestCase
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $this->aclService->allow($role, User_Model_Action_Default::VIEW(), $resource);
+        $this->aclService->allow($role, DefaultAction::VIEW(), $resource);
         $this->entityManager->flush();
 
         $identities = $resource->getLinkedSecurityIdentities();
@@ -87,8 +93,8 @@ class ResourceTest extends Core_Test_TestCase
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $this->aclService->allow($role, User_Model_Action_Default::VIEW(), $resource);
-        $this->aclService->allow($role, User_Model_Action_Default::EDIT(), $resource);
+        $this->aclService->allow($role, DefaultAction::VIEW(), $resource);
+        $this->aclService->allow($role, DefaultAction::EDIT(), $resource);
         $this->entityManager->flush();
 
         $identities = $resource->getLinkedSecurityIdentities();

@@ -1,20 +1,15 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Model
- */
-use User\ACL\TypeMapping\ActionType;
+
+use User\Architecture\TypeMapping\ActionType;
+use User\Domain\ACL\ACLFilterEntry;
 
 /**
  * Requete avec filtres et tri.
  *
- * @package    Core
- * @subpackage Model
+ * @author matthieu.napoli
  */
 class Core_Model_Query
 {
-
     /**
      * Nombre d'éléments maximum renvoyés par la requête.
      *
@@ -350,7 +345,7 @@ class Core_Model_Query
     protected function addAclFilterToQueryBuilder(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         if ($this->aclFilter->enabled) {
-            $queryBuilder->innerJoin('User_Model_ACLFilterEntry', 'acl_cache');
+            $queryBuilder->innerJoin(ACLFilterEntry::class, 'acl_cache');
 
             $queryBuilder->andWhere('acl_cache.idUser = :aclUserId');
             $queryBuilder->andWhere('acl_cache.action = :aclAction');
@@ -403,5 +398,4 @@ class Core_Model_Query
         }
         return $baseAlias . '.' . $condition['name'];
     }
-
 }

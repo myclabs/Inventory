@@ -1,0 +1,16 @@
+User\Domain\ACL\Resource\EntityResource:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: User_Resource_Entity
+
+  fields:
+    entityName:
+      type: string
+      nullable: false
+    entityIdentifier:
+      type: integer
+      nullable: true
+
+  uniqueConstraints:
+    uniqueEntityResource:
+      columns: [entityName, entityIdentifier]

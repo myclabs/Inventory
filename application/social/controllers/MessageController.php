@@ -7,6 +7,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use User\Domain\User;
 
 /**
  * @package Social
@@ -72,7 +73,7 @@ class Social_MessageController extends Core_Controller
                 $recipientId = $formData->getValue('recipientId');
                 $recipientType = $formData->getValue('recipientType');
                 if ($recipientType == 'user') {
-                    $recipient = User_Model_User::load($recipientId);
+                    $recipient = User::load($recipientId);
                 } else {
                     $recipient = Social_Model_UserGroup::load($recipientId);
                 }
@@ -84,7 +85,7 @@ class Social_MessageController extends Core_Controller
             return;
         }
         if ($this->hasParam('idUser')) {
-            $recipient = User_Model_User::load($this->getParam('idUser'));
+            $recipient = User::load($this->getParam('idUser'));
         } elseif ($this->hasParam('idUserGroup')) {
             $recipient = Social_Model_UserGroup::load($this->getParam('idUserGroup'));
         } else {

@@ -1,4 +1,7 @@
 <?php
+
+use User\Domain\ACL\ACLFilterService;
+
 /**
  * Scripts re-générant le filtre des ACL
  */
@@ -16,8 +19,8 @@ require_once __DIR__ . '/../../../application/init.php';
 /** @var \DI\Container $container */
 $container = Zend_Registry::get('container');
 
-/** @var User_Service_ACLFilter $aclFilterService */
-$aclFilterService = $container->get('User_Service_ACLFilter');
+/** @var ACLFilterService $aclFilterService */
+$aclFilterService = $container->get(ACLFilterService::class);
 
 echo "Starting ACL filter generation..." . PHP_EOL;
 

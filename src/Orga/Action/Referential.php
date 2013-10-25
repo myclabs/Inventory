@@ -1,4 +1,6 @@
 <?php
+use User\Domain\ACL\Action\Action;
+
 /**
  * @author valentin.claras
  * @package Orga
@@ -9,7 +11,7 @@
  *
  * @package Orga
  */
-class Orga_Action_Referential extends User_Model_Action
+class Orga_Action_Referential extends Action
 {
 
     /**

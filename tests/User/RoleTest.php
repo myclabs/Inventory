@@ -1,4 +1,6 @@
 <?php
+use User\Domain\ACL\Role;
+
 /**
  * @package    User
  * @subpackage Test
@@ -27,11 +29,11 @@ class RoleTest
 
     /**
      * Génere un objet pret à l'emploi pour les tests.
-     * @return User_Model_Role Objet généré
+     * @return Role Objet généré
      */
     public static function generateObject()
     {
-        $o = new User_Model_Role(Core_Tools::generateString(10), 'Role de test');
+        $o = new Role(Core_Tools::generateString(10), 'Role de test');
         $o->save();
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
@@ -40,7 +42,7 @@ class RoleTest
 
     /**
      * Supprime un objet de test généré avec generateObject().
-     * @param User_Model_Role $o
+     * @param Role $o
      */
     public static function deleteObject($o)
     {
@@ -52,7 +54,7 @@ class RoleTest
 }
 
 /**
- * Test des méthodes de base de l'objet User_Model_Role.
+ * Test des méthodes de base de l'objet Role.
  * @package    User
  * @subpackage Test
  */
@@ -65,7 +67,7 @@ class RoleSetUpTest extends Core_Test_TestCase
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (User_Model_Role::loadList() as $o) {
+        foreach (Role::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -74,11 +76,11 @@ class RoleSetUpTest extends Core_Test_TestCase
 
     /**
      * Test du Constructeur
-     * @return User_Model_Role
+     * @return Role
      */
     function testConstruct()
     {
-        $o = new User_Model_Role();
+        $o = new Role();
         $o->setRef('test');
         $o->setName('Role de test');
 
@@ -94,16 +96,16 @@ class RoleSetUpTest extends Core_Test_TestCase
 
     /**
      * @depends testConstruct
-     * @param User_Model_Role $o
-     * @return User_Model_Role
+     * @param Role $o
+     * @return Role
      */
-    function testLoad(User_Model_Role $o)
+    function testLoad(Role $o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded User_Model_Role */
-        $oLoaded = User_Model_Role::load($o->getId());
+        /** @var $oLoaded Role */
+        $oLoaded = Role::load($o->getId());
 
-        $this->assertInstanceOf('User_Model_Role', $oLoaded);
+        $this->assertInstanceOf(Role::class, $oLoaded);
         $this->assertEquals($o->getId(), $oLoaded->getId());
         $this->assertEquals($o->getName(), $oLoaded->getName());
         $this->assertEquals($o->getRef(), $oLoaded->getRef());
@@ -112,9 +114,9 @@ class RoleSetUpTest extends Core_Test_TestCase
 
     /**
      * @depends testLoad
-     * @param User_Model_Role $o
+     * @param Role $o
      */
-    function testDelete(User_Model_Role $o)
+    function testDelete(Role $o)
     {
         $o->delete();
         $this->entityManager->flush();
@@ -124,7 +126,7 @@ class RoleSetUpTest extends Core_Test_TestCase
 }
 
 /**
- * Test des méthodes métier de l'objet User_Model_Role.
+ * Test des méthodes métier de l'objet Role.
  * @package    User
  * @subpackage Test
  */
@@ -136,7 +138,7 @@ class RoleMetierTest extends Core_Test_TestCase
      */
     public static function setUpBeforeClass()
     {
-        foreach (User_Model_Role::loadList() as $o) {
+        foreach (Role::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -150,7 +152,7 @@ class RoleMetierTest extends Core_Test_TestCase
     {
         $role = RoleTest::generateObject();
 
-        $o = User_Model_Role::loadByRef($role->getRef());
+        $o = Role::loadByRef($role->getRef());
         $this->assertSame($role, $o);
 
         RoleTest::deleteObject($role);

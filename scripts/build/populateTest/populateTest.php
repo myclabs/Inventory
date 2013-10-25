@@ -1,4 +1,7 @@
 <?php
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\ACLFilterService;
+
 /**
  * @package Inventory
  */
@@ -76,13 +79,13 @@ class Inventory_PopulateTest extends Core_Script_Populate
         $entityManager->getEventManager()->addEventListener($events, $container->get(Orga_Service_ACLManager::class));
 
         // Ajout de treeTraverser.
-        /** @var $aclService User_Service_ACL */
-        $aclService = $container->get(User_Service_ACL::class);
+        /** @var $aclService ACLService */
+        $aclService = $container->get(ACLService::class);
         $aclService->setResourceTreeTraverser(Orga_Model_Cell::class, $container->get(Orga_Service_ACLManager::class));
 
         // Désactivation du filtre des ACL.
-        /** @var $aclFilterService User_Service_ACLFilter */
-        $aclFilterService = $container->get(User_Service_ACLFilter::class);
+        /** @var $aclFilterService ACLFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
         $aclFilterService->enabled = false;
 
         // Filtre des ACL
@@ -103,8 +106,8 @@ class Inventory_PopulateTest extends Core_Script_Populate
         $container = Zend_Registry::get('container');
 
         // Résactivation du filtre des ACL.
-        /** @var $aclFilterService User_Service_ACLFilter */
-        $aclFilterService = $container->get(User_Service_ACLFilter::class);
+        /** @var $aclFilterService ACLFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
         $aclFilterService->enabled = true;
         echo "\tRégénération des ACL…";
         $aclFilterService->generate();

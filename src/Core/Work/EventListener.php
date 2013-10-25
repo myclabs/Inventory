@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use MyCLabs\Work\Task\Task;
 use Psr\Log\LoggerInterface;
-use User_Model_User;
+use User\Domain\User;
 use Zend_Auth;
 
 /**
@@ -118,8 +118,8 @@ class EventListener extends \MyCLabs\Work\EventListener
         if ($task instanceof BaseTaskInterface) {
             // Error notification
             if (!$dispatcherNotified && $task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
-                /** @var User_Model_User $user */
-                $user = User_Model_User::load($task->getContext()->getUserId());
+                /** @var User $user */
+                $user = User::load($task->getContext()->getUserId());
 
                 $this->notifier->notifyTaskError($user, $task->getTaskLabel());
             }
@@ -134,8 +134,8 @@ class EventListener extends \MyCLabs\Work\EventListener
         if ($task instanceof BaseTaskInterface) {
             // Notification
             if (!$dispatcherNotified && $task->getTaskLabel() !== null && $task->getContext()->getUserId() !== null) {
-                /** @var User_Model_User $user */
-                $user = User_Model_User::load($task->getContext()->getUserId());
+                /** @var User $user */
+                $user = User::load($task->getContext()->getUserId());
 
                 $this->logger->info(
                     "Task {task} executed, notifying {user} by mail",

@@ -1,48 +1,47 @@
 <?php
-/**
- * @package    User
- * @subpackage Test
- */
 
-/**
- * Test de Ressource_Utilisateur
- * @package    User
- * @subpackage Test
- */
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Resource;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\ACLFilterService;
+use User\Domain\User;
+
 class ResourceUserTest extends Core_Test_TestCase
 {
-
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     protected $aclService;
     /**
-     * @var User_Service_ACLFilter
+     * @var ACLFilterService
      */
     protected $cacheService;
 
     /**
-     * @var User_Model_User
+     * @var User
      */
     protected $testUser;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $allUsersResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $invitedUsersResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $basicUsersResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $adminUsersResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $testUserResource;
     // Invité n'a accès à rien
@@ -53,7 +52,7 @@ class ResourceUserTest extends Core_Test_TestCase
     protected $roleAdmin;
 
     /**
-     * @var User_Model_Authorization
+     * @var Authorization
      */
     protected $adminAuthorization;
 
@@ -62,22 +61,22 @@ class ResourceUserTest extends Core_Test_TestCase
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         $entityManagers = Zend_Registry::get('EntityManagers');
-        foreach (User_Model_Authorization::loadList() as $o) {
+        foreach (Authorization::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource::loadList() as $o) {
+        foreach (Resource::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Role::loadList() as $o) {
+        foreach (Role::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_User::loadList() as $o) {
+        foreach (User::loadList() as $o) {
             $o->delete();
         }
         $entityManagers['default']->flush();
@@ -88,24 +87,24 @@ class ResourceUserTest extends Core_Test_TestCase
         parent::setUp();
 
         // Service des ACL
-        $this->aclService = $this->get('User_Service_ACL');
+        $this->aclService = $this->get(ACLService::class);
         // Service de cache
-        $this->cacheService = $this->get('User_Service_ACLFilter');
+        $this->cacheService = $this->get(ACLFilterService::class);
         $this->cacheService->enabled = false;
 
         try {
             // Création du role invité
-            $this->roleInvited = new User_Model_Role();
+            $this->roleInvited = new Role();
             $this->roleInvited->setRef('anonymous');
             $this->roleInvited->setName('Anonymous');
             $this->roleInvited->save();
             // Création du role utilisateur bsique
-            $this->roleBasic = new User_Model_Role();
+            $this->roleBasic = new Role();
             $this->roleBasic->setRef('basic');
             $this->roleBasic->setName('Basic');
             $this->roleBasic->save();
             // Création du role admin
-            $this->roleAdmin = new User_Model_Role();
+            $this->roleAdmin = new Role();
             $this->roleAdmin->setRef('admin');
             $this->roleAdmin->setName('Admin');
             $this->roleAdmin->save();
@@ -113,7 +112,7 @@ class ResourceUserTest extends Core_Test_TestCase
             $this->entityManager->flush();
 
             // Création d'un utilisateur
-            $this->testUser = new User_Model_User();
+            $this->testUser = new User();
             $this->testUser->setPassword('test');
             $this->testUser->setEmail('test');
             $this->testUser->enable();
@@ -124,26 +123,26 @@ class ResourceUserTest extends Core_Test_TestCase
             $this->entityManager->flush();
 
             // Crée les ressources
-            $this->testUserResource = new User_Model_Resource_Entity();
+            $this->testUserResource = new EntityResource();
             $this->testUserResource->setEntity($this->testUser);
             $this->testUserResource->save();
-            $this->allUsersResource = new User_Model_Resource_Entity();
-            $this->allUsersResource->setEntityName('User_Model_User');
+            $this->allUsersResource = new EntityResource();
+            $this->allUsersResource->setEntityName(User::class);
             $this->allUsersResource->save();
-            $this->invitedUsersResource = new User_Model_Resource_Entity();
+            $this->invitedUsersResource = new EntityResource();
             $this->invitedUsersResource->setEntity($this->roleInvited);
             $this->invitedUsersResource->save();
-            $this->basicUsersResource = new User_Model_Resource_Entity();
+            $this->basicUsersResource = new EntityResource();
             $this->basicUsersResource->setEntity($this->roleBasic);
             $this->basicUsersResource->save();
-            $this->adminUsersResource = new User_Model_Resource_Entity();
+            $this->adminUsersResource = new EntityResource();
             $this->adminUsersResource->setEntity($this->roleAdmin);
             $this->adminUsersResource->save();
 
             $this->entityManager->flush();
 
             // Création du privilège donnant l'accès à admin sur les préférences de tous les utilisateurs
-            $this->aclService->allow($this->roleAdmin, User_Model_Action_Default::VIEW(), $this->allUsersResource);
+            $this->aclService->allow($this->roleAdmin, DefaultAction::VIEW(), $this->allUsersResource);
 
             $this->entityManager->flush();
         } catch (Exception $e) {
@@ -156,7 +155,7 @@ class ResourceUserTest extends Core_Test_TestCase
      */
     public function testLoadByEntity()
     {
-        $resource = User_Model_Resource_Entity::loadByEntity($this->testUser);
+        $resource = EntityResource::loadByEntity($this->testUser);
         $this->assertSame($this->testUserResource, $resource);
         $this->assertSame($this->testUser, $resource->getEntity());
     }
@@ -167,9 +166,9 @@ class ResourceUserTest extends Core_Test_TestCase
      */
     public function testLoadByEntityName()
     {
-        $resource = User_Model_Resource_Entity::loadByEntityName('User_Model_User');
+        $resource = EntityResource::loadByEntityName(User::class);
         $this->assertSame($this->allUsersResource, $resource);
-        $this->assertEquals('User_Model_User', $resource->getEntityName());
+        $this->assertEquals(User::class, $resource->getEntityName());
     }
 
     /**
@@ -177,8 +176,8 @@ class ResourceUserTest extends Core_Test_TestCase
      */
     public function testLoadByRole()
     {
-        $resource = User_Model_Resource_Entity::loadByEntity($this->roleInvited);
-        $this->assertTrue($resource instanceof User_Model_Resource);
+        $resource = EntityResource::loadByEntity($this->roleInvited);
+        $this->assertTrue($resource instanceof Resource);
         $this->assertEquals($this->invitedUsersResource->getId(), $resource->getId());
         $this->assertSame($this->roleInvited, $resource->getEntity());
     }
@@ -188,9 +187,7 @@ class ResourceUserTest extends Core_Test_TestCase
      */
     public function testAnonymous()
     {
-        $access = $this->aclService->isAllowed($this->roleInvited,
-                                               User_Model_Action_Default::VIEW(),
-                                               $this->allUsersResource);
+        $access = $this->aclService->isAllowed($this->roleInvited, DefaultAction::VIEW(), $this->allUsersResource);
         $this->assertFalse($access);
     }
 
@@ -204,7 +201,7 @@ class ResourceUserTest extends Core_Test_TestCase
         $user2->save();
         $this->entityManager->flush();
 
-        $access = $this->aclService->isAllowed($user2, User_Model_Action_Default::VIEW(), $this->testUserResource);
+        $access = $this->aclService->isAllowed($user2, DefaultAction::VIEW(), $this->testUserResource);
         $this->assertFalse($access);
 
         UserTest::deleteObject($user2);
@@ -216,9 +213,7 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testAdminOnAllUsers()
     {
         // Accès aux préférences de tous les utilisateurs
-        $access = $this->aclService->isAllowed($this->roleAdmin,
-                                               User_Model_Action_Default::VIEW(),
-                                               $this->allUsersResource);
+        $access = $this->aclService->isAllowed($this->roleAdmin, DefaultAction::VIEW(), $this->allUsersResource);
         $this->assertTrue($access);
     }
 
@@ -228,9 +223,7 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testAdminOnSpecificUser()
     {
         // Accès aux préférences de l'utilisateur de test
-        $access = $this->aclService->isAllowed($this->roleAdmin,
-                                               User_Model_Action_Default::VIEW(),
-                                               $this->testUserResource);
+        $access = $this->aclService->isAllowed($this->roleAdmin, DefaultAction::VIEW(), $this->testUserResource);
         $this->assertTrue($access);
     }
 
@@ -240,9 +233,7 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testAdminOnAllBasicUsers()
     {
         // Accès aux préférences de l'utilisateur de test
-        $access = $this->aclService->isAllowed($this->roleAdmin,
-                                               User_Model_Action_Default::VIEW(),
-                                               $this->basicUsersResource);
+        $access = $this->aclService->isAllowed($this->roleAdmin, DefaultAction::VIEW(), $this->basicUsersResource);
         $this->assertTrue($access);
     }
 
@@ -253,22 +244,16 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testDroitsUtilisateursDeRole1()
     {
         // Création du privilège donnant l'accès à utilisateur sur les préférences des invités
-        $this->aclService->allow($this->roleBasic, User_Model_Action_Default::VIEW(), $this->invitedUsersResource);
+        $this->aclService->allow($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
         $this->entityManager->flush();
         // Accès aux préférences de tous les utilisateurs du role "Invité" pour un role "Utilisateur"
-        $access1 = $this->aclService->isAllowed($this->roleBasic,
-                                                User_Model_Action_Default::VIEW(),
-                                                $this->invitedUsersResource);
+        $access1 = $this->aclService->isAllowed($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
         // L'accès ne marche pas pour les préférences des "Utilisateurs"
-        $access2 = $this->aclService->isAllowed($this->roleBasic,
-                                                User_Model_Action_Default::VIEW(),
-                                                $this->basicUsersResource);
+        $access2 = $this->aclService->isAllowed($this->roleBasic, DefaultAction::VIEW(), $this->basicUsersResource);
         // L'accès ne marche pas pour les préférences des admins
-        $access3 = $this->aclService->isAllowed($this->roleBasic,
-                                                User_Model_Action_Default::VIEW(),
-                                                $this->adminUsersResource);
+        $access3 = $this->aclService->isAllowed($this->roleBasic, DefaultAction::VIEW(), $this->adminUsersResource);
         // Supprime le privilège
-        $this->aclService->disallow($this->roleBasic, User_Model_Action_Default::VIEW(), $this->invitedUsersResource);
+        $this->aclService->disallow($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
         $this->entityManager->flush();
         $this->assertTrue($access1);
         $this->assertFalse($access2);
@@ -283,7 +268,7 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testDroitsUtilisateursDeRole2()
     {
         // Création du privilège donnant l'accès à utilisateur sur les préférences des invités
-        $this->aclService->allow($this->roleBasic, User_Model_Action_Default::VIEW(), $this->invitedUsersResource);
+        $this->aclService->allow($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
 
         // Crée un utilisateur "invité"
         $invitedUser = UserTest::generateObject();
@@ -291,17 +276,15 @@ class ResourceUserTest extends Core_Test_TestCase
         $invitedUser->save();
         $this->entityManager->flush();
         // Crée une ressource représentant cet utilisateur invité
-        $invitedUserResource = new User_Model_Resource_Entity();
+        $invitedUserResource = new EntityResource();
         $invitedUserResource->setEntity($invitedUser);
         $invitedUserResource->save();
         $this->entityManager->flush();
 
         // Accès aux préférences de l'utilisateur de test
-        $access = $this->aclService->isAllowed($this->roleBasic,
-                                               User_Model_Action_Default::VIEW(),
-                                               $invitedUserResource);
+        $access = $this->aclService->isAllowed($this->roleBasic, DefaultAction::VIEW(), $invitedUserResource);
 
-        $this->aclService->disallow($this->roleBasic, User_Model_Action_Default::VIEW(), $this->invitedUsersResource);
+        $this->aclService->disallow($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
         $invitedUserResource->delete();
         $invitedUser->delete();
         $this->entityManager->flush();
@@ -321,7 +304,7 @@ class ResourceUserTest extends Core_Test_TestCase
             $this->cacheService->enabled = false;
 
             //Suppression des objets crées pour les tests
-            $this->aclService->disallow($this->roleAdmin, User_Model_Action_Default::VIEW(), $this->allUsersResource);
+            $this->aclService->disallow($this->roleAdmin, DefaultAction::VIEW(), $this->allUsersResource);
             if ($this->adminUsersResource) {
                 $this->adminUsersResource->delete();
             }
@@ -356,5 +339,4 @@ class ResourceUserTest extends Core_Test_TestCase
             $this->fail($e);
         }
     }
-
 }

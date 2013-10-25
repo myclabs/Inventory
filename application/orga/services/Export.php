@@ -6,6 +6,8 @@
  * @subpackage Service
  */
 
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
@@ -269,10 +271,10 @@ class Orga_Service_Export
             function(Orga_Model_Cell $cell) {
                 $users = [];
 
-                $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
+                $cellResource = EntityResource::loadByEntity($cell);
                 $linkedIndentities = $cellResource->getLinkedSecurityIdentities();
                 foreach ($linkedIndentities as $linkedIndentity) {
-                    if ($linkedIndentity instanceof User_Model_Role) {
+                    if ($linkedIndentity instanceof Role) {
                         foreach ($linkedIndentity->getUsers() as $user) {
                             $users[] = ['user' => $user, 'role' => $linkedIndentity];
                         }
@@ -299,7 +301,7 @@ class Orga_Service_Export
         );
         $modelBuilder->bindFunction(
             'displayRoleName',
-            function(User_Model_Role $role) {
+            function(Role $role) {
                 return __('Orga', 'role', $role->getName());
             }
         );

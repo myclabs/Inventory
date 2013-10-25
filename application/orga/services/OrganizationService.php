@@ -6,6 +6,9 @@
  */
 
 use Doctrine\ORM\EntityManager;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
+use User\Domain\User;
 
 /**
  * @package Orga
@@ -37,12 +40,12 @@ class Orga_Service_OrganizationService
     /**
      * Crée un projet et assigne un utilisateur comme administrateur
      *
-     * @param User_Model_User $administrator
+     * @param User $administrator
      * @param string $label
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganization(User_Model_User $administrator, $label)
+    public function createOrganization(User $administrator, $label)
     {
         $this->entityManager->beginTransaction();
 
@@ -90,10 +93,10 @@ class Orga_Service_OrganizationService
 
         try {
             // Suppression des autorisations de tous les utilisateurs.
-            $this->clearAttachedUsers(User_Model_Resource_Entity::loadByEntity($organization));
+            $this->clearAttachedUsers(EntityResource::loadByEntity($organization));
             foreach ($organization->getGranularities() as $granularity) {
                 foreach ($granularity->getCells() as $cell) {
-                    $this->clearAttachedUsers(User_Model_Resource_Entity::loadByEntity($cell));
+                    $this->clearAttachedUsers(EntityResource::loadByEntity($cell));
                 }
             }
 
@@ -131,12 +134,12 @@ class Orga_Service_OrganizationService
     }
 
     /**
-     * @param User_Model_Resource_Entity $resource
+     * @param EntityResource $resource
      */
-    protected function clearAttachedUsers(User_Model_Resource_Entity $resource)
+    protected function clearAttachedUsers(EntityResource $resource)
     {
         foreach ($resource->getLinkedSecurityIdentities() as $securityIdentity) {
-            if ($securityIdentity instanceof User_Model_Role) {
+            if ($securityIdentity instanceof Role) {
                 foreach ($securityIdentity->getUsers() as $attachedUser) {
                     $attachedUser->removeRole($securityIdentity);
                 }

@@ -1,0 +1,10 @@
+User\Domain\ACL\Resource\NamedResource:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: User_Resource_Named
+
+  fields:
+    name:
+      type: string
+      nullable: false
+      unique: true

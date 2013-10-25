@@ -1,13 +1,11 @@
 <?php
-/**
- * @package User
- */
 
-/**
- * Creation of the Test Suite.
- * @package    User
- * @subpackage Test
- */
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Resource;
+use User\Domain\ACL\Role;
+use User\Domain\ACL\ACLFilterService;
+
 class AuthorizationTest
 {
 
@@ -25,14 +23,14 @@ class AuthorizationTest
 
     /**
      * Génere un objet pret à l'emploi pour les tests
-     * @return User_Model_Authorization Objet généré
+     * @return Authorization Objet généré
      */
     public static function generateObject()
     {
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $o = new User_Model_Authorization($role, User_Model_Action_Default::VIEW(), $resource);
+        $o = new Authorization($role, DefaultAction::VIEW(), $resource);
         $o->save();
 
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -42,9 +40,9 @@ class AuthorizationTest
 
     /**
      * Supprime un objet de test généré avec generateObject()
-     * @param User_Model_Authorization $o l'objet de test a supprimer
+     * @param Authorization $o l'objet de test a supprimer
      */
-    public static function deleteObject(User_Model_Authorization $o)
+    public static function deleteObject(Authorization $o)
     {
         $o->delete();
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -56,7 +54,7 @@ class AuthorizationTest
 }
 
 /**
- * Test des méthodes de base de l'objet User_Model_Authorization.
+ * Test des méthodes de base de l'objet Authorization.
  *
  * @package    User
  * @subpackage Test
@@ -71,18 +69,18 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (User_Model_Authorization::loadList() as $o) {
+        foreach (Authorization::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource::loadList() as $o) {
+        foreach (Resource::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Role::loadList() as $o) {
+        foreach (Role::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -98,7 +96,7 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
     }
 
     /**
-     * @return User_Model_Authorization
+     * @return Authorization
      */
     function testConstruct()
     {
@@ -106,9 +104,9 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $o = new User_Model_Authorization($role, User_Model_Action_Default::VIEW(), $resource);
+        $o = new Authorization($role, DefaultAction::VIEW(), $resource);
 
-        $this->assertEquals(User_Model_Action_Default::VIEW(), $o->getAction());
+        $this->assertEquals(DefaultAction::VIEW(), $o->getAction());
         $this->assertSame($resource, $o->getResource());
         $this->assertSame($role, $o->getIdentity());
 
@@ -122,21 +120,21 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
 
     /**
      * @depends testConstruct
-     * @param User_Model_Authorization $o
-     * @return User_Model_Authorization
+     * @param Authorization $o
+     * @return Authorization
      */
-    function testLoad(User_Model_Authorization $o)
+    function testLoad(Authorization $o)
     {
-        /** @var $oLoaded User_Model_Authorization */
-        $oLoaded = User_Model_Authorization::load($o->getId());
+        /** @var $oLoaded Authorization */
+        $oLoaded = Authorization::load($o->getId());
 
         $this->assertSame($o, $oLoaded);
 
         // Vérification des attributs
         $this->assertEquals($oLoaded->getAction(), $o->getAction());
-        $this->assertInstanceOf('User_Model_Resource', $oLoaded->getResource());
+        $this->assertInstanceOf(Resource::class, $oLoaded->getResource());
         $this->assertEquals($o->getResource()->getId(), $oLoaded->getResource()->getId());
-        $this->assertInstanceOf('User_Model_Role', $oLoaded->getIdentity());
+        $this->assertInstanceOf(Role::class, $oLoaded->getIdentity());
         $this->assertEquals($o->getIdentity()->getId(), $oLoaded->getIdentity()->getId());
 
         return $oLoaded;
@@ -144,9 +142,9 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
 
     /**
      * @depends testLoad
-     * @param User_Model_Authorization $o
+     * @param Authorization $o
      */
-    function testDelete(User_Model_Authorization $o)
+    function testDelete(Authorization $o)
     {
         $resource = $o->getResource();
         $role = $o->getIdentity();
@@ -163,7 +161,7 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
 }
 
 /**
- * Test des méthodes métier de l'objet User_Model_Authorization.
+ * Test des méthodes métier de l'objet Authorization.
  *
  * @package    User
  * @subpackage Test
@@ -178,18 +176,18 @@ class AuthorizationMetierTest extends Core_Test_TestCase
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (User_Model_Role::loadList() as $o) {
+        foreach (Role::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Authorization::loadList() as $o) {
+        foreach (Authorization::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource::loadList() as $o) {
+        foreach (Resource::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -202,8 +200,8 @@ class AuthorizationMetierTest extends Core_Test_TestCase
     public function setUp()
     {
         parent::setUp();
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $this->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $this->get(ACLFilterService::class);
         $aclFilterService->enabled = false;
     }
 
@@ -214,9 +212,11 @@ class AuthorizationMetierTest extends Core_Test_TestCase
     {
         $authorization = AuthorizationTest::generateObject();
 
-        $o = User_Model_Authorization::search($authorization->getIdentity(),
-                                              $authorization->getAction(),
-                                              $authorization->getResource());
+        $o = Authorization::search(
+            $authorization->getIdentity(),
+            $authorization->getAction(),
+            $authorization->getResource()
+        );
         $this->assertSame($authorization, $o);
 
         AuthorizationTest::deleteObject($authorization);
@@ -229,9 +229,11 @@ class AuthorizationMetierTest extends Core_Test_TestCase
     {
         $authorization = AuthorizationTest::generateObject();
 
-        $o = User_Model_Authorization::search($authorization->getIdentity(),
-                                              User_Model_Action_Default::EDIT(),
-                                              $authorization->getResource());
+        $o = Authorization::search(
+            $authorization->getIdentity(),
+            DefaultAction::EDIT(),
+            $authorization->getResource()
+        );
         $this->assertNull($o);
 
         AuthorizationTest::deleteObject($authorization);

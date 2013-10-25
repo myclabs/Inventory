@@ -1,11 +1,20 @@
 <?php
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Resource;
+use User\Domain\ACL\Role;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\ACLFilterService;
+use User\Domain\User;
+use User\Domain\UserService;
+
 /**
  * @package User
  * @subpackage Test
  */
 
 /**
- * Test de User_Service_ACL
+ * Test de ACLService
  * @package    User
  * @subpackage Test
  */
@@ -13,12 +22,12 @@ class ACLServiceTest extends Core_Test_TestCase
 {
 
     /**
-     * @var User_Service_User
+     * @var UserService
      */
     protected $userService;
 
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     protected $aclService;
 
@@ -30,21 +39,21 @@ class ACLServiceTest extends Core_Test_TestCase
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (User_Model_Authorization::loadList() as $o) {
+        foreach (Authorization::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource::loadList() as $o) {
+        foreach (Resource::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Role::loadList() as $o) {
+        foreach (Role::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_User::loadList() as $o) {
+        foreach (User::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -58,10 +67,10 @@ class ACLServiceTest extends Core_Test_TestCase
     {
         parent::setUp();
 
-        $this->userService = $this->get('User_Service_User');
-        $this->aclService = $this->get('User_Service_ACL');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $this->get('User_Service_ACLFilter');
+        $this->userService = $this->get(UserService::class);
+        $this->aclService = $this->get(ACLService::class);
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $this->get(ACLFilterService::class);
 
         $aclFilterService->enabled = false;
     }
@@ -74,13 +83,13 @@ class ACLServiceTest extends Core_Test_TestCase
         // Fixtures
         $targetUser = $this->userService->createUser('target', 'target');
         $admin = $this->userService->createUser('admin', 'admin');
-        $this->aclService->allow($admin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->allow($admin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
 
-        $result = $this->aclService->isAllowed($admin, User_Model_Action_Default::VIEW(), $targetUser);
+        $result = $this->aclService->isAllowed($admin, DefaultAction::VIEW(), $targetUser);
 
         // Fixtures
-        $this->aclService->disallow($admin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->disallow($admin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
         $this->userService->deleteUser($targetUser);
         $this->userService->deleteUser($admin);
@@ -96,14 +105,14 @@ class ACLServiceTest extends Core_Test_TestCase
         // Fixtures
         $targetUser = $this->userService->createUser('target', 'target');
         $admin = $this->userService->createUser('admin', 'admin');
-        $this->aclService->allow($admin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->allow($admin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
 
         $targetResource = $this->aclService->getResourceForEntity($targetUser);
-        $result = $this->aclService->isAllowed($admin, User_Model_Action_Default::VIEW(), $targetResource);
+        $result = $this->aclService->isAllowed($admin, DefaultAction::VIEW(), $targetResource);
 
         // Fixtures
-        $this->aclService->disallow($admin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->disallow($admin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
         $this->userService->deleteUser($targetUser);
         $this->userService->deleteUser($admin);
@@ -119,17 +128,17 @@ class ACLServiceTest extends Core_Test_TestCase
         // Fixtures
         $targetUser = $this->userService->createUser('target', 'target');
         $admin = $this->userService->createUser('admin', 'admin');
-        $roleAdmin = new User_Model_Role('admin', 'Admin');
+        $roleAdmin = new Role('admin', 'Admin');
         $roleAdmin->save();
         $admin->addRole($roleAdmin);
         $this->entityManager->flush();
-        $this->aclService->allow($roleAdmin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->allow($roleAdmin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
 
-        $result = $this->aclService->isAllowed($roleAdmin, User_Model_Action_Default::VIEW(), $targetUser);
+        $result = $this->aclService->isAllowed($roleAdmin, DefaultAction::VIEW(), $targetUser);
 
         // Fixtures
-        $this->aclService->disallow($roleAdmin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->disallow($roleAdmin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
         $this->userService->deleteUser($targetUser);
         $this->userService->deleteUser($admin);
@@ -147,18 +156,18 @@ class ACLServiceTest extends Core_Test_TestCase
         // Fixtures
         $targetUser = $this->userService->createUser('target', 'target');
         $admin = $this->userService->createUser('admin', 'admin');
-        $roleAdmin = new User_Model_Role('admin', 'Admin');
+        $roleAdmin = new Role('admin', 'Admin');
         $roleAdmin->save();
         $admin->addRole($roleAdmin);
         $this->entityManager->flush();
-        $this->aclService->allow($roleAdmin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->allow($roleAdmin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
 
         $targetResource = $this->aclService->getResourceForEntity($targetUser);
-        $result = $this->aclService->isAllowed($roleAdmin, User_Model_Action_Default::VIEW(), $targetResource);
+        $result = $this->aclService->isAllowed($roleAdmin, DefaultAction::VIEW(), $targetResource);
 
         // Fixtures
-        $this->aclService->disallow($roleAdmin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->disallow($roleAdmin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
         $this->userService->deleteUser($targetUser);
         $this->userService->deleteUser($admin);
@@ -167,5 +176,4 @@ class ACLServiceTest extends Core_Test_TestCase
 
         $this->assertTrue($result);
     }
-
 }

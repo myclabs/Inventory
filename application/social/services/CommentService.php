@@ -1,6 +1,10 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\ACLService;
+use User\Domain\User;
 
 /**
  * Comment application service
@@ -10,7 +14,7 @@ use Doctrine\ORM\EntityManager;
 class Social_Service_CommentService
 {
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -19,13 +23,13 @@ class Social_Service_CommentService
      */
     private $entityManager;
 
-    public function __construct(User_Service_ACL $aclService, EntityManager $entityManager)
+    public function __construct(ACLService $aclService, EntityManager $entityManager)
     {
         $this->aclService = $aclService;
         $this->entityManager = $entityManager;
     }
 
-    public function addComment(User_Model_User $author, $content)
+    public function addComment(User $author, $content)
     {
         $this->entityManager->beginTransaction();
 
@@ -35,14 +39,14 @@ class Social_Service_CommentService
         $this->entityManager->flush();
 
         // Crée la ressource
-        $resource = new User_Model_Resource_Entity();
+        $resource = new EntityResource();
         $resource->setEntity($comment);
         $resource->save();
         $this->entityManager->flush();
 
         // Donne le droit à l'auteur de modifier et supprimer le commentaire
-        $this->aclService->allow($author, User_Model_Action_Default::EDIT(), $comment);
-        $this->aclService->allow($author, User_Model_Action_Default::DELETE(), $comment);
+        $this->aclService->allow($author, DefaultAction::EDIT(), $comment);
+        $this->aclService->allow($author, DefaultAction::DELETE(), $comment);
 
         $this->entityManager->flush();
         $this->entityManager->commit();
@@ -66,12 +70,12 @@ class Social_Service_CommentService
         $comment = Social_Model_Comment::load($id);
 
         // Supprime les droits
-        $this->aclService->disallow($comment->getAuthor(), User_Model_Action_Default::EDIT(), $comment);
-        $this->aclService->disallow($comment->getAuthor(), User_Model_Action_Default::DELETE(), $comment);
+        $this->aclService->disallow($comment->getAuthor(), DefaultAction::EDIT(), $comment);
+        $this->aclService->disallow($comment->getAuthor(), DefaultAction::DELETE(), $comment);
         $this->entityManager->flush();
 
         // Supprime la ressource
-        $resource = User_Model_Resource_Entity::loadByEntity($comment);
+        $resource = EntityResource::loadByEntity($comment);
         if ($resource) {
             $resource->delete();
         }

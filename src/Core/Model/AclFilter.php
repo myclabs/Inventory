@@ -1,4 +1,7 @@
 <?php
+use User\Domain\ACL\Action\Action;
+use User\Domain\User;
+
 /**
  * @author     matthieu.napoli
  * @package    Core
@@ -26,14 +29,14 @@ class Core_Model_AclFilter
      *
      * Optionnel : par défaut, l'utilisateur connecté est utilisé.
      *
-     * @var User_Model_User|null
+     * @var User|null
      */
     public $user = null;
 
     /**
      * Action demandée sur la ressource
      *
-     * @var User_Model_Action|null
+     * @var Action|null
      */
     public $action = null;
 

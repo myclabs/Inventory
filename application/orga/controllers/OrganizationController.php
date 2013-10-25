@@ -10,6 +10,10 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\ACLService;
+use User\Domain\User;
 
 /**
  * @author valentin.claras
@@ -22,7 +26,7 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -50,27 +54,27 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function indexAction()
     {
-        /** @var User_Model_User $connectedUser */
+        /** @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
-        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
+        $organizationResource = EntityResource::loadByEntityName(Orga_Model_Organization::class);
         $isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::CREATE(),
+            DefaultAction::CREATE(),
             $organizationResource
         );
 
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
+        $aclQuery->aclFilter->action = DefaultAction::DELETE();
         $isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
-        $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+        $aclQuery->aclFilter->action = DefaultAction::VIEW();
         $isConnectedUserAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
 
         $listCellResource = array();
         foreach ($connectedUser->getLinkedResources() as $cellResource) {
-            if (($cellResource instanceof User_Model_Resource_Entity)
+            if (($cellResource instanceof EntityResource)
                 && ($cellResource->getEntity() instanceof Orga_Model_Cell)
                 && (!in_array($cellResource, $listCellResource))
             ) {
@@ -79,7 +83,7 @@ class Orga_OrganizationController extends Core_Controller
         }
         foreach ($connectedUser->getRoles() as $userRole) {
             foreach ($userRole->getLinkedResources() as $cellResource) {
-                if (($cellResource instanceof User_Model_Resource_Entity)
+                if (($cellResource instanceof EntityResource)
                     && ($cellResource->getEntity() instanceof Orga_Model_Cell)
                     && (!in_array($cellResource, $listCellResource))
                 ) {
@@ -112,17 +116,17 @@ class Orga_OrganizationController extends Core_Controller
     {
         $connectedUser = $this->_helper->auth();
 
-        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
+        $organizationResource = EntityResource::loadByEntityName('Orga_Model_Organization');
         $this->view->isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::CREATE(),
+            DefaultAction::CREATE(),
             $organizationResource
         );
 
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
+        $aclQuery->aclFilter->action = DefaultAction::EDIT();
         $this->view->isConnectedUserAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
     }
 

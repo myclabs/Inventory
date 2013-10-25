@@ -1,4 +1,7 @@
 <?php
+use User\Domain\ACL\Role;
+use User\Domain\UserService;
+
 /**
  * @package User
  */
@@ -23,11 +26,11 @@ class User_PopulateUser extends Core_Script_Action
         /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = $entityManagers['default'];
 
-        /** @var $userService User_Service_User */
-        $userService = $container->get(User_Service_User::class);
+        /** @var $userService UserService */
+        $userService = $container->get(UserService::class);
 
         // Charge les roles
-        $roleAdmin = User_Model_Role::loadByRef('sysadmin');
+        $roleAdmin = Role::loadByRef('sysadmin');
 
         // Crée un admin
         $admin = $userService->createUser('admin@myc-sense.com', 'myc-53n53');

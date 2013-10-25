@@ -1,6 +1,17 @@
 # Mise en production
 
 
+## 2.next (branche feature/ACL)
+
+- Déployer normalement l'application (avec build update)
+
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/featureACL/migrate.sql
+```
+
+
 ## 2.7
 
 - Mettre hors ligne la prod actuelle (sauf stations de montagne et spiritueux)

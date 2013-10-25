@@ -7,6 +7,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use User\Domain\ACL\ACLService;
 
 /**
  * Controlleur des onglets de la saisie d'une cellule.
@@ -20,7 +21,7 @@ class Orga_Tab_InputController extends Core_Controller
 
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 

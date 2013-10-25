@@ -8,6 +8,8 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\ACLService;
 
 /**
  * Controller de projet
@@ -17,7 +19,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -41,7 +43,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
     {
         $this->request->aclFilter->enabled = true;
         $this->request->aclFilter->user = $this->_helper->auth();
-        $this->request->aclFilter->action = User_Model_Action_Default::VIEW();
+        $this->request->aclFilter->action = DefaultAction::VIEW();
 
         foreach (Orga_Model_Organization::loadList($this->request) as $organization) {
             /** @var Orga_Model_Organization $organization */
@@ -64,7 +66,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $this->_helper->auth();
-                $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+                $aclCellQuery->aclFilter->action = DefaultAction::VIEW();
                 $aclCellQuery->filter->addCondition(
                     Orga_Model_Cell::QUERY_GRANULARITY,
                     $granularity,
@@ -87,7 +89,7 @@ class Orga_Datagrid_OrganizationController extends UI_Controller_Datagrid
 
             $isConnectedUserAbleToDeleteOrganization = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                User_Model_Action_Default::DELETE(),
+                DefaultAction::DELETE(),
                 $organization
             );
             if (!$isConnectedUserAbleToDeleteOrganization) {

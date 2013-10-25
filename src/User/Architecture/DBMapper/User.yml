@@ -1,0 +1,47 @@
+User\Domain\User:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: User_User
+
+  fields:
+    lastName:
+      type: string
+      nullable: true
+    firstName:
+      type: string
+      nullable: true
+    email:
+      type: string
+      nullable: false
+      unique: true
+    emailValidated:
+      type: boolean
+      nullable: false
+    emailKey:
+      type: string
+      nullable: true
+    enabled:
+      type: boolean
+      nullable: false
+    password:
+      type: string
+      nullable: false
+    creationDate:
+      type: datetime
+      nullable: false
+    locale:
+      type: core_locale
+      nullable: true
+
+  manyToMany:
+    roles:
+      targetEntity: User\Domain\ACL\Role
+      inversedBy: users
+      joinTable:
+        name: User_UserRoles
+        joinColumns:
+          idUser:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idRole:
+            referencedColumnName: id

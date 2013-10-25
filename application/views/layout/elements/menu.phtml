@@ -1,8 +1,14 @@
 <?php
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Resource\NamedResource;
+use User\Domain\ACL\ACLService;
+use User\Domain\User;
+
 if (Zend_Auth::getInstance()->hasIdentity()) {
     try {
-        /** @var User_Model_User $connectedUser */
-        $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+        /** @var User $connectedUser */
+        $connectedUser = User::load(Zend_Auth::getInstance()->getIdentity());
     } catch (Core_Exception_NotFound $e) {
         $connectedUser = null;
     }
@@ -12,15 +18,15 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
 if ($connectedUser) {
     $container = Zend_Registry::get('container');
-    /** @var User_Service_ACL $aclService */
-    $aclService = $container->get('User_Service_ACL');
+    /** @var ACLService $aclService */
+    $aclService = $container->get(ACLService::class);
 
     $leftMenu = [];
 
     $aclQuery = new Core_Model_Query();
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
-    $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+    $aclQuery->aclFilter->action = DefaultAction::VIEW();
 
     $leftMenu[1] = [
         'name' => __('UI', 'name', 'home'),
@@ -38,8 +44,8 @@ if ($connectedUser) {
 
     $isAllowedToViewAllUser = $aclService->isAllowed(
         $connectedUser,
-        User_Model_Action_Default::VIEW(),
-        User_Model_Resource_Entity::loadByEntityName('User_Model_User')
+        DefaultAction::VIEW(),
+        EntityResource::loadByEntityName(User::class)
     );
     if ($isAllowedToViewAllUser) {
         $leftMenu[5] = [
@@ -79,8 +85,8 @@ if ($connectedUser) {
 
     $isAllowedToEditReferential = $aclService->isAllowed(
         $connectedUser,
-        User_Model_Action_Default::EDIT(),
-        User_Model_Resource_Named::loadByName('referential')
+        DefaultAction::EDIT(),
+        NamedResource::loadByName('referential')
     );
     if ($isAllowedToEditReferential) {
         $subMenuReferencial[] = [
@@ -267,7 +273,7 @@ if ($connectedUser) {
     $aclQuery = new Core_Model_Query();
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
-    $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
+    $aclQuery->aclFilter->action = DefaultAction::EDIT();
     $isAllowToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
     if ($isAllowedToEditReferential || $isAllowToEditOrganizations) {
         $leftMenu[6] = [

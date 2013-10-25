@@ -1,4 +1,6 @@
 <?php
+use User\Domain\ACL\ACLFilterService;
+
 /**
  * @package User
  */
@@ -19,8 +21,8 @@ class User_Populate extends Core_Script_Populate
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var $aclFilterService User_Service_ACLFilter */
-        $aclFilterService = $container->get(User_Service_ACLFilter::class);
+        /** @var $aclFilterService ACLFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         // Filtre des ACL
         $aclFilterService->enabled = false;

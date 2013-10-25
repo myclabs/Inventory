@@ -7,7 +7,7 @@
  */
 
 use Core\Annotation\Secure;
-
+use User\Domain\User;
 
 /**
  * @author valentin.claras
@@ -39,7 +39,7 @@ class Orga_ReferentialController extends Core_Controller
      */
     public function exportsAction()
     {
-        /** @var User_Model_User $connectedUser */
+        /** @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
         // Formats d'exports.

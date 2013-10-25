@@ -1,76 +1,79 @@
 <?php
-/**
- * @package User
- */
 
-/**
- * @package User
- */
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Resource;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
+use User\Domain\ACL\SecurityIdentity;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\ACLFilterService;
+use User\Domain\User;
+
 class ACLFilterTest extends Core_Test_TestCase
 {
-
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     protected $aclService;
 
     /**
-     * @var User_Service_ACLFilter
+     * @var ACLFilterService
      */
     protected $cacheService;
 
     /**
-     * @var User_Model_User
+     * @var User
      */
     protected $testUser;
 
     /**
-     * @var User_Model_User
+     * @var User
      */
     protected $testAdmin;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $allUsersResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $invitedUsersResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $basicUsersResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $adminUsersResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $testUserResource;
     /**
-     * @var User_Model_Resource
+     * @var Resource
      */
     protected $testAdminResource;
 
     /**
      * Invité n'a accès à rien
-     * @var User_Model_Role
+     * @var Role
      */
     protected $roleInvited;
     /**
      * Utilisateur a accès à ses préférences seulement
-     * @var User_Model_Role
+     * @var Role
      */
     protected $roleBasic;
     /**
      * Admin a accès à toute les préférences
-     * @var User_Model_Role
+     * @var Role
      */
     protected $roleAdmin;
 
     /**
-     * @var User_Model_Authorization
+     * @var Authorization
      */
     protected $adminAuthorization;
 
@@ -82,21 +85,21 @@ class ACLFilterTest extends Core_Test_TestCase
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         $aclFilterService->clean();
         $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (User_Model_Authorization::loadList() as $o) {
+        foreach (Authorization::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource::loadList() as $o) {
+        foreach (Resource::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_SecurityIdentity::loadList() as $o) {
+        foreach (SecurityIdentity::loadList() as $o) {
             $o->delete();
         }
         $entityManager->flush();
@@ -109,22 +112,22 @@ class ACLFilterTest extends Core_Test_TestCase
     {
         parent::setUp();
         // Service des ACL
-        $this->aclService = $this->get('User_Service_ACL');
-        $this->cacheService = $this->get('User_Service_ACLFilter');
+        $this->aclService = $this->get(ACLService::class);
+        $this->cacheService = $this->get(ACLFilterService::class);
         $this->cacheService->enabled = true;
         try {
             // Création du role invité
-            $this->roleInvited = new User_Model_Role();
+            $this->roleInvited = new Role();
             $this->roleInvited->setRef('anonymous');
             $this->roleInvited->setName('Anonymous');
             $this->roleInvited->save();
             // Création du role utilisateur bsique
-            $this->roleBasic = new User_Model_Role();
+            $this->roleBasic = new Role();
             $this->roleBasic->setRef('basic');
             $this->roleBasic->setName('Basic');
             $this->roleBasic->save();
             // Création du role admin
-            $this->roleAdmin = new User_Model_Role();
+            $this->roleAdmin = new Role();
             $this->roleAdmin->setRef('admin');
             $this->roleAdmin->setName('Admin');
             $this->roleAdmin->save();
@@ -132,14 +135,14 @@ class ACLFilterTest extends Core_Test_TestCase
             $this->entityManager->flush();
 
             // Création d'un utilisateur
-            $this->testUser = new User_Model_User();
+            $this->testUser = new User();
             $this->testUser->setEmail('test');
             $this->testUser->setPassword('test');
             $this->testUser->addRole($this->roleBasic);
             $this->testUser->save();
 
             // Création d'un admin
-            $this->testAdmin = new User_Model_User();
+            $this->testAdmin = new User();
             $this->testAdmin->setEmail('admin');
             $this->testAdmin->setPassword('admin');
             $this->testAdmin->addRole($this->roleAdmin);
@@ -148,29 +151,29 @@ class ACLFilterTest extends Core_Test_TestCase
             $this->entityManager->flush();
 
             // Crée les ressources
-            $this->testUserResource = new User_Model_Resource_Entity();
+            $this->testUserResource = new EntityResource();
             $this->testUserResource->setEntity($this->testUser);
             $this->testUserResource->save();
-            $this->testAdminResource = new User_Model_Resource_Entity();
+            $this->testAdminResource = new EntityResource();
             $this->testAdminResource->setEntity($this->testAdmin);
             $this->testAdminResource->save();
-            $this->allUsersResource = new User_Model_Resource_Entity();
-            $this->allUsersResource->setEntityName('User_Model_User');
+            $this->allUsersResource = new EntityResource();
+            $this->allUsersResource->setEntityName(User::class);
             $this->allUsersResource->save();
-            $this->invitedUsersResource = new User_Model_Resource_Entity();
+            $this->invitedUsersResource = new EntityResource();
             $this->invitedUsersResource->setEntity($this->roleInvited);
             $this->invitedUsersResource->save();
-            $this->basicUsersResource = new User_Model_Resource_Entity();
+            $this->basicUsersResource = new EntityResource();
             $this->basicUsersResource->setEntity($this->roleBasic);
             $this->basicUsersResource->save();
-            $this->adminUsersResource = new User_Model_Resource_Entity();
+            $this->adminUsersResource = new EntityResource();
             $this->adminUsersResource->setEntity($this->roleAdmin);
             $this->adminUsersResource->save();
 
             $this->entityManager->flush();
 
             // Création du privilège donnant l'accès à admin sur les préférences de tous les utilisateurs
-            $this->aclService->allow($this->roleAdmin, User_Model_Action_Default::VIEW(), $this->basicUsersResource);
+            $this->aclService->allow($this->roleAdmin, DefaultAction::VIEW(), $this->basicUsersResource);
 
             $this->entityManager->flush();
         } catch (Exception $e) {
@@ -183,7 +186,7 @@ class ACLFilterTest extends Core_Test_TestCase
      */
     function testWithoutFilter()
     {
-        $this->assertEquals(2, count(User_Model_User::loadList()));
+        $this->assertEquals(2, count(User::loadList()));
     }
 
     /**
@@ -196,8 +199,8 @@ class ACLFilterTest extends Core_Test_TestCase
         $query = new Core_Model_Query();
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $this->testAdmin;
-        $query->aclFilter->action = User_Model_Action_Default::VIEW();
-        $this->assertCount(1, User_Model_User::loadList($query));
+        $query->aclFilter->action = DefaultAction::VIEW();
+        $this->assertCount(1, User::loadList($query));
     }
 
     /**
@@ -210,8 +213,8 @@ class ACLFilterTest extends Core_Test_TestCase
         $query = new Core_Model_Query();
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $this->testUser;
-        $query->aclFilter->action = User_Model_Action_Default::VIEW();
-        $this->assertCount(0, User_Model_User::loadList($query));
+        $query->aclFilter->action = DefaultAction::VIEW();
+        $this->assertCount(0, User::loadList($query));
     }
 
     /**
@@ -224,7 +227,7 @@ class ACLFilterTest extends Core_Test_TestCase
         parent::tearDown();
         try {
             //Suppression des objets crées pour les tests
-            $this->aclService->disallow($this->roleAdmin, User_Model_Action_Default::VIEW(), $this->basicUsersResource);
+            $this->aclService->disallow($this->roleAdmin, DefaultAction::VIEW(), $this->basicUsersResource);
             if ($this->adminUsersResource) {
                 $this->adminUsersResource->delete();
             }

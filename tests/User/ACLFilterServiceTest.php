@@ -1,4 +1,14 @@
 <?php
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Resource;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\SecurityIdentity;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\ACLFilterService;
+use User\Domain\User;
+use User\Domain\UserService;
+
 /**
  * @package    User
  * @subpackage Test
@@ -12,17 +22,17 @@ class ACLFilterServiceTest extends Core_Test_TestCase
 {
 
     /**
-     * @var User_Service_User
+     * @var UserService
      */
     protected $userService;
 
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     protected $aclService;
 
     /**
-     * @var User_Service_ACLFilter
+     * @var ACLFilterService
      */
     protected $aclFilterService;
 
@@ -33,19 +43,19 @@ class ACLFilterServiceTest extends Core_Test_TestCase
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var User_Service_ACLFilter $aclFilterService */
-        $aclFilterService = $container->get('User_Service_ACLFilter');
+        /** @var ACLFilterService $aclFilterService */
+        $aclFilterService = $container->get(ACLFilterService::class);
 
         $aclFilterService->clean();
         $aclFilterService->enabled = false;
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (User_Model_Authorization::loadList() as $o) {
+        foreach (Authorization::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_Resource::loadList() as $o) {
+        foreach (Resource::loadList() as $o) {
             $o->delete();
         }
-        foreach (User_Model_SecurityIdentity::loadList() as $o) {
+        foreach (SecurityIdentity::loadList() as $o) {
             $o->delete();
         }
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -58,9 +68,9 @@ class ACLFilterServiceTest extends Core_Test_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->userService = $this->get('User_Service_User');
-        $this->aclService = $this->get('User_Service_ACL');
-        $this->aclFilterService = $this->get('User_Service_ACLFilter');
+        $this->userService = $this->get(UserService::class);
+        $this->aclService = $this->get(ACLService::class);
+        $this->aclFilterService = $this->get(ACLFilterService::class);
         $this->aclFilterService->enabled = true;
     }
 
@@ -90,14 +100,14 @@ class ACLFilterServiceTest extends Core_Test_TestCase
         // Fixtures
         $targetUser = $this->userService->createUser('target', 'target');
         $admin = $this->userService->createUser('admin', 'admin');
-        $this->aclService->allow($admin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->allow($admin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
 
         // 2 droits par utilisateur (VIEW et EDIT sur eux-même) + le droit qu'on a rajouté manuellement
         $this->assertEquals(2*2 + 1, $this->aclFilterService->getEntriesCount());
 
         // Fixtures
-        $this->aclService->disallow($admin, User_Model_Action_Default::VIEW(), $targetUser);
+        $this->aclService->disallow($admin, DefaultAction::VIEW(), $targetUser);
         $this->entityManager->flush();
         $this->userService->deleteUser($targetUser);
         $this->userService->deleteUser($admin);
@@ -111,11 +121,11 @@ class ACLFilterServiceTest extends Core_Test_TestCase
         // Fixtures
         $admin = $this->userService->createUser('admin', 'admin');
         $this->entityManager->flush();
-        $allUsersResource = new User_Model_Resource_Entity();
-        $allUsersResource->setEntityName('User_Model_User');
+        $allUsersResource = new EntityResource();
+        $allUsersResource->setEntityName(User::class);
         $allUsersResource->save();
         $this->entityManager->flush();
-        $this->aclService->allow($admin, User_Model_Action_Default::VIEW(), $allUsersResource);
+        $this->aclService->allow($admin, DefaultAction::VIEW(), $allUsersResource);
         $this->entityManager->flush();
 
         // 2 droits par utilisateur (VIEW et EDIT sur eux-même)
@@ -128,7 +138,7 @@ class ACLFilterServiceTest extends Core_Test_TestCase
         $this->assertEquals(2*2+1, $this->aclFilterService->getEntriesCount());
 
         // Fixtures
-        $this->aclService->disallow($admin, User_Model_Action_Default::VIEW(), $allUsersResource);
+        $this->aclService->disallow($admin, DefaultAction::VIEW(), $allUsersResource);
         $this->entityManager->flush();
         $allUsersResource->delete();
         $this->userService->deleteUser($admin);

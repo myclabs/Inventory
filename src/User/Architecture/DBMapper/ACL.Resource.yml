@@ -1,0 +1,29 @@
+User\Domain\ACL\Resource:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: User_Resource
+
+  inheritanceType: single_table
+  discriminatorColumn:
+    name: resource_type
+    type: string
+  discriminatorMap:
+    entityResource: User\Domain\ACL\Resource\EntityResource
+    namedResource: User\Domain\ACL\Resource\NamedResource
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToMany:
+    directAuthorizations:
+      targetEntity: Authorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true
+
+  indexes:
+    index1:
+      columns: [entityName, entityIdentifier]

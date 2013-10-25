@@ -5,7 +5,9 @@
  */
 
 use Core\Annotation\Secure;
-
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
+use User\Domain\User;
 
 /**
  * Controller de cells
@@ -20,12 +22,12 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        /* @var User_Model_User $connectedUser */
+        /* @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
         $listCellResource = array();
         foreach ($connectedUser->getLinkedResources() as $cellResource) {
-            if (($cellResource instanceof User_Model_Resource_Entity)
+            if (($cellResource instanceof EntityResource)
                 && ($cellResource->getEntity() instanceof Orga_Model_Cell)
                 && ($cellResource->getEntity()->getGranularity()->getOrganization() === $organization)
                 && (!in_array($cellResource, $listCellResource))
@@ -35,7 +37,7 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
         }
         foreach ($connectedUser->getRoles() as $userRole) {
             foreach ($userRole->getLinkedResources() as $cellResource) {
-                if (($cellResource instanceof User_Model_Resource_Entity)
+                if (($cellResource instanceof EntityResource)
                     && ($cellResource->getEntity() instanceof Orga_Model_Cell)
                     && ($cellResource->getEntity()->getGranularity()->getOrganization() === $organization)
                     && (!in_array($cellResource, $listCellResource))
@@ -53,7 +55,7 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
 
             $access = array();
             foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {
-                if (($securityIdentity instanceof User_Model_Role) && ($connectedUser->hasRole($securityIdentity))) {
+                if (($securityIdentity instanceof Role) && ($connectedUser->hasRole($securityIdentity))) {
                     $access[] = $securityIdentity->getName();
                 }
             }

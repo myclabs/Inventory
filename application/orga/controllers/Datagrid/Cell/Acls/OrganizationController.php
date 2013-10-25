@@ -9,6 +9,9 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use User\Domain\ACL\Role;
+use User\Domain\User;
+use User\Domain\UserService;
 
 /**
  * Controlleur du Datagrid listant les Roles du projet d'une cellule.
@@ -20,7 +23,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
 {
     /**
      * @Inject
-     * @var User_Service_User
+     * @var UserService
      */
     private $userService;
 
@@ -52,7 +55,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
     function getelementsAction()
     {
         $idOrganization = $this->getParam('idOrganization');
-        $organizationAdministratorRole = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
+        $organizationAdministratorRole = Role::loadByRef('organizationAdministrator_'.$idOrganization);
 
         foreach ($organizationAdministratorRole->getUsers() as $user) {
             $data = array();
@@ -78,7 +81,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
     function addelementAction()
     {
         $idOrganization = $this->getParam('idOrganization');
-        $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
+        $role = Role::loadByRef('organizationAdministrator_'.$idOrganization);
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $userEmail = $this->getAddElementValue('userEmail');
@@ -98,8 +101,8 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             throw $e;
         };
 
-        if (User_Model_User::isEmailUsed($userEmail)) {
-            $user = User_Model_User::loadByEmail($userEmail);
+        if (User::isEmailUsed($userEmail)) {
+            $user = User::loadByEmail($userEmail);
             if ($user->hasRole($role)) {
                 $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
                 $this->send();
@@ -144,18 +147,18 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
     {
         $idOrganization = $this->getParam('idOrganization');
         $organization = Orga_Model_Organization::load($idOrganization);
-        $user = User_Model_User::load($this->delete);
-        $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
+        $user = User::load($this->delete);
+        $role = Role::loadByRef('organizationAdministrator_'.$idOrganization);
 
         //@see http://supervision.myc-sense.com:3000/issues/6582
         //  Sans worker la suppression s'effectue correctement mais échoue avec.
 
         // sans worker.
-//        $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
+//        $user->removeRole(Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 //
 //        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCellByMembers([]);
 //        $user->removeRole(
-//            User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
+//            Role::loadByRef('cellAdministrator_'.$globalCell->getId())
 //        );
 
         // worker.

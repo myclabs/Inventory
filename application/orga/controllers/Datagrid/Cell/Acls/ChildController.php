@@ -6,6 +6,8 @@
  */
 
 use Core\Annotation\Secure;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.
@@ -39,7 +41,7 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
 
         $this->request->order->addOrder(Orga_Model_Cell::QUERY_MEMBERS_HASHKEY);
         foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
-            $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
+            $childCellResource = EntityResource::loadByEntity($childCell);
 
             $data = array();
             $data['index'] = $childCell->getId();
@@ -50,7 +52,7 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
             $listLinkedUser = array();
             $listAdministrator = array();
             foreach ($childCellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                if ($linkedIdentity instanceof User_Model_Role) {
+                if ($linkedIdentity instanceof Role) {
                     $userNumber = 0;
                     foreach ($linkedIdentity->getUsers() as $user) {
                         if ($linkedIdentity->getRef() === 'cellDataProviderAdministrator_'.$childCell->getId()
@@ -85,13 +87,13 @@ class Orga_Datagrid_Cell_Acls_ChildController extends UI_Controller_Datagrid
     public function listAction()
     {
         $this->view->idCell = $this->getParam('idCell');
-        $cellACLResource = User_Model_Resource_Entity::loadByEntity(
+        $cellACLResource = EntityResource::loadByEntity(
             Orga_Model_Cell::load($this->view->idCell)
         );
 
         $this->view->listRoles = array();
         foreach ($cellACLResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-            if ($linkedIdentity instanceof User_Model_Role) {
+            if ($linkedIdentity instanceof Role) {
                 $this->view->listRoles[$linkedIdentity->getRef()] = __('Orga', 'role', $linkedIdentity->getName());
             }
         }

@@ -1,0 +1,18 @@
+User\Domain\ACL\Role:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: User_Role
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+      unique: true
+    name:
+      type: string
+      nullable: true
+
+  manyToMany:
+    users:
+      targetEntity: User\Domain\User
+      mappedBy: roles

@@ -5,6 +5,13 @@
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\ResourceTreeTraverser;
+use User\Domain\User;
+use User\Domain\UserService;
 
 /**
  * Classe permettant de construire les ACL relatives aux éléments d'Orga.
@@ -12,15 +19,15 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
  * @package Orga
  *
  */
-class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
+class Orga_Service_ACLManager implements ResourceTreeTraverser
 {
     /**
-     * @var User_Service_User
+     * @var UserService
      */
     protected $userService;
 
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     protected $aclService;
 
@@ -69,16 +76,16 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     /**
      * Ensemble des nouveaux Role.
      *
-     * @var User_Model_Role[]
+     * @var Role[]
      */
     protected $newRoles = [];
 
 
     /**
-     * @param User_Service_User $userService
-     * @param User_Service_ACL $aclService
+     * @param UserService $userService
+     * @param ACLService $aclService
      */
-    public function __construct(User_Service_User $userService, User_Service_ACL $aclService)
+    public function __construct(UserService $userService, ACLService $aclService)
     {
         $this->userService = $userService;
         $this->aclService = $aclService;
@@ -116,15 +123,15 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         foreach ($unitOfWork->getScheduledEntityDeletions() as $entity) {
             // Organization
             if ($entity instanceof Orga_Model_Organization) {
-                $this->processOldOrganization(User_Model_Resource_Entity::loadByEntity($entity));
+                $this->processOldOrganization(EntityResource::loadByEntity($entity));
             }
             // Cell
             if ($entity instanceof Orga_Model_Cell) {
-                $this->processOldCell(User_Model_Resource_Entity::loadByEntity($entity));
+                $this->processOldCell(EntityResource::loadByEntity($entity));
             }
             // Report
             if ($entity instanceof DW_Model_Report) {
-                $this->processOldReport(User_Model_Resource_Entity::loadByEntity($entity));
+                $this->processOldReport(EntityResource::loadByEntity($entity));
             }
         }
 
@@ -177,13 +184,13 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     protected function processNewOrganization(Orga_Model_Organization $organization)
     {
         // Création de la ressource projet donné.
-        $organizationResource = new User_Model_Resource_Entity();
+        $organizationResource = new EntityResource();
         $organizationResource->setEntity($organization);
         $organizationResource->save();
         $this->newResources['organization'][$organization->getId()] = $organizationResource;
 
         // Création du rôle administrateur du projet donné.
-        $organizationAdministrator = new User_Model_Role();
+        $organizationAdministrator = new Role();
         $organizationAdministrator->setRef('organizationAdministrator_'.$organization->getId());
         $organizationAdministrator->setName('organizationAdministrator');
         $organizationAdministrator->save();
@@ -192,17 +199,17 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Ajout des autorisations du rôle administrateur sur la ressource.
         $this->aclService->allow(
             $organizationAdministrator,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $organizationResource
         );
         $this->aclService->allow(
             $organizationAdministrator,
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $organizationResource
         );
         $this->aclService->allow(
             $organizationAdministrator,
-            User_Model_Action_Default::DELETE(),
+            DefaultAction::DELETE(),
             $organizationResource
         );
     }
@@ -219,18 +226,18 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         if (isset($this->newResources['organization'][$organization->getId()])) {
             $organizationResource = $this->newResources['organization'][$organization->getId()];
         } else {
-            $organizationResource = User_Model_Resource_Entity::loadByEntity($organization);
+            $organizationResource = EntityResource::loadByEntity($organization);
         }
 
         // Création de la ressource cellule donnée.
-        $cellResource = new User_Model_Resource_Entity();
+        $cellResource = new EntityResource();
         $cellResource->setEntity($cell);
         $cellResource->save();
         $this->newResources['cell'][$cell->getId()] = $cellResource;
 
 
         // Création du rôle administrateur de la cellule donnée.
-        $cellAdministrator = new User_Model_Role();
+        $cellAdministrator = new Role();
         $cellAdministrator->setRef('cellAdministrator_'.$cell->getId());
         $cellAdministrator->setName('cellAdministrator');
         $cellAdministrator->save();
@@ -239,22 +246,22 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Ajout des autorisations du rôle administrateur sur la ressource.
         $this->aclService->allow(
             $cellAdministrator,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $organizationResource
         );
         $this->aclService->allow(
             $cellAdministrator,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $cellResource
         );
         $this->aclService->allow(
             $cellAdministrator,
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $cellResource
         );
         $this->aclService->allow(
             $cellAdministrator,
-            User_Model_Action_Default::ALLOW(),
+            DefaultAction::ALLOW(),
             $cellResource
         );
         $this->aclService->allow(
@@ -270,7 +277,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
 
         // Création du rôle contributeur de la cellule donnée.
-        $cellContributor = new User_Model_Role();
+        $cellContributor = new Role();
         $cellContributor->setRef('cellContributor_'.$cell->getId());
         $cellContributor->setName('cellContributor');
         $cellContributor->save();
@@ -279,12 +286,12 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Ajout des autorisations du rôle administrateur sur la ressource.
         $this->aclService->allow(
             $cellContributor,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $organizationResource
         );
         $this->aclService->allow(
             $cellContributor,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $cellResource
         );
         $this->aclService->allow(
@@ -300,7 +307,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
 
         // Création du rôle observateur de la cellule donnée.
-        $cellObserver = new User_Model_Role();
+        $cellObserver = new Role();
         $cellObserver->setRef('cellObserver_'.$cell->getId());
         $cellObserver->setName('cellObserver');
         $cellObserver->save();
@@ -309,12 +316,12 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         // Ajout des autorisations du rôle observateur sur la ressource.
         $this->aclService->allow(
             $cellObserver,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $organizationResource
         );
         $this->aclService->allow(
             $cellObserver,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $cellResource
         );
         $this->aclService->allow(
@@ -332,7 +339,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     protected function processNewReport(DW_Model_Report $dWReport)
     {
         // Création de la ressource Report donné.
-        $reportResource = new User_Model_Resource_Entity();
+        $reportResource = new EntityResource();
         $reportResource->setEntity($dWReport);
         $reportResource->save();
         $this->newResources['report'][$dWReport->getId()] = $reportResource;
@@ -352,16 +359,16 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
             if (isset($this->newRoles[$organizationAdministratorRoleRef])) {
                 $identity = $this->newRoles[$organizationAdministratorRoleRef];
             } else {
-                $identity = User_Model_Role::loadByRef($organizationAdministratorRoleRef);
+                $identity = Role::loadByRef($organizationAdministratorRoleRef);
             }
         } catch (Core_Exception_NotFound $e) {
             // Le Report n'est pas issue d'un Cube de DW de Granularity.
-            $identity = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+            $identity = User::load(Zend_Auth::getInstance()->getIdentity());
         }
 
         $this->aclService->allow(
             $identity,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $reportResource
         );
         $this->aclService->allow(
@@ -371,7 +378,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
         );
         $this->aclService->allow(
             $identity,
-            User_Model_Action_Default::DELETE(),
+            DefaultAction::DELETE(),
             $reportResource
         );
     }
@@ -379,41 +386,41 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     /**
      * Supprime la ressource et roles d'un Organization.
      *
-     * @param User_Model_Resource_Entity $organizationResource
+     * @param EntityResource $organizationResource
      */
-    protected function processOldOrganization(User_Model_Resource_Entity $organizationResource)
+    protected function processOldOrganization(EntityResource $organizationResource)
     {
         $idOrganization = $organizationResource->getEntityIdentifier();
 
         $organizationResource->delete();
 
-        $this->deleteRole(User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization));
+        $this->deleteRole(Role::loadByRef('organizationAdministrator_'.$idOrganization));
         self::$changesDetected = true;
     }
 
     /**
      * Supprime la ressource et roles d'une Cell.
      *
-     * @param User_Model_Resource_Entity $cellResource
+     * @param EntityResource $cellResource
      */
-    protected function processOldCell(User_Model_Resource_Entity $cellResource)
+    protected function processOldCell(EntityResource $cellResource)
     {
         $idCell = $cellResource->getEntityIdentifier();
 
         $cellResource->delete();
 
-        $this->deleteRole(User_Model_Role::loadByRef('cellAdministrator_'.$idCell));
-        $this->deleteRole(User_Model_Role::loadByRef('cellContributor_'.$idCell));
-        $this->deleteRole(User_Model_Role::loadByRef('cellObserver_'.$idCell));
+        $this->deleteRole(Role::loadByRef('cellAdministrator_'.$idCell));
+        $this->deleteRole(Role::loadByRef('cellContributor_'.$idCell));
+        $this->deleteRole(Role::loadByRef('cellObserver_'.$idCell));
         self::$changesDetected = true;
     }
 
     /**
      * Supprime la ressource d'un Report.
      *
-     * @param User_Model_Resource_Entity $reportResource
+     * @param EntityResource $reportResource
      */
-    protected function processOldReport(User_Model_Resource_Entity $reportResource)
+    protected function processOldReport(EntityResource $reportResource)
     {
         $idReport = $reportResource->getEntityIdentifier();
 
@@ -422,9 +429,9 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     }
 
     /**
-     * @param User_Model_Role $role
+     * @param Role $role
      */
-    protected function deleteRole(User_Model_Role $role)
+    protected function deleteRole(Role $role)
     {
         foreach ($role->getUsers() as $user) {
             $user->removeRole($role);
@@ -440,11 +447,11 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     /**
      * Trouve les ressources parent d'une ressource
      *
-     * @param User_Model_Resource_Entity $resource
+     * @param EntityResource $resource
      *
-     * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
+     * @return EntityResource[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
      */
-    public function getAllParentResources(User_Model_Resource_Entity $resource)
+    public function getAllParentResources(EntityResource $resource)
     {
         $entity = $resource->getEntity();
         if ($entity instanceof DW_Model_Report) {
@@ -457,20 +464,20 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
     /**
      * @param DW_Model_Report $report
-     * @return User_Model_Resource_Entity[]
+     * @return EntityResource[]
      */
     protected function getDWReportParentResources(DW_Model_Report $report)
     {
         if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
             $reportCell = Orga_Model_Cell::loadByDWCube($report->getCube());
-            return array_merge([User_Model_Resource_Entity::loadByEntity($reportCell)], $this->getCellParentResources($reportCell));
+            return array_merge([EntityResource::loadByEntity($reportCell)], $this->getCellParentResources($reportCell));
         }
         return [];
     }
 
     /**
      * @param Orga_Model_Cell $cell
-     * @return User_Model_Resource_Entity[]
+     * @return EntityResource[]
      */
     protected function getCellParentResources(Orga_Model_Cell $cell)
     {
@@ -487,7 +494,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
             if (isset($this->newResources['cell'][$parentCell->getId()])) {
                 $parentCellResource = $this->newResources['cell'][$parentCell->getId()];
             } else {
-                $parentCellResource = User_Model_Resource_Entity::loadByEntity($parentCell);
+                $parentCellResource = EntityResource::loadByEntity($parentCell);
             }
             if ($parentCellResource !== null) {
                 $parentResources[] = $parentCellResource;
@@ -500,11 +507,11 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     /**
      * Trouve les ressources filles d'une ressource
      *
-     * @param User_Model_Resource_Entity $resource
+     * @param EntityResource $resource
      *
-     * @return User_Model_Resource_Entity[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
+     * @return EntityResource[] Tableau indexé par l'ID de chaque ressource pour éviter les doublons
      */
-    public function getAllChildResources(User_Model_Resource_Entity $resource)
+    public function getAllChildResources(EntityResource $resource)
     {
         $entity = $resource->getEntity();
         if ($entity instanceof Orga_Model_Cell) {
@@ -515,7 +522,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
     /**
      * @param Orga_Model_Cell $cell
-     * @return User_Model_Resource_Entity[]
+     * @return EntityResource[]
      */
     protected function getCellChildResources(Orga_Model_Cell $cell)
     {
@@ -525,7 +532,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
             if (isset($this->newResources['cell'][$childCell->getId()])) {
                 $childCellResource = $this->newResources['cell'][$childCell->getId()];
             } else {
-                $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
+                $childCellResource = EntityResource::loadByEntity($childCell);
             }
             if ($childCellResource !== null) {
                 $childResources[] = $childCellResource;
@@ -538,7 +545,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
     /**
      * @param Orga_Model_Cell $cell
-     * @return User_Model_Resource_Entity[]
+     * @return EntityResource[]
      */
     protected function getCellDWReportResources(Orga_Model_Cell $cell)
     {
@@ -553,7 +560,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
                 if (isset($this->newResources['report'][$dWReport->getId()])) {
                     $dWReportResource = $this->newResources['report'][$dWReport->getId()];
                 } else {
-                    $dWReportResource = User_Model_Resource_Entity::loadByEntity($dWReport);
+                    $dWReportResource = EntityResource::loadByEntity($dWReport);
                 }
                 if ($dWReportResource !== null) {
                     $dWReportResources[] = $dWReportResource;
@@ -570,13 +577,13 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      */
 
     /**
-     * @param User_Model_User $user
+     * @param User $user
      * @param string $functionName
      * @param Orga_Model_Organization|Orga_Model_Cell $orgaElement
      */
-    public function createUserAndAddRole(User_Model_User $user, $functionName, $orgaElement)
+    public function createUserAndAddRole(User $user, $functionName, $orgaElement)
     {
-        $user->addRole(User_Model_Role::loadByRef('user'));
+        $user->addRole(Role::loadByRef('user'));
 
         call_user_func_array(['Orga_Service_ACLManager', $functionName], [$orgaElement, $user, false]);
     }
@@ -585,16 +592,16 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      * Ajoute au projet donné, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Organization $organization
-     * @param User_Model_User  $user
+     * @param User  $user
      * @param bool $sendMail
      */
-    public function addOrganizationAdministrator(Orga_Model_Organization $organization, User_Model_User $user, $sendMail=true)
+    public function addOrganizationAdministrator(Orga_Model_Organization $organization, User $user, $sendMail=true)
     {
-        $user->addRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
+        $user->addRole(Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
         $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
         $user->addRole(
-            User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
+            Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
 
         if ($sendMail === true) {
@@ -614,16 +621,16 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      * Retire au projet donné, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Organization $organization
-     * @param User_Model_User $user
+     * @param User $user
      * @param bool $sendMail
      */
-    public function removeOrganizationAdministrator(Orga_Model_Organization $organization, User_Model_User $user, $sendMail=true)
+    public function removeOrganizationAdministrator(Orga_Model_Organization $organization, User $user, $sendMail=true)
     {
-        $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
+        $user->removeRole(Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
         $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
         $user->removeRole(
-            User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
+            Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
 
         if ($sendMail === true) {
@@ -639,81 +646,81 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
      * Ajoute à la cellule donnée, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User  $user
+     * @param User  $user
      * @param bool $sendMail
      */
-    public function addCellAdministrator(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    public function addCellAdministrator(Orga_Model_Cell $cell, User $user, $sendMail=true)
     {
-        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
+        $this->addCellUser($cell, $user, Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
     }
 
     /**
      * Retire de la cellule donnée, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User  $user
+     * @param User  $user
      * @param bool $sendMail
      */
-    public function removeCellAdministrator(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    public function removeCellAdministrator(Orga_Model_Cell $cell, User $user, $sendMail=true)
     {
-        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
+        $this->removeCellUser($cell, $user, Role::loadByRef('cellAdministrator_'.$cell->getId()), $sendMail);
     }
 
     /**
      * Ajoute à la cellule donnée, l'utilisateur comme contributor.
      *
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User  $user
+     * @param User  $user
      * @param bool $sendMail
      */
-    public function addCellContributor(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    public function addCellContributor(Orga_Model_Cell $cell, User $user, $sendMail=true)
     {
-        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
+        $this->addCellUser($cell, $user, Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
     }
 
     /**
      * Retire de la cellule donnée, l'utilisateur comme contributor.
      *
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User  $user
+     * @param User  $user
      * @param bool $sendMail
      */
-    public function removeCellContributor(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    public function removeCellContributor(Orga_Model_Cell $cell, User $user, $sendMail=true)
     {
-        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
+        $this->removeCellUser($cell, $user, Role::loadByRef('cellContributor_'.$cell->getId()), $sendMail);
     }
 
     /**
      * Ajoute à la cellule donnée, l'utilisateur comme observateur.
      *
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User  $user
+     * @param User  $user
      * @param bool $sendMail
      */
-    public function addCellObserver(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    public function addCellObserver(Orga_Model_Cell $cell, User $user, $sendMail=true)
     {
-        $this->addCellUser($cell, $user, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
+        $this->addCellUser($cell, $user, Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
     }
 
     /**
      * Retire de la cellule donnée, l'utilisateur comme observateur.
      *
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User  $user
+     * @param User  $user
      * @param bool $sendMail
      */
-    public function removeCellObserver(Orga_Model_Cell $cell, User_Model_User $user, $sendMail=true)
+    public function removeCellObserver(Orga_Model_Cell $cell, User $user, $sendMail=true)
     {
-        $this->removeCellUser($cell, $user, User_Model_Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
+        $this->removeCellUser($cell, $user, Role::loadByRef('cellObserver_'.$cell->getId()), $sendMail);
     }
 
     /**
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User $user
-     * @param User_Model_Role $role
+     * @param User $user
+     * @param Role $role
      * @param bool $sendMail
      */
-    public function addCellUser(Orga_Model_Cell $cell, User_Model_User $user, User_Model_Role $role, $sendMail=true)
+    public function addCellUser(Orga_Model_Cell $cell, User $user, Role $role, $sendMail=true)
     {
         $user->addRole($role);
 
@@ -733,11 +740,11 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
 
     /**
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User $user
-     * @param User_Model_Role $role
+     * @param User $user
+     * @param Role $role
      * @param bool $sendMail
      */
-    public function removeCellUser(Orga_Model_Cell $cell, User_Model_User $user, User_Model_Role $role, $sendMail=true)
+    public function removeCellUser(Orga_Model_Cell $cell, User $user, Role $role, $sendMail=true)
     {
         $user->removeRole($role);
 

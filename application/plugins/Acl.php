@@ -6,23 +6,28 @@
  */
 
 use Doc\Domain\Library;
-use User\ForbiddenException;
+use User\Application\ForbiddenException;
+use User\Application\Plugin\ACLPlugin;
+use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Resource\NamedResource;
+use User\Domain\ACL\SecurityIdentity;
 
 /**
  * Plugin pour la vérification des ACL
  *
  * @package Configuration
  * @subpackage Plugin
- * @uses User_Plugin_Abstract
+ * @uses AbstractACLPlugin
  */
-class Inventory_Plugin_Acl extends User_Plugin_Acl
+class Inventory_Plugin_Acl extends ACLPlugin
 {
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function viewOrganizationsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function viewOrganizationsRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $isIdentityAbleToEditOrganizations = $this->editOrganizationsRule($identity, $request);
         if ($isIdentityAbleToEditOrganizations) {
@@ -32,7 +37,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+        $aclQuery->aclFilter->action = DefaultAction::VIEW();
         $isIdentityAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
         if ($isIdentityAbleToSeeManyOrganizations) {
             return true;
@@ -42,17 +47,17 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function editOrganizationsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function editOrganizationsRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
-        $organizationResource = User_Model_Resource_Entity::loadByEntityName(Orga_Model_Organization::class);
+        $organizationResource = EntityResource::loadByEntityName(Orga_Model_Organization::class);
 
         $isIdentityAbleToCreateOrganizations = $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::CREATE(),
+            DefaultAction::CREATE(),
             $organizationResource
         );
         if ($isIdentityAbleToCreateOrganizations) {
@@ -62,7 +67,7 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
+        $aclQuery->aclFilter->action = DefaultAction::EDIT();
         $isIdentityAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
         if ($isIdentityAbleToEditOrganizations) {
             return true;
@@ -72,57 +77,57 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function createOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function createOrganizationRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::CREATE(),
-            User_Model_Resource_Entity::loadByEntityName(Orga_Model_Organization::class)
+            DefaultAction::CREATE(),
+            EntityResource::loadByEntityName(Orga_Model_Organization::class)
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewOrganizationRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $this->getOrganization($request)
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editOrganizationRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $this->getOrganization($request)
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function deleteOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function deleteOrganizationRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::DELETE(),
+            DefaultAction::DELETE(),
             $this->getOrganization($request)
         );
     }
@@ -151,80 +156,80 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function viewMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function viewMembersRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return ($this->viewOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function editMembersRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function editMembersRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return (
             $this->editOrganizationRule($identity, $request)
             || $this->aclService->isAllowed(
                 $identity,
-                User_Model_Action_Default::EDIT(),
+                DefaultAction::EDIT(),
                 Orga_Model_Cell::load($request->getParam('idCell'))
             )
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewCellRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewCellRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::VIEW(),
+            DefaultAction::VIEW(),
             $this->getCell($request)
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editCellRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editCellRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $this->getCell($request)
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function allowCellRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function allowCellRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::ALLOW(),
+            DefaultAction::ALLOW(),
             Orga_Model_Cell::load($request->getParam('idCell'))
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function inputCellRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function inputCellRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
@@ -234,11 +239,11 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function commentCellRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function commentCellRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
             $identity,
@@ -248,40 +253,40 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editCommentRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editCommentRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $comment = Social_Model_Comment::load($request->getParam('id'));
 
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::EDIT(),
+            DefaultAction::EDIT(),
             $comment
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function deleteCommentRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function deleteCommentRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $comment = Social_Model_Comment::load($request->getParam('id'));
 
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::DELETE(),
+            DefaultAction::DELETE(),
             $comment
         );
     }
 
     /**
      * @param Zend_Controller_Request_Abstract $request
-     * @throws ForbiddenException
+     * @throws \User\Application\ForbiddenException
      * @return Orga_Model_Cell
      */
     protected function getCell(Zend_Controller_Request_Abstract $request)
@@ -303,11 +308,11 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewOrgaCubeRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewOrgaCubeRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         try {
             return $this->viewCellRule($identity, $request);
@@ -317,11 +322,11 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editOrgaCubeRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editOrgaCubeRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         try {
             return $this->editCellRule($identity, $request);
@@ -333,18 +338,18 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewReportRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewReportRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $idReport = $request->getParam('idReport');
         if ($idReport !== null) {
             $isAllowed = $this->aclService->isAllowed(
                 $identity,
-                User_Model_Action_Default::VIEW(),
-                User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load($idReport))
+                DefaultAction::VIEW(),
+                EntityResource::loadByEntity(DW_Model_Report::load($idReport))
             );
             if ($isAllowed) {
                 return $isAllowed;
@@ -391,46 +396,46 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editReportRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editReportRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->viewReportRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function deleteReportRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function deleteReportRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $idReport = $request->getParam('index');
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::DELETE(),
-            User_Model_Resource_Entity::loadByEntity(DW_Model_Report::load($idReport))
+            DefaultAction::DELETE(),
+            EntityResource::loadByEntity(DW_Model_Report::load($idReport))
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewDWCubeRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewDWCubeRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->viewReportRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewInputAFRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewInputAFRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
@@ -441,11 +446,11 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editInputAFRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editInputAFRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
@@ -456,11 +461,11 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function modeInputAFRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function modeInputAFRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
@@ -477,11 +482,11 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function genericInputAF(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function genericInputAF(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $idScenario = $request->getParam('idScenario');
         if ($idScenario !== null) {
@@ -494,149 +499,149 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editAFRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editAFRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->editReferential($identity);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewTECRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewTECRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->editReferential($identity);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewClassifRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewClassifRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->viewReferential($identity);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editClassifRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editClassifRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->editReferential($identity);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewTechnoRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewTechnoRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editTechnoRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editTechnoRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->editReferential($identity);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewKeywordRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewKeywordRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->viewReferential($identity);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editKeywordRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editKeywordRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->editReferential($identity);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function deleteKeywordRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function deleteKeywordRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->editReferential($identity);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewUnitRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewUnitRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewReferential(User_Model_SecurityIdentity $identity)
+    protected function viewReferential(SecurityIdentity $identity)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::VIEW(),
-            User_Model_Resource_Named::loadByName('referential')
+            DefaultAction::VIEW(),
+            NamedResource::loadByName('referential')
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editReferential(User_Model_SecurityIdentity $identity)
+    protected function editReferential(SecurityIdentity $identity)
     {
         return $this->aclService->isAllowed(
             $identity,
-            User_Model_Action_Default::EDIT(),
-            User_Model_Resource_Named::loadByName('referential')
+            DefaultAction::EDIT(),
+            NamedResource::loadByName('referential')
         );
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewLibraryRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewLibraryRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return true;
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editLibraryRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editLibraryRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return true;
     }
@@ -670,171 +675,171 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function problemToSolveRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function problemToSolveRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewBibliographyRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewBibliographyRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editBibliographyRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editBibliographyRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewDocumentRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewDocumentRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function adminThemesRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function adminThemesRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewGenericActionsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewGenericActionsRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewGenericActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewGenericActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function addGenericActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function addGenericActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editGenericActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editGenericActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function commentGenericActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function commentGenericActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function deleteGenericActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function deleteGenericActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewContextActionsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewContextActionsRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewContextActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewContextActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function addContextActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function addContextActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editContextActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function editContextActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function commentContextActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function commentContextActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }
 
     /**
-     * @param User_Model_SecurityIdentity      $identity
+     * @param SecurityIdentity      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function deleteContextActionRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    protected function deleteContextActionRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
     }

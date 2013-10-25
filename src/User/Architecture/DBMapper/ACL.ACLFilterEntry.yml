@@ -1,0 +1,32 @@
+User\Domain\ACL\ACLFilterEntry:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: ACL_Filter
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    idUser:
+      type: integer
+      nullable: false
+    action:
+      type: user_action
+      nullable: false
+    entityName:
+      type: string
+      nullable: false
+    entityIdentifier:
+      type: integer
+      nullable: false
+
+  uniqueConstraints:
+    uniqueACLFilterEntry:
+      columns: [idUser, action, entityName, entityIdentifier]
+
+  indexes:
+    index1:
+      columns: [entityName, entityIdentifier]

@@ -1,4 +1,8 @@
 <?php
+use User\Domain\ACL\Role;
+use User\Domain\User;
+use User\Domain\UserService;
+
 /**
  * @package Orga
  */
@@ -377,7 +381,7 @@ class Orga_Populate extends Core_Script_Action
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $container->get(User_Service_User::class)->createUser($email, $email);
+        $container->get(UserService::class)->createUser($email, $email);
     }
 
     /**
@@ -386,7 +390,7 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function addOrganizationAdministrator($email, Orga_Model_Organization $organization)
     {
-        $user = User_Model_User::loadByEmail($email);
+        $user = User::loadByEmail($email);
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
         $container->get(Orga_Service_ACLManager::class)->addOrganizationAdministrator($organization, $user, false);
@@ -432,8 +436,8 @@ class Orga_Populate extends Core_Script_Action
     {
         $cell = $granularity->getCellByMembers($members);
 
-        $user = User_Model_User::loadByEmail($email);
-        $user->addRole(User_Model_Role::loadByRef('cell'.ucfirst(strtolower($role)).'_'.$cell->getId()));
+        $user = User::loadByEmail($email);
+        $user->addRole(Role::loadByRef('cell'.ucfirst(strtolower($role)).'_'.$cell->getId()));
     }
 
 }

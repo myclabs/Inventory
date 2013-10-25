@@ -1,4 +1,6 @@
 <?php
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\UsersResourceTreeTraverser;
 
 /**
  * @author valentin.claras
@@ -24,10 +26,10 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initOrgaACLResourceTreeTraverser()
     {
-        /** @var $usersResourceTreeTraverser User_Service_ACL_UsersResourceTreeTraverser */
+        /** @var $usersResourceTreeTraverser UsersResourceTreeTraverser */
         $resourceTreeTraverser = $this->container->get(Orga_Service_ACLManager::class);
-        /** @var $aclService User_Service_ACL */
-        $aclService = $this->container->get(User_Service_ACL::class);
+        /** @var $aclService ACLService */
+        $aclService = $this->container->get(ACLService::class);
 
         $aclService->setResourceTreeTraverser(Orga_Model_Cell::class, $resourceTreeTraverser);
         $aclService->setResourceTreeTraverser(DW_Model_Report::class, $resourceTreeTraverser);

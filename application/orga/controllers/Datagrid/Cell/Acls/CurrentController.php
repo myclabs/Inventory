@@ -9,6 +9,10 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use User\Domain\ACL\Resource\EntityResource;
+use User\Domain\ACL\Role;
+use User\Domain\User;
+use User\Domain\UserService;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.
@@ -20,7 +24,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var User_Service_User
+     * @var UserService
      */
     private $userService;
 
@@ -52,10 +56,10 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $idCell = $this->getParam('idCell');
-        $cellACLResource = User_Model_Resource_Entity::loadByEntity(Orga_Model_Cell::load($idCell));
+        $cellACLResource = EntityResource::loadByEntity(Orga_Model_Cell::load($idCell));
 
         foreach ($cellACLResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-            if ($linkedIdentity instanceof User_Model_Role) {
+            if ($linkedIdentity instanceof Role) {
                 foreach ($linkedIdentity->getUsers() as $user) {
                     $data = array();
                     $data['index'] = $linkedIdentity->getRef().'#'.$user->getId();
@@ -93,15 +97,15 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         if (empty($userRoleRef)) {
             $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
-            $role = User_Model_Role::loadByRef($userRoleRef);
+            $role = Role::loadByRef($userRoleRef);
         }
         if (!empty($this->_addErrorMessages)) {
             $this->send();
             return;
         }
 
-        if (User_Model_User::isEmailUsed($userEmail)) {
-            $user = User_Model_User::loadByEmail($userEmail);
+        if (User::isEmailUsed($userEmail)) {
+            $user = User::loadByEmail($userEmail);
             if ($user->hasRole($role)) {
                 $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
                 $this->send();
@@ -111,7 +115,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             $user = $this->userService->inviteUser(
                 $userEmail
             );
-            $user->addRole(User_Model_Role::loadByRef('user'));
+            $user->addRole(Role::loadByRef('user'));
         }
 
         $success = function () {
@@ -150,8 +154,8 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         list($userRoleRef, $userId) = explode('#', $this->delete);
-        $user = User_Model_User::load($userId);
-        $role = User_Model_Role::loadByRef($userRoleRef);
+        $user = User::load($userId);
+        $role = Role::loadByRef($userRoleRef);
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $success = function () {

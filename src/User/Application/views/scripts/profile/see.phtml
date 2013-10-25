@@ -1,0 +1,63 @@
+<?php
+use User\Domain\User;
+
+/**
+ * @package User
+ */
+
+/** @var $user User */
+$user = $this->user;
+?>
+
+<ul>
+
+    <li>
+        <span class="">
+            <?=__('User', 'user', 'firstName')?> :
+        </span>
+        <?=$user->getFirstName()?>
+    </li>
+
+    <li>
+        <span class="">
+            <?=__('User', 'user', 'lastName')?> :
+        </span>
+        <?=$user->getLastName()?>
+    </li>
+
+    <li>
+        <span class="">
+            <?=__('UI', 'name', 'emailAddress')?> :
+        </span>
+        <?=$user->getEmail()?>
+    </li>
+
+    <li>
+        <span class="">
+            <?=__('User', 'list', 'firstConnectionHeader')?> :
+        </span>
+        <?php
+        if ($user->isEmailValidated()) {
+            $labelValidEmail = '<i class="icon-ok"></i> '.__('User', 'property', 'performedFem');
+        } else {
+            $labelValidEmail = '<i class="icon-remove"></i> '.__('User', 'property', 'notPerformedFem');
+        }
+        ?>
+        <?=$labelValidEmail?>
+    </li>
+
+    <li>
+        <span class="">
+            <?=__('UI', 'name', 'activation')?> :
+        </span>
+        <?php
+        if ($user->isEnabled()) {
+            $labelEnable = '<i class="icon-ok"></i> '.__('UI', 'property', 'enabled');
+        } else {
+            $labelEnable = '<i class="icon-remove"></i> '.__('UI', 'property', 'disabled');
+        }
+        ?>
+        <?=$labelEnable?>
+    </li>
+
+</ul>
