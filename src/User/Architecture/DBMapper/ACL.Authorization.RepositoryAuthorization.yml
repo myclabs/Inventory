@@ -1,0 +1,4 @@
+User\Domain\ACL\Authorization\RepositoryAuthorization:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: ACL_Authorization_RepositoryAuthorization

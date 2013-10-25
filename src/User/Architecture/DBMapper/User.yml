@@ -3,6 +3,12 @@ User\Domain\User:
   repositoryClass: \Core_Model_Repository
   table: User_User
 
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
   fields:
     lastName:
       type: string
@@ -33,15 +39,14 @@ User\Domain\User:
       type: core_locale
       nullable: true
 
-  manyToMany:
+  oneToMany:
     roles:
       targetEntity: User\Domain\ACL\Role
-      inversedBy: users
-      joinTable:
-        name: User_UserRoles
-        joinColumns:
-          idUser:
-            referencedColumnName: id
-        inverseJoinColumns:
-          idRole:
-            referencedColumnName: id
+      mappedBy: user
+      cascade: [ all ]
+      orphanRemoval: true
+    authorizations:
+      targetEntity: User\Domain\ACL\Authorization
+      mappedBy: user
+      cascade: [ all ]
+      orphanRemoval: true

@@ -32,7 +32,7 @@ class User_Datagrid_AuthorizationController extends UI_Controller_Datagrid
         /** @var $loggedInUser User */
         $loggedInUser = $this->_helper->auth();
 
-        $authorizations = $loggedInUser->getDirectAuthorizations();
+        $authorizations = $loggedInUser->getAuthorizations();
 
         foreach ($authorizations as $authorization) {
 

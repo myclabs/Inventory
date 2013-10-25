@@ -48,7 +48,7 @@ class AuthorizationTest
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
         ResourceNamedTest::deleteObject($o->getResource());
-        RoleTest::deleteObject($o->getIdentity());
+        RoleTest::deleteObject($o->getUser());
     }
 
 }
@@ -108,7 +108,7 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
 
         $this->assertEquals(DefaultAction::VIEW(), $o->getAction());
         $this->assertSame($resource, $o->getResource());
-        $this->assertSame($role, $o->getIdentity());
+        $this->assertSame($role, $o->getUser());
 
         $o->save();
         $this->entityManager->flush();
@@ -134,8 +134,8 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
         $this->assertEquals($oLoaded->getAction(), $o->getAction());
         $this->assertInstanceOf(Resource::class, $oLoaded->getResource());
         $this->assertEquals($o->getResource()->getId(), $oLoaded->getResource()->getId());
-        $this->assertInstanceOf(Role::class, $oLoaded->getIdentity());
-        $this->assertEquals($o->getIdentity()->getId(), $oLoaded->getIdentity()->getId());
+        $this->assertInstanceOf(Role::class, $oLoaded->getUser());
+        $this->assertEquals($o->getUser()->getId(), $oLoaded->getUser()->getId());
 
         return $oLoaded;
     }
@@ -147,7 +147,7 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
     function testDelete(Authorization $o)
     {
         $resource = $o->getResource();
-        $role = $o->getIdentity();
+        $role = $o->getUser();
 
         $o->delete();
         $this->entityManager->flush();
@@ -213,7 +213,7 @@ class AuthorizationMetierTest extends Core_Test_TestCase
         $authorization = AuthorizationTest::generateObject();
 
         $o = Authorization::search(
-            $authorization->getIdentity(),
+            $authorization->getUser(),
             $authorization->getAction(),
             $authorization->getResource()
         );
@@ -230,7 +230,7 @@ class AuthorizationMetierTest extends Core_Test_TestCase
         $authorization = AuthorizationTest::generateObject();
 
         $o = Authorization::search(
-            $authorization->getIdentity(),
+            $authorization->getUser(),
             DefaultAction::EDIT(),
             $authorization->getResource()
         );

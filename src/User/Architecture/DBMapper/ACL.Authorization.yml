@@ -1,7 +1,15 @@
 User\Domain\ACL\Authorization:
   type: entity
   repositoryClass: \Core_Model_Repository
-  table: User_Authorization
+  table: ACL_Authorization
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type
+    type: string
+  discriminatorMap:
+    user: User\Domain\ACL\Authorization\UserAuthorization
+    repository: User\Domain\ACL\Authorization\RepositoryAuthorization
 
   id:
     id:
@@ -15,21 +23,8 @@ User\Domain\ACL\Authorization:
       nullable: false
 
   manyToOne:
-    identity:
-      targetEntity: SecurityIdentity
-      inversedBy: directAuthorizations
+    user:
+      targetEntity: User\Domain\User
+      inversedBy: authorizations
       joinColumn:
-        name: idIdentity
-        referencedColumnName: id
         nullable: false
-    resource:
-      targetEntity: Resource
-      inversedBy: directAuthorizations
-      joinColumn:
-        name: idResource
-        referencedColumnName: id
-        nullable: false
-
-  uniqueConstraints:
-    uniqueAuthorization:
-      columns: [idIdentity, action, idResource]

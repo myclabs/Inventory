@@ -1,7 +1,7 @@
 <?php
 
 use User\Architecture\TypeMapping\ActionType;
-use User\Domain\ACL\ACLFilterEntry;
+use User\Domain\ACL\Authorization;
 
 /**
  * Requete avec filtres et tri.
@@ -345,7 +345,7 @@ class Core_Model_Query
     protected function addAclFilterToQueryBuilder(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         if ($this->aclFilter->enabled) {
-            $queryBuilder->innerJoin(ACLFilterEntry::class, 'acl_cache');
+            $queryBuilder->innerJoin(Authorization::class, 'acl_cache');
 
             $queryBuilder->andWhere('acl_cache.idUser = :aclUserId');
             $queryBuilder->andWhere('acl_cache.action = :aclAction');

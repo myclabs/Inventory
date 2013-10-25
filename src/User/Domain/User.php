@@ -6,13 +6,14 @@ use Core_Exception;
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
 use Core_Locale;
+use Core_Model_Entity;
 use Core_Model_Query;
 use Core_Tools;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use User\Domain\ACL\Role;
-use User\Domain\ACL\SecurityIdentity;
+use User\Domain\ACL\Authorization;
 
 /**
  * User domain class.
@@ -20,11 +21,8 @@ use User\Domain\ACL\SecurityIdentity;
  * @author matthieu.napoli
  * @author valentin.claras
  */
-class User extends SecurityIdentity
+class User extends Core_Model_Entity
 {
-    /**#@+
-     * Constantes de tri et filtre
-     */
     const QUERY_ID = 'id';
     const QUERY_PASSWORD = 'password';
     const QUERY_LASTNAME = 'lastName';
@@ -32,7 +30,11 @@ class User extends SecurityIdentity
     const QUERY_EMAIL = 'email';
     const QUERY_EMAIL_KEY = 'emailKey';
     const QUERY_CREATIONDATE = 'creationDate';
-    /**#@-*/
+
+    /**
+     * @var int
+     */
+    protected $id;
 
     /**
      * @var string
@@ -92,12 +94,18 @@ class User extends SecurityIdentity
      */
     protected $roles;
 
+    /**
+     * Authorizations related to this resource
+     * @var Authorization[]|Collection
+     */
+    protected $authorizations;
+
 
     public function __construct()
     {
-        parent::__construct();
         $this->creationDate = new DateTime();
         $this->roles = new ArrayCollection();
+        $this->authorizations = new ArrayCollection();
     }
 
     /**
@@ -207,7 +215,7 @@ class User extends SecurityIdentity
      */
     public function getRoles()
     {
-        return $this->roles->toArray();
+        return $this->roles;
     }
 
     /**
@@ -220,28 +228,39 @@ class User extends SecurityIdentity
         return $this->roles->contains($role);
     }
 
-    /**
-     * Ajoute un rôle à l'utilisateur
-     * @param Role $role
-     */
     public function addRole(Role $role)
     {
-        if (!$this->hasRole($role)) {
-            $this->roles->add($role);
-            $role->addUser($this);
-        }
+        $this->roles->add($role);
+    }
+
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
     }
 
     /**
-     * Retire un rôle de l'utilisateur
-     * @param Role $role
+     * Retourne les autorisations de cet utilisateur.
+     *
+     * @return Authorization[]
      */
-    public function removeRole(Role $role)
+    public function getAuthorizations()
     {
-        if ($this->hasRole($role)) {
-            $this->roles->removeElement($role);
-            $role->removeUser($this);
-        }
+        return $this->authorizations;
+    }
+
+    public function addAuthorization(Authorization $authorization)
+    {
+        $this->authorizations->add($authorization);
+    }
+
+    public function removeAuthorization(Authorization $authorization)
+    {
+        $this->authorizations->removeElement($authorization);
+    }
+
+    public function replaceAuthorizations(array $authorizations)
+    {
+        $this->authorizations = new ArrayCollection($authorizations);
     }
 
     /**

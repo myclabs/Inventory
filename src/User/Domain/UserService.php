@@ -6,10 +6,7 @@ use Core_Exception;
 use Core_Exception_Duplicate;
 use Core_Mail;
 use Core_Tools;
-use Doctrine\ORM\EntityManager;
-use User\Domain\ACL\Action\DefaultAction;
-use User\Domain\ACL\Resource\EntityResource;
-use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Role\UserRole;
 use Zend_Controller_Front;
 use Zend_Registry;
 
@@ -21,16 +18,6 @@ use Zend_Registry;
 class UserService
 {
     /**
-     * @var ACLService
-     */
-    private $aclService;
-
-    public function __construct(ACLService $aclService)
-    {
-        $this->aclService = $aclService;
-    }
-
-    /**
      * Crée et initialise un nouvel utilisateur
      *
      * @param string $email
@@ -39,26 +26,13 @@ class UserService
      */
     public function createUser($email, $password)
     {
-        $this->getEntityManager()->beginTransaction();
-
         $user = new User();
         $user->setEmail($email);
         $user->setPassword($password);
+        // Ajoute le role utilisateur
+        $user->addRole(new UserRole($user));
+
         $user->save();
-        $this->getEntityManager()->flush();
-
-        // Crée la ressource associée à l'utilisateur
-        $resource = new EntityResource();
-        $resource->setEntity($user);
-        $resource->save();
-        $this->getEntityManager()->flush();
-
-        // Donne le droit à l'utilisateur de se modifier
-        $this->aclService->allow($user, DefaultAction::VIEW(), $user);
-        $this->aclService->allow($user, DefaultAction::EDIT(), $user);
-
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->commit();
 
         return $user;
     }
@@ -70,24 +44,7 @@ class UserService
      */
     public function deleteUser(User $user)
     {
-        $this->getEntityManager()->beginTransaction();
-
-        // Supprime les droits
-        $this->aclService->disallow($user, DefaultAction::VIEW(), $user);
-        $this->aclService->disallow($user, DefaultAction::EDIT(), $user);
-        $this->getEntityManager()->flush();
-
-        // Supprime la ressource utilisateur
-        $resource = EntityResource::loadByEntity($user);
-        if ($resource) {
-            $resource->delete();
-        }
-
-        // Supprime l'utilisateur
         $user->delete();
-
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->commit();
     }
 
     /**
@@ -116,7 +73,6 @@ class UserService
 
         // Sauvegarde
         $user->save();
-        $this->getEntityManager()->flush();
 
         $url = 'http://' . $_SERVER["SERVER_NAME"] . Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
 
@@ -197,14 +153,5 @@ class UserService
         return __('User', 'email', 'footMailContentDefault', [
             'APPLICATION_NAME' => $config->emails->noreply->name,
         ]);
-    }
-
-    /**
-     * @return EntityManager
-     */
-    protected function getEntityManager()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        return $entityManagers['default'];
     }
 }

@@ -17,7 +17,6 @@ require_once __DIR__ . '/AF/populateTest.php';
  */
 class Inventory_PopulateTest extends Core_Script_Populate
 {
-
     /**
      * Populate a specific environment.
      *
@@ -30,7 +29,9 @@ class Inventory_PopulateTest extends Core_Script_Populate
         if ($environment === 'test') {
             return;
         }
-        $this->init($environment);
+        // Initalisation Unit.
+        $populateUnit = new Unit_Populate();
+        $populateUnit->initUnitEntityManager($environment);
 
 
         // Classif.
@@ -53,69 +54,10 @@ class Inventory_PopulateTest extends Core_Script_Populate
         $populateOrga = new Orga_PopulateTest();
         $populateOrga->runEnvironment($environment);
 
-
-        $this->close($environment);
-    }
-
-    /**
-     * @param string $environment
-     */
-    protected function init($environment)
-    {
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
-
-        // Ajout du listener des ACL.
-        if (! Zend_Registry::isRegistered('EntityManagers')) {
-            return;
-        }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
-        $events = [
-            Doctrine\ORM\Events::onFlush,
-            Doctrine\ORM\Events::postFlush,
-        ];
-        $entityManager->getEventManager()->addEventListener($events, $container->get(Orga_Service_ACLManager::class));
-
-        // Ajout de treeTraverser.
-        /** @var $aclService ACLService */
-        $aclService = $container->get(ACLService::class);
-        $aclService->setResourceTreeTraverser(Orga_Model_Cell::class, $container->get(Orga_Service_ACLManager::class));
-
-        // Désactivation du filtre des ACL.
-        /** @var $aclFilterService ACLFilterService */
-        $aclFilterService = $container->get(ACLFilterService::class);
-        $aclFilterService->enabled = false;
-
-        // Filtre des ACL
-        $aclFilterService->enabled = true;
-        $aclFilterService->generate();
-
-        // Initalisation Unit.
-        $populateUnit = new Unit_Populate();
-        $populateUnit->initUnitEntityManager($environment);
-    }
-
-    /**
-     * @param string $environment
-     */
-    protected function close($environment)
-    {
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
-
-        // Résactivation du filtre des ACL.
-        /** @var $aclFilterService ACLFilterService */
-        $aclFilterService = $container->get(ACLFilterService::class);
-        $aclFilterService->enabled = true;
-        echo "\tRégénération des ACL…";
-        $aclFilterService->generate();
         echo "… done!".PHP_EOL;
 
         // Fermeture Unit.
         $populateUnit = new Unit_Populate();
         $populateUnit->resetUnitEntityManager();
     }
-
 }

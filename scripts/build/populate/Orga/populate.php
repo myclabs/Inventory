@@ -1,5 +1,4 @@
 <?php
-use User\Domain\ACL\Role;
 use User\Domain\User;
 use User\Domain\UserService;
 

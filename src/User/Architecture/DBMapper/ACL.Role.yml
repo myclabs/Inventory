@@ -1,18 +1,25 @@
 User\Domain\ACL\Role:
   type: entity
   repositoryClass: \Core_Model_Repository
-  table: User_Role
+  table: ACL_Role
 
-  fields:
-    ref:
-      type: string
-      nullable: false
-      unique: true
-    name:
-      type: string
-      nullable: true
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type
+    type: string
+  discriminatorMap:
+    user: User\Domain\ACL\Role\UserRole
+    admin: User\Domain\ACL\Role\AdminRole
 
-  manyToMany:
-    users:
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    user:
       targetEntity: User\Domain\User
-      mappedBy: roles
+      inversedBy: roles
+      joinColumn:
+        nullable: false

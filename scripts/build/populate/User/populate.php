@@ -1,43 +1,25 @@
 <?php
-use User\Domain\ACL\ACLFilterService;
 
-/**
- * @package User
- */
+use User\Domain\ACL\Role\AdminRole;
+use User\Domain\UserService;
 
-require_once 'populateAcl.php';
-require_once 'populateUser.php';
-
-/**
- * @package User
- */
 class User_Populate extends Core_Script_Populate
 {
-
-    /**
-     * {@inheritdoc}
-     */
     public function populateEnvironment($environment)
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var $aclFilterService ACLFilterService */
-        $aclFilterService = $container->get(ACLFilterService::class);
 
-        // Filtre des ACL
-        $aclFilterService->enabled = false;
+        /** @var $userService UserService */
+        $userService = $container->get(UserService::class);
 
-        $aclScripts = new User_PopulateAcl();
-        $aclScripts->runEnvironment($environment);
-
-        $usersScripts = new User_PopulateUser();
-        $usersScripts->runEnvironment($environment);
-
-        // Filtre des ACL
-        $aclFilterService->enabled = true;
-        $aclFilterService->generate();
+        // Crée un admin
+        $admin = $userService->createUser('admin@myc-sense.com', 'myc-53n53');
+        $admin->setLastName('Système');
+        $admin->setFirstName('Administrateur');
+        $admin->addRole(new AdminRole($admin));
+        $admin->save();
 
         echo "\t\tUsers ($environment) : OK".PHP_EOL;
     }
-
 }
