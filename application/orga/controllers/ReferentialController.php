@@ -19,6 +19,12 @@ class Orga_ReferentialController extends Core_Controller
     use UI_Controller_Helper_Form;
 
     /**
+     * @Inject
+     * @var \Keyword\Application\Service\KeywordExport
+     */
+    protected $keywordExportService;
+
+    /**
      * Redirection sur la liste.
      * @Secure("loggedIn")
      */
@@ -105,7 +111,7 @@ class Orga_ReferentialController extends Core_Controller
                 $baseFilename = __('UI', 'name', 'parameters');
                 break;
             case 'Keyword':
-                $exportService = new \Keyword\Application\Service\KeywordExport();
+                $exportService = $this->keywordExportService;
                 $streamFunction = 'stream';
                 $baseFilename = __('Keyword', 'export', 'baseFileName');
                 break;
