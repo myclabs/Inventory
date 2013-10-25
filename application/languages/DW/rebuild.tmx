@@ -141,7 +141,7 @@
                 <seg>La régénération des données du cube d'analyse a été interrompue, car certains résultats ne sont pas compatibles avec le référentiel de classification. Merci d'essayer de relancer les calculs (bouton suivant) ou de vérifier la cohérence des différents référentiels.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Analysis data rebuild was interrupted, because some results are not compatible with the classification referential. Please try to restart computations (next button) or check the various referentials.</seg>
+                <seg>Analysis data rebuild was interrupted, because some results are not compatible with the classification reference data. Please try to restart computations (next button) or check the various reference data.</seg>
             </tuv>
         </tu>
         <tu tuid="outputDataRebuildFailMessage">
@@ -149,7 +149,7 @@
                 <seg>Une erreur a été détectée lors de la relance des calculs. Merci de vérifier la validité des différents référentiels, et de ré-essayer après correction des erreurs trouvées.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>An error was found during computations restart. Please check the validity of the various referentials, and try again after correction.</seg>
+                <seg>An error was found during computations restart. Please check the validity of the various reference data, and try again after correction.</seg>
             </tuv>
         </tu>
 
