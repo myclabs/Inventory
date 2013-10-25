@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "278a9f1ee99ba50cf37f127d1f7bca0c",
+    "hash": "3d983a60cb8d73e2e46cd17bad1390a1",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1061,16 +1061,16 @@
         },
         {
             "name": "myclabs/xport",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Xport.git",
-                "reference": "7dd0d5df89e3ea04e7d2f6e18fbc818082dd0a98"
+                "reference": "edfe2ad64a8aa1a98433b88fa5ca73e8fa80eaa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Xport/zipball/7dd0d5df89e3ea04e7d2f6e18fbc818082dd0a98",
-                "reference": "7dd0d5df89e3ea04e7d2f6e18fbc818082dd0a98",
+                "url": "https://api.github.com/repos/myclabs/Xport/zipball/edfe2ad64a8aa1a98433b88fa5ca73e8fa80eaa0",
+                "reference": "edfe2ad64a8aa1a98433b88fa5ca73e8fa80eaa0",
                 "shasum": ""
             },
             "require": {
@@ -1103,7 +1103,7 @@
                 "pdf",
                 "xml"
             ],
-            "time": "2013-09-30 08:41:16"
+            "time": "2013-10-11 12:12:34"
         },
         {
             "name": "netcarver/textile",
