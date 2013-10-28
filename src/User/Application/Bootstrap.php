@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use User\Architecture\TypeMapping\ActionType;
 use User\Application\Controller\Helper\AuthHelper;
+use User\Domain\ACL\Authorization\RepositoryAuthorization;
 use User\Domain\ACL\Authorization\UserAuthorization;
 use User\Domain\ACL\Role;
 use User\Domain\User;
@@ -50,6 +51,10 @@ class Bootstrap extends Core_Package_Bootstrap
 
                 $aclService = new ACLService($em, $c->get(LoggerInterface::class));
                 $aclService->setAuthorizationRepository(User::class, $em->getRepository(UserAuthorization::class));
+                $aclService->setAuthorizationRepository(
+                    'repository',
+                    $em->getRepository(RepositoryAuthorization::class)
+                );
                 return $aclService;
             }
         );

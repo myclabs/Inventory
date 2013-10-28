@@ -64,9 +64,14 @@ class UserRoleTest extends Core_Test_TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testIsAllowed(Action $action, $himself = true, $value = true)
+    public function testIsAllowed(Action $action, $resource = 'himself', $value = true)
     {
-        $resource = $himself ? $this->user : $this->otherUser;
+        if ($resource === 'himself') {
+            $resource = $this->user;
+        }
+        if ($resource === 'other') {
+            $resource = $this->otherUser;
+        }
 
         if ($value) {
             $this->assertTrue($this->aclService->isAllowed($this->user, $action, $resource));
@@ -81,18 +86,25 @@ class UserRoleTest extends Core_Test_TestCase
             [Action::CREATE(), User::class, false],
 
             // Sur lui-même
-            [Action::VIEW(), true],
-            [Action::EDIT(), true],
-            [Action::DELETE(), true],
-            [Action::UNDELETE(), true, false],
-            [Action::ALLOW(), true, false],
+            [Action::VIEW()],
+            [Action::EDIT()],
+            [Action::DELETE()],
+            [Action::UNDELETE(), 'himself', false],
+            [Action::ALLOW(), 'himself', false],
 
             // Sur les autres
-            [Action::VIEW(), false, false],
-            [Action::EDIT(), false, false],
-            [Action::DELETE(), false, false],
-            [Action::UNDELETE(), false, false],
-            [Action::ALLOW(), false, false],
+            [Action::VIEW(), 'other', false],
+            [Action::EDIT(), 'other', false],
+            [Action::DELETE(), 'other', false],
+            [Action::UNDELETE(), 'other', false],
+            [Action::ALLOW(), 'other', false],
+
+            // Sur les référentiels de données
+            [Action::VIEW(), 'repository', true],
+            [Action::EDIT(), 'repository', false],
+            [Action::DELETE(), 'repository', false],
+            [Action::UNDELETE(), 'repository', false],
+            [Action::ALLOW(), 'repository', false],
         ];
     }
 }

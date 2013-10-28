@@ -51,29 +51,29 @@ class ACLService
     {
         if (is_string($resource)) {
             // Si la ressource est un nom de classe
-            $entityClass = $resource;
+            $resourceName = $resource;
             $resource = null;
         } else {
-            $entityClass = $this->entityManager->getClassMetadata(get_class($resource))->getName();
+            $resourceName = $this->entityManager->getClassMetadata(get_class($resource))->getName();
         }
 
-        if (! isset($this->authorizationRepositories[$entityClass])) {
-            throw new RuntimeException("No authorization repository registered for entity of type $entityClass");
+        if (! isset($this->authorizationRepositories[$resourceName])) {
+            throw new RuntimeException("No authorization repository registered for resource $resourceName");
         }
 
-        $authorizationRepository = $this->authorizationRepositories[$entityClass];
+        $authorizationRepository = $this->authorizationRepositories[$resourceName];
 
         return $authorizationRepository->exists($user, $action, $resource);
     }
 
     /**
      * Enregistre un repository d'autorisations qui gère les autorisation d'une classe d'entité
-     * @param string                           $entityClass
+     * @param string                           $resourceName Nom de la classe, ou nom abstrait de ressource
      * @param AuthorizationRepositoryInterface $authorizationRepository
      */
-    public function setAuthorizationRepository($entityClass, AuthorizationRepositoryInterface $authorizationRepository)
+    public function setAuthorizationRepository($resourceName, AuthorizationRepositoryInterface $authorizationRepository)
     {
-        $this->authorizationRepositories[$entityClass] = $authorizationRepository;
+        $this->authorizationRepositories[$resourceName] = $authorizationRepository;
     }
 
     /**
@@ -81,7 +81,10 @@ class ACLService
      */
     public function rebuildAuthorizations()
     {
-        $this->emptyAuthorizations();
+        // Vide les autorisations
+        $query = $this->entityManager->createQuery('DELETE FROM ' . Authorization::class);
+        $query->execute();
+        $this->entityManager->clear(Authorization::class);
 
         /** @var User[] $users */
         $users = User::loadList();
@@ -89,14 +92,5 @@ class ACLService
         foreach ($users as $user) {
             $user->updateAuthorizations();
         }
-    }
-
-    /**
-     * Vide le filtre
-     */
-    private function emptyAuthorizations()
-    {
-        $query = $this->entityManager->createQuery('DELETE FROM ' . Authorization::class);
-        $query->execute();
     }
 }

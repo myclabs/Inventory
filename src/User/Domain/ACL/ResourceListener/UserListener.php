@@ -6,7 +6,7 @@ use User\Domain\ACL\Authorization\UserAuthorization;
 use User\Domain\User;
 
 /**
- * Listens to events on the User entity.
+ * Listens to events on the User resource.
  */
 class UserListener
 {

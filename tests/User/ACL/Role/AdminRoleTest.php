@@ -87,6 +87,13 @@ class AdminRoleTest extends Core_Test_TestCase
             [Action::DELETE()],
             [Action::UNDELETE()],
             [Action::ALLOW()],
+
+            // Sur les référentiels de données
+            [Action::VIEW(), 'repository', true],
+            [Action::EDIT(), 'repository', true],
+            [Action::DELETE(), 'repository', false],
+            [Action::UNDELETE(), 'repository', false],
+            [Action::ALLOW(), 'repository', false],
         ];
     }
 }
