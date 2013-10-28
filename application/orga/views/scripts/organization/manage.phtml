@@ -3,6 +3,10 @@
 $organizations = $this->organizations;
 ?>
 
+<style>
+    .deleteOrganization { margin-left: 15px; }
+</style>
+
 <div class="page-header">
     <h1>
         <?=__('Orga', 'organization', 'organizations')?>
@@ -24,7 +28,7 @@ $organizations = $this->organizations;
             <?php endif; ?>
             <?php if ($organization->canBeEdited) : ?>
                 <div class="pull-right">
-                    <a class="editOrganization btn btn-small btn-info"
+                    <a class="editOrganization btn btn-small btn-primary"
                        href="orga/organization/edit?idOrganization=<?=$organization->id?>">
                         <i class="icon-cog icon-white"></i>
                         <?=__('UI', 'verb', 'edit')?>

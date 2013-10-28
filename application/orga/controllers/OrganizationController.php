@@ -184,6 +184,7 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function addAction()
     {
+        UI_Form::addHeader();
 //        $user = $this->_helper->auth();
 //        $label = $this->getParam('label');
 //

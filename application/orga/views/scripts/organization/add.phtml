@@ -1,88 +1,207 @@
 <style>
-    .button-label { float: left; text-align: right; width: 160px; }
+    #organizationSteps { border: none; }
+    #organizationSteps.nav a { border: none; }
+    #organizationSteps.nav a:hover { border: none; }
+    #organizationSteps.nav li.active a { font-weight: bolder; }
+    .navigation-buttons .control-label { padding-top: 0px; }
 </style>
 
-<form class="form-horizontal">
-    <ul class="nav nav-tabs" id="tab">
-        <li class="active"><a href="#organization" data-toggle="tab">Organisation</a></li>
-        <li class="disabled"><a href="#" data-toggle="tab"> >>> </a></li>
-        <li class="disabled"><a href="#axes" data-toggle="tab">Axes</a></li>
-        <li class="disabled"><a href="#" data-toggle="tab"> >>> </a></li>
-        <li class="disabled"><a href="#granularities" data-toggle="tab">Granularités</a></li>
-        <li class="disabled"><a href="#" data-toggle="tab"> >>> </a></li>
-        <li class="disabled"><a href="#members" data-toggle="tab">Éléments</a></li>
-        <li class="disabled"><a href="#" data-toggle="tab"> >>> </a></li>
-        <li class="disabled"><a href="#dw" data-toggle="tab">Données</a></li>
+<form class="form form-horizontal">
+    <ul class="nav nav-tabs" id="organizationSteps">
+        <li class="active"><a href="#organization">Organisation</a></li>
+        <li class="disabled"><a href="#"> >>> </a></li>
+        <li class="disabled"><a href="#axes">Axes</a></li>
+        <li class="disabled"><a href="#"> >>> </a></li>
+        <li class="disabled"><a href="#granularities">Granularités</a></li>
+        <li class="disabled"><a href="#"> >>> </a></li>
+        <li class="disabled"><a href="#members">Éléments</a></li>
+        <li class="disabled hide"><a href="#"> >>> </a></li>
+        <li class="disabled hide"><a href="#dw">Données</a></li>
+        <li class="disabled"><a href="#"> >>> </a></li>
+        <li class="disabled"><a href="#validation">Validation</a></li>
     </ul>
 
-    <div class="tab-content">
+    <div class="control-group navigation-buttons">
+        <div class="control-label">
+            <button class="btn btn-warning navigationPrevious hide" type="button">
+                <i class="icon-chevron-left icon-white"></i> Précédent
+            </button>
+        </div>
+        <div class="controls">
+            <button class="btn btn-primary navigationNext" type="button">
+                Suivant <i class="icon-chevron-right icon-white"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="tab-content" id="organizationSteps">
         <div class="tab-pane active" id="organization">
             <div class="control-group">
-                <label class="control-label" for="label">Nom de projet ?</label>
+                <label class="control-label" for="label">Nom de projet</label>
                 <div class="controls">
-                    <input type="text" id="label" placeholder="nom">
+                    <div class="input">
+                        <input type="text" id="label" placeholder="organisation">
+                    </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="type">Type de projet ?</label>
+                <label class="control-label" for="organizationType">Type de projet</label>
                 <div class="controls">
-                    <select id="type">
-                        <option value="collecte">Collecte</option>
-                        <option value="collecte">Reporting</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn btn-primary next">Suivant <i class="icon-chevron-right icon-white"></i></button>
+                    <div class="input">
+                        <select id="organizationType">
+                            <option value="collecte">Collecte</option>
+                            <option value="reporting">Reporting</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="tab-pane" id="axes">
-            <div class="control-group">
-                <button class="control-label btn btn-warning pull-left previous">Précédent</button></label>
-                <div class="controls">
-                    <button class="btn btn-primary pull-right next">Suivant</button>
+            <fieldset>
+                <legend>Choisir le centre organisationnel du projet</legend>
+                <div class="control-group" data-level="1">
+                    <label class="control-label" for="mainAxis">Centre</label>
+                    <div class="controls">
+                        <div class="input">
+                            <input type="text" id="mainAxis" placeholder="agence, site, bâtiments,…">
+                        </div>
+                        <div class="input">
+                            <button class="btn addAggregation"><i class="icon-plus"></i> Ajouter une aggrégation</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="control-group">
-                <div class="button-label">
-                    <button class="btn btn-warning previous"><i class="icon-chevron-left icon-white"></i> Précédent</button></label>
+            </fieldset>
+            <fieldset>
+                <legend>Choisir l'unité de temps prévue pour les saisies</legend>
+                <div class="control-group">
+                    <label class="control-label" for="timeAxis">Temps</label>
+                    <div class="controls">
+                        <div class="input">
+                            <input type="text" id="timeAxis" placeholder="mois, année,…">
+                        </div>
+                    </div>
                 </div>
-                <div class="controls">
-                    <button class="btn btn-primary next">Suivant <i class="icon-chevron-right icon-white"></i></button>
+            </fieldset>
+            <fieldset>
+                <legend>Indiquer un axe de répartition des saisies</legend>
+                <div class="control-group">
+                    <label class="control-label" for="subdivisionAxis">Sous-division</label>
+                    <div class="controls">
+                        <div class="input">
+                            <input type="text" id="subdivisionAxis" placeholder="catégorie, sujet,…">
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </fieldset>
         </div>
         <div class="tab-pane" id="granularities">
-
         </div>
         <div class="tab-pane" id="members">
-
+            
         </div>
         <div class="tab-pane" id="dw">
 
         </div>
     </div>
+
+    <div class="control-group navigation-buttons">
+        <div class="control-label">
+            <button class="btn btn-warning navigationPrevious hide" type="button">
+                <i class="icon-chevron-left icon-white"></i> Précédent
+            </button>
+        </div>
+        <div class="controls">
+            <button class="btn btn-primary navigationNext" type="button">
+                Suivant <i class="icon-chevron-right icon-white"></i>
+            </button>
+        </div>
+    </div>
 </form>
 
 <script>
-    $('#tab a').click(function(e) { e.preventDefault(); });
-    $('.next').click(function(e) {
+    $('#organizationSteps a').click(function(e) { e.preventDefault(); });
+    $('form').on('click', '.navigationPrevious', function(e) {
         e.preventDefault();
-        $('#tab li.active').addClass('disabled');
-        $('#tab li.active').next().next().children('a').tab('show');
-        $('#tab li.active').removeClass('disabled');
+        $('#organizationSteps li.active').addClass('disabled');
+        $('#organizationSteps li.active').prev().prevAll(':not(.hide):first').children('a').tab('show');
+        $('#organizationSteps li.active').removeClass('disabled');
     });
-    $('.previous').click(function(e) {
+    $('form').on('click', '.navigationNext', function(e) {
         e.preventDefault();
-        $('#tab li.active').addClass('disabled');
-        $('#tab li.active').prev().prev().children('a').tab('show');
-        $('#tab li.active').removeClass('disabled');
+        $('#organizationSteps li.active').addClass('disabled');
+        $('#organizationSteps li.active').nextAll(':not(.hide):first').next().children('a').tab('show');
+        $('#organizationSteps li.active').removeClass('disabled');
     });
-    $('#organizationType').change(function(e) {
+    $('form').on('click', '.navigationEnd', function(e) {
+        e.preventDefault();
+        addMessage('Construction du projet en cours…', 'info');
+    });
+    $('#organizationSteps a').on('shown', function (e) {
+        var currentTab = $(this);
+        var firstTab = $('#organizationSteps li:first a');
+        var lastTab = $('#organizationSteps li:not(.hide):last a');
+        var previousButton = $('.navigationPrevious');
+        var nextButton = $('.navigationNext').length > 0 ? $('.navigationNext')  : $('.navigationEnd');
+        if (currentTab[0] == firstTab[0]) {
+            previousButton.addClass('hide');
+        } else if (currentTab[0] == lastTab[0]) {
+            nextButton.addClass('navigationEnd');
+            nextButton.removeClass('navigationNext');
+            nextButton.prop('type', 'submit');
+            nextButton.html('Terminer <i class="icon-ok icon-white">');
+        } else {
+            previousButton.removeClass('hide');
+            nextButton.addClass('navigationNext');
+            nextButton.removeClass('navigationEnd');
+            nextButton.prop('type', 'button');
+            nextButton.html('Suivant <i class="icon-chevron-right icon-white">');
+        }
+    });
 
+    $('#organizationType').change(function(dWTab) {
+        var dWTab = $('#organizationSteps li a[href="#dw"]').parent();
+        if ($('#organizationType').val() == 'collecte') {
+            dWTab.addClass('hide');
+            dWTab.prev().addClass('hide');
+        } else if ($('#organizationType').val() == 'reporting') {
+            dWTab.removeClass('hide');
+            dWTab.prev().removeClass('hide');
+        }
+    });
+    $('form').on('click', '.addAggregation', function(e) {
+        e.preventDefault();
+        var row = $(this).parent().parent().parent();
+        row.after(
+        '<div class="control-group" style="padding-left: ' + (row.attr('data-level') * 45) + 'px" data-level="' + (row.attr('data-level') * 1 + 1) + '">' +
+            '<label class="control-label" for="mainAxis">Aggrégation</label>' +
+            '<div class="controls">' +
+                '<div class="input">' +
+                '<input type="text" id="mainAxis" placeholder="pays, zone, marque,…">' +
+                '</div>' +
+                '<div class="input">' +
+                '<button class="btn addAggregation"><i class="icon-plus"></i></button>' +
+                '</div>' +
+                '<div class="input">' +
+                '<button class="btn removeAggregation"><i class="icon-minus"></i></button>' +
+                '</div>' +
+            '</div>' +
+        '</div>'
+        );
+    });
+    $('form').on('click', '.removeAggregation', function(e) {
+        e.preventDefault();
+        var row = $(this).parent().parent().parent();
+        console.log(row.nextUntil('[data-level="' + row.attr('data-level') + '"]'));
+        row.nextUntil('[data-level="' + row.attr('data-level') + '"]').each(function() {
+            console.log($(this).attr('data-level'));
+            $(this).attr('data-level', ($(this).attr('data-level') * 1 - 1));
+            console.log($(this).attr('data-level'));
+            $(this).attr('style', 'padding-left: ' + (($(this).attr('data-level') - 1) * 45) + 'px');
+        });
+        row.remove();
+    });
+
+    $().ready(function() {
+        $('.navigationNext:first').trigger('click');
     });
 </script>

@@ -623,23 +623,23 @@ class Orga_CellController extends Core_Controller
     public function inputsAction()
     {
         $idCell = $this->getParam('idCell');
-        $cell = Orga_Model_Cell::load($idCell);
-        $granularity = $cell->getGranularity();
+        $this->view->cell = Orga_Model_Cell::load($idCell);
+        $granularity = $this->view->cell->getGranularity();
 
-        $this->pageTitle = $cell->getLabel();
+        $this->pageTitle = $this->view->cell->getLabel();
 
         $this->view->inputCells = [];
         if ($granularity->getInputConfigGranularity() !== null) {
             $this->view->inputCells[] = [
-                'granularityLabel' => $granularity->getLabel(),
-                'cells' => $cell
+                'granularity' => $granularity,
+                'cells' => $this->view->cell
             ];
         }
         foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
             if ($narrowerGranularity->getInputConfigGranularity() != null) {
                 $this->view->inputCells[] = [
-                    'granularityLabel' => $narrowerGranularity->getLabel(),
-                    'cells' => $cell->getChildCellsForGranularity($narrowerGranularity)
+                    'granularity' => $narrowerGranularity,
+                    'cells' => $this->view->cell->getChildCellsForGranularity($narrowerGranularity)
                 ];
             }
         }
