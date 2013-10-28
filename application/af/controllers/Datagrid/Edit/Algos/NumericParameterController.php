@@ -8,6 +8,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Techno\Application\Service\TechnoService;
 
 /**
  * @package AF
@@ -17,7 +18,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
 
     /**
      * @Inject
-     * @var Techno_Service_Techno
+     * @var TechnoService
      */
     private $technoService;
 

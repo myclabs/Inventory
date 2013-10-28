@@ -40,7 +40,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                 || $inputGranularity->getRef() === $granularityForInventoryStatus->getRef()));
 
         if ($cell->getGranularity()->getRef() === $inputGranularity->getRef()) {
-            $this->addLine($this->getLineData($cell, $inputGranularity, $isInputInInventory, $idCell));
+            $this->addLineData($cell, $inputGranularity, $isInputInInventory, $idCell);
             $this->totalElements = 1;
         } else {
             $customParameters = [];
@@ -93,7 +93,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                 Orga_Model_Cell::getAlias()
             );
             foreach ($cell->loadChildCellsForGranularity($inputGranularity, $this->request) as $childCell) {
-                $this->addLine($this->getLineData($childCell, $inputGranularity, $isInputInInventory, $idCell));
+                $this->addLineData($childCell, $inputGranularity, $isInputInInventory, $idCell);
             }
             $this->totalElements = $cell->countTotalChildCellsForGranularity($inputGranularity, $this->request);
         }
@@ -101,7 +101,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $this->send();
     }
     
-    private function getLineData(Orga_Model_Cell $cell, Orga_Model_Granularity $inputGranularity, $isInputInInventory, $fromIdCell)
+    private function addLineData(Orga_Model_Cell $cell, Orga_Model_Granularity $inputGranularity, $isInputInInventory, $fromIdCell)
     {
         $data = array();
         $data['index'] = $cell->getId();
@@ -167,7 +167,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
             $data['stateInput'] = null;
         }
         
-        return $data;
+        $this->addLine($data);
     }
 
 }

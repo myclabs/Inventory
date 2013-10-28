@@ -67,15 +67,23 @@
 				<seg>Delete</seg>
 			</tuv>
 		</tu>
-		<tu tuid="disable">
-			<tuv xml:lang="fr">
-				<seg>Désactiver</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Disable</seg>
-			</tuv>
-		</tu>
-		<tu tuid="edit">
+        <tu tuid="disable">
+            <tuv xml:lang="fr">
+                <seg>Désactiver</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Disable</seg>
+            </tuv>
+        </tu>
+        <tu tuid="display">
+            <tuv xml:lang="fr">
+                <seg>Afficher</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Display</seg>
+            </tuv>
+        </tu>
+        <tu tuid="edit">
 			<tuv xml:lang="fr">
 				<seg>Éditer</seg>
 			</tuv>

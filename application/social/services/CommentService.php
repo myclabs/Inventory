@@ -7,7 +7,7 @@ use User\Domain\ACL\ACLService;
 use User\Domain\User;
 
 /**
- * Comment application service
+ * Service de gestion des commentaires.
  *
  * @author matthieu.napoli
  */

@@ -160,23 +160,27 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB INVENTORIES
-        $inventoriesTab = new UI_Tab('inventories');
         try {
             $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
-            $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+            if ($granularityForInventoryStatus->isNarrowerThan($granularity) || ($granularityForInventoryStatus === $granularity)) {
+                $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+            } else {
+                $crossedOrgaGranularity = null;
+            }
         } catch (Core_Exception_UndefinedAttribute $e) {
             $crossedOrgaGranularity = null;
         } catch (Core_Exception_NotFound $e) {
             $crossedOrgaGranularity = null;
         }
-        if ($crossedOrgaGranularity === null) {
-            $inventoriesTab->disabled = true;
-        } else if ($tab === 'inventories') {
-            $inventoriesTab->active = true;
+        if ($crossedOrgaGranularity !== null) {
+            $inventoriesTab = new UI_Tab('inventories');
+            if ($tab === 'inventories') {
+                $inventoriesTab->active = true;
+            }
+            $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
+            $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
+            $this->view->tabView->addTab($inventoriesTab);
         }
-        $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
-        $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
-        $this->view->tabView->addTab($inventoriesTab);
 
 
         // TAB INPUTS
@@ -268,6 +272,16 @@ class Orga_CellController extends Core_Controller
         $historyTab->label =  __('UI', 'history', 'history');
         $historyTab->dataSource = 'orga/tab_celldetails/history?idCell='.$idCell;
         $this->view->tabView->addTab($historyTab);
+
+
+        // TAB COMMENTAIRES
+        $commentsTab = new UI_Tab('comments');
+        if ($tab === 'comments') {
+            $commentsTab->active = true;
+        }
+        $commentsTab->label = __('Social', 'comment', 'comments');
+        $commentsTab->dataSource = 'orga/tab_celldetails/comments?idCell=' . $idCell;
+        $this->view->tabView->addTab($commentsTab);
 
 
         // TAB ADMINISTRATION

@@ -1,16 +1,11 @@
 <?php
-/**
- * Creation of the Techno Meaning test.
- * @package Techno
- */
+
+use Doctrine\ORM\UnitOfWork;
 use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
+use Techno\Domain\Meaning;
 
-/**
- * Test Techno package.
- * @package Techno
- */
 class Techno_Test_MeaningTest
 {
     /**
@@ -24,7 +19,7 @@ class Techno_Test_MeaningTest
 
     /**
      * Génere un objet dérivé prêt à l'emploi pour les tests.
-     * @return Techno_Model_Meaning
+     * @return Meaning
      */
     public static function generateObject()
     {
@@ -32,13 +27,13 @@ class Techno_Test_MeaningTest
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRef = strtolower(Core_Tools::generateString(10));
         $keywordRepository->add(new Keyword($keywordRef, 'Label'));
         $entityManager->flush();
         /** @var KeywordService $keywordService */
-        $keywordService = $container->get('\Keyword\Application\Service\KeywordService');
-        $meaning = new Techno_Model_Meaning();
+        $keywordService = $container->get('Keyword\Application\Service\KeywordService');
+        $meaning = new Meaning();
         $meaning->setKeyword($keywordService->get($keywordRef));
         $meaning->save();
         $entityManager->flush();
@@ -47,50 +42,39 @@ class Techno_Test_MeaningTest
 
     /**
      * DeleteObject
-     * @param Techno_Model_Meaning $o
+     * @param Meaning $o
      */
     public static function deleteObject($o)
     {
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRepository->remove($keywordRepository->getByRef($o->getKeyword()->getRef()));
         $o->delete();
         $entityManager->flush();
     }
 }
 
-/**
- *  @package Techno
- */
-class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
+class Techno_Test_MeaningSetUp extends Core_Test_TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
     /**
      * @var KeywordService
      */
     private $keywordService;
 
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
     public static function setUpBeforeClass()
     {
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Techno_Model_Meaning::countTotal() > 0) {
-            foreach (Techno_Model_Meaning::loadList() as $o) {
+        if (Meaning::countTotal() > 0) {
+            foreach (Meaning::loadList() as $o) {
                 $o->delete();
             }
         }
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $entityManager->getRepository('Keyword\Domain\Keyword');
         if ($keywordRepository->count() > 0) {
             foreach ($keywordRepository->getAll() as $o) {
                 $keywordRepository->remove($o);
@@ -99,28 +83,24 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
         $entityManager->flush();
     }
 
-    /**
-     * Set up
-     */
     public function setUp()
     {
-        $this->entityManager = Zend_Registry::get('EntityManagers')['default'];
-        $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get('\Keyword\Application\Service\KeywordService');
+        parent::setUp();
+        $this->keywordService = $this->get('Keyword\Application\Service\KeywordService');
     }
 
     /**
-     * @return Techno_Model_Meaning $meaning
+     * @return Meaning $meaning
      */
     function testConstruct()
     {
         $keywordRef = strtolower(Core_Tools::generateString(20));
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRepository->add(new Keyword($keywordRef, 'Label'));
         $this->entityManager->flush();
 
-        $o = new Techno_Model_Meaning();
+        $o = new Meaning();
         $o->setKeyword($this->keywordService->get($keywordRef));
         $o->save();
         $this->entityManager->flush();
@@ -131,16 +111,16 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Techno_Model_Meaning $o
-     * @return Techno_Model_Meaning
+     * @param Meaning $o
+     * @return Meaning
      */
     function testLoad($o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Techno_Model_Meaning */
-        $oLoaded = Techno_Model_Meaning::load($o->getKey());
+        /** @var $oLoaded Meaning */
+        $oLoaded = Meaning::load($o->getKey());
 
-        $this->assertInstanceOf('Techno_Model_Meaning', $oLoaded);
+        $this->assertInstanceOf('Techno\Domain\Meaning', $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         $this->assertInstanceOf('Keyword\Application\Service\KeywordDTO', $oLoaded->getKeyword());
@@ -150,20 +130,18 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testLoad
-     * @param Techno_Model_Meaning $o
+     * @param Meaning $o
      */
     function testDelete($o)
     {
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keyword = $keywordRepository->getByRef($o->getKeyword()->getRef());
         $keywordRepository->remove($keyword);
         $o->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
 
     /**
@@ -174,16 +152,16 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
         $keywordRef1 = strtolower(Core_Tools::generateString(10));
         $keywordRef2 = strtolower(Core_Tools::generateString(10));
         /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $this->entityManager->getRepository('\Keyword\Domain\Keyword');
+        $keywordRepository = $this->entityManager->getRepository('Keyword\Domain\Keyword');
         $keywordRepository->add(new Keyword($keywordRef1, 'Label'));
         $keywordRepository->add(new Keyword($keywordRef2, 'Label'));
         $this->entityManager->flush();
 
-        $o1 = new Techno_Model_Meaning();
+        $o1 = new Meaning();
         $o1->setKeyword($this->keywordService->get($keywordRef1));
         $o1->setPosition();
         $o1->save();
-        $o2 = new Techno_Model_Meaning();
+        $o2 = new Meaning();
         $o2->setKeyword($this->keywordService->get($keywordRef2));
         $o2->setPosition();
         $o2->save();
@@ -216,5 +194,4 @@ class Techno_Test_MeaningSetUp extends PHPUnit_Framework_TestCase
         $keywordRepository->remove($keywordRepository->getByRef($keywordRef2));
         $this->entityManager->flush();
     }
-
 }

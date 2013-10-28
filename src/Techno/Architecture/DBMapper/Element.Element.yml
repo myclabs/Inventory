@@ -1,0 +1,4 @@
+Techno\Domain\Element\Element:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Techno_Element

@@ -32,7 +32,6 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
     {
         /** @var $container \DI\Container */
         $container = Zend_Registry::get('container');
-
         return $container->get($name);
     }
 

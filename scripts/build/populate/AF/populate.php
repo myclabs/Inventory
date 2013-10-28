@@ -1,5 +1,8 @@
 <?php
 
+use Keyword\Domain\Keyword;
+use Techno\Domain\Family\Family;
+use Techno\Domain\Meaning;
 use Keyword\Application\Service\KeywordService;
 
 /**
@@ -499,7 +502,7 @@ class AF_Populate extends Core_Script_Action
     protected function createAlgoNumericParameter(AF_Model_AF $aF, $ref, $label, $refFamily)
     {
         $numericParameter = new Algo_Model_Numeric_Parameter();
-        $numericParameter->setFamily(Techno_Model_Family::loadByRef($refFamily));
+        $numericParameter->setFamily(Family::loadByRef($refFamily));
         $this->createAlgoNumeric($aF, $numericParameter, $ref, $label);
     }
 
@@ -510,7 +513,7 @@ class AF_Populate extends Core_Script_Action
     protected function createFixedCoordinateForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, $indexes)
     {
         foreach ($indexes as $refDimensionKeyword => $refMemberKeyword) {
-            $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $dimension = $parameter->getFamily()->getDimensionByMeaning(Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Fixed();
             $index->setDimension($dimension);
             $index->setMember($dimension->getMember($this->keywordService->get($refMemberKeyword)));
@@ -526,7 +529,7 @@ class AF_Populate extends Core_Script_Action
     protected function createAlgoCoordinateForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, $indexes)
     {
         foreach ($indexes as $refDimensionKeyword => $algo) {
-            $dimension = $parameter->getFamily()->getDimensionByMeaning(Techno_Model_Meaning::loadByRef($refDimensionKeyword));
+            $dimension = $parameter->getFamily()->getDimensionByMeaning(Meaning::loadByRef($refDimensionKeyword));
             $index = new Algo_Model_ParameterCoordinate_Algo();
             $index->setDimension($dimension);
             $index->setAlgoKeyword($algo);

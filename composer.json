@@ -1,22 +1,7 @@
 {
     "autoload": {
         "psr-0": {
-            "Core": "src/",
-            "UI": "src/",
-            "Unit": "src/",
-            "User": "src/",
-            "TEC": "src/",
-            "Calc": "src/",
-            "Exec": "src/",
-            "Export": "src/",
-            "Keyword": "src/",
-            "Doc": "src/",
-            "DW": "src/",
-            "Algo": "src/",
-            "AF": "src/",
-            "Orga": "src/",
-            "Inventory": "src/",
-            "AuditTrail": "src/"
+            "": "src/"
         }
     },
     "require": {

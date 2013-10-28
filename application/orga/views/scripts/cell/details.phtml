@@ -1,42 +1,43 @@
-<?php
-/**
- * Vue générale d'une Cell
- * @author valentin.claras
- * @author diana.dragusin
- * @package Orga
- */
-?>
-
 <div class="page-header">
     <h1><?=$this->pageTitle?></h1>
 </div>
+
 <div class="row-fluid">
-    <div class="well span" id="navigationPanel">
-<?= $this->partial('cell/navigation.phtml', ['cell' => $this->cell, 'isParentCellReachable' => $this->isParentCellReachable])?>
-    </div>
-    <div id="navigationClose" class="span">
-        <i class="icon-indent-right"> </i>
-    </div>
+
+    <? if ($this->displayNavigationPanel !== false) : ?>
+        <div class="well span" id="navigationPanel">
+            <?= $this->partial('cell/navigation.phtml',
+                ['cell' => $this->cell, 'isParentCellReachable' => $this->isParentCellReachable])?>
+        </div>
+        <div id="navigationClose" class="span">
+            <i class="icon-arrow-down"></i>
+            <span><?=__('Orga', 'navigation', 'hideNavigationPanel')?></span>
+            <i class="icon-arrow-down"></i>
+        </div>
+    <? endif; ?>
+
     <div id="navigationContent" class="span">
-<?php
-
-$this->tabView->display();
-
-$script = '';
-$script .= '$(\'#navigationClose\').click(';
-$script .= 'function() {';
-$script .= 'if ($(\'#navigationClose i:first-child\').hasClass(\'icon-indent-right\')) {';
-$script .= '$(\'#navigationClose i:first-child\').removeClass(\'icon-indent-right\');';
-$script .= '$(\'#navigationClose i:first-child\').addClass(\'icon-indent-left\');';
-$script .= '$(\'#navigationPanel\').animate({width: "toggle"}, 50);';
-$script .= '} else {';
-$script .= '$(\'#navigationClose i:first-child\').removeClass(\'icon-indent-left\');';
-$script .= '$(\'#navigationClose i:first-child\').addClass(\'icon-indent-right\');';
-$script .= '$(\'#navigationPanel\').animate({width: "toggle"}, 50);';
-$script .= '}';
-$script .= '});';
-
-$this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
-?>
+        <?php
+        $this->tabView->display();
+        ?>
     </div>
+
 </div>
+
+<script type="text/javascript">
+    $('#navigationClose').click(function () {
+        var navigationPanel = $('#navigationPanel');
+        if (navigationPanel.css('display') == 'none') {
+            $(this).find('i')
+                .removeClass('icon-arrow-up')
+                .addClass('icon-arrow-down');
+            $(this).find('span').html('<?=__('Orga', 'navigation', 'hideNavigationPanel')?>');
+        } else {
+            $(this).find('i')
+                .removeClass('icon-arrow-down')
+                .addClass('icon-arrow-up');
+            $(this).find('span').html('<?=__('Orga', 'navigation', 'displayNavigationPanel')?>');
+        }
+        navigationPanel.animate({width: "toggle"}, 50);
+    });
+</script>

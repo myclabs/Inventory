@@ -1,13 +1,13 @@
 <?php
-/**
-* @package Techno
-*/
+
+use Doctrine\ORM\UnitOfWork;
+use Keyword\Domain\KeywordRepository;
+use Techno\Domain\Family\CoeffFamily;
+use Techno\Domain\Meaning;
+use Techno\Domain\Tag;
+use Techno\Domain\Component;
 use Unit\UnitAPI;
 
-/**
- * Test Family Coeff Class
- * @package Techno
- */
 class Techno_Test_Family_CoeffTest
 {
     /**
@@ -23,7 +23,7 @@ class Techno_Test_Family_CoeffTest
 
     /**
      * Generation of a test object
-     * @return Techno_Model_Family_Coeff
+     * @return CoeffFamily
      */
     public static function generateObject()
     {
@@ -31,7 +31,7 @@ class Techno_Test_Family_CoeffTest
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
 
-        $o = new Techno_Model_Family_Coeff();
+        $o = new CoeffFamily();
         $o->setRef(strtolower(Core_Tools::generateString(10)));
         $o->setBaseUnit($baseUnit);
         $o->setUnit($unit);
@@ -46,7 +46,7 @@ class Techno_Test_Family_CoeffTest
 
     /**
      * Deletion of an object created with generateObject
-     * @param Techno_Model_Family_Coeff $o
+     * @param CoeffFamily $o
      */
     public static function deleteObject($o)
     {
@@ -56,39 +56,21 @@ class Techno_Test_Family_CoeffTest
     }
 }
 
-/**
- * Test des méthodes de base de l'objet métier Techno_Model_Family_Coeff
- * @package Techno
- */
-class Techno_Test_Family_CoeffSetUpTest extends PHPUnit_Framework_TestCase
+class Techno_Test_Family_CoeffSetUpTest extends Core_Test_TestCase
 {
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant les tests
-     */
-    public static  function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Techno_Model_Component::countTotal() > 0) {
-            foreach (Techno_Model_Component::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Component::loadList() as $o) {
+            $o->delete();
         }
-        if (Techno_Model_Tag::countTotal() > 0) {
-            foreach (Techno_Model_Tag::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Tag::loadList() as $o) {
+            $o->delete();
         }
-        if (Techno_Model_Meaning::countTotal() > 0) {
-            foreach (Techno_Model_Meaning::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Meaning::loadList() as $o) {
+            $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
@@ -101,24 +83,15 @@ class Techno_Test_Family_CoeffSetUpTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set up
+     * @return CoeffFamily
      */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
-     * @return Techno_Model_Family_Coeff
-     */
-    function testConstruct()
+    public function testConstruct()
     {
         // Fixtures
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
 
-        $o = new Techno_Model_Family_Coeff();
+        $o = new CoeffFamily();
         $o->setRef('family');
         $o->setBaseUnit($baseUnit);
         $o->setUnit($unit);
@@ -136,16 +109,16 @@ class Techno_Test_Family_CoeffSetUpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Techno_Model_Family_Coeff $o
-     * @return Techno_Model_Family_Coeff
+     * @param CoeffFamily $o
+     * @return CoeffFamily
      */
     public function testLoad($o)
     {
-        $this->entityManager->clear('Techno_Model_Component');
-        /** @var $oLoaded Techno_Model_Family_Coeff */
-        $oLoaded = Techno_Model_Family_Coeff::load($o->getKey());
+        $this->entityManager->clear('Techno\Domain\Component');
+        /** @var $oLoaded CoeffFamily */
+        $oLoaded = CoeffFamily::load($o->getKey());
 
-        $this->assertInstanceOf('Techno_Model_Family_Coeff', $oLoaded);
+        $this->assertInstanceOf('Techno\Domain\Family\CoeffFamily', $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         // getBaseUnit
@@ -163,55 +136,34 @@ class Techno_Test_Family_CoeffSetUpTest extends PHPUnit_Framework_TestCase
         return $oLoaded;
     }
 
-     /**
-      * @depends testLoad
-      * @param Techno_Model_Family_Coeff $o
-      */
-     function testDelete($o)
-     {
-         $o->delete();
-         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-                             $this->entityManager->getUnitOfWork()->getEntityState($o));
-         $this->entityManager->flush();
-         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                             $this->entityManager->getUnitOfWork()->getEntityState($o));
-     }
-
+    /**
+     * @depends testLoad
+     * @param CoeffFamily $o
+     */
+    public function testDelete($o)
+    {
+        $o->delete();
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->entityManager->flush();
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
+    }
 }
 
-/**
- * Test des fonctionnalités de l'objet métier Techno_Model_Family_Coeff
- * @package Techno
- */
-class Techno_Test_Family_CoeffMetierTest extends PHPUnit_Framework_TestCase
+class Techno_Test_Family_CoeffMetierTest extends Core_Test_TestCase
 {
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant les tests
-     */
-    public static  function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        if (Techno_Model_Component::countTotal() > 0) {
-            foreach (Techno_Model_Component::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Component::loadList() as $o) {
+            $o->delete();
         }
-        if (Techno_Model_Tag::countTotal() > 0) {
-            foreach (Techno_Model_Tag::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Tag::loadList() as $o) {
+            $o->delete();
         }
-        if (Techno_Model_Meaning::countTotal() > 0) {
-            foreach (Techno_Model_Meaning::loadList() as $o) {
-                $o->delete();
-            }
+        foreach (Meaning::loadList() as $o) {
+            $o->delete();
         }
         /** @var KeywordRepository $keywordRepository */
         $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
@@ -224,24 +176,15 @@ class Techno_Test_Family_CoeffMetierTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
      * Teste les champs qui peuvent être vides
      */
-    function testNullableFields()
+    public function testNullableFields()
     {
         // Fixtures
         $baseUnit = new UnitAPI('m');
         $unit = new UnitAPI('km');
 
-        $o = new Techno_Model_Family_Coeff();
+        $o = new CoeffFamily();
         $o->setRef('family');
         $o->setBaseUnit($baseUnit);
         $o->setUnit($unit);
@@ -250,5 +193,4 @@ class Techno_Test_Family_CoeffMetierTest extends PHPUnit_Framework_TestCase
         $o->delete();
         $this->entityManager->flush();
     }
-
 }

@@ -1,9 +1,16 @@
 <?php
-/**
- * @package Techno
- */
 
 use Keyword\Application\Service\KeywordService;
+use Keyword\Domain\Keyword;
+use Techno\Domain\Element\CoeffElement;
+use Techno\Domain\Element\ProcessElement;
+use Techno\Domain\Family\Family;
+use Techno\Domain\Family\CoeffFamily;
+use Techno\Domain\Family\Dimension;
+use Techno\Domain\Family\Member;
+use Techno\Domain\Family\ProcessFamily;
+use Techno\Domain\Meaning;
+use Techno\Domain\Category;
 
 /**
  * Remplissage de la base de données avec des données de test
@@ -69,13 +76,12 @@ class Techno_Populate extends Core_Script_Action
 
     /**
      * @param string $label
-     * @param Techno_Model_Category $parent
-     * @return Techno_Model_Category
+     * @param Category $parent
+     * @return Category
      */
-    protected function createCategory($label, Techno_Model_Category $parent=null)
+    protected function createCategory($label, Category $parent=null)
     {
-        $category = new Techno_Model_Category();
-        $category->setLabel($label);
+        $category = new Category($label);
         if ($parent !== null) {
             $category->setParentCategory($parent);
         }
@@ -84,48 +90,48 @@ class Techno_Populate extends Core_Script_Action
     }
 
     /**
-     * @param Techno_Model_Category $category
+     * @param Category $category
      * @param $ref
      * @param $label
      * @param $refBaseUnit
      * @param $refUnit
      * @param $documentation
-     * @return Techno_Model_Family
+     * @return Family
      */
-    protected function createFamilyProcess(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit,
+    protected function createFamilyProcess(Category $category, $ref, $label, $refBaseUnit, $refUnit,
         $documentation='')
     {
-        $family = new Techno_Model_Family_Process();
+        $family = new ProcessFamily();
         return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit, $documentation);
     }
 
     /**
-     * @param Techno_Model_Category $category
+     * @param Category $category
      * @param $ref
      * @param $label
      * @param $refBaseUnit
      * @param $refUnit
      * @param $documentation
-     * @return Techno_Model_Family
+     * @return Family
      */
-    protected function createFamilyCoef(Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit,
+    protected function createFamilyCoef(Category $category, $ref, $label, $refBaseUnit, $refUnit,
         $documentation='')
     {
-        $family = new Techno_Model_Family_Coeff();
+        $family = new CoeffFamily();
         return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit, $documentation);
     }
 
     /**
-     * @param Techno_Model_Family $family
-     * @param Techno_Model_Category $category
+     * @param Family $family
+     * @param Category $category
      * @param $ref
      * @param $label
      * @param $refBaseUnit
      * @param $refUnit
      * @param $documentation
-     * @return Techno_Model_Family
+     * @return Family
      */
-    protected function createFamily(Techno_Model_Family $family, Techno_Model_Category $category, $ref, $label, $refBaseUnit, $refUnit,
+    protected function createFamily(Family $family, Category $category, $ref, $label, $refBaseUnit, $refUnit,
         $documentation='')
     {
         $family->setCategory($category);
@@ -139,48 +145,48 @@ class Techno_Populate extends Core_Script_Action
     }
 
     /**
-     * @param Techno_Model_Family $family
+     * @param Family $family
      * @param string $refKeyword
      * @param string[] $keywordMembers
      */
-    protected function createHorizontalDimension(Techno_Model_Family $family, $refKeyword, array $keywordMembers)
+    protected function createHorizontalDimension(Family $family, $refKeyword, array $keywordMembers)
     {
-        $this->createDimension($family, $refKeyword, Techno_Model_Family_Dimension::ORIENTATION_HORIZONTAL, $keywordMembers);
+        $this->createDimension($family, $refKeyword, Dimension::ORIENTATION_HORIZONTAL, $keywordMembers);
     }
 
     /**
-     * @param Techno_Model_Family $family
+     * @param Family $family
      * @param string $refKeyword
      * @param string[] $keywordMembers
      */
-    protected function createVerticalDimension(Techno_Model_Family $family, $refKeyword, array $keywordMembers)
+    protected function createVerticalDimension(Family $family, $refKeyword, array $keywordMembers)
     {
-        $this->createDimension($family, $refKeyword, Techno_Model_Family_Dimension::ORIENTATION_VERTICAL, $keywordMembers);
+        $this->createDimension($family, $refKeyword, Dimension::ORIENTATION_VERTICAL, $keywordMembers);
     }
 
     /**
-     * @param Techno_Model_Family $family
+     * @param Family $family
      * @param string $refKeyword
      * @param int $orientation
      * @param string[] $keywordMembers
      */
-    protected function createDimension(Techno_Model_Family $family, $refKeyword, $orientation, array $keywordMembers)
+    protected function createDimension(Family $family, $refKeyword, $orientation, array $keywordMembers)
     {
         if (!isset($this->meanings[$refKeyword])) {
-            $this->meanings[$refKeyword] = new Techno_Model_Meaning();
+            $this->meanings[$refKeyword] = new Meaning();
             $this->meanings[$refKeyword]->setKeyword($this->keywordService->get($refKeyword));
             $this->meanings[$refKeyword]->save();
         }
-        $dimension = new Techno_Model_Family_Dimension($family, $this->meanings[$refKeyword], $orientation);
+        $dimension = new Dimension($family, $this->meanings[$refKeyword], $orientation);
         foreach ($keywordMembers as $refKeyword) {
-            $member = new Techno_Model_Family_Member($dimension, $this->keywordService->get($refKeyword));
+            $member = new Member($dimension, $this->keywordService->get($refKeyword));
             $member->save();
             $dimension->addMember($member);
         }
         $dimension->save();
     }
 
-    protected function createParameter(Techno_Model_Family $family, array $refKeywordMembers, $value, $uncertainty=0)
+    protected function createParameter(Family $family, array $refKeywordMembers, $value, $uncertainty=0)
     {
         // Récupère la cellule
         $members = [];
@@ -198,10 +204,10 @@ class Techno_Populate extends Core_Script_Action
             throw new Core_Exception("Un élément est déjà choisi pour ces coordonnées.");
         }
         // Crée un élément vide et l'ajoute à la cellule
-        if ($family instanceof Techno_Model_Family_Process) {
-            $element = new Techno_Model_Element_Process();
+        if ($family instanceof ProcessFamily) {
+            $element = new ProcessElement();
         } else {
-            $element = new Techno_Model_Element_Coeff();
+            $element = new CoeffElement();
         }
         $element->setBaseUnit($family->getBaseUnit());
         $element->setUnit($family->getUnit());

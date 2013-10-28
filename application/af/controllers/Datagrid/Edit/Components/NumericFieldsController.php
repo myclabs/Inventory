@@ -42,6 +42,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['enabled'] = $numericField->isEnabled();
             $data['required'] = $numericField->getRequired();
             $data['unit'] = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
+            $data['unitSelection'] = $numericField->hasUnitSelection();
             $data['withUncertainty'] = $numericField->getWithUncertainty();
             $data['digitalValue'] = $this->cellNumber($numericField->getDefaultValue()->getDigitalValue());
             $data['relativeUncertainty'] = $this->cellNumber($numericField->getDefaultValue()->getRelativeUncertainty());
@@ -102,6 +103,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $numericField->setHelp($this->getAddElementValue('help'));
             $numericField->setEnabled($this->getAddElementValue('enabled'));
             $numericField->setRequired($this->getAddElementValue('required'));
+            $numericField->setUnitSelection($this->getAddElementValue('unitSelection'));
             $numericField->setWithUncertainty($this->getAddElementValue('withUncertainty'));
             /** @noinspection PhpUndefinedVariableInspection */
             $numericField->setUnit($unit);
@@ -177,6 +179,10 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 }
                 $numericField->setUnit($unit);
                 $this->data = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
+                break;
+            case 'unitSelection':
+                $numericField->setUnitSelection($newValue);
+                $this->data = $numericField->hasUnitSelection();
                 break;
             case 'withUncertainty':
                 $numericField->setWithUncertainty($newValue);

@@ -12,7 +12,6 @@ use User\Domain\User;
  */
 class Social_Model_Comment extends Social_Model_Text
 {
-
     /**
      * {@inheritdoc}
      * @param User $author Auteur (obligatoire)
@@ -21,5 +20,4 @@ class Social_Model_Comment extends Social_Model_Text
     {
         parent::__construct($author);
     }
-
 }

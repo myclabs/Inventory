@@ -31,6 +31,7 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
     {
         $this->request->setCustomParameters($this->request->filter->getConditions());
         $this->request->filter->setConditions(array());
+        $this->request->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
 
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
@@ -43,7 +44,6 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
             $data['relevant'] = $childCell->getRelevant();
-            $data['allParentsRelevant'] = $childCell->getAllParentsRelevant();
             $this->addLine($data);
         }
         $this->totalElements = $cell->countTotalChildCellsForGranularity($granularity, $this->request);
