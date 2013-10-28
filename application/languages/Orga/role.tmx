@@ -71,6 +71,25 @@
             </tuv>
         </tu>
 
+        <!-- Collapses -->
+
+        <tu tuid="userDetails">
+            <tuv xml:lang="fr">
+                <seg>par utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>by user</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellDetails">
+            <tuv xml:lang="fr">
+                <seg>par élément d'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>by organization item</seg>
+            </tuv>
+        </tu>
+
         <!-- Datagrid -->
 
          <tu tuid="cellGenericAdministrators">

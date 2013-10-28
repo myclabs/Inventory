@@ -219,10 +219,10 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
                 $datagridConfiguration->datagrid->pagination = true;
                 $datagridConfiguration->datagrid->addElements = true;
-                $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addUserPanelTitle');
+                $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addPanelTitle');
                 $datagridConfiguration->datagrid->deleteElements = true;
 
-                $labelDatagrid = $narrowerGranularity->getLabel() . ' ' . __('Orga', 'role', 'userDetails');
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' — ' . __('Orga', 'role', 'userDetails');
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
 
                 // Datagrid des cellules enfants avec le nombre d'utilisteur pour chacune.
@@ -242,7 +242,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $columnDetails->popup->addAttribute('class', 'large');
                 $datagridConfiguration->datagrid->addCol($columnDetails);
 
-                $labelDatagrid = $narrowerGranularity->getLabel() . ' ' . __('Orga', 'role', 'cellDetails');
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' — ' . __('Orga', 'role', 'cellDetails');
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
             }
         }
