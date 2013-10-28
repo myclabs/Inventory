@@ -231,11 +231,28 @@ class User extends Core_Model_Entity
     public function addRole(Role $role)
     {
         $this->roles->add($role);
+
+        // Update authorizations
+        foreach ($role->getAuthorizations() as $authorization) {
+            $this->authorizations->add($authorization);
+        }
     }
 
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
+        $this->updateAuthorizations();
+    }
+
+    public function updateAuthorizations()
+    {
+        $this->authorizations->clear();
+
+        foreach ($this->getRoles() as $role) {
+            foreach ($role->getAuthorizations() as $authorization) {
+                $this->authorizations->add($authorization);
+            }
+        }
     }
 
     /**

@@ -46,9 +46,6 @@ To create authorizations on a new resource, you need to create a new kind of aut
 ```php
 class ArticleAuthorization extends Authorization
 {
-    /**
-     * @var Article
-     */
     protected $article;
 
     public function __construct(User $user, Action $action, Article $article)

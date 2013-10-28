@@ -2,6 +2,7 @@
 
 namespace User\Domain\ACL\Authorization;
 
+use Core_Model_Query;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
 use User\Domain\User;
@@ -36,5 +37,16 @@ class UserAuthorization extends Authorization
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * @param User $resource
+     * @return self[]
+     */
+    public static function loadByResource(User $resource)
+    {
+        $query = new Core_Model_Query();
+        $query->filter->addCondition('resource', $resource);
+        return self::loadList($query);
     }
 }

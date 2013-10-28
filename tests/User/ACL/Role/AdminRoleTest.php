@@ -16,13 +16,13 @@ class AdminRoleTest extends Core_Test_TestCase
      * @Inject
      * @var UserService
      */
-    protected $userService;
+    private $userService;
 
     /**
      * @Inject
      * @var ACLService
      */
-    protected $aclService;
+    private $aclService;
 
     /**
      * @var User
@@ -47,12 +47,10 @@ class AdminRoleTest extends Core_Test_TestCase
         parent::setUp();
 
         $this->targetUser = $this->userService->createUser('target', 'target');
+        $this->entityManager->flush();
         $this->admin = $this->userService->createUser('admin', 'admin');
         $this->admin->addRole(new AdminRole($this->admin));
 
-        $this->entityManager->flush();
-
-        $this->aclService->rebuildAuthorizations();
         $this->entityManager->flush();
     }
 

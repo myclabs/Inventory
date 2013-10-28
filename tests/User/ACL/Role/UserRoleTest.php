@@ -15,13 +15,13 @@ class UserRoleTest extends Core_Test_TestCase
      * @Inject
      * @var UserService
      */
-    protected $userService;
+    private $userService;
 
     /**
      * @Inject
      * @var ACLService
      */
-    protected $aclService;
+    private $aclService;
 
     /**
      * @var User
@@ -48,9 +48,6 @@ class UserRoleTest extends Core_Test_TestCase
         $this->user = $this->userService->createUser('user', 'user');
         $this->otherUser = $this->userService->createUser('otherUser', 'otherUser');
 
-        $this->entityManager->flush();
-
-        $this->aclService->rebuildAuthorizations();
         $this->entityManager->flush();
     }
 

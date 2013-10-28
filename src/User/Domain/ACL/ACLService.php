@@ -87,9 +87,7 @@ class ACLService
         $users = User::loadList();
 
         foreach ($users as $user) {
-            foreach ($user->getRoles() as $role) {
-                $user->replaceAuthorizations($role->getAuthorizations());
-            }
+            $user->updateAuthorizations();
         }
     }
 

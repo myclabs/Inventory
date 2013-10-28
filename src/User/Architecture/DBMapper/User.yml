@@ -3,6 +3,9 @@ User\Domain\User:
   repositoryClass: \Core_Model_Repository
   table: User_User
 
+  entityListeners:
+      User\Domain\ACL\ResourceListener\UserListener:
+
   id:
     id:
       type: integer
