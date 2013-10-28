@@ -1,6 +1,6 @@
 <?php
 
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
 use User\Domain\ACL\Resource;
 use User\Domain\ACL\Resource\EntityResource;
@@ -173,7 +173,7 @@ class ACLFilterTest extends Core_Test_TestCase
             $this->entityManager->flush();
 
             // Création du privilège donnant l'accès à admin sur les préférences de tous les utilisateurs
-            $this->aclService->allow($this->roleAdmin, DefaultAction::VIEW(), $this->basicUsersResource);
+            $this->aclService->allow($this->roleAdmin, Action::VIEW(), $this->basicUsersResource);
 
             $this->entityManager->flush();
         } catch (Exception $e) {
@@ -199,7 +199,7 @@ class ACLFilterTest extends Core_Test_TestCase
         $query = new Core_Model_Query();
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $this->testAdmin;
-        $query->aclFilter->action = DefaultAction::VIEW();
+        $query->aclFilter->action = Action::VIEW();
         $this->assertCount(1, User::loadList($query));
     }
 
@@ -213,7 +213,7 @@ class ACLFilterTest extends Core_Test_TestCase
         $query = new Core_Model_Query();
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $this->testUser;
-        $query->aclFilter->action = DefaultAction::VIEW();
+        $query->aclFilter->action = Action::VIEW();
         $this->assertCount(0, User::loadList($query));
     }
 
@@ -227,7 +227,7 @@ class ACLFilterTest extends Core_Test_TestCase
         parent::tearDown();
         try {
             //Suppression des objets crées pour les tests
-            $this->aclService->disallow($this->roleAdmin, DefaultAction::VIEW(), $this->basicUsersResource);
+            $this->aclService->disallow($this->roleAdmin, Action::VIEW(), $this->basicUsersResource);
             if ($this->adminUsersResource) {
                 $this->adminUsersResource->delete();
             }

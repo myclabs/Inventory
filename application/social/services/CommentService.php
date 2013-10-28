@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
@@ -45,8 +45,8 @@ class Social_Service_CommentService
         $this->entityManager->flush();
 
         // Donne le droit à l'auteur de modifier et supprimer le commentaire
-        $this->aclService->allow($author, DefaultAction::EDIT(), $comment);
-        $this->aclService->allow($author, DefaultAction::DELETE(), $comment);
+        $this->aclService->allow($author, Action::EDIT(), $comment);
+        $this->aclService->allow($author, Action::DELETE(), $comment);
 
         $this->entityManager->flush();
         $this->entityManager->commit();
@@ -70,8 +70,8 @@ class Social_Service_CommentService
         $comment = Social_Model_Comment::load($id);
 
         // Supprime les droits
-        $this->aclService->disallow($comment->getAuthor(), DefaultAction::EDIT(), $comment);
-        $this->aclService->disallow($comment->getAuthor(), DefaultAction::DELETE(), $comment);
+        $this->aclService->disallow($comment->getAuthor(), Action::EDIT(), $comment);
+        $this->aclService->disallow($comment->getAuthor(), Action::DELETE(), $comment);
         $this->entityManager->flush();
 
         // Supprime la ressource

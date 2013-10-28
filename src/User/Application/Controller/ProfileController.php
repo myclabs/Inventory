@@ -7,7 +7,7 @@
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use User\Application\ForbiddenException;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
@@ -54,7 +54,7 @@ class User_ProfileController extends Core_Controller
         $resourceAllUsers = EntityResource::loadByEntityName(User::class);
         $this->view->canCreateUsers = $this->aclService->isAllowed(
             $loggedInUser,
-            DefaultAction::CREATE(),
+            Action::CREATE(),
             $resourceAllUsers
         );
     }
@@ -90,12 +90,12 @@ class User_ProfileController extends Core_Controller
         // Est-ce que l'utilisateur peut désactiver le compte
         $this->view->canDisable = $this->aclService->isAllowed(
             $loggedInUser,
-            DefaultAction::DELETE(),
+            Action::DELETE(),
             $user
         );
         $this->view->canEnable = $this->aclService->isAllowed(
             $loggedInUser,
-            DefaultAction::UNDELETE(),
+            Action::UNDELETE(),
             $user
         );
 

@@ -1,10 +1,10 @@
 <?php
-use User\Domain\ACL\Action\Action;
-
 /**
  * @author valentin.claras
  * @package Orga
  */
+
+use User\Domain\ACL\Action;
 
 /**
  * Actions pouvant être réalisées sur les ressources Referential.
@@ -37,7 +37,7 @@ class Orga_Action_Referential extends Action
             case self::TRANSLATE:
                 return __('UI', 'verb', 'translate');
         }
-        return '';
+        return parent::getLabel();
     }
 
 }

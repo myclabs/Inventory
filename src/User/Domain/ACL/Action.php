@@ -1,13 +1,16 @@
 <?php
 
-namespace User\Domain\ACL\Action;
+namespace User\Domain\ACL;
+
+use Core_Exception_InvalidArgument;
+use MyCLabs\Enum\Enum;
 
 /**
- * Actions standard pouvant être réalisées sur les ressources
+ * Actions pouvant être réalisées sur les ressources
  *
  * @author matthieu.napoli
  */
-class DefaultAction extends Action
+class Action extends Enum
 {
     /**
      * Consultation d'une ressource
@@ -41,7 +44,7 @@ class DefaultAction extends Action
 
 
     /**
-     * @return DefaultAction
+     * @return Action
      */
     public static function VIEW()
     {
@@ -49,7 +52,7 @@ class DefaultAction extends Action
     }
 
     /**
-     * @return DefaultAction
+     * @return Action
      */
     public static function CREATE()
     {
@@ -57,7 +60,7 @@ class DefaultAction extends Action
     }
 
     /**
-     * @return DefaultAction
+     * @return Action
      */
     public static function EDIT()
     {
@@ -65,7 +68,7 @@ class DefaultAction extends Action
     }
 
     /**
-     * @return DefaultAction
+     * @return Action
      */
     public static function DELETE()
     {
@@ -73,7 +76,7 @@ class DefaultAction extends Action
     }
 
     /**
-     * @return DefaultAction
+     * @return Action
      */
     public static function UNDELETE()
     {
@@ -81,7 +84,7 @@ class DefaultAction extends Action
     }
 
     /**
-     * @return DefaultAction
+     * @return Action
      */
     public static function ALLOW()
     {
@@ -108,5 +111,33 @@ class DefaultAction extends Action
                 return __('UI', 'verb', 'consult');
         }
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function exportToString()
+    {
+        // Représentation du genre Action::READ
+        return get_class($this) . '::' . $this->getValue();
+    }
+
+    /**
+     * @param string $str
+     * @throws Core_Exception_InvalidArgument
+     * @return Action
+     */
+    public static function importFromString($str)
+    {
+        if ($str === null) {
+            throw new Core_Exception_InvalidArgument("Unable to resolve ACL Action from null string");
+        }
+        $array = explode('::', $str, 2);
+        if (count($array) != 2) {
+            throw new Core_Exception_InvalidArgument("Unable to resolve ACL Action: $str");
+        }
+        $class = $array[0];
+        $enumValue = $array[1];
+        return new $class($enumValue);
     }
 }

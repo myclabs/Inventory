@@ -3,7 +3,7 @@
 namespace User\Domain\ACL;
 
 use Core_Model_Entity;
-use User\Domain\ACL\Action\Action;
+use User\Domain\ACL\Action;
 use User\Domain\User;
 
 /**

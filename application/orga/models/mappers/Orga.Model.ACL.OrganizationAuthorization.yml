@@ -1,0 +1,10 @@
+Orga\Model\ACL\OrganizationAuthorization:
+  type: entity
+  repositoryClass: Orga_Model_Repository_OrganizationAuthorizationRepository
+  table: ACL_Authorization_Orga
+
+  oneToOne:
+    resource:
+      targetEntity: \Orga_Model_Organization
+      joinColumn:
+        nullable: true

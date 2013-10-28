@@ -1,10 +1,10 @@
 User\Domain\ACL\Authorization\UserAuthorization:
   type: entity
-  repositoryClass: \Core_Model_Repository
+  repositoryClass: User\Architecture\Repository\UserAuthorizationRepository
   table: ACL_Authorization_User
 
-  oneToOne:
+  manyToOne:
     resource:
       targetEntity: User\Domain\User
       joinColumn:
-        nullable: false
+        nullable: true

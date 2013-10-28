@@ -10,6 +10,7 @@ User\Domain\ACL\Authorization:
   discriminatorMap:
     user: User\Domain\ACL\Authorization\UserAuthorization
     repository: User\Domain\ACL\Authorization\RepositoryAuthorization
+    organization: Orga\Model\ACL\OrganizationAuthorization
 
   id:
     id:

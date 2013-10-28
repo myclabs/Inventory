@@ -1,10 +1,10 @@
 <?php
-use User\Domain\ACL\Action\Action;
-
 /**
  * @author valentin.claras
  * @package Orga
  */
+
+use User\Domain\ACL\Action;
 
 /**
  * Actions pouvant être réalisées sur les ressources Report.
@@ -13,7 +13,6 @@ use User\Domain\ACL\Action\Action;
  */
 class Orga_Action_Report extends Action
 {
-
     /**
      * Éditer une ressource.
      */
@@ -37,7 +36,6 @@ class Orga_Action_Report extends Action
             case self::EDIT:
                 return __('UI', 'verb', 'edit');
         }
-        return '';
+        return parent::getLabel();
     }
-
 }

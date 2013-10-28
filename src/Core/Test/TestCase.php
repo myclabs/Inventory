@@ -1,12 +1,9 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Core
- */
 
 /**
- * Classe de test de base
- * @package Core
+ * Classe de test de base.
+ *
+ * @author matthieu.napoli
  */
 abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
 {
@@ -37,5 +34,18 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
         $container = Zend_Registry::get('container');
 
         return $container->get($name);
+    }
+
+    /**
+     * À utiliser uniquement dans des méthodes statiques.
+     *
+     * Évite de passer par Zend_Registry.
+     *
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected static function getEntityManager()
+    {
+        $entityManagers = Zend_Registry::get('EntityManagers');
+        return $entityManagers['default'];
     }
 }

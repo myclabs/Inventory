@@ -1,10 +1,10 @@
 <?php
-use User\Domain\ACL\Action\Action;
-
 /**
  * @author valentin.claras
  * @package Orga
  */
+
+use User\Domain\ACL\Action;
 
 /**
  * Actions pouvant être réalisées sur les ressources Cell.
@@ -13,7 +13,6 @@ use User\Domain\ACL\Action\Action;
  */
 class Orga_Action_Cell extends Action
 {
-
     /**
      * Commenter une ressource.
      */
@@ -52,7 +51,6 @@ class Orga_Action_Cell extends Action
             case self::INPUT:
                 return __('UI', 'verb', 'input');
         }
-        return '';
+        return parent::getLabel();
     }
-
 }

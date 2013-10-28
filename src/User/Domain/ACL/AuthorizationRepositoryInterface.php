@@ -2,7 +2,7 @@
 
 namespace User\Domain\ACL;
 
-use User\Domain\ACL\Action\Action;
+use User\Domain\ACL\Action;
 use User\Domain\User;
 
 interface AuthorizationRepositoryInterface
@@ -13,5 +13,5 @@ interface AuthorizationRepositoryInterface
      * @param mixed  $resource
      * @return bool Does the authorization exist
      */
-    public function exists(User $user, Action $action, $resource);
+    public function exists(User $user, Action $action, $resource = null);
 }

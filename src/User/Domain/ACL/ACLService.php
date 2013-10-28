@@ -5,7 +5,6 @@ namespace User\Domain\ACL;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use User\Domain\ACL\Action\Action;
 use User\Domain\User;
 
 /**

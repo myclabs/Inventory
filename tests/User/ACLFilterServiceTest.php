@@ -1,5 +1,5 @@
 <?php
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
 use User\Domain\ACL\Resource;
 use User\Domain\ACL\Resource\EntityResource;
@@ -100,14 +100,14 @@ class ACLFilterServiceTest extends Core_Test_TestCase
         // Fixtures
         $targetUser = $this->userService->createUser('target', 'target');
         $admin = $this->userService->createUser('admin', 'admin');
-        $this->aclService->allow($admin, DefaultAction::VIEW(), $targetUser);
+        $this->aclService->allow($admin, Action::VIEW(), $targetUser);
         $this->entityManager->flush();
 
         // 2 droits par utilisateur (VIEW et EDIT sur eux-même) + le droit qu'on a rajouté manuellement
         $this->assertEquals(2*2 + 1, $this->aclFilterService->getEntriesCount());
 
         // Fixtures
-        $this->aclService->disallow($admin, DefaultAction::VIEW(), $targetUser);
+        $this->aclService->disallow($admin, Action::VIEW(), $targetUser);
         $this->entityManager->flush();
         $this->userService->deleteUser($targetUser);
         $this->userService->deleteUser($admin);
@@ -125,7 +125,7 @@ class ACLFilterServiceTest extends Core_Test_TestCase
         $allUsersResource->setEntityName(User::class);
         $allUsersResource->save();
         $this->entityManager->flush();
-        $this->aclService->allow($admin, DefaultAction::VIEW(), $allUsersResource);
+        $this->aclService->allow($admin, Action::VIEW(), $allUsersResource);
         $this->entityManager->flush();
 
         // 2 droits par utilisateur (VIEW et EDIT sur eux-même)
@@ -138,7 +138,7 @@ class ACLFilterServiceTest extends Core_Test_TestCase
         $this->assertEquals(2*2+1, $this->aclFilterService->getEntriesCount());
 
         // Fixtures
-        $this->aclService->disallow($admin, DefaultAction::VIEW(), $allUsersResource);
+        $this->aclService->disallow($admin, Action::VIEW(), $allUsersResource);
         $this->entityManager->flush();
         $allUsersResource->delete();
         $this->userService->deleteUser($admin);

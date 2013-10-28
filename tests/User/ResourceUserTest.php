@@ -1,6 +1,6 @@
 <?php
 
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
 use User\Domain\ACL\Resource;
 use User\Domain\ACL\Resource\EntityResource;
@@ -142,7 +142,7 @@ class ResourceUserTest extends Core_Test_TestCase
             $this->entityManager->flush();
 
             // Création du privilège donnant l'accès à admin sur les préférences de tous les utilisateurs
-            $this->aclService->allow($this->roleAdmin, DefaultAction::VIEW(), $this->allUsersResource);
+            $this->aclService->allow($this->roleAdmin, Action::VIEW(), $this->allUsersResource);
 
             $this->entityManager->flush();
         } catch (Exception $e) {
@@ -187,7 +187,7 @@ class ResourceUserTest extends Core_Test_TestCase
      */
     public function testAnonymous()
     {
-        $access = $this->aclService->isAllowed($this->roleInvited, DefaultAction::VIEW(), $this->allUsersResource);
+        $access = $this->aclService->isAllowed($this->roleInvited, Action::VIEW(), $this->allUsersResource);
         $this->assertFalse($access);
     }
 
@@ -201,7 +201,7 @@ class ResourceUserTest extends Core_Test_TestCase
         $user2->save();
         $this->entityManager->flush();
 
-        $access = $this->aclService->isAllowed($user2, DefaultAction::VIEW(), $this->testUserResource);
+        $access = $this->aclService->isAllowed($user2, Action::VIEW(), $this->testUserResource);
         $this->assertFalse($access);
 
         UserTest::deleteObject($user2);
@@ -213,7 +213,7 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testAdminOnAllUsers()
     {
         // Accès aux préférences de tous les utilisateurs
-        $access = $this->aclService->isAllowed($this->roleAdmin, DefaultAction::VIEW(), $this->allUsersResource);
+        $access = $this->aclService->isAllowed($this->roleAdmin, Action::VIEW(), $this->allUsersResource);
         $this->assertTrue($access);
     }
 
@@ -223,7 +223,7 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testAdminOnSpecificUser()
     {
         // Accès aux préférences de l'utilisateur de test
-        $access = $this->aclService->isAllowed($this->roleAdmin, DefaultAction::VIEW(), $this->testUserResource);
+        $access = $this->aclService->isAllowed($this->roleAdmin, Action::VIEW(), $this->testUserResource);
         $this->assertTrue($access);
     }
 
@@ -233,7 +233,7 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testAdminOnAllBasicUsers()
     {
         // Accès aux préférences de l'utilisateur de test
-        $access = $this->aclService->isAllowed($this->roleAdmin, DefaultAction::VIEW(), $this->basicUsersResource);
+        $access = $this->aclService->isAllowed($this->roleAdmin, Action::VIEW(), $this->basicUsersResource);
         $this->assertTrue($access);
     }
 
@@ -244,16 +244,16 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testDroitsUtilisateursDeRole1()
     {
         // Création du privilège donnant l'accès à utilisateur sur les préférences des invités
-        $this->aclService->allow($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
+        $this->aclService->allow($this->roleBasic, Action::VIEW(), $this->invitedUsersResource);
         $this->entityManager->flush();
         // Accès aux préférences de tous les utilisateurs du role "Invité" pour un role "Utilisateur"
-        $access1 = $this->aclService->isAllowed($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
+        $access1 = $this->aclService->isAllowed($this->roleBasic, Action::VIEW(), $this->invitedUsersResource);
         // L'accès ne marche pas pour les préférences des "Utilisateurs"
-        $access2 = $this->aclService->isAllowed($this->roleBasic, DefaultAction::VIEW(), $this->basicUsersResource);
+        $access2 = $this->aclService->isAllowed($this->roleBasic, Action::VIEW(), $this->basicUsersResource);
         // L'accès ne marche pas pour les préférences des admins
-        $access3 = $this->aclService->isAllowed($this->roleBasic, DefaultAction::VIEW(), $this->adminUsersResource);
+        $access3 = $this->aclService->isAllowed($this->roleBasic, Action::VIEW(), $this->adminUsersResource);
         // Supprime le privilège
-        $this->aclService->disallow($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
+        $this->aclService->disallow($this->roleBasic, Action::VIEW(), $this->invitedUsersResource);
         $this->entityManager->flush();
         $this->assertTrue($access1);
         $this->assertFalse($access2);
@@ -268,7 +268,7 @@ class ResourceUserTest extends Core_Test_TestCase
     public function testDroitsUtilisateursDeRole2()
     {
         // Création du privilège donnant l'accès à utilisateur sur les préférences des invités
-        $this->aclService->allow($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
+        $this->aclService->allow($this->roleBasic, Action::VIEW(), $this->invitedUsersResource);
 
         // Crée un utilisateur "invité"
         $invitedUser = UserTest::generateObject();
@@ -282,9 +282,9 @@ class ResourceUserTest extends Core_Test_TestCase
         $this->entityManager->flush();
 
         // Accès aux préférences de l'utilisateur de test
-        $access = $this->aclService->isAllowed($this->roleBasic, DefaultAction::VIEW(), $invitedUserResource);
+        $access = $this->aclService->isAllowed($this->roleBasic, Action::VIEW(), $invitedUserResource);
 
-        $this->aclService->disallow($this->roleBasic, DefaultAction::VIEW(), $this->invitedUsersResource);
+        $this->aclService->disallow($this->roleBasic, Action::VIEW(), $this->invitedUsersResource);
         $invitedUserResource->delete();
         $invitedUser->delete();
         $this->entityManager->flush();
@@ -304,7 +304,7 @@ class ResourceUserTest extends Core_Test_TestCase
             $this->cacheService->enabled = false;
 
             //Suppression des objets crées pour les tests
-            $this->aclService->disallow($this->roleAdmin, DefaultAction::VIEW(), $this->allUsersResource);
+            $this->aclService->disallow($this->roleAdmin, Action::VIEW(), $this->allUsersResource);
             if ($this->adminUsersResource) {
                 $this->adminUsersResource->delete();
             }

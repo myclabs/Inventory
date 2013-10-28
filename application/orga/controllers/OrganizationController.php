@@ -10,7 +10,7 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
@@ -60,16 +60,16 @@ class Orga_OrganizationController extends Core_Controller
         $organizationResource = EntityResource::loadByEntityName(Orga_Model_Organization::class);
         $isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
-            DefaultAction::CREATE(),
+            Action::CREATE(),
             $organizationResource
         );
 
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = DefaultAction::DELETE();
+        $aclQuery->aclFilter->action = Action::DELETE();
         $isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
-        $aclQuery->aclFilter->action = DefaultAction::VIEW();
+        $aclQuery->aclFilter->action = Action::VIEW();
         $isConnectedUserAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
 
         $listCellResource = array();
@@ -119,14 +119,14 @@ class Orga_OrganizationController extends Core_Controller
         $organizationResource = EntityResource::loadByEntityName('Orga_Model_Organization');
         $this->view->isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
-            DefaultAction::CREATE(),
+            Action::CREATE(),
             $organizationResource
         );
 
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = DefaultAction::EDIT();
+        $aclQuery->aclFilter->action = Action::EDIT();
         $this->view->isConnectedUserAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
     }
 

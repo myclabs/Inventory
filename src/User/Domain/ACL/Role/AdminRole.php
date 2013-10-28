@@ -2,9 +2,9 @@
 
 namespace User\Domain\ACL\Role;
 
-use Orga\ACL\Authorization\OrganizationAuthorization;
+use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Model_Organization;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization\RepositoryAuthorization;
 use User\Domain\ACL\Authorization\UserAuthorization;
 use User\Domain\ACL\Role;
@@ -25,7 +25,7 @@ class AdminRole extends Role
         $authorizations = [];
 
         // Admin can create new users
-        $authorizations[] = new UserAuthorization($this->user, DefaultAction::CREATE());
+        $authorizations[] = new UserAuthorization($this->user, Action::CREATE());
 
         // Admin can view, edit, delete, undelete, allow everyone except himself
         /** @var User[] $allUsers */
@@ -34,27 +34,27 @@ class AdminRole extends Role
             if ($target === $this->user) {
                 continue;
             }
-            $authorizations[] = new UserAuthorization($this->user, DefaultAction::VIEW(), $target);
-            $authorizations[] = new UserAuthorization($this->user, DefaultAction::EDIT(), $target);
-            $authorizations[] = new UserAuthorization($this->user, DefaultAction::DELETE(), $target);
-            $authorizations[] = new UserAuthorization($this->user, DefaultAction::UNDELETE(), $target);
-            $authorizations[] = new UserAuthorization($this->user, DefaultAction::ALLOW(), $target);
+            $authorizations[] = new UserAuthorization($this->user, Action::VIEW(), $target);
+            $authorizations[] = new UserAuthorization($this->user, Action::EDIT(), $target);
+            $authorizations[] = new UserAuthorization($this->user, Action::DELETE(), $target);
+            $authorizations[] = new UserAuthorization($this->user, Action::UNDELETE(), $target);
+            $authorizations[] = new UserAuthorization($this->user, Action::ALLOW(), $target);
         }
 
         // Admin can edit the repository
-        $authorizations[] = new RepositoryAuthorization($this->user, DefaultAction::EDIT());
+        $authorizations[] = new RepositoryAuthorization($this->user, Action::EDIT());
 
         // Admin can create new organizations
-        $authorizations[] = new OrganizationAuthorization($this->user, DefaultAction::CREATE());
+        $authorizations[] = new OrganizationAuthorization($this->user, Action::CREATE());
 
         // Admin can view, edit, delete, allow on all organizations
         /** @var Orga_Model_Organization[] $organizations */
         $organizations = Orga_Model_Organization::loadList();
         foreach ($organizations as $organization) {
-            $authorizations[] = new OrganizationAuthorization($this->user, DefaultAction::VIEW(), $organization);
-            $authorizations[] = new OrganizationAuthorization($this->user, DefaultAction::EDIT(), $organization);
-            $authorizations[] = new OrganizationAuthorization($this->user, DefaultAction::DELETE(), $organization);
-            $authorizations[] = new OrganizationAuthorization($this->user, DefaultAction::ALLOW(), $organization);
+            $authorizations[] = new OrganizationAuthorization($this->user, Action::VIEW(), $organization);
+            $authorizations[] = new OrganizationAuthorization($this->user, Action::EDIT(), $organization);
+            $authorizations[] = new OrganizationAuthorization($this->user, Action::DELETE(), $organization);
+            $authorizations[] = new OrganizationAuthorization($this->user, Action::ALLOW(), $organization);
         }
 
         return $authorizations;

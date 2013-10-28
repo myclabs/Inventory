@@ -1,6 +1,6 @@
 <?php
 
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
 use User\Domain\ACL\Resource;
 use User\Domain\ACL\Role;
@@ -30,7 +30,7 @@ class AuthorizationTest
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $o = new Authorization($role, DefaultAction::VIEW(), $resource);
+        $o = new Authorization($role, Action::VIEW(), $resource);
         $o->save();
 
         $entityManagers = Zend_Registry::get('EntityManagers');
@@ -104,9 +104,9 @@ class AuthorizationSetUpTest extends Core_Test_TestCase
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $o = new Authorization($role, DefaultAction::VIEW(), $resource);
+        $o = new Authorization($role, Action::VIEW(), $resource);
 
-        $this->assertEquals(DefaultAction::VIEW(), $o->getAction());
+        $this->assertEquals(Action::VIEW(), $o->getAction());
         $this->assertSame($resource, $o->getResource());
         $this->assertSame($role, $o->getUser());
 
@@ -231,7 +231,7 @@ class AuthorizationMetierTest extends Core_Test_TestCase
 
         $o = Authorization::search(
             $authorization->getUser(),
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $authorization->getResource()
         );
         $this->assertNull($o);

@@ -11,7 +11,7 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\ACLService;
 
@@ -87,7 +87,7 @@ class Orga_CellController extends Core_Controller
         foreach ($cell->getParentCells() as $parentCell) {
             $isUserAllowedToViewParentCell = $this->aclService->isAllowed(
                 $connectedUser,
-                DefaultAction::VIEW(),
+                Action::VIEW(),
                 $parentCell
             );
             if (!$isUserAllowedToViewParentCell) {
@@ -99,12 +99,12 @@ class Orga_CellController extends Core_Controller
         // TAB ORGA.
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $organization
         );
         $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $cell
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && $granularity->getCellsWithOrgaTab()) {
@@ -123,7 +123,7 @@ class Orga_CellController extends Core_Controller
         // TAB ACL
         $isUserAllowedToAllowAuthorizations = $this->aclService->isAllowed(
             $connectedUser,
-            DefaultAction::ALLOW(),
+            Action::ALLOW(),
             $cell
         );
         if (($isUserAllowedToAllowAuthorizations === true) && ($granularity->getCellsWithACL() === false)) {

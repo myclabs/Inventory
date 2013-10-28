@@ -7,7 +7,7 @@
  */
 
 use Core\Annotation\Secure;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 
 /**
  * Classe du controller du datagrid des traductions des organizations.
@@ -34,7 +34,7 @@ class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Data
     {
         $this->request->aclFilter->enabled = true;
         $this->request->aclFilter->user = $this->_helper->auth();
-        $this->request->aclFilter->action = DefaultAction::VIEW();
+        $this->request->aclFilter->action = Action::VIEW();
 
         foreach (Orga_Model_Organization::loadList($this->request) as $organization) {
             $data = array();

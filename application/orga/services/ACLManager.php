@@ -5,7 +5,7 @@
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;

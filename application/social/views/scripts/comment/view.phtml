@@ -1,12 +1,12 @@
 <?php
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 
 /** @var $comment Social_Model_Comment */
 $comment = $this->comment;
 $locale = Core_Locale::loadDefault();
 
-$canEdit = $this->isAllowed(DefaultAction::EDIT(), $comment);
-$canDelete = $this->isAllowed(DefaultAction::DELETE(), $comment);
+$canEdit = $this->isAllowed(Action::EDIT(), $comment);
+$canDelete = $this->isAllowed(Action::DELETE(), $comment);
 ?>
 
 <blockquote id="comment<?=$comment->getId()?>" data-comment-id="<?=$comment->getId()?>">

@@ -1,5 +1,5 @@
 <?php
-use User\Domain\ACL\Action\Action;
+use User\Domain\ACL\Action;
 use User\Domain\User;
 
 /**
@@ -36,7 +36,7 @@ class Core_Model_AclFilter
     /**
      * Action demandée sur la ressource
      *
-     * @var Action|null
+     * @var \User\Domain\ACL\Action|null
      */
     public $action = null;
 

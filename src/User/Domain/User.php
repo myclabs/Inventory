@@ -472,4 +472,12 @@ class User extends Core_Model_Entity
     {
         return md5($password);
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

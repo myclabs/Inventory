@@ -34,7 +34,7 @@ $user->addRole(new CellAdministrator($user, $cell));
 Test access rights:
 
 ```php
-$userService->isAllowed($user, DefaultAction::EDIT(), $resource);
+$userService->isAllowed($user, Action::EDIT(), $resource);
 ```
 
 ### Extending
@@ -78,8 +78,8 @@ class ArticleEditorRole extends Role
     public function getAuthorizations()
     {
         return [
-            new ArticleAuthorization($this->user, DefaultAction::VIEW(), $this->article),
-            new ArticleAuthorization($this->user, DefaultAction::EDIT(), $this->article),
+            new ArticleAuthorization($this->user, Action::VIEW(), $this->article),
+            new ArticleAuthorization($this->user, Action::EDIT(), $this->article),
         ];
     }
 }

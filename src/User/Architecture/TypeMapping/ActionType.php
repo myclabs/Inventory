@@ -5,7 +5,7 @@ namespace User\Architecture\TypeMapping;
 use Core_Exception_InvalidArgument;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use User\Domain\ACL\Action\Action;
+use User\Domain\ACL\Action;
 
 /**
  * Mapping d'un objet Action en champ de BDD.
@@ -48,7 +48,7 @@ class ActionType extends Type
      * @param string           $value
      * @param AbstractPlatform $platform
      * @throws Core_Exception_InvalidArgument
-     * @return Action
+     * @return \User\Domain\ACL\Action
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

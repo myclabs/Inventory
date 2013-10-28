@@ -1,9 +1,9 @@
 <?php
 
-namespace Orga\ACL\Authorization;
+namespace Orga\Model\ACL;
 
 use Orga_Model_Organization;
-use User\Domain\ACL\Action\Action;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
 use User\Domain\User;
 

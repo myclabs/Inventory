@@ -1,5 +1,5 @@
 <?php
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
 use User\Domain\ACL\Resource;
 use User\Domain\ACL\ACLService;
@@ -54,7 +54,7 @@ class ResourceTest extends Core_Test_TestCase
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $authorization = $this->aclService->allow($role, DefaultAction::VIEW(), $resource);
+        $authorization = $this->aclService->allow($role, Action::VIEW(), $resource);
         $this->entityManager->flush();
 
         $authorizations = $resource->getDirectAuthorizations();
@@ -74,7 +74,7 @@ class ResourceTest extends Core_Test_TestCase
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $this->aclService->allow($role, DefaultAction::VIEW(), $resource);
+        $this->aclService->allow($role, Action::VIEW(), $resource);
         $this->entityManager->flush();
 
         $identities = $resource->getLinkedSecurityIdentities();
@@ -93,8 +93,8 @@ class ResourceTest extends Core_Test_TestCase
         $resource = ResourceNamedTest::generateObject();
         $role = RoleTest::generateObject();
 
-        $this->aclService->allow($role, DefaultAction::VIEW(), $resource);
-        $this->aclService->allow($role, DefaultAction::EDIT(), $resource);
+        $this->aclService->allow($role, Action::VIEW(), $resource);
+        $this->aclService->allow($role, Action::EDIT(), $resource);
         $this->entityManager->flush();
 
         $identities = $resource->getLinkedSecurityIdentities();

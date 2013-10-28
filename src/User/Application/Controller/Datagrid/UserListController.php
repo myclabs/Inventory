@@ -6,7 +6,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
@@ -44,7 +44,7 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
         $loggedInUser = $this->_helper->auth();
 
         foreach ($users as $user) {
-            $action = DefaultAction::EDIT();
+            $action = Action::EDIT();
 
             $data = [];
             $data['index'] = $user->getId();

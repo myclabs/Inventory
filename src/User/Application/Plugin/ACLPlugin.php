@@ -2,7 +2,7 @@
 
 namespace User\Application\Plugin;
 
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\SecurityIdentity;
 use User\Domain\User;
@@ -24,7 +24,7 @@ class ACLPlugin extends AbstractACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::CREATE(),
+            Action::CREATE(),
             EntityResource::loadByEntityName(User::class)
         );
     }
@@ -42,7 +42,7 @@ class ACLPlugin extends AbstractACLPlugin
         } else {
             $user = $identity;
         }
-        return $this->aclService->isAllowed($identity, DefaultAction::EDIT(), $user);
+        return $this->aclService->isAllowed($identity, Action::EDIT(), $user);
     }
 
     /**
@@ -53,7 +53,7 @@ class ACLPlugin extends AbstractACLPlugin
     public function disableUserRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $user = User::load($request->getParam('id'));
-        return $this->aclService->isAllowed($identity, DefaultAction::DELETE(), $user);
+        return $this->aclService->isAllowed($identity, Action::DELETE(), $user);
     }
 
     /**
@@ -64,7 +64,7 @@ class ACLPlugin extends AbstractACLPlugin
     public function enableUserRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $user = User::load($request->getParam('id'));
-        return $this->aclService->isAllowed($identity, DefaultAction::UNDELETE(), $user);
+        return $this->aclService->isAllowed($identity, Action::UNDELETE(), $user);
     }
 
     /**
@@ -75,6 +75,6 @@ class ACLPlugin extends AbstractACLPlugin
     public function viewAllUsersRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         $resource = EntityResource::loadByEntityName(User::class);
-        return $this->aclService->isAllowed($identity, DefaultAction::VIEW(), $resource);
+        return $this->aclService->isAllowed($identity, Action::VIEW(), $resource);
     }
 }

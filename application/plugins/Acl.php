@@ -8,7 +8,7 @@
 use Doc\Domain\Library;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\SecurityIdentity;
@@ -37,7 +37,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
-        $aclQuery->aclFilter->action = DefaultAction::VIEW();
+        $aclQuery->aclFilter->action = Action::VIEW();
         $isIdentityAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
         if ($isIdentityAbleToSeeManyOrganizations) {
             return true;
@@ -57,7 +57,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
         $isIdentityAbleToCreateOrganizations = $this->aclService->isAllowed(
             $identity,
-            DefaultAction::CREATE(),
+            Action::CREATE(),
             $organizationResource
         );
         if ($isIdentityAbleToCreateOrganizations) {
@@ -67,7 +67,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
-        $aclQuery->aclFilter->action = DefaultAction::EDIT();
+        $aclQuery->aclFilter->action = Action::EDIT();
         $isIdentityAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
         if ($isIdentityAbleToEditOrganizations) {
             return true;
@@ -85,7 +85,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::CREATE(),
+            Action::CREATE(),
             EntityResource::loadByEntityName(Orga_Model_Organization::class)
         );
     }
@@ -99,7 +99,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::VIEW(),
+            Action::VIEW(),
             $this->getOrganization($request)
         );
     }
@@ -113,7 +113,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $this->getOrganization($request)
         );
     }
@@ -127,7 +127,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::DELETE(),
+            Action::DELETE(),
             $this->getOrganization($request)
         );
     }
@@ -176,7 +176,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
             $this->editOrganizationRule($identity, $request)
             || $this->aclService->isAllowed(
                 $identity,
-                DefaultAction::EDIT(),
+                Action::EDIT(),
                 Orga_Model_Cell::load($request->getParam('idCell'))
             )
         );
@@ -191,7 +191,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::VIEW(),
+            Action::VIEW(),
             $this->getCell($request)
         );
     }
@@ -205,7 +205,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $this->getCell($request)
         );
     }
@@ -219,7 +219,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::ALLOW(),
+            Action::ALLOW(),
             Orga_Model_Cell::load($request->getParam('idCell'))
         );
     }
@@ -263,7 +263,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $comment
         );
     }
@@ -279,7 +279,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::DELETE(),
+            Action::DELETE(),
             $comment
         );
     }
@@ -348,7 +348,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         if ($idReport !== null) {
             $isAllowed = $this->aclService->isAllowed(
                 $identity,
-                DefaultAction::VIEW(),
+                Action::VIEW(),
                 EntityResource::loadByEntity(DW_Model_Report::load($idReport))
             );
             if ($isAllowed) {
@@ -415,7 +415,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $idReport = $request->getParam('index');
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::DELETE(),
+            Action::DELETE(),
             EntityResource::loadByEntity(DW_Model_Report::load($idReport))
         );
     }
@@ -607,7 +607,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::VIEW(),
+            Action::VIEW(),
             NamedResource::loadByName('referential')
         );
     }
@@ -621,7 +621,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             NamedResource::loadByName('referential')
         );
     }

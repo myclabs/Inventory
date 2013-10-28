@@ -9,7 +9,7 @@ use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use User\Domain\ACL\Action\DefaultAction;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\Role;
 use User\Domain\ACL\ACLService;
@@ -64,12 +64,12 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->view->idOrganization = $organization->getId();
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $organization
         );
         $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $cell
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && ($granularity->getRef() === 'global')) {
@@ -112,7 +112,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         if (count($granularity->getAxes()) === 0) {
             $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                DefaultAction::EDIT(),
+                Action::EDIT(),
                 $organizationResource
             );
         } else {
@@ -448,7 +448,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate($cell);
         $this->view->dWCubesCanBeReset = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $cell
         );
 
@@ -495,7 +495,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
         $reportCanBeSaveAs = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            DefaultAction::VIEW(),
+            Action::VIEW(),
             EntityResource::loadByEntity($cell)
         );
         $viewConfiguration = new DW_ViewConfiguration();
@@ -532,7 +532,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            DefaultAction::EDIT(),
+            Action::EDIT(),
             $organization
         );
 

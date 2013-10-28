@@ -2,7 +2,7 @@
 
 namespace User\Domain\ACL\Authorization;
 
-use User\Domain\ACL\Action\Action;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
 use User\Domain\User;
 
