@@ -125,6 +125,9 @@ class Orga_OrganizationController extends Core_Controller
             $viewModel = new OrganizationViewModel();
             $viewModel->id = $organization->getId();
             $viewModel->label = $organization->getLabel();
+            if ($viewModel->label == '') {
+                $viewModel->label = __('Orga', 'navigation', 'defaultOrganizationLabel');
+            }
             $viewModel->rootAxesLabels = array_map(
                 function (Orga_Model_Axis $axis) {
                     return $axis->getLabel();
