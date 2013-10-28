@@ -4,6 +4,35 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <!-- Boutons de diagnostic du caractère à jour ou non du DW -->
+
+       <tu tuid="celldWCubesState">
+            <tuv xml:lang="fr">
+                <seg>Tester si la structure des données d'analyse est à jour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Test whether or not analysis data are up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellDWCubesUpToDate">
+            <tuv xml:lang="fr">
+                <seg>La structure des données d'analyse est à jour</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data structure is up to date</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellDWCubesOutDated">
+            <tuv xml:lang="fr">
+                <seg>La structure des données d'analyse n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data structure is not up to date. Please press this button again if you want to update it.</seg>
+            </tuv>
+        </tu>
+
+        dWCubesState
+
         <!-- Exports PDF composés -->
         
         <tu tuid="specificPDFExports">
