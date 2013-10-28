@@ -41,18 +41,18 @@
 
         <tu tuid="hideNavigationPanel">
             <tuv xml:lang="fr">
-                <seg>Navigation</seg>
+                <seg> </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Navigation</seg>
+                <seg> </seg>
             </tuv>
         </tu>
         <tu tuid="displayNavigationPanel">
             <tuv xml:lang="fr">
-                <seg>Navigation</seg>
+                <seg>Explorer l\'organisation</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Navigation</seg>
+                <seg>Browse organization</seg>
             </tuv>
         </tu>
 

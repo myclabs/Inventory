@@ -1,4 +1,4 @@
-#navigationClose { width: 250px; height:35px; margin-left: 25px; margin-right: -225px; cursor: pointer; font-style: italic; font-size: large; }
+#navigationClose { width: 250px; height:35px; margin-left: 25px; margin-right: -225px; cursor: pointer; font-size: large; }
 #navigationClose i { margin-top: 8px; }
 #navigationClose { transform-origin: 0px 0px; transform: rotate(90deg); }
 
