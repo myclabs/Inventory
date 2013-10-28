@@ -28,5 +28,24 @@
             </tuv>
         </tu>
 
+        <!-- Afficher / masquer volet de navigation -->
+
+        <tu tuid="hideNavigationPanel">
+            <tuv xml:lang="fr">
+                <seg>Navigation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Navigation</seg>
+            </tuv>
+        </tu>
+        <tu tuid="displayNavigationPanel">
+            <tuv xml:lang="fr">
+                <seg>Navigation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Navigation</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

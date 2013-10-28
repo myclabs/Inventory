@@ -11,7 +11,7 @@
         </div>
         <div id="navigationClose" class="span">
             <i class="icon-arrow-down"></i>
-            <span><?=__('UI', 'verb', 'hide')?></span>
+            <span><?=__('Orga', 'navigation', 'hideNavigationPanel')?></span>
             <i class="icon-arrow-down"></i>
         </div>
     <? endif; ?>
@@ -31,12 +31,12 @@
             $(this).find('i')
                 .removeClass('icon-arrow-up')
                 .addClass('icon-arrow-down');
-            $(this).find('span').html('<?=__('UI', 'verb', 'hide')?>');
+            $(this).find('span').html('<?=__('Orga', 'navigation', 'hideNavigationPanel')?>');
         } else {
             $(this).find('i')
                 .removeClass('icon-arrow-down')
                 .addClass('icon-arrow-up');
-            $(this).find('span').html('<?=__('UI', 'verb', 'display')?>');
+            $(this).find('span').html('<?=__('Orga', 'navigation', 'displayNavigationPanel')?>');
         }
         navigationPanel.animate({width: "toggle"}, 50);
     });
