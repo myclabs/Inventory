@@ -271,6 +271,16 @@ class Orga_CellController extends Core_Controller
         $this->view->tabView->addTab($historyTab);
 
 
+        // TAB COMMENTAIRES
+        $commentsTab = new UI_Tab('comments');
+        if ($tab === 'comments') {
+            $commentsTab->active = true;
+        }
+        $commentsTab->label = __('Social', 'comment', 'comments');
+        $commentsTab->dataSource = 'orga/tab_celldetails/comments?idCell=' . $idCell;
+        $this->view->tabView->addTab($commentsTab);
+
+
         // TAB ADMINISTRATION
         if ($isUserAllowedToEditOrganization) {
             $administrationTab = new UI_Tab('administration');
