@@ -1,13 +1,22 @@
 <?php
 
 use Core\Autoloader;
+use DI\Container;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Keyword\Application\Service\KeywordService;
+use Orga\Model\ACL\CellAuthorization;
+use Orga\Model\ACL\OrganizationAuthorization;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
 use User\Application\Plugin\ACLPlugin;
 use User\Application\ViewHelper\IsAllowedHelper;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Authorization\RepositoryAuthorization;
+use User\Domain\ACL\Authorization\UserAuthorization;
+use User\Domain\User;
 
 /**
  * Application bootstrap
@@ -182,4 +191,35 @@ class Bootstrap extends Core_Bootstrap
         $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }
 
+    protected function _initAuthorizationRepositories()
+    {
+        $this->container->set(
+            ACLService::class,
+            function (Container $c) {
+                /** @var EntityManager $em */
+                $em = $c->get(EntityManager::class);
+
+                $aclService = new ACLService($em, $c->get(LoggerInterface::class));
+
+                $aclService->setAuthorizationRepository(
+                    User::class,
+                    $em->getRepository(UserAuthorization::class)
+                );
+                $aclService->setAuthorizationRepository(
+                    'repository',
+                    $em->getRepository(RepositoryAuthorization::class)
+                );
+                $aclService->setAuthorizationRepository(
+                    Orga_Model_Organization::class,
+                    $em->getRepository(OrganizationAuthorization::class)
+                );
+                $aclService->setAuthorizationRepository(
+                    Orga_Model_Cell::class,
+                    $em->getRepository(CellAuthorization::class)
+                );
+
+                return $aclService;
+            }
+        );
+    }
 }

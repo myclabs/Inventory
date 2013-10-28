@@ -57,6 +57,24 @@ class ArticleAuthorization extends Authorization
 }
 ```
 
+the authorization repository:
+
+```php
+class ArticleAuthorizationRepository implements AuthorizationRepositoryInterface
+{
+    public function exists(User $user, Action $action, $article = null)
+    {
+        ...
+    }
+}
+```
+
+and link it to the resource:
+
+```php
+$aclService->setAuthorizationRepository(Article::class, $em->getRepository(ArticleAuthorization::class));
+```
+
 #### Creating a new role
 
 To create a new role, extend the `Role` abstract class:

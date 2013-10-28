@@ -1,6 +1,6 @@
 Orga\Model\ACL\CellAuthorization:
   type: entity
-  repositoryClass: Orga_Model_Repository_CellAuthorizationRepository
+  repositoryClass: Orga\Model\Repository\CellAuthorizationRepository
   table: Orga_ACL_Authorization_Cell
 
   oneToOne:
