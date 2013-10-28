@@ -126,12 +126,11 @@ class Orga_OrganizationController extends Core_Controller
         $organizations = Orga_Model_Organization::loadList($query);
 
         // Crée les ViewModel
-        $organizationsVM = array_map(
-            function (Orga_Model_Organization $organization) use ($connectedUser) {
-                return $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
-            },
-            $organizations
-        );
+        $organizationsVM = [];
+        foreach ($organizations as $organization) {
+            $vm = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
+            $organizationsVM[] = $vm;
+        }
         $this->view->assign('organizations', $organizationsVM);
 
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
