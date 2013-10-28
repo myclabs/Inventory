@@ -1,49 +1,39 @@
 <?php
+
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
+use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
 use User\Domain\UserService;
 
-/**
- * Class Orga_Test_ACLTest
- * @author valentin.claras
- * @package    Orga
- * @subpackage Test
- */
-
-
-/**
- * Creation de la suite de test sur les ACL.
- * @package    Orga
- * @subpackage Test
- */
 class Orga_Test_ACLTest
 {
-    /**
-     * Creation de la suite de test
-     */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
 //        $suite->addTestSuite('Orga_Test_ACL');
         return $suite;
     }
-
 }
 
 /**
- * Test des ACL ser l'organization.
- * @package Orga
- * @subpackage Test
+ * Test des ACL dans Orga.
+ *
+ * @author valentin.claras
  */
 class Orga_Test_ACL extends Core_Test_TestCase
 {
     /**
+     * @Inject
      * @var UserService
      */
     protected $userService;
 
     /**
+     * @Inject
      * @var ACLService
      */
     protected $aclService;
@@ -234,104 +224,51 @@ class Orga_Test_ACL extends Core_Test_TestCase
     protected $berlinCellObserver;
 
 
-    /**
-     * Fonction appelee une fois, avant tous les tests
-     */
     public static function setUpBeforeClass()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
 
-        /** @var Orga_Service_ACLManager $aclManagerService */
-        $aclManagerService = $container->get('Orga_Service_ACLManager');
-        $entityManager->getEventManager()->addEventListener(
-            [Doctrine\ORM\Events::onFlush, Doctrine\ORM\Events::postFlush],
-            $aclManagerService
-        );
         /** @var Core_EventDispatcher $eventDispatcher */
         $eventDispatcher = $container->get('Core_EventDispatcher');
         $eventDispatcher->addListener('Orga_Model_GranularityReport', 'DW_Model_Report');
 
-        // Vérification qu'il ne reste aucun User en base, sinon suppression !
-        if (User::countTotal() > 0) {
-            echo PHP_EOL . 'Des User_User restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (User::loadList() as $user) {
-                $user->delete();
-            }
-            $entityManager->flush();
+        foreach (User::loadList() as $user) {
+            $user->delete();
         }
-
-        // Vérification qu'il ne reste aucun Orga_Model_Cell en base, sinon suppression !
-        if (Orga_Model_Cell::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Cell restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Cell::loadList() as $cell) {
-                $cell->delete();
-            }
-            $entityManager->flush();
+        self::getEntityManager()->flush();
+        foreach (Orga_Model_Cell::loadList() as $cell) {
+            $cell->delete();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Granularity en base, sinon suppression !
-        if (Orga_Model_Granularity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Granularity restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Granularity::loadList() as $granularity) {
-                $granularity->delete();
-            }
-            $entityManager->flush();
+        self::getEntityManager()->flush();
+        foreach (Orga_Model_Granularity::loadList() as $granularity) {
+            $granularity->delete();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Member en base, sinon suppression !
-        if (Orga_Model_Member::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Member restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Member::loadList() as $member) {
-                $member->delete();
-            }
-            $entityManager->flush();
+        self::getEntityManager()->flush();
+        foreach (Orga_Model_Member::loadList() as $member) {
+            $member->delete();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Axis en base, sinon suppression !
-        if (Orga_Model_Axis::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Axis::loadList() as $axis) {
-                $axis->delete();
-            }
-            $entityManager->flush();
+        self::getEntityManager()->flush();
+        foreach (Orga_Model_Axis::loadList() as $axis) {
+            $axis->delete();
         }
-        // Vérification qu'il ne reste aucun Orga_Model_Organization en base, sinon suppression !
-        if (Orga_Model_Organization::countTotal() > 0) {
-            echo PHP_EOL . 'Des Orga_Organization restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Orga_Model_Organization::loadList() as $organization) {
-                $organization->delete();
-            }
-            $entityManager->flush();
+        self::getEntityManager()->flush();
+        foreach (Orga_Model_Organization::loadList() as $organization) {
+            $organization->delete();
         }
+        self::getEntityManager()->flush();
     }
 
-    /**
-     * Fonction appelee avant chaque test
-     */
     public function setUp()
     {
+        $this->markTestSkipped('TODO');
         parent::setUp();
-
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = $entityManagers['default'];
-
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
-
-        /** @var Orga_Service_ACLManager $aclManagerService */
-        $aclManagerService = $container->get(Orga_Service_ACLManager::class);
-        $this->userService = $container->get(UserService::class);
-        $this->aclService = $container->get(ACLService::class);
-
 
         // Création de l'organization (proche de populateTest au 08/08/2013).
         $this->organization = new Orga_Model_Organization();
         $this->organization->setLabel('ACL Test');
 
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         // Création d'un ensemble d'axes.
 
@@ -475,51 +412,63 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         // Sauvegarde.
         $this->organization->save();
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         // Ajout d'utilisateurs.
 
         // Ajout d'un utilisateur administrateur de l'administration.
         $this->organizationAdministrator= $this->userService->createUser('organizationAdministrator', 'organizationAdministrator');
-        $aclManagerService->addOrganizationAdministrator($this->organization, $this->organizationAdministrator, false);
+        $this->organizationAdministrator->addRole(
+            new OrganizationAdminRole($this->organizationAdministrator, $this->organization)
+        );
 
         // Ajout d'un administrateur de cellule globale.
         $this->globaleCellAdministrator = $this->userService->createUser('globalAdministrator', 'globalAdministrator');
-        $aclManagerService->addCellAdministrator(
-            $this->granularityGlobale->getCellByMembers([]), $this->globaleCellAdministrator, false
+        $this->globaleCellAdministrator->addRole(
+            new CellAdminRole($this->globaleCellAdministrator, $this->granularityGlobale->getCellByMembers([]))
         );
 
         // Ajout d'un contributeur de cellule zone marque.
         $this->europeaCellContributor = $this->userService->createUser('europeaContributor', 'europeaContributor');
-        $aclManagerService->addCellContributor(
-            $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueA]), $this->europeaCellContributor, 'contributor'
+        $this->europeaCellContributor->addRole(
+            new CellContributorRole($this->europeaCellContributor, $this->granularityZoneMarque->getCellByMembers(
+                [$this->memberZoneEurope, $this->memberMarqueA]
+            ))
         );
 
         // Ajout d'un observatur de cellule zone marque.
         $this->sudameriquebCellObserver = $this->userService->createUser('sudameriquebObserver', 'sudameriquebObserver');
-        $aclManagerService->addCellObserver(
-            $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]), $this->sudameriquebCellObserver, 'observer'
+        $this->sudameriquebCellObserver->addRole(
+            new CellObserverRole($this->sudameriquebCellObserver, $this->granularityZoneMarque->getCellByMembers(
+                [$this->memberZoneSudamerique, $this->memberMarqueB]
+            ))
         );
 
         // Ajout d'un administrateur de cellule site.
         $this->annecyCellAdministrator = $this->userService->createUser('annecyAdministrator', 'annecyAdministrator');
-        $aclManagerService->addCellAdministrator(
-            $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]), $this->annecyCellAdministrator, 'administrator'
+        $this->annecyCellAdministrator->addRole(
+            new CellAdminRole($this->annecyCellAdministrator, $this->granularitySite->getCellByMembers(
+                [$this->memberSiteAnnecy]
+            ))
         );
 
         // Ajout d'un contributeur de cellule site.
         $this->limaCellContributor = $this->userService->createUser('limaContributor', 'limaContributor');
-        $aclManagerService->addCellContributor(
-            $this->granularitySite->getCellByMembers([$this->memberSiteLima]), $this->limaCellContributor, 'contributor'
+        $this->limaCellContributor->addRole(
+            new CellContributorRole($this->limaCellContributor, $this->granularitySite->getCellByMembers(
+                [$this->memberSiteLima]
+            ))
         );
 
         // Ajout d'un observateur de cellule site.
         $this->berlinCellObserver = $this->userService->createUser('berlinObserver', 'berlinObserver');
-        $aclManagerService->addCellObserver(
-            $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]), $this->berlinCellObserver, 'observer'
+        $this->berlinCellObserver->addRole(
+            new CellObserverRole($this->berlinCellObserver, $this->granularitySite->getCellByMembers(
+                [$this->memberSiteBerlin]
+            ))
         );
 
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         // Ajout des rapports préconfigurés.
 
@@ -529,7 +478,7 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         $this->organization->save();
 
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         $reportGlobale = new DW_Model_Report($this->granularityGlobale->getDWCube());
         $reportGlobale->setLabel('Test Globale');
@@ -543,7 +492,7 @@ class Orga_Test_ACL extends Core_Test_TestCase
         $reportSite->setLabel('Test Site');
         $reportSite->save();
 
-        $entityManager->flush();
+        $this->entityManager->flush();
     }
 
     /**
@@ -6356,16 +6305,6 @@ class Orga_Test_ACL extends Core_Test_TestCase
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = $entityManagers['default'];
 
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
-
-        /** @var Orga_Service_ACLManager $aclManagerService */
-        $aclManagerService = $container->get('Orga_Service_ACLManager');
-        $entityManager->getEventManager()->removeEventListener(
-            [Doctrine\ORM\Events::onFlush, Doctrine\ORM\Events::postFlush],
-            $aclManagerService
-        );
-
         // Vérification qu'il ne reste aucun User en base, sinon suppression !
         if (User::countTotal() > 0) {
             echo PHP_EOL . 'Des User_User restants ont été trouvé après les tests, suppression en cours !';
@@ -6416,5 +6355,4 @@ class Orga_Test_ACL extends Core_Test_TestCase
             $entityManager->flush();
         }
     }
-
 }
