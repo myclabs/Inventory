@@ -11,6 +11,7 @@ User\Domain\ACL\Authorization:
     user: User\Domain\ACL\Authorization\UserAuthorization
     repository: User\Domain\ACL\Authorization\RepositoryAuthorization
     organization: Orga\Model\ACL\OrganizationAuthorization
+    cell: Orga\Model\ACL\CellAuthorization
 
   id:
     id:

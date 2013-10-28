@@ -10,6 +10,11 @@ User\Domain\ACL\Role:
   discriminatorMap:
     user: User\Domain\ACL\Role\UserRole
     admin: User\Domain\ACL\Role\AdminRole
+    organizationAdmin: Orga\Model\ACL\Role\OrganizationAdminRole
+    cellAdmin: Orga\Model\ACL\Role\CellAdminRole
+    cellManager: Orga\Model\ACL\Role\CellManagerRole
+    cellContributor: Orga\Model\ACL\Role\CellContributorRole
+    cellObserver: Orga\Model\ACL\Role\CellObserverRole
 
   id:
     id:

@@ -1,0 +1,8 @@
+Orga\Model\ACL\Role\CellContributorRole:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Orga_ACL_Role_CellContributor
+
+  manyToOne:
+    cell:
+      targetEntity: \Orga_Model_Cell

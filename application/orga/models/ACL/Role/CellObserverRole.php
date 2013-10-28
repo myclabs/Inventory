@@ -11,9 +11,9 @@ use User\Domain\ACL\Role;
 use User\Domain\User;
 
 /**
- * Cell administrator.
+ * Cell observer.
  */
-class CellAdminRole extends Role
+class CellObserverRole extends Role
 {
     /**
      * @var Orga_Model_Cell
@@ -33,10 +33,7 @@ class CellAdminRole extends Role
         $authorizations[] = new OrganizationAuthorization($this->user, Action::VIEW(), $this->cell->getOrganization());
 
         $authorizations[] = new CellAuthorization($this->user, Action::VIEW(), $this->cell);
-        $authorizations[] = new CellAuthorization($this->user, Action::EDIT(), $this->cell);
-        $authorizations[] = new CellAuthorization($this->user, Action::ALLOW(), $this->cell);
         $authorizations[] = new CellAuthorization($this->user, Orga_Action_Cell::COMMENT(), $this->cell);
-        $authorizations[] = new CellAuthorization($this->user, Orga_Action_Cell::INPUT(), $this->cell);
 
         return $authorizations;
     }

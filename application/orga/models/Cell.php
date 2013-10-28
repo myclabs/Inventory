@@ -318,6 +318,14 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
+     * @return Orga_Model_Organization
+     */
+    public function getOrganization()
+    {
+        return $this->granularity->getOrganization();
+    }
+
+    /**
      * Vérifie si le Member donné indexe la Cell.
      *
      * @param Orga_Model_Member $member
