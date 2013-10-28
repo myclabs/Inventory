@@ -1,7 +1,7 @@
 Orga\Model\ACL\OrganizationAuthorization:
   type: entity
   repositoryClass: Orga_Model_Repository_OrganizationAuthorizationRepository
-  table: ACL_Authorization_Orga
+  table: Orga_ACL_Authorization_Organization
 
   oneToOne:
     resource:
