@@ -53,3 +53,4 @@ User\Domain\User:
       mappedBy: user
       cascade: [ all ]
       orphanRemoval: true
+      fetch: EXTRA_LAZY
