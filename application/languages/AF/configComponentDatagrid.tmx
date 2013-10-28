@@ -119,6 +119,14 @@
                 <seg>Required ?</seg>
             </tuv>
         </tu>
+        <tu tuid="editableUnitHeader">
+            <tuv xml:lang="fr">
+                <seg>Unité modifiable ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Unit editable ?</seg>
+            </tuv>
+        </tu>
         <tu tuid="withUncertaintyHeader">
             <tuv xml:lang="fr">
                 <seg>Aff. incertitude</seg>
