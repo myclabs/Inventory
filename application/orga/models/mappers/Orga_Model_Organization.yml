@@ -4,6 +4,9 @@ Orga_Model_Organization:
   repositoryClass: Core_Model_Repository
   table: Orga_Organization
 
+  entityListeners:
+    Orga\Model\ACL\ResourceListener\OrganizationListener:
+
   gedmo:
     translation:
       locale: translationLocale

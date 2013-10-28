@@ -4,6 +4,9 @@ Orga_Model_Cell:
   repositoryClass: Orga_Model_Repository_Cell
   table: Orga_Cell
 
+  entityListeners:
+    Orga\Model\ACL\ResourceListener\CellListener:
+
   id:
     id:
       column: id

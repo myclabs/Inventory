@@ -4,7 +4,7 @@ User\Domain\User:
   table: User_User
 
   entityListeners:
-      User\Domain\ACL\ResourceListener\UserListener:
+    User\Domain\ACL\ResourceListener\UserListener:
 
   id:
     id:

@@ -82,6 +82,33 @@ class ArticleEditorRole extends Role
 }
 ```
 
+#### Keeping the authorizations up to date
+
+The listener will update the authorizations when the resource changes:
+
+```php
+class ArticleListener
+{
+    public function preRemove(Article $article)
+    {
+        // Cascade remove
+        foreach (ArticleAuthorization::loadByResource($article) as $authorization) {
+            $authorization->delete();
+        }
+    }
+}
+```
+
+YAML configuration:
+
+```yaml
+Article\Domain\Article:
+  type: entity
+
+  entityListeners:
+    Article\Domain\ACL\ResourceListener\ArticleListener:
+```
+
 ### Rebuilding authorizations
 
 To manually rebuild all the authorizations:

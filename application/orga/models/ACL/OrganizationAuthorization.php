@@ -2,6 +2,7 @@
 
 namespace Orga\Model\ACL;
 
+use Core_Model_Query;
 use Orga_Model_Organization;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization;
@@ -37,5 +38,16 @@ class OrganizationAuthorization extends Authorization
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * @param Orga_Model_Organization $resource
+     * @return self[]
+     */
+    public static function loadByResource(Orga_Model_Organization $resource)
+    {
+        $query = new Core_Model_Query();
+        $query->filter->addCondition('resource', $resource);
+        return self::loadList($query);
     }
 }
