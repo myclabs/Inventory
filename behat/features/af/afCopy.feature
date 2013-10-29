@@ -22,13 +22,13 @@ Feature: AF copy feature
     When I click "Test" in the row 9 of the "listAF" datagrid
     And I select "Charbon" from "nature_combustible"
     And I fill in "quantite_combustible" with "10"
-  # Formulaire copié : aperçu des résultats
+  # Formulaire copié : aperçu des résultats
     And I click "Aperçu des résultats"
     Then I should see "Total : 33,3 t équ. CO2"
-  # Formulaire copié : enregistrement de la saisie
+  # Formulaire copié : enregistrement de la saisie
     When I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
-  # Formulaire copié : accès détails calculs et vérification calculs corrects
+  # Formulaire copié : accès détails calculs et vérification calculs corrects
     When I open tab "Détails calculs"
     And I open collapse "Formulaire maître"
     Then I should see "emissions_combustion Émissions liées à la combustion"

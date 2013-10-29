@@ -44,13 +44,13 @@ Feature: Organization navigation feature
     And I open collapse "Zone | Marque"
     Then I should see the "relevant_c1_g2" datagrid
     And the row 1 of the "relevant_c1_g2" datagrid should contain:
-      | zone | marque | relevant | allParentsRelevant |
-      | Europe | Marque A | Pertinente | Toutes pertinentes |
+      | zone   | marque   | relevant   |
+      | Europe | Marque A | Pertinente |
   # Édition pertinence "Europe|Marque A"
     When I set "Non pertinente" for column "relevant" of row 1 of the "relevant_c1_g2" datagrid with a confirmation message
     Then the row 1 of the "relevant_c1_g2" datagrid should contain:
-      | zone | marque | relevant | allParentsRelevant |
-      | Europe | Marque A | Non pertinente | Toutes pertinentes |
+      | zone   | marque   | relevant       |
+      | Europe | Marque A | Non pertinente |
   # Essayer d'atteindre la cellule "Europe|Marque A" avec le volet de navigation
     When I select "Europe" from "zone"
     And I select "Marque A" from "marque"

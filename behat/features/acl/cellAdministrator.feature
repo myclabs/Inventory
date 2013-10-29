@@ -140,15 +140,15 @@ Feature: Cell administrator feature
     And I open collapse "Site"
     Then I should see the "relevant_c2_g3" datagrid
     And the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site   | relevant   | allParentsRelevant |
-      | Annecy | Pertinente | Toutes pertinentes |
+      | site   | relevant   |
+      | Annecy | Pertinente |
   # Édition de la pertinence : rendre non pertinente une cellule pertinente
     When I set "Non pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
     Then the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site   | relevant       | allParentsRelevant |
-      | Annecy | Non pertinente | Toutes pertinentes |
+      | site   | relevant       |
+      | Annecy | Non pertinente |
   # Édition de la pertinence : rendre pertinente une cellule non pertinente
     When I set "Pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
     Then the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site    | relevant   | allParentsRelevant |
-      | Annecy  | Pertinente | Toutes pertinentes |
+      | site    | relevant   |
+      | Annecy  | Pertinente |

@@ -10,10 +10,10 @@ Feature: Organization administrator feature
     And I fill in "password" with "administrateur.organisation@toto.com"
     And I click "connection"
   # On tombe sur le datagrid des organisations
-    Then I should see the "organizations" datagrid
-    And the "organizations" datagrid should contain 1 row
+    Then I should see "Axes racine : Année, Site, Catégorie, Axe vide"
+    And I should see "Collectes : Année | Zone | Marque"
   # Accès à l'organisation
-    When I click "Cliquer pour accéder" in the row 1 of the "organizations" datagrid
+    When I click "Organisation avec données"
     Then I should see "Vue globale Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid

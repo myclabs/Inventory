@@ -35,6 +35,7 @@ Feature: Configuration of an organization
     Then the following message is shown and closed: "Modification effectuée."
   # Vérification modification prise en compte
     When I open tab "Collectes"
+    And I open collapse "Année"
     Then I should see the "inventories4" datagrid
     And the "inventories4" datagrid should contain 2 row
     And the row 1 of the "inventories4" datagrid should contain:

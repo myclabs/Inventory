@@ -21,6 +21,7 @@ Feature: Cell contributor feature
   # Accès à l'onglet "Collectes", édition du statut d'une collecte
     When I click "Quitter"
     And I open tab "Collectes"
+    And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
     When I set "Ouvert" for column "inventoryStatus" of row 1 of the "inventories6" datagrid with a confirmation message
   # Les autres onglets de la page d'une cellule sont absents

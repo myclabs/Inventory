@@ -23,6 +23,7 @@ Feature: Cell observer feature
   # Accès à l'onglet "Collectes"
     When I click "Quitter"
     And I open tab "Collectes"
+    And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
     # And the "inventories6" datagrid should contain 2 row
   # TODO : statut de la collecte non éditable

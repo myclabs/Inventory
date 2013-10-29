@@ -10,6 +10,7 @@ Feature: Organization inventory tab feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Collectes"
+    And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
     And the row 5 of the "inventories6" datagrid should contain:
       | annee | zone   | marque   | inventoryStatus |
@@ -21,11 +22,12 @@ Feature: Organization inventory tab feature
       | 2013  | Europe | Marque B | Ouvert          |
 
   @javascript
-  Scenario: Test Inventory filter
+  Scenario: Test Inventory filter scenario
   # Accès à l'onglet "Collectes"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Collectes"
+    And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
     And the "inventories6" datagrid should contain 6 row
   # Filtre sur la marque
@@ -35,13 +37,15 @@ Feature: Organization inventory tab feature
     Then the "inventories6" datagrid should contain 2 row
 
   @javascript
-  Scenario: Percentage of complete and finished inputs
-    Given I am on "orga/cell/details/idCell/5"
+  Scenario: Percentage of complete and finished inputs scenario
+    Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Collectes"
-    Then the "inventories6" datagrid should contain a row:
-      | annee | inventoryStatus | advancementInput | advancementFinishedInput |
-      | 2012  | Ouvert          | 50%              | 25%                      |
+    And I open collapse "Année | Site"
+    Then I should see the "inventories7" datagrid
+    Then the "inventories7" datagrid should contain a row:
+      | annee | site   | inventoryStatus | advancementInput | advancementFinishedInput |
+      | 2012  | Annecy | Ouvert          | 50%              | 25%                      |
 
   @javascript
   Scenario: Display of the inventory datagrid in a cell with a granularity smaller than or equal to that of inventories
@@ -55,6 +59,7 @@ Feature: Organization inventory tab feature
     And I reload the page
     And I click element "#goTo6"
     And I open tab "Collectes"
+    And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
     And the "inventories6" datagrid should contain 1 row
     And the row 1 of the "inventories6" datagrid should contain:

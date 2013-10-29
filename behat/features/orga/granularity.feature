@@ -27,8 +27,8 @@ Feature: Organization granularity feature
     And I select "Oui" in radio "Documents"
     And I click "Valider"
   # Nécessité d'une attente longue du fait de la présence du masque de chargement, pour que le scénario passe en local (affichage du message de confirmation).
-  # Test effectué en local le 06/09/2013 : 1'05 pour le traitement. Ci-dessous temps d'attente de 1'20 pour avoir un peu de marge.
-    And I wait 80 seconds
+  # Test effectué en local le 06/09/2013 : 1'05 pour le traitement. Ci-dessous temps d'attente de 1'40 pour avoir de la marge.
+    And I wait 100 seconds
     Then the following message is shown and closed: "Ajout effectué."
     And the row 2 of the "granularity" datagrid should contain:
       | axes | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
@@ -105,7 +105,7 @@ Feature: Organization granularity feature
       | Site |
     When I set "Non" for column "aCL" of row 3 of the "granularity" datagrid
     Then the following message is shown and closed: "Cette modification ne peut pas être effectuée, car il existe au moins un rôle associé à une unité organisationnelle de ce niveau organisationnel."
-  # À l'inverse, pour la granularité "Année", pas de pb
+  # À l'inverse, pour la granularité "Année", pas de pb
     And the row 4 of the "granularity" datagrid should contain:
       | axes  | aCL |
       | Année | Non |
