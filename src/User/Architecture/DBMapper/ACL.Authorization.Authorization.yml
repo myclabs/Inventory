@@ -43,6 +43,7 @@ User\Domain\ACL\Authorization\Authorization:
       cascade: [ all ]
       joinColumn:
         nullable: true
+        onDelete: CASCADE
 
   oneToMany:
     childAuthorizations:
