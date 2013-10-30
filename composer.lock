@@ -780,16 +780,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.5.0",
+            "version": "3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "c33f4efffd4f64c351dc25907622f54e4ad04374"
+                "reference": "a039bcd574cce6b2370577f927fbda5e90c7540f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/c33f4efffd4f64c351dc25907622f54e4ad04374",
-                "reference": "c33f4efffd4f64c351dc25907622f54e4ad04374",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/a039bcd574cce6b2370577f927fbda5e90c7540f",
+                "reference": "a039bcd574cce6b2370577f927fbda5e90c7540f",
                 "shasum": ""
             },
             "require": {
@@ -819,7 +819,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-10-11 10:13:25"
+            "time": "2013-10-29 09:22:31"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -1633,16 +1633,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.14.1",
+            "version": "v1.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "8873d7593ad7c120004f177c0fd01459b383c9cb"
+                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/8873d7593ad7c120004f177c0fd01459b383c9cb",
-                "reference": "8873d7593ad7c120004f177c0fd01459b383c9cb",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ca445842fcea4f844d68203ffa2d00f5e3cdea64",
+                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64",
                 "shasum": ""
             },
             "require": {
@@ -1678,7 +1678,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-10-15 19:17:38"
+            "time": "2013-10-30 08:20:53"
         },
         {
             "name": "videlalvaro/php-amqplib",

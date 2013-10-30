@@ -469,7 +469,7 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         $this->organization->save();
 
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         $reportGlobale = new DW_Model_Report($this->granularityGlobale->getDWCube());
         $reportGlobale->setLabel('Test Globale');
