@@ -1,12 +1,7 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
+use Techno\Application\Form\AddNodeForm;
 ?>
-    use Techno\Application\Form\Techno_Form_AddNode;
-
-    <div class="page-header">
+<div class="page-header">
     <h1><?=__('Techno', 'familyTree', 'familyTree')?></h1>
 </div>
 
@@ -19,7 +14,7 @@ $tree->addParam('mode', $this->mode);
 if ($this->mode == 'edition') {
     // Ajout.
     $tree->addNode = true;
-    $addForm = new Techno_Form_AddNode('addNode');
+    $addForm = new AddNodeForm('addNode');
     $tree->addPanelForm = $addForm;
     $tree->addPanelTitle = __('Techno', 'familyTree', 'addCategoryPopupTitle');
     $tree->addButtonLabel = __('Techno', 'familyTree', 'addCategoryButton');
