@@ -9,7 +9,7 @@ Feature: General info tab analysis edit feature
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
   # Accès au datagrid des analyses pré-configurées au niveau global
     And I open collapse "Niveau organisationnel global"
@@ -36,7 +36,7 @@ Feature: General info tab analysis edit feature
   Scenario: Delete a granularity analysis
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
     And I open collapse "Niveau organisationnel global"
     Then I should see the "granularity1Report" datagrid

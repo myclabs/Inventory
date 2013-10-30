@@ -9,7 +9,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Ajout d'une granularité non déjà existante
@@ -18,7 +18,7 @@ Feature: Organization granularity feature
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Zone" from "granularity_axes_addForm"
     And I select "Navigable" in radio "Navigable"
-    And I select "Oui" in radio "Organisation"
+    And I select "Oui" in radio "Paramétrage"
     And I select "Oui" in radio "Rôles"
     And I select "Oui" in radio "Formulaires"
     And I select "Oui" in radio "Analyses"
@@ -39,7 +39,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Ajout d'une granularité déjà existante
@@ -71,7 +71,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Contenu initial de la granularité "Année"
@@ -96,7 +96,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Tentative de modifier de "oui" à "non" l'attribut "with roles" de la granularité "Site" (pour laquelle il existe des rôles)
@@ -124,7 +124,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Suppression, granularité de saisie  (suppression interdite)
@@ -179,7 +179,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
   # Ajout d'une granularité
     When I click "Ajouter"
@@ -207,7 +207,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
   # Ajout d'une granularité
     When I click "Ajouter"
@@ -257,7 +257,7 @@ Feature: Organization granularity feature
     And I click "Confirmer"
   # Modification de l'attribut "with roles" pour la granularité "site"
     And I click "Vue globale"
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then the row 3 of the "granularity" datagrid should contain:
       | axes |

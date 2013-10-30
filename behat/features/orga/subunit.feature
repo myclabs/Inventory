@@ -9,7 +9,7 @@ Feature: Organizational subunits tab feature
   # Accès au volet "Sous-unités"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Sous-unités"
   # Ouverture d'un volet pour une granularité non navigable
     And I open collapse "Année | Site | Catégorie"
@@ -40,7 +40,7 @@ Feature: Organizational subunits tab feature
     And I click element "#goTo2"
     Then I should see "Europe | Marque B Organisation avec données"
   # Accès au volet "Sous-unités" et au collapse "Site"
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Sous-unités"
     And I wait 2 seconds
     And I open collapse "Année | Site"
@@ -55,7 +55,7 @@ Feature: Organizational subunits tab feature
   # État des lieux initial dans l'onglet "Sous-unités"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Sous-unités"
     When I open collapse "Zone | Marque"
     Then I should see the "child_c1_g2" datagrid
@@ -70,7 +70,7 @@ Feature: Organizational subunits tab feature
   # Maintenant on rend "Europe | Marque A" non pertinente
     When I reload the page
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     When I open tab "Pertinence"
     And I open collapse "Zone | Marque"
     Then I should see the "relevant_c1_g2" datagrid

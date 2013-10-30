@@ -8,7 +8,7 @@ Feature: Rebuild of dataware from the configuration tab feature
   Scenario: Rebuild analysis data from the configuration tab scenario
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
   # Au départ la structure des données d'analyse est à jour
     And I click "Tester si la structure des données d'analyse est à jour"

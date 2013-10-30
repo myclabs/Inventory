@@ -9,7 +9,7 @@ Feature: General info of an organization feature
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Modification du libellé
@@ -26,7 +26,7 @@ Feature: General info of an organization feature
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Modification du niveau organisationnel des collectes
@@ -49,7 +49,7 @@ Feature: General info of an organization feature
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Popup d'ajout
@@ -80,7 +80,7 @@ Feature: General info of an organization feature
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Ajout, saisie correcte (granularité de saisie non plus fine que ou égale à la granularité des collectes)
@@ -112,7 +112,7 @@ Feature: General info of an organization feature
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Suppression d'une granularité de saisie avec des saisies

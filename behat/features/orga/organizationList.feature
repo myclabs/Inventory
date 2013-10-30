@@ -22,7 +22,7 @@ Feature: Organization datagrid feature
     When I click "AAA"
     Then I should see "Vue globale AAA"
   # Vérification de la création de la granularité globale et ses attributs par défaut
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
     And the "granularity" datagrid should contain 1 row

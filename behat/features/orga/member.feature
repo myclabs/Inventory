@@ -9,7 +9,7 @@ Feature: Organizational member feature
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Membres"
   # Accès au datagrid des sites
     And I open collapse "Site"
@@ -33,7 +33,7 @@ Feature: Organizational member feature
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Membres"
     Then I should see "Site"
   # Déplier un volet
@@ -59,7 +59,7 @@ Feature: Organizational member feature
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Membres"
   # Ajout membre axe Pays, zone non renseignée
     When I open collapse "Site"
@@ -76,7 +76,7 @@ Feature: Organizational member feature
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Membres"
   # Ajout membre axe Pays, zone non renseignée
     When I open collapse "Site"
@@ -96,7 +96,7 @@ Feature: Organizational member feature
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Membres"
     When I open collapse "Site"
     Then the row 1 of the "listMemberssite" datagrid should contain:
@@ -119,7 +119,7 @@ Feature: Organizational member feature
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Membres"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
@@ -149,7 +149,7 @@ Feature: Organizational member feature
   # Accès à l'onglet "Membres"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Membres"
   # Membre jouant le rôle de parent direct pour au moins un autre membre
     And I open collapse "Pays"
@@ -174,7 +174,7 @@ Feature: Organizational member feature
     And I select "Marque B" from "marque"
     And I click element "#goTo2"
   # Vérification du contenu du datagrid des membres de l'axe "Site"
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Membres"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid

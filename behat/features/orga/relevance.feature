@@ -9,7 +9,7 @@ Feature: Organizational relevance tab feature
   # Accès au volet "Pertinence"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Pertinence"
   # Ouverture volet "Année | Site | Catégorie", vérification que les cellules associées à Annecy ont bien toutes leurs cellules parentes pertinentes
     When I open collapse "Année | Site | Catégorie"

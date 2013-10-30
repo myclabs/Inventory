@@ -9,7 +9,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
   # Ajout d'un axe organisationnel
     Given I am on "orga/cell/details/idCell/1/tab/analyses"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Axes"
     And I wait 3 seconds
     And I click "Ajouter"
@@ -39,7 +39,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
   # Ajout d'un axe organisationnel
     Given I am on "orga/cell/details/idCell/1/tab/analyses"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Axes"
     And I wait 3 seconds
     And I click "Ajouter"

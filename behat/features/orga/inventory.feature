@@ -52,7 +52,7 @@ Feature: Organization inventory tab feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # On rend navigable la granularité "Année|Zone|Marque"
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Niveaux"
     And I set "Navigable" for column "navigable" of row 6 of the "granularity" datagrid with a confirmation message
   # On recharge la page pour faire apparaître le volet de navigation

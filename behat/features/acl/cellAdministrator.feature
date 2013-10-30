@@ -66,8 +66,8 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
     Then I should see "Europe | Marque A Organisation avec données"
-  # Vérification qu'on a bien accès à l'onglet "Organisation" et à ses sous-onglets
-    When I open tab "Organisation"
+  # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
+    When I open tab "Paramétrage"
   # On tombe sur l'onglet "Membres"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
@@ -98,7 +98,7 @@ Feature: Cell administrator feature
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
   # Ajout et suppression d'un membre à l'axe "Pays"
     And I open collapse "Pays"
     And I click "Ajouter"
@@ -129,8 +129,8 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
     Then I should see "Europe | Marque A Organisation avec données"
-  # Vérification qu'on a bien accès à l'onglet "Organisation" et à ses sous-onglets
-    When I open tab "Organisation"
+  # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
+    When I open tab "Paramétrage"
   # Accès à l'onglet "Sous-unités"
     And I open tab "Sous-unités"
     And I open collapse "Site"

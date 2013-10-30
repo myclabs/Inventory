@@ -25,7 +25,7 @@ Feature: Cell contributor feature
     Then I should see the "inventories6" datagrid
     When I set "Ouvert" for column "inventoryStatus" of row 1 of the "inventories6" datagrid with a confirmation message
   # Les autres onglets de la page d'une cellule sont absents
-    # TODO And I should not see "Organisation"
+    # TODO And I should not see "Paramétrage"
     And I should not see "Rôles"
     And I should not see "Reconstruction"
 

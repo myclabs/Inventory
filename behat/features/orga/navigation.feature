@@ -39,7 +39,7 @@ Feature: Organization navigation feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # Rendre non pertinente la cellule "Europe | Marque A"
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Pertinence"
     And I open collapse "Zone | Marque"
     Then I should see the "relevant_c1_g2" datagrid

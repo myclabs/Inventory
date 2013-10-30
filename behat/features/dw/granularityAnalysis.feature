@@ -9,7 +9,7 @@ Feature: Granularity dataware analysis feature
   # Affichage des messages d'erreur lorsque des champs ne sont pas remplis
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Informations générales"
   # Accès au datagrid des analyses pré-configurées au niveau global
     And I open collapse "Niveau organisationnel global"
