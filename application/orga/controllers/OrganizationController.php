@@ -7,8 +7,9 @@
  */
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
-
+use Core\Work\ServiceCall\ServiceCallTask;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\ViewModel\OrganizationViewModelFactory;
 
 /**
  * @author valentin.claras
@@ -33,9 +34,21 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject
+     * @var OrganizationViewModelFactory
+     */
+    private $organizationVMFactory;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Redirection sur la liste.
@@ -87,10 +100,10 @@ class Orga_OrganizationController extends Core_Controller
             || ($isConnectedUserAbleToSeeManyOrganizations)
         ) {
             $this->redirect('orga/organization/manage');
-        } else if ($isConnectedUserAbleToSeeManyCells) {
+        } elseif ($isConnectedUserAbleToSeeManyCells) {
             $organizationArray = Orga_Model_Organization::loadList($aclQuery);
             $this->redirect('orga/organization/cells/idOrganization/'.array_pop($organizationArray)->getId());
-        } else if (count($listCellResource) == 1) {
+        } elseif (count($listCellResource) == 1) {
             $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getId());
         } else {
             $this->forward('noaccess', 'organization', 'orga');
@@ -105,18 +118,85 @@ class Orga_OrganizationController extends Core_Controller
     {
         $connectedUser = $this->_helper->auth();
 
+        // Retrouve la liste des organisations
+        $query = new Core_Model_Query();
+        $query->aclFilter->enabled = true;
+        $query->aclFilter->user = $connectedUser;
+        $query->aclFilter->action = User_Model_Action_Default::VIEW();
+        $organizations = Orga_Model_Organization::loadList($query);
+
+        // Crée les ViewModel
+        $organizationsVM = [];
+        foreach ($organizations as $organization) {
+            $vm = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
+            $organizationsVM[] = $vm;
+        }
+        $this->view->assign('organizations', $organizationsVM);
+
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
-        $this->view->isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
+        $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $organizationResource
-        );
+        ));
+    }
 
-        $aclQuery = new Core_Model_Query();
-        $aclQuery->aclFilter->enabled = true;
-        $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
-        $this->view->isConnectedUserAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
+    /**
+     * @Secure("createOrganization")
+     */
+    public function addAction()
+    {
+        $user = $this->_helper->auth();
+        $label = $this->getParam('label');
+
+        $success = function () {
+            UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
+        };
+        $timeout = function () {
+            UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'), UI_Message::TYPE_SUCCESS);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'createOrganization',
+            [$user, $label],
+            __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
+        $this->redirect('orga/organization/manage');
+    }
+
+    /**
+     * @Secure("deleteOrganization")
+     */
+    public function deleteAction()
+    {
+        $organization = Orga_Model_Organization::load($this->_getParam('idOrganization'));
+
+        $success = function () {
+            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
+        };
+        $timeout = function () {
+            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'), UI_Message::TYPE_SUCCESS);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'deleteOrganization',
+            [$organization]
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
+        $this->redirect('orga/organization/manage');
     }
 
     /**
@@ -170,7 +250,10 @@ class Orga_OrganizationController extends Core_Controller
             try {
                 $organization->setGranularityForInventoryStatus($granularityForInventoryStatus);
             } catch (Core_Exception_InvalidArgument $e) {
-                $this->addFormError('granularityForInventoryStatus', __('Orga', 'exception', 'broaderInputGranularity'));
+                $this->addFormError(
+                    'granularityForInventoryStatus',
+                    __('Orga', 'exception', 'broaderInputGranularity')
+                );
             }
         }
 
@@ -191,13 +274,11 @@ class Orga_OrganizationController extends Core_Controller
     public function dwcubesstateAction()
     {
         set_time_limit(0);
-        $this->sendJsonResponse(
-            array(
-                'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
-                    Orga_Model_Organization::load($this->getParam('idOrganization'))
-                )
+        $this->sendJsonResponse([
+            'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate(
+                Orga_Model_Organization::load($this->getParam('idOrganization'))
             )
-        );
+        ]);
     }
 
     /**
@@ -208,20 +289,24 @@ class Orga_OrganizationController extends Core_Controller
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
-                    'Orga_Service_ETLStructure',
-                    'resetOrganizationDWCubes',
-                    [$organization],
-                    __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'updated'));
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'operationInProgress'));
+        };
+        $error = function () {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array());
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetOrganizationDWCubes',
+            [$organization],
+            __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -275,6 +360,5 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function noaccessAction()
     {
-
     }
 }

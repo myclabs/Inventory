@@ -15,7 +15,6 @@
  */
 class Core_Mail extends Zend_Mail
 {
-
     /**
      * Constructeur
      *
@@ -31,7 +30,7 @@ class Core_Mail extends Zend_Mail
         $config = Zend_Registry::get('configuration');
 
         if ((empty($config->emails->noreply->adress)) || (empty($config->emails->noreply->name))) {
-            throw new Core_Exception_UndefinedAttribute('Le mail "no-reply" n\'est pas définit dans le application.ini');
+            throw new Core_Exception_UndefinedAttribute('Le mail "no-reply" n\'est pas défini dans application.ini');
         } else {
             $this->setFrom($config->emails->noreply->adress, $config->emails->noreply->name);
             $this->setReplyTo($config->emails->noreply->adress, $config->emails->noreply->name);
@@ -45,11 +44,10 @@ class Core_Mail extends Zend_Mail
      *
      * @param Zend_Mail_Transport_Abstract $transport
      *
-     * @return void
+     * @return self
      */
     public function send($transport = null)
     {
         return parent::send();
     }
-
 }

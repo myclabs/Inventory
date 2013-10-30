@@ -12,7 +12,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Au départ les données d'analyse sont à jour
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Ajout axe
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Axes"
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
@@ -27,12 +27,12 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Modification du libellé d'un axe
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Axes"
     And I click "Test"
     Then I should see the popup "Édition d'un axe"
@@ -46,12 +46,12 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Modification de l'identifiant d'un axe
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Axes"
     And I click "Test modifié"
     Then I should see the popup "Édition d'un axe"
@@ -65,12 +65,12 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Modification de la position (numéro d'ordre) d'un axe : modification non détectée
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Axes"
     And I click "Test modifié"
     Then I should see the popup "Édition d'un axe"
@@ -83,7 +83,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Suppression axe
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open tab "Axes"
     And I click "Test modifié"
     Then I should see the popup "Édition d'un axe"
@@ -98,7 +98,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
@@ -110,7 +110,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Au départ les données d'analyse sont à jour
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Ajout membre (membre parent non renseigné)
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open collapse "Site"
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un membre à l'axe « Site »"
@@ -119,19 +119,19 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # And I fill in "listMemberssite_broaderpays_addForm" with "france#"
     And I click "Valider"
     And I wait 5 seconds
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
     When I reload the page
     And I wait for the page to finish loading
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Modification du libellé d'un membre
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open collapse "Site"
     When I set "Test modifié" for column "label" of row 1 of the "listMemberssite" datagrid with a confirmation message
   # Détection modification
@@ -140,12 +140,12 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Modification de l'identifiant d'un membre
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open collapse "Site"
     When I set "test_modifie" for column "ref" of row 1 of the "listMemberssite" datagrid with a confirmation message
   # Détection modification
@@ -154,12 +154,12 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Ajout membre parent à un membre
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open collapse "Site"
     When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
@@ -170,12 +170,12 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Modification membre parent d'un membre
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open collapse "Site"
     When I set "italie#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
@@ -186,12 +186,12 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Suppression membre parent d'un membre
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open collapse "Site"
     When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
@@ -202,12 +202,12 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Suppression membre
-    When I open tab "Organisation"
+    When I open tab "Paramétrage"
     And I open collapse "Site"
     And I click "Supprimer" in the row 1 of the "listMemberssite" datagrid
     Then I should see the popup "Demande de confirmation"
@@ -219,7 +219,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
   # Régénération
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I reload the page
     And I wait for the page to finish loading
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."

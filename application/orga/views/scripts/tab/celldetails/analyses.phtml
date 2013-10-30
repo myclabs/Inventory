@@ -5,37 +5,19 @@
  * @package Orga
  * @subpackage View
  */
-if (!$this->isDWCubeUpToDate) { ?>
-<div id="dWCubeNotUpToDate">
-    <p>
-        <span class="label label-warning"><?=__('UI', 'message', 'titleWarning') ?></span>
-        <?=__('DW', 'rebuild', 'analysisTabRebuildAlert') ?>
-    </p>
-    <?php if ($this->dWCubesCanBeReset) { ?>
-    <p><?=__('DW', 'rebuild', 'analysisDataRebuildWarningMessageOrganization') ?></p>
-    <p><?=__('DW', 'rebuild', 'cellAdministratorWarningMessage') ?></p>
-    <?= $this->button(__('DW', 'rebuild', 'analysisDataRebuildButton'), 'refresh icon-white', array('id' => 'resetDWCube', 'class' => 'btn-primary')) ?>
-    <script type="text/javascript">
-        $('#resetDWCube').click(function() {
-            setMask(true);
-            $.post(
-                    'orga/cell/resetdws/idCell/<?=$this->idCell?>',
-                    function(data, textStatus, jqXHR){
-                        setMask(false);
-                        addMessage(data.message, 'success');
-                        $('#dWCubeNotUpToDate').remove();
-                    }
-            ).error(
-                    function(o) { setMask(false); errorHandler(o); }
-            );
-        });
-    </script>
-    <? } else { ?>
-    <p><?=__('DW', 'rebuild', 'cellNonAdministratorWarningMessage') ?></p>
-    <? } ?>
-    <hr/>
-</div>
-<?php } ?>
+echo $this->button('<span>'.__('Orga', 'analysis', 'cellDWCubesState').'</span>', 'info-sign', array('id' => 'cellDWCube'));
+?>
+<script type="text/javascript">
+    var checkCellDWCubeState = function() {
+        $.get(
+            'orga/cell/dwcubestate/idCell/<?=$this->idCell?>',
+            function (response) {
+                addMessage(response.message, response.status);
+            }
+        ).fail(function(o) { errorHandler(o); });
+    };
+    $('#cellDWCube').unbind('click').bind('click', checkCellDWCubeState);
+</script>
 
 <?php
 $datagrid = new UI_Datagrid('report', 'datagrid_cell_report', 'orga');

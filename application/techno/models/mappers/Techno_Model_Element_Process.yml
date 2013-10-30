@@ -1,8 +1,0 @@
-Techno_Model_Element_Process:
-  type: entity
-  repositoryClass: Core_Model_Repository
-  table: Techno_Element_Process
-
-  fields:
-    value:
-      type: calc_value

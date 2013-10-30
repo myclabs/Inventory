@@ -7,6 +7,8 @@
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Keyword\Application\Service\KeywordService;
+use Techno\Domain\Family\Dimension;
+use Techno\Domain\Family\Member;
 
 /**
  * @package AF
@@ -61,8 +63,8 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            /** @var $dimension Techno_Model_Family_Dimension */
-            $dimension = Techno_Model_Family_Dimension::load($idDimension);
+            /** @var $dimension Dimension */
+            $dimension = Dimension::load($idDimension);
             $coordinate = new Algo_Model_ParameterCoordinate_Fixed();
             $coordinate->setDimension($dimension);
             $coordinate->save();
@@ -91,7 +93,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
                 if (empty($newValue)) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
-                /** @var $member Techno_Model_Family_Member */
+                /** @var $member Member */
                 $keyword = $this->keywordService->get($newValue);
                 $member = $coordinate->getDimension()->getMember($keyword);
                 $coordinate->setMember($member);

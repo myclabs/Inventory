@@ -41,7 +41,16 @@
                 <seg>Êtes-vous sûr de vouloir désactiver cet utilisateur ?</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Are you sure you want to disable this user ?</seg>
+                <seg>Are you sure you want to disable this user?</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="confirmEnableUser">
+            <tuv xml:lang="fr">
+                <seg>Êtes-vous sûr de vouloir réactiver cet utilisateur ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Are you sure you want to enable this user?</seg>
             </tuv>
         </tu>
 

@@ -586,7 +586,7 @@ class Datagrid extends UI_Generic
         $url = '';
 
         $url .= '/idDatagrid/' . $this->id;
-        $url .= '/criteriaName/' . urlencode($this->criteriaName);
+        $url .= '/criteriaName/' . rawurlencode(str_replace('\\', '|', $this->criteriaName));
         foreach ($this->_parameters as $option => $valeur) {
             $url .= '/' . $option . '/' . addslashes($valeur);
         }

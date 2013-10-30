@@ -9,7 +9,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Ajout d'une granularité non déjà existante
@@ -18,7 +18,7 @@ Feature: Organization granularity feature
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Zone" from "granularity_axes_addForm"
     And I select "Navigable" in radio "Navigable"
-    And I select "Oui" in radio "Organisation"
+    And I select "Oui" in radio "Paramétrage"
     And I select "Oui" in radio "Rôles"
     And I select "Oui" in radio "Formulaires"
     And I select "Oui" in radio "Analyses"
@@ -27,9 +27,9 @@ Feature: Organization granularity feature
     And I select "Oui" in radio "Documents"
     And I click "Valider"
   # Nécessité d'une attente longue du fait de la présence du masque de chargement, pour que le scénario passe en local (affichage du message de confirmation).
-  # Test effectué en local le 06/09/2013 : 1'05 pour le traitement. Ci-dessous temps d'attente de 1'20 pour avoir un peu de marge.
-    And I wait 80 seconds
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+  # Test effectué en local le 06/09/2013 : 1'05 pour le traitement. Ci-dessous temps d'attente de 1'40 pour avoir de la marge.
+    And I wait 100 seconds
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 2 of the "granularity" datagrid should contain:
       | axes | navigable  | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
       | Zone | Navigable  | Oui     | Oui | Oui   | Oui | Oui            | Oui            | Oui            |
@@ -39,7 +39,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Ajout d'une granularité déjà existante
@@ -71,7 +71,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Contenu initial de la granularité "Année"
@@ -96,7 +96,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Tentative de modifier de "oui" à "non" l'attribut "with roles" de la granularité "Site" (pour laquelle il existe des rôles)
@@ -105,7 +105,7 @@ Feature: Organization granularity feature
       | Site |
     When I set "Non" for column "aCL" of row 3 of the "granularity" datagrid
     Then the following message is shown and closed: "Cette modification ne peut pas être effectuée, car il existe au moins un rôle associé à une unité organisationnelle de ce niveau organisationnel."
-  # À l'inverse, pour la granularité "Année", pas de pb
+  # À l'inverse, pour la granularité "Année", pas de pb
     And the row 4 of the "granularity" datagrid should contain:
       | axes  | aCL |
       | Année | Non |
@@ -124,7 +124,7 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
   # Suppression, granularité de saisie  (suppression interdite)
@@ -179,19 +179,19 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
   # Ajout d'une granularité
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Axe vide" from "granularity_axes_addForm"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 2 of the "granularity" datagrid should contain:
       | axes     |
       | Axe vide |
   # On choisit cette nouvelle granularité pour le statut des inventaires
-    When I open tab "Configuration"
+    When I open tab "Informations générales"
     And I select "Axe vide" from "Niveau organisationnel des collectes"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
@@ -207,14 +207,14 @@ Feature: Organization granularity feature
   # Accès à l'onglet "Niveaux"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
   # Ajout d'une granularité
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
     When I additionally select "Axe vide" from "granularity_axes_addForm"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 2 of the "granularity" datagrid should contain:
       | axes     |
       | Axe vide |
@@ -257,7 +257,7 @@ Feature: Organization granularity feature
     And I click "Confirmer"
   # Modification de l'attribut "with roles" pour la granularité "site"
     And I click "Vue globale"
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then the row 3 of the "granularity" datagrid should contain:
       | axes |

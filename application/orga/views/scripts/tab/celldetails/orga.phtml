@@ -8,7 +8,7 @@ $tabView = new UI_Tab_View('orga');
 
 if ($this->displayOrganizationTabs) {
     $organizationTab = new UI_Tab('organization');
-    $organizationTab->label = __('UI', 'name', 'configuration');
+    $organizationTab->label = __('Orga', 'configuration', 'generalInfoTab');
     $organizationTab->dataSource = 'orga/organization/details/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
     $organizationTab->useCache = false;
     $tabView->addTab($organizationTab);
@@ -18,7 +18,15 @@ if ($this->displayOrganizationTabs) {
     $axisTab->dataSource = 'orga/axis/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
     $axisTab->useCache = true;
     $tabView->addTab($axisTab);
+}
 
+$membersTab = new UI_Tab('members');
+$membersTab->label = __('UI', 'name', 'elements');
+$membersTab->dataSource = 'orga/member/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
+$membersTab->useCache = false;
+$tabView->addTab($membersTab);
+
+if ($this->displayOrganizationTabs) {
     $granularityTab = new UI_Tab('granularities');
     $granularityTab->label = __('Orga', 'granularity', 'granularities');
     $granularityTab->dataSource = 'orga/granularity/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
@@ -26,18 +34,12 @@ if ($this->displayOrganizationTabs) {
     $tabView->addTab($granularityTab);
 }
 
-$membersTab = new UI_Tab('members');
-$membersTab->label = __('UI', 'name', 'members');
-$membersTab->dataSource = 'orga/member/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
-$membersTab->useCache = false;
-$tabView->addTab($membersTab);
-
-if ($this->hasChildCells || $this->displayOrganizationTabs) {
-    $childCellsTab = new UI_Tab('childCells');
-    $childCellsTab->label = __('Orga', 'cell', 'subCells');
-    $childCellsTab->dataSource = 'orga/cell/child/idCell/'.$this->idCell.'/display/render';
-    $childCellsTab->useCache = !$this->displayOrganizationTabs;
-    $tabView->addTab($childCellsTab);
+if ($this->hasChildCells) {
+    // $childCellsTab = new UI_Tab('childCells');
+    // $childCellsTab->label = __('Orga', 'cell', 'subCells');
+    // $childCellsTab->dataSource = 'orga/cell/child/idCell/'.$this->idCell.'/display/render';
+    // $childCellsTab->useCache = false;
+    // $tabView->addTab($childCellsTab);
 
     $relevanceTab = new UI_Tab('relevant');
     $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');

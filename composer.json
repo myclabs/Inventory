@@ -1,26 +1,11 @@
 {
     "autoload": {
         "psr-0": {
-            "Core": "src/",
-            "UI": "src/",
-            "Unit": "src/",
-            "User": "src/",
-            "TEC": "src/",
-            "Calc": "src/",
-            "Exec": "src/",
-            "Export": "src/",
-            "Keyword": "src/",
-            "Doc": "src/",
-            "DW": "src/",
-            "Algo": "src/",
-            "AF": "src/",
-            "Orga": "src/",
-            "Inventory": "src/",
-            "AuditTrail": "src/"
+            "": "src/"
         }
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "zendframework/zendframework1": "1.12.*",
         "doctrine/orm": "dev-CriteriaContains as 2.4.99",
         "doctrine/annotations": "~1.0",
@@ -36,11 +21,12 @@
         "myclabs/xport": "0.2.0",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
-        "mnapoli/php-di": "3.4.*",
-        "mnapoli/php-di-zf1": "*",
+        "mnapoli/php-di": "3.5.*",
+        "mnapoli/php-di-zf1": "~1.0",
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",
-        "mnapoli/number-two": "~0.2.0"
+        "mnapoli/number-two": "~0.2.0",
+        "myclabs/work": "~0.2.0"
     },
     "require-dev": {
         "behat/behat": "~2.4",

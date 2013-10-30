@@ -18,7 +18,7 @@ class Social_MessageController extends Core_Controller
 
     /**
      * @Inject
-     * @var Social_Service_Message
+     * @var Social_Service_MessageService
      */
     private $messageService;
 

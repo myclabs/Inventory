@@ -1,17 +1,13 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Core
- */
 
 /**
  * Classe de test de base
- * @package Core
+ * @author matthieu.napoli
  */
 abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
 {
-
     /**
+     * @Inject
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
@@ -21,8 +17,9 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        /** @var $container \DI\Container */
+        $container = Zend_Registry::get('container');
+        $container->injectOn($this);
     }
 
     /**
@@ -34,8 +31,6 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
     {
         /** @var $container \DI\Container */
         $container = Zend_Registry::get('container');
-
         return $container->get($name);
     }
-
 }

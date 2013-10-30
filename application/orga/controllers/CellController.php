@@ -8,7 +8,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Classe controleur de cell.
@@ -27,9 +29,15 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * @Inject
@@ -98,7 +106,7 @@ class Orga_CellController extends Core_Controller
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && $granularity->getCellsWithOrgaTab()) {
             $organizationTab = new UI_Tab('orga');
-            $organizationTab->label = __('Orga', 'organization', 'organization');
+            $organizationTab->label = __('Orga', 'cell', 'configurationTab');
             $organizationSubTabs = array('organization', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
             if (in_array($tab, $organizationSubTabs)) {
                 $organizationTab->active = true;
@@ -149,23 +157,27 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB INVENTORIES
-        $inventoriesTab = new UI_Tab('inventories');
         try {
             $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
-            $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+            if ($granularityForInventoryStatus->isNarrowerThan($granularity) || ($granularityForInventoryStatus === $granularity)) {
+                $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+            } else {
+                $crossedOrgaGranularity = null;
+            }
         } catch (Core_Exception_UndefinedAttribute $e) {
             $crossedOrgaGranularity = null;
         } catch (Core_Exception_NotFound $e) {
             $crossedOrgaGranularity = null;
         }
-        if ($crossedOrgaGranularity === null) {
-            $inventoriesTab->disabled = true;
-        } else if ($tab === 'inventories') {
-            $inventoriesTab->active = true;
+        if ($crossedOrgaGranularity !== null) {
+            $inventoriesTab = new UI_Tab('inventories');
+            if ($tab === 'inventories') {
+                $inventoriesTab->active = true;
+            }
+            $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
+            $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
+            $this->view->tabView->addTab($inventoriesTab);
         }
-        $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
-        $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
-        $this->view->tabView->addTab($inventoriesTab);
 
 
         // TAB INPUTS
@@ -257,6 +269,16 @@ class Orga_CellController extends Core_Controller
         $historyTab->label =  __('UI', 'history', 'history');
         $historyTab->dataSource = 'orga/tab_celldetails/history?idCell='.$idCell;
         $this->view->tabView->addTab($historyTab);
+
+
+        // TAB COMMENTAIRES
+        $commentsTab = new UI_Tab('comments');
+        if ($tab === 'comments') {
+            $commentsTab->active = true;
+        }
+        $commentsTab->label = __('Social', 'comment', 'comments');
+        $commentsTab->dataSource = 'orga/tab_celldetails/comments?idCell=' . $idCell;
+        $this->view->tabView->addTab($commentsTab);
 
 
         // TAB ADMINISTRATION
@@ -488,20 +510,24 @@ class Orga_CellController extends Core_Controller
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
-                    'Orga_Service_ETLStructure',
-                    'resetCellAndChildrenDWCubes',
-                    [$cell],
-                    __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function () {
+            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage')]);
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
+        };
+        $error = function () {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetCellAndChildrenDWCubes',
+            [$cell],
+            __('Orga', 'backgroundTasks', 'resetDWCell', ['LABEL' => $cell->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -512,20 +538,24 @@ class Orga_CellController extends Core_Controller
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        try {
-            // Lance la tache en arrière plan
-            $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task(
-                    'Orga_Service_ETLStructure',
-                    'resetCellAndChildrenCalculationsAndDWCubes',
-                    [$cell],
-                    __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
-                )
-            );
-        } catch (Core_Exception_NotFound $e) {
+        $success = function () {
+            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'outputDataRebuildConfirmationMessage')]);
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
+        };
+        $error = function () {
             throw new Core_Exception_User('DW', 'rebuild', 'outputDataRebuildFailMessage');
-        }
-        $this->sendJsonResponse(array('message' => __('UI', 'message', 'operationInProgress')));
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_ETLStructure',
+            'resetCellAndChildrenCalculationsAndDWCubes',
+            [$cell],
+            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**

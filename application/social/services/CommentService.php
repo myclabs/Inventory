@@ -3,7 +3,7 @@
 use Doctrine\ORM\EntityManager;
 
 /**
- * Comment application service
+ * Service de gestion des commentaires.
  *
  * @author matthieu.napoli
  */

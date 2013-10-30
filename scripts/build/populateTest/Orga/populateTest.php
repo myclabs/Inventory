@@ -159,7 +159,7 @@ qui officia deserunt mollit anim id est laborum.',
         $this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', 'chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
 
         // Création des utilisateurs orga.
-        $this->createUser('administrateur.organisation@toto.com');
+        $this->createUser('administrateur.application@toto.com');
         $this->createUser('administrateur.global@toto.com');
         $this->createUser('contributeur.global@toto.com');
         $this->createUser('observateur.global@toto.com');
@@ -176,7 +176,7 @@ qui officia deserunt mollit anim id est laborum.',
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);
-        $this->addOrganizationAdministrator('administrateur.organisation@toto.com', $organization);
+        $this->addOrganizationAdministrator('administrateur.application@toto.com', $organization);
         // Ajout d'un role sur une cellule à un utilisateur existant.
 
         // La zone-marque pour laquelle les droits sont configurés est "Europe | Marque A".

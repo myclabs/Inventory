@@ -4,6 +4,7 @@ use Netcarver\Textile;
 use NumberTwo\Filter\DoctrineCollectionFilter;
 use NumberTwo\Filter\DoctrineProxyFilter;
 use NumberTwo\NumberTwo;
+use Psr\Log\LoggerInterface;
 
 /**
  * Classe regroupant des fonctions utilitaires transverses.
@@ -32,7 +33,7 @@ abstract class Core_Tools
     {
         $container = Zend_Registry::get('container');
         /** @var \Psr\Log\LoggerInterface $logger */
-        $logger = $container->get('Psr\Log\LoggerInterface');
+        $logger = $container->get(LoggerInterface::class);
 
         $filters = [new DoctrineCollectionFilter(), new DoctrineProxyFilter()];
 

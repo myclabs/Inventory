@@ -8,6 +8,13 @@ namespace Keyword\Application;
 
 use Core_Package_Bootstrap;
 use DI\Container;
+use Doctrine\ORM\EntityManager;
+use Keyword\Architecture\Repository\DoctrineAssociationRepository;
+use Keyword\Domain\Association;
+use Keyword\Domain\Keyword;
+use Keyword\Domain\KeywordRepository;
+use Keyword\Domain\Predicate;
+use Keyword\Domain\PredicateRepository;
 
 /**
  * Bootstrap
@@ -20,21 +27,21 @@ class Bootstrap extends Core_Package_Bootstrap
     protected function _initKeywordRepositories()
     {
         $this->container->set(
-            'Keyword\Domain\KeywordRepository',
+            KeywordRepository::class,
             function(Container $c) {
-                return $c->get('Doctrine\ORM\EntityManager')->getRepository('Keyword\Domain\Keyword');
+                return $c->get(EntityManager::class)->getRepository(Keyword::class);
             }
         );
         $this->container->set(
-            'Keyword\Domain\PredicateRepository',
+            PredicateRepository::class,
             function(Container $c) {
-                return $c->get('Doctrine\ORM\EntityManager')->getRepository('Keyword\Domain\Predicate');
+                return $c->get(EntityManager::class)->getRepository(Predicate::class);
             }
         );
         $this->container->set(
-            'Keyword\Domain\AssociationRepository',
+            DoctrineAssociationRepository::class,
             function(Container $c) {
-                return $c->get('Doctrine\ORM\EntityManager')->getRepository('Keyword\Domain\Association');
+                return $c->get(EntityManager::class)->getRepository(Association::class);
             }
         );
     }

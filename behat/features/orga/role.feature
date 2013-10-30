@@ -10,7 +10,7 @@ Feature: Organization role feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Rôles"
-    And I open collapse "Administrateurs d'organisation"
+    And I open collapse "Administrateurs d'application"
     Then I should see the "organizationACL1" datagrid
   # Popup d'ajout
     When I click "Ajouter"
@@ -23,7 +23,7 @@ Feature: Organization role feature
   # Ajout, format email correct, utilisateur non existant
     When I fill in "organizationACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 3 of the "organizationACL1" datagrid should contain:
       | userEmail                     |
       | emmanuel.risler.abo@gmail.com |
@@ -38,13 +38,13 @@ Feature: Organization role feature
     And I click "Supprimer" in the row 3 of the "organizationACL1" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Suppression effectuée."
   # Ajout, format email correct, utilisateur existant
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un administrateur d'organisation (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)"
     When I fill in "organizationACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 3 of the "organizationACL1" datagrid should contain:
       | userEmail                     |
       | emmanuel.risler.abo@gmail.com |
@@ -71,7 +71,7 @@ Feature: Organization role feature
   # Ajout, saisie correcte, utilisateur non existant
     When I fill in "granularityACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 3 of the "granularityACL1" datagrid should contain:
       | userEmail                      | userRole       |
       | emmanuel.risler.abo@gmail.com  | Administrateur |
@@ -89,13 +89,13 @@ Feature: Organization role feature
     And I click "Supprimer" in the row 3 of the "granularityACL1" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Suppression effectuée."
   # Ajout, format email correct, utilisateur existant
     When I click "Ajouter"
     And I fill in "granularityACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I select "Contributeur" from "granularityACL1_userRole_addForm"
     And I click "Valider"
-    Then the following message is shown and closed: "Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page."
+    Then the following message is shown and closed: "Ajout effectué."
     And the row 3 of the "granularityACL1" datagrid should contain:
       | userEmail                      | userRole     |
       | emmanuel.risler.abo@gmail.com  | Contributeur |

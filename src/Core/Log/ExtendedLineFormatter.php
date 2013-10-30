@@ -11,7 +11,7 @@ use Monolog\Formatter\NormalizerFormatter;
  */
 class ExtendedLineFormatter extends NormalizerFormatter
 {
-    const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n%exception%";
+    const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %extra%\n%exception%";
 
     protected $format;
 

@@ -91,6 +91,14 @@
                 <seg>Enabled</seg>
             </tuv>
         </tu>
+        <tu tuid="editable">
+            <tuv xml:lang="fr">
+                <seg>Modifiable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Editable</seg>
+            </tuv>
+        </tu>
         <tu tuid="false">
             <tuv xml:lang="fr">
                 <seg>Faux</seg>
@@ -153,6 +161,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Non foldaway</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notEditable">
+            <tuv xml:lang="fr">
+                <seg>Non modifiable</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not editable</seg>
             </tuv>
         </tu>
         <tu tuid="notSelected">

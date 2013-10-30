@@ -64,18 +64,19 @@ When I select "Oui" in radio "Activé"
 Then the field "field" should have error: "Some error"
 
 # Popup
+Then I should see a popup
 Then I should see the popup "Popup title"
 
 # Datagrid
 Then I should see the "users" datagrid
 Then the "users" datagrid should contain 1 row
-Then the "users" datagrid should contain a row:
+Then the "users" datagrid should [not] contain a row:
   | nom            | email | detailsUser |
   | Administrateur | admin | Éditer      |
-Then the row 1 of the "users" datagrid should contain:
+Then the row 1 of the "users" datagrid should [not] contain:
   | nom            | email | detailsUser |
   | Administrateur | admin | Éditer      |
-Then [the] column "name" of [the] row 2 of the "users" datagrid should contain "Bob"
+Then [the] column "name" of [the] row 2 of the "users" datagrid should [not] contain "Bob"
 Then I set "value" for [the] column "label" of [the] row 1 of the "keywords" datagrid [with a confirmation message]
 Then I additionally select "value" for [the] column "label" of [the] row 1 of the "keywords" datagrid [with a confirmation message]
 When I click "Supprimer" in the row 5 of the "users" datagrid

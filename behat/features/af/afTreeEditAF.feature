@@ -53,18 +53,42 @@ Feature: AF tree edit AF feature
   Scenario: Deletion of an AF in AF tree edit, forbidden
     Given I am on "af/af/tree"
     And I wait 7 seconds
-  # Suppression, formulaire utilisé comme sous-formulaire (non répété)
-    When I click "Données générales"
-    And I click "Supprimer"
-    Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire."
-  # Suppression, formulaire utilisé comme sous-formulaire (répété)
+  # Tentative de suppression, formulaire associé à des saisies
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click "Confirmer"
+    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé car des saisies y sont associées."
+  # Tentative de suppression, formulaire associé à des saisies (bis)
+    When I click "Données générales"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé car des saisies y sont associées."
+  # Tentative de suppression, formulaire utilisé en tant que sous-formulaire par un autre formulaire
+    When I click "Formulaire avec tout type de champ"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
     Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé, car il est appelé en tant que sous-formulaire par un autre formulaire."
+  # Tentative de suppression, formulaire utilisé pour la configuration d'une organisation (2)
+    When I click "Formulaire avec sous-formulaire répété contenant tout type de champ"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé car il est utilisé par des organisations."
+  # Tentative de suppression, formulaire utilisé pour la configuration d'une organisation
+    When I click "Forfait émissions en fonction de la marque"
+    And I click "Supprimer"
+    Then I should see the popup "Demande de confirmation"
+    And I click "Confirmer"
+    Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé car il est utilisé par des organisations."
+  # Vérification suppression non effectuée
+    And I should see "Combustion de combustible, mesuré en unité de masse"
+    And I should see "Données générales"
+    And I should see "Formulaire avec tout type de champ"
+    And I should see "Formulaire avec sous-formulaire répété contenant tout type de champ"
+    And I should see "Forfait émissions en fonction de la marque"
 
   @javascript
   Scenario: Deletion of an AF in AF tree edit, authorized
@@ -89,26 +113,11 @@ Feature: AF tree edit AF feature
     Then I should see the popup "Demande de confirmation"
     And I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-  # Suppression sans obstacle, "Données générales"
-    When I click "Données générales"
-    And I click "Supprimer"
-    Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
-  # Suppression sans obstacle, "Combustion de combustible, mesuré en unité de masse"
-    When I click "Combustion de combustible, mesuré en unité de masse"
-    And I click "Supprimer"
-    Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
   # Vérification suppression effectuée
     When I wait 5 seconds
-    Then I should see "Données générales"
-    And I should not see "Combustion de combustible, mesuré en unité de masse"
-    And I should not see "Données générales"
-    And I should not see "Formulaire avec sous-formulaires"
+    Then I should not see "Formulaire vide"
     And I should not see "Formulaire test"
-    And I should not see "Formulaire vide"
+    And I should not see "Formulaire avec sous-formulaires"
 
   @javascript
   Scenario: Link towards configuration view, from AF tree edit

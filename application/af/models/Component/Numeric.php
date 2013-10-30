@@ -16,12 +16,17 @@ use Unit\UnitAPI;
  */
 class AF_Model_Component_Numeric extends AF_Model_Component_Field
 {
-
     /**
      * L'unité associée à la valeur numérique.
      * @var UnitAPI
      */
     protected $unit;
+
+    /**
+     * Est-ce que l'utilisateur peut choisir l'unité.
+     * @var bool
+     */
+    protected $unitSelection = true;
 
     /**
      * Flag indiquant si le champs de saisie doit être associé à un champs de saisie d'incertitude.
@@ -98,7 +103,7 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             if ($this->withUncertainty) {
                 $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent'.$this->ref);
                 if ($value) {
-                    $uiUncertaintyElement->setValue($locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty()));
+                    $uiUncertaintyElement->setValue($locale->formatNumberForInput($value->getRelativeUncertainty()));
                 }
                 $uiElement->getElement()->addElement($uiUncertaintyElement);
             }
@@ -312,7 +317,25 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
         // Sélection
         $unitComponent->setValue($selectedUnit->getRef());
 
+        $unitComponent->getElement()->disabled = !$this->hasUnitSelection();
+
         return $unitComponent;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasUnitSelection()
+    {
+        return is_null($this->unitSelection) ? true : $this->unitSelection;
+    }
+
+    /**
+     * @param boolean $unitChoice
+     */
+    public function setUnitSelection($unitChoice)
+    {
+        $this->unitSelection = (boolean) $unitChoice;
     }
 
 }

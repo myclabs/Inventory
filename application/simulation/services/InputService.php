@@ -3,6 +3,8 @@
  * @author  matthieu.napoli
  */
 
+use Core\Work\ServiceCall\ServiceCallTask;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -26,16 +28,21 @@ class Simulation_Service_InputService
     private $eventDispatcher;
 
     /**
-     * @param AF_Service_InputService $afInputService
-     * @param Simulation_Service_ETLData    $etlDataService
-     * @param EventDispatcher         $eventDispatcher
-     * @param Core_Work_Dispatcher    $workDispatcher
+     * @var WorkDispatcher
+     */
+    private $workDispatcher;
+
+    /**
+     * @param AF_Service_InputService    $afInputService
+     * @param Simulation_Service_ETLData $etlDataService
+     * @param EventDispatcher            $eventDispatcher
+     * @param WorkDispatcher             $workDispatcher
      */
     public function __construct(
         AF_Service_InputService $afInputService,
         Simulation_Service_ETLData $etlDataService,
         EventDispatcher $eventDispatcher,
-        Core_Work_Dispatcher $workDispatcher
+        WorkDispatcher $workDispatcher
     ) {
         $this->afInputService = $afInputService;
         $this->etlDataService = $etlDataService;
@@ -80,11 +87,11 @@ class Simulation_Service_InputService
 
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task('Simulation_Service_ETLData', 'clearDWResultsFromScenario', [$scenario])
+            new ServiceCallTask('Simulation_Service_ETLData', 'clearDWResultsFromScenario', [$scenario])
         );
         if ($inputSet->isInputComplete()) {
             $this->workDispatcher->runBackground(
-                new Core_Work_ServiceCall_Task('Simulation_Service_ETLData', 'populateDWResultsFromScenario', [$scenario])
+                new ServiceCallTask('Simulation_Service_ETLData', 'populateDWResultsFromScenario', [$scenario])
             );
         }
     }

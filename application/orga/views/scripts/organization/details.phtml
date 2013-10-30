@@ -121,7 +121,7 @@
                         button.attr('class', 'btn');
                         button.children('i').attr('class', 'icon-info-sign icon-white');
                         button.children('span').html('<?=htmlentities(__('Orga', 'configuration', 'dWCubesState'), ENT_QUOTES)?>');
-                        addMessage('<?=htmlentities(__('UI', 'message', 'operationInProgress'), ENT_QUOTES)?>', 'success');
+                        addMessage(response, 'success');
                         button.unbind('click');
                         button.bind('click', checkOrganizationDWCubesState);
                     }

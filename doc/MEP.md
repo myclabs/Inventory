@@ -1,9 +1,29 @@
 # Mise en production
 
 
+## 2.8
+
+- Déployer normalement l'application (avec build update)
+
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/2.8/migrate.sql
+```
+
+
 ## 2.7
 
-- Déployer l'application sans build update
+- Mettre hors ligne la prod actuelle (sauf stations de montagne et spiritueux)
+
+- Installer les projets sur le nouveau serveur
+
+- Copier les BDD
+
+- Copier les fichiers
+  - `data/documents`
+  - `data/specificExports`
+  - `public/temp` ?
 
 - Exécuter le script de migration SQL
 
@@ -11,7 +31,9 @@
 scripts/migration/2.7/migrate.sql
 ```
 
-- Effectuer un build update
+- Déployer la version avec build update
+
+- Configurer les noms de domaine pour pointer vers le nouveau serveur
 
 
 ## 2.5

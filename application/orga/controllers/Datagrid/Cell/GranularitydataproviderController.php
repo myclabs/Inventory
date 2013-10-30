@@ -7,6 +7,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Datagrid de granularity
@@ -17,9 +18,15 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
 
     /**
      * @Inject
-     * @var Core_Work_Dispatcher
+     * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -86,15 +93,24 @@ class Orga_Datagrid_Cell_GranularitydataproviderController extends UI_Controller
                 $this->data = $granularity->getCellsWithACL();
                 break;
             case 'cellsGenerateDWCube':
-                $this->workDispatcher->runBackground(
-                    new Orga_Work_Task_SetGranularityCellsGenerateDWCubes(
-                        $granularity,
-                        $this->update['value']
-                    )
+                $success = function() {
+                    $this->message = __('UI', 'message', 'updated');
+                };
+                $timeout = function() {
+                    $this->message = __('UI', 'message', 'updatedLater');
+                };
+                $error = function() {
+                    throw new Core_Exception("Error in the background task");
+                };
+
+                // Lance la tache en arrière plan
+                $task = new Orga_Work_Task_SetGranularityCellsGenerateDWCubes(
+                    $granularity,
+                    $this->update['value']
                 );
+                $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
                 $this->data = $granularity->getCellsGenerateDWCubes();
-                $this->message = __('UI', 'message', 'updatedLater',
-                                    array('GRANULARITY' => $granularity->getLabel()));
                 $this->send();
                 return;
             case 'cellsWithOrgaTab':

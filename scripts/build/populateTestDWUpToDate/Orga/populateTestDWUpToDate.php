@@ -55,7 +55,7 @@ class Orga_PopulateTestDWUpToDate extends Orga_Populate
 
         // Création des utilisateurs orga.
         // Params : email
-        // $this->createUser('administrateur.organisation@toto.com');
+        // $this->createUser('administrateur.application@toto.com');
 
         // Ajout d'un role sun une organisation à un utilisateur existant.
         // Params : email, Organization
