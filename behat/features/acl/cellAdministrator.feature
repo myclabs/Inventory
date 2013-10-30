@@ -38,7 +38,7 @@ Feature: Cell administrator feature
       | label  | access         |
       | Annecy | Administrateur |
   # Accès à une des cellules
-    When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
+    When I click "Accéder aux saisies" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
