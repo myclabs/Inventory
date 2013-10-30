@@ -1,6 +1,6 @@
 <?php
+
 use User\Domain\ACL\ACLService;
-use User\Domain\ACL\UsersResourceTreeTraverser;
 
 /**
  * @author valentin.claras

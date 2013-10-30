@@ -155,6 +155,8 @@ trait Core_Strategy_Ordered
             }
 
             $this->hasMove();
+        } else {
+            $this->deletePosition();
         }
     }
 
