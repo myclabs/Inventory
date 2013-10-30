@@ -25,7 +25,7 @@ Feature: Organization administrator feature
     Then I should see the "granularity1Report" datagrid
   # Accès à l'onglet "Rôles" et au datagrid des administrateurs d'organisation
     When I open tab "Rôles"
-    And I open collapse "Administrateurs d'organisation"
+    And I open collapse "Administrateurs d'application"
     Then I should see the "organizationACL1" datagrid
 
 

@@ -10,7 +10,7 @@ Feature: Organization role feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Rôles"
-    And I open collapse "Administrateurs d'organisation"
+    And I open collapse "Administrateurs d'application"
     Then I should see the "organizationACL1" datagrid
   # Popup d'ajout
     When I click "Ajouter"
