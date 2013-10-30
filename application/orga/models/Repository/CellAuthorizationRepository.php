@@ -5,7 +5,7 @@ namespace Orga\Model\Repository;
 use Core_Model_Repository;
 use Orga_Model_Cell;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\AuthorizationRepositoryInterface;
+use User\Domain\ACL\Authorization\AuthorizationRepositoryInterface;
 use User\Domain\User;
 
 class CellAuthorizationRepository extends Core_Model_Repository implements AuthorizationRepositoryInterface

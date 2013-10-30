@@ -5,7 +5,7 @@ namespace Orga\Model\ACL\Role;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Model_Cell;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\ACL\Role;
 use User\Domain\User;
 
@@ -46,7 +46,7 @@ abstract class AbstractCellRole extends Role
      * Retourne les autorisations pour les cellules concernées par ce role.
      *
      * @param Orga_Model_Cell $cell
-     * @return Authorization[]
+     * @return \User\Domain\ACL\Authorization\Authorization[]
      */
     abstract protected function getCellAuthorizations(Orga_Model_Cell $cell);
 }

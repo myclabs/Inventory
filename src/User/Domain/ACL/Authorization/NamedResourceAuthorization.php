@@ -2,29 +2,20 @@
 
 namespace User\Domain\ACL\Authorization;
 
-use Core_Model_Query;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Authorization\Authorization;
+use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
 
 /**
- * Autorisation d'accès à un utilisateur.
+ * Autorisation d'accès à une ressource nommée.
  *
  * @author matthieu.napoli
  */
-class UserAuthorization extends Authorization
+class NamedResourceAuthorization extends Authorization
 {
-    /**
-     * @var User
-     */
     protected $resource;
 
-    /**
-     * @param User   $user
-     * @param Action $action
-     * @param User   $resource
-     */
-    public function __construct(User $user, Action $action, User $resource)
+    public function __construct(User $user, Action $action, NamedResource $resource)
     {
         $this->user = $user;
         $this->setAction($action);
@@ -34,7 +25,7 @@ class UserAuthorization extends Authorization
     }
 
     /**
-     * @return User
+     * @return Resource
      */
     public function getResource()
     {

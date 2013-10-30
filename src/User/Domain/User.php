@@ -12,8 +12,11 @@ use Core_Tools;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use User\Domain\ACL\Authorization\UserAuthorization;
+use User\Domain\ACL\Resource\Resource;
+use User\Domain\ACL\Resource\ResourceTrait;
 use User\Domain\ACL\Role;
-use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Authorization\Authorization;
 
 /**
  * User domain class.
@@ -21,8 +24,10 @@ use User\Domain\ACL\Authorization;
  * @author matthieu.napoli
  * @author valentin.claras
  */
-class User extends Core_Model_Entity
+class User extends Core_Model_Entity implements Resource
 {
+    use ACL\Resource\ResourceTrait;
+
     const QUERY_ID = 'id';
     const QUERY_PASSWORD = 'password';
     const QUERY_LASTNAME = 'lastName';
@@ -95,10 +100,16 @@ class User extends Core_Model_Entity
     protected $roles;
 
     /**
-     * Authorizations related to this resource
+     * Autorisations d'accès à des ressources.
      * @var Authorization[]|Collection
      */
     protected $authorizations;
+
+    /**
+     * Autorisations s'appliquant à cette ressource.
+     * @var UserAuthorization[]|Collection
+     */
+    protected $acl;
 
 
     public function __construct()
@@ -106,6 +117,7 @@ class User extends Core_Model_Entity
         $this->creationDate = new DateTime();
         $this->roles = new ArrayCollection();
         $this->authorizations = new ArrayCollection();
+        $this->acl = new ArrayCollection();
     }
 
     /**

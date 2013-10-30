@@ -30,6 +30,5 @@ class Bootstrap extends Core_Package_Bootstrap
     protected function _initUserTypeMapping()
     {
         Type::addType(LocaleMapping::TYPE_NAME, LocaleMapping::class);
-        Type::addType(ActionType::TYPE_NAME, ActionType::class);
     }
 }

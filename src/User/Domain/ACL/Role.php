@@ -3,6 +3,7 @@
 namespace User\Domain\ACL;
 
 use Core_Model_Entity;
+use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\User;
 
 /**

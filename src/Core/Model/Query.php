@@ -1,7 +1,7 @@
 <?php
 
 use User\Architecture\TypeMapping\ActionType;
-use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Authorization\Authorization;
 
 /**
  * Requete avec filtres et tri.

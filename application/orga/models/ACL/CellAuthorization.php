@@ -5,7 +5,7 @@ namespace Orga\Model\ACL;
 use Core_Model_Query;
 use Orga_Model_Cell;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\User;
 
 /**
@@ -28,7 +28,7 @@ class CellAuthorization extends Authorization
     public function __construct(User $user, Action $action, Orga_Model_Cell $resource = null)
     {
         $this->user = $user;
-        $this->action = $action;
+        $this->setAction($action);
         $this->resource = $resource;
     }
 

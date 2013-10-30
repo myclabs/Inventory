@@ -5,8 +5,9 @@ namespace User\Domain\ACL\Role;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Model_Organization;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Authorization\RepositoryAuthorization;
+use User\Domain\ACL\Authorization\NamedResourceAuthorization;
 use User\Domain\ACL\Authorization\UserAuthorization;
+use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\Role;
 use User\Domain\User;
 
@@ -25,7 +26,8 @@ class AdminRole extends Role
         $authorizations = [];
 
         // Admin can create new users
-        $authorizations[] = new UserAuthorization($this->user, Action::CREATE());
+        $usersAbstractResource = NamedResource::loadByName(User::class);
+        $authorizations[] = new NamedResourceAuthorization($this->user, Action::CREATE(), $usersAbstractResource);
 
         // Admin can view, edit, delete, undelete, allow everyone except himself
         /** @var User[] $allUsers */
@@ -42,10 +44,12 @@ class AdminRole extends Role
         }
 
         // Admin can edit the repository
-        $authorizations[] = new RepositoryAuthorization($this->user, Action::EDIT());
+        $repository = NamedResource::loadByName('repository');
+        $authorizations[] = new NamedResourceAuthorization($this->user, Action::EDIT(), $repository);
 
         // Admin can create new organizations
-        $authorizations[] = new OrganizationAuthorization($this->user, Action::CREATE());
+        $organizationsResource = NamedResource::loadByName(Orga_Model_Organization::class);
+        $authorizations[] = new NamedResourceAuthorization($this->user, Action::CREATE(), $organizationsResource);
 
         // Admin can view, edit, delete, allow on all organizations
         /** @var Orga_Model_Organization[] $organizations */

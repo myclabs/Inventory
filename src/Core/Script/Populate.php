@@ -1,4 +1,6 @@
 <?php
+use Doctrine\ORM\EntityManager;
+
 /**
  * @author     matthieu.napoli
  * @package    Core
@@ -32,6 +34,9 @@ abstract class Core_Script_Populate extends Core_Script_Action
         if (!in_array($environment, $this->acceptedEnvironments)) {
             return;
         }
+
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
         /** @var $bootstrap Core_Bootstrap */
         $bootstrap = Zend_Registry::get('bootstrap');
 
@@ -51,6 +56,7 @@ abstract class Core_Script_Populate extends Core_Script_Action
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default'] = $entityManager;
         Zend_Registry::set('EntityManagers', $entityManagers);
+        $container->set(EntityManager::class, $entityManager);
 
         // Lancement du populate.
         $this->populateEnvironment($environment);
@@ -61,6 +67,7 @@ abstract class Core_Script_Populate extends Core_Script_Action
         unset($entityManagers['default']);
         $entityManager->close();
         Zend_Registry::set('EntityManagers', $entityManagers);
+        $container->set(EntityManager::class, null);
     }
 
     /**

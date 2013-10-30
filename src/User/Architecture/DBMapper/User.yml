@@ -3,9 +3,6 @@ User\Domain\User:
   repositoryClass: \Core_Model_Repository
   table: User_User
 
-  entityListeners:
-    User\Domain\ACL\ResourceListener\UserListener:
-
   id:
     id:
       type: integer
@@ -49,8 +46,13 @@ User\Domain\User:
       cascade: [ all ]
       orphanRemoval: true
     authorizations:
-      targetEntity: User\Domain\ACL\Authorization
+      targetEntity: User\Domain\ACL\Authorization\Authorization
       mappedBy: user
       cascade: [ all ]
       orphanRemoval: true
       fetch: EXTRA_LAZY
+    acl:
+      targetEntity: User\Domain\ACL\Authorization\UserAuthorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true

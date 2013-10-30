@@ -1,6 +1,6 @@
 <?php
 
-namespace User\Domain\ACL;
+namespace User\Domain\ACL\Authorization;
 
 use User\Domain\ACL\Action;
 use User\Domain\User;

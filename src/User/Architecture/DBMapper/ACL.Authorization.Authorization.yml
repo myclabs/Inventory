@@ -1,4 +1,4 @@
-User\Domain\ACL\Authorization:
+User\Domain\ACL\Authorization\Authorization:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: ACL_Authorization
@@ -9,7 +9,7 @@ User\Domain\ACL\Authorization:
     type: string
   discriminatorMap:
     user: User\Domain\ACL\Authorization\UserAuthorization
-    repository: User\Domain\ACL\Authorization\RepositoryAuthorization
+    namedResource: User\Domain\ACL\Authorization\NamedResourceAuthorization
     organization: Orga\Model\ACL\OrganizationAuthorization
     cell: Orga\Model\ACL\CellAuthorization
 
@@ -20,8 +20,8 @@ User\Domain\ACL\Authorization:
         strategy: AUTO
 
   fields:
-    action:
-      type: user_action
+    actionId:
+      type: string
       nullable: false
 
   manyToOne:

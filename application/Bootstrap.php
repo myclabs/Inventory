@@ -190,36 +190,4 @@ class Bootstrap extends Core_Bootstrap
         $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
         $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }
-
-    protected function _initAuthorizationRepositories()
-    {
-        $this->container->set(
-            ACLService::class,
-            function (Container $c) {
-                /** @var EntityManager $em */
-                $em = $c->get(EntityManager::class);
-
-                $aclService = new ACLService($em, $c->get(LoggerInterface::class));
-
-                $aclService->setAuthorizationRepository(
-                    User::class,
-                    $em->getRepository(UserAuthorization::class)
-                );
-                $aclService->setAuthorizationRepository(
-                    'repository',
-                    $em->getRepository(RepositoryAuthorization::class)
-                );
-                $aclService->setAuthorizationRepository(
-                    Orga_Model_Organization::class,
-                    $em->getRepository(OrganizationAuthorization::class)
-                );
-                $aclService->setAuthorizationRepository(
-                    Orga_Model_Cell::class,
-                    $em->getRepository(CellAuthorization::class)
-                );
-
-                return $aclService;
-            }
-        );
-    }
 }
