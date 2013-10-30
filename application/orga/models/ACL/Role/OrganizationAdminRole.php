@@ -43,4 +43,12 @@ class OrganizationAdminRole extends Role
             }
         }
     }
+
+    /**
+     * @return Orga_Model_Organization
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
+    }
 }
