@@ -204,7 +204,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     public function __construct(Orga_Model_Granularity $granularity, array $members=[])
     {
-        $this->members = new ArrayCollection($members);
+        $this->members = new ArrayCollection();
         $this->cellsGroups = new ArrayCollection();
         $this->socialCommentsForAFInputSetPrimary = new ArrayCollection();
         $this->dWResults = new ArrayCollection();
