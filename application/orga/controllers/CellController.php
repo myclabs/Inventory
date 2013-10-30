@@ -109,7 +109,7 @@ class Orga_CellController extends Core_Controller
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && $granularity->getCellsWithOrgaTab()) {
             $organizationTab = new UI_Tab('orga');
-            $organizationTab->label = __('Orga', 'organization', 'organization');
+            $organizationTab->label = __('Orga', 'cell', 'configurationTab');
             $organizationSubTabs = array('organization', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
             if (in_array($tab, $organizationSubTabs)) {
                 $organizationTab->active = true;

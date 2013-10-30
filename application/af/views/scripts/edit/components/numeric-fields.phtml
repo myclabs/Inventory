@@ -69,13 +69,13 @@ $unitColumn->editable = true;
 $numericDatagrid->addCol($unitColumn);
 
 // Unit choice
-$unitSelectionColumn = new UI_Datagrid_Col_Bool('unitSelection', __('AF', 'configComponentDatagrid', 'unitSelection'));
+$unitSelectionColumn = new UI_Datagrid_Col_Bool('unitSelection', __('AF', 'configComponentDatagrid', 'editableUnitHeader'));
 $unitSelectionColumn->editable = true;
 $unitSelectionColumn->defaultAddValue = true;
-$unitSelectionColumn->textTrue = __('UI', 'property', 'enabled');
-$unitSelectionColumn->textFalse = __('UI', 'property', 'disabled');
-$unitSelectionColumn->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'enabled');
-$unitSelectionColumn->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'disabled');
+$unitSelectionColumn->textTrue = __('UI', 'property', 'editable');
+$unitSelectionColumn->textFalse = __('UI', 'property', 'notEditable');
+$unitSelectionColumn->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'editable');
+$unitSelectionColumn->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'notEditable');
 $numericDatagrid->addCol($unitSelectionColumn);
 
 // Has Uncertainty

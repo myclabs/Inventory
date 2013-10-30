@@ -9,7 +9,7 @@ Feature: Organizational axis feature
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Axes"
     And I wait 5 seconds
     Then I should see "Année (annee)"
@@ -46,7 +46,7 @@ Feature: Organizational axis feature
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Axes"
     And I wait 5 seconds
   # TODO : modification sans effet
@@ -73,7 +73,7 @@ Feature: Organizational axis feature
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Axes"
     And I wait 3 seconds
   # Modification du libellé et de l'identifiant d'un axe
@@ -103,7 +103,7 @@ Feature: Organizational axis feature
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Axes"
     And I wait 5 seconds
   # Déplacement en premier (axe situé à la racine)
@@ -134,7 +134,7 @@ Feature: Organizational axis feature
   # Accès à l'onglet "Axes"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Axes"
     And I wait 5 seconds
   # Axe contenant un membre

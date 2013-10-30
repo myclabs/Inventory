@@ -36,4 +36,21 @@ trait PopupFeatureContext
         // Petite pause pour l'animation du popup
         $this->getSession()->wait(300);
     }
+
+    /**
+     * @Then /^(?:|I )should see a popup$/
+     */
+    public function assertAPopupVisible()
+    {
+        $jsCondition = '$(".modal:visible").length > 0';
+
+        // Timeout de 2 secondes
+        $this->getSession()->wait(2000, $jsCondition);
+
+        // Test that a popup is visible
+        $this->assertSession()->elementExists('css', ".modal");
+
+        // Petite pause pour l'animation du popup
+        $this->getSession()->wait(300);
+    }
 }
