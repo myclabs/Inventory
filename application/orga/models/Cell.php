@@ -195,7 +195,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     public function __construct(Orga_Model_Granularity $granularity, array $members=[])
     {
-        $this->members = new ArrayCollection();
+        $this->members = new ArrayCollection($members);
+        foreach ($members as $member) {
+            $member->addCell($this);
+        }
+
         $this->cellsGroups = new ArrayCollection();
         $this->socialCommentsForAFInputSetPrimary = new ArrayCollection();
         $this->dWResults = new ArrayCollection();
@@ -204,12 +208,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $this->acl = new ArrayCollection();
 
         $this->granularity = $granularity;
-        foreach ($members as $member) {
-            $this->members->add($member);
-            $member->addCell($this);
-        }
         $this->updateMembersHashKey();
         $this->updateHierarchy();
+        $this->updateACL();
 
         // Création du cube de DW.
         $this->createDWCube();
@@ -1578,4 +1579,17 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         return $this->getMembersHashKey();
     }
 
+    /**
+     * Met à jour les autorisations d'accès à cette cellule.
+     */
+    public function updateACL()
+    {
+        $authorizations = [];
+        foreach ($this->getParentCells() as $parentCell) {
+            foreach ($parentCell->getACL() as $authorization) {
+                $authorizations[] = $authorization;
+            }
+        }
+        $this->replaceACL($authorizations);
+    }
 }

@@ -261,7 +261,6 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
     public function setUp()
     {
-        $this->markTestSkipped('TODO');
         parent::setUp();
 
         // Création de l'organization (proche de populateTest au 08/08/2013).
@@ -6270,6 +6269,11 @@ class Orga_Test_ACL extends Core_Test_TestCase
     protected function tearDown()
     {
         parent::tearDown();
+
+        if (! $this->organizationAdministrator) {
+            // Erreur dans le set up ?
+            return;
+        }
 
         $this->userService->deleteUser($this->organizationAdministrator);
         $this->userService->deleteUser($this->globaleCellAdministrator);
