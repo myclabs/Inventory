@@ -18,19 +18,21 @@ if ($this->displayOrganizationTabs) {
     $axisTab->dataSource = 'orga/axis/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
     $axisTab->useCache = true;
     $tabView->addTab($axisTab);
+}
 
+$membersTab = new UI_Tab('members');
+$membersTab->label = __('UI', 'name', 'elements');
+$membersTab->dataSource = 'orga/member/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
+$membersTab->useCache = false;
+$tabView->addTab($membersTab);
+
+if ($this->displayOrganizationTabs) {
     $granularityTab = new UI_Tab('granularities');
     $granularityTab->label = __('Orga', 'granularity', 'granularities');
     $granularityTab->dataSource = 'orga/granularity/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
     $granularityTab->useCache = false;
     $tabView->addTab($granularityTab);
 }
-
-$membersTab = new UI_Tab('members');
-$membersTab->label = __('UI', 'name', 'members');
-$membersTab->dataSource = 'orga/member/manage/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
-$membersTab->useCache = false;
-$tabView->addTab($membersTab);
 
 if ($this->hasChildCells) {
     $childCellsTab = new UI_Tab('childCells');
