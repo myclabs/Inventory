@@ -14,7 +14,7 @@ class Orga_Test_ACLTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Orga_Test_ACL');
+//        $suite->addTestSuite('Orga_Test_ACL');
         return $suite;
     }
 }
@@ -3162,7 +3162,6 @@ class Orga_Test_ACL extends Core_Test_TestCase
      */
     public function testUsersACLFilter()
     {
-        $this->markTestSkipped('TODO');
         $this->tACLFilterOrganizationAdministrator();
         $this->tACLFilterGlobaleCellAdministrator();
         $this->tACLFilterEuropeACellContributor();
