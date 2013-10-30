@@ -14,7 +14,7 @@ class Orga_Test_ACLTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-//        $suite->addTestSuite('Orga_Test_ACL');
+        $suite->addTestSuite('Orga_Test_ACL');
         return $suite;
     }
 }
@@ -6266,34 +6266,6 @@ class Orga_Test_ACL extends Core_Test_TestCase
             // Erreur dans le set up ?
             return;
         }
-        
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
-
-        /** @var Orga_Service_ACLManager $aclManagerService */
-        $aclManagerService = $container->get('Orga_Service_ACLManager');
-        $aclManagerService->removeOrganizationAdministrator($this->organization, $this->organizationAdministrator, false);
-        $aclManagerService->removeCellAdministrator(
-            $this->granularityGlobale->getCellByMembers([]), $this->globaleCellAdministrator, false
-        );
-        $aclManagerService->removeCellContributor(
-            $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueA]), $this->europeaCellContributor, 'contributor'
-        );
-        $aclManagerService->removeCellObserver(
-            $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]), $this->sudameriquebCellObserver, 'observer'
-        );
-        $aclManagerService->removeCellAdministrator(
-            $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]), $this->annecyCellAdministrator, 'administrator'
-        );
-        $aclManagerService->removeCellContributor(
-            $this->granularitySite->getCellByMembers([$this->memberSiteLima]), $this->limaCellContributor, 'contributor'
-        );
-        $aclManagerService->removeCellObserver(
-            $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]), $this->berlinCellObserver, 'observer'
-        );
-
-        $this->entityManager->flush();
-        $this->entityManager->clear();
 
         $this->userService->deleteUser(User::load($this->organizationAdministrator->getId()));
         $this->userService->deleteUser(User::load($this->globaleCellAdministrator->getId()));
