@@ -35,6 +35,14 @@
                 <seg>Please use only characters "a..z", "0..9", and "_".</seg>
             </tuv>
         </tu>
+        <tu tuid="tooLongRef">
+            <tuv xml:lang="fr">
+                <seg>Merci d'utiliser moins de 255 caractères.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please use less than 255 characters.</seg>
+            </tuv>
+        </tu>
 
 	</body>
 </tmx>

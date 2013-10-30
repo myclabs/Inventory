@@ -249,7 +249,7 @@ class Orga_Service_ACLManager
     {
         $user->addRole(Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
-        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
+        $globalCell = $organization->getGranularityByRef('global')->getCells()[0];
         $user->addRole(
             Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
@@ -278,7 +278,7 @@ class Orga_Service_ACLManager
     {
         $user->removeRole(Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
-        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
+        $globalCell = $organization->getGranularityByRef('global')->getCells()[0];
         $user->removeRole(
             Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
@@ -380,7 +380,7 @@ class Orga_Service_ACLManager
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleAdded',
                     [
-                        'CELL' => $cell->getLabelExtended(),
+                        'CELL' => $cell->getExtendedLabel(),
                         'ROLE' => __('Orga', 'role', $role->getName())
                     ]
                 )
@@ -404,7 +404,7 @@ class Orga_Service_ACLManager
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleRemoved',
                     [
-                        'CELL' => $cell->getLabelExtended(),
+                        'CELL' => $cell->getExtendedLabel(),
                         'ROLE' => __('Orga', 'role', $role->getName())
                     ]
                 )

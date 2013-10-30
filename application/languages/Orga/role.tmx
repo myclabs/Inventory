@@ -8,18 +8,18 @@
 
         <tu tuid="organizationAdministrator">
             <tuv xml:lang="fr">
-                <seg>Administrateur d'organisation</seg>
+                <seg>Administrateur d'application</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization administrator</seg>
+                <seg>Application administrator</seg>
             </tuv>
         </tu>
         <tu tuid="organizationAdministrators">
             <tuv xml:lang="fr">
-                <seg>Administrateurs d'organisation</seg>
+                <seg>Administrateurs d'application</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization administrators</seg>
+                <seg>Application administrators</seg>
             </tuv>
         </tu>
         <tu tuid="cellAdministrator">

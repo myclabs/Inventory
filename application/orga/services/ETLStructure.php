@@ -116,10 +116,7 @@ class Orga_Service_ETLStructure
         $this->populateDWCubeWithClassifAndOrga(
             $cell->getDWCube(),
             $cell->getGranularity()->getOrganization(),
-            array(
-                'axes' => $cell->getGranularity()->getAxes(),
-                'members' => $cell->getMembers()
-            )
+            ['axes' => $cell->getGranularity()->getAxes(), 'members' => $cell->getMembers()]
         );
     }
 
@@ -134,9 +131,7 @@ class Orga_Service_ETLStructure
         $this->populateDWCubeWithClassifAndOrga(
             $granularity->getDWCube(),
             $granularity->getOrganization(),
-            array(
-                'axes' => $granularity->getAxes()
-            )
+            ['axes' => $granularity->getAxes()]
         );
     }
 
@@ -238,7 +233,7 @@ class Orga_Service_ETLStructure
      * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      */
-    protected function populateDWCubeWithClassifAndOrga($dWCube, $orgaOrganization, $orgaFilters)
+    protected function populateDWCubeWithClassifAndOrga($dWCube, $orgaOrganization, array $orgaFilters)
     {
         $this->populateDWCubeWithOrgaOrganization($dWCube, $orgaOrganization, $orgaFilters);
         $this->populateDWCubeWithClassif($dWCube);
@@ -433,9 +428,9 @@ class Orga_Service_ETLStructure
 
             $memberIdentifier = $orgaMember->getAxis()->getRef().'_'.$orgaMember->getCompleteRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
-            foreach ($orgaMember->getDirectChildren() as $narrowerClassifMember) {
-                $narrowerIdentifier = $narrowerClassifMember->getAxis()->getRef().'_'
-                    .$narrowerClassifMember->getCompleteRef();
+            foreach ($orgaMember->getDirectChildren() as $narrowerOrgaMember) {
+                $narrowerIdentifier = $narrowerOrgaMember->getAxis()->getRef().'_'
+                    .$narrowerOrgaMember->getCompleteRef();
                 if (isset($associationArray['members'][$narrowerIdentifier])) {
                     $dWMember->addDirectChild($associationArray['members'][$narrowerIdentifier]);
                 }
@@ -857,10 +852,10 @@ class Orga_Service_ETLStructure
             }
         }
 
-        $orgaMembers = $orgaAxis->getMembers();
+        $orgaMembers = $orgaAxis->getMembers()->toArray();
         $dWMembers = $dWAxis->getMembers();
 
-        foreach ($orgaAxis->getMembers() as $orgaIndex => $orgaMember) {
+        foreach ($orgaAxis->getMembers()->toArray() as $orgaIndex => $orgaMember) {
             if (isset($orgaFilters['members'])) {
                 foreach ($filteringOrgaBroaderAxes as $filteringOrgaAxis) {
                     foreach ($orgaFilters['members'] as $filteringOrgaMember) {

@@ -436,14 +436,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         }
 
         $listDatagridConfiguration = array();
-        $listInputGranularities = $organization->getInputGranularities();
-        uasort(
-            $listInputGranularities,
-            function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
-                return $a->getPosition() - $b->getPosition();
-            }
-        );
-        foreach ($listInputGranularities as $inputGranularity) {
+        foreach ($organization->getInputGranularities() as $inputGranularity) {
             if ($cell->getGranularity()->isBroaderThan($inputGranularity)
                 || ($cell->getGranularity()->getRef() === $inputGranularity->getRef())) {
                 $datagridConfiguration = new Orga_DatagridConfiguration(
@@ -565,7 +558,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             EntityResource::loadByEntity($cell)
         );
         $viewConfiguration = new DW_ViewConfiguration();
-        $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getLabelExtended().'</small>');
+        $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
         $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$cell->getId().'/tab/analyses');
         $viewConfiguration->setSaveURL('orga/tab_celldetails/report/idCell/'.$cell->getId());
         $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);

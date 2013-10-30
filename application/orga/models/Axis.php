@@ -17,14 +17,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Orga_Model_Axis extends Core_Model_Entity
 {
-    //@todo utiliser l'héritage dès qu'une version nouvelle de php (5.4.7 >) sera disponible.
-//    use Core_Strategy_Ordered {
-//        Core_Strategy_Ordered::setPositionInternal as setPositionInternalOrdered;
-//    }
     use Core_Strategy_Ordered;
     use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
+    const QUERY_NARROWER_TAG = 'narrowerTag';
+    const QUERY_BROADER_TAG = 'broaderTag';
     const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
     const QUERY_POSITION = 'position';
@@ -33,7 +31,7 @@ class Orga_Model_Axis extends Core_Model_Entity
 
 
     /**
-     * Identifiant uniqe de l'axe.
+     * Identifiant unique de l'axe.
      *
      * @var int
      */
@@ -61,6 +59,20 @@ class Orga_Model_Axis extends Core_Model_Entity
     protected $organization = null;
 
     /**
+     * Tag identifiant l'axe dans la hiérarchie des narrowers de l'organization.
+     *
+     * @var string
+     */
+    protected $narrowerTag = null;
+
+    /**
+     * Tag identifiant l'axe dans la hiérarchie des broaders de l'organization.
+     *
+     * @var string
+     */
+    protected $broaderTag = null;
+
+    /**
      * Axe narrower de l'axe courant.
      *
      * @var Orga_Model_Axis
@@ -82,6 +94,13 @@ class Orga_Model_Axis extends Core_Model_Entity
     protected $contextualizing = false;
 
     /**
+     * Définit si l'Axis courant permet le positionnement des Member. (ou ordre alphabétique)
+     *
+     * @var bool
+     */
+    protected $memberPositioning = false;
+
+    /**
      * Collection des Member de l'Axis courant.
      *
      * @var Collection|Orga_Model_Member[]
@@ -100,16 +119,36 @@ class Orga_Model_Axis extends Core_Model_Entity
      * Constructeur de la classe Axis.
      *
      * @param Orga_Model_Organization $organization
+     * @param Orga_Model_Axis $directNarrowerAxis
      */
-    public function __construct(Orga_Model_Organization $organization)
+    public function __construct(Orga_Model_Organization $organization, Orga_Model_Axis $directNarrowerAxis=null)
     {
         $this->directBroaders = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->granularities = new ArrayCollection();
 
         $this->organization = $organization;
-        $this->setPosition();
+        $this->directNarrower = $directNarrowerAxis;
+        if ($directNarrowerAxis !== null) {
+            foreach ($directNarrowerAxis->getMembers() as $member) {
+                $member->setPosition();
+            }
+            $directNarrowerAxis->directBroaders->add($this);
+            foreach ($directNarrowerAxis->getMembers() as $member) {
+                $member->setPosition();
+            }
+        }
+
         $this->organization->addAxis($this);
+        $this->setPosition();
+        $this->updateNarrowerTag();
+        $this->updateBroaderTag();
+
+        if ($directNarrowerAxis !== null) {
+            foreach ($directNarrowerAxis->getMembers() as $member) {
+                $member->updateParentsMembers();
+            }
+        }
     }
 
     /**
@@ -139,30 +178,20 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Charge un Axis en fonction de sa référence et son organization.
-     *
-     * @param string $ref
-     * @param Orga_Model_Organization $organization
-     *
-     * @return Orga_Model_Axis
-     */
-    public static function loadByRefAndOrganization($ref, $organization)
-    {
-        return $organization->getAxisByRef($ref);
-    }
-
-    /**
      * Met à jour les hashKey des membres et des cellules.
      */
-    protected function updateMembersAndCellsHashKey()
+    public function updateTags()
     {
+        $this->updateNarrowerTag();
+        $this->updateBroaderTag();
         foreach ($this->getMembers() as $member) {
-            $member->updateParentMembersHashKey();
+            // Update simple des tag, les cellules seront mises à jour ensuite.
+            $member->updateTag();
         }
-
         foreach ($this->getGranularities() as $granularity) {
+            $granularity->updateRef();
             foreach ($granularity->getCells() as $cell) {
-                $cell->updateMembersHashKey();
+                $cell->updateTags();
             }
         }
     }
@@ -183,15 +212,19 @@ class Orga_Model_Axis extends Core_Model_Entity
      * @param string $ref
      *
      * @throws Core_Exception_InvalidArgument
+     * @throws Core_Exception_Duplicate
      */
     public function setRef($ref)
     {
         if ($ref === 'global') {
             throw new Core_Exception_InvalidArgument('An Axis ref cannot be "global".');
-        } else {
-            $this->ref = $ref;
-            foreach ($this->granularities as $granularity) {
-                $granularity->updateRef();
+        } else if ($this->ref !== $ref) {
+            try {
+                $this->getOrganization()->getAxisByRef($ref);
+                throw new Core_Exception_Duplicate('An Axis with ref "'.$ref.'" already exists in the Organization');
+            } catch (Core_Exception_NotFound $e) {
+                $this->ref = $ref;
+                $this->updateTags();
             }
         }
     }
@@ -201,7 +234,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      *
      * @return String
      */
-    public function getRef ()
+    public function getRef()
     {
         return $this->ref;
     }
@@ -211,7 +244,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      *
      * @param String $label
      */
-    public function setLabel ($label)
+    public function setLabel($label)
     {
         $this->label = $label;
     }
@@ -237,38 +270,85 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Définit la position de l'objet et renvoi sa nouvelle position.
+     * Retire (supprime) l'axe de l'organization.
      *
-     * @param int $position
-     *
-     * @return int Nouvelle position
-     *
-     * @throws Core_Exception_InvalidArgument Position invalide
-     * @throws Core_Exception_UndefinedAttribute La position n'est pas déjà définie
+     * Nécessaire pour supprimer sa position.
      */
-    public function setPositionInternal($position=null)
+    public function removeFromOrganization()
     {
-        if (($this->position === null) && ($position === null)) {
-            $this->addPosition();
-        } else if ($position !== null) {
-            $this->checkHasPosition();
+        $this->getOrganization()->removeAxis($this);
+        $this->deletePosition();
+    }
 
-            // Vérification que la position ne soit pas inférieure à la première et supérieure à la dernière.
-            if (($position < 1) || ($position > self::getLastPositionByContext($this->getContext()))) {
-                throw new Core_Exception_InvalidArgument("The position '$position' is out of range.");
-            }
+    /**
+     * @return string
+     */
+    public function getAxisTag()
+    {
+        return $this->getPosition() . '-' . $this->getRef();
+    }
 
-            // Tant que la position n'est pas celle souhaitée on la modifie.
-            while ($this->position != $position) {
-                if ($this->position < $position) {
-                    $this->swapWithNext();
-                } else if ($this->position > $position) {
-                    $this->swapWithPrevious();
+    /**
+     * Mets à jour le tag des narrowers de l'axe.
+     */
+    public function updateNarrowerTag()
+    {
+        $this->narrowerTag = '';
+        if ($this->directNarrower !== null) {
+            $this->narrowerTag = $this->directNarrower->narrowerTag;
+        }
+        $this->narrowerTag .= Orga_Model_Organization::PATH_SEPARATOR . $this->getAxisTag();
+
+        foreach ($this->getDirectBroaders() as $directBroaderAxis) {
+            $directBroaderAxis->updateNarrowerTag();
+        }
+    }
+
+    /**
+     * Renvoie le tag des narrowers l'axe.
+     *
+     * @return string
+     */
+    public function getNarrowerTag()
+    {
+        return $this->narrowerTag;
+    }
+
+    /**
+     * Mets à jour le tag des broaders de l'axe.
+     */
+    public function updateBroaderTag()
+    {
+        $this->broaderTag = '';
+        if ($this->hasDirectBroaders()) {
+            $broaderPathTags = [];
+            foreach ($this->getDirectBroaders() as $directBroaderAxis) {
+                foreach (explode(Orga_Model_Organization::PATH_JOIN, $directBroaderAxis->getBroaderTag()) as $broaderPathTag) {
+                    $broaderPathTags[] = $broaderPathTag;
                 }
             }
+            $pathLink = Orga_Model_Organization::PATH_SEPARATOR . $this->getAxisTag() . Orga_Model_Organization::PATH_JOIN;
+            $this->broaderTag = implode($pathLink, $broaderPathTags);
+        }
+        $this->broaderTag .= Orga_Model_Organization::PATH_SEPARATOR . $this->getAxisTag();
+
+        if ($this->directNarrower !== null) {
+            $this->directNarrower->updateBroaderTag();
         }
 
-        $this->getOrganization()->orderGranularities();
+        foreach ($this->getGranularities() as $granularity) {
+            $granularity->updateTag();
+        }
+    }
+
+    /**
+     * Renvoie le tag des broaders de l'axe.
+     *
+     * @return string
+     */
+    public function getBroaderTag()
+    {
+        return $this->broaderTag;
     }
 
     /**
@@ -276,17 +356,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     protected function hasMove()
     {
-        $this->updateMembersAndCellsHashKey();
-    }
-
-    /**
-     * Renvoie la position globale de l'axe.
-     *
-     * @return int
-     */
-    public function getGlobalPosition()
-    {
-        return $this->getOrganization()->getAxisGlobalPosition($this);
+        $this->updateTags();
     }
 
     /**
@@ -297,28 +367,70 @@ class Orga_Model_Axis extends Core_Model_Entity
      *
      * @return int 1, 0 ou -1
      */
-    public static function orderAxes(Orga_Model_Axis $a, Orga_Model_Axis $b)
+    public static function firstOrderAxes(Orga_Model_Axis $a, Orga_Model_Axis $b)
     {
-        return $a->getGlobalPosition() - $b->getGlobalPosition();
+        return strcmp($a->narrowerTag, $b->narrowerTag);
+    }
+
+    /**
+     * Permet d'ordonner des Axis entre eux.
+     *
+     * @param Orga_Model_Axis $a
+     * @param Orga_Model_Axis $b
+     *
+     * @return int 1, 0 ou -1
+     */
+    public static function lastOrderAxes(Orga_Model_Axis $a, Orga_Model_Axis $b)
+    {
+        if (strpos($a->narrowerTag, $b->narrowerTag) !== false) {
+            return -1;
+        } else if (strpos($b->narrowerTag, $a->narrowerTag) !== false) {
+            return 1;
+        }
+        return self::firstOrderAxes($a, $b);
     }
 
     /**
      * Définit l'axe narrower de l'axe courant.
      *
-     * @param Orga_Model_Axis $narrowerAxis
+     * @param Orga_Model_Axis $newDirectNarrowerAxis
+     *
+     * @throws Core_Exception_InvalidArgument
      */
-    public function setDirectNarrower(Orga_Model_Axis $narrowerAxis=null)
+    public function moveTo(Orga_Model_Axis $newDirectNarrowerAxis=null)
     {
-        if ($this->directNarrower !== $narrowerAxis) {
-            if ($this->directNarrower !== null) {
-                $this->directNarrower->removeDirectBroader($this);
+        if ($this->directNarrower !== $newDirectNarrowerAxis) {
+            if ($newDirectNarrowerAxis !== null && $newDirectNarrowerAxis->isBroaderThan($this)) {
+                throw new Core_Exception_InvalidArgument('The given Axis is broader than the current one.');
             }
+
+            $oldDirectNarrowerAxis = $this->directNarrower;
+            if ($oldDirectNarrowerAxis !== null) {
+                if ($oldDirectNarrowerAxis->hasDirectBroader($this)) {
+                    $oldDirectNarrowerAxis->directBroaders->removeElement($this);
+                    foreach ($oldDirectNarrowerAxis->getMembers() as $member) {
+                        $member->updateParentsMembers();
+                    }
+                    // La mise à jour du broaderTag du oldNarrrowerAxis est faites lors du deletePosition de cet axe.
+                }
+            }
+
             $this->deletePosition();
-            $this->directNarrower = $narrowerAxis;
-            if ($narrowerAxis !== null) {
-                $narrowerAxis->addDirectBroader($this);
+            $this->directNarrower = $newDirectNarrowerAxis;
+
+            if ($newDirectNarrowerAxis !== null) {
+                if (!($newDirectNarrowerAxis->hasDirectBroader($this))) {
+                    $newDirectNarrowerAxis->directBroaders->add($this);
+                    foreach ($newDirectNarrowerAxis->getMembers() as $member) {
+                        $member->updateParentsMembers();
+                    }
+                    // La mise à jour du broaderTag du narrrowerAxis est faites lors du setPosition de cet axe.
+                }
             }
+
+            // L'update des tags est effectué pas hasMove().
             $this->setPosition();
+            $this->updateTags();
         }
     }
 
@@ -333,16 +445,23 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un Axis broader à l'axe courant.
+     * Retourne tous les narrowers de l'Axis dans l'ordre de première exploration.
      *
-     * @param Orga_Model_Axis $broaderAxis
+     * @return Orga_Model_Axis[]
      */
-    public function addDirectBroader(Orga_Model_Axis $broaderAxis)
+    public function getAllNarrowers()
     {
-        if (!($this->hasDirectBroader($broaderAxis))) {
-            $this->directBroaders->add($broaderAxis);
-            $broaderAxis->setDirectNarrower($this);
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getBroaderTag()) as $pathTag) {
+            $criteria->andWhere(
+                Doctrine\Common\Collections\Criteria::expr()->contains(
+                    'broaderTag',
+                    $pathTag . Orga_Model_Organization::PATH_SEPARATOR
+                )
+            );
         }
+        $criteria->orderBy(['narrowerTag' => 'DESC']);
+        return $this->getOrganization()->getAxes()->matching($criteria)->toArray();
     }
 
     /**
@@ -355,19 +474,6 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function hasDirectBroader(Orga_Model_Axis $broaderAxis)
     {
         return $this->directBroaders->contains($broaderAxis);
-    }
-
-    /**
-     * Retire l'axe donnés .
-     *
-     * @param Orga_Model_Axis $broaderAxis
-     */
-    public function removeDirectBroader($broaderAxis)
-    {
-        if ($this->hasDirectBroader($broaderAxis)) {
-            $this->directBroaders->removeElement($broaderAxis);
-            $broaderAxis->setDirectNarrower();
-        }
     }
 
     /**
@@ -387,52 +493,43 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getDirectBroaders()
     {
-        $directBroaders = $this->directBroaders->toArray();
-
-        @uasort(
-            $directBroaders,
-            function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
-        );
-
-        return $directBroaders;
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->orderBy(['narrowerTag' => 'ASC']);
+        return $this->directBroaders->matching($criteria);
     }
 
     /**
-     * Retourne récursivement, tous les broaders de l'Axis dans l'ordre de première exploration.
+     * Retourne tous les broaders de l'Axis dans l'ordre de première exploration.
      *
      * @return Orga_Model_Axis[]
      */
     public function getAllBroadersFirstOrdered()
     {
-        $broaders = array();
-        foreach ($this->getDirectBroaders() as $directBroader) {
-            $broaders[] = $directBroader;
-            foreach ($directBroader->getAllBroadersFirstOrdered() as $recursiveBroader) {
-                $broaders[] = $recursiveBroader;
-            }
-        }
-        return $broaders;
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->where(
+            Doctrine\Common\Collections\Criteria::expr()->contains(
+                'narrowerTag',
+                $this->getNarrowerTag() . Orga_Model_Organization::PATH_SEPARATOR
+            )
+        );
+        $criteria->orderBy(['narrowerTag' => 'ASC']);
+        return $this->getOrganization()->getAxes()->matching($criteria)->toArray();
     }
 
     /**
-     * Retourne récursivement, tous les broaders de l'Axis dans l'ordre de dernière exploration.
+     * Retourne tous les broaders de l'Axis dans l'ordre de dernière exploration.
      *
      * @return Orga_Model_Axis[]
      */
     public function getAllBroadersLastOrdered()
     {
-        $broaders = array();
-        foreach ($this->getDirectBroaders() as $directBroader) {
-            foreach ($directBroader->getAllBroadersLastOrdered() as $recursiveBroader) {
-                $broaders[] = $recursiveBroader;
-            }
-            $broaders[] = $directBroader;
-        }
+        $broaders = $this->getAllBroadersFirstOrdered();
+        @usort($broaders, ['Orga_Model_Axis', 'lastOrderAxes']);
         return $broaders;
     }
 
     /**
-     * Définit si l'Axis.
+     * Définit si l'Axis contextualise ses membres.
      *
      * @param bool $contextualizing
      */
@@ -441,7 +538,9 @@ class Orga_Model_Axis extends Core_Model_Entity
         if ($this->contextualizing !== $contextualizing) {
             $this->contextualizing = $contextualizing;
 
-            $this->updateMembersAndCellsHashKey();
+            foreach ($this->getMembers() as $member) {
+                $member->updateDirectChildrenMembersParentMembersHashKey();
+            }
         }
     }
 
@@ -453,6 +552,32 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function isContextualizing()
     {
         return $this->contextualizing;
+    }
+
+    /**
+     * Définit si l'Axis permet le positionnement de ses membres.
+     *
+     * @param bool $memberPositioning
+     */
+    public function setMemberPositioning($memberPositioning)
+    {
+        if ($this->memberPositioning !== $memberPositioning) {
+            $this->memberPositioning = $memberPositioning;
+
+            foreach ($this->getMembers() as $member) {
+                $member->updateTag();
+            }
+        }
+    }
+
+    /**
+     * Indique si l'axe permet le positionnement de ses membres.
+     *
+     * @return bool
+     */
+    public function isMemberPositioning()
+    {
+        return $this->memberPositioning;
     }
 
     /**
@@ -500,7 +625,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getMemberByCompleteRef($completeRef)
     {
-        $refParts = explode('#', $completeRef);
+        $refParts = explode(Orga_Model_Member::COMPLETEREF_JOIN, $completeRef);
         $baseRef = (isset($refParts[0]) ? $refParts[0] : '');
         $parentMembersHashKey = (isset($refParts[1]) ? $refParts[1] : null);
         $criteria = \Doctrine\Common\Collections\Criteria::create();
@@ -509,10 +634,10 @@ class Orga_Model_Axis extends Core_Model_Entity
         $member = $this->members->matching($criteria)->toArray();
 
         if (empty($member)) {
-            throw new Core_Exception_NotFound("No 'Orga_Model_Member' matching " . $completeRef);
+            throw new Core_Exception_NotFound('No Member matching ref "'.$baseRef.'".');
         } else {
             if (count($member) > 1) {
-                throw new Core_Exception_TooMany("Too many 'Orga_Model_Member' matching " . $completeRef);
+                throw new Core_Exception_TooMany('Too many Member matching ref "'.$baseRef.'".');
             }
         }
 
@@ -527,7 +652,28 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function removeMember(Orga_Model_Member $member)
     {
         if ($this->hasMember($member)) {
+            $cellChildCells = [];
+            foreach ($member->getCells() as $cell) {
+                $cellChildCells[$cell->getMembersHashKey()] = $cell->getChildCells();
+            }
+
             $this->members->removeElement($member);
+            foreach ($member->getDirectChildren() as $directChildMember) {
+                $directChildMember->removeDirectParentForAxis($member);
+            }
+            foreach ($this->granularities as $granularity) {
+                $granularity->removeCellsFromMember($member);
+            }
+
+            /** @var Orga_Model_Cell[] $childCells */
+            foreach ($cellChildCells as $childCells) {
+                foreach ($childCells as $childCell) {
+                    if (!$childCell->hasMember($member)) {
+                        // Inutile de mettre à jour les cellules possédant ce membre.
+                        $childCell->updateHierarchy();
+                    }
+                }
+            }
         }
     }
 
@@ -544,11 +690,17 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Retourne un tableau contenant les members de l'Axis.
      *
-     * @return Orga_Model_Member[]
+     * @return Collection|Orga_Model_Member[]
      */
     public function getMembers()
     {
-        return $this->members->toArray();
+        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        if ($this->isMemberPositioning()) {
+            $criteria->orderBy(['parentMembersHashKey' => 'ASC', 'position' => 'ASC']);
+        } else {
+            $criteria->orderBy(['label' => 'ASC']);
+        }
+        return $this->members->matching($criteria);
     }
 
     /**
@@ -594,7 +746,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Renvoie toute les Granularity utilisant l'Axis courant.
      *
-     * @return Orga_Model_Granularity[]
+     * @return Collection|Orga_Model_Granularity[]
      */
     public function getGranularities()
     {
@@ -610,8 +762,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function isNarrowerThan($axis)
     {
-        $directNarrower = $axis->getDirectNarrower();
-        return (($this == $directNarrower) || ((null !== $directNarrower) && $this->isNarrowerThan($directNarrower)));
+        return (strpos($axis->narrowerTag, $this->narrowerTag . Orga_Model_Organization::PATH_SEPARATOR) !== false);
     }
 
     /**

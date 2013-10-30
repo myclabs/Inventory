@@ -62,14 +62,14 @@ class Orga_Datagrid_Organization_InputgranularitiesController extends UI_Control
         if (empty($inputConfigGranularityRef)) {
             $this->setAddElementErrorMessage('inputConfigGranularity', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
-            $inputConfigGranularity = Orga_Model_Granularity::loadByRefAndOrganization($inputConfigGranularityRef, $organization);
+            $inputConfigGranularity = $organization->getGranularityByRef($inputConfigGranularityRef);
         }
 
         $inputGranularityRef = $this->getAddElementValue('inputGranularity');
         if (empty($inputGranularityRef)) {
             $this->setAddElementErrorMessage('inputGranularity', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
-            $inputGranularity = Orga_Model_Granularity::loadByRefAndOrganization($inputGranularityRef, $organization);
+            $inputGranularity = $organization->getGranularityByRef($inputGranularityRef);
         }
 
         if (empty($this->_addErrorMessages)) {

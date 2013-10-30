@@ -47,7 +47,6 @@ class Orga_PopulateTest extends Orga_Populate
         $member_site_annecy = $this->createMember($axis_site, 'annecy', 'Annecy', [$member_pays_france, $member_marque_marque_a]);
         $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambéry', [$member_pays_france, $member_marque_marque_a]);
         $member_site_grenoble = $this->createMember($axis_site, 'grenoble', 'Grenoble', [$member_pays_france, $member_marque_marque_b]);
-        $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
         $member_categorie_energie = $this->createMember($axis_categorie, 'energie', 'Énergie');
         $member_categorie_test_affichage = $this->createMember($axis_categorie, 'test_affichage', 'Test affichage');
         $member_categorie_forfait_marque = $this->createMember($axis_categorie, 'forfait_marque', 'Forfait marque');
@@ -160,7 +159,7 @@ qui officia deserunt mollit anim id est laborum.',
         $this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', 'chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
 
         // Création des utilisateurs orga.
-        $this->createUser('administrateur.organisation@toto.com');
+        $this->createUser('administrateur.application@toto.com');
         $this->createUser('administrateur.global@toto.com');
         $this->createUser('contributeur.global@toto.com');
         $this->createUser('observateur.global@toto.com');
@@ -177,7 +176,7 @@ qui officia deserunt mollit anim id est laborum.',
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);
-        $this->addOrganizationAdministrator('administrateur.organisation@toto.com', $organization);
+        $this->addOrganizationAdministrator('administrateur.application@toto.com', $organization);
         // Ajout d'un role sur une cellule à un utilisateur existant.
 
         // La zone-marque pour laquelle les droits sont configurés est "Europe | Marque A".
