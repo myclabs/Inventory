@@ -210,7 +210,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $this->granularity = $granularity;
         $this->updateMembersHashKey();
         $this->updateHierarchy();
-        $this->updateACL();
 
         // Création du cube de DW.
         $this->createDWCube();
@@ -233,6 +232,14 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         // Création de la Library des ContextAction.
         if ($this->granularity->getCellsWithInputDocuments()) {
             $this->docLibraryForSocialContextActions = new Library();
+        }
+
+        // Héritage des ACL des cellules parent
+        foreach ($this->getParentCells() as $parentCell) {
+            foreach ($parentCell->getACL() as $parentAuthorization) {
+                /** @var CellAuthorization $parentAuthorization */
+                $this->acl->add($parentAuthorization->createChildAuthorization($this));
+            }
         }
     }
 
@@ -1577,19 +1584,5 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function __toString()
     {
         return $this->getMembersHashKey();
-    }
-
-    /**
-     * Met à jour les autorisations d'accès à cette cellule.
-     */
-    public function updateACL()
-    {
-        $authorizations = [];
-        foreach ($this->getParentCells() as $parentCell) {
-            foreach ($parentCell->getACL() as $authorization) {
-                $authorizations[] = $authorization;
-            }
-        }
-        $this->replaceACL($authorizations);
     }
 }
