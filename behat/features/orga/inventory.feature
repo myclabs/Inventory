@@ -57,9 +57,9 @@ Feature: Organization inventory tab feature
     And I set "Navigable" for column "navigable" of row 6 of the "granularity" datagrid with a confirmation message
   # On recharge la page pour faire apparaître le volet de navigation
     And I reload the page
+  # On descend dans la cellule "2012 | Europe | Marque A"
     And I click element "#goTo6"
     And I open tab "Collectes"
-    And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
     And the "inventories6" datagrid should contain 1 row
     And the row 1 of the "inventories6" datagrid should contain:
