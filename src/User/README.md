@@ -35,6 +35,8 @@ Test access rights:
 
 ```php
 $userService->isAllowed($user, Action::EDIT(), $resource);
+// or
+$resource->isAllowed($user, Action::EDIT());
 ```
 
 ### Extending
@@ -94,7 +96,7 @@ class ArticleAuthorization extends Authorization
 Article\Domain\ACL\ArticleAuthorization:
   type: entity
 
-  oneToOne:
+  manyToOne:
     resource:
       targetEntity: Article\Domain\Article
       inversedBy: acl

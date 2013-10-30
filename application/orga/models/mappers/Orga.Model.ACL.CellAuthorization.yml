@@ -3,7 +3,7 @@ Orga\Model\ACL\CellAuthorization:
   repositoryClass: \Core_Model_Repository
   table: Orga_ACL_Authorization_Cell
 
-  oneToOne:
+  manyToOne:
     resource:
       targetEntity: \Orga_Model_Cell
       inversedBy: acl
