@@ -6,8 +6,8 @@ Feature: Organization administrator feature
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté
-    When I fill in "email" with "administrateur.organisation@toto.com"
-    And I fill in "password" with "administrateur.organisation@toto.com"
+    When I fill in "email" with "administrateur.application@toto.com"
+    And I fill in "password" with "administrateur.application@toto.com"
     And I click "connection"
   # On tombe sur le datagrid des organisations
     Then I should see "Axes racine : Année, Site, Catégorie, Axe vide"
