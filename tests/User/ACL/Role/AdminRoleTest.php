@@ -3,6 +3,7 @@
 namespace Tests\User\ACL\Role;
 
 use Core_Test_TestCase;
+use Orga_Model_Organization;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\ACL\ACLService;
@@ -81,10 +82,20 @@ class AdminRoleTest extends Core_Test_TestCase
 
     public function dataProvider()
     {
+        $allUsers = NamedResource::loadByName(User::class);
         $repository = NamedResource::loadByName('repository');
+        $allOrganizations = NamedResource::loadByName(Orga_Model_Organization::class);
 
         return [
-            [Action::CREATE(), NamedResource::loadByName(User::class)],
+            // Teste sur la ressource abstraite "tous les utilisateurs"
+            [Action::CREATE(), $allUsers],
+            [Action::VIEW(), $allUsers],
+            [Action::EDIT(), $allUsers],
+            [Action::DELETE(), $allUsers],
+            [Action::UNDELETE(), $allUsers],
+            [Action::ALLOW(), $allUsers],
+
+            // Teste sur un autre utilisateur
             [Action::VIEW()],
             [Action::EDIT()],
             [Action::DELETE()],
@@ -97,6 +108,13 @@ class AdminRoleTest extends Core_Test_TestCase
             [Action::DELETE(), $repository, false],
             [Action::UNDELETE(), $repository, false],
             [Action::ALLOW(), $repository, false],
+
+            // Teste sur la ressource abstraite "toutes les organisations"
+            [Action::CREATE(), $allOrganizations],
+            [Action::VIEW(), $allOrganizations],
+            [Action::EDIT(), $allOrganizations],
+            [Action::DELETE(), $allOrganizations],
+            [Action::ALLOW(), $allOrganizations],
         ];
     }
 }

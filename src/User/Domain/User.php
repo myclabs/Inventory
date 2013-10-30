@@ -13,6 +13,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use User\Domain\ACL\Authorization\UserAuthorization;
+use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\Resource\Resource;
 use User\Domain\ACL\Resource\ResourceTrait;
 use User\Domain\ACL\Role;
@@ -118,6 +119,13 @@ class User extends Core_Model_Entity implements Resource
         $this->roles = new ArrayCollection();
         $this->authorizations = new ArrayCollection();
         $this->acl = new ArrayCollection();
+
+        // Hérite des droits sur "tous les utilisateurs"
+        $allUsers = NamedResource::loadByName(self::class);
+        foreach ($allUsers->getACL() as $parentAuthorization) {
+            // L'autorisation sera automatiquement ajoutée à $this->acl
+            UserAuthorization::createChildAuthorization($parentAuthorization, $this);
+        }
     }
 
     /**
