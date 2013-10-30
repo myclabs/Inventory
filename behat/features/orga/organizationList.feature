@@ -46,8 +46,8 @@ Feature: Organization datagrid feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Suppression de l'organisation ajoutée
-    When I click "Supprimer"
-    Then I should see the popup "Demande de confirmation"
+    When I click element ".organization:nth-child(2) a:contains('Supprimer')"
+    Then I should see a popup
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée"
     And I should not see "AAA"

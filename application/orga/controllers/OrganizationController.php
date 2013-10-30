@@ -150,10 +150,10 @@ class Orga_OrganizationController extends Core_Controller
         $label = $this->getParam('label');
 
         $success = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'added'));
+            UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
         };
         $timeout = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'));
+            UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'), UI_Message::TYPE_SUCCESS);
         };
         $error = function (Exception $e) {
             throw $e;
@@ -179,10 +179,10 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($this->_getParam('idOrganization'));
 
         $success = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'));
+            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
         };
         $timeout = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'));
+            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'), UI_Message::TYPE_SUCCESS);
         };
         $error = function (Exception $e) {
             throw $e;

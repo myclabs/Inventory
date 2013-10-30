@@ -64,6 +64,7 @@ When I select "Oui" in radio "Activé"
 Then the field "field" should have error: "Some error"
 
 # Popup
+Then I should see a popup
 Then I should see the popup "Popup title"
 
 # Datagrid
