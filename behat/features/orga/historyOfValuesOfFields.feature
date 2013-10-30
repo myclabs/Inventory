@@ -35,7 +35,7 @@ Feature: History of values of a field feature
 
   @javascript
   Scenario: Input history scenario, display of history for various kinds of input fiels
-  # Cellule : 2012 | Chambéry | Test affichage
+  # Cellule : 2012 | Chambéry | Test affichage
     Given I am on "orga/cell/input/idCell/35/fromIdCell/1"
     And I wait for the page to finish loading
   # Attente pour voir si ça aide à passer sur serveur dédié
@@ -76,7 +76,7 @@ Feature: History of values of a field feature
 
   @javascript
   Scenario: Input history scenario, display of history for a repeated subform containing various types of fields, one repetition
-  # Cellule : 2013 | Annecy | Test affichage
+  # Cellule : 2013 | Annecy | Test affichage
     Given I am on "orga/cell/input/idCell/44/fromIdCell/1"
     And I wait for the page to finish loading
   # Ajout attente pour voir si ça aide à faire passer le test sur serveur distant

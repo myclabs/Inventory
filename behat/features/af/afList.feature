@@ -93,7 +93,7 @@ Feature: AF list edit feature
     And the row 1 of the "listAF" datagrid should contain:
       | category                          | label                                               |
       | Catégorie contenant un formulaire | Combustion de combustible, mesuré en unité de masse |
-  # Clic sur "Configuration"
+  # Clic sur "Informations générales"
     When I click "Configuration" in the row 1 of the "listAF" datagrid
   # Vérification qu'on est bien sur la page "Configuration"
     And I open tab "Contrôle"
@@ -187,7 +187,7 @@ Feature: AF list edit feature
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé car des saisies y sont associées."
-  # 3 et 4 peuvent être supprimés (voir plus loin)
+  # 3 et 4 peuvent être supprimés (voir plus loin)
   # Tentative de suppression, formulaire utilisé comme sous-formulaire (répété)
     When I click "Supprimer" in the row 5 of the "listAF" datagrid
     Then I should see the popup "Demande de confirmation"
@@ -198,7 +198,7 @@ Feature: AF list edit feature
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce formulaire ne peut pas être supprimé car il est utilisé par des organisations."
-  # 7 peut être supprimé (voir plus loin)
+  # 7 peut être supprimé (voir plus loin)
   # Tentative de suppression, formulaire utilisé pour des organisations
     When I click "Supprimer" in the row 8 of the "listAF" datagrid
     Then I should see the popup "Demande de confirmation"

@@ -3,6 +3,15 @@
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
+        <tu tuid="defaultOrganizationLabel">
+            <tuv xml:lang="fr">
+                <seg>Cliquer pour accéder (organisation sans libellé)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Click to open (organization without label)</seg>
+            </tuv>
+        </tu>
+
         <tu tuid="labelGlobalCellExtended">
             <tuv xml:lang="fr">
                 <seg>Vue globale</seg>
@@ -32,18 +41,18 @@
 
         <tu tuid="hideNavigationPanel">
             <tuv xml:lang="fr">
-                <seg>Navigation</seg>
+                <seg> </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Navigation</seg>
+                <seg> </seg>
             </tuv>
         </tu>
         <tu tuid="displayNavigationPanel">
             <tuv xml:lang="fr">
-                <seg>Navigation</seg>
+                <seg>Explorer l\'organisation</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Navigation</seg>
+                <seg>Browse organization</seg>
             </tuv>
         </tu>
 

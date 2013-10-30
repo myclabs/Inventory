@@ -402,8 +402,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'inventory', 'finishedInputPercentageHeader'));
             $datagridConfiguration->datagrid->addCol($columnAdvencementFinishedInputs);
 
-            $columnUsers = new UI_Datagrid_Col_Popup('users', __('Orga', 'inventory', 'users'));
-            $columnUsers->defaultValue = '<i class="icon-search"></i> '.__('Orga', 'inventory', 'usersDetails');
+            $columnUsers = new UI_Datagrid_Col_Popup('users', __('Orga', 'inventory', 'involvedUsers'));
+            $columnUsers->defaultValue = '<i class="icon-search"></i> '.__('Orga', 'inventory', 'involvedUsers');
             $columnUsers->popup->addAttribute('class', 'large');
             $datagridConfiguration->datagrid->addCol($columnUsers);
 
