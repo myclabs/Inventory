@@ -14,22 +14,17 @@ use User\Domain\User;
  */
 class UserRole extends Role
 {
-    public function __construct(User $user)
+    public function buildAuthorizations()
     {
-        $this->user = $user;
-    }
+        $this->authorizations->clear();
 
-    public function getAuthorizations()
-    {
+        // User can view, edit and delete himself
+        UserAuthorization::create($this, $this->user, Action::VIEW(), $this->user);
+        UserAuthorization::create($this, $this->user, Action::EDIT(), $this->user);
+        UserAuthorization::create($this, $this->user, Action::DELETE(), $this->user);
+
+        // User can view the repository
         $repository = NamedResource::loadByName('repository');
-
-        return [
-            // User can view, edit and delete himself
-            new UserAuthorization($this->user, Action::VIEW(), $this->user),
-            new UserAuthorization($this->user, Action::EDIT(), $this->user),
-            new UserAuthorization($this->user, Action::DELETE(), $this->user),
-            // User can view the repository
-            new NamedResourceAuthorization($this->user, Action::VIEW(), $repository),
-        ];
+        NamedResourceAuthorization::create($this, $this->user, Action::VIEW(), $repository);
     }
 }

@@ -10,8 +10,10 @@ use User\Domain\ACL\Role;
  */
 class CellManagerRole extends AbstractCellRole
 {
-    protected function getCellAuthorizations(Orga_Model_Cell $cell)
+    public function buildAuthorizations()
     {
-        // TODO: Implement getCellAuthorizations() method.
+        $this->authorizations->clear();
+
+        // TODO
     }
 }

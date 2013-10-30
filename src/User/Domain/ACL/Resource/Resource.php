@@ -28,17 +28,16 @@ interface Resource
     public function getACL();
 
     /**
+     * Ne pas utiliser directement. Uniquement utilisé par Authorization::create().
+     *
      * @param Authorization $authorization
      */
     public function addToACL(Authorization $authorization);
 
     /**
+     * Ne pas utiliser directement. Uniquement utilisé par Authorization et Role.
+     *
      * @param Authorization $authorization
      */
     public function removeFromACL(Authorization $authorization);
-
-    /**
-     * @param Authorization[] $authorizations
-     */
-    public function replaceACL(array $authorizations);
 }

@@ -2,6 +2,7 @@ User\Domain\ACL\Authorization\Authorization:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: ACL_Authorization
+  readOnly: true
 
   inheritanceType: joined
   discriminatorColumn:
@@ -25,8 +26,9 @@ User\Domain\ACL\Authorization\Authorization:
       nullable: false
 
   manyToOne:
+    role:
+      targetEntity: User\Domain\ACL\Role
+      inversedBy: authorizations
     user:
       targetEntity: User\Domain\User
       inversedBy: authorizations
-      joinColumn:
-        nullable: false

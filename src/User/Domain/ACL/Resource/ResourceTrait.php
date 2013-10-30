@@ -2,7 +2,6 @@
 
 namespace User\Domain\ACL\Resource;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
@@ -44,10 +43,5 @@ trait ResourceTrait
     public function removeFromACL(Authorization $authorization)
     {
         $this->acl->removeElement($authorization);
-    }
-
-    public function replaceACL(array $authorizations)
-    {
-        $this->acl = new ArrayCollection($authorizations);
     }
 }

@@ -7,8 +7,8 @@ use Core_Model_Query;
 use Orga_Model_Axis;
 use Orga_Model_Cell;
 use Orga_Model_Organization;
-use User_Model_Action_Default;
-use User_Service_ACL;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Action;
 
 /**
  * Factory de OrganizationViewModel.
@@ -16,11 +16,11 @@ use User_Service_ACL;
 class OrganizationViewModelFactory
 {
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
-    public function __construct(User_Service_ACL $aclService)
+    public function __construct(ACLService $aclService)
     {
         $this->aclService = $aclService;
     }
@@ -42,7 +42,7 @@ class OrganizationViewModelFactory
         );
         $viewModel->canBeDeleted = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::DELETE(),
+            Action::DELETE(),
             $organization
         );
 
@@ -55,7 +55,7 @@ class OrganizationViewModelFactory
             $aclCellQuery = new Core_Model_Query();
             $aclCellQuery->aclFilter->enabled = true;
             $aclCellQuery->aclFilter->user = $connectedUser;
-            $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+            $aclCellQuery->aclFilter->action = Action::VIEW();
             $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
             $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
             if ($numberCellsUserCanSee > 1) {

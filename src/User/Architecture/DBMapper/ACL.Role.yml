@@ -26,5 +26,9 @@ User\Domain\ACL\Role:
     user:
       targetEntity: User\Domain\User
       inversedBy: roles
-      joinColumn:
-        nullable: false
+
+  oneToMany:
+    authorizations:
+      targetEntity: User\Domain\ACL\Authorization\Authorization
+      mappedBy: role
+      cascade: [ all ]

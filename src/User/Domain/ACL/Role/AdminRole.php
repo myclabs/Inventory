@@ -16,51 +16,44 @@ use User\Domain\User;
  */
 class AdminRole extends Role
 {
-    public function __construct(User $user)
+    public function buildAuthorizations()
     {
-        $this->user = $user;
-    }
-
-    public function getAuthorizations()
-    {
-        $authorizations = [];
+        $this->authorizations->clear();
 
         // Admin can create new users
-        $usersAbstractResource = NamedResource::loadByName(User::class);
-        $authorizations[] = new NamedResourceAuthorization($this->user, Action::CREATE(), $usersAbstractResource);
+        $allUsersResource = NamedResource::loadByName(User::class);
+        NamedResourceAuthorization::create($this, $this->user, Action::CREATE(), $allUsersResource);
 
         // Admin can view, edit, delete, undelete, allow everyone except himself
-        /** @var User[] $allUsers */
         $allUsers = User::loadList();
         foreach ($allUsers as $target) {
+            /** @var User $target */
             if ($target === $this->user) {
                 continue;
             }
-            $authorizations[] = new UserAuthorization($this->user, Action::VIEW(), $target);
-            $authorizations[] = new UserAuthorization($this->user, Action::EDIT(), $target);
-            $authorizations[] = new UserAuthorization($this->user, Action::DELETE(), $target);
-            $authorizations[] = new UserAuthorization($this->user, Action::UNDELETE(), $target);
-            $authorizations[] = new UserAuthorization($this->user, Action::ALLOW(), $target);
+            UserAuthorization::create($this, $this->user, Action::VIEW(), $target);
+            UserAuthorization::create($this, $this->user, Action::EDIT(), $target);
+            UserAuthorization::create($this, $this->user, Action::DELETE(), $target);
+            UserAuthorization::create($this, $this->user, Action::UNDELETE(), $target);
+            UserAuthorization::create($this, $this->user, Action::ALLOW(), $target);
         }
 
         // Admin can edit the repository
         $repository = NamedResource::loadByName('repository');
-        $authorizations[] = new NamedResourceAuthorization($this->user, Action::EDIT(), $repository);
+        NamedResourceAuthorization::create($this, $this->user, Action::EDIT(), $repository);
 
         // Admin can create new organizations
         $organizationsResource = NamedResource::loadByName(Orga_Model_Organization::class);
-        $authorizations[] = new NamedResourceAuthorization($this->user, Action::CREATE(), $organizationsResource);
+        NamedResourceAuthorization::create($this, $this->user, Action::CREATE(), $organizationsResource);
 
         // Admin can view, edit, delete, allow on all organizations
-        /** @var Orga_Model_Organization[] $organizations */
         $organizations = Orga_Model_Organization::loadList();
         foreach ($organizations as $organization) {
-            $authorizations[] = new OrganizationAuthorization($this->user, Action::VIEW(), $organization);
-            $authorizations[] = new OrganizationAuthorization($this->user, Action::EDIT(), $organization);
-            $authorizations[] = new OrganizationAuthorization($this->user, Action::DELETE(), $organization);
-            $authorizations[] = new OrganizationAuthorization($this->user, Action::ALLOW(), $organization);
+            /** @var Orga_Model_Organization $organization */
+            OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $organization);
+            OrganizationAuthorization::create($this, $this->user, Action::EDIT(), $organization);
+            OrganizationAuthorization::create($this, $this->user, Action::DELETE(), $organization);
+            OrganizationAuthorization::create($this, $this->user, Action::ALLOW(), $organization);
         }
-
-        return $authorizations;
     }
 }

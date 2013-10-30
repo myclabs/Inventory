@@ -26,7 +26,7 @@ use User\Domain\ACL\Authorization\Authorization;
  */
 class User extends Core_Model_Entity implements Resource
 {
-    use ACL\Resource\ResourceTrait;
+    use ResourceTrait;
 
     const QUERY_ID = 'id';
     const QUERY_PASSWORD = 'password';
@@ -244,27 +244,15 @@ class User extends Core_Model_Entity implements Resource
     {
         $this->roles->add($role);
 
-        // Update authorizations
-        foreach ($role->getAuthorizations() as $authorization) {
-            $this->authorizations->add($authorization);
-        }
+        // Va ajouter les autorisations dans cet utilisateur
+        $role->buildAuthorizations();
     }
 
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
-        $this->updateAuthorizations();
-    }
-
-    public function updateAuthorizations()
-    {
-        $this->authorizations->clear();
-
-        foreach ($this->getRoles() as $role) {
-            foreach ($role->getAuthorizations() as $authorization) {
-                $this->authorizations->add($authorization);
-            }
-        }
+        $role->destroyAuthorizations();
+        $role->delete();
     }
 
     /**
@@ -277,19 +265,20 @@ class User extends Core_Model_Entity implements Resource
         return $this->authorizations;
     }
 
+    /**
+     * Ne pas utiliser directement. Uniquement utilisé par Authorization::create().
+     */
     public function addAuthorization(Authorization $authorization)
     {
         $this->authorizations->add($authorization);
     }
 
-    public function removeAuthorization(Authorization $authorization)
+    /**
+     * Ne pas utiliser directement. Uniquement utilisé par Authorization et Role.
+     */
+    public function removeAuthorizations(Authorization $authorization)
     {
         $this->authorizations->removeElement($authorization);
-    }
-
-    public function replaceAuthorizations(array $authorizations)
-    {
-        $this->authorizations = new ArrayCollection($authorizations);
     }
 
     /**

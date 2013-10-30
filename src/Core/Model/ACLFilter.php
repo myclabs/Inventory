@@ -14,9 +14,8 @@ use User\Domain\User;
  * @package    Core
  * @subpackage Model
  */
-class Core_Model_AclFilter
+class Core_Model_ACLFilter
 {
-
     /**
      * Activation du filtre
      *
@@ -52,5 +51,4 @@ class Core_Model_AclFilter
             throw new Core_Exception_InvalidArgument("ACL Filter enabled without specifying its privilege");
         }
     }
-
 }

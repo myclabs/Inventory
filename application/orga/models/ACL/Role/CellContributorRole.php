@@ -3,8 +3,8 @@
 namespace Orga\Model\ACL\Role;
 
 use Orga\Model\ACL\CellAuthorization;
+use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Action_Cell;
-use Orga_Model_Cell;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
 
@@ -13,12 +13,22 @@ use User\Domain\ACL\Role;
  */
 class CellContributorRole extends AbstractCellRole
 {
-    protected function getCellAuthorizations(Orga_Model_Cell $cell)
+    public function buildAuthorizations()
     {
-        return [
-            new CellAuthorization($this->user, Action::VIEW(), $cell),
-            new CellAuthorization($this->user, Orga_Action_Cell::COMMENT(), $cell),
-            new CellAuthorization($this->user, Orga_Action_Cell::INPUT(), $cell),
-        ];
+        $this->authorizations->clear();
+
+        // Voir l'organisation
+        OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $this->cell->getOrganization());
+
+        CellAuthorization::create($this, $this->user, Action::VIEW(), $this->cell);
+        CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $this->cell);
+        CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $this->cell);
+
+        // Cellules filles
+        foreach ($this->cell->getChildCells() as $childCell) {
+            CellAuthorization::create($this, $this->user, Action::VIEW(), $childCell);
+            CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $childCell);
+            CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $childCell);
+        }
     }
 }

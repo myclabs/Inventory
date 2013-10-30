@@ -12,6 +12,7 @@ use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\ViewModel\OrganizationViewModelFactory;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
 
 /**
@@ -125,7 +126,7 @@ class Orga_OrganizationController extends Core_Controller
         $query = new Core_Model_Query();
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $connectedUser;
-        $query->aclFilter->action = User_Model_Action_Default::VIEW();
+        $query->aclFilter->action = Action::VIEW();
         $organizations = Orga_Model_Organization::loadList($query);
 
         // Crée les ViewModel
@@ -136,7 +137,7 @@ class Orga_OrganizationController extends Core_Controller
         }
         $this->view->assign('organizations', $organizationsVM);
 
-        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
+        $organizationResource = NamedResource::loadByName(Orga_Model_Organization::class);
         $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
             $connectedUser,
             Action::CREATE(),

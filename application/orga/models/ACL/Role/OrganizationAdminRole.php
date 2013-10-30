@@ -2,7 +2,9 @@
 
 namespace Orga\Model\ACL\Role;
 
+use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
+use Orga_Action_Cell;
 use Orga_Model_Organization;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
@@ -17,18 +19,28 @@ class OrganizationAdminRole extends Role
 
     public function __construct(User $user, Orga_Model_Organization $organization)
     {
-        $this->user = $user;
         $this->organization = $organization;
+
+        parent::__construct($user);
     }
 
-    public function getAuthorizations()
+    public function buildAuthorizations()
     {
-        $authorizations = [];
+        $this->authorizations->clear();
 
-        $authorizations[] = new OrganizationAuthorization($this->user, Action::VIEW(), $this->organization);
-        $authorizations[] = new OrganizationAuthorization($this->user, Action::EDIT(), $this->organization);
-        $authorizations[] = new OrganizationAuthorization($this->user, Action::DELETE(), $this->organization);
+        OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $this->organization);
+        OrganizationAuthorization::create($this, $this->user, Action::EDIT(), $this->organization);
+        OrganizationAuthorization::create($this, $this->user, Action::DELETE(), $this->organization);
 
-        return $authorizations;
+        // Admin sur toutes les cellules
+        foreach ($this->organization->getGranularities() as $granularity) {
+            foreach ($granularity->getCells() as $cell) {
+                CellAuthorization::create($this, $this->user, Action::VIEW(), $cell);
+                CellAuthorization::create($this, $this->user, Action::EDIT(), $cell);
+                CellAuthorization::create($this, $this->user, Action::ALLOW(), $cell);
+                CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $cell);
+                CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $cell);
+            }
+        }
     }
 }
