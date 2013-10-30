@@ -191,7 +191,7 @@ Feature: Organization granularity feature
       | axes     |
       | Axe vide |
   # On choisit cette nouvelle granularité pour le statut des inventaires
-    When I open tab "Configuration"
+    When I open tab "Informations générales"
     And I select "Axe vide" from "Niveau organisationnel des collectes"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."

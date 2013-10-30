@@ -30,7 +30,7 @@ Feature: Organization datagrid feature
       | axes | navigable | orgaTab | aCL | aFTab | dW  | genericActions | contextActions | inputDocuments |
       |      | Navigable | Oui     | Oui | Oui   | Oui | Non            | Non            | Non            |
   # Structure des données d'analyse par défaut (à jour)
-    When I open tab "Configuration"
+    When I open tab "Informations générales"
     And I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour"
 

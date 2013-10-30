@@ -7,10 +7,10 @@ Feature: Granularity dataware analysis feature
   @javascript
   Scenario: Trying to launch an analysis when configuration is not complete
   # Affichage des messages d'erreur lorsque des champs ne sont pas remplis
-  # Accès à l'onglet "Configuration"
+  # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
   # Accès au datagrid des analyses pré-configurées au niveau global
     And I open collapse "Niveau organisationnel global"
     Then I should see the "granularity1Report" datagrid

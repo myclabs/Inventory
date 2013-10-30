@@ -93,7 +93,7 @@ Feature: AF list edit feature
     And the row 1 of the "listAF" datagrid should contain:
       | category                          | label                                               |
       | Catégorie contenant un formulaire | Combustion de combustible, mesuré en unité de masse |
-  # Clic sur "Configuration"
+  # Clic sur "Informations générales"
     When I click "Configuration" in the row 1 of the "listAF" datagrid
   # Vérification qu'on est bien sur la page "Configuration"
     And I open tab "Contrôle"

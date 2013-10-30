@@ -1,16 +1,16 @@
 @dbFull
-Feature: Configuration tab analysis edit feature
+Feature: General info tab analysis edit feature
 
   Background:
     Given I am logged in
 
   @javascript
   Scenario: Add a granularity analysis (global granularity)
-  # Accès à l'onglet "Configuration"
+  # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
   # Accès au datagrid des analyses pré-configurées au niveau global
     And I open collapse "Niveau organisationnel global"
     Then I should see the "granularity1Report" datagrid
@@ -37,7 +37,7 @@ Feature: Configuration tab analysis edit feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
     And I open collapse "Niveau organisationnel global"
     Then I should see the "granularity1Report" datagrid
     And the "granularity1Report" datagrid should contain 2 row

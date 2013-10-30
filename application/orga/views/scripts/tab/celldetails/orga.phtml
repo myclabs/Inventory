@@ -8,7 +8,7 @@ $tabView = new UI_Tab_View('orga');
 
 if ($this->displayOrganizationTabs) {
     $organizationTab = new UI_Tab('organization');
-    $organizationTab->label = __('UI', 'name', 'configuration');
+    $organizationTab->label = __('Orga', 'configuration', 'generalInfoTab');
     $organizationTab->dataSource = 'orga/organization/details/idOrganization/'.$this->idOrganization.'/idCell/'.$this->idCell.'/display/render';
     $organizationTab->useCache = false;
     $tabView->addTab($organizationTab);

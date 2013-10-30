@@ -4,6 +4,17 @@
 		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
 	<body>
 
+        <!-- Libellé de l'onglet -->
+
+        <tu tuid="generalInfoTab">
+            <tuv xml:lang="fr">
+                <seg>Informations générales</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>General info</seg>
+            </tuv>
+        </tu>
+
         <!-- Libellé de l'organisation et choix de la granularité des collectes -->
 
         <tu tuid="granularityForInventoryStatus">

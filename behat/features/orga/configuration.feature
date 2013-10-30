@@ -1,16 +1,16 @@
 @dbFull
-Feature: Configuration of an organization
+Feature: General info of an organization feature
 
   Background:
     Given I am logged in
 
   @javascript
   Scenario: Edit organization label
-  # Accès à l'onglet "Configuration"
+  # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Modification du libellé
     When I fill in "Libellé" with "Organisation avec données modifiée"
@@ -23,11 +23,11 @@ Feature: Configuration of an organization
 
   @javascript
   Scenario: Edit organization inventory granularity
-  # Accès à l'onglet "Configuration"
+  # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Modification du niveau organisationnel des collectes
     And I select "Année" from "Niveau organisationnel des collectes"
@@ -46,11 +46,11 @@ Feature: Configuration of an organization
 
   @javascript
   Scenario: Add input granularity, incorrect input
-  # Accès à l'onglet "Configuration"
+  # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Popup d'ajout
     When I click "Ajouter"
@@ -77,11 +77,11 @@ Feature: Configuration of an organization
 
   @javascript
   Scenario: Add input granularity, correct input
-  # Accès à l'onglet "Configuration"
+  # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Ajout, saisie correcte (granularité de saisie non plus fine que ou égale à la granularité des collectes)
   # Remarque : granularités identiques (sans importance)
@@ -109,11 +109,11 @@ Feature: Configuration of an organization
 
   @javascript
   Scenario: Delete input granularity
-  # Accès à l'onglet "Configuration"
+  # Accès à l'onglet "Informations générales"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Suppression d'une granularité de saisie avec des saisies
     When I click "Supprimer" in the row 1 of the "inputGranularities" datagrid

@@ -17,9 +17,9 @@ Feature: Organization administrator feature
     Then I should see "Vue globale Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
-  # Accès à l'onglet "Configuration"
+  # Accès à l'onglet "Informations générales"
     When I open tab "Organisation"
-    And I open tab "Configuration"
+    And I open tab "Informations générales"
   # Accès au datagrid des analyses préconfigurées
     And I open collapse "Niveau organisationnel global"
     Then I should see the "granularity1Report" datagrid
