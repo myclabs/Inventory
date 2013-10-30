@@ -68,7 +68,7 @@ Feature: Cell administrator feature
     Then I should see "Europe | Marque A Organisation avec données"
   # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
     When I open tab "Paramétrage"
-  # On tombe sur l'onglet "Membres"
+  # On tombe sur l'onglet "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
   # Ajout d'un membre, saisie correcte (parent renseigné en partie)

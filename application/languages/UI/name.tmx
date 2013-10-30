@@ -195,6 +195,14 @@
                 <seg>Edition</seg>
             </tuv>
         </tu>
+        <tu tuid="element">
+            <tuv xml:lang="fr">
+                <seg>Élément</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Element</seg>
+            </tuv>
+        </tu>
         <tu tuid="elements">
             <tuv xml:lang="fr">
                 <seg>Éléments</seg>
@@ -203,7 +211,7 @@
                 <seg>Elements</seg>
             </tuv>
         </tu>
-        <tu tuid="emailAddress">    
+        <tu tuid="emailAddress">
             <tuv xml:lang="fr">
                 <seg>Adresse e-mail</seg>
             </tuv>

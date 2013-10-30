@@ -6,11 +6,11 @@ Feature: Organizational member feature
 
   @javascript
   Scenario: Creation of an organizational member, correct input
-  # Accès à l'onglet "Membres"
+  # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
-    And I open tab "Membres"
+    And I open tab "Éléments"
   # Accès au datagrid des sites
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
@@ -30,11 +30,11 @@ Feature: Organizational member feature
 
   @javascript
   Scenario: Creation of an organizational member, incorrect input
-  # Accès à l'onglet "Membres"
+  # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
-    And I open tab "Membres"
+    And I open tab "Éléments"
     Then I should see "Site"
   # Déplier un volet
     When I open collapse "Site"
@@ -56,11 +56,11 @@ Feature: Organizational member feature
 
   @javascript
   Scenario: Edition of an organizational member's attributes (label and identifier), correct input
-  # Accès à l'onglet "Membres"
+  # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
-    And I open tab "Membres"
+    And I open tab "Éléments"
   # Ajout membre axe Pays, zone non renseignée
     When I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
@@ -73,11 +73,11 @@ Feature: Organizational member feature
 
   @javascript
   Scenario: Edition of an organizational member's attributes (label and identifier), incorrect input
-  # Accès à l'onglet "Membres"
+  # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
-    And I open tab "Membres"
+    And I open tab "Éléments"
   # Ajout membre axe Pays, zone non renseignée
     When I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
@@ -93,11 +93,11 @@ Feature: Organizational member feature
 
   @javascript
   Scenario: Edition of parent member of an organizational member
-  # Accès à l'onglet "Membres"
+  # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
-    And I open tab "Membres"
+    And I open tab "Éléments"
     When I open collapse "Site"
     Then the row 1 of the "listMemberssite" datagrid should contain:
       | label  | ref      | broaderpays    |
@@ -116,11 +116,11 @@ Feature: Organizational member feature
 
   @javascript
   Scenario: Deletion of an organizational member generating cells with inputs and DW, but no cell with roles
-  # Accès à l'onglet "Membres"
+  # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
-    And I open tab "Membres"
+    And I open tab "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
     And the "listMemberssite" datagrid should contain 4 row
@@ -146,11 +146,11 @@ Feature: Organizational member feature
   @javascript @skipped
   Scenario: Deletion of an organizational member scenario
     #6268 Exceptions non capturées suppression d'un membre organisationnel
-  # Accès à l'onglet "Membres"
+  # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
-    And I open tab "Membres"
+    And I open tab "Éléments"
   # Membre jouant le rôle de parent direct pour au moins un autre membre
     And I open collapse "Pays"
     When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
@@ -175,7 +175,7 @@ Feature: Organizational member feature
     And I click element "#goTo2"
   # Vérification du contenu du datagrid des membres de l'axe "Site"
     And I open tab "Paramétrage"
-    And I open tab "Membres"
+    And I open tab "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
     And the row 1 of the "listMemberssite" datagrid should contain:
