@@ -106,10 +106,10 @@
 
 		<tu tuid="incompleteInputSaved">
 			<tuv xml:lang="fr">
-				<seg>Enregistrement effectué (saisie incomplète).</seg>
+				<seg>Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard.</seg>
 			</tuv>
 			<tuv xml:lang="en">
-				<seg>Saving done (incomplete input).</seg>
+				<seg>Data saved, input is incomplete. You can fill the missing mandatory fields now or later.</seg>
 			</tuv>
 		</tu>
 		<tu tuid="completeInputSaved">
