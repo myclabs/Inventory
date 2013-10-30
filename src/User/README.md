@@ -79,18 +79,10 @@ To create authorizations on the new resource, you need to create a new kind of a
 ```php
 class ArticleAuthorization extends Authorization
 {
-    protected $resource;
-
-    public function __construct(User $user, Action $action, Article $resource)
-    {
-        $this->user = $user;
-        $this->setAction($action);
-        $this->resource = $article;
-
-        $this->resource->addToACL($this);
-    }
 }
 ```
+
+and map its `resource` field:
 
 ```yaml
 Article\Domain\ACL\ArticleAuthorization:
@@ -113,16 +105,17 @@ class ArticleEditorRole extends Role
 
     public function __construct(User $user, Article $article)
     {
-        $this->user = $user;
         $this->article = $article;
+
+        parent::__construct($user);
     }
 
-    public function getAuthorizations()
+    public function buildAuthorizations()
     {
-        return [
-            new ArticleAuthorization($this->user, Action::VIEW(), $this->article),
-            new ArticleAuthorization($this->user, Action::EDIT(), $this->article),
-        ];
+        $this->authorizations->clear();
+
+        ArticleAuthorization::create($this, $this->user, Action::VIEW(), $this->article);
+        ArticleAuthorization::create($this, $this->user, Action::EDIT(), $this->article);
     }
 }
 ```
@@ -130,34 +123,6 @@ class ArticleEditorRole extends Role
 #### Keeping the authorizations up to date
 
 When a user, or a resource is deleted, authorizations will be deleted in cascade by Doctrine.
-
-However, if your resources have inheritance, you need to update the authorizations when the inheritance changes
-(resource removed from the tree, resource inserted in the tree, …).
-
-A listener can update the authorizations when the resource changes:
-
-```php
-class ArticleListener
-{
-    public function preRemove(Article $article)
-    {
-        // Cascade remove
-        foreach (ArticleAuthorization::loadByResource($article) as $authorization) {
-            $authorization->delete();
-        }
-    }
-}
-```
-
-YAML configuration:
-
-```yaml
-Article\Domain\Article:
-  type: entity
-
-  entityListeners:
-    Article\Domain\ACL\ResourceListener\ArticleListener:
-```
 
 ### Rebuilding authorizations
 

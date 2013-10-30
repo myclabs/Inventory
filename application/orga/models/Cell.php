@@ -245,8 +245,8 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         // Héritage des ACL des cellules parent
         foreach ($this->getParentCells() as $parentCell) {
             foreach ($parentCell->getACL() as $parentAuthorization) {
-                /** @var CellAuthorization $parentAuthorization */
-                $this->acl->add($parentAuthorization->createChildAuthorization($this));
+                // L'autorisation sera automatiquement ajoutée à $this->acl
+                CellAuthorization::createChildAuthorization($parentAuthorization, $this);
             }
         }
     }

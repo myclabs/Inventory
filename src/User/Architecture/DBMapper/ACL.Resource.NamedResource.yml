@@ -13,6 +13,7 @@ User\Domain\ACL\Resource\NamedResource:
     name:
       type: string
       unique: true
+      nullable: false
 
   oneToMany:
     acl:

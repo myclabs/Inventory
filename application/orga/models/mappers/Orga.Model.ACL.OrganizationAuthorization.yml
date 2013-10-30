@@ -7,3 +7,5 @@ Orga\Model\ACL\OrganizationAuthorization:
     resource:
       targetEntity: \Orga_Model_Organization
       inversedBy: acl
+      joinColumn:
+        nullable: false

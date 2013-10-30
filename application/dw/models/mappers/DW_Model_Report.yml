@@ -93,6 +93,11 @@ DW_Model_Report:
       mappedBy: report
       cascade: [ persist, remove ]
       orphanRemoval: true
+    acl:
+      targetEntity: DW\Model\ACL\ReportAuthorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

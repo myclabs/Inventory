@@ -7,3 +7,5 @@ User\Domain\ACL\Authorization\UserAuthorization:
     resource:
       targetEntity: User\Domain\User
       inversedBy: acl
+      joinColumn:
+        nullable: false

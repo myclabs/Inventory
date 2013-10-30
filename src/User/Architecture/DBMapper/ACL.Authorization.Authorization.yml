@@ -13,6 +13,7 @@ User\Domain\ACL\Authorization\Authorization:
     namedResource: User\Domain\ACL\Authorization\NamedResourceAuthorization
     organization: Orga\Model\ACL\OrganizationAuthorization
     cell: Orga\Model\ACL\CellAuthorization
+    report: DW\Model\ACL\ReportAuthorization
 
   id:
     id:
@@ -29,6 +30,23 @@ User\Domain\ACL\Authorization\Authorization:
     role:
       targetEntity: User\Domain\ACL\Role
       inversedBy: authorizations
+      joinColumn:
+        nullable: false
     user:
       targetEntity: User\Domain\User
       inversedBy: authorizations
+      joinColumn:
+        nullable: false
+    parentAuthorization:
+      targetEntity: Authorization
+      inversedBy: childAuthorizations
+      cascade: [ all ]
+      joinColumn:
+        nullable: true
+
+  oneToMany:
+    childAuthorizations:
+      targetEntity: Authorization
+      mappedBy: parentAuthorization
+      cascade: [ all ]
+      orphanRemoval: true

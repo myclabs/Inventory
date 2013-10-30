@@ -10,6 +10,7 @@
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Orga\Model\ACL\OrganizationAuthorization;
+use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\Resource\Resource;
 use User\Domain\ACL\Resource\ResourceTrait;
@@ -81,7 +82,8 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
         // Hérite des droits sur "toutes les organisations"
         $allOrganizations = NamedResource::loadByName(self::class);
         foreach ($allOrganizations->getACL() as $parentAuthorization) {
-            $this->acl->add($parentAuthorization->createChildAuthorization($this));
+            // L'autorisation sera automatiquement ajoutée à $this->acl
+            OrganizationAuthorization::createChildAuthorization($parentAuthorization, $this);
         }
     }
 

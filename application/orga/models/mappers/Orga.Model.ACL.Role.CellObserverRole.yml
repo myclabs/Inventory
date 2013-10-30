@@ -6,3 +6,5 @@ Orga\Model\ACL\Role\CellObserverRole:
   manyToOne:
     cell:
       targetEntity: \Orga_Model_Cell
+      joinColumn:
+        nullable: false

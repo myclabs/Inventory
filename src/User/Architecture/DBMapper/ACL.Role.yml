@@ -26,6 +26,8 @@ User\Domain\ACL\Role:
     user:
       targetEntity: User\Domain\User
       inversedBy: roles
+      joinColumn:
+        nullable: false
 
   oneToMany:
     authorizations:

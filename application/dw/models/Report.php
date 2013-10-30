@@ -8,6 +8,9 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use DW\Model\ACL\ReportAuthorization;
+use User\Domain\ACL\Resource\Resource;
+use User\Domain\ACL\Resource\ResourceTrait;
 
 /**
  * Permet de gérer un report
@@ -15,10 +18,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @package DW
  * @subpackage Model
  */
-class DW_Model_Report extends Core_Model_Entity
+class DW_Model_Report extends Core_Model_Entity implements Resource
 {
     use Core_Event_ObservableTrait;
     use Core_Model_Entity_Translatable;
+    use ResourceTrait;
 
     // Constantes de tris et de filtres.
     const QUERY_CUBE = 'cube';
@@ -151,6 +155,11 @@ class DW_Model_Report extends Core_Model_Entity
      */
     protected $lastModificationTimestamp = 1;
 
+    /**
+     * @var ReportAuthorization[]|Collection
+     */
+    protected $acl;
+
 
     /**
      * Constructeur de l'objet
@@ -158,6 +167,7 @@ class DW_Model_Report extends Core_Model_Entity
     public function __construct(DW_Model_Cube $cube)
     {
         $this->filters = new ArrayCollection();
+        $this->acl = new ArrayCollection();
 
         $this->cube = $cube;
         $this->cube->addReport($this);

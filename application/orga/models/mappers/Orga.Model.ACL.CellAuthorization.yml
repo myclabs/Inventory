@@ -7,14 +7,5 @@ Orga\Model\ACL\CellAuthorization:
     resource:
       targetEntity: \Orga_Model_Cell
       inversedBy: acl
-    parentAuthorization:
-      targetEntity: CellAuthorization
-      inversedBy: childAuthorizations
-      cascade: [ all ]
-
-  oneToMany:
-    childAuthorizations:
-      targetEntity: CellAuthorization
-      mappedBy: parentAuthorization
-      cascade: [ all ]
-      orphanRemoval: true
+      joinColumn:
+        nullable: false

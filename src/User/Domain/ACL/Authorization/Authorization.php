@@ -58,7 +58,7 @@ abstract class Authorization extends Core_Model_Entity
     protected $childAuthorizations;
 
     /**
-     * Crée une autorisation qui hérite de celle-ci.
+     * Crée une autorisation.
      *
      * @param Role                               $role
      * @param User                               $user
@@ -84,6 +84,29 @@ abstract class Authorization extends Core_Model_Entity
     }
 
     /**
+     * Crée une autorisation qui hérite d'une autre.
+     *
+     * @param Authorization                      $authorization
+     * @param \User\Domain\ACL\Resource\Resource $resource Nouvelle ressource
+     * @return static
+     */
+    public static function createChildAuthorization(Authorization $authorization, Resource $resource)
+    {
+        /** @var self $authorization */
+        $authorization = self::create(
+            $authorization->role,
+            $authorization->user,
+            $authorization->getAction(),
+            $resource
+        );
+
+        $authorization->parentAuthorization = $authorization;
+        $authorization->childAuthorizations->add($authorization);
+
+        return $authorization;
+    }
+
+    /**
      * @param Role                               $role
      * @param User                               $user
      * @param Action                             $action
@@ -91,29 +114,12 @@ abstract class Authorization extends Core_Model_Entity
      */
     private function __construct(Role $role, User $user, Action $action, Resource $resource)
     {
-        $this->$role = $role;
+        $this->role = $role;
         $this->user = $user;
         $this->actionId = $action->exportToString();
         $this->resource = $resource;
 
         $this->childAuthorizations = new ArrayCollection();
-    }
-
-    /**
-     * Crée une autorisation qui hérite de celle-ci.
-     *
-     * @param \User\Domain\ACL\Resource\Resource $resource
-     * @return static
-     */
-    public function createChildAuthorization(Resource $resource)
-    {
-        /** @var self $authorization */
-        $authorization = new static($this->role, $this->user, $this->getAction(), $resource);
-        $authorization->parentAuthorization = $this;
-
-        $this->childAuthorizations->add($authorization);
-
-        return $authorization;
     }
 
     /**
