@@ -35,10 +35,10 @@
         
         <tu tuid="dataRebuildTab">
             <tuv xml:lang="fr">
-                <seg>Reconst. données</seg>
+                <seg>Reconstruction</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Data rebuild</seg>
+                <seg>Rebuild</seg>
             </tuv>
         </tu>
  

@@ -27,7 +27,7 @@ Feature: Cell contributor feature
   # Les autres onglets de la page d'une cellule sont absents
     # TODO And I should not see "Organisation"
     And I should not see "Rôles"
-    And I should not see "Reconst. données"
+    And I should not see "Reconstruction"
 
   @javascript
   Scenario: Contributor of several cells

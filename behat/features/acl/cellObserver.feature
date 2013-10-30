@@ -36,7 +36,7 @@ Feature: Cell observer feature
   # Les autres onglets de la page d'une cellule sont absents
     And I should not see a "#container a:contains('Organisation')" element
     And I should not see a "#container a:contains('Rôles')" element
-    And I should not see a "#container a:contains('Reconst. données')" element
+    And I should not see a "#container a:contains('Reconstruction')" element
 
   @javascript
   Scenario: Observer of several cells
