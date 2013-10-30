@@ -132,9 +132,9 @@ Feature: Cell administrator feature
   # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
     When I open tab "Paramétrage"
   # Accès à l'onglet "Sous-unités"
-    And I open tab "Sous-unités"
-    And I open collapse "Site"
-    Then I should see the "child_c2_g3" datagrid
+    # And I open tab "Sous-unités"
+    # And I open collapse "Site"
+    # Then I should see the "child_c2_g3" datagrid
   # Accès à l'onglet "Pertinence"
     When I open tab "Pertinence"
     And I open collapse "Site"

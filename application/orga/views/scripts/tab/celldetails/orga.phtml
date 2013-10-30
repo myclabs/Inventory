@@ -35,11 +35,11 @@ if ($this->displayOrganizationTabs) {
 }
 
 if ($this->hasChildCells) {
-    $childCellsTab = new UI_Tab('childCells');
-    $childCellsTab->label = __('Orga', 'cell', 'subCells');
-    $childCellsTab->dataSource = 'orga/cell/child/idCell/'.$this->idCell.'/display/render';
-    $childCellsTab->useCache = false;
-    $tabView->addTab($childCellsTab);
+    // $childCellsTab = new UI_Tab('childCells');
+    // $childCellsTab->label = __('Orga', 'cell', 'subCells');
+    // $childCellsTab->dataSource = 'orga/cell/child/idCell/'.$this->idCell.'/display/render';
+    // $childCellsTab->useCache = false;
+    // $tabView->addTab($childCellsTab);
 
     $relevanceTab = new UI_Tab('relevant');
     $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');
