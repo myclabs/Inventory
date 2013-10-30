@@ -29,6 +29,8 @@ class OrganizationAuthorization extends Authorization
         $this->user = $user;
         $this->setAction($action);
         $this->resource = $resource;
+
+        $this->resource->addToACL($this);
     }
 
     /**

@@ -41,38 +41,63 @@ $userService->isAllowed($user, Action::EDIT(), $resource);
 
 #### Creating a new kind of resource
 
-To create authorizations on a new resource, you need to create a new kind of authorization:
+You need to have your entity implement the `Resource` interface:
+
+```php
+class Article extends Resource
+{
+    use ResourceTrait;
+
+    /**
+     * @var ArticleAuthorization[]|Collection
+     */
+    protected $acl;
+
+    public function __construct()
+    {
+        $this->acl = new ArrayCollection();
+    }
+}
+```
+
+```yaml
+Article\Domain\Article:
+  type: entity
+
+  oneToMany:
+    acl:
+      targetEntity: Article\Domain\ACL\ArticleAuthorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true
+```
+
+To create authorizations on the new resource, you need to create a new kind of authorization:
 
 ```php
 class ArticleAuthorization extends Authorization
 {
-    protected $article;
+    protected $resource;
 
-    public function __construct(User $user, Action $action, Article $article)
+    public function __construct(User $user, Action $action, Article $resource)
     {
         $this->user = $user;
-        $this->action = $action;
-        $this->article = $article;
+        $this->setAction($action);
+        $this->resource = $article;
+
+        $this->resource->addToACL($this);
     }
 }
 ```
 
-the authorization repository:
+```yaml
+Article\Domain\ACL\ArticleAuthorization:
+  type: entity
 
-```php
-class ArticleAuthorizationRepository implements AuthorizationRepositoryInterface
-{
-    public function exists(User $user, Action $action, $article = null)
-    {
-        ...
-    }
-}
-```
-
-and link it to the resource:
-
-```php
-$aclService->setAuthorizationRepository(Article::class, $em->getRepository(ArticleAuthorization::class));
+  oneToOne:
+    resource:
+      targetEntity: Article\Domain\Article
+      inversedBy: acl
 ```
 
 #### Creating a new role
@@ -102,7 +127,12 @@ class ArticleEditorRole extends Role
 
 #### Keeping the authorizations up to date
 
-The listener will update the authorizations when the resource changes:
+When a user, or a resource is deleted, authorizations will be deleted in cascade by Doctrine.
+
+However, if your resources have inheritance, you need to update the authorizations when the inheritance changes
+(resource removed from the tree, resource inserted in the tree, …).
+
+A listener can update the authorizations when the resource changes:
 
 ```php
 class ArticleListener

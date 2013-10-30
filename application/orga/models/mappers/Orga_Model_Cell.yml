@@ -94,6 +94,11 @@ Orga_Model_Cell:
       targetEntity: Orga_Model_CellsGroup
       mappedBy: containerCell
       cascade: [ persist, remove ]
+    acl:
+      targetEntity: Orga\Model\ACL\CellAuthorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true
 
   manyToOne:
     granularity:

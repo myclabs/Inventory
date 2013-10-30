@@ -1,10 +1,9 @@
 Orga\Model\ACL\OrganizationAuthorization:
   type: entity
-  repositoryClass: Orga\Model\Repository\OrganizationAuthorizationRepository
+  repositoryClass: \Core_Model_Repository
   table: Orga_ACL_Authorization_Organization
 
   oneToOne:
     resource:
       targetEntity: \Orga_Model_Organization
-      joinColumn:
-        nullable: true
+      inversedBy: acl

@@ -4,9 +4,6 @@ Orga_Model_Organization:
   repositoryClass: Core_Model_Repository
   table: Orga_Organization
 
-  entityListeners:
-    Orga\Model\ACL\ResourceListener\OrganizationListener:
-
   gedmo:
     translation:
       locale: translationLocale
@@ -51,3 +48,8 @@ Orga_Model_Organization:
         position: ASC
       orphanRemoval: true
       cascade: [ persist, remove ]
+    acl:
+      targetEntity: Orga\Model\ACL\OrganizationAuthorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true

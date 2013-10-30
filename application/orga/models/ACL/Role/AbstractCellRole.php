@@ -5,7 +5,6 @@ namespace Orga\Model\ACL\Role;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Model_Cell;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\ACL\Role;
 use User\Domain\User;
 

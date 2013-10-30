@@ -16,8 +16,8 @@ class CellObserverRole extends AbstractCellRole
     protected function getCellAuthorizations(Orga_Model_Cell $cell)
     {
         return [
-            new CellAuthorization($this->user, Action::VIEW(), $this->cell),
-            new CellAuthorization($this->user, Orga_Action_Cell::COMMENT(), $this->cell),
+            new CellAuthorization($this->user, Action::VIEW(), $cell),
+            new CellAuthorization($this->user, Orga_Action_Cell::COMMENT(), $cell),
         ];
     }
 }

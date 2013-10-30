@@ -12,14 +12,19 @@ use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Orga\Model\ACL\CellAuthorization;
+use User\Domain\ACL\Resource\Resource;
+use User\Domain\ACL\Resource\ResourceTrait;
 
 /**
  * Definit une cellule organisationnelle.
  * @package    Orga
  * @subpackage Model
  */
-class Orga_Model_Cell extends Core_Model_Entity
+class Orga_Model_Cell extends Core_Model_Entity implements Resource
 {
+    use ResourceTrait;
+
     // Constantes de tris et de filtres.
     const QUERY_GRANULARITY = 'granularity';
     const QUERY_RELEVANT = 'relevant';
@@ -177,6 +182,11 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     protected $docLibraryForSocialContextActions = null;
 
+    /**
+     * @var CellAuthorization[]|Collection
+     */
+    protected $acl;
+
 
     /**
      * Constructeur de la classe Cell.
@@ -191,6 +201,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         $this->dWResults = new ArrayCollection();
         $this->socialGenericActions = new ArrayCollection();
         $this->socialContextActions = new ArrayCollection();
+        $this->acl = new ArrayCollection();
 
         $this->granularity = $granularity;
         foreach ($members as $member) {

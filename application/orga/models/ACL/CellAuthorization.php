@@ -2,7 +2,6 @@
 
 namespace Orga\Model\ACL;
 
-use Core_Model_Query;
 use Orga_Model_Cell;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization\Authorization;
@@ -16,38 +15,29 @@ use User\Domain\User;
 class CellAuthorization extends Authorization
 {
     /**
-     * @var Orga_Model_Cell|null
+     * @var Orga_Model_Cell
      */
     protected $resource;
 
     /**
-     * @param User                 $user
-     * @param Action               $action
-     * @param Orga_Model_Cell|null $resource Can be null, for example with the "CREATE" action
+     * @param User            $user
+     * @param Action          $action
+     * @param Orga_Model_Cell $resource
      */
-    public function __construct(User $user, Action $action, Orga_Model_Cell $resource = null)
+    public function __construct(User $user, Action $action, Orga_Model_Cell $resource)
     {
         $this->user = $user;
         $this->setAction($action);
         $this->resource = $resource;
+
+        $this->resource->addToACL($this);
     }
 
     /**
-     * @return Orga_Model_Cell|null
+     * @return Orga_Model_Cell
      */
     public function getResource()
     {
         return $this->resource;
-    }
-
-    /**
-     * @param Orga_Model_Cell $resource
-     * @return self[]
-     */
-    public static function loadByResource(Orga_Model_Cell $resource)
-    {
-        $query = new Core_Model_Query();
-        $query->filter->addCondition('resource', $resource);
-        return self::loadList($query);
     }
 }

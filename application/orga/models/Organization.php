@@ -6,18 +6,22 @@
  * @package    Orga
  * @subpackage Model
  */
+
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Orga\Model\ACL\OrganizationAuthorization;
+use User\Domain\ACL\Resource\Resource;
+use User\Domain\ACL\Resource\ResourceTrait;
 
 /**
  * Organization organisationnel.
  * @package    Orga
  * @subpackage Model
  */
-class Orga_Model_Organization extends Core_Model_Entity
+class Orga_Model_Organization extends Core_Model_Entity implements Resource
 {
-
     use Core_Model_Entity_Translatable;
+    use ResourceTrait;
 
     /**
      * Identifiant unique du Organization.
@@ -54,6 +58,11 @@ class Orga_Model_Organization extends Core_Model_Entity
      */
     protected $granularityForInventoryStatus = null;
 
+    /**
+     * @var OrganizationAuthorization[]|Collection
+     */
+    protected $acl;
+
 
     /**
      * Constructeur de la classe Organization.
@@ -62,6 +71,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     {
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
+        $this->acl = new ArrayCollection();
     }
 
     /**
