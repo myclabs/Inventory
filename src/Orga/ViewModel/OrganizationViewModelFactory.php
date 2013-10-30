@@ -51,6 +51,7 @@ class OrganizationViewModelFactory
         } catch (Core_Exception_UndefinedAttribute $e) {
         };
         $canUserSeeManyCells = false;
+        $numberCellsUserCanSee = 0;
         foreach ($organization->getGranularities() as $granularity) {
             $aclCellQuery = new Core_Model_Query();
             $aclCellQuery->aclFilter->enabled = true;

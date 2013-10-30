@@ -9,7 +9,6 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use UI_Message;
 use User\Application\ForbiddenException;
-use User\Domain\ACL\SecurityIdentity;
 use User\Domain\User;
 use User\Domain\ACL\ACLService;
 use User\Application\Service\ControllerSecurityService;
@@ -207,11 +206,11 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
 
     /**
      * Pages publiques des utilisateurs connectés.
-     * @param SecurityIdentity                 $identity
+     * @param User                             $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool true
      */
-    public function loggedInRule(SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    public function loggedInRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return true;
     }

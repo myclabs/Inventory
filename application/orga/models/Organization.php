@@ -10,7 +10,7 @@
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Orga\Model\ACL\OrganizationAuthorization;
-use User\Domain\ACL\Authorization\Authorization;
+use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\Resource\Resource;
 use User\Domain\ACL\Resource\ResourceTrait;
@@ -69,6 +69,13 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      */
     protected $acl;
 
+    /**
+     * Liste des roles administrateurs sur cette organisation.
+     *
+     * @var OrganizationAdminRole[]|Collection
+     */
+    protected $adminRoles;
+
 
     /**
      * Constructeur de la classe Organization.
@@ -78,6 +85,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
         $this->acl = new ArrayCollection();
+        $this->adminRoles = new ArrayCollection();
 
         // Hérite des droits sur "toutes les organisations"
         $allOrganizations = NamedResource::loadByName(self::class);
@@ -368,7 +376,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->orderBy(['tag' => 'ASC']);
-        return $this->granularities->matching($criteria);
+        return $this->granularities->matching($criteria)->toArray();
     }
 
     /**
@@ -460,4 +468,31 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
         return $this->granularities->matching($criteria)->toArray();
     }
 
+    /**
+     * @return OrganizationAdminRole[]
+     */
+    public function getAdminRoles()
+    {
+        return $this->adminRoles;
+    }
+
+    /**
+     * API utilisée uniquement par OrganizationAdminRole
+     *
+     * @param OrganizationAdminRole $adminRole
+     */
+    public function addAdminRole(OrganizationAdminRole $adminRole)
+    {
+        $this->adminRoles->add($adminRole);
+    }
+
+    /**
+     * API utilisée uniquement par OrganizationAdminRole
+     *
+     * @param OrganizationAdminRole $adminRole
+     */
+    public function removeAdminRole(OrganizationAdminRole $adminRole)
+    {
+        $this->adminRoles->removeElement($adminRole);
+    }
 }

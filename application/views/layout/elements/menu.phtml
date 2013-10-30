@@ -1,6 +1,6 @@
 <?php
+
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
@@ -45,7 +45,7 @@ if ($connectedUser) {
     $isAllowedToViewAllUser = $aclService->isAllowed(
         $connectedUser,
         Action::VIEW(),
-        EntityResource::loadByEntityName(User::class)
+        NamedResource::loadByName(User::class)
     );
     if ($isAllowedToViewAllUser) {
         $leftMenu[5] = [
@@ -86,7 +86,7 @@ if ($connectedUser) {
     $isAllowedToEditReferential = $aclService->isAllowed(
         $connectedUser,
         Action::EDIT(),
-        NamedResource::loadByName('referential')
+        NamedResource::loadByName('repository')
     );
     if ($isAllowedToEditReferential) {
         $subMenuReferencial[] = [

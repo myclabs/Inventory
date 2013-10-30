@@ -20,6 +20,7 @@ class OrganizationAdminRole extends Role
     public function __construct(User $user, Orga_Model_Organization $organization)
     {
         $this->organization = $organization;
+        $organization->addAdminRole($this);
 
         parent::__construct($user);
     }

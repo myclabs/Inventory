@@ -1,22 +1,11 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Orga
- * @subpackage Service
- */
 
 use Doctrine\ORM\EntityManager;
-use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\Role;
 use User\Domain\User;
 
-/**
- * @package Orga
- * @subpackage Service
- */
 class Orga_Service_OrganizationService
 {
-
     /**
      * @var EntityManager
      */
@@ -92,17 +81,6 @@ class Orga_Service_OrganizationService
         $this->entityManager->beginTransaction();
 
         try {
-            // Suppression des autorisations de tous les utilisateurs.
-            $this->clearAttachedUsers(EntityResource::loadByEntity($organization));
-            foreach ($organization->getGranularities() as $granularity) {
-                foreach ($granularity->getCells() as $cell) {
-                    $this->clearAttachedUsers(EntityResource::loadByEntity($cell));
-                }
-            }
-
-            $this->entityManager->flush();
-            $this->entityManager->clear();
-
             $organization = Orga_Model_Organization::load($organization->getId());
             $organization->setGranularityForInventoryStatus();
 
@@ -132,19 +110,4 @@ class Orga_Service_OrganizationService
             throw $e;
         }
     }
-
-    /**
-     * @param EntityResource $resource
-     */
-    protected function clearAttachedUsers(EntityResource $resource)
-    {
-        foreach ($resource->getLinkedSecurityIdentities() as $securityIdentity) {
-            if ($securityIdentity instanceof Role) {
-                foreach ($securityIdentity->getUsers() as $attachedUser) {
-                    $attachedUser->removeRole($securityIdentity);
-                }
-            }
-        }
-    }
-
 }

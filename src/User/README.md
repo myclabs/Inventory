@@ -106,6 +106,8 @@ class ArticleEditorRole extends Role
     public function __construct(User $user, Article $article)
     {
         $this->article = $article;
+        // See remark below
+        $article->addEditorRole($this);
 
         parent::__construct($user);
     }
@@ -119,6 +121,10 @@ class ArticleEditorRole extends Role
     }
 }
 ```
+
+If the role is related to a resource, the association between the resource (`Article`)
+and the role (`ArticleEditorRole`) needs to be bidirectional so that the Delete Cascade of Doctrine works
+when the Article is deleted.
 
 #### Keeping the authorizations up to date
 

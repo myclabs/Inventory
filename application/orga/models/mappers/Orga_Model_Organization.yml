@@ -53,3 +53,8 @@ Orga_Model_Organization:
       mappedBy: resource
       cascade: [ all ]
       orphanRemoval: true
+    adminRoles:
+      targetEntity: Orga\Model\ACL\Role\OrganizationAdminRole
+      mappedBy: organization
+      cascade: [ all ]
+      orphanRemoval: true

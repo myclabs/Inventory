@@ -1,11 +1,4 @@
 <?php
-/**
- * Classe Orga_Model_Cell
- * @author     valentin.claras
- * @author     simon.rieu
- * @package    Orga
- * @subpackage Model
- */
 
 use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
@@ -13,13 +6,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Orga\Model\ACL\CellAuthorization;
+use Orga\Model\ACL\Role\AbstractCellRole;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellManagerRole;
+use Orga\Model\ACL\Role\CellObserverRole;
 use User\Domain\ACL\Resource\Resource;
 use User\Domain\ACL\Resource\ResourceTrait;
 
 /**
  * Definit une cellule organisationnelle.
- * @package    Orga
- * @subpackage Model
+ *
+ * @author valentin.claras
+ * @author simon.rieu
  */
 class Orga_Model_Cell extends Core_Model_Entity implements Resource
 {
@@ -196,6 +195,34 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     protected $acl;
 
+    /**
+     * Liste des roles administrateurs sur cette cellule.
+     *
+     * @var CellAdminRole[]|Collection
+     */
+    protected $adminRoles;
+
+    /**
+     * Liste des roles managers sur cette cellule.
+     *
+     * @var CellManagerRole[]|Collection
+     */
+    protected $managerRoles;
+
+    /**
+     * Liste des roles contributeurs sur cette cellule.
+     *
+     * @var CellContributorRole[]|Collection
+     */
+    protected $contributorRoles;
+
+    /**
+     * Liste des roles observateurs sur cette cellule.
+     *
+     * @var CellObserverRole[]|Collection
+     */
+    protected $observerRoles;
+
 
     /**
      * Constructeur de la classe Cell.
@@ -211,6 +238,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $this->socialGenericActions = new ArrayCollection();
         $this->socialContextActions = new ArrayCollection();
         $this->acl = new ArrayCollection();
+        $this->adminRoles = new ArrayCollection();
+        $this->managerRoles = new ArrayCollection();
+        $this->contributorRoles = new ArrayCollection();
+        $this->observerRoles = new ArrayCollection();
 
         $this->granularity = $granularity;
         foreach ($members as $member) {
@@ -223,7 +254,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $this->createDWCube();
         // Création du CellsGroup.
         foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
-            $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);
+            new Orga_Model_CellsGroup($this, $inputGranularity);
         }
         // Création de la Bibliography des Input.
         if ($this->granularity->getInputConfigGranularity() !== null) {
@@ -1663,6 +1694,131 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             }
         }
         throw new Core_Exception_NotFound('No broader Granularity provides a Library for the SocialContextAction.');
+    }
+
+    /**
+     * @return AbstractCellRole[]
+     */
+    public function getAllRoles()
+    {
+        return array_merge(
+            $this->adminRoles->toArray(),
+            $this->managerRoles->toArray(),
+            $this->contributorRoles->toArray(),
+            $this->observerRoles->toArray()
+        );
+    }
+
+    /**
+     * @return CellAdminRole[]
+     */
+    public function getAdminRoles()
+    {
+        return $this->adminRoles;
+    }
+
+    /**
+     * API utilisée uniquement par CellAdminRole
+     *
+     * @param CellAdminRole $adminRole
+     */
+    public function addAdminRole(CellAdminRole $adminRole)
+    {
+        $this->adminRoles->add($adminRole);
+    }
+
+    /**
+     * API utilisée uniquement par CellAdminRole
+     *
+     * @param CellAdminRole $adminRole
+     */
+    public function removeAdminRole(CellAdminRole $adminRole)
+    {
+        $this->adminRoles->removeElement($adminRole);
+    }
+
+    /**
+     * @return CellManagerRole[]
+     */
+    public function getManagerRoles()
+    {
+        return $this->managerRoles;
+    }
+
+    /**
+     * API utilisée uniquement par CellManagerRole
+     *
+     * @param CellManagerRole $managerRole
+     */
+    public function addManagerRole(CellManagerRole $managerRole)
+    {
+        $this->managerRoles->add($managerRole);
+    }
+
+    /**
+     * API utilisée uniquement par CellManagerRole
+     *
+     * @param CellManagerRole $managerRole
+     */
+    public function removeManagerRole(CellManagerRole $managerRole)
+    {
+        $this->managerRoles->removeElement($managerRole);
+    }
+
+    /**
+     * @return CellContributorRole[]
+     */
+    public function getContributorRoles()
+    {
+        return $this->contributorRoles;
+    }
+
+    /**
+     * API utilisée uniquement par CellContributorRole
+     *
+     * @param CellContributorRole $contributorRole
+     */
+    public function addContributorRole(CellContributorRole $contributorRole)
+    {
+        $this->contributorRoles->add($contributorRole);
+    }
+
+    /**
+     * API utilisée uniquement par CellContributorRole
+     *
+     * @param CellContributorRole $contributorRole
+     */
+    public function removeContributorRole(CellContributorRole $contributorRole)
+    {
+        $this->contributorRoles->removeElement($contributorRole);
+    }
+
+    /**
+     * @return CellObserverRole[]
+     */
+    public function getObserverRoles()
+    {
+        return $this->observerRoles;
+    }
+
+    /**
+     * API utilisée uniquement par CellObserverRole
+     *
+     * @param CellObserverRole $observerRole
+     */
+    public function addObserverRole(CellObserverRole $observerRole)
+    {
+        $this->observerRoles->add($observerRole);
+    }
+
+    /**
+     * API utilisée uniquement par CellObserverRole
+     *
+     * @param CellObserverRole $observerRole
+     */
+    public function removeObserverRole(CellObserverRole $observerRole)
+    {
+        $this->observerRoles->removeElement($observerRole);
     }
 
     /**
