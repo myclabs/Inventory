@@ -45,6 +45,7 @@ class Orga_Tab_InputController extends Core_Controller
 
         $this->view->idCell = $idCell;
         $this->view->comments = $cell->getSocialCommentsForInputSetPrimary();
+        $this->view->currentUser = $this->_helper->auth();
         $this->view->isUserAbleToComment = $this->aclService->isAllowed(
             $this->_helper->auth(),
             Orga_Action_Cell::INPUT(),
@@ -76,9 +77,10 @@ class Orga_Tab_InputController extends Core_Controller
             $comment = $this->commentService->addComment($author, $content);
             $cell->addSocialCommentForInputSetPrimary($comment);
             $cell->save();
+            $this->entityManager->flush();
 
             // Retourne la vue du commentaire
-            $this->forward('comment-added', 'comment', 'social', ['comment' => $comment]);
+            $this->forward('comment-added', 'comment', 'social', ['comment' => $comment, 'currentUser' => $author]);
             return;
         }
         $this->sendFormResponse();
@@ -124,5 +126,4 @@ class Orga_Tab_InputController extends Core_Controller
         }
         $this->view->documentBibliography = $cell->getDocBibliographyForAFInputSetPrimary();
     }
-
 }

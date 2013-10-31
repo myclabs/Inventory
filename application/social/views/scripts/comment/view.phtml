@@ -1,12 +1,8 @@
 <?php
-use User\Domain\ACL\Action;
-
 /** @var $comment Social_Model_Comment */
 $comment = $this->comment;
-$locale = Core_Locale::loadDefault();
 
-$canEdit = $this->isAllowed(Action::EDIT(), $comment);
-$canDelete = $this->isAllowed(Action::DELETE(), $comment);
+$canEdit = ($comment->getAuthor() === $this->currentUser);
 ?>
 
 <blockquote id="comment<?=$comment->getId()?>" data-comment-id="<?=$comment->getId()?>">
@@ -22,9 +18,6 @@ $canDelete = $this->isAllowed(Action::DELETE(), $comment);
                 <i class="icon-edit"></i>
                 <?=__('UI', 'verb', 'edit')?>
             </button>
-        <?php endif; ?>
-
-        <?php if ($canDelete) : ?>
             <button type="button" class="deleteComment btn btn-mini">
                 <i class="icon-trash"></i>
                 <?=__('UI', 'verb', 'delete')?>
