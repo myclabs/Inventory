@@ -239,13 +239,18 @@ class User extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Vérifie si un utiisateur possède un role donné
-     * @param Role $role
+     * Vérifie si un utiisateur possède un type de role donné
+     * @param string $roleClass
      * @return bool
      */
-    public function hasRole(Role $role)
+    public function hasRole($roleClass)
     {
-        return $this->roles->contains($role);
+        foreach ($this->roles as $role) {
+            if ($role instanceof $roleClass) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function addRole(Role $role)

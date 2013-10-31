@@ -8,10 +8,7 @@
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
-use Doctrine\Common\Collections\ArrayCollection;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\Role;
 use User\Domain\ACL\ACLService;
 
@@ -103,10 +100,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $cellACLResource = EntityResource::loadByEntity($cell);
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
-        $organizationResource = EntityResource::loadByEntity($organization);
 
         $listDatagridConfiguration = array();
 
@@ -114,7 +109,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 Action::EDIT(),
-                $organizationResource
+                $organization
             );
         } else {
             $isUserAllowedToEditOrganization = false;
@@ -173,10 +168,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
             $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
             $columnRole->list = array();
-            foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
-                if ($role instanceof Role) {
-                    $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
-                }
+            foreach ($cell->getAllRoles() as $role) {
+                $columnRole->list[] = __('Orga', 'role', $role->getLabel());
             }
             $datagridConfiguration->datagrid->addCol($columnRole);
 
@@ -214,10 +207,8 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
                 $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
                 $columnRole->list = array();
-                foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
-                    if ($role instanceof User_Model_Role) {
-                        $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
-                    }
+                foreach ($cell->getAllRoles() as $role) {
+                    $columnRole->list[] = __('Orga', 'role', $role->getLabel());
                 }
                 $datagridConfiguration->datagrid->addCol($columnRole);
 

@@ -1,8 +1,8 @@
 <?php
 
+use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\ACL\Role;
-use User\Domain\ACL\ACLService;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -19,25 +19,37 @@ class Orga_Service_ACLManager
     private $userService;
 
     /**
-     * @param UserService $userService
-     * @param ACLService $aclService
+     * @var EntityManager
      */
-    public function __construct(UserService $userService, ACLService $aclService)
+    private $entityManager;
+
+    /**
+     * @param UserService $userService
+     * @param EntityManager $entityManager
+     */
+    public function __construct(UserService $userService, EntityManager $entityManager)
     {
         $this->userService = $userService;
-        $this->aclService = $aclService;
+        $this->entityManager = $entityManager;
     }
 
     /**
      * Ajoute au projet donné, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Organization $organization
-     * @param User  $user
-     * @param bool $sendMail
+     * @param string                  $email
+     * @param bool                    $sendMail
      */
-    public function addOrganizationAdministrator(Orga_Model_Organization $organization, User $user, $sendMail = true)
+    public function addOrganizationAdministrator(Orga_Model_Organization $organization, $email, $sendMail = true)
     {
+        if (User::isEmailUsed($email)) {
+            $user = User::loadByEmail($email);
+        } else {
+            $user = $this->userService->inviteUser($email);
+        }
+
         $user->addRole(new OrganizationAdminRole($user, $organization));
+        $this->entityManager->flush();
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -56,17 +68,14 @@ class Orga_Service_ACLManager
      * Retire au projet donné, l'utilisateur comme administrateur.
      *
      * @param Orga_Model_Organization $organization
-     * @param User $user
+     * @param Role $role
      * @param bool $sendMail
      */
-    public function removeOrganizationAdministrator(Orga_Model_Organization $organization, User $user, $sendMail = true)
+    public function removeOrganizationAdministrator(Orga_Model_Organization $organization, Role $role, $sendMail = true)
     {
-        foreach ($user->getRoles() as $role) {
-            if ($role instanceof OrganizationAdminRole && $role->getOrganization() === $organization) {
-                $user->removeRole($role);
-                break;
-            }
-        }
+        $user = $role->getUser();
+        $user->removeRole($role);
+        $this->entityManager->flush();
 
         if ($sendMail) {
             $this->userService->sendEmail(
