@@ -14,7 +14,7 @@ class Orga_Test_ACLTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Orga_Test_ACL');
+//        $suite->addTestSuite('Orga_Test_ACL');
         return $suite;
     }
 }
