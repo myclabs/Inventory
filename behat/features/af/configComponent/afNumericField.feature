@@ -5,7 +5,28 @@ Feature: AF numeric field feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a numeric field, correct input
+  Scenario: Creation of a numeric field, correct input, default value for attributes
+    # Accès au datagrid
+    Given I am on "af/edit/menu/id/4"
+    And I wait for the page to finish loading
+    And I open tab "Composants"
+    And I open collapse "Champs numériques"
+    Then I should see the "numericFieldDatagrid" datagrid
+      # Popup d'ajout
+    When I click "Ajouter"
+    Then I should see the popup "Ajout d'un champ numérique"
+      # Ajout, saisie correcte
+    And I fill in "numericFieldDatagrid_ref_addForm" with "aaa"
+    And I fill in "numericFieldDatagrid_unit_addForm" with "m"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
+      # Vérification ligne bien ajoutée
+    And the "numericFieldDatagrid" datagrid should contain a row:
+      | label | ref | isVisible | enabled | required   | unit | unitSelection | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
+      |       | aaa | Visible   | Activé  | Facultatif | m    | Modifiable    | Affichée        |              |                     | Masqué               |
+
+  @javascript
+  Scenario: Creation of a numeric field, correct input, non default values for attributes
   # Accès au datagrid
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
@@ -18,16 +39,22 @@ Feature: AF numeric field feature
   # Ajout, saisie correcte
     And I fill in "numericFieldDatagrid_label_addForm" with "AAA"
     And I fill in "numericFieldDatagrid_ref_addForm" with "aaa"
+    And I fill in "numericFieldDatagrid_help_addForm" with "h1. Blabla"
+    And I check "numericFieldDatagrid_isVisible_addForm_0"
+    And I check "Désactivé"
+    And I check "Obligatoire"
     And I fill in "numericFieldDatagrid_unit_addForm" with "kg_co2e.m3^-1"
+    And I check "Non modifiable"
+    And I check "Masquée"
     And I fill in "numericFieldDatagrid_digitalValue_addForm" with "1000,5"
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "10,9"
-    And I fill in "numericFieldDatagrid_help_addForm" with "h1. Blabla"
+    And I check "numericFieldDatagrid_defaultValueReminder_addForm_1"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Champs ordonnés suivant l'ordre de création
+  # Vérification ligne bien ajoutée
     And the "numericFieldDatagrid" datagrid should contain a row:
-      | label | ref | isVisible | enabled | required   | unit           | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
-      | AAA   | aaa | Visible   | Activé  | Facultatif | kg équ. CO2/m³ | Affichée        | 1 000,5      | 10                  | Masqué               |
+      | label | ref | isVisible | enabled    | required    | unit           | unitSelection     | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
+      | AAA   | aaa | Masqué    | Désactivé  | Obligatoire | kg équ. CO2/m³ | Non modifiable    | Masquée         | 1 000,5      | 10                  | Affiché              |
     When I click "Aide" in the row 4 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#numericFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
@@ -39,7 +66,7 @@ Feature: AF numeric field feature
     Then I should see the "algoNumericInput" datagrid
   # Ordre par ordre alphabétique des identifiants pour le datagrid des algos de type "saisie de champ numérique"
     And the "algoNumericInput" datagrid should contain a row:
-      | label | ref | input | unit |
+      | label | ref | input | unit           |
       | AAA   | aaa | AAA   | kg équ. CO2/m³ |
 
   @javascript
@@ -109,6 +136,8 @@ Feature: AF numeric field feature
     When I set "Facultatif" for column "required" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification de l'unité, unité valide
     When I set "t" for column "unit" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
+  # Modification du caractère modifiable de l'unité
+    When I set "Non modifiable" for column "unitSelection" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification de l'affichage de l'incertitude
     When I set "Masquée" for column "withUncertainty" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Modification valeur initiale
@@ -119,8 +148,8 @@ Feature: AF numeric field feature
     When I set "Masqué" for column "defaultValueReminder" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "numericFieldDatagrid" datagrid should contain:
-      | label                   | ref         | isVisible | enabled   | required   | unit | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
-      | Champ numérique modifié | c_n_modifie | Masqué    | Désactivé | Facultatif | t    | Masquée         | 1,5          | 15                  | Masqué               |
+      | label                   | ref         | isVisible | enabled   | required   | unit | unitSelection  | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
+      | Champ numérique modifié | c_n_modifie | Masqué    | Désactivé | Facultatif | t    | Non modifiable | Masquée         | 1,5          | 15                  | Masqué               |
     When I click "Aide" in the row 1 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#numericFieldDatagrid_help_popup .modal-body h1:contains('Aide modifiée')" element
