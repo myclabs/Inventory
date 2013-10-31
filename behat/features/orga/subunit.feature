@@ -4,20 +4,21 @@ Feature: Organizational subunits tab feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @skipped
   Scenario: Global cell subunits tab scenario
-  # Accès au volet "Sous-unités"
+    # Ce volet n'est plus affiché
+    # Accès au volet "Sous-unités"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
-    # And I open tab "Sous-unités"
+    And I open tab "Sous-unités"
   # Ouverture d'un volet pour une granularité non navigable
     And I open collapse "Année | Site | Catégorie"
     Then I should see the "child_c1_g8" datagrid
     And the row 1 of the "child_c1_g8" datagrid should contain:
-      | annee | site | categorie |
-      | 2012 | Annecy| Énergie |
-    And I should not see "Navigation"
+     | annee | site | categorie |
+     | 2012 | Annecy| Énergie |
+    And I should not see "Aller à"
   # Filtres
     # TODO : tester filtres
     # When I open collapse "Filtres"
