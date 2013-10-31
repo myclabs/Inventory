@@ -33,15 +33,22 @@ class OrganizationAdminRole extends Role
         OrganizationAuthorization::create($this, $this->user, Action::EDIT(), $this->organization);
         OrganizationAuthorization::create($this, $this->user, Action::DELETE(), $this->organization);
 
-        // Admin sur toutes les cellules
-        foreach ($this->organization->getGranularities() as $granularity) {
-            foreach ($granularity->getCells() as $cell) {
-                CellAuthorization::create($this, $this->user, Action::VIEW(), $cell);
-                CellAuthorization::create($this, $this->user, Action::EDIT(), $cell);
-                CellAuthorization::create($this, $this->user, Action::ALLOW(), $cell);
-                CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $cell);
-                CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $cell);
-            }
+        // Admin sur la cellule globale
+        $globalCell = $this->organization->getGranularityByRef('global')->getCellByMembers([]);
+
+        $view = CellAuthorization::create($this, $this->user, Action::VIEW(), $globalCell);
+        $edit = CellAuthorization::create($this, $this->user, Action::EDIT(), $globalCell);
+        $allow = CellAuthorization::create($this, $this->user, Action::ALLOW(), $globalCell);
+        $comment = CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $globalCell);
+        $input = CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $globalCell);
+
+        // Cellules filles
+        foreach ($globalCell->getChildCells() as $childCell) {
+            CellAuthorization::createChildAuthorization($view, $childCell);
+            CellAuthorization::createChildAuthorization($edit, $childCell);
+            CellAuthorization::createChildAuthorization($allow, $childCell);
+            CellAuthorization::createChildAuthorization($comment, $childCell);
+            CellAuthorization::createChildAuthorization($input, $childCell);
         }
     }
 

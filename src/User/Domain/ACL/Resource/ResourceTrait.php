@@ -35,6 +35,14 @@ trait ResourceTrait
         return $this->acl;
     }
 
+    public function getRootACL()
+    {
+        $criteria = new Criteria();
+        $criteria->where($criteria->expr()->isNull('parentAuthorization'));
+
+        return $this->acl->matching($criteria);
+    }
+
     public function addToACL(Authorization $authorization)
     {
         $this->acl->add($authorization);

@@ -2,6 +2,7 @@ Orga\Model\ACL\OrganizationAuthorization:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: Orga_ACL_Authorization_Organization
+  readOnly: true
 
   manyToOne:
     resource:

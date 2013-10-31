@@ -29,19 +29,19 @@ class CellAdminRole extends AbstractCellRole
         // Voir l'organisation
         OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $this->cell->getOrganization());
 
-        CellAuthorization::create($this, $this->user, Action::VIEW(), $this->cell);
-        CellAuthorization::create($this, $this->user, Action::EDIT(), $this->cell);
-        CellAuthorization::create($this, $this->user, Action::ALLOW(), $this->cell);
-        CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $this->cell);
-        CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $this->cell);
+        $view = CellAuthorization::create($this, $this->user, Action::VIEW(), $this->cell);
+        $edit = CellAuthorization::create($this, $this->user, Action::EDIT(), $this->cell);
+        $allow = CellAuthorization::create($this, $this->user, Action::ALLOW(), $this->cell);
+        $comment = CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $this->cell);
+        $input = CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $this->cell);
 
         // Cellules filles
         foreach ($this->cell->getChildCells() as $childCell) {
-            CellAuthorization::create($this, $this->user, Action::VIEW(), $childCell);
-            CellAuthorization::create($this, $this->user, Action::EDIT(), $childCell);
-            CellAuthorization::create($this, $this->user, Action::ALLOW(), $childCell);
-            CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $childCell);
-            CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $childCell);
+            CellAuthorization::createChildAuthorization($view, $childCell);
+            CellAuthorization::createChildAuthorization($edit, $childCell);
+            CellAuthorization::createChildAuthorization($allow, $childCell);
+            CellAuthorization::createChildAuthorization($comment, $childCell);
+            CellAuthorization::createChildAuthorization($input, $childCell);
         }
     }
 

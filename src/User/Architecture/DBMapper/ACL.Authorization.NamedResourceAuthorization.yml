@@ -2,6 +2,7 @@ User\Domain\ACL\Authorization\NamedResourceAuthorization:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: ACL_Authorization_NamedResourceAuthorization
+  readOnly: true
 
   manyToOne:
     resource:

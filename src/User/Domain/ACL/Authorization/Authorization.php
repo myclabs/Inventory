@@ -153,4 +153,20 @@ abstract class Authorization extends Core_Model_Entity
     {
         return $this->resource;
     }
+
+    /**
+     * @return static
+     */
+    public function getParentAuthorization()
+    {
+        return $this->parentAuthorization;
+    }
+
+    /**
+     * @return static[]
+     */
+    public function getChildAuthorizations()
+    {
+        return $this->childAuthorizations;
+    }
 }

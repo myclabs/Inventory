@@ -2,6 +2,7 @@ Orga\Model\ACL\CellAuthorization:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: Orga_ACL_Authorization_Cell
+  readOnly: true
 
   manyToOne:
     resource:

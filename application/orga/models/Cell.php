@@ -229,7 +229,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      * @param Orga_Model_Granularity $granularity
      * @param Orga_Model_Member[]    $members
      */
-    public function __construct(Orga_Model_Granularity $granularity, array $members=[])
+    public function __construct(Orga_Model_Granularity $granularity, array $members = [])
     {
         $this->members = new ArrayCollection();
         $this->cellsGroups = new ArrayCollection();
@@ -273,9 +273,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             $this->docLibraryForSocialContextActions = new Library();
         }
 
-        // Héritage des ACL des cellules parent
+        // Héritage des ACL (racines) des cellules parent
         foreach ($this->getParentCells() as $parentCell) {
-            foreach ($parentCell->getACL() as $parentAuthorization) {
+            foreach ($parentCell->getRootACL() as $parentAuthorization) {
                 // L'autorisation sera automatiquement ajoutée à $this->acl
                 CellAuthorization::createChildAuthorization($parentAuthorization, $this);
             }

@@ -21,11 +21,20 @@ interface Resource
     public function isAllowed(User $user, Action $action);
 
     /**
-     * Returns the list of authorizations that apply to this resource.
+     * Returns the whole list of authorizations that apply to this resource.
      *
      * @return Authorization[]
      */
     public function getACL();
+
+    /**
+     * Returns the list of authorizations that apply to this resource, excluding inherited authorizations.
+     *
+     * Useful for resource inheritance, to cascade authorizations.
+     *
+     * @return Authorization[]
+     */
+    public function getRootACL();
 
     /**
      * Ne pas utiliser directement. Uniquement utilisé par Authorization::create().

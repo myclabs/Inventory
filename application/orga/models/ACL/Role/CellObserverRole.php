@@ -29,13 +29,13 @@ class CellObserverRole extends AbstractCellRole
         // Voir l'organisation
         OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $this->cell->getOrganization());
 
-        CellAuthorization::create($this, $this->user, Action::VIEW(), $this->cell);
-        CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $this->cell);
+        $view = CellAuthorization::create($this, $this->user, Action::VIEW(), $this->cell);
+        $comment = CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $this->cell);
 
         // Cellules filles
         foreach ($this->cell->getChildCells() as $childCell) {
-            CellAuthorization::create($this, $this->user, Action::VIEW(), $childCell);
-            CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $childCell);
+            CellAuthorization::createChildAuthorization($view, $childCell);
+            CellAuthorization::createChildAuthorization($comment, $childCell);
         }
     }
 
