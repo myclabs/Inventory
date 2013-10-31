@@ -532,22 +532,15 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         if ($this->hasParam('idReport')) {
-            $reportResource = EntityResource::loadByEntity(
-                DW_Model_Report::load($this->getParam('idReport'))
-            );
             $reportCanBeUpdated = $this->aclService->isAllowed(
                 $this->_helper->auth(),
                 Orga_Action_Report::EDIT(),
-                $reportResource
+                DW_Model_Report::load($this->getParam('idReport'))
             );
         } else {
             $reportCanBeUpdated = false;
         }
-        $reportCanBeSaveAs = $this->aclService->isAllowed(
-            $this->_helper->auth(),
-            Action::VIEW(),
-            EntityResource::loadByEntity($cell)
-        );
+        $reportCanBeSaveAs = $this->aclService->isAllowed($this->_helper->auth(), Action::VIEW(), $cell);
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
         $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$cell->getId().'/tab/analyses');
