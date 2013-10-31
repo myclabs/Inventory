@@ -113,10 +113,10 @@
 
         <tu tuid="addAdministratorPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Ajout d'un administrateur d'organisation (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)</seg>
+                <seg>Ajout d'un administrateur d'application (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of a organization administrator (creation of a new user or assignation of this role to an existing user)</seg>
+                <seg>Creation of an application administrator (creation of a new user or assignation of this role to an existing user)</seg>
             </tuv>
         </tu>        
         <tu tuid="addPanelTitle">
