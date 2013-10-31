@@ -6,6 +6,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
+use User\Domain\ACL\Role;
+use User\Domain\User;
 
 /**
  * Controlleur du Datagrid listant les utilisateurs d'un ensemble de cellules.
@@ -16,58 +19,38 @@ use Core\Annotation\Secure;
 class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagrid
 {
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("allowCell")
      */
-    function getelementsAction()
+    public function getelementsAction()
     {
         $this->request->setCustomParameters($this->request->filter->getConditions());
-        $this->request->filter->setConditions(array());
+        $this->request->filter->setConditions([]);
 
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
         $this->request->order->addOrder(Orga_Model_Cell::QUERY_MEMBERS_HASHKEY);
-        foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
-            $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
-
-            $data = array();
+        $childCells = $cell->loadChildCellsForGranularity($granularity, $this->request);
+        foreach ($childCells as $childCell) {
+            $data = [];
             foreach ($childCell->getMembers() as $member) {
                 $data[$member->getAxis()->getRef()] = $member->getRef();
             }
 
-            foreach ($childCellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                if ($linkedIdentity instanceof User_Model_Role) {
-                    foreach ($linkedIdentity->getUsers() as $user) {
-                        $data['index'] = $linkedIdentity->getRef().'#'.$user->getId();
-                        $data['userFirstName'] = $user->getFirstName();
-                        $data['userLastName'] = $user->getLastName();
-                        $data['userEmail'] = $user->getEmail();
-                        $data['userRole'] = $linkedIdentity->getRef();
-                        $this->addLine($data);
-                    }
-                }
+            foreach ($cell->getAllRoles() as $role) {
+                $data['index'] = $role->getId();
+                $data['userFirstName'] = $role->getUser()->getFirstName();
+                $data['userLastName'] = $role->getUser()->getLastName();
+                $data['userEmail'] = $role->getUser()->getEmail();
+                $data['userRole'] = $role->getLabel();
+                $this->addLine($data);
             }
         }
 
         $totalElement = 0;
-        foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
-            $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
-            foreach ($childCellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                if ($linkedIdentity instanceof User_Model_Role) {
-                    $totalElement += count($linkedIdentity->getUsers());
-                }
-            }
+        foreach ($childCells as $childCell) {
+            $totalElement += count($childCell->getAllRoles());
         }
         $this->totalElements = $totalElement;
 
@@ -75,15 +58,9 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
     }
 
     /**
-     * Fonction ajoutant un élément.
-     *
-     * Renvoie un message d'information.
-     *
-     * @see getAddElementValue
-     * @see setAddElementErrorMessage
      * @Secure("allowCell")
      */
-    function addelementAction()
+    public function addelementAction()
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
@@ -110,15 +87,15 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             $baseUserRoleRef = explode('_', $userRoleRef)[0];
-            $role = User_Model_Role::loadByRef($baseUserRoleRef.'_'.$granularityCell->getId());
+            $role = Role::loadByRef($baseUserRoleRef.'_'.$granularityCell->getId());
         }
         if (!empty($this->_addErrorMessages)) {
             $this->send();
             return;
         }
 
-        if (User_Model_User::isEmailUsed($userEmail)) {
-            $user = User_Model_User::loadByEmail($userEmail);
+        if (User::isEmailUsed($userEmail)) {
+            $user = User::loadByEmail($userEmail);
             if ($user->hasRole($role)) {
                 $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
                 $this->send();
@@ -132,11 +109,11 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         }
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'addCellUser',
                 [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()])
             )
         );
 
@@ -156,24 +133,22 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
      * Renvoie un message d'information.
      * @Secure("allowCell")
      */
-    function deleteelementAction()
+    public function deleteelementAction()
     {
-        list($userRoleRef, $userId) = explode('#', $this->delete);
-        $user = User_Model_User::load($userId);
-        $role = User_Model_Role::loadByRef($userRoleRef);
+        $role = Role::load($this->delete);
+        $user = $role->getUser();
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
+            new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'removeCellUser',
                 [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()])
             )
         );
 
         $this->message = __('UI', 'message', 'deletedLater');
         $this->send();
     }
-
 }

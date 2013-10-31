@@ -108,7 +108,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             Orga_Service_ACLManager::class,
             'addOrganizationAdministrator',
             [$organization, $userEmail, false],
-            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $roleLabel), 'USER' => $userEmail])
+            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $roleLabel, 'USER' => $userEmail])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
