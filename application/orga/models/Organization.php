@@ -376,7 +376,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->orderBy(['tag' => 'ASC']);
-        return $this->granularities->matching($criteria)->toArray();
+        return $this->granularities->matching($criteria);
     }
 
     /**
