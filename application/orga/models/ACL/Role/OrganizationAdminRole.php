@@ -52,4 +52,9 @@ class OrganizationAdminRole extends Role
     {
         return $this->organization;
     }
+
+    public function getLabel()
+    {
+        return __('Orga', 'role', 'organizationAdministrator');
+    }
 }

@@ -97,15 +97,3 @@ $form->display();
         });
     })
 </script>
-
-<?php
-$datagrid = new UI_Datagrid('authorizations', 'datagrid_authorization', 'user');
-
-$actionColumn = new UI_Datagrid_Col_Text('action', __('User', 'action', 'action'));
-$datagrid->addCol($actionColumn);
-
-$resourceColumn = new UI_Datagrid_Col_Text('resource', __('User', 'resource', 'resource'));
-$datagrid->addCol($resourceColumn);
-
-// @see http://dev.myc-sense.com:3000/issues/5394
-//$datagrid->display();

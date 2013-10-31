@@ -9,10 +9,8 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\ACLService;
 
 /**
@@ -246,7 +244,7 @@ class Orga_CellController extends Core_Controller
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $connectedUser,
             Orga_Action_Cell::INPUT(),
-            EntityResource::loadByEntity($cell)
+            $cell
         );
         if (($isUserAllowedToInputCell)
             && (($granularity->getCellsWithSocialContextActions() === true)

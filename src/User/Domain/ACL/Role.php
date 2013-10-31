@@ -86,4 +86,11 @@ abstract class Role extends Core_Model_Entity
     {
         $this->authorizations->add($authorization);
     }
+
+    /**
+     * Retourne le nom du rôle.
+     *
+     * @return string
+     */
+    abstract public function getLabel();
 }

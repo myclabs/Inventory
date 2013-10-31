@@ -40,4 +40,9 @@ class CellContributorRole extends AbstractCellRole
             CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $childCell);
         }
     }
+
+    public function getLabel()
+    {
+        return __('Orga', 'role', 'cellContributor');
+    }
 }

@@ -27,4 +27,9 @@ class UserRole extends Role
         $repository = NamedResource::loadByName('repository');
         NamedResourceAuthorization::create($this, $this->user, Action::VIEW(), $repository);
     }
+
+    public function getLabel()
+    {
+        return __('User', 'role', 'roleUser');
+    }
 }

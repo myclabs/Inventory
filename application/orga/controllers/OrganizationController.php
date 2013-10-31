@@ -3,6 +3,7 @@
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Model\ACL\Role\AbstractCellRole;
 use Orga\ViewModel\OrganizationViewModelFactory;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
@@ -72,22 +73,37 @@ class Orga_OrganizationController extends Core_Controller
         $aclQuery->aclFilter->action = Action::VIEW();
         $isConnectedUserAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
 
-        $listCells = Orga_Model_Cell::loadList($aclQuery);
-        $isConnectedUserAbleToSeeManyCells = (count($listCells) > 1);
-
-        if (($isConnectedUserAbleToCreateOrganizations)
-            || ($isConnectedUserAbleToDeleteOrganizations)
-            || ($isConnectedUserAbleToSeeManyOrganizations)
+        if ($isConnectedUserAbleToCreateOrganizations
+            || $isConnectedUserAbleToDeleteOrganizations
+            || $isConnectedUserAbleToSeeManyOrganizations
         ) {
             $this->redirect('orga/organization/manage');
-        } elseif ($isConnectedUserAbleToSeeManyCells) {
+            return;
+        }
+
+        $cells = [];
+        foreach ($connectedUser->getRoles() as $role) {
+            if ($role instanceof AbstractCellRole) {
+                $cell = $role->getCell();
+                if (! in_array($cell, $cells)) {
+                    $cells[] = $cell;
+                }
+            }
+        }
+        $isConnectedUserAbleToSeeManyCells = (count($cells) > 1);
+
+        if ($isConnectedUserAbleToSeeManyCells) {
             $organizationArray = Orga_Model_Organization::loadList($aclQuery);
             $this->redirect('orga/organization/cells/idOrganization/'.array_pop($organizationArray)->getId());
-        } elseif (count($listCells) == 1) {
-            $this->redirect('orga/cell/details/idCell/'.array_pop($listCells)->getId());
-        } else {
-            $this->forward('noaccess', 'organization', 'orga');
+            return;
         }
+
+        if (count($cells) == 1) {
+            $this->redirect('orga/cell/details/idCell/'.array_pop($cells)->getId());
+            return;
+        }
+
+        $this->forward('noaccess', 'organization', 'orga');
     }
 
     /**

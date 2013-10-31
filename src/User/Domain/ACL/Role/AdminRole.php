@@ -64,4 +64,9 @@ class AdminRole extends Role
             OrganizationAuthorization::createChildAuthorization($allow, $organization);
         }
     }
+
+    public function getLabel()
+    {
+        return __('User', 'role', 'roleAdmin');
+    }
 }

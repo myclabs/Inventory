@@ -597,7 +597,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->aclService->isAllowed(
             $identity,
             Action::VIEW(),
-            NamedResource::loadByName('referential')
+            NamedResource::loadByName('repository')
         );
     }
 
@@ -611,7 +611,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->aclService->isAllowed(
             $identity,
             Action::EDIT(),
-            NamedResource::loadByName('referential')
+            NamedResource::loadByName('repository')
         );
     }
 

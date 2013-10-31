@@ -22,4 +22,12 @@ abstract class AbstractCellRole extends Role
 
         parent::__construct($user);
     }
+
+    /**
+     * @return Orga_Model_Cell
+     */
+    public function getCell()
+    {
+        return $this->cell;
+    }
 }

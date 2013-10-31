@@ -24,4 +24,9 @@ class CellManagerRole extends AbstractCellRole
 
         // TODO
     }
+
+    public function getLabel()
+    {
+        return __('Orga', 'role', 'cellManager');
+    }
 }
