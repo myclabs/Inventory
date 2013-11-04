@@ -41,7 +41,6 @@ class AdminRoleTest extends Core_Test_TestCase
             $o->delete();
         }
         self::getEntityManager()->flush();
-        self::getEntityManager()->clear();
     }
 
     public function setUp()

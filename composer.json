@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.5.0",
         "zendframework/zendframework1": "1.12.*",
-        "doctrine/orm": "dev-CriteriaContains as 2.4.99",
+        "doctrine/orm": "dev-master-myclabs as 2.4.99",
         "doctrine/annotations": "~1.0",
         "doctrine/common": "dev-ProxyStaticProperties as 2.4.1",
         "gedmo/doctrine-extensions": "dev-OptimizedTranslatable as 2.99",
