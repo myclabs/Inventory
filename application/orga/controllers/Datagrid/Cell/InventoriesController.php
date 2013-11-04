@@ -195,7 +195,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $this->view->acls = [];
         foreach ($granularity->getOrganization()->getGranularities() as $granularityACL) {
             if ($granularityACL->getCellsWithACL()) {
-                Core_Tools::dump($granularityACL->getLabel());
                 $granularityACLs = [];
                 if ($granularityACL->isBroaderThan($granularity)) {
                     $parentCell = $cell->getParentCellForGranularity($granularityACL);
@@ -204,7 +203,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                 } else if ($granularityACL === $granularity) {
                     $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
                     $this->addUserToArray($cellResource, $granularityACLs);
-                } else if ($granularityACL->isNarrowerThan($granularityACL)) {
+                } else if ($granularityACL->isNarrowerThan($granularity)) {
                     foreach ($cell->getChildCellsForGranularity($granularityACL) as $childCell) {
                         $cellResource = User_Model_Resource_Entity::loadByEntity($childCell);
                         $this->addUserToArray($cellResource, $granularityACLs);
