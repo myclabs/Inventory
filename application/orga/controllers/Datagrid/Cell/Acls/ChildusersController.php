@@ -122,9 +122,6 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             $user = $this->userService->inviteUser($userEmail);
         }
 
-        // TODO
-        $roleLabel = '';
-
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
@@ -139,7 +136,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             'Orga_Service_ACLManager',
             'addCellUser',
             [$cell, $user, $role, false],
-            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $roleLabel, 'USER' => $user->getEmail()])
+            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $user->getEmail()])
         );
 
         $this->workDispatcher->runBackground($serviceCallTask, $this->waitDelay, $success, $timeout, $error);

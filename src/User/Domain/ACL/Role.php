@@ -92,5 +92,8 @@ abstract class Role extends Core_Model_Entity
      *
      * @return string
      */
-    abstract public function getLabel();
+    public static function getLabel()
+    {
+        return '';
+    }
 }

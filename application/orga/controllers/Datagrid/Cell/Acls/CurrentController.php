@@ -66,7 +66,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             $this->send();
             return;
         }
-        $roleType = $this->getAddElementValue('userRole');
+        $role = $this->getAddElementValue('userRole');
         if (empty($userRoleRef)) {
             $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->send();
@@ -75,7 +75,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 
         if (User::isEmailUsed($userEmail)) {
             $user = User::loadByEmail($userEmail);
-            if ($user->hasRole($roleType)) {
+            if ($user->hasRole($role)) {
                 $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
                 $this->send();
                 return;
@@ -98,8 +98,8 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         $task = new ServiceCallTask(
             Orga_Service_ACLManager::class,
             'addCellRole',
-            [$cell, $userEmail, $roleType, false],
-            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $roleLabel, 'USER' => $userEmail])
+            [$cell, $userEmail, $role, false],
+            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $userEmail])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 

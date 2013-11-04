@@ -28,7 +28,7 @@ class UserRole extends Role
         NamedResourceAuthorization::create($this, $this->user, Action::VIEW(), $repository);
     }
 
-    public function getLabel()
+    public static function getLabel()
     {
         return __('User', 'role', 'roleUser');
     }

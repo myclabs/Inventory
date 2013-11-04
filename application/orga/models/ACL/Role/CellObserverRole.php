@@ -39,7 +39,7 @@ class CellObserverRole extends AbstractCellRole
         }
     }
 
-    public function getLabel()
+    public static function getLabel()
     {
         return __('Orga', 'role', 'cellObserver');
     }

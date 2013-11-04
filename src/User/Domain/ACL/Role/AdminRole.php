@@ -65,7 +65,7 @@ class AdminRole extends Role
         }
     }
 
-    public function getLabel()
+    public static function getLabel()
     {
         return __('User', 'role', 'roleAdmin');
     }
