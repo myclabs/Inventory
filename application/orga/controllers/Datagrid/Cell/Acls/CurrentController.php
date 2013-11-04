@@ -32,16 +32,6 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     private $waitDelay;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("allowCell")
      */
     public function getelementsAction()
@@ -63,12 +53,6 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction ajoutant un élément.
-     *
-     * Renvoie un message d'information.
-     *
-     * @see getAddElementValue
-     * @see setAddElementErrorMessage
      * @Secure("allowCell")
      */
     public function addelementAction()
@@ -123,15 +107,6 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction supprimant un élément.
-     *
-     * Récupération de la ligne à supprimer de la manière suivante :
-     *  $this->delete.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie un message d'information.
      * @Secure("allowCell")
      */
     public function deleteelementAction()

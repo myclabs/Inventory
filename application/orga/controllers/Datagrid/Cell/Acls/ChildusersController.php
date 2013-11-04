@@ -63,7 +63,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
                 $data['userFirstName'] = $role->getUser()->getFirstName();
                 $data['userLastName'] = $role->getUser()->getLastName();
                 $data['userEmail'] = $role->getUser()->getEmail();
-                $data['userRole'] = $role->getLabel();
+                $data['userRole'] = $role->getId();
                 $this->addLine($data);
             }
         }
@@ -102,12 +102,9 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         if (empty($userEmail)) {
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $userRoleRef = $this->getAddElementValue('userRole');
-        if (empty($userRoleRef)) {
+        $role = $this->getAddElementValue('userRole');
+        if (empty($role)) {
             $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
-        } else {
-            $baseUserRoleRef = explode('_', $userRoleRef)[0];
-            $role = Role::loadByRef($baseUserRoleRef.'_'.$granularityCell->getId());
         }
         if (!empty($this->_addErrorMessages)) {
             $this->send();
@@ -125,6 +122,9 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             $user = $this->userService->inviteUser($userEmail);
         }
 
+        // TODO
+        $roleLabel = '';
+
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
@@ -135,14 +135,14 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             throw $e;
         };
 
-        $this->workDispatcher->runBackground(
-            new ServiceCallTask(
-                'Orga_Service_ACLManager',
-                'addCellUser',
-                [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()])
-            ), $this->waitDelay, $success, $timeout, $error
+        $serviceCallTask = new ServiceCallTask(
+            'Orga_Service_ACLManager',
+            'addCellUser',
+            [$cell, $user, $role, false],
+            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $roleLabel, 'USER' => $user->getEmail()])
         );
+
+        $this->workDispatcher->runBackground($serviceCallTask, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
