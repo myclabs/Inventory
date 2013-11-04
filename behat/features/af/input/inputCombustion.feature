@@ -40,6 +40,3 @@ Feature: Combustion input feature
 
 
 
-
-
-

@@ -55,7 +55,7 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
             }
             $data['access'] = $this->cellList($access);
 
-            $data['details'] = $this->cellLink('orga/cell/details/idCell/'.$cell->getId());
+            $data['details'] = $this->cellLink('orga/cell/details/idCell/'.$cell->getId(), __('Orga', 'home', 'dataInputLink'), 'share-alt');
             $this->addLine($data);
         }
 

@@ -32,7 +32,7 @@ Feature: General data input feature
     And I click "Aperçu des résultats"
     Then the field "chiffre_affaire" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
     When I click "Enregistrer"
-    Then the following message is shown and closed: "Enregistrement effectué (saisie incomplète)."
+    Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
     And the field "chiffre_affaire" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Saisie nombre séparateur décimal incorrect
     When I fill in "chiffre_affaire" with "1.5"

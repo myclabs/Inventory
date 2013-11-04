@@ -9,10 +9,8 @@
             <?= $this->partial('cell/navigation.phtml',
                 ['cell' => $this->cell, 'isParentCellReachable' => $this->isParentCellReachable])?>
         </div>
-        <div id="navigationClose" class="span">
-            <i class="icon-remove"></i>
-            <span><?=__('Orga', 'navigation', 'hideNavigationPanel')?></span>
-            <!-- <i class="icon-arrow-down"></i> -->
+        <div id="navigationClose" class="span well opened" title="<?=__('Orga', 'navigation', 'displayOrCloseNavigationPanel')?>">
+            <i class="icon-minus"></i>
         </div>
     <? endif; ?>
 
@@ -28,14 +26,13 @@
     $('#navigationClose').click(function () {
         var navigationPanel = $('#navigationPanel');
         if (navigationPanel.css('display') == 'none') {
-            $(this).find('i')
-                .addClass('icon-remove');
-            $(this).find('span').html('<?=__('Orga', 'navigation', 'hideNavigationPanel')?>');
+            $(this).removeClass('closed').addClass('opened');
+            $(this).find('i').removeClass('icon-plus').addClass('icon-minus');
         } else {
-            $(this).find('i')
-                .removeClass('icon-remove');
-            $(this).find('span').html('<?=__('Orga', 'navigation', 'displayNavigationPanel')?>');
+            $(this).addClass('closed').removeClass('opened');
+            $(this).find('i').removeClass('icon-minus').addClass('icon-plus');
         }
         navigationPanel.animate({width: "toggle"}, 50);
     });
+    $('#navigationClose').trigger('click');
 </script>

@@ -175,7 +175,13 @@ qui officia deserunt mollit anim id est laborum.',
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);
         $this->addOrganizationAdministrator('administrateur.application@toto.com', $organization);
+
         // Ajout d'un role sur une cellule à un utilisateur existant.
+
+        // Cellule globale
+        $this->addCellAdministrator('administrateur.global@toto.com', $granularityGlobal, []);
+        $this->addCellContributor('contributeur.global@toto.com', $granularityGlobal, []);
+        $this->addCellObserver('observateur.global@toto.com', $granularityGlobal, []);
 
         // La zone-marque pour laquelle les droits sont configurés est "Europe | Marque A".
         $this->addCellAdministrator('administrateur.zone-marque@toto.com', $granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a]);

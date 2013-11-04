@@ -71,6 +71,23 @@ class Calc_UnitValue
     }
 
     /**
+     * Convert the value to a different unit
+     * @param UnitAPI $unit
+     * @return Calc_UnitValue
+     */
+    public function convertTo(UnitAPI $unit)
+    {
+        $digitalValue = $this->value->getDigitalValue();
+        if (is_null($digitalValue)) {
+            $newDigitalValue = null;
+        } else {
+            $newDigitalValue = (float) $digitalValue * $unit->getConversionFactor($this->unit->getRef());
+        }
+
+        return new Calc_UnitValue($unit, $newDigitalValue, $this->value->getRelativeUncertainty());
+    }
+
+    /**
      * Permet de comparer deux unitValue entres elles.
      *
      * Ne compare pas l'incertitude.

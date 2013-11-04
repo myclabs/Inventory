@@ -7,8 +7,10 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use User\Domain\ACL\Role;
 use User\Domain\User;
+use User\Domain\UserService;
 
 /**
  * Controlleur du Datagrid listant les utilisateurs d'un ensemble de cellules.
@@ -18,6 +20,24 @@ use User\Domain\User;
  */
 class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * @Inject
+     * @var WorkDispatcher
+     */
+    private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
+
     /**
      * @Secure("allowCell")
      */
@@ -102,11 +122,18 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
                 return;
             }
         } else {
-            $user = $this->userService->inviteUser(
-                $userEmail
-            );
-            $user->addRole(User_Model_Role::loadByRef('user'));
+            $user = $this->userService->inviteUser($userEmail);
         }
+
+        $success = function () {
+            $this->message = __('UI', 'message', 'added');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'addedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
 
         $this->workDispatcher->runBackground(
             new ServiceCallTask(
@@ -114,10 +141,9 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
                 'addCellUser',
                 [$cell, $user, $role, false],
                 __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()])
-            )
+            ), $this->waitDelay, $success, $timeout, $error
         );
 
-        $this->message = __('UI', 'message', 'addedLater');
         $this->send();
     }
 
@@ -139,16 +165,24 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         $user = $role->getUser();
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        $this->workDispatcher->runBackground(
-            new ServiceCallTask(
-                'Orga_Service_ACLManager',
-                'removeCellUser',
-                [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()])
-            )
-        );
+        $success = function () {
+            $this->message = __('UI', 'message', 'deleted');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'deletedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
 
-        $this->message = __('UI', 'message', 'deletedLater');
+        $task = new ServiceCallTask(
+            'Orga_Service_ACLManager',
+            'removeCellUser',
+            [$cell, $user, $role, false],
+            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->send();
     }
 }

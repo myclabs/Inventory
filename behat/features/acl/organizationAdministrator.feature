@@ -2,14 +2,15 @@
 Feature: Organization administrator feature
 
   @javascript
-  Scenario: Administrator of a single organization
+  Scenario: Administrator of a single organization scenario
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté
     When I fill in "email" with "administrateur.application@toto.com"
     And I fill in "password" with "administrateur.application@toto.com"
     And I click "connection"
-  # On tombe sur le datagrid des organisations
+    And I wait 10 seconds
+  # On tombe sur la liste des organisations
     Then I should see "Axes racine : Année, Site, Catégorie, Axe vide"
     And I should see "Collectes : Année | Zone | Marque"
   # Accès à l'organisation
