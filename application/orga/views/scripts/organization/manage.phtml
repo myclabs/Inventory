@@ -29,7 +29,7 @@ $organizations = $this->organizations;
             <?php if ($organization->canBeEdited) : ?>
                 <div class="pull-right">
                     <a class="editOrganization btn btn-small btn-primary"
-                       href="orga/organization/edit?idOrganization=<?=$organization->id?>">
+                       href="<?=$organization->editLink?>">
                         <i class="icon-cog icon-white"></i>
                         <?=__('UI', 'verb', 'edit')?>
                     </a>
@@ -37,7 +37,7 @@ $organizations = $this->organizations;
             <?php endif; ?>
 
             <h3>
-                <a href="<?=$organization->link?>"><?=$organization->label?></a>
+                <a href="<?=$organization->viewLink?>"><?=$organization->label?></a>
             </h3>
 
             <p>
@@ -73,22 +73,3 @@ $organizations = $this->organizations;
         });
     });
 </script>
-
-<?php
-//// Popup d'ajout
-//$popup = new UI_Popup_Static('addOrgaPopup');
-//$popup->title = __('UI', 'name', 'addition');
-//
-//$addForm = new UI_Form('addOrgaForm');
-//$addForm->setAction('orga/organization/add');
-//$addForm->setAjax(false);
-//$labelInput = new UI_Form_Element_Text('label');
-//$labelInput->setLabel(__('UI', 'name', 'label'));
-//$labelInput->setRequired(true);
-//$addForm->addElement($labelInput);
-//
-//$popup->footer = $this->button(__('UI', 'verb', 'validate'), null, ['class' => 'btn-primary'])->submitForm('addOrgaForm')->__toString()
-//    . $this->button(__('UI', 'verb', 'cancel'))->closePopup('addOrgaPopup')->__toString();
-//
-//$popup->body = $addForm->render();
-//$popup->display();

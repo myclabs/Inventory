@@ -37,95 +37,119 @@ $cell = $this->cell;
 <div class="page-header">
     <h1><?=$this->pageTitle?></h1>
 </div>
-<?php
-foreach ($this->inputCells as $granularityCells) {
-    /** @var Orga_Model_Granularity $granularity */
-    $granularity = $granularityCells['granularity'];
-?>
-<h3>
-    <?=$granularity->getLabel()?>
-    <small>
-        <a href="#">
-            <i class="icon-search"></i>
-            Voir les données
-        </a>
-    </small>
-    <form class="form-inline cells-filter">
+
+<div class="row-fluid">
+    <div class="span10">
         <?php
-        foreach ($granularity->getAxes() as $axis) {
+        foreach ($this->cells as $granularityCells) {
+            /** @var Orga_Model_Granularity $granularity */
+            $granularity = $granularityCells['granularity'];
         ?>
-        <select>
-            <option value=""></option>
+        <h3>
+            <?=$granularity->getLabel()?>
+            <small>
+                <a href="#">
+                    <i class="icon-search"></i>
+                    Voir les données
+                </a>
+            </small>
             <?php
-            foreach ($axis->getMembers() as $member) {
+            if ($granularity->hasAxes()) {
             ?>
-            <option value="<?=$member->getCompleteRef()?>"><?=$member->getLabel()?></option>
+            <form class="form-inline cells-filter">
+                <?php
+                foreach ($granularity->getAxes() as $axis) {
+                ?>
+                <select>
+                    <option value="">Tout <?=$axis->getLabel()?></option>
+                    <?php
+                    foreach ($axis->getMembers() as $member) {
+                    ?>
+                    <option value="<?=$member->getCompleteRef()?>"><?=$member->getLabel()?></option>
+                    <?php
+                    }
+                    ?>
+                </select>
+                <?php
+                }
+                ?>
+                <button class="btn reset"><i class="icon-zoom-out"></i> Reset</button>
+            </form>
             <?php
             }
             ?>
-        </select>
+        </h3>
+        <div class="row-fluid granularity">
+            <?php
+            /** @var $cell Orga_Model_Cell */
+            foreach ($granularityCells['cells'] as $cell) {
+        //        if ($inputCell->getInventoryStatus() == Orga_Model_Cell::STATUS_ACTIVE) {
+                    try {
+                        $aFInputPrimarySet = $cell->getAFInputSetPrimary();
+                        $inputCompletePercentage = $aFInputPrimarySet->getCompletion();
+                        $inputStatus = $aFInputPrimarySet->getStatus();
+                    } catch (Core_Exception_UndefinedAttribute $e) {
+                        $inputCompletePercentage = 0;
+                        $inputStatus = null;
+                    }
+                    $cellMembers = array_map(function (Orga_Model_Member $member) { return $member->getCompleteRef(); }, $cell->getMembers());
+            ?>
+            <div class="span4 well cell" data-members="<?=implode(' ', $cellMembers)?>">
+                <h3><a href="orga/cell/input/idCell/23/fromIdCell/<?=$cell->getId()?>"><?=$cell->getLabel()?></a></h3>
+                <p>
+                    <a data-toggle="modal" data-target="#<?=$cell->getId()?>administrators" href="#"
+                        ><i class="icon-search"></i>
+                        Contacter les administrateurs
+                    </a>
+                </p>
+                <p>
+                    <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
+                    <?=$inventoryStatusList[$cell->getInventoryStatus()]?>
+                </p>
+                <p>
+                    <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
+                    <?=$inputStatusList[$inputStatus]?>
+                </p>
+                <div class="progress <?=$inputStatusStyleList[$inputStatus]?>">
+                    <div class="bar" style="width: <?=$inputCompletePercentage?>%"><?=$inputCompletePercentage?> %</div>
+                </div>
+            </div>
+            <div id="<?=$cell->getId()?>administrators" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Administrateur de <?=$cell->getLabel()?></h4>
+                </div>
+                <div class="modal-body">
+        <pre>administrator@parentcell.com
+        administrator@organization.com
+        administrator@site.com</pre>
+                </div>
+            </div>
+                    <?php
+        //        }
+            }
+            ?>
+        </div>
+        <hr>
         <?php
         }
         ?>
-        <button class="btn btn-primary submit"><i class="icon-zoom-in icon-white"></i> Filtrer</button>
-        <button class="btn reset"><i class="icon-zoom-out"></i> Reset</button>
-    </form>
-</h3>
-<div class="row-fluid granularity">
-    <?php
-    /** @var $inputCell Orga_Model_Cell */
-    foreach ($granularityCells['cells'] as $inputCell) {
-//        if ($inputCell->getInventoryStatus() == Orga_Model_Cell::STATUS_ACTIVE) {
-            try {
-                $aFInputPrimarySet = $inputCell->getAFInputSetPrimary();
-                $inputCompletePercentage = $aFInputPrimarySet->getCompletion();
-                $inputStatus = $aFInputPrimarySet->getStatus();
-            } catch (Core_Exception_UndefinedAttribute $e) {
-                $inputCompletePercentage = 0;
-                $inputStatus = null;
-            }
-            $cellMembers = array_map(function (Orga_Model_Member $member) { return $member->getCompleteRef(); }, $inputCell->getMembers());
-    ?>
-    <div class="span4 well cell" data-members="<?=implode(' ', $cellMembers)?>">
-        <h3><a href="orga/cell/input/idCell/23/fromIdCell/<?=$inputCell->getId()?>"><?=$inputCell->getLabel()?></a></h3>
-        <p>
-            <a data-toggle="modal" data-target="#<?=$inputCell->getId()?>administrators" href="#"
-                ><i class="icon-search"></i>
-                Contacter les administrateurs
-            </a>
-        </p>
-        <p class="hide">
-            <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
-            <?=$inventoryStatusList[$inputCell->getInventoryStatus()]?>
-        </p>
-        <p>
-            <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
-            <?=$inputStatusList[$inputStatus]?>
-        </p>
-        <div class="progress <?=$inputStatusStyleList[$inputStatus]?>">
-            <div class="bar" style="width: <?=$inputCompletePercentage?>%"><?=$inputCompletePercentage?> %</div>
+    </div>
+    <div class="span2">
+        <div class="well">
+            <h4>Historique</h4>
+            <hr/>
+            <ul>
+                <li>X à compléter une saise</li>
+                <li>Y à commenter une saise</li>
+            </ul>
+        </div>
+        <div class="well">
+            <h4>Ajouter un membre</h4>
+            <hr/>
         </div>
     </div>
-    <div id="<?=$inputCell->getId()?>administrators" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4>Administrateur de <?=$inputCell->getLabel()?></h4>
-        </div>
-        <div class="modal-body">
-<pre>administrator@parentcell.com
-administrator@organization.com
-administrator@site.com</pre>
-        </div>
-    </div>
-            <?php
-//        }
-    }
-    ?>
 </div>
-<hr>
-<?php
-}
-?>
 <script>
     $('.cells-filter button.reset').click(function(e) {
         e.preventDefault();
@@ -136,7 +160,7 @@ administrator@site.com</pre>
         $('.cell:nth-child(3n+1)', granularity).each(function() { $(this).addClass('firstRowCell'); });
         $('select', form).each(function() { $(this).val(''); });
     });
-    $('.cells-filter button.submit').click(function(e) {
+    $('.cells-filter select').change(function(e) {
         e.preventDefault();
         var form = $(e.target).parent();
         var granularity = form.parent().next();
@@ -164,6 +188,4 @@ administrator@site.com</pre>
             numberElement++;
         });
     });
-
-    $('.cells-filter button.reset').trigger('click');
 </script>

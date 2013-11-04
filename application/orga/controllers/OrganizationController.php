@@ -161,10 +161,12 @@ class Orga_OrganizationController extends Core_Controller
                 }
             }
             if ($canUserSeeManyCells) {
-                $viewModel->link = 'orga/organization/cells/idOrganization/' . $organization->getId();
+                $viewModel->viewLink = 'orga/organization/cells/idOrganization/' . $organization->getId();
             } elseif ($numberCellsUserCanSee == 1) {
-                $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
-                $viewModel->link = 'orga/cell/details/idCell/' . array_pop($cellWithAccess)->getId();
+                $cellsWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
+                $cellWithAccess = array_pop($cellsWithAccess);
+                $viewModel->viewLink = 'orga/cell/inputs/idCell/' . $cellWithAccess->getId();
+                $viewModel->editLink = 'orga/tab_celldetails/orga/idCell/' . $cellWithAccess->getId();
             }
             return $viewModel;
         };
@@ -185,29 +187,35 @@ class Orga_OrganizationController extends Core_Controller
     public function addAction()
     {
         UI_Form::addHeader();
-//        $user = $this->_helper->auth();
-//        $label = $this->getParam('label');
-//
-//        $success = function () {
-//            UI_Message::addMessageStatic(__('UI', 'message', 'added'));
-//        };
-//        $timeout = function () {
-//            UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'));
-//        };
-//        $error = function (Exception $e) {
-//            throw $e;
-//        };
-//
-//        // Lance la tache en arrière plan
-//        $task = new ServiceCallTask(
-//            'Orga_Service_OrganizationService',
-//            'createOrganization',
-//            [$user, $label],
-//            __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
-//        );
-//        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-//
-//        $this->redirect('orga/organization/manage');
+    }
+
+    /**
+     * @Secure("createOrganization")
+     */
+    public function addSubmitAction()
+    {
+        $user = $this->_helper->auth();
+        $formData = json_decode($this->getRequest()->getParam('addOrganization'), true);
+        $label = $formData['organization']['elements']['organizationLabel']['value'];
+
+        $success = function () {
+            $this->sendJsonResponse('ok');
+        };
+        $timeout = function () {
+            $this->sendJsonResponse('processing');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'createOrganization',
+            [$user, $formData],
+            __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**

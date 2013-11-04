@@ -624,20 +624,21 @@ class Orga_CellController extends Core_Controller
     {
         $idCell = $this->getParam('idCell');
         $this->view->cell = Orga_Model_Cell::load($idCell);
+        /** @var Orga_Model_Granularity $granularity */
         $granularity = $this->view->cell->getGranularity();
 
         $this->pageTitle = $this->view->cell->getLabel();
 
-        $this->view->inputCells = [];
-        if ($granularity->getInputConfigGranularity() !== null) {
-            $this->view->inputCells[] = [
+        $this->view->cells = [];
+        if (($granularity->getInputConfigGranularity() !== null) || ($granularity->getCellsGenerateDWCubes())) {
+            $this->view->cells[] = [
                 'granularity' => $granularity,
-                'cells' => $this->view->cell
+                'cells' => [$this->view->cell]
             ];
         }
         foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
-            if ($narrowerGranularity->getInputConfigGranularity() != null) {
-                $this->view->inputCells[] = [
+            if (($narrowerGranularity->getInputConfigGranularity() != null) || ($narrowerGranularity->getCellsGenerateDWCubes())) {
+                $this->view->cells[] = [
                     'granularity' => $narrowerGranularity,
                     'cells' => $this->view->cell->getChildCellsForGranularity($narrowerGranularity)
                 ];

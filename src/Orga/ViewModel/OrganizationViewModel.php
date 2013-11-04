@@ -40,5 +40,10 @@ class OrganizationViewModel
     /**
      * @var string
      */
-    public $link;
+    public $viewLink;
+
+    /**
+     * @var string
+     */
+    public $editLink;
 }
