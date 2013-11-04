@@ -58,12 +58,6 @@ class Orga_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         $data['failure'] = $this->cellText($consistency['failureMemberChildren']);
         $this->addLine($data);
 
-        $data['index'] = 4;
-        $data['diagnostic'] = $consistency['okCrossedGranularities'];
-        $data['control'] = $consistency['controlCrossedGranularities'];
-        $data['failure'] = $this->cellText($consistency['failureCrossedGranularities']);
-        $this->addLine($data);
-
         $this->send();
     }
 
