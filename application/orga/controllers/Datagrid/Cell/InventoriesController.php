@@ -186,9 +186,11 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
      */
     function getusersdetailsAction()
     {
-        $idCell = $this->getParam('idCell');
-        $cell = Orga_Model_Cell::load($idCell);
+        $this->view->idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($this->view->idCell);
+        $this->view->labelPopup = __('Orga', 'inventory', 'involvedUsersOf', ['CELL' => $cell->getLabel()]);
         $granularity = $cell->getGranularity();
+        $this->view->idGranularity = $granularity->getId();
 
         $this->view->acls = [];
         foreach ($granularity->getOrganization()->getGranularities() as $granularityACL) {

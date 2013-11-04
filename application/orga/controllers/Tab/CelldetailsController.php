@@ -400,6 +400,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
             $columnUsers = new UI_Datagrid_Col_Popup('users', __('Orga', 'inventory', 'involvedUsers'));
             $columnUsers->defaultValue = '<i class="icon-search"></i> '.__('Orga', 'inventory', 'involvedUsers');
+            $columnUsers->popup->title = '';
             $columnUsers->popup->addAttribute('class', 'large');
             $datagridConfiguration->datagrid->addCol($columnUsers);
 
