@@ -30,8 +30,8 @@ class UserSetUpTest extends Core_Test_TestCase
         foreach (User::loadList() as $o) {
             $o->delete();
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
     }
 
     /**

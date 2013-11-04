@@ -4,7 +4,6 @@ namespace Tests\User\ACL\Role;
 
 use Core_Test_TestCase;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
@@ -40,6 +39,7 @@ class UserRoleTest extends Core_Test_TestCase
             $o->delete();
         }
         self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
     }
 
     public function setUp()
