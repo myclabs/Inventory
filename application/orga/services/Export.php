@@ -6,7 +6,6 @@
  * @subpackage Service
  */
 
-use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\Role;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
@@ -49,7 +48,7 @@ class Orga_Service_Export
         $modelBuilder->bind('axisColumnNarrower', __('Classif', 'export', 'axisColumnNarrower'));
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
-            function(Orga_Model_Axis $axis) {
+            function (Orga_Model_Axis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
                     return $axis->getDirectNarrower()->getLabel() . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
@@ -77,7 +76,7 @@ class Orga_Service_Export
         $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'displayParentMemberForAxis',
-            function(Orga_Model_member $member, Orga_Model_Axis $broaderAxis) {
+            function (Orga_Model_member $member, Orga_Model_Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
                         return $directParent->getLabel();
@@ -94,7 +93,7 @@ class Orga_Service_Export
         $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader'));
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
-            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+            function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
                         return $member->getLabel();
@@ -144,7 +143,7 @@ class Orga_Service_Export
         $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'getCellNarrowerAxes',
-            function(Orga_Model_Cell $cell) {
+            function (Orga_Model_Cell $cell) {
                 $organization = $cell->getGranularity()->getOrganization();
                 $axes = [];
                 foreach ($organization->getAxes() as $organizationAxis) {
@@ -162,7 +161,7 @@ class Orga_Service_Export
         );
         $modelBuilder->bindFunction(
             'getCellNarrowerMembers',
-            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+            function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 $members = [];
                 foreach ($axis->getMembers() as $axisMember) {
                     foreach ($cell->getMembers() as $member) {
@@ -179,7 +178,7 @@ class Orga_Service_Export
         );
         $modelBuilder->bindFunction(
             'displayParentMemberForAxis',
-            function(Orga_Model_member $member, Orga_Model_Axis $broaderAxis) {
+            function (Orga_Model_member $member, Orga_Model_Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
                         return $directParent->getLabel();
@@ -196,13 +195,13 @@ class Orga_Service_Export
         $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader'));
         $modelBuilder->bindFunction(
             'getChildCellsForGranularity',
-            function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
+            function (Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
                 return $cell->getChildCellsForGranularity($granularity);
             }
         );
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
-            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+            function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
                         return $member->getLabel();
@@ -257,7 +256,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'getChildCellsForGranularity',
-            function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
+            function (Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
                 if ($cell->getGranularity() === $granularity) {
                     return [$cell];
                 } else {
@@ -268,19 +267,11 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'getUsersForCell',
-            function(Orga_Model_Cell $cell) {
+            function (Orga_Model_Cell $cell) {
                 $users = [];
-
-                $cellResource = EntityResource::loadByEntity($cell);
-                $linkedIndentities = $cellResource->getLinkedSecurityIdentities();
-                foreach ($linkedIndentities as $linkedIndentity) {
-                    if ($linkedIndentity instanceof Role) {
-                        foreach ($linkedIndentity->getUsers() as $user) {
-                            $users[] = ['user' => $user, 'role' => $linkedIndentity];
-                        }
-                    }
+                foreach ($cell->getAllRoles() as $role) {
+                    $users[] = ['user' => $role->getUser(), 'role' => $role];
                 }
-
                 return $users;
             }
         );
@@ -290,7 +281,7 @@ class Orga_Service_Export
         $modelBuilder->bind('userColumnRole', __('User', 'role', 'role'));
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
-            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+            function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
                         return $member->getLabel();
@@ -301,8 +292,8 @@ class Orga_Service_Export
         );
         $modelBuilder->bindFunction(
             'displayRoleName',
-            function(Role $role) {
-                return __('Orga', 'role', $role->getName());
+            function (Role $role) {
+                return $role->getLabel();
             }
         );
 
@@ -359,7 +350,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'getChildCellsForGranularity',
-            function(Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
+            function (Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
                 if ($cell->getGranularity() === $granularity) {
                     return [$cell];
                 } else {
@@ -370,7 +361,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
-            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+            function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
                         return $member->getLabel();
@@ -382,7 +373,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'getCellInputs',
-            function(Orga_Model_Cell $cell) {
+            function (Orga_Model_Cell $cell) {
                 try {
                     $aFInputSetPrimary = $cell->getAFInputSetPrimary();
                 } catch (Core_Exception_UndefinedAttribute $e) {
@@ -429,7 +420,7 @@ class Orga_Service_Export
         $export = new PHPExcelExporter();
 
         $modelBuilder->bind('cell', $cell);
-        $modelBuilder->bind('populatingCells', $cell->getPopulatingCells() );
+        $modelBuilder->bind('populatingCells', $cell->getPopulatingCells());
 
         $modelBuilder->bind('indicators', Classif_Model_Indicator::loadList());
 
@@ -461,7 +452,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'getOutputsForIndicator',
-            function(Orga_Model_Cell $cell, Classif_Model_Indicator $indicator) {
+            function (Orga_Model_Cell $cell, Classif_Model_Indicator $indicator) {
                 $results = [];
                 try {
                     if ($cell->getAFInputSetPrimary()->getOutputSet() !== null) {
@@ -480,7 +471,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayMemberForOrgaAxis',
-            function(Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
+            function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $cellMember) {
                     if ($cellMember->getAxis() === $axis) {
                         return $cellMember->getLabel();
@@ -498,7 +489,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayMemberForClassifAxis',
-            function(AF_Model_Output_Element $output, Classif_Model_Axis $axis) {
+            function (AF_Model_Output_Element $output, Classif_Model_Axis $axis) {
                 try {
                     return $output->getIndexForAxis($axis)->getMember()->getLabel();
                 } catch (Core_Exception_NotFound $e) {
@@ -510,7 +501,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayInputStatus',
-            function(Orga_Model_Cell $cell) {
+            function (Orga_Model_Cell $cell) {
                 switch ($cell->getAFInputSetPrimary()->getStatus()) {
                     case AF_Model_InputSet_Primary::STATUS_FINISHED:
                         return __('AF', 'inputInput', 'statusFinished');
@@ -532,7 +523,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayFreeLabel',
-            function(AF_Model_Output_Element $output) {
+            function (AF_Model_Output_Element $output) {
                 if ($output->getInputSet() instanceof AF_Model_InputSet_Sub) {
                     return $output->getInputSet()->getFreeLabel();
                 }
@@ -542,7 +533,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayRoundedValue',
-            function($value) {
+            function ($value) {
                 return round($value, floor(3 - log10(abs($value))));
             }
         );
@@ -567,7 +558,7 @@ class Orga_Service_Export
 
 }
 
-function getInputsDetails(AF_Model_Input $input, $path='')
+function getInputsDetails(AF_Model_Input $input, $path = '')
 {
     if ($input->getComponent() !== null) {
         $componentLabel = $input->getComponent()->getLabel();
@@ -585,7 +576,7 @@ function getInputsDetails(AF_Model_Input $input, $path='')
             }
         }
         return $subInputs;
-    } else if ($input instanceof AF_Model_Input_SubAF_Repeated) {
+    } elseif ($input instanceof AF_Model_Input_SubAF_Repeated) {
         $subInputs = [];
         foreach ($input->getValue() as $number => $subInputSet) {
             foreach ($subInputSet->getInputs() as $subInput) {
@@ -609,7 +600,7 @@ function getInputsDetails(AF_Model_Input $input, $path='')
     }
 }
 
-function getInputType (AF_Model_Input $input) {
+function getInputType(AF_Model_Input $input) {
     switch (get_class($input)) {
         case 'AF_Model_Input_Checkbox':
             return __('Orga', 'export', 'checkboxField');
@@ -668,7 +659,7 @@ function getInputValues(AF_Model_Input $input)
             /** @var AF_Model_Input_Select_Single $input */
             if (empty($value)) {
                 return [''];
-            } else if ($input->getComponent() !== null) {
+            } elseif ($input->getComponent() !== null) {
                 return [$input->getComponent()->getOptionByRef($value)->getLabel()];
             }
             return [$value];

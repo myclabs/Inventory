@@ -6,7 +6,7 @@
  */
 
 use Core\Annotation\Secure;
-use User\Application\AuthAdapter;
+use User\Application\Service\AuthAdapter;
 use User\Domain\User;
 
 /**

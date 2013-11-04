@@ -4,14 +4,29 @@ namespace Orga\Model\ACL\Role;
 
 use Orga_Model_Cell;
 use User\Domain\ACL\Role;
+use User\Domain\User;
 
 /**
  * Cell manager.
  */
 class CellManagerRole extends AbstractCellRole
 {
-    protected function getCellAuthorizations(Orga_Model_Cell $cell)
+    public function __construct(User $user, Orga_Model_Cell $cell)
     {
-        // TODO: Implement getCellAuthorizations() method.
+        $cell->addManagerRole($this);
+
+        parent::__construct($user, $cell);
+    }
+
+    public function buildAuthorizations()
+    {
+        $this->authorizations->clear();
+
+        // TODO
+    }
+
+    public static function getLabel()
+    {
+        return __('Orga', 'role', 'cellManager');
     }
 }

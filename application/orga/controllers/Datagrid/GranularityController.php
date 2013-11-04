@@ -6,9 +6,7 @@
  */
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\Role;
 
 /**
@@ -17,7 +15,6 @@ use User\Domain\ACL\Role;
  */
 class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 {
-
     /**
      * @Inject
      * @var WorkDispatcher
@@ -31,16 +28,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     private $waitDelay;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("viewOrganization")
      */
     public function getelementsAction()
@@ -76,13 +63,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction ajoutant un élément.
-     *
-     * Renvoie un message d'information.
-     *
-     * @see getAddElementValue
-     * @see setAddElementErrorMessage
-     *
      * @Secure("editOrganization")
      */
     public function addelementAction()
@@ -149,16 +129,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction supprimant un élément.
-     *
-     * Récupération de la ligne à supprimer de la manière suivante :
-     *  $this->delete.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie un message d'information.
-     *
      * @Secure("editOrganization")
      */
     public function deleteelementAction()
@@ -182,22 +152,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction modifiant un élément.
-     *
-     * Récupération de la ligne à modifier de la manière suivante :
-     *  $this->update['index'].
-     *
-     * Récupération de la colonne à modifier de la manière suivante :
-     *  $this->update['column'].
-     *
-     * Récupération de la nouvelle valeur à modifier de la manière suivante :
-     *  $this->update['value'].
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
-     *
      * @Secure("editOrganization")
      */
     public function updateelementAction()
@@ -215,11 +169,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 break;
             case 'aCL':
                 foreach ($granularity->getCells() as $cell) {
-                    $cellResource = EntityResource::loadByEntity($cell);
-                    foreach ($cellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                        if (!($linkedIdentity instanceof Role) || (count($linkedIdentity->getUsers()) > 0)) {
-                            throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
-                        }
+                    if (count($cell->getAllRoles()) > 0) {
+                        throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
                     }
                 }
                 $granularity->setCellsWithACL((bool) $this->update['value']);

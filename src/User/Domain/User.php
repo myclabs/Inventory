@@ -12,8 +12,12 @@ use Core_Tools;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use User\Domain\ACL\Authorization\UserAuthorization;
+use User\Domain\ACL\Resource\NamedResource;
+use User\Domain\ACL\Resource\Resource;
+use User\Domain\ACL\Resource\ResourceTrait;
 use User\Domain\ACL\Role;
-use User\Domain\ACL\Authorization;
+use User\Domain\ACL\Authorization\Authorization;
 
 /**
  * User domain class.
@@ -21,8 +25,10 @@ use User\Domain\ACL\Authorization;
  * @author matthieu.napoli
  * @author valentin.claras
  */
-class User extends Core_Model_Entity
+class User extends Core_Model_Entity implements Resource
 {
+    use ResourceTrait;
+
     const QUERY_ID = 'id';
     const QUERY_PASSWORD = 'password';
     const QUERY_LASTNAME = 'lastName';
@@ -95,10 +101,16 @@ class User extends Core_Model_Entity
     protected $roles;
 
     /**
-     * Authorizations related to this resource
+     * Autorisations d'accès à des ressources.
      * @var Authorization[]|Collection
      */
     protected $authorizations;
+
+    /**
+     * Autorisations s'appliquant à cette ressource.
+     * @var UserAuthorization[]|Collection
+     */
+    protected $acl;
 
 
     public function __construct()
@@ -106,6 +118,14 @@ class User extends Core_Model_Entity
         $this->creationDate = new DateTime();
         $this->roles = new ArrayCollection();
         $this->authorizations = new ArrayCollection();
+        $this->acl = new ArrayCollection();
+
+        // Hérite des droits sur "tous les utilisateurs"
+        $allUsers = NamedResource::loadByName(self::class);
+        foreach ($allUsers->getACL() as $parentAuthorization) {
+            // L'autorisation sera automatiquement ajoutée à $this->acl
+            UserAuthorization::createChildAuthorization($parentAuthorization, $this);
+        }
     }
 
     /**
@@ -219,40 +239,33 @@ class User extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si un utiisateur possède un role donné
-     * @param Role $role
+     * Vérifie si un utiisateur possède un type de role donné
+     * @param string $roleClass
      * @return bool
      */
-    public function hasRole(Role $role)
+    public function hasRole($roleClass)
     {
-        return $this->roles->contains($role);
+        foreach ($this->roles as $role) {
+            if ($role instanceof $roleClass) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function addRole(Role $role)
     {
         $this->roles->add($role);
 
-        // Update authorizations
-        foreach ($role->getAuthorizations() as $authorization) {
-            $this->authorizations->add($authorization);
-        }
+        // Va ajouter les autorisations dans cet utilisateur
+        $role->buildAuthorizations();
     }
 
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
-        $this->updateAuthorizations();
-    }
-
-    public function updateAuthorizations()
-    {
-        $this->authorizations->clear();
-
-        foreach ($this->getRoles() as $role) {
-            foreach ($role->getAuthorizations() as $authorization) {
-                $this->authorizations->add($authorization);
-            }
-        }
+        $role->destroyAuthorizations();
+        $role->delete();
     }
 
     /**
@@ -265,19 +278,20 @@ class User extends Core_Model_Entity
         return $this->authorizations;
     }
 
+    /**
+     * Ne pas utiliser directement. Uniquement utilisé par Authorization::create().
+     */
     public function addAuthorization(Authorization $authorization)
     {
         $this->authorizations->add($authorization);
     }
 
-    public function removeAuthorization(Authorization $authorization)
+    /**
+     * Ne pas utiliser directement. Uniquement utilisé par Authorization et Role.
+     */
+    public function removeAuthorizations(Authorization $authorization)
     {
         $this->authorizations->removeElement($authorization);
-    }
-
-    public function replaceAuthorizations(array $authorizations)
-    {
-        $this->authorizations = new ArrayCollection($authorizations);
     }
 
     /**
@@ -496,5 +510,10 @@ class User extends Core_Model_Entity
     public function getId()
     {
         return $this->id;
+    }
+
+    public function __toString()
+    {
+        return "User($this->email)";
     }
 }

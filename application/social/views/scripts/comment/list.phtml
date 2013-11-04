@@ -1,6 +1,7 @@
 <?php
 /** @var $comments Social_Model_Comment[] */
 $comments = $this->comments;
+$currentUser = $this->currentUser;
 
 $endpointAdd = $this->endpointAdd;
 $endpointDelete = $this->endpointDelete;
@@ -9,13 +10,13 @@ $endpointDelete = $this->endpointDelete;
 <div class="commentList">
     <?php
     foreach ($comments as $comment) {
-        echo $this->partial('comment/view.phtml', 'social', array('comment' => $comment));
+        echo $this->partial('comment/view.phtml', 'social', ['comment' => $comment, 'currentUser' => $currentUser]);
     }
 
     if (count($comments) === 0) {
         ?>
         <p class="muted noComments">
-            <?=__('Social', 'comment', 'noComment')?>.
+            <?=__('Social', 'comment', 'noComment')?>
         </p>
         <?php
     }

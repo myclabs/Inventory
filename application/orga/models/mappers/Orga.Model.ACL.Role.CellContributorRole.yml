@@ -6,3 +6,6 @@ Orga\Model\ACL\Role\CellContributorRole:
   manyToOne:
     cell:
       targetEntity: \Orga_Model_Cell
+      inversedBy: contributorRoles
+      joinColumn:
+        nullable: false

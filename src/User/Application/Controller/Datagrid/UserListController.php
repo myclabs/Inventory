@@ -5,7 +5,6 @@
  */
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
 use User\Domain\ACL\ACLService;
@@ -18,7 +17,6 @@ use User\Domain\UserService;
  */
 class User_Datagrid_UserListController extends UI_Controller_Datagrid
 {
-
     /**
      * @Inject
      * @var UserService
@@ -57,7 +55,7 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
             // Roles
             $data['roles'] = [];
             foreach ($user->getRoles() as $role) {
-                $data['roles'][] = $role->getName();
+                $data['roles'][] = $role->getLabel();
             }
             $data['roles'] = implode(', ', $data['roles']);
 
@@ -98,11 +96,6 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
             $user->setFirstName($this->getAddElementValue('prenom'));
             $user->setLastName($this->getAddElementValue('nom'));
 
-            // Ajout du rôle utilisateur par defaut
-            $role = Role::loadByRef('user');
-            $user->addRole($role);
-
-            $user->save();
             $this->entityManager->flush();
 
             $this->message = __('User', 'list', 'accountCreated');
@@ -110,5 +103,4 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
 
         $this->send();
     }
-
 }

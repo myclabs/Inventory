@@ -6,3 +6,6 @@ Orga\Model\ACL\Role\OrganizationAdminRole:
   manyToOne:
     organization:
       targetEntity: \Orga_Model_Organization
+      inversedBy: adminRoles
+      joinColumn:
+        nullable: false

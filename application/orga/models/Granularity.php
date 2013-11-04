@@ -6,6 +6,7 @@
  * @package    Orga
  * @subpackage Model
  */
+
 use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
@@ -40,7 +41,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @var string
      */
-    protected  $ref = null;
+    protected $ref = null;
 
     /**
      * Organization contenant la Granularity.
@@ -156,7 +157,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function __construct(Orga_Model_Organization $organization, array $axes=array())
+    public function __construct(Orga_Model_Organization $organization, array $axes = array())
     {
         $this->axes = new ArrayCollection();
         $this->cells = new ArrayCollection();
@@ -348,8 +349,11 @@ class Orga_Model_Granularity extends Core_Model_Entity
      * @param array $selectedMembers
      * @param Orga_Model_Axis $ignoredAxis
      */
-    protected function traverseAxesThenCreateCells($indexCurrentAxis=0, array $selectedMembers=array(), $ignoredAxis=null)
-    {
+    protected function traverseAxesThenCreateCells(
+        $indexCurrentAxis = 0,
+        array $selectedMembers = [],
+        $ignoredAxis = null
+    ) {
         if ($indexCurrentAxis >= count($this->axes)) {
             $this->createCell($selectedMembers);
         } else if ($this->axes[$indexCurrentAxis] === $ignoredAxis) {
@@ -425,7 +429,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
         if (empty($matchingCells)) {
             $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
             throw new Core_Exception_NotFound('No Cell matching members "'.$membersHashKey.'".');
-        } else if (count($matchingCells) > 1) {
+        } elseif (count($matchingCells) > 1) {
             $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
             throw new Core_Exception_TooMany('Too many Cell matching members "'.$membersHashKey.'".');
         }

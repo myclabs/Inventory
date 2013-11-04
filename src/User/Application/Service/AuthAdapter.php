@@ -1,6 +1,6 @@
 <?php
 
-namespace User\Application;
+namespace User\Application\Service;
 
 use User\Domain\User;
 use Core_Exception_NotFound;

@@ -3,6 +3,7 @@
  * @package Orga
  * @subpackage Model
  */
+
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -18,26 +19,21 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
      * Identifiant unique du Granularity.
      * @var int
      */
-    protected $id = null;
+    protected $id;
 
     /**
      * Report du Organization de DW concerné.
      *
      * @var DW_Model_Report
      */
-    protected $granularityDWReport = null;
+    protected $granularityDWReport;
 
     /**
-     * Collection des CellsGroup utilisant ce Cell.
-     *
      * @var Collection|DW_Model_Report[]
      */
-    private $cellDWReports = null;
+    private $cellDWReports;
 
 
-    /**
-     * Constructeur de la classe GranularityReport.
-     */
     public function __construct($granularityDWReport)
     {
         /** @var \DI\Container $container */
@@ -52,20 +48,18 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     }
 
     /**
-     * Utilisé quand un événement est lancé.
-     *
-     * @param string            $event
-     * @param Core_Model_Entity $subject
-     * @param array             $arguments
+     * @param string          $event
+     * @param DW_Model_Report $subject
+     * @param array           $arguments
      */
-    public static function applyEvent($event, $subject, $arguments = array())
+    public static function applyEvent($event, $subject, $arguments = [])
     {
         switch ($event) {
             case DW_Model_Report::EVENT_SAVE:
                 try {
                     // Nécessaire pour détecter d'où est issu le Report.
                     if ($subject->getCube()->getId() !== null) {
-                        $granularity = Orga_Model_Granularity::loadByDWCube($subject->getCube());
+                        Orga_Model_Granularity::loadByDWCube($subject->getCube());
                         $granularityReport = new self($subject);
                         $granularityReport->save();
                     }
@@ -136,8 +130,6 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     }
 
     /**
-     * Renvoie l'id du GranularityReport.
-     *
      * @return string
      */
     public function getId()
@@ -210,5 +202,4 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     {
         return $this->cellDWReports->toArray();
     }
-
 }

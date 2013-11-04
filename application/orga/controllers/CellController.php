@@ -9,10 +9,8 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\EntityResource;
 use User\Domain\ACL\ACLService;
 
 /**
@@ -246,7 +244,7 @@ class Orga_CellController extends Core_Controller
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $connectedUser,
             Orga_Action_Cell::INPUT(),
-            EntityResource::loadByEntity($cell)
+            $cell
         );
         if (($isUserAllowedToInputCell)
             && (($granularity->getCellsWithSocialContextActions() === true)
@@ -375,13 +373,6 @@ class Orga_CellController extends Core_Controller
             $columnRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'relevantFem');
             $columnRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
             $datagridConfiguration->datagrid->addCol($columnRelevant);
-
-            $columnAllParentsRelevant = new UI_Datagrid_Col_Bool('allParentsRelevant');
-            $columnAllParentsRelevant->label = __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader');
-            $columnAllParentsRelevant->editable = false;
-            $columnAllParentsRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'allParentCellsRelevantProperty');
-            $columnAllParentsRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'notAllParentCellsRelevantProperty');
-            $datagridConfiguration->datagrid->addCol($columnAllParentsRelevant);
             $listDatagridConfiguration[$narrowerGranularity->getLabel()] = $datagridConfiguration;
         }
 

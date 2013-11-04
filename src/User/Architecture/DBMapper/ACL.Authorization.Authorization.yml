@@ -1,0 +1,52 @@
+User\Domain\ACL\Authorization\Authorization:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: ACL_Authorization
+  readOnly: true
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type
+    type: string
+  discriminatorMap:
+    user: User\Domain\ACL\Authorization\UserAuthorization
+    namedResource: User\Domain\ACL\Authorization\NamedResourceAuthorization
+    organization: Orga\Model\ACL\OrganizationAuthorization
+    cell: Orga\Model\ACL\CellAuthorization
+    report: DW\Model\ACL\ReportAuthorization
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    actionId:
+      type: string
+      nullable: false
+
+  manyToOne:
+    role:
+      targetEntity: User\Domain\ACL\Role
+      inversedBy: authorizations
+      joinColumn:
+        nullable: false
+    user:
+      targetEntity: User\Domain\User
+      inversedBy: authorizations
+      joinColumn:
+        nullable: false
+    parentAuthorization:
+      targetEntity: Authorization
+      inversedBy: childAuthorizations
+      joinColumn:
+        nullable: true
+        onDelete: CASCADE
+
+  oneToMany:
+    childAuthorizations:
+      targetEntity: Authorization
+      mappedBy: parentAuthorization
+      cascade: [ all ]
+      orphanRemoval: true

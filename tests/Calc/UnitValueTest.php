@@ -13,6 +13,28 @@ use Unit\UnitAPI;
  */
 class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 {
+    public function testConversion()
+    {
+        $m = new UnitAPI('m');
+        $km = new UnitAPI('km');
+        $centkm = new UnitAPI('100km');
+
+        $value = new Calc_UnitValue($km, 3, 10);
+
+        $mValue = $value->convertTo($m);
+
+        $this->assertEquals(3000, $mValue->getDigitalValue());
+        $this->assertEquals(10, $mValue->getRelativeUncertainty());
+        $this->assertSame($m, $mValue->getUnit());
+
+        $centkmValue = $value->convertTo($centkm);
+
+        $this->assertEquals(0.03, $centkmValue->getDigitalValue());
+        $this->assertEquals(10, $centkmValue->getRelativeUncertainty());
+        $this->assertSame($centkm, $centkmValue->getUnit());
+
+        $this->assertEquals($value->convertTo($centkm), $mValue->convertTo($centkm));
+    }
 
     /**
      * Test de la fonction calculateProduct()
@@ -36,7 +58,6 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(0.00000075, $result->getDigitalValue());
         $this->assertEquals('m^4.animal^-1.s^-4', $result->getUnit()->getRef());
-
     }
 
     /**
@@ -167,5 +188,4 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
             ['|'],
         ];
     }
-
 }

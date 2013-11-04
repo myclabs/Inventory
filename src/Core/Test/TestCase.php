@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * Classe de test de base.
  *
@@ -9,7 +11,7 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
 {
     /**
      * @Inject
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     protected $entityManager;
 
@@ -44,7 +46,8 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
      */
     protected static function getEntityManager()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        return $entityManagers['default'];
+        /** @var $container \DI\Container */
+        $container = Zend_Registry::get('container');
+        return $container->get(EntityManager::class);
     }
 }

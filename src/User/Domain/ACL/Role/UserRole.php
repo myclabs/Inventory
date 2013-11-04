@@ -3,8 +3,9 @@
 namespace User\Domain\ACL\Role;
 
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Authorization\RepositoryAuthorization;
+use User\Domain\ACL\Authorization\NamedResourceAuthorization;
 use User\Domain\ACL\Authorization\UserAuthorization;
+use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\Role;
 use User\Domain\User;
 
@@ -13,20 +14,22 @@ use User\Domain\User;
  */
 class UserRole extends Role
 {
-    public function __construct(User $user)
+    public function buildAuthorizations()
     {
-        $this->user = $user;
+        $this->authorizations->clear();
+
+        // User can view, edit and delete himself
+        UserAuthorization::create($this, $this->user, Action::VIEW(), $this->user);
+        UserAuthorization::create($this, $this->user, Action::EDIT(), $this->user);
+        UserAuthorization::create($this, $this->user, Action::DELETE(), $this->user);
+
+        // User can view the repository
+        $repository = NamedResource::loadByName('repository');
+        NamedResourceAuthorization::create($this, $this->user, Action::VIEW(), $repository);
     }
 
-    public function getAuthorizations()
+    public static function getLabel()
     {
-        return [
-            // User can view, edit and delete himself
-            new UserAuthorization($this->user, Action::VIEW(), $this->user),
-            new UserAuthorization($this->user, Action::EDIT(), $this->user),
-            new UserAuthorization($this->user, Action::DELETE(), $this->user),
-            // User can view the repository
-            new RepositoryAuthorization($this->user, Action::VIEW()),
-        ];
+        return __('User', 'role', 'roleUser');
     }
 }

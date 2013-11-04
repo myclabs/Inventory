@@ -21,5 +21,22 @@
             </tuv>
         </tu>
 
+        <tu tuid="roleUser">
+            <tuv xml:lang="fr">
+                <seg>Utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User</seg>
+            </tuv>
+        </tu>
+        <tu tuid="roleAdmin">
+            <tuv xml:lang="fr">
+                <seg>Administrateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administrator</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

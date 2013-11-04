@@ -1,18 +1,22 @@
 <?php
 if ($this->isUserAbleToComment) {
-    echo $this->partial('comment/list.phtml',
+    echo $this->partial(
+        'comment/list.phtml',
         'social',
         array(
-            'comments' => $this->comments,
-            'endpointAdd' => 'orga/tab_input/comment-add/idCell/'.$this->idCell,
-            'endpointDelete' => 'orga/tab_input/comment-delete/idCell/'.$this->idCell,
+             'comments'       => $this->comments,
+             'currentUser'    => $this->currentUser,
+             'endpointAdd'    => 'orga/tab_input/comment-add/idCell/' . $this->idCell,
+             'endpointDelete' => 'orga/tab_input/comment-delete/idCell/' . $this->idCell,
         )
     );
 } else {
-    echo $this->partial('comment/list.phtml',
+    echo $this->partial(
+        'comment/list.phtml',
         'social',
         array(
-            'comments' => $this->comments,
+             'comments'    => $this->comments,
+             'currentUser' => $this->currentUser,
         )
     );
 }

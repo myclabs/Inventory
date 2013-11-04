@@ -1,10 +1,12 @@
 Orga\Model\ACL\CellAuthorization:
   type: entity
-  repositoryClass: Orga\Model\Repository\CellAuthorizationRepository
+  repositoryClass: \Core_Model_Repository
   table: Orga_ACL_Authorization_Cell
+  readOnly: true
 
-  oneToOne:
+  manyToOne:
     resource:
       targetEntity: \Orga_Model_Cell
+      inversedBy: acl
       joinColumn:
-        nullable: true
+        nullable: false

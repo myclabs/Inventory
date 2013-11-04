@@ -35,44 +35,63 @@ Test access rights:
 
 ```php
 $userService->isAllowed($user, Action::EDIT(), $resource);
+// or
+$resource->isAllowed($user, Action::EDIT());
 ```
 
 ### Extending
 
 #### Creating a new kind of resource
 
-To create authorizations on a new resource, you need to create a new kind of authorization:
+You need to have your entity implement the `Resource` interface:
+
+```php
+class Article extends Resource
+{
+    use ResourceTrait;
+
+    /**
+     * @var ArticleAuthorization[]|Collection
+     */
+    protected $acl;
+
+    public function __construct()
+    {
+        $this->acl = new ArrayCollection();
+    }
+}
+```
+
+```yaml
+Article\Domain\Article:
+  type: entity
+
+  oneToMany:
+    acl:
+      targetEntity: Article\Domain\ACL\ArticleAuthorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true
+```
+
+To create authorizations on the new resource, you need to create a new kind of authorization:
 
 ```php
 class ArticleAuthorization extends Authorization
 {
-    protected $article;
-
-    public function __construct(User $user, Action $action, Article $article)
-    {
-        $this->user = $user;
-        $this->action = $action;
-        $this->article = $article;
-    }
 }
 ```
 
-the authorization repository:
+and map its `resource` field:
 
-```php
-class ArticleAuthorizationRepository implements AuthorizationRepositoryInterface
-{
-    public function exists(User $user, Action $action, $article = null)
-    {
-        ...
-    }
-}
-```
+```yaml
+Article\Domain\ACL\ArticleAuthorization:
+  type: entity
 
-and link it to the resource:
-
-```php
-$aclService->setAuthorizationRepository(Article::class, $em->getRepository(ArticleAuthorization::class));
+  manyToOne:
+    resource:
+      targetEntity: Article\Domain\Article
+      inversedBy: acl
 ```
 
 #### Creating a new role
@@ -86,46 +105,30 @@ class ArticleEditorRole extends Role
 
     public function __construct(User $user, Article $article)
     {
-        $this->user = $user;
         $this->article = $article;
+        // See remark below
+        $article->addEditorRole($this);
+
+        parent::__construct($user);
     }
 
-    public function getAuthorizations()
+    public function buildAuthorizations()
     {
-        return [
-            new ArticleAuthorization($this->user, Action::VIEW(), $this->article),
-            new ArticleAuthorization($this->user, Action::EDIT(), $this->article),
-        ];
+        $this->authorizations->clear();
+
+        ArticleAuthorization::create($this, $this->user, Action::VIEW(), $this->article);
+        ArticleAuthorization::create($this, $this->user, Action::EDIT(), $this->article);
     }
 }
 ```
+
+If the role is related to a resource, the association between the resource (`Article`)
+and the role (`ArticleEditorRole`) needs to be bidirectional so that the Delete Cascade of Doctrine works
+when the Article is deleted.
 
 #### Keeping the authorizations up to date
 
-The listener will update the authorizations when the resource changes:
-
-```php
-class ArticleListener
-{
-    public function preRemove(Article $article)
-    {
-        // Cascade remove
-        foreach (ArticleAuthorization::loadByResource($article) as $authorization) {
-            $authorization->delete();
-        }
-    }
-}
-```
-
-YAML configuration:
-
-```yaml
-Article\Domain\Article:
-  type: entity
-
-  entityListeners:
-    Article\Domain\ACL\ResourceListener\ArticleListener:
-```
+When a user, or a resource is deleted, authorizations will be deleted in cascade by Doctrine.
 
 ### Rebuilding authorizations
 
