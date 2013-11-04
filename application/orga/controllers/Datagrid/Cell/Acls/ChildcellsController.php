@@ -65,7 +65,7 @@ class Orga_Datagrid_Cell_Acls_ChildcellsController extends UI_Controller_Datagri
 
             $data['administrators'] = implode(' | ', $listAdministrator);
             $data['details'] = $this->cellPopup(
-                'orga/datagrid_cell_acls_child/list/idCell/'.$data['index'],
+                'orga/datagrid_cell_acls_childcells/list/idCell/'.$data['index'],
                 implode(' | ', $listLinkedUser),
                 'zoom-in'
             );

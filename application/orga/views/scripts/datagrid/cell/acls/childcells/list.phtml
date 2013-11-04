@@ -28,3 +28,7 @@ $datagridACLs->addParam('idCell', $this->idCell);
 
 echo $datagridACLs->render();
 ?>
+
+<script>
+    $('#granularityCellACL<?=$this->idGranularity?>_details_popup .modal-header h3').html("<?=$this->labelPopup?>");
+</script>
