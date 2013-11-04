@@ -49,12 +49,11 @@
         </tu>
         <tu tuid="displayNavigationPanel">
             <tuv xml:lang="fr">
-                <seg>Explorer l\'organisation</seg>
+                <seg>Explorer l'organisation</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Browse organization</seg>
             </tuv>
         </tu>
-
     </body>
 </tmx>
