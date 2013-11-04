@@ -511,4 +511,9 @@ class User extends Core_Model_Entity implements Resource
     {
         return $this->id;
     }
+
+    public function __toString()
+    {
+        return "User($this->email)";
+    }
 }

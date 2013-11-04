@@ -40,10 +40,8 @@ User\Domain\ACL\Authorization\Authorization:
     parentAuthorization:
       targetEntity: Authorization
       inversedBy: childAuthorizations
-      cascade: [ all ]
       joinColumn:
         nullable: true
-        onDelete: CASCADE
 
   oneToMany:
     childAuthorizations:

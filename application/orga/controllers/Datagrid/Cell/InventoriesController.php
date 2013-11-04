@@ -193,7 +193,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $this->view->acls = [];
         foreach ($granularity->getOrganization()->getGranularities() as $granularityACL) {
             if ($granularityACL->getCellsWithACL()) {
-                Core_Tools::dump($granularityACL->getLabel());
                 $granularityACLs = [];
                 if ($granularityACL->isBroaderThan($granularity)) {
                     $parentCell = $cell->getParentCellForGranularity($granularityACL);

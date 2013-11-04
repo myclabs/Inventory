@@ -195,6 +195,9 @@ abstract class Core_Model_Entity
         if (isset($this->ref)) {
             return $this->ref;
         }
+        if (isset($this->id)) {
+            return $this->id;
+        }
         $tmp = [];
         foreach ($this->getKey() as $key => $value) {
             $tmp[] = "$key: $value";
