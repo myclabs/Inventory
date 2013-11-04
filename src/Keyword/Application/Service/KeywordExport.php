@@ -8,9 +8,11 @@
 
 namespace Keyword\Application\Service;
 
-use Keyword\Domain\Association;
-use Keyword\Domain\Keyword;
-use Keyword\Domain\Predicate;
+use Keyword\Domain\PredicateRepository;
+use Keyword\Domain\KeywordRepository;
+use Keyword\Domain\PredicateCriteria;
+use Keyword\Domain\KeywordCriteria;
+use Keyword\Domain\AssociationCriteria;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
@@ -23,6 +25,25 @@ use Xport\MappingReader\YamlMappingReader;
 class KeywordExport
 {
     /**
+     * @var PredicateRepository
+     */
+    protected $predicateRepository;
+    /**
+     * @var KeywordRepository
+     */
+    protected $keywordRepository;
+
+    /**
+     * @param PredicateRepository $predicateRepository
+     * @param KeywordRepository $keywordRepository
+     */
+    public function __construct(PredicateRepository $predicateRepository, KeywordRepository $keywordRepository)
+    {
+        $this->predicateRepository = $predicateRepository;
+        $this->keywordRepository = $keywordRepository;
+    }
+
+    /**
      * Exporte la version de Keyword.
      *
      * @param string $format
@@ -33,9 +54,9 @@ class KeywordExport
         $export = new PHPExcelExporter();
 
         // Predicates
-        $queryPredicateLabel = new \Core_Model_Query();
-        $queryPredicateLabel->order->addOrder(Predicate::QUERY_LABEL);
-        $modelBuilder->bind('predicates', Predicate::loadList($queryPredicateLabel));
+        $predicateCriteria = new PredicateCriteria();
+        $predicateCriteria->orderBy([$predicateCriteria->label->getField() => PredicateCriteria::ASC]);
+        $modelBuilder->bind('predicates', $this->predicateRepository->matching($predicateCriteria));
         $modelBuilder->bind('predicatesSheetLabel', __('Keyword', 'predicate', 'predicates'));
         $modelBuilder->bind('predicateColumnDirectLabel', __('Keyword', 'predicate', 'directPredicateLabelHeader'));
         $modelBuilder->bind('predicateColumnDirectRef', __('Keyword', 'predicate', 'directPredicateIdentifierHeader'));
@@ -44,9 +65,9 @@ class KeywordExport
         $modelBuilder->bind('predicateColumnDescription', __('UI', 'name', 'description'));
 
         // Keywords
-        $queryKeywordLabel = new \Core_Model_Query();
-        $queryKeywordLabel->order->addOrder(Keyword::QUERY_LABEL);
-        $modelBuilder->bind('keywords', Keyword::loadList($queryKeywordLabel));
+        $keywordCriteria = new KeywordCriteria();
+        $keywordCriteria->orderBy([$keywordCriteria->label->getField() => KeywordCriteria::ASC]);
+        $modelBuilder->bind('keywords', $this->keywordRepository->matching($keywordCriteria));
         $modelBuilder->bind('keywordsSheetLabel', __('Keyword', 'name', 'keywords'));
         $modelBuilder->bind('keywordColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('keywordColumnRef', __('UI', 'name', 'identifier'));
@@ -54,18 +75,12 @@ class KeywordExport
         $modelBuilder->bind('keywordColumnAssociationsAsObject', __('Keyword', 'export', 'keywordColumnAssociationsAsObject'));
 
         // Associations
-        $queryAssociationLabels = new \Core_Model_Query();
-        $queryAssociationLabels->order->addOrder(
-            Keyword::QUERY_LABEL,
-            \Core_Model_Order::ORDER_ASC,
-            Keyword::getAliasAsSubject()
-        );
-        $queryAssociationLabels->order->addOrder(
-            Keyword::QUERY_LABEL,
-            \Core_Model_Order::ORDER_ASC,
-            Keyword::getAliasAsObject()
-        );
-        $modelBuilder->bind('associations', Association::loadList($queryAssociationLabels));
+        $associationCriteria = new AssociationCriteria();
+        $associationCriteria->orderBy([
+                $associationCriteria->subjectLabel->getField() => AssociationCriteria::ASC,
+                $associationCriteria->objectLabel->getField() => AssociationCriteria::ASC
+            ]);
+        $modelBuilder->bind('associations', $this->keywordRepository->associationsMatching($associationCriteria));
         $modelBuilder->bind('associationsSheetLabel', __('Keyword', 'relation', 'pageTitle'));
         $modelBuilder->bind('associationColumnSubject', __('Keyword', 'name', 'subject'));
         $modelBuilder->bind('associationColumnPredicate', __('Keyword', 'predicate', 'predicate'));

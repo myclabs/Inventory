@@ -10,7 +10,7 @@
         "doctrine/orm": "dev-CriteriaContains as 2.4.99",
         "doctrine/annotations": "~1.0",
         "doctrine/common": "dev-ProxyStaticProperties as 2.4.1",
-        "gedmo/doctrine-extensions": "~2.3",
+        "gedmo/doctrine-extensions": "dev-OptimizedTranslatable as 2.99",
         "symfony/yaml": "~2.3",
         "symfony/event-dispatcher": "~2.3",
         "pear/console_commandline": "dev-trunk",
@@ -18,7 +18,7 @@
         "dompdf/dompdf": "dev-master",
         "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
         "myclabs/array-comparator": "1.0.*",
-        "myclabs/xport": "0.2.0",
+        "myclabs/xport": "0.2.*",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
         "mnapoli/php-di": "3.5.*",
@@ -49,6 +49,10 @@
         {
             "type": "git",
             "url": "git://github.com/myclabs/doctrine2.git"
+        },
+        {
+            "type": "git",
+            "url": "git://github.com/myclabs/DoctrineExtensions.git"
         }
     ]
 }
