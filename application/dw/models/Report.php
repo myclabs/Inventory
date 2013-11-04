@@ -9,6 +9,7 @@
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use DW\Model\ACL\ReportAuthorization;
+use DW\Model\ACL\Role\ReportOwnerRole;
 use User\Domain\ACL\Resource\Resource;
 use User\Domain\ACL\Resource\ResourceTrait;
 
@@ -160,10 +161,12 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      */
     protected $acl;
 
-
     /**
-     * Constructeur de l'objet
+     * @var ReportOwnerRole|null
      */
+    protected $owner;
+
+
     public function __construct(DW_Model_Cube $cube)
     {
         $this->filters = new ArrayCollection();
@@ -249,7 +252,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
     /**
      * Définit le type de UI_Chart utilisé.
      *
-     * @param const $chartType
+     * @param string $chartType
      *
      * @throws Core_Exception_InvalidArgument
      */
@@ -264,7 +267,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
     /**
      * Renvoie le type de UI_Chart utilisé.
      *
-     * @return const
+     * @return string
      */
     public function getChartType()
     {
@@ -274,7 +277,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
     /**
      * Définit si le Report prend en compte les incertitudes.
      *
-     * @param const $sortType
+     * @param string $sortType
      *
      * @throws Core_Exception_InvalidArgument
      */
@@ -282,8 +285,8 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
     {
         if (($sortType !== self::SORT_VALUE_INCREASING)
             && ($sortType !== self::SORT_VALUE_DECREASING)
-            && ($sortType !== self::SORT_CONVENTIONAL))
-        {
+            && ($sortType !== self::SORT_CONVENTIONAL)
+        ) {
             throw new Core_Exception_InvalidArgument('The sort type must be a class constant "SORT_" .');
         }
         $this->sortType = $sortType;
@@ -292,7 +295,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
     /**
      * Renvoie le type de tri utilisé pour ordonner les résultats.
      *
-     * @return const
+     * @return string
      */
     public function getSortType()
     {
@@ -324,7 +327,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @param DW_Model_Indicator $indicator
      */
-    public function setNumerator(DW_Model_Indicator $indicator=null)
+    public function setNumerator(DW_Model_Indicator $indicator = null)
     {
         $this->numerator = $indicator;
     }
@@ -344,7 +347,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @param DW_Model_Axis $axis
      */
-    public function setNumeratorAxis1(DW_Model_Axis $axis=null)
+    public function setNumeratorAxis1(DW_Model_Axis $axis = null)
     {
         $this->numeratorAxis1 = $axis;
     }
@@ -366,7 +369,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setNumeratorAxis2(DW_Model_Axis $axis=null)
+    public function setNumeratorAxis2(DW_Model_Axis $axis = null)
     {
         if (($axis !== null) && ($this->numeratorAxis1 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 1 for numerator need to be set first');
@@ -389,7 +392,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @param DW_Model_Indicator $indicator
      */
-    public function setDenominator(DW_Model_Indicator $indicator=null)
+    public function setDenominator(DW_Model_Indicator $indicator = null)
     {
         $this->denominator = $indicator;
     }
@@ -411,7 +414,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setDenominatorAxis1(DW_Model_Axis $axis=null)
+    public function setDenominatorAxis1(DW_Model_Axis $axis = null)
     {
         if (($axis !== null) && ($this->numeratorAxis1 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 1 for numerator need to be set first');
@@ -436,7 +439,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setDenominatorAxis2(DW_Model_Axis $axis=null)
+    public function setDenominatorAxis2(DW_Model_Axis $axis = null)
     {
         if (($axis !== null) && ($this->numeratorAxis2 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 2 for numerator need to be set first');
@@ -530,7 +533,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
 
         if (empty($filterArray)) {
             return null;
-        } else if (count($filterArray) > 1) {
+        } elseif (count($filterArray) > 1) {
             throw new Core_Exception_TooMany('Too many Filters found for Axis "'.$axis->getRef().'"');
         }
 
@@ -570,7 +573,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @return UI_Chart_Bar|UI_Chart_Pie
      */
-    public function getChart($idChart='reportChart')
+    public function getChart($idChart = 'reportChart')
     {
         if ($this->getNumeratorAxis1() === null) {
             throw new Core_Exception_InvalidArgument('At least one numerator axis is needed to drow a chart');
@@ -663,13 +666,13 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
                             $seriesValues[$serieValueId][$member1Id] = array('value' => 0, 'uncertainty' => 0);
                         }
                     }
-                    uksort($seriesValues[$serieValueId], function($a, $b) {
+                    uksort($seriesValues[$serieValueId], function ($a, $b) {
                         $memberA = DW_Model_Member::load($a);
                         $memberB = DW_Model_Member::load($b);
                         return $memberA->getPosition() - $memberB->getPosition();
                     });
                 }
-                uksort($seriesAxisLabel, function($a, $b) {
+                uksort($seriesAxisLabel, function ($a, $b) {
                     $memberA = DW_Model_Member::load($a);
                     $memberB = DW_Model_Member::load($b);
                     return $memberA->getPosition() - $memberB->getPosition();
@@ -798,7 +801,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @return DW_Model_Report
      */
-    public static function getFromString($string, DW_Model_Cube $cube=null)
+    public static function getFromString($string, DW_Model_Cube $cube = null)
     {
         $stdReport = json_decode($string);
 
@@ -927,4 +930,19 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
         return DW_Model_Report::getFromString($reportAsString, $cube);
     }
 
+    /**
+     * @return ReportOwnerRole|null
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param ReportOwnerRole|null $owner
+     */
+    public function setOwner(ReportOwnerRole $owner = null)
+    {
+        $this->owner = $owner;
+    }
 }

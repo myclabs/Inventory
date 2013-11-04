@@ -15,6 +15,7 @@ User\Domain\ACL\Role:
     cellManager: Orga\Model\ACL\Role\CellManagerRole
     cellContributor: Orga\Model\ACL\Role\CellContributorRole
     cellObserver: Orga\Model\ACL\Role\CellObserverRole
+    reportOwner: DW\Model\ACL\Role\ReportOwnerRole
 
   id:
     id:
