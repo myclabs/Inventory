@@ -51,29 +51,29 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @var int
      */
-    protected $id = null;
+    protected $id;
 
     /**
      * Label de l'Indicator.
      *
      * @var string
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Cube contenant l'Indicator.
      *
      * @var DW_Model_Cube
      */
-    protected $cube = null;
+    protected $cube;
 
     /**
      * Type de UI_Chart utilisé dans ce Report.
      *
      * @var string
      */
-    protected $chartType = null;
-    protected $chartTypeArray = array(
+    protected $chartType;
+    protected $chartTypeArray = [
         self::CHART_PIE,
         self::CHART_HORIZONTAL,
         self::CHART_VERTICAL,
@@ -83,7 +83,7 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
         self::CHART_VERTICAL_STACKED,
         self::CHART_HORIZONTAL_STACKEDGROUPED,
         self::CHART_VERTICAL_STACKEDGROUPED,
-    );
+    ];
 
     /**
      * Ordre des résultats.
@@ -97,49 +97,49 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      *
      * @var bool
      */
-    protected  $withUncertainty = false;
+    protected $withUncertainty = false;
 
     /**
      * Indicator numérateur.
      *
      * @var DW_Model_Indicator
      */
-    protected $numerator = null;
+    protected $numerator;
 
     /**
      * Axis 1 utilisés au numérateur.
      *
      * @var DW_Model_Axis
      */
-    protected $numeratorAxis1 = null;
+    protected $numeratorAxis1;
 
     /**
      * Axis 2 utilisés au numérateur.
      *
      * @var DW_Model_Axis
      */
-    protected $numeratorAxis2 = null;
+    protected $numeratorAxis2;
 
     /**
      * Indicator dénominateur.
      *
      * @var DW_Model_Indicator
      */
-    protected $denominator = null;
+    protected $denominator;
 
     /**
      * Axis 1 utilisés au dénominateur.
      *
      * @var DW_Model_Axis
      */
-    protected $denominatorAxis1 = null;
+    protected $denominatorAxis1;
 
     /**
      * Axis 2 utilisés au dénominateur.
      *
      * @var DW_Model_Axis
      */
-    protected $denominatorAxis2 = null;
+    protected $denominatorAxis2;
 
     /**
      * Ensemble des Filter utilisés sur le Report.
