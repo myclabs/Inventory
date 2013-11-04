@@ -53,7 +53,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
                         $data['userFirstName'] = $user->getFirstName();
                         $data['userLastName'] = $user->getLastName();
                         $data['userEmail'] = $user->getEmail();
-                        $data['userRole'] = $linkedIdentity->getRef();
+                        $data['userRole'] = explode('_', $linkedIdentity->getRef())[0];
                         $this->addLine($data);
                     }
                 }

@@ -212,7 +212,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $columnRole->list = array();
                 foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
                     if ($role instanceof User_Model_Role) {
-                        $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
+                        $columnRole->list[explode('_', $role->getRef())[0]] = __('Orga', 'role', $role->getName());
                     }
                 }
                 $datagridConfiguration->datagrid->addCol($columnRole);
