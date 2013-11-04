@@ -47,12 +47,12 @@
                 <seg> </seg>
             </tuv>
         </tu>
-        <tu tuid="displayNavigationPanel">
+        <tu tuid="displayOrCloseNavigationPanel">
             <tuv xml:lang="fr">
-                <seg>Explorer l'organisation</seg>
+                <seg>Afficher / masquer le volet d'exploration</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Browse organization</seg>
+                <seg>Display / hide navigation panel</seg>
             </tuv>
         </tu>
     </body>
