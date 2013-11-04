@@ -9,7 +9,7 @@
             <?= $this->partial('cell/navigation.phtml',
                 ['cell' => $this->cell, 'isParentCellReachable' => $this->isParentCellReachable])?>
         </div>
-        <div id="navigationClose" class="span well opened">
+        <div id="navigationClose" class="span well opened" title="<?=__('Orga', 'navigation', 'seeOrganization')?>">
             <i class="icon-minus"></i>
         </div>
     <? endif; ?>
@@ -31,8 +31,8 @@
         } else {
             $(this).addClass('closed').removeClass('opened');
             $(this).find('i').removeClass('icon-minus').addClass('icon-plus');
-            console.log($(this).find('i'));
         }
         navigationPanel.animate({width: "toggle"}, 50);
     });
+    $('#navigationClose').trigger('click');
 </script>
