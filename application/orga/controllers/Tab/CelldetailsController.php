@@ -9,6 +9,7 @@ use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Controlleur des onglets des détails d'une cellule.
@@ -186,9 +187,48 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
             if ($narrowerGranularity->getCellsWithACL()) {
+                // Datagrid des utilisateurs des cellules enfants.
                 $datagridConfiguration = new Orga_DatagridConfiguration(
-                    'granularityACL'.$narrowerGranularity->getId(),
-                    'datagrid_cell_acls_child',
+                    'granularityUserACL'.$narrowerGranularity->getId(),
+                    'datagrid_cell_acls_childusers',
+                    'orga',
+                    $cell,
+                    $narrowerGranularity
+                );
+                $datagridConfiguration->datagrid->addParam('idCell', $idCell);
+
+                $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
+                $columnUserFirstName->addable = false;
+                $datagridConfiguration->datagrid->addCol($columnUserFirstName);
+
+                $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
+                $columnUserLastName->addable = false;
+                $datagridConfiguration->datagrid->addCol($columnUserLastName);
+
+                $columnUserEmail = new UI_Datagrid_Col_Text('userEmail', __('UI', 'name', 'emailAddress'));
+                $datagridConfiguration->datagrid->addCol($columnUserEmail);
+
+                $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
+                $columnRole->list = array();
+                foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
+                    if ($role instanceof User_Model_Role) {
+                        $columnRole->list[$role->getName()] = __('Orga', 'role', $role->getName());
+                    }
+                }
+                $datagridConfiguration->datagrid->addCol($columnRole);
+
+                $datagridConfiguration->datagrid->pagination = true;
+                $datagridConfiguration->datagrid->addElements = true;
+                $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addPanelTitle');
+                $datagridConfiguration->datagrid->deleteElements = true;
+
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' — ' . __('Orga', 'role', 'userDetails');
+                $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+
+                // Datagrid des cellules enfants avec le nombre d'utilisteur pour chacune.
+                $datagridConfiguration = new Orga_DatagridConfiguration(
+                    'granularityCellACL'.$narrowerGranularity->getId(),
+                    'datagrid_cell_acls_childcells',
                     'orga',
                     $cell,
                     $narrowerGranularity
@@ -202,7 +242,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $columnDetails->popup->addAttribute('class', 'large');
                 $datagridConfiguration->datagrid->addCol($columnDetails);
 
-                $labelDatagrid = $narrowerGranularity->getLabel();
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' — ' . __('Orga', 'role', 'cellDetails');
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
             }
         }
@@ -278,17 +318,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
+        $cellGranularity = $cell->getGranularity();
+
+        $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
+            $this->_helper->auth(),
+            Orga_Action_Cell::INPUT(),
+            $cell
+        );
 
         try {
-            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
-            // Verification que la granularité croisée existe.
-            $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+            $granularityForInventoryStatus = $cellGranularity->getOrganization()->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
-            $crossedOrgaGranularity = null;
-        } catch (Core_Exception_NotFound $e) {
-            $crossedOrgaGranularity = null;
-        }
-        if ($crossedOrgaGranularity === null) {
             $this->forward('emptytab', 'tab_celldetails', 'orga', array(
                     'idCell' => $idCell,
                     'display' => 'render',
@@ -297,48 +337,81 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             return;
         }
 
-        $datagridConfiguration = new Orga_DatagridConfiguration(
-            'inventories'.$granularityForInventoryStatus->getId(),
-            'datagrid_cell_inventories',
-            'orga',
-            $cell,
-            $crossedOrgaGranularity
-        );
-        $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
+        $crossedGranularitiesForInventoryStatus = [];
+        // Verification que la granularité croisée existe.
+        try {
+            $crossedGranularitiesForInventoryStatus[] = $granularityForInventoryStatus->getCrossedGranularity($cellGranularity);
+        } catch (Core_Exception_NotFound $e) {
+            // Pas de granularité croisée.
+        }
+        foreach ($cellGranularity->getNarrowerGranularities() as $granularity) {
+            if ($granularity->getCellsWithACL() && $granularity->isNavigable()) {
+                try {
+                    $crossedGranularitiesForInventoryStatus[] = $granularityForInventoryStatus->getCrossedGranularity($granularity);
+                } catch (Core_Exception_NotFound $e) {
+                    // Pas de granularité croisée.
+                }
+            }
+        }
+        if (empty($crossedGranularitiesForInventoryStatus)) {
+            $this->forward('emptytab', 'tab_celldetails', 'orga', array(
+                    'idCell' => $idCell,
+                    'display' => 'render',
+                )
+            );
+            return;
+        }
 
-        // Column Statut
-        $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('UI', 'name', 'status'));
-        $columnStateOrga->withEmptyElement = false;
+        $listDatagridConfiguration = [];
+        foreach ($crossedGranularitiesForInventoryStatus as $crossedGranularity) {
+            if (isset($listDatagridConfiguration[$crossedGranularity->getLabel()])) {
+                continue;
+            }
+            $datagridConfiguration = new Orga_DatagridConfiguration(
+                'inventories'.$crossedGranularity->getId(),
+                'datagrid_cell_inventories',
+                'orga',
+                $cell,
+                $crossedGranularity
+            );
+            $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
 
-        $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
-            $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
-            $cell
-        );
-        $columnStateOrga->editable = ($isUserAllowedToInputInventoryStatus
-            && (($cell->getGranularity()->isBroaderThan($granularityForInventoryStatus))
-                || ($cell->getGranularity() === $granularityForInventoryStatus))
-        );
-        $columnStateOrga->list = array(
+            // Column Statut
+            $columnStateOrga = new UI_Datagrid_Col_List('inventoryStatus', __('UI', 'name', 'status'));
+            $columnStateOrga->withEmptyElement = false;
+            $columnStateOrga->editable = ($isUserAllowedToInputInventoryStatus
+                && ($crossedGranularity === $granularityForInventoryStatus)
+            );
+            $columnStateOrga->list = array(
                 Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
                 Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
                 Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
-        );
-        $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
-        $columnStateOrga->filterName = Orga_Model_Cell::QUERY_INVENTORYSTATUS;
-        $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
-        $datagridConfiguration->datagrid->addCol($columnStateOrga);
+            );
+            $columnStateOrga->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
+            $columnStateOrga->filterName = Orga_Model_Cell::QUERY_INVENTORYSTATUS;
+            $columnStateOrga->entityAlias = Orga_Model_Cell::getAlias();
+            $datagridConfiguration->datagrid->addCol($columnStateOrga);
 
-        $columnAdvencementInputs = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'inventory', 'completeInputPercentageHeader'));
-        $datagridConfiguration->datagrid->addCol($columnAdvencementInputs);
+            $columnAdvencementInputs = new UI_Datagrid_Col_Percent('advancementInput', __('Orga', 'inventory', 'completeInputPercentageHeader'));
+            $datagridConfiguration->datagrid->addCol($columnAdvencementInputs);
 
-        $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'inventory', 'finishedInputPercentageHeader'));
-        $datagridConfiguration->datagrid->addCol($columnAdvencementFinishedInputs);
+            $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'inventory', 'finishedInputPercentageHeader'));
+            $datagridConfiguration->datagrid->addCol($columnAdvencementFinishedInputs);
+
+            $columnUsers = new UI_Datagrid_Col_Popup('users', __('Orga', 'inventory', 'involvedUsers'));
+            $columnUsers->defaultValue = '<i class="icon-search"></i> '.__('Orga', 'inventory', 'involvedUsers');
+            $columnUsers->popup->title = '';
+            $columnUsers->popup->addAttribute('class', 'large');
+            $datagridConfiguration->datagrid->addCol($columnUsers);
+
+            $labelDatagrid = $crossedGranularity->getLabel();
+            $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+        }
 
         $this->forward('child', 'cell', 'orga', array(
-            'idCell' => $idCell,
-            'datagridConfiguration' => $datagridConfiguration,
-            'display' => 'render',
+                'idCell' => $idCell,
+                'datagridConfiguration' => $listDatagridConfiguration,
+                'display' => 'render',
         ));
     }
 
@@ -441,12 +514,6 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $this->view->idCell = $cell->getId();
         $this->view->idCube = $cell->getDWCube()->getId();
-        $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate($cell);
-        $this->view->dWCubesCanBeReset = $this->aclService->isAllowed(
-            $this->_helper->auth(),
-            User_Model_Action_Default::EDIT(),
-            $cell
-        );
 
         $this->view->specificExports = array();
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
@@ -726,6 +793,19 @@ class Orga_Tab_CelldetailsController extends Core_Controller
     }
 
     /**
+     * Action fournissant la vue des commentaires de la cellule.
+     * @Secure("viewCell")
+     */
+    public function commentsAction()
+    {
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+
+        $this->view->assign('idCell', $this->getParam('idCell'));
+        $this->view->assign('comments', $cell->getInputSetLatestComments(20));
+        $this->_helper->layout()->disableLayout();
+    }
+
+    /**
      * Action fournissant la vue d'administration d'une cellule.
      * @Secure("editOrganization")
      */
@@ -739,9 +819,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $granularity = $cell->getGranularity();
 
         if ($granularity->getCellsGenerateDWCubes()) {
-            $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate(
-                $cell
-            );
+            $this->view->isDWCubeUpToDate = $this->etlStructureService->isCellDWCubeUpToDate($cell);
         }
     }
 

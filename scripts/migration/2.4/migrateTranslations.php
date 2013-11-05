@@ -8,9 +8,9 @@ $temporaryLabel = 'Temporary Label';
 $translatableClasses = [
     'Keyword\Domain\Predicate' => ['attributes' => ['label', 'reverseLabel'], 'translations' => []],
     'Keyword\Domain\Keyword' => ['attributes' => ['label'], 'translations' => []],
-    'Techno_Model_Category' => ['attributes' => ['label'], 'translations' => []],
-    'Techno_Model_Family' => ['attributes' => ['label', 'documentation'], 'translations' => []],
-    'Techno_Model_Element' => ['attributes' => ['documentation'], 'translations' => []],
+    'Techno\Domain\Category' => ['attributes' => ['label'], 'translations' => []],
+    'Techno\Domain\Family\Family' => ['attributes' => ['label', 'documentation'], 'translations' => []],
+    'Techno\Domain\Element\Element' => ['attributes' => ['documentation'], 'translations' => []],
     'Classif_Model_Axis' => ['attributes' => ['label'], 'translations' => []],
     'Classif_Model_Member' => ['attributes' => ['label'], 'translations' => []],
     'Classif_Model_Indicator' => ['attributes' => ['label'], 'translations' => []],

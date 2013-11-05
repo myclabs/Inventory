@@ -8,8 +8,8 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\ViewModel\OrganizationViewModelFactory;
 
 /**
  * @author valentin.claras
@@ -37,6 +37,12 @@ class Orga_OrganizationController extends Core_Controller
      * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject
+     * @var OrganizationViewModelFactory
+     */
+    private $organizationVMFactory;
 
     /**
      * @Inject("work.waitDelay")
@@ -112,18 +118,85 @@ class Orga_OrganizationController extends Core_Controller
     {
         $connectedUser = $this->_helper->auth();
 
+        // Retrouve la liste des organisations
+        $query = new Core_Model_Query();
+        $query->aclFilter->enabled = true;
+        $query->aclFilter->user = $connectedUser;
+        $query->aclFilter->action = User_Model_Action_Default::VIEW();
+        $organizations = Orga_Model_Organization::loadList($query);
+
+        // Crée les ViewModel
+        $organizationsVM = [];
+        foreach ($organizations as $organization) {
+            $vm = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
+            $organizationsVM[] = $vm;
+        }
+        $this->view->assign('organizations', $organizationsVM);
+
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
-        $this->view->isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
+        $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $organizationResource
-        );
+        ));
+    }
 
-        $aclQuery = new Core_Model_Query();
-        $aclQuery->aclFilter->enabled = true;
-        $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::EDIT();
-        $this->view->isConnectedUserAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
+    /**
+     * @Secure("createOrganization")
+     */
+    public function addAction()
+    {
+        $user = $this->_helper->auth();
+        $label = $this->getParam('label');
+
+        $success = function () {
+            UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
+        };
+        $timeout = function () {
+            UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'), UI_Message::TYPE_SUCCESS);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'createOrganization',
+            [$user, $label],
+            __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
+        $this->redirect('orga/organization/manage');
+    }
+
+    /**
+     * @Secure("deleteOrganization")
+     */
+    public function deleteAction()
+    {
+        $organization = Orga_Model_Organization::load($this->_getParam('idOrganization'));
+
+        $success = function () {
+            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
+        };
+        $timeout = function () {
+            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'), UI_Message::TYPE_SUCCESS);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'deleteOrganization',
+            [$organization]
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
+        $this->redirect('orga/organization/manage');
     }
 
     /**

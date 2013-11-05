@@ -9,7 +9,7 @@ Feature: Control of organizational data feature
   # Accès à l'onglet "Contrôle"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Contrôle"
     Then I should see the "consistency" datagrid
     And the row 1 of the "consistency" datagrid should contain:

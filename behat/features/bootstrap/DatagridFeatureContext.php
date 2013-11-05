@@ -44,6 +44,18 @@ trait DatagridFeatureContext
     }
 
     /**
+     * @Then /^the row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should not contain:$/
+     */
+    public function assertDatagridRowNotContains($row, $datagrid, TableNode $fields)
+    {
+        foreach ($fields->getHash() as $line) {
+            foreach ($line as $column => $content) {
+                $this->assertDatagridCellNotContains($column, $row, $datagrid, $content);
+            }
+        }
+    }
+
+    /**
      * @Then /^the "(?P<datagrid>[^"]*)" datagrid should contain a row:$/
      */
     public function assertDatagridContainsRow($datagrid, TableNode $fields)
@@ -66,6 +78,20 @@ trait DatagridFeatureContext
     }
 
     /**
+     * @Then /^the "(?P<datagrid>[^"]*)" datagrid should not contain a row:$/
+     */
+    public function assertDatagridNotContainsRow($datagrid, TableNode $fields)
+    {
+        $rows = $this->findAllElements($this->getDatagridSelector($datagrid) . ' .yui-dt-data tr');
+        $nbRows = count($rows);
+
+        // Assert in each line
+        for ($rowIndex = 1; $rowIndex <= $nbRows; $rowIndex++) {
+            $this->assertDatagridRowNotContains($rowIndex, $datagrid, $fields);
+        }
+    }
+
+    /**
      * @Then /^(?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should contain "(?P<content>[^"]*)"$/
      */
     public function assertDatagridCellContains($column, $row, $datagrid, $content)
@@ -78,6 +104,24 @@ trait DatagridFeatureContext
             $this->assertElementContainsText($cellSelector, $content);
         } catch (\Exception $e) {
             $message = sprintf("The text '%s' was not found at line %s and column '%s'. \n\nOriginal message: %s",
+                $content, $row, $column, $e->getMessage());
+            throw new \Exception($message);
+        }
+    }
+
+    /**
+     * @Then /^(?:|the )column "(?P<column>[^"]*)" of (?:|the )row (?P<row>\d+) of the "(?P<datagrid>[^"]*)" datagrid should not contain "(?P<content>[^"]*)"$/
+     */
+    public function assertDatagridCellNotContains($column, $row, $datagrid, $content)
+    {
+        $cellSelector = $this->getDatagridSelector($datagrid)
+            . " .yui-dt-data tr:nth-child($row)"
+            . " .yui-dt-col-$column";
+
+        try {
+            $this->assertElementNotContainsText($cellSelector, $content);
+        } catch (\Exception $e) {
+            $message = sprintf("The text '%s' was found at line %s and column '%s'. \n\nOriginal message: %s",
                 $content, $row, $column, $e->getMessage());
             throw new \Exception($message);
         }
@@ -220,6 +264,7 @@ JS;
      */
     public abstract function assertSession($name = null);
     public abstract function assertElementContainsText($element, $text);
+    public abstract function assertElementNotContainsText($element, $text);
     public abstract function waitForPageToFinishLoading();
     public abstract function clickElement($selector);
     public abstract function fillField($field, $value);

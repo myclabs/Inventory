@@ -23,6 +23,7 @@ Feature: Cell observer feature
   # Accès à l'onglet "Collectes"
     When I click "Quitter"
     And I open tab "Collectes"
+    And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
     # And the "inventories6" datagrid should contain 2 row
   # TODO : statut de la collecte non éditable
@@ -35,7 +36,7 @@ Feature: Cell observer feature
   # Les autres onglets de la page d'une cellule sont absents
     And I should not see a "#container a:contains('Organisation')" element
     And I should not see a "#container a:contains('Rôles')" element
-    And I should not see a "#container a:contains('Reconst. données')" element
+    And I should not see a "#container a:contains('Reconstruction')" element
 
   @javascript
   Scenario: Observer of several cells
@@ -51,7 +52,7 @@ Feature: Cell observer feature
       | label  | access      |
       | Annecy | Observateur |
   # Accès à une des cellules
-    When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
+    When I click "Accéder aux saisies" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid

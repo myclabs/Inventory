@@ -133,21 +133,21 @@
         <tu tuid="deleteGranularityConfigAF">
             <tuv xml:lang="fr">
                 <seg>Ce niveau organisationnel ne peut pas être supprimé, car il a été sélectionné pour y effectuer
-                    le choix de formulaires comptables (voir l'onglet « Configuration »).</seg>
+                    le choix de formulaires comptables (voir l'onglet « Informations générales »).</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>This organizational level cannot be deleted, since it has been selected for the choice of
-                    accounting forms (see "Configuration" tab).</seg>
+                    accounting forms (see "General info" tab).</seg>
             </tuv>
         </tu>
         <tu tuid="deleteGranularityInputAF">
             <tuv xml:lang="fr">
                 <seg>Ce niveau organisationnel ne peut pas être supprimé, car il a été sélectionné pour y effectuer
-                    des saisies (voir l'onglet « Configuration »).</seg>
+                    des saisies (voir l'onglet « Informations générales »).</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>This organizational level cannot be deleted, since it has been selected for input processing (see
-                    "Configuration" tab).</seg>
+                    "General info" tab).</seg>
             </tuv>
         </tu>
 

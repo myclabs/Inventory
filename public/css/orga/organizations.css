@@ -1,0 +1,10 @@
+.organizationList {
+}
+
+.organizationList .organization {
+    margin-bottom: 20px;
+}
+
+.organizationList .organization h3 {
+    margin-top: 0;
+}

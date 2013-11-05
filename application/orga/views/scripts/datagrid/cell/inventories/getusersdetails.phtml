@@ -1,0 +1,42 @@
+<?php
+/**
+ * @author valentin.claras
+ * @package Orga
+ * @subpackage View
+ */
+foreach ($this->acls as $granularityLabel => $roles) {
+?>
+    <fieldset class="wrapper">
+        <legend style="cursor: default"><?=$granularityLabel?></legend>
+        <div>
+<?php
+    foreach ($roles as $roleLabel => $usersRoles) {
+?>
+            <fieldset class="wrapper">
+                <legend style="cursor: default"><?=__('Orga', 'role', $roleLabel.'s')?></legend>
+                <div>
+                    <pre>
+<?php
+        $lastUserEmail = end($usersRoles);
+        foreach ($usersRoles as $userEmail) {
+            echo $userEmail;
+            if ($userEmail !== $lastUserEmail) {
+                echo "\n";
+            }
+        }
+?>
+                    </pre>
+                </div>
+            </fieldset>
+<?php
+    }
+?>
+        </div>
+    </fieldset>
+<?php
+}
+?>
+
+<script>
+    $('#inventories<?=$this->idGranularity?>_users_popup .modal-header h3').html("<?=$this->labelPopup?>");
+</script>

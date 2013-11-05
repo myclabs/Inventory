@@ -8,6 +8,8 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Techno\Application\Service\TechnoService;
+use Techno\Domain\Family\Family;
 use Unit\UnitAPI;
 
 /**
@@ -52,8 +54,8 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
 
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var Techno_Service_Techno $technoService */
-        $technoService = $container->get('Techno_Service_Techno');
+        /** @var TechnoService $technoService */
+        $technoService = $container->get('Techno\Application\Service\TechnoService');
 
         $value = $technoService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
 
@@ -75,8 +77,8 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
 
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var Techno_Service_Techno $technoService */
-        $technoService = $container->get('Techno_Service_Techno');
+        /** @var TechnoService $technoService */
+        $technoService = $container->get('Techno\Application\Service\TechnoService');
 
         // Vérifie que la famille liée est bien trouvable
         try {
@@ -141,22 +143,22 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
     }
 
     /**
-     * @return Techno_Model_Family
+     * @return Family
      */
     public function getFamily()
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
-        /** @var Techno_Service_Techno $technoService */
-        $technoService = $container->get('Techno_Service_Techno');
+        /** @var TechnoService $technoService */
+        $technoService = $container->get('Techno\Application\Service\TechnoService');
 
         return $technoService->getFamily($this->familyRef);
     }
 
     /**
-     * @param Techno_Model_Family $family
+     * @param Family $family
      */
-    public function setFamily(Techno_Model_Family $family)
+    public function setFamily(Family $family)
     {
         $this->familyRef = $family->getRef();
         // Supprime les coordonnées pour l'ancienne famille

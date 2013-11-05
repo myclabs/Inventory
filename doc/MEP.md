@@ -1,6 +1,17 @@
 # Mise en production
 
 
+## 2.8
+
+- Déployer normalement l'application (avec build update)
+
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/2.8/migrate.sql
+```
+
+
 ## 2.7
 
 - Mettre hors ligne la prod actuelle (sauf stations de montagne et spiritueux)

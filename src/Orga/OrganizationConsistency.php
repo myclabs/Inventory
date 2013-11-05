@@ -14,10 +14,10 @@ class Orga_OrganizationConsistency
     /**
      * Methode qui vérifie la cohérence d'un cube.
      *
-     * @param Orga_Model_Organization $cube
+     * @param Orga_Model_Organization $organization
      * @return array();
      */
-    public function check($cube)
+    public function check($organization)
     {
         $listAxes = array();
         $listParentsAxes = array();
@@ -29,7 +29,7 @@ class Orga_OrganizationConsistency
         $checkBroaderMember = __('Orga', 'control', 'memberWithMissingDirectParent');
         $checkNarrowerMember = __('Orga', 'control', 'memberWithNoDirectChild');
 
-        foreach ($cube->getAxes() as $axis) {
+        foreach ($organization->getAxes() as $axis) {
             if (!$axis->hasMembers()) {
                 $listAxes[] = $axis->getLabel();
             }

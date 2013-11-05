@@ -6,6 +6,7 @@
  * @package    AF
  * @subpackage Form
  */
+
 use Unit\UnitAPI;
 
 /**
@@ -16,12 +17,17 @@ use Unit\UnitAPI;
  */
 class AF_Model_Component_Numeric extends AF_Model_Component_Field
 {
-
     /**
      * L'unité associée à la valeur numérique.
      * @var UnitAPI
      */
     protected $unit;
+
+    /**
+     * Est-ce que l'utilisateur peut choisir l'unité.
+     * @var bool
+     */
+    protected $unitSelection = true;
 
     /**
      * Flag indiquant si le champs de saisie doit être associé à un champs de saisie d'incertitude.
@@ -48,9 +54,6 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
     protected $required = true;
 
 
-    /**
-     * Constructeur
-     */
     public function __construct()
     {
         parent::__construct();
@@ -83,13 +86,18 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             $value = $input->getValue();
             $selectedUnit = $input->getValue()->getUnit();
             // Si l'unité du champ n'est plus compatible avec l'ancienne saisie
-            if (!$selectedUnit->isEquivalent($this->unit->getRef())) {
+            if (! $selectedUnit->isEquivalent($this->unit->getRef())) {
                 // Ignore l'ancienne saisie
                 $value = $this->defaultValue;
                 $selectedUnit = $this->unit;
             }
             // Valeur
             if ($value) {
+                // Si on ne peut plus choisir l'unité, et qu'une valeur a été saisie dans une unité différente
+                if ((! $this->hasUnitSelection()) && ($value->getUnit() != $this->unit)) {
+                    // On convertit dans l'unité par défaut
+                    $value = $value->convertTo($this->unit);
+                }
                 $uiElement->setValue($locale->formatNumberForInput($value->getDigitalValue()));
             }
             // Unité
@@ -116,7 +124,9 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
             // Incertitude
             if ($this->withUncertainty) {
                 $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent'.$this->ref);
-                $uiUncertaintyElement->setValue($locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty()));
+                $uiUncertaintyElement->setValue(
+                    $locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty())
+                );
                 $uiElement->getElement()->addElement($uiUncertaintyElement);
             }
         }
@@ -127,10 +137,12 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
         // Rappel de la valeur par défaut
         if ($this->getDefaultValueReminder()) {
             $locale = Core_Locale::loadDefault();
-            $uiElement->setDescription(sprintf("Valeur par défaut : %s %s ± %d%%",
-                                               $locale->formatNumber((float) $this->defaultValue->getDigitalValue()),
-                                               $this->unit->getSymbol(),
-                                               (float) $this->defaultValue->getRelativeUncertainty()));
+            $uiElement->setDescription(sprintf(
+                "Valeur par défaut : %s %s ± %d%%",
+                $locale->formatNumber((float) $this->defaultValue->getDigitalValue()),
+                $this->unit->getSymbol(),
+                (float) $this->defaultValue->getRelativeUncertainty()
+            ));
         }
         return $uiElement;
     }
@@ -146,8 +158,11 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
         try {
             $unit->getNormalizedUnit();
         } catch (Core_Exception_NotFound $e) {
-            $errors[] = new AF_ConfigError("L'unité '{$unit->getRef()}' associée au champ '$this->ref' n'existe pas.",
-                                           true, $this->getAf());
+            $errors[] = new AF_ConfigError(
+                "L'unité '{$unit->getRef()}' associée au champ '$this->ref' n'existe pas.",
+                true,
+                $this->getAf()
+            );
         }
         return $errors;
     }
@@ -298,21 +313,47 @@ class AF_Model_Component_Numeric extends AF_Model_Component_Field
         $unitComponent = new UI_Form_Element_Select($this->ref . '_unit');
 
         // Ajoute l'unité de base
-        $option = new UI_Form_Element_Option($this->ref . '_unit_' . $baseUnit->getRef(), $baseUnit->getRef(),
-            $baseUnit->getSymbol());
+        $option = new UI_Form_Element_Option(
+            $this->ref . '_unit_' . $baseUnit->getRef(),
+            $baseUnit->getRef(),
+            $baseUnit->getSymbol()
+        );
         $unitComponent->addOption($option);
 
         // Ajoute les unités compatibles
         foreach ($baseUnit->getCompatibleUnits() as $compatibleUnit) {
-            $option = new UI_Form_Element_Option($this->ref . '_unit_' . $compatibleUnit->getRef(),
-                $compatibleUnit->getRef(), $compatibleUnit->getSymbol());
+            $option = new UI_Form_Element_Option(
+                $this->ref . '_unit_' . $compatibleUnit->getRef(),
+                $compatibleUnit->getRef(),
+                $compatibleUnit->getSymbol()
+            );
             $unitComponent->addOption($option);
         }
 
         // Sélection
-        $unitComponent->setValue($selectedUnit->getRef());
+        if ($this->hasUnitSelection()) {
+            $unitComponent->setValue($selectedUnit->getRef());
+        } else {
+            $unitComponent->setValue($baseUnit->getRef());
+            $unitComponent->getElement()->disabled = true;
+        }
 
         return $unitComponent;
     }
 
+    /**
+     * @return boolean
+     */
+    public function hasUnitSelection()
+    {
+        return is_null($this->unitSelection) ? true : $this->unitSelection;
+    }
+
+    /**
+     * @param boolean $unitChoice
+     */
+    public function setUnitSelection($unitChoice)
+    {
+        $this->unitSelection = (boolean) $unitChoice;
+    }
 }

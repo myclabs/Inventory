@@ -1,6 +1,8 @@
-#navigationClose { width: 25px; margin-left: 0px; cursor: pointer; }
+#navigationClose { width: 30px; height: 55px; margin-left: -2px; margin-right: 15px; border-left: 0; cursor: pointer; border-radius: 0px 15px 15px 0px; }
+#navigationClose.closed { margin-left: -30px; }
+#navigationClose.opened { box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.05) inset; }
 
-#navigationPanel { min-width: 200px; max-width: 350px; width: auto; padding: 1%; }
+#navigationPanel { min-width: 200px; max-width: 350px; width: auto; padding: 1%; margin-left: -25px; }
 
 #navigationCurrent { font-weight: bold; font-size: 1.1em; }
 
@@ -15,4 +17,4 @@
 #navigationPanel .form-horizontal .control-label { float: none; text-align: left; }
 #navigationPanel form select { width: 100%; }
 
-#navigationContent { float: none; width: auto; overflow: hidden; }
+#navigationContent { float: none; width: auto; overflow: hidden; margin-left: 0px; }

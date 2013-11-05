@@ -69,7 +69,7 @@ class Orga_Service_Export
         $modelBuilder->bind('granularityColumnInputDocuments', __('Doc', 'name', 'documents'));
 
         // Feuille des Member.
-        $modelBuilder->bind('membersSheetLabel', __('UI', 'name', 'members'));
+        $modelBuilder->bind('membersSheetLabel', __('UI', 'name', 'elements'));
 
         $modelBuilder->bind('memberColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
@@ -136,7 +136,7 @@ class Orga_Service_Export
         $modelBuilder->bind('organization', $cell->getGranularity()->getOrganization());
 
         // Feuille des Member.
-        $modelBuilder->bind('membersSheetLabel', __('UI', 'name', 'members'));
+        $modelBuilder->bind('membersSheetLabel', __('UI', 'name', 'elements'));
 
         $modelBuilder->bind('memberColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));

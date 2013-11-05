@@ -1,34 +1,78 @@
 <?php
-// Liste des Organization.
+/** @var \Orga\ViewModel\OrganizationViewModel[] $organizations */
+$organizations = $this->organizations;
 ?>
+
 <div class="page-header">
     <h1>
-        <?=__('Orga', 'organization', 'organizations')?>
+        <?=__('UI', 'name', 'applications')?>
     </h1>
 </div>
 
+<div class="organizationList">
+    <?php foreach ($organizations as $organization) : ?>
+
+        <div class="organization well">
+            <?php if ($organization->canBeDeleted) : ?>
+                <div class="pull-right">
+                    <a class="deleteOrganization btn btn-small btn-warning"
+                       href="orga/organization/delete?idOrganization=<?=$organization->id?>">
+                        <i class="icon-trash icon-white"></i>
+                        <?=__('UI', 'verb', 'delete')?>
+                    </a>
+                </div>
+            <?php endif; ?>
+
+            <h3>
+                <a href="<?=$organization->link?>"><?=$organization->label?></a>
+            </h3>
+
+            <p>
+                <strong><?=__('Orga', 'axis', 'rootAxes').__('UI', 'other', ':')?></strong>
+                <?=implode(', ', $organization->rootAxesLabels)?>
+            </p>
+
+            <p>
+                <strong><?=__('Orga', 'inventory', 'inventories').__('UI', 'other', ':')?></strong>
+                <?=$organization->inventory?>
+            </p>
+        </div>
+
+    <?php endforeach; ?>
+
+    <?php if ($this->canCreateOrganization) : ?>
+        <p>
+            <?=$this->button(__('UI', 'verb', 'add'), 'plus-sign')->showPopup('addOrgaPopup')?>
+        </p>
+    <?php endif; ?>
+</div>
+
+<script>
+    $(function() {
+        $(".deleteOrganization").confirm({
+            text: "<?=__('UI', 'message', 'areYouSure')?>",
+            confirmButton: "<?=__('UI', 'verb', 'confirm')?>",
+            cancelButton: "<?=__('UI', 'verb', 'cancel')?>",
+            post: true
+        });
+    });
+</script>
+
 <?php
-$datagridOrganization = new UI_Datagrid('organizations', 'datagrid_organization', 'orga');
+// Popup d'ajout
+$popup = new UI_Popup_Static('addOrgaPopup');
+$popup->title = __('Orga', 'organization', 'addPanelTitle');
 
-$columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
-$columnLabel->addable = true;
-$datagridOrganization->addCol($columnLabel);
+$addForm = new UI_Form('addOrgaForm');
+$addForm->setAction('orga/organization/add');
+$addForm->setAjax(false);
+$labelInput = new UI_Form_Element_Text('label');
+$labelInput->setLabel(__('UI', 'name', 'label'));
+$labelInput->setRequired(true);
+$addForm->addElement($labelInput);
 
-$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
-$columnDetails->addable = false;
-$datagridOrganization->addCol($columnDetails);
+$popup->footer = $this->button(__('UI', 'verb', 'validate'), null, ['class' => 'btn-primary'])->submitForm('addOrgaForm')->__toString()
+    . $this->button(__('UI', 'verb', 'cancel'))->closePopup('addOrgaPopup')->__toString();
 
-$columnRootAxes = new UI_Datagrid_Col_Text('rootAxes', __('Orga', 'axis', 'rootAxes'));
-$columnRootAxes->addable = false;
-$datagridOrganization->addCol($columnRootAxes);
-
-$columnGranularityForInventoryStatus = new UI_Datagrid_Col_Text('granularityForInventoryStatus', __('Orga', 'inventory', 'inventories'));
-$columnGranularityForInventoryStatus->addable = false;
-$datagridOrganization->addCol($columnGranularityForInventoryStatus);
-
-$datagridOrganization->deleteElements = $this->isConnectedUserAbleToCreateOrganizations;
-$datagridOrganization->pagination = false;
-$datagridOrganization->addElements = $this->isConnectedUserAbleToCreateOrganizations;
-$datagridOrganization->addPanelTitle = __('Orga', 'organization', 'addPanelTitle');
-
-$datagridOrganization->display();
+$popup->body = $addForm->render();
+$popup->display();

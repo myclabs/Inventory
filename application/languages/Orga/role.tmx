@@ -8,18 +8,18 @@
 
         <tu tuid="organizationAdministrator">
             <tuv xml:lang="fr">
-                <seg>Administrateur d'organisation</seg>
+                <seg>Administrateur d'application</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization administrator</seg>
+                <seg>Application administrator</seg>
             </tuv>
         </tu>
         <tu tuid="organizationAdministrators">
             <tuv xml:lang="fr">
-                <seg>Administrateurs d'organisation</seg>
+                <seg>Administrateurs d'application</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization administrators</seg>
+                <seg>Application administrators</seg>
             </tuv>
         </tu>
         <tu tuid="cellAdministrator">
@@ -71,6 +71,25 @@
             </tuv>
         </tu>
 
+        <!-- Collapses -->
+
+        <tu tuid="userDetails">
+            <tuv xml:lang="fr">
+                <seg>par utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>by user</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellDetails">
+            <tuv xml:lang="fr">
+                <seg>par élément d'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>by organization item</seg>
+            </tuv>
+        </tu>
+
         <!-- Datagrid -->
 
          <tu tuid="cellGenericAdministrators">
@@ -94,10 +113,10 @@
 
         <tu tuid="addAdministratorPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Ajout d'un administrateur d'organisation (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)</seg>
+                <seg>Ajout d'un administrateur d'application (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of a organization administrator (creation of a new user or assignation of this role to an existing user)</seg>
+                <seg>Creation of an application administrator (creation of a new user or assignation of this role to an existing user)</seg>
             </tuv>
         </tu>        
         <tu tuid="addPanelTitle">

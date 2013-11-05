@@ -4,6 +4,8 @@
  * @author  matthieu.napoli
  * @package AF
  */
+use Techno\Domain\Family\Family;
+
 /** @var $af AF_Model_AF */
 $af = $this->af;
 
@@ -28,8 +30,8 @@ $datagrid->addCol($refColumn);
 // Famille
 $familyColumn = new UI_Datagrid_Col_List('family', __('Techno', 'name', 'family'));
 $familyColumn->list = [];
-foreach (Techno_Model_Family::loadList() as $family) {
-    /** @var $family Techno_Model_Family */
+foreach (Family::loadList() as $family) {
+    /** @var $family Family */
     $familyColumn->list[$family->getRef()] = $family->getLabel();
 }
 $familyColumn->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
