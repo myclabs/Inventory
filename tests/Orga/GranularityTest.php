@@ -94,7 +94,7 @@ class Orga_Test_GranularityAttributes extends Core_Test_TestCase
 
     /**
      * @expectedException Core_Exception_InvalidArgument
-     * @expectedExceptionMessage Each given Axis must be transverse with each other axes.
+     * @expectedExceptionMessage Each given Axis must be transverse with each other axes
      */
     function testConstructLinedAxes()
     {
