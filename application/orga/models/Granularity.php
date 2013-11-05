@@ -11,6 +11,8 @@ use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\CompositeExpression;
 
 /**
  * Objet métier Granularité : ensemble d'Axis formant des Cell pour chaque association de Member.
@@ -168,7 +170,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
         foreach ($axes as $axis) {
             if ($organization->hasAxis($axis) && !($this->hasAxis($axis))) {
                 if (!$axis->isTransverse($this->axes->toArray())) {
-                    throw new Core_Exception_InvalidArgument('Each given Axis must be transverse with each other axes.');
+                    throw new Core_Exception_InvalidArgument(
+                        'Each given Axis must be transverse with each other axes'
+                    );
                 }
                 $this->axes->add($axis);
                 $axis->addGranularity($this);
@@ -356,7 +360,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     ) {
         if ($indexCurrentAxis >= count($this->axes)) {
             $this->createCell($selectedMembers);
-        } else if ($this->axes[$indexCurrentAxis] === $ignoredAxis) {
+        } elseif ($this->axes[$indexCurrentAxis] === $ignoredAxis) {
             $this->traverseAxesThenCreateCells($indexCurrentAxis + 1, $selectedMembers, $ignoredAxis);
         } else {
             foreach ($this->axes[$indexCurrentAxis]->getMembers() as $currentAxisMember) {
@@ -446,7 +450,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getCellsByMembers($listMembers)
     {
-        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
 
         $axesPath = [];
         foreach ($listMembers as $member) {
@@ -459,13 +463,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 foreach ($axisPath as $memberPath) {
                     $orExpressions[] = $criteria->expr()->contains('tag', $memberPath);
                 }
-                $criteria->andWhere(
-                    new Doctrine\Common\Collections\Expr\CompositeExpression(
-                        Doctrine\Common\Collections\Expr\CompositeExpression::TYPE_OR,
-                        $orExpressions
-                    )
-                );
-            } else if (count($axisPath) > 0) {
+                $criteria->andWhere(new CompositeExpression(CompositeExpression::TYPE_OR, $orExpressions));
+            } elseif (count($axisPath) > 0) {
                 $criteria->andWhere($criteria->expr()->contains('tag', array_pop($axisPath)));
             }
         }
@@ -580,13 +579,15 @@ class Orga_Model_Granularity extends Core_Model_Entity
             foreach ($crossingGranularity->getAxes() as $crossingIndex => $crossingAxis) {
                 if (($currentAxis->isNarrowerThan($crossingAxis)) || ($currentAxis === $crossingAxis)) {
                     unset($crossingAxes[$crossingIndex]);
-                } else if ($currentAxis->isBroaderThan($crossingAxis)) {
+                } elseif ($currentAxis->isBroaderThan($crossingAxis)) {
                     unset($currentAxes[$currentIndex]);
                 }
             }
         }
 
-        return $this->getOrganization()->getGranularityByRef(self::buildRefFromAxes(array_merge($currentAxes, $crossingAxes)));
+        return $this->getOrganization()->getGranularityByRef(
+            self::buildRefFromAxes(array_merge($currentAxes, $crossingAxes))
+        );
     }
 
     /**
@@ -594,7 +595,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @param Orga_Model_Granularity $configGranularity
      */
-    public function setInputConfigGranularity($configGranularity=null)
+    public function setInputConfigGranularity($configGranularity = null)
     {
         if ($this->inputConfigGranularity !== $configGranularity) {
             if ($this->inputConfigGranularity !== null) {
@@ -646,7 +647,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $inputGranularity->setInputConfigGranularity($this);
 
             foreach ($this->getCells() as $cell) {
-                $cellsGroup = new Orga_Model_CellsGroup($cell, $inputGranularity);
+                new Orga_Model_CellsGroup($cell, $inputGranularity);
             }
         }
     }
@@ -857,7 +858,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForSocialGenericAction();
                 }
-            } else  {
+            } else {
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForSocialGenericAction(new Library());
                 }
@@ -895,7 +896,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForSocialContextAction();
                 }
-            } else  {
+            } else {
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForSocialContextAction(new Library());
                 }
@@ -933,7 +934,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForAFInputSetsPrimary();
                 }
-            } else  {
+            } else {
                 foreach ($this->getCells() as $cell) {
                     $cell->setDocLibraryForAFInputSetsPrimary(new Library());
                 }
@@ -950,13 +951,4 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         return $this->cellsWithInputDocs;
     }
-
-    /**
-     * @return string Représentation textuelle de la Granularity
-     */
-    public function __toString()
-    {
-        return $this->getRef();
-    }
-
 }

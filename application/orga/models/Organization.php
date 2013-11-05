@@ -9,6 +9,7 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Selectable;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\ACL\Resource\NamedResource;
@@ -370,7 +371,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     /**
      * Renvoie un tableau des Granularity du Organization.
      *
-     * @return Collection|Orga_Model_Granularity[]
+     * @return Collection|Selectable|Orga_Model_Granularity[]
      */
     public function getGranularities()
     {
