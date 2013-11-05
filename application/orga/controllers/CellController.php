@@ -11,6 +11,8 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\ViewModel\OrganizationViewModelFactory;
+use Orga\ViewModel\CellViewModelFactory;
 
 /**
  * Classe controleur de cell.
@@ -34,6 +36,18 @@ class Orga_CellController extends Core_Controller
     private $workDispatcher;
 
     /**
+     * @Inject
+     * @var OrganizationViewModelFactory
+     */
+    private $organizationVMFactory;
+
+    /**
+     * @Inject
+     * @var CellViewModelFactory
+     */
+    private $cellVMFactory;
+
+    /**
      * @Inject("work.waitDelay")
      * @var int
      */
@@ -50,6 +64,25 @@ class Orga_CellController extends Core_Controller
      * @var AF_Service_InputFormParser
      */
     private $inputFormParser;
+
+    /**
+     * @Secure("viewCell")
+     */
+    public function viewAction()
+    {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+        $granularity = $cell->getGranularity();
+        $organization = $granularity->getOrganization();
+        $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
+
+        $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser));
+        $this->view->assign('childCells', $this->cellVMFactory->createChildCellsViewModel($cell, $connectedUser));
+    }
 
     /**
      * Affiche le détail d'une cellule.
@@ -617,35 +650,6 @@ class Orga_CellController extends Core_Controller
         } else {
             Zend_Layout::getMvcInstance()->disableLayout();
             $specificReports->display();
-        }
-    }
-
-    /**
-     * @Secure("inputCell")
-     */
-    public function inputsAction()
-    {
-        $idCell = $this->getParam('idCell');
-        $this->view->cell = Orga_Model_Cell::load($idCell);
-        /** @var Orga_Model_Granularity $granularity */
-        $granularity = $this->view->cell->getGranularity();
-
-        $this->pageTitle = $this->view->cell->getLabel();
-
-        $this->view->cells = [];
-        if (($granularity->getInputConfigGranularity() !== null) || ($granularity->getCellsGenerateDWCubes())) {
-            $this->view->cells[] = [
-                'granularity' => $granularity,
-                'cells' => [$this->view->cell]
-            ];
-        }
-        foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
-            if (($narrowerGranularity->getInputConfigGranularity() != null) || ($narrowerGranularity->getCellsGenerateDWCubes())) {
-                $this->view->cells[] = [
-                    'granularity' => $narrowerGranularity,
-                    'cells' => $this->view->cell->getChildCellsForGranularity($narrowerGranularity)
-                ];
-            }
         }
     }
 

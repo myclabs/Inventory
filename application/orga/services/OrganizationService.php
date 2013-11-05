@@ -130,6 +130,11 @@ class Orga_Service_OrganizationService
                         if (($memberId === 'addMember'.$axisId) || (empty($memberRef))) {
                             continue;
                         }
+                        $parentMembers = [];
+                        foreach ($memberData['children'] as $parentMemberAxisId => $parentMemberData) {
+                            $parentAxisId = substr($parentMemberAxisId, strlen('parent'.ucfirst($memberId)));
+                            $parentMembers[] = $members[$parentAxisId][$parentMemberData['value']];
+                        }
 
                         if (isset($members[$axisId][$memberRef])) {
                             $i = 2;
@@ -139,6 +144,9 @@ class Orga_Service_OrganizationService
                             $memberRef .= '_'.$i;
                         }
                         $member = new Orga_Model_Member($membersAxis);
+                        foreach ($parentMembers as $parentMember) {
+                            $member->addDirectParent($parentMember);
+                        }
                         $member->setRef($memberRef);
                         $member->setLabel($memberData['value']);
                         $members[$axisId][$memberId] = $member;
@@ -197,7 +205,6 @@ class Orga_Service_OrganizationService
                     $inputGranularity->setInputConfigGranularity($navigableInputGranularity);
                 }
 
-                Core_Tools::dump($formData['dw']['elements']);
                 if ($formData['organization']['elements']['organizationType']['value'] === 'reporting') {
                     $dWGranularitiesData = $formData['dw']['elements']['dwGranularitiesGroup']['elements']['dwGranularities'];
                     foreach ($dWGranularitiesData['value'] as $dWGranularityId) {
@@ -236,7 +243,6 @@ class Orga_Service_OrganizationService
             $this->entityManager->commit();
 
             return $organization;
-            throw new Core_Exception_InvalidArgument();
         } catch (Exception $e) {
             $this->entityManager->rollback();
             $this->entityManager->clear();

@@ -28,6 +28,12 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
+     * @var OrganizationViewModelFactory
+     */
+    private $organizationVMFactory;
+
+    /**
+     * @Inject
      * @var Orga_Service_ETLStructure
      */
     private $etlStructureService;
@@ -37,12 +43,6 @@ class Orga_OrganizationController extends Core_Controller
      * @var WorkDispatcher
      */
     private $workDispatcher;
-
-    /**
-     * @Inject
-     * @var OrganizationViewModelFactory
-     */
-    private $organizationVMFactory;
 
     /**
      * @Inject("work.waitDelay")
@@ -60,53 +60,36 @@ class Orga_OrganizationController extends Core_Controller
         $connectedUser = $this->_helper->auth();
 
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
+
         $isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::CREATE(),
             $organizationResource
         );
 
-        $aclQuery = new Core_Model_Query();
-        $aclQuery->aclFilter->enabled = true;
-        $aclQuery->aclFilter->user = $connectedUser;
-        $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
-        $isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
-        $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-        $isConnectedUserAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
+        if (!$isConnectedUserAbleToCreateOrganizations) {
+            $aclQuery = new Core_Model_Query();
+            $aclQuery->aclFilter->enabled = true;
+            $aclQuery->aclFilter->user = $connectedUser;
+            $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
 
-        $listCellResource = array();
-        foreach ($connectedUser->getLinkedResources() as $cellResource) {
-            if (($cellResource instanceof User_Model_Resource_Entity)
-                && ($cellResource->getEntity() instanceof Orga_Model_Cell)
-                && (!in_array($cellResource, $listCellResource))
-            ) {
-                $listCellResource[] = $cellResource;
+            $isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
+
+            if (!$isConnectedUserAbleToDeleteOrganizations) {
+                $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+                $isConnectedUserAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
             }
         }
-        foreach ($connectedUser->getRoles() as $userRole) {
-            foreach ($userRole->getLinkedResources() as $cellResource) {
-                if (($cellResource instanceof User_Model_Resource_Entity)
-                    && ($cellResource->getEntity() instanceof Orga_Model_Cell)
-                    && (!in_array($cellResource, $listCellResource))
-                ) {
-                    $listCellResource[] = $cellResource;
-                }
-            }
-        }
-        $isConnectedUserAbleToSeeManyCells = (count($listCellResource) > 1);
 
         if (($isConnectedUserAbleToCreateOrganizations)
             || ($isConnectedUserAbleToDeleteOrganizations)
             || ($isConnectedUserAbleToSeeManyOrganizations)
         ) {
             $this->redirect('orga/organization/manage');
-        } elseif ($isConnectedUserAbleToSeeManyCells) {
-            $organizationArray = Orga_Model_Organization::loadList($aclQuery);
-            $this->redirect('orga/organization/cells/idOrganization/'.array_pop($organizationArray)->getId());
-        } elseif (count($listCellResource) == 1) {
-            $this->redirect('orga/cell/details/idCell/'.array_pop($listCellResource)->getEntity()->getId());
         } else {
-            $this->forward('noaccess', 'organization', 'orga');
+            $organizationsWithAccess = Orga_Model_Organization::loadList($aclQuery);
+            $idOrganization = array_pop($organizationsWithAccess)->getId();
+            $this->redirect('orga/organization/view/idOrganization/'.$idOrganization);
         }
     }
 
@@ -126,12 +109,11 @@ class Orga_OrganizationController extends Core_Controller
         $organizations = Orga_Model_Organization::loadList($query);
 
         // Crée les ViewModel
-        $organizationsVM = [];
+        $organizationsViewModel = [];
         foreach ($organizations as $organization) {
-            $vm = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
-            $organizationsVM[] = $vm;
+            $organizationsViewModel[] = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
         }
-        $this->view->assign('organizations', $organizationsVM);
+        $this->view->assign('organizations', $organizationsViewModel);
 
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
         $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
@@ -189,7 +171,7 @@ class Orga_OrganizationController extends Core_Controller
             UI_Message::addMessageStatic(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
         };
         $timeout = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'), UI_Message::TYPE_SUCCESS);
+            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'), UI_Message::TYPE_INFO);
         };
         $error = function (Exception $e) {
             throw $e;
@@ -208,7 +190,49 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * Action de détails d'un organization.
+     * @Secure("viewOrganization")
+     */
+    public function viewAction()
+    {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        foreach ($organization->getGranularities() as $granularity) {
+            $aclCellQuery = new Core_Model_Query();
+            $aclCellQuery->aclFilter->enabled = true;
+            $aclCellQuery->aclFilter->user = $connectedUser;
+            $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+            $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+            $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
+            if ($numberCellsUserCanSee == 1) {
+                $cellsWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
+                $idCell = array_pop($cellsWithAccess)->getId();
+                $this->redirect('orga/cell/view/idCell/'.$idCell);
+                break;
+            } else if ($numberCellsUserCanSee > 1) {
+                $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
+
+                $listGranularities = array();
+                foreach ($organization->getGranularities() as $granularity) {
+                    if ($granularity->isNavigable()) {
+                        $listGranularities[$granularity->getRef()] = $granularity->getLabel();
+                    }
+                }
+                $this->view->assign('listGranularities', $listGranularities);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Action de détails d'un organization.
      * @Secure("editOrganization")
+     * todo organization/details utilité/utilisé ?
      */
     public function detailsAction()
     {
@@ -230,7 +254,6 @@ class Orga_OrganizationController extends Core_Controller
             }
         }
 
-
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
             $this->view->display = false;
@@ -244,6 +267,7 @@ class Orga_OrganizationController extends Core_Controller
     /**
      * Action de détails d'un organization.
      * @Secure("editOrganization")
+     *@todo remplacer detailsAction par editAction et ajouter editsubmitAction
      */
     public function editAction()
     {
@@ -338,30 +362,6 @@ class Orga_OrganizationController extends Core_Controller
         } else {
             $this->view->display = true;
         }
-    }
-
-    /**
-     * Liste des cellules d'un projet.
-     * @Secure("viewOrganization")
-     */
-    public function cellsAction()
-    {
-        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-
-        $this->view->idOrganization = $this->getParam('idOrganization');
-
-        $this->view->listGranularities = array();
-        foreach ($organization->getGranularities() as $granularity) {
-            if ($granularity->isNavigable()) {
-                $this->view->listGranularities[$granularity->getRef()] = $granularity->getLabel();
-            }
-        }
-
-        $this->view->listAccess = array(
-            'cellAdministrator' => __('Orga', 'role', 'cellAdministrator'),
-            'cellContributor' => __('Orga', 'role', 'cellContributor'),
-            'cellObserver' => __('Orga', 'role', 'cellObserver'),
-        );
     }
 
     /**

@@ -1,0 +1,330 @@
+<?php
+$inventoryStatusList = [
+    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
+    Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
+    Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
+];
+$inventoryStatusFilters = [
+    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
+    Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
+    Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'),
+    null => 'Toute collecte'
+];
+$imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
+$imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
+$imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+$imageInputIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+$imageInputNotStarted = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+$inputStatusList = [
+    AF_Model_InputSet_Primary::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
+    AF_Model_InputSet_Primary::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
+    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => $imageCalculationIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusCalculationIncomplete'),
+    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
+    null => $imageInputNotStarted->render() . ' ' . __('AF', 'inputInput', 'statusNotStarted')
+];
+$inputStatusStyleList = [
+    AF_Model_InputSet_Primary::STATUS_FINISHED => 'progress-success',
+    AF_Model_InputSet_Primary::STATUS_COMPLETE => 'progress-warning',
+    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'progress-danger',
+    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'progress-danger',
+    null => 'progress-danger'
+];
+$inputStatusFilters = [
+    AF_Model_InputSet_Primary::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
+    AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
+    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
+    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
+    'notStarted' => __('AF', 'inputInput', 'statusNotStarted'),
+    null => 'Tout status'
+];
+?>
+
+<style xmlns="http://www.w3.org/1999/html">
+    .granularity > .cell.firstRowCell {
+        margin-left: 0;
+    }
+</style>
+
+<?php
+/** @var \Orga\ViewModel\OrganizationViewModel $organization */
+$organization = $this->organization;
+?>
+<div class="organization well alert-info">
+    <?php if ($organization->canBeEdited) : ?>
+        <div class="pull-right">
+            <a class="editOrganization btn btn-small btn-primary"
+               href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                <i class="icon-cog icon-white"></i>
+                <?=__('UI', 'verb', 'edit')?>
+            </a>
+        </div>
+    <?php endif; ?>
+
+    <h1>
+        <?=$organization->label?>
+    </h1>
+
+    <p>
+        <strong><?=__('Orga', 'axis', 'rootAxes').__('UI', 'other', ':')?></strong>
+        <?=implode(', ', $organization->rootAxesLabels)?>
+    </p>
+
+    <p>
+        <strong><?=__('Orga', 'inventory', 'inventories').__('UI', 'other', ':')?></strong>
+        <?=$organization->inventory?>
+    </p>
+</div>
+
+<div class="row-fluid">
+
+    <div class="span9">
+
+        <?php
+        /** @var \Orga\ViewModel\CellViewModel $currentCell */
+        $currentCell = $this->currentCell;
+        ?>
+        <div class="currentCell well">
+            <h2>
+                <?php if ($currentCell->canBeInputted) : ?>
+                <a href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>">
+                    <?php endif; ?>
+                    <?=$currentCell->extendedLabel?>
+                    <?php if ($currentCell->canBeInputted) : ?>
+                </a>
+            <?php endif; ?>
+            </h2>
+            <p>
+                <a data-toggle="modal" data-target="#administrators<?=$currentCell->id?>" href="#">
+                    <i class="icon-search"></i>
+                    Contacter les administrateurs
+                </a>
+            </p>
+            <?php if ($currentCell->canBeAnalyzed) : ?>
+            <p>
+                <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="#">
+                    <i class="icon-tasks"></i>
+                    Voir les rapports
+                </a>
+            </p>
+            <?php endif; ?>
+            <?php if ($currentCell->inventoryStatus !== null) : ?>
+            <p>
+                <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
+                <?=$inventoryStatusList[$currentCell->inventoryStatus]?>
+            </p>
+            <?php endif; ?>
+            <?php if ($currentCell->canBeInputted) : ?>
+            <p>
+                <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
+                <?=$inputStatusList[$currentCell->inputStatus]?>
+            </p>
+            <div class="progress <?=$inputStatusStyleList[$currentCell->inputStatus]?>">
+                <div class="bar" style="width: <?=$currentCell->inputCompletion?>%"><?=$currentCell->inputCompletion?> %</div>
+            </div>
+            <?php endif; ?>
+
+            <div id="administrators<?=$currentCell->id?>" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Administrateur de <?=$currentCell->shortLabel?></h4>
+                </div>
+                <div class="modal-body">
+                    <pre><?=implode("\n", $currentCell->administrators)?></pre>
+                </div>
+            </div>
+
+            <?php if ($currentCell->canBeAnalyzed) : ?>
+            <div id="reports<?=$currentCell->id?>" class="modal hide fade large">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Rapports de <?=$currentCell->shortLabel?></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+
+        <?php foreach ($this->childCells as $granularityCells) :
+            /** @var Orga_Model_Granularity $granularity */
+            $granularity = $granularityCells['granularity'];
+            try {
+                $granularityForInventoryStatus = $granularity->getOrganization()->getGranularityForInventoryStatus();
+            } catch (Core_Exception_UndefinedAttribute $e) {
+                $granularityForInventoryStatus = null;
+            }
+            if (($granularity === $granularityForInventoryStatus) || ($granularity->isNarrowerThan($granularityForInventoryStatus))) {
+                $displayInventoryStatusFilter = true;
+            } else {
+                $displayInventoryStatusFilter = false;
+            }
+        ?>
+        <fieldset class="wrapper">
+            <legend data-toggle="collapse" data-target="#granularity<?=$granularity->getId()?>">
+                <i class="filterChevron icon-chevron-down"></i>
+                <?=$granularity->getLabel()?>
+                <small>
+                    <?php if ($granularity->getInputConfigGranularity() !== null) : ?>
+                        Saisies
+                    <?php endif; ?>
+                    <?php if (($granularity->getInputConfigGranularity() !== null) && ($granularity->getCellsGenerateDWCubes())) : ?>
+                        &nbsp;&&nbsp;
+                    <?php endif; ?>
+                    <?php if ($granularity->getCellsGenerateDWCubes()) : ?>
+                        Analyses
+                    <?php endif; ?>
+                </small>
+            </legend>
+
+            <div id="granularity<?=$granularity->getId()?>" class="collapse">
+                <?php if ($granularity->hasAxes() || ($granularity->getInputConfigGranularity() !== null)) : ?>
+                <form class="form-inline cells-filter">
+                    <?php foreach ($granularity->getAxes() as $axis) : ?>
+                        <select data-filter="path">
+                            <option value="">Tout <?=$axis->getLabel()?></option>
+                            <?php foreach ($axis->getMembers() as $member) : ?>
+                                <option value="<?=$member->getCompleteRef()?>"><?=$member->getLabel()?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endforeach; ?>
+                    <?php if ($granularity->getInputConfigGranularity() !== null) : ?>
+                        <select data-filter="inputstatus">
+                            <?php foreach ($inputStatusFilters as $statusValue => $statusLabel) : ?>
+                                <option value="<?=$statusValue?>"><?=$statusLabel?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endif; ?>
+                    <?php if ($displayInventoryStatusFilter) : ?>
+                        <select data-filter="inventorystatus">
+                            <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
+                                <option value="<?=$statusValue?>"><?=$statusLabel?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endif; ?>
+                    <button class="btn reset"><i class="icon-zoom-out"></i> Reset</button>
+                </form>
+                <?php endif; ?>
+
+                <div class="granularity row-fluid">
+                    <?php
+                    /** @var $cell \Orga\ViewModel\CellViewModel */
+                    foreach ($granularityCells['cells'] as $childCell) :
+                    ?>
+                    <div class="span4 well cell" data-path="<?=$childCell->path?>" data-inputstatus="<?=$childCell->inputStatus?>" data-inventorystatus="<?=$childCell->inventoryStatus?>">
+                        <h4>
+                            <?php if ($childCell->canBeInputted) : ?>
+                            <a href="orga/cell/input/idCell/23/fromIdCell/<?=$childCell->id?>">
+                            <?php endif; ?>
+                            <?=$childCell->extendedLabel?>
+                            <?php if ($childCell->canBeInputted) : ?>
+                            </a>
+                            <?php endif; ?>
+                        </h4>
+                        <?php if ($currentCell->canBeAnalyzed) : ?>
+                            <p>
+                                <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="#">
+                                    <i class="icon-tasks"></i>
+                                    Voir les rapports
+                                </a>
+                            </p>
+                        <?php endif; ?>
+                        <?php if ($childCell->inventoryStatus !== null) : ?>
+                        <p>
+                            <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
+                            <?=$inventoryStatusList[$childCell->inventoryStatus]?>
+                        </p>
+                        <?php endif; ?>
+                        <?php if ($childCell->canBeInputted) : ?>
+                        <p>
+                            <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
+                            <?=$inputStatusList[$childCell->inputStatus]?>
+                        </p>
+                        <div class="progress <?=$inputStatusStyleList[$childCell->inputStatus]?>">
+                            <div class="bar" style="width: <?=$childCell->inputCompletion?>%">
+                                <?=$childCell->inputCompletion?> %
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($currentCell->canBeAnalyzed) : ?>
+                        <div id="reports<?=$currentCell->id?>" class="modal hide fade large">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4>Rapports de <?=$currentCell->shortLabel?></h4>
+                            </div>
+                            <div class="modal-body">
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </fieldset>
+        <?php endforeach; ?>
+
+    </div>
+
+    <div class="span3">
+        <div class="well">
+            <h4>Historique</h4>
+            <hr/>
+            <ul>
+                <li>X à complété une saise</li>
+                <li>Y à commenté une saise</li>
+                <li>Y à commenté une saise</li>
+                <li>Y à commenté une saise</li>
+                <li>Y à commenté une saise</li>
+                <li>Y à commenté une saise</li>
+                <li>Y à commenté une saise</li>
+            </ul>
+        </div>
+        <div class="well">
+            <h4>Ajouter un membre</h4>
+            <hr/>
+        </div>
+    </div>
+
+</div>
+<script>
+    $('.cells-filter button.reset').click(function(e) {
+        e.preventDefault();
+        var form = $(e.target).parent();
+        var granularity = form.next();
+        $('.cell', granularity).removeClass('hide');
+        $('.cell', granularity).removeClass('firstRowCell');
+        $('.cell:nth-child(3n+1)', granularity).each(function() { $(this).addClass('firstRowCell'); });
+        $('select', form).each(function() { $(this).val(''); });
+    });
+    $('.cells-filter select').change(function(e) {
+        e.preventDefault();
+        var form = $(e.target).parent();
+        var granularity = form.next();
+
+        $('.cell', granularity).removeClass('hide');
+        $('.cell', granularity).removeClass('firstRowCell');
+
+        var test = '';
+        $('select', form).each(function() {
+            var filter = $(this).attr('data-filter');
+            var value = $(this).val();
+            if ((filter == 'inputstatus') && (value == 'notStarted')) {
+                test += '[data-' + filter + '=\'\']';
+            } else if (value != '') {
+                test += '[data-' + filter + '*=\'' + value + '\']';
+            }
+        });
+        if (test != '') {
+            $('.cell:not('+ test + ')', granularity).addClass('hide');
+        }
+
+        var numberElement = 0;
+        $('.cell:not(.hide)', granularity).each(function() {
+            if ((numberElement % 3) == 0) {
+                $(this).addClass('firstRowCell');
+            }
+            numberElement++;
+        });
+    });
+    $(document).ready(function() { $('.cells-filter button.reset').trigger('click'); });
+</script>

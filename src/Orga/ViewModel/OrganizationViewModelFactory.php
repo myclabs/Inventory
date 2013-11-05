@@ -3,10 +3,9 @@
 namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
-use Core_Model_Query;
 use Orga_Model_Axis;
-use Orga_Model_Cell;
 use Orga_Model_Organization;
+use User_Model_User;
 use User_Model_Action_Default;
 use User_Service_ACL;
 
@@ -25,7 +24,7 @@ class OrganizationViewModelFactory
         $this->aclService = $aclService;
     }
 
-    public function createOrganizationViewModel(Orga_Model_Organization $organization, $connectedUser)
+    public function createOrganizationViewModel(Orga_Model_Organization $organization, User_Model_User $connectedUser)
     {
         $viewModel = new OrganizationViewModel();
         $viewModel->id = $organization->getId();
@@ -40,6 +39,11 @@ class OrganizationViewModelFactory
             },
             $organization->getRootAxes()
         );
+        $viewModel->canBeEdited = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
         $viewModel->canBeDeleted = $this->aclService->isAllowed(
             $connectedUser,
             User_Model_Action_Default::DELETE(),
@@ -50,28 +54,6 @@ class OrganizationViewModelFactory
             $viewModel->inventory =  $organization->getGranularityForInventoryStatus()->getLabel();
         } catch (Core_Exception_UndefinedAttribute $e) {
         };
-        $canUserSeeManyCells = false;
-        foreach ($organization->getGranularities() as $granularity) {
-            $aclCellQuery = new Core_Model_Query();
-            $aclCellQuery->aclFilter->enabled = true;
-            $aclCellQuery->aclFilter->user = $connectedUser;
-            $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-            $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
-            $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
-            if ($numberCellsUserCanSee > 1) {
-                $canUserSeeManyCells = true;
-                break;
-            } elseif ($numberCellsUserCanSee == 1) {
-                break;
-            }
-        }
-
-        if ($canUserSeeManyCells) {
-            $viewModel->link = 'orga/organization/cells/idOrganization/' . $organization->getId();
-        } elseif ($numberCellsUserCanSee == 1) {
-            $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
-            $viewModel->link = 'orga/cell/details/idCell/' . array_pop($cellWithAccess)->getId();
-        }
 
         return $viewModel;
     }

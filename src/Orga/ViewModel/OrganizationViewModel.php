@@ -36,14 +36,4 @@ class OrganizationViewModel
      * @var string
      */
     public $inventory;
-
-    /**
-     * @var string
-     */
-    public $viewLink;
-
-    /**
-     * @var string
-     */
-    public $editLink;
 }

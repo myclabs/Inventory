@@ -272,10 +272,10 @@
                         '</div>' +
                         '<hr />' +
                         '<p>Vous pouvez fermer le popup et réessayer. Si le problème persiste, contactez un administrateur.</p>' +
-                        '<a class="btn btn-warning" href="#end" data-dismiss="modal">' +
+                        '<a class="btn btn-warning pull-right" href="#end" data-dismiss="modal">' +
                             'Fermer le popup' +
                         '</a>' +
-                        '<a class="btn btn-primary" href="orga/organization">' +
+                        '<a class="btn btn-primary pull-left" href="orga/organization">' +
                             '<i class="icon-home icon-white"></i> ' +
                             'Retour à l\'accueil' +
                         '</a>'
@@ -390,8 +390,8 @@
         var parentMembers = '';
         $.each($(this).attr('data-parentAxes').split('|'), function() {
             if (this != '') {
-                parentMembers += '<div class="input">' +
-                        '<select data-axis="' + this + '" name="parentMember' + globalMemberCounter + '-' + this + '"></select>' +
+                parentMembers += '<div id="parentMember' + globalMemberCounter + this + '" class="input">' +
+                        '<select data-axis="' + this + '" name="parentMember' + globalMemberCounter + this + '"></select>' +
                     '</div>';
             }
         });
@@ -431,6 +431,15 @@
 
         var state = true;
         switch ($('#organizationSteps li.active a').attr('href')) {
+            case '#organization':
+                if ($('#organizationType').val() == 'empty') {
+                    $('#validationOrganization').html(
+                        '<ul>' +
+                            '<li><strong>Label : </strong>' + $('#organizationLabel').val() + '</li>' +
+                            '</ul>'
+                    );
+                }
+            break;
             case '#axes':
                 var mainAxis = $('#mainAxis');
                 if (mainAxis.val() == '') {
@@ -474,8 +483,8 @@
                             parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]', '[data-level="' + (parentLine.attr('data-level') * 1 + 1) + '"]').each(function() {
                                 var parentAxis = $(this).attr('id').substr(0, $(this).attr('id').length - 5);
                                 parentAxes += parentAxis + '|';
-                                parentMembersSelect += '<div class="input">' +
-                                        '<select data-axis="' + parentAxis + '" name="parentMember' + globalMemberCounter + '-' + parentAxis + '">' +
+                                parentMembersSelect += '<div id="parentMember' + globalMemberCounter + parentAxis + '" class="input">' +
+                                        '<select data-axis="' + parentAxis + '" name="parentMember' + globalMemberCounter + parentAxis + '">' +
                                         '</select>' +
                                     '</div>'
                             });
@@ -601,7 +610,15 @@
                         if ($(this).val() != '') {
                             var members = '';
                             $('#' + $(this).attr('name') + '-members input').each(function() {
-                                members += $(this).val() + ', ';
+                                members += $(this).val();
+                                var parentMembers = '';
+                                $('select', $(this).parent().parent()).each(function () {
+                                    parentMembers += $('input[name="' + $(this).val() + '"]').val() + ', ';
+                                });
+                                if (parentMembers.length > 0) {
+                                    members += ' (' + parentMembers.substr(0, (parentMembers.length - 2)) + ')'
+                                }
+                                members += ', '
                             });
                             if ($('#' + $(this).attr('name') + '-members input').length > 0) {
                                 members = members.substr(0, (members.length - 2))
