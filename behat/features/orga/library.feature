@@ -9,7 +9,7 @@ Feature: Organization library feature
   # Accès au datagrid des granularités
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
     And I open tab "Niveaux"
     Then I should see the "granularity" datagrid
     And the row 1 of the "granularity" datagrid should contain:

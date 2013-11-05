@@ -26,3 +26,7 @@ User_Model_ACLFilterEntry:
   uniqueConstraints:
     uniqueACLFilterEntry:
       columns: [idUser, action, entityName, entityIdentifier]
+
+  indexes:
+    index1:
+      columns: [entityName, entityIdentifier]

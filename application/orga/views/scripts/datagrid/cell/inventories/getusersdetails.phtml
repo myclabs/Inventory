@@ -4,8 +4,6 @@
  * @package Orga
  * @subpackage View
  */
-echo __('Orga', 'inventory', 'usersList');
-
 foreach ($this->acls as $granularityLabel => $roles) {
 ?>
     <fieldset class="wrapper">
@@ -15,7 +13,7 @@ foreach ($this->acls as $granularityLabel => $roles) {
     foreach ($roles as $roleLabel => $usersRoles) {
 ?>
             <fieldset class="wrapper">
-                <legend style="cursor: default"><?=__('Orga', 'role', $roleLabel)?></legend>
+                <legend style="cursor: default"><?=__('Orga', 'role', $roleLabel.'s')?></legend>
                 <div>
                     <pre>
 <?php
@@ -37,3 +35,8 @@ foreach ($this->acls as $granularityLabel => $roles) {
     </fieldset>
 <?php
 }
+?>
+
+<script>
+    $('#inventories<?=$this->idGranularity?>_users_popup .modal-header h3').html("<?=$this->labelPopup?>");
+</script>

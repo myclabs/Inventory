@@ -9,8 +9,8 @@ Feature: Dw cube label feature
   # On modifie le libellé du membre "Europe"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Organisation"
-    And I open tab "Membres"
+    And I open tab "Paramétrage"
+    And I open tab "Éléments"
     And I open collapse "Zone"
     Then the row 1 of the "listMemberszone" datagrid should contain:
       | label  |

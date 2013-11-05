@@ -19,7 +19,23 @@
                 <seg>Addition</seg>
             </tuv>
         </tu>
-		<tu tuid="axes">
+        <tu tuid="application">
+            <tuv xml:lang="fr">
+                <seg>Application</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Application</seg>
+            </tuv>
+        </tu>
+        <tu tuid="applications">
+            <tuv xml:lang="fr">
+                <seg>Applications</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Applications</seg>
+            </tuv>
+        </tu>
+        <tu tuid="axes">
 			<tuv xml:lang="fr">
 				<seg>Axes</seg>
 			</tuv>
@@ -195,6 +211,14 @@
                 <seg>Edition</seg>
             </tuv>
         </tu>
+        <tu tuid="element">
+            <tuv xml:lang="fr">
+                <seg>Élément</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Element</seg>
+            </tuv>
+        </tu>
         <tu tuid="elements">
             <tuv xml:lang="fr">
                 <seg>Éléments</seg>
@@ -203,7 +227,7 @@
                 <seg>Elements</seg>
             </tuv>
         </tu>
-        <tu tuid="emailAddress">    
+        <tu tuid="emailAddress">
             <tuv xml:lang="fr">
                 <seg>Adresse e-mail</seg>
             </tuv>

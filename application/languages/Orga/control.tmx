@@ -45,6 +45,14 @@
                 <seg>Member for which a parent is missing</seg>
             </tuv>
         </tu>
+        <tu tuid="crossedGranularities">
+            <tuv xml:lang="fr">
+                <seg>Niveau organisationnel manquant pour l'affichage de l'onglet "Collectes"</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Missing organizational level for display of "Collection" tab</seg>
+            </tuv>
+        </tu>
         <tu tuid="renewControl">
             <tuv xml:lang="fr">
                 <seg>Renouveler le contrôle</seg>

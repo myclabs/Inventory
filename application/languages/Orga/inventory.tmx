@@ -52,6 +52,14 @@
                 <seg>Not started</seg>
             </tuv>
         </tu>
+        <tu tuid="involvedUsers">
+            <tuv xml:lang="fr">
+                <seg>Intervenants</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Involved users</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>

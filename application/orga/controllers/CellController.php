@@ -106,7 +106,7 @@ class Orga_CellController extends Core_Controller
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && $granularity->getCellsWithOrgaTab()) {
             $organizationTab = new UI_Tab('orga');
-            $organizationTab->label = __('Orga', 'organization', 'organization');
+            $organizationTab->label = __('Orga', 'cell', 'configurationTab');
             $organizationSubTabs = array('organization', 'axes', 'granularities', 'members', 'childCells', 'relevant', 'consistency');
             if (in_array($tab, $organizationSubTabs)) {
                 $organizationTab->active = true;
@@ -271,6 +271,16 @@ class Orga_CellController extends Core_Controller
         $this->view->tabView->addTab($historyTab);
 
 
+        // TAB COMMENTAIRES
+        $commentsTab = new UI_Tab('comments');
+        if ($tab === 'comments') {
+            $commentsTab->active = true;
+        }
+        $commentsTab->label = __('Social', 'comment', 'comments');
+        $commentsTab->dataSource = 'orga/tab_celldetails/comments?idCell=' . $idCell;
+        $this->view->tabView->addTab($commentsTab);
+
+
         // TAB ADMINISTRATION
         if ($isUserAllowedToEditOrganization) {
             $administrationTab = new UI_Tab('administration');
@@ -362,13 +372,6 @@ class Orga_CellController extends Core_Controller
             $columnRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'relevantFem');
             $columnRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
             $datagridConfiguration->datagrid->addCol($columnRelevant);
-
-            $columnAllParentsRelevant = new UI_Datagrid_Col_Bool('allParentsRelevant');
-            $columnAllParentsRelevant->label = __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader');
-            $columnAllParentsRelevant->editable = false;
-            $columnAllParentsRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'allParentCellsRelevantProperty');
-            $columnAllParentsRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'notAllParentCellsRelevantProperty');
-            $datagridConfiguration->datagrid->addCol($columnAllParentsRelevant);
             $listDatagridConfiguration[$narrowerGranularity->getLabel()] = $datagridConfiguration;
         }
 

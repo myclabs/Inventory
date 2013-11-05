@@ -14,10 +14,10 @@
         </tu>
         <tu tuid="noComment">
             <tuv xml:lang="fr">
-                <seg>Aucun commentaire</seg>
+                <seg>Aucun commentaire.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>No comment</seg>
+                <seg>No comment.</seg>
             </tuv>
         </tu>
         <tu tuid="by">

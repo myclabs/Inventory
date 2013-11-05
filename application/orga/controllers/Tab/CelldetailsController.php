@@ -212,17 +212,17 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $columnRole->list = array();
                 foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
                     if ($role instanceof User_Model_Role) {
-                        $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
+                        $columnRole->list[$role->getName()] = __('Orga', 'role', $role->getName());
                     }
                 }
                 $datagridConfiguration->datagrid->addCol($columnRole);
 
                 $datagridConfiguration->datagrid->pagination = true;
                 $datagridConfiguration->datagrid->addElements = true;
-                $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addUserPanelTitle');
+                $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addPanelTitle');
                 $datagridConfiguration->datagrid->deleteElements = true;
 
-                $labelDatagrid = $narrowerGranularity->getLabel() . ' ' . __('Orga', 'role', 'userDetails');
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' — ' . __('Orga', 'role', 'userDetails');
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
 
                 // Datagrid des cellules enfants avec le nombre d'utilisteur pour chacune.
@@ -242,7 +242,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $columnDetails->popup->addAttribute('class', 'large');
                 $datagridConfiguration->datagrid->addCol($columnDetails);
 
-                $labelDatagrid = $narrowerGranularity->getLabel() . ' ' . __('Orga', 'role', 'cellDetails');
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' — ' . __('Orga', 'role', 'cellDetails');
                 $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
             }
         }
@@ -398,8 +398,9 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $columnAdvencementFinishedInputs = new UI_Datagrid_Col_Percent('advancementFinishedInput', __('Orga', 'inventory', 'finishedInputPercentageHeader'));
             $datagridConfiguration->datagrid->addCol($columnAdvencementFinishedInputs);
 
-            $columnUsers = new UI_Datagrid_Col_Popup('users', __('Orga', 'inventory', 'users'));
-            $columnUsers->defaultValue = '<i class="icon-search"></i> '.__('Orga', 'inventory', 'usersDetails');
+            $columnUsers = new UI_Datagrid_Col_Popup('users', __('Orga', 'inventory', 'involvedUsers'));
+            $columnUsers->defaultValue = '<i class="icon-search"></i> '.__('Orga', 'inventory', 'involvedUsers');
+            $columnUsers->popup->title = '';
             $columnUsers->popup->addAttribute('class', 'large');
             $datagridConfiguration->datagrid->addCol($columnUsers);
 

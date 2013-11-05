@@ -53,9 +53,7 @@ abstract class User_Model_Resource extends Core_Model_Entity
      */
     public function addAuthorization(User_Model_Authorization $authorization)
     {
-        if (! $this->directAuthorizations->contains($authorization)) {
-            $this->directAuthorizations->add($authorization);
-        }
+        $this->directAuthorizations->add($authorization);
     }
 
     /**

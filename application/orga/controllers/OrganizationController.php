@@ -8,9 +8,8 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use Orga\ViewModel\OrganizationViewModel;
+use Orga\ViewModel\OrganizationViewModelFactory;
 
 /**
  * @author valentin.claras
@@ -38,6 +37,12 @@ class Orga_OrganizationController extends Core_Controller
      * @var WorkDispatcher
      */
     private $workDispatcher;
+
+    /**
+     * @Inject
+     * @var OrganizationViewModelFactory
+     */
+    private $organizationVMFactory;
 
     /**
      * @Inject("work.waitDelay")
@@ -121,56 +126,11 @@ class Orga_OrganizationController extends Core_Controller
         $organizations = Orga_Model_Organization::loadList($query);
 
         // Crée les ViewModel
-        $createViewModel = function (Orga_Model_Organization $organization) use ($connectedUser) {
-            $viewModel = new OrganizationViewModel();
-            $viewModel->id = $organization->getId();
-            $viewModel->label = $organization->getLabel();
-            $viewModel->rootAxesLabels = array_map(
-                function (Orga_Model_Axis $axis) {
-                    return $axis->getLabel();
-                },
-                $organization->getRootAxes()
-            );
-            $viewModel->canBeEdited = $this->aclService->isAllowed(
-                $connectedUser,
-                User_Model_Action_Default::EDIT(),
-                $organization
-            );
-            $viewModel->canBeDeleted = $this->aclService->isAllowed(
-                $connectedUser,
-                User_Model_Action_Default::DELETE(),
-                $organization
-            );
-            try {
-                $viewModel->inventory =  $organization->getGranularityForInventoryStatus()->getLabel();
-            } catch (Core_Exception_UndefinedAttribute $e) {
-            };
-            $canUserSeeManyCells = false;
-            foreach ($organization->getGranularities() as $granularity) {
-                $aclCellQuery = new Core_Model_Query();
-                $aclCellQuery->aclFilter->enabled = true;
-                $aclCellQuery->aclFilter->user = $connectedUser;
-                $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
-                $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
-                if ($numberCellsUserCanSee > 1) {
-                    $canUserSeeManyCells = true;
-                    break;
-                } elseif ($numberCellsUserCanSee == 1) {
-                    break;
-                }
-            }
-            if ($canUserSeeManyCells) {
-                $viewModel->viewLink = 'orga/organization/cells/idOrganization/' . $organization->getId();
-            } elseif ($numberCellsUserCanSee == 1) {
-                $cellsWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
-                $cellWithAccess = array_pop($cellsWithAccess);
-                $viewModel->viewLink = 'orga/cell/inputs/idCell/' . $cellWithAccess->getId();
-                $viewModel->editLink = 'orga/tab_celldetails/orga/idCell/' . $cellWithAccess->getId();
-            }
-            return $viewModel;
-        };
-        $organizationsVM = array_map($createViewModel, $organizations);
+        $organizationsVM = [];
+        foreach ($organizations as $organization) {
+            $vm = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
+            $organizationsVM[] = $vm;
+        }
         $this->view->assign('organizations', $organizationsVM);
 
         $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
@@ -226,10 +186,10 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($this->_getParam('idOrganization'));
 
         $success = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'));
+            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
         };
         $timeout = function () {
-            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'));
+            UI_Message::addMessageStatic(__('UI', 'message', 'deletedLater'), UI_Message::TYPE_SUCCESS);
         };
         $error = function (Exception $e) {
             throw $e;
@@ -340,7 +300,7 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $success = function () {
-            $this->sendJsonResponse(__('UI', 'message', 'updated'));
+            $this->sendJsonResponse(__('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage'));
         };
         $timeout = function () {
             $this->sendJsonResponse(__('UI', 'message', 'operationInProgress'));

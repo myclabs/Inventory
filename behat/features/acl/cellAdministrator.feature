@@ -38,7 +38,7 @@ Feature: Cell administrator feature
       | label  | access         |
       | Annecy | Administrateur |
   # Accès à une des cellules
-    When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
+    When I click "Accéder aux saisies" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Organisation avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
@@ -66,9 +66,9 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
     Then I should see "Europe | Marque A Organisation avec données"
-  # Vérification qu'on a bien accès à l'onglet "Organisation" et à ses sous-onglets
-    When I open tab "Organisation"
-  # On tombe sur l'onglet "Membres"
+  # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
+    When I open tab "Paramétrage"
+  # On tombe sur l'onglet "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
   # Ajout d'un membre, saisie correcte (parent renseigné en partie)
@@ -98,7 +98,7 @@ Feature: Cell administrator feature
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
-    And I open tab "Organisation"
+    And I open tab "Paramétrage"
   # Ajout et suppression d'un membre à l'axe "Pays"
     And I open collapse "Pays"
     And I click "Ajouter"
@@ -129,26 +129,26 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
     Then I should see "Europe | Marque A Organisation avec données"
-  # Vérification qu'on a bien accès à l'onglet "Organisation" et à ses sous-onglets
-    When I open tab "Organisation"
+  # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
+    When I open tab "Paramétrage"
   # Accès à l'onglet "Sous-unités"
-    And I open tab "Sous-unités"
-    And I open collapse "Site"
-    Then I should see the "child_c2_g3" datagrid
+    # And I open tab "Sous-unités"
+    # And I open collapse "Site"
+    # Then I should see the "child_c2_g3" datagrid
   # Accès à l'onglet "Pertinence"
     When I open tab "Pertinence"
     And I open collapse "Site"
     Then I should see the "relevant_c2_g3" datagrid
     And the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site   | relevant   | allParentsRelevant |
-      | Annecy | Pertinente | Toutes pertinentes |
+      | site   | relevant   |
+      | Annecy | Pertinente |
   # Édition de la pertinence : rendre non pertinente une cellule pertinente
     When I set "Non pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
     Then the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site   | relevant       | allParentsRelevant |
-      | Annecy | Non pertinente | Toutes pertinentes |
+      | site   | relevant       |
+      | Annecy | Non pertinente |
   # Édition de la pertinence : rendre pertinente une cellule non pertinente
     When I set "Pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
     Then the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site    | relevant   | allParentsRelevant |
-      | Annecy  | Pertinente | Toutes pertinentes |
+      | site    | relevant   |
+      | Annecy  | Pertinente |

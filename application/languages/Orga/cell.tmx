@@ -12,6 +12,14 @@
                 <seg>My organizational units</seg>
             </tuv>
         </tu>
+        <tu tuid="configurationTab">
+        <tuv xml:lang="fr">
+            <seg>Paramétrage</seg>
+        </tuv>
+        <tuv xml:lang="en">
+            <seg>Configuration</seg>
+        </tuv>
+    </tu>
         <tu tuid="subCells">
             <tuv xml:lang="fr">
                 <seg>Sous-unités</seg>
