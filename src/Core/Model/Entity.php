@@ -195,8 +195,8 @@ abstract class Core_Model_Entity
         if (isset($this->ref)) {
             return $this->ref;
         }
-        if (isset($this->id)) {
-            return $this->id;
+        if (isset($this->id) && is_numeric($this->id)) {
+            return (string) $this->id;
         }
         $tmp = [];
         foreach ($this->getKey() as $key => $value) {
@@ -204,5 +204,4 @@ abstract class Core_Model_Entity
         }
         return '{' . implode(', ', $tmp) . '}';
     }
-
 }
