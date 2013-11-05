@@ -15,17 +15,7 @@ foreach ($this->acls as $granularityLabel => $roles) {
             <fieldset class="wrapper">
                 <legend style="cursor: default"><?=__('Orga', 'role', $roleLabel.'s')?></legend>
                 <div>
-                    <pre>
-<?php
-        $lastUserEmail = end($usersRoles);
-        foreach ($usersRoles as $userEmail) {
-            echo $userEmail;
-            if ($userEmail !== $lastUserEmail) {
-                echo "\n";
-            }
-        }
-?>
-                    </pre>
+                    <pre><?=implode("\n", $usersRoles);?></pre>
                 </div>
             </fieldset>
 <?php
