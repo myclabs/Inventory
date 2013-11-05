@@ -56,11 +56,9 @@ class Orga_Service_ACLManager
             $this->userService->sendEmail(
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
-                __('Orga', 'email', 'userOrganizationAdministratorRoleAdded',
-                    [
-                        'ORGANIZATION' => $organization->getLabel()
-                    ]
-                )
+                __('Orga', 'email', 'userOrganizationAdministratorRoleAdded', [
+                    'ORGANIZATION' => $organization->getLabel()
+                ])
             );
         }
     }
@@ -82,8 +80,9 @@ class Orga_Service_ACLManager
             $this->userService->sendEmail(
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
-                __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved',
-                    ['ORGANIZATION' => $organization->getLabel()])
+                __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', [
+                    'ORGANIZATION' => $organization->getLabel()
+                ])
             );
         }
     }
@@ -116,12 +115,10 @@ class Orga_Service_ACLManager
             $this->userService->sendEmail(
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
-                __('Orga', 'email', 'userRoleAdded',
-                    [
-                        'CELL' => $cell->getExtendedLabel(),
-                        'ROLE' => $role->getLabel(),
-                    ]
-                )
+                __('Orga', 'email', 'userRoleAdded', [
+                    'CELL' => $cell->getExtendedLabel(),
+                    'ROLE' => $role->getLabel(),
+                ])
             );
         }
     }

@@ -3,6 +3,7 @@
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
+use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -430,9 +431,7 @@ class Orga_Populate extends Core_Script_Action
     protected function addOrganizationAdministrator($email, Orga_Model_Organization $organization)
     {
         $user = User::loadByEmail($email);
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
-        $container->get(Orga_Service_ACLManager::class)->addOrganizationAdministrator($organization, $user, false);
+        $user->addRole(new OrganizationAdminRole($user, $organization));
     }
 
     /**
