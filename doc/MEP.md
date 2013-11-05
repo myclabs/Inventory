@@ -1,17 +1,6 @@
 # Mise en production
 
 
-## 2.next (branche feature/ACL)
-
-- Déployer normalement l'application (avec build update)
-
-- Exécuter le script de migration SQL
-
-```
-scripts/migration/featureACL/migrate.sql
-```
-
-
 ## 2.8
 
 - Déployer normalement l'application (avec build update)
