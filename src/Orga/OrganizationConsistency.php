@@ -88,9 +88,11 @@ class Orga_OrganizationConsistency
         $m = count($listParentsAxes);
         for ($i = 0; $i <= $m-1; $i++) {
             if ($i == $m-1) {
-                $text2 = $text2.'Axe: '.$listParentsAxes[$i].'; membre : '.$listParentsMembers[$i];
+                $text2 = $text2 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listParentsAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listParentsMembers[$i];
             } else {
-                $text2 = $text2.'Axe: '.$listParentsAxes[$i].'; membre : '.$listParentsMembers[$i].' / ';
+                $text2 = $text2 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listParentsAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listParentsMembers[$i] . ' / ';
             }
         }
 
@@ -98,9 +100,11 @@ class Orga_OrganizationConsistency
         $l = count($listChildrenAxes);
         for ($i = 0; $i <= $l-1; $i++) {
             if ($i == $l-1) {
-                $text3 = $text3.'Axe: '.$listChildrenAxes[$i].'; membre : '.$listChildrenMembers[$i];
+                $text3 = $text3 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listChildrenAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listChildrenMembers[$i];
             } else {
-                $text3 = $text3.'Axe: '.$listChildrenAxes[$i].'; membre : '.$listChildrenMembers[$i].' / ';
+                $text3 = $text3 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listChildrenAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listChildrenMembers[$i]  . ' / ';
             }
         }
 
@@ -113,7 +117,7 @@ class Orga_OrganizationConsistency
                 $text4 = substr($text4, 0, -3);
             }
         } else {
-            $text4 = __('Orga', 'control', 'noGranularityForInventoryStatus');
+            $text4 = '';
         }
 
         $result  = array();
