@@ -24,10 +24,12 @@ class Orga_OrganizationConsistency
         $listParentsMembers = array();
         $listChildrenAxes = array();
         $listChildrenMembers = array();
+        $listCrossedGranularities = array();
 
         $checkAxes = __('Orga', 'control', 'axisWithNoMember');
         $checkBroaderMember = __('Orga', 'control', 'memberWithMissingDirectParent');
         $checkNarrowerMember = __('Orga', 'control', 'memberWithNoDirectChild');
+        $checkCrossedGranularities = __('Orga', 'control', 'crossedGranularities');
 
         foreach ($organization->getAxes() as $axis) {
             if (!$axis->hasMembers()) {
@@ -48,6 +50,23 @@ class Orga_OrganizationConsistency
                             $listChildrenAxes[] = $broaderAxis->getLabel();
                             $listChildrenMembers[] = $parentMember->getLabel();
                         }
+                    }
+                }
+            }
+        }
+
+        try {
+            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = null;
+        }
+        if ($granularityForInventoryStatus !== null) {
+            foreach ($organization->getGranularities() as $granularity) {
+                if ($granularity->isNavigable()) {
+                    try {
+                        $granularityForInventoryStatus->getCrossedGranularity($granularity);
+                    } catch (Core_Exception_NotFound $e) {
+                        $listCrossedGranularities[] = $granularity;
                     }
                 }
             }
@@ -85,6 +104,18 @@ class Orga_OrganizationConsistency
             }
         }
 
+        if ($granularityForInventoryStatus !== null) {
+            $text4 = '';
+            if (count($listCrossedGranularities) > 0) {
+                foreach ($listCrossedGranularities as $granularity) {
+                    $text4 .= $granularity->getRef() . ' / ';
+                }
+                $text4 = substr($text4, 0, -3);
+            }
+        } else {
+            $text4 = __('Orga', 'control', 'noGranularityForInventoryStatus');
+        }
+
         $result  = array();
         $result['okAxis'] = empty($listAxes);
         $result['controlAxis'] = $checkAxes;
@@ -97,6 +128,10 @@ class Orga_OrganizationConsistency
         $result['okMemberChildren'] = empty($listChildrenAxes);
         $result['controlMemberChildren'] = $checkNarrowerMember;
         $result['failureMemberChildren'] = $text3;
+
+        $result['okCrossedGranularities'] = empty($listCrossedGranularities);
+        $result['controlCrossedGranularities'] = $checkCrossedGranularities;
+        $result['failureCrossedGranularities'] = $text4;
 
         return $result;
     }
