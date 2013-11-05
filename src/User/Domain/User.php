@@ -295,6 +295,19 @@ class User extends Core_Model_Entity implements Resource
     }
 
     /**
+     * Ne pas utiliser directement. Uniquement utilisé par Authorization et Role.
+     */
+    public function updateAuthorizations()
+    {
+        foreach ($this->roles as $role) {
+            $role->destroyAuthorizations();
+        }
+        foreach ($this->roles as $role) {
+            $role->buildAuthorizations();
+        }
+    }
+
+    /**
      * Définit la locale de l'utilisateur
      * @param Core_Locale $locale
      */

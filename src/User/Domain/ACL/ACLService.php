@@ -53,9 +53,9 @@ class ACLService
     public function rebuildAuthorizations()
     {
         // Vide les autorisations
-        $query = $this->entityManager->createQuery('DELETE FROM ' . Authorization::class);
-        $query->execute();
-        $this->entityManager->clear(Authorization::class);
+//        $query = $this->entityManager->createQuery('DELETE FROM ' . Authorization::class);
+//        $query->execute();
+//        $this->entityManager->clear(Authorization::class);
 
         /** @var User[] $users */
         $users = User::loadList();
