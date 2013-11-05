@@ -81,15 +81,15 @@ if ($connectedUser) {
         ),
     );
 
-    $subMenuReferencial = &$leftMenu[4]['submenu'];
+    $subMenuRepository = &$leftMenu[4]['submenu'];
 
-    $isAllowedToEditReferential = $aclService->isAllowed(
+    $isAllowedToEditRepository = $aclService->isAllowed(
         $connectedUser,
         Action::EDIT(),
         NamedResource::loadByName('repository')
     );
-    if ($isAllowedToEditReferential) {
-        $subMenuReferencial[] = [
+    if ($isAllowedToEditRepository) {
+        $subMenuRepository[] = [
             'name' => __('AF', 'name', 'accountingForms'),
             'url' => '#',
             'submenu' => [
@@ -108,8 +108,8 @@ if ($connectedUser) {
             ]
         ];
     }
-    if ($isAllowedToEditReferential) {
-        $subMenuReferencial[] = [
+    if ($isAllowedToEditRepository) {
+        $subMenuRepository[] = [
             'name' => __('Classif', 'classification', 'classification'),
             'url' => '#',
             'submenu' => [
@@ -140,8 +140,8 @@ if ($connectedUser) {
             ]
         ];
     }
-    if ($isAllowedToEditReferential) {
-        $subMenuReferencial[] = [
+    if ($isAllowedToEditRepository) {
+        $subMenuRepository[] = [
             'name' => __('Techno', 'name', 'parameters'),
             'url' => '#',
             'submenu' => [
@@ -172,7 +172,7 @@ if ($connectedUser) {
             ],
         ];
     } else {
-        $subMenuReferencial[] = [
+        $subMenuRepository[] = [
             'name' => __('Techno', 'name', 'parameters'),
             'url' => '#',
             'submenu' => [
@@ -187,8 +187,8 @@ if ($connectedUser) {
             ]
         ];
     }
-    if ($isAllowedToEditReferential) {
-        $subMenuReferencial[] = [
+    if ($isAllowedToEditRepository) {
+        $subMenuRepository[] = [
             'name' => __('Keyword', 'menu', 'semanticResources'),
             'url' => '#',
             'submenu' => [
@@ -212,8 +212,8 @@ if ($connectedUser) {
         ];
     }
 
-    if ($isAllowedToEditReferential) {
-        $subMenuReferencial[] = [
+    if ($isAllowedToEditRepository) {
+        $subMenuRepository[] = [
             'name' => __('Unit', 'name', 'units'),
             'url' => '#',
             'submenu' => [
@@ -240,7 +240,7 @@ if ($connectedUser) {
             ]
         ];
     } else {
-        $subMenuReferencial[] = [
+        $subMenuRepository[] = [
             'name' => __('Unit', 'name', 'units'),
             'url' => '#',
             'submenu' => [
@@ -264,7 +264,7 @@ if ($connectedUser) {
         ];
     }
 
-    $subMenuReferencial[] = [
+    $subMenuRepository[] = [
         'name' => '<i class="icon-download-alt"></i> '.__('UI', 'name', 'exports'),
         'url' => 'orga/referential/exports',
         'submenu' => null
@@ -275,7 +275,7 @@ if ($connectedUser) {
     $aclQuery->aclFilter->user = $connectedUser;
     $aclQuery->aclFilter->action = Action::EDIT();
     $isAllowToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
-    if ($isAllowedToEditReferential || $isAllowToEditOrganizations) {
+    if ($isAllowedToEditRepository || $isAllowToEditOrganizations) {
         $leftMenu[6] = [
             'name' => __('UI', 'name', 'translations'),
             'url' => '#',
@@ -283,7 +283,7 @@ if ($connectedUser) {
         ];
         $subMenuTranslation = &$leftMenu[6]['submenu'];
 
-        if ($isAllowedToEditReferential) {
+        if ($isAllowedToEditRepository) {
             $subMenuTranslation[] = [
                 'name' => __('Orga', 'organization', 'organizations'),
                 'url' => 'orga/translate/organizations',
