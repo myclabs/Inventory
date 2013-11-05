@@ -217,6 +217,18 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                     if (!empty($granularityACLs)) {
                         $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
                     }
+                } else {
+                    try {
+                        $crossedGranularity = $granularity->getCrossedGranularity($granularityACL);
+                        foreach ($cell->getChildCellsForGranularity($crossedGranularity) as $childCrossedGranularity) {
+                            $cellResource = User_Model_Resource_Entity::loadByEntity($childCrossedGranularity->getParentCellForGranularity($granularityACL));
+                            $this->addUserToArray($cellResource, $granularityACLs);
+                        }
+                        if (!empty($granularityACLs)) {
+                            $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
+                        }
+                    } catch (Core_Exception_NotFound $e) {
+                    }
                 }
             }
         }
@@ -230,9 +242,11 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
     {
         foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {
             if ($securityIdentity instanceof User_Model_Role) {
-                $roleUsers = [];
+                $roleUsers = isset($granularityACLs[$securityIdentity->getName()]) ? $granularityACLs[$securityIdentity->getName()] : [];
                 foreach ($securityIdentity->getUsers() as $user) {
-                    $roleUsers[] = $user->getEmail();
+                    if (!in_array($user->getEmail(), $roleUsers)) {
+                        $roleUsers[] = $user->getEmail();
+                    }
                 }
                 if (!empty($roleUsers)) {
                     $granularityACLs[$securityIdentity->getName()] = $roleUsers;
