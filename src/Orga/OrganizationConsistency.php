@@ -62,7 +62,7 @@ class Orga_OrganizationConsistency
         }
         if ($granularityForInventoryStatus !== null) {
             foreach ($organization->getGranularities() as $granularity) {
-                if ($granularity->isNavigable()) {
+                if ($granularity->getCellsWithACL()) {
                     try {
                         $granularityForInventoryStatus->getCrossedGranularity($granularity);
                     } catch (Core_Exception_NotFound $e) {
