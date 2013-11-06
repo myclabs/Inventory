@@ -63,16 +63,6 @@ $organization = $this->organization;
     <h1>
         <?=$organization->label?>
     </h1>
-
-    <p>
-        <strong><?=__('Orga', 'axis', 'rootAxes').__('UI', 'other', ':')?></strong>
-        <?=implode(', ', $organization->rootAxesLabels)?>
-    </p>
-
-    <p>
-        <strong><?=__('Orga', 'inventory', 'inventories').__('UI', 'other', ':')?></strong>
-        <?=$organization->inventory?>
-    </p>
 </div>
 
 <div class="row-fluid">
@@ -164,15 +154,12 @@ $organization = $this->organization;
                 <i class="filterChevron icon-chevron-down"></i>
                 <?=$granularity->getLabel()?>
                 <small>
-                    <?php if ($granularity->getInputConfigGranularity() !== null) : ?>
-                        Saisies
-                    <?php endif; ?>
-                    <?php if (($granularity->getInputConfigGranularity() !== null) && ($granularity->getCellsGenerateDWCubes())) : ?>
-                        &nbsp;&&nbsp;
-                    <?php endif; ?>
-                    <?php if ($granularity->getCellsGenerateDWCubes()) : ?>
-                        Analyses
-                    <?php endif; ?>
+                    <?php
+                    $actions = [];
+                    if ($granularity->getInputConfigGranularity() !== null) { $actions[] = 'Saisies' ;}
+                    if ($granularity->getCellsGenerateDWCubes()) { $actions[] = 'Analyses' ;}
+                    echo implode('&nbsp;&&nbsp;', $actions);
+                    ?>
                 </small>
             </legend>
 
