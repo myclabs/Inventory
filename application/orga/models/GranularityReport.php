@@ -31,10 +31,10 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     /**
      * @var Collection|DW_Model_Report[]
      */
-    private $cellDWReports;
+    protected $cellDWReports;
 
 
-    public function __construct($granularityDWReport)
+    public function __construct(DW_Model_Report $granularityDWReport)
     {
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');

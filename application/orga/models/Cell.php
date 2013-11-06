@@ -280,6 +280,8 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                 CellAuthorization::createChildAuthorization($parentAuthorization, $this);
             }
         }
+        // L'héritage des droits sur les copies des rapports préconfigurés se fait dans
+        // Orga_Service_ETLStructure::copyGranularityReportToCellDWCube
     }
 
     /**

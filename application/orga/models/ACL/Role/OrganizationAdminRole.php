@@ -2,9 +2,11 @@
 
 namespace Orga\Model\ACL\Role;
 
+use DW\Model\ACL\ReportAuthorization;
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Action_Cell;
+use Orga_Model_GranularityReport;
 use Orga_Model_Organization;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
@@ -42,6 +44,15 @@ class OrganizationAdminRole extends Role
         $comment = CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $globalCell);
         $input = CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $globalCell);
 
+        // Voir les copies des rapports préconfigurés
+        if ($globalCell->getGranularity()->getCellsGenerateDWCubes()) {
+            foreach ($globalCell->getDWCube()->getReports() as $report) {
+                if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
+                    ReportAuthorization::createChildAuthorization($view, $report);
+                }
+            }
+        }
+
         // Cellules filles
         foreach ($globalCell->getChildCells() as $childCell) {
             CellAuthorization::createChildAuthorization($view, $childCell);
@@ -49,6 +60,15 @@ class OrganizationAdminRole extends Role
             CellAuthorization::createChildAuthorization($allow, $childCell);
             CellAuthorization::createChildAuthorization($comment, $childCell);
             CellAuthorization::createChildAuthorization($input, $childCell);
+
+            // Voir les copies des rapports préconfigurés
+            if ($childCell->getGranularity()->getCellsGenerateDWCubes()) {
+                foreach ($childCell->getDWCube()->getReports() as $report) {
+                    if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
+                        ReportAuthorization::createChildAuthorization($view, $report);
+                    }
+                }
+            }
         }
     }
 

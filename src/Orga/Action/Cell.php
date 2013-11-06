@@ -1,15 +1,11 @@
 <?php
-/**
- * @author valentin.claras
- * @package Orga
- */
 
 use User\Domain\ACL\Action;
 
 /**
  * Actions pouvant être réalisées sur les ressources Cell.
  *
- * @package Orga
+ * @author valentin.claras
  */
 class Orga_Action_Cell extends Action
 {
@@ -25,7 +21,7 @@ class Orga_Action_Cell extends Action
 
 
     /**
-     * @return Orga_Action_Cell
+     * @return self
      */
     public static function COMMENT()
     {
@@ -33,7 +29,7 @@ class Orga_Action_Cell extends Action
     }
 
     /**
-     * @return Orga_Action_Cell
+     * @return self
      */
     public static function INPUT()
     {

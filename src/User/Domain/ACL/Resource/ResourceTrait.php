@@ -35,6 +35,9 @@ trait ResourceTrait
         return $this->acl;
     }
 
+    /**
+     * @return Authorization[]
+     */
     public function getRootACL()
     {
         $criteria = new Criteria();

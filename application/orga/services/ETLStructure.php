@@ -5,6 +5,8 @@
  */
 
 use Doctrine\ORM\EntityManager;
+use DW\Model\ACL\ReportAuthorization;
+use User\Domain\ACL\Action;
 
 /**
  * Classe permettant de construire les DW.
@@ -451,7 +453,7 @@ class Orga_Service_ETLStructure
     {
         $granularity = Orga_Model_Granularity::loadByDWCube($granularityReport->getGranularityDWReport()->getCube());
         foreach ($granularity->getCells() as $cell) {
-            $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube());
+            $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube(), $cell);
         }
     }
 
@@ -483,13 +485,13 @@ class Orga_Service_ETLStructure
      *
      * @param Orga_Model_Cell $cell
      */
-    public function addGranularityDWReportsToCellDWCube($cell)
+    public function addGranularityDWReportsToCellDWCube(Orga_Model_Cell $cell)
     {
         $queryDWCube = new Core_Model_Query();
         $queryDWCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $cell->getGranularity()->getDWCube());
         foreach ($cell->getGranularity()->getDWCube()->getReports() as $granularityDWReport) {
             $granularityReport = Orga_Model_GranularityReport::loadByGranularityDWReport($granularityDWReport);
-            $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube());
+            $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube(), $cell);
         }
     }
 
@@ -497,11 +499,23 @@ class Orga_Service_ETLStructure
      * Copie le Report d'un Cube de DW d'un Granularity dans le Cube d'un Cell.
      *
      * @param Orga_Model_GranularityReport $granularityReport
-     * @param DW_Model_Cube $dWCube
+     * @param DW_Model_Cube                $dWCube
+     * @param Orga_Model_Cell              $cell
      */
-    protected function copyGranularityReportToCellDWCube($granularityReport, $dWCube)
-    {
-        $granularityReport->addCellDWReport($granularityReport->getGranularityDWReport()->copyToCube($dWCube));
+    protected function copyGranularityReportToCellDWCube(
+        Orga_Model_GranularityReport $granularityReport,
+        DW_Model_Cube $dWCube,
+        Orga_Model_Cell $cell
+    ) {
+        $reportCopy = $granularityReport->getGranularityDWReport()->copyToCube($dWCube);
+        $granularityReport->addCellDWReport($reportCopy);
+
+        // Héritage des ACL depuis la cellule
+        foreach ($cell->getRootACL() as $parentAuthorization) {
+            if ($parentAuthorization->getAction() == Action::VIEW()) {
+                ReportAuthorization::createChildAuthorization($parentAuthorization, $reportCopy);
+            }
+        }
     }
 
     /**
@@ -511,7 +525,7 @@ class Orga_Service_ETLStructure
      *
      * @return bool
      */
-    public function areOrganizationDWCubesUpToDate($organization)
+    public function areOrganizationDWCubesUpToDate(Orga_Model_Organization $organization)
     {
         foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
