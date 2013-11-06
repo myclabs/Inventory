@@ -3,6 +3,7 @@
 namespace Orga\Model\ACL\Role;
 
 use DW\Model\ACL\ReportAuthorization;
+use Orga\Action\CellAction;
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Action_Cell;
@@ -41,8 +42,8 @@ class OrganizationAdminRole extends Role
         $view = CellAuthorization::create($this, $this->user, Action::VIEW(), $globalCell);
         $edit = CellAuthorization::create($this, $this->user, Action::EDIT(), $globalCell);
         $allow = CellAuthorization::create($this, $this->user, Action::ALLOW(), $globalCell);
-        $comment = CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $globalCell);
-        $input = CellAuthorization::create($this, $this->user, Orga_Action_Cell::INPUT(), $globalCell);
+        $comment = CellAuthorization::create($this, $this->user, CellAction::COMMENT(), $globalCell);
+        $input = CellAuthorization::create($this, $this->user, CellAction::INPUT(), $globalCell);
 
         // Voir les copies des rapports préconfigurés
         if ($globalCell->getGranularity()->getCellsGenerateDWCubes()) {
