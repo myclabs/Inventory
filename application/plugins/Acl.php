@@ -1,6 +1,7 @@
 <?php
 
 use Doc\Domain\Library;
+use Orga\Action\CellAction;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
 use User\Domain\ACL\Action;
@@ -211,7 +212,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $this->getCell($request)
         );
     }
@@ -225,7 +226,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclService->isAllowed(
             $identity,
-            Orga_Action_Cell::COMMENT(),
+            CellAction::COMMENT(),
             $this->getCell($request)
         );
     }

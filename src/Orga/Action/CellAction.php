@@ -1,5 +1,7 @@
 <?php
 
+namespace Orga\Action;
+
 use User\Domain\ACL\Action;
 
 /**
@@ -7,7 +9,7 @@ use User\Domain\ACL\Action;
  *
  * @author valentin.claras
  */
-class Orga_Action_Cell extends Action
+class CellAction extends Action
 {
     /**
      * Commenter une ressource.

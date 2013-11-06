@@ -5,7 +5,7 @@ namespace Orga\Model\ACL\Role;
 use DW\Model\ACL\ReportAuthorization;
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
-use Orga_Action_Cell;
+use Orga\Action\CellAction;
 use Orga_Model_Cell;
 use Orga_Model_GranularityReport;
 use User\Domain\ACL\Action;
@@ -32,7 +32,7 @@ class CellObserverRole extends AbstractCellRole
         OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $this->cell->getOrganization());
 
         $view = CellAuthorization::create($this, $this->user, Action::VIEW(), $this->cell);
-        $comment = CellAuthorization::create($this, $this->user, Orga_Action_Cell::COMMENT(), $this->cell);
+        $comment = CellAuthorization::create($this, $this->user, CellAction::COMMENT(), $this->cell);
 
         // Voir les copies des rapports préconfigurés
         if ($this->cell->getGranularity()->getCellsGenerateDWCubes()) {

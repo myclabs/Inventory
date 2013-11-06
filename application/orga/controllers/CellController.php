@@ -10,6 +10,7 @@
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Action\CellAction;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
 
@@ -243,7 +244,7 @@ class Orga_CellController extends Core_Controller
         // TAB DOCUMENTS
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $connectedUser,
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $cell
         );
         if (($isUserAllowedToInputCell)
@@ -398,7 +399,7 @@ class Orga_CellController extends Core_Controller
 
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $cell
         );
 

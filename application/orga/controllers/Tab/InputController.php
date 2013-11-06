@@ -7,6 +7,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Orga\Action\CellAction;
 use User\Domain\ACL\ACLService;
 
 /**
@@ -48,7 +49,7 @@ class Orga_Tab_InputController extends Core_Controller
         $this->view->currentUser = $this->_helper->auth();
         $this->view->isUserAbleToComment = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $cell
         );
     }

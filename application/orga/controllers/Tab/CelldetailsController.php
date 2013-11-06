@@ -8,6 +8,7 @@
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
+use Orga\Action\CellAction;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
 use User\Domain\ACL\ACLService;
@@ -317,7 +318,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $cell
         );
 
