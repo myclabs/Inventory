@@ -20,11 +20,11 @@ Feature: Combustion input feature
 
   @javascript
   Scenario: Check case where input unit cannot be changed
-    Given I am on "af/af/test/id/1"
+    Given I am on "af/edit/menu/id/1"
     And I wait for the page to finish loading
     And I open tab "Composants"
     And I open collapse "Champs numériques"
     And I set "Non modifiable" for column "unitSelection" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
     And I click "Test"
-    Then I should see a "quantite_combustible_unit" element
-    #todo : tester que c'est effectivement non modifiable
+    Then I should see a "#quantite_combustible_unit" element
+  #todo : tester que c'est effectivement non modifiable

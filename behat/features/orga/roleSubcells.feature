@@ -150,9 +150,9 @@ Feature: Organization role for subcells feature
     And the row 1 of the "cellACLs5" datagrid should contain:
       | userEmail                    | userRole       |
       | administrateur.site@toto.com | Administrateur |
-    When I click "×"
   # On descend au niveau zone | marque
-    When I click element ".icon-plus"
+    When I click "×"
+    And I click element ".icon-plus"
     And I click "goTo2"
     And I open tab "Rôles"
   # Contenu collapse au niveau Site
@@ -168,7 +168,8 @@ Feature: Organization role for subcells feature
       | userEmail                    | userRole       |
       | administrateur.site@toto.com | Administrateur |
   # On descend au niveau site
-    When I click element ".icon-plus"
+    When I click "×"
+    And I click element ".icon-plus"
     And I click "goTo3"
     And I open tab "Rôles"
     Then I should not see "Site — par élément d'organisation"
