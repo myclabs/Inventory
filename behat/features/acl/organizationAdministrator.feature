@@ -6,8 +6,8 @@ Feature: Organization administrator feature
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté
-    When I fill in "email" with "administrateur.application@toto.com"
-    And I fill in "password" with "administrateur.application@toto.com"
+    When I fill in "email" with "administrateur.workspace@toto.com"
+    And I fill in "password" with "administrateur.workspace@toto.com"
     And I click "connection"
     And I wait 10 seconds
   # On tombe sur la liste des organisations
@@ -26,7 +26,7 @@ Feature: Organization administrator feature
     Then I should see the "granularity1Report" datagrid
   # Accès à l'onglet "Rôles" et au datagrid des administrateurs d'organisation
     When I open tab "Rôles"
-    And I open collapse "Administrateurs d'application"
+    And I open collapse "Administrateurs de workspace"
     Then I should see the "organizationACL1" datagrid
 
 

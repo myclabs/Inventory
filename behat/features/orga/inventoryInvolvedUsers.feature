@@ -24,7 +24,7 @@ Feature: Organization inventory tab, involved users column feature
     And I should see "Site"
   # Rôles associés à l'organisation
     And I should see "admin@myc-sense.com"
-    And I should see "administrateur.application@toto.com"
+    And I should see "administrateur.workspace@toto.com"
   # Rôles associés à la cellule globale
     And I should see "administrateur.global@toto.com"
     And I should see "contributeur.global@toto.com"
@@ -61,7 +61,7 @@ Feature: Organization inventory tab, involved users column feature
     # Aucune
   # Rôles associés à l'organisation
     Then I should see "admin@myc-sense.com"
-    And I should see "administrateur.application@toto.com"
+    And I should see "administrateur.workspace@toto.com"
   # Rôles associés à la cellule globale
     And I should see "administrateur.global@toto.com"
     And I should see "contributeur.global@toto.com"
