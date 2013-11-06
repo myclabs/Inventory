@@ -124,27 +124,52 @@ Feature: Organization role for subcells feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Rôles"
+  # Contenu collapse au niveau Zone | Marque
     And I open collapse "Zone | Marque — par élément d'organisation"
     Then I should see the "granularityCellACL2" datagrid
     And the row 1 of the "granularityCellACL2" datagrid should contain:
       | zone   | marque   | administrators                                                           | details     |
       | Europe | Marque A | administrateur.zone-marque@toto.com \| contributeur.zone-marque@toto.com | 1 \| 1 \| 1 |
-  # À compléter avec le contenu des popups
-    When I close collapse "Zone | Marque — par élément d'organisation"
+  # Contenu popup
+    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL2" datagrid
+    Then I should see the "cellACLs2" datagrid
+    And the row 1 of the "cellACLs2" datagrid should contain:
+      | userEmail                           | userRole       |
+      | administrateur.zone-marque@toto.com | Administrateur |
+    When I click "×"
+    And I close collapse "Zone | Marque — par élément d'organisation"
+  # Contenu collapse au niveau Site
     And I open collapse "Site — par élément d'organisation"
     Then I should see the "granularityCellACL3" datagrid
     And the row 1 of the "granularityCellACL3" datagrid should contain:
       | site   | administrators                                            | details     |
       | Annecy | administrateur.site@toto.com | contributeur.site@toto.com | 1 \| 1 \| 1 |
-  # À compléter avec le contenu des popups
-    When I click "goTo2"
+  # Contenu popup
+    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL3" datagrid
+    Then I should see the "cellACLs5" datagrid
+    And the row 1 of the "cellACLs5" datagrid should contain:
+      | userEmail                    | userRole       |
+      | administrateur.site@toto.com | Administrateur |
+    When I click "×"
+  # On descend au niveau zone | marque
+    When I click element ".icon-plus"
+    And I click "goTo2"
     And I open tab "Rôles"
+  # Contenu collapse au niveau Site
     And I open collapse "Site — par élément d'organisation"
     Then I should see the "granularityCellACL3" datagrid
     And the row 1 of the "granularityCellACL3" datagrid should contain:
       | site   | administrators                                            | details     |
       | Annecy | administrateur.site@toto.com | contributeur.site@toto.com | 1 \| 1 \| 1 |
-    When I click "goTo3"
+  # Contenu popup
+    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL3" datagrid
+    Then I should see the "cellACLs5" datagrid
+    And the row 1 of the "cellACLs5" datagrid should contain:
+      | userEmail                    | userRole       |
+      | administrateur.site@toto.com | Administrateur |
+  # On descend au niveau site
+    When I click element ".icon-plus"
+    And I click "goTo3"
     And I open tab "Rôles"
     Then I should not see "Site — par élément d'organisation"
 
