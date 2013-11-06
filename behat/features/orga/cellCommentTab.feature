@@ -30,7 +30,7 @@ Feature: Cell comment tab feature
     And I click "Ajouter un commentaire"
     And I fill in "addContent" with "h2. Commentaire cellule _Europe Marque A_."
     And I click element "#Ajouter"
-    Then I should see "Commentaire cellule _Europe Marque A_."
+    Then I should see "Commentaire cellule Europe Marque A."
     # TODO : améliorer affichage commentaires
   # Retour à la page de la cellule globale
     When I open tab "Saisie"
@@ -39,7 +39,7 @@ Feature: Cell comment tab feature
     And I open tab "Commentaires"
     Then I should see "Administrateur Système"
     And I should see "Europe | Marque A"
-    And I should see "Commentaire cellule Europe Marque A."
+    And I should see "Commentaire cellule _Europe Marque A_."
     And I should see " Vue globale"
-    And I should see "Commentaire cellule globale."
+    And I should see "Commentaire cellule _globale_."
 

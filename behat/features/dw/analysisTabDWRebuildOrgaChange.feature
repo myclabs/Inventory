@@ -131,8 +131,9 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification du libellé d'un membre
-    When I open tab "Paramétrage"
+    When I open tab "Éléments"
     And I open collapse "Site"
+    Then I should see the "listMemberssite" datagrid
     When I set "Test modifié" for column "label" of row 1 of the "listMemberssite" datagrid with a confirmation message
   # Détection modification
     When I am on "orga/cell/details/idCell/1/tab/organization"
@@ -145,7 +146,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification de l'identifiant d'un membre
-    When I open tab "Paramétrage"
+    When I open tab "Éléments"
     And I open collapse "Site"
     When I set "test_modifie" for column "ref" of row 1 of the "listMemberssite" datagrid with a confirmation message
   # Détection modification
@@ -159,7 +160,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Ajout membre parent à un membre
-    When I open tab "Paramétrage"
+    When I open tab "Éléments"
     And I open collapse "Site"
     When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
@@ -175,7 +176,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification membre parent d'un membre
-    When I open tab "Paramétrage"
+    When I open tab "Éléments"
     And I open collapse "Site"
     When I set "italie#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
@@ -191,7 +192,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Suppression membre parent d'un membre
-    When I open tab "Paramétrage"
+    When I open tab "Éléments"
     And I open collapse "Site"
     When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
@@ -207,7 +208,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Suppression membre
-    When I open tab "Paramétrage"
+    When I open tab "Éléments"
     And I open collapse "Site"
     And I click "Supprimer" in the row 1 of the "listMemberssite" datagrid
     Then I should see the popup "Demande de confirmation"

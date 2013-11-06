@@ -26,7 +26,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     Then I should see "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
   # Régénération
     When I click "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
-    # And I wait 10 seconds
+    And I wait 10 seconds
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
