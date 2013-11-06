@@ -14,6 +14,7 @@ Feature: Input in a cell associated to a DW feature
     And I open collapse "Zone | Marque"
     And I set "Combustion de combustible, mesuré en unité de masse" for column "aF" of row 1 of the "aFGranularityConfig2" datagrid with a confirmation message
   # Accès à la cellule "Europe | Marque A"
+    And I click element ".icon-plus"
     And I click element "#goTo2"
   # Accès à la saisie
     And I open collapse "Zone | Marque"

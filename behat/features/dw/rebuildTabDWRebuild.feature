@@ -20,19 +20,16 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     And I wait 3 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
-    When I reload the page
+    When I am on "orga/cell/details/idCell/1/tab/organization"
     And I wait for the page to finish loading
-    Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
+    And I click "Tester si la structure des données d'analyse est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
   # Régénération
-    When I open tab "Reconstruction"
-    And I click "Régénérer les données d'analyse"
-    And I wait 5 seconds
+    When I click "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
+    # And I wait 10 seconds
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
-  # Vérification que la régénération a bien fonctionné
-    When I reload the page
-    And I wait for the page to finish loading
-    Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
-
+    When I click "Tester si la structure des données d'analyse est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation est à jour."
 
   @javascript
   Scenario: Rebuild analysis data from the data rebuild tab, with launching form calculations scenario
@@ -50,18 +47,16 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     And I wait 3 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
-    When I reload the page
+    When I am on "orga/cell/details/idCell/1/tab/organization"
     And I wait for the page to finish loading
-    Then I should see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
+    And I click "Tester si la structure des données d'analyse est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
   # Régénération
-    When I open tab "Reconstruction"
-    And I click "Relancer les calculs et régénérer les données d'analyse"
-    And I wait 5 seconds
-    Then the following message is shown and closed: "Relance des calculs et régénération des données d'analyse effectuées."
-  # Vérification que la régénération a bien fonctionné
-    When I am on "orga/cell/details/idCell/1/tab/analyses"
-    And I wait for the page to finish loading
-    Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
+    When I click "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
+      # And I wait 10 seconds
+    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
+    When I click "Tester si la structure des données d'analyse est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation est à jour."
 
   @javascript
   Scenario: Rebuild analysis data from the data rebuild tab, without launching form calculations, and check analysis result scenario

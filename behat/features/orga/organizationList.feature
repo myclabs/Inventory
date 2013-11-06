@@ -32,7 +32,7 @@ Feature: Organization datagrid feature
   # Structure des données d'analyse par défaut (à jour)
     When I open tab "Informations générales"
     And I click "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse de l'organisation est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation est à jour."
 
   @javascript
   Scenario: Deletion of an organization without data scenario
