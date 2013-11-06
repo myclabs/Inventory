@@ -14,8 +14,8 @@ Feature: Organization administrator feature
     Then I should see "Axes racine : Année, Site, Catégorie, Axe vide"
     And I should see "Collectes : Année | Zone | Marque"
   # Accès à l'organisation
-    When I click "Organisation avec données"
-    Then I should see "Vue globale Organisation avec données"
+    When I click "Workpsace avec données"
+    Then I should see "Vue globale Workpsace avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
   # Accès à l'onglet "Informations générales"

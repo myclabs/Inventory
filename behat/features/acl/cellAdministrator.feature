@@ -10,7 +10,7 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
   # On tombe sur la page de la cellule
-    Then I should see "Europe | Marque A Organisation avec données"
+    Then I should see "Europe | Marque A Workpsace avec données"
     When I wait 5 seconds
   # Vérification que le libellé "Vue globale" est présent mais non cliquable dans le volet de navigation
   # Voir "Organization navigation scenario"
@@ -39,7 +39,7 @@ Feature: Cell administrator feature
       | Annecy | Administrateur |
   # Accès à une des cellules
     When I click "Accéder aux saisies" in the row 1 of the "listCells" datagrid
-    Then I should see "Annecy Organisation avec données"
+    Then I should see "Annecy Workpsace avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
   # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
@@ -65,7 +65,7 @@ Feature: Cell administrator feature
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
-    Then I should see "Europe | Marque A Organisation avec données"
+    Then I should see "Europe | Marque A Workpsace avec données"
   # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
     When I open tab "Paramétrage"
   # On tombe sur l'onglet "Éléments"
@@ -128,7 +128,7 @@ Feature: Cell administrator feature
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
-    Then I should see "Europe | Marque A Organisation avec données"
+    Then I should see "Europe | Marque A Workpsace avec données"
   # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
     When I open tab "Paramétrage"
   # Accès à l'onglet "Sous-unités"

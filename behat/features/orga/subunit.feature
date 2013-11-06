@@ -30,7 +30,7 @@ Feature: Organizational subunits tab feature
       | Annecy | Aller à |
   # Lien vers cellule
     When I click "Aller à" in the row 1 of the "child_c1_g3" datagrid
-    Then I should see "Annecy Organisation avec données"
+    Then I should see "Annecy Workpsace avec données"
 
   @javascript
   Scenario: Nonglobal cell subunits tab scenario
@@ -40,7 +40,7 @@ Feature: Organizational subunits tab feature
     When I click element ".icon-plus"
     And I select "Marque B" from "marque"
     And I click element "#goTo2"
-    Then I should see "Europe | Marque B Organisation avec données"
+    Then I should see "Europe | Marque B Workpsace avec données"
   # Accès au volet "Sous-unités" et au collapse "Site"
     When I open tab "Paramétrage"
     # And I open tab "Sous-unités"

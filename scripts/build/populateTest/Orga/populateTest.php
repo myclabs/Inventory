@@ -24,8 +24,8 @@ class Orga_PopulateTest extends Orga_Populate
 
 
         // Création d'une organisation.
-        $organization = $this->createOrganization('Organisation avec données');
-        $organization_vide = $this->createOrganization('Organisation vide');
+        $organization = $this->createOrganization('Workpsace avec données');
+        $organization_vide = $this->createOrganization('Workpsace vide');
 
         // Création des axes.
         $axis_annee = $this->createAxis($organization, 'annee', 'Année');
@@ -160,7 +160,7 @@ qui officia deserunt mollit anim id est laborum.',
         $this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', 'chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
 
         // Création des utilisateurs orga.
-        $this->createUser('administrateur.application@toto.com');
+        $this->createUser('administrateur.workpsace@toto.com');
         $this->createUser('administrateur.global@toto.com');
         $this->createUser('contributeur.global@toto.com');
         $this->createUser('observateur.global@toto.com');

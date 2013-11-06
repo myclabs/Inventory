@@ -19,22 +19,6 @@
                 <seg>Addition</seg>
             </tuv>
         </tu>
-        <tu tuid="application">
-            <tuv xml:lang="fr">
-                <seg>Application</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Application</seg>
-            </tuv>
-        </tu>
-        <tu tuid="applications">
-            <tuv xml:lang="fr">
-                <seg>Applications</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Applications</seg>
-            </tuv>
-        </tu>
         <tu tuid="axes">
 			<tuv xml:lang="fr">
 				<seg>Axes</seg>
