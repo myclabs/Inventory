@@ -12,13 +12,13 @@ Feature: Organization navigation feature
     When I click element ".icon-plus"
     And I select "Chambéry" from "site"
     And I click element "#goTo3"
-    Then I should see "Chambéry Workpsace avec données"
+    Then I should see "Chambéry Workspace avec données"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity6Input8" datagrid
   # Remonter au niveau zone-marque
     When I click "Europe | Marque A"
-    Then I should see "Europe | Marque A Workpsace avec données"
+    Then I should see "Europe | Marque A Workspace avec données"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
@@ -33,7 +33,7 @@ Feature: Organization navigation feature
     When I click element ".icon-plus"
     And I select "Marque sans site" from "marque"
     And I click element "#goTo2"
-    Then I should see "Europe | Marque sans site Workpsace avec données"
+    Then I should see "Europe | Marque sans site Workspace avec données"
   # Vérification que l'élément "Vue globale" cliquable est présent, pour tester à l'inverse qu'il est absent dans les tests ACL
     And I should see a "#navigationParent a:contains('Vue globale')" element
 

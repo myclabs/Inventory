@@ -19,7 +19,7 @@ Feature: Dw cube label feature
   # Accès à la cellule "Europe modifiée | Marque A"
     And I click element ".icon-plus"
     And I click element "#goTo2"
-    Then I should see "Europe modifiée | Marque A Workpsace avec données"
+    Then I should see "Europe modifiée | Marque A Workspace avec données"
   # Dans la page d'une nouvelle analyse le libellé "Europe modifié" apparaît déjà
     When I open tab "Analyses"
     And I click "Nouvelle analyse"

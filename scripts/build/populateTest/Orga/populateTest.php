@@ -24,8 +24,8 @@ class Orga_PopulateTest extends Orga_Populate
 
 
         // Création d'une organisation.
-        $organization = $this->createOrganization('Workpsace avec données');
-        $organization_vide = $this->createOrganization('Workpsace vide');
+        $organization = $this->createOrganization('Workspace avec données');
+        $organization_vide = $this->createOrganization('Workspace vide');
 
         // Création des axes.
         $axis_annee = $this->createAxis($organization, 'annee', 'Année');

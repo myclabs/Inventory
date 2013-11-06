@@ -13,13 +13,13 @@ Feature: General info of an organization feature
     And I open tab "Informations générales"
     Then I should see the "inputGranularities" datagrid
   # Modification du libellé
-    When I fill in "Libellé" with "Workpsace avec données modifiée"
+    When I fill in "Libellé" with "Workspace avec données modifiée"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Vérification modification prise en compte
     When I reload the page
     And I wait for the page to finish loading
-    Then I should see "Vue globale Workpsace avec données modifiée"
+    Then I should see "Vue globale Workspace avec données modifiée"
 
   @javascript
   Scenario: Edit organization inventory granularity

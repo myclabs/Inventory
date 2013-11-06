@@ -23,7 +23,7 @@ Feature: Organization inventory tab feature
   # Descendre au niveau zone-marque (on descend sur Europe | Marque A")
     When I click element ".icon-plus"
     And I click element "#goTo2"
-    Then I should see "Europe | Marque A Workpsace avec données"
+    Then I should see "Europe | Marque A Workspace avec données"
     When I open tab "Collectes"
     And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
@@ -52,7 +52,7 @@ Feature: Organization inventory tab feature
   # Descendre au niveau zone-marque (on descend sur Europe | Marque A")
     When I click element ".icon-plus"
     And I click element "#goTo2"
-    Then I should see "Europe | Marque A Workpsace avec données"
+    Then I should see "Europe | Marque A Workspace avec données"
     When I open tab "Collectes"
     And I open collapse "Année | Site"
     Then I should see the "inventories7" datagrid

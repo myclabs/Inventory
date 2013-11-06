@@ -25,7 +25,7 @@ class Orga_PopulateTestDWUpToDate extends Orga_Populate
 
         // Création d'une organisation.
         // Param : label
-        $organization = $this->createOrganization('Workpsace avec données');
+        $organization = $this->createOrganization('Workspace avec données');
 
         // Création des axes.
         // Params : Organization, ref, label
