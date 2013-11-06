@@ -3,10 +3,10 @@
 namespace Orga\Model\ACL\Role;
 
 use DW\Model\ACL\ReportAuthorization;
-use Orga\Action\CellAction;
+use Orga\Model\ACL\Action\CellAction;
+use Orga\Model\ACL\Action\OrganizationAction;
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
-use Orga_Action_Cell;
 use Orga_Model_GranularityReport;
 use Orga_Model_Organization;
 use User\Domain\ACL\Action;
@@ -35,6 +35,7 @@ class OrganizationAdminRole extends Role
         OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $this->organization);
         OrganizationAuthorization::create($this, $this->user, Action::EDIT(), $this->organization);
         OrganizationAuthorization::create($this, $this->user, Action::DELETE(), $this->organization);
+        OrganizationAuthorization::create($this, $this->user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $this->organization);
 
         // Admin sur la cellule globale
         $globalCell = $this->organization->getGranularityByRef('global')->getCellByMembers([]);

@@ -10,7 +10,7 @@
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use Orga\Action\CellAction;
+use Orga\Model\ACL\Action\CellAction;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
 

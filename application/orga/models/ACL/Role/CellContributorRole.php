@@ -4,7 +4,7 @@ namespace Orga\Model\ACL\Role;
 
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
-use Orga\Action\CellAction;
+use Orga\Model\ACL\Action\CellAction;
 use Orga_Model_Cell;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;

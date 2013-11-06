@@ -8,7 +8,8 @@
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
-use Orga\Action\CellAction;
+use Orga\Model\ACL\Action\CellAction;
+use Orga\Model\ACL\Action\OrganizationAction;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
 use User\Domain\ACL\ACLService;
@@ -536,7 +537,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         if ($this->hasParam('idReport')) {
             $reportCanBeUpdated = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                Orga_Action_Report::EDIT(),
+                OrganizationAction::EDIT(),
                 DW_Model_Report::load($this->getParam('idReport'))
             );
         } else {

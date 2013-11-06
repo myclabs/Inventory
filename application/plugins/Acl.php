@@ -1,7 +1,7 @@
 <?php
 
 use Doc\Domain\Library;
-use Orga\Action\CellAction;
+use Orga\Model\ACL\Action\CellAction;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
 use User\Domain\ACL\Action;

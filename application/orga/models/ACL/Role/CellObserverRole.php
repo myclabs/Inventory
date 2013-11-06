@@ -5,7 +5,7 @@ namespace Orga\Model\ACL\Role;
 use DW\Model\ACL\ReportAuthorization;
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
-use Orga\Action\CellAction;
+use Orga\Model\ACL\Action\CellAction;
 use Orga_Model_Cell;
 use Orga_Model_GranularityReport;
 use User\Domain\ACL\Action;

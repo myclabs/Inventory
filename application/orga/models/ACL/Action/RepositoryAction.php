@@ -1,19 +1,16 @@
 <?php
-/**
- * @author valentin.claras
- * @package Orga
- */
+
+namespace Orga\Model\ACL\Action;
 
 use User\Domain\ACL\Action;
 
 /**
- * Actions pouvant être réalisées sur les ressources Referential.
+ * Actions pouvant être réalisées sur les référentiels.
  *
- * @package Orga
+ * @author  valentin.claras
  */
-class Orga_Action_Referential extends Action
+class RepositoryAction extends Action
 {
-
     /**
      * Traduire une ressource.
      */
@@ -21,7 +18,7 @@ class Orga_Action_Referential extends Action
 
 
     /**
-     * @return Orga_Action_Referential
+     * @return RepositoryAction
      */
     public static function TRANSLATE()
     {
@@ -39,5 +36,4 @@ class Orga_Action_Referential extends Action
         }
         return parent::getLabel();
     }
-
 }

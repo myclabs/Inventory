@@ -6,7 +6,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use Orga\Action\CellAction;
+use Orga\Model\ACL\Action\CellAction;
 use User\Domain\ACL\ACLService;
 
 /**

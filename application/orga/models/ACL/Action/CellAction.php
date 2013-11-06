@@ -1,6 +1,6 @@
 <?php
 
-namespace Orga\Action;
+namespace Orga\Model\ACL\Action;
 
 use User\Domain\ACL\Action;
 
