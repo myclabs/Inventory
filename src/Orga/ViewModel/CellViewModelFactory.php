@@ -10,8 +10,9 @@ use User_Model_User;
 use User_Model_Action_Default;
 use Orga_Action_Cell;
 use User_Service_ACL;
-use Core_Model_Query;
-use Core_Model_Filter;
+use Core_Locale;
+use UI_HTML_Image;
+use AF_Model_InputSet_Primary;
 
 /**
  * Factory de CellViewModel.
@@ -24,11 +25,51 @@ class CellViewModelFactory
     private $aclService;
 
     /**
+     * @var array
+     */
+    private $inventoryStatusList;
+
+    /**
+     * @var array
+     */
+    private $inputStatusList;
+
+    /**
+     * @var array
+     */
+    private $inputStatusStyleList;
+
+    /**
      * @param User_Service_ACL $aclService
      */
     public function __construct(User_Service_ACL $aclService)
     {
         $this->aclService = $aclService;
+
+        $this->inventoryStatusList = [
+            Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
+            Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
+            Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
+        ];
+        $imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
+        $imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
+        $imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+        $imageInputIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+        $imageInputNotStarted = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+        $this->inputStatusList = [
+            AF_Model_InputSet_Primary::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
+            AF_Model_InputSet_Primary::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
+            AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => $imageCalculationIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusCalculationIncomplete'),
+            AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
+            null => $imageInputNotStarted->render() . ' ' . __('AF', 'inputInput', 'statusNotStarted')
+        ];
+        $this->inputStatusStyleList = [
+            AF_Model_InputSet_Primary::STATUS_FINISHED => 'progress-success',
+            AF_Model_InputSet_Primary::STATUS_COMPLETE => 'progress-warning',
+            AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'progress-danger',
+            AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'progress-danger',
+            null => 'progress-danger'
+        ];
     }
 
     /**
@@ -39,6 +80,7 @@ class CellViewModelFactory
     public function createCellViewModel(Orga_Model_Cell $cell, User_Model_User $user)
     {
         $cellViewModel = new CellViewModel();
+        $cellViewModel->id = $cell->getId();
         $cellViewModel->shortLabel = $cell->getLabel();
         $cellViewModel->extendedLabel = $cell->getLabelExtended();
         $cellViewModel->path = implode(' ', array_map(function (Orga_Model_Member $member) { return $member->getCompleteRef(); }, $cell->getMembers()));
@@ -52,11 +94,42 @@ class CellViewModelFactory
         try {
             $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
-            if (($cell->getGranularity() === $granularityForInventoryStatus)
-                || ($granularityForInventoryStatus->isBroaderThan($cell->getGranularity()))) {
-                $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
+            if ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
+                || ($cell->getGranularity() === $granularityForInventoryStatus)
+            ) {
+                $cellViewModel->inventoryStatus = $this->inventoryStatusList[$cell->getInventoryStatus()];
+
+                $totalInventoryCompletion = 0;
+                $totalInventoryInputs = 0;
+                if (($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
+                    || ($cell->getGranularity() === $granularityForInventoryStatus))
+                    && ($cell->getGranularity()->getInputConfigGranularity() !== null)) {
+                    try {
+                        $totalInventoryCompletion += $cell->getAFInputSetPrimary()->getCompletion();
+                    } catch (Core_Exception_UndefinedAttribute $e) {
+                    }
+                    $totalInventoryInputs ++;
+                }
+                foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerInputGranularity) {
+                    if (($narrowerInputGranularity->getInputConfigGranularity() !== null)
+                        && ($narrowerInputGranularity->isNarrowerThan($granularityForInventoryStatus))) {
+                        foreach ($cell->getChildCellsForGranularity($narrowerInputGranularity) as $childInputCell) {
+                            try {
+                                $totalInventoryCompletion += $childInputCell->getAFInputSetPrimary()->getCompletion();
+                            } catch (Core_Exception_UndefinedAttribute $e) {
+                            }
+                            $totalInventoryInputs ++;
+                        }
+                    }
+                }
+                $cellViewModel->inventoryCompletion = $totalInventoryCompletion;
+                if ($totalInventoryInputs > 0) {
+                    $cellViewModel->inventoryCompletion /= $totalInventoryInputs;
+                }
+                $cellViewModel->inventoryCompletion = round($cellViewModel->inventoryCompletion);
             }
         } catch (Core_Exception_UndefinedAttribute $e) {
+        } catch (\Core_Exception_NotFound $e) {
         }
 
         // Saisie.
@@ -64,45 +137,21 @@ class CellViewModelFactory
             $cellViewModel->canBeInputted = $this->aclService->isAllowed($user, Orga_Action_Cell::INPUT(), $cell);
 
             try {
-                $cellViewModel->inputStatus = $cell->getAFInputSetPrimary()->getStatus();
+                $afInputSetPrimary = $cell->getAFInputSetPrimary();
+                $cellViewModel->inputStatus = $afInputSetPrimary->getStatus();
+                $cellViewModel->inputStatusTitle = $this->inputStatusList[$cellViewModel->inputStatus];
+                $cellViewModel->inputStatusStyle = $this->inputStatusStyleList[$cellViewModel->inputStatus];
+                $cellViewModel->inputCompletion = $afInputSetPrimary->getCompletion();
             } catch (Core_Exception_UndefinedAttribute $e) {
+                $cellViewModel->inputStatus = null;
+                $cellViewModel->inputStatusTitle = $this->inputStatusList[null];
+                $cellViewModel->inputStatusStyle = $this->inputStatusStyleList[null];
+                $cellViewModel->inputCompletion = 0;
             }
         } else {
             $cellViewModel->canBeInputted = false;
         }
 
         return $cellViewModel;
-    }
-
-    public function createChildCellsViewModel(Orga_Model_Cell $cell, User_Model_User $user)
-    {
-        $granularityFilter = new Core_Model_Filter();
-        $granularityFilter->condition = Core_Model_Filter::CONDITION_OR;
-        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            $granularityFilter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $narrowerGranularity);
-        }
-        if (count($granularityFilter->getConditions()) === 0) {
-            return [];
-        }
-        $cells = [];
-
-        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            $granularityWithInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
-            $granularityWithDWCubes = $narrowerGranularity->getCellsGenerateDWCubes();
-            if (($narrowerGranularity->getInputConfigGranularity() === null) && (!$narrowerGranularity->getCellsGenerateDWCubes())) {
-                continue;
-            }
-
-            $granularityCells = [];
-            foreach ($cell->loadChildCellsForGranularity($narrowerGranularity) as $childCell) {
-                $granularityCells[] = $this->createCellViewModel($childCell, $user);
-            }
-            $cells[] = [
-                'granularity' => $narrowerGranularity,
-                'cells' => $granularityCells
-            ];
-        }
-
-        return $cells;
     }
 }

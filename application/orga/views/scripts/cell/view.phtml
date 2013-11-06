@@ -1,33 +1,9 @@
 <?php
-$inventoryStatusList = [
-    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
-    Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
-    Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
-];
 $inventoryStatusFilters = [
     Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
     Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
     Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'),
     null => 'Toute collecte'
-];
-$imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
-$imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
-$imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
-$imageInputIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
-$imageInputNotStarted = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
-$inputStatusList = [
-    AF_Model_InputSet_Primary::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
-    AF_Model_InputSet_Primary::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
-    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => $imageCalculationIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusCalculationIncomplete'),
-    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
-    null => $imageInputNotStarted->render() . ' ' . __('AF', 'inputInput', 'statusNotStarted')
-];
-$inputStatusStyleList = [
-    AF_Model_InputSet_Primary::STATUS_FINISHED => 'progress-success',
-    AF_Model_InputSet_Primary::STATUS_COMPLETE => 'progress-warning',
-    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'progress-danger',
-    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'progress-danger',
-    null => 'progress-danger'
 ];
 $inputStatusFilters = [
     AF_Model_InputSet_Primary::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
@@ -39,10 +15,15 @@ $inputStatusFilters = [
 ];
 ?>
 
-<style xmlns="http://www.w3.org/1999/html">
-    .granularity > .cell.firstRowCell {
-        margin-left: 0;
-    }
+<style>
+    .granularity > .cell.firstRowCell { margin-left: 0; }
+    .progress { margin-bottom: 5px; }
+    #addMembers { margin: 0; }
+    #addMembers .controls { margin-left: 0; }
+    #addMembers .subGroup { margin-left: 0; }
+    #addMembers label { text-align: left; width: 35%; }
+    #addMembers .input { width: auto; }
+    #addMembers .form-actions { padding-left: 0; padding-bottom: 0; margin-bottom: 0; margin-top: 0px; }
 </style>
 
 <?php
@@ -91,24 +72,35 @@ $organization = $this->organization;
             </p>
             <?php if ($currentCell->canBeAnalyzed) : ?>
             <p>
-                <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="#">
+                <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="orga/tab_celldetails/analyses/idCell/<?=$currentCell->id?>">
                     <i class="icon-tasks"></i>
                     Voir les rapports
                 </a>
             </p>
             <?php endif; ?>
+            <p>
+                <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/tab_celldetails/exports/idCell/<?=$currentCell->id?>">
+                    <i class="icon-download-alt"></i>
+                    Voir les exports
+                </a>
+            </p>
             <?php if ($currentCell->inventoryStatus !== null) : ?>
             <p>
                 <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
-                <?=$inventoryStatusList[$currentCell->inventoryStatus]?>
+                <?=$currentCell->inventoryStatus?>
             </p>
+            <?php endif; ?>
+            <?php if ($currentCell->inventoryCompletion !== null) : ?>
+            <div class="progress">
+                <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%"><?=$currentCell->inventoryCompletion?> %</div>
+            </div>
             <?php endif; ?>
             <?php if ($currentCell->canBeInputted) : ?>
             <p>
                 <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
-                <?=$inputStatusList[$currentCell->inputStatus]?>
+                <?=$currentCell->inputStatusTitle?>
             </p>
-            <div class="progress <?=$inputStatusStyleList[$currentCell->inputStatus]?>">
+            <div class="progress <?=$currentCell->inputStatusStyle?>">
                 <div class="bar" style="width: <?=$currentCell->inputCompletion?>%"><?=$currentCell->inputCompletion?> %</div>
             </div>
             <?php endif; ?>
@@ -124,49 +116,63 @@ $organization = $this->organization;
             </div>
 
             <?php if ($currentCell->canBeAnalyzed) : ?>
-            <div id="reports<?=$currentCell->id?>" class="modal hide fade large">
+            <div id="reports<?=$currentCell->id?>" class="modal reports hide fade large">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4>Rapports de <?=$currentCell->shortLabel?></h4>
                 </div>
                 <div class="modal-body">
+                    <div class="granularity row-fluid">
+                        <img src="images/ui/ajax-loader_large.gif"> Chargement des rapports en cours
+                    </div>
                 </div>
             </div>
             <?php endif; ?>
+            <div id="exports<?=$currentCell->id?>" class="modal exports hide fade large">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Exports de <?=$currentCell->shortLabel?></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="granularity row-fluid">
+                        <img src="images/ui/ajax-loader_large.gif"> Chargement des exports en cours
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <?php foreach ($this->childCells as $granularityCells) :
-            /** @var Orga_Model_Granularity $granularity */
-            $granularity = $granularityCells['granularity'];
+        <?php foreach ($this->narrowerGranularities as $narrowerGranularity) :
+            /** @var Orga_Model_Granularity $narrowerGranularity */
             try {
-                $granularityForInventoryStatus = $granularity->getOrganization()->getGranularityForInventoryStatus();
+                $granularityForInventoryStatus = $narrowerGranularity->getOrganization()->getGranularityForInventoryStatus();
             } catch (Core_Exception_UndefinedAttribute $e) {
                 $granularityForInventoryStatus = null;
             }
-            if (($granularity === $granularityForInventoryStatus) || ($granularity->isNarrowerThan($granularityForInventoryStatus))) {
+            if (($narrowerGranularity === $granularityForInventoryStatus) || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))) {
                 $displayInventoryStatusFilter = true;
             } else {
                 $displayInventoryStatusFilter = false;
             }
         ?>
         <fieldset class="wrapper">
-            <legend data-toggle="collapse" data-target="#granularity<?=$granularity->getId()?>">
+            <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
                 <i class="filterChevron icon-chevron-down"></i>
-                <?=$granularity->getLabel()?>
+                <?=$narrowerGranularity->getLabel()?>
                 <small>
                     <?php
                     $actions = [];
-                    if ($granularity->getInputConfigGranularity() !== null) { $actions[] = 'Saisies' ;}
-                    if ($granularity->getCellsGenerateDWCubes()) { $actions[] = 'Analyses' ;}
+                    if ($narrowerGranularity === $this->granularityForInventoryStatus || $narrowerGranularity->isNarrowerThan($this->granularityForInventoryStatus)) { $actions[] = 'Collecte' ;}
+                    if ($narrowerGranularity->getInputConfigGranularity() !== null) { $actions[] = 'Saisies' ;}
+                    if ($narrowerGranularity->getCellsGenerateDWCubes()) { $actions[] = 'Analyses' ;}
                     echo implode('&nbsp;&&nbsp;', $actions);
                     ?>
                 </small>
             </legend>
 
-            <div id="granularity<?=$granularity->getId()?>" class="collapse">
-                <?php if ($granularity->hasAxes() || ($granularity->getInputConfigGranularity() !== null)) : ?>
+            <div id="granularity<?=$narrowerGranularity->getId()?>" class="collapse">
+                <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
                 <form class="form-inline cells-filter">
-                    <?php foreach ($granularity->getAxes() as $axis) : ?>
+                    <?php foreach ($narrowerGranularity->getAxes() as $axis) : ?>
                         <select data-filter="path">
                             <option value="">Tout <?=$axis->getLabel()?></option>
                             <?php foreach ($axis->getMembers() as $member) : ?>
@@ -174,7 +180,7 @@ $organization = $this->organization;
                             <?php endforeach; ?>
                         </select>
                     <?php endforeach; ?>
-                    <?php if ($granularity->getInputConfigGranularity() !== null) : ?>
+                    <?php if ($narrowerGranularity->getInputConfigGranularity() !== null) : ?>
                         <select data-filter="inputstatus">
                             <?php foreach ($inputStatusFilters as $statusValue => $statusLabel) : ?>
                                 <option value="<?=$statusValue?>"><?=$statusLabel?></option>
@@ -193,58 +199,7 @@ $organization = $this->organization;
                 <?php endif; ?>
 
                 <div class="granularity row-fluid">
-                    <?php
-                    /** @var $cell \Orga\ViewModel\CellViewModel */
-                    foreach ($granularityCells['cells'] as $childCell) :
-                    ?>
-                    <div class="span4 well cell" data-path="<?=$childCell->path?>" data-inputstatus="<?=$childCell->inputStatus?>" data-inventorystatus="<?=$childCell->inventoryStatus?>">
-                        <h4>
-                            <?php if ($childCell->canBeInputted) : ?>
-                            <a href="orga/cell/input/idCell/23/fromIdCell/<?=$childCell->id?>">
-                            <?php endif; ?>
-                            <?=$childCell->extendedLabel?>
-                            <?php if ($childCell->canBeInputted) : ?>
-                            </a>
-                            <?php endif; ?>
-                        </h4>
-                        <?php if ($currentCell->canBeAnalyzed) : ?>
-                            <p>
-                                <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="#">
-                                    <i class="icon-tasks"></i>
-                                    Voir les rapports
-                                </a>
-                            </p>
-                        <?php endif; ?>
-                        <?php if ($childCell->inventoryStatus !== null) : ?>
-                        <p>
-                            <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
-                            <?=$inventoryStatusList[$childCell->inventoryStatus]?>
-                        </p>
-                        <?php endif; ?>
-                        <?php if ($childCell->canBeInputted) : ?>
-                        <p>
-                            <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
-                            <?=$inputStatusList[$childCell->inputStatus]?>
-                        </p>
-                        <div class="progress <?=$inputStatusStyleList[$childCell->inputStatus]?>">
-                            <div class="bar" style="width: <?=$childCell->inputCompletion?>%">
-                                <?=$childCell->inputCompletion?> %
-                            </div>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php if ($currentCell->canBeAnalyzed) : ?>
-                        <div id="reports<?=$currentCell->id?>" class="modal hide fade large">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4>Rapports de <?=$currentCell->shortLabel?></h4>
-                            </div>
-                            <div class="modal-body">
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                    <?php endforeach; ?>
+                    <img src="images/ui/ajax-loader_large.gif"> Chargement des cellules en cours
                 </div>
             </div>
         </fieldset>
@@ -256,24 +211,125 @@ $organization = $this->organization;
         <div class="well">
             <h4>Historique</h4>
             <hr/>
-            <ul>
-                <li>X à complété une saise</li>
-                <li>Y à commenté une saise</li>
-                <li>Y à commenté une saise</li>
-                <li>Y à commenté une saise</li>
-                <li>Y à commenté une saise</li>
-                <li>Y à commenté une saise</li>
-                <li>Y à commenté une saise</li>
-            </ul>
+            <div>
+                <?=$this->partial('events/recent.phtml', 'audittrail', ['idCell' => $currentCell->id, 'entries' => $this->entries]);?>
+            </div>
         </div>
         <div class="well">
-            <h4>Ajouter un membre</h4>
+            <h4>Commentaires</h4>
             <hr/>
+            <div>
+                <?=$this->partial('/tab/celldetails/comments.phtml',['comments' => $this->comments]); ?>
+            </div>
         </div>
+        <?php if ($organization->canBeEdited) : ?>
+            <div class="well">
+                <h4>
+                    Ajouter un membre
+                    <div class="pull-right">
+                        <a class="editOrganization btn btn-small btn-primary"
+                           href="orga/organization/edit/idOrganization/<?=$organization->id?>/tab/members">
+                            <i class="icon-cog icon-white"></i>
+                            <?=__('UI', 'verb', 'edit')?>
+                        </a>
+                    </div>
+                </h4>
+                <hr/>
+                <?=$this->addMembersForm->display()?>
+            </div>
+        <?php endif; ?>
     </div>
 
 </div>
 <script>
+    $('div.collapse[id^="granularity"]').on('show', function(e) {
+        var granularity = $('.granularity', $(this));
+        if (!granularity.data('initialized')) {
+            var granularityId = $(this).attr('id').substr(11, $(this).attr('id').length);
+            $.get(
+                'orga/cell/viewchildren/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId,
+                function(o) {
+                    granularity.html('');
+                    $(o).each(function() {
+                        var cellTitle = this.extendedLabel;
+                        if (this.canBeInputted) {
+                            cellTitle = '<a href="orga/cell/input/idCell/23/fromIdCell/' + this.id + '">' + cellTitle + '</a>';
+                        }
+                        var exportsP =
+                            '<p>' +
+                                '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/tab_celldetails/exports/idCell/' + this.id + '">' +
+                                '<i class="icon-download-alt"></i> Voir les exports' +
+                                '</a>' +
+                            '</p>';
+                        var exportsPopup =
+                            '<div id="exports' + this.id + '" class="modal exports hide fade large">' +
+                                '<div class="modal-header">' +
+                                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                    '<h4>Exports de ' + this.shortLabel + '</h4>' +
+                                '</div>' +
+                                '<div class="modal-body">' +
+                                    '<img src="images/ui/ajax-loader_large.gif"> Chargement des exports en cours' +
+                                '</div>' +
+                            '</div>';
+                        var reportsP = '';
+                        var reportsPopup = '';
+                        if (this.canBeAnalyzed) {
+                            reportsP =
+                                '<p>' +
+                                    '<a data-toggle="modal" data-target="#reports' + this.id + '" href="orga/tab_celldetails/analyses/idCell/' + this.id + '">' +
+                                        '<i class="icon-tasks"></i> Voir les rapports' +
+                                    '</a>' +
+                                '</p>';
+                            reportsPopup =
+                                '<div id="reports' + this.id + '" class="modal reports hide fade large">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4>Rapports de ' + this.shortLabel + '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                        '<img src="images/ui/ajax-loader_large.gif"> Chargement des rapports en cours' +
+                                    '</div>' +
+                                '</div>';
+                        }
+                        var inventoryP = '';
+                        if (this.inventoryStatus != null) {
+                            inventoryP =
+                                '<p><b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>' + this.inventoryStatus + '</p>';
+                            if (this.inventoryCompletion != null) {
+                                inventoryP +=
+                                '<div class="progress">' +
+                                '   <div class="bar" style="width: ' + this.inventoryCompletion + '%">' + this.inventoryCompletion + ' %</div>' +
+                                '</div>';
+                            }
+                        }
+                        var inputStatusP = '';
+                        if (this.canBeInputted) {
+                            inputStatusP =
+                                '<p><b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>' + this.inputStatusTitle + '</p>' +
+                                '<div class="progress ' + this.inputStatusStyle + '">' +
+                                '   <div class="bar" style="width: ' + this.inputCompletion + '%">' + this.inputCompletion + ' %</div>' +
+                                '</div>';
+                        }
+                        granularity.append(
+                        '<div class="span4 well cell" data-path="' + this.path + '" data-inputstatus="' + this.inputStatus + '" data-inventorystatus="' + this.inventoryStatus + '">' +
+                            '<h4>' + cellTitle + '</h4>' +
+                            reportsP +
+                            exportsP +
+                            inventoryP +
+                            inputStatusP +
+                            reportsPopup +
+                            exportsPopup +
+                        '</div>'
+                        );
+                    });
+                    $('.reset', granularity.parent()).trigger('click');
+                    granularity.data('initialized', true);
+                }
+            ).error(function(o) {
+
+            });
+        }
+    });
     $('.cells-filter button.reset').click(function(e) {
         e.preventDefault();
         var form = $(e.target).parent();
@@ -293,7 +349,7 @@ $organization = $this->organization;
 
         var test = '';
         $('select', form).each(function() {
-            var filter = $(this).attr('data-filter');
+            var filter = $(this).data('filter');
             var value = $(this).val();
             if ((filter == 'inputstatus') && (value == 'notStarted')) {
                 test += '[data-' + filter + '=\'\']';
@@ -313,5 +369,4 @@ $organization = $this->organization;
             numberElement++;
         });
     });
-    $(document).ready(function() { $('.cells-filter button.reset').trigger('click'); });
 </script>

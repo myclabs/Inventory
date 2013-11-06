@@ -13,6 +13,8 @@ use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\ViewModel\OrganizationViewModelFactory;
 use Orga\ViewModel\CellViewModelFactory;
+use AuditTrail\Domain\Context\OrganizationContext;
+use AuditTrail\Domain\EntryRepository;
 
 /**
  * Classe controleur de cell.
@@ -66,6 +68,12 @@ class Orga_CellController extends Core_Controller
     private $inputFormParser;
 
     /**
+     * @Inject
+     * @var EntryRepository
+     */
+    private $entryRepository;
+
+    /**
      * @Secure("viewCell")
      */
     public function viewAction()
@@ -81,7 +89,98 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
 
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser));
-        $this->view->assign('childCells', $this->cellVMFactory->createChildCellsViewModel($cell, $connectedUser));
+
+        // Cellules enfants.
+        $narrowerGranularities = [];
+        try {
+            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = null;
+        }
+        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            if (($narrowerGranularity->getInputConfigGranularity() !== null)
+                || ($narrowerGranularity->getCellsGenerateDWCubes())
+                || ($narrowerGranularity === $granularityForInventoryStatus)
+            ) {
+                $narrowerGranularities[] = $narrowerGranularity;
+            }
+        }
+        $this->view->assign('narrowerGranularities', $narrowerGranularities);
+        $this->view->assign('granularityForInventoryStatus', $granularityForInventoryStatus);
+
+        // Historique.
+        $this->view->assign('comments', $cell->getInputSetLatestComments(20));
+
+        // Commentaires.
+        $context = new OrganizationContext($organization);
+        $context->setCell($cell);
+        $entries = $this->entryRepository->findLatestForOrganizationContext($context, 100);
+        $this->view->assign('entries', $entries);
+
+        // Formulaire d'ajout des membres enfants.
+        $addMembersForm = new UI_Form('addMembers');
+        $addMembersForm->setAction('orga/cell/addMember');
+        $selectAxis = new UI_Form_Element_Select('axis');
+        $selectAxis->addNullOption('');
+        $addMembersForm->addElement($selectAxis);
+        foreach ($organization->getAxes() as $axis) {
+            foreach ($granularity->getAxes() as $granularityAxis) {
+                if ($axis->isBroaderThan($granularityAxis)) {
+                    continue 2;
+                }
+            }
+            $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
+            $selectAxis->addOption($axisOption);
+
+            $axisGroup = new UI_Form_Element_Group($axis->getRef().'_members');
+            $axisGroup->setLabel('');
+            $axisGroup->foldaway = false;
+            $axisGroup->getElement()->hidden = true;
+
+            $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
+            $axisGroup->addElement($memberInput);
+            foreach ($axis->getDirectBroaders() as $broaderAxis) {
+                $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
+                $selectParentMember->setLabel($broaderAxis->getLabel());
+                foreach ($broaderAxis->getMembers() as $parentMember) {
+                    $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
+                    $selectParentMember->addOption($parentMemberOption);
+                }
+                $axisGroup->getElement()->addElement($selectParentMember);
+            }
+
+            $displayGroupAction = new UI_Form_Action_Show($axis->getRef().'_toggle');
+            $displayGroupAction->condition = new UI_Form_Condition_Elementary('', $selectAxis, UI_Form_Condition_Elementary::EQUAL, $axis->getRef());
+            $axisGroup->getElement()->addAction($displayGroupAction);
+
+            $addMembersForm->addElement($axisGroup);
+        }
+        $addMembersForm->addSubmitButton('Ajouter');
+        $this->view->assign('addMembersForm', $addMembersForm);
+
+        UI_Datagrid::addHeader();
+    }
+
+    /**
+     * @Secure("viewCell")
+     */
+    public function viewchildrenAction()
+    {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+        $idNarrowerGranularity = $this->getParam('idGranularity');
+        /** @var Orga_Model_Granularity $narrowerGranularity */
+        $narrowerGranularity = Orga_Model_Granularity::load($idNarrowerGranularity);
+
+        $childCells = [];
+        foreach ($cell->loadChildCellsForGranularity($narrowerGranularity) as $childCell) {
+            $childCells[] = $this->cellVMFactory->createCellViewModel($childCell, $connectedUser);
+        }
+        $this->sendJsonResponse($childCells);
     }
 
     /**

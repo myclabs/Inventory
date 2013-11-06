@@ -1,26 +1,5 @@
 <?php
-/**
- * @author valentin.claras
- * @author cyril.perraud
- * @package Orga
- * @subpackage View
- */
-echo $this->button('<span>'.__('Orga', 'analysis', 'cellDWCubesState').'</span>', 'info-sign', array('id' => 'cellDWCube'));
-?>
-<script type="text/javascript">
-    var checkCellDWCubeState = function() {
-        $.get(
-            'orga/cell/dwcubestate/idCell/<?=$this->idCell?>',
-            function (response) {
-                addMessage(response.message, response.status);
-            }
-        ).fail(function(o) { errorHandler(o); });
-    };
-    $('#cellDWCube').unbind('click').bind('click', checkCellDWCubeState);
-</script>
-
-<?php
-$datagrid = new UI_Datagrid('report', 'datagrid_cell_report', 'orga');
+$datagrid = new UI_Datagrid('report'.$this->idCell, 'datagrid_cell_report', 'orga');
 
 $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $datagrid->addCol($columnLabel);

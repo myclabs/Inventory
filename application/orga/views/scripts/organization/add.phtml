@@ -353,7 +353,7 @@
         globalAxisCounter++;
         var row = $(this).parent().parent().parent();
         var parentAxisId = $('input[type="text"]', $(this).parent().parent()).attr('id');
-        var level = row.attr('data-level') * 1;
+        var level = row.data('level') * 1;
         var identifier = 'mainAxis' + globalAxisCounter;
         row.after(
             '<div id="' + identifier + '-line" class="control-group" style="padding-left: ' + (level * 45) + 'px" data-level="' + (level + 1) + '">' +
@@ -376,9 +376,9 @@
     $('#addOrganization').on('click', '.removeAggregation', function(e) {
         e.preventDefault();
         var row = $(this).parent().parent().parent();
-        row.nextUntil('[data-level="' + row.attr('data-level') + '"]').each(function() {
-            $(this).attr('data-level', ($(this).attr('data-level') * 1 - 1));
-            $(this).attr('style', 'padding-left: ' + (($(this).attr('data-level') - 1) * 45) + 'px');
+        row.nextUntil('[data-level="' + row.data('level') + '"]').each(function() {
+            $(this).data('level', ($(this).data('level') * 1 - 1));
+            $(this).attr('style', 'padding-left: ' + (($(this).data('level') - 1) * 45) + 'px');
         });
         row.remove();
     });
@@ -388,7 +388,7 @@
         var row = $(this).parent().parent().parent();
         var identifier = 'member' + globalMemberCounter;
         var parentMembers = '';
-        $.each($(this).attr('data-parentAxes').split('|'), function() {
+        $.each($(this).data('parentAxes').split('|'), function() {
             if (this != '') {
                 parentMembers += '<div id="parentMember' + globalMemberCounter + this + '" class="input">' +
                         '<select data-axis="' + this + '" name="parentMember' + globalMemberCounter + this + '"></select>' +
@@ -405,7 +405,7 @@
                 '</div>' +
             '</div>'
         );
-        $.each($(this).attr('data-parentAxes').split('|'), function() {
+        $.each($(this).data('parentAxes').split('|'), function() {
             if (this != '') {
                 $('#members fieldset[data-axis="' + this + '"] .controls:first input').trigger('change');
             }
@@ -417,7 +417,7 @@
         $('input', fieldset).each(function() {
             options += '<option value="' + $(this).attr('name') + '">' + $(this).val() + '</option>';
         });
-        $('#members select[data-axis="' + fieldset.attr('data-axis') + '"]').each(function() {
+        $('#members select[data-axis="' + fieldset.data('axis') + '"]').each(function() {
             var previousVal = $(this).val();
             $(this).html(options);
             $(this).val(previousVal);
@@ -451,7 +451,7 @@
                     if ($(this).val() == '') {
                         var input = $(this);
                         var parentLine = $('#' + $(this).attr('id') + '-line');
-                        parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]').each(function() {
+                        parentLine.nextUntil('[data-level="' + parentLine.data('level') + '"]').each(function() {
                             var childInput = $('input', $(this));
                             if (childInput.val() != '') {
                                 parentLine.addClass('warning');
@@ -460,8 +460,8 @@
                                 return false;
                             }
                         });
-                        if (!parentLine.hasClass('warning') && (parentLine.attr('data-level') != '1')) {
-                            parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]').remove();
+                        if (!parentLine.hasClass('warning') && (parentLine.data('level') != '1')) {
+                            parentLine.nextUntil('[data-level="' + parentLine.data('level') + '"]').remove();
                             parentLine.remove();
                         }
                     }
@@ -480,7 +480,7 @@
                             var parentAxes = '';
                             var parentMembersSelect = '';
                             var parentLine = $('#' + $(this).attr('id') + '-line');
-                            parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]', '[data-level="' + (parentLine.attr('data-level') * 1 + 1) + '"]').each(function() {
+                            parentLine.nextUntil('[data-level="' + parentLine.data('level') + '"]', '[data-level="' + (parentLine.data('level') * 1 + 1) + '"]').each(function() {
                                 var parentAxis = $(this).attr('id').substr(0, $(this).attr('id').length - 5);
                                 parentAxes += parentAxis + '|';
                                 parentMembersSelect += '<div id="parentMember' + globalMemberCounter + parentAxis + '" class="input">' +

@@ -33,6 +33,11 @@ class CellViewModel
     public $inventoryStatus;
 
     /**
+     * @var int
+     */
+    public $inventoryCompletion;
+
+    /**
      * @var boolean
      */
     public $canBeInputted;
@@ -41,6 +46,16 @@ class CellViewModel
      * @var string
      */
     public $inputStatus;
+
+    /**
+     * @var string
+     */
+    public $inputStatusTitle;
+
+    /**
+     * @var int
+     */
+    public $inputStatusStyle;
 
     /**
      * @var int

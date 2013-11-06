@@ -4,46 +4,52 @@
  * @author valentin.claras
  * @package Orga
  */
+$exportsNumber = 0;
+?>
 
-foreach ($this->exports as $exportRef => $exportArray) { ?>
-<fieldset class="wrapper">
-    <legend style="cursor:default"><?=$exportArray['label']?></legend>
-    <div style="padding-left: 1px;">
-        <form class="form-inline" action="orga/tab_celldetails/export/idCell/<?=$this->idCell?>">
-            <div class="input-prepend input-append">
-                <span class="add-on format">
-                    <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
-                </span>
-                <input name="export" type="hidden" value="<?=$exportRef?>">
-                <?php if (count($this->formats) > 1) { ?>
-                <select name="format" class="input format">
-                    <?php foreach($this->formats as $formatRef => $formatLabel) { ?>
-                        <option value="<?=$formatRef?>"><?=$formatLabel?></option>
-                    <?php } ?>
-                </select>
-                <?php } else { ?>
-                <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
-                <?php } ?>
-                <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 0)) { ?>
+<div class="alert alert-info hide">
+    <?=__('Orga', 'analysis', 'detailedExcelExportPopup')?>
+</div>
+<div class="row-fluid">
+    <?php foreach ($this->exports as $exportRef => $exportArray) : ?>
+    <fieldset class="span6 wrapper" style="margin-top: 10px;<?=($exportsNumber %2 === 0) ? ' margin-left: 0px;' : ''?>">
+        <legend style="cursor:default"><?=$exportArray['label']?></legend>
+        <div style="padding-left: 1px;">
+            <form class="form-inline" action="orga/tab_celldetails/export/idCell/<?=$this->idCell?>">
+                <div class="input-prepend input-append">
+                    <span class="add-on format">
+                        <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
+                    </span>
+                    <input name="export" type="hidden" value="<?=$exportRef?>">
                     <?php if (count($this->formats) > 1) { ?>
-                        <span class="add-on">
-                            -
-                        </span>
-                    <?php } ?>
-                    <select name="version" >
-                        <?php foreach($exportArray['version'] as $versionRef => $versionLabel) { ?>
-                            <option value="<?=$versionRef?>"><?=$versionLabel?></option>
+                    <select name="format" class="input format">
+                        <?php foreach($this->formats as $formatRef => $formatLabel) { ?>
+                            <option value="<?=$formatRef?>"><?=$formatLabel?></option>
                         <?php } ?>
                     </select>
-                <?php } ?>
-                <button class="btn btn-primary" type="submit"><?=__('UI', 'verb', 'export')?></button>
-            </div>
-        </form>
-    </div>
-</fieldset>
-<?php
-}
-?>
+                    <?php } else { ?>
+                    <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
+                    <?php } ?>
+                    <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 0)) { ?>
+                        <?php if (count($this->formats) > 1) { ?>
+                            <span class="add-on">
+                                -
+                            </span>
+                        <?php } ?>
+                        <select name="version" >
+                            <?php foreach($exportArray['version'] as $versionRef => $versionLabel) { ?>
+                                <option value="<?=$versionRef?>"><?=$versionLabel?></option>
+                            <?php } ?>
+                        </select>
+                    <?php } ?>
+                    <button class="btn btn-primary" type="submit"><?=__('UI', 'verb', 'export')?></button>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+    <?php $exportsNumber++; endforeach; ?>
+</div>
+
 <script type="text/javascript">
     $('.format').on(
         'change',
@@ -55,20 +61,11 @@ foreach ($this->exports as $exportRef => $exportArray) { ?>
     );
 </script>
 
-<div id="exportCellAsExcelPopup" class="modal hide fade">
-    <div class="modal-body">
-        <p><?=__('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
-        <div class="progress progress-striped active">
-            <div class="bar" style="width: 100%;"></div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'close')?></button>
-    </div>
-</div>
-
 <script>
-    $("#container_exports button.btn-primary[type=submit]").click(function(e) {
-        $('#exportCellAsExcelPopup').modal();
+    $("#exports<?=$this->idCell?> button.btn-primary[type=submit]").click(function(e) {
+        $('#exports<?=$this->idCell?> div.alert').removeClass('hide');
+    });
+    $("#exports<?=$this->idCell?>").on('hidden', function(e) {
+        $('#exports<?=$this->idCell?> div.alert').addClass('hide');
     });
 </script>
