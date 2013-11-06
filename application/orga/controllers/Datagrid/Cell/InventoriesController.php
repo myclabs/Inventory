@@ -188,7 +188,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
     {
         $this->view->idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($this->view->idCell);
-        $this->view->labelPopup = __('Orga', 'inventory', 'involvedUsersOf', ['CELL' => $cell->getLabel()]);
+        $this->view->labelPopup = __('Orga', 'inventory', 'involvedUsersInDataCollection', ['CELL' => $cell->getLabel()]);
         $granularity = $cell->getGranularity();
         $this->view->idGranularity = $granularity->getId();
 

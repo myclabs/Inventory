@@ -18,16 +18,18 @@ Feature: Organization role for subcells feature
     And I open collapse "Site — par utilisateur"
     Then I should see the "granularityUserACL3" datagrid
     And the row 1 of the "granularityUserACL3" datagrid should contain:
-      | Site   | userEmail                           | userRole       |
+      | site   | userEmail                           | userRole       |
       | Annecy | administrateur.site@toto.com        | Administrateur |
-    When I click "goTo2"
+    When I click element ".icon-plus"
+    And I click element "#goTo2"
     And I open tab "Rôles"
     And I open collapse "Site — par utilisateur"
     Then I should see the "granularityUserACL3" datagrid
     And the row 1 of the "granularityUserACL3" datagrid should contain:
-      | Site   | userEmail                           | userRole       |
+      | site   | userEmail                           | userRole       |
       | Annecy | administrateur.site@toto.com        | Administrateur |
-    When I click "goTo3"
+    When I click element ".icon-plus"
+    And I click element "#goTo3"
     And I open tab "Rôles"
     Then I should not see "Site — par utilisateur"
 
@@ -71,7 +73,7 @@ Feature: Organization role for subcells feature
     Then the field "granularityUserACL2_userRole_addForm" should have error: "Ce rôle est déjà attribué à l'utilisateur indiqué."
 
   @javascript
-  Scenario: Create role for subcell, correct input
+  Scenario: Create role for subcell, correct input scenario
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Rôles"
@@ -81,8 +83,8 @@ Feature: Organization role for subcells feature
   # Ajout, utilisateur non existant
     When I click "Ajouter"
     Then I should see the popup "Création d'un utilisateur ou attribution d'un rôle à un utilisateur existant"
-    When I select "Europe" from "s2id_granularityUserACL2_zone_addForm"
-    And I select "Marque B" from "s2id_granularityUserACL2_marque_addForm"
+    When I select "Europe" from "granularityUserACL2_zone_addForm"
+    And I select "Marque B" from "granularityUserACL2_marque_addForm"
     And I fill in "granularityUserACL2_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I select "Contributeur" from "granularityUserACL2_userRole_addForm"
     And I click "Valider"
@@ -94,8 +96,8 @@ Feature: Organization role for subcells feature
   # Ajout, utilisateur existant
     When I click "Ajouter"
     Then I should see the popup "Création d'un utilisateur ou attribution d'un rôle à un utilisateur existant"
-    When I select "Europe" from "s2id_granularityUserACL2_zone_addForm"
-    And I select "Marque B" from "s2id_granularityUserACL2_marque_addForm"
+    When I select "Europe" from "granularityUserACL2_zone_addForm"
+    And I select "Marque B" from "granularityUserACL2_marque_addForm"
     And I fill in "granularityUserACL2_userEmail_addForm" with "emmanuel.risler.pro@gmail.com"
     And I select "Contributeur" from "granularityUserACL2_userRole_addForm"
     And I click "Valider"
@@ -117,34 +119,60 @@ Feature: Organization role for subcells feature
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée"
-    And the "granularityUserACL2" datagrid should contain 1 row
+    And the "granularityUserACL2" datagrid should contain 2 row
 
   @javascript
   Scenario: Display of collapses of roles by cell for subcells scenario
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Rôles"
+  # Contenu collapse au niveau Zone | Marque
     And I open collapse "Zone | Marque — par élément d'organisation"
     Then I should see the "granularityCellACL2" datagrid
     And the row 1 of the "granularityCellACL2" datagrid should contain:
       | zone   | marque   | administrators                                                           | details     |
       | Europe | Marque A | administrateur.zone-marque@toto.com \| contributeur.zone-marque@toto.com | 1 \| 1 \| 1 |
-  # À compléter avec le contenu des popups
-    When I close collapse "Zone | Marque — par élément d'organisation"
+  # Contenu popup
+    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL2" datagrid
+    Then I should see the "cellACLs2" datagrid
+    And the row 1 of the "cellACLs2" datagrid should contain:
+      | userEmail                           | userRole       |
+      | administrateur.zone-marque@toto.com | Administrateur |
+    When I click "×"
+    And I close collapse "Zone | Marque — par élément d'organisation"
+  # Contenu collapse au niveau Site
     And I open collapse "Site — par élément d'organisation"
     Then I should see the "granularityCellACL3" datagrid
     And the row 1 of the "granularityCellACL3" datagrid should contain:
       | site   | administrators                                            | details     |
       | Annecy | administrateur.site@toto.com | contributeur.site@toto.com | 1 \| 1 \| 1 |
-  # À compléter avec le contenu des popups
-    When I click "goTo2"
+  # Contenu popup
+    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL3" datagrid
+    Then I should see the "cellACLs5" datagrid
+    And the row 1 of the "cellACLs5" datagrid should contain:
+      | userEmail                    | userRole       |
+      | administrateur.site@toto.com | Administrateur |
+  # On descend au niveau zone | marque
+    When I click "×"
+    And I click element ".icon-plus"
+    And I click element "#goTo2"
     And I open tab "Rôles"
+  # Contenu collapse au niveau Site
     And I open collapse "Site — par élément d'organisation"
     Then I should see the "granularityCellACL3" datagrid
     And the row 1 of the "granularityCellACL3" datagrid should contain:
       | site   | administrators                                            | details     |
       | Annecy | administrateur.site@toto.com | contributeur.site@toto.com | 1 \| 1 \| 1 |
-    When I click "goTo3"
+  # Contenu popup
+    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL3" datagrid
+    Then I should see the "cellACLs5" datagrid
+    And the row 1 of the "cellACLs5" datagrid should contain:
+      | userEmail                    | userRole       |
+      | administrateur.site@toto.com | Administrateur |
+  # On descend au niveau site
+    When I click "×"
+    And I click element ".icon-plus"
+    And I click element "#goTo3"
     And I open tab "Rôles"
     Then I should not see "Site — par élément d'organisation"
 

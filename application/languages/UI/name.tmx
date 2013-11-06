@@ -219,6 +219,14 @@
                 <seg>Element</seg>
             </tuv>
         </tu>
+        <tu tuid="elementSmallCap">
+            <tuv xml:lang="fr">
+                <seg>élément</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>element</seg>
+            </tuv>
+        </tu>
         <tu tuid="elements">
             <tuv xml:lang="fr">
                 <seg>Éléments</seg>
