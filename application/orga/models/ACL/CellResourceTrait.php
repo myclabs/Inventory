@@ -5,14 +5,12 @@ namespace Orga\Model\ACL;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Selectable;
-use DW_Model_Cube;
 use Orga\Model\ACL\Role\AbstractCellRole;
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\CellObserverRole;
 use Orga_Model_Cell;
-use Orga_Model_Granularity;
 use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\ACL\Resource\ResourceTrait;
 
@@ -210,17 +208,5 @@ trait CellResourceTrait
     /**
      * @return Orga_Model_Cell[]
      */
-    abstract public function getChildCells();
-    /**
-     * @return Orga_Model_Cell[]
-     */
     abstract public function getParentCells();
-    /**
-     * @return Orga_Model_Granularity
-     */
-    abstract public function getGranularity();
-    /**
-     * @return DW_model_cube
-     */
-    abstract public function getDWCube();
 }
