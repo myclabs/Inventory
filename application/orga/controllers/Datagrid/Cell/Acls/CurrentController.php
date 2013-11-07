@@ -95,6 +95,11 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         } else {
             $role = User_Model_Role::loadByRef($userRoleRef);
         }
+        if (!empty($this->_addErrorMessages)) {
+            $this->send();
+            return;
+        }
+
         if (strpos($role->getRef(), 'Administrator') !==false) {
             $serviceName = 'addCellAdministrator';
         } else if (strpos($role->getRef(), 'Contributor') !== false) {
@@ -104,11 +109,6 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         } else {
             throw new Core_Exception_InvalidArgument();
         }
-        if (!empty($this->_addErrorMessages)) {
-            $this->send();
-            return;
-        }
-
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };

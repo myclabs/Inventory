@@ -49,7 +49,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
      *
      * @Secure("allowCell")
      */
-    function getelementsAction()
+    public function getelementsAction()
     {
         $this->request->setCustomParameters($this->request->filter->getConditions());
         $this->request->filter->setConditions(array());
@@ -133,6 +133,11 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             $baseUserRoleRef = explode('_', $userRoleRef)[0];
             $role = User_Model_Role::loadByRef($baseUserRoleRef.'_'.$granularityCell->getId());
         }
+        if (!empty($this->_addErrorMessages)) {
+            $this->send();
+            return;
+        }
+
         if (strpos($role->getRef(), 'Administrator') !==false) {
             $serviceName = 'addCellAdministrator';
         } else if (strpos($role->getRef(), 'Contributor') !== false) {
@@ -142,11 +147,6 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         } else {
             throw new Core_Exception_InvalidArgument();
         }
-        if (!empty($this->_addErrorMessages)) {
-            $this->send();
-            return;
-        }
-
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
@@ -167,7 +167,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             $task = new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 $serviceName,
-                [$cell, $user, false],
+                [$granularityCell, $user, false],
                 __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
             );
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
@@ -178,13 +178,12 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             $task = new ServiceCallTask(
                 'Orga_Service_ACLManager',
                 'createUserAndAddRole',
-                [$user, $serviceName, $cell],
+                [$user, $serviceName, $granularityCell],
                 __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
             );
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         }
 
-        $this->message = __('UI', 'message', 'addedLater');
         $this->send();
     }
 
