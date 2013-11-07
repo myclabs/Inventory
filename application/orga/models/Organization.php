@@ -70,6 +70,8 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     {
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
+
+        $this->constructACL();
     }
 
     /**
