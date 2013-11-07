@@ -110,81 +110,64 @@ class Orga_Test_OrganizationAxes extends Core_Test_TestCase
 
         $this->organization = new Orga_Model_Organization();
 
-        $this->axis1 = new Orga_Model_Axis($this->organization);
-        $this->axis1->setRef('Ref1');
+        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
         $this->axis1->setLabel ('Label 1');
 
-        $this->axis11 = new Orga_Model_Axis($this->organization, $this->axis1);
-        $this->axis11->setRef('Ref11');
+        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
         $this->axis11->setLabel ('Label 11');
 
-        $this->axis111 = new Orga_Model_Axis($this->organization, $this->axis11);
-        $this->axis111->setRef('Ref111');
+        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
         $this->axis111->setLabel ('Label 111');
 
-        $this->axis12 = new Orga_Model_Axis($this->organization, $this->axis1);
-        $this->axis12->setRef('Ref12');
+        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
         $this->axis12->setLabel ('Label 12');
 
-        $this->axis121 = new Orga_Model_Axis($this->organization, $this->axis12);
-        $this->axis121->setRef('Ref121');
+        $this->axis121 = new Orga_Model_Axis($this->organization, 'ref_121', $this->axis12);
         $this->axis121->setLabel ('Label 121');
 
-        $this->axis122 = new Orga_Model_Axis($this->organization, $this->axis12);
-        $this->axis122->setRef('Ref122');
+        $this->axis122 = new Orga_Model_Axis($this->organization, 'ref_122', $this->axis12);
         $this->axis122->setLabel ('Label 122');
 
-        $this->axis123 = new Orga_Model_Axis($this->organization, $this->axis12);
-        $this->axis123->setRef('Ref123');
+        $this->axis123 = new Orga_Model_Axis($this->organization, 'ref_123', $this->axis12);
         $this->axis123->setLabel ('Label 123');
 
-        $this->axis2 = new Orga_Model_Axis($this->organization);
-        $this->axis2->setRef('Ref2');
+        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
         $this->axis2->setLabel ('Label 2');
 
-        $this->axis21 = new Orga_Model_Axis($this->organization, $this->axis2);
-        $this->axis21->setRef('Ref21');
+        $this->axis21 = new Orga_Model_Axis($this->organization, 'ref_21', $this->axis2);
         $this->axis21->setLabel ('Label 21');
 
-        $this->axis3 = new Orga_Model_Axis($this->organization);
-        $this->axis3->setRef('Ref3');
+        $this->axis3 = new Orga_Model_Axis($this->organization, 'ref_3');
         $this->axis3->setLabel ('Label 3');
 
-        $this->axis31 = new Orga_Model_Axis($this->organization, $this->axis3);
-        $this->axis31->setRef('Ref31');
+        $this->axis31 = new Orga_Model_Axis($this->organization, 'ref_31', $this->axis3);
         $this->axis31->setLabel ('Label 31');
 
-        $this->axis311 = new Orga_Model_Axis($this->organization, $this->axis31);
-        $this->axis311->setRef('Ref311');
+        $this->axis311 = new Orga_Model_Axis($this->organization, 'ref_311', $this->axis31);
         $this->axis311->setLabel ('Label 311');
 
-        $this->axis312 = new Orga_Model_Axis($this->organization, $this->axis31);
-        $this->axis312->setRef('Ref312');
+        $this->axis312 = new Orga_Model_Axis($this->organization, 'ref_312', $this->axis31);
         $this->axis312->setLabel ('Label 312');
 
-        $this->axis32 = new Orga_Model_Axis($this->organization, $this->axis3);
-        $this->axis32->setRef('Ref32');
+        $this->axis32 = new Orga_Model_Axis($this->organization, 'ref_32', $this->axis3);
         $this->axis32->setLabel ('Label 32');
 
-        $this->axis33 = new Orga_Model_Axis($this->organization, $this->axis3);
-        $this->axis33->setRef('Ref33');
+        $this->axis33 = new Orga_Model_Axis($this->organization, 'ref_33', $this->axis3);
         $this->axis33->setLabel ('Label 33');
 
-        $this->axis331 = new Orga_Model_Axis($this->organization, $this->axis33);
-        $this->axis331->setRef('Ref331');
+        $this->axis331 = new Orga_Model_Axis($this->organization, 'ref_331', $this->axis33);
         $this->axis331->setLabel ('Label 331');
 
-        $this->axis332 = new Orga_Model_Axis($this->organization, $this->axis33);
-        $this->axis332->setRef('Ref332');
+        $this->axis332 = new Orga_Model_Axis($this->organization, 'ref_332', $this->axis33);
         $this->axis332->setLabel ('Label 332');
     }
 
     public function testGetAxisByRef()
     {
-        $axis1 = $this->organization->getAxisByRef('Ref1');
+        $axis1 = $this->organization->getAxisByRef('ref_1');
         $this->assertSame($this->axis1, $axis1);
 
-        $axis312 = $this->organization->getAxisByRef('Ref312');
+        $axis312 = $this->organization->getAxisByRef('ref_312');
         $this->assertSame($this->axis312, $axis312);
     }
 
@@ -393,72 +376,55 @@ class Orga_Test_OrganizationGranularities extends Core_Test_TestCase
 
         $this->organization = new Orga_Model_Organization();
 
-        $this->axis1 = new Orga_Model_Axis($this->organization);
-        $this->axis1->setRef('Ref1');
+        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
         $this->axis1->setLabel ('Label 1');
 
-        $this->axis11 = new Orga_Model_Axis($this->organization, $this->axis1);
-        $this->axis11->setRef('Ref11');
+        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
         $this->axis11->setLabel ('Label 11');
 
-        $this->axis111 = new Orga_Model_Axis($this->organization, $this->axis11);
-        $this->axis111->setRef('Ref111');
+        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
         $this->axis111->setLabel ('Label 111');
 
-        $this->axis12 = new Orga_Model_Axis($this->organization, $this->axis1);
-        $this->axis12->setRef('Ref12');
+        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
         $this->axis12->setLabel ('Label 12');
 
-        $this->axis121 = new Orga_Model_Axis($this->organization, $this->axis12);
-        $this->axis121->setRef('Ref121');
+        $this->axis121 = new Orga_Model_Axis($this->organization, 'ref_121', $this->axis12);
         $this->axis121->setLabel ('Label 121');
 
-        $this->axis122 = new Orga_Model_Axis($this->organization, $this->axis12);
-        $this->axis122->setRef('Ref122');
+        $this->axis122 = new Orga_Model_Axis($this->organization, 'ref_122', $this->axis12);
         $this->axis122->setLabel ('Label 122');
 
-        $this->axis123 = new Orga_Model_Axis($this->organization, $this->axis12);
-        $this->axis123->setRef('Ref123');
+        $this->axis123 = new Orga_Model_Axis($this->organization, 'ref_123', $this->axis12);
         $this->axis123->setLabel ('Label 123');
 
-        $this->axis2 = new Orga_Model_Axis($this->organization);
-        $this->axis2->setRef('Ref2');
+        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
         $this->axis2->setLabel ('Label 2');
 
-        $this->axis21 = new Orga_Model_Axis($this->organization, $this->axis2);
-        $this->axis21->setRef('Ref21');
+        $this->axis21 = new Orga_Model_Axis($this->organization, 'ref_21', $this->axis2);
         $this->axis21->setLabel ('Label 21');
 
-        $this->axis3 = new Orga_Model_Axis($this->organization);
-        $this->axis3->setRef('Ref3');
+        $this->axis3 = new Orga_Model_Axis($this->organization, 'ref_3');
         $this->axis3->setLabel ('Label 3');
 
-        $this->axis31 = new Orga_Model_Axis($this->organization, $this->axis3);
-        $this->axis31->setRef('Ref31');
+        $this->axis31 = new Orga_Model_Axis($this->organization, 'ref_31', $this->axis3);
         $this->axis31->setLabel ('Label 31');
 
-        $this->axis311 = new Orga_Model_Axis($this->organization, $this->axis31);
-        $this->axis311->setRef('Ref311');
+        $this->axis311 = new Orga_Model_Axis($this->organization, 'ref_311', $this->axis31);
         $this->axis311->setLabel ('Label 311');
 
-        $this->axis312 = new Orga_Model_Axis($this->organization, $this->axis31);
-        $this->axis312->setRef('Ref312');
+        $this->axis312 = new Orga_Model_Axis($this->organization, 'ref_312', $this->axis31);
         $this->axis312->setLabel ('Label 312');
 
-        $this->axis32 = new Orga_Model_Axis($this->organization, $this->axis3);
-        $this->axis32->setRef('Ref32');
+        $this->axis32 = new Orga_Model_Axis($this->organization, 'ref_32', $this->axis3);
         $this->axis32->setLabel ('Label 32');
 
-        $this->axis33 = new Orga_Model_Axis($this->organization, $this->axis3);
-        $this->axis33->setRef('Ref33');
+        $this->axis33 = new Orga_Model_Axis($this->organization, 'ref_33', $this->axis3);
         $this->axis33->setLabel ('Label 33');
 
-        $this->axis331 = new Orga_Model_Axis($this->organization, $this->axis33);
-        $this->axis331->setRef('Ref331');
+        $this->axis331 = new Orga_Model_Axis($this->organization, 'ref_331', $this->axis33);
         $this->axis331->setLabel ('Label 331');
 
-        $this->axis332 = new Orga_Model_Axis($this->organization, $this->axis33);
-        $this->axis332->setRef('Ref332');
+        $this->axis332 = new Orga_Model_Axis($this->organization, 'ref_332', $this->axis33);
         $this->axis332->setLabel ('Label 332');
 
         $this->granularity0 = new Orga_Model_Granularity($this->organization);
@@ -474,7 +440,7 @@ class Orga_Test_OrganizationGranularities extends Core_Test_TestCase
         $granularity1 = $this->organization->getGranularityByRef('global');
         $this->assertSame($this->granularity0, $granularity1);
 
-        $granularity5 = $this->organization->getGranularityByRef('Ref12|Ref21|Ref33');
+        $granularity5 = $this->organization->getGranularityByRef('ref_12|ref_21|ref_33');
         $this->assertSame($this->granularity5, $granularity5);
     }
 

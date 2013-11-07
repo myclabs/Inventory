@@ -119,9 +119,13 @@ class Orga_Model_Axis extends Core_Model_Entity
      * Constructeur de la classe Axis.
      *
      * @param Orga_Model_Organization $organization
+     * @param string $ref
      * @param Orga_Model_Axis $directNarrowerAxis
+     *
+     * @throws Core_Exception_Duplicate
+     * @throws Core_Exception_InvalidArgument
      */
-    public function __construct(Orga_Model_Organization $organization, Orga_Model_Axis $directNarrowerAxis=null)
+    public function __construct(Orga_Model_Organization $organization, $ref, Orga_Model_Axis $directNarrowerAxis=null)
     {
         $this->directBroaders = new ArrayCollection();
         $this->members = new ArrayCollection();
@@ -129,6 +133,19 @@ class Orga_Model_Axis extends Core_Model_Entity
 
         $this->organization = $organization;
         $this->directNarrower = $directNarrowerAxis;
+
+        Core_Tools::checkRef($ref);
+        if ($ref === 'global') {
+            throw new Core_Exception_InvalidArgument('An Axis ref cannot be "global".');
+        }
+        try {
+            $this->getOrganization()->getAxisByRef($ref);
+            throw new Core_Exception_Duplicate('An Axis with ref "'.$ref.'" already exists in the Organization');
+        } catch (Core_Exception_NotFound $e) {
+        }
+        $this->ref = $ref;
+        $this->organization->addAxis($this);
+
         if ($directNarrowerAxis !== null) {
             foreach ($directNarrowerAxis->getMembers() as $member) {
                 $member->setPosition();
@@ -139,7 +156,6 @@ class Orga_Model_Axis extends Core_Model_Entity
             }
         }
 
-        $this->organization->addAxis($this);
         $this->setPosition();
         $this->updateNarrowerTag();
         $this->updateBroaderTag();

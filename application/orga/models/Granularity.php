@@ -631,6 +631,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
+     * Indique si la granularité est une granularité de saisie.
+     *
+     * @return bool
+     */
+    public function isInput()
+    {
+        return $this->inputConfigGranularity !== null;
+    }
+
+    /**
      * Ajoute une Granularity de saisie configurée par cette Granularity.
      *
      * @param Orga_Model_Granularity $inputGranularity

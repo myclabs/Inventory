@@ -70,11 +70,9 @@ class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
     public function testFindLatestForCell()
     {
         $organization = new Orga_Model_Organization();
-        $axis = new Orga_Model_Axis($organization);
-        $axis->setRef('axis');
+        $axis = new Orga_Model_Axis($organization, 'axis');
         $axis->setLabel('axis');
-        $member = new Orga_Model_Member($axis);
-        $member->setRef('member');
+        $member = new Orga_Model_Member($axis, 'member');
         $member->setLabel('member');
         $organization->save();
         $this->entityManager->flush();

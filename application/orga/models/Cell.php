@@ -206,7 +206,8 @@ class Orga_Model_Cell extends Core_Model_Entity
             $this->members->add($member);
             $member->addCell($this);
         }
-        $this->updateTags();
+        $this->updateMembersHashKey();
+        $this->updateTag();
 
         // Création du cube de DW.
         $this->createDWCube();
@@ -215,11 +216,11 @@ class Orga_Model_Cell extends Core_Model_Entity
             $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);
         }
         // Création de la Bibliography des Input.
-        if ($this->granularity->getInputConfigGranularity() !== null) {
+        if ($this->granularity->isInput()) {
             $this->docBibliographyForAFInputSetPrimary = new Bibliography();
         }
         // Création de la Library des Input.
-        if ($this->granularity->getCellsWithInputDocuments()) {
+        if ($this->granularity->getCellsWithInputDoKcuments()) {
             $this->docLibraryForAFInputSetsPrimary = new Library();
         }
         // Création de la Library des GenericAction.
@@ -230,6 +231,8 @@ class Orga_Model_Cell extends Core_Model_Entity
         if ($this->granularity->getCellsWithInputDocuments()) {
             $this->docLibraryForSocialContextActions = new Library();
         }
+
+        $this->updateHierarchy();
     }
 
     /**
@@ -559,32 +562,57 @@ class Orga_Model_Cell extends Core_Model_Entity
         }
 
         // Vérification des bibliothèques.
-        if ($this->getGranularity()->getInputConfigGranularity() !== null) {
-            $parentDocLibraryForAFInputSetsPrimary = $this->getParentDocLibraryForAFInputSetsPrimary();
-            $docBibliographyForAFInputSetPrimary = $this->getDocBibliographyForAFInputSetPrimary();
-            foreach ($docBibliographyForAFInputSetPrimary->getReferencedDocuments() as $document) {
-                if (!$parentDocLibraryForAFInputSetsPrimary->hasDocument($document)) {
+        if ($this->getGranularity()->isInput()) {
+            try {
+                $parentDocLibraryForAFInputSetsPrimary = $this->getParentDocLibraryForAFInputSetsPrimary();
+                $docBibliographyForAFInputSetPrimary = $this->getDocBibliographyForAFInputSetPrimary();
+                foreach ($docBibliographyForAFInputSetPrimary->getReferencedDocuments() as $document) {
+                    if (!$parentDocLibraryForAFInputSetsPrimary->hasDocument($document)) {
+                        $docBibliographyForAFInputSetPrimary->unreferenceDocument($document);
+                    }
+                }
+            } catch (Core_Exception_NotFound $e) {
+                $docBibliographyForAFInputSetPrimary = $this->getDocBibliographyForAFInputSetPrimary();
+                foreach ($docBibliographyForAFInputSetPrimary->getReferencedDocuments() as $document) {
                     $docBibliographyForAFInputSetPrimary->unreferenceDocument($document);
                 }
             }
         }
         if ($this->getGranularity()->getCellsWithSocialGenericActions()) {
-            $parentDocLibraryForSocialGenericAction = $this->getParentDocLibraryForSocialGenericAction();
-            foreach ($this->getSocialGenericActions() as $socialGenericAction) {
-                $docBibliographyForSocialGenericAction = $socialGenericAction->getDocumentBibliography();
-                foreach ($docBibliographyForSocialGenericAction->getReferencedDocuments() as $document) {
-                    if (!$parentDocLibraryForSocialGenericAction->hasDocument($document)) {
+            try {
+                $parentDocLibraryForSocialGenericAction = $this->getParentDocLibraryForSocialGenericAction();
+                foreach ($this->getSocialGenericActions() as $socialGenericAction) {
+                    $docBibliographyForSocialGenericAction = $socialGenericAction->getDocumentBibliography();
+                    foreach ($docBibliographyForSocialGenericAction->getReferencedDocuments() as $document) {
+                        if (!$parentDocLibraryForSocialGenericAction->hasDocument($document)) {
+                            $docBibliographyForSocialGenericAction->unreferenceDocument($document);
+                        }
+                    }
+                }
+            } catch (Core_Exception_NotFound $e) {
+                foreach ($this->getSocialGenericActions() as $socialGenericAction) {
+                    $docBibliographyForSocialGenericAction = $socialGenericAction->getDocumentBibliography();
+                    foreach ($docBibliographyForSocialGenericAction->getReferencedDocuments() as $document) {
                         $docBibliographyForSocialGenericAction->unreferenceDocument($document);
                     }
                 }
             }
         }
-        if ($this->getGranularity()->getInputConfigGranularity()) {
-            $parentDocLibraryForSocialContextAction = $this->getParentDocLibraryForSocialContextAction();
-            foreach ($this->getSocialContextActions() as $sociaContextAction) {
-                $docBibliographyForSocialContextAction = $sociaContextAction->getDocumentBibliography();
-                foreach ($docBibliographyForSocialContextAction->getReferencedDocuments() as $document) {
-                    if (!$parentDocLibraryForSocialContextAction->hasDocument($document)) {
+        if ($this->getGranularity()->isInput()) {
+            try {
+                $parentDocLibraryForSocialContextAction = $this->getParentDocLibraryForSocialContextAction();
+                foreach ($this->getSocialContextActions() as $sociaContextAction) {
+                    $docBibliographyForSocialContextAction = $sociaContextAction->getDocumentBibliography();
+                    foreach ($docBibliographyForSocialContextAction->getReferencedDocuments() as $document) {
+                        if (!$parentDocLibraryForSocialContextAction->hasDocument($document)) {
+                            $docBibliographyForSocialContextAction->unreferenceDocument($document);
+                        }
+                    }
+                }
+            } catch (Core_Exception_NotFound $e) {
+                foreach ($this->getSocialContextActions() as $sociaContextAction) {
+                    $docBibliographyForSocialContextAction = $sociaContextAction->getDocumentBibliography();
+                    foreach ($docBibliographyForSocialContextAction->getReferencedDocuments() as $document) {
                         $docBibliographyForSocialContextAction->unreferenceDocument($document);
                     }
                 }
