@@ -10,21 +10,18 @@
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Selectable;
-use Orga\Model\ACL\OrganizationAuthorization;
-use Orga\Model\ACL\Role\OrganizationAdminRole;
-use User\Domain\ACL\Resource\NamedResource;
+use Orga\Model\ACL\OrganizationResourceTrait;
 use User\Domain\ACL\Resource\Resource;
-use User\Domain\ACL\Resource\ResourceTrait;
 
 /**
- * Organization organisationnel.
+ * Organization.
  * @package    Orga
  * @subpackage Model
  */
 class Orga_Model_Organization extends Core_Model_Entity implements Resource
 {
     use Core_Model_Entity_Translatable;
-    use ResourceTrait;
+    use OrganizationResourceTrait;
 
     // Constantes de path des Axis, Member, Granularity et Cell.
     const PATH_SEPARATOR = '/';
@@ -65,18 +62,6 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      */
     protected $granularityForInventoryStatus = null;
 
-    /**
-     * @var OrganizationAuthorization[]|Collection
-     */
-    protected $acl;
-
-    /**
-     * Liste des roles administrateurs sur cette organisation.
-     *
-     * @var OrganizationAdminRole[]|Collection
-     */
-    protected $adminRoles;
-
 
     /**
      * Constructeur de la classe Organization.
@@ -85,15 +70,6 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     {
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
-        $this->acl = new ArrayCollection();
-        $this->adminRoles = new ArrayCollection();
-
-        // Hérite des droits sur "toutes les organisations"
-        $allOrganizations = NamedResource::loadByName(Orga_Model_Organization::class);
-        foreach ($allOrganizations->getACL() as $parentAuthorization) {
-            // L'autorisation sera automatiquement ajoutée à $this->acl
-            OrganizationAuthorization::createChildAuthorization($parentAuthorization, $this);
-        }
     }
 
     /**
@@ -467,33 +443,5 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
         $criteria->where(Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null));
         $criteria->orderBy(['tag' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
-    }
-
-    /**
-     * @return OrganizationAdminRole[]
-     */
-    public function getAdminRoles()
-    {
-        return $this->adminRoles;
-    }
-
-    /**
-     * API utilisée uniquement par OrganizationAdminRole
-     *
-     * @param OrganizationAdminRole $adminRole
-     */
-    public function addAdminRole(OrganizationAdminRole $adminRole)
-    {
-        $this->adminRoles->add($adminRole);
-    }
-
-    /**
-     * API utilisée uniquement par OrganizationAdminRole
-     *
-     * @param OrganizationAdminRole $adminRole
-     */
-    public function removeAdminRole(OrganizationAdminRole $adminRole)
-    {
-        $this->adminRoles->removeElement($adminRole);
     }
 }

@@ -17,8 +17,6 @@ use User\Domain\ACL\Resource\ResourceTrait;
 /**
  * Cell resource trait helper.
  *
- * This trait needs a $acl attribute.
- *
  * @property Authorization[]|Collection|Selectable $acl
  */
 trait CellResourceTrait
@@ -73,11 +71,6 @@ trait CellResourceTrait
                 CellAuthorization::createChildAuthorization($parentAuthorization, $this);
             }
         }
-    }
-
-    public function removeFromACL(Authorization $authorization)
-    {
-        $this->acl->removeElement($authorization);
     }
 
     /**
