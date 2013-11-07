@@ -111,8 +111,27 @@ class Orga_OrganizationConsistency
         if ($granularityForInventoryStatus !== null) {
             $text4 = '';
             if (count($listCrossedGranularities) > 0) {
+                /** @var Orga_Model_Granularity $granularity */
                 foreach ($listCrossedGranularities as $granularity) {
-                    $text4 .= $granularity->getRef() . ' / ';
+                    $currentAxes = $granularity->getAxes();
+                    $crossingAxes = $granularityForInventoryStatus->getAxes();
+
+                    foreach ($granularity->getAxes() as $currentIndex => $currentAxis) {
+                        foreach ($granularityForInventoryStatus->getAxes() as $crossingIndex => $crossingAxis) {
+                            if (($currentAxis->isNarrowerThan($crossingAxis)) || ($currentAxis === $crossingAxis)) {
+                                unset($crossingAxes[$crossingIndex]);
+                            } else if ($currentAxis->isBroaderThan($crossingAxis)) {
+                                unset($currentAxes[$currentIndex]);
+                            }
+                        }
+                    }
+                    $axes = array_merge($currentAxes, $crossingAxes);
+                    @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+                    foreach ($axes as $axis) {
+                        $labelParts[] = $axis->getLabel();
+                    }
+                    $label = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
+                    $text4 .= $label .' / ';
                 }
                 $text4 = substr($text4, 0, -3);
             }
