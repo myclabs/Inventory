@@ -202,39 +202,209 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
         foreach ($organization->getGranularities() as $granularity) {
-            $aclCellQuery = new Core_Model_Query();
-            $aclCellQuery->aclFilter->enabled = true;
-            $aclCellQuery->aclFilter->user = $connectedUser;
-            $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-            $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+            if ($granularity->isNavigable()) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $connectedUser;
+                $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
 
-            $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
-            if ($numberCellsUserCanSee == 1) {
-                $cellsWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
-                $idCell = array_pop($cellsWithAccess)->getId();
-                $this->redirect('orga/cell/view/idCell/'.$idCell);
-                break;
-            } else if ($numberCellsUserCanSee > 1) {
-                $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
-
-                $listGranularities = array();
-                foreach ($organization->getGranularities() as $granularity) {
-                    if ($granularity->isNavigable()) {
-                        $listGranularities[$granularity->getRef()] = $granularity->getLabel();
-                    }
+                $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanSee == 1) {
+                    $cellsWithViewAccess = Orga_Model_Cell::loadList($aclCellQuery);
+                    $idCell = array_pop($cellsWithViewAccess)->getId();
+                    $this->redirect('orga/cell/view/idCell/'.$idCell);
+                    break;
+                } else if ($numberCellsUserCanSee > 1) {
+                    //@todo Organization view : Faire une nouvelle vue.
+                    $this->view->assign(
+                        'organization',
+                        $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser)
+                    );
+                    break;
                 }
-                $this->view->assign('listGranularities', $listGranularities);
-                break;
             }
         }
     }
 
     /**
      * Action de détails d'un organization.
-     * @Secure("editOrganization")
-     * todo organization/details utilité/utilisé ?
+     * @Secure("editOrganizationAndCells")
      */
-    public function detailsAction()
+    public function editAction()
+    {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $this->view->assign(
+            'organization',
+            $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser)
+        );
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
+        if (!$isUserAllowedToEditOrganization) {
+            foreach ($organization->getGranularities() as $granularity) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $connectedUser;
+                $aclCellQuery->aclFilter->action = User_Model_Action_Default::EDIT();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+                $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanEdit > 0) {
+                    break;
+                }
+            }
+            $isUserAllowedToEditCells = ($numberCellsUserCanEdit > 0);
+            foreach ($organization->getGranularities() as $granularity) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $connectedUser;
+                $aclCellQuery->aclFilter->action = User_Model_Action_Default::ALLOW();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+                $numberCellsUserCanAllow = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanAllow > 0) {
+                    break;
+                }
+            }
+            $isUserAllowedToAllowCells = ($numberCellsUserCanAllow > 0);
+        } else {
+            $isUserAllowedToEditCells = true;
+            $isUserAllowedToAllowCells = true;
+        }
+
+        $tabView = new UI_Tab_View('orga');
+        $parameters = '/idOrganization/'.$idOrganization.'/display/render';
+
+        // Tab Organization & Axes.
+        if ($isUserAllowedToEditOrganization) {
+            $organizationTab = new UI_Tab('organization');
+            $organizationTab->label = __('Orga', 'configuration', 'generalInfoTab');
+            $organizationTab->dataSource = 'orga/organization/edit-organization'.$parameters;
+            $organizationTab->useCache = false;
+            $tabView->addTab($organizationTab);
+
+            $axisTab = new UI_Tab('axes');
+            $axisTab->label = __('UI', 'name', 'axes');
+            $axisTab->dataSource = 'orga/axis/manage'.$parameters;
+            $axisTab->useCache = true;
+            $tabView->addTab($axisTab);
+        }
+
+        // Tab Members.
+        if ($isUserAllowedToEditCells) {
+            $membersTab = new UI_Tab('members');
+            $membersTab->label = __('UI', 'name', 'elements');
+            $membersTab->dataSource = 'orga/member/manage'.$parameters;
+            $membersTab->useCache = false;
+            $tabView->addTab($membersTab);
+        }
+
+        // Tab Granularities.
+        if ($isUserAllowedToEditOrganization) {
+            $granularityTab = new UI_Tab('granularities');
+            $granularityTab->label = __('Orga', 'granularity', 'granularities');
+            $granularityTab->dataSource = 'orga/granularity/manage'.$parameters;
+            $granularityTab->useCache = false;
+            $tabView->addTab($granularityTab);
+        }
+
+        // Tab Relevant.
+        if ($isUserAllowedToEditCells) {
+            $relevanceTab = new UI_Tab('relevance');
+            $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');
+            $relevanceTab->dataSource = 'orga/organization/edit-relevance'.$parameters;
+            $relevanceTab->useCache = false;
+            $tabView->addTab($relevanceTab);
+        }
+
+        // Tab Consistency.
+        if ($isUserAllowedToEditOrganization) {
+            $consistencyTab = new UI_Tab('consistency');
+            $consistencyTab->label = __('UI', 'name', 'control');
+            $consistencyTab->dataSource = 'orga/organization/edit-consistency'.$parameters;
+            $consistencyTab->useCache = true;
+            $tabView->addTab($consistencyTab);
+        }
+
+        // Tab ACLs.
+        if ($isUserAllowedToAllowCells) {
+            $aclsTab = new UI_Tab('acls');
+            $aclsTab->label = __('User', 'role', 'roles');
+            $aclsTab->dataSource = 'orga/organization/edit-acls'.$parameters;
+            $aclsTab->useCache = !$isUserAllowedToEditOrganization;
+            $tabView->addTab($aclsTab);
+        }
+
+        // Tab AFConfiguration.
+        if ($isUserAllowedToEditOrganization) {
+            $afTab = new UI_Tab('afs');
+            $afTab->label = __('UI', 'name', 'forms');
+            $afTab->dataSource = 'orga/organization/edit-afs'.$parameters;
+            $afTab->useCache = !$isUserAllowedToEditOrganization;
+            $tabView->addTab($afTab);
+        }
+
+        $activeTab = $this->hasParam('tab') ? $this->getParam('tab') : 'organization';
+        $editOrganizationTabs = ['organization', 'axes', 'granularities', 'consistency', 'afs'];
+        $editCellsTabs = ['members', 'relevant'];
+        $allowCellsTabs = ['acls'];
+        if (!$isUserAllowedToEditOrganization && in_array($activeTab, $editOrganizationTabs)) {
+            $activeTab = 'members';
+        }
+        if (!$isUserAllowedToEditCells && in_array($activeTab, $editCellsTabs)) {
+            $activeTab = 'acl';
+        }
+        if (!$isUserAllowedToAllowCells && in_array($activeTab, $allowCellsTabs)) {
+            $activeTab = 'members';
+        }
+        switch ($activeTab) {
+            case 'organization':
+                $organizationTab->active = true;
+                break;
+            case 'axes':
+                $axisTab->active = true;
+                break;
+            case 'granularities':
+                $granularityTab->active = true;
+                break;
+            case 'consistency':
+                $consistencyTab->active = true;
+                break;
+            case 'afs':
+                $afTab->active = true;
+                break;
+            case 'members':
+                $membersTab->active = true;
+                break;
+            case 'relevance':
+                $relevanceTab->active = true;
+                break;
+            case 'acls':
+                $aclsTab->active = true;
+                break;
+        }
+
+        $this->view->assign('tabView', $tabView);
+        UI_Datagrid::addHeader();
+        UI_Tree::addHeader();
+        UI_Form::addHeader();
+        UI_Popup_Ajax::addHeader();
+    }
+
+    /**
+     * Action de détails d'un organization.
+     * @Secure("editOrganization")
+     */
+    public function editOrganizationAction()
     {
         $idOrganization = $this->getParam('idOrganization');
         $organization = Orga_Model_Organization::load($idOrganization);
@@ -257,19 +427,17 @@ class Orga_OrganizationController extends Core_Controller
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
             $this->view->display = false;
-            $this->view->granularityReportBaseUrl = 'orga/granularity/report/idCell/'.$this->getParam('idCell');
         } else {
             $this->view->display = true;
-            $this->view->granularityReportBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
         }
+        $this->view->granularityReportBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
     }
 
     /**
      * Action de détails d'un organization.
      * @Secure("editOrganization")
-     *@todo remplacer detailsAction par editAction et ajouter editsubmitAction
      */
-    public function editAction()
+    public function editOrganizationSubmitAction()
     {
         $idOrganization = $this->getParam('idOrganization');
         $organization = Orga_Model_Organization::load($idOrganization);
@@ -299,6 +467,69 @@ class Orga_OrganizationController extends Core_Controller
         $this->setFormMessage(__('UI', 'message', 'updated'));
 
         $this->sendFormResponse();
+    }
+
+    /**
+     * Action pour la pertinence des cellules enfants.
+     * @Secure("editOrganizationAndCells")
+     */
+    public function editRelevanceAction()
+    {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idOrganization = $this->getParam('idOrganization');
+        $organization = Orga_Model_Organization::load($idOrganization);
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
+        if (!$isUserAllowedToEditOrganization) {
+            $granularities = [];
+            foreach ($organization->getGranularities() as $granularity) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $connectedUser;
+                $aclCellQuery->aclFilter->action = User_Model_Action_Default::EDIT();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+                $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanEdit > 0) {
+                    $granularities[] = $granularity;
+                }
+            }
+        } else {
+            $granularities = $organization->getGranularities();
+            uasort($granularities, function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) { return $b->getPosition() - $a->getPosition(); });
+            // Pas de reglage de la pertinence de la cellule globale.
+            array_pop($granularities)->getLabel();
+        }
+        $this->view->granularities = $granularities;
+
+        $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
+        $listDatagridConfiguration = array();
+        foreach ($granularities as $granularity) {
+            $datagridConfiguration = new Orga_DatagridConfiguration(
+                'relevance_granularity'.$granularity->getId(),
+                'datagrid_cell_relevance',
+                'orga',
+                $globalCell,
+                $granularity
+            );
+            $datagridConfiguration->datagrid->addParam('idOrganization', $idOrganization);
+            $columnRelevant = new UI_Datagrid_Col_Bool('relevant');
+            $columnRelevant->label = __('Orga', 'cellRelevance', 'relevance');
+            $columnRelevant->editable = true;
+            $columnRelevant->textTrue = __('Orga', 'cellRelevance', 'relevantFem');
+            $columnRelevant->textFalse = __('Orga', 'cellRelevance', 'irrelevantFem');
+            $columnRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'relevantFem');
+            $columnRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
+            $datagridConfiguration->datagrid->addCol($columnRelevant);
+            $listDatagridConfiguration[$granularity->getLabel()] = $datagridConfiguration;
+        }
+
+        $this->forward('child', 'cell', 'orga', ['datagridConfiguration' => $listDatagridConfiguration, 'idCell' => $globalCell->getId()]);
     }
 
     /**

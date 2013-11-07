@@ -104,6 +104,49 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
+    public function editOrganizationAndCellsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $organization = $this->getOrganization($request);
+
+        $isUserAllowedToEditOrganizationAndCells = $this->aclService->isAllowed(
+            $identity,
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
+        if (!$isUserAllowedToEditOrganizationAndCells) {
+            foreach ($organization->getGranularities() as $granularity) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $identity;
+                $aclCellQuery->aclFilter->action = User_Model_Action_Default::EDIT();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+                $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanEdit > 0) {
+                    return true;
+                }
+            }
+            foreach ($organization->getGranularities() as $granularity) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $identity;
+                $aclCellQuery->aclFilter->action = User_Model_Action_Default::ALLOW();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+                $numberCellsUserCanAllow = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanAllow > 0) {
+                    return true;
+                }
+            }
+        }
+        return $isUserAllowedToEditOrganizationAndCells;
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
     protected function editOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(

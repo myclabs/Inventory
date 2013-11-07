@@ -119,7 +119,7 @@ class Orga_CellController extends Core_Controller
 
         // Formulaire d'ajout des membres enfants.
         $addMembersForm = new UI_Form('addMembers');
-        $addMembersForm->setAction('orga/cell/addMember');
+        $addMembersForm->setAction('orga/cell/addmember/idCell/'.$idCell);
         $selectAxis = new UI_Form_Element_Select('axis');
         $selectAxis->addNullOption('');
         $addMembersForm->addElement($selectAxis);
@@ -181,6 +181,14 @@ class Orga_CellController extends Core_Controller
             $childCells[] = $this->cellVMFactory->createCellViewModel($childCell, $connectedUser);
         }
         $this->sendJsonResponse($childCells);
+    }
+
+    /**
+     * @Secure("editCell")
+     */
+    public function addmemberAction()
+    {
+        $this->sendJsonResponse(['message' => 'Fonctionnalité non développée']);
     }
 
     /**
@@ -474,40 +482,6 @@ class Orga_CellController extends Core_Controller
         } else {
             $this->view->display = true;
         }
-    }
-
-    /**
-     * Action pour la pertinence des cellules enfants.
-     * @Secure("viewOrganization")
-     */
-    public function relevantAction()
-    {
-        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
-        $this->view->granularities = $cell->getGranularity()->getNarrowerGranularities();
-
-        $listDatagridConfiguration = array();
-        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            $datagridConfiguration = new Orga_DatagridConfiguration(
-                'relevant_c'.$cell->getId().'_g'.$narrowerGranularity->getId(),
-                'datagrid_cell_relevant',
-                'orga',
-                $cell,
-                $narrowerGranularity
-            );
-            $datagridConfiguration->datagrid->addParam('idOrganization', $cell->getGranularity()->getOrganization()->getId());
-            $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
-            $columnRelevant = new UI_Datagrid_Col_Bool('relevant');
-            $columnRelevant->label = __('Orga', 'cellRelevance', 'relevance');
-            $columnRelevant->editable = true;
-            $columnRelevant->textTrue = __('Orga', 'cellRelevance', 'relevantFem');
-            $columnRelevant->textFalse = __('Orga', 'cellRelevance', 'irrelevantFem');
-            $columnRelevant->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'relevantFem');
-            $columnRelevant->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
-            $datagridConfiguration->datagrid->addCol($columnRelevant);
-            $listDatagridConfiguration[$narrowerGranularity->getLabel()] = $datagridConfiguration;
-        }
-
-        $this->forward('child', 'cell', 'orga', array('datagridConfiguration' => $listDatagridConfiguration));
     }
 
     /**

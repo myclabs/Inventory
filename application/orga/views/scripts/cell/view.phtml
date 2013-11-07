@@ -1,17 +1,17 @@
 <?php
 $inventoryStatusFilters = [
+    null => 'Toute collecte',
     Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
     Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
     Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'),
-    null => 'Toute collecte'
 ];
 $inputStatusFilters = [
+    null => 'Tout status',
     AF_Model_InputSet_Primary::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
     AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
     AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
     AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
     'notStarted' => __('AF', 'inputInput', 'statusNotStarted'),
-    null => 'Tout status'
 ];
 ?>
 
@@ -89,8 +89,16 @@ $organization = $this->organization;
                 <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
                 <?=$currentCell->inventoryStatus?>
             </p>
-            <?php endif; ?>
-            <?php if ($currentCell->inventoryCompletion !== null) : ?>
+            <p>
+                <?=$currentCell->inventoryNotStartedInputsNumber?> non commencée
+                <?php if ($currentCell->inventoryNotStartedInputsNumber > 1) : echo 's'; endif; ?>
+                |
+                <?=$currentCell->inventoryStartedInputsNumber?> en cours
+                <?php if ($currentCell->inventoryStartedInputsNumber > 1) : echo 's'; endif; ?>
+                |
+                <?=$currentCell->inventoryCompletedInputsNumber?> terminée
+                <?php if ($currentCell->inventoryCompletedInputsNumber > 1) : echo 's'; endif; ?>
+            </p>
             <div class="progress">
                 <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%"><?=$currentCell->inventoryCompletion?> %</div>
             </div>
@@ -190,8 +198,12 @@ $organization = $this->organization;
                     <?php if ($displayInventoryStatusFilter) : ?>
                         <select data-filter="inventorystatus">
                             <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
-                                <option value="<?=$statusValue?>"><?=$statusLabel?></option>
-                            <?php endforeach; ?>
+                                <? if ($statusValue === Orga_Model_Cell::STATUS_ACTIVE) : ?>
+                                    <option value="<?=$statusValue?>" selected><?=$statusLabel?></option>
+                                <?php else: ?>
+                                    <option value="<?=$statusValue?>"><?=$statusLabel?></option>
+                                <?php endif ?>
+                            <?php endforeach ?>
                         </select>
                     <?php endif; ?>
                     <button class="btn reset"><i class="icon-zoom-out"></i> Reset</button>
@@ -294,13 +306,20 @@ $organization = $this->organization;
                         var inventoryP = '';
                         if (this.inventoryStatus != null) {
                             inventoryP =
-                                '<p><b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>' + this.inventoryStatus + '</p>';
-                            if (this.inventoryCompletion != null) {
-                                inventoryP +=
+                                '<p><b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>' + this.inventoryStatusTitle + '</p>' +
+                                '<p>' +
+                                    this.inventoryNotStartedInputsNumber + ' non commencée' +
+                                    ((this.inventoryNotStartedInputsNumber > 1) ? 's' : '') +
+                                    ' | ' +
+                                    this.inventoryStartedInputsNumber + ' en cours' +
+                                    ((this.inventoryStartedInputsNumber > 1) ? 's' : '') +
+                                    ' | ' +
+                                    this.inventoryCompletedInputsNumber + ' terminée' +
+                                    ((this.inventoryCompletedInputsNumber > 1) ? 's' : '') +
+                                '</p>' +
                                 '<div class="progress">' +
                                 '   <div class="bar" style="width: ' + this.inventoryCompletion + '%">' + this.inventoryCompletion + ' %</div>' +
                                 '</div>';
-                            }
                         }
                         var inputStatusP = '';
                         if (this.canBeInputted) {
@@ -322,7 +341,7 @@ $organization = $this->organization;
                         '</div>'
                         );
                     });
-                    $('.reset', granularity.parent()).trigger('click');
+                    $('select:first', granularity.parent()).trigger('change');
                     granularity.data('initialized', true);
                 }
             ).error(function(o) {

@@ -11,7 +11,7 @@
     <div>
         <?php
         $organizationForm = new UI_Form('organizationDetails');
-        $organizationForm->setAction('orga/organization/edit/idOrganization/'.$this->idOrganization);
+        $organizationForm->setAction('orga/organization/edit-organization-submit/idOrganization/'.$this->idOrganization);
 
         $labelElementForm = new UI_Form_Element_Text('label');
         $labelElementForm->setLabel(__('UI', 'name', 'label'));

@@ -33,6 +33,26 @@ class CellViewModel
     public $inventoryStatus;
 
     /**
+     * @var string
+     */
+    public $inventoryStatusTitle;
+
+    /**
+     * @var int
+     */
+    public $inventoryNotStartedInputsNumber;
+
+    /**
+     * @var int
+     */
+    public $inventoryStartedInputsNumber;
+
+    /**
+     * @var int
+     */
+    public $inventoryCompletedInputsNumber;
+
+    /**
      * @var int
      */
     public $inventoryCompletion;
