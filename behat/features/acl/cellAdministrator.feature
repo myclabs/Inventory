@@ -14,6 +14,7 @@ Feature: Cell administrator feature
     When I wait 5 seconds
   # Vérification que le libellé "Vue globale" est présent mais non cliquable dans le volet de navigation
   # Voir "Organization navigation scenario"
+    And I click element ".icon-plus"
     Then I should see "Vue globale"
     And I should not see a "#navigationParent a:contains('Vue globale')" element
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)

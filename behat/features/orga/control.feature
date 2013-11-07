@@ -32,7 +32,7 @@ Feature: Control of organizational data feature
     # And I select "Navigable" in radio "Navigable"
     And I select "Oui" in radio "Rôles"
     And I click "Valider"
-    And I wait 30 seconds
+    And I wait 20 seconds
     Then the following message is shown and closed: "Ajout effectué."
     When I open tab "Contrôle"
     And I click "Renouveler le contrôle"

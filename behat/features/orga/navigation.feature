@@ -17,7 +17,8 @@ Feature: Organization navigation feature
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity6Input8" datagrid
   # Remonter au niveau zone-marque
-    When I click "Europe | Marque A"
+    When I click element ".icon-plus"
+    And I click "Europe | Marque A"
     Then I should see "Europe | Marque A Workspace avec données"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
     When I open collapse "Année | Site | Catégorie"
