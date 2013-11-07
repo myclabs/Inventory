@@ -2,12 +2,10 @@
 
 namespace Orga\Model\ACL\Role;
 
-use DW\Model\ACL\ReportAuthorization;
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga\Model\ACL\Action\CellAction;
 use Orga_Model_Cell;
-use Orga_Model_GranularityReport;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
 use User\Domain\User;
@@ -29,38 +27,21 @@ class CellAdminRole extends AbstractCellRole
         $this->authorizations->clear();
 
         // Voir l'organisation
-        OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $this->cell->getOrganization());
+        OrganizationAuthorization::create($this, Action::VIEW(), $this->cell->getOrganization());
 
-        $view = CellAuthorization::create($this, $this->user, Action::VIEW(), $this->cell);
-        $edit = CellAuthorization::create($this, $this->user, Action::EDIT(), $this->cell);
-        $allow = CellAuthorization::create($this, $this->user, Action::ALLOW(), $this->cell);
-        $comment = CellAuthorization::create($this, $this->user, CellAction::COMMENT(), $this->cell);
-        $input = CellAuthorization::create($this, $this->user, CellAction::INPUT(), $this->cell);
-
-        // Voir les copies des rapports préconfigurés
-        if ($this->cell->getGranularity()->getCellsGenerateDWCubes()) {
-            foreach ($this->cell->getDWCube()->getReports() as $report) {
-                if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
-                    ReportAuthorization::createChildAuthorization($view, $report);
-                }
-            }
-        }
+        $authorizations = CellAuthorization::createMany($this, $this->cell, [
+            Action::VIEW(),
+            Action::EDIT(),
+            Action::ALLOW(),
+            CellAction::COMMENT(),
+            CellAction::INPUT(),
+            CellAction::VIEW_REPORTS(),
+        ]);
 
         // Cellules filles
         foreach ($this->cell->getChildCells() as $childCell) {
-            CellAuthorization::createChildAuthorization($view, $childCell);
-            CellAuthorization::createChildAuthorization($edit, $childCell);
-            CellAuthorization::createChildAuthorization($allow, $childCell);
-            CellAuthorization::createChildAuthorization($comment, $childCell);
-            CellAuthorization::createChildAuthorization($input, $childCell);
-
-            // Voir les copies des rapports préconfigurés
-            if ($childCell->getGranularity()->getCellsGenerateDWCubes()) {
-                foreach ($childCell->getDWCube()->getReports() as $report) {
-                    if (Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
-                        ReportAuthorization::createChildAuthorization($view, $report);
-                    }
-                }
+            foreach ($authorizations as $authorization) {
+                CellAuthorization::createChildAuthorization($authorization, $childCell);
             }
         }
     }

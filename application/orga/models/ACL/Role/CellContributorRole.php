@@ -27,17 +27,19 @@ class CellContributorRole extends AbstractCellRole
         $this->authorizations->clear();
 
         // Voir l'organisation
-        OrganizationAuthorization::create($this, $this->user, Action::VIEW(), $this->cell->getOrganization());
+        OrganizationAuthorization::create($this, Action::VIEW(), $this->cell->getOrganization());
 
-        $view = CellAuthorization::create($this, $this->user, Action::VIEW(), $this->cell);
-        $comment = CellAuthorization::create($this, $this->user, CellAction::COMMENT(), $this->cell);
-        $input = CellAuthorization::create($this, $this->user, CellAction::INPUT(), $this->cell);
+        $authorizations = CellAuthorization::createMany($this, $this->cell, [
+            Action::VIEW(),
+            CellAction::COMMENT(),
+            CellAction::INPUT(),
+        ]);
 
         // Cellules filles
         foreach ($this->cell->getChildCells() as $childCell) {
-            CellAuthorization::createChildAuthorization($view, $childCell);
-            CellAuthorization::createChildAuthorization($comment, $childCell);
-            CellAuthorization::createChildAuthorization($input, $childCell);
+            foreach ($authorizations as $authorization) {
+                CellAuthorization::createChildAuthorization($authorization, $childCell);
+            }
         }
     }
 

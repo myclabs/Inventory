@@ -21,6 +21,11 @@ class CellAction extends Action
      */
     const INPUT = 512;
 
+    /**
+     * Voir les rapports de la cellule.
+     */
+    const VIEW_REPORTS = 1024;
+
 
     /**
      * @return self
@@ -36,6 +41,14 @@ class CellAction extends Action
     public static function INPUT()
     {
         return new static(self::INPUT);
+    }
+
+    /**
+     * @return self
+     */
+    public static function VIEW_REPORTS()
+    {
+        return new static(self::VIEW_REPORTS);
     }
 
     /**

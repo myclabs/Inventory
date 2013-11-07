@@ -39,9 +39,9 @@ interface Resource
     /**
      * Ne pas utiliser directement. Uniquement utilisé par Authorization::create().
      *
-     * @param Authorization $authorization
+     * @param Authorization[] $authorizations
      */
-    public function addToACL(Authorization $authorization);
+    public function addToACL(array $authorizations);
 
     /**
      * Ne pas utiliser directement. Uniquement utilisé par Authorization et Role.

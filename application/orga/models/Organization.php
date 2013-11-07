@@ -89,7 +89,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
         $this->adminRoles = new ArrayCollection();
 
         // Hérite des droits sur "toutes les organisations"
-        $allOrganizations = NamedResource::loadByName(self::class);
+        $allOrganizations = NamedResource::loadByName(Orga_Model_Organization::class);
         foreach ($allOrganizations->getACL() as $parentAuthorization) {
             // L'autorisation sera automatiquement ajoutée à $this->acl
             OrganizationAuthorization::createChildAuthorization($parentAuthorization, $this);

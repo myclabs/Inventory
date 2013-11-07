@@ -46,9 +46,11 @@ trait ResourceTrait
         return $this->acl->matching($criteria);
     }
 
-    public function addToACL(Authorization $authorization)
+    public function addToACL(array $authorizations)
     {
-        $this->acl->add($authorization);
+        foreach ($authorizations as $authorization) {
+            $this->acl->add($authorization);
+        }
     }
 
     public function removeFromACL(Authorization $authorization)

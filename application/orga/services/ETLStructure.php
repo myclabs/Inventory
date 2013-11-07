@@ -5,8 +5,6 @@
  */
 
 use Doctrine\ORM\EntityManager;
-use DW\Model\ACL\ReportAuthorization;
-use User\Domain\ACL\Action;
 
 /**
  * Classe permettant de construire les DW.
@@ -453,7 +451,7 @@ class Orga_Service_ETLStructure
     {
         $granularity = Orga_Model_Granularity::loadByDWCube($granularityReport->getGranularityDWReport()->getCube());
         foreach ($granularity->getCells() as $cell) {
-            $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube(), $cell);
+            $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube());
         }
     }
 
@@ -491,7 +489,7 @@ class Orga_Service_ETLStructure
         $queryDWCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $cell->getGranularity()->getDWCube());
         foreach ($cell->getGranularity()->getDWCube()->getReports() as $granularityDWReport) {
             $granularityReport = Orga_Model_GranularityReport::loadByGranularityDWReport($granularityDWReport);
-            $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube(), $cell);
+            $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube());
         }
     }
 
@@ -500,27 +498,13 @@ class Orga_Service_ETLStructure
      *
      * @param Orga_Model_GranularityReport $granularityReport
      * @param DW_Model_Cube                $dWCube
-     * @param Orga_Model_Cell              $cell
      */
     protected function copyGranularityReportToCellDWCube(
         Orga_Model_GranularityReport $granularityReport,
-        DW_Model_Cube $dWCube,
-        Orga_Model_Cell $cell
+        DW_Model_Cube $dWCube
     ) {
         $reportCopy = $granularityReport->getGranularityDWReport()->copyToCube($dWCube);
         $granularityReport->addCellDWReport($reportCopy);
-
-        // Héritage des ACL depuis la cellule et ses cellules parentes
-        $cells = $cell->getParentCells();
-        $cells[] = $cell;
-        foreach ($cells as $cell) {
-            /** @var Orga_Model_Cell $cell */
-            foreach ($cell->getRootACL() as $parentAuthorization) {
-                if ($parentAuthorization->getAction() == Action::VIEW()) {
-                    ReportAuthorization::createChildAuthorization($parentAuthorization, $reportCopy);
-                }
-            }
-        }
     }
 
     /**

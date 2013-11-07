@@ -58,16 +58,50 @@ abstract class Authorization extends Core_Model_Entity
     protected $childAuthorizations;
 
     /**
+     * Crée des autorisations.
+     *
+     * @param Role                               $role
+     * @param \User\Domain\ACL\Resource\Resource $resource
+     * @param Action[]                           $actions
+     * @return static[]
+     */
+    public static function createMany(Role $role, Resource $resource, array $actions)
+    {
+        $user = $role->getUser();
+
+        $authorizations = [];
+
+        foreach ($actions as $action) {
+            /** @var self $authorization */
+            $authorization = new static($role, $user, $action, $resource);
+
+            // Ajoute au role
+            $role->addAuthorization($authorization);
+
+            // Ajoute à l'utilisateur
+            $user->addAuthorization($authorization);
+
+            $authorizations[] = $authorization;
+        }
+
+        // Ajoute à la ressource
+        $resource->addToACL($authorizations);
+
+        return $authorizations;
+    }
+
+    /**
      * Crée une autorisation.
      *
      * @param Role                               $role
-     * @param User                               $user
      * @param Action                             $action
      * @param \User\Domain\ACL\Resource\Resource $resource
      * @return static
      */
-    public static function create(Role $role, User $user, Action $action, Resource $resource)
+    public static function create(Role $role, Action $action, Resource $resource)
     {
+        $user = $role->getUser();
+
         /** @var self $authorization */
         $authorization = new static($role, $user, $action, $resource);
 
@@ -78,7 +112,7 @@ abstract class Authorization extends Core_Model_Entity
         $user->addAuthorization($authorization);
 
         // Ajoute à la ressource
-        $resource->addToACL($authorization);
+        $resource->addToACL([$authorization]);
 
         return $authorization;
     }
@@ -86,22 +120,23 @@ abstract class Authorization extends Core_Model_Entity
     /**
      * Crée une autorisation qui hérite d'une autre.
      *
-     * @param Authorization                      $authorization
+     * @param Authorization                      $parentAuthorization
      * @param \User\Domain\ACL\Resource\Resource $resource Nouvelle ressource
+     * @param Action|null                        $action
      * @return static
      */
-    public static function createChildAuthorization(Authorization $authorization, Resource $resource)
-    {
-        /** @var self $authorization */
-        $authorization = self::create(
-            $authorization->role,
-            $authorization->user,
-            $authorization->getAction(),
-            $resource
-        );
+    public static function createChildAuthorization(
+        Authorization $parentAuthorization,
+        Resource $resource,
+        Action $action = null
+    ) {
+        $action = $action ?: $parentAuthorization->getAction();
 
-        $authorization->parentAuthorization = $authorization;
-        $authorization->childAuthorizations->add($authorization);
+        /** @var self $authorization */
+        $authorization = self::create($parentAuthorization->role, $action, $resource);
+
+        $authorization->parentAuthorization = $parentAuthorization;
+        $parentAuthorization->childAuthorizations->add($authorization);
 
         return $authorization;
     }

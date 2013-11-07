@@ -27,9 +27,11 @@ class ReportOwnerRole extends Role
     {
         $this->authorizations->clear();
 
-        ReportAuthorization::create($this, $this->user, Action::VIEW(), $this->report);
-        ReportAuthorization::create($this, $this->user, Action::EDIT(), $this->report);
-        ReportAuthorization::create($this, $this->user, Action::DELETE(), $this->report);
+        ReportAuthorization::createMany($this, $this->report, [
+            Action::VIEW(),
+            Action::EDIT(),
+            Action::DELETE(),
+        ]);
     }
 
     /**
