@@ -510,10 +510,15 @@ class Orga_Service_ETLStructure
         $reportCopy = $granularityReport->getGranularityDWReport()->copyToCube($dWCube);
         $granularityReport->addCellDWReport($reportCopy);
 
-        // Héritage des ACL depuis la cellule
-        foreach ($cell->getRootACL() as $parentAuthorization) {
-            if ($parentAuthorization->getAction() == Action::VIEW()) {
-                ReportAuthorization::createChildAuthorization($parentAuthorization, $reportCopy);
+        // Héritage des ACL depuis la cellule et ses cellules parentes
+        $cells = $cell->getParentCells();
+        $cells[] = $cell;
+        foreach ($cells as $cell) {
+            /** @var Orga_Model_Cell $cell */
+            foreach ($cell->getRootACL() as $parentAuthorization) {
+                if ($parentAuthorization->getAction() == Action::VIEW()) {
+                    ReportAuthorization::createChildAuthorization($parentAuthorization, $reportCopy);
+                }
             }
         }
     }
