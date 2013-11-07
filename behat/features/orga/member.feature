@@ -170,7 +170,8 @@ Feature: Organizational member feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # Descendre dans la cellule "Europe | Marque B"
-    When I select "Europe" from "zone"
+    When I click element ".icon-plus"
+    And I select "Europe" from "zone"
     And I select "Marque B" from "marque"
     And I click element "#goTo2"
   # Vérification du contenu du datagrid des membres de l'axe "Site"

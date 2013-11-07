@@ -14,18 +14,18 @@
         </tu>
         <tu tuid="organization">
             <tuv xml:lang="fr">
-                <seg>Organisation</seg>
+                <seg>Workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization</seg>
+                <seg>Workspace</seg>
             </tuv>
         </tu>
         <tu tuid="organizations">
             <tuv xml:lang="fr">
-                <seg>Organisations</seg>
+                <seg>Workspaces</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organizations</seg>
+                <seg>Workspaces</seg>
             </tuv>
         </tu>
         <tu tuid="structure">

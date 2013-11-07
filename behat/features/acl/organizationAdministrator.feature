@@ -6,16 +6,16 @@ Feature: Organization administrator feature
     Given I am on the homepage
     And I wait for the page to finish loading
   # Login en tant qu'utilisateur connecté
-    When I fill in "email" with "administrateur.application@toto.com"
-    And I fill in "password" with "administrateur.application@toto.com"
+    When I fill in "email" with "administrateur.workspace@toto.com"
+    And I fill in "password" with "administrateur.workspace@toto.com"
     And I click "connection"
     And I wait 10 seconds
   # On tombe sur la liste des organisations
     Then I should see "Axes racine : Année, Site, Catégorie, Axe vide"
     And I should see "Collectes : Année | Zone | Marque"
   # Accès à l'organisation
-    When I click "Organisation avec données"
-    Then I should see "Vue globale Organisation avec données"
+    When I click "Workspace avec données"
+    Then I should see "Vue globale Workspace avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
   # Accès à l'onglet "Informations générales"
@@ -26,7 +26,7 @@ Feature: Organization administrator feature
     Then I should see the "granularity1Report" datagrid
   # Accès à l'onglet "Rôles" et au datagrid des administrateurs d'organisation
     When I open tab "Rôles"
-    And I open collapse "Administrateurs d'application"
+    And I open collapse "Administrateurs de workspace"
     Then I should see the "organizationACL1" datagrid
 
 

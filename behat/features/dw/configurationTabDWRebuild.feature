@@ -12,7 +12,7 @@ Feature: Rebuild of dataware from the configuration tab feature
     And I open tab "Informations générales"
   # Au départ la structure des données d'analyse est à jour
     And I click "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse de l'organisation est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Ajout d'un axe organisationnel
     When I open tab "Axes"
     And I wait 5 seconds
@@ -32,4 +32,4 @@ Feature: Rebuild of dataware from the configuration tab feature
     And I wait 10 seconds
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I click "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse de l'organisation est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation est à jour."

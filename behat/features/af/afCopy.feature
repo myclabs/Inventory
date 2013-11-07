@@ -127,4 +127,4 @@ Feature: AF copy feature
     And I fill in "s_f_r_t_t_c__c_t_c__1" with "Bla"
     And I fill in "s_f_r_t_t_c__c_t_l__1" with "BlaBla"
     And I click "Enregistrer"
-    Then the following message is shown and closed: "Enregistrement effectué (saisie incomplète)."
+    Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."

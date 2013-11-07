@@ -84,6 +84,8 @@ class EventListener extends \MyCLabs\Work\EventListener
      */
     public function beforeTaskExecution(Task $task)
     {
+        set_time_limit(0);
+
         $this->logger->info("Executing task {task}", ['task' => (string) $task]);
 
         if ($task instanceof BaseTaskInterface) {

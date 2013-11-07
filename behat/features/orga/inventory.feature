@@ -21,8 +21,9 @@ Feature: Organization inventory tab feature
       | annee | zone   | marque   | inventoryStatus |
       | 2013  | Europe | Marque B | Ouvert          |
   # Descendre au niveau zone-marque (on descend sur Europe | Marque A")
-    When I click "goTo2"
-    Then I should see "Europe | Marque A Organisation avec données"
+    When I click element ".icon-plus"
+    And I click element "#goTo2"
+    Then I should see "Europe | Marque A Workspace avec données"
     When I open tab "Collectes"
     And I open collapse "Année | Zone | Marque"
     Then I should see the "inventories6" datagrid
@@ -49,8 +50,9 @@ Feature: Organization inventory tab feature
     Then I should see the "inventories6" datagrid
     And I should see a ".icon-pencil" element
   # Descendre au niveau zone-marque (on descend sur Europe | Marque A")
-    When I click "goTo2"
-    Then I should see "Europe | Marque A Organisation avec données"
+    When I click element ".icon-plus"
+    And I click element "#goTo2"
+    Then I should see "Europe | Marque A Workspace avec données"
     When I open tab "Collectes"
     And I open collapse "Année | Site"
     Then I should see the "inventories7" datagrid
@@ -99,6 +101,7 @@ Feature: Organization inventory tab feature
   # On recharge la page pour faire apparaître le volet de navigation
     And I reload the page
   # On descend dans la cellule "2012 | Europe | Marque A"
+    And I click element ".icon-plus"
     And I click element "#goTo6"
     And I open tab "Collectes"
     Then I should see the "inventories6" datagrid
@@ -112,10 +115,12 @@ Feature: Organization inventory tab feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # On descend au niveau site, on ne voit pas le datagrid des collectes
-    And I click "goTo3"
+    And I click element ".icon-plus"
+    And I click element "#goTo3"
     Then I should not see "Collectes"
   # Retour au niveau global
-    When I click "Vue globale"
+    When I click element ".icon-plus"
+    And I click "Vue globale"
   # Modification de la granularité des inventaires
     And I open tab "Paramétrage"
     And I open tab "Informations générales"
@@ -123,7 +128,8 @@ Feature: Organization inventory tab feature
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Cette fois-ci, si on descend au niveau d'un site, on verra le datagrid des collectes
-    When I click "goTo3"
+    When I click element ".icon-plus"
+    And I click element "#goTo3"
     Then I should see "Collectes"
     When I open tab "Collectes"
     Then I should see the "inventories7" datagrid

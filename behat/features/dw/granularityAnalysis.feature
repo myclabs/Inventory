@@ -41,7 +41,7 @@ Feature: Granularity dataware analysis feature
   # And the field "denominator" should have error: "Merci de sélectionner un indicateur pour le dénominateur."
   # Retour
     When I click "Retour"
-    Then I should see "Vue globale Organisation avec données"
+    Then I should see "Vue globale Workspace avec données"
 
   @javascript
   Scenario: Display of the status of analysis configuration (new configuration / change in course)
