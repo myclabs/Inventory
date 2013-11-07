@@ -72,7 +72,7 @@ Feature: Organization role feature
     When I fill in "granularityACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 3 of the "granularityACL1" datagrid should contain:
+    And the "granularityACL1" datagrid should contain a row:
       | userEmail                      | userRole       |
       | emmanuel.risler.abo@gmail.com  | Administrateur |
   # Tentative d'ajout, format email non respecté (pas d'erreur à ce jour…)
@@ -96,7 +96,7 @@ Feature: Organization role feature
     And I select "Contributeur" from "granularityACL1_userRole_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 3 of the "granularityACL1" datagrid should contain:
+    And the "granularityACL1" datagrid should contain a row:
       | userEmail                      | userRole     |
       | emmanuel.risler.abo@gmail.com  | Contributeur |
 

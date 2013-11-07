@@ -90,7 +90,7 @@ Feature: Organization role for subcells feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the "granularityUserACL2" datagrid should contain 4 row
-    And the row 4 of the "granularityUserACL2" datagrid should contain:
+    And the "granularityUserACL2" datagrid should contain a row:
       | zone   | marque   | userEmail                     | userRole     |
       | Europe | Marque B | emmanuel.risler.abo@gmail.com | Contributeur |
   # Ajout, utilisateur existant
@@ -103,7 +103,7 @@ Feature: Organization role for subcells feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the "granularityUserACL2" datagrid should contain 5 row
-    And the row 5 of the "granularityUserACL2" datagrid should contain:
+    And the "granularityUserACL2" datagrid should contain a row:
       | zone   | marque   | userEmail                     | userRole     |
       | Europe | Marque B | emmanuel.risler.pro@gmail.com | Contributeur |
 
