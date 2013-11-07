@@ -220,7 +220,7 @@ class Orga_Model_Cell extends Core_Model_Entity
             $this->docBibliographyForAFInputSetPrimary = new Bibliography();
         }
         // Création de la Library des Input.
-        if ($this->granularity->getCellsWithInputDoKcuments()) {
+        if ($this->granularity->getCellsWithInputDocuments()) {
             $this->docLibraryForAFInputSetsPrimary = new Library();
         }
         // Création de la Library des GenericAction.
