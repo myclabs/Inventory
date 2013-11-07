@@ -60,5 +60,5 @@ Feature: Organization input input feature
   # Retour à l'onglet "Saisie" et quitter la page
     When I open tab "Saisie"
     And I click "Quitter"
-    Then I should see "Vue globale Organisation avec données"
+    Then I should see "Vue globale Workspace avec données"
 

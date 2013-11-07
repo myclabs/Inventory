@@ -5,16 +5,16 @@ Feature: Organization role feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation/deletion of a role of application administrator
+  Scenario: Creation/deletion of a role of workspace administrator
   # Accès au datagrid
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Rôles"
-    And I open collapse "Administrateurs d'application"
+    And I open collapse "Administrateurs de workspace"
     Then I should see the "organizationACL1" datagrid
   # Popup d'ajout
     When I click "Ajouter"
-    Then I should see the popup "Ajout d'un administrateur d'application (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)"
+    Then I should see the popup "Ajout d'un administrateur de workspace (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)"
   # Tentative d'ajout, email vide
     When I click "Valider"
     Then the field "organizationACL1_userEmail_addForm" should have error: "Merci de renseigner ce champ."
@@ -29,7 +29,7 @@ Feature: Organization role feature
       | emmanuel.risler.abo@gmail.com |
   # Ajout, format email correct, le rôle existe déjà pour cet utilisateur
     When I click "Ajouter"
-    Then I should see the popup "Ajout d'un administrateur d'application (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)"
+    Then I should see the popup "Ajout d'un administrateur de workspace (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)"
     When I fill in "organizationACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
     Then the field "organizationACL1_userEmail_addForm" should have error: "Ce rôle est déjà attribué à l'utilisateur indiqué."
@@ -41,7 +41,7 @@ Feature: Organization role feature
     Then the following message is shown and closed: "Suppression effectuée."
   # Ajout, format email correct, utilisateur existant
     When I click "Ajouter"
-    Then I should see the popup "Ajout d'un administrateur d'application (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)"
+    Then I should see the popup "Ajout d'un administrateur de workspace (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)"
     When I fill in "organizationACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
@@ -72,7 +72,7 @@ Feature: Organization role feature
     When I fill in "granularityACL1_userEmail_addForm" with "emmanuel.risler.abo@gmail.com"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 3 of the "granularityACL1" datagrid should contain:
+    And the "granularityACL1" datagrid should contain a row:
       | userEmail                      | userRole       |
       | emmanuel.risler.abo@gmail.com  | Administrateur |
   # Tentative d'ajout, format email non respecté (pas d'erreur à ce jour…)
@@ -96,7 +96,7 @@ Feature: Organization role feature
     And I select "Contributeur" from "granularityACL1_userRole_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the row 3 of the "granularityACL1" datagrid should contain:
+    And the "granularityACL1" datagrid should contain a row:
       | userEmail                      | userRole     |
       | emmanuel.risler.abo@gmail.com  | Contributeur |
 

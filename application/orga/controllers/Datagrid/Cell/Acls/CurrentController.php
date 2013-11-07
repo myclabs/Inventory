@@ -92,9 +92,6 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
             throw $e;
         };
 
-        // TODO
-        $roleLabel = '';
-
         $task = new ServiceCallTask(
             Orga_Service_ACLManager::class,
             'addCellRole',

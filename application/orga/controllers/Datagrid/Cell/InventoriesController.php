@@ -160,7 +160,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
     {
         $this->view->idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($this->view->idCell);
-        $this->view->labelPopup = __('Orga', 'inventory', 'involvedUsersOf', ['CELL' => $cell->getLabel()]);
+        $this->view->labelPopup = __('Orga', 'inventory', 'involvedUsersInDataCollection', ['CELL' => $cell->getLabel()]);
         $granularity = $cell->getGranularity();
         $this->view->idGranularity = $granularity->getId();
 
@@ -185,6 +185,18 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                     }
                     if (!empty($granularityACLs)) {
                         $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
+                    }
+                } else {
+                    try {
+                        $crossedGranularity = $granularity->getCrossedGranularity($granularityACL);
+                        foreach ($cell->getChildCellsForGranularity($crossedGranularity) as $childCrossedGranularity) {
+                            $cellResource = User_Model_Resource_Entity::loadByEntity($childCrossedGranularity->getParentCellForGranularity($granularityACL));
+                            $this->addUserToArray($cellResource, $granularityACLs);
+                        }
+                        if (!empty($granularityACLs)) {
+                            $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
+                        }
+                    } catch (Core_Exception_NotFound $e) {
                     }
                 }
             }

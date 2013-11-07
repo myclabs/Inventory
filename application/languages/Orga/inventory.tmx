@@ -60,6 +60,13 @@
                 <seg>Involved users</seg>
             </tuv>
         </tu>
-
+        <tu tuid="involvedUsersInDataCollection">
+            <tuv xml:lang="fr">
+                <seg>Intervenants pour « [CELL] »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Involved users for "[CELL]"</seg>
+            </tuv>
+        </tu>
     </body>
 </tmx>

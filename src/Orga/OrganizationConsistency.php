@@ -24,10 +24,12 @@ class Orga_OrganizationConsistency
         $listParentsMembers = array();
         $listChildrenAxes = array();
         $listChildrenMembers = array();
+        $listCrossedGranularities = array();
 
         $checkAxes = __('Orga', 'control', 'axisWithNoMember');
         $checkBroaderMember = __('Orga', 'control', 'memberWithMissingDirectParent');
         $checkNarrowerMember = __('Orga', 'control', 'memberWithNoDirectChild');
+        $checkCrossedGranularities = __('Orga', 'control', 'crossedGranularities');
 
         foreach ($organization->getAxes() as $axis) {
             if (!$axis->hasMembers()) {
@@ -53,6 +55,23 @@ class Orga_OrganizationConsistency
             }
         }
 
+        try {
+            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = null;
+        }
+        if ($granularityForInventoryStatus !== null) {
+            foreach ($organization->getGranularities() as $granularity) {
+                if ($granularity->getCellsWithACL()) {
+                    try {
+                        $granularityForInventoryStatus->getCrossedGranularity($granularity);
+                    } catch (Core_Exception_NotFound $e) {
+                        $listCrossedGranularities[] = $granularity;
+                    }
+                }
+            }
+        }
+
         $n = count($listAxes);
         $text1 = '';
         $i = 0;
@@ -69,9 +88,11 @@ class Orga_OrganizationConsistency
         $m = count($listParentsAxes);
         for ($i = 0; $i <= $m-1; $i++) {
             if ($i == $m-1) {
-                $text2 = $text2.'Axe: '.$listParentsAxes[$i].'; membre : '.$listParentsMembers[$i];
+                $text2 = $text2 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listParentsAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listParentsMembers[$i];
             } else {
-                $text2 = $text2.'Axe: '.$listParentsAxes[$i].'; membre : '.$listParentsMembers[$i].' / ';
+                $text2 = $text2 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listParentsAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listParentsMembers[$i] . ' / ';
             }
         }
 
@@ -79,10 +100,43 @@ class Orga_OrganizationConsistency
         $l = count($listChildrenAxes);
         for ($i = 0; $i <= $l-1; $i++) {
             if ($i == $l-1) {
-                $text3 = $text3.'Axe: '.$listChildrenAxes[$i].'; membre : '.$listChildrenMembers[$i];
+                $text3 = $text3 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listChildrenAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listChildrenMembers[$i];
             } else {
-                $text3 = $text3.'Axe: '.$listChildrenAxes[$i].'; membre : '.$listChildrenMembers[$i].' / ';
+                $text3 = $text3 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listChildrenAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listChildrenMembers[$i]  . ' / ';
             }
+        }
+
+        if ($granularityForInventoryStatus !== null) {
+            $text4 = '';
+            if (count($listCrossedGranularities) > 0) {
+                /** @var Orga_Model_Granularity $granularity */
+                foreach ($listCrossedGranularities as $granularity) {
+                    $currentAxes = $granularity->getAxes();
+                    $crossingAxes = $granularityForInventoryStatus->getAxes();
+
+                    foreach ($granularity->getAxes() as $currentIndex => $currentAxis) {
+                        foreach ($granularityForInventoryStatus->getAxes() as $crossingIndex => $crossingAxis) {
+                            if (($currentAxis->isNarrowerThan($crossingAxis)) || ($currentAxis === $crossingAxis)) {
+                                unset($crossingAxes[$crossingIndex]);
+                            } else if ($currentAxis->isBroaderThan($crossingAxis)) {
+                                unset($currentAxes[$currentIndex]);
+                            }
+                        }
+                    }
+                    $axes = array_merge($currentAxes, $crossingAxes);
+                    @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+                    foreach ($axes as $axis) {
+                        $labelParts[] = $axis->getLabel();
+                    }
+                    $label = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
+                    $text4 .= $label .' / ';
+                }
+                $text4 = substr($text4, 0, -3);
+            }
+        } else {
+            $text4 = '';
         }
 
         $result  = array();
@@ -97,6 +151,10 @@ class Orga_OrganizationConsistency
         $result['okMemberChildren'] = empty($listChildrenAxes);
         $result['controlMemberChildren'] = $checkNarrowerMember;
         $result['failureMemberChildren'] = $text3;
+
+        $result['okCrossedGranularities'] = empty($listCrossedGranularities);
+        $result['controlCrossedGranularities'] = $checkCrossedGranularities;
+        $result['failureCrossedGranularities'] = $text4;
 
         return $result;
     }

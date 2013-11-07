@@ -49,7 +49,8 @@ Feature: Organization input tab feature
     Then I should see the "aFGranularity1Input1" datagrid
     And the "aFGranularity1Input1" datagrid should contain 1 row
   # Saisie associée à une cellule non globale (Europe|Marque A)
-    When I click element "#goTo2"
+    When I click element ".icon-plus"
+    And I click element "#goTo2"
     And I open collapse "Zone | Marque"
     Then I should see the "aFGranularity2Input2" datagrid
     And the "aFGranularity2Input2" datagrid should contain 1 row
@@ -59,7 +60,8 @@ Feature: Organization input tab feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # Descendre depuis la cellule globale dans une cellule de granularité site
-    When I select "Annecy" from "site"
+    When I click element ".icon-plus"
+    And I select "Annecy" from "site"
     And I click element "#goTo3"
   # Cas inventaire en cours, saisie complète
     When I open collapse "Année | Site"
@@ -76,7 +78,9 @@ Feature: Organization input tab feature
       | annee | categorie      | inventoryStatus | advancementInput | stateInput        |
       | 2012  | Test affichage | Ouvert          | 14%              | Saisie incomplète |
   # Cas inventaire non lancé, inventaire clôturé
-    When I click "Vue globale"
+    When I click element ".icon-plus"
+    And I click "Vue globale"
+    And I click element ".icon-plus"
     And I select "Europe" from "zone"
     And I select "Marque B" from "marque"
     And I click element "#goTo2"

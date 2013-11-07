@@ -22,7 +22,8 @@ Feature: Organization library feature
     When I open tab "Saisies"
     Then I should not see "Documents"
   # Vérification que l'onglet "Documents" est présent au niveau site, accès à l'onglet "Documents"
-    When I select "Annecy" from "site"
+    When I click element ".icon-plus"
+    And I select "Annecy" from "site"
     And I click element "#goTo3"
     And I open tab "Documents"
     Then I should see "Documents des saisies"
@@ -33,7 +34,8 @@ Feature: Organization library feature
   # Accès au datagrid des documents
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    When I select "Annecy" from "site"
+    When I click element ".icon-plus"
+    And I select "Annecy" from "site"
     And I click element "#goTo3"
     And I open tab "Documents"
     Then I should see the "library1" datagrid

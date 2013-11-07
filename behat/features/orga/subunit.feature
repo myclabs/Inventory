@@ -30,16 +30,17 @@ Feature: Organizational subunits tab feature
       | Annecy | Aller à |
   # Lien vers cellule
     When I click "Aller à" in the row 1 of the "child_c1_g3" datagrid
-    Then I should see "Annecy Organisation avec données"
+    Then I should see "Annecy Workspace avec données"
 
   @javascript
   Scenario: Nonglobal cell subunits tab scenario
   # Accès à la cellule "Europe / Marque B"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    When I select "Marque B" from "marque"
+    When I click element ".icon-plus"
+    And I select "Marque B" from "marque"
     And I click element "#goTo2"
-    Then I should see "Europe | Marque B Organisation avec données"
+    Then I should see "Europe | Marque B Workspace avec données"
   # Accès au volet "Sous-unités" et au collapse "Site"
     When I open tab "Paramétrage"
     # And I open tab "Sous-unités"

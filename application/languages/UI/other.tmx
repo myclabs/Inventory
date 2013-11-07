@@ -14,6 +14,14 @@
                 <seg>: </seg>
             </tuv>
         </tu>
+        <tu tuid=";">
+            <tuv xml:lang="fr">
+                <seg> ; </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>; </seg>
+            </tuv>
+        </tu>
         
         <!-- Autre -->        
         
