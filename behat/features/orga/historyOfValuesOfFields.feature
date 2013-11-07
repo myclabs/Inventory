@@ -105,7 +105,7 @@ Feature: History of values of a field feature
   # Ajout d'une répétition, enregistrement, vérification pourcentage avancement
     When I click "Ajouter"
     And I click "Enregistrer"
-    Then the following message is shown and closed: "Enregistrement effectué (saisie incomplète)."
+    Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
     And the "#tabs_tabInput .inputProgress .bar" element should contain "50%"
   # Historiques des différents champs
     When I reload the page
@@ -144,7 +144,7 @@ Feature: History of values of a field feature
     And I fill in "s_f_r_t_t_c__c_n__2" with "20"
     And I fill in "s_f_r_t_t_c__percentc_n__2" with "30"
     And I click "Enregistrer"
-    Then the following message is shown and closed: "Enregistrement effectué (saisie incomplète)."
+    Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
     And the "#tabs_tabInput .inputProgress .bar" element should contain "57%"
   # Popups des valeurs saisies pour cette 2ème ligne
     When I click element "#s_f_r_t_t_c__c_nHistory__2 .btn"

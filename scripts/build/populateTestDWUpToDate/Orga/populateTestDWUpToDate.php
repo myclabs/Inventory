@@ -25,7 +25,7 @@ class Orga_PopulateTestDWUpToDate extends Orga_Populate
 
         // Création d'une organisation.
         // Param : label
-        $organization = $this->createOrganization('Organisation avec données');
+        $organization = $this->createOrganization('Workspace avec données');
 
         // Création des axes.
         // Params : Organization, ref, label
@@ -55,7 +55,7 @@ class Orga_PopulateTestDWUpToDate extends Orga_Populate
 
         // Création des utilisateurs orga.
         // Params : email
-        // $this->createUser('administrateur.application@toto.com');
+        // $this->createUser('administrateur.workspace@toto.com');
 
         // Ajout d'un role sun une organisation à un utilisateur existant.
         // Params : email, Organization

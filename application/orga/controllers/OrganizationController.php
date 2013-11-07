@@ -290,7 +290,7 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $success = function () {
-            $this->sendJsonResponse(__('UI', 'message', 'updated'));
+            $this->sendJsonResponse(__('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage'));
         };
         $timeout = function () {
             $this->sendJsonResponse(__('UI', 'message', 'operationInProgress'));

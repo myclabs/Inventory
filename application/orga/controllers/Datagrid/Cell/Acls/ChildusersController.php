@@ -6,6 +6,9 @@
  */
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
+use DI\Annotation\Inject;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
 
 /**
  * Controlleur du Datagrid listant les utilisateurs d'un ensemble de cellules.
@@ -15,6 +18,24 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var User_Service_User
+     */
+    private $userService;
+
+    /**
+     * @Inject
+     * @var WorkDispatcher
+     */
+    private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -28,7 +49,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
      *
      * @Secure("allowCell")
      */
-    function getelementsAction()
+    public function getelementsAction()
     {
         $this->request->setCustomParameters($this->request->filter->getConditions());
         $this->request->filter->setConditions(array());
@@ -53,7 +74,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
                         $data['userFirstName'] = $user->getFirstName();
                         $data['userLastName'] = $user->getLastName();
                         $data['userEmail'] = $user->getEmail();
-                        $data['userRole'] = $linkedIdentity->getRef();
+                        $data['userRole'] = $linkedIdentity->getName();
                         $this->addLine($data);
                     }
                 }
@@ -117,6 +138,25 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             return;
         }
 
+        if (strpos($role->getRef(), 'Administrator') !==false) {
+            $serviceName = 'addCellAdministrator';
+        } else if (strpos($role->getRef(), 'Contributor') !== false) {
+            $serviceName = 'addCellContributor';
+        } else if (strpos($role->getRef(), 'Observer') !== false) {
+            $serviceName = 'addCellObserver';
+        } else {
+            throw new Core_Exception_InvalidArgument();
+        }
+        $success = function () {
+            $this->message = __('UI', 'message', 'added');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'addedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
         if (User_Model_User::isEmailUsed($userEmail)) {
             $user = User_Model_User::loadByEmail($userEmail);
             if ($user->hasRole($role)) {
@@ -124,23 +164,26 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
                 $this->send();
                 return;
             }
+            $task = new ServiceCallTask(
+                'Orga_Service_ACLManager',
+                $serviceName,
+                [$granularityCell, $user, false],
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+            );
+            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         } else {
             $user = $this->userService->inviteUser(
                 $userEmail
             );
-            $user->addRole(User_Model_Role::loadByRef('user'));
+            $task = new ServiceCallTask(
+                'Orga_Service_ACLManager',
+                'createUserAndAddRole',
+                [$user, $serviceName, $granularityCell],
+                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
+            );
+            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         }
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_ACLManager',
-                'addCellUser',
-                [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-            )
-        );
-
-        $this->message = __('UI', 'message', 'addedLater');
         $this->send();
     }
 
@@ -163,16 +206,24 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         $role = User_Model_Role::loadByRef($userRoleRef);
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        $this->workDispatcher->runBackground(
-            new Core_Work_ServiceCall_Task(
-                'Orga_Service_ACLManager',
-                'removeCellUser',
-                [$cell, $user, $role, false],
-                __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-            )
-        );
+        $success = function () {
+            $this->message = __('UI', 'message', 'deleted');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'deletedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
 
-        $this->message = __('UI', 'message', 'deletedLater');
+        $task = new ServiceCallTask(
+            'Orga_Service_ACLManager',
+            'removeCellUser',
+            [$cell, $user, $role, false],
+            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+
         $this->send();
     }
 

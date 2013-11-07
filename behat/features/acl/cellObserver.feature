@@ -10,7 +10,7 @@ Feature: Cell observer feature
     And I fill in "password" with "observateur.zone-marque@toto.com"
     And I click "connection"
   # On tombe sur la page de la cellule
-    Then I should see "Europe | Marque A Organisation avec données"
+    Then I should see "Europe | Marque A Workspace avec données"
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
     When I wait 5 seconds
     And I open collapse "Zone | Marque"
@@ -34,7 +34,7 @@ Feature: Cell observer feature
     When I open tab "Exports"
     # TODO : accès aux exports
   # Les autres onglets de la page d'une cellule sont absents
-    And I should not see a "#container a:contains('Organisation')" element
+    And I should not see a "#container a:contains('Workspace')" element
     And I should not see a "#container a:contains('Rôles')" element
     And I should not see a "#container a:contains('Reconstruction')" element
 
@@ -52,8 +52,8 @@ Feature: Cell observer feature
       | label  | access      |
       | Annecy | Observateur |
   # Accès à une des cellules
-    When I click "Cliquer pour accéder" in the row 1 of the "listCells" datagrid
-    Then I should see "Annecy Organisation avec données"
+    When I click "Accéder aux saisies" in the row 1 of the "listCells" datagrid
+    Then I should see "Annecy Workspace avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
   # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées

@@ -14,7 +14,7 @@ Feature: Subforms input feature
   # On commence par ajouter une répétition, juste pour tester l'affichage des messages d'erreur et le taux de complétudi
     And I click "Ajouter"
     And I click "Enregistrer"
-    Then the following message is shown and closed: "Enregistrement effectué (saisie incomplète)."
+    Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
     And the field "s_f_r__nature_combustible__1" should have error: "Merci de renseigner ce champ."
     And the field "s_f_r__quantite_combustible__1" should have error: "Merci de renseigner ce champ."
     And I should see "33%"

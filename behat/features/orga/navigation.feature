@@ -9,28 +9,32 @@ Feature: Organization navigation feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # Descendre depuis la cellule globale dans une cellule de granularité site
-    When I select "Chambéry" from "site"
+    When I click element ".icon-plus"
+    And I select "Chambéry" from "site"
     And I click element "#goTo3"
-    Then I should see "Chambéry Organisation avec données"
+    Then I should see "Chambéry Workspace avec données"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity6Input8" datagrid
   # Remonter au niveau zone-marque
-    When I click "Europe | Marque A"
-    Then I should see "Europe | Marque A Organisation avec données"
+    When I click element ".icon-plus"
+    And I click "Europe | Marque A"
+    Then I should see "Europe | Marque A Workspace avec données"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
   # Remonter au niveau global
-    When I click "Vue globale"
+    When I click element ".icon-plus"
+    And I click "Vue globale"
     Then I should see "Vue globale"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
   # Descendre au niveau zone|marque
-    When I select "Marque sans site" from "marque"
+    When I click element ".icon-plus"
+    And I select "Marque sans site" from "marque"
     And I click element "#goTo2"
-    Then I should see "Europe | Marque sans site Organisation avec données"
+    Then I should see "Europe | Marque sans site Workspace avec données"
   # Vérification que l'élément "Vue globale" cliquable est présent, pour tester à l'inverse qu'il est absent dans les tests ACL
     And I should see a "#navigationParent a:contains('Vue globale')" element
 
@@ -52,7 +56,8 @@ Feature: Organization navigation feature
       | zone   | marque   | relevant       |
       | Europe | Marque A | Non pertinente |
   # Essayer d'atteindre la cellule "Europe|Marque A" avec le volet de navigation
-    When I select "Europe" from "zone"
+    When I click element ".icon-plus"
+    And I select "Europe" from "zone"
     And I select "Marque A" from "marque"
     And I click element "#goTo2"
     Then the following message is shown and closed: "Cette unité organisationnelle n'est pas pertinente, il n'est donc pas possible d'y accéder."

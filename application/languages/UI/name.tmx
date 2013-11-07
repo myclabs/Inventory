@@ -19,7 +19,7 @@
                 <seg>Addition</seg>
             </tuv>
         </tu>
-		<tu tuid="axes">
+        <tu tuid="axes">
 			<tuv xml:lang="fr">
 				<seg>Axes</seg>
 			</tuv>
@@ -201,6 +201,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Element</seg>
+            </tuv>
+        </tu>
+        <tu tuid="elementSmallCap">
+            <tuv xml:lang="fr">
+                <seg>élément</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>element</seg>
             </tuv>
         </tu>
         <tu tuid="elements">

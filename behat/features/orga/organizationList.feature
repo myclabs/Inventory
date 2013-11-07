@@ -15,7 +15,7 @@ Feature: Organization datagrid feature
     When I fill in "Libellé" with "AAA"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-  # Organisations affichées dans l'ordre de création
+  # Workspaces affichées dans l'ordre de création
   # TODO : ordre alphabétique des libellés ?
     And I should see "AAA"
   # Lien vers le détail de l'organisation
@@ -32,7 +32,7 @@ Feature: Organization datagrid feature
   # Structure des données d'analyse par défaut (à jour)
     When I open tab "Informations générales"
     And I click "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse de l'organisation est à jour"
+    Then I should see "La structure des données d'analyse de l'organisation est à jour."
 
   @javascript
   Scenario: Deletion of an organization without data scenario

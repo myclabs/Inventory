@@ -62,7 +62,7 @@ class Orga_OrganizationConsistency
         }
         if ($granularityForInventoryStatus !== null) {
             foreach ($organization->getGranularities() as $granularity) {
-                if ($granularity->isNavigable()) {
+                if ($granularity->getCellsWithACL()) {
                     try {
                         $granularityForInventoryStatus->getCrossedGranularity($granularity);
                     } catch (Core_Exception_NotFound $e) {
@@ -88,9 +88,11 @@ class Orga_OrganizationConsistency
         $m = count($listParentsAxes);
         for ($i = 0; $i <= $m-1; $i++) {
             if ($i == $m-1) {
-                $text2 = $text2.'Axe: '.$listParentsAxes[$i].'; membre : '.$listParentsMembers[$i];
+                $text2 = $text2 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listParentsAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listParentsMembers[$i];
             } else {
-                $text2 = $text2.'Axe: '.$listParentsAxes[$i].'; membre : '.$listParentsMembers[$i].' / ';
+                $text2 = $text2 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listParentsAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listParentsMembers[$i] . ' / ';
             }
         }
 
@@ -98,22 +100,43 @@ class Orga_OrganizationConsistency
         $l = count($listChildrenAxes);
         for ($i = 0; $i <= $l-1; $i++) {
             if ($i == $l-1) {
-                $text3 = $text3.'Axe: '.$listChildrenAxes[$i].'; membre : '.$listChildrenMembers[$i];
+                $text3 = $text3 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listChildrenAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listChildrenMembers[$i];
             } else {
-                $text3 = $text3.'Axe: '.$listChildrenAxes[$i].'; membre : '.$listChildrenMembers[$i].' / ';
+                $text3 = $text3 . __('UI', 'name', 'axis') . __('UI', 'other', ':') . $listChildrenAxes[$i]
+                    . __('UI', 'other', ';') . __('UI', 'name', 'elementSmallCap') . __('UI', 'other', ':') . $listChildrenMembers[$i]  . ' / ';
             }
         }
 
         if ($granularityForInventoryStatus !== null) {
             $text4 = '';
             if (count($listCrossedGranularities) > 0) {
+                /** @var Orga_Model_Granularity $granularity */
                 foreach ($listCrossedGranularities as $granularity) {
-                    $text4 .= $granularity->getRef() . ' / ';
+                    $currentAxes = $granularity->getAxes();
+                    $crossingAxes = $granularityForInventoryStatus->getAxes();
+
+                    foreach ($granularity->getAxes() as $currentIndex => $currentAxis) {
+                        foreach ($granularityForInventoryStatus->getAxes() as $crossingIndex => $crossingAxis) {
+                            if (($currentAxis->isNarrowerThan($crossingAxis)) || ($currentAxis === $crossingAxis)) {
+                                unset($crossingAxes[$crossingIndex]);
+                            } else if ($currentAxis->isBroaderThan($crossingAxis)) {
+                                unset($currentAxes[$currentIndex]);
+                            }
+                        }
+                    }
+                    $axes = array_merge($currentAxes, $crossingAxes);
+                    @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+                    foreach ($axes as $axis) {
+                        $labelParts[] = $axis->getLabel();
+                    }
+                    $label = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
+                    $text4 .= $label .' / ';
                 }
                 $text4 = substr($text4, 0, -3);
             }
         } else {
-            $text4 = __('Orga', 'control', 'noGranularityForInventoryStatus');
+            $text4 = '';
         }
 
         $result  = array();

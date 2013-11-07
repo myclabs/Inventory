@@ -115,14 +115,14 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            $success = function() {
+            $success = function () {
                 $this->message = __('UI', 'message', 'added');
             };
-            $timeout = function() {
+            $timeout = function () {
                 $this->message = __('UI', 'message', 'addedLater');
             };
-            $error = function() {
-                throw new Core_Exception("Error in the background task");
+            $error = function (Exception $e) {
+                throw $e;
             };
 
             // Lance la tache en arrière plan
@@ -139,6 +139,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 (bool) $this->getAddElementValue('inputDocuments'),
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $listAxes)])
             );
+            set_time_limit(0);
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         }
 

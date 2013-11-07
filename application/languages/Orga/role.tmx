@@ -8,18 +8,18 @@
 
         <tu tuid="organizationAdministrator">
             <tuv xml:lang="fr">
-                <seg>Administrateur d'application</seg>
+                <seg>Administrateur de workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Application administrator</seg>
+                <seg>Workspace administrator</seg>
             </tuv>
         </tu>
         <tu tuid="organizationAdministrators">
             <tuv xml:lang="fr">
-                <seg>Administrateurs d'application</seg>
+                <seg>Administrateurs de workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Application administrators</seg>
+                <seg>Workspace administrators</seg>
             </tuv>
         </tu>
         <tu tuid="cellAdministrator">
@@ -113,10 +113,10 @@
 
         <tu tuid="addAdministratorPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Ajout d'un administrateur d'organisation (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)</seg>
+                <seg>Ajout d'un administrateur de workspace (création d'un nouvel utilisateur ou attribution du rôle à un utilisateur existant)</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of a organization administrator (creation of a new user or assignation of this role to an existing user)</seg>
+                <seg>Creation of a workspace administrator (creation of a new user or assignation of this role to an existing user)</seg>
             </tuv>
         </tu>        
         <tu tuid="addPanelTitle">

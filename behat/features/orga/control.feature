@@ -16,8 +16,26 @@ Feature: Control of organizational data feature
       | control                        | diagnostic | failure  |
       | Axe ne contenant aucun membre  | NOT OK     | Axe vide |
     And the row 2 of the "consistency" datagrid should contain:
-      | control                                    | diagnostic | failure                                     |
-      | Membre pour lequel manque un membre parent | NOT OK     | Axe: Site; membre : Site relié à aucun pays |
+      | control                                    | diagnostic | failure                                        |
+      | Membre pour lequel manque un membre parent | NOT OK     | Axe : Site ; élément : Site relié à aucun pays |
     And the row 3 of the "consistency" datagrid should contain:
-      | control                                           | diagnostic | failure                                |
-      | Membre sans enfant d'un axe non situé à la racine | NOT OK     | Axe: Marque; membre : Marque sans site |
+      | control                                           | diagnostic | failure                                   |
+      | Membre sans enfant d'un axe non situé à la racine | NOT OK     | Axe : Marque ; élément : Marque sans site |
+    And the row 4 of the "consistency" datagrid should contain:
+      | control                                                                  | diagnostic | failure |
+      | Niveau organisationnel manquant pour l'affichage de l'onglet "Collectes" | OK         |         |
+  # Ajout de la granularité "Pays"
+    And I open tab "Niveaux"
+    And I click "Ajouter"
+    Then I should see the popup "Ajout d'un niveau organisationnel"
+    When I additionally select "Pays" from "granularity_axes_addForm"
+    # And I select "Navigable" in radio "Navigable"
+    And I select "Oui" in radio "Rôles"
+    And I click "Valider"
+    And I wait 20 seconds
+    Then the following message is shown and closed: "Ajout effectué."
+    When I open tab "Contrôle"
+    And I click "Renouveler le contrôle"
+    Then the row 4 of the "consistency" datagrid should contain:
+      | control                                                                  | diagnostic | failure                 |
+      | Niveau organisationnel manquant pour l'affichage de l'onglet "Collectes" | NOT OK     | Année \| Pays \| Marque |

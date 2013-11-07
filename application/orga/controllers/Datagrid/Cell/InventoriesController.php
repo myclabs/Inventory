@@ -186,30 +186,49 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
      */
     function getusersdetailsAction()
     {
-        $idCell = $this->getParam('idCell');
-        $cell = Orga_Model_Cell::load($idCell);
+        $this->view->idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($this->view->idCell);
+        $this->view->labelPopup = __('Orga', 'inventory', 'involvedUsersInDataCollection', ['CELL' => $cell->getLabel()]);
         $granularity = $cell->getGranularity();
+        $this->view->idGranularity = $granularity->getId();
 
         $this->view->acls = [];
         foreach ($granularity->getOrganization()->getGranularities() as $granularityACL) {
             if ($granularityACL->getCellsWithACL()) {
-                Core_Tools::dump($granularityACL->getLabel());
                 $granularityACLs = [];
                 if ($granularityACL->isBroaderThan($granularity)) {
                     $parentCell = $cell->getParentCellForGranularity($granularityACL);
                     $cellResource = User_Model_Resource_Entity::loadByEntity($parentCell);
                     $this->addUserToArray($cellResource, $granularityACLs);
+                    if (!empty($granularityACLs)) {
+                        $this->view->acls[$parentCell->getLabel()] = $granularityACLs;
+                    }
                 } else if ($granularityACL === $granularity) {
                     $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
                     $this->addUserToArray($cellResource, $granularityACLs);
-                } else if ($granularityACL->isNarrowerThan($granularityACL)) {
+                    if (!empty($granularityACLs)) {
+                        $this->view->acls[$cell->getLabel()] = $granularityACLs;
+                    }
+                } else if ($granularityACL->isNarrowerThan($granularity)) {
                     foreach ($cell->getChildCellsForGranularity($granularityACL) as $childCell) {
                         $cellResource = User_Model_Resource_Entity::loadByEntity($childCell);
                         $this->addUserToArray($cellResource, $granularityACLs);
                     }
-                }
-                if (!empty($granularityACLs)) {
-                    $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
+                    if (!empty($granularityACLs)) {
+                        $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
+                    }
+                } else {
+                    try {
+                        $crossedGranularity = $granularity->getCrossedGranularity($granularityACL);
+                        foreach ($cell->getChildCellsForGranularity($crossedGranularity) as $childCrossedGranularity) {
+                            $cellResource = User_Model_Resource_Entity::loadByEntity($childCrossedGranularity->getParentCellForGranularity($granularityACL));
+                            $this->addUserToArray($cellResource, $granularityACLs);
+                        }
+                        if (!empty($granularityACLs)) {
+                            $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
+                        }
+                    } catch (Core_Exception_NotFound $e) {
+                    }
                 }
             }
         }
@@ -223,9 +242,11 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
     {
         foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {
             if ($securityIdentity instanceof User_Model_Role) {
-                $roleUsers = [];
+                $roleUsers = isset($granularityACLs[$securityIdentity->getName()]) ? $granularityACLs[$securityIdentity->getName()] : [];
                 foreach ($securityIdentity->getUsers() as $user) {
-                    $roleUsers[] = $user->getEmail();
+                    if (!in_array($user->getEmail(), $roleUsers)) {
+                        $roleUsers[] = $user->getEmail();
+                    }
                 }
                 if (!empty($roleUsers)) {
                     $granularityACLs[$securityIdentity->getName()] = $roleUsers;

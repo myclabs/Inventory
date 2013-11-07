@@ -18,7 +18,7 @@ Feature: Cell dataware analysis feature
     And the field "chartType" should have error: "Merci de préciser le type de graphique à afficher."
   # Retour
     When I click "Retour"
-    Then I should see "Vue globale Organisation avec données"
+    Then I should see "Vue globale Workspace avec données"
 
   @javascript
   Scenario: Cell existing preconfigured analysis scenario

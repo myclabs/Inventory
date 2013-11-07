@@ -24,8 +24,8 @@ class Orga_PopulateTest extends Orga_Populate
 
 
         // Création d'une organisation.
-        $organization = $this->createOrganization('Organisation avec données');
-        $organization_vide = $this->createOrganization('Organisation vide');
+        $organization = $this->createOrganization('Workspace avec données');
+        $organization_vide = $this->createOrganization('Workspace vide');
 
         // Création des axes.
         $axis_annee = $this->createAxis($organization, 'annee', 'Année');
@@ -159,7 +159,7 @@ qui officia deserunt mollit anim id est laborum.',
         $this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', 'chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
 
         // Création des utilisateurs orga.
-        $this->createUser('administrateur.application@toto.com');
+        $this->createUser('administrateur.workspace@toto.com');
         $this->createUser('administrateur.global@toto.com');
         $this->createUser('contributeur.global@toto.com');
         $this->createUser('observateur.global@toto.com');
@@ -176,8 +176,14 @@ qui officia deserunt mollit anim id est laborum.',
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);
-        $this->addOrganizationAdministrator('administrateur.application@toto.com', $organization);
+        $this->addOrganizationAdministrator('administrateur.workspace@toto.com', $organization);
+
         // Ajout d'un role sur une cellule à un utilisateur existant.
+
+        // Cellule globale
+        $this->addCellAdministrator('administrateur.global@toto.com', $granularityGlobal, []);
+        $this->addCellContributor('contributeur.global@toto.com', $granularityGlobal, []);
+        $this->addCellObserver('observateur.global@toto.com', $granularityGlobal, []);
 
         // La zone-marque pour laquelle les droits sont configurés est "Europe | Marque A".
         $this->addCellAdministrator('administrateur.zone-marque@toto.com', $granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a]);

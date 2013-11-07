@@ -36,16 +36,18 @@ Feature: History of user actions on a cell feature
     And I open tab "Historique"
     Then I should see "La saisie Europe | Marque B a été enregistrée pour la première fois par Administrateur Système."
   # Descente au niveau Zone | Marque et vérification que le contenu d'historique est encore présent
-    When I select "Europe" from "zone"
+    When I click element ".icon-plus"
+    And I select "Europe" from "zone"
     And I select "Marque B" from "marque"
     And I click element "#goTo2"
-    Then I should see "Europe | Marque B Organisation avec données"
+    Then I should see "Europe | Marque B Workspace avec données"
     When I open tab "Historique"
     Then I should see "La saisie Europe | Marque B a été enregistrée pour la première fois par Administrateur Système."
   # Descente au niveau site et vérification que le contenu d'historique n'est plus présent
-    When I select "Grenoble" from "site"
+    When I click element ".icon-plus"
+    And I select "Grenoble" from "site"
     And I click element "#goTo3"
-    Then I should see "Grenoble Organisation avec données"
+    Then I should see "Grenoble Workspace avec données"
     When I open tab "Historique"
     Then I should see "Aucun historique à afficher."
 
