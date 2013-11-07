@@ -16,7 +16,7 @@ use MyCLabs\Work\Dispatcher\WorkDispatcher;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagrid
+class Orga_Datagrid_Organization_Acls_ChildusersController extends UI_Controller_Datagrid
 {
     /**
      * @Inject

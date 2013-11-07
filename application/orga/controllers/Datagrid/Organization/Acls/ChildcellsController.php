@@ -13,7 +13,7 @@ use Core\Annotation\Secure;
  * @package Orga
  * @subpackage Controller
  */
-class Orga_Datagrid_Cell_Acls_ChildcellsController extends UI_Controller_Datagrid
+class Orga_Datagrid_Organization_Acls_ChildcellsController extends UI_Controller_Datagrid
 {
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -65,7 +65,7 @@ class Orga_Datagrid_Cell_Acls_ChildcellsController extends UI_Controller_Datagri
 
             $data['administrators'] = implode(' | ', $listAdministrator);
             $data['details'] = $this->cellPopup(
-                'orga/datagrid_cell_acls_childcells/list/idCell/'.$data['index'],
+                'orga/datagrid_organization_acls_childcells/list/idCell/'.$data['index'],
                 implode(' | ', $listLinkedUser),
                 'zoom-in'
             );
@@ -84,17 +84,22 @@ class Orga_Datagrid_Cell_Acls_ChildcellsController extends UI_Controller_Datagri
      */
     public function listAction()
     {
-        $this->view->idCell = $this->getParam('idCell');
-        $cellACLResource = User_Model_Resource_Entity::loadByEntity(
-            Orga_Model_Cell::load($this->view->idCell)
-        );
+        $idCell = $this->getParam('idCell');
+        $this->view->assign('idCell', $idCell);
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+        $this->view->assign('idGranularity', $cell->getGranularity()->getId());
+        $cellACLResource = User_Model_Resource_Entity::loadByEntity($cell);
 
-        $this->view->listRoles = array();
+        $listRoles = array();
         foreach ($cellACLResource->getLinkedSecurityIdentities() as $linkedIdentity) {
             if ($linkedIdentity instanceof User_Model_Role) {
-                $this->view->listRoles[$linkedIdentity->getRef()] = __('Orga', 'role', $linkedIdentity->getName());
+                $listRoles[$linkedIdentity->getRef()] = __('Orga', 'role', $linkedIdentity->getName());
             }
         }
+        $this->view->assign('listRoles', $listRoles);
+
+        $this->view->assign('labelPopup', $cell->getLabelExtended());
     }
 
 }

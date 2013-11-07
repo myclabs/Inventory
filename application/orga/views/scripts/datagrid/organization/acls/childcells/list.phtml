@@ -7,7 +7,7 @@
 
 $action = $this->action;
 
-$datagridACLs = new UI_Datagrid('cellACLs'.$action.$this->idCell, 'datagrid_cell_acls_current', 'orga');
+$datagridACLs = new UI_Datagrid('cellACLs'.$action.$this->idCell, 'datagrid_organization_acls_cell', 'orga');
 
 $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
 $columnUserFirstName->addable = false;

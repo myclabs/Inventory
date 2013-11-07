@@ -12,7 +12,7 @@ use Core\Annotation\Secure;
  * Controller des datagrid des cellules
  * @package Orga
  */
-class Orga_Datagrid_Cell_RelevanceController extends UI_Controller_Datagrid
+class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datagrid
 {
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -35,9 +35,9 @@ class Orga_Datagrid_Cell_RelevanceController extends UI_Controller_Datagrid
         $this->request->setCustomParameters($this->request->filter->getConditions());
         $this->request->filter->setConditions(array());
         $this->request->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
-        $this->request->aclFilter->enabled = true;
-        $this->request->aclFilter->user = $connectedUser;
-        $this->request->aclFilter->action = User_Model_Action_Default::EDIT();
+//        $this->request->aclFilter->enabled = true;
+//        $this->request->aclFilter->user = $connectedUser;
+//        $this->request->aclFilter->action = User_Model_Action_Default::EDIT();
 
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));

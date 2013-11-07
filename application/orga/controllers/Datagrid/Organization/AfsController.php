@@ -10,12 +10,12 @@ use Core\Annotation\Secure;
  * Controller du datagrid de configuration des formulaires des cellules.
  * @package Orga
  */
-class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_Datagrid
+class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
 {
 
     /**
      * Methode appelee pour remplir le tableau.
-     * @Secure("editCell")
+     * @Secure("editOrganization")
      */
     public function getelementsAction()
     {
@@ -90,7 +90,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
 
     /**
      * Modifie les valeurs d'un element.
-     * @Secure("editCell")
+     * @Secure("editOrganization")
      */
     public function updateelementAction()
     {

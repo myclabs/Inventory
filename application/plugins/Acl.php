@@ -126,6 +126,25 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
                     return true;
                 }
             }
+        }
+        return $isUserAllowedToEditOrganizationAndCells;
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function allowOrganizationAndCellsRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $organization = $this->getOrganization($request);
+
+        $isUserAllowedToEditOrganizationAndCells = $this->aclService->isAllowed(
+            $identity,
+            User_Model_Action_Default::ALLOW(),
+            $organization
+        );
+        if (!$isUserAllowedToEditOrganizationAndCells) {
             foreach ($organization->getGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
@@ -140,6 +159,20 @@ class Inventory_Plugin_Acl extends User_Plugin_Acl
             }
         }
         return $isUserAllowedToEditOrganizationAndCells;
+    }
+
+    /**
+     * @param User_Model_SecurityIdentity      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    protected function allowOrganizationRule(User_Model_SecurityIdentity $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->aclService->isAllowed(
+            $identity,
+            User_Model_Action_Default::EDIT(),
+            $this->getOrganization($request)
+        );
     }
 
     /**

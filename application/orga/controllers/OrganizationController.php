@@ -330,7 +330,7 @@ class Orga_OrganizationController extends Core_Controller
         if ($isUserAllowedToEditOrganization) {
             $consistencyTab = new UI_Tab('consistency');
             $consistencyTab->label = __('UI', 'name', 'control');
-            $consistencyTab->dataSource = 'orga/organization/edit-consistency'.$parameters;
+            $consistencyTab->dataSource = 'orga/organization/consistency'.$parameters;
             $consistencyTab->useCache = true;
             $tabView->addTab($consistencyTab);
         }
@@ -407,6 +407,7 @@ class Orga_OrganizationController extends Core_Controller
     public function editOrganizationAction()
     {
         $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->idOrganization = $idOrganization;
@@ -426,9 +427,9 @@ class Orga_OrganizationController extends Core_Controller
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
-            $this->view->display = false;
+            $this->view->assign('display', false);
         } else {
-            $this->view->display = true;
+            $this->view->assign('display', true);
         }
         $this->view->granularityReportBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
     }
@@ -440,6 +441,7 @@ class Orga_OrganizationController extends Core_Controller
     public function editOrganizationSubmitAction()
     {
         $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
         $formData = $this->getFormData('organizationDetails');
 
@@ -479,6 +481,7 @@ class Orga_OrganizationController extends Core_Controller
         $connectedUser = $this->_helper->auth();
 
         $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
@@ -503,16 +506,18 @@ class Orga_OrganizationController extends Core_Controller
             $granularities = $organization->getGranularities();
             uasort($granularities, function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) { return $b->getPosition() - $a->getPosition(); });
             // Pas de reglage de la pertinence de la cellule globale.
-            array_pop($granularities)->getLabel();
+            array_pop($granularities);
         }
-        $this->view->granularities = $granularities;
+        $this->view->assign('granularities', $granularities);
 
-        $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
+        $globalGranularity = $organization->getGranularityByRef('global');
+        $globalCell = $globalGranularity->getCellByMembers([]);
+
         $listDatagridConfiguration = array();
         foreach ($granularities as $granularity) {
             $datagridConfiguration = new Orga_DatagridConfiguration(
                 'relevance_granularity'.$granularity->getId(),
-                'datagrid_cell_relevance',
+                'datagrid_organization_relevance',
                 'orga',
                 $globalCell,
                 $granularity
@@ -530,6 +535,260 @@ class Orga_OrganizationController extends Core_Controller
         }
 
         $this->forward('child', 'cell', 'orga', ['datagridConfiguration' => $listDatagridConfiguration, 'idCell' => $globalCell->getId()]);
+    }
+
+    /**
+     * Controller de la vue de la cohérence d'un organization.
+     * @Secure("editOrganization")
+     */
+    public function consistencyAction()
+    {
+        $this->view->assign('idOrganization', $this->getParam('idOrganization'));
+
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
+            $this->view->assign('display', false);
+        } else {
+            $this->view->assign('display', true);
+        }
+    }
+
+    /**
+     * Action renvoyant le tab.
+     * @Secure("allowOrganizationAndCells")
+     */
+    public function editAclsAction()
+    {
+        /** @var User_Model_User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+        //@todo Changer par un droit ALLOW
+        $isUserAllowedToAllowOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            User_Model_Action_Default::EDIT(),
+            $organization
+        );
+        if (!$isUserAllowedToAllowOrganization) {
+            $granularities = [];
+            foreach ($organization->getGranularities() as $granularity) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $connectedUser;
+                $aclCellQuery->aclFilter->action = User_Model_Action_Default::ALLOW();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+                $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanEdit > 0) {
+                    $granularities[] = $granularity;
+                }
+            }
+        } else {
+            $granularities = $organization->getGranularities();
+            uasort($granularities, function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) { return $b->getPosition() - $a->getPosition(); });
+            // La granularité globale subit un traitement a part.
+            $globalGranularity = array_pop($granularities);
+        }
+        $this->view->assign('granularities', $granularities);
+
+        $globalGranularity = $organization->getGranularityByRef('global');
+        $globalCell = $globalGranularity->getCellByMembers([]);
+
+        $listDatagridConfiguration = array();
+        if ($isUserAllowedToAllowOrganization) {
+            // Utilisateurs de l'organization.
+            $datagridConfiguration = new Orga_DatagridConfiguration(
+                'organizationACL'.$organization->getId(),
+                'datagrid_organization_acls_organization',
+                'orga',
+                $globalCell,
+                $globalGranularity
+            );
+            $datagridConfiguration->datagrid->addParam('idOrganization', $idOrganization);
+
+            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
+            $columnUserFirstName->addable = false;
+            $datagridConfiguration->datagrid->addCol($columnUserFirstName);
+
+            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
+            $columnUserLastName->addable = false;
+            $datagridConfiguration->datagrid->addCol($columnUserLastName);
+
+            $columnUserEmail = new UI_Datagrid_Col_Text('userEmail', __('UI', 'name', 'emailAddress'));
+            $datagridConfiguration->datagrid->addCol($columnUserEmail);
+
+            $datagridConfiguration->datagrid->pagination = false;
+            $datagridConfiguration->datagrid->addElements = true;
+            $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addAdministratorPanelTitle');
+            $datagridConfiguration->datagrid->deleteElements = true;
+
+            $labelDatagrid = __('Orga', 'role', 'organizationAdministrators');
+            $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+
+            // Utilisateurs de la cellule globale.
+            $datagridConfiguration = new Orga_DatagridConfiguration(
+                'granularityACL'.$globalGranularity->getId(),
+                'datagrid_organization_acls_cell',
+                'orga',
+                $globalCell,
+                $globalGranularity
+            );
+            $datagridConfiguration->datagrid->addParam('idOrganization', $idOrganization);
+            $datagridConfiguration->datagrid->addParam('idCell', $globalCell->getId());
+
+            $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
+            $columnUserFirstName->addable = false;
+            $datagridConfiguration->datagrid->addCol($columnUserFirstName);
+
+            $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
+            $columnUserLastName->addable = false;
+            $datagridConfiguration->datagrid->addCol($columnUserLastName);
+
+            $columnUserEmail = new UI_Datagrid_Col_Text('userEmail', __('UI', 'name', 'emailAddress'));
+            $datagridConfiguration->datagrid->addCol($columnUserEmail);
+
+            $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
+            $columnRole->list = array();
+            $columnRole->list[] = 'En attente du refactoring des ACLs';
+//            foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
+//                if ($role instanceof User_Model_Role) {
+//                    $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
+//                }
+//            }
+            $datagridConfiguration->datagrid->addCol($columnRole);
+
+            $datagridConfiguration->datagrid->pagination = false;
+            $datagridConfiguration->datagrid->addElements = true;
+            $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addPanelTitle');
+            $datagridConfiguration->datagrid->deleteElements = true;
+
+            $labelDatagrid = $globalCell->getLabel();
+            $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+        }
+
+        foreach ($granularities as $narrowerGranularity) {
+            if ($narrowerGranularity->getCellsWithACL()) {
+                // Datagrid des utilisateurs des cellules enfants.
+                $datagridConfiguration = new Orga_DatagridConfiguration(
+                    'granularityUserACL'.$narrowerGranularity->getId(),
+                    'datagrid_organization_acls_childusers',
+                    'orga',
+                    $globalCell,
+                    $narrowerGranularity
+                );
+                $datagridConfiguration->datagrid->addParam('idOrganization', $idOrganization);
+
+                $columnUserFirstName = new UI_Datagrid_Col_Text('userFirstName', __('User', 'user', 'firstName'));
+                $columnUserFirstName->addable = false;
+                $datagridConfiguration->datagrid->addCol($columnUserFirstName);
+
+                $columnUserLastName = new UI_Datagrid_Col_Text('userLastName', __('User', 'user', 'lastName'));
+                $columnUserLastName->addable = false;
+                $datagridConfiguration->datagrid->addCol($columnUserLastName);
+
+                $columnUserEmail = new UI_Datagrid_Col_Text('userEmail', __('UI', 'name', 'emailAddress'));
+                $datagridConfiguration->datagrid->addCol($columnUserEmail);
+
+                $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
+                $columnRole->list = array();
+                $columnRole->list[] = 'En attente du refactoring des ACLs';
+//                foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
+//                    if ($role instanceof User_Model_Role) {
+//                        $columnRole->list[$role->getName()] = __('Orga', 'role', $role->getName());
+//                    }
+//                }
+                $datagridConfiguration->datagrid->addCol($columnRole);
+
+                $datagridConfiguration->datagrid->pagination = true;
+                $datagridConfiguration->datagrid->addElements = true;
+                $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addPanelTitle');
+                $datagridConfiguration->datagrid->deleteElements = true;
+
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' — ' . __('Orga', 'role', 'userDetails');
+                $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+
+                // Datagrid des cellules enfants avec le nombre d'utilisteur pour chacune.
+                $datagridConfiguration = new Orga_DatagridConfiguration(
+                    'granularityCellACL'.$narrowerGranularity->getId(),
+                    'datagrid_organization_acls_childcells',
+                    'orga',
+                    $globalCell,
+                    $narrowerGranularity
+                );
+                $datagridConfiguration->datagrid->addParam('idOrganization', $idOrganization);
+
+                $columnAdministrators = new UI_Datagrid_Col_Text('administrators', __('Orga', 'role', 'cellGenericAdministrators'));
+                $datagridConfiguration->datagrid->addCol($columnAdministrators);
+
+                $columnDetails = new UI_Datagrid_Col_Popup('details', __('Orga', 'role', 'detailCellRolesHeader'));
+                $columnDetails->popup->addAttribute('class', 'large');
+                $columnDetails->popup->title = '';
+                $datagridConfiguration->datagrid->addCol($columnDetails);
+
+                $labelDatagrid = $narrowerGranularity->getLabel() . ' — ' . __('Orga', 'role', 'cellDetails');
+                $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+            }
+        }
+
+        $this->forward('child', 'cell', 'orga', array(
+            'idCell' => $globalCell->getId(),
+            'datagridConfiguration' => $listDatagridConfiguration,
+            'display' => 'render',
+            'minimize' => false,
+        ));
+    }
+
+    /**
+     * Action renvoyant le tab.
+     * @Secure("editOrganization")
+     */
+    public function editAfsAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $globalGranularity = $organization->getGranularityByRef('global');
+        $globalCell = $globalGranularity->getCellByMembers([]);
+
+        $listAFs = array();
+        /** @var AF_Model_AF $aF */
+        foreach (AF_Model_AF::loadList() as $aF) {
+            $listAFs[$aF->getRef()] = $aF->getLabel();
+        }
+
+        $listDatagridConfiguration = array();
+        foreach ($organization->getInputGranularities() as $inputGranularity) {
+            $datagridConfiguration = new Orga_DatagridConfiguration(
+                'aFGranularityConfig'.$inputGranularity->getId(),
+                'datagrid_organization_afs',
+                'orga',
+                $globalCell,
+                $inputGranularity->getInputConfigGranularity()
+            );
+            $datagridConfiguration->datagrid->addParam('idCell', $globalCell->getId());
+            $idInputGranularity = $inputGranularity->getId();
+            $datagridConfiguration->datagrid->addParam('idInputGranularity', $idInputGranularity);
+
+            $columnAF = new UI_Datagrid_Col_List('aF', __('AF', 'name', 'accountingForm'));
+            $columnAF->list = $listAFs;
+            $columnAF->editable = true;
+            $columnAF->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
+            $datagridConfiguration->datagrid->addCol($columnAF);
+
+            $labelDatagrid = $inputGranularity->getInputConfigGranularity()->getLabel()
+                . ' <small>' . $inputGranularity->getLabel() . '</small>';
+            $listDatagridConfiguration[$labelDatagrid] = $datagridConfiguration;
+        }
+
+        $this->forward('child', 'cell', 'orga', array(
+            'idCell' => $globalCell->getId(),
+            'datagridConfiguration' => $listDatagridConfiguration,
+            'display' => 'render',
+            'minimize' => false,
+        ));
     }
 
     /**
@@ -572,27 +831,6 @@ class Orga_OrganizationController extends Core_Controller
             __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-    }
-
-    /**
-     * Controller de la vue de la cohérence d'un organization.
-     * @Secure("viewOrganization")
-     */
-    public function consistencyAction()
-    {
-        if ($this->hasParam('idCell')) {
-            $this->view->idCell = $this->getParam('idCell');
-        } else {
-            $this->view->idCell = null;
-        }
-        $this->view->idOrganization = $this->getParam('idOrganization');
-
-        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
-            $this->_helper->layout()->disableLayout();
-            $this->view->display = false;
-        } else {
-            $this->view->display = true;
-        }
     }
 
     /**

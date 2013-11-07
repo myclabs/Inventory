@@ -13,7 +13,7 @@ use DI\Annotation\Inject;
  * Controller du datagrid de coherence
  * @package Orga
  */
-class Orga_Datagrid_ConsistencyController extends UI_Controller_Datagrid
+class Orga_Datagrid_Organization_ConsistencyController extends UI_Controller_Datagrid
 {
     /**
      * @Inject

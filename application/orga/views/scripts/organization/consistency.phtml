@@ -15,13 +15,13 @@ $columnDiag->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'nok'
 $columnEchec = new UI_Datagrid_Col_Text('failure', __('Orga', 'control', 'abnormalItems'));
 $columnEchec->multiple = true;
 
-$datagrid = new UI_Datagrid('consistency', 'datagrid_consistency', 'orga');
+$datagrid = new UI_Datagrid('consistency'.$this->idOrganization, 'datagrid_organization_consistency', 'orga');
 $datagrid->addCol($columnControl);
 $datagrid->addCol($columnDiag);
 $datagrid->addCol($columnEchec);
-
-$datagrid->pagination = false;
 $datagrid->addParam('idOrganization', $this->idOrganization);
+$datagrid->pagination = false;
+
 if ($this->display === false) {
     echo $datagrid->render();
 } else {
@@ -29,6 +29,6 @@ if ($this->display === false) {
 }
 
 $controlButton = new UI_HTML_Button(__('Orga', 'control', 'renewControl'));
-$controlButton->addAttribute('onclick', 'consistency.filter();');
+$controlButton->addAttribute('onclick', 'consistency'.$this->idOrganization.'.filter();');
 $controlButton->addAttribute('class', 'btn-primary');
 $controlButton->display();
