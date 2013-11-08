@@ -177,7 +177,7 @@
                     "Doctrine\\Common\\Collections\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -384,7 +384,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -408,7 +408,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -447,7 +447,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -482,7 +482,7 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/myclabs/doctrine2.git",
-                "reference": "791ec3bc6eb5d0fc75fc1238df47dbce63b12b0e"
+                "reference": "1899bcf00012712ba1326e740e6b1746845c9f1b"
             },
             "archive": {
                 "exclude": [
@@ -555,7 +555,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2013-11-04 11:53:18"
+            "time": "2013-11-04 15:01:05"
         },
         {
             "name": "dompdf/dompdf",
@@ -563,12 +563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "36a5677a3cc83a7adbadf16831f8e1bb6763e811"
+                "reference": "98c741926ef0d2e2bd6086a71ca3ee14775aa74e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/36a5677a3cc83a7adbadf16831f8e1bb6763e811",
-                "reference": "36a5677a3cc83a7adbadf16831f8e1bb6763e811",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/98c741926ef0d2e2bd6086a71ca3ee14775aa74e",
+                "reference": "98c741926ef0d2e2bd6086a71ca3ee14775aa74e",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +596,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2013-10-08 14:44:02"
+            "time": "2013-11-07 02:10:19"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -1112,16 +1112,16 @@
         },
         {
             "name": "netcarver/textile",
-            "version": "v3.5.3",
+            "version": "v3.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/textile/php-textile.git",
-                "reference": "159dc08480c0e3c1375d7015a7236c8033922dde"
+                "reference": "5d170a5fd1ad50793ca92b0cb188aecfdec8571b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/textile/php-textile/zipball/159dc08480c0e3c1375d7015a7236c8033922dde",
-                "reference": "159dc08480c0e3c1375d7015a7236c8033922dde",
+                "url": "https://api.github.com/repos/textile/php-textile/zipball/5d170a5fd1ad50793ca92b0cb188aecfdec8571b",
+                "reference": "5d170a5fd1ad50793ca92b0cb188aecfdec8571b",
                 "shasum": ""
             },
             "require": {
@@ -1148,7 +1148,7 @@
             ],
             "description": "A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.",
             "homepage": "https://github.com/textile/php-textile",
-            "time": "2013-10-30 20:04:10"
+            "time": "2013-11-05 19:26:42"
         },
         {
             "name": "ocramius/proxy-manager",
@@ -1236,7 +1236,7 @@
                     "Console_CommandLine": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -1283,7 +1283,7 @@
                     "PEAR": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 "."
             ],
@@ -1327,7 +1327,7 @@
                     "classes/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1895,7 +1895,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],
