@@ -204,4 +204,12 @@ abstract class Authorization extends Core_Model_Entity
     {
         return $this->childAuthorizations;
     }
+
+    /**
+     * @return bool
+     */
+    public function isRoot()
+    {
+        return ($this->parentAuthorization === null);
+    }
 }

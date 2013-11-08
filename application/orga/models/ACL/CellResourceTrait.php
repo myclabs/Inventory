@@ -63,6 +63,16 @@ trait CellResourceTrait
         $this->managerRoles = new ArrayCollection();
         $this->contributorRoles = new ArrayCollection();
         $this->observerRoles = new ArrayCollection();
+    }
+
+    protected function updateACL()
+    {
+        // Supprime les autorisations héritées
+        $this->acl->forAll(function (CellAuthorization $authorization) {
+            if (! $authorization->isRoot()) {
+                $this->acl->removeElement($authorization);
+            }
+        });
 
         // Hérite des ressources parent
         foreach ($this->getParentCells() as $parentCell) {

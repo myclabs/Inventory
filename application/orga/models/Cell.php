@@ -198,6 +198,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $this->dWResults = new ArrayCollection();
         $this->socialGenericActions = new ArrayCollection();
         $this->socialContextActions = new ArrayCollection();
+        $this->constructACL();
 
         $this->granularity = $granularity;
         foreach ($members as $member) {
@@ -231,9 +232,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         }
 
         $this->updateHierarchy();
-
-        // ACL
-        $this->constructACL();
     }
 
     /**
@@ -627,6 +625,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                 }
             }
         }
+
+        // MAJ des ACL
+        $this->updateACL();
     }
 
     /**
