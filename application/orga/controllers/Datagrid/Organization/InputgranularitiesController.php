@@ -73,7 +73,7 @@ class Orga_Datagrid_Organization_InputgranularitiesController extends UI_Control
         }
 
         if (empty($this->_addErrorMessages)) {
-            if ($inputGranularity->getInputConfigGranularity() !== null) {
+            if ($inputGranularity->isInput()) {
                 $this->setAddElementErrorMessage(
                     'inputGranularity',
                     __('Orga', 'configuration', 'granularityIsAlreadyAnInputGranularity')

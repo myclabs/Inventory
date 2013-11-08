@@ -48,15 +48,13 @@ class Orga_Test_AxisAttributes extends Core_Test_TestCase
 
         $this->organization = new Orga_Model_Organization();
 
-        $this->axis = new Orga_Model_Axis($this->organization);
-        $this->axis->setRef('ref');
+        $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel ('Label');
     }
 
     public function testSetGetRef()
     {
-        $newAxis = new Orga_Model_Axis($this->organization);
-        $newAxis->setRef('new');
+        $newAxis = new Orga_Model_Axis($this->organization, 'new');
 
         $this->assertSame('ref', $this->axis->getRef());
         $this->assertSame('new', $newAxis->getRef());
@@ -68,8 +66,7 @@ class Orga_Test_AxisAttributes extends Core_Test_TestCase
      */
     public function testSetRefGlobal()
     {
-        $newAxis = new Orga_Model_Axis($this->organization);
-        $newAxis->setRef('global');
+        $newAxis = new Orga_Model_Axis($this->organization, 'global');
     }
 
     /**
@@ -78,8 +75,7 @@ class Orga_Test_AxisAttributes extends Core_Test_TestCase
      */
     public function testSetRefDuplicate()
     {
-        $newAxis = new Orga_Model_Axis($this->organization);
-        $newAxis->setRef('ref');
+        $newAxis = new Orga_Model_Axis($this->organization, 'ref');
     }
 
 }
@@ -104,15 +100,13 @@ class Orga_Test_AxisTag extends Core_Test_TestCase
 
         $this->organization = new Orga_Model_Organization();
 
-        $this->axis = new Orga_Model_Axis($this->organization);
-        $this->axis->setRef('ref');
+        $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel ('Label');
     }
 
     public function testGetAxisTag()
     {
-        $newAxis = new Orga_Model_Axis($this->organization);
-        $newAxis->setRef('new');
+        $newAxis = new Orga_Model_Axis($this->organization, 'new');
 
         $this->assertSame('1-ref', $this->axis->getAxisTag());
         $this->assertSame('2-new', $newAxis->getAxisTag());
@@ -120,28 +114,23 @@ class Orga_Test_AxisTag extends Core_Test_TestCase
 
     public function testGetNarrowerTag()
     {
-        $newAxis = new Orga_Model_Axis($this->organization);
-        $newAxis->setRef('new');
+        $newAxis = new Orga_Model_Axis($this->organization, 'new');
 
         $this->assertSame('/1-ref', $this->axis->getNarrowerTag());
         $this->assertSame('/2-new', $newAxis->getNarrowerTag());
 
-        $axisA = new Orga_Model_Axis($this->organization, $this->axis);
-        $axisA->setRef('ref_a');
+        $axisA = new Orga_Model_Axis($this->organization, 'ref_a', $this->axis);
 
-        $axisB = new Orga_Model_Axis($this->organization, $this->axis);
-        $axisB->setRef('ref_b');
+        $axisB = new Orga_Model_Axis($this->organization, 'ref_b', $this->axis);
 
         $this->assertSame('/1-ref', $this->axis->getNarrowerTag());
         $this->assertSame('/2-new', $newAxis->getNarrowerTag());
         $this->assertSame('/1-ref/1-ref_a', $axisA->getNarrowerTag());
         $this->assertSame('/1-ref/2-ref_b', $axisB->getNarrowerTag());
 
-        $axisB1 = new Orga_Model_Axis($this->organization, $axisB);
-        $axisB1->setRef('ref_b1');
+        $axisB1 = new Orga_Model_Axis($this->organization, 'ref_b1', $axisB);
 
-        $axis0 = new Orga_Model_Axis($this->organization);
-        $axis0->setRef('ref_0');
+        $axis0 = new Orga_Model_Axis($this->organization, 'ref_0');
 
         $this->assertSame('/1-ref', $this->axis->getNarrowerTag());
         $this->assertSame('/2-new', $newAxis->getNarrowerTag());
@@ -153,28 +142,23 @@ class Orga_Test_AxisTag extends Core_Test_TestCase
 
     public function testGetBroaderTag()
     {
-        $newAxis = new Orga_Model_Axis($this->organization);
-        $newAxis->setRef('new');
+        $newAxis = new Orga_Model_Axis($this->organization, 'new');
 
         $this->assertSame('/1-ref', $this->axis->getBroaderTag());
         $this->assertSame('/2-new', $newAxis->getBroaderTag());
 
-        $axisA = new Orga_Model_Axis($this->organization, $this->axis);
-        $axisA->setRef('ref_a');
+        $axisA = new Orga_Model_Axis($this->organization, 'ref_a', $this->axis);
 
-        $axisB = new Orga_Model_Axis($this->organization, $this->axis);
-        $axisB->setRef('ref_b');
+        $axisB = new Orga_Model_Axis($this->organization, 'ref_b', $this->axis);
 
         $this->assertSame('/1-ref_a/1-ref&/2-ref_b/1-ref', $this->axis->getBroaderTag());
         $this->assertSame('/2-new', $newAxis->getBroaderTag());
         $this->assertSame('/1-ref_a', $axisA->getBroaderTag());
         $this->assertSame('/2-ref_b', $axisB->getBroaderTag());
 
-        $axisB1 = new Orga_Model_Axis($this->organization, $axisB);
-        $axisB1->setRef('ref_b1');
+        $axisB1 = new Orga_Model_Axis($this->organization, 'ref_b1', $axisB);
 
-        $axis0 = new Orga_Model_Axis($this->organization);
-        $axis0->setRef('ref_0');
+        $axis0 = new Orga_Model_Axis($this->organization, 'ref_0');
 
         $this->assertSame('/1-ref_a/1-ref&/1-ref_b1/2-ref_b/1-ref', $this->axis->getBroaderTag());
         $this->assertSame('/2-new', $newAxis->getBroaderTag());
@@ -254,56 +238,43 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
 
         $this->organization = new Orga_Model_Organization();
 
-        $this->axis = new Orga_Model_Axis($this->organization);
-        $this->axis->setRef('ref');
+        $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel ('Label');
 
-        $this->newAxis = new Orga_Model_Axis($this->organization);
-        $this->newAxis->setRef('new');
+        $this->newAxis = new Orga_Model_Axis($this->organization, 'new');
         $this->newAxis->setLabel('New');
 
-        $this->axis1 = new Orga_Model_Axis($this->organization);
-        $this->axis1->setRef('ref_1');
+        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
         $this->axis1->setLabel('Label 1');
 
-        $this->axis11 = new Orga_Model_Axis($this->organization, $this->axis1);
-        $this->axis11->setRef('ref_11');
+        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
         $this->axis11->setLabel('Label 11');
 
-        $this->axis111 = new Orga_Model_Axis($this->organization, $this->axis11);
-        $this->axis111->setRef('ref_111');
+        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
         $this->axis111->setLabel('Label 111');
 
-        $this->axis112 = new Orga_Model_Axis($this->organization, $this->axis11);
-        $this->axis112->setRef('ref_112');
+        $this->axis112 = new Orga_Model_Axis($this->organization, 'ref_112', $this->axis11);
         $this->axis112->setLabel('Label 112');
 
-        $this->axis12 = new Orga_Model_Axis($this->organization, $this->axis1);
-        $this->axis12->setRef('ref_12');
+        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
         $this->axis12->setLabel('Label 12');
 
-        $this->axis121 = new Orga_Model_Axis($this->organization, $this->axis12);
-        $this->axis121->setRef('ref_121');
+        $this->axis121 = new Orga_Model_Axis($this->organization, 'ref_121', $this->axis12);
         $this->axis121->setLabel('Label 121');
 
-        $this->axis2 = new Orga_Model_Axis($this->organization);
-        $this->axis2->setRef('ref_2');
+        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
         $this->axis2->setLabel('Label 2');
 
-        $this->axis3 = new Orga_Model_Axis($this->organization);
-        $this->axis3->setRef('ref_3');
+        $this->axis3 = new Orga_Model_Axis($this->organization, 'ref_3');
         $this->axis3->setLabel('Label 3');
 
-        $this->axis31 = new Orga_Model_Axis($this->organization, $this->axis3);
-        $this->axis31->setRef('ref_31');
+        $this->axis31 = new Orga_Model_Axis($this->organization, 'ref_31', $this->axis3);
         $this->axis31->setLabel('Label 31');
 
-        $this->axis32 = new Orga_Model_Axis($this->organization, $this->axis3);
-        $this->axis32->setRef('ref_32');
+        $this->axis32 = new Orga_Model_Axis($this->organization, 'ref_32', $this->axis3);
         $this->axis32->setLabel('Label 32');
 
-        $this->axis321 = new Orga_Model_Axis($this->organization, $this->axis32);
-        $this->axis321->setRef('ref_321');
+        $this->axis321 = new Orga_Model_Axis($this->organization, 'ref_321', $this->axis32);
         $this->axis321->setLabel('Label 321');
     }
 
@@ -1044,20 +1015,16 @@ class Orga_Test_AxisMembers extends Core_Test_TestCase
 
         $this->organization = new Orga_Model_Organization();
 
-        $this->axis = new Orga_Model_Axis($this->organization);
-        $this->axis->setRef('ref');
+        $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel ('Label');
 
-        $this->member1 = new Orga_Model_Member($this->axis);
-        $this->member1->setRef('ref_1');
+        $this->member1 = new Orga_Model_Member($this->axis, 'ref_1');
         $this->member1->setLabel ('Label 1');
 
-        $this->member2 = new Orga_Model_Member($this->axis);
-        $this->member2->setRef('ref_2');
+        $this->member2 = new Orga_Model_Member($this->axis, 'ref_2');
         $this->member2->setLabel ('Label 2');
 
-        $this->member3 = new Orga_Model_Member($this->axis);
-        $this->member3->setRef('ref_3');
+        $this->member3 = new Orga_Model_Member($this->axis, 'ref_3');
         $this->member3->setLabel ('Label 3');
     }
 
@@ -1127,13 +1094,11 @@ class Orga_Test_AxisMembers extends Core_Test_TestCase
     {
         $this->axis->setMemberPositioning(true);
 
-        $contextualizingBroaderAxis = new Orga_Model_Axis($this->organization, $this->axis);
+        $contextualizingBroaderAxis = new Orga_Model_Axis($this->organization, 'new', $this->axis);
         $contextualizingBroaderAxis->setContextualize(true);
 
-        $memberA = new Orga_Model_Member($contextualizingBroaderAxis);
-        $memberA->setRef('ref_A');
-        $memberB = new Orga_Model_Member($contextualizingBroaderAxis);
-        $memberB->setRef('ref_B');
+        $memberA = new Orga_Model_Member($contextualizingBroaderAxis, 'ref_a');
+        $memberB = new Orga_Model_Member($contextualizingBroaderAxis, 'ref_b');
 
         $this->member1->setDirectParentForAxis($memberA);
         $this->member2->setDirectParentForAxis($memberB);

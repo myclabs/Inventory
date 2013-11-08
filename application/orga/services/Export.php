@@ -329,11 +329,11 @@ class Orga_Service_Export
         $modelBuilder->bind('cell', $cell);
 
         $granularities = [];
-        if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
+        if ($cell->getGranularity()->isInput()) {
             $granularities[] = $cell->getGranularity();
         }
         foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            if ($narrowerGranularity->getInputConfigGranularity() !== null) {
+            if ($narrowerGranularity->isInput()) {
                 $granularities[] = $narrowerGranularity;
             }
         }

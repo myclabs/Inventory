@@ -97,11 +97,13 @@ class Orga_Model_Member extends Core_Model_Entity
      * Constructeur de la classe Member.
      *
      * @param Orga_Model_Axis $axis
+     * @param string $ref
      * @param Orga_Model_Member[] $directParentMembers
      *
+     * @throws Core_Exception_Duplicate
      * @throws Core_Exception_InvalidArgument
      */
-    public function __construct(Orga_Model_Axis $axis, array $directParentMembers=[])
+    public function __construct(Orga_Model_Axis $axis, $ref, array $directParentMembers=[])
     {
         $this->directParents = new ArrayCollection();
         $this->directChildren = new ArrayCollection();
@@ -128,8 +130,16 @@ class Orga_Model_Member extends Core_Model_Entity
         foreach ($directParentMembers as $directParentMember) {
             $directParentMember->directChildren->add($this);
         }
-
         $this->updateParentMembersHashKeys();
+
+        Core_Tools::checkRef($ref);
+        try {
+            $this->getAxis()->getMemberByCompleteRef($ref . self::COMPLETEREF_JOIN . $this->parentMembersHashKey);
+            throw new Core_Exception_Duplicate('A Member with ref "'.$ref.'" already exists in this Axis');
+        } catch (Core_Exception_NotFound $e) {
+            $this->ref = $ref;
+        }
+
         $this->setPosition();
         $this->updateTag();
 

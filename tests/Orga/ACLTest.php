@@ -251,92 +251,72 @@ class Orga_Test_ACL extends Core_Test_TestCase
         // Création d'un ensemble d'axes.
 
         // Année.
-        $this->axisAnnee = new Orga_Model_Axis($this->organization);
-        $this->axisAnnee->setRef('annee');
+        $this->axisAnnee = new Orga_Model_Axis($this->organization, 'annee');
         $this->axisAnnee->setLabel('Année');
 
         // Site.
-        $this->axisSite = new Orga_Model_Axis($this->organization);
-        $this->axisSite->setRef('site');
+        $this->axisSite = new Orga_Model_Axis($this->organization, 'site');
         $this->axisSite->setLabel('Site');
 
         // Pays.
-        $this->axisPays = new Orga_Model_Axis($this->organization, $this->axisSite);
-        $this->axisPays->setRef('pays');
+        $this->axisPays = new Orga_Model_Axis($this->organization, 'pays', $this->axisSite);
         $this->axisPays->setLabel('Pays');
 
         // Zone.
-        $this->axisZone = new Orga_Model_Axis($this->organization, $this->axisPays);
-        $this->axisZone->setRef('zone');
+        $this->axisZone = new Orga_Model_Axis($this->organization, 'zone', $this->axisPays);
         $this->axisZone->setLabel('Zone');
 
         // Marque.
-        $this->axisMarque = new Orga_Model_Axis($this->organization, $this->axisSite);
-        $this->axisMarque->setRef('marque');
+        $this->axisMarque = new Orga_Model_Axis($this->organization, 'marque', $this->axisSite);
         $this->axisMarque->setLabel('Marque');
 
         // Catégories.
-        $this->axisCategorie = new Orga_Model_Axis($this->organization);
-        $this->axisCategorie->setRef('categorie');
+        $this->axisCategorie = new Orga_Model_Axis($this->organization, 'categorie');
         $this->axisCategorie->setLabel('Catégorie');
 
         // Création des membres des axes.
 
         // Années.
-        $this->memberAnnee2012 = new Orga_Model_Member($this->axisAnnee);
-        $this->memberAnnee2012->setRef('2012');
+        $this->memberAnnee2012 = new Orga_Model_Member($this->axisAnnee, '2012');
         $this->memberAnnee2012->setLabel('2012');
-        $this->memberAnnee2013 = new Orga_Model_Member($this->axisAnnee);
-        $this->memberAnnee2013->setRef('2013');
+        $this->memberAnnee2013 = new Orga_Model_Member($this->axisAnnee, '2013');
         $this->memberAnnee2013->setLabel('2013');
 
         // Zones.
-        $this->memberZoneEurope = new Orga_Model_Member($this->axisZone);
-        $this->memberZoneEurope->setRef('europe');
+        $this->memberZoneEurope = new Orga_Model_Member($this->axisZone, 'europe');
         $this->memberZoneEurope->setLabel('Europe');
-        $this->memberZoneSudamerique = new Orga_Model_Member($this->axisZone);
-        $this->memberZoneSudamerique->setRef('sudamerique');
+        $this->memberZoneSudamerique = new Orga_Model_Member($this->axisZone, 'sudamerique');
         $this->memberZoneSudamerique->setLabel('Amerique du Sud');
 
         // Pays.
-        $this->memberPaysFrance = new Orga_Model_Member($this->axisPays, [$this->memberZoneEurope]);
-        $this->memberPaysFrance->setRef('france');
+        $this->memberPaysFrance = new Orga_Model_Member($this->axisPays, 'france', [$this->memberZoneEurope]);
         $this->memberPaysFrance->setLabel('France');
-        $this->memberPaysAllemagne = new Orga_Model_Member($this->axisPays, [$this->memberZoneEurope]);
-        $this->memberPaysAllemagne->setRef('allemagne');
+        $this->memberPaysAllemagne = new Orga_Model_Member($this->axisPays, 'allemagne', [$this->memberZoneEurope]);
         $this->memberPaysAllemagne->setLabel('Allemagne');
-        $this->memberPaysPerou = new Orga_Model_Member($this->axisPays, [$this->memberZoneSudamerique]);
-        $this->memberPaysPerou->setRef('perou');
+        $this->memberPaysPerou = new Orga_Model_Member($this->axisPays, 'perou', [$this->memberZoneSudamerique]);
         $this->memberPaysPerou->setLabel('Pérou');
 
         // Marques.
-        $this->memberMarqueA = new Orga_Model_Member($this->axisMarque);
-        $this->memberMarqueA->setRef('a');
+        $this->memberMarqueA = new Orga_Model_Member($this->axisMarque, 'a');
         $this->memberMarqueA->setLabel('A');
-        $this->memberMarqueB = new Orga_Model_Member($this->axisMarque);
+        $this->memberMarqueB = new Orga_Model_Member($this->axisMarque, 'b');
         $this->memberMarqueB->setRef('b');
         $this->memberMarqueB->setLabel('B');
 
         // Sites.
-        $this->memberSiteAnnecy = new Orga_Model_Member($this->axisSite, [$this->memberPaysFrance, $this->memberMarqueA]);
-        $this->memberSiteAnnecy->setRef('annecy');
+        $this->memberSiteAnnecy = new Orga_Model_Member($this->axisSite, 'annecy', [$this->memberPaysFrance, $this->memberMarqueA]);
         $this->memberSiteAnnecy->setLabel('Annecy');
-        $this->memberSiteChambery = new Orga_Model_Member($this->axisSite, [$this->memberPaysFrance, $this->memberMarqueA]);
-        $this->memberSiteChambery->setRef('chambery');
+        $this->memberSiteChambery = new Orga_Model_Member($this->axisSite, 'chambery', [$this->memberPaysFrance, $this->memberMarqueA]);
         $this->memberSiteChambery->setLabel('Chambery');
-        $this->memberSiteBerlin = new Orga_Model_Member($this->axisSite, [$this->memberPaysAllemagne, $this->memberMarqueB]);
-        $this->memberSiteBerlin->setRef('berlin');
+        $this->memberSiteBerlin = new Orga_Model_Member($this->axisSite, 'berlin', [$this->memberPaysAllemagne, $this->memberMarqueB]);
         $this->memberSiteBerlin->setLabel('Berlin');
-        $this->memberSiteLima = new Orga_Model_Member($this->axisSite, [$this->memberPaysPerou, $this->memberMarqueB]);
-        $this->memberSiteLima->setRef('lima');
+        $this->memberSiteLima = new Orga_Model_Member($this->axisSite, 'lima', [$this->memberPaysPerou, $this->memberMarqueB]);
         $this->memberSiteLima->setLabel('Lima');
 
         // Catégories.
-        $this->memberCategorieEnergie = new Orga_Model_Member($this->axisCategorie);
-        $this->memberCategorieEnergie->setRef('energie');
+        $this->memberCategorieEnergie = new Orga_Model_Member($this->axisCategorie, 'energie');
         $this->memberCategorieEnergie->setLabel('Énergie');
-        $this->memberCategorieTransport = new Orga_Model_Member($this->axisCategorie);
-        $this->memberCategorieTransport->setRef('transport');
+        $this->memberCategorieTransport = new Orga_Model_Member($this->axisCategorie, 'transport');
         $this->memberCategorieTransport->setLabel('Transport');
 
         // Création des granularités de l'organisation.

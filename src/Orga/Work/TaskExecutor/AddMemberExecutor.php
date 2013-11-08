@@ -28,13 +28,9 @@ class Orga_Work_TaskExecutor_AddMemberExecutor implements TaskExecutor
             throw new InvalidArgumentException("Invalid task type provided");
         }
 
-        $parents = [];
-        foreach ($task->listBroaderMembers as $idBroaderMember) {
-            $parents[] = Orga_Model_Member::load($idBroaderMember);
-        }
+        $parentMembers = array_map(function($idMember) { return Orga_Model_Member::load($idMember); }, $task->listBroaderMembers);
 
-        $member = new Orga_Model_Member(Orga_Model_Axis::load($task->idAxis), $parents);
-        $member->setRef($task->ref);
+        $member = new Orga_Model_Member(Orga_Model_Axis::load($task->idAxis), $task->ref, $parentMembers);
         $member->setLabel($task->label);
         $member->save();
 
