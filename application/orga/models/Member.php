@@ -141,7 +141,7 @@ class Orga_Model_Member extends Core_Model_Entity
         }
 
         $this->setPosition();
-        $this->updateTag();
+        $this->updateTags();
 
         $axis->addMember($this);
     }
@@ -252,7 +252,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     protected function hasMove()
     {
-        $this->updateTag();
+        $this->updateTags();
     }
 
     /**
@@ -300,7 +300,7 @@ class Orga_Model_Member extends Core_Model_Entity
                 throw new Core_Exception_Duplicate('A Member with ref "'.$ref.'" already exists in this Axis');
             } catch (Core_Exception_NotFound $e) {
                 $this->ref = $ref;
-                $this->updateTag();
+                $this->updateTags();
             }
         }
     }
@@ -395,6 +395,7 @@ class Orga_Model_Member extends Core_Model_Entity
 
     /**
      * Mets à jour le tag du membre.
+     *  Ne devrait pas être utilisé.
      */
     public function updateTag()
     {
@@ -410,13 +411,21 @@ class Orga_Model_Member extends Core_Model_Entity
             $this->tag = implode($pathLink, $pathTags);
         }
         $this->tag .= Orga_Model_Organization::PATH_SEPARATOR . $this->getMemberTag();
+    }
+
+    /**
+     * Mets à jour le tag du membre, de ses cellules, et ceux des enfants.
+     */
+    public function updateTags()
+    {
+        $this->updateTag();
 
         foreach ($this->getCells() as $cell) {
             $cell->updateTags();
         }
 
         foreach ($this->getDirectChildren() as $directChildMember) {
-            $directChildMember->updateTag();
+            $directChildMember->updateTags();
         }
     }
 
@@ -488,7 +497,7 @@ class Orga_Model_Member extends Core_Model_Entity
             }
             $this->updateParentMembersHashKeys();
             $this->addPosition();
-            $this->updateTag();
+            $this->updateTags();
         }
     }
 
@@ -507,7 +516,7 @@ class Orga_Model_Member extends Core_Model_Entity
             }
             $this->updateParentMembersHashKeys();
             $this->addPosition();
-            $this->updateTag();
+            $this->updateTags();
             $this->disableCells();
         }
     }

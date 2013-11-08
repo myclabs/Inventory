@@ -202,7 +202,7 @@ class Orga_Model_Axis extends Core_Model_Entity
         $this->updateBroaderTag();
         foreach ($this->getMembers() as $member) {
             // Update simple des tag, les cellules seront mises à jour ensuite.
-            $member->updateTag();
+            $member->updateTags();
         }
         foreach ($this->getGranularities() as $granularity) {
             $granularity->updateRef();
@@ -581,7 +581,7 @@ class Orga_Model_Axis extends Core_Model_Entity
             $this->memberPositioning = $memberPositioning;
 
             foreach ($this->getMembers() as $member) {
-                $member->updateTag();
+                $member->updateTags();
             }
         }
     }
