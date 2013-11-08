@@ -18,14 +18,13 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Orga_Model_Granularity extends Core_Model_Entity
 {
-    use Core_Strategy_Ordered;
-
     // Constantes de tris et de filtres.
+    const QUERY_TAG = 'tag';
     const QUERY_REF = 'ref';
-    const QUERY_POSITION = 'position';
     const QUERY_ORGANIZATION = 'organization';
 
-    // Séparateur des labels des axes dans le label de la granularité.
+    // Séparateur des refs et labels des axes dans le label de la granularité.
+    const  REF_SEPARATOR = '|';
     const  LABEL_SEPARATOR = ' | ';
 
 
@@ -56,6 +55,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
      * @var Collection|Orga_Model_Axis[]
      */
     protected $axes = array();
+
+    /**
+     * Tag identifiant l'axe dans la hiérarchie de l'organization.
+     *
+     * @var string
+     */
+    protected $tag = null;
 
     /**
      * Collection des Cell de la Granularity.
@@ -147,6 +153,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @param Orga_Model_Organization $organization
      * @param Orga_Model_Axis[] $axes
+     *
+     * @throws Core_Exception_InvalidArgument
      */
     public function __construct(Orga_Model_Organization $organization, array $axes=array())
     {
@@ -155,74 +163,21 @@ class Orga_Model_Granularity extends Core_Model_Entity
         $this->inputGranularities = new ArrayCollection();
 
         $this->organization = $organization;
+        @usort($axes, ['Orga_Model_Axis', 'firstOrderAxes']);
         foreach ($axes as $axis) {
-            if (!($this->hasAxis($axis))) {
+            if ($organization->hasAxis($axis) && !($this->hasAxis($axis))) {
+                if (!$axis->isTransverse($this->axes->toArray())) {
+                    throw new Core_Exception_InvalidArgument('Each given Axis must be transverse with each other axes.');
+                }
                 $this->axes->add($axis);
                 $axis->addGranularity($this);
             }
         }
-        $this->updateRef();
-        $this->traverseAxesThenCreateCells();
+
         $organization->addGranularity($this);
-    }
-
-    /**
-     * Renvoi les valeurs du contexte pour l'objet.
-     *
-     * @return array
-     */
-    protected function getContext()
-    {
-        return array('organization' => $this->organization);
-    }
-
-    /**
-     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
-     */
-    public function preSave()
-    {
-        try {
-            $this->checkHasPosition();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->setPosition();
-        }
-    }
-
-    /**
-     * Fonction appelée avant un update de l'objet (défini dans le mapper).
-     */
-    public function preUpdate()
-    {
-        $this->checkHasPosition();
-    }
-
-    /**
-     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
-     */
-    public function preDelete()
-    {
-        $this->deletePosition();
-    }
-
-    /**
-     * Fonction appelée après un load de l'objet (défini dans le mapper).
-     */
-    public function postLoad()
-    {
-        $this->updateCachePosition();
-    }
-
-    /**
-     * Charge une Granularity en fonction de sa référence et de son Organization.
-     *
-     * @param string $ref
-     * @param Orga_Model_Organization $organization
-     *
-     * @return Orga_Model_Granularity
-     */
-    public static function loadByRefAndOrganization($ref, $organization)
-    {
-        return $organization->getGranularityByRef($ref);
+        $this->updateRef();
+        $this->updateTag();
+        $this->traverseAxesThenCreateCells();
     }
 
     /**
@@ -307,8 +262,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public static function buildRefFromAxes($axes)
     {
         $axesRefParts = array();
-        // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-        @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+        @usort($axes, ['Orga_Model_Axis', 'firstOrderAxes']);
         foreach ($axes as $axis) {
             $axesRefParts[] = $axis->getRef();
         }
@@ -316,7 +270,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
         if (empty($axesRefParts)) {
             return 'global';
         } else {
-            return implode('|', $axesRefParts);
+            return implode(self::REF_SEPARATOR, $axesRefParts);
         }
     }
 
@@ -337,19 +291,44 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getLabel()
     {
-        if ($this->axes->isEmpty()) {
+        if (!$this->hasAxes()) {
             $label = __('Orga', 'granularity', 'labelGlobalGranularity');
         } else {
             $labelParts = array();
-            $axes = $this->getAxes();
-            // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-            @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
-            foreach ($axes as $axis) {
+            foreach ($this->getAxes() as $axis) {
                 $labelParts[] = $axis->getLabel();
             }
             $label = implode(self::LABEL_SEPARATOR, $labelParts);
         }
         return $label;
+    }
+
+    /**
+     * Mets à jour le tag de la granularité.
+     */
+    public function updateTag()
+    {
+        if (!$this->hasAxes()) {
+            $this->tag = Orga_Model_Organization::PATH_SEPARATOR;
+        } else {
+            $axesTagParts = array();
+            $axes = $this->getAxes();
+            @usort($axes, ['Orga_Model_Axis', 'firstOrderAxes']);
+            foreach ($axes as $axis) {
+                $axesTagParts[] = $axis->getBroaderTag();
+            }
+            $this->tag =  implode(Orga_Model_Organization::PATH_JOIN, $axesTagParts);
+        }
+    }
+
+    /**
+     * Renvoie le tag de la granularité.
+     *
+     * @return string
+     */
+    public function getTag()
+    {
+        return $this->tag;
     }
 
     /**
@@ -369,9 +348,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
      * @param array $selectedMembers
      * @param Orga_Model_Axis $ignoredAxis
      */
-    protected function traverseAxesThenCreateCells($indexCurrentAxis = 0, array $selectedMembers = array(),
-        $ignoredAxis = null
-    ) {
+    protected function traverseAxesThenCreateCells($indexCurrentAxis=0, array $selectedMembers=array(), $ignoredAxis=null)
+    {
         if ($indexCurrentAxis >= count($this->axes)) {
             $this->createCell($selectedMembers);
         } else if ($this->axes[$indexCurrentAxis] === $ignoredAxis) {
@@ -395,13 +373,38 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
+     * Supprime une cellule.
+     *
+     * @param Orga_Model_Cell $cell
+     */
+    protected function removeCell(Orga_Model_Cell $cell)
+    {
+        $this->cells->removeElement($cell);
+    }
+
+    /**
+     * Supprime les cellules liées à un membre.
+     *
+     * @param Orga_Model_Member $member
+     */
+    public function removeCellsFromMember(Orga_Model_Member $member)
+    {
+        foreach ($this->getCellsByMembers([$member]) as $cell) {
+            $this->cells->removeElement($cell);
+        }
+    }
+
+    /**
      * Renvoie un tableau des Cell de la Granularity.
      *
-     * @return Orga_Model_Cell[]
+     * @return Collection|Orga_Model_Cell[]
      */
     public function getCells()
     {
-        return $this->cells->toArray();
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        //@todo Ordre des Cellules suivant les tag (?Position- & Ref) !== ordre réel (Position || Label).
+        $criteria->orderBy(['tag' => 'ASC']);
+        return $this->cells->matching($criteria);
     }
 
     /**
@@ -410,100 +413,63 @@ class Orga_Model_Granularity extends Core_Model_Entity
      * @param Orga_Model_Member[] $listMembers
      *
      * @throws Core_Exception_NotFound
+     * @throws Core_Exception_InvalidArgument
      * @throws Core_Exception_TooMany
-     * 
+     *
      * @return Orga_Model_Cell
      */
     public function getCellByMembers($listMembers)
     {
-        $matchingCells = $this->getCellsByMembers($listMembers);
+        $matchingCells = $this->getCellsByMembers($listMembers)->toArray();
 
         if (empty($matchingCells)) {
             $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
-            throw new Core_Exception_NotFound('No "Orga_Model_Cell" matching attributes '.$membersHashKey);
+            throw new Core_Exception_NotFound('No Cell matching members "'.$membersHashKey.'".');
         } else if (count($matchingCells) > 1) {
             $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
-            throw new Core_Exception_TooMany('Too many "Orga_Model_Cell" matching attributes '.$membersHashKey);
+            throw new Core_Exception_TooMany('Too many Cell matching members "'.$membersHashKey.'".');
         }
 
         return array_pop($matchingCells);
     }
 
     /**
-     * Renvoie les cellule correspondants aux membres données.
+     * Renvoie les cellule correspondants aux membres données ou à leurs enfants.
      *
      * @param Orga_Model_Member[] $listMembers
      *
-     * @return Orga_Model_Cell[]
+     * @return Collection|Orga_Model_Cell[]
      */
     public function getCellsByMembers($listMembers)
     {
         $criteria = \Doctrine\Common\Collections\Criteria::create();
-        $criteria->where($criteria->expr()->eq('granularity', $this));
 
-        $axisMembers = [];
-        foreach ($this->axes as $indexAxis => $axis) {
-            $axisMembers[$indexAxis] = [];
-            foreach ($listMembers as $member) {
-                if ($axis->hasMember($member)) {
-                    $axisMembers[$indexAxis][] = $member;
+        $axesPath = [];
+        foreach ($listMembers as $member) {
+            $axesPath[$member->getAxis()->getRef()][] = $member->getTag();
+        }
+
+        foreach ($axesPath as $axisPath) {
+            if (count($axisPath) > 1) {
+                $orExpressions = [];
+                foreach ($axisPath as $memberPath) {
+                    $orExpressions[] = $criteria->expr()->contains('tag', $memberPath);
                 }
-            }
-            if (empty($axisMembers[$indexAxis])) {
-                $axisMembers[$indexAxis] = $axis->getMembers();
-            }
-        }
-
-        $expressions = [];
-        foreach ($this->traverseMembersThenBuildMembersHashKey($axisMembers) as $membersHashKey) {
-            $expressions[] = $criteria->expr()->eq('membersHashKey', $membersHashKey);
-        }
-        if (count($expressions) > 1) {
-            $criteria->andWhere(
-                new Doctrine\Common\Collections\Expr\CompositeExpression(
-                    Doctrine\Common\Collections\Expr\CompositeExpression::TYPE_OR,
-                    $expressions
-                )
-            );
-        } else if (count($expressions) > 0) {
-            $criteria->andWhere(array_pop($expressions));
-        }
-        $matchingCells = $this->cells->matching($criteria);
-
-        return $matchingCells->toArray();
-    }
-
-    /**
-     * Parcours les Axis et crée les Cell..
-     *
-     * @param array $axisMembers
-     * @param int $indexCurrentAxis
-     * @param Orga_Model_Member[] $selectedMembers
-     *
-     * @return string[]
-     */
-    public function traverseMembersThenBuildMembersHashKey(array $axisMembers, $indexCurrentAxis = 0,
-        array $selectedMembers=array())
-    {
-        $membersHashKeys = array();
-
-        if ($indexCurrentAxis >= count($this->axes)) {
-            return [Orga_Model_Cell::buildMembersHashKey($selectedMembers)];
-        } else {
-            foreach ($axisMembers[$indexCurrentAxis] as $currentAxisMember) {
-                $nextSelectedMembers = array_merge($selectedMembers, array($currentAxisMember));
-                $membersHashKeys = array_merge(
-                    $membersHashKeys,
-                    $this->traverseMembersThenBuildMembersHashKey(
-                        $axisMembers,
-                        $indexCurrentAxis + 1,
-                        $nextSelectedMembers
+                $criteria->andWhere(
+                    new Doctrine\Common\Collections\Expr\CompositeExpression(
+                        Doctrine\Common\Collections\Expr\CompositeExpression::TYPE_OR,
+                        $orExpressions
                     )
                 );
+            } else if (count($axisPath) > 0) {
+                $criteria->andWhere($criteria->expr()->contains('tag', array_pop($axisPath)));
             }
         }
 
-        return $membersHashKeys;
+        //@todo Ordre des Cellules suivant les tag (?Position- & Ref) !== ordre réel (Position || Label).
+        $criteria->orderBy(['tag' => 'ASC']);
+
+        return $this->cells->matching($criteria);
     }
 
     /**
@@ -535,15 +501,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function isNarrowerThan($broaderGranularity)
     {
-        if ($broaderGranularity->getRef() === $this->getRef()) {
+        if ($broaderGranularity === $this) {
             return false;
         }
 
-        foreach ($broaderGranularity->getAxes() as $broaderAxis) {
-            foreach ($this->getAxes() as $axis) {
-                if (($axis === $broaderAxis) || ($axis->isNarrowerThan($broaderAxis))) {
-                    continue 2;
-                }
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $broaderGranularity->getTag()) as $pathTag) {
+            if (strpos($this->tag, $pathTag) !== false) {
+                continue;
             }
             return false;
         }
@@ -571,15 +535,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getNarrowerGranularities()
     {
-        $narrowerGranularities = array();
-
-        foreach ($this->getOrganization()->getGranularities() as $granularity) {
-            if (($granularity->getRef() !== $this->getRef()) && ($granularity->isNarrowerThan($this))) {
-                $narrowerGranularities[] = $granularity;
-            }
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->where($criteria->expr()->neq('ref', $this->getRef()));
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getTag()) as $pathTag) {
+            $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
         }
-
-        return $narrowerGranularities;
+        $criteria->orderBy(['tag' => 'ASC']);
+        return $this->getOrganization()->getGranularities()->matching($criteria)->toArray();
     }
 
     /**
@@ -589,15 +551,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getBroaderGranularities()
     {
-        $broaderGranularities = array();
-
+        $broaderGranularities = [];
         foreach ($this->getOrganization()->getGranularities() as $granularity) {
-            if (($granularity !== $this) && ($this->isNarrowerThan($granularity))) {
+            if ($this->isNarrowerThan($granularity)) {
                 $broaderGranularities[] = $granularity;
             }
         }
-
-        return array_reverse($broaderGranularities);
+        return $broaderGranularities;
     }
 
     /**
@@ -622,33 +582,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             }
         }
 
-        return $this->organization->getGranularityByRef(self::buildRefFromAxes(array_merge($currentAxes, $crossingAxes)));
-    }
-
-    /**
-     * Renvoi la plus fine des granularités plus grosses communes aux granularités courante et donnée.
-     *
-     * @param Orga_Model_Granularity $crossingGranularity
-     *
-     * @return Orga_Model_Granularity
-     */
-    public function getEncompassingGranularity($crossingGranularity)
-    {
-        $encompassingAxes = array();
-
-        foreach ($this->getAxes() as $currentIndex => $currentAxis) {
-            if (!($currentAxis->isTransverse($crossingGranularity->getAxes()))) {
-                foreach ($crossingGranularity->getAxes() as $crossingAxis) {
-                    if ($currentAxis->isNarrowerThan($crossingAxis)) {
-                        $encompassingAxes[$currentIndex] = $crossingAxis;
-                    } else {
-                        $encompassingAxes[$currentIndex] = $currentAxis;
-                    }
-                }
-            }
-        }
-
-        return $this->organization->getGranularityByRef(self::buildRefFromAxes($encompassingAxes));
+        return $this->getOrganization()->getGranularityByRef(self::buildRefFromAxes(array_merge($currentAxes, $crossingAxes)));
     }
 
     /**
@@ -694,6 +628,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getInputConfigGranularity()
     {
         return $this->inputConfigGranularity;
+    }
+
+    /**
+     * Indique si la granularité est une granularité de saisie.
+     *
+     * @return bool
+     */
+    public function isInput()
+    {
+        return $this->inputConfigGranularity !== null;
     }
 
     /**
@@ -800,7 +744,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected function createDWCube()
     {
         if ($this->dWCube === null) {
-            $this->dWCube = new DW_model_cube();
+            $this->dWCube = new DW_Model_Cube();
             $this->dWCube->setLabel($this->getLabel());
 
             /** @var \DI\Container $container */
@@ -820,7 +764,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected function deleteDWCube()
     {
         if ($this->dWCube !== null) {
-            $this->dWCube->delete();
             $this->dWCube = null;
         }
     }
@@ -834,8 +777,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getDWCube()
     {
-        if (!$this->cellsGenerateDWCubes) {
-            throw new Core_Exception_UndefinedAttribute('La Granularity de la Cell ne génère pas de DWCube');
+        if (!$this->getCellsGenerateDWCubes()) {
+            throw new Core_Exception_UndefinedAttribute('The Granularity does not generate DW Cube');
         }
         return $this->dWCube;
     }

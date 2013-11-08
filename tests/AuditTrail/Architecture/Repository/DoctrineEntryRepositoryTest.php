@@ -70,12 +70,12 @@ class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
     public function testFindLatestForCell()
     {
         $organization = new Orga_Model_Organization();
-        $axis = new Orga_Model_Axis($organization);
-        $axis->setRef('axis');
+        $axis = new Orga_Model_Axis($organization, 'axis');
         $axis->setLabel('axis');
-        $member = new Orga_Model_Member($axis);
-        $member->setRef('member');
+        $member = new Orga_Model_Member($axis, 'member');
         $member->setLabel('member');
+        $organization->save();
+        $this->entityManager->flush();
         new Orga_Model_Granularity($organization, [$axis]);
         $organization->save();
         $this->entityManager->flush();
@@ -105,7 +105,14 @@ class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
         $this->entryRepository->remove($entry2);
         $this->entryRepository->remove($entry3);
         $this->entryRepository->remove($entry4);
-        $organization->delete();
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        foreach (Orga_Model_Organization::load($organization->getId())->getGranularities() as $granularity) {
+            $granularity->delete();
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        Orga_Model_Organization::load($organization->getId())->delete();
         $this->entityManager->flush();
 
         $this->assertCount(1, $entries);

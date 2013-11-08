@@ -79,7 +79,7 @@ class Orga_CellController extends Core_Controller
 
 
         $this->view->tabView = new UI_Tab_View('container');
-        $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$organization->getLabel().'</small>';
+        $this->view->pageTitle = $cell->getExtendedLabel().' <small>'.$organization->getLabel().'</small>';
         $this->view->isParentCellReachable = array();
         foreach ($cell->getParentCells() as $parentCell) {
             $isUserAllowedToViewParentCell = $this->aclService->isAllowed(

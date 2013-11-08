@@ -41,15 +41,15 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
         if (! Zend_Registry::isRegistered('EntityManagers')) {
             return;
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
-        $events = [
-            Doctrine\ORM\Events::onFlush,
-            Doctrine\ORM\Events::postFlush,
-        ];
-
         if (APPLICATION_ENV != 'testsunitaires') {
+            $entityManagers = Zend_Registry::get('EntityManagers');
+            /** @var $entityManager Doctrine\ORM\EntityManager */
+            $entityManager = $entityManagers['default'];
+            $events = [
+                Doctrine\ORM\Events::onFlush,
+                Doctrine\ORM\Events::postFlush,
+            ];
+
             $aclManager = $this->container->get(Orga_Service_ACLManager::class);
 
             $entityManager->getEventManager()->addEventListener($events, $aclManager);

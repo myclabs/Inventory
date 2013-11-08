@@ -246,10 +246,7 @@ class Orga_OrganizationController extends Core_Controller
 
         $refGranularityForInventoryStatus = $formData->getValue('granularityForInventoryStatus');
         if (!empty($refGranularityForInventoryStatus)) {
-            $granularityForInventoryStatus = Orga_Model_Granularity::loadByRefAndOrganization(
-                $refGranularityForInventoryStatus,
-                $organization
-            );
+            $granularityForInventoryStatus = $organization->getGranularityByRef($refGranularityForInventoryStatus);
             try {
                 $organization->setGranularityForInventoryStatus($granularityForInventoryStatus);
             } catch (Core_Exception_InvalidArgument $e) {

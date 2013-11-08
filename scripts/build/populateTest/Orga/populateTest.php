@@ -47,7 +47,6 @@ class Orga_PopulateTest extends Orga_Populate
         $member_site_annecy = $this->createMember($axis_site, 'annecy', 'Annecy', [$member_pays_france, $member_marque_marque_a]);
         $member_site_chambery = $this->createMember($axis_site, 'chambery', 'Chambéry', [$member_pays_france, $member_marque_marque_a]);
         $member_site_grenoble = $this->createMember($axis_site, 'grenoble', 'Grenoble', [$member_pays_france, $member_marque_marque_b]);
-        $member_site_relie_aucun_pays = $this->createMember($axis_site, 'site_relie_aucun_pays', 'Site relié à aucun pays', [$member_marque_marque_a]);
         $member_categorie_energie = $this->createMember($axis_categorie, 'energie', 'Énergie');
         $member_categorie_test_affichage = $this->createMember($axis_categorie, 'test_affichage', 'Test affichage');
         $member_categorie_forfait_marque = $this->createMember($axis_categorie, 'forfait_marque', 'Forfait marque');
