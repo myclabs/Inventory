@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 use Doctrine\ORM\EntityManager;
@@ -71,7 +70,8 @@ $cellObserverRoles = execQuery($query);
 echo "Executing build update" . PHP_EOL . PHP_EOL;
 $output = [];
 $return = 0;
-exec('php ../../build/build.php update', $output, $return);
+$buildScript = __DIR__ . '/../../build/build.php';
+exec("php $buildScript update", $output, $return);
 if ($return !== 0) {
     die("Error executing build update" . PHP_EOL . implode(PHP_EOL, $output));
 }

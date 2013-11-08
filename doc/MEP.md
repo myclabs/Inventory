@@ -12,7 +12,7 @@ sudo deploy 2.9.?
 - Exécuter le script de migration
 
 ```
-./scripts/migration/2.9/migrate.php
+php scripts/migration/2.9/migrate.php
 ```
 
 Le script va effectuer un build update
