@@ -18,6 +18,11 @@ $inputStatusFilters = [
 <style>
     .granularity > .cell.firstRowCell { margin-left: 0; }
     .progress { margin-bottom: 5px; }
+    .history .dl-horizontal, .comments .dl-horizontal { margin-top: 0; }
+    .history .dl-horizontal .page-header, .comments .dl-horizontal .page-header { margin: 0 0 15px; }
+    .history .dl-horizontal h4, .comments .dl-horizontal h4 { margin: 0; }
+    .history .dl-horizontal dt, .comments .dl-horizontal dt { width: auto; margin-right: 15px }
+    .history .dl-horizontal dd, .comments .dl-horizontal dd { margin-left: 0; }
     #addMembers { margin: 0; }
     #addMembers .controls { margin-left: 0; }
     #addMembers .subGroup { margin-left: 0; }
@@ -220,23 +225,23 @@ $organization = $this->organization;
     </div>
 
     <div class="span3">
-        <div class="well">
-            <h4>Historique</h4>
+        <div class="well history">
+            <h3>Historique</h3>
             <hr/>
             <div>
                 <?=$this->partial('events/recent.phtml', 'audittrail', ['idCell' => $currentCell->id, 'entries' => $this->entries]);?>
             </div>
         </div>
-        <div class="well">
-            <h4>Commentaires</h4>
+        <div class="well comments">
+            <h3>Commentaires</h3>
             <hr/>
             <div>
-                <?=$this->partial('/tab/celldetails/comments.phtml',['comments' => $this->comments]); ?>
+                <?=$this->partial('/tab/celldetails/comments.phtml',['idCell' => $currentCell->id, 'comments' => $this->comments]); ?>
             </div>
         </div>
         <?php if ($organization->canBeEdited) : ?>
             <div class="well">
-                <h4>
+                <h3>
                     Ajouter un membre
                     <div class="pull-right">
                         <a class="editOrganization btn btn-small btn-primary"
@@ -245,7 +250,7 @@ $organization = $this->organization;
                             <?=__('UI', 'verb', 'edit')?>
                         </a>
                     </div>
-                </h4>
+                </h3>
                 <hr/>
                 <?=$this->addMembersForm->display()?>
             </div>

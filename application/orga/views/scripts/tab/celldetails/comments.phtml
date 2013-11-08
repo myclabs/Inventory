@@ -4,24 +4,32 @@ $locale = Core_Locale::loadDefault();
 $comments = $this->comments;
 ?>
 
+<div>
 <?php if (count($comments) === 0) : ?>
     <p class="muted">
         <?=__('Social', 'comment', 'noComment')?>
     </p>
 <?php endif; ?>
 
-<ul>
-    <?php foreach ($comments as $comment) : ?>
-        <li>
-            <?=$locale->formatDateTime($comment->getCreationDate())?>
-
+    <dl class="dl-horizontal">
+        <?php foreach ($comments as $comment) : ?>
+        <dt>
+            <span class="badge badge-info">
+                <?=$locale->formatDateTime($comment->getCreationDate())?>
+            </span>
+        </dt>
+        <dd>
             <?=__('Social', 'comment', 'by')?>
-            <?=$comment->getAuthor()->getName()?>
-
+            <b>
+                <?=$comment->getAuthor()->getName()?>
+            </b>
             <?=__('Orga', 'input', 'aboutInput')?>
-            <?=$comment->getCell()->getLabel()?><?=__('UI', 'other', ':')?>
-
+            <a href="orga/cell/input/idCell/<?=$comment->getCell()->getId()?>/fromIdCell/<?=$this->idCell?>">
+                <?=$comment->getCell()->getLabel()?><?=__('UI', 'other', ':')?>
+            </a>
             « <?=Core_Tools::truncateString($comment->getText(), 200)?> ».
-        </li>
-    <?php endforeach; ?>
-</ul>
+        </dd>
+        <?php endforeach; ?>
+    </dl>
+
+</div>
