@@ -34,6 +34,7 @@ class OrganizationAdminRole extends Role
             Action::VIEW(),
             Action::EDIT(),
             Action::DELETE(),
+            Action::ALLOW(),
             OrganizationAction::EDIT_GRANULARITY_REPORTS(),
         ]);
 
