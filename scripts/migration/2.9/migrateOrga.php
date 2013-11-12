@@ -1,8 +1,4 @@
 <?php
-// Entity Manager
-$entityManagers = Zend_Registry::get('EntityManagers');
-/** @var $entityManager \Doctrine\ORM\EntityManager */
-$entityManager = $entityManagers['default'];
 
 /** @var Orga_Model_Organization $organization */
 foreach (Orga_Model_Organization::loadList() as $organization) {
@@ -34,5 +30,6 @@ foreach (Orga_Model_Organization::loadList() as $organization) {
 }
 
 echo "\n".'-> Flush starting…'."\n";
-$entityManager->flush();
+$em->flush();
+$em->clear();
 echo "\n".'-> Flush ended !'."\n";
