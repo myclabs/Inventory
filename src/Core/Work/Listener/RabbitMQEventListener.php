@@ -1,9 +1,11 @@
 <?php
 
-namespace Core\Work;
+namespace Core\Work\EventListener;
 
+use Core\Work\BaseTaskInterface;
 use Core\Work\Notification\TaskNotifier;
 use Core\Work\ServiceCall\ServiceCallTask;
+use Core\Work\TaskContext;
 use Core_Locale;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -13,9 +15,11 @@ use User\Domain\User;
 use Zend_Auth;
 
 /**
+ * Event listener pour le RabbitMQWorker
+ *
  * @author matthieu.napoli
  */
-class EventListener extends \MyCLabs\Work\EventListener
+class RabbitMQEventListener extends \MyCLabs\Work\EventListener
 {
     /**
      * @var LoggerInterface
@@ -84,8 +88,6 @@ class EventListener extends \MyCLabs\Work\EventListener
      */
     public function beforeTaskExecution(Task $task)
     {
-        set_time_limit(0);
-
         $this->logger->info("Executing task {task}", ['task' => (string) $task]);
 
         if ($task instanceof BaseTaskInterface) {
