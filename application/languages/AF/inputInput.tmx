@@ -168,6 +168,14 @@
                 <seg>Saved input is complete but has not generated any result.</seg>
             </tuv>
         </tu>
+        <tu tuid="emptyRequiredField">
+            <tuv xml:lang="fr">
+                <seg>Champ obligatoire pour atteindre le statut : complet.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This field is mandatory to reach the status: complete.</seg>
+            </tuv>
+        </tu>
 
         <!-- Message lors de la modification du caractère terminée ou non -->
 

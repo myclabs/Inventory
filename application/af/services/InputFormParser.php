@@ -101,7 +101,7 @@ class AF_Service_InputFormParser
             try {
                 $value = $locale->readNumber($inputContent['value']);
                 if ($component->getRequired() && $value === null) {
-                    $errorMessages[$fullRef] = __('UI', 'formValidation', 'emptyRequiredField');
+                    $errorMessages[$fullRef] = __('AF', 'inputInput', 'emptyRequiredField');
                 }
             } catch (Core_Exception_InvalidArgument $e) {
                 $errorMessages[$fullRef] = __('UI', 'formValidation', 'invalidNumber');
@@ -137,7 +137,7 @@ class AF_Service_InputFormParser
                 }
             }
             if (!isset($selectedUnit)) {
-                throw new Exception("Bonjour, il est temps de refactoriser un peu le parsing des soumissions de UI_Form");
+                throw new Exception("Il est temps de refactoriser un peu le parsing des soumissions de UI_Form");
             }
             $input->setValue(
                 new Calc_UnitValue($selectedUnit, $value, $relativeUncertainty)
@@ -149,7 +149,7 @@ class AF_Service_InputFormParser
             if (!empty($inputContent['value'])) {
                 $input->setValue($inputContent['value']);
             } elseif ($component->getRequired()) {
-                $errorMessages[$fullRef] = __("UI", "formValidation", "emptyRequiredField");
+                $errorMessages[$fullRef] = __("AF", "inputInput", "emptyRequiredField");
             }
 
         } elseif ($component instanceof AF_Model_Component_Checkbox) {
@@ -166,7 +166,7 @@ class AF_Service_InputFormParser
                 $option = $component->getOptionByRef($inputContent['value']);
                 $input->setValue($option);
             } elseif ($component->getRequired()) {
-                $errorMessages[$fullRef] = __("UI", "formValidation", "emptyRequiredField");
+                $errorMessages[$fullRef] = __("AF", "inputInput", "emptyRequiredField");
             }
 
         } elseif ($component instanceof AF_Model_Component_Select_Multi) {
@@ -179,15 +179,17 @@ class AF_Service_InputFormParser
                 }
                 $input->setValue($options);
             } elseif ($component->getRequired()) {
-                $errorMessages[$fullRef] = __("UI", "formValidation", "emptyRequiredField");
+                $errorMessages[$fullRef] = __("AF", "inputInput", "emptyRequiredField");
             }
 
         } elseif ($component instanceof AF_Model_Component_SubAF_NotRepeated) {
             // Sous-AF non répété
             $input = new AF_Model_Input_SubAF_NotRepeated($inputSet, $component);
-            $errorMessages += $this->doParseForm($inputContent['elements'],
+            $errorMessages += $this->doParseForm(
+                $inputContent['elements'],
                 $input->getValue(),
-                $component->getCalledAF());
+                $component->getCalledAF()
+            );
 
         } elseif ($component instanceof AF_Model_Component_SubAF_Repeated) {
             // Sous-AF répété
@@ -208,9 +210,11 @@ class AF_Service_InputFormParser
                                 break;
                             }
                         }
-                        $errorMessages += $this->doParseForm($elements['elements'],
+                        $errorMessages += $this->doParseForm(
+                            $elements['elements'],
                             $subInputSet,
-                            $component->getCalledAF());
+                            $component->getCalledAF()
+                        );
                     } else {
                         // On crée une nouvelle répétition
                         $subInputSet = new AF_Model_InputSet_Sub($component->getCalledAF());
@@ -222,9 +226,11 @@ class AF_Service_InputFormParser
                                 break;
                             }
                         }
-                        $errorMessages += $this->doParseForm($elements,
+                        $errorMessages += $this->doParseForm(
+                            $elements,
                             $subInputSet,
-                            $component->getCalledAF());
+                            $component->getCalledAF()
+                        );
                         $input->addSubSet($subInputSet);
                     }
                 }
