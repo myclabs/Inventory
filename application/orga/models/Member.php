@@ -399,7 +399,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function updateTag()
     {
-        $this->tag = '';
+        $this->tag = Orga_Model_Organization::PATH_SEPARATOR;
         if ($this->hasDirectParents()) {
             $pathTags = [];
             foreach ($this->getDirectParents() as $directParentMember) {
@@ -407,10 +407,10 @@ class Orga_Model_Member extends Core_Model_Entity
                     $pathTags[] = $pathTag;
                 }
             }
-            $pathLink = Orga_Model_Organization::PATH_SEPARATOR . $this->getMemberTag() . Orga_Model_Organization::PATH_JOIN;
+            $pathLink = $this->getMemberTag() . Orga_Model_Organization::PATH_SEPARATOR . Orga_Model_Organization::PATH_JOIN;
             $this->tag = implode($pathLink, $pathTags);
         }
-        $this->tag .= Orga_Model_Organization::PATH_SEPARATOR . $this->getMemberTag();
+        $this->tag .=  $this->getMemberTag() . Orga_Model_Organization::PATH_SEPARATOR;
     }
 
     /**

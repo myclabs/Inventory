@@ -309,11 +309,11 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function updateNarrowerTag()
     {
-        $this->narrowerTag = '';
+        $this->narrowerTag = Orga_Model_Organization::PATH_SEPARATOR;
         if ($this->directNarrower !== null) {
             $this->narrowerTag = $this->directNarrower->narrowerTag;
         }
-        $this->narrowerTag .= Orga_Model_Organization::PATH_SEPARATOR . $this->getAxisTag();
+        $this->narrowerTag .= $this->getAxisTag() . Orga_Model_Organization::PATH_SEPARATOR;
 
         foreach ($this->getDirectBroaders() as $directBroaderAxis) {
             $directBroaderAxis->updateNarrowerTag();
@@ -335,7 +335,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function updateBroaderTag()
     {
-        $this->broaderTag = '';
+        $this->broaderTag = Orga_Model_Organization::PATH_SEPARATOR;
         if ($this->hasDirectBroaders()) {
             $broaderPathTags = [];
             foreach ($this->getDirectBroaders() as $directBroaderAxis) {
@@ -343,10 +343,10 @@ class Orga_Model_Axis extends Core_Model_Entity
                     $broaderPathTags[] = $broaderPathTag;
                 }
             }
-            $pathLink = Orga_Model_Organization::PATH_SEPARATOR . $this->getAxisTag() . Orga_Model_Organization::PATH_JOIN;
+            $pathLink = $this->getAxisTag() . Orga_Model_Organization::PATH_SEPARATOR . Orga_Model_Organization::PATH_JOIN;
             $this->broaderTag = implode($pathLink, $broaderPathTags);
         }
-        $this->broaderTag .= Orga_Model_Organization::PATH_SEPARATOR . $this->getAxisTag();
+        $this->broaderTag .= $this->getAxisTag() . Orga_Model_Organization::PATH_SEPARATOR;
 
         if ($this->directNarrower !== null) {
             $this->directNarrower->updateBroaderTag();
@@ -470,12 +470,12 @@ class Orga_Model_Axis extends Core_Model_Entity
         $criteria = Doctrine\Common\Collections\Criteria::create();
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getBroaderTag()) as $pathTag) {
             $criteria->andWhere(
-                Doctrine\Common\Collections\Criteria::expr()->contains(
-                    'broaderTag',
-                    $pathTag . Orga_Model_Organization::PATH_SEPARATOR
-                )
+                Doctrine\Common\Collections\Criteria::expr()->contains('broaderTag', $pathTag)
             );
         }
+        $criteria->andWhere(
+            Doctrine\Common\Collections\Criteria::expr()->neq('broaderTag', $this->getBroaderTag())
+        );
         $criteria->orderBy(['narrowerTag' => 'DESC']);
         return $this->getOrganization()->getAxes()->matching($criteria)->toArray();
     }
@@ -523,10 +523,10 @@ class Orga_Model_Axis extends Core_Model_Entity
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->where(
-            Doctrine\Common\Collections\Criteria::expr()->contains(
-                'narrowerTag',
-                $this->getNarrowerTag() . Orga_Model_Organization::PATH_SEPARATOR
-            )
+            Doctrine\Common\Collections\Criteria::expr()->contains('narrowerTag', $this->getNarrowerTag())
+        );
+        $criteria->andWhere(
+            Doctrine\Common\Collections\Criteria::expr()->neq('narrowerTag', $this->getNarrowerTag())
         );
         $criteria->orderBy(['narrowerTag' => 'ASC']);
         return $this->getOrganization()->getAxes()->matching($criteria)->toArray();
@@ -778,7 +778,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function isNarrowerThan($axis)
     {
-        return (strpos($axis->narrowerTag, $this->narrowerTag . Orga_Model_Organization::PATH_SEPARATOR) !== false);
+        return ((strpos($axis->narrowerTag, $this->narrowerTag) !== false) && ($axis !== $this));
     }
 
     /**

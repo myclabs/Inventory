@@ -423,11 +423,21 @@ class Orga_Model_Granularity extends Core_Model_Entity
         $matchingCells = $this->getCellsByMembers($listMembers)->toArray();
 
         if (empty($matchingCells)) {
-            $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
-            throw new Core_Exception_NotFound('No Cell matching members "'.$membersHashKey.'".');
+            @usort($listMembers, ['Orga_Model_Member', 'orderMembers']);
+            $membersRef = [];
+            foreach ($listMembers as $member) {
+                $membersRef[] = $member->getRef();
+            }
+            $membersHashKey = implode(self::REF_SEPARATOR, $membersRef);
+            throw new Core_Exception_NotFound('No Cell matching members "'.$membersHashKey.'" for "'.$this->getRef().'".');
         } else if (count($matchingCells) > 1) {
-            $membersHashKey = Orga_Model_Cell::buildMembersHashKey($listMembers);
-            throw new Core_Exception_TooMany('Too many Cell matching members "'.$membersHashKey.'".');
+            @usort($listMembers, ['Orga_Model_Member', 'orderMembers']);
+            $membersRef = [];
+            foreach ($listMembers as $member) {
+                $membersRef[] = $member->getRef();
+            }
+            $membersHashKey = implode(self::REF_SEPARATOR, $membersRef);
+            throw new Core_Exception_TooMany('Too many Cell matching members "'.$membersHashKey.'" for "'.$this->getRef().'".');
         }
 
         return array_pop($matchingCells);
@@ -540,6 +550,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getTag()) as $pathTag) {
             $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
         }
+        $criteria->andWhere($criteria->expr()->neq('tag', $this->getTag()));
         $criteria->orderBy(['tag' => 'ASC']);
         return $this->getOrganization()->getGranularities()->matching($criteria)->toArray();
     }

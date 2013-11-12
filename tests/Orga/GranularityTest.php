@@ -227,36 +227,36 @@ class Orga_Test_GranularityHierarchy extends Core_Test_TestCase
     function testGetTag()
     {
         $this->assertSame('/', $this->granularity0->getTag());
-        $this->assertSame('/1-ref_111', $this->granularity1->getTag());
-        $this->assertSame('/1-ref_111/1-ref_11&/2-ref_12', $this->granularity2->getTag());
-        $this->assertSame('/1-ref_111/1-ref_11&/2-ref_2', $this->granularity3->getTag());
-        $this->assertSame('/2-ref_12&/2-ref_2', $this->granularity4->getTag());
-        $this->assertSame('/1-ref_111/1-ref_11&/2-ref_12&/2-ref_2', $this->granularity5->getTag());
-        $this->assertSame('/1-ref_111/1-ref_11/1-ref_1&/2-ref_12/1-ref_1&/2-ref_2', $this->granularity6->getTag());
-        $this->assertSame('/2-ref_2', $this->granularity7->getTag());
+        $this->assertSame('/1-ref_111/', $this->granularity1->getTag());
+        $this->assertSame('/1-ref_111/1-ref_11/&/2-ref_12/', $this->granularity2->getTag());
+        $this->assertSame('/1-ref_111/1-ref_11/&/2-ref_2/', $this->granularity3->getTag());
+        $this->assertSame('/2-ref_12/&/2-ref_2/', $this->granularity4->getTag());
+        $this->assertSame('/1-ref_111/1-ref_11/&/2-ref_12/&/2-ref_2/', $this->granularity5->getTag());
+        $this->assertSame('/1-ref_111/1-ref_11/1-ref_1/&/2-ref_12/1-ref_1/&/2-ref_2/', $this->granularity6->getTag());
+        $this->assertSame('/2-ref_2/', $this->granularity7->getTag());
 
         $this->axis11->setRef('ref_11_updated');
         
         $this->assertSame('/', $this->granularity0->getTag());
-        $this->assertSame('/1-ref_111', $this->granularity1->getTag());
-        $this->assertSame('/1-ref_111/1-ref_11_updated&/2-ref_12', $this->granularity2->getTag());
-        $this->assertSame('/1-ref_111/1-ref_11_updated&/2-ref_2', $this->granularity3->getTag());
-        $this->assertSame('/2-ref_12&/2-ref_2', $this->granularity4->getTag());
-        $this->assertSame('/1-ref_111/1-ref_11_updated&/2-ref_12&/2-ref_2', $this->granularity5->getTag());
-        $this->assertSame('/1-ref_111/1-ref_11_updated/1-ref_1&/2-ref_12/1-ref_1&/2-ref_2', $this->granularity6->getTag());
-        $this->assertSame('/2-ref_2', $this->granularity7->getTag());
+        $this->assertSame('/1-ref_111/', $this->granularity1->getTag());
+        $this->assertSame('/1-ref_111/1-ref_11_updated/&/2-ref_12/', $this->granularity2->getTag());
+        $this->assertSame('/1-ref_111/1-ref_11_updated/&/2-ref_2/', $this->granularity3->getTag());
+        $this->assertSame('/2-ref_12/&/2-ref_2/', $this->granularity4->getTag());
+        $this->assertSame('/1-ref_111/1-ref_11_updated/&/2-ref_12/&/2-ref_2/', $this->granularity5->getTag());
+        $this->assertSame('/1-ref_111/1-ref_11_updated/1-ref_1/&/2-ref_12/1-ref_1/&/2-ref_2/', $this->granularity6->getTag());
+        $this->assertSame('/2-ref_2/', $this->granularity7->getTag());
 
         $this->axis12->setPosition(1);
         $this->axis2->setPosition(1);
 
         $this->assertSame('/', $this->granularity0->getTag());
-        $this->assertSame('/1-ref_111', $this->granularity1->getTag());
-        $this->assertSame('/1-ref_12&/1-ref_111/2-ref_11_updated', $this->granularity2->getTag());
-        $this->assertSame('/1-ref_2&/1-ref_111/2-ref_11_updated', $this->granularity3->getTag());
-        $this->assertSame('/1-ref_2&/1-ref_12', $this->granularity4->getTag());
-        $this->assertSame('/1-ref_2&/1-ref_12&/1-ref_111/2-ref_11_updated', $this->granularity5->getTag());
-        $this->assertSame('/1-ref_2&/1-ref_12/2-ref_1&/1-ref_111/2-ref_11_updated/2-ref_1', $this->granularity6->getTag());
-        $this->assertSame('/1-ref_2', $this->granularity7->getTag());
+        $this->assertSame('/1-ref_111/', $this->granularity1->getTag());
+        $this->assertSame('/1-ref_12/&/1-ref_111/2-ref_11_updated/', $this->granularity2->getTag());
+        $this->assertSame('/1-ref_2/&/1-ref_111/2-ref_11_updated/', $this->granularity3->getTag());
+        $this->assertSame('/1-ref_2/&/1-ref_12/', $this->granularity4->getTag());
+        $this->assertSame('/1-ref_2/&/1-ref_12/&/1-ref_111/2-ref_11_updated/', $this->granularity5->getTag());
+        $this->assertSame('/1-ref_2/&/1-ref_12/2-ref_1/&/1-ref_111/2-ref_11_updated/2-ref_1/', $this->granularity6->getTag());
+        $this->assertSame('/1-ref_2/', $this->granularity7->getTag());
     }
     
     function testIsNarrowerThan()
@@ -692,7 +692,7 @@ class Orga_Test_GranularityCells extends Core_Test_TestCase
 
     /**
      * @expectedException Core_Exception_NotFound
-     * @expectedExceptionMessage No Cell matching members "3a9bdde8261423faa40cc60c577c4a4becf52ddd".
+     * @expectedExceptionMessage No Cell matching members "ref1_a" for "ref_11|ref_2".
      */
     public function testGetCellByMembersNotFound()
     {
@@ -703,7 +703,7 @@ class Orga_Test_GranularityCells extends Core_Test_TestCase
 
     /**
      * @expectedException Core_Exception_TooMany
-     * @expectedExceptionMessage Too many Cell matching members "14b563f437e64e44b9ecdcab001aeaa010a0bad1".
+     * @expectedExceptionMessage Too many Cell matching members "ref11_a" for "ref_11|ref_2".
      */
     public function testGetCellByMembersTooMany()
     {
