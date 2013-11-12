@@ -786,7 +786,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
 
         $criteria = Doctrine\Common\Collections\Criteria::create();
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getTag()) as $pathTag) {
-            $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
+            if ($pathTag != '') {
+                $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
+            }
         }
         //@todo Ordre des Cellules suivant les tag (?Position- & Ref) !== ordre réel (Position || Label).
         $criteria->orderBy(['tag' => 'ASC']);
