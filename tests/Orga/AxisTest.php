@@ -108,64 +108,64 @@ class Orga_Test_AxisTag extends Core_Test_TestCase
     {
         $newAxis = new Orga_Model_Axis($this->organization, 'new');
 
-        $this->assertSame('1-ref', $this->axis->getAxisTag());
-        $this->assertSame('2-new', $newAxis->getAxisTag());
+        $this->assertSame('1-ref',$this->axis->getAxisTag());
+        $this->assertSame('2-new',$newAxis->getAxisTag());
     }
 
     public function testGetNarrowerTag()
     {
         $newAxis = new Orga_Model_Axis($this->organization, 'new');
 
-        $this->assertSame('/1-ref', $this->axis->getNarrowerTag());
-        $this->assertSame('/2-new', $newAxis->getNarrowerTag());
+        $this->assertSame('/1-ref/', $this->axis->getNarrowerTag());
+        $this->assertSame('/2-new/', $newAxis->getNarrowerTag());
 
         $axisA = new Orga_Model_Axis($this->organization, 'ref_a', $this->axis);
 
         $axisB = new Orga_Model_Axis($this->organization, 'ref_b', $this->axis);
 
-        $this->assertSame('/1-ref', $this->axis->getNarrowerTag());
-        $this->assertSame('/2-new', $newAxis->getNarrowerTag());
-        $this->assertSame('/1-ref/1-ref_a', $axisA->getNarrowerTag());
-        $this->assertSame('/1-ref/2-ref_b', $axisB->getNarrowerTag());
+        $this->assertSame('/1-ref/', $this->axis->getNarrowerTag());
+        $this->assertSame('/2-new/', $newAxis->getNarrowerTag());
+        $this->assertSame('/1-ref/1-ref_a/', $axisA->getNarrowerTag());
+        $this->assertSame('/1-ref/2-ref_b/', $axisB->getNarrowerTag());
 
         $axisB1 = new Orga_Model_Axis($this->organization, 'ref_b1', $axisB);
 
         $axis0 = new Orga_Model_Axis($this->organization, 'ref_0');
 
-        $this->assertSame('/1-ref', $this->axis->getNarrowerTag());
-        $this->assertSame('/2-new', $newAxis->getNarrowerTag());
-        $this->assertSame('/1-ref/1-ref_a', $axisA->getNarrowerTag());
-        $this->assertSame('/1-ref/2-ref_b', $axisB->getNarrowerTag());
-        $this->assertSame('/1-ref/2-ref_b/1-ref_b1', $axisB1->getNarrowerTag());
-        $this->assertSame('/3-ref_0', $axis0->getNarrowerTag());
+        $this->assertSame('/1-ref/', $this->axis->getNarrowerTag());
+        $this->assertSame('/2-new/', $newAxis->getNarrowerTag());
+        $this->assertSame('/1-ref/1-ref_a/', $axisA->getNarrowerTag());
+        $this->assertSame('/1-ref/2-ref_b/', $axisB->getNarrowerTag());
+        $this->assertSame('/1-ref/2-ref_b/1-ref_b1/', $axisB1->getNarrowerTag());
+        $this->assertSame('/3-ref_0/', $axis0->getNarrowerTag());
     }
 
     public function testGetBroaderTag()
     {
         $newAxis = new Orga_Model_Axis($this->organization, 'new');
 
-        $this->assertSame('/1-ref', $this->axis->getBroaderTag());
-        $this->assertSame('/2-new', $newAxis->getBroaderTag());
+        $this->assertSame('/1-ref/', $this->axis->getBroaderTag());
+        $this->assertSame('/2-new/', $newAxis->getBroaderTag());
 
         $axisA = new Orga_Model_Axis($this->organization, 'ref_a', $this->axis);
 
         $axisB = new Orga_Model_Axis($this->organization, 'ref_b', $this->axis);
 
-        $this->assertSame('/1-ref_a/1-ref&/2-ref_b/1-ref', $this->axis->getBroaderTag());
-        $this->assertSame('/2-new', $newAxis->getBroaderTag());
-        $this->assertSame('/1-ref_a', $axisA->getBroaderTag());
-        $this->assertSame('/2-ref_b', $axisB->getBroaderTag());
+        $this->assertSame('/1-ref_a/1-ref/&/2-ref_b/1-ref/', $this->axis->getBroaderTag());
+        $this->assertSame('/2-new/', $newAxis->getBroaderTag());
+        $this->assertSame('/1-ref_a/', $axisA->getBroaderTag());
+        $this->assertSame('/2-ref_b/', $axisB->getBroaderTag());
 
         $axisB1 = new Orga_Model_Axis($this->organization, 'ref_b1', $axisB);
 
         $axis0 = new Orga_Model_Axis($this->organization, 'ref_0');
 
-        $this->assertSame('/1-ref_a/1-ref&/1-ref_b1/2-ref_b/1-ref', $this->axis->getBroaderTag());
-        $this->assertSame('/2-new', $newAxis->getBroaderTag());
-        $this->assertSame('/1-ref_a', $axisA->getBroaderTag());
-        $this->assertSame('/1-ref_b1/2-ref_b', $axisB->getBroaderTag());
-        $this->assertSame('/1-ref_b1', $axisB1->getBroaderTag());
-        $this->assertSame('/3-ref_0', $axis0->getBroaderTag());
+        $this->assertSame('/1-ref_a/1-ref/&/1-ref_b1/2-ref_b/1-ref/', $this->axis->getBroaderTag());
+        $this->assertSame('/2-new/', $newAxis->getBroaderTag());
+        $this->assertSame('/1-ref_a/', $axisA->getBroaderTag());
+        $this->assertSame('/1-ref_b1/2-ref_b/', $axisB->getBroaderTag());
+        $this->assertSame('/1-ref_b1/', $axisB1->getBroaderTag());
+        $this->assertSame('/3-ref_0/', $axis0->getBroaderTag());
     }
 
 }
@@ -391,13 +391,13 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
     public function testMoveTo()
     {
         // Narrower Tag.
-        $this->assertSame('/3-ref_1', $this->axis1->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11', $this->axis11->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11/1-ref_111', $this->axis111->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11/2-ref_112', $this->axis112->getNarrowerTag());
-        $this->assertSame('/3-ref_1/2-ref_12', $this->axis12->getNarrowerTag());
-        $this->assertSame('/3-ref_1/2-ref_12/1-ref_121', $this->axis121->getNarrowerTag());
-        $this->assertSame('/4-ref_2', $this->axis2->getNarrowerTag());
+        $this->assertSame('/3-ref_1/', $this->axis1->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/', $this->axis11->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/1-ref_111/', $this->axis111->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/2-ref_112/', $this->axis112->getNarrowerTag());
+        $this->assertSame('/3-ref_1/2-ref_12/', $this->axis12->getNarrowerTag());
+        $this->assertSame('/3-ref_1/2-ref_12/1-ref_121/', $this->axis121->getNarrowerTag());
+        $this->assertSame('/4-ref_2/', $this->axis2->getNarrowerTag());
 
         // Narrowers.
         $this->assertSame([], $this->axis1->getAllNarrowers());
@@ -409,13 +409,13 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
         $this->assertSame([], $this->axis2->getAllNarrowers());
 
         // Broader Tag.
-        $this->assertSame('/1-ref_111/1-ref_11/3-ref_1&/2-ref_112/1-ref_11/3-ref_1&/1-ref_121/2-ref_12/3-ref_1', $this->axis1->getBroaderTag());
-        $this->assertSame('/1-ref_111/1-ref_11&/2-ref_112/1-ref_11', $this->axis11->getBroaderTag());
-        $this->assertSame('/1-ref_111', $this->axis111->getBroaderTag());
-        $this->assertSame('/2-ref_112', $this->axis112->getBroaderTag());
-        $this->assertSame('/1-ref_121/2-ref_12', $this->axis12->getBroaderTag());
-        $this->assertSame('/1-ref_121', $this->axis121->getBroaderTag());
-        $this->assertSame('/4-ref_2', $this->axis2->getBroaderTag());
+        $this->assertSame('/1-ref_111/1-ref_11/3-ref_1/&/2-ref_112/1-ref_11/3-ref_1/&/1-ref_121/2-ref_12/3-ref_1/', $this->axis1->getBroaderTag());
+        $this->assertSame('/1-ref_111/1-ref_11/&/2-ref_112/1-ref_11/', $this->axis11->getBroaderTag());
+        $this->assertSame('/1-ref_111/', $this->axis111->getBroaderTag());
+        $this->assertSame('/2-ref_112/', $this->axis112->getBroaderTag());
+        $this->assertSame('/1-ref_121/2-ref_12/', $this->axis12->getBroaderTag());
+        $this->assertSame('/1-ref_121/', $this->axis121->getBroaderTag());
+        $this->assertSame('/4-ref_2/', $this->axis2->getBroaderTag());
 
         // Broaders.
         $this->assertSame([$this->axis11, $this->axis111, $this->axis112, $this->axis12, $this->axis121], $this->axis1->getAllBroadersFirstOrdered());
@@ -433,13 +433,13 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
         $this->assertSame($this->axis2, $this->axis11->getDirectNarrower());
 
         // Narrower Tag.
-        $this->assertSame('/3-ref_1', $this->axis1->getNarrowerTag());
-        $this->assertSame('/4-ref_2/1-ref_11', $this->axis11->getNarrowerTag());
-        $this->assertSame('/4-ref_2/1-ref_11/1-ref_111', $this->axis111->getNarrowerTag());
-        $this->assertSame('/4-ref_2/1-ref_11/2-ref_112', $this->axis112->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_12', $this->axis12->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_12/1-ref_121', $this->axis121->getNarrowerTag());
-        $this->assertSame('/4-ref_2', $this->axis2->getNarrowerTag());
+        $this->assertSame('/3-ref_1/', $this->axis1->getNarrowerTag());
+        $this->assertSame('/4-ref_2/1-ref_11/', $this->axis11->getNarrowerTag());
+        $this->assertSame('/4-ref_2/1-ref_11/1-ref_111/', $this->axis111->getNarrowerTag());
+        $this->assertSame('/4-ref_2/1-ref_11/2-ref_112/', $this->axis112->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_12/', $this->axis12->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_12/1-ref_121/', $this->axis121->getNarrowerTag());
+        $this->assertSame('/4-ref_2/', $this->axis2->getNarrowerTag());
 
         // Narrowers.
         $this->assertSame([], $this->axis1->getAllNarrowers());
@@ -451,13 +451,13 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
         $this->assertSame([], $this->axis2->getAllNarrowers());
 
         // Broader Tag.
-        $this->assertSame('/1-ref_121/1-ref_12/3-ref_1', $this->axis1->getBroaderTag());
-        $this->assertSame('/1-ref_111/1-ref_11&/2-ref_112/1-ref_11', $this->axis11->getBroaderTag());
-        $this->assertSame('/1-ref_111', $this->axis111->getBroaderTag());
-        $this->assertSame('/2-ref_112', $this->axis112->getBroaderTag());
-        $this->assertSame('/1-ref_121/1-ref_12', $this->axis12->getBroaderTag());
-        $this->assertSame('/1-ref_121', $this->axis121->getBroaderTag());
-        $this->assertSame('/1-ref_111/1-ref_11/4-ref_2&/2-ref_112/1-ref_11/4-ref_2', $this->axis2->getBroaderTag());
+        $this->assertSame('/1-ref_121/1-ref_12/3-ref_1/', $this->axis1->getBroaderTag());
+        $this->assertSame('/1-ref_111/1-ref_11/&/2-ref_112/1-ref_11/', $this->axis11->getBroaderTag());
+        $this->assertSame('/1-ref_111/', $this->axis111->getBroaderTag());
+        $this->assertSame('/2-ref_112/', $this->axis112->getBroaderTag());
+        $this->assertSame('/1-ref_121/1-ref_12/', $this->axis12->getBroaderTag());
+        $this->assertSame('/1-ref_121/', $this->axis121->getBroaderTag());
+        $this->assertSame('/1-ref_111/1-ref_11/4-ref_2/&/2-ref_112/1-ref_11/4-ref_2/', $this->axis2->getBroaderTag());
 
         // Broaders.
         $this->assertSame([$this->axis12, $this->axis121], $this->axis1->getAllBroadersFirstOrdered());
@@ -472,17 +472,17 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
     public function testRemoveAxisFromOrganization()
     {
         // Narrower Tag.
-        $this->assertSame('/3-ref_1', $this->axis1->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11', $this->axis11->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11/1-ref_111', $this->axis111->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11/2-ref_112', $this->axis112->getNarrowerTag());
-        $this->assertSame('/3-ref_1/2-ref_12', $this->axis12->getNarrowerTag());
-        $this->assertSame('/3-ref_1/2-ref_12/1-ref_121', $this->axis121->getNarrowerTag());
-        $this->assertSame('/4-ref_2', $this->axis2->getNarrowerTag());
-        $this->assertSame('/5-ref_3', $this->axis3->getNarrowerTag());
-        $this->assertSame('/5-ref_3/1-ref_31', $this->axis31->getNarrowerTag());
-        $this->assertSame('/5-ref_3/2-ref_32', $this->axis32->getNarrowerTag());
-        $this->assertSame('/5-ref_3/2-ref_32/1-ref_321', $this->axis321->getNarrowerTag());
+        $this->assertSame('/3-ref_1/', $this->axis1->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/', $this->axis11->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/1-ref_111/', $this->axis111->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/2-ref_112/', $this->axis112->getNarrowerTag());
+        $this->assertSame('/3-ref_1/2-ref_12/', $this->axis12->getNarrowerTag());
+        $this->assertSame('/3-ref_1/2-ref_12/1-ref_121/', $this->axis121->getNarrowerTag());
+        $this->assertSame('/4-ref_2/', $this->axis2->getNarrowerTag());
+        $this->assertSame('/5-ref_3/', $this->axis3->getNarrowerTag());
+        $this->assertSame('/5-ref_3/1-ref_31/', $this->axis31->getNarrowerTag());
+        $this->assertSame('/5-ref_3/2-ref_32/', $this->axis32->getNarrowerTag());
+        $this->assertSame('/5-ref_3/2-ref_32/1-ref_321/', $this->axis321->getNarrowerTag());
 
         // Narrowers.
         $this->assertSame([], $this->axis1->getAllNarrowers());
@@ -498,17 +498,17 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
         $this->assertSame([$this->axis32, $this->axis3], $this->axis321->getAllNarrowers());
 
         // Broader Tag.
-        $this->assertSame('/1-ref_111/1-ref_11/3-ref_1&/2-ref_112/1-ref_11/3-ref_1&/1-ref_121/2-ref_12/3-ref_1', $this->axis1->getBroaderTag());
-        $this->assertSame('/1-ref_111/1-ref_11&/2-ref_112/1-ref_11', $this->axis11->getBroaderTag());
-        $this->assertSame('/1-ref_111', $this->axis111->getBroaderTag());
-        $this->assertSame('/2-ref_112', $this->axis112->getBroaderTag());
-        $this->assertSame('/1-ref_121/2-ref_12', $this->axis12->getBroaderTag());
-        $this->assertSame('/1-ref_121', $this->axis121->getBroaderTag());
-        $this->assertSame('/4-ref_2', $this->axis2->getBroaderTag());
-        $this->assertSame('/1-ref_31/5-ref_3&/1-ref_321/2-ref_32/5-ref_3', $this->axis3->getBroaderTag());
-        $this->assertSame('/1-ref_31', $this->axis31->getBroaderTag());
-        $this->assertSame('/1-ref_321/2-ref_32', $this->axis32->getBroaderTag());
-        $this->assertSame('/1-ref_321', $this->axis321->getBroaderTag());
+        $this->assertSame('/1-ref_111/1-ref_11/3-ref_1/&/2-ref_112/1-ref_11/3-ref_1/&/1-ref_121/2-ref_12/3-ref_1/', $this->axis1->getBroaderTag());
+        $this->assertSame('/1-ref_111/1-ref_11/&/2-ref_112/1-ref_11/', $this->axis11->getBroaderTag());
+        $this->assertSame('/1-ref_111/', $this->axis111->getBroaderTag());
+        $this->assertSame('/2-ref_112/', $this->axis112->getBroaderTag());
+        $this->assertSame('/1-ref_121/2-ref_12/', $this->axis12->getBroaderTag());
+        $this->assertSame('/1-ref_121/', $this->axis121->getBroaderTag());
+        $this->assertSame('/4-ref_2/', $this->axis2->getBroaderTag());
+        $this->assertSame('/1-ref_31/5-ref_3/&/1-ref_321/2-ref_32/5-ref_3/', $this->axis3->getBroaderTag());
+        $this->assertSame('/1-ref_31/', $this->axis31->getBroaderTag());
+        $this->assertSame('/1-ref_321/2-ref_32/', $this->axis32->getBroaderTag());
+        $this->assertSame('/1-ref_321/', $this->axis321->getBroaderTag());
 
         // Broaders.
         $this->assertSame([$this->axis11, $this->axis111, $this->axis112, $this->axis12, $this->axis121], $this->axis1->getAllBroadersFirstOrdered());
@@ -526,17 +526,17 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
         $this->organization->removeAxis($this->axis2);
 
         // Narrower Tag.
-        $this->assertSame('/3-ref_1', $this->axis1->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11', $this->axis11->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11/1-ref_111', $this->axis111->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_11/2-ref_112', $this->axis112->getNarrowerTag());
-        $this->assertSame('/3-ref_1/2-ref_12', $this->axis12->getNarrowerTag());
-        $this->assertSame('/3-ref_1/2-ref_12/1-ref_121', $this->axis121->getNarrowerTag());
-        $this->assertSame('/5-ref_2', $this->axis2->getNarrowerTag());
-        $this->assertSame('/4-ref_3', $this->axis3->getNarrowerTag());
-        $this->assertSame('/4-ref_3/1-ref_31', $this->axis31->getNarrowerTag());
-        $this->assertSame('/4-ref_3/2-ref_32', $this->axis32->getNarrowerTag());
-        $this->assertSame('/4-ref_3/2-ref_32/1-ref_321', $this->axis321->getNarrowerTag());
+        $this->assertSame('/3-ref_1/', $this->axis1->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/', $this->axis11->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/1-ref_111/', $this->axis111->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_11/2-ref_112/', $this->axis112->getNarrowerTag());
+        $this->assertSame('/3-ref_1/2-ref_12/', $this->axis12->getNarrowerTag());
+        $this->assertSame('/3-ref_1/2-ref_12/1-ref_121/', $this->axis121->getNarrowerTag());
+        $this->assertSame('/5-ref_2/', $this->axis2->getNarrowerTag());
+        $this->assertSame('/4-ref_3/', $this->axis3->getNarrowerTag());
+        $this->assertSame('/4-ref_3/1-ref_31/', $this->axis31->getNarrowerTag());
+        $this->assertSame('/4-ref_3/2-ref_32/', $this->axis32->getNarrowerTag());
+        $this->assertSame('/4-ref_3/2-ref_32/1-ref_321/', $this->axis321->getNarrowerTag());
 
         // Narrowers.
         $this->assertSame([], $this->axis1->getAllNarrowers());
@@ -552,17 +552,17 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
         $this->assertSame([$this->axis32, $this->axis3], $this->axis321->getAllNarrowers());
 
         // Broader Tag.
-        $this->assertSame('/1-ref_111/1-ref_11/3-ref_1&/2-ref_112/1-ref_11/3-ref_1&/1-ref_121/2-ref_12/3-ref_1', $this->axis1->getBroaderTag());
-        $this->assertSame('/1-ref_111/1-ref_11&/2-ref_112/1-ref_11', $this->axis11->getBroaderTag());
-        $this->assertSame('/1-ref_111', $this->axis111->getBroaderTag());
-        $this->assertSame('/2-ref_112', $this->axis112->getBroaderTag());
-        $this->assertSame('/1-ref_121/2-ref_12', $this->axis12->getBroaderTag());
-        $this->assertSame('/1-ref_121', $this->axis121->getBroaderTag());
-        $this->assertSame('/5-ref_2', $this->axis2->getBroaderTag());
-        $this->assertSame('/1-ref_31/4-ref_3&/1-ref_321/2-ref_32/4-ref_3', $this->axis3->getBroaderTag());
-        $this->assertSame('/1-ref_31', $this->axis31->getBroaderTag());
-        $this->assertSame('/1-ref_321/2-ref_32', $this->axis32->getBroaderTag());
-        $this->assertSame('/1-ref_321', $this->axis321->getBroaderTag());
+        $this->assertSame('/1-ref_111/1-ref_11/3-ref_1/&/2-ref_112/1-ref_11/3-ref_1/&/1-ref_121/2-ref_12/3-ref_1/', $this->axis1->getBroaderTag());
+        $this->assertSame('/1-ref_111/1-ref_11/&/2-ref_112/1-ref_11/', $this->axis11->getBroaderTag());
+        $this->assertSame('/1-ref_111/', $this->axis111->getBroaderTag());
+        $this->assertSame('/2-ref_112/', $this->axis112->getBroaderTag());
+        $this->assertSame('/1-ref_121/2-ref_12/', $this->axis12->getBroaderTag());
+        $this->assertSame('/1-ref_121/', $this->axis121->getBroaderTag());
+        $this->assertSame('/5-ref_2/', $this->axis2->getBroaderTag());
+        $this->assertSame('/1-ref_31/4-ref_3/&/1-ref_321/2-ref_32/4-ref_3/', $this->axis3->getBroaderTag());
+        $this->assertSame('/1-ref_31/', $this->axis31->getBroaderTag());
+        $this->assertSame('/1-ref_321/2-ref_32/', $this->axis32->getBroaderTag());
+        $this->assertSame('/1-ref_321/', $this->axis321->getBroaderTag());
 
         // Broaders.
         $this->assertSame([$this->axis11, $this->axis111, $this->axis112, $this->axis12, $this->axis121], $this->axis1->getAllBroadersFirstOrdered());
@@ -580,17 +580,17 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
         $this->organization->removeAxis($this->axis11);
 
         // Narrower Tag.
-        $this->assertSame('/3-ref_1', $this->axis1->getNarrowerTag());
-        $this->assertSame('/5-ref_11', $this->axis11->getNarrowerTag());
-        $this->assertSame('/3-ref_1/2-ref_111', $this->axis111->getNarrowerTag());
-        $this->assertSame('/3-ref_1/3-ref_112', $this->axis112->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_12', $this->axis12->getNarrowerTag());
-        $this->assertSame('/3-ref_1/1-ref_12/1-ref_121', $this->axis121->getNarrowerTag());
-        $this->assertSame('/5-ref_2', $this->axis2->getNarrowerTag());
-        $this->assertSame('/4-ref_3', $this->axis3->getNarrowerTag());
-        $this->assertSame('/4-ref_3/1-ref_31', $this->axis31->getNarrowerTag());
-        $this->assertSame('/4-ref_3/2-ref_32', $this->axis32->getNarrowerTag());
-        $this->assertSame('/4-ref_3/2-ref_32/1-ref_321', $this->axis321->getNarrowerTag());
+        $this->assertSame('/3-ref_1/', $this->axis1->getNarrowerTag());
+        $this->assertSame('/5-ref_11/', $this->axis11->getNarrowerTag());
+        $this->assertSame('/3-ref_1/2-ref_111/', $this->axis111->getNarrowerTag());
+        $this->assertSame('/3-ref_1/3-ref_112/', $this->axis112->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_12/', $this->axis12->getNarrowerTag());
+        $this->assertSame('/3-ref_1/1-ref_12/1-ref_121/', $this->axis121->getNarrowerTag());
+        $this->assertSame('/5-ref_2/', $this->axis2->getNarrowerTag());
+        $this->assertSame('/4-ref_3/', $this->axis3->getNarrowerTag());
+        $this->assertSame('/4-ref_3/1-ref_31/', $this->axis31->getNarrowerTag());
+        $this->assertSame('/4-ref_3/2-ref_32/', $this->axis32->getNarrowerTag());
+        $this->assertSame('/4-ref_3/2-ref_32/1-ref_321/', $this->axis321->getNarrowerTag());
 
         // Narrowers.
         $this->assertSame([], $this->axis1->getAllNarrowers());
@@ -606,17 +606,17 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
         $this->assertSame([$this->axis32, $this->axis3], $this->axis321->getAllNarrowers());
 
         // Broader Tag.
-        $this->assertSame('/1-ref_121/1-ref_12/3-ref_1&/2-ref_111/3-ref_1&/3-ref_112/3-ref_1', $this->axis1->getBroaderTag());
-        $this->assertSame('/5-ref_11', $this->axis11->getBroaderTag());
-        $this->assertSame('/2-ref_111', $this->axis111->getBroaderTag());
-        $this->assertSame('/3-ref_112', $this->axis112->getBroaderTag());
-        $this->assertSame('/1-ref_121/1-ref_12', $this->axis12->getBroaderTag());
-        $this->assertSame('/1-ref_121', $this->axis121->getBroaderTag());
-        $this->assertSame('/5-ref_2', $this->axis2->getBroaderTag());
-        $this->assertSame('/1-ref_31/4-ref_3&/1-ref_321/2-ref_32/4-ref_3', $this->axis3->getBroaderTag());
-        $this->assertSame('/1-ref_31', $this->axis31->getBroaderTag());
-        $this->assertSame('/1-ref_321/2-ref_32', $this->axis32->getBroaderTag());
-        $this->assertSame('/1-ref_321', $this->axis321->getBroaderTag());
+        $this->assertSame('/1-ref_121/1-ref_12/3-ref_1/&/2-ref_111/3-ref_1/&/3-ref_112/3-ref_1/', $this->axis1->getBroaderTag());
+        $this->assertSame('/5-ref_11/', $this->axis11->getBroaderTag());
+        $this->assertSame('/2-ref_111/', $this->axis111->getBroaderTag());
+        $this->assertSame('/3-ref_112/', $this->axis112->getBroaderTag());
+        $this->assertSame('/1-ref_121/1-ref_12/', $this->axis12->getBroaderTag());
+        $this->assertSame('/1-ref_121/', $this->axis121->getBroaderTag());
+        $this->assertSame('/5-ref_2/', $this->axis2->getBroaderTag());
+        $this->assertSame('/1-ref_31/4-ref_3/&/1-ref_321/2-ref_32/4-ref_3/', $this->axis3->getBroaderTag());
+        $this->assertSame('/1-ref_31/', $this->axis31->getBroaderTag());
+        $this->assertSame('/1-ref_321/2-ref_32/', $this->axis32->getBroaderTag());
+        $this->assertSame('/1-ref_321/', $this->axis321->getBroaderTag());
 
         // Broaders.
         $this->assertSame([$this->axis12, $this->axis121, $this->axis111, $this->axis112], $this->axis1->getAllBroadersFirstOrdered());

@@ -317,8 +317,8 @@ class Orga_Test_MemberTag extends Core_Test_TestCase
     {
         $newMember = new Orga_Model_Member($this->axis, 'ref_new');
 
-        $this->assertSame('/1-ref:ref_member', $this->member->getTag());
-        $this->assertSame('/1-ref:ref_new', $newMember->getTag());
+        $this->assertSame('/1-ref:ref_member/', $this->member->getTag());
+        $this->assertSame('/1-ref:ref_new/', $newMember->getTag());
 
         $axisA = new Orga_Model_Axis($this->organization, 'ref_a', $this->axis);
         $axisA->setMemberPositioning(true);
@@ -336,11 +336,11 @@ class Orga_Test_MemberTag extends Core_Test_TestCase
         $newMember->setDirectParentForAxis($memberA2);
         $newMember->setDirectParentForAxis($memberB1);
 
-        $this->assertSame('/1-ref_a:1-refa_1/1-ref:ref_member&/2-ref_b:refb_1/1-ref:ref_member', $this->member->getTag());
-        $this->assertSame('/1-ref_a:2-refa_2/1-ref:ref_new&/2-ref_b:refb_1/1-ref:ref_new', $newMember->getTag());
-        $this->assertSame('/1-ref_a:1-refa_1', $memberA1->getTag());
-        $this->assertSame('/1-ref_a:2-refa_2', $memberA2->getTag());
-        $this->assertSame('/2-ref_b:refb_1', $memberB1->getTag());
+        $this->assertSame('/1-ref_a:1-refa_1/1-ref:ref_member/&/2-ref_b:refb_1/1-ref:ref_member/', $this->member->getTag());
+        $this->assertSame('/1-ref_a:2-refa_2/1-ref:ref_new/&/2-ref_b:refb_1/1-ref:ref_new/', $newMember->getTag());
+        $this->assertSame('/1-ref_a:1-refa_1/', $memberA1->getTag());
+        $this->assertSame('/1-ref_a:2-refa_2/', $memberA2->getTag());
+        $this->assertSame('/2-ref_b:refb_1/', $memberB1->getTag());
 
         $axisAA = new Orga_Model_Axis($this->organization, 'ref_aa', $axisA);
         $axisAA->setContextualize(true);
@@ -355,15 +355,15 @@ class Orga_Test_MemberTag extends Core_Test_TestCase
 
         $member3 = new Orga_Model_Member($this->axis, 'ref_3', [$memberA1bis, $memberB1]);
 
-        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:1-refa_1/1-ref:ref_member&/2-ref_b:refb_1/1-ref:ref_member', $this->member->getTag());
-        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:2-refa_2/1-ref:ref_new&/2-ref_b:refb_1/1-ref:ref_new', $newMember->getTag());
-        $this->assertSame('/1-ref_aa:refaa_2/1-ref_a:1-refa_1/1-ref:ref_3&/2-ref_b:refb_1/1-ref:ref_3', $member3->getTag());
-        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:1-refa_1', $memberA1->getTag());
-        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:2-refa_2', $memberA2->getTag());
-        $this->assertSame('/1-ref_aa:refaa_2/1-ref_a:1-refa_1', $memberA1bis->getTag());
-        $this->assertSame('/1-ref_aa:refaa_1', $memberAA1->getTag());
-        $this->assertSame('/1-ref_aa:refaa_2', $memberAA2->getTag());
-        $this->assertSame('/2-ref_b:refb_1', $memberB1->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:1-refa_1/1-ref:ref_member/&/2-ref_b:refb_1/1-ref:ref_member/', $this->member->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:2-refa_2/1-ref:ref_new/&/2-ref_b:refb_1/1-ref:ref_new/', $newMember->getTag());
+        $this->assertSame('/1-ref_aa:refaa_2/1-ref_a:1-refa_1/1-ref:ref_3/&/2-ref_b:refb_1/1-ref:ref_3/', $member3->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:1-refa_1/', $memberA1->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1/1-ref_a:2-refa_2/', $memberA2->getTag());
+        $this->assertSame('/1-ref_aa:refaa_2/1-ref_a:1-refa_1/', $memberA1bis->getTag());
+        $this->assertSame('/1-ref_aa:refaa_1/', $memberAA1->getTag());
+        $this->assertSame('/1-ref_aa:refaa_2/', $memberAA2->getTag());
+        $this->assertSame('/2-ref_b:refb_1/', $memberB1->getTag());
     }
 
 }

@@ -1370,264 +1370,264 @@ class Orga_Test_CellHierarchy extends Core_Test_TestCase
     {
         $this->assertSame('/', $this->cell0_0->getTag());
         
-        $this->assertSame('/1-ref_111:ref111_a', $this->cell1_111a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b', $this->cell1_111b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/', $this->cell1_111a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/', $this->cell1_111b->getTag());
         
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12:ref12_a', $this->cell2_11a12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12:ref12_a', $this->cell2_11b12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12:ref12_a', $this->cell2_11c12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12:ref12_b', $this->cell2_11a12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12:ref12_b', $this->cell2_11b12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12:ref12_b', $this->cell2_11c12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_a/', $this->cell2_11a12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_a/', $this->cell2_11b12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_a/', $this->cell2_11c12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_b/', $this->cell2_11a12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_b/', $this->cell2_11b12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_b/', $this->cell2_11c12b->getTag());
         
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12:ref12_a&/2-ref_2:ref2_a', $this->cell3_11a12a2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12:ref12_a&/2-ref_2:ref2_a', $this->cell3_11b12a2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12:ref12_a&/2-ref_2:ref2_a', $this->cell3_11c12a2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12:ref12_b&/2-ref_2:ref2_a', $this->cell3_11a12b2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12:ref12_b&/2-ref_2:ref2_a', $this->cell3_11b12b2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12:ref12_b&/2-ref_2:ref2_a', $this->cell3_11c12b2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12:ref12_a&/2-ref_2:ref2_b', $this->cell3_11a12a2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12:ref12_a&/2-ref_2:ref2_b', $this->cell3_11b12a2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12:ref12_a&/2-ref_2:ref2_b', $this->cell3_11c12a2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12:ref12_b&/2-ref_2:ref2_b', $this->cell3_11a12b2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12:ref12_b&/2-ref_2:ref2_b', $this->cell3_11b12b2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12:ref12_b&/2-ref_2:ref2_b', $this->cell3_11c12b2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11a12a2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11b12a2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11c12a2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_b/&/2-ref_2:ref2_a/', $this->cell3_11a12b2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_b/&/2-ref_2:ref2_a/', $this->cell3_11b12b2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_b/&/2-ref_2:ref2_a/', $this->cell3_11c12b2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_a/&/2-ref_2:ref2_b/', $this->cell3_11a12a2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_a/&/2-ref_2:ref2_b/', $this->cell3_11b12a2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_a/&/2-ref_2:ref2_b/', $this->cell3_11c12a2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11a12b2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11b12b2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11c12b2b->getTag());
         
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a&/2-ref_12:ref12_a/1-ref_1:ref1_a&/2-ref_2:ref2_a', $this->cell4_1a2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b&/2-ref_12:ref12_b/1-ref_1:ref1_b&/2-ref_2:ref2_a', $this->cell4_1b2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c&/2-ref_12:ref12_a/1-ref_1:ref1_c&/2-ref_2:ref2_a', $this->cell4_1c2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d&/2-ref_12:ref12_b/1-ref_1:ref1_d&/2-ref_2:ref2_a', $this->cell4_1d2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e&/2-ref_12:ref12_a/1-ref_1:ref1_e&/2-ref_2:ref2_a', $this->cell4_1e2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f&/2-ref_12:ref12_b/1-ref_1:ref1_f&/2-ref_2:ref2_a', $this->cell4_1f2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a&/2-ref_12:ref12_a/1-ref_1:ref1_a&/2-ref_2:ref2_b', $this->cell4_1a2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b&/2-ref_12:ref12_b/1-ref_1:ref1_b&/2-ref_2:ref2_b', $this->cell4_1b2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c&/2-ref_12:ref12_a/1-ref_1:ref1_c&/2-ref_2:ref2_b', $this->cell4_1c2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d&/2-ref_12:ref12_b/1-ref_1:ref1_d&/2-ref_2:ref2_b', $this->cell4_1d2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e&/2-ref_12:ref12_a/1-ref_1:ref1_e&/2-ref_2:ref2_b', $this->cell4_1e2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f&/2-ref_12:ref12_b/1-ref_1:ref1_f&/2-ref_2:ref2_b', $this->cell4_1f2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a/&/2-ref_12:ref12_a/1-ref_1:ref1_a/&/2-ref_2:ref2_a/', $this->cell4_1a2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b/&/2-ref_12:ref12_b/1-ref_1:ref1_b/&/2-ref_2:ref2_a/', $this->cell4_1b2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c/&/2-ref_12:ref12_a/1-ref_1:ref1_c/&/2-ref_2:ref2_a/', $this->cell4_1c2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d/&/2-ref_12:ref12_b/1-ref_1:ref1_d/&/2-ref_2:ref2_a/', $this->cell4_1d2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e/&/2-ref_12:ref12_a/1-ref_1:ref1_e/&/2-ref_2:ref2_a/', $this->cell4_1e2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f/&/2-ref_12:ref12_b/1-ref_1:ref1_f/&/2-ref_2:ref2_a/', $this->cell4_1f2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a/&/2-ref_12:ref12_a/1-ref_1:ref1_a/&/2-ref_2:ref2_b/', $this->cell4_1a2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b/&/2-ref_12:ref12_b/1-ref_1:ref1_b/&/2-ref_2:ref2_b/', $this->cell4_1b2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c/&/2-ref_12:ref12_a/1-ref_1:ref1_c/&/2-ref_2:ref2_b/', $this->cell4_1c2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d/&/2-ref_12:ref12_b/1-ref_1:ref1_d/&/2-ref_2:ref2_b/', $this->cell4_1d2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e/&/2-ref_12:ref12_a/1-ref_1:ref1_e/&/2-ref_2:ref2_b/', $this->cell4_1e2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f/&/2-ref_12:ref12_b/1-ref_1:ref1_f/&/2-ref_2:ref2_b/', $this->cell4_1f2b->getTag());
         
-        $this->assertSame('/2-ref_2:ref2_a', $this->cell5_2a->getTag());
-        $this->assertSame('/2-ref_2:ref2_b', $this->cell5_2b->getTag());
+        $this->assertSame('/2-ref_2:ref2_a/', $this->cell5_2a->getTag());
+        $this->assertSame('/2-ref_2:ref2_b/', $this->cell5_2b->getTag());
         
         // Modification de la ref d'un axe.
         $this->axis12->setRef('ref_12_updated');
         
         $this->assertSame('/', $this->cell0_0->getTag());
         
-        $this->assertSame('/1-ref_111:ref111_a', $this->cell1_111a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b', $this->cell1_111b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/', $this->cell1_111a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/', $this->cell1_111b->getTag());
         
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a', $this->cell2_11a12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a', $this->cell2_11b12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a', $this->cell2_11c12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b', $this->cell2_11a12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b', $this->cell2_11b12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b', $this->cell2_11c12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell2_11a12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell2_11b12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell2_11c12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell2_11a12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell2_11b12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell2_11c12b->getTag());
         
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a&/2-ref_2:ref2_a', $this->cell3_11a12a2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a&/2-ref_2:ref2_a', $this->cell3_11b12a2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a&/2-ref_2:ref2_a', $this->cell3_11c12a2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b&/2-ref_2:ref2_a', $this->cell3_11a12b2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b&/2-ref_2:ref2_a', $this->cell3_11b12b2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b&/2-ref_2:ref2_a', $this->cell3_11c12b2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a&/2-ref_2:ref2_b', $this->cell3_11a12a2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a&/2-ref_2:ref2_b', $this->cell3_11b12a2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a&/2-ref_2:ref2_b', $this->cell3_11c12a2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b&/2-ref_2:ref2_b', $this->cell3_11a12b2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b&/2-ref_2:ref2_b', $this->cell3_11b12b2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b&/2-ref_2:ref2_b', $this->cell3_11c12b2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11a12a2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11b12a2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11c12a2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_a/', $this->cell3_11a12b2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_a/', $this->cell3_11b12b2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_a/', $this->cell3_11c12b2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_b/', $this->cell3_11a12a2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_b/', $this->cell3_11b12a2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_b/', $this->cell3_11c12a2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11a12b2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11b12b2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11c12b2b->getTag());
         
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a&/2-ref_12_updated:ref12_a/1-ref_1:ref1_a&/2-ref_2:ref2_a', $this->cell4_1a2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b&/2-ref_12_updated:ref12_b/1-ref_1:ref1_b&/2-ref_2:ref2_a', $this->cell4_1b2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c&/2-ref_12_updated:ref12_a/1-ref_1:ref1_c&/2-ref_2:ref2_a', $this->cell4_1c2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d&/2-ref_12_updated:ref12_b/1-ref_1:ref1_d&/2-ref_2:ref2_a', $this->cell4_1d2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e&/2-ref_12_updated:ref12_a/1-ref_1:ref1_e&/2-ref_2:ref2_a', $this->cell4_1e2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f&/2-ref_12_updated:ref12_b/1-ref_1:ref1_f&/2-ref_2:ref2_a', $this->cell4_1f2a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a&/2-ref_12_updated:ref12_a/1-ref_1:ref1_a&/2-ref_2:ref2_b', $this->cell4_1a2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b&/2-ref_12_updated:ref12_b/1-ref_1:ref1_b&/2-ref_2:ref2_b', $this->cell4_1b2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c&/2-ref_12_updated:ref12_a/1-ref_1:ref1_c&/2-ref_2:ref2_b', $this->cell4_1c2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d&/2-ref_12_updated:ref12_b/1-ref_1:ref1_d&/2-ref_2:ref2_b', $this->cell4_1d2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e&/2-ref_12_updated:ref12_a/1-ref_1:ref1_e&/2-ref_2:ref2_b', $this->cell4_1e2b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f&/2-ref_12_updated:ref12_b/1-ref_1:ref1_f&/2-ref_2:ref2_b', $this->cell4_1f2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/1-ref_1:ref1_a/&/2-ref_2:ref2_a/', $this->cell4_1a2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/1-ref_1:ref1_b/&/2-ref_2:ref2_a/', $this->cell4_1b2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/1-ref_1:ref1_c/&/2-ref_2:ref2_a/', $this->cell4_1c2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/1-ref_1:ref1_d/&/2-ref_2:ref2_a/', $this->cell4_1d2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/1-ref_1:ref1_e/&/2-ref_2:ref2_a/', $this->cell4_1e2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/1-ref_1:ref1_f/&/2-ref_2:ref2_a/', $this->cell4_1f2a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/1-ref_1:ref1_a/&/2-ref_2:ref2_b/', $this->cell4_1a2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/1-ref_1:ref1_b/&/2-ref_2:ref2_b/', $this->cell4_1b2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/1-ref_1:ref1_c/&/2-ref_2:ref2_b/', $this->cell4_1c2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/1-ref_1:ref1_d/&/2-ref_2:ref2_b/', $this->cell4_1d2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/1-ref_1:ref1_e/&/2-ref_2:ref2_b/', $this->cell4_1e2b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/1-ref_1:ref1_f/&/2-ref_2:ref2_b/', $this->cell4_1f2b->getTag());
 
-        $this->assertSame('/2-ref_2:ref2_a', $this->cell5_2a->getTag());
-        $this->assertSame('/2-ref_2:ref2_b', $this->cell5_2b->getTag());
+        $this->assertSame('/2-ref_2:ref2_a/', $this->cell5_2a->getTag());
+        $this->assertSame('/2-ref_2:ref2_b/', $this->cell5_2b->getTag());
 
         // Modification de la position d'un axe.
         $this->axis2->setPosition(1);
 
         $this->assertSame('/', $this->cell0_0->getTag());
 
-        $this->assertSame('/1-ref_111:ref111_a', $this->cell1_111a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b', $this->cell1_111b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/', $this->cell1_111a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/', $this->cell1_111b->getTag());
 
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a', $this->cell2_11a12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a', $this->cell2_11b12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a', $this->cell2_11c12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b', $this->cell2_11a12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b', $this->cell2_11b12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b', $this->cell2_11c12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell2_11a12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell2_11b12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell2_11c12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell2_11a12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell2_11b12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell2_11c12b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a', $this->cell3_11a12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a', $this->cell3_11b12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a', $this->cell3_11c12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b', $this->cell3_11a12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b', $this->cell3_11b12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b', $this->cell3_11c12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a', $this->cell3_11a12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a', $this->cell3_11b12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a', $this->cell3_11c12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b', $this->cell3_11a12b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b', $this->cell3_11b12b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b', $this->cell3_11c12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell3_11a12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell3_11b12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell3_11c12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell3_11a12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell3_11b12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell3_11c12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell3_11a12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell3_11b12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell3_11c12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell3_11a12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell3_11b12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell3_11c12b2b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_a&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a', $this->cell4_1a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_b&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b', $this->cell4_1b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b/1-ref_11:ref11_b/2-ref_1:ref1_c&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c', $this->cell4_1c2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b/1-ref_11:ref11_b/2-ref_1:ref1_d&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d', $this->cell4_1d2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b/1-ref_11:ref11_c/2-ref_1:ref1_e&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e', $this->cell4_1e2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b/1-ref_11:ref11_c/2-ref_1:ref1_f&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f', $this->cell4_1f2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_a&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a', $this->cell4_1a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_b&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b', $this->cell4_1b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b/1-ref_11:ref11_b/2-ref_1:ref1_c&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c', $this->cell4_1c2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b/1-ref_11:ref11_b/2-ref_1:ref1_d&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d', $this->cell4_1d2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b/1-ref_11:ref11_c/2-ref_1:ref1_e&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e', $this->cell4_1e2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b/1-ref_11:ref11_c/2-ref_1:ref1_f&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f', $this->cell4_1f2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a/', $this->cell4_1a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b/', $this->cell4_1b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b/1-ref_11:ref11_b/2-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c/', $this->cell4_1c2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b/1-ref_11:ref11_b/2-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d/', $this->cell4_1d2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b/1-ref_11:ref11_c/2-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e/', $this->cell4_1e2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b/1-ref_11:ref11_c/2-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f/', $this->cell4_1f2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a/', $this->cell4_1a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b/', $this->cell4_1b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b/1-ref_11:ref11_b/2-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c/', $this->cell4_1c2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b/1-ref_11:ref11_b/2-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d/', $this->cell4_1d2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b/1-ref_11:ref11_c/2-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e/', $this->cell4_1e2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b/1-ref_11:ref11_c/2-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f/', $this->cell4_1f2b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a', $this->cell5_2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b', $this->cell5_2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/', $this->cell5_2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/', $this->cell5_2b->getTag());
 
         // Modification de la ref d'un membre.
         $this->member111b->setRef('ref111_b_updated');
 
         $this->assertSame('/', $this->cell0_0->getTag());
 
-        $this->assertSame('/1-ref_111:ref111_a', $this->cell1_111a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated', $this->cell1_111b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/', $this->cell1_111a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/', $this->cell1_111b->getTag());
 
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a', $this->cell2_11a12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a', $this->cell2_11b12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a', $this->cell2_11c12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b', $this->cell2_11a12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b', $this->cell2_11b12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b', $this->cell2_11c12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell2_11a12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell2_11b12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell2_11c12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell2_11a12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell2_11b12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell2_11c12b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a', $this->cell3_11a12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a', $this->cell3_11b12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a', $this->cell3_11c12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b', $this->cell3_11a12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b', $this->cell3_11b12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b', $this->cell3_11c12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_a', $this->cell3_11a12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b&/2-ref_12_updated:ref12_a', $this->cell3_11b12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c&/2-ref_12_updated:ref12_a', $this->cell3_11c12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:ref11_a&/2-ref_12_updated:ref12_b', $this->cell3_11a12b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b&/2-ref_12_updated:ref12_b', $this->cell3_11b12b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c&/2-ref_12_updated:ref12_b', $this->cell3_11c12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell3_11a12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell3_11b12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell3_11c12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell3_11a12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell3_11b12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell3_11c12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell3_11a12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell3_11b12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell3_11c12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell3_11a12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell3_11b12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell3_11c12b2b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_a&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a', $this->cell4_1a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_b&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b', $this->cell4_1b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/2-ref_1:ref1_c&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c', $this->cell4_1c2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/2-ref_1:ref1_d&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d', $this->cell4_1d2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/2-ref_1:ref1_e&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e', $this->cell4_1e2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/2-ref_1:ref1_f&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f', $this->cell4_1f2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_a&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a', $this->cell4_1a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_b&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b', $this->cell4_1b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/2-ref_1:ref1_c&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c', $this->cell4_1c2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/2-ref_1:ref1_d&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d', $this->cell4_1d2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/2-ref_1:ref1_e&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e', $this->cell4_1e2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/2-ref_1:ref1_f&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f', $this->cell4_1f2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a/', $this->cell4_1a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b/', $this->cell4_1b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/2-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c/', $this->cell4_1c2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/2-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d/', $this->cell4_1d2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/2-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e/', $this->cell4_1e2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/2-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f/', $this->cell4_1f2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a/', $this->cell4_1a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:ref11_a/2-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b/', $this->cell4_1b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/2-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c/', $this->cell4_1c2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_b/2-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d/', $this->cell4_1d2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/2-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e/', $this->cell4_1e2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:ref11_c/2-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f/', $this->cell4_1f2b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a', $this->cell5_2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b', $this->cell5_2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/', $this->cell5_2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/', $this->cell5_2b->getTag());
         
         // Modification du positionnement des membres d'un axe.
         $this->axis11->setMemberPositioning(true);
 
         $this->assertSame('/', $this->cell0_0->getTag());
 
-        $this->assertSame('/1-ref_111:ref111_a', $this->cell1_111a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated', $this->cell1_111b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/', $this->cell1_111a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/', $this->cell1_111b->getTag());
 
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_a', $this->cell2_11a12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b&/2-ref_12_updated:ref12_a', $this->cell2_11b12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c&/2-ref_12_updated:ref12_a', $this->cell2_11c12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_b', $this->cell2_11a12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b&/2-ref_12_updated:ref12_b', $this->cell2_11b12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c&/2-ref_12_updated:ref12_b', $this->cell2_11c12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell2_11a12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell2_11b12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell2_11c12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell2_11a12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell2_11b12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell2_11c12b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_a', $this->cell3_11a12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b&/2-ref_12_updated:ref12_a', $this->cell3_11b12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c&/2-ref_12_updated:ref12_a', $this->cell3_11c12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_b', $this->cell3_11a12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b&/2-ref_12_updated:ref12_b', $this->cell3_11b12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c&/2-ref_12_updated:ref12_b', $this->cell3_11c12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_a', $this->cell3_11a12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b&/2-ref_12_updated:ref12_a', $this->cell3_11b12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c&/2-ref_12_updated:ref12_a', $this->cell3_11c12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_b', $this->cell3_11a12b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b&/2-ref_12_updated:ref12_b', $this->cell3_11b12b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c&/2-ref_12_updated:ref12_b', $this->cell3_11c12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell3_11a12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell3_11b12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell3_11c12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell3_11a12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell3_11b12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell3_11c12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell3_11a12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell3_11b12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell3_11c12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell3_11a12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell3_11b12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell3_11c12b2b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_a&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a', $this->cell4_1a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_b&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b', $this->cell4_1b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/2-ref_1:ref1_c&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c', $this->cell4_1c2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/2-ref_1:ref1_d&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d', $this->cell4_1d2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/2-ref_1:ref1_e&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e', $this->cell4_1e2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/2-ref_1:ref1_f&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f', $this->cell4_1f2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_a&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a', $this->cell4_1a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_b&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b', $this->cell4_1b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/2-ref_1:ref1_c&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c', $this->cell4_1c2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/2-ref_1:ref1_d&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d', $this->cell4_1d2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/2-ref_1:ref1_e&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e', $this->cell4_1e2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/2-ref_1:ref1_f&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f', $this->cell4_1f2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a/', $this->cell4_1a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b/', $this->cell4_1b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/2-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c/', $this->cell4_1c2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/2-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d/', $this->cell4_1d2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/2-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e/', $this->cell4_1e2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/2-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f/', $this->cell4_1f2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a/', $this->cell4_1a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b/', $this->cell4_1b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/2-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c/', $this->cell4_1c2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_b/2-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d/', $this->cell4_1d2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/2-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e/', $this->cell4_1e2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_c/2-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f/', $this->cell4_1f2b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a', $this->cell5_2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b', $this->cell5_2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/', $this->cell5_2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/', $this->cell5_2b->getTag());
 
         // Modification de la position d'un membre.
         $this->member11c->setPosition(2);
 
         $this->assertSame('/', $this->cell0_0->getTag());
 
-        $this->assertSame('/1-ref_111:ref111_a', $this->cell1_111a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated', $this->cell1_111b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/', $this->cell1_111a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/', $this->cell1_111b->getTag());
 
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_a', $this->cell2_11a12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b&/2-ref_12_updated:ref12_a', $this->cell2_11b12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c&/2-ref_12_updated:ref12_a', $this->cell2_11c12a->getTag());
-        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_b', $this->cell2_11a12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b&/2-ref_12_updated:ref12_b', $this->cell2_11b12b->getTag());
-        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c&/2-ref_12_updated:ref12_b', $this->cell2_11c12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell2_11a12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell2_11b12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell2_11c12a->getTag());
+        $this->assertSame('/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell2_11a12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell2_11b12b->getTag());
+        $this->assertSame('/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell2_11c12b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_a', $this->cell3_11a12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b&/2-ref_12_updated:ref12_a', $this->cell3_11b12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c&/2-ref_12_updated:ref12_a', $this->cell3_11c12a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_b', $this->cell3_11a12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b&/2-ref_12_updated:ref12_b', $this->cell3_11b12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c&/2-ref_12_updated:ref12_b', $this->cell3_11c12b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_a', $this->cell3_11a12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b&/2-ref_12_updated:ref12_a', $this->cell3_11b12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c&/2-ref_12_updated:ref12_a', $this->cell3_11c12a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:1-ref11_a&/2-ref_12_updated:ref12_b', $this->cell3_11a12b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b&/2-ref_12_updated:ref12_b', $this->cell3_11b12b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c&/2-ref_12_updated:ref12_b', $this->cell3_11c12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell3_11a12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell3_11b12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell3_11c12a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell3_11a12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell3_11b12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell3_11c12b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell3_11a12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell3_11b12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell3_11c12a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell3_11a12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell3_11b12b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell3_11c12b2b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_a&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a', $this->cell4_1a2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_b&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b', $this->cell4_1b2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/2-ref_1:ref1_c&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c', $this->cell4_1c2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/2-ref_1:ref1_d&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d', $this->cell4_1d2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/2-ref_1:ref1_e&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e', $this->cell4_1e2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_a&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/2-ref_1:ref1_f&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f', $this->cell4_1f2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_a&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a', $this->cell4_1a2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_b&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b', $this->cell4_1b2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/2-ref_1:ref1_c&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c', $this->cell4_1c2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/2-ref_1:ref1_d&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d', $this->cell4_1d2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/2-ref_1:ref1_e&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e', $this->cell4_1e2b->getTag());
-        $this->assertSame('/1-ref_2:ref2_b&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/2-ref_1:ref1_f&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f', $this->cell4_1f2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a/', $this->cell4_1a2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b/', $this->cell4_1b2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/2-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c/', $this->cell4_1c2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/2-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d/', $this->cell4_1d2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/2-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e/', $this->cell4_1e2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/2-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f/', $this->cell4_1f2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_a/', $this->cell4_1a2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_a/1-ref_11:1-ref11_a/2-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_b/', $this->cell4_1b2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/2-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_c/', $this->cell4_1c2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:3-ref11_b/2-ref_1:ref1_d/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_d/', $this->cell4_1d2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/2-ref_1:ref1_e/&/2-ref_12_updated:ref12_a/2-ref_1:ref1_e/', $this->cell4_1e2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/&/1-ref_111:ref111_b_updated/1-ref_11:2-ref11_c/2-ref_1:ref1_f/&/2-ref_12_updated:ref12_b/2-ref_1:ref1_f/', $this->cell4_1f2b->getTag());
 
-        $this->assertSame('/1-ref_2:ref2_a', $this->cell5_2a->getTag());
-        $this->assertSame('/1-ref_2:ref2_b', $this->cell5_2b->getTag());
+        $this->assertSame('/1-ref_2:ref2_a/', $this->cell5_2a->getTag());
+        $this->assertSame('/1-ref_2:ref2_b/', $this->cell5_2b->getTag());
     }
 
     function testGetParentCellForGranularity()

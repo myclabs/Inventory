@@ -359,48 +359,6 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Ordonne les Granularity dans le Organization.
-     *
-     * @return array
-     */
-    public function orderGranularities()
-    {
-        $granularities = array();
-        foreach ($this->getGranularities() as $granularity) {
-            $granularities[spl_object_hash($granularity)] = array(
-                'granularity' => $granularity,
-                'position'    => ''
-            );
-        }
-
-        if (count($granularities) > 1) {
-            foreach ($this->getFirstOrderedAxes() as $index => $axis) {
-                foreach ($this->getGranularities() as $granularity) {
-                    if (!$axis->hasGranularity($granularity)) {
-                        $granularities[spl_object_hash($granularity)]['position'] .= '1';
-                    } else {
-                        $granularities[spl_object_hash($granularity)]['position'] .= '0';
-                    }
-                }
-            }
-        }
-
-        $orderedGranularities = array();
-        foreach ($granularities as $granularity) {
-            $orderedGranularities[$granularity['position']] = $granularity['granularity'];
-        }
-        ksort($orderedGranularities);
-
-        foreach ($orderedGranularities as $position => $orderedGranularity) {
-            try {
-                $orderedGranularity->setPosition(1);
-            } catch (Core_Exception_UndefinedAttribute $e) {
-                // La Granularity n'a pas de position, elle est donc en train d'être supprimée.
-            }
-        }
-    }
-
-    /**
      * Spécifie la Granularity où est spécifié le statut des inventaires.
      *
      * @param Orga_Model_Granularity $granularity
