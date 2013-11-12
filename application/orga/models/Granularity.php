@@ -314,6 +314,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $axesTagParts = array();
             $axes = $this->getAxes();
             @usort($axes, ['Orga_Model_Axis', 'firstOrderAxes']);
+            $axes = array_reverse($axes);
             foreach ($axes as $axis) {
                 $axesTagParts[] = $axis->getBroaderTag();
             }
