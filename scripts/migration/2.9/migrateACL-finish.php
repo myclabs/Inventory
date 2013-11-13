@@ -27,7 +27,6 @@ foreach (User::loadList() as $user) {
     /** @var User $user */
     echo "Adding UserRole to {$user->getEmail()}" . PHP_EOL;
     $user->addRole(new UserRole($user));
-    $user->save();
 }
 echo PHP_EOL;
 
@@ -39,7 +38,6 @@ foreach ($adminRoles as list($idUser)) {
     $user = User::load($idUser);
     echo "Adding AdminRole to {$user->getEmail()}" . PHP_EOL;
     $user->addRole(new AdminRole($user));
-    $user->save();
 
     $em->flush();
     $em->clear();
@@ -52,7 +50,6 @@ foreach ($organizationAdminRoles as list($idUser, $idOrganization)) {
     $organization = Orga_Model_Organization::load($idOrganization);
     echo "Adding OrganizationAdminRole to {$user->getEmail()} for organization $idOrganization" . PHP_EOL;
     $user->addRole(new OrganizationAdminRole($user, $organization));
-    $user->save();
 
     $em->flush();
     $em->clear();
@@ -65,7 +62,6 @@ foreach ($cellAdminRoles as list($idUser, $idCell)) {
     $cell = Orga_Model_Cell::load($idCell);
     echo "Adding CellAdminRole to {$user->getEmail()} for cell $idCell" . PHP_EOL;
     $user->addRole(new CellAdminRole($user, $cell));
-    $user->save();
 
     $em->flush();
     $em->clear();
@@ -78,7 +74,6 @@ foreach ($cellContributorRoles as list($idUser, $idCell)) {
     $cell = Orga_Model_Cell::load($idCell);
     echo "Adding CellContributorRole to {$user->getEmail()} for cell $idCell" . PHP_EOL;
     $user->addRole(new CellContributorRole($user, $cell));
-    $user->save();
 
     $em->flush();
     $em->clear();
@@ -91,7 +86,6 @@ foreach ($cellObserverRoles as list($idUser, $idCell)) {
     $cell = Orga_Model_Cell::load($idCell);
     echo "Adding CellObserverRole to {$user->getEmail()} for cell $idCell" . PHP_EOL;
     $user->addRole(new CellObserverRole($user, $cell));
-    $user->save();
 
     $em->flush();
     $em->clear();
