@@ -303,10 +303,8 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
 
         if (empty($granularity)) {
             throw new Core_Exception_NotFound('No Granularity in Organization matching ref "'.$ref.'".');
-        } else {
-            if (count($granularity) > 1) {
-                throw new Core_Exception_TooMany('Too many Granularity in Organization matching ref "'.$ref.'".');
-            }
+        } else if (count($granularity) > 1) {
+            throw new Core_Exception_TooMany('Too many Granularity in Organization matching ref "'.$ref.'".');
         }
 
         return array_pop($granularity);
