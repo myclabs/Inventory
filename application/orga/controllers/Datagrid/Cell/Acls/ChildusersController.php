@@ -116,7 +116,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         }
         foreach ($granularity->getAxes() as $axis) {
             if (isset($this->_add[$this->id.'_'.$axis->getRef().'_addForm'])) {
-                $members[] = $axis->getMemberByCompleteRef($this->getAddElementValue($axis->getRef()).'#');
+                $members[] = $axis->getMemberByCompleteRef($this->getAddElementValue($axis->getRef()));
             }
         }
         $granularityCell = $granularity->getCellByMembers($members);

@@ -72,7 +72,7 @@ class Orga_DatagridConfiguration
             }
             $columnAxis->list = array();
             foreach ($childMembers as $childMember) {
-                $columnAxis->list[$childMember->getRef()] = $childMember->getLabel();
+                $columnAxis->list[$childMember->getCompleteRef()] = $childMember->getLabel();
             }
             if (count($columnAxis->list) > 5) {
                 $sizeFilter = 5;
