@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\UnitOfWork;
+use User\Domain\ACL\Role\AdminRole;
 use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -287,7 +288,7 @@ class UserMetierTest extends Core_Test_TestCase
 
         $this->assertCount(1, $user->getRoles());
 
-        $role = new Role\AdminRole($user);
+        $role = new AdminRole($user);
         $user->addRole($role);
         $user->save();
         $this->entityManager->flush();
