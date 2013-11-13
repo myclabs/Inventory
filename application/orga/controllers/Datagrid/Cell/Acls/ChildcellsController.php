@@ -6,7 +6,7 @@
  */
 
 use Core\Annotation\Secure;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.

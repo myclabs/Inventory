@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\Resource;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 /**
@@ -25,7 +25,7 @@ abstract class Authorization extends Core_Model_Entity
     /**
      * Role créateur de l'autorisation.
      *
-     * @var Role
+     * @var \User\Domain\ACL\Role\Role
      */
     protected $role;
 
@@ -60,7 +60,7 @@ abstract class Authorization extends Core_Model_Entity
     /**
      * Crée des autorisations.
      *
-     * @param Role                               $role
+     * @param \User\Domain\ACL\Role\Role                               $role
      * @param \User\Domain\ACL\Resource\Resource $resource
      * @param Action[]                           $actions
      * @return static[]
@@ -93,7 +93,7 @@ abstract class Authorization extends Core_Model_Entity
     /**
      * Crée une autorisation.
      *
-     * @param Role                               $role
+     * @param \User\Domain\ACL\Role\Role                               $role
      * @param Action                             $action
      * @param \User\Domain\ACL\Resource\Resource $resource
      * @return static
@@ -142,7 +142,7 @@ abstract class Authorization extends Core_Model_Entity
     }
 
     /**
-     * @param Role                               $role
+     * @param \User\Domain\ACL\Role\Role                               $role
      * @param User                               $user
      * @param Action                             $action
      * @param \User\Domain\ACL\Resource\Resource $resource

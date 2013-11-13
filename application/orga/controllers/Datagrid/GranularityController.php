@@ -7,7 +7,7 @@
 
 use Core\Annotation\Secure;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 
 /**
  * Datagrid de granularity

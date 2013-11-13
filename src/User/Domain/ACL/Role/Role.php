@@ -1,6 +1,6 @@
 <?php
 
-namespace User\Domain\ACL;
+namespace User\Domain\ACL\Role;
 
 use Core_Model_Entity;
 use Doctrine\Common\Collections\ArrayCollection;

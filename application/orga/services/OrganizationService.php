@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 class Orga_Service_OrganizationService

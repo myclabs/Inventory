@@ -7,7 +7,7 @@
 use Core\Annotation\Secure;
 use Orga\Model\ACL\Role\AbstractCellRole;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 /**
@@ -50,7 +50,7 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
 
             $access = [];
             foreach ($roles[$cell->getId()] as $role) {
-                /** @var Role $role */
+                /** @var \User\Domain\ACL\Role\Role $role */
                 $access[] = $role->getLabel();
             }
             $data['access'] = $this->cellList($access);

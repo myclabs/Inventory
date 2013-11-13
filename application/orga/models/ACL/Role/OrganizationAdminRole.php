@@ -8,7 +8,7 @@ use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Model_Organization;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 /**

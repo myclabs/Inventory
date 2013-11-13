@@ -1,4 +1,4 @@
-User\Domain\ACL\Role:
+User\Domain\ACL\Role\Role:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: ACL_Role

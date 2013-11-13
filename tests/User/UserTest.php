@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\ORM\UnitOfWork;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 use User\Domain\UserService;
 

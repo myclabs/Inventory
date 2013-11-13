@@ -6,7 +6,7 @@
 
 use Core\Annotation\Secure;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
 use User\Domain\UserService;

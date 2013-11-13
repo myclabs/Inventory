@@ -41,7 +41,7 @@ User\Domain\User:
 
   oneToMany:
     roles:
-      targetEntity: User\Domain\ACL\Role
+      targetEntity: User\Domain\ACL\Role\Role
       mappedBy: user
       cascade: [ all ]
       orphanRemoval: true

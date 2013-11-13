@@ -16,7 +16,7 @@ use User\Domain\ACL\Authorization\UserAuthorization;
 use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\Resource\Resource;
 use User\Domain\ACL\Resource\ResourceTrait;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\ACL\Authorization\Authorization;
 
 /**
@@ -231,7 +231,7 @@ class User extends Core_Model_Entity implements Resource
 
     /**
      * Renvoie la liste des rôles de l'utilisateur
-     * @return Role[]
+     * @return \User\Domain\ACL\Role\Role[]
      */
     public function getRoles()
     {

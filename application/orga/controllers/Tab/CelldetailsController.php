@@ -14,7 +14,7 @@ use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\ACL\ACLService;
 
 /**

@@ -28,7 +28,7 @@ User\Domain\ACL\Authorization\Authorization:
 
   manyToOne:
     role:
-      targetEntity: User\Domain\ACL\Role
+      targetEntity: User\Domain\ACL\Role\Role
       inversedBy: authorizations
       joinColumn:
         nullable: false

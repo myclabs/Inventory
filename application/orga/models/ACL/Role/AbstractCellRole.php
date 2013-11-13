@@ -3,7 +3,7 @@
 namespace Orga\Model\ACL\Role;
 
 use Orga_Model_Cell;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 /**

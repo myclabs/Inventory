@@ -6,7 +6,7 @@
  * @subpackage Service
  */
 
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;

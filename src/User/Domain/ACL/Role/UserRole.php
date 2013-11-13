@@ -6,7 +6,7 @@ use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization\NamedResourceAuthorization;
 use User\Domain\ACL\Authorization\UserAuthorization;
 use User\Domain\ACL\Resource\NamedResource;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 
 /**
  * "User" role that every user have.

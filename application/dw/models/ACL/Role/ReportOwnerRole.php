@@ -5,7 +5,7 @@ namespace DW\Model\ACL\Role;
 use DW\Model\ACL\ReportAuthorization;
 use DW_Model_Report;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 /**

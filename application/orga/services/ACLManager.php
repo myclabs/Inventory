@@ -3,7 +3,7 @@
 use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\AbstractCellRole;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
-use User\Domain\ACL\Role;
+use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 use User\Domain\UserService;
 
