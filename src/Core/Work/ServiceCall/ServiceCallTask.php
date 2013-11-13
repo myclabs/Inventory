@@ -4,6 +4,7 @@ namespace Core\Work\ServiceCall;
 
 use Core\Work\BaseTaskInterface;
 use Core\Work\BaseTaskTrait;
+use Doctrine\Common\Persistence\Proxy;
 use Doctrine\ORM\EntityManager;
 use MyCLabs\Work\Task\ServiceCall;
 
@@ -32,6 +33,13 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
     public function mergeEntities(EntityManager $entityManager)
     {
         foreach ($this->parameters as $i => $parameter) {
+            // Gère les proxies
+            if ($parameter instanceof Proxy) {
+                $realClassName = $entityManager->getClassMetadata($parameter)->getName();
+                $this->parameters[$i] = $entityManager->find($realClassName, $parameter->getId());
+                continue;
+            }
+
             // Vérifie que c'est une entité Doctrine
             if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
                 $this->parameters[$i] = $entityManager->find(get_class($parameter), $parameter->getId());
