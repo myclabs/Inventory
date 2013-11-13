@@ -123,6 +123,8 @@ if (!empty($wrongTagMembers)) {
 }
 echo "\n".'Migration terminée !'."\n";
 
+$em->clear();
+
 function buildAxisNarrowerTag (Orga_Model_Axis $axis) {
     $narrowerTag = Orga_Model_Organization::PATH_SEPARATOR;
     $directNarrower = $axis->getDirectNarrower();

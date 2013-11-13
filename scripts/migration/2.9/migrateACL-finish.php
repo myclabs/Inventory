@@ -20,6 +20,7 @@ $allOrganizations = new NamedResource(Orga_Model_Organization::class);
 $allOrganizations->save();
 
 $em->flush();
+$em->clear();
 
 
 // User
