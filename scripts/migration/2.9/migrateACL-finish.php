@@ -31,17 +31,20 @@ foreach (User::loadList() as $user) {
 }
 echo PHP_EOL;
 
+$em->flush();
+$em->clear();
+
 // Administrator
 foreach ($adminRoles as list($idUser)) {
     $user = User::load($idUser);
     echo "Adding AdminRole to {$user->getEmail()}" . PHP_EOL;
     $user->addRole(new AdminRole($user));
     $user->save();
+
+    $em->flush();
+    $em->clear();
 }
 echo PHP_EOL;
-
-$em->flush();
-$em->clear();
 
 // Organization admin
 foreach ($organizationAdminRoles as list($idUser, $idOrganization)) {
