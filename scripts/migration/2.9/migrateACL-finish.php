@@ -42,6 +42,9 @@ foreach ($adminRoles as list($idUser)) {
 
     $em->flush();
     $em->clear();
+
+    unset($user);
+    unset($cell);
 }
 echo PHP_EOL;
 
@@ -54,6 +57,9 @@ foreach ($organizationAdminRoles as list($idUser, $idOrganization)) {
 
     $em->flush();
     $em->clear();
+
+    unset($user);
+    unset($cell);
 }
 echo PHP_EOL;
 
@@ -66,6 +72,9 @@ foreach ($cellAdminRoles as list($idUser, $idCell)) {
 
     $em->flush();
     $em->clear();
+
+    unset($user);
+    unset($cell);
 }
 echo PHP_EOL;
 
@@ -78,6 +87,9 @@ foreach ($cellContributorRoles as list($idUser, $idCell)) {
 
     $em->flush();
     $em->clear();
+
+    unset($user);
+    unset($cell);
 }
 echo PHP_EOL;
 
@@ -90,5 +102,8 @@ foreach ($cellObserverRoles as list($idUser, $idCell)) {
 
     $em->flush();
     $em->clear();
+
+    unset($user);
+    unset($cell);
 }
 echo PHP_EOL;
