@@ -35,7 +35,7 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
         foreach ($this->parameters as $i => $parameter) {
             // Gère les proxies
             if ($parameter instanceof Proxy) {
-                $realClassName = $entityManager->getClassMetadata($parameter)->getName();
+                $realClassName = $entityManager->getClassMetadata(get_class($parameter))->getName();
                 $this->parameters[$i] = $entityManager->find($realClassName, $parameter->getId());
                 continue;
             }
