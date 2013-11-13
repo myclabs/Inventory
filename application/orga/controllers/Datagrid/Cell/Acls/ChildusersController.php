@@ -8,6 +8,9 @@
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
 use User\Domain\ACL\Role;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -63,7 +66,17 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
                 $data['userFirstName'] = $role->getUser()->getFirstName();
                 $data['userLastName'] = $role->getUser()->getLastName();
                 $data['userEmail'] = $role->getUser()->getEmail();
-                $data['userRole'] = $role->getId();
+                switch (true) {
+                    case $role instanceof CellAdminRole:
+                        $data['userRole'] = 'CellAdminRole';
+                        break;
+                    case $role instanceof CellContributorRole:
+                        $data['userRole'] = 'CellContributorRole';
+                        break;
+                    case $role instanceof CellObserverRole:
+                        $data['userRole'] = 'CellObserverRole';
+                        break;
+                }
                 $this->addLine($data);
             }
         }
@@ -103,8 +116,18 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         $role = $this->getAddElementValue('userRole');
-        if (empty($role)) {
-            $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
+        switch ($role) {
+            case 'CellAdminRole':
+                $role = CellAdminRole::class;
+                break;
+            case 'CellContributorRole':
+                $role = CellContributorRole::class;
+                break;
+            case 'CellObserverRole':
+                $role = CellObserverRole::class;
+                break;
+            default:
+                $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         if (!empty($this->_addErrorMessages)) {
             $this->send();

@@ -10,6 +10,9 @@ use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
 use Orga\Model\ACL\Action\CellAction;
 use Orga\Model\ACL\Action\OrganizationAction;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Role;
 use User\Domain\ACL\ACLService;
@@ -169,10 +172,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $datagridConfiguration->datagrid->addCol($columnUserEmail);
 
             $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
-            $columnRole->list = array();
-            foreach ($cell->getAllRoles() as $role) {
-                $columnRole->list[] = __('Orga', 'role', $role->getLabel());
-            }
+            $columnRole->list = [
+                'CellAdminRole' => CellAdminRole::getLabel(),
+                'CellContributorRole' => CellContributorRole::getLabel(),
+                'CellObserverRole' => CellObserverRole::getLabel(),
+            ];
             $datagridConfiguration->datagrid->addCol($columnRole);
 
             $datagridConfiguration->datagrid->pagination = false;
@@ -208,10 +212,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $datagridConfiguration->datagrid->addCol($columnUserEmail);
 
                 $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
-                $columnRole->list = array();
-                foreach ($cell->getAllRoles() as $role) {
-                    $columnRole->list[] = __('Orga', 'role', $role->getLabel());
-                }
+                $columnRole->list = [
+                    'CellAdminRole' => CellAdminRole::getLabel(),
+                    'CellContributorRole' => CellContributorRole::getLabel(),
+                    'CellObserverRole' => CellObserverRole::getLabel(),
+                ];
                 $datagridConfiguration->datagrid->addCol($columnRole);
 
                 $datagridConfiguration->datagrid->pagination = true;
