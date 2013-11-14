@@ -309,7 +309,7 @@ $organization = $this->organization;
                                 '</div>';
                         }
                         var inventoryP = '';
-                        if (this.inventoryStatus != null) {
+                        if ((this.inventoryStatus != null) && ((this.inventoryNotStartedInputsNumber + this.inventoryStartedInputsNumber + this.inventoryCompletedInputsNumber) > 1)) {
                             inventoryP =
                                 '<p><b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>' + this.inventoryStatusTitle + '</p>' +
                                 '<p>' +
