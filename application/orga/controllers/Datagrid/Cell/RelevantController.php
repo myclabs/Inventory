@@ -41,7 +41,7 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
             $data = array();
             $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
-                $data[$member->getAxis()->getRef()] = $member->getRef();
+                $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
             }
             $data['relevant'] = $childCell->getRelevant();
             $this->addLine($data);
