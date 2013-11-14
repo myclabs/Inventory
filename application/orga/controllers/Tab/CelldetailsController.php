@@ -613,12 +613,12 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         if ($isUserAllowedToEditOrganization && !$cell->getGranularity()->hasAxes()) {
             // Orga Structure.
             $this->view->exports['Organization'] = [
-                'label' => __('Orga', 'organization', 'organization'),
+                'label' => __('Orga', 'organization', 'organizationalStructure'),
             ];
         } else {
             // Orga Cell.
             $this->view->exports['Cell'] = [
-                'label' => __('Orga', 'organization', 'organization'),
+                'label' => __('Orga', 'organization', 'organizationalStructure'),
             ];
         }
 
@@ -657,11 +657,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         switch ($this->getParam('export')) {
             case 'Organization':
                 $streamFunction = 'streamOrganization';
-                $baseFilename = __('Orga', 'organization', 'organization');
+                $baseFilename = __('Orga', 'organization', 'structure');
                 break;
             case 'Cell':
                 $streamFunction = 'streamCell';
-                $baseFilename = __('Orga', 'organization', 'organization');
+                $baseFilename = __('Orga', 'organization', 'structure');
                 break;
             case 'Users':
                 $streamFunction = 'streamUsers';
