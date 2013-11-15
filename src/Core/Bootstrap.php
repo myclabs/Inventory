@@ -366,7 +366,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $connection = $c->get(AMQPConnection::class);
             $channel = $connection->channel();
             // Queue durable (= sauvegardée sur disque)
-            $channel->queue_declare($queue, false, true);
+            $channel->queue_declare($queue, false, true, false, false);
             return $channel;
         });
 
