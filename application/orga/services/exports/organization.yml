@@ -113,7 +113,6 @@ sheets:
                 do:
                   - label: "{{ axis.label }}"
               - label: "{{ cellColumnRelevant }}"
-              - label: "{{ cellColumnAllParentsRelevant }}"
             lines:
               - foreach: granularity.cells as cell
                 do:
@@ -121,5 +120,4 @@ sheets:
                       - foreach: granularity.axes as axis
                         do:
                           - "{{ displayCellMemberForAxis(cell, axis) }}"
-                      - "{{ cell.relevant }}"
-                      - "{{ cell.allParentsRelevant }}"
+                      - "{{ cell.isRelevant }}"
