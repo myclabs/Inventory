@@ -130,4 +130,26 @@ class Orga_Service_ACLManager
             );
         }
     }
+
+    /**
+     * @param User             $user
+     * @param AbstractCellRole $role
+     * @param bool             $sendMail
+     */
+    public function removeCellRole(User $user, AbstractCellRole $role, $sendMail = true)
+    {
+        $this->aclService->removeRole($user, $role);
+        $this->entityManager->flush();
+
+        if ($sendMail) {
+            $this->userService->sendEmail(
+                $user,
+                __('User', 'email', 'subjectAccessRightsChange'),
+                __('Orga', 'email', 'userRoleRemoved', [
+                    'CELL' => $role->getCell()->getExtendedLabel(),
+                    'ROLE' => $role->getLabel()
+                ])
+            );
+        }
+    }
 }

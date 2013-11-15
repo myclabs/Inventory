@@ -69,7 +69,7 @@ class Orga_Datagrid_Cell_Acls_ChildcellsController extends UI_Controller_Datagri
 
         $this->view->listRoles = [];
         foreach ($cell->getAllRoles() as $role) {
-            $this->view->listRoles[] = __('Orga', 'role', $role->getLabel());
+            $this->view->listRoles[] = $role->getLabel();
         }
     }
 }

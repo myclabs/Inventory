@@ -66,15 +66,6 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             return;
         }
 
-        if (User::isEmailUsed($userEmail)) {
-            $user = User::loadByEmail($userEmail);
-            if ($user->hasRole(OrganizationAdminRole::class)) {
-                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
-                $this->send();
-                return;
-            }
-        }
-
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
@@ -108,18 +99,6 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         $role = Role::load($this->delete);
 
-        //@see http://supervision.myc-sense.com:3000/issues/6582
-        //  Sans worker la suppression s'effectue correctement mais échoue avec.
-
-        // sans worker.
-//        $user->removeRole(Role::loadByRef('organizationAdministrator_'.$organization->getId()));
-//
-//        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCellByMembers([]);
-//        $user->removeRole(
-//            Role::loadByRef('cellAdministrator_'.$globalCell->getId())
-//        );
-
-        // worker.
         $success = function () {
             $this->message = __('UI', 'message', 'deleted');
         };
@@ -138,7 +117,7 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
                 'Orga',
                 'backgroundTasks',
                 'removeRoleFromUser',
-                ['ROLE' => __('Orga', 'role', $role->getLabel()), 'USER' => $role->getUser()->getEmail()]
+                ['ROLE' => $role->getLabel(), 'USER' => $role->getUser()->getEmail()]
             )
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);

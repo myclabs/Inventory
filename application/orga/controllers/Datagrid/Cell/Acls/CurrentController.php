@@ -96,15 +96,6 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                 return;
         }
 
-        if (User::isEmailUsed($userEmail)) {
-            $user = User::loadByEmail($userEmail);
-            if ($user->hasRole($role)) {
-                $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
-                $this->send();
-                return;
-            }
-        }
-
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
@@ -118,7 +109,7 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         $task = new ServiceCallTask(
             Orga_Service_ACLManager::class,
             'addCellRole',
-            [$cell, $userEmail, $role, false],
+            [$cell, $role, $userEmail, false],
             __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $userEmail])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
@@ -133,7 +124,6 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
     {
         $role = Role::load($this->delete);
         $user = $role->getUser();
-        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $success = function () {
             $this->message = __('UI', 'message', 'deleted');
@@ -147,13 +137,13 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
 
         $task = new ServiceCallTask(
             Orga_Service_ACLManager::class,
-            'removeCellUser',
-            [$cell, $user, $role, false],
+            'removeCellRole',
+            [$user, $role, false],
             __(
                 'Orga',
                 'backgroundTasks',
                 'removeRoleFromUser',
-                ['ROLE' => __('Orga', 'role', $role->getLabel()), 'USER' => $user->getEmail()]
+                ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()]
             )
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);

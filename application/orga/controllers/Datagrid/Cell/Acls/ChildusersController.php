@@ -134,17 +134,6 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             return;
         }
 
-        if (User::isEmailUsed($userEmail)) {
-            $user = User::loadByEmail($userEmail);
-            if ($user->hasRole($role)) {
-                $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
-                $this->send();
-                return;
-            }
-        } else {
-            $user = $this->userService->inviteUser($userEmail);
-        }
-
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
@@ -157,9 +146,9 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
 
         $serviceCallTask = new ServiceCallTask(
             'Orga_Service_ACLManager',
-            'addCellUser',
-            [$cell, $user, $role, false],
-            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $user->getEmail()])
+            'addCellRole',
+            [$cell, $role, $userEmail, false],
+            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $userEmail])
         );
 
         $this->workDispatcher->runBackground($serviceCallTask, $this->waitDelay, $success, $timeout, $error);
@@ -197,9 +186,14 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
 
         $task = new ServiceCallTask(
             'Orga_Service_ACLManager',
-            'removeCellUser',
-            [$cell, $user, $role, false],
-            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()])
+            'removeCellRole',
+            [$user, $role, false],
+            __(
+                'Orga',
+                'backgroundTasks',
+                'removeRoleFromUser',
+                ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()]
+            )
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 

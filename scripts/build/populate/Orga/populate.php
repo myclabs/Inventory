@@ -1,9 +1,11 @@
 <?php
 
+use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
+use Psr\Log\LoggerInterface;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -26,7 +28,11 @@ class Orga_Populate extends Core_Script_Action
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
 
-        $this->aclService = $container->get(ACLService::class);
+        $entityManager = $container->get(EntityManager::class);
+
+        // On crée le service, car sinon il n'a pas la bonne instance de l'entity manager
+        // car Script_Populate recrée l'EM (donc différent de celui créé dans le bootstrap)
+        $this->aclService = new ACLService($entityManager, $container->get(LoggerInterface::class));
 
 
         // Création d'une organisation.
