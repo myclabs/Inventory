@@ -10,3 +10,4 @@ Orga\Model\ACL\OrganizationAuthorization:
       inversedBy: acl
       joinColumn:
         nullable: false
+        onDelete: CASCADE

@@ -3,6 +3,7 @@
 use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\AbstractCellRole;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
+use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -20,17 +21,24 @@ class Orga_Service_ACLManager
     private $userService;
 
     /**
+     * @var ACLService
+     */
+    private $aclService;
+
+    /**
      * @var EntityManager
      */
     private $entityManager;
 
     /**
-     * @param UserService $userService
+     * @param UserService   $userService
+     * @param ACLService    $aclService
      * @param EntityManager $entityManager
      */
-    public function __construct(UserService $userService, EntityManager $entityManager)
+    public function __construct(UserService $userService, ACLService $aclService, EntityManager $entityManager)
     {
         $this->userService = $userService;
+        $this->aclService = $aclService;
         $this->entityManager = $entityManager;
     }
 
@@ -49,7 +57,7 @@ class Orga_Service_ACLManager
             $user = $this->userService->inviteUser($email);
         }
 
-        $user->addRole(new OrganizationAdminRole($user, $organization));
+        $this->aclService->addRole($user, new OrganizationAdminRole($user, $organization));
         $this->entityManager->flush();
 
         if ($sendMail) {
@@ -73,7 +81,7 @@ class Orga_Service_ACLManager
     public function removeOrganizationAdministrator(Orga_Model_Organization $organization, Role $role, $sendMail = true)
     {
         $user = $role->getUser();
-        $user->removeRole($role);
+        $this->aclService->removeRole($user, $role);
         $this->entityManager->flush();
 
         if ($sendMail) {
@@ -108,7 +116,7 @@ class Orga_Service_ACLManager
 
         /** @var AbstractCellRole $role */
         $role = new $roleClass($user, $cell);
-        $user->addRole($role);
+        $this->aclService->addRole($user, $role);
         $this->entityManager->flush();
 
         if ($sendMail) {

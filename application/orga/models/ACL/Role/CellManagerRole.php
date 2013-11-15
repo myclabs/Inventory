@@ -3,13 +3,13 @@
 namespace Orga\Model\ACL\Role;
 
 use Orga_Model_Cell;
-use User\Domain\ACL\Role\Role;
+use User\Domain\ACL\Role\OptimizedRole;
 use User\Domain\User;
 
 /**
  * Cell manager.
  */
-class CellManagerRole extends AbstractCellRole
+class CellManagerRole extends AbstractCellRole implements OptimizedRole
 {
     public function __construct(User $user, Orga_Model_Cell $cell)
     {
@@ -23,6 +23,11 @@ class CellManagerRole extends AbstractCellRole
         $this->authorizations->clear();
 
         // TODO
+    }
+
+    public function optimizedBuildAuthorizations()
+    {
+        return [];
     }
 
     public static function getLabel()

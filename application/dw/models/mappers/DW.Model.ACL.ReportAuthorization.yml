@@ -7,3 +7,6 @@ DW\Model\ACL\ReportAuthorization:
     resource:
       targetEntity: \DW_Model_Report
       inversedBy: acl
+      joinColumn:
+        nullable: false
+        onDelete: CASCADE

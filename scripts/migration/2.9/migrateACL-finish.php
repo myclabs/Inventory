@@ -27,7 +27,7 @@ $em->clear();
 foreach (User::loadList() as $user) {
     /** @var User $user */
     echo "Adding UserRole to {$user->getEmail()}" . PHP_EOL;
-    $user->addRole(new UserRole($user));
+    $aclService->addRole($user, new UserRole($user));
 }
 echo PHP_EOL;
 
@@ -38,7 +38,7 @@ $em->clear();
 foreach ($adminRoles as list($idUser)) {
     $user = User::load($idUser);
     echo "Adding AdminRole to {$user->getEmail()}" . PHP_EOL;
-    $user->addRole(new AdminRole($user));
+    $aclService->addRole($user, new AdminRole($user));
 
     $em->flush();
     $em->clear();
@@ -53,7 +53,7 @@ foreach ($organizationAdminRoles as list($idUser, $idOrganization)) {
     $user = User::load($idUser);
     $organization = Orga_Model_Organization::load($idOrganization);
     echo "Adding OrganizationAdminRole to {$user->getEmail()} for organization $idOrganization" . PHP_EOL;
-    $user->addRole(new OrganizationAdminRole($user, $organization));
+    $aclService->addRole($user, new OrganizationAdminRole($user, $organization));
 
     $em->flush();
     $em->clear();
@@ -68,7 +68,7 @@ foreach ($cellAdminRoles as list($idUser, $idCell)) {
     $user = User::load($idUser);
     $cell = Orga_Model_Cell::load($idCell);
     echo "Adding CellAdminRole to {$user->getEmail()} for cell $idCell" . PHP_EOL;
-    $user->addRole(new CellAdminRole($user, $cell));
+    $aclService->addRole($user, new CellAdminRole($user, $cell));
 
     $em->flush();
     $em->clear();
@@ -83,7 +83,7 @@ foreach ($cellContributorRoles as list($idUser, $idCell)) {
     $user = User::load($idUser);
     $cell = Orga_Model_Cell::load($idCell);
     echo "Adding CellContributorRole to {$user->getEmail()} for cell $idCell" . PHP_EOL;
-    $user->addRole(new CellContributorRole($user, $cell));
+    $aclService->addRole($user, new CellContributorRole($user, $cell));
 
     $em->flush();
     $em->clear();
@@ -98,7 +98,7 @@ foreach ($cellObserverRoles as list($idUser, $idCell)) {
     $user = User::load($idUser);
     $cell = Orga_Model_Cell::load($idCell);
     echo "Adding CellObserverRole to {$user->getEmail()} for cell $idCell" . PHP_EOL;
-    $user->addRole(new CellObserverRole($user, $cell));
+    $aclService->addRole($user, new CellObserverRole($user, $cell));
 
     $em->flush();
     $em->clear();

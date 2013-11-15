@@ -256,16 +256,11 @@ class User extends Core_Model_Entity implements Resource
     public function addRole(Role $role)
     {
         $this->roles->add($role);
-
-        // Va ajouter les autorisations dans cet utilisateur
-        $role->buildAuthorizations();
     }
 
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
-        $role->destroyAuthorizations();
-        $role->delete();
     }
 
     /**
@@ -292,19 +287,6 @@ class User extends Core_Model_Entity implements Resource
     public function removeAuthorizations(Authorization $authorization)
     {
         $this->authorizations->removeElement($authorization);
-    }
-
-    /**
-     * Ne pas utiliser directement. Uniquement utilisé par Authorization et Role.
-     */
-    public function updateAuthorizations()
-    {
-        foreach ($this->roles as $role) {
-            $role->destroyAuthorizations();
-        }
-        foreach ($this->roles as $role) {
-            $role->buildAuthorizations();
-        }
     }
 
     /**

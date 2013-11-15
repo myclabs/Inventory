@@ -365,19 +365,22 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         // Ajout d'un utilisateur administrateur de l'administration.
         $this->organizationAdministrator= $this->userService->createUser('organizationAdministrator', 'organizationAdministrator');
-        $this->organizationAdministrator->addRole(
+        $this->aclService->addRole(
+            $this->organizationAdministrator,
             new OrganizationAdminRole($this->organizationAdministrator, $this->organization)
         );
 
         // Ajout d'un administrateur de cellule globale.
         $this->globaleCellAdministrator = $this->userService->createUser('globalAdministrator', 'globalAdministrator');
-        $this->globaleCellAdministrator->addRole(
+        $this->aclService->addRole(
+            $this->globaleCellAdministrator,
             new CellAdminRole($this->globaleCellAdministrator, $this->granularityGlobale->getCellByMembers([]))
         );
 
         // Ajout d'un contributeur de cellule zone marque.
         $this->europeaCellContributor = $this->userService->createUser('europeaContributor', 'europeaContributor');
-        $this->europeaCellContributor->addRole(
+        $this->aclService->addRole(
+            $this->europeaCellContributor,
             new CellContributorRole($this->europeaCellContributor, $this->granularityZoneMarque->getCellByMembers(
                 [$this->memberZoneEurope, $this->memberMarqueA]
             ))
@@ -385,7 +388,8 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         // Ajout d'un observatur de cellule zone marque.
         $this->sudameriquebCellObserver = $this->userService->createUser('sudameriquebObserver', 'sudameriquebObserver');
-        $this->sudameriquebCellObserver->addRole(
+        $this->aclService->addRole(
+            $this->sudameriquebCellObserver,
             new CellObserverRole($this->sudameriquebCellObserver, $this->granularityZoneMarque->getCellByMembers(
                 [$this->memberZoneSudamerique, $this->memberMarqueB]
             ))
@@ -393,7 +397,8 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         // Ajout d'un administrateur de cellule site.
         $this->annecyCellAdministrator = $this->userService->createUser('annecyAdministrator', 'annecyAdministrator');
-        $this->annecyCellAdministrator->addRole(
+        $this->aclService->addRole(
+            $this->annecyCellAdministrator,
             new CellAdminRole($this->annecyCellAdministrator, $this->granularitySite->getCellByMembers(
                 [$this->memberSiteAnnecy]
             ))
@@ -401,7 +406,8 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         // Ajout d'un contributeur de cellule site.
         $this->limaCellContributor = $this->userService->createUser('limaContributor', 'limaContributor');
-        $this->limaCellContributor->addRole(
+        $this->aclService->addRole(
+            $this->limaCellContributor,
             new CellContributorRole($this->limaCellContributor, $this->granularitySite->getCellByMembers(
                 [$this->memberSiteLima]
             ))
@@ -409,7 +415,8 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         // Ajout d'un observateur de cellule site.
         $this->berlinCellObserver = $this->userService->createUser('berlinObserver', 'berlinObserver');
-        $this->berlinCellObserver->addRole(
+        $this->aclService->addRole(
+            $this->berlinCellObserver,
             new CellObserverRole($this->berlinCellObserver, $this->granularitySite->getCellByMembers(
                 [$this->memberSiteBerlin]
             ))

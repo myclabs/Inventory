@@ -48,12 +48,12 @@ abstract class Authorization extends Core_Model_Entity
     /**
      * Héritage des droits entre ressources.
      *
-     * @var static
+     * @var Authorization
      */
     protected $parentAuthorization;
 
     /**
-     * @var static[]|Collection
+     * @var Authorization[]|Collection
      */
     protected $childAuthorizations;
 
@@ -96,23 +96,27 @@ abstract class Authorization extends Core_Model_Entity
      * @param Role                               $role
      * @param Action                             $action
      * @param \User\Domain\ACL\Resource\Resource $resource
+     * @param bool                               $addInverseCollections If true, will add in inverse-side
+     *                                                                  collections
      * @return static
      */
-    public static function create(Role $role, Action $action, Resource $resource)
+    public static function create(Role $role, Action $action, Resource $resource, $addInverseCollections = true)
     {
         $user = $role->getUser();
 
         /** @var self $authorization */
         $authorization = new static($role, $user, $action, $resource);
 
-        // Ajoute au role
-        $role->addAuthorization($authorization);
+        if ($addInverseCollections) {
+            // Ajoute au role
+            $role->addAuthorization($authorization);
 
-        // Ajoute à l'utilisateur
-        $user->addAuthorization($authorization);
+            // Ajoute à l'utilisateur
+            $user->addAuthorization($authorization);
 
-        // Ajoute à la ressource
-        $resource->addToACL([$authorization]);
+            // Ajoute à la ressource
+            $resource->addToACL([$authorization]);
+        }
 
         return $authorization;
     }
@@ -123,20 +127,25 @@ abstract class Authorization extends Core_Model_Entity
      * @param Authorization                      $parentAuthorization
      * @param \User\Domain\ACL\Resource\Resource $resource Nouvelle ressource
      * @param Action|null                        $action
+     * @param bool                               $addInverseCollections If true, will add in inverse-side
+     *                                                                  collections
      * @return static
      */
     public static function createChildAuthorization(
         Authorization $parentAuthorization,
         Resource $resource,
-        Action $action = null
+        Action $action = null,
+        $addInverseCollections = true
     ) {
         $action = $action ?: $parentAuthorization->getAction();
 
         /** @var self $authorization */
-        $authorization = self::create($parentAuthorization->role, $action, $resource);
+        $authorization = self::create($parentAuthorization->role, $action, $resource, $addInverseCollections);
 
         $authorization->parentAuthorization = $parentAuthorization;
-        $parentAuthorization->childAuthorizations->add($authorization);
+        if ($addInverseCollections) {
+            $parentAuthorization->childAuthorizations->add($authorization);
+        }
 
         return $authorization;
     }
@@ -190,11 +199,19 @@ abstract class Authorization extends Core_Model_Entity
     }
 
     /**
-     * @return static
+     * @return Authorization
      */
     public function getParentAuthorization()
     {
         return $this->parentAuthorization;
+    }
+
+    /**
+     * @param Authorization $parentAuthorization
+     */
+    public function setParentAuthorization(Authorization $parentAuthorization)
+    {
+        $this->parentAuthorization = $parentAuthorization;
     }
 
     /**
@@ -211,5 +228,31 @@ abstract class Authorization extends Core_Model_Entity
     public function isRoot()
     {
         return ($this->parentAuthorization === null);
+    }
+
+    /**
+     * @return Role
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     *
+     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 }

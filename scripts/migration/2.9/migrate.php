@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use User\Domain\ACL\ACLService;
 
 define('RUN', false);
 
@@ -10,6 +11,8 @@ require_once __DIR__ . '/../../../application/init.php';
 $container = Zend_Registry::get('container');
 /** @var EntityManager $em */
 $em = $container->get(EntityManager::class);
+/** @var ACLService $aclService */
+$aclService = $container->get(ACLService::class);
 
 require __DIR__ . '/migrateACL-begin.php';
 

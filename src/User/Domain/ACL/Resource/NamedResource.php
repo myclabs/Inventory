@@ -36,6 +36,14 @@ class NamedResource extends Core_Model_Entity implements Resource
     }
 
     /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return string
      */
     public function getName()

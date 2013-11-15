@@ -277,37 +277,4 @@ class UserMetierTest extends Core_Test_TestCase
         $this->userService->deleteUser($user);
         $this->entityManager->flush();
     }
-
-    /**
-     * Test du lien utilisateur - role
-     */
-    public function testUtilisateurRole()
-    {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
-        $this->entityManager->flush();
-
-        $this->assertCount(1, $user->getRoles());
-
-        $role = new AdminRole($user);
-        $user->addRole($role);
-        $user->save();
-        $this->entityManager->flush();
-        $this->entityManager->clear();
-
-        /** @var $user User */
-        $user = User::load($user->getId());
-        /** @var Role $role */
-        $role = Role::load($role->getId());
-        // Vérifie le lien
-        $roles = $user->getRoles();
-        $this->assertCount(2, $roles);
-        $this->assertEquals($role->getId(), $roles[1]->getId());
-
-        $user->removeRole($role);
-        $this->entityManager->flush();
-        $this->assertCount(1, $user->getRoles());
-
-        $this->userService->deleteUser($user);
-        $this->entityManager->flush();
-    }
 }

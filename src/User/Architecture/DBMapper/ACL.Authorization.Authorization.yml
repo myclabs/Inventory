@@ -32,11 +32,13 @@ User\Domain\ACL\Authorization\Authorization:
       inversedBy: authorizations
       joinColumn:
         nullable: false
+        onDelete: CASCADE
     user:
       targetEntity: User\Domain\User
       inversedBy: authorizations
       joinColumn:
         nullable: false
+        onDelete: CASCADE
     parentAuthorization:
       targetEntity: Authorization
       inversedBy: childAuthorizations

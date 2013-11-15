@@ -6,6 +6,7 @@ use Core_Exception;
 use Core_Exception_Duplicate;
 use Core_Mail;
 use Core_Tools;
+use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\UserRole;
 use Zend_Controller_Front;
 use Zend_Registry;
@@ -17,6 +18,16 @@ use Zend_Registry;
  */
 class UserService
 {
+    /**
+     * @var ACLService
+     */
+    private $aclService;
+
+    public function __construct(ACLService $aclService)
+    {
+        $this->aclService = $aclService;
+    }
+
     /**
      * Crée et initialise un nouvel utilisateur
      *
@@ -30,7 +41,7 @@ class UserService
         $user->setEmail($email);
         $user->setPassword($password);
         // Ajoute le role utilisateur
-        $user->addRole(new UserRole($user));
+        $this->aclService->addRole($user, new UserRole($user));
 
         $user->save();
 
@@ -44,6 +55,10 @@ class UserService
      */
     public function deleteUser(User $user)
     {
+        foreach ($user->getRoles() as $role) {
+            $this->aclService->removeRole($user, $role);
+        }
+
         $user->delete();
     }
 

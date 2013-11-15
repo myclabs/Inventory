@@ -1,6 +1,8 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
+use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\Role\AdminRole;
 use User\Domain\User;
@@ -19,6 +21,10 @@ class User_Populate extends Core_Script_Populate
         /** @var $userService UserService */
         $userService = $container->get(UserService::class);
 
+        // On crée le service, car sinon il n'a pas la bonne instance de l'entity manager
+        // car Script_Populate recrée l'EM (donc différent de celui créé dans le bootstrap)
+        $aclService = new ACLService($entityManager, $container->get(LoggerInterface::class));
+
         // Ressource "Repository"
         $repository = new NamedResource('repository');
         $repository->save();
@@ -35,8 +41,8 @@ class User_Populate extends Core_Script_Populate
         $admin = $userService->createUser('admin@myc-sense.com', 'myc-53n53');
         $admin->setLastName('Système');
         $admin->setFirstName('Administrateur');
-        $admin->addRole(new AdminRole($admin));
         $admin->save();
+        $aclService->addRole($admin, new AdminRole($admin));
 
         $entityManager->flush();
 

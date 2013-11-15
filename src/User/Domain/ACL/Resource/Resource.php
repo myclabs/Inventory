@@ -2,24 +2,13 @@
 
 namespace User\Domain\ACL\Resource;
 
-use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization\Authorization;
-use User\Domain\User;
 
 /**
  * Resource interface.
  */
 interface Resource
 {
-    /**
-     * Tests if a user is allowed for the given action on the resource.
-     *
-     * @param User   $user
-     * @param Action $action
-     * @return bool
-     */
-    public function isAllowed(User $user, Action $action);
-
     /**
      * Returns the whole list of authorizations that apply to this resource.
      *
@@ -49,4 +38,11 @@ interface Resource
      * @param Authorization $authorization
      */
     public function removeFromACL(Authorization $authorization);
+
+    /**
+     * Une ressource doit avoir un ID simple.
+     *
+     * @return mixed
+     */
+    public function getId();
 }

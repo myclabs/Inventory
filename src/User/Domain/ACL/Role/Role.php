@@ -32,26 +32,12 @@ abstract class Role extends Core_Model_Entity
     {
         $this->authorizations = new ArrayCollection();
         $this->user = $user;
-
-        $this->buildAuthorizations();
     }
 
     /**
-     * @return Authorization[]
+     * Creates the role's authorizations.
      */
     abstract public function buildAuthorizations();
-
-    /**
-     * Destroy all the role's authorizations.
-     */
-    public function destroyAuthorizations()
-    {
-        foreach ($this->authorizations as $authorization) {
-            $authorization->getUser()->removeAuthorizations($authorization);
-            $authorization->getResource()->removeFromACL($authorization);
-        }
-        $this->authorizations->clear();
-    }
 
     /**
      * @return int

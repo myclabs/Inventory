@@ -50,7 +50,7 @@ class AdminRoleTest extends Core_Test_TestCase
         $this->targetUser = $this->userService->createUser('target', 'target');
         $this->entityManager->flush();
         $this->admin = $this->userService->createUser('admin', 'admin');
-        $this->admin->addRole(new AdminRole($this->admin));
+        $this->aclService->addRole($this->admin, new AdminRole($this->admin));
 
         $this->entityManager->flush();
     }
@@ -63,6 +63,7 @@ class AdminRoleTest extends Core_Test_TestCase
         $this->userService->deleteUser($this->admin);
 
         $this->entityManager->flush();
+        $this->entityManager->clear();
     }
 
     /**

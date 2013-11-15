@@ -74,10 +74,8 @@ class UserRoleTest extends Core_Test_TestCase
         }
 
         if ($value) {
-            $this->assertTrue($resource->isAllowed($this->user, $action));
             $this->assertTrue($this->aclService->isAllowed($this->user, $action, $resource));
         } else {
-            $this->assertFalse($resource->isAllowed($this->user, $action));
             $this->assertFalse($this->aclService->isAllowed($this->user, $action, $resource));
         }
     }
