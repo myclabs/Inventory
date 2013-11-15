@@ -6,9 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Selectable;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
-use Orga_Model_Organization;
 use User\Domain\ACL\Authorization\Authorization;
-use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\Resource\ResourceTrait;
 
 /**
@@ -36,15 +34,6 @@ trait OrganizationResourceTrait
     {
         $this->acl = new ArrayCollection();
         $this->adminRoles = new ArrayCollection();
-
-        // Hérite des droits sur "toutes les organisations"
-        $allOrganizations = NamedResource::loadByName(Orga_Model_Organization::class);
-        foreach ($allOrganizations->getACL() as $parentAuthorization) {
-            // L'autorisation sera automatiquement ajoutée à $this->acl
-            OrganizationAuthorization::createChildAuthorization($parentAuthorization, $this);
-        }
-
-        // TODO droits sur la cellule globale
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use User\Domain\ACL\Role\AdminRole;
 use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
@@ -58,6 +59,14 @@ class Orga_Service_OrganizationService
             // Ajout de l'utilisateur courant en tant qu'administrateur.
             $this->aclManager->addOrganizationAdministrator($organization, $administrator->getEmail(), false);
             $this->entityManager->flush();
+
+            // Ajout des superadmins en tant qu'administrateur de l'organisation
+            foreach (AdminRole::loadList() as $adminRole) {
+                /** @var AdminRole $adminRole */
+                $email = $adminRole->getUser()->getEmail();
+                $this->aclManager->addOrganizationAdministrator($organization, $email, false);
+                $this->entityManager->flush();
+            }
 
             $this->entityManager->commit();
 

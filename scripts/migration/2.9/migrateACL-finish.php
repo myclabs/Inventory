@@ -40,6 +40,12 @@ foreach ($adminRoles as list($idUser)) {
     echo "Adding AdminRole to {$user->getEmail()}" . PHP_EOL;
     $aclService->addRole($user, new AdminRole($user));
 
+    // Admin on all organizations
+    foreach (Orga_Model_Organization::loadList() as $organization) {
+        /** @var Orga_Model_Organization $organization */
+        $aclService->addRole($user, new OrganizationAdminRole($user, $organization));
+    }
+
     $em->flush();
     $em->clear();
 
