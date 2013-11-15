@@ -89,7 +89,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $data = array();
         $data['index'] = $cell->getId();
         foreach ($cell->getMembers() as $member) {
-            $data[$member->getAxis()->getRef()] = $member->getRef();
+            $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
         }
 
         if ($crossedGranularity === $granularityForInventoryStatus) {

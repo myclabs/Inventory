@@ -105,7 +105,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $data = array();
         $data['index'] = $cell->getId();
         foreach ($cell->getMembers() as $member) {
-            $data[$member->getAxis()->getRef()] = $member->getRef();
+            $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
         }
 
         if ($isInputInInventory) {
