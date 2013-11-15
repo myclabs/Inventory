@@ -19,6 +19,14 @@ use Xport\MappingReader\YamlMappingReader;
 class Orga_Service_Export
 {
     /**
+     * Constructeur, augmente la limite de mémoire à 2G pour réaliser l'export.
+     */
+    public function __construct()
+    {
+        ini_set('memory_limit','2G');
+    }
+
+    /**
      * Exporte la structure d'une Organization.
      *
      * @param string $format

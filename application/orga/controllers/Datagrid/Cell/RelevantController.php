@@ -7,6 +7,8 @@
  */
 
 use Core\Annotation\Secure;
+use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Core\Work\ServiceCall\ServiceCallTask;
 
 /**
  * Controller des datagrid des cellules
@@ -14,6 +16,18 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var WorkDispatcher
+     */
+    private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
+
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
@@ -41,7 +55,7 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
             $data = array();
             $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
-                $data[$member->getAxis()->getRef()] = $member->getRef();
+                $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
             }
             $data['relevant'] = $childCell->getRelevant();
             $this->addLine($data);
@@ -78,10 +92,24 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
 
         $childCell = Orga_Model_Cell::load($this->update['index']);
 
-        $childCell->setRelevant((bool) $this->update['value']);
-        $this->data = $childCell->getRelevant();
+        // worker.
+        $success = function () {
+            $this->message = __('UI', 'message', 'updated');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'updatedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
 
-        $this->message = __('UI', 'message', 'updated');
+        $task = new ServiceCallTask(
+            'Orga_Service_CellService',
+            'setCellRelevance',
+            [$childCell, (bool) $this->update['value']],
+            __('Orga', 'backgroundTasks', 'setCellRelevance', ['CELL' => $childCell->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }

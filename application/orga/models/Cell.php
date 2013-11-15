@@ -440,30 +440,55 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     {
         if ($relevant != $this->relevant) {
             $this->relevant = $relevant;
-            // Si les cellules supérieures ne sont pas pertinentes,
-            //  alors modifier celle-ci n'impactera pas les cellules inférieures.
+            // Si les cellules parentes ne sont pas pertinentes,
+            //  alors modifier celle-ci n'impactera pas les cellules enfantes.
             if ($this->getAllParentsRelevant() === true) {
-                // Nécessaire pour mettre à jour l'intégralité des cellules filles.
-                foreach ($this->getChildCells() as $childCell) {
-                    $childAccess = $relevant;
-                    if ($childAccess) {
-                        foreach ($childCell->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-                            try {
-                                $parentCell= $childCell->getParentCellForGranularity($broaderGranularity);
-                            } catch (Core_Exception_NotFound $e) {
-                                // Pas de cellule parente pour cette granularité.
-                                $parentCell = null;
-                            }
-                            if (($parentCell === null) || (!$parentCell->getRelevant())) {
-                                $childAccess = false;
-                                break;
-                            }
-                        }
+                if ($this->relevant) {
+                    // Vérification de l'état des cellules filles.
+                    foreach ($this->getChildCells() as $childCell) {
+                        $childCell->enable();
                     }
-                    $childCell->setAllParentsRelevant($childAccess);
+                } else {
+                    // Désactivation de totes les cellules filles.
+                    foreach ($this->getChildCells() as $childCell) {
+                        $childCell->disable();
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Désactive la cellule (utilisé dans le cas d'une hiérarchie cassée).
+     */
+    public function disable()
+    {
+        $this->allParentsRelevant = false;
+    }
+
+    /**
+     * Réactive la cellule et met à jour la pertinence de ses cellules parentes.
+     */
+    public function enable()
+    {
+        $this->allParentsRelevant = false;
+        foreach ($this->getMembers() as $member) {
+            if (count($member->getAxis()->getDirectBroaders()) !== count($member->getDirectParents())) {
+                return;
+            }
+        }
+        foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
+            try {
+                $parentCell = $this->getParentCellForGranularity($broaderGranularity);
+                if (!$parentCell->getRelevant()) {
+                    return;
+                }
+            } catch (Core_Exception_NotFound $e) {
+                // Pas de cellule parente pour cette granularité.
+                return;
+            }
+        }
+        $this->allParentsRelevant = true;
     }
 
     /**
@@ -474,16 +499,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function getRelevant()
     {
         return $this->relevant;
-    }
-
-    /**
-     * Définit si tous les parents de la Cell sont pertinents.
-     *
-     * @param bool $allParentsRelevant
-     */
-    protected function setAllParentsRelevant($allParentsRelevant)
-    {
-        $this->allParentsRelevant = $allParentsRelevant;
     }
 
     /**
@@ -504,38 +519,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function isRelevant()
     {
         return ($this->getRelevant() && $this->getAllParentsRelevant());
-    }
-
-    /**
-     * Désactive la cellule (utilisé dans le cas d'une hiérarchie cassée).
-     */
-    public function disable()
-    {
-        $this->allParentsRelevant = false;
-    }
-
-    /**
-     * Réactive la cellule et met à jour la pertinence de ses cellules parentes.
-     */
-    public function enable()
-    {
-        $access = true;
-        foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-            try {
-                $parentCell = $this->getParentCellForGranularity($broaderGranularity);
-            } catch (Core_Exception_NotFound $e) {
-                // Pas de cellule parente pour cette granularité.
-                $parentCell = null;
-            } catch (Core_Exception_TooMany $e) {
-                // Pas de cellule parente pour cette granularité.
-                $parentCell = null;
-            }
-            if (($parentCell === null) || (!$parentCell->getRelevant())) {
-                $access = false;
-                break;
-            }
-        }
-        $this->allParentsRelevant = $access;
     }
 
     /**
@@ -687,10 +670,8 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             foreach ($broaderGranularity->getAxes() as $broaderAxis) {
                 if ($member->getAxis()->isNarrowerThan($broaderAxis)) {
                     $parentMembers[$broaderAxis->getRef()] = $member->getParentForAxis($broaderAxis);
-                } else {
-                    if ($member->getAxis() === $broaderAxis) {
-                        $parentMembers[$broaderAxis->getRef()] = $member;
-                    }
+                } else if ($member->getAxis() === $broaderAxis) {
+                    $parentMembers[$broaderAxis->getRef()] = $member;
                 }
             }
         }

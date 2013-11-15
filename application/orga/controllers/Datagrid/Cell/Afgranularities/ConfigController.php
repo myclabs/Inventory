@@ -76,7 +76,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
         $data = array();
         $data['index'] = $cell->getId();
         foreach ($cell->getMembers() as $member) {
-            $data[$member->getAxis()->getRef()] = $member->getRef();
+            $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
         }
         try {
             $cellsGroupDataProvider = $cell->getCellsGroupForInputGranularity($inputGranularity);
