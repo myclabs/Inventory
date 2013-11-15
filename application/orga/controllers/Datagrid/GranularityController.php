@@ -55,7 +55,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 $listAxes[] = $axis->getRef();
             }
             $data['axes'] = $this->cellList($listAxes);
-            $data['navigable'] = $granularity->isNavigable();
             $data['orgaTab'] = $granularity->getCellsWithOrgaTab();
             $data['aCL'] = $granularity->getCellsWithACL();
             $data['aFTab'] = $granularity->getCellsWithAFConfigTab();
@@ -129,7 +128,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $task = new Orga_Work_Task_AddGranularity(
                 $organization,
                 $listAxes,
-                (bool) $this->getAddElementValue('navigable'),
                 (bool) $this->getAddElementValue('orgaTab'),
                 (bool) $this->getAddElementValue('aCL'),
                 (bool) $this->getAddElementValue('aFTab'),
@@ -203,10 +201,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         $granularity = Orga_Model_Granularity::load($this->update['index']);
 
         switch ($this->update['column']) {
-            case 'navigable':
-                $granularity->setNavigability((bool) $this->update['value']);
-                $this->data = $granularity->isNavigable();
-                break;
             case 'orgaTab':
                 $granularity->setCellsWithOrgaTab((bool) $this->update['value']);
                 $this->data = $granularity->getCellsWithOrgaTab();

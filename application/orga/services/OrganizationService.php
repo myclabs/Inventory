@@ -55,7 +55,6 @@ class Orga_Service_OrganizationService
             
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
-            $defaultGranularity->setNavigability(true);
             $defaultGranularity->setCellsWithOrgaTab(true);
             $defaultGranularity->setCellsWithACL(true);
             $defaultGranularity->setCellsWithAFConfigTab(true);

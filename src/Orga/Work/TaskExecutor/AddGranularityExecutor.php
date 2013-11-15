@@ -34,7 +34,6 @@ class Orga_Work_TaskExecutor_AddGranularityExecutor implements TaskExecutor
             $axes[] = Orga_Model_Axis::load($idAxis);
         }
         $granularity = new Orga_Model_Granularity($organization, $axes);
-        $granularity->setNavigability($task->navigability);
         $granularity->setCellsWithOrgaTab($task->orgaTab);
         $granularity->setCellsWithACL($task->acl);
         $granularity->setCellsWithAFConfigTab($task->afTab);

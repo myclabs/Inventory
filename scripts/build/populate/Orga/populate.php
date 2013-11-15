@@ -139,7 +139,6 @@ class Orga_Populate extends Core_Script_Action
     /**
      * @param Orga_Model_Organization $organization
      * @param array $axes
-     * @param bool $navigable
      * @param bool $orgaTab
      * @param bool $aCL
      * @param bool $aFTab
@@ -149,11 +148,10 @@ class Orga_Populate extends Core_Script_Action
      * @param bool $inputDocs
      * @return Orga_Model_Granularity
      */
-    protected function createGranularity(Orga_Model_Organization $organization, array $axes=[], $navigable,
+    protected function createGranularity(Orga_Model_Organization $organization, array $axes=[],
         $orgaTab=false, $aCL=true, $aFTab=false, $dWCubes=false, $genericAction=false, $contextAction=false, $inputDocs=false)
     {
         $granularity = new Orga_Model_Granularity($organization, $axes);
-        $granularity->setNavigability($navigable);
         $granularity->setCellsWithOrgaTab($orgaTab);
         $granularity->setCellsWithACL($aCL);
         $granularity->setCellsWithAFConfigTab($aFTab);

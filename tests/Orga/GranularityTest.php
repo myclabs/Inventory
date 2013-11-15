@@ -105,7 +105,6 @@ class Orga_Test_GranularitySetUp extends PHPUnit_Framework_TestCase
     {
         $organization = Orga_Test_OrganizationTest::generateObject();
         $o = new Orga_Model_Granularity($organization);
-        $o->setNavigability(false);
         $this->assertInstanceOf('Orga_Model_Granularity', $o);
         $this->assertEquals($o->getKey(), array());
         $o->save();
@@ -124,7 +123,6 @@ class Orga_Test_GranularitySetUp extends PHPUnit_Framework_TestCase
          $oLoaded = Orga_Model_Granularity::load($o->getKey());
          $this->assertInstanceOf('Orga_Model_Granularity', $o);
          $this->assertEquals($oLoaded->getKey(), $o->getKey());
-         $this->assertEquals($oLoaded->isNavigable(), $o->isNavigable());
          $this->assertSame($oLoaded->getOrganization(), $o->getOrganization());
          return $oLoaded;
     }

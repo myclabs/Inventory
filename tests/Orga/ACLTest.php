@@ -437,20 +437,17 @@ class Orga_Test_ACL extends Core_Test_TestCase
 
         // Création de la granularité globale.
         $this->granularityGlobale = new Orga_Model_Granularity($this->organization);
-        $this->granularityGlobale->setNavigability(true);
         $this->granularityGlobale->setCellsWithOrgaTab(true);
         $this->granularityGlobale->setCellsWithACL(true);
         $this->granularityGlobale->setCellsWithAFConfigTab(true);
 
         // Création de la granularité zone marque.
         $this->granularityZoneMarque = new Orga_Model_Granularity($this->organization, [$this->axisZone, $this->axisMarque]);
-        $this->granularityZoneMarque->setNavigability(true);
         $this->granularityZoneMarque->setCellsWithOrgaTab(true);
         $this->granularityZoneMarque->setCellsWithACL(true);
 
         // Création de la granularité site.
         $this->granularitySite = new Orga_Model_Granularity($this->organization, [$this->axisSite]);
-        $this->granularitySite->setNavigability(true);
         $this->granularitySite->setCellsWithACL(true);
 
         // Création de la granularité année.

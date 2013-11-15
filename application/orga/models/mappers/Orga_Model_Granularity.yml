@@ -17,10 +17,6 @@ Orga_Model_Granularity:
       type: string
       length: 255
       nullable: false
-    navigable:
-      column: navigable
-      type: boolean
-      nullable: false
     position:
       column: position
       type: integer

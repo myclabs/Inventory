@@ -65,13 +65,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected $cells = array();
 
     /**
-     * Définit si la Granularity est navigable.
-     *
-     * @var Bool
-     */
-    protected $navigable = true;
-
-    /**
      * Indique la Granularity configurant cette Granularity de saisie.
      *
      * @var Orga_Model_Granularity
@@ -504,26 +497,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
         }
 
         return $membersHashKeys;
-    }
-
-    /**
-     * Définit la navigabilité de la Granularity.
-     *
-     * @param boolean $navigable
-     */
-    public function setNavigability($navigable)
-    {
-        $this->navigable = (bool) $navigable;
-    }
-
-    /**
-     * Indique si la Granularity es navigable.
-     *
-     * @return boolean
-     */
-    public function isNavigable()
-    {
-        return $this->navigable;
     }
 
     /**

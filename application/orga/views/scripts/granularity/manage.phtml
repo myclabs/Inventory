@@ -15,16 +15,6 @@ $columnAxis->withEmptyElement = false;
 $columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $datagrid->addCol($columnAxis);
 
-$columnNavigable = new UI_Datagrid_Col_Bool('navigable', __('Orga', 'granularity', 'navigableHeader'));
-$columnNavigable->addable = true;
-$columnNavigable->editable = true;
-$columnNavigable->defaultAddValue = false;
-$columnNavigable->textTrue = __('Orga', 'granularity', 'navigableOption');
-$columnNavigable->textFalse = __('Orga', 'granularity', 'notNavigableOption');
-$columnNavigable->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'granularity', 'navigableOption');
-$columnNavigable->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'granularity', 'notNavigableOption');
-$datagrid->addCol($columnNavigable);
-
 $columnOrgaTab = new UI_Datagrid_Col_Bool('orgaTab', __('Orga', 'cell', 'configurationTab'));
 $columnOrgaTab->addable = true;
 $columnOrgaTab->editable = true;

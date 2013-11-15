@@ -202,27 +202,25 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
         foreach ($organization->getGranularities() as $granularity) {
-            if ($granularity->isNavigable()) {
-                $aclCellQuery = new Core_Model_Query();
-                $aclCellQuery->aclFilter->enabled = true;
-                $aclCellQuery->aclFilter->user = $connectedUser;
-                $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
-                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+            $aclCellQuery = new Core_Model_Query();
+            $aclCellQuery->aclFilter->enabled = true;
+            $aclCellQuery->aclFilter->user = $connectedUser;
+            $aclCellQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+            $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
 
-                $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
-                if ($numberCellsUserCanSee == 1) {
-                    $cellsWithViewAccess = Orga_Model_Cell::loadList($aclCellQuery);
-                    $idCell = array_pop($cellsWithViewAccess)->getId();
-                    $this->redirect('orga/cell/view/idCell/'.$idCell);
-                    break;
-                } else if ($numberCellsUserCanSee > 1) {
-                    //@todo Organization view : Faire une nouvelle vue.
-                    $this->view->assign(
-                        'organization',
-                        $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser)
-                    );
-                    break;
-                }
+            $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
+            if ($numberCellsUserCanSee == 1) {
+                $cellsWithViewAccess = Orga_Model_Cell::loadList($aclCellQuery);
+                $idCell = array_pop($cellsWithViewAccess)->getId();
+                $this->redirect('orga/cell/view/idCell/'.$idCell);
+                break;
+            } else if ($numberCellsUserCanSee > 1) {
+                //@todo Organization view : Faire une nouvelle vue.
+                $this->view->assign(
+                    'organization',
+                    $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser)
+                );
+                break;
             }
         }
     }

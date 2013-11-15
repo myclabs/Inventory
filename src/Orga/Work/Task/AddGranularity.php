@@ -21,11 +21,6 @@ class Orga_Work_Task_AddGranularity implements Task, BaseTaskInterface
     /**
      * @var bool
      */
-    public $navigability;
-
-    /**
-     * @var bool
-     */
     public $orgaTab;
 
     /**
@@ -74,7 +69,6 @@ class Orga_Work_Task_AddGranularity implements Task, BaseTaskInterface
     public function __construct(
         $organization,
         $listAxes,
-        $navigability,
         $orgaTab,
         $acl,
         $afTab,
@@ -88,7 +82,6 @@ class Orga_Work_Task_AddGranularity implements Task, BaseTaskInterface
         foreach ($listAxes as $axis) {
             $this->listAxes[] = $axis->getId();
         }
-        $this->navigability = $navigability;
         $this->orgaTab = $orgaTab;
         $this->acl = $acl;
         $this->afTab = $afTab;
