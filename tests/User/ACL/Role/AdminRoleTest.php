@@ -111,10 +111,6 @@ class AdminRoleTest extends Core_Test_TestCase
 
             // Teste sur la ressource abstraite "toutes les organisations"
             [Action::CREATE(), $allOrganizations],
-            [Action::VIEW(), $allOrganizations],
-            [Action::EDIT(), $allOrganizations],
-            [Action::DELETE(), $allOrganizations],
-            [Action::ALLOW(), $allOrganizations],
         ];
     }
 }
