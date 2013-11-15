@@ -127,7 +127,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
                             ':members_'.$memberFilter['name'].'_'.$indexValue
                         )
                     );
-                    $queryBuilder->setParameter('members_'.$memberFilter['name'].'_'.$indexValue, $memberFilterValue);
+                    $queryBuilder->setParameter('members_'.$memberFilter['name'].'_'.$indexValue, explode(Orga_Model_Member::COMPLETEREF_JOIN, $memberFilterValue)[0]);
                 }
                 $queryBuilder->andWhere($orMembers);
             } else {
@@ -137,7 +137,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
                         ':members_'.$memberFilter['name']
                     )
                 );
-                $queryBuilder->setParameter('members_'.$memberFilter['name'], $memberFilter['value']);
+                $queryBuilder->setParameter('members_'.$memberFilter['name'], explode(Orga_Model_Member::COMPLETEREF_JOIN, $memberFilter['value'])[0]);
             }
         }
     }
