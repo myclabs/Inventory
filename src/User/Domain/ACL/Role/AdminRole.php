@@ -65,24 +65,24 @@ class AdminRole extends Role implements OptimizedRole
             /** @var Orga_Model_Organization $organization */
             foreach ($organizationAuthorizations as $organizationAuthorization) {
                 OrganizationAuthorization::createChildAuthorization($organizationAuthorization, $organization);
+            }
 
-                // Admin sur la cellule globale
-                $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
+            // Admin sur la cellule globale
+            $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
 
-                $authorizations = CellAuthorization::createMany($this, $globalCell, [
-                    Action::VIEW(),
-                    Action::EDIT(),
-                    Action::ALLOW(),
-                    CellAction::COMMENT(),
-                    CellAction::INPUT(),
-                    CellAction::VIEW_REPORTS(),
-                ]);
+            $authorizations = CellAuthorization::createMany($this, $globalCell, [
+                Action::VIEW(),
+                Action::EDIT(),
+                Action::ALLOW(),
+                CellAction::COMMENT(),
+                CellAction::INPUT(),
+                CellAction::VIEW_REPORTS(),
+            ]);
 
-                // Cellules filles
-                foreach ($globalCell->getChildCells() as $childCell) {
-                    foreach ($authorizations as $authorization) {
-                        CellAuthorization::createChildAuthorization($authorization, $childCell);
-                    }
+            // Cellules filles
+            foreach ($globalCell->getChildCells() as $childCell) {
+                foreach ($authorizations as $authorization) {
+                    CellAuthorization::createChildAuthorization($authorization, $childCell);
                 }
             }
         }
