@@ -1,11 +1,4 @@
 <?php
-/**
- * Fichier de la classe Datagrid.
- *
- * @author     valentin.claras
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid;
 
@@ -16,307 +9,303 @@ use UI_Popup_Static;
 use UI_Form;
 use UI_Form_Element_HTML;
 use Core_Exception_InvalidArgument;
-use Core_Exception_UndefinedAttribute;
 use Zend_Registry;
 use Zend_Session_Namespace;
 use Zend_Controller_Action_HelperBroker;
 use Doctrine\Common\Collections\Criteria;
 
 /**
- * Description of Datagrid.
+ * Classe permettant de génèrer un Tableau de données (datagrid).
  *
- * Une classe permettant de génèrer un Tableau de données (datagrid) très simplement.
+ * @author valentin.claras
  *
- * @package    UI
- * @subpackage Datagrid
- *
- * @see   UI_Controller_Datagrid
+ * @see    UI_Controller_Datagrid
  */
 class Datagrid extends UI_Generic
 {
     /**
      * Définition du message affiché dans la datagrid lorqu'elle est vide.
      *
-     * @var   string
+     * @var string
      */
-    public $datagridEmptyText = null;
+    public $datagridEmptyText;
 
     /**
      * Définition du message affiché dans la datagrid lorqu'elle contient une erreur.
      *
-     * @var   string
+     * @var string
      */
-    public $datagridErrorText = null;
+    public $datagridErrorText;
 
     /**
      * Définition du message affiché dans la datagrid lorqu'elle est en chargement.
      *
-     * @var   string
+     * @var string
      */
-    public $datagridLoadingText = null;
+    public $datagridLoadingText;
 
     /**
      * Définition du titre par défaut du Collapse entourant le filtre affiché au dessus du datagrid.
      *
-     * @var   string
+     * @var string
      */
-    public $filterCollapseTitle = null;
+    public $filterCollapseTitle;
 
     /**
      * Définition de l'aide affiché au survol dans le cas d'un filtre précédemment sauvegardé.
      *
-     * @var   string
+     * @var string
      */
-    public $filterCollapseActiveHint = null;
+    public $filterCollapseActiveHint;
 
     /**
      * Définition du Collapse entourant le filtre affiché au dessus du datagrid.
      *
-     * @var   UI_HTML_Collapse
+     * @var UI_HTML_Collapse
      */
-    public $filterCollapse = null;
+    public $filterCollapse;
 
     /**
      * Définition du bouton permettant de filtrer.
      *
      * @var UI_HTML_Button
      */
-    public $filterConfirmButton = null;
+    public $filterConfirmButton;
 
     /**
      * Définition du bouton permettant de réinitialiser le filtre.
      *
      * @var UI_HTML_Button
      */
-    public $filterResetButton = null;
+    public $filterResetButton;
 
     /**
      * Définition de l'icone permettant de réinitialiser indépendamment chaque champs du filtre.
      *
      * @var string
      */
-    public $filterIconResetFieldSuffix = null;
+    public $filterIconResetFieldSuffix;
 
     /**
      * Définition de l'icône affichée dans le bouton faisant apparaître le popup d'ajout.
      *
-     * @var   string
+     * @var string
      */
-    public $addButtonIcon = null;
+    public $addButtonIcon;
 
     /**
      * Définition du label affiché dans le bouton faisant apparaître le popup d'ajout.
      *
-     * @var   string
+     * @var string
      */
-    public $addButtonLabel = null;
+    public $addButtonLabel;
 
     /**
      * Définition du titre affiché dans le popup d'ajout.
      *
-     * @var   string
+     * @var string
      */
-    public $addPanelTitle = null;
+    public $addPanelTitle;
 
     /**
      * Définition du formulaire affiché dans le popup d'ajout. Null = UI_Form par défaut.
      *
-     * @var   UI_Form
+     * @var UI_Form
      */
-    public $addPanelForm = null;
+    public $addPanelForm;
 
     /**
      * Définition de l'icône affichée dans le bouton de validation du popup d'ajout.
      *
-     * @var   string
+     * @var string
      */
-    public $addPanelConfirmIcon = null;
+    public $addPanelConfirmIcon;
 
     /**
      * Définition de l'icône affichée dans le bouton d'annulation du popup d'ajout.
      *
-     * @var   string
+     * @var string
      */
-    public $addPanelCancelIcon = null;
+    public $addPanelCancelIcon;
 
     /**
      * Définition du label affiché dans le bouton de validation du popup d'ajout.
      *
-     * @var   string
+     * @var string
      */
-    public $addPanelConfirmLabel = null;
+    public $addPanelConfirmLabel;
 
     /**
      * Définition du label affiché dans le bouton d'annulation du popup d'ajout.
      *
-     * @var   string
+     * @var string
      */
-    public $addPanelCancelLabel = null;
+    public $addPanelCancelLabel;
 
     /**
      * Définition du titre affiché dans le popup de suppression.
      *
-     * @var   string
+     * @var string
      */
-    public $deletePanelTitle = null;
+    public $deletePanelTitle;
 
     /**
      * Définition du message affiché dans le popup de suppression.
      *
-     * @var   string
+     * @var string
      */
-    public $deletePanelText = null;
+    public $deletePanelText;
 
     /**
      * Définition de l'icône affichée dans le bouton de validation du popup de suppression.
      *
-     * @var   string
+     * @var string
      */
-    public $deletePanelConfirmIcon = null;
+    public $deletePanelConfirmIcon;
 
     /**
      * Définition de l'icône affichée dans le bouton d'annulation du popup de suppression.
      *
-     * @var   string
+     * @var string
      */
-    public $deletePanelCancelIcon = null;
+    public $deletePanelCancelIcon;
 
     /**
      * Définition du label affiché dans le bouton de validation du popup de suppression.
      *
-     * @var   string
+     * @var string
      */
-    public $deletePanelConfirmLabel = null;
+    public $deletePanelConfirmLabel;
 
     /**
      * Définition du label affiché dans le bouton d'annulation du popup de suppression.
      *
-     * @var   string
+     * @var string
      */
-    public $deletePanelCancelLabel = null;
+    public $deletePanelCancelLabel;
 
     /**
      * Définition du titre affiché dans la colonne de suppression.
      *
-     * @var   string
+     * @var string
      */
-    public $deleteElementTitle = null;
+    public $deleteElementTitle;
 
     /**
      * Définition du label affiché dans la cellule lorsque la suppression est possible.
      *
-     * @var   string
+     * @var string
      */
-    public $deleteElementValue = null;
+    public $deleteElementValue;
 
     /**
      * Définition du label affiché dans la cellule lorsque la suppression n'est pas possible.
      *
-     * @var   string
+     * @var string
      */
-    public $deleteElementNullValue = null;
+    public $deleteElementNullValue;
 
     /**
      * Définition du label affiché devant le select du choix du nombre d'élément par page.
      *
-     * @var   string
+     * @var string
      */
-    public $paginationPerPage = null;
+    public $paginationPerPage;
 
     /**
      * Définition du label affiché devant le select du choix de la page.
      *
-     * @var   string
+     * @var string
      */
-    public $paginationPage = null;
+    public $paginationPage;
 
     /**
      * Définition du nombre de ligne par page, pour la pagination de la datagrid.
      *
-     * @var   int
+     * @var int
      */
-    public $paginationRowPerPage = null;
+    public $paginationRowPerPage;
 
     /**
      * Définition des options du nombre de ligne par page, pour la pagination de la datagrid.
      *
-     * @var   array
+     * @var array
      */
-    public $paginationOptionsRowPerPage = null;
+    public $paginationOptionsRowPerPage;
 
     /**
      * Définition du texte menant à la première page, pour la pagination de la datagrid.
      *
-     * @var   string
+     * @var string
      */
-    public $paginationFirstPage = null;
+    public $paginationFirstPage;
 
     /**
      * Définition du texte menant à la dernière page, pour la pagination de la datagrid.
      *
-     * @var   string
+     * @var string
      */
-    public $paginationLastPage = null;
+    public $paginationLastPage;
 
     /**
      * Définition du texte menant à la page précédante, pour la pagination de la datagrid.
      *
-     * @var   string
+     * @var string
      */
-    public $paginationPreviousPage = null;
+    public $paginationPreviousPage;
 
     /**
      * Définition du texte menant à la page suivante, pour la pagination de la datagrid.
      *
-     * @var   string
+     * @var string
      */
-    public $paginationNextPage = null;
+    public $paginationNextPage;
 
 
     /**
      * Identifiant unique de la Datagrid.
      *
-     * @var   string
+     * @var string
      */
-    public $id = null;
+    public $id;
 
     /**
      * Nom du contrôleur ou la datagrid récuperera les données.
      *
-     * @var   string
+     * @var string
      */
-    protected $_controller = null;
+    protected $_controller;
 
     /**
      * Nom (optionnel) du module ou la datagrid récuperera les données.
      *
-     * @var   string
+     * @var string
      */
-    protected $_module = null;
+    protected $_module;
 
     /**
      * Tableau d'attributs optionnels qui seront envoyés au controleur.
      *
-     * @var   array
+     * @var array
      */
-    protected $_parameters = array();
+    protected $_parameters = [];
 
     /**
      * Tableau des colonnes de la datagrid.
      *
      * @var Column\GenericColumn[]
      *
-     * @see ajouterColonne
+     * @see ajouterColonne()
      * @see Column\GenericColumn
      */
-    protected $_cols = array();
+    protected $_cols = [];
 
     /**
      * Permet de savoir si l'ajout d'éléments est présent dans la datagrid.
      *
      * Par défaut non actif.
      *
-     * @var   bool
+     * @var bool
      *
      * @see setAddElement
      */
@@ -327,7 +316,7 @@ class Datagrid extends UI_Generic
      *
      * Par défaut non actif.
      *
-     * @var   bool
+     * @var bool
      *
      * @see setDeleteElement
      */
@@ -336,25 +325,25 @@ class Datagrid extends UI_Generic
     /**
      * Nom du criteria utilisé par le controleur.
      *
-     * @var string null
+     * @var string
      */
-    public $criteriaName = 'Doctrine\Common\Collections\Criteria';
+    public $criteriaName = Criteria::class;
 
     /**
      * Tableau de paramètres définissant le tri par défaut sur une datagrid.
      *
-     * @var   array
+     * @var array
      *
      * @see setDefaultSorting
      */
-    protected $_defaultSorting = array();
+    protected $_defaultSorting = [];
 
     /**
      * Permet de savoir si la datagrid sera paginé.
      *
      * Par défaut oui.
      *
-     * @var   bool
+     * @var bool
      */
     public $pagination = true;
 
@@ -363,7 +352,7 @@ class Datagrid extends UI_Generic
      *
      * Par défaut non.
      *
-     * @var   bool
+     * @var bool
      */
     public $selectableElement = false;
 
@@ -372,7 +361,7 @@ class Datagrid extends UI_Generic
      *
      * Par défaut non.
      *
-     * @var   bool
+     * @var bool
      */
     public $highlightEditableCell = false;
 
@@ -381,7 +370,7 @@ class Datagrid extends UI_Generic
      *
      * Par défaut oui.
      *
-     * @var   bool
+     * @var bool
      */
     public $highlightElement = true;
 
@@ -390,7 +379,7 @@ class Datagrid extends UI_Generic
      *
      * Par défaut oui.
      *
-     * @var   bool
+     * @var bool
      */
     public $automaticFiltering = true;
 
@@ -400,7 +389,7 @@ class Datagrid extends UI_Generic
      *
      * Par défaut oui.
      *
-     * @var   bool
+     * @var bool
      */
     public $initialLoading = true;
 
@@ -409,9 +398,9 @@ class Datagrid extends UI_Generic
      *
      * @var array
      *
-     * @see ajouterFiltrePersonnalise
+     * @see ajouterFiltrePersonnalise()
      */
-    protected $_customFilters = array();
+    protected $_customFilters = [];
 
 
     /**
@@ -420,9 +409,8 @@ class Datagrid extends UI_Generic
      * @param string $id         Identifiant unique de la datagrid.
      * @param string $controller Nom du contrôleur de la datagrid.
      * @param string $module     Module ou se trouve le controleur de la datagrid.
-     *
      */
-    public function  __construct($id, $controller, $module=null)
+    public function __construct($id, $controller, $module = null)
     {
         $this->id = $id;
         $this->_controller = $controller;
@@ -486,10 +474,8 @@ class Datagrid extends UI_Generic
      *
      * Ces paramètres seront envoyés par l'url à chaque requête.
      *
-     * @param string              $parameterName    Nom du paramètre indiqué dans l'url.
-     * @param mixed(string|array) $parameterValue Valeur du paramètre qui sera transmis.
-     *
-     * @return void
+     * @param string       $parameterName  Nom du paramètre indiqué dans l'url.
+     * @param string|array $parameterValue Valeur du paramètre qui sera transmis.
      */
     public function addParam($parameterName, $parameterValue)
     {
@@ -501,19 +487,18 @@ class Datagrid extends UI_Generic
      * Fonction qui permet d'ajouter des colonnes à la datagrid.
      *
      * @param Column\GenericColumn $column Colonne à rajouter.
-     * @param int $ordre =null   Position de la colonne.
+     * @param int|null             $order  Position de la colonne.
      *
      * @throws Core_Exception_InvalidArgument
-     * @return void
      */
-    public function addCol($column, $ordre=null)
+    public function addCol($column, $order = null)
     {
         if (($column->id === 'index') || ($column->id === 'delete')) {
             throw new Core_Exception_InvalidArgument('Can\'t with id "index" or "delete" !');
         }
 
-        if ($ordre !== null) {
-            $this->_cols[$ordre] = $column;
+        if ($order !== null) {
+            $this->_cols[$order] = $column;
         } else {
             $this->_cols[] = $column;
         }
@@ -524,15 +509,13 @@ class Datagrid extends UI_Generic
      *
      * Attention : la colonne doit avoir été ajouté avant et son nomTri doit être défini.
      *
-     * @param int    $idColumn    Identifiant de la colonne suivant laquelle trier par défaut.
+     * @param int    $idColumn      Identifiant de la colonne suivant laquelle trier par défaut.
      * @param string $sortDirection Direction du tri.
-     *
-     * @return void
      *
      * @see TYPE_SORT_ASC
      * @see TYPE_SORT_DESC
      */
-    public function setDefaultSorting($idColumn, $sortDirection=Criteria::ASC)
+    public function setDefaultSorting($idColumn, $sortDirection = Criteria::ASC)
     {
         foreach ($this->_cols as $column) {
             // Vérification que le nom du tri est bien défini pour cette colonne
@@ -548,10 +531,6 @@ class Datagrid extends UI_Generic
      * Fonction qui permet d'ajouter des filtres indépendants des colonnes.
      *
      * @param Column\GenericColumn $col Colonne sur laquelle sera basé le filtre.
-     *
-     * @return void
-     *
-     * @see _customFilters
      */
     public function addFilter($col)
     {
@@ -673,8 +652,11 @@ class Datagrid extends UI_Generic
         $this->filterConfirmButton->addAttribute('onclick', $this->id.'.filter();'.$scriptHideWrapper);
         $filterElement->content = $this->filterConfirmButton->getHTML();
         $formFilter->addActionElement($filterElement);
-        $resetElement = new UI_Form_Element_HTML($this->id.'-resetFilter');
-        $this->filterResetButton->addAttribute('onclick', $this->id.'.resetFilter();'.$this->id.'.filter();'.$scriptHideWrapper);
+        $resetElement = new UI_Form_Element_HTML($this->id . '-resetFilter');
+        $this->filterResetButton->addAttribute(
+            'onclick',
+            $this->id . '.resetFilter();' . $this->id . '.filter();' . $scriptHideWrapper
+        );
         $resetElement->content = $this->filterResetButton->getHTML();
         $formFilter->addActionElement($resetElement);
 
@@ -835,18 +817,17 @@ class Datagrid extends UI_Generic
      */
     protected function getDeleteScript()
     {
-        $deleteScript = '';
-
         // Ajout de la passation des information de la cellule au panel de suppression.
         // Ajout d'un listener sur chaque bouton ouvrant ce popup pour effectuer le chargement du contenu.
-        $deleteScript .= '$(\'body\').on(\'click\', \'[data-target="#'.$this->id.'_deletePanel"]\', function(e) {';
-        $deleteScript .= 'e.preventDefault();';
-        $deleteScript .= '$(\'.btn-primary\', $(\'#'.$this->id.'_deletePanel\')).attr(';
-        $deleteScript .= '\'onclick\',';
-        $deleteScript .= '\''.$this->id.'.delete(\' + $(this).attr(\'href\').substring(1) + \');\'';
-        $deleteScript .= ');';
-        $deleteScript .= '});';
-
+        $deleteScript = <<<JS
+$('body').on('click', '[data-target="#{$this->id}_deletePanel"]', function(e) {
+    e.preventDefault();
+    $('.btn-primary', $('#{$this->id}_deletePanel')).attr(
+        'onclick',
+        '{$this->id}.delete(' + $(this).attr('href').substring(1) + ');'
+    );
+});
+JS;
         return $deleteScript;
     }
 
@@ -894,10 +875,8 @@ class Datagrid extends UI_Generic
     {
         $datagridSession = $this->getDatagridSession();
 
-        $datagridScript = '';
-
         // Définition d'un objet datagrid qui sera une surcouche de l'objet YUI.
-        $datagridScript .= 'var datagrid'.$this->id.' = function() {';
+        $datagridScript = "var datagrid{$this->id} = function() {";
 
         // Ajout des types personnalisés de colonnes.
         foreach ($this->_cols as $column) {
@@ -1146,7 +1125,7 @@ class Datagrid extends UI_Generic
                     if ($initialSortName === $column->getFullSortName($this)) {
                         $this->_defaultSorting['column'] = $column->id;
                     }
-                } else if ($column->id === $this->_defaultSorting['column']) {
+                } elseif ($column->id === $this->_defaultSorting['column']) {
                     if ($column->criteriaOrderAttribute !== null) {
                         $initialSortName = $column->getFullSortName($this);
                     } else {
@@ -1170,7 +1149,7 @@ class Datagrid extends UI_Generic
                 } else {
                     $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_DESC';
                 }
-            } else if ($this->_defaultSorting['direction'] === Criteria::ASC) {
+            } elseif ($this->_defaultSorting['direction'] === Criteria::ASC) {
                 $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_ASC';
                 $initialSortDirection = 'true';
             } else {
@@ -1195,7 +1174,7 @@ class Datagrid extends UI_Generic
                 $datagridScript .= '/sortDirection/'.$initialSortDirection;
                 $datagridScript .= '/filters/'.addslashes($initialFilter).'",';
             }
-        } else if ($this->pagination === true) {
+        } elseif ($this->pagination === true) {
             $datagridScript .= 'initialRequest : "getelements';
             $datagridScript .= $this->encodeParameters();
             $datagridScript .= '/nbElements/'.$datagridSession['nbElements'];
@@ -1295,7 +1274,7 @@ class Datagrid extends UI_Generic
             if (($this->highlightElement === false) && ($this->selectableElement === false)) {
                 $datagridScript .= '
                             this.highlightCell(elCell);';
-            } else if ($this->selectableElement === false) {
+            } elseif ($this->selectableElement === false) {
                 $datagridScript .= '
                             this.selectCell(elCell);';
             } else {
@@ -1314,7 +1293,7 @@ class Datagrid extends UI_Generic
             if (($this->highlightElement === false) && ($this->selectableElement === false)) {
                 $datagridScript .= '
                         this.unhighlightCell(elCell);';
-            } else if ($this->selectableElement === false) {
+            } elseif ($this->selectableElement === false) {
                 $datagridScript .= '
                         this.unselectCell(elCell);';
             } else {
@@ -1326,7 +1305,7 @@ class Datagrid extends UI_Generic
                     };
                     this.Datagrid.subscribe("cellMouseoverEvent", this.highlightEditableCell);
                     this.Datagrid.subscribe("cellMouseoutEvent", this.unhighlightEditableCell);';
-            }
+        }
 
         // Ajout de la mise en valeur d'une ligne au survol.
         if ($this->highlightElement === true) {
@@ -1508,9 +1487,7 @@ class Datagrid extends UI_Generic
      */
     protected function generateDatagrid()
     {
-        $datagrid = '';
-
-        $datagrid .= '<div class="yui-skin-sam">';
+        $datagrid = '<div class="yui-skin-sam">';
 
         // Ajout de la pagination si nécéssaire.
         if ($this->pagination === true) {
@@ -1571,23 +1548,24 @@ class Datagrid extends UI_Generic
      *
      * @param Datagrid $instance Permet de spécifier les headers requis en fonction de l'instance passée.
      */
-    static function addHeader($instance=null)
+    public static function addHeader($instance = null)
     {
         $broker = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
+        $view = $broker->view;
         // Ajout des feuilles de style.
-        $broker->view->headLink()->appendStylesheet('yui/build/datatable/assets/skins/sam/datatable.css');
-        $broker->view->headLink()->appendStylesheet('yui/build/paginator/assets/skins/sam/paginator.css');
-        $broker->view->headLink()->appendStylesheet('yui/build/calendar/assets/skins/sam/calendar.css');
-        $broker->view->headLink()->appendStylesheet('css/ui/datagrid.css');
+        $view->headLink()->appendStylesheet('yui/build/datatable/assets/skins/sam/datatable.css');
+        $view->headLink()->appendStylesheet('yui/build/paginator/assets/skins/sam/paginator.css');
+        $view->headLink()->appendStylesheet('yui/build/calendar/assets/skins/sam/calendar.css');
+        $view->headLink()->appendStylesheet('css/ui/datagrid.css');
         // Ajout des fichiers Javascript.
-        $broker->view->headScript()->appendFile('yui/build/yahoo-dom-event/yahoo-dom-event.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('yui/build/element/element-min.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('yui/build/json/json-min.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('yui/build/connection/connection-min.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('yui/build/datasource/datasource-min.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('yui/build/datatable/datatable-min.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
+        $view->headScript()->appendFile('yui/build/yahoo-dom-event/yahoo-dom-event.js', 'text/javascript');
+        $view->headScript()->appendFile('yui/build/element/element-min.js', 'text/javascript');
+        $view->headScript()->appendFile('yui/build/json/json-min.js', 'text/javascript');
+        $view->headScript()->appendFile('yui/build/connection/connection-min.js', 'text/javascript');
+        $view->headScript()->appendFile('yui/build/datasource/datasource-min.js', 'text/javascript');
+        $view->headScript()->appendFile('yui/build/datatable/datatable-min.js', 'text/javascript');
+        $view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
+        $view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
 
         UI_Form::addHeader();
 
@@ -1695,5 +1673,4 @@ class Datagrid extends UI_Generic
 
         return $html;
     }
-
 }
