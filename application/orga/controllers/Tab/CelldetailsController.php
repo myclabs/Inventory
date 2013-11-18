@@ -217,7 +217,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 }
                 $datagridConfiguration->datagrid->addCol($columnRole);
 
-                $datagridConfiguration->datagrid->pagination = true;
+                $datagridConfiguration->datagrid->pagination = false;
                 $datagridConfiguration->datagrid->addElements = true;
                 $datagridConfiguration->datagrid->addPanelTitle = __('Orga', 'role', 'addPanelTitle');
                 $datagridConfiguration->datagrid->deleteElements = true;
