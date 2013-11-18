@@ -54,18 +54,18 @@
         </tu>
         <tu tuid="involvedUsers">
             <tuv xml:lang="fr">
-                <seg>Intervenants</seg>
+                <seg>Utilisateurs</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Involved users</seg>
+                <seg>Users</seg>
             </tuv>
         </tu>
         <tu tuid="involvedUsersInDataCollection">
             <tuv xml:lang="fr">
-                <seg>Intervenants pour « [CELL] »</seg>
+                <seg>Utilisateurs — [CELL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Involved users for "[CELL]"</seg>
+                <seg>Users — [CELL]</seg>
             </tuv>
         </tu>
     </body>
