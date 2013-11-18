@@ -82,6 +82,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         }
 
         $totalElement = 0;
+        $this->request->totalElements = null;
         foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
             $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
             foreach ($childCellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
