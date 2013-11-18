@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe NumberColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -15,55 +7,49 @@ use UI_Form_Element_Text;
 use UI_Form_Element_Numeric;
 
 /**
- * Description of NumberColumn.
+ * Classe représentant une colonne contenant des nombres.
  *
- * Une classe permettant de générer une colonne contenant des nombres.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class NumberColumn extends GenericColumn
 {
     /**
      * Définition du mot clef du filtre pour l'égalité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterEqual = null;
+    public $keywordFilterEqual;
 
     /**
      * Définition du mot clef du filtre pour l'infériorité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterLower = null;
+    public $keywordFilterLower;
 
     /**
      * Définition du mot clef du filtre pour la supériorité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterHigher = null;
+    public $keywordFilterHigher;
 
     /**
      * Définition de la constante utilisé pour le filtre inférieur sur la colonne.
      *
-     * @var   string
+     * @var string
      */
-    public $filterOperatorLower = null;
+    public $filterOperatorLower;
 
     /**
      * Définition de la constante utilisé pour le filtre supérieur sur la colonne.
      *
-     * @var   string
+     * @var string
      */
-    public $filterOperatorHigher = null;
+    public $filterOperatorHigher;
 
 
-     /**
-      * {@inheritdoc}
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         // Définition des pseudo-constantes pouvant être redéfinies.
@@ -81,19 +67,17 @@ class NumberColumn extends GenericColumn
      */
     public function getFormatter(Datagrid $datagrid)
     {
-        $format = '';
-
-        $format .= 'if (typeof(sData) != "object") {';
-        $format .= 'content = sData;';
-        $format .= '} else {';
-        $format .= 'if (sData.content != null) {';
-        $format .= 'content = sData.content;';
-        $format .= '} else {';
-        $format .= 'content = sData.value;';
-        $format .= '}';
-        $format .= '}';
-
-        return $format;
+        return <<<JS
+if (typeof(sData) != "object") {
+    content = sData;
+} else {
+    if (sData.content != null) {
+        content = sData.content;
+    } else {
+        content = sData.value;
+    }
+}
+JS;
     }
 
     /**
@@ -101,25 +85,23 @@ class NumberColumn extends GenericColumn
      */
     public function getEditorValue(Datagrid $datagrid)
     {
-        $editorValue = '';
-
-        $editorValue .= 'this.onEventShowCellEditor(oArgs);';
-        $editorValue .= 'if ((typeof(sData) == "undefined") || (sData == null)) {';
-        $editorValue .= 'var content = \'\';';
-        $editorValue .= '} else if (typeof(sData) != "object") {';
-        $editorValue .= 'var content = sData.toString();';
-        $editorValue .= '} else {';
-        $editorValue .= 'content = sData.value.toString();';
-        $editorValue .= '}';
-        $editorValue .= 'column.editor.textbox.value = content;';
-
-        return $editorValue;
+        return <<<JS
+this.onEventShowCellEditor(oArgs);
+if ((typeof(sData) == "undefined") || (sData == null)) {
+    var content = '';
+} else if (typeof(sData) != "object") {
+    var content = sData.toString();
+} else {
+    content = sData.value.toString();
+}
+column.editor.textbox.value = content;
+JS;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         $filterFormElement = new UI_Form_Element_Numeric($this->getFilterFormId($datagrid));
         $filterFormElement->setLabel($this->getFilterFormLabel());
@@ -205,7 +187,7 @@ class NumberColumn extends GenericColumn
     /**
      * {@inheritdoc}
      */
-    function getResettingFilter(Datagrid $datagrid)
+    public function getResettingFilter(Datagrid $datagrid)
     {
         $resetFields = '';
 
@@ -227,5 +209,4 @@ class NumberColumn extends GenericColumn
 
         return $addFormElement;
     }
-
 }

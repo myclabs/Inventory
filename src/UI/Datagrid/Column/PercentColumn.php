@@ -1,48 +1,32 @@
 <?php
-/**
- * Fichier de la classe PercentColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
 use UI\Datagrid\Datagrid;
 
 /**
- * Description of PercentColumn.
+ * Classe représentant une colonne contenant un pourcentage.
  *
- * Une classe permettant de générer une colonne contenant un pourcentage.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class PercentColumn extends NumberColumn
 {
     /**
      * Définit l'élément placé avant l'affichage de la valeur.
-     *  Par défaut null.
      *
      * @var int
      */
-    public $patternDisplayPreValue = null;
+    public $patternDisplayPreValue;
 
     /**
-     * Définit l'élément placé après l'affichage de la valeur.
-     *  Par défaut %.
+     * Définit l'élément placé après l'affichage de la valeur. Par défaut %.
      *
-     * @var int
+     * @var string
      */
     public $patternDisplayPostValue = '%';
 
 
-     /**
-      * {@inheritdoc}
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         // Définition des pseudo-constantes pouvant être redéfinies.
@@ -123,5 +107,4 @@ class PercentColumn extends NumberColumn
         // Pas d'ajout possible sur des pourcentages.
         return null;
     }
-
 }
