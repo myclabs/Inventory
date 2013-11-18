@@ -521,6 +521,18 @@ class AF_Model_AF extends Core_Model_Entity
     }
 
     /**
+     * Vérifie si une condition d'algo porte sur un composant
+     *
+     * @param AF_Model_Component $component
+     *
+     * @return bool
+     */
+    public function hasAlgoConditionOnInput(AF_Model_Component $component)
+    {
+        return $this->algoSet->hasConditionOnInputRef($component->getRef());
+    }
+
+    /**
      * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()

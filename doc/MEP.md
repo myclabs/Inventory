@@ -1,6 +1,17 @@
 # Mise en production
 
 
+## 2.9
+
+- Déployer normalement l'application (avec build update)
+
+- Exécuter le script de migration PHP
+
+```
+sudo php scripts/migration/2.9/migrate.php
+```
+
+
 ## 2.8
 
 - Déployer normalement l'application (avec build update)

@@ -106,12 +106,8 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function createAxis(Orga_Model_Organization $organization, $ref, $label, Orga_Model_Axis $narrower=null)
     {
-        $axis = new Orga_Model_Axis($organization);
-        $axis->setRef($ref);
+        $axis = new Orga_Model_Axis($organization, $ref, $narrower);
         $axis->setLabel($label);
-        if ($narrower !== null) {
-            $axis->setDirectNarrower($narrower);
-        }
         $axis->save();
         return $axis;
     }
@@ -125,13 +121,8 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function createMember(Orga_Model_Axis $axis, $ref, $label, array $parents=[])
     {
-        $member = new Orga_Model_Member($axis);
-        $member->setRef($ref);
+        $member = new Orga_Model_Member($axis, $ref, $parents);
         $member->setLabel($label);
-        foreach ($parents as $directParent)
-        {
-            $member->addDirectParent($directParent);
-        }
         $member->save();
         return $member;
     }

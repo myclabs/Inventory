@@ -101,7 +101,6 @@ class Simulation_Model_Set extends Core_Model_Entity
         $this->dWAxis = new DW_Model_Axis($this->dWCube);
         $this->dWAxis->setRef('set');
         $this->dWAxis->setLabel(__('Simulation', 'name', 'scenario'));
-        $this->dWAxis->setPosition();
 
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');

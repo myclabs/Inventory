@@ -66,7 +66,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                     // Nécessaire pour détecter d'où est issu le Report.
                     if ($subject->getCube()->getId() !== null) {
                         $granularity = Orga_Model_Granularity::loadByDWCube($subject->getCube());
-                        $granularityReport = new Orga_Model_GranularityReport($subject);
+                        $granularityReport = new self($subject);
                         $granularityReport->save();
                     }
                 } catch (Core_Exception_NotFound $e) {
@@ -81,7 +81,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                     $etlStructureService = $container->get('Orga_Service_ETLStructure');
 
                     $etlStructureService->updateCellsDWReportFromGranularityReport(
-                        Orga_Model_GranularityReport::loadByGranularityDWReport($subject)
+                        self::loadByGranularityDWReport($subject)
                     );
                 } catch (Core_Exception_NotFound $e) {
                     // Le Report n'est pas issue d'un Cube de DW de Granularity.
@@ -89,7 +89,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                 break;
             case DW_Model_Report::EVENT_DELETE:
                 try {
-                    $granularityReport = Orga_Model_GranularityReport::loadByGranularityDWReport($subject);
+                    $granularityReport = self::loadByGranularityDWReport($subject);
                     $granularityReport->delete();
                 } catch (Core_Exception_NotFound $e) {
                     // Le Report n'est pas issue d'un Cube de Granularity.

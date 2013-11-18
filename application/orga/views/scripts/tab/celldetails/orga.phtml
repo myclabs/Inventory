@@ -44,7 +44,7 @@ if ($this->hasChildCells) {
     $relevanceTab = new UI_Tab('relevant');
     $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');
     $relevanceTab->dataSource = 'orga/cell/relevant/idCell/'.$this->idCell.'/display/render';
-    $relevanceTab->useCache = false;
+    $relevanceTab->useCache = !$this->displayOrganizationTabs;
     $tabView->addTab($relevanceTab);
 }
 

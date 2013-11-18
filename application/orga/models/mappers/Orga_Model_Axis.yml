@@ -28,8 +28,20 @@ Orga_Model_Axis:
       nullable: false
       gedmo:
         - translatable
+    narrowerTag:
+      column: narrowerTag
+      type: text
+      nullable: false
+    broaderTag:
+      column: broaderTag
+      type: text
+      nullable: false
     contextualizing:
       column: contextualizing
+      type: boolean
+      nullable: false
+    memberPositioning:
+      column: memberPositioning
       type: boolean
       nullable: false
     position:
@@ -65,7 +77,7 @@ Orga_Model_Axis:
       orphanRemoval: true
       cascade: [ persist, remove ]
       orderBy:
-        ref: ASC
+        tag: ASC
 
   manyToMany:
     granularities:

@@ -99,4 +99,19 @@ class Algo_Model_Set extends Core_Model_Entity
         throw new Core_Exception_NotFound("No algo was found with ref '$ref' in this set");
     }
 
+    /**
+     * Vérifie si un inputRef a une condition portant sur un input
+     *
+     * @param string $inputRef Reférence de l'input
+     * @return bool
+     */
+    public function hasConditionOnInputRef($inputRef)
+    {
+        return $this->algos->exists(
+            function ($key, $element) use ($inputRef) {
+                return $element instanceof Algo_Model_Condition_Elementary && $element->getInputRef() == $inputRef;
+            }
+        );
+    }
+
 }

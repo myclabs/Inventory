@@ -87,8 +87,8 @@ class DW_Model_Axis extends Core_Model_Entity
         $this->members = new ArrayCollection();
 
         $this->cube = $cube;
-        $this->setPosition();
         $this->cube->addAxis($this);
+        $this->setPosition();
     }
 
     /**

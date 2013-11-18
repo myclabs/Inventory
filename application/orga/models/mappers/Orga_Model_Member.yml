@@ -1,7 +1,7 @@
 # orga\models\mappers\Orga_Model_Member.yml
 Orga_Model_Member:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: Core_Model_Repository_Ordered
   table: Orga_Member
 
   gedmo:
@@ -33,6 +33,14 @@ Orga_Model_Member:
       nullable: false
       gedmo:
         - translatable
+    tag:
+      column: tag
+      type: text
+      nullable: false
+    position:
+      column: position
+      type: integer
+      nullable: false
 
   manyToOne:
     axis:
@@ -67,6 +75,8 @@ Orga_Model_Member:
   lifecycleCallbacks:
     prePersist: [ preSave ]
     preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]
 
   uniqueConstraints:
     memberRefUniquenessInAxisAndParentMembersSashKey:

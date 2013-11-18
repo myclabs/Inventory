@@ -592,7 +592,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     {
         $user->addRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
-        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
+        $globalCell = $organization->getGranularityByRef('global')->getCells()[0];
         $user->addRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
@@ -621,7 +621,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
     {
         $user->removeRole(User_Model_Role::loadByRef('organizationAdministrator_'.$organization->getId()));
 
-        $globalCell = Orga_Model_Granularity::loadByRefAndOrganization('global', $organization)->getCells()[0];
+        $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
         $user->removeRole(
             User_Model_Role::loadByRef('cellAdministrator_'.$globalCell->getId())
         );
@@ -723,7 +723,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleAdded',
                     [
-                        'CELL' => $cell->getLabelExtended(),
+                        'CELL' => $cell->getExtendedLabel(),
                         'ROLE' => __('Orga', 'role', $role->getName())
                     ]
                 )
@@ -747,7 +747,7 @@ class Orga_Service_ACLManager implements User_Service_ACL_ResourceTreeTraverser
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleRemoved',
                     [
-                        'CELL' => $cell->getLabelExtended(),
+                        'CELL' => $cell->getExtendedLabel(),
                         'ROLE' => __('Orga', 'role', $role->getName())
                     ]
                 )
