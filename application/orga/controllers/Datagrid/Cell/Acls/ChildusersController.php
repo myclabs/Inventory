@@ -81,17 +81,6 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             }
         }
 
-        $totalElement = 0;
-        foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
-            $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
-            foreach ($childCellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                if ($linkedIdentity instanceof User_Model_Role) {
-                    $totalElement += count($linkedIdentity->getUsers());
-                }
-            }
-        }
-        $this->totalElements = $totalElement;
-
         $this->send();
     }
 
