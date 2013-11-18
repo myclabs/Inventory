@@ -99,7 +99,7 @@ class Orga_Datagrid_Organization_Acls_ChildcellsController extends UI_Controller
         }
         $this->view->assign('listRoles', $listRoles);
 
-        $this->view->assign('labelPopup', __('Orga', 'acls', 'childCell', ['CELL' => $cell->getLabelExtended()]));
+        $this->view->assign('labelPopup', __('Orga', 'acls', 'childCell', ['CELL' => $cell->getExtendedLabel()]));
     }
 
 }

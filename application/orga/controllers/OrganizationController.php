@@ -88,8 +88,10 @@ class Orga_OrganizationController extends Core_Controller
             $this->redirect('orga/organization/manage');
         } else {
             $organizationsWithAccess = Orga_Model_Organization::loadList($aclQuery);
-            $idOrganization = array_pop($organizationsWithAccess)->getId();
-            $this->redirect('orga/organization/view/idOrganization/'.$idOrganization);
+            if (count($organizationsWithAccess) > 0) {
+                $idOrganization = array_pop($organizationsWithAccess)->getId();
+                $this->redirect('orga/organization/view/idOrganization/'.$idOrganization);
+            }
         }
     }
 

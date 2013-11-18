@@ -3,6 +3,8 @@
 namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Orga_Model_Cell;
 use Orga_Model_Granularity;
 use Orga_Model_Member;
@@ -76,92 +78,109 @@ class CellViewModelFactory
     /**
      * @param Orga_Model_Cell $cell
      * @param User_Model_User $user
+     * @param bool $withAdministrators
+     * @param bool $withDW
+     * @param bool $withInventory
+     * @param bool $withInput
      * @return CellViewModel
      */
-    public function createCellViewModel(Orga_Model_Cell $cell, User_Model_User $user)
+    public function createCellViewModel(Orga_Model_Cell $cell, User_Model_User $user,
+        $withAdministrators=null, $withDW=null, $withInventory=null, $withInput=null)
     {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
         $cellViewModel->shortLabel = $cell->getLabel();
-        $cellViewModel->extendedLabel = $cell->getLabelExtended();
+        $cellViewModel->extendedLabel = $cell->getExtendedLabel();
         $cellViewModel->path = implode(' ', array_map(function (Orga_Model_Member $member) { return $member->getCompleteRef(); }, $cell->getMembers()));
 
         // Administrateurs
-        $cellAdministrators = User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId());
-        foreach ($cellAdministrators->getUsers() as $administrator) {
-            $cellViewModel->administrators[] = $administrator->getEmail();
-        }
-        foreach ($cell->getParentCells() as $parentCell) {
-            $parentCellAdministrators = User_Model_Role::loadByRef('cellAdministrator_'.$parentCell->getId());
-            foreach ($parentCellAdministrators->getUsers() as $parentAdministrator) {
-                $cellViewModel->administrators[] = $parentAdministrator->getEmail();
+        if ($withAdministrators === true) {
+            $cellAdministrators = User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId());
+            foreach ($cellAdministrators->getUsers() as $administrator) {
+                $cellViewModel->administrators[] = $administrator->getEmail();
+            }
+            foreach ($cell->getParentCells() as $parentCell) {
+                $parentCellAdministrators = User_Model_Role::loadByRef('cellAdministrator_'.$parentCell->getId());
+                foreach ($parentCellAdministrators->getUsers() as $parentAdministrator) {
+                    $cellViewModel->administrators[] = $parentAdministrator->getEmail();
+                }
             }
         }
 
         // DW
-        $cellViewModel->canBeAnalyzed = $cell->getGranularity()->getCellsGenerateDWCubes();
+        if (($withDW === true)
+            || (($withDW !== false) && ($cell->getGranularity()->getCellsGenerateDWCubes()))) {
+            $cellViewModel->canBeAnalyzed = true;
+        }
 
         // Inventory
-        try {
-            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+        if ($withInventory !== false) {
+            try {
+                $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
-            if ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
-                || ($cell->getGranularity() === $granularityForInventoryStatus)
-            ) {
-                $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
-                $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
+                if (($cell->getGranularity() === $granularityForInventoryStatus)
+                    || ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus))
+                ) {
+                    $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
+                    $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
 
-                $cellViewModel->inventoryCompletion = 0;
-                $cellViewModel->inventoryNotStartedInputsNumber = 0;
-                $cellViewModel->inventoryStartedInputsNumber = 0;
-                $cellViewModel->inventoryCompletedInputsNumber = 0;
-                if (($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
-                    || ($cell->getGranularity() === $granularityForInventoryStatus))
-                    && ($cell->getGranularity()->getInputConfigGranularity() !== null)) {
-                    try {
-                        $cellViewModel->inventoryCompletion += $cell->getAFInputSetPrimary()->getCompletion();
-                        if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
-                            $cellViewModel->inventoryNotStartedInputsNumber ++;
-                        } else if ($cell->getAFInputSetPrimary()->getCompletion() < 100) {
-                            $cellViewModel->inventoryStartedInputsNumber ++;
-                        } else {
-                            $cellViewModel->inventoryCompletedInputsNumber ++;
-                        }
-                    } catch (Core_Exception_UndefinedAttribute $e) {
-                        $cellViewModel->inventoryNotStartedInputsNumber ++;
-                    }
-                }
-                foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerInputGranularity) {
-                    if (($narrowerInputGranularity->getInputConfigGranularity() !== null)
-                        && ($narrowerInputGranularity->isNarrowerThan($granularityForInventoryStatus))) {
-                        foreach ($cell->getChildCellsForGranularity($narrowerInputGranularity) as $childInputCell) {
-                            try {
-                                $cellViewModel->inventoryCompletion += $childInputCell->getAFInputSetPrimary()->getCompletion();
-                                if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
-                                    $cellViewModel->inventoryNotStartedInputsNumber ++;
-                                } else if ($childInputCell->getAFInputSetPrimary()->getCompletion() < 100) {
-                                    $cellViewModel->inventoryStartedInputsNumber ++;
-                                } else {
-                                    $cellViewModel->inventoryCompletedInputsNumber ++;
-                                }
-                            } catch (Core_Exception_UndefinedAttribute $e) {
+                    $cellViewModel->inventoryCompletion = 0;
+                    $cellViewModel->inventoryNotStartedInputsNumber = 0;
+                    $cellViewModel->inventoryStartedInputsNumber = 0;
+                    $cellViewModel->inventoryCompletedInputsNumber = 0;
+                    if (($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
+                        || ($cell->getGranularity() === $granularityForInventoryStatus))
+                        && ($cell->getGranularity()->getInputConfigGranularity() !== null)) {
+                        try {
+                            $cellViewModel->inventoryCompletion += $cell->getAFInputSetPrimary()->getCompletion();
+                            if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
                                 $cellViewModel->inventoryNotStartedInputsNumber ++;
+                            } else if ($cell->getAFInputSetPrimary()->getCompletion() < 100) {
+                                $cellViewModel->inventoryStartedInputsNumber ++;
+                            } else {
+                                $cellViewModel->inventoryCompletedInputsNumber ++;
+                            }
+                        } catch (Core_Exception_UndefinedAttribute $e) {
+                            $cellViewModel->inventoryNotStartedInputsNumber ++;
+                        }
+                    }
+                    foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerInputGranularity) {
+                        if (($narrowerInputGranularity->getInputConfigGranularity() !== null)
+                            && ($narrowerInputGranularity->isNarrowerThan($granularityForInventoryStatus))) {
+                            $relevantCriteria = new Criteria();
+                            $relevantCriteria->where($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
+                            $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
+                            $relevantChildInputCells = $cell->getChildCellsForGranularity($narrowerInputGranularity)->matching($relevantCriteria);
+                            foreach ($relevantChildInputCells as $childInputCell) {
+                                try {
+                                    $cellViewModel->inventoryCompletion += $childInputCell->getAFInputSetPrimary()->getCompletion();
+                                    if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
+                                        $cellViewModel->inventoryNotStartedInputsNumber ++;
+                                    } else if ($childInputCell->getAFInputSetPrimary()->getCompletion() < 100) {
+                                        $cellViewModel->inventoryStartedInputsNumber ++;
+                                    } else {
+                                        $cellViewModel->inventoryCompletedInputsNumber ++;
+                                    }
+                                } catch (Core_Exception_UndefinedAttribute $e) {
+                                    $cellViewModel->inventoryNotStartedInputsNumber ++;
+                                }
                             }
                         }
                     }
+                    $totalInventoryInputs = $cellViewModel->inventoryNotStartedInputsNumber + $cellViewModel->inventoryStartedInputsNumber + $cellViewModel->inventoryCompletedInputsNumber;
+                    if ($totalInventoryInputs > 0) {
+                        $cellViewModel->inventoryCompletion /= $totalInventoryInputs;
+                    }
+                    $cellViewModel->inventoryCompletion = round($cellViewModel->inventoryCompletion);
                 }
-                $totalInventoryInputs = $cellViewModel->inventoryNotStartedInputsNumber + $cellViewModel->inventoryStartedInputsNumber + $cellViewModel->inventoryCompletedInputsNumber;
-                if ($totalInventoryInputs > 0) {
-                    $cellViewModel->inventoryCompletion /= $totalInventoryInputs;
-                }
-                $cellViewModel->inventoryCompletion = round($cellViewModel->inventoryCompletion);
+            } catch (Core_Exception_UndefinedAttribute $e) {
+            } catch (\Core_Exception_NotFound $e) {
             }
-        } catch (Core_Exception_UndefinedAttribute $e) {
-        } catch (\Core_Exception_NotFound $e) {
         }
 
         // Saisie.
-        if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
+        if (($withInput === true)
+            || (($withInput !== false) && ($cell->getGranularity()->getInputConfigGranularity() !== null))) {
             $cellViewModel->canBeInputted = $this->aclService->isAllowed($user, Orga_Action_Cell::INPUT(), $cell);
 
             try {
@@ -176,8 +195,6 @@ class CellViewModelFactory
                 $cellViewModel->inputStatusStyle = $this->inputStatusStyleList[null];
                 $cellViewModel->inputCompletion = 0;
             }
-        } else {
-            $cellViewModel->canBeInputted = false;
         }
 
         return $cellViewModel;

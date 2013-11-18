@@ -30,67 +30,62 @@ class CellViewModel
     /**
      * @var string
      */
-    public $inventoryStatus;
+    public $inventoryStatus = null;
 
     /**
      * @var string
      */
-    public $inventoryStatusTitle;
+    public $inventoryStatusTitle = '';
 
     /**
      * @var int
      */
-    public $inventoryNotStartedInputsNumber;
+    public $inventoryNotStartedInputsNumber = 0;
 
     /**
      * @var int
      */
-    public $inventoryStartedInputsNumber;
+    public $inventoryStartedInputsNumber = 0;
 
     /**
      * @var int
      */
-    public $inventoryCompletedInputsNumber;
+    public $inventoryCompletedInputsNumber = 0;
 
     /**
      * @var int
      */
-    public $inventoryCompletion;
+    public $inventoryCompletion = 0;
 
     /**
      * @var boolean
      */
-    public $canBeInputted;
+    public $canBeInputted = false;
 
     /**
      * @var string
      */
-    public $inputStatus;
+    public $inputStatus = null;
 
     /**
      * @var string
      */
-    public $inputStatusTitle;
+    public $inputStatusTitle = '';
 
     /**
      * @var int
      */
-    public $inputStatusStyle;
+    public $inputStatusStyle = '';
 
     /**
      * @var int
      */
-    public $inputCompletion;
+    public $inputCompletion = 0;
 
     /**
      * @var boolean
      */
-    public $canBeAnalyzed;
-
-    /**
-     * @var int
-     */
-    public $dWReports;
+    public $canBeAnalyzed = false;
 
     /**
      * @var array

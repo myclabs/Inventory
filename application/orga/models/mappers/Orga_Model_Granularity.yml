@@ -1,7 +1,7 @@
 # orga\models\mappers\Orga_Model_Granularity.yml
 Orga_Model_Granularity:
   type: entity
-  repositoryClass: Core_Model_Repository_Ordered
+  repositoryClass: Core_Model_Repository
   table: Orga_Granularity
 
   id:
@@ -102,12 +102,6 @@ Orga_Model_Granularity:
     inputGranularities:
       targetEntity: Orga_Model_Granularity
       mappedBy: inputConfigGranularity
-
-  lifecycleCallbacks:
-    prePersist: [ preSave ]
-    preUpdate: [ preUpdate ]
-    preRemove: [ preDelete ]
-    postLoad: [ postLoad ]
 
   uniqueConstraints:
     granularityRefUniquenessInOrganization:

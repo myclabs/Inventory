@@ -15,6 +15,7 @@ use Orga\ViewModel\OrganizationViewModelFactory;
 use Orga\ViewModel\CellViewModelFactory;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Classe controleur de cell.
@@ -98,24 +99,47 @@ class Orga_CellController extends Core_Controller
             $granularityForInventoryStatus = null;
         }
         foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            if (($narrowerGranularity->getInputConfigGranularity() !== null)
-                || ($narrowerGranularity->getCellsGenerateDWCubes())
-                || ($narrowerGranularity === $granularityForInventoryStatus)
-            ) {
-                $narrowerGranularities[] = $narrowerGranularity;
+            $purpose = '';
+            $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
+                && (($narrowerGranularity === $granularityForInventoryStatus)
+                    || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
+            $narrowerGranularityHasSubInputGranlarities = false;
+            foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
+                if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
+                    $narrowerGranularityHasSubInputGranlarities = true;
+                    break;
+                }
+            }
+            $isNarrowerGranularityInventory = $isNarrowerGranularityInventory && $narrowerGranularityHasSubInputGranlarities;
+            if ($isNarrowerGranularityInventory) {
+                $purpose .= __('Orga', 'granlarity', 'InventoryPurpose');
+            }
+            $isNarrowerGranularityInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
+            if ($isNarrowerGranularityInput) {
+                if ($isNarrowerGranularityInventory) {
+                    $purpose .= __('UI', 'view', '&separator');
+                }
+                $purpose .= __('Orga', 'granlarity', 'InputPurpose');
+            }
+            $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes());
+            if ($isNarrowerGranularityAnalyses) {
+                if ($isNarrowerGranularityInventory || $isNarrowerGranularityInput) {
+                    $purpose .= __('UI', 'view', '&separator');
+                }
+                $purpose .= __('Orga', 'granlarity', 'AnalysesPurpose');
+            }
+            if ($purpose !== '') {
+                $narrowerGranularities[] = [
+                    'granularity' => $narrowerGranularity,
+                    'purpose' => $purpose,
+                    'isInventory' => $isNarrowerGranularityInventory,
+                    'isInput' => $isNarrowerGranularityInput,
+                    'isAnalyses' => $isNarrowerGranularityAnalyses,
+                ];
             }
         }
         $this->view->assign('narrowerGranularities', $narrowerGranularities);
         $this->view->assign('granularityForInventoryStatus', $granularityForInventoryStatus);
-
-        // Historique.
-        $this->view->assign('comments', $cell->getInputSetLatestComments(20));
-
-        // Commentaires.
-        $context = new OrganizationContext($organization);
-        $context->setCell($cell);
-        $entries = $this->entryRepository->findLatestForOrganizationContext($context, 100);
-        $this->view->assign('entries', $entries);
 
         // Formulaire d'ajout des membres enfants.
         $addMembersForm = new UI_Form('addMembers');
@@ -176,11 +200,98 @@ class Orga_CellController extends Core_Controller
         /** @var Orga_Model_Granularity $narrowerGranularity */
         $narrowerGranularity = Orga_Model_Granularity::load($idNarrowerGranularity);
 
+        // ACL.
+        $displayAdministrators = $narrowerGranularity->getCellsWithACL();
+
+        // DW.
+        $displayDW = $narrowerGranularity->getCellsGenerateDWCubes();
+
+        // Inventory.
+        try {
+            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = null;
+        }
+        $displayInventory = (($granularityForInventoryStatus !== null)
+            && (($narrowerGranularity === $granularityForInventoryStatus)
+                || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
+        $narrowerGranularityHasSubInputGranlarities = false;
+        foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
+            if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
+                $narrowerGranularityHasSubInputGranlarities = true;
+                break;
+            }
+        }
+        $displayInventory = $displayInventory && $narrowerGranularityHasSubInputGranlarities;
+
+        // Input.
+        $displayInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
+
+        // Uniquement les sous-cellules pertinentes.
+        $relevantCriteria = new Criteria();
+        $relevantCriteria->where($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
+        $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
+
         $childCells = [];
-        foreach ($cell->loadChildCellsForGranularity($narrowerGranularity) as $childCell) {
-            $childCells[] = $this->cellVMFactory->createCellViewModel($childCell, $connectedUser);
+        foreach ($cell->getChildCellsForGranularity($narrowerGranularity)->matching($relevantCriteria) as $childCell) {
+            $childCells[] = $this->cellVMFactory->createCellViewModel(
+                $childCell,
+                $connectedUser,
+                $displayAdministrators,
+                $displayDW,
+                $displayInventory,
+                $displayInput
+            );
         }
         $this->sendJsonResponse($childCells);
+    }
+
+    /**
+     * @Secure("viewCell")
+     */
+    public function viewhistoryAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+        $context->setCell($cell);
+        $locale = Core_Locale::loadDefault();
+
+        $events = [];
+        foreach ($this->entryRepository->findLatestForOrganizationContext($context, 100) as $entry) {
+            $eventText = __('Orga', 'auditTrail', $entry->getEventName(),
+                [
+                    'INPUT' => $entry->getContext()->getCell()->getLabel(),
+                    'USER' => $entry->getUser()->getName()
+                ]
+            );
+            $events[] = ['date' => $locale->formatDateTime($entry->getDate()), 'event' => $eventText];
+        }
+
+        $this->sendJsonResponse($events);
+    }
+
+    /**
+     * @Secure("viewCell")
+     */
+    public function viewcommentsAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $locale = Core_Locale::loadDefault();
+
+        $comments = [];
+        foreach ($cell->getInputSetLatestComments(20) as $comment) {
+            $commentText = __('Social', 'comment', 'by') . '<b>' . $comment->getAuthor()->getName() . '</b>'
+                . __('Orga', 'input', 'aboutInput') . $comment->getCell()->getLabel() . __('UI', 'other', ':')
+                . '« ' . Core_Tools::truncateString($comment->getText(), 200) . ' ».';
+            $comments[] = ['date' => $locale->formatDateTime($comment->getCreationDate()), 'comment' => $commentText];
+        }
+        $this->sendJsonResponse($comments);
     }
 
     /**
@@ -467,11 +578,6 @@ class Orga_CellController extends Core_Controller
                     $narrowerGranularity
                 );
                 $datagridConfiguration->datagrid->addParam('idCell', $cell->getId());
-                if ($narrowerGranularity->isNavigable()) {
-                    $columnLink = new UI_Datagrid_Col_Link('link');
-                    $columnLink->label = __('UI', 'name', 'browsing');
-                    $datagridConfiguration->datagrid->addCol($columnLink);
-                }
                 $this->view->listDatagrids[$narrowerGranularity->getLabel()] = $datagridConfiguration;
             }
         }

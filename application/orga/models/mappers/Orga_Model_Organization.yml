@@ -38,7 +38,7 @@ Orga_Model_Organization:
       targetEntity: Orga_Model_Axis
       mappedBy: organization
       orderBy:
-        position: ASC
+        tag: ASC
       orphanRemoval: true
       cascade: [ persist, remove ]
     granularities:

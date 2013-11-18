@@ -18,7 +18,8 @@ $inputStatusFilters = [
 <style>
     .granularity > .cell.firstRowCell { margin-left: 0; }
     .progress { margin-bottom: 5px; }
-    .history .dl-horizontal, .comments .dl-horizontal { margin-top: 0; }
+    .history h3 small, .comments h3 small { margin-top: 15px; cursor: pointer; }
+    .history .dl-horizontal, .comments .dl-horizontal { max-height: 200px; margin-top: 0; overflow-y: scroll}
     .history .dl-horizontal .page-header, .comments .dl-horizontal .page-header { margin: 0 0 15px; }
     .history .dl-horizontal h4, .comments .dl-horizontal h4 { margin: 0; }
     .history .dl-horizontal dt, .comments .dl-horizontal dt { width: auto; margin-right: 15px }
@@ -154,31 +155,16 @@ $organization = $this->organization;
             </div>
         </div>
 
-        <?php foreach ($this->narrowerGranularities as $narrowerGranularity) :
+        <?php foreach ($this->narrowerGranularities as $narrowerGranularityArray) :
             /** @var Orga_Model_Granularity $narrowerGranularity */
-            try {
-                $granularityForInventoryStatus = $narrowerGranularity->getOrganization()->getGranularityForInventoryStatus();
-            } catch (Core_Exception_UndefinedAttribute $e) {
-                $granularityForInventoryStatus = null;
-            }
-            if (($narrowerGranularity === $granularityForInventoryStatus) || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))) {
-                $displayInventoryStatusFilter = true;
-            } else {
-                $displayInventoryStatusFilter = false;
-            }
+            $narrowerGranularity = $narrowerGranularityArray['granularity'];
         ?>
         <fieldset class="wrapper">
             <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
                 <i class="filterChevron icon-chevron-down"></i>
                 <?=$narrowerGranularity->getLabel()?>
                 <small>
-                    <?php
-                    $actions = [];
-                    if ($narrowerGranularity === $this->granularityForInventoryStatus || $narrowerGranularity->isNarrowerThan($this->granularityForInventoryStatus)) { $actions[] = 'Collecte' ;}
-                    if ($narrowerGranularity->getInputConfigGranularity() !== null) { $actions[] = 'Saisies' ;}
-                    if ($narrowerGranularity->getCellsGenerateDWCubes()) { $actions[] = 'Analyses' ;}
-                    echo implode('&nbsp;&&nbsp;', $actions);
-                    ?>
+                    <?=$narrowerGranularityArray['purpose']?>
                 </small>
             </legend>
 
@@ -193,14 +179,14 @@ $organization = $this->organization;
                             <?php endforeach; ?>
                         </select>
                     <?php endforeach; ?>
-                    <?php if ($narrowerGranularity->getInputConfigGranularity() !== null) : ?>
+                    <?php if ($narrowerGranularityArray['isInput']) : ?>
                         <select data-filter="inputstatus">
                             <?php foreach ($inputStatusFilters as $statusValue => $statusLabel) : ?>
                                 <option value="<?=$statusValue?>"><?=$statusLabel?></option>
                             <?php endforeach; ?>
                         </select>
                     <?php endif; ?>
-                    <?php if ($displayInventoryStatusFilter) : ?>
+                    <?php if ($narrowerGranularityArray['isInventory']) : ?>
                         <select data-filter="inventorystatus">
                             <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
                                 <? if ($statusValue === Orga_Model_Cell::STATUS_ACTIVE) : ?>
@@ -226,17 +212,23 @@ $organization = $this->organization;
 
     <div class="span3">
         <div class="well history">
-            <h3>Historique</h3>
+            <h3>
+                <?=__('UI', 'history', 'history')?>
+                <small class="pull-right"><i class="icon-refresh"></i></small>
+            </h3>
             <hr/>
             <div>
-                <?=$this->partial('events/recent.phtml', 'audittrail', ['idCell' => $currentCell->id, 'entries' => $this->entries]);?>
+                <?=__('Orga', 'view', 'notLoadedHistory')?>
             </div>
         </div>
         <div class="well comments">
-            <h3>Commentaires</h3>
+            <h3>
+                <?=__('Social', 'comment', 'comment')?>
+                <small class="pull-right"><i class="icon-refresh"></i></small>
+            </h3>
             <hr/>
             <div>
-                <?=$this->partial('/tab/celldetails/comments.phtml',['idCell' => $currentCell->id, 'comments' => $this->comments]); ?>
+                <?=__('Orga', 'view', 'notLoadedComments')?>
             </div>
         </div>
         <?php if ($organization->canBeEdited) : ?>
@@ -392,5 +384,48 @@ $organization = $this->organization;
             }
             numberElement++;
         });
+    });
+    $('.history .icon-refresh').click(function(e) {
+        $('.history > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'history', 'loadingHistory'))?>');
+        $.get(
+            'orga/cell/viewhistory/idCell/<?=$currentCell->id?>',
+            function(o) {
+                if (o.length > 0) {
+                    $('.history > div').html('<dl class="dl-horizontal"></dl>');
+                    $.each(o, function() {
+                        $('.history > div dl').append('<dt><span class="badge badge-info">' + this.date + '</span></dt>');
+                        $('.history > div dl').append('<dd>' + this.event + '</dd>');
+                    });
+                } else {
+                    $('.history > div').html('<p><?=__('UI', 'history', 'noHistory')?></p>');
+                }
+            }
+        ).error(function(o) {
+            $('.history > div').html('<?=addslashes(__('UI', 'history', 'errorWhileLoadingHistory'))?>');
+        });
+    });
+    $('.comments .icon-refresh').click(function(e) {
+        $('.comments > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'comment', 'loadingComments'))?>');
+        $.get(
+            'orga/cell/viewcomments/idCell/<?=$currentCell->id?>',
+            function(o) {
+                if (o.length > 0) {
+                    $('.comments > div').html('<dl class="dl-horizontal"></dl>');
+                    $.each(o, function() {
+                        $('.comments > div dl').append('<dt><span class="badge badge-info">' + this.date + '</span></dt>');
+                        $('.comments > div dl').append('<dd>' + this.event + '</dd>');
+                    });
+                } else {
+                    $('.comments > div').html('<p><?=__('UI', 'comment', 'noComment')?></p>');
+                }
+            }
+        ).error(function(o) {
+            $('.comments > div').html('<?=addslashes(__('UI', 'comment', 'errorWhileLoadingComments'))?>');
+        });
+    });
+
+    $(document).ready(function() {
+//        $('.history .icon-refresh').trigger('click');
+//        $('.comments .icon-refresh').trigger('click');
     });
 </script>

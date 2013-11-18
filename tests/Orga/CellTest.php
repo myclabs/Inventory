@@ -480,7 +480,7 @@ class Orga_Test_CellAttributes extends Core_Test_TestCase
         $this->assertSame('Label 2 B', $this->cell5_2b->getLabel());
     }
     
-    function testGetLabelExtended()
+    function testGetExtendedLabel()
     {
         $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel());
 
