@@ -1,9 +1,4 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Exec
- * @subpackage Execution
- */
 
 namespace Exec;
 
@@ -12,9 +7,9 @@ use TEC\Expression;
 use TEC\Component\Component;
 
 /**
- * classe Execution
- * @package    Exec
- * @subpackage Execution
+ * Exécute une expression.
+ *
+ * @author valentin.claras
  */
 abstract class Execution
 {
@@ -25,19 +20,14 @@ abstract class Execution
      */
     protected $expression;
 
-
-    /**
-     * Constructeur de la classe.
-     *
-     * @param Expression $expression
-     */
     public function __construct(Expression $expression)
     {
         $this->expression = $expression;
     }
 
     /**
-     * Renvoi l'attribut protégé expression
+     * Renvoie l'expression à partir de laquelle l'arbre est construit.
+     *
      * @return Expression
      */
     public function getExpression()
@@ -60,7 +50,7 @@ abstract class Execution
     /**
      * Parcourt l'arbre d'éxécution des opérations de l'arbres et parse les valeurs.
      *
-     * @param \Exec\Provider\ValueInterface $valueProvider
+     * @param ValueInterface $valueProvider
      *
      * @return mixed
      */
@@ -72,27 +62,20 @@ abstract class Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
      *
-     * @param Component $node
-     * @param \Exec\Provider\ValueInterface $valueProvider
+     * @param Component      $node
+     * @param ValueInterface $valueProvider
      *
      * @return array
      */
-    protected abstract function getErrorsFromComponent(
-        Component $node,
-        ValueInterface $valueProvider
-    );
+    abstract protected function getErrorsFromComponent(Component $node, ValueInterface $valueProvider);
 
     /**
      * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
      *
-     * @param Component $node
-     * @param \Exec\Provider\ValueInterface $valueProvider
+     * @param Component      $node
+     * @param ValueInterface $valueProvider
      *
      * @return mixed
      */
-    protected abstract function executeComponent(
-        Component $node,
-        ValueInterface $valueProvider
-    );
-
+    abstract protected function executeComponent(Component $node, ValueInterface $valueProvider);
 }
