@@ -274,31 +274,28 @@ class Datagrid extends UI_Generic
      *
      * @var string
      */
-    protected $_controller;
+    protected $controller;
 
     /**
      * Nom (optionnel) du module ou la datagrid récuperera les données.
      *
      * @var string
      */
-    protected $_module;
+    protected $module;
 
     /**
      * Tableau d'attributs optionnels qui seront envoyés au controleur.
      *
      * @var array
      */
-    protected $_parameters = [];
+    protected $parameters = [];
 
     /**
      * Tableau des colonnes de la datagrid.
      *
      * @var Column\GenericColumn[]
-     *
-     * @see ajouterColonne()
-     * @see Column\GenericColumn
      */
-    protected $_cols = [];
+    protected $columns = [];
 
     /**
      * Permet de savoir si l'ajout d'éléments est présent dans la datagrid.
@@ -336,7 +333,7 @@ class Datagrid extends UI_Generic
      *
      * @see setDefaultSorting
      */
-    protected $_defaultSorting = [];
+    protected $defaultSorting = [];
 
     /**
      * Permet de savoir si la datagrid sera paginé.
@@ -385,7 +382,7 @@ class Datagrid extends UI_Generic
 
     /**
      * Permet de savoir si le datagrid sera chargé à l'initialisation.
-     *  Sinon il faudra passer par la fonction Filtrer du datagrid.
+     * Sinon il faudra passer par la fonction Filtrer du datagrid.
      *
      * Par défaut oui.
      *
@@ -397,10 +394,8 @@ class Datagrid extends UI_Generic
      * Tableau de filtres personnalisés (indépendant des colonnes).
      *
      * @var array
-     *
-     * @see ajouterFiltrePersonnalise()
      */
-    protected $_customFilters = [];
+    protected $customFilters = [];
 
 
     /**
@@ -413,8 +408,8 @@ class Datagrid extends UI_Generic
     public function __construct($id, $controller, $module = null)
     {
         $this->id = $id;
-        $this->_controller = $controller;
-        $this->_module = $module;
+        $this->controller = $controller;
+        $this->module = $module;
 
         $this->datagridEmptyText = __('UI', 'loading', 'empty');
         $this->datagridErrorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
@@ -464,9 +459,9 @@ class Datagrid extends UI_Generic
         $this->filterResetButton = new UI_HTML_Button(__('UI', 'verb', 'reset'));
         $this->filterResetButton->icon = 'zoom-out';
         $this->filterIconResetFieldSuffix = 'remove';
-        $this->_defaultSorting['state'] = false;
-        $this->_defaultSorting['column'] = null;
-        $this->_defaultSorting['direction'] = Criteria::ASC;
+        $this->defaultSorting['state'] = false;
+        $this->defaultSorting['column'] = null;
+        $this->defaultSorting['direction'] = Criteria::ASC;
     }
 
     /**
@@ -479,7 +474,7 @@ class Datagrid extends UI_Generic
      */
     public function addParam($parameterName, $parameterValue)
     {
-        $this->_parameters[$parameterName] = $parameterValue;
+        $this->parameters[$parameterName] = $parameterValue;
     }
 
 
@@ -498,9 +493,9 @@ class Datagrid extends UI_Generic
         }
 
         if ($order !== null) {
-            $this->_cols[$order] = $column;
+            $this->columns[$order] = $column;
         } else {
-            $this->_cols[] = $column;
+            $this->columns[] = $column;
         }
     }
 
@@ -517,12 +512,12 @@ class Datagrid extends UI_Generic
      */
     public function setDefaultSorting($idColumn, $sortDirection = Criteria::ASC)
     {
-        foreach ($this->_cols as $column) {
+        foreach ($this->columns as $column) {
             // Vérification que le nom du tri est bien défini pour cette colonne
             if (($column->id === $idColumn) && ($column->criteriaOrderAttribute !== null)) {
-                $this->_defaultSorting['state'] = true;
-                $this->_defaultSorting['column'] = $idColumn;
-                $this->_defaultSorting['direction'] = $sortDirection;
+                $this->defaultSorting['state'] = true;
+                $this->defaultSorting['column'] = $idColumn;
+                $this->defaultSorting['direction'] = $sortDirection;
             }
         }
     }
@@ -534,7 +529,7 @@ class Datagrid extends UI_Generic
      */
     public function addFilter($col)
     {
-        $this->_customFilters[] = $col;
+        $this->customFilters[] = $col;
     }
 
     /**
@@ -546,11 +541,11 @@ class Datagrid extends UI_Generic
     {
         $url = '';
         // Ajout du nom du module.
-        if ($this->_module !== null) {
-            $url .= $this->_module . '/';
+        if ($this->module !== null) {
+            $url .= $this->module . '/';
         }
         // Ajout du contrôleur.
-        $url .= $this->_controller . '/';
+        $url .= $this->controller . '/';
 
         return $url;
     }
@@ -566,7 +561,7 @@ class Datagrid extends UI_Generic
 
         $url .= '/idDatagrid/' . $this->id;
         $url .= '/criteriaName/' . rawurlencode(str_replace('\\', '|', $this->criteriaName));
-        foreach ($this->_parameters as $option => $valeur) {
+        foreach ($this->parameters as $option => $valeur) {
             $url .= '/' . $option . '/' . addslashes($valeur);
         }
 
@@ -592,10 +587,10 @@ class Datagrid extends UI_Generic
      */
     protected function hasFilter()
     {
-        if (count($this->_customFilters) > 0) {
+        if (count($this->customFilters) > 0) {
             return true;
         } else {
-            foreach ($this->_cols as $column) {
+            foreach ($this->columns as $column) {
                 if ($column->criteriaFilterAttribute !== null) {
                     return true;
                 }
@@ -632,7 +627,7 @@ class Datagrid extends UI_Generic
 
         // Création d'un formulaire contenant les champs du filtre.
         $formFilter = new UI_Form($this->id.'_filterForm');
-        $filters = array_merge($this->_cols, $this->_customFilters);
+        $filters = array_merge($this->columns, $this->customFilters);
         /** @var Column\GenericColumn $column */
         foreach ($filters as $column) {
             if ($column->criteriaFilterAttribute !== null) {
@@ -678,7 +673,7 @@ class Datagrid extends UI_Generic
         $filterScript = '';
 
         // Récupération des scripts des éléments du formulaire.
-        $filters = array_merge($this->_cols, $this->_customFilters);
+        $filters = array_merge($this->columns, $this->customFilters);
         /** @var Column\GenericColumn $column */
         foreach ($filters as $column) {
             if ($column->criteriaFilterAttribute !== null) {
@@ -717,7 +712,7 @@ class Datagrid extends UI_Generic
             $this->addPanelForm->setRef($this->id.'_addForm');
         } else {
             $this->addPanelForm = new UI_Form($this->id.'_addForm');
-            foreach ($this->_cols as $column) {
+            foreach ($this->columns as $column) {
                 if ($column->addable == true) {
                     $columnAddElement = $column->getAddFormElement($this);
                     if ($columnAddElement !== null) {
@@ -879,7 +874,7 @@ JS;
         $datagridScript = "var datagrid{$this->id} = function() {";
 
         // Ajout des types personnalisés de colonnes.
-        foreach ($this->_cols as $column) {
+        foreach ($this->columns as $column) {
             $datagridScript .= $column->getFormattingFunction($this);
         }
         if ($this->deleteElements === true) {
@@ -907,7 +902,7 @@ JS;
         // Ajout de la définition des colonnes.
         $datagridScript .= ' this.Columns = [';
         $datagridScript .= '{key:"index", hidden:true}';
-        foreach ($this->_cols as $column) {
+        foreach ($this->columns as $column) {
             $datagridScript .= ', '.$column->getDefinition($this);
         }
         // Ajout de la colonne de suppression.
@@ -929,7 +924,7 @@ JS;
         // Définitition du format des données reçues.
         $datagridScript .= 'this.DataSource.responseSchema = {';
         $datagridScript .= 'resultsList: "data", fields: [{key: "index"}';
-        foreach ($this->_cols as $column) {
+        foreach ($this->columns as $column) {
             $datagridScript .= ', {key: "'.$column->id.'"}';
         }
         if ($this->deleteElements === true) {
@@ -979,7 +974,7 @@ JS;
         $datagridScript .= 'var filter = \'\';';
         $datagridScript .= 'filter += "{ ";';
         if ($this->hasFilter() === true) {
-            $filters = array_merge($this->_cols, $this->_customFilters);
+            $filters = array_merge($this->columns, $this->customFilters);
             /** @var Column\GenericColumn $column */
             foreach ($filters as $column) {
                 if ($column->criteriaFilterAttribute !== null) {
@@ -1115,17 +1110,17 @@ JS;
         }
         // Récupération de l'ordre de tri par défaut.
         if ($datagridSession['sortDirection'] !== null) {
-            $this->_defaultSorting['direction'] = $datagridSession['sortDirection'];
+            $this->defaultSorting['direction'] = $datagridSession['sortDirection'];
         }
         // Récupération de la colonne de tri sauvegardée.
-        if (($this->_defaultSorting['state'] === true) || ($datagridSession['sortColumn'] !== null)) {
-            foreach ($this->_cols as $column) {
+        if (($this->defaultSorting['state'] === true) || ($datagridSession['sortColumn'] !== null)) {
+            foreach ($this->columns as $column) {
                 // Vérification que le nom du tri est bien défini pour cette colonne.
                 if ($initialSortName !== null) {
                     if ($initialSortName === $column->getFullSortName($this)) {
-                        $this->_defaultSorting['column'] = $column->id;
+                        $this->defaultSorting['column'] = $column->id;
                     }
-                } elseif ($column->id === $this->_defaultSorting['column']) {
+                } elseif ($column->id === $this->defaultSorting['column']) {
                     if ($column->criteriaOrderAttribute !== null) {
                         $initialSortName = $column->getFullSortName($this);
                     } else {
@@ -1135,7 +1130,7 @@ JS;
                     }
                 }
             }
-            $datagridScript .= 'sortedBy : { key: "'.$this->_defaultSorting['column'].'"';
+            $datagridScript .= 'sortedBy : { key: "'.$this->defaultSorting['column'].'"';
             // Mise en forme de la direction du tri
             if ($datagridSession['sortDirection'] !== null) {
                 // Récupération de la direction du tri sauvegardée.
@@ -1149,7 +1144,7 @@ JS;
                 } else {
                     $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_DESC';
                 }
-            } elseif ($this->_defaultSorting['direction'] === Criteria::ASC) {
+            } elseif ($this->defaultSorting['direction'] === Criteria::ASC) {
                 $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_ASC';
                 $initialSortDirection = 'true';
             } else {
@@ -1250,7 +1245,7 @@ JS;
         $datagridScript .= 'return true;';
         $datagridScript .= '};';
         // Affichage en cas de tri sur une colonne.
-        foreach ($this->_cols as $column) {
+        foreach ($this->columns as $column) {
             if ($column->criteriaOrderAttribute !== null) {
                 $datagridScript .= 'this.Datagrid.doBeforeSortColumn = this.StartLoading;';
                 break;
@@ -1364,7 +1359,7 @@ JS;
         $datagridScript .= 'switch (column.key) {';
         // Edition des cellules modifiables.
         $modifiable = false;
-        foreach ($this->_cols as $column) {
+        foreach ($this->columns as $column) {
             if ($column->editable === true) {
                 $modifiable = true;
                 $datagridScript .= 'case "'.$column->id.'":';
@@ -1414,7 +1409,7 @@ JS;
             $datagridScript .= ' || (typeof(sData.editable) == "undefined")';
             $datagridScript .= ' || (sData.editable != false)';
             $datagridScript .= ') {';
-            foreach ($this->_cols as $column) {
+            foreach ($this->columns as $column) {
                 if ($column->editable === true) {
                     $datagridScript .= 'if (column.key == "'.$column->id.'") {';
                     $datagridScript .= $column->getEditor($this);
@@ -1516,7 +1511,7 @@ JS;
     {
         $complementScript = '';
 
-        foreach ($this->_cols as $column) {
+        foreach ($this->columns as $column) {
             if ($column instanceof Column\PopupColumn) {
                 $complementScript .= $column->getPopup($this)->getScript();
             }
@@ -1534,7 +1529,7 @@ JS;
     {
         $complementHTML = '';
 
-        foreach ($this->_cols as $column) {
+        foreach ($this->columns as $column) {
             if ($column instanceof Column\PopupColumn) {
                 $complementHTML .= $column->getPopup($this)->getHTML();
             }
