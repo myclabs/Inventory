@@ -1,4 +1,12 @@
 <?php
+
+namespace Tests\AF;
+
+use AF_Model_AF;
+use AF_Model_Component;
+use AF_Model_Component_Numeric;
+use AF_Model_Condition_Elementary_Numeric;
+use AF_Service_AFCopyService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
 
@@ -46,14 +54,14 @@ class AFCopyTest extends TestCase
 
         $afCopyService = new AF_Service_AFCopyService();
         /** @var AF_Model_AF $newAF */
-        $newAF = $afCopyService->copyAF($oldAF, 'new_ref');
+        $newAF = $afCopyService->copyAF($oldAF, 'new_ref', 'new label');
 
         $this->assertInstanceOf(get_class($oldAF), $newAF);
 
         $this->assertNull($newAF->getId());
         $this->assertNull($newAF->getPosition());
         $this->assertEquals('new_ref', $newAF->getRef());
-        $this->assertEquals($oldAF->getLabel(), $newAF->getLabel());
+        $this->assertEquals('new_label', $newAF->getLabel());
         $this->assertEquals($oldAF->getDocumentation(), $newAF->getDocumentation());
         $this->assertNull($newAF->getCategory());
 
@@ -62,8 +70,10 @@ class AFCopyTest extends TestCase
         $this->assertInstanceOf(get_class($oldAF->getRootGroup()), $newAF->getRootGroup());
         $this->assertNull($newAF->getRootGroup()->getId());
         $this->assertSame($newAF, $newAF->getRootGroup()->getAf());
-        $this->assertSameSize($oldAF->getRootGroup()->getSubComponentsRecursive(),
-            $newAF->getRootGroup()->getSubComponentsRecursive());
+        $this->assertSameSize(
+            $oldAF->getRootGroup()->getSubComponentsRecursive(),
+            $newAF->getRootGroup()->getSubComponentsRecursive()
+        );
         foreach ($newAF->getRootGroup()->getSubComponentsRecursive() as $newSubComponent) {
             $this->assertSame($newAF, $newSubComponent->getAf());
             $this->assertNull($newSubComponent->getId());
