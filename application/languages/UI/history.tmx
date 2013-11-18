@@ -8,7 +8,7 @@
                 <seg>Historique</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>History</seg>
+                <seg>Change log</seg>
             </tuv>
         </tu>
         <tu tuid="noHistory">
@@ -16,7 +16,7 @@
                 <seg>Aucun historique à afficher.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>No history to display.</seg>
+                <seg>No change log to display.</seg>
             </tuv>
         </tu>
 
@@ -27,7 +27,7 @@
                 <seg>Historique des valeurs</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Value history</seg>
+                <seg>Values change log</seg>
             </tuv>
         </tu>
 

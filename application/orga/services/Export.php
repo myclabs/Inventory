@@ -32,7 +32,7 @@ class Orga_Service_Export
         $modelBuilder->bind('organization', $cell->getGranularity()->getOrganization());
 
         // Feuilles de l'Organization.
-        $modelBuilder->bind('organizationSheetLabel', __('Orga', 'organization', 'organization'));
+        $modelBuilder->bind('organizationSheetLabel', __('Orga', 'configuration', 'generalInfoTab'));
 
         $modelBuilder->bind('organizationColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('organizationColumnGranularityForInventoryStatus', __('Orga', 'configuration', 'granularityForInventoryStatus'));
@@ -60,8 +60,8 @@ class Orga_Service_Export
 
         $modelBuilder->bind('granularityColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('granularityColumnNavigable', __('Orga', 'granularity', 'navigableHeader'));
-        $modelBuilder->bind('granularityColumnOrgaTab', __('Orga', 'organization', 'organization'));
-        $modelBuilder->bind('granularityColumnACL', __('user', 'role', 'roles'));
+        $modelBuilder->bind('granularityColumnOrgaTab', __('Orga', 'cell', 'configurationTab'));
+        $modelBuilder->bind('granularityColumnACL', __('User', 'role', 'roles'));
         $modelBuilder->bind('granularityColumnAFTab', __('UI', 'name', 'forms'));
         $modelBuilder->bind('granularityColumnDW', __('DW', 'name', 'analyses'));
         $modelBuilder->bind('granularityColumnGenericActions', __('Social', 'actionTemplate', 'actionTemplates'));
