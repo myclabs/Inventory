@@ -6,6 +6,7 @@
  * @package Algo
  */
 
+use Core\Test\TestCase;
 use Keyword\Domain\Keyword;
 use TEC\Expression;
 
@@ -44,7 +45,7 @@ class TextKey_ExpressionTest
  * TextKey_ExpressionSetUpTest
  * @package Algo
  */
-class TextKey_ExpressionSetUpTest extends Core_Test_TestCase
+class TextKey_ExpressionSetUpTest extends TestCase
 {
 
 	/**

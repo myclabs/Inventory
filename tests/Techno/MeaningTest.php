@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\Keyword;
@@ -56,7 +57,7 @@ class Techno_Test_MeaningTest
     }
 }
 
-class Techno_Test_MeaningSetUp extends Core_Test_TestCase
+class Techno_Test_MeaningSetUp extends TestCase
 {
     /**
      * @var KeywordService

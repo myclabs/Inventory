@@ -3,12 +3,13 @@
  * @author  matthieu.napoli
  * @package AF
  */
+use Core\Test\TestCase;
 use Unit\UnitAPI;
 
 /**
  * @package AF
  */
-class InputServiceTest extends Core_Test_TestCase
+class InputServiceTest extends TestCase
 {
     /**
      * @var AF_Service_InputService

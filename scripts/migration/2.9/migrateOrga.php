@@ -1,8 +1,4 @@
 <?php
-// Entity Manager
-$entityManagers = Zend_Registry::get('EntityManagers');
-/** @var $entityManager \Doctrine\ORM\EntityManager */
-$entityManager = $entityManagers['default'];
 
 echo "\n".'Ajout des Tag aux éléments de la structure organisationnelle…'."\n";
 /** @var Orga_Model_Organization $organization */
@@ -44,7 +40,8 @@ foreach (Orga_Model_Organization::loadList() as $organization) {
 echo "\n".'…ajout terminé !'."\n";
 
 echo "\n".'-> Flush starting…'."\n";
-$entityManager->flush();
+$em->flush();
+$em->clear();
 echo "\n".'-> Flush ended !'."\n";
 
 echo "\n".'Vérification de la structure…'."\n";
@@ -125,6 +122,8 @@ if (!empty($wrongTagMembers)) {
     }
 }
 echo "\n".'Migration terminée !'."\n";
+
+$em->clear();
 
 function buildAxisNarrowerTag (Orga_Model_Axis $axis) {
     $narrowerTag = Orga_Model_Organization::PATH_SEPARATOR;

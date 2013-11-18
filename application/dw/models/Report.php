@@ -8,6 +8,10 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use DW\Model\ACL\ReportAuthorization;
+use DW\Model\ACL\Role\ReportOwnerRole;
+use User\Domain\ACL\Resource\Resource;
+use User\Domain\ACL\Resource\ResourceTrait;
 
 /**
  * Permet de gérer un report
@@ -15,10 +19,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @package DW
  * @subpackage Model
  */
-class DW_Model_Report extends Core_Model_Entity
+class DW_Model_Report extends Core_Model_Entity implements Resource
 {
     use Core_Event_ObservableTrait;
     use Core_Model_Entity_Translatable;
+    use ResourceTrait;
 
     // Constantes de tris et de filtres.
     const QUERY_CUBE = 'cube';
@@ -47,29 +52,29 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @var int
      */
-    protected $id = null;
+    protected $id;
 
     /**
      * Label de l'Indicator.
      *
      * @var string
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Cube contenant l'Indicator.
      *
      * @var DW_Model_Cube
      */
-    protected $cube = null;
+    protected $cube;
 
     /**
      * Type de UI_Chart utilisé dans ce Report.
      *
      * @var string
      */
-    protected $chartType = null;
-    protected $chartTypeArray = array(
+    protected $chartType;
+    protected $chartTypeArray = [
         self::CHART_PIE,
         self::CHART_HORIZONTAL,
         self::CHART_VERTICAL,
@@ -79,7 +84,7 @@ class DW_Model_Report extends Core_Model_Entity
         self::CHART_VERTICAL_STACKED,
         self::CHART_HORIZONTAL_STACKEDGROUPED,
         self::CHART_VERTICAL_STACKEDGROUPED,
-    );
+    ];
 
     /**
      * Ordre des résultats.
@@ -93,49 +98,49 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @var bool
      */
-    protected  $withUncertainty = false;
+    protected $withUncertainty = false;
 
     /**
      * Indicator numérateur.
      *
      * @var DW_Model_Indicator
      */
-    protected $numerator = null;
+    protected $numerator;
 
     /**
      * Axis 1 utilisés au numérateur.
      *
      * @var DW_Model_Axis
      */
-    protected $numeratorAxis1 = null;
+    protected $numeratorAxis1;
 
     /**
      * Axis 2 utilisés au numérateur.
      *
      * @var DW_Model_Axis
      */
-    protected $numeratorAxis2 = null;
+    protected $numeratorAxis2;
 
     /**
      * Indicator dénominateur.
      *
      * @var DW_Model_Indicator
      */
-    protected $denominator = null;
+    protected $denominator;
 
     /**
      * Axis 1 utilisés au dénominateur.
      *
      * @var DW_Model_Axis
      */
-    protected $denominatorAxis1 = null;
+    protected $denominatorAxis1;
 
     /**
      * Axis 2 utilisés au dénominateur.
      *
      * @var DW_Model_Axis
      */
-    protected $denominatorAxis2 = null;
+    protected $denominatorAxis2;
 
     /**
      * Ensemble des Filter utilisés sur le Report.
@@ -151,13 +156,21 @@ class DW_Model_Report extends Core_Model_Entity
      */
     protected $lastModificationTimestamp = 1;
 
+    /**
+     * @var ReportAuthorization[]|Collection
+     */
+    protected $acl;
 
     /**
-     * Constructeur de l'objet
+     * @var ReportOwnerRole|null
      */
+    protected $owner;
+
+
     public function __construct(DW_Model_Cube $cube)
     {
         $this->filters = new ArrayCollection();
+        $this->acl = new ArrayCollection();
 
         $this->cube = $cube;
         $this->cube->addReport($this);
@@ -239,7 +252,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Définit le type de UI_Chart utilisé.
      *
-     * @param const $chartType
+     * @param string $chartType
      *
      * @throws Core_Exception_InvalidArgument
      */
@@ -254,7 +267,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoie le type de UI_Chart utilisé.
      *
-     * @return const
+     * @return string
      */
     public function getChartType()
     {
@@ -264,7 +277,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Définit si le Report prend en compte les incertitudes.
      *
-     * @param const $sortType
+     * @param string $sortType
      *
      * @throws Core_Exception_InvalidArgument
      */
@@ -272,8 +285,8 @@ class DW_Model_Report extends Core_Model_Entity
     {
         if (($sortType !== self::SORT_VALUE_INCREASING)
             && ($sortType !== self::SORT_VALUE_DECREASING)
-            && ($sortType !== self::SORT_CONVENTIONAL))
-        {
+            && ($sortType !== self::SORT_CONVENTIONAL)
+        ) {
             throw new Core_Exception_InvalidArgument('The sort type must be a class constant "SORT_" .');
         }
         $this->sortType = $sortType;
@@ -282,7 +295,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoie le type de tri utilisé pour ordonner les résultats.
      *
-     * @return const
+     * @return string
      */
     public function getSortType()
     {
@@ -314,7 +327,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param DW_Model_Indicator $indicator
      */
-    public function setNumerator(DW_Model_Indicator $indicator=null)
+    public function setNumerator(DW_Model_Indicator $indicator = null)
     {
         $this->numerator = $indicator;
     }
@@ -334,7 +347,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param DW_Model_Axis $axis
      */
-    public function setNumeratorAxis1(DW_Model_Axis $axis=null)
+    public function setNumeratorAxis1(DW_Model_Axis $axis = null)
     {
         $this->numeratorAxis1 = $axis;
     }
@@ -356,7 +369,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setNumeratorAxis2(DW_Model_Axis $axis=null)
+    public function setNumeratorAxis2(DW_Model_Axis $axis = null)
     {
         if (($axis !== null) && ($this->numeratorAxis1 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 1 for numerator need to be set first');
@@ -379,7 +392,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param DW_Model_Indicator $indicator
      */
-    public function setDenominator(DW_Model_Indicator $indicator=null)
+    public function setDenominator(DW_Model_Indicator $indicator = null)
     {
         $this->denominator = $indicator;
     }
@@ -401,7 +414,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setDenominatorAxis1(DW_Model_Axis $axis=null)
+    public function setDenominatorAxis1(DW_Model_Axis $axis = null)
     {
         if (($axis !== null) && ($this->numeratorAxis1 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 1 for numerator need to be set first');
@@ -426,7 +439,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setDenominatorAxis2(DW_Model_Axis $axis=null)
+    public function setDenominatorAxis2(DW_Model_Axis $axis = null)
     {
         if (($axis !== null) && ($this->numeratorAxis2 === null)) {
             throw new Core_Exception_InvalidArgument('Axis 2 for numerator need to be set first');
@@ -520,7 +533,7 @@ class DW_Model_Report extends Core_Model_Entity
 
         if (empty($filterArray)) {
             return null;
-        } else if (count($filterArray) > 1) {
+        } elseif (count($filterArray) > 1) {
             throw new Core_Exception_TooMany('Too many Filters found for Axis "'.$axis->getRef().'"');
         }
 
@@ -560,7 +573,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @return UI_Chart_Bar|UI_Chart_Pie
      */
-    public function getChart($idChart='reportChart')
+    public function getChart($idChart = 'reportChart')
     {
         if ($this->getNumeratorAxis1() === null) {
             throw new Core_Exception_InvalidArgument('At least one numerator axis is needed to drow a chart');
@@ -653,13 +666,13 @@ class DW_Model_Report extends Core_Model_Entity
                             $seriesValues[$serieValueId][$member1Id] = array('value' => 0, 'uncertainty' => 0);
                         }
                     }
-                    uksort($seriesValues[$serieValueId], function($a, $b) {
+                    uksort($seriesValues[$serieValueId], function ($a, $b) {
                         $memberA = DW_Model_Member::load($a);
                         $memberB = DW_Model_Member::load($b);
                         return $memberA->getPosition() - $memberB->getPosition();
                     });
                 }
-                uksort($seriesAxisLabel, function($a, $b) {
+                uksort($seriesAxisLabel, function ($a, $b) {
                     $memberA = DW_Model_Member::load($a);
                     $memberB = DW_Model_Member::load($b);
                     return $memberA->getPosition() - $memberB->getPosition();
@@ -788,7 +801,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @return DW_Model_Report
      */
-    public static function getFromString($string, DW_Model_Cube $cube=null)
+    public static function getFromString($string, DW_Model_Cube $cube = null)
     {
         $stdReport = json_decode($string);
 
@@ -917,4 +930,19 @@ class DW_Model_Report extends Core_Model_Entity
         return DW_Model_Report::getFromString($reportAsString, $cube);
     }
 
+    /**
+     * @return ReportOwnerRole|null
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param ReportOwnerRole|null $owner
+     */
+    public function setOwner(ReportOwnerRole $owner = null)
+    {
+        $this->owner = $owner;
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Core\Autoloader;
+use Core\Controller\FlushPlugin;
 use Core\Log\ChromePHPFormatter;
 use Core\Log\ErrorHandler;
 use Core\Log\ExtendedLineFormatter;
@@ -455,7 +456,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initPluginCore()
     {
         $front = Zend_Controller_Front::getInstance();
-        $front->registerPlugin(new Core_Plugin_Flush());
+        $front->registerPlugin(new FlushPlugin());
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Techno\Domain\Category;
 
@@ -40,7 +41,7 @@ class Techno_Test_CategoryTest
     }
 }
 
-class Techno_Test_CategorySetUp extends Core_Test_TestCase
+class Techno_Test_CategorySetUp extends TestCase
 {
     public static function setUpBeforeClass()
     {

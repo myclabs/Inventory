@@ -1,4 +1,6 @@
 <?php
+use Core\Test\TestCase;
+
 /**
  * Class Orga_Test_OrganizationTest
  * @author valentin.claras
@@ -26,7 +28,7 @@ class Orga_Test_OrganizationTest
 
 }
 
-class Orga_Test_OrganizationAxes extends Core_Test_TestCase
+class Orga_Test_OrganizationAxes extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -268,7 +270,7 @@ class Orga_Test_OrganizationAxes extends Core_Test_TestCase
 
 }
 
-class Orga_Test_OrganizationGranularities extends Core_Test_TestCase
+class Orga_Test_OrganizationGranularities extends TestCase
 {
     /**
      * @var Orga_Model_Organization

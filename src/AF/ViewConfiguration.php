@@ -183,7 +183,6 @@ class AF_ViewConfiguration
         $this->tabs[] = self::TAB_INPUT;
         $this->tabs[] = self::TAB_RESULT;
         $this->tabs[] = self::TAB_CALCULATION_DETAILS;
-//        $this->tabs[] = self::TAB_DOCUMENTATION;
     }
 
     /**

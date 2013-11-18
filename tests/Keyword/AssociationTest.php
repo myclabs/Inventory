@@ -1,4 +1,5 @@
 <?php
+use Core\Test\TestCase;
 use Keyword\Architecture\Repository\DoctrineAssociationRepository;
 use Keyword\Domain\AssociationCriteria;
 use Keyword\Domain\Keyword;
@@ -10,7 +11,7 @@ use Keyword\Domain\PredicateRepository;
  * @todo Améliorer ça
  * @author matthieu.napoli
  */
-class Keyword_Test_AssociationTest extends Core_Test_TestCase
+class Keyword_Test_AssociationTest extends TestCase
 {
     public function setUp()
     {

@@ -1,14 +1,21 @@
 <?php
 
+namespace Core\Test;
+
+use Doctrine\ORM\EntityManager;
+use PHPUnit_Framework_TestCase;
+use Zend_Registry;
+
 /**
- * Classe de test de base
+ * Classe de test de base.
+ *
  * @author matthieu.napoli
  */
-abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
+abstract class TestCase extends PHPUnit_Framework_TestCase
 {
     /**
      * @Inject
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     protected $entityManager;
 
@@ -32,5 +39,19 @@ abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
         /** @var $container \DI\Container */
         $container = Zend_Registry::get('container');
         return $container->get($name);
+    }
+
+    /**
+     * À utiliser uniquement dans des méthodes statiques.
+     *
+     * Évite de passer par Zend_Registry.
+     *
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected static function getEntityManager()
+    {
+        /** @var $container \DI\Container */
+        $container = Zend_Registry::get('container');
+        return $container->get(EntityManager::class);
     }
 }

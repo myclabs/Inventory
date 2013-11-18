@@ -6,6 +6,8 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Orga\Model\ACL\Action\CellAction;
+use User\Domain\ACL\ACLService;
 
 /**
  * Controller du datagrid des saisies des formulaires des cellules.
@@ -15,7 +17,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 {
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -126,7 +128,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
                 $isUserAllowedToInputCell = $this->aclService->isAllowed(
                     $this->_helper->auth(),
-                    Orga_Action_Cell::INPUT(),
+                    CellAction::INPUT(),
                     $cell
                 );
                 try {

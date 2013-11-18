@@ -1,4 +1,6 @@
 <?php
+use Core\Test\TestCase;
+
 /**
  * Class Orga_Test_MemberTest
  * @author valentin.claras
@@ -27,7 +29,7 @@ class Orga_Test_MemberTest
 
 }
 
-class Orga_Test_MemberAttributes extends Core_Test_TestCase
+class Orga_Test_MemberAttributes extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -264,7 +266,7 @@ class Orga_Test_MemberAttributes extends Core_Test_TestCase
 
 }
 
-class Orga_Test_MemberTag extends Core_Test_TestCase
+class Orga_Test_MemberTag extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -368,7 +370,7 @@ class Orga_Test_MemberTag extends Core_Test_TestCase
 
 }
 
-class Orga_Test_MemberHierarchy extends Core_Test_TestCase
+class Orga_Test_MemberHierarchy extends TestCase
 {
     /**
      * @var Orga_Model_Organization

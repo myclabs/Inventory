@@ -1,4 +1,6 @@
 <?php
+use Core\Test\TestCase;
+
 /**
  * Class Orga_Test_CellTest
  * @author valentin.claras
@@ -33,7 +35,7 @@ class Orga_Test_CellTest
  * @package Organization
  * @subpackage Test
  */
-class Orga_Test_CellAttributes extends Core_Test_TestCase
+class Orga_Test_CellAttributes extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -1006,7 +1008,7 @@ class Orga_Test_CellAttributes extends Core_Test_TestCase
  * @package Organization
  * @subpackage Test
  */
-class Orga_Test_CellHierarchy extends Core_Test_TestCase
+class Orga_Test_CellHierarchy extends TestCase
 {
     /**
      * @var Orga_Model_Organization

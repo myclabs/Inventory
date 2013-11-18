@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Keyword\Domain\KeywordRepository;
 use Keyword\Application\Service\KeywordService;
@@ -62,7 +63,7 @@ class Techno_Test_TagTest
     }
 }
 
-class Techno_Test_TagSetUp extends Core_Test_TestCase
+class Techno_Test_TagSetUp extends TestCase
 {
     /**
      * @var KeywordService

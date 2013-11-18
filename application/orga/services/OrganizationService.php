@@ -1,19 +1,12 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Orga
- * @subpackage Service
- */
 
 use Doctrine\ORM\EntityManager;
+use User\Domain\ACL\Role\AdminRole;
+use User\Domain\ACL\Role\Role;
+use User\Domain\User;
 
-/**
- * @package Orga
- * @subpackage Service
- */
 class Orga_Service_OrganizationService
 {
-
     /**
      * @var EntityManager
      */
@@ -37,12 +30,12 @@ class Orga_Service_OrganizationService
     /**
      * Crée un projet et assigne un utilisateur comme administrateur
      *
-     * @param User_Model_User $administrator
+     * @param User $administrator
      * @param string $label
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganization(User_Model_User $administrator, $label)
+    public function createOrganization(User $administrator, $label)
     {
         $this->entityManager->beginTransaction();
 
@@ -64,8 +57,16 @@ class Orga_Service_OrganizationService
             $organization->save();
 
             // Ajout de l'utilisateur courant en tant qu'administrateur.
-            $this->aclManager->addOrganizationAdministrator($organization, $administrator, false);
+            $this->aclManager->addOrganizationAdministrator($organization, $administrator->getEmail(), false);
             $this->entityManager->flush();
+
+            // Ajout des superadmins en tant qu'administrateur de l'organisation
+            foreach (AdminRole::loadList() as $adminRole) {
+                /** @var AdminRole $adminRole */
+                $email = $adminRole->getUser()->getEmail();
+                $this->aclManager->addOrganizationAdministrator($organization, $email, false);
+                $this->entityManager->flush();
+            }
 
             $this->entityManager->commit();
 
@@ -89,17 +90,6 @@ class Orga_Service_OrganizationService
         $this->entityManager->beginTransaction();
 
         try {
-            // Suppression des autorisations de tous les utilisateurs.
-            $this->clearAttachedUsers(User_Model_Resource_Entity::loadByEntity($organization));
-            foreach ($organization->getGranularities() as $granularity) {
-                foreach ($granularity->getCells() as $cell) {
-                    $this->clearAttachedUsers(User_Model_Resource_Entity::loadByEntity($cell));
-                }
-            }
-
-            $this->entityManager->flush();
-            $this->entityManager->clear();
-
             $organization = Orga_Model_Organization::load($organization->getId());
             $organization->setGranularityForInventoryStatus();
 
@@ -129,19 +119,4 @@ class Orga_Service_OrganizationService
             throw $e;
         }
     }
-
-    /**
-     * @param User_Model_Resource_Entity $resource
-     */
-    protected function clearAttachedUsers(User_Model_Resource_Entity $resource)
-    {
-        foreach ($resource->getLinkedSecurityIdentities() as $securityIdentity) {
-            if ($securityIdentity instanceof User_Model_Role) {
-                foreach ($securityIdentity->getUsers() as $attachedUser) {
-                    $attachedUser->removeRole($securityIdentity);
-                }
-            }
-        }
-    }
-
 }

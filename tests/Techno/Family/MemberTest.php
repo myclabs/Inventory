@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\KeywordRepository;
@@ -63,7 +64,7 @@ class Techno_Test_Family_MemberTest
     }
 }
 
-class Techno_Test_Family_MemberSetUp extends Core_Test_TestCase
+class Techno_Test_Family_MemberSetUp extends TestCase
 {
     /**
      * @var KeywordService
@@ -168,7 +169,7 @@ class Techno_Test_Family_MemberSetUp extends Core_Test_TestCase
     }
 }
 
-class Techno_Test_Family_MemberMetierTest extends Core_Test_TestCase
+class Techno_Test_Family_MemberMetierTest extends TestCase
 {
     /**
      * @var KeywordService

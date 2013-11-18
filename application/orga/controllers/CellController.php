@@ -9,8 +9,10 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Model\ACL\Action\CellAction;
+use User\Domain\ACL\Action;
+use User\Domain\ACL\ACLService;
 
 /**
  * Classe controleur de cell.
@@ -23,7 +25,7 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -84,7 +86,7 @@ class Orga_CellController extends Core_Controller
         foreach ($cell->getParentCells() as $parentCell) {
             $isUserAllowedToViewParentCell = $this->aclService->isAllowed(
                 $connectedUser,
-                User_Model_Action_Default::VIEW(),
+                Action::VIEW(),
                 $parentCell
             );
             if (!$isUserAllowedToViewParentCell) {
@@ -96,12 +98,12 @@ class Orga_CellController extends Core_Controller
         // TAB ORGA.
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            Action::EDIT(),
             $organization
         );
         $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            Action::EDIT(),
             $cell
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && $granularity->getCellsWithOrgaTab()) {
@@ -120,7 +122,7 @@ class Orga_CellController extends Core_Controller
         // TAB ACL
         $isUserAllowedToAllowAuthorizations = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::ALLOW(),
+            Action::ALLOW(),
             $cell
         );
         if (($isUserAllowedToAllowAuthorizations === true) && ($granularity->getCellsWithACL() === false)) {
@@ -242,8 +244,8 @@ class Orga_CellController extends Core_Controller
         // TAB DOCUMENTS
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $connectedUser,
-            Orga_Action_Cell::INPUT(),
-            User_Model_Resource_Entity::loadByEntity($cell)
+            CellAction::INPUT(),
+            $cell
         );
         if (($isUserAllowedToInputCell)
             && (($granularity->getCellsWithSocialContextActions() === true)
@@ -397,7 +399,7 @@ class Orga_CellController extends Core_Controller
 
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $cell
         );
 
@@ -414,7 +416,7 @@ class Orga_CellController extends Core_Controller
                 ['idCell' => $this->getParam('fromIdCell')]));
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
-        $aFViewConfiguration->addBaseTabs();
+        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_INPUT);
         try {
             $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
         } catch (Core_Exception_UndefinedAttribute $e) {
@@ -432,6 +434,9 @@ class Orga_CellController extends Core_Controller
         $tabDocs->dataSource = 'orga/tab_input/docs/idCell/'.$idCell;
         $tabDocs->cacheData = true;
         $aFViewConfiguration->addTab($tabDocs);
+
+        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_RESULT);
+        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_CALCULATION_DETAILS);
 
         $this->forward('display', 'af', 'af', array(
                 'id' => $aF->getId(),

@@ -1,10 +1,11 @@
 <?php
+use Core\Test\TestCase;
 use Unit\UnitAPI;
 
 /**
  * Test de la copie d'un AF
  */
-class AFCopyTest extends Core_Test_TestCase
+class AFCopyTest extends TestCase
 {
     public function setUp()
     {

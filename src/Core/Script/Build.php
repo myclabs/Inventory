@@ -74,8 +74,7 @@ class Core_Script_Build
         $this->_parser->addOption('environment', array(
             'short_name'  => '-e',
             'long_name'   => '--environment',
-            'description' => "Environments to use for Create action. Example: '-e developpement'. "
-                            ."Default is '-e testsunitaires,developpement'",
+            'description' => "Environments to use for Create action. Example: '-e developpement'. ",
             'default'     => APPLICATION_ENV,
         ));
     }

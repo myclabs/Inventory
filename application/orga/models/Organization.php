@@ -6,17 +6,22 @@
  * @package    Orga
  * @subpackage Model
  */
+
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Selectable;
+use Orga\Model\ACL\OrganizationResourceTrait;
+use User\Domain\ACL\Resource\Resource;
 
 /**
- * Organization organisationnel.
+ * Organization.
  * @package    Orga
  * @subpackage Model
  */
-class Orga_Model_Organization extends Core_Model_Entity
+class Orga_Model_Organization extends Core_Model_Entity implements Resource
 {
     use Core_Model_Entity_Translatable;
+    use OrganizationResourceTrait;
 
     // Constantes de path des Axis, Member, Granularity et Cell.
     const PATH_SEPARATOR = '/';
@@ -65,6 +70,8 @@ class Orga_Model_Organization extends Core_Model_Entity
     {
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
+
+        $this->constructACL();
     }
 
     /**
@@ -340,7 +347,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     /**
      * Renvoie un tableau des Granularity du Organization.
      *
-     * @return Collection|Orga_Model_Granularity[]
+     * @return Collection|Selectable|Orga_Model_Granularity[]
      */
     public function getGranularities()
     {
@@ -395,5 +402,4 @@ class Orga_Model_Organization extends Core_Model_Entity
         $criteria->orderBy(['tag' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
     }
-
 }

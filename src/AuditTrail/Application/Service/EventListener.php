@@ -11,7 +11,7 @@ use Core_Exception_NotFound;
 use Orga_Model_Cell;
 use Orga_Service_InputCreatedEvent;
 use Orga_Service_InputEditedEvent;
-use User_Model_User;
+use User\Domain\User;
 
 /**
  * Event listener

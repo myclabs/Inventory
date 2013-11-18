@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Keyword\Application\Service\KeywordService;
 use Keyword\Domain\KeywordRepository;
 use Keyword\Domain\Keyword;
@@ -11,7 +12,7 @@ use Techno\Domain\Meaning;
 use Techno\Domain\Tag;
 use Techno\Domain\Component;
 
-class Techno_Test_FamilyTest extends Core_Test_TestCase
+class Techno_Test_FamilyTest extends TestCase
 {
     /**
      * @var KeywordService

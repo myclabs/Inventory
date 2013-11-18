@@ -1,4 +1,6 @@
 <?php
+use Core\Test\TestCase;
+
 /**
  * @author     matthieu.napoli
  * @package    Core
@@ -11,7 +13,7 @@
  * @package Core
  * @subpackage Event
  */
-class Core_Test_EntityTranslatedTest extends Core_Test_TestCase
+class Core_Test_EntityTranslatedTest extends TestCase
 {
 
     /**
