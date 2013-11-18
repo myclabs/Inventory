@@ -1,7 +1,7 @@
 <?php
 
 use Orga\Model\ACL\Role\CellAdminRole;
-use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\CellObserverRole;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\ACL\Resource\NamedResource;
@@ -84,12 +84,12 @@ foreach ($cellAdminRoles as list($idUser, $idCell)) {
 }
 echo PHP_EOL;
 
-// Cell contributor
-foreach ($cellContributorRoles as list($idUser, $idCell)) {
+// Cell managers
+foreach ($cellManagersRoles as list($idUser, $idCell)) {
     $user = User::load($idUser);
     $cell = Orga_Model_Cell::load($idCell);
-    echo "Adding CellContributorRole to {$user->getEmail()} for cell $idCell" . PHP_EOL;
-    $aclService->addRole($user, new CellContributorRole($user, $cell));
+    echo "Adding CellManagerRole to {$user->getEmail()} for cell $idCell" . PHP_EOL;
+    $aclService->addRole($user, new CellManagerRole($user, $cell));
 
     $em->flush();
     $em->clear();

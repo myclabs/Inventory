@@ -42,7 +42,7 @@ FROM User_UserRoles ur
   INNER JOIN User_Role r ON r.id = ur.idRole
 WHERE name = 'cellContributor';
 SQL;
-$cellContributorRoles = execQuery($query);
+$cellManagersRoles = execQuery($query);
 
 // Cell observer
 $query = <<<SQL
