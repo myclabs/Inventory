@@ -10,3 +10,4 @@ User\Domain\ACL\Authorization\NamedResourceAuthorization:
       inversedBy: acl
       joinColumn:
         nullable: false
+        onDelete: CASCADE

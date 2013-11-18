@@ -28,15 +28,13 @@ $entityManager->flush();
 You give access rights to a user by adding it a role:
 
 ```php
-$user->addRole(new CellAdministrator($user, $cell));
+$userService->addRole($user, new CellAdministrator($user, $cell));
 ```
 
 Test access rights:
 
 ```php
 $userService->isAllowed($user, Action::EDIT(), $resource);
-// or
-$resource->isAllowed($user, Action::EDIT());
 ```
 
 ### Extending
@@ -92,6 +90,9 @@ Article\Domain\ACL\ArticleAuthorization:
     resource:
       targetEntity: Article\Domain\Article
       inversedBy: acl
+      joinColumn:
+        nullable: false
+        onDelete: CASCADE
 ```
 
 #### Creating a new role
