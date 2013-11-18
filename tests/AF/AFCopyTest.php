@@ -61,7 +61,7 @@ class AFCopyTest extends TestCase
         $this->assertNull($newAF->getId());
         $this->assertNull($newAF->getPosition());
         $this->assertEquals('new_ref', $newAF->getRef());
-        $this->assertEquals('new_label', $newAF->getLabel());
+        $this->assertEquals('new label', $newAF->getLabel());
         $this->assertEquals($oldAF->getDocumentation(), $newAF->getDocumentation());
         $this->assertNull($newAF->getCategory());
 
