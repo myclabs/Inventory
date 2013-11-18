@@ -1,26 +1,26 @@
 <?php
-/**
- * @author valentin.claras
- * @author matthieu.napoli
- * @package Core
- * @subpackage Plugin
- */
+
+namespace Core\Controller;
+
+use Zend_Controller_Plugin_Abstract;
+use Exception;
+use Zend_Registry;
+use Zend_Controller_Request_Abstract;
+use Doctrine;
 
 /**
  * Plugin pour enregistrer en base de donnée les changements effetués sur les objets.
  *
- * @package Core
- * @subpackage Plugin
+ * @author valentin.claras
+ * @author matthieu.napoli
  */
-class Core_Plugin_Flush extends Zend_Controller_Plugin_Abstract
+class FlushPlugin extends Zend_Controller_Plugin_Abstract
 {
-
     /**
      * Permet de détected si une erreur est arrivé sur un entityManager.
-     * @var string
+     * @var \Exception|null
      */
-    protected $databaseErrorHappened = null;
-
+    protected $databaseErrorHappened;
 
     /**
      * {@inheritdoc}
@@ -31,13 +31,13 @@ class Core_Plugin_Flush extends Zend_Controller_Plugin_Abstract
         if (count($this->getResponse()->getException()) == 0) {
             /* @var $entityManager Doctrine\ORM\EntityManager */
             // Début des transactions pour l'ensemble des EntityManagers.
-            foreach (Zend_Registry::get('EntityManagers') as $poolName => $entityManager) {
+            foreach (Zend_Registry::get('EntityManagers') as $entityManager) {
                 if ($entityManager->isOpen()) {
                     $entityManager->getConnection()->beginTransaction();
                 }
             }
             // Lancement des transactions !
-            foreach (Zend_Registry::get('EntityManagers') as $poolName => $entityManager) {
+            foreach (Zend_Registry::get('EntityManagers') as $entityManager) {
                 if ($entityManager->isOpen()) {
                     try {
                         $entityManager->flush();
@@ -48,7 +48,7 @@ class Core_Plugin_Flush extends Zend_Controller_Plugin_Abstract
                 }
             }
             // Fin de la transaction.
-            foreach (Zend_Registry::get('EntityManagers') as $poolName => $entityManager) {
+            foreach (Zend_Registry::get('EntityManagers') as $entityManager) {
                 if ($entityManager->isOpen()) {
                     if ($this->databaseErrorHappened !== null) {
                         $entityManager->getConnection()->rollback();
@@ -64,5 +64,4 @@ class Core_Plugin_Flush extends Zend_Controller_Plugin_Abstract
             }
         }
     }
-
 }
