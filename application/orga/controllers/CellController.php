@@ -414,7 +414,7 @@ class Orga_CellController extends Core_Controller
                 ['idCell' => $this->getParam('fromIdCell')]));
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
-        $aFViewConfiguration->addBaseTabs();
+        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_INPUT);
         try {
             $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
         } catch (Core_Exception_UndefinedAttribute $e) {
@@ -432,6 +432,9 @@ class Orga_CellController extends Core_Controller
         $tabDocs->dataSource = 'orga/tab_input/docs/idCell/'.$idCell;
         $tabDocs->cacheData = true;
         $aFViewConfiguration->addTab($tabDocs);
+
+        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_RESULT);
+        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_CALCULATION_DETAILS);
 
         $this->forward('display', 'af', 'af', array(
                 'id' => $aF->getId(),
