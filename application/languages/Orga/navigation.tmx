@@ -5,10 +5,10 @@
 
         <tu tuid="defaultOrganizationLabel">
             <tuv xml:lang="fr">
-                <seg>Cliquer pour accéder (organisation sans libellé)</seg>
+                <seg>Cliquer pour accéder (workspace sans libellé)</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Click to open (organization without label)</seg>
+                <seg>Click to open (workspace without label)</seg>
             </tuv>
         </tu>
 
