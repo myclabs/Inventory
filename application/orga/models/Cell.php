@@ -1,25 +1,23 @@
 <?php
-/**
- * Classe Orga_Model_Cell
- * @author     valentin.claras
- * @author     simon.rieu
- * @package    Orga
- * @subpackage Model
- */
 
 use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Orga\Model\ACL\CellResourceTrait;
+use User\Domain\ACL\Resource\Resource;
 
 /**
  * Definit une cellule organisationnelle.
- * @package    Orga
- * @subpackage Model
+ *
+ * @author valentin.claras
+ * @author simon.rieu
  */
-class Orga_Model_Cell extends Core_Model_Entity
+class Orga_Model_Cell extends Core_Model_Entity implements Resource
 {
+    use CellResourceTrait;
+
     // Constantes de tris et de filtres.
     const QUERY_GRANULARITY = 'granularity';
     const QUERY_TAG = 'tag';
@@ -192,7 +190,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      * @param Orga_Model_Granularity $granularity
      * @param Orga_Model_Member[]    $members
      */
-    public function __construct(Orga_Model_Granularity $granularity, array $members=[])
+    public function __construct(Orga_Model_Granularity $granularity, array $members = [])
     {
         $this->members = new ArrayCollection();
         $this->cellsGroups = new ArrayCollection();
@@ -200,6 +198,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         $this->dWResults = new ArrayCollection();
         $this->socialGenericActions = new ArrayCollection();
         $this->socialContextActions = new ArrayCollection();
+        $this->constructACL();
 
         $this->granularity = $granularity;
         foreach ($members as $member) {
@@ -213,7 +212,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         $this->createDWCube();
         // Création du CellsGroup.
         foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
-            $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);
+            new Orga_Model_CellsGroup($this, $inputGranularity);
         }
         // Création de la Bibliography des Input.
         if ($this->granularity->isInput()) {
@@ -313,6 +312,14 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getGranularity()
     {
         return $this->granularity;
+    }
+
+    /**
+     * @return Orga_Model_Organization
+     */
+    public function getOrganization()
+    {
+        return $this->granularity->getOrganization();
     }
 
     /**
@@ -601,6 +608,9 @@ class Orga_Model_Cell extends Core_Model_Entity
                 }
             }
         }
+
+        // MAJ des ACL
+        $this->updateACL();
     }
 
     /**
@@ -1654,5 +1664,4 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         return $this->getMembersHashKey();
     }
-
 }

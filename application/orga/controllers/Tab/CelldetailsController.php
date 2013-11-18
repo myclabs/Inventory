@@ -8,8 +8,14 @@
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
-use Doctrine\Common\Collections\ArrayCollection;
+use Orga\Model\ACL\Action\CellAction;
+use Orga\Model\ACL\Action\OrganizationAction;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
+use User\Domain\ACL\Action;
+use User\Domain\ACL\Role\Role;
+use User\Domain\ACL\ACLService;
 
 /**
  * Controlleur des onglets des détails d'une cellule.
@@ -21,7 +27,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 {
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -61,12 +67,12 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->view->idOrganization = $organization->getId();
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            Action::EDIT(),
             $organization
         );
         $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            Action::EDIT(),
             $cell
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && ($granularity->getRef() === 'global')) {
@@ -99,18 +105,16 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $this->_helper->layout()->disableLayout();
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
-        $cellACLResource = User_Model_Resource_Entity::loadByEntity($cell);
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
-        $organizationResource = User_Model_Resource_Entity::loadByEntity($organization);
 
         $listDatagridConfiguration = array();
 
         if (count($granularity->getAxes()) === 0) {
             $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                User_Model_Action_Default::EDIT(),
-                $organizationResource
+                Action::EDIT(),
+                $organization
             );
         } else {
             $isUserAllowedToEditOrganization = false;
@@ -168,12 +172,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $datagridConfiguration->datagrid->addCol($columnUserEmail);
 
             $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
-            $columnRole->list = array();
-            foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
-                if ($role instanceof User_Model_Role) {
-                    $columnRole->list[$role->getRef()] = __('Orga', 'role', $role->getName());
-                }
-            }
+            $columnRole->list = [
+                'CellAdminRole' => CellAdminRole::getLabel(),
+                'CellContributorRole' => CellContributorRole::getLabel(),
+                'CellObserverRole' => CellObserverRole::getLabel(),
+            ];
             $datagridConfiguration->datagrid->addCol($columnRole);
 
             $datagridConfiguration->datagrid->pagination = false;
@@ -209,12 +212,11 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $datagridConfiguration->datagrid->addCol($columnUserEmail);
 
                 $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
-                $columnRole->list = array();
-                foreach ($cellACLResource->getLinkedSecurityIdentities() as $role) {
-                    if ($role instanceof User_Model_Role) {
-                        $columnRole->list[$role->getName()] = __('Orga', 'role', $role->getName());
-                    }
-                }
+                $columnRole->list = [
+                    'CellAdminRole' => CellAdminRole::getLabel(),
+                    'CellContributorRole' => CellContributorRole::getLabel(),
+                    'CellObserverRole' => CellObserverRole::getLabel(),
+                ];
                 $datagridConfiguration->datagrid->addCol($columnRole);
 
                 $datagridConfiguration->datagrid->pagination = true;
@@ -322,7 +324,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $isUserAllowedToInputInventoryStatus = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $cell
         );
 
@@ -538,22 +540,15 @@ class Orga_Tab_CelldetailsController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         if ($this->hasParam('idReport')) {
-            $reportResource = User_Model_Resource_Entity::loadByEntity(
-                DW_Model_Report::load($this->getParam('idReport'))
-            );
             $reportCanBeUpdated = $this->aclService->isAllowed(
                 $this->_helper->auth(),
-                Orga_Action_Report::EDIT(),
-                $reportResource
+                OrganizationAction::EDIT(),
+                DW_Model_Report::load($this->getParam('idReport'))
             );
         } else {
             $reportCanBeUpdated = false;
         }
-        $reportCanBeSaveAs = $this->aclService->isAllowed(
-            $this->_helper->auth(),
-            User_Model_Action_Default::VIEW(),
-            User_Model_Resource_Entity::loadByEntity($cell)
-        );
+        $reportCanBeSaveAs = $this->aclService->isAllowed($this->_helper->auth(), Action::VIEW(), $cell);
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
         $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$cell->getId().'/tab/analyses');
@@ -588,7 +583,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
 
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            User_Model_Action_Default::EDIT(),
+            Action::EDIT(),
             $organization
         );
 

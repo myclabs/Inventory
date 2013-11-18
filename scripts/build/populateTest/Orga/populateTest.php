@@ -1,7 +1,4 @@
 <?php
-/**
- * @package Orga
- */
 
 require_once __DIR__ . '/../../populate/Orga/populate.php';
 
@@ -9,7 +6,6 @@ use Unit\UnitAPI;
 
 /**
  * Remplissage de la base de données avec des données de test
- * @package Orga
  */
 class Orga_PopulateTest extends Orga_Populate
 {
@@ -18,6 +14,8 @@ class Orga_PopulateTest extends Orga_Populate
      */
     public function runEnvironment($environment)
     {
+        parent::runEnvironment($environment);
+
         $entityManagers = Zend_Registry::get('EntityManagers');
         /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = $entityManagers['default'];
@@ -173,6 +171,8 @@ qui officia deserunt mollit anim id est laborum.',
 
         // Création utilisateur pour test édition "mon compte" et test édition compte d'un utilisateur.
         $this->createUser('emmanuel.risler.pro@gmail.com');
+
+        $entityManager->flush();
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
         $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);

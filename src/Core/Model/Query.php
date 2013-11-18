@@ -1,20 +1,12 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Model
- */
-use User\ACL\TypeMapping\ActionType;
 
 /**
  * Requete avec filtres et tri.
  *
- * @package    Core
- * @subpackage Model
+ * @author matthieu.napoli
  */
 class Core_Model_Query
 {
-
     /**
      * Nombre d'éléments maximum renvoyés par la requête.
      *
@@ -46,7 +38,7 @@ class Core_Model_Query
     /**
      * Filtrage en utilisant les ACL.
      *
-     * @var Core_Model_AclFilter
+     * @var Core_Model_ACLFilter
      */
     public $aclFilter = null;
 
@@ -77,7 +69,7 @@ class Core_Model_Query
     {
         $this->order = new Core_Model_Order();
         $this->filter = new Core_Model_Filter();
-        $this->aclFilter = new Core_Model_AclFilter();
+        $this->aclFilter = new Core_Model_ACLFilter();
     }
 
     /**
@@ -350,16 +342,13 @@ class Core_Model_Query
     protected function addAclFilterToQueryBuilder(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         if ($this->aclFilter->enabled) {
-            $queryBuilder->innerJoin('User_Model_ACLFilterEntry', 'acl_cache');
+            $queryBuilder->innerJoin($this->rootAlias . '.acl', 'authorization');
 
-            $queryBuilder->andWhere('acl_cache.idUser = :aclUserId');
-            $queryBuilder->andWhere('acl_cache.action = :aclAction');
-            $queryBuilder->andWhere('acl_cache.entityName = :aclEntityName');
-            $queryBuilder->andWhere('acl_cache.entityIdentifier = ' . $this->rootAlias . '.id');
+            $queryBuilder->andWhere('authorization.user = :aclUser');
+            $queryBuilder->andWhere('authorization.actionId = :aclAction');
 
-            $queryBuilder->setParameter('aclEntityName', $this->entityName);
-            $queryBuilder->setParameter('aclAction', $this->aclFilter->action, ActionType::TYPE_NAME);
-            $queryBuilder->setParameter('aclUserId', $this->aclFilter->user->getId());
+            $queryBuilder->setParameter('aclUser', $this->aclFilter->user);
+            $queryBuilder->setParameter('aclAction', $this->aclFilter->action->exportToString());
         }
     }
 
@@ -403,5 +392,4 @@ class Core_Model_Query
         }
         return $baseAlias . '.' . $condition['name'];
     }
-
 }

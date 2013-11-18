@@ -3,12 +3,24 @@
 
 ## 2.9
 
-- Déployer normalement l'application (avec build update)
-
-- Exécuter le script de migration PHP
+- Déployer l'application SANS build update ni redémarrage du worker
 
 ```
-sudo php scripts/migration/2.9/migrate.php
+sudo deploy 2.9.?
+```
+
+- Exécuter le script de migration
+
+```
+php scripts/migration/2.9/migrate.php
+```
+
+Le script va effectuer un build update
+
+- Redémarrer le worker
+
+```
+sudo supervisiorctl restart XXX-worker
 ```
 
 

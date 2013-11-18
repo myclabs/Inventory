@@ -5,6 +5,7 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use User\Domain\User;
 
 /**
  * @author  joseph.rouffet
@@ -50,7 +51,7 @@ class Social_Model_News extends Social_Model_Text
     /**
      * {@inheritdoc}
      */
-    public function __construct(User_Model_User $author = null)
+    public function __construct(User $author = null)
     {
         parent::__construct($author);
         $this->comments = new ArrayCollection();

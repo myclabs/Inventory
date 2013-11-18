@@ -20,7 +20,7 @@ Social_Model_UserGroup:
 
   manyToMany:
     users:
-      targetEntity: User_Model_User
+      targetEntity: User\Domain\User
       joinTable:
         name: Social_UserGroup_Users
         joinColumns:

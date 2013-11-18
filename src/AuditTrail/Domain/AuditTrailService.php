@@ -6,7 +6,7 @@
 namespace AuditTrail\Domain;
 
 use AuditTrail\Domain\Context\Context;
-use User_Model_User;
+use User\Domain\User;
 
 /**
  * Audit trail service
@@ -29,11 +29,11 @@ class AuditTrailService
     /**
      * @param string               $eventName
      * @param Context              $context
-     * @param User_Model_User|null $user
+     * @param \User\Domain\User|null $user
      *
      * @return Entry
      */
-    public function addEntry($eventName, Context $context, User_Model_User $user = null)
+    public function addEntry($eventName, Context $context, User $user = null)
     {
         // Value object -> clone
         $context = clone $context;

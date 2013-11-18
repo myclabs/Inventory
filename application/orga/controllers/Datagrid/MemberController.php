@@ -136,13 +136,13 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 $axis->getMemberByCompleteRef($ref . '#' . Orga_Model_Member::buildParentMembersHashKey($contextualizingMembers));
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                $success = function() {
+                $success = function () {
                     $this->message = __('UI', 'message', 'added');
                 };
-                $timeout = function() {
+                $timeout = function () {
                     $this->message = __('UI', 'message', 'addedLater');
                 };
-                $error = function(Exception $e) {
+                $error = function (Exception $e) {
                     throw $e;
                 };
 

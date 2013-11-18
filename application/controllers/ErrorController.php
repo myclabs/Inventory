@@ -1,6 +1,6 @@
 <?php
 
-use User\ForbiddenException;
+use User\Application\ForbiddenException;
 
 /**
  * Controleur de gestion des erreurs

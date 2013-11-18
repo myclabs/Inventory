@@ -1,0 +1,37 @@
+User\Domain\ACL\Role\Role:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: ACL_Role
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type
+    type: string
+  discriminatorMap:
+    user: User\Domain\ACL\Role\UserRole
+    admin: User\Domain\ACL\Role\AdminRole
+    organizationAdmin: Orga\Model\ACL\Role\OrganizationAdminRole
+    cellAdmin: Orga\Model\ACL\Role\CellAdminRole
+    cellManager: Orga\Model\ACL\Role\CellManagerRole
+    cellContributor: Orga\Model\ACL\Role\CellContributorRole
+    cellObserver: Orga\Model\ACL\Role\CellObserverRole
+    reportOwner: DW\Model\ACL\Role\ReportOwnerRole
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    user:
+      targetEntity: User\Domain\User
+      inversedBy: roles
+      joinColumn:
+        nullable: false
+
+  oneToMany:
+    authorizations:
+      targetEntity: User\Domain\ACL\Authorization\Authorization
+      mappedBy: role
+      cascade: [ all ]
