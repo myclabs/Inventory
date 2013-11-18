@@ -4,12 +4,13 @@
  * @package Test
  */
 
+use Core\Test\TestCase;
 use Doctrine\ORM\Tools\SchemaValidator;
 
 /**
  * @package Test
  */
-class MappingValidationTest extends Core_Test_TestCase
+class MappingValidationTest extends TestCase
 {
 
     /**

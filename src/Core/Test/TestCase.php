@@ -1,13 +1,17 @@
 <?php
 
+namespace Core\Test;
+
 use Doctrine\ORM\EntityManager;
+use PHPUnit_Framework_TestCase;
+use Zend_Registry;
 
 /**
  * Classe de test de base.
  *
  * @author matthieu.napoli
  */
-abstract class Core_Test_TestCase extends PHPUnit_Framework_TestCase
+abstract class TestCase extends PHPUnit_Framework_TestCase
 {
     /**
      * @Inject

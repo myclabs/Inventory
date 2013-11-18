@@ -2,14 +2,14 @@
 
 namespace Tests\User\ACL\Role;
 
-use Core_Test_TestCase;
+use Core\Test\TestCase;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
 use User\Domain\UserService;
 
-class UserRoleTest extends Core_Test_TestCase
+class UserRoleTest extends TestCase
 {
     /**
      * @Inject

@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use User\Domain\ACL\Role\AdminRole;
 use User\Domain\ACL\Role\Role;
@@ -21,7 +22,7 @@ class UserTest
     }
 }
 
-class UserSetUpTest extends Core_Test_TestCase
+class UserSetUpTest extends TestCase
 {
     protected $passwordDefaut = 'password-default';
 
@@ -108,7 +109,7 @@ class UserSetUpTest extends Core_Test_TestCase
     }
 }
 
-class UserMetierTest extends Core_Test_TestCase
+class UserMetierTest extends TestCase
 {
     /**
      * @Inject

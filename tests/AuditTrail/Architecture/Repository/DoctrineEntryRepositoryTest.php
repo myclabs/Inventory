@@ -7,11 +7,12 @@ use AuditTrail\Architecture\Repository\DoctrineEntryRepository;
 use AuditTrail\Domain\Context\GlobalContext;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\Entry;
+use Core\Test\TestCase;
 
 /**
  * EntryRepositoryTest tests
  */
-class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
+class AuditTrail_DoctrineEntryRepositoryTest extends TestCase
 {
     /**
      * @var DoctrineEntryRepository

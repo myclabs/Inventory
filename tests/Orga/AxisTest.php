@@ -1,4 +1,6 @@
 <?php
+use Core\Test\TestCase;
+
 /**
  * Class Orga_Test_AxisTest
  * @author valentin.claras
@@ -28,7 +30,7 @@ class Orga_Test_AxisTest
 
 }
 
-class Orga_Test_AxisAttributes extends Core_Test_TestCase
+class Orga_Test_AxisAttributes extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -80,7 +82,7 @@ class Orga_Test_AxisAttributes extends Core_Test_TestCase
 
 }
 
-class Orga_Test_AxisTag extends Core_Test_TestCase
+class Orga_Test_AxisTag extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -170,7 +172,7 @@ class Orga_Test_AxisTag extends Core_Test_TestCase
 
 }
 
-class Orga_Test_AxisHierarchy extends Core_Test_TestCase
+class Orga_Test_AxisHierarchy extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -983,7 +985,7 @@ class Orga_Test_AxisHierarchy extends Core_Test_TestCase
 
 }
 
-class Orga_Test_AxisMembers extends Core_Test_TestCase
+class Orga_Test_AxisMembers extends TestCase
 {
     /**
      * @var Orga_Model_Organization

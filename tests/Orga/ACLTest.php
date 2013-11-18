@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Orga\Model\ACL\Action\CellAction;
 use Orga\Model\ACL\Action\OrganizationAction;
 use Orga\Model\ACL\Role\CellAdminRole;
@@ -26,7 +27,7 @@ class Orga_Test_ACLTest
  *
  * @author valentin.claras
  */
-class Orga_Test_ACL extends Core_Test_TestCase
+class Orga_Test_ACL extends TestCase
 {
     /**
      * @Inject

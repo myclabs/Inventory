@@ -6,11 +6,12 @@
 use AuditTrail\Domain\AuditTrailService;
 use AuditTrail\Domain\Context\Context;
 use AuditTrail\Domain\EntryRepository;
+use Core\Test\TestCase;
 
 /**
  * AuditTrailService tests
  */
-class AuditTrail_AuditTrailServiceTest extends Core_Test_TestCase
+class AuditTrail_AuditTrailServiceTest extends TestCase
 {
     public function testAddEntry()
     {

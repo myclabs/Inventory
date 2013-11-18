@@ -5,6 +5,7 @@
  * @package Keyword
  * @subpackage Test
  */
+use Core\Test\TestCase;
 use Keyword\Domain\Predicate;
 
 /**
@@ -12,7 +13,7 @@ use Keyword\Domain\Predicate;
  * @package Keyword
  * @subpackage Test
  */
-class Keyword_Test_PredicateTest extends Core_Test_TestCase
+class Keyword_Test_PredicateTest extends TestCase
 {
     /**
      * Creation de la suite de test.
@@ -29,7 +30,7 @@ class Keyword_Test_PredicateTest extends Core_Test_TestCase
  * @package Keyword
  * @subpackage Test
  */
-class Keyword_Test_PredicateEntity extends Core_Test_TestCase
+class Keyword_Test_PredicateEntity extends TestCase
 {
 
     /**

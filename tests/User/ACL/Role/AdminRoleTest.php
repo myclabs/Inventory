@@ -2,7 +2,7 @@
 
 namespace Tests\User\ACL\Role;
 
-use Core_Test_TestCase;
+use Core\Test\TestCase;
 use Orga_Model_Organization;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
@@ -11,7 +11,7 @@ use User\Domain\ACL\Role\AdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
 
-class AdminRoleTest extends Core_Test_TestCase
+class AdminRoleTest extends TestCase
 {
     /**
      * @Inject

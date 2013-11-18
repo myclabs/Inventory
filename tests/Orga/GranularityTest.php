@@ -1,4 +1,6 @@
 <?php
+use Core\Test\TestCase;
+
 /**
  * Class Orga_Test_GranularityTest
  * @author valentin.claras
@@ -27,7 +29,7 @@ class Orga_Test_GranularityTest
 
 }
 
-class Orga_Test_GranularityAttributes extends Core_Test_TestCase
+class Orga_Test_GranularityAttributes extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -131,7 +133,7 @@ class Orga_Test_GranularityAttributes extends Core_Test_TestCase
 
 }
 
-class Orga_Test_GranularityHierarchy extends Core_Test_TestCase
+class Orga_Test_GranularityHierarchy extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -451,7 +453,7 @@ class Orga_Test_GranularityHierarchy extends Core_Test_TestCase
 
 }
 
-class Orga_Test_GranularityCells extends Core_Test_TestCase
+class Orga_Test_GranularityCells extends TestCase
 {
     /**
      * @var Orga_Model_Organization
