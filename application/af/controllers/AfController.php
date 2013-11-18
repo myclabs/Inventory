@@ -231,6 +231,16 @@ class AF_AfController extends Core_Controller
     }
 
     /**
+     * Popup de copie d'un AF
+     * @Secure("editAF")
+     */
+    public function duplicatePopupAction()
+    {
+        $this->view->assign('id', $this->getParam('id'));
+        $this->_helper->layout->disableLayout();
+    }
+
+    /**
      * Duplique un AF
      * @Secure("editAF")
      */
@@ -239,8 +249,14 @@ class AF_AfController extends Core_Controller
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
 
-        $newRef = $af->getRef() . '_copy';
-        $newAF = $this->afCopyService->copyAF($af, $newRef);
+        $newRef = $this->getParam('ref');
+        $newLabel = $this->getParam('label');
+        if ($newRef == '' || $newLabel == '') {
+            UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'), UI_Message::TYPE_ERROR);
+            $this->redirect('af/af/list');
+        }
+
+        $newAF = $this->afCopyService->copyAF($af, $newRef, $newLabel);
 
         $newAF->save();
         $this->entityManager->flush();
@@ -248,5 +264,4 @@ class AF_AfController extends Core_Controller
         UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
         $this->redirect('af/af/list');
     }
-
 }

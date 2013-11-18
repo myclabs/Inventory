@@ -1,0 +1,20 @@
+<?php
+
+$form = new UI_Form('duplicateAF');
+$form->setAjax(false);
+$form->setAction($this->url(array(
+    'module'     => 'af',
+    'controller' => 'af',
+    'action'     => 'duplicate',
+    'id'         => $this->id,
+)));
+
+$label = new UI_Form_Element_Text('label');
+$label->setLabel(__('UI', 'name', 'label'));
+$form->addElement($label);
+
+$ref = new UI_Form_Element_Text('ref');
+$ref->setLabel(__('UI', 'name', 'identifier'));
+$form->addElement($ref);
+
+echo $form->render();
