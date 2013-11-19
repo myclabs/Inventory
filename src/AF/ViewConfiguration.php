@@ -12,7 +12,6 @@
  */
 class AF_ViewConfiguration
 {
-
     /**
      * Constants for base tabs
      */
@@ -79,6 +78,8 @@ class AF_ViewConfiguration
      * @var array
      */
     protected $urlParams = array();
+
+    protected $useSession = false;
 
 
     /**
@@ -306,4 +307,19 @@ class AF_ViewConfiguration
         $this->urlParams[$name] = $value;
     }
 
+    /**
+     * @return boolean
+     */
+    public function getUseSession()
+    {
+        return $this->useSession;
+    }
+
+    /**
+     * @param boolean $useSession
+     */
+    public function setUseSession($useSession)
+    {
+        $this->useSession = $useSession;
+    }
 }

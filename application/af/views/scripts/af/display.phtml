@@ -36,6 +36,7 @@ $urlArray = array(
     'mode'              => $viewConfiguration->getMode(),
     'exitURL'           => urlencode($viewConfiguration->getExitURL()),
     'resultsPreviewUrl' => urlencode(json_encode($viewConfiguration->getResultsPreviewUrl())),
+    'useSession'        => $viewConfiguration->getUseSession(),
 );
 $urlArray += $viewConfiguration->getUrlParams();
 if ($viewConfiguration->getIdInputSet()) {

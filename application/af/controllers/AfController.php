@@ -59,6 +59,7 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->setDisplayConfigurationLink(true);
         $viewConfiguration->addBaseTabs();
         $viewConfiguration->setPageTitle($af->getLabel());
+        $viewConfiguration->setUseSession(true);
         if ($this->hasParam('fromTree')) {
             $viewConfiguration->setExitUrl($this->_helper->url('tree', 'af', 'af'));
         } else {
@@ -110,9 +111,11 @@ class AF_AfController extends Core_Controller
         if ($idInputSet) {
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
-        } else {
+        } elseif ($this->getParam('useSession')) {
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+        } else {
+            $inputSet = new AF_Model_InputSet_Primary($af);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->af = $af;
