@@ -1,0 +1,22 @@
+Orga\Model\Account:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Orga_Account
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    label:
+      type: string
+
+  oneToMany:
+    organization:
+      targetEntity: Orga_Model_Organization
+      mappedBy: account
+      orphanRemoval: true
+      cascade: [ all ]

@@ -10,6 +10,7 @@
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Selectable;
+use Orga\Model\Account;
 use Orga\Model\ACL\OrganizationResourceTrait;
 use User\Domain\ACL\Resource\Resource;
 
@@ -62,12 +63,18 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      */
     protected $granularityForInventoryStatus = null;
 
+    /**
+     * @var Account
+     */
+    protected $account;
+
 
     /**
      * Constructeur de la classe Organization.
      */
-    public function __construct()
+    public function __construct(Account $account)
     {
+        $this->account = $account;
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
 
@@ -443,5 +450,13 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
         $criteria->where(Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null));
         $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
+    }
+
+    /**
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 }
