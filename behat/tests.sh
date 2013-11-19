@@ -24,8 +24,16 @@ java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
 sleep 8
 
+# Export the databases
+php ../scripts/build/build.php create update populate
+mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/emptyOneUser.sql
+php ../scripts/build/build.php create update populate populateTest
+mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/full.sql
+php ../scripts/build/build.php create update populate populateTestDWUpToDate
+mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/forTestDWUpToDate.sql
+
 # Zombie.js
 #export NODE_PATH=/usr/local/lib/node_modules
 
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml --rerun failed.txt && rm failed.txt
+php ../vendor/behat/behat/bin/behat --config behat.yml --rerun failed.txt && rm -f failed.txt
