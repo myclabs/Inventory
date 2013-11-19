@@ -27,7 +27,7 @@ sleep 8
 # Export the databases
 php ../scripts/build/build.php create update populate
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/emptyOneUser.sql
-php ../scripts/build/build.php create update populate populateTest
+php ../scripts/build/build.php populateTest
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/full.sql
 php ../scripts/build/build.php create update populate populateTestDWUpToDate
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/forTestDWUpToDate.sql
