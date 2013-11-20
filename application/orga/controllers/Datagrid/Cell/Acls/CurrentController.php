@@ -9,6 +9,7 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
 use User\Domain\ACL\Role\Role;
@@ -52,6 +53,9 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
                 case $role instanceof CellAdminRole:
                     $data['userRole'] = 'CellAdminRole';
                     break;
+                case $role instanceof CellManagerRole:
+                    $data['userRole'] = 'CellManagerRole';
+                    break;
                 case $role instanceof CellContributorRole:
                     $data['userRole'] = 'CellContributorRole';
                     break;
@@ -83,6 +87,9 @@ class Orga_Datagrid_Cell_Acls_CurrentController extends UI_Controller_Datagrid
         switch ($role) {
             case 'CellAdminRole':
                 $role = CellAdminRole::class;
+                break;
+            case 'CellManagerRole':
+                $role = CellManagerRole::class;
                 break;
             case 'CellContributorRole':
                 $role = CellContributorRole::class;

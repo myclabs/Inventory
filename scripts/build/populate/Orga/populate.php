@@ -2,6 +2,7 @@
 
 use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
@@ -446,6 +447,17 @@ class Orga_Populate extends Core_Script_Action
     {
         $user = User::loadByEmail($email);
         $this->aclService->addRole($user, new CellAdminRole($user, $granularity->getCellByMembers($members)));
+    }
+
+    /**
+     * @param $email
+     * @param Orga_Model_Granularity $granularity
+     * @param array $members
+     */
+    protected function addCellManager($email, Orga_Model_Granularity $granularity, array $members)
+    {
+        $user = User::loadByEmail($email);
+        $this->aclService->addRole($user, new CellManagerRole($user, $granularity->getCellByMembers($members)));
     }
 
     /**

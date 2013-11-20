@@ -194,7 +194,12 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB ANALYSES
-        if ($granularity->getCellsGenerateDWCubes() === true) {
+        $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
+            $connectedUser,
+            CellAction::VIEW_REPORTS(),
+            $cell
+        );
+        if (($isUserAllowedToViewCellReports) && ($granularity->getCellsGenerateDWCubes() === true)) {
             $analysisTab = new UI_Tab('analyses');
             if ($tab === 'analyses') {
                 $analysisTab->active = true;
@@ -207,14 +212,16 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB EXPORTS
-        $exportsTab = new UI_Tab('exports');
-        if ($tab === 'exports') {
-            $exportsTab->active = true;
+        if ($isUserAllowedToViewCellReports) {
+            $exportsTab = new UI_Tab('exports');
+            if ($tab === 'exports') {
+                $exportsTab->active = true;
+            }
+            $exportsTab->label = __('UI', 'name', 'exports');
+            $exportsTab->dataSource = 'orga/tab_celldetails/exports/idCell/'.$idCell;
+            $exportsTab->useCache = true;
+            $this->view->tabView->addTab($exportsTab);
         }
-        $exportsTab->label = __('UI', 'name', 'exports');
-        $exportsTab->dataSource = 'orga/tab_celldetails/exports/idCell/'.$idCell;
-        $exportsTab->useCache = true;
-        $this->view->tabView->addTab($exportsTab);
 
 
         // TAB GENERIC ACTIONS
@@ -435,8 +442,15 @@ class Orga_CellController extends Core_Controller
         $tabDocs->cacheData = true;
         $aFViewConfiguration->addTab($tabDocs);
 
-        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_RESULT);
-        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_CALCULATION_DETAILS);
+        $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
+            $this->_helper->auth(),
+            CellAction::VIEW_REPORTS(),
+            $cell
+        );
+        if ($isUserAllowedToViewCellReports) {
+            $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_RESULT);
+            $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_CALCULATION_DETAILS);
+        }
 
         $this->forward('display', 'af', 'af', array(
                 'id' => $aF->getId(),

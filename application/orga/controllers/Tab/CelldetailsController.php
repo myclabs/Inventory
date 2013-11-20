@@ -11,6 +11,7 @@ use Core\Annotation\Secure;
 use Orga\Model\ACL\Action\CellAction;
 use Orga\Model\ACL\Action\OrganizationAction;
 use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
 use User\Domain\ACL\Action;
@@ -169,6 +170,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
             $columnRole->list = [
                 'CellAdminRole' => CellAdminRole::getLabel(),
+                'CellManagerRole' => CellManagerRole::getLabel(),
                 'CellContributorRole' => CellContributorRole::getLabel(),
                 'CellObserverRole' => CellObserverRole::getLabel(),
             ];
@@ -209,6 +211,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
                 $columnRole = new UI_Datagrid_Col_List('userRole', __('User', 'role', 'role'));
                 $columnRole->list = [
                     'CellAdminRole' => CellAdminRole::getLabel(),
+                    'CellManagerRole' => CellManagerRole::getLabel(),
                     'CellContributorRole' => CellContributorRole::getLabel(),
                     'CellObserverRole' => CellObserverRole::getLabel(),
                 ];
