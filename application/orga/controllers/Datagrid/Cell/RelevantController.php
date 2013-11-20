@@ -50,7 +50,7 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
-        $this->request->order->addOrder(Orga_Model_Cell::QUERY_MEMBERS_HASHKEY);
+        $this->request->order->addOrder(Orga_Model_Cell::QUERY_TAG);
         foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
             $data = array();
             $data['index'] = $childCell->getId();

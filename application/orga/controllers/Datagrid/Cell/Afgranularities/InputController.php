@@ -89,7 +89,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                 Orga_Model_Cell::getAlias()
             );
             $this->request->order->addOrder(
-                Orga_Model_Cell::QUERY_MEMBERS_HASHKEY,
+                Orga_Model_Cell::QUERY_TAG,
                 Core_Model_Order::ORDER_ASC,
                 Orga_Model_Cell::getAlias()
             );
