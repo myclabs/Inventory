@@ -36,7 +36,7 @@ Feature: History of values of a field feature
   @javascript
   Scenario: Input history scenario, display of history for various kinds of input fiels
   # Cellule : 2012 | Chambéry | Test affichage
-    Given I am on "orga/cell/input/idCell/35/fromIdCell/1"
+    Given I am on "orga/cell/input/idCell/32/fromIdCell/1"
     And I wait for the page to finish loading
   # Attente pour voir si ça aide à passer sur serveur dédié
     And I wait 5 seconds

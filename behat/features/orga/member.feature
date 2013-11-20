@@ -21,6 +21,7 @@ Feature: Organizational member feature
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
     And I fill in "listMemberssite_broaderpays_addForm" with "france#"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Affichage suivant l'ordre alphabétique des identifiants

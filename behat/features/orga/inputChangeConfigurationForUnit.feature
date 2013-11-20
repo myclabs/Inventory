@@ -6,7 +6,7 @@ Feature: Organization input input feature
 
   @javascript
   Scenario: Change unit of a numeric field while an input already exists, case of a compatible unit
-    Given I am on "orga/cell/input/idCell/31/"
+    Given I am on "orga/cell/input/idCell/30/"
     And I wait for the page to finish loading
     Then I should see "Saisie 2012 | Annecy | Énergie"
     And the "quantite_combustible" field should contain "10"
@@ -33,7 +33,7 @@ Feature: Organization input input feature
     And I open collapse "Champs numériques"
     And I set "m" for column "unit" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Retour à la saisie
-    Given I am on "orga/cell/input/idCell/31/"
+    Given I am on "orga/cell/input/idCell/30/"
     And I wait for the page to finish loading
   # Cette fois-ci, la saisie a été supprimée
     Then the "quantite_combustible" field should not contain "10"
@@ -41,7 +41,7 @@ Feature: Organization input input feature
 
   @javascript
   Scenario: Deny the ability to change unit of a numeric field while an input already exists scenario and unit has been changed for this input
-    Given I am on "orga/cell/input/idCell/31/"
+    Given I am on "orga/cell/input/idCell/30/"
     And I wait for the page to finish loading
     Then I should see "Saisie 2012 | Annecy | Énergie"
     When I fill in "quantite_combustible" with "1000"
