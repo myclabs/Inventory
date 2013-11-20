@@ -428,7 +428,7 @@ class Orga_Service_ETLStructure
 
             $memberIdentifier = $orgaMember->getAxis()->getRef().'_'.$orgaMember->getCompleteRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
-            foreach ($orgaMember->getDirectChildren() as $narrowerOrgaMember) {
+            foreach ($orgaMember->getDirectChildren()->toArray() as $narrowerOrgaMember) {
                 $narrowerIdentifier = $narrowerOrgaMember->getAxis()->getRef().'_'
                     .$narrowerOrgaMember->getCompleteRef();
                 if (isset($associationArray['members'][$narrowerIdentifier])) {
@@ -581,9 +581,9 @@ class Orga_Service_ETLStructure
      */
     protected function isDWCubeUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
-        return !(
+        return (
             $this->areDWIndicatorsUpToDate($dWCube)
-            || $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
+            && $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
         );
     }
 
@@ -610,10 +610,9 @@ class Orga_Service_ETLStructure
         }
 
         if ((count($classifIndicators) > 0) || (count($dWIndicators) > 0)) {
-            return true;
+            return false;
         }
-
-        return false;
+        return true;
     }
 
     /**
@@ -680,10 +679,10 @@ class Orga_Service_ETLStructure
         }
 
         if ((count($classifRootAxes) > 0) || (count($orgaRootAxes) > 0) || (count($dWRootAxes) > 1)) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -877,7 +876,6 @@ class Orga_Service_ETLStructure
                 if (!($this->isDWMemberDifferentFromOrga($dWMember, $orgaMember, $orgaFilters))) {
                     unset($orgaMembers[$orgaIndex]);
                     unset($dWMembers[$dWIndex]);
-                } else {
                 }
             }
         }
@@ -905,7 +903,7 @@ class Orga_Service_ETLStructure
         ) {
             return true;
         } else {
-            $orgaParentMembers = $orgaMember->getDirectParents();
+            $orgaParentMembers = $orgaMember->getDirectParents()->toArray();
             $dWParentMembers = $dWMember->getDirectParents();
 
             foreach ($orgaMember->getDirectParents() as $index => $orgaParentMember) {
