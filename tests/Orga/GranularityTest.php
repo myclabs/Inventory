@@ -23,7 +23,7 @@ class Orga_Test_GranularityTest
         $suite = new PHPUnit_Framework_TestSuite();
         $suite->addTestSuite('Orga_Test_GranularityAttributes');
         $suite->addTestSuite('Orga_Test_GranularityHierarchy');
-        $suite->addTestSuite('Orga_Test_GranularityCells');
+//        $suite->addTestSuite('Orga_Test_GranularityCells');
         return $suite;
     }
 
@@ -234,7 +234,7 @@ class Orga_Test_GranularityHierarchy extends TestCase
         $this->assertSame('/2-ref_2/&/1-ref_111/1-ref_11/', $this->granularity3->getTag());
         $this->assertSame('/2-ref_2/&/2-ref_12/', $this->granularity4->getTag());
         $this->assertSame('/2-ref_2/&/2-ref_12/&/1-ref_111/1-ref_11/', $this->granularity5->getTag());
-        $this->assertSame('/2-ref_2/&/1-ref_111/1-ref_11/1-ref_1/&/2-ref_12/1-ref_1/', $this->granularity6->getTag());
+        $this->assertSame('/2-ref_2/&/2-ref_12/1-ref_1/&/1-ref_111/1-ref_11/1-ref_1/', $this->granularity6->getTag());
         $this->assertSame('/2-ref_2/', $this->granularity7->getTag());
 
         $this->axis11->setRef('ref_11_updated');
@@ -245,7 +245,7 @@ class Orga_Test_GranularityHierarchy extends TestCase
         $this->assertSame('/2-ref_2/&/1-ref_111/1-ref_11_updated/', $this->granularity3->getTag());
         $this->assertSame('/2-ref_2/&/2-ref_12/', $this->granularity4->getTag());
         $this->assertSame('/2-ref_2/&/2-ref_12/&/1-ref_111/1-ref_11_updated/', $this->granularity5->getTag());
-        $this->assertSame('/2-ref_2/&/1-ref_111/1-ref_11_updated/1-ref_1/&/2-ref_12/1-ref_1/', $this->granularity6->getTag());
+        $this->assertSame('/2-ref_2/&/2-ref_12/1-ref_1/&/1-ref_111/1-ref_11_updated/1-ref_1/', $this->granularity6->getTag());
         $this->assertSame('/2-ref_2/', $this->granularity7->getTag());
 
         $this->axis12->setPosition(1);
@@ -257,7 +257,7 @@ class Orga_Test_GranularityHierarchy extends TestCase
         $this->assertSame('/1-ref_111/2-ref_11_updated/&/1-ref_2/', $this->granularity3->getTag());
         $this->assertSame('/1-ref_12/&/1-ref_2/', $this->granularity4->getTag());
         $this->assertSame('/1-ref_111/2-ref_11_updated/&/1-ref_12/&/1-ref_2/', $this->granularity5->getTag());
-        $this->assertSame('/1-ref_12/2-ref_1/&/1-ref_111/2-ref_11_updated/2-ref_1/&/1-ref_2/', $this->granularity6->getTag());
+        $this->assertSame('/1-ref_111/2-ref_11_updated/2-ref_1/&/1-ref_12/2-ref_1/&/1-ref_2/', $this->granularity6->getTag());
         $this->assertSame('/1-ref_2/', $this->granularity7->getTag());
     }
     
@@ -413,14 +413,14 @@ class Orga_Test_GranularityHierarchy extends TestCase
 
     function testGetNarrowerGranularities()
     {
-        $this->assertSame([$this->granularity1, $this->granularity2, $this->granularity7, $this->granularity3, $this->granularity6, $this->granularity4, $this->granularity5], $this->granularity0->getNarrowerGranularities());
-        $this->assertSame([$this->granularity2, $this->granularity3, $this->granularity6, $this->granularity5], $this->granularity1->getNarrowerGranularities());
-        $this->assertSame([$this->granularity6, $this->granularity5], $this->granularity2->getNarrowerGranularities());
-        $this->assertSame([$this->granularity6, $this->granularity5], $this->granularity3->getNarrowerGranularities());
-        $this->assertSame([$this->granularity6, $this->granularity5], $this->granularity4->getNarrowerGranularities());
+        $this->assertSame([$this->granularity1, $this->granularity2, $this->granularity7, $this->granularity3, $this->granularity4, $this->granularity5, $this->granularity6], $this->granularity0->getNarrowerGranularities());
+        $this->assertSame([$this->granularity2, $this->granularity3, $this->granularity5, $this->granularity6], $this->granularity1->getNarrowerGranularities());
+        $this->assertSame([$this->granularity5, $this->granularity6], $this->granularity2->getNarrowerGranularities());
+        $this->assertSame([$this->granularity5, $this->granularity6], $this->granularity3->getNarrowerGranularities());
+        $this->assertSame([$this->granularity5, $this->granularity6], $this->granularity4->getNarrowerGranularities());
         $this->assertSame([$this->granularity6], $this->granularity5->getNarrowerGranularities());
         $this->assertSame([], $this->granularity6->getNarrowerGranularities());
-        $this->assertSame([$this->granularity3, $this->granularity6, $this->granularity4, $this->granularity5], $this->granularity7->getNarrowerGranularities());
+        $this->assertSame([$this->granularity3, $this->granularity4, $this->granularity5, $this->granularity6], $this->granularity7->getNarrowerGranularities());
     }
 
     function testGetBroaderGranularities()

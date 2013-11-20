@@ -138,7 +138,9 @@ function buildAxisNarrowerTag (Orga_Model_Axis $axis) {
 function buildAxisBroaderTag (Orga_Model_Axis $axis) {
     if ($axis->hasDirectBroaders()) {
         $broaderTag = '';
-        foreach ($axis->getDirectBroaders() as $directBroader) {
+        $criteriaDESC = Doctrine\Common\Collections\Criteria::create();
+        $criteriaDESC->orderBy(['narrowerTag' => 'ASC']);
+        foreach ($axis->getDirectBroaders()->matching($criteriaDESC) as $directBroader) {
             $directBroaderTag = buildAxisBroaderTag($directBroader);
             foreach (explode(Orga_Model_Organization::PATH_JOIN, $directBroaderTag) as  $pathTag) {
                 $broaderTag .= $pathTag . $axis->getAxisTag() . Orga_Model_Organization::PATH_SEPARATOR . Orga_Model_Organization::PATH_JOIN;

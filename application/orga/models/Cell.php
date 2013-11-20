@@ -626,6 +626,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
 
         $labels = [];
         $members = $this->getMembers();
+        @usort($members, ['Orga_Model_Member', 'orderMembers']);
         foreach ($members as $member) {
             $labels[] = $member->getLabel();
         }
@@ -646,6 +647,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
 
         $labels = [];
         $members = $this->getMembers();
+        @usort($members, ['Orga_Model_Member', 'orderMembers']);
         foreach ($members as $member) {
             $labels[] = $member->getExtendedLabel();
         }

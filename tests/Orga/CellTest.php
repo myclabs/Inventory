@@ -23,7 +23,7 @@ class Orga_Test_CellTest
     {
         $suite = new PHPUnit_Framework_TestSuite();
         $suite->addTestSuite('Orga_Test_CellAttributes');
-        $suite->addTestSuite('Orga_Test_CellHierarchy');
+//        $suite->addTestSuite('Orga_Test_CellHierarchy');
         return $suite;
     }
 

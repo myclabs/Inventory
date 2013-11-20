@@ -338,7 +338,9 @@ class Orga_Model_Axis extends Core_Model_Entity
         $this->broaderTag = Orga_Model_Organization::PATH_SEPARATOR;
         if ($this->hasDirectBroaders()) {
             $broaderPathTags = [];
-            foreach ($this->getDirectBroaders() as $directBroaderAxis) {
+            $criteriaDESC = Doctrine\Common\Collections\Criteria::create();
+            $criteriaDESC->orderBy(['narrowerTag' => 'DESC']);
+            foreach ($this->getDirectBroaders()->matching($criteriaDESC) as $directBroaderAxis) {
                 foreach (explode(Orga_Model_Organization::PATH_JOIN, $directBroaderAxis->getBroaderTag()) as $broaderPathTag) {
                     $broaderPathTags[] = $broaderPathTag;
                 }
