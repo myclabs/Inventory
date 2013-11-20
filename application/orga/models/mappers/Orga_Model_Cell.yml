@@ -133,6 +133,8 @@ Orga_Model_Cell:
     members:
       targetEntity: Orga_Model_Member
       inversedBy: cells
+      orderBy:
+        tag: ASC
       joinTable:
         name: Orga_Cell_Member
         joinColumns:

@@ -385,7 +385,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public static function firstOrderAxes(Orga_Model_Axis $a, Orga_Model_Axis $b)
     {
-        return strcmp($a->narrowerTag, $b->narrowerTag);
+        return strcmp($a->getNarrowerTag(), $b->getNarrowerTag());
     }
 
     /**
@@ -398,9 +398,9 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public static function lastOrderAxes(Orga_Model_Axis $a, Orga_Model_Axis $b)
     {
-        if (strpos($a->narrowerTag, $b->narrowerTag) !== false) {
+        if (strpos($a->getNarrowerTag(), $b->getNarrowerTag()) !== false) {
             return -1;
-        } else if (strpos($b->narrowerTag, $a->narrowerTag) !== false) {
+        } else if (strpos($b->getNarrowerTag(), $a->getNarrowerTag()) !== false) {
             return 1;
         }
         return self::firstOrderAxes($a, $b);

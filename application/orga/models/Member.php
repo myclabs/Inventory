@@ -217,14 +217,14 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function orderMembers(Orga_Model_Member $a, Orga_Model_Member $b)
     {
-        if ($a->axis === $b->axis)  {
-            if ($a->axis->isMemberPositioning()) {
-                return strcmp($a->tag, $b->tag);
+        if ($a->getAxis() === $b->getAxis())  {
+            if ($a->getAxis()->isMemberPositioning()) {
+                return strcmp($a->getTag(), $b->getTag());
             } else {
-                return strcmp($a->label, $b->label);
+                return strcmp($a->getLabel(), $b->getLabel());
             }
         }
-        return Orga_Model_Axis::firstOrderAxes($a->axis, $b->axis);
+        return Orga_Model_Axis::firstOrderAxes($a->getAxis(), $b->getAxis());
     }
 
     /**
