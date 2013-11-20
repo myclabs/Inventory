@@ -852,7 +852,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
         foreach ($childMembersForGranularity as $childAxisMembersForGranularity) {
             if (empty($childAxisMembersForGranularity)) {
-                return array();
+                return 0;
             }
         }
 
