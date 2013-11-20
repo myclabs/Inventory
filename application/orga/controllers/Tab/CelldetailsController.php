@@ -70,12 +70,7 @@ class Orga_Tab_CelldetailsController extends Core_Controller
             Action::EDIT(),
             $organization
         );
-        $isUserAllowedToEditCell = $this->aclService->isAllowed(
-            $connectedUser,
-            Action::EDIT(),
-            $cell
-        );
-        if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && ($granularity->getRef() === 'global')) {
+        if ($isUserAllowedToEditOrganization) {
             $this->view->displayOrganizationTabs = true;
         } else {
             $this->view->displayOrganizationTabs = false;
