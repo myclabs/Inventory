@@ -621,7 +621,7 @@ class Orga_Model_Member extends Core_Model_Entity
         $s = Orga_Model_Organization::PATH_SEPARATOR;
         $j = Orga_Model_Organization::PATH_JOIN;
         $parentMemberTag = $axis->getAxisTag() . ':' . ($axis->isMemberPositioning() ? '[0-9]+-' : '');
-        preg_match('#([^\\'.$j.']*\\'.$s.$parentMemberTag.'[a-z0-9_]+)\\'.$s.'#', $this->getTag(), $parentMemberPathTags);
+        preg_match('#([^\\'.$j.']*\\'.$s.$parentMemberTag.'[a-z0-9_]+\\'.$s.')#', $this->getTag(), $parentMemberPathTags);
         array_shift($parentMemberPathTags);
 
         if (count($parentMemberPathTags) > 0) {

@@ -31,11 +31,7 @@ foreach (Orga_Model_Organization::loadList() as $organization) {
             $cell->updateTag();
         }
     }
-    foreach ($organization->getGranularities() as $granularity) {
-        foreach ($granularity->getCells() as $cell) {
-            $cell->updateHierarchy();
-        }
-    }
+    $organization->getGranularityByRef('global')->getCellByMembers([])->setRelevant(true);
 }
 echo "\n".'…ajout terminé !'."\n";
 
@@ -139,7 +135,7 @@ function buildAxisBroaderTag (Orga_Model_Axis $axis) {
     if ($axis->hasDirectBroaders()) {
         $broaderTag = '';
         $criteriaDESC = Doctrine\Common\Collections\Criteria::create();
-        $criteriaDESC->orderBy(['narrowerTag' => 'ASC']);
+        $criteriaDESC->orderBy(['narrowerTag' => 'DESC']);
         foreach ($axis->getDirectBroaders()->matching($criteriaDESC) as $directBroader) {
             $directBroaderTag = buildAxisBroaderTag($directBroader);
             foreach (explode(Orga_Model_Organization::PATH_JOIN, $directBroaderTag) as  $pathTag) {
