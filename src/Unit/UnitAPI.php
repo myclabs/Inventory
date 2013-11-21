@@ -114,11 +114,11 @@ class UnitAPI
     public function isEquivalent($ref)
     {
         if (!array_key_exists($this->ref, self::$equivalentUnits)
-            || !array_key_exists($ref, self::$equivalentUnits[$this->ref])) {
+            || !array_key_exists((string) $ref, self::$equivalentUnits[$this->ref])) {
             $composedUnit = new ComposedUnit($this->ref);
-            self::$equivalentUnits[$this->ref][$ref] = $composedUnit->isEquivalent(new ComposedUnit($ref));
+            self::$equivalentUnits[$this->ref][(string) $ref] = $composedUnit->isEquivalent(new ComposedUnit($ref));
         }
-        return self::$equivalentUnits[$this->ref][$ref];
+        return self::$equivalentUnits[$this->ref][(string) $ref];
     }
 
     /**
@@ -136,27 +136,29 @@ class UnitAPI
         // Dans le cas ou on veut passer l'unité apellé dans l'unité passée en paramètre
         if (isset($refUnit)) {
             if (!array_key_exists($this->ref, self::$conversionFactors)
-                || !array_key_exists($refUnit, self::$conversionFactors[$this->ref])
+                || !array_key_exists((string) $refUnit, self::$conversionFactors[$this->ref])
             ) {
                 if ($this->isEquivalent($refUnit)) {
                     $unit1 = new ComposedUnit($this->ref);
                     $factor1 = $unit1->getConversionFactor();
                     $unit2 = new ComposedUnit($refUnit);
                     $factor2 = $unit2->getConversionFactor();
-                    self::$conversionFactors[$this->ref][$refUnit] = $factor2 / $factor1;
+                    self::$conversionFactors[$this->ref][(string) $refUnit] = $factor2 / $factor1;
                 } else {
                     throw new IncompatibleUnitsException("Unit {$this->ref} is incompatible with $refUnit");
                 }
             }
         } // Dans le cas ou on veut récupérer le facteur de conversion de l'unité de base
-        elseif (!array_key_exists($this->ref, self::$conversionFactors)
+		else {
+			$refUnit = $this->ref;
+			if (!array_key_exists($this->ref, self::$conversionFactors)
                 || !array_key_exists($this->ref, self::$conversionFactors[$this->ref])
-        ) {
-            $unit = new ComposedUnit($this->ref);
-            self::$conversionFactors[$this->ref][$this->ref] = $unit->getConversionFactor();
-            $refUnit = $this->ref;
-        }
-        return self::$conversionFactors[$this->ref][$refUnit];
+			) {
+				$unit = new ComposedUnit($this->ref);
+				self::$conversionFactors[$this->ref][$this->ref] = $unit->getConversionFactor();
+			}
+		}
+        return self::$conversionFactors[$this->ref][(string) $refUnit];
     }
 
     /**
