@@ -131,7 +131,7 @@ Feature: Organizational member feature
     And I open tab "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
-    And the "listMemberssite" datagrid should contain 4 row
+    And the "listMemberssite" datagrid should contain 3 row
     And the row 3 of the "listMemberssite" datagrid should contain:
       | label  |
       | Grenoble |
@@ -139,7 +139,7 @@ Feature: Organizational member feature
     When I click "Supprimer" in the row 3 of the "listMemberssite" datagrid
     And I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "listMemberssite" datagrid should contain 3 row
+    And the "listMemberssite" datagrid should contain 2 row
   # Tentative de suppression d'un membre générant une cellule associée à des rôles
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label  |
