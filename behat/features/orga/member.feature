@@ -107,19 +107,20 @@ Feature: Organizational member feature
     And I open tab "Éléments"
     When I open collapse "Site"
     Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label  | ref      | broaderpays    |
-      | Annecy | annecy   | France         |
-  # Modification du membre parent suivant l'axe "Pays" (modification de "France" à "vide")
-    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
-    Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label  | ref      | broaderpays    |
-      | Annecy | annecy   |                |
-  # Modification du membre parent suivant l'axe "Pays" (modification de "vide" à "France")
-    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+      | label  | ref      | broaderpays |
+      | Annecy | annecy   | France      |
+  # Modification du membre parent suivant l'axe "Marque"
+    When I set "marque_b#" for column "broadermarque" of row 1 of the "listMemberssite" datagrid with a confirmation message
     And I wait 15 seconds
-    Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label  | ref      | broaderpays    |
-      | Annecy | annecy   | France         |
+    Then the "listMemberssite" datagrid should contain a row:
+      | label  | ref      | broaderpays    | broadermarque |
+      | Annecy | annecy   | France         | Marque B      |
+  # Modification du membre parent suivant l'axe "Pays" (tentative de modification de "France" à "vide", non autorisé)
+    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+    And the "listMemberssite" datagrid should contain a row:
+      | label  | ref      | broaderpays    | broadermarque |
+      | Annecy | annecy   | France         | Marque B      |
 
   @javascript
   Scenario: Deletion of an organizational member generating cells with inputs and DW, but no cell with roles
