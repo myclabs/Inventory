@@ -1,11 +1,11 @@
 @dbFull
-Feature: Cell contributor feature
+Feature: Cell coordinator feature
 
   @javascript
   Scenario: Coordinator of a single cell
     Given I am on the homepage
     And I wait for the page to finish loading
-  # Login en tant qu'utilisateur connecté
+  # Login
     When I fill in "email" with "coordinateur.zone-marque@toto.com"
     And I fill in "password" with "coordinateur.zone-marque@toto.com"
     And I click "connection"
@@ -25,7 +25,7 @@ Feature: Cell contributor feature
     Then I should see the "inventories6" datagrid
     When I set "Ouvert" for column "inventoryStatus" of row 1 of the "inventories6" datagrid with a confirmation message
   # Les autres onglets de la page d'une cellule sont absents
-    # TODO And I should not see "Paramétrage"
+  #TODO (2.10) And I should not see "Paramétrage"
     And I should not see "Rôles"
     And I should not see "Reconstruction"
 
@@ -33,7 +33,7 @@ Feature: Cell contributor feature
   Scenario: Coordinator of several cells
     Given I am on the homepage
     And I wait for the page to finish loading
-  # Login en tant qu'utilisateur connecté
+  # Login
     When I fill in "email" with "coordinateur.site@toto.com"
     And I fill in "password" with "coordinateur.site@toto.com"
     And I click "connection"
