@@ -174,6 +174,36 @@ Feature: Granularity dataware analysis feature
       | valueAxiso_annee |
       | 2013                |
 
+  @javascript
+  Scenario: Create a granularity analysis, modify it, and save as another configuration scenario
+  # Configuration et lancement d'une nouvelle analyse préconfigurée
+    Given I am on "orga/granularity/report/idCell/1/idGranularity/1/idCube/1"
+    When I click element "#indicatorRatio_indicator"
+    And I select "Camembert" from "chartType"
+    And I click "Lancer"
+    Then the following message is shown and closed: "Analyse effectuée."
+  # Enregistrement de l'analyse préconfigurée
+    When I click "Enregistrer"
+    Then I should see the popup "Enregistrer la configuration de l'analyse"
+    When I fill in "Libellé" with "Analyse préconfigurée test"
+    When I click element "#saveReport .btn:contains('Enregistrer')"
+    Then I should see "Analyse préconfigurée test Niveau organisationnel global"
+    And I should see "Configuration enregistrée"
+  # Modification de l'analyse (dans la même interface) et lancement
+    When I select "Histogramme vertical" from "chartType"
+    And I click "Lancer"
+    Then the following message is shown and closed: "Analyse effectuée."
+  # Enregistrement comme une nouvelle analyse
+    When I click "Enregistrer"
+    Then I should see the popup "Enregistrer la configuration de l'analyse"
+    When I click element "label:contains('Créer une nouvelle configuration')"
+    And I fill in "Libellé" with "Analyse préconfigurée test modifiée"
+    And I click element "#saveReport .btn:contains('Enregistrer')"
+    Then I should see "Analyse préconfigurée test modifiée Niveau organisationnel global"
+
+
+
+
 
 
 
