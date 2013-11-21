@@ -151,7 +151,7 @@ Feature: Organizational member feature
       | label  |
       | Annecy |
 
-  @javascript @skipped
+  @javascript
   Scenario: Deletion of an organizational member scenario
     #6268 Exceptions non capturées suppression d'un membre organisationnel
   # Accès à l'onglet "Éléments"
