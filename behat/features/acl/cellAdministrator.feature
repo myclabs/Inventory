@@ -77,8 +77,8 @@ Feature: Cell administrator feature
     Then I should see the popup "Ajout d'un membre à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
-    And I fill in "listMemberssite_broaderpays_addForm" with "france#"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 1 of the "listMemberssite" datagrid should contain:
@@ -106,7 +106,7 @@ Feature: Cell administrator feature
     Then I should see the popup "Ajout d'un membre à l'axe « Pays »"
     When I fill in "listMemberspays_label_addForm" with "AAA"
     And I fill in "listMemberspays_ref_addForm" with "aaa"
-    And I fill in "listMemberspays_broaderzone_addForm" with "europe#"
+    And I fill in "listMemberspays_broaderzone_addForm" with "europe"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the "listMemberspays" datagrid should contain 2 row
