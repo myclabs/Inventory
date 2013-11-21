@@ -49,7 +49,7 @@ $testColumn = new UI_Datagrid_Col_Link('test', __('UI', 'name', 'test'));
 $datagrid->addCol($testColumn);
 
 $duplicateColumn = new UI_Datagrid_Col_Popup('duplicate', __('UI', 'verb', 'duplicate'));
-$duplicateColumn->popup->title = __('UI', 'verb', 'duplicate');
+$duplicateColumn->popup->title = __('AF', 'formList', 'duplicatePanelTitle');
 $button = new UI_HTML_Button(__('UI', 'verb', 'duplicate'));
 $button->id = 'submit';
 $button->addAttribute('class', 'btn-primary');
