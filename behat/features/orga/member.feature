@@ -50,8 +50,14 @@ Feature: Organizational member feature
     When I fill in "listMemberssite_ref_addForm" with "bépo"
     And I click "Valider"
     Then the field "listMemberssite_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout, identifiant déjà utilisé
+  # Ajout, identifiant déjà utilisé, membres axes parents manquants
     When I fill in "listMemberssite_ref_addForm" with "annecy"
+    And I click "Valider"
+    Then the field "listMemberssite_broaderpays_addForm" should have error: "Merci de renseigner ce champ."
+    And the field "listMemberssite_broadermarque_addForm" should have error: "Merci de renseigner ce champ."
+  # Ajout, identifiant déjà utilisé, membres axes parents remplis
+    When I fill in "listMemberssite_broaderpays_addForm" with "france#"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#"
     And I click "Valider"
     Then the field "listMemberssite_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
