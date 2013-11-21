@@ -20,6 +20,14 @@
                 <seg>Creation of a form</seg>
             </tuv>
         </tu>
+        <tu tuid="duplicatePanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Libellé et identifiant du nouveau formulaire (copie)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Label and identifier of the new form (copy)</seg>
+            </tuv>
+        </tu>
 
         <!-- Messages -->
 

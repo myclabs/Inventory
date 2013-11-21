@@ -82,8 +82,8 @@ Feature: Organizational axis feature
     When I fill in "editAxis_label" with "Site modifié"
     And I fill in "editAxis_ref" with "site_modifie"
     And I click "Confirmer"
-    And I wait 3 seconds
-    Then the following message is shown and closed: "Modification effectuée."
+    And I wait 5 seconds
+   # Then the following message is shown and closed: "Modification effectuée."
   # Modification de l'identifiant d'un axe, identifiant vide
     When I click "Site modifié"
     Then I should see the popup "Édition d'un axe"

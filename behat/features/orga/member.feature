@@ -20,8 +20,8 @@ Feature: Organizational member feature
   # Ajout d'un membre, saisie correcte (parent renseigné en partie)
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
-    And I fill in "listMemberssite_broaderpays_addForm" with "france#"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Affichage suivant l'ordre alphabétique des identifiants
@@ -50,8 +50,14 @@ Feature: Organizational member feature
     When I fill in "listMemberssite_ref_addForm" with "bépo"
     And I click "Valider"
     Then the field "listMemberssite_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout, identifiant déjà utilisé
+  # Ajout, identifiant déjà utilisé, membres axes parents manquants
     When I fill in "listMemberssite_ref_addForm" with "annecy"
+    And I click "Valider"
+    Then the field "listMemberssite_broaderpays_addForm" should have error: "Merci de renseigner ce champ."
+    And the field "listMemberssite_broadermarque_addForm" should have error: "Merci de renseigner ce champ."
+  # Ajout, identifiant déjà utilisé, membres axes parents remplis
+    When I fill in "listMemberssite_broaderpays_addForm" with "france"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a"
     And I click "Valider"
     Then the field "listMemberssite_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -101,19 +107,20 @@ Feature: Organizational member feature
     And I open tab "Éléments"
     When I open collapse "Site"
     Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label  | ref      | broaderpays    |
-      | Annecy | annecy   | France         |
-  # Modification du membre parent suivant l'axe "Pays" (modification de "France" à "vide")
-    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
-    Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label  | ref      | broaderpays    |
-      | Annecy | annecy   |                |
-  # Modification du membre parent suivant l'axe "Pays" (modification de "vide" à "France")
-    When I set "france#" for column "broaderpays" of row 1 of the "listMemberssite" datagrid with a confirmation message
+      | label  | ref      | broaderpays |
+      | Annecy | annecy   | France      |
+  # Modification du membre parent suivant l'axe "Marque"
+    When I set "marque_b" for column "broadermarque" of row 1 of the "listMemberssite" datagrid with a confirmation message
     And I wait 15 seconds
-    Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label  | ref      | broaderpays    |
-      | Annecy | annecy   | France         |
+    Then the "listMemberssite" datagrid should contain a row:
+      | label  | ref      | broaderpays    | broadermarque |
+      | Annecy | annecy   | France         | Marque B      |
+  # Modification du membre parent suivant l'axe "Pays" (tentative de modification de "France" à "vide", non autorisé)
+    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
+    Then the following message is shown and closed: "Merci de renseigner ce champ."
+    And the "listMemberssite" datagrid should contain a row:
+      | label  | ref      | broaderpays    | broadermarque |
+      | Annecy | annecy   | France         | Marque B      |
 
   @javascript
   Scenario: Deletion of an organizational member generating cells with inputs and DW, but no cell with roles
@@ -124,7 +131,7 @@ Feature: Organizational member feature
     And I open tab "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
-    And the "listMemberssite" datagrid should contain 4 row
+    And the "listMemberssite" datagrid should contain 3 row
     And the row 3 of the "listMemberssite" datagrid should contain:
       | label  |
       | Grenoble |
@@ -132,7 +139,7 @@ Feature: Organizational member feature
     When I click "Supprimer" in the row 3 of the "listMemberssite" datagrid
     And I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "listMemberssite" datagrid should contain 3 row
+    And the "listMemberssite" datagrid should contain 2 row
   # Tentative de suppression d'un membre générant une cellule associée à des rôles
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label  |
@@ -144,7 +151,7 @@ Feature: Organizational member feature
       | label  |
       | Annecy |
 
-  @javascript @skipped
+  @javascript
   Scenario: Deletion of an organizational member scenario
     #6268 Exceptions non capturées suppression d'un membre organisationnel
   # Accès à l'onglet "Éléments"
