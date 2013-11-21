@@ -2,10 +2,30 @@
 Feature: Cell administrator feature
 
   @javascript
+  Scenario: Global cell administrator login scenario
+    Given I am on the homepage
+    And I wait for the page to finish loading
+  # Login en tant qu'administrateur de la cellule globale
+    When I fill in "email" with "administrateur.global@toto.com"
+    And I fill in "password" with "administrateur.global@toto.com"
+  # On tombe sur la page de la cellule globale
+    Then I should see "Vue globale Workspace avec données"
+    When I wait 5 seconds
+  # Vérification onglets visibles et invisibles
+    When I open tab "Paramétrage"
+  # Vérification que, sous l'onglet "Paramétrage", l'utilisateur voit uniquement "Éléments" et "Pertinence"
+    And I open tab "Éléments"
+    And I open tab "Pertinence"
+    Then I should not see "Informations générales"
+    And I should not see "Axes"
+    And I should not see "Niveaux"
+    And I should not see "Contrôle"
+
+  @javascript
   Scenario: Single cell administrator login scenario
     Given I am on the homepage
     And I wait for the page to finish loading
-  # Login en tant qu'utilisateur connecté
+  # Login
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
