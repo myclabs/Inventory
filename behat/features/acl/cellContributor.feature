@@ -5,7 +5,7 @@ Feature: Cell contributor feature
   Scenario: Contributor of a single cell
     Given I am on the homepage
     And I wait for the page to finish loading
-  # Login en tant qu'utilisateur connecté
+  # Login
     When I fill in "email" with "contributeur.zone-marque@toto.com"
     And I fill in "password" with "contributeur.zone-marque@toto.com"
     And I click "connection"
@@ -18,22 +18,36 @@ Feature: Cell contributor feature
     And I click element "#chiffre_affaireHistory .btn"
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element
-  # Accès à l'onglet "Collectes", édition du statut d'une collecte
-    When I click "Quitter"
-    And I open tab "Collectes"
-    And I open collapse "Année | Zone | Marque"
-    Then I should see the "inventories6" datagrid
-    When I set "Ouvert" for column "inventoryStatus" of row 1 of the "inventories6" datagrid with a confirmation message
-  # Les autres onglets de la page d'une cellule sont absents
-    # TODO And I should not see "Paramétrage"
+  # Accès à l'onglet "Commentaires"
+    When I open tab "Commentaires"
+    And I click "Ajouter un commentaire"
+    And I fill in "addContent" with "Blabla"
+    And I click element "#Ajouter"
+    Then I should see "Blabla"
+  # Accès à l'onglet "Documents" (pb de configuration, pas de bibliothèque associée…)
+    When I open tab "Documents"
+  # Vérification que pas accès aux autres habituels onglets de la page d'une saisie
+    And I should not see "Résultats"
+    And I should not see "Détails calculs"
+    When I open tab "Saisie"
+    And I click "Quitter"
+    # Vérification des onglets auxquels on a accès
+    And I open tab "Historique"
+    And I open tab "Commentaires"
+    And I open tab "Saisies"
+  # Vérification des onglets auxquels on n'a pas accès
+    And I should not see "Paramétrage"
     And I should not see "Rôles"
+    And I should not see "Collectes"
+    And I should not see "Analyses"
+    And I should not see "Exports"
     And I should not see "Reconstruction"
 
   @javascript
   Scenario: Contributor of several cells
     Given I am on the homepage
     And I wait for the page to finish loading
-  # Login en tant qu'utilisateur connecté
+  # Login
     When I fill in "email" with "contributeur.site@toto.com"
     And I fill in "password" with "contributeur.site@toto.com"
     And I click "connection"
@@ -48,16 +62,3 @@ Feature: Cell contributor feature
     Then I should see "Annecy Workspace avec données"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
-  # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
-    When I open tab "Analyses"
-    Then the row 1 of the "report" datagrid should contain:
-      | label                        |
-      | Chiffre d'affaire, par année |
-    When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
-    And I open tab "Valeurs"
-    Then the row 1 of the "reportValues" datagrid should contain:
-      | valueAxiso_annee | valueDigital | valueUncertainty |
-      | 2012             | 10           | 15               |
-    And the row 2 of the "reportValues" datagrid should contain:
-      | valueAxiso_annee | valueDigital | valueUncertainty |
-      | 2013             | 10           | 15               |

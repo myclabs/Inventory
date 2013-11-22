@@ -75,7 +75,7 @@ Feature: Organizational member feature
     When I set "Annecy modifiée" for column "label" of row 1 of the "listMemberssite" datagrid with a confirmation message
     And I set "annecy_modifie" for column "ref" of row 1 of the "listMemberssite" datagrid with a confirmation message
     Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label           | ref     |
+      | label           | ref            |
       | Annecy modifiée | annecy_modifie |
 
   @javascript
@@ -121,57 +121,6 @@ Feature: Organizational member feature
     And the "listMemberssite" datagrid should contain a row:
       | label  | ref      | broaderpays    | broadermarque |
       | Annecy | annecy   | France         | Marque B      |
-
-  @javascript
-  Scenario: Deletion of an organizational member generating cells with inputs and DW, but no cell with roles
-  # Accès à l'onglet "Éléments"
-    Given I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-    And I open tab "Paramétrage"
-    And I open tab "Éléments"
-    And I open collapse "Site"
-    Then I should see the "listMemberssite" datagrid
-    And the "listMemberssite" datagrid should contain 3 row
-    And the row 3 of the "listMemberssite" datagrid should contain:
-      | label  |
-      | Grenoble |
-  # Remarque : Grenoble associé à aucun rôle
-    When I click "Supprimer" in the row 3 of the "listMemberssite" datagrid
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
-    And the "listMemberssite" datagrid should contain 2 row
-  # Tentative de suppression d'un membre générant une cellule associée à des rôles
-    And the row 1 of the "listMemberssite" datagrid should contain:
-      | label  |
-      | Annecy |
-    When I click "Supprimer" in the row 1 of the "listMemberssite" datagrid
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il existe au moins un rôle organisationnel pour une unité organisationnelle associée à ce membre."
-    And the row 1 of the "listMemberssite" datagrid should contain:
-      | label  |
-      | Annecy |
-
-  @javascript
-  Scenario: Deletion of an organizational member scenario
-    #6268 Exceptions non capturées suppression d'un membre organisationnel
-  # Accès à l'onglet "Éléments"
-    Given I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-    And I open tab "Paramétrage"
-    And I open tab "Éléments"
-  # Membre jouant le rôle de parent direct pour au moins un autre membre
-    And I open collapse "Pays"
-    When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il joue le rôle de parent direct pour au moins un autre membre."
-  # Suppression d'un membre, sans obstacle
-    When I open collapse "Année"
-    And I click "Supprimer" in the row 1 of the "listMembersannee" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
-    Then the "listMembersannee" datagrid should contain 1 row
 
   @javascript
   Scenario: Check list of members of an axis when the current cell is not the global cell
