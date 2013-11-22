@@ -159,26 +159,33 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB INVENTORIES
-        try {
-            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
-            if ($granularityForInventoryStatus->isNarrowerThan($granularity) || ($granularityForInventoryStatus === $granularity)) {
-                $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
-            } else {
+        $isUserAllowedToInputCell = $this->aclService->isAllowed(
+            $connectedUser,
+            CellAction::INPUT(),
+            $cell
+        );
+        if ($isUserAllowedToInputCell) {
+            try {
+                $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+                if ($granularityForInventoryStatus->isNarrowerThan($granularity) || ($granularityForInventoryStatus === $granularity)) {
+                    $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+                } else {
+                    $crossedOrgaGranularity = null;
+                }
+            } catch (Core_Exception_UndefinedAttribute $e) {
+                $crossedOrgaGranularity = null;
+            } catch (Core_Exception_NotFound $e) {
                 $crossedOrgaGranularity = null;
             }
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $crossedOrgaGranularity = null;
-        } catch (Core_Exception_NotFound $e) {
-            $crossedOrgaGranularity = null;
-        }
-        if ($crossedOrgaGranularity !== null) {
-            $inventoriesTab = new UI_Tab('inventories');
-            if ($tab === 'inventories') {
-                $inventoriesTab->active = true;
+            if ($crossedOrgaGranularity !== null) {
+                $inventoriesTab = new UI_Tab('inventories');
+                if ($tab === 'inventories') {
+                    $inventoriesTab->active = true;
+                }
+                $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
+                $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
+                $this->view->tabView->addTab($inventoriesTab);
             }
-            $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
-            $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
-            $this->view->tabView->addTab($inventoriesTab);
         }
 
 
@@ -249,11 +256,6 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB DOCUMENTS
-        $isUserAllowedToInputCell = $this->aclService->isAllowed(
-            $connectedUser,
-            CellAction::INPUT(),
-            $cell
-        );
         if (($isUserAllowedToInputCell)
             && (($granularity->getCellsWithSocialContextActions() === true)
                 || ($granularity->getCellsWithSocialGenericActions() === true)
