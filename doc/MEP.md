@@ -17,6 +17,12 @@ php scripts/migration/2.9/migrate.php
 
 Le script va effectuer un build update
 
+- Exécuter le job de rebuild des exports (long)
+
+```
+php scripts/job/exports/rebuild.php
+```
+
 - Redémarrer le worker
 
 ```

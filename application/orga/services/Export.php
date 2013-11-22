@@ -468,14 +468,13 @@ class Orga_Service_Export
                     continue;
                 }
                 $cellInputsPHPExcel = PHPExcel_IOFactory::load($cellFile);
-                $findEndDataRow = $cellInputsPHPExcel->getActiveSheet()->getHighestRow();
-                if ($findEndDataRow < 2) {
+                $cellInputsEndDataRow = $cellInputsPHPExcel->getActiveSheet()->getHighestRow();
+                if ($cellInputsEndDataRow < 2) {
                     continue;
                 }
-                $findEndData = $findEndDataRow . $findEndDataRow;
-                $data = $cellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $findEndData);
-                $appendStartRow = $findEndDataRow + 1;
-                $granularitySheet->fromArray($data, null, 'A' . $appendStartRow);
+                $cellInputsEndData = $cellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $cellInputsEndDataRow;
+                $cellInputsData = $cellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $cellInputsEndData);
+                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1));
                 $cellInputsPHPExcel->disconnectWorksheets();
                 unset($cellInputsPHPExcel);
             }
