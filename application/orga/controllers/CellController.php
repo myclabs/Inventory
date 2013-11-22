@@ -159,12 +159,12 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB INVENTORIES
-        $isUserAllowedToInputCell = $this->aclService->isAllowed(
+        $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
             $connectedUser,
-            CellAction::INPUT(),
+            CellAction::VIEW_REPORTS(),
             $cell
         );
-        if ($isUserAllowedToInputCell) {
+        if ($isUserAllowedToViewCellReports) {
             try {
                 $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
                 if ($granularityForInventoryStatus->isNarrowerThan($granularity) || ($granularityForInventoryStatus === $granularity)) {
@@ -201,11 +201,6 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB ANALYSES
-        $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
-            $connectedUser,
-            CellAction::VIEW_REPORTS(),
-            $cell
-        );
         if (($isUserAllowedToViewCellReports) && ($granularity->getCellsGenerateDWCubes() === true)) {
             $analysisTab = new UI_Tab('analyses');
             if ($tab === 'analyses') {
@@ -256,6 +251,11 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB DOCUMENTS
+        $isUserAllowedToInputCell = $this->aclService->isAllowed(
+            $connectedUser,
+            CellAction::INPUT(),
+            $cell
+        );
         if (($isUserAllowedToInputCell)
             && (($granularity->getCellsWithSocialContextActions() === true)
                 || ($granularity->getCellsWithSocialGenericActions() === true)
