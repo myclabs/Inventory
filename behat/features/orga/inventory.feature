@@ -97,7 +97,11 @@ Feature: Organization inventory tab feature
     When I open tab "Paramétrage"
     And I open tab "Niveaux"
   # On rend navigable la granularité "Année|Zone|Marque" (qui est la granularité des inventaires)
-    And I set "Navigable" for column "navigable" of row 6 of the "granularity" datagrid with a confirmation message
+    Then I should see the "granularity" datagrid
+    And the row 6 of the "granularity" datagrid should contain:
+      | axes                | navigable     |
+      | Année, Zone, Marque | Non navigable |
+    When I set "Navigable" for column "navigable" of row 6 of the "granularity" datagrid with a confirmation message
   # On recharge la page pour faire apparaître le volet de navigation
     And I reload the page
   # On descend dans la cellule "2012 | Europe | Marque A"

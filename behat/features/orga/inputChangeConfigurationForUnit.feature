@@ -20,7 +20,7 @@ Feature: Organization input input feature
     And I open collapse "Champs numériques"
     And I set "kg" for column "unit" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Retour à la saisie : la saisie n'a pas été modifiée
-    Given I am on "orga/cell/input/idCell/31/"
+    Given I am on "orga/cell/input/idCell/30/"
     And I wait for the page to finish loading
     And the "quantite_combustible" field should contain "10"
     And the "quantite_combustible_unit" field should contain "t"
@@ -55,7 +55,7 @@ Feature: Organization input input feature
     And I open collapse "Champs numériques"
     And I set "Non modifiable" for column "unitSelection" of row 1 of the "numericFieldDatagrid" datagrid with a confirmation message
   # Retour à la saisie
-    Given I am on "orga/cell/input/idCell/31/"
+    Given I am on "orga/cell/input/idCell/30/"
     And I wait for the page to finish loading
     Then the "quantite_combustible_unit" field should contain "t"
     And the "quantite_combustible" field should contain "1"
