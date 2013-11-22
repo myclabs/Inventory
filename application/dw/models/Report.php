@@ -178,6 +178,18 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
     }
 
     /**
+     * Clone le Report.
+     *
+     * @return DW_Model_Report
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+        }
+    }
+
+    /**
      * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()

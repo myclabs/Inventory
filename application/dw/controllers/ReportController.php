@@ -330,11 +330,11 @@ class DW_ReportController extends Core_Controller
             $this->entityManager->flush($report);
 
             $this->sendJsonResponse(
-                array(
+                [
                     'message'  => __('UI', 'message', 'updated'),
                     'type'     => 'success',
                     'idReport' => $report->getId()
-                )
+                ]
             );
 
             $this->entityManager->clear();
