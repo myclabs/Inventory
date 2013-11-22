@@ -96,31 +96,27 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             $totalChildInputCells = 0;
             foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
                 if ($inputGranularity === $cell->getGranularity()) {
-                    try {
-                        $afInputSetPrimary = $cell->getAFInputSetPrimary();
+                    $afInputSetPrimary = $cell->getAFInputSetPrimary();
+                    if ($afInputSetPrimary !== null) {
                         if ($afInputSetPrimary->isInputComplete()) {
                             $data['advancementInput'] ++;
                         }
                         if ($afInputSetPrimary->isFinished()) {
                             $data['advancementFinishedInput'] ++;
                         }
-                    } catch (Core_Exception_UndefinedAttribute $e) {
-                        // Pas de saisie pour l'instant = pas d'avancement.
                     }
                     $totalChildInputCells ++;
                 } elseif ($inputGranularity->isNarrowerThan($cell->getGranularity())) {
                     $inputCells = $cell->getChildCellsForGranularity($inputGranularity);
                     foreach ($inputCells as $inputCell) {
-                        try {
-                            $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
+                        $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
+                        if ($childAfInputSetPrimary !== null) {
                             if ($childAfInputSetPrimary->isInputComplete()) {
                                 $data['advancementInput'] ++;
                             }
                             if ($childAfInputSetPrimary->isFinished()) {
                                 $data['advancementFinishedInput'] ++;
                             }
-                        } catch (Core_Exception_UndefinedAttribute $e) {
-                            // Pas de saisie pour l'instant = pas d'avancement.
                         }
                         $totalChildInputCells ++;
                     }

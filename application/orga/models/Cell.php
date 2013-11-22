@@ -1043,15 +1043,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @throws Core_Exception_UndefinedAttribute
-     *
      * @return AF_Model_InputSet_Primary
      */
     public function getAFInputSetPrimary()
     {
-        if ($this->aFInputSetPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute('InputSetPrimary has not be defined.');
-        }
         return $this->aFInputSetPrimary;
     }
 

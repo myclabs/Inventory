@@ -307,12 +307,12 @@ class Orga_Service_Export
 
 
         switch ($format) {
-            case 'xls':
-                $writer = new PHPExcel_Writer_Excel5();
-                break;
             case 'xlsx':
-            default:
                 $writer = new PHPExcel_Writer_Excel2007();
+                break;
+            case 'xls':
+            default:
+                $writer = new PHPExcel_Writer_Excel5();
                 break;
         }
 
@@ -324,28 +324,40 @@ class Orga_Service_Export
     }
 
     /**
-     * Exporte les Inputs de la version de orga.
+     * Enregistre (dans data/exports/inputs) l'exports de la saisie de la cellule.
      *
-     * @param string $format
      * @param Orga_Model_Cell $cell
      */
-    public function streamInputs($format, Orga_Model_Cell $cell)
+    public function saveCellInput(Orga_Model_Cell $cell)
     {
+        $inputsExportsDirectory = APPLICATION_PATH . '/../data/exports/inputs/';
+        $writers = [
+            'xls' => new PHPExcel_Writer_Excel5(),
+//            'xlsx' => new PHPExcel_Writer_Excel2007(),
+        ];
+
+        $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+        if ($aFInputSetPrimary === null) {
+            foreach ($writers as $extension => $writer) {
+                $file = $inputsExportsDirectory . $cell->getId() . '.' . $extension;
+                if (file_exists($file)) {
+                    unlink($file);
+                }
+            }
+            return;
+        }
+        $inputs = [];
+        foreach ($aFInputSetPrimary->getInputs() as $input) {
+            if (!$input instanceof AF_Model_Input_Group) {
+                $inputs = array_merge($inputs, getInputsDetails($input));
+            }
+        }
+
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
 
         $modelBuilder->bind('cell', $cell);
-
-        $granularities = [];
-        if ($cell->getGranularity()->isInput()) {
-            $granularities[] = $cell->getGranularity();
-        }
-        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-            if ($narrowerGranularity->isInput()) {
-                $granularities[] = $narrowerGranularity;
-            }
-        }
-        $modelBuilder->bind('granularities', $granularities);
+        $modelBuilder->bind('inputs', $inputs);
 
         $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'subForm'));
         $modelBuilder->bind('inputLabel', __('UI', 'name', 'field'));
@@ -355,17 +367,6 @@ class Orga_Service_Export
         $modelBuilder->bind('inputUnit', __('Orga', 'export', 'choosedUnit'));
         $modelBuilder->bind('inputReferenceValue', __('Orga', 'export', 'valueExpressedInDefaultUnit'));
         $modelBuilder->bind('inputReferenceUnit', __('Orga', 'export', 'defaultUnit'));
-
-        $modelBuilder->bindFunction(
-            'getChildCellsForGranularity',
-            function (Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
-                if ($cell->getGranularity() === $granularity) {
-                    return [$cell];
-                } else {
-                    return $cell->getChildCellsForGranularity($granularity);
-                }
-            }
-        );
 
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
@@ -379,25 +380,110 @@ class Orga_Service_Export
             }
         );
 
-        $modelBuilder->bindFunction(
-            'getCellInputs',
-            function (Orga_Model_Cell $cell) {
-                try {
-                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    return [];
-                }
+        $document = $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/inputs.yml'));
+        foreach ($writers as $extension => $writer) {
+            $export->export(
+                $document,
+                $inputsExportsDirectory . $cell->getId() . '.' . $extension,
+                $writer
+            );
+        }
+    }
 
-                $inputs = [];
-                foreach ($aFInputSetPrimary->getInputs() as $input) {
-                    if (!$input instanceof AF_Model_Input_Group) {
-                        $inputs = array_merge($inputs, getInputsDetails($input));
-                    }
-                }
-                return $inputs;
+    /**
+     * Exporte les Inputs de la version de orga.
+     *
+     * @param string $format
+     * @param Orga_Model_Cell $cell
+     */
+    public function streamInputs($format, Orga_Model_Cell $cell)
+    {
+        $inputsExportsDirectory = APPLICATION_PATH . '/../data/exports/inputs/';
+
+        $phpExcelModel = new PHPExcel();
+
+        // Détermination des granularitées concernées.
+        $granularities = [];
+        if ($cell->getGranularity()->isInput()) {
+            $granularities[] = $cell->getGranularity();
+        }
+        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            if ($narrowerGranularity->isInput()) {
+                $granularities[] = $narrowerGranularity;
             }
-        );
+        }
 
+        // Création d'une sheet par granularité.
+        foreach ($granularities as $indexGranularity => $granularity) {
+            /** @var Orga_Model_Granularity $granularity */
+            if ($indexGranularity > $phpExcelModel->getSheetCount() - 1) {
+                $phpExcelModel->createSheet();
+            }
+
+            $granularitySheet = $phpExcelModel->getSheet($indexGranularity);
+            $granularitySheet->setTitle(mb_substr($granularity->getLabel(), 0, 31));
+
+            // Colonnes
+            $columns = array_map(function(Orga_Model_Axis $axis) { return $axis->getLabel(); }, $granularity->getAxes());
+            $columns[] = __('Orga', 'export', 'subForm');
+            $columns[] = __('UI', 'name', 'field');
+            $columns[] = __('Orga', 'export', 'fieldType');
+            $columns[] = __('Orga', 'export', 'typedInValue');
+            $columns[] = __('UI', 'name', 'uncertainty') . ' (%)';
+            $columns[] = __('Orga', 'export', 'choosedUnit');
+            $columns[] = __('Orga', 'export', 'valueExpressedInDefaultUnit');
+            $columns[] = __('Orga', 'export', 'defaultUnit');
+            foreach (array_values($columns) as $columnIndex => $column) {
+                $granularitySheet->setCellValueByColumnAndRow($columnIndex, 1, $column);
+            }
+            $granularitySheetHighestColumn = $granularitySheet->getHighestColumn();
+            $cellCoordinates = 'A1:' . $granularitySheetHighestColumn . '1';
+            $granularitySheet->getStyle($cellCoordinates)->applyFromArray(
+                [
+                    'alignment' => [
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    ],
+                    'font' => [
+                        'bold' => true,
+                    ],
+                ]
+            );
+
+            // Ajout des exports de chaque cellules.
+            if ($cell->getGranularity() === $granularity) {
+                if ($cell->getAFInputSetPrimary() !== null) {
+                    $cells = [$cell];
+                } else {
+                    $cells = [];
+                }
+            } else {
+                $criteria = new \Doctrine\Common\Collections\Criteria();
+                $criteria->where($criteria->expr()->neq('aFInputSetPrimary', null));
+                $criteria->orderBy(['tag' => 'ASC']);
+                $cells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
+            }
+            foreach ($cells as $cell) {
+                $cellFile = $inputsExportsDirectory . $cell->getId() . '.' . $format;
+                if (!file_exists($cellFile)) {
+                    continue;
+                }
+                $cellInputsPHPExcel = PHPExcel_IOFactory::load($cellFile);
+                $findEndDataRow = $cellInputsPHPExcel->getActiveSheet()->getHighestRow();
+                if ($findEndDataRow < 2) {
+                    continue;
+                }
+                $findEndData = $findEndDataRow . $findEndDataRow;
+                $data = $cellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $findEndData);
+                $appendStartRow = $findEndDataRow + 1;
+                $granularitySheet->fromArray($data, null, 'A' . $appendStartRow);
+                $cellInputsPHPExcel->disconnectWorksheets();
+                unset($cellInputsPHPExcel);
+            }
+
+            foreach (array_values($columns) as $columnIndex => $column) {
+                $granularitySheet->getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($columnIndex))->setAutoSize(true);
+            }
+        }
 
         switch ($format) {
             case 'xls':
@@ -409,11 +495,8 @@ class Orga_Service_Export
                 break;
         }
 
-        $export->export(
-            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/inputs.yml')),
-            'php://output',
-            $writer
-        );
+        $writer->setPHPExcel($phpExcelModel);
+        $writer->save('php://output');
     }
 
     /**
@@ -462,16 +545,12 @@ class Orga_Service_Export
             'getOutputsForIndicator',
             function (Orga_Model_Cell $cell, Classif_Model_Indicator $indicator) {
                 $results = [];
-                try {
-                    if ($cell->getAFInputSetPrimary()->getOutputSet() !== null) {
-                        foreach ($cell->getAFInputSetPrimary()->getOutputSet()->getElements() as $result) {
-                            if ($result->getContextIndicator()->getIndicator() === $indicator) {
-                                $results[] = $result;
-                            }
+                if (($cell->getAFInputSetPrimary() !== null) && ($cell->getAFInputSetPrimary()->getOutputSet() !== null)) {
+                    foreach ($cell->getAFInputSetPrimary()->getOutputSet()->getElements() as $result) {
+                        if ($result->getContextIndicator()->getIndicator() === $indicator) {
+                            $results[] = $result;
                         }
                     }
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    // Pas de saisie.
                 }
                 return $results;
             }
@@ -632,15 +711,23 @@ function getInputValues(AF_Model_Input $input)
         case 'AF_Model_Input_Numeric':
             /** @var AF_Model_Input_Numeric $input */
             if ($input->getComponent() !== null) {
-                $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
-                $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
-                return [
-                    $inputValue->getDigitalValue(),
-                    $inputValue->getRelativeUncertainty(),
-                    $inputValue->getUnit()->getSymbol(),
-                    $baseConvertedValue->getDigitalValue(),
-                    $baseConvertedValue->getUnit()->getSymbol(),
-                ];
+                try {
+                    $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
+                    $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
+                    return [
+                        $inputValue->getDigitalValue(),
+                        $inputValue->getRelativeUncertainty(),
+                        $inputValue->getUnit()->getSymbol(),
+                        $baseConvertedValue->getDigitalValue(),
+                        $baseConvertedValue->getUnit()->getSymbol(),
+                    ];
+                } catch (\Unit\IncompatibleUnitsException $e) {
+                    return [
+                        $inputValue->getDigitalValue(),
+                        $inputValue->getRelativeUncertainty(),
+                        $inputValue->getUnit()->getSymbol(),
+                    ];
+                }
             }
             return [
                 $inputValue->getDigitalValue(),

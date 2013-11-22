@@ -426,10 +426,8 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
         $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_INPUT);
-        try {
+        if ($cell->getAFInputSetPrimary() !== null) {
             $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            // Pas d'inputSetPrimary : nouvelle saisie.
         }
 
         $tabComments = new UI_Tab('inputComments');

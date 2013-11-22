@@ -131,8 +131,8 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                     CellAction::INPUT(),
                     $cell
                 );
-                try {
-                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+                $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+                if ($aFInputSetPrimary !== null) {
                     $percent = $aFInputSetPrimary->getCompletion();
                     $progressBarColor = null;
                     switch ($aFInputSetPrimary->getStatus()) {
@@ -151,8 +151,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                     }
                     $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
                     $data['stateInput'] = $aFInputSetPrimary->getStatus();
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    $aFInputSetPrimary = null;
+                } else {
                     $data['advancementInput'] = $this->cellPercent(0, 'danger');
                     $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
                 }
