@@ -8,6 +8,7 @@ Feature: Cell administrator feature
   # Login en tant qu'administrateur de la cellule globale
     When I fill in "email" with "administrateur.global@toto.com"
     And I fill in "password" with "administrateur.global@toto.com"
+    And I click "connection"
   # On tombe sur la page de la cellule globale
     Then I should see "Vue globale Workspace avec données"
     When I wait 5 seconds
