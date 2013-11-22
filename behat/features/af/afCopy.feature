@@ -120,7 +120,7 @@ Feature: AF copy feature
       | Copie formulaire avec tout type de champ | formulaire_tous_types_champ_copy |
     When I click "Test" in the row 9 of the "listAF" datagrid
     And I fill in "Champ numérique" with "10"
-    And I select "kg équ. CO2/bl" from "c_n_unit"
+    And I select "kg_co2e.bl^-1" from "c_n_unit"
     And I select "Option 1" from "c_s_s_liste"
     And I check "c_s_s_bouton_opt_2"
     And I check "c_s_m_checkbox_opt_3"
@@ -154,7 +154,7 @@ Feature: AF copy feature
     And I click "Ajouter"
     And I click "Ajouter"
     And I fill in "s_f_r_t_t_c__c_n__1" with "10"
-    And I select "kg équ. CO2/bl" from "s_f_r_t_t_c__c_n_unit__1"
+    And I select "kg_co2e.bl^-1" from "s_f_r_t_t_c__c_n_unit__1"
     And I select "Option 1" from "s_f_r_t_t_c__c_s_s_liste__1"
     And I check "s_f_r_t_t_c__c_s_s_bouton__1_opt_2"
     And I check "s_f_r_t_t_c__c_s_m_checkbox__1_opt_3"

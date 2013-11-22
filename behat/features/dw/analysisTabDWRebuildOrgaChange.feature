@@ -109,14 +109,14 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     And I wait for the page to finish loading
   # Au départ les données d'analyse sont à jour
     Then I should not see "Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour."
-  # Ajout membre (membre parent non renseigné)
+  # Ajout membre
     When I open tab "Paramétrage"
     And I open collapse "Site"
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un membre à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "Test"
     And I fill in "listMemberssite_ref_addForm" with "test"
-  # And I fill in "listMemberssite_broaderpays_addForm" with "france"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france"
     And I click "Valider"
     And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
