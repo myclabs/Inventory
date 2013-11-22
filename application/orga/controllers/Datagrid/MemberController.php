@@ -255,7 +255,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         $broaderAxis = $organization->getAxisByRef($this->getParam('refParentAxis'));
 
-        $members = $broaderAxis->getMembers();
+        $members = $broaderAxis->getMembers()->toArray();
         $idCell = $this->getParam('idCell');
         if (!empty($idCell)) {
             $cell = Orga_Model_Cell::load($idCell);
