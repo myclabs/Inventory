@@ -9,6 +9,7 @@ use Core_Exception_NotFound;
 use Core_Mail;
 use Core_Model_Query;
 use Core_Tools;
+use Psr\Log\LoggerInterface;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\UserRole;
 use Zend_Controller_Front;
@@ -26,9 +27,15 @@ class UserService
      */
     private $aclService;
 
-    public function __construct(ACLService $aclService)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(ACLService $aclService, LoggerInterface $logger)
     {
         $this->aclService = $aclService;
+        $this->logger = $logger;
     }
 
     /**
@@ -41,20 +48,27 @@ class UserService
      * @throws Core_Exception_InvalidArgument Mauvais mot de passe
      * @return User
      */
-    public static function login($email, $password)
+    public function login($email, $password)
     {
         $query = new Core_Model_Query();
         $query->filter->addCondition(User::QUERY_EMAIL, $email);
         $list = User::loadList($query);
         if (count($list) == 0) {
+            // Mauvais email
+            $this->logger->info('User log in failed: {email} (unknown email)', ['email' => $email]);
             throw new Core_Exception_NotFound("User not found");
         }
 
         /** @var $user User */
         $user = current($list);
         if (!$user->testPassword($password)) {
+            // Mauvais mot de passe
+            $this->logger->info('User log in failed: {email} (wrong password)', ['email' => $email]);
             throw new Core_Exception_InvalidArgument("Wrong password");
         }
+
+        // Login OK
+        $this->logger->info('User log in success: {email}', ['email' => $email]);
 
         return $user;
     }
