@@ -135,7 +135,7 @@ function buildAxisBroaderTag (Orga_Model_Axis $axis) {
     if ($axis->hasDirectBroaders()) {
         $broaderTag = '';
         $criteriaDESC = Doctrine\Common\Collections\Criteria::create();
-        $criteriaDESC->orderBy(['narrowerTag' => 'DESC']);
+        $criteriaDESC->orderBy(['narrowerTag' => 'ASC']);
         foreach ($axis->getDirectBroaders()->matching($criteriaDESC) as $directBroader) {
             $directBroaderTag = buildAxisBroaderTag($directBroader);
             foreach (explode(Orga_Model_Organization::PATH_JOIN, $directBroaderTag) as  $pathTag) {
@@ -170,7 +170,6 @@ function buildGranularityTag (Orga_Model_Granularity $granularity) {
         $tag = '';
         $axes = $granularity->getAxes();
         @usort($axes, ['Orga_Model_Axis', 'firstOrderAxes']);
-        $axes = array_reverse($axes);
         foreach ($axes as $axis) {
             $tag .= buildAxisBroaderTag($axis) . Orga_Model_Organization::PATH_JOIN;
         }
