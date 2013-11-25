@@ -78,8 +78,6 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
         $email = $this->getAddElementValue('email');
         if (!$email) {
             $this->setAddElementErrorMessage('email', __('UI', 'formValidation', 'emptyRequiredField'));
-        } elseif (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->setAddElementErrorMessage('email', __('UI', 'formValidation', 'invalidEmail'));
         }
 
         if (empty($this->_addErrorMessages)) {
@@ -89,6 +87,10 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
                 $user = $this->userService->inviteUser($email);
             } catch (Core_Exception_Duplicate $e) {
                 $this->setAddElementErrorMessage('email', __('User', 'list', 'emailAlreadyUsed'));
+                $this->send();
+                return;
+            } catch (Core_Exception_InvalidArgument $e) {
+                $this->setAddElementErrorMessage('email', __('UI', 'formValidation', 'invalidEmail'));
                 $this->send();
                 return;
             }

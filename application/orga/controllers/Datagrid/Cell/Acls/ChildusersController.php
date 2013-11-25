@@ -112,6 +112,10 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
+        } elseif (! filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+            $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'invalidEmail'));
+            $this->send();
+            return;
         }
         $role = $this->getAddElementValue('userRole');
         switch ($role) {

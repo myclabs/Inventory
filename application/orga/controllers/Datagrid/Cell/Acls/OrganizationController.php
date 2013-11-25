@@ -64,6 +64,10 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->send();
             return;
+        } elseif (! filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+            $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'invalidEmail'));
+            $this->send();
+            return;
         }
 
         $success = function () {

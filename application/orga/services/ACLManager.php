@@ -45,6 +45,7 @@ class Orga_Service_ACLManager
     /**
      * Ajoute au projet donné, l'utilisateur comme administrateur.
      *
+     * @throws Core_Exception_InvalidArgument email invalide
      * @param Orga_Model_Organization $organization
      * @param string                  $email
      * @param bool                    $sendMail
@@ -101,6 +102,7 @@ class Orga_Service_ACLManager
      * @param string          $email
      * @param bool            $sendMail
      * @throws InvalidArgumentException
+     * @throws Core_Exception_InvalidArgument email invalide
      */
     public function addCellRole(Orga_Model_Cell $cell, $roleClass, $email, $sendMail = true)
     {

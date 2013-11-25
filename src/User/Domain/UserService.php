@@ -50,6 +50,8 @@ class UserService
      */
     public function login($email, $password)
     {
+        $email = trim($email);
+
         $query = new Core_Model_Query();
         $query->filter->addCondition(User::QUERY_EMAIL, $email);
         $list = User::loadList($query);
@@ -82,6 +84,12 @@ class UserService
      */
     public function createUser($email, $password)
     {
+        $email = trim($email);
+        // Validation de l'email
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Core_Exception_InvalidArgument("Email invalide");
+        }
+
         $user = new User();
         $user->setEmail($email);
         $user->setPassword($password);
@@ -120,6 +128,8 @@ class UserService
      */
     public function inviteUser($email, $extraContent = null)
     {
+        $email = trim($email);
+
         if (User::isEmailUsed($email)) {
             throw new Core_Exception_Duplicate('Email is already used');
         }

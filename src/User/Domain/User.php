@@ -419,7 +419,7 @@ class User extends Core_Model_Entity implements Resource
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = trim($email);
     }
 
     /**
