@@ -59,10 +59,10 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         foreach ($childCells as $childCell) {
             $data = [];
             foreach ($childCell->getMembers() as $member) {
-                $data[$member->getAxis()->getRef()] = $member->getRef();
+                $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
             }
 
-            foreach ($cell->getAllRoles() as $role) {
+            foreach ($childCell->getAllRoles() as $role) {
                 $data['index'] = $role->getId();
                 $data['userFirstName'] = $role->getUser()->getFirstName();
                 $data['userLastName'] = $role->getUser()->getLastName();

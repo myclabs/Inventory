@@ -7,6 +7,10 @@
 
 use Core\Annotation\Secure;
 use User\Domain\ACL\Role\Role;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.
@@ -33,14 +37,20 @@ class Orga_Datagrid_Cell_Acls_ChildcellsController extends UI_Controller_Datagri
             $data = [];
             $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
-                $data[$member->getAxis()->getRef()] = $member->getRef();
+                $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
             }
 
             $listLinkedUser = [];
+            $listLinkedUser[CellAdminRole::class] = 0;
+            $listLinkedUser[CellManagerRole::class] = 0;
+            $listLinkedUser[CellContributorRole::class] = 0;
+            $listLinkedUser[CellObserverRole::class] = 0;
             $listAdministrator = [];
-            foreach ($cell->getAllRoles() as $role) {
-                $listAdministrator[] = $role->getUser()->getName();
-                $listLinkedUser[] = 1;  //  . ' ' . $linkedIdentity->getName() . '(s)';
+            foreach ($childCell->getAllRoles() as $role) {
+                $listLinkedUser[get_class($role)]++;
+                if (!($role instanceof \Orga\Model\ACL\Role\CellObserverRole)) {
+                    $listAdministrator[] = $role->getUser()->getName();
+                }
             }
 
             $data['administrators'] = implode(' | ', $listAdministrator);
@@ -65,11 +75,12 @@ class Orga_Datagrid_Cell_Acls_ChildcellsController extends UI_Controller_Datagri
     public function listAction()
     {
         $this->view->idCell = $this->getParam('idCell');
-        $cell = Orga_Model_Cell::load($this->view->idCell);
 
-        $this->view->listRoles = [];
-        foreach ($cell->getAllRoles() as $role) {
-            $this->view->listRoles[] = $role->getLabel();
-        }
+        $this->view->listRoles = [
+            'CellAdminRole' => CellAdminRole::getLabel(),
+            'CellManagerRole' => CellManagerRole::getLabel(),
+            'CellContributorRole' => CellContributorRole::getLabel(),
+            'CellObserverRole' => CellObserverRole::getLabel(),
+        ];
     }
 }
