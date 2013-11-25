@@ -6,6 +6,7 @@ use Core\Log\ChromePHPFormatter;
 use Core\Log\ErrorHandler;
 use Core\Log\ExtendedLineFormatter;
 use Core\Log\QueryLogger;
+use Core\Log\UserInfoProcessor;
 use Core\Mail\NullTransport;
 use Core\Work\EventListener\RabbitMQEventListener;
 use Core\Work\EventListener\SimpleEventListener;
@@ -179,6 +180,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         /** @noinspection PhpParamsInspection */
         $logger->pushProcessor(new PsrLogMessageProcessor());
+        // Log l'email de l'utilisateur
+        $logger->pushProcessor(new UserInfoProcessor());
 
         $this->container->set(LoggerInterface::class, $logger);
 
