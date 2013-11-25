@@ -129,30 +129,6 @@ class User extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Renvoie l'utilisateur correspondant au couple (email, password)
-     * @param string $email    Email utilisateur
-     * @param string $password Mot de passe de l'utilisateur
-     * @throws Core_Exception_NotFound L'email ne correspond à aucun utilisateur
-     * @throws Core_Exception_InvalidArgument Mauvais mot de passe
-     * @return User
-     */
-    public static function login($email, $password)
-    {
-        $query = new Core_Model_Query();
-        $query->filter->addCondition(self::QUERY_EMAIL, $email);
-        $list = self::loadList($query);
-        if (count($list) == 0) {
-            throw new Core_Exception_NotFound("User not found");
-        }
-        /** @var $user User */
-        $user = current($list);
-        if (!$user->testPassword($password)) {
-            throw new Core_Exception_InvalidArgument("Wrong password");
-        }
-        return $user;
-    }
-
-    /**
      * Renvoie l'utilisateur correspondant au mail
      * @param string $email
      * @return User

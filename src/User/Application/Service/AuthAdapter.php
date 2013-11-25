@@ -4,6 +4,7 @@ namespace User\Application\Service;
 
 use User\Domain\User;
 use Core_Exception_NotFound;
+use User\Domain\UserService;
 use Zend_Auth_Adapter_Interface;
 use Zend_Auth_Adapter_Exception;
 use Core_Exception_InvalidArgument;
@@ -16,17 +17,20 @@ use Zend_Auth_Result;
  */
 class AuthAdapter implements Zend_Auth_Adapter_Interface
 {
+    protected $userService;
     protected $login;
     protected $password;
 
     /**
      * Définition de l'identifiant et du mot de passe pour authentification
      *
-     * @param string $login
-     * @param string $password
+     * @param UserService $userService
+     * @param string      $login
+     * @param string      $password
      */
-    public function __construct($login, $password)
+    public function __construct(UserService $userService, $login, $password)
     {
+        $this->userService = $userService;
         $this->login = $login;
         $this->password = $password;
     }
@@ -40,7 +44,7 @@ class AuthAdapter implements Zend_Auth_Adapter_Interface
     public function authenticate()
     {
         try {
-            $user = User::login($this->login, $this->password);
+            $user = $this->userService->login($this->login, $this->password);
             if ($user->isEnabled()) {
                 return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user->getId());
             } else {

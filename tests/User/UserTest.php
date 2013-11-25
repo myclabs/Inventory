@@ -2,8 +2,6 @@
 
 use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
-use User\Domain\ACL\Role\AdminRole;
-use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -116,58 +114,6 @@ class UserMetierTest extends TestCase
      * @var UserService
      */
     private $userService;
-
-    /**
-     * Test de la méthode de login
-     */
-    public function testLogin()
-    {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
-        $this->entityManager->flush();
-
-        $o = User::login($user->getEmail(), 'test');
-        $this->assertTrue($o instanceof User);
-        $this->assertEquals($o->getId(), $user->getId());
-
-        $this->userService->deleteUser($user);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * Test de la méthode de login
-     * @expectedException Core_Exception_InvalidArgument
-     */
-    public function testWrongPassword()
-    {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
-        $this->entityManager->flush();
-
-        try {
-            User::login($user->getEmail(), 'mauvais-password');
-        } catch (Core_Exception_InvalidArgument $e) {
-            $this->userService->deleteUser($user);
-            $this->entityManager->flush();
-            throw $e;
-        }
-    }
-
-    /**
-     * Test de la méthode de login
-     * @expectedException Core_Exception_NotFound
-     */
-    public function testWrongLogin()
-    {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
-        $this->entityManager->flush();
-
-        try {
-            User::login('foo', 'test');
-        } catch (Core_Exception_NotFound $e) {
-            $this->userService->deleteUser($user);
-            $this->entityManager->flush();
-            throw $e;
-        }
-    }
 
     /**
      * Test du mot de passe

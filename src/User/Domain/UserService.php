@@ -4,7 +4,10 @@ namespace User\Domain;
 
 use Core_Exception;
 use Core_Exception_Duplicate;
+use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
 use Core_Mail;
+use Core_Model_Query;
 use Core_Tools;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\UserRole;
@@ -26,6 +29,34 @@ class UserService
     public function __construct(ACLService $aclService)
     {
         $this->aclService = $aclService;
+    }
+
+    /**
+     * Renvoie l'utilisateur correspondant au couple (email, password).
+     *
+     * @param string $email    Email utilisateur
+     * @param string $password Mot de passe de l'utilisateur
+     *
+     * @throws Core_Exception_NotFound L'email ne correspond à aucun utilisateur
+     * @throws Core_Exception_InvalidArgument Mauvais mot de passe
+     * @return User
+     */
+    public static function login($email, $password)
+    {
+        $query = new Core_Model_Query();
+        $query->filter->addCondition(User::QUERY_EMAIL, $email);
+        $list = User::loadList($query);
+        if (count($list) == 0) {
+            throw new Core_Exception_NotFound("User not found");
+        }
+
+        /** @var $user User */
+        $user = current($list);
+        if (!$user->testPassword($password)) {
+            throw new Core_Exception_InvalidArgument("Wrong password");
+        }
+
+        return $user;
     }
 
     /**

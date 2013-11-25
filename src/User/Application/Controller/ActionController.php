@@ -8,6 +8,7 @@
 use Core\Annotation\Secure;
 use User\Application\Service\AuthAdapter;
 use User\Domain\User;
+use User\Domain\UserService;
 
 /**
  * Contrôleur de gestion des actions de l'utilisateurs
@@ -16,8 +17,13 @@ use User\Domain\User;
  */
 class User_ActionController extends UI_Controller_Captcha
 {
-
     use UI_Controller_Helper_Form;
+
+    /**
+     * @Inject
+     * @var UserService
+     */
+    private $userService;
 
     /**
      * Par défaut : redirige vers l'action de login.
@@ -54,7 +60,7 @@ class User_ActionController extends UI_Controller_Captcha
                 // Obtention d'une référence de l'instance du Singleton de Zend_Auth.
                 $auth = Zend_Auth::getInstance();
                 // Définition de l'adaptateur d'authentification.
-                $authAdapter = new AuthAdapter($email, $password);
+                $authAdapter = new AuthAdapter($this->userService, $email, $password);
                 // Tentative d'authentification et stockage du résultat.
                 $result = $auth->authenticate($authAdapter);
                 if ($result->isValid()) {
