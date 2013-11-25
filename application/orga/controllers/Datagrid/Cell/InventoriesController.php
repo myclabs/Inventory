@@ -188,7 +188,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                         $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
                     }
                 } else {
-                    Core_Tools::dump($granularityACL->getLabel());
                     try {
                         $crossedGranularity = $granularity->getCrossedGranularity($granularityACL);
                         Core_Tools::dump($crossedGranularity->getLabel());
