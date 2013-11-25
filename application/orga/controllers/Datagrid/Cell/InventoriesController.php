@@ -190,7 +190,6 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                 } else {
                     try {
                         $crossedGranularity = $granularity->getCrossedGranularity($granularityACL);
-                        Core_Tools::dump($crossedGranularity->getLabel());
                         foreach ($cell->getChildCellsForGranularity($crossedGranularity) as $childCrossedGranularity) {
                             $this->addUserToArray($childCrossedGranularity->getParentCellForGranularity($granularityACL), $granularityACLs);
                         }
