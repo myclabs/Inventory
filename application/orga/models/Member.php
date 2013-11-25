@@ -197,7 +197,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function buildParentMembersHashKey($contextualizingParentMembers)
     {
-        @usort($contextualizingParentMembers, ['Orga_Model_Member', 'orderMembers']);
+        @usort($contextualizingParentMembers, [Orga_Model_Member::class, 'orderMembers']);
         $parentMembersRef = [];
 
         foreach ($contextualizingParentMembers as $parentMember) {
@@ -597,7 +597,7 @@ class Orga_Model_Member extends Core_Model_Entity
                 $parents[] = $recursiveParents;
             }
         }
-        @usort($parents, ['Orga_Model_Member', 'orderMembers']);
+        @usort($parents, [Orga_Model_Member::class, 'orderMembers']);
         return $parents;
     }
 

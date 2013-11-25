@@ -45,7 +45,7 @@ Orga_Model_Organization:
       targetEntity: Orga_Model_Granularity
       mappedBy: organization
       orderBy:
-        tag: ASC
+        position: ASC
       orphanRemoval: true
       cascade: [ persist, remove ]
     acl:

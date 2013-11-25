@@ -190,7 +190,7 @@ class Orga_Service_ETLStructure
         } else {
             $axes = $granularity->getAxes();
             // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-            @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+            @uasort($axes, [Orga_Model_Axis::class, 'orderAxes']);
             foreach (Zend_Registry::get('languages') as $localeId) {
                 $labelParts = [];
                 foreach ($axes as $axis) {

@@ -185,7 +185,7 @@ function buildCellTag (Orga_Model_Cell $cell) {
     if ($cell->hasMembers()) {
         $tag = '';
         $members = $cell->getMembers();
-        @usort($members, ['Orga_Model_Member', 'orderMembers']);
+        @usort($members, [Orga_Model_Member::class, 'orderMembers']);
         foreach ($members as $member) {
             $tag .= buildMemberTag($member) . Orga_Model_Organization::PATH_JOIN;
         }

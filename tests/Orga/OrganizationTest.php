@@ -462,11 +462,11 @@ class Orga_Test_OrganizationGranularities extends TestCase
         $this->assertCount(6, $granularities);
 
         $this->assertSame($this->granularity0, $granularities[0]);
-        $this->assertSame($this->granularity1, $granularities[2]);
-        $this->assertSame($this->granularity2, $granularities[3]);
+        $this->assertSame($this->granularity1, $granularities[3]);
+        $this->assertSame($this->granularity2, $granularities[4]);
         $this->assertSame($this->granularity3, $granularities[1]);
         $this->assertSame($this->granularity4, $granularities[5]);
-        $this->assertSame($this->granularity5, $granularities[4]);
+        $this->assertSame($this->granularity5, $granularities[2]);
     }
 
 }

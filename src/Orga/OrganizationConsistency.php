@@ -126,7 +126,7 @@ class Orga_OrganizationConsistency
                         }
                     }
                     $axes = array_merge($currentAxes, $crossingAxes);
-                    @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+                    @uasort($axes, [Orga_Model_Axis::class, 'orderAxes']);
                     foreach ($axes as $axis) {
                         $labelParts[] = $axis->getLabel();
                     }

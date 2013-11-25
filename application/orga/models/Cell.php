@@ -393,7 +393,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     public static function buildMembersHashKey($listMembers)
     {
-        @usort($listMembers, ['Orga_Model_Member', 'orderMembers']);
+        @usort($listMembers, [Orga_Model_Member::class, 'orderMembers']);
         $membersRef = [];
 
         foreach ($listMembers as $member) {
@@ -413,7 +413,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         } else {
             $membersTagParts = array();
             $members = $this->getMembers();
-            @usort($members, ['Orga_Model_Member', 'orderMembers']);
+            @usort($members, [Orga_Model_Member::class, 'orderMembers']);
             foreach ($members as $member) {
                 $membersTagParts[] = $member->getTag();
             }
@@ -626,7 +626,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
 
         $labels = [];
         $members = $this->getMembers();
-        @usort($members, ['Orga_Model_Member', 'orderMembers']);
+        @usort($members, [Orga_Model_Member::class, 'orderMembers']);
         foreach ($members as $member) {
             $labels[] = $member->getLabel();
         }
@@ -647,7 +647,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
 
         $labels = [];
         $members = $this->getMembers();
-        @usort($members, ['Orga_Model_Member', 'orderMembers']);
+        @usort($members, [Orga_Model_Member::class, 'orderMembers']);
         foreach ($members as $member) {
             $labels[] = $member->getExtendedLabel();
         }

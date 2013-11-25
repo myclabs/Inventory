@@ -339,7 +339,7 @@ class Orga_Model_Axis extends Core_Model_Entity
         if ($this->hasDirectBroaders()) {
             $broaderPathTags = [];
             $criteriaDESC = Doctrine\Common\Collections\Criteria::create();
-            $criteriaDESC->orderBy(['narrowerTag' => 'DESC']);
+            $criteriaDESC->orderBy(['narrowerTag' => 'ASC']);
             foreach ($this->getDirectBroaders()->matching($criteriaDESC) as $directBroaderAxis) {
                 foreach (explode(Orga_Model_Organization::PATH_JOIN, $directBroaderAxis->getBroaderTag()) as $broaderPathTag) {
                     $broaderPathTags[] = $broaderPathTag;
@@ -375,6 +375,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     protected function hasMove()
     {
         $this->updateTags();
+        $this->getOrganization()->orderGranularities();
     }
 
     /**

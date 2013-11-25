@@ -255,6 +255,39 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
         return $axes;
     }
 
+    public function orderGranularities()
+    {
+        $granularities = array();
+        foreach ($this->getGranularities() as $granularity) {
+            $granularities[spl_object_hash($granularity)] = array(
+                'granularity' => $granularity,
+                'position'    => ''
+            );
+        }
+        foreach ($this->getFirstOrderedAxes() as $axis) {
+            foreach ($this->getGranularities() as $granularity) {
+                if (!$axis->hasGranularity($granularity)) {
+                    $granularities[spl_object_hash($granularity)]['position'] .= '1';
+                } else {
+                    $granularities[spl_object_hash($granularity)]['position'] .= '0';
+                }
+            }
+        }
+
+        /** @var Orga_Model_Granularity[] $orderedGranularities */
+        $orderedGranularities = array();
+        foreach ($granularities as $granularity) {
+            $orderedGranularities[$granularity['position']] = $granularity['granularity'];
+        }
+        ksort($orderedGranularities);
+
+        $position = 1;
+        foreach (array_reverse($orderedGranularities) as $orderedGranularity) {
+            $orderedGranularity->setPosition($position);
+            $position++;
+        }
+    }
+
     /**
      * Ajoute une Granularity au Organization
      *
@@ -270,6 +303,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
 
         if (!$this->hasGranularity($granularity)) {
             $this->granularities->add($granularity);
+            $this->orderGranularities();
         }
     }
 
@@ -352,7 +386,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     public function getGranularities()
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->orderBy(['tag' => 'ASC']);
+        $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria);
     }
 
@@ -399,7 +433,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->where(Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null));
-        $criteria->orderBy(['tag' => 'ASC']);
+        $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
     }
 }

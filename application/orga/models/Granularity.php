@@ -24,6 +24,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     // Constantes de tris et de filtres.
     const QUERY_TAG = 'tag';
     const QUERY_REF = 'ref';
+    const QUERY_POSITION = 'position';
     const QUERY_ORGANIZATION = 'organization';
 
     // Séparateur des refs et labels des axes dans le label de la granularité.
@@ -60,11 +61,18 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected $axes = array();
 
     /**
-     * Tag identifiant l'axe dans la hiérarchie de l'organization.
+     * Tag identifiant la granularité dans l'organization.
      *
      * @var string
      */
     protected $tag = null;
+
+    /**
+     * Position de la granularité dans l'organization.
+     *
+     * @var int
+     */
+    protected $position = null;
 
     /**
      * Collection des Cell de la Granularity.
@@ -319,7 +327,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $axesTagParts = array();
             $axes = $this->getAxes();
             @usort($axes, ['Orga_Model_Axis', 'firstOrderAxes']);
-            $axes = array_reverse($axes);
             foreach ($axes as $axis) {
                 $axesTagParts[] = $axis->getBroaderTag();
             }
@@ -335,6 +342,26 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getTag()
     {
         return $this->tag;
+    }
+
+    /**
+     * Définis la position de la granularité.
+     *
+     * @param $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
+     * Renvoie la position de la granularité dans l'organisation.
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 
     /**
@@ -432,7 +459,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
         $matchingCells = $this->getCellsByMembers($listMembers)->toArray();
 
         if (empty($matchingCells)) {
-            @usort($listMembers, ['Orga_Model_Member', 'orderMembers']);
+            @usort($listMembers, [Orga_Model_Member::class, 'orderMembers']);
             $membersRef = [];
             foreach ($listMembers as $member) {
                 $membersRef[] = $member->getRef();
@@ -440,7 +467,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $membersHashKey = implode(self::REF_SEPARATOR, $membersRef);
             throw new Core_Exception_NotFound('No Cell matching members "'.$membersHashKey.'" for "'.$this->getRef().'".');
         } elseif (count($matchingCells) > 1) {
-            @usort($listMembers, ['Orga_Model_Member', 'orderMembers']);
+            @usort($listMembers, [Orga_Model_Member::class, 'orderMembers']);
             $membersRef = [];
             foreach ($listMembers as $member) {
                 $membersRef[] = $member->getRef();
@@ -550,12 +577,11 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getNarrowerGranularities()
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->where($criteria->expr()->neq('ref', $this->getRef()));
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getTag()) as $pathTag) {
             $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
         }
         $criteria->andWhere($criteria->expr()->neq('tag', $this->getTag()));
-        $criteria->orderBy(['tag' => 'ASC']);
+        $criteria->orderBy(['position' => 'ASC']);
         return $this->getOrganization()->getGranularities()->matching($criteria)->toArray();
     }
 

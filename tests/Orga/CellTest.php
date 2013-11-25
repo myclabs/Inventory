@@ -23,7 +23,7 @@ class Orga_Test_CellTest
     {
         $suite = new PHPUnit_Framework_TestSuite();
         $suite->addTestSuite('Orga_Test_CellAttributes');
-//        $suite->addTestSuite('Orga_Test_CellHierarchy');
+        $suite->addTestSuite('Orga_Test_CellHierarchy');
         return $suite;
     }
 
@@ -1668,9 +1668,9 @@ class Orga_Test_CellHierarchy extends TestCase
 
         $this->assertSame([$this->cell0_0, $this->cell1_111a], $this->cell2_11a12a->getParentCells());
 
-        $this->assertSame([$this->cell0_0, $this->cell1_111a, $this->cell2_11a12b, $this->cell5_2a], $this->cell3_11a12b2a->getParentCells());
+        $this->assertSame([$this->cell0_0, $this->cell5_2a, $this->cell1_111a, $this->cell2_11a12b], $this->cell3_11a12b2a->getParentCells());
 
-        $this->assertSame([$this->cell0_0, $this->cell1_111b, $this->cell2_11b12a, $this->cell5_2b, $this->cell3_11b12a2b], $this->cell4_1c2b->getParentCells());
+        $this->assertSame([$this->cell0_0, $this->cell5_2b, $this->cell1_111b, $this->cell2_11b12a, $this->cell3_11b12a2b], $this->cell4_1c2b->getParentCells());
 
         $this->assertSame([$this->cell0_0], $this->cell5_2b->getParentCells());
     }
@@ -1695,13 +1695,13 @@ class Orga_Test_CellHierarchy extends TestCase
 
     function testGetChildCells()
     {
-        $this->assertSame([$this->cell1_111a, $this->cell1_111b, $this->cell2_11a12a, $this->cell2_11a12b, $this->cell2_11b12a, $this->cell2_11b12b, $this->cell2_11c12a, $this->cell2_11c12b, $this->cell5_2a, $this->cell5_2b, $this->cell4_1a2a, $this->cell4_1a2b, $this->cell4_1b2a, $this->cell4_1b2b, $this->cell4_1c2a, $this->cell4_1c2b, $this->cell4_1d2a, $this->cell4_1d2b, $this->cell4_1e2a, $this->cell4_1e2b, $this->cell4_1f2a, $this->cell4_1f2b,  $this->cell3_11a12a2a, $this->cell3_11a12a2b, $this->cell3_11a12b2a, $this->cell3_11a12b2b, $this->cell3_11b12a2a, $this->cell3_11b12a2b, $this->cell3_11b12b2a, $this->cell3_11b12b2b, $this->cell3_11c12a2a, $this->cell3_11c12a2b, $this->cell3_11c12b2a, $this->cell3_11c12b2b], $this->cell0_0->getChildCells());
+        $this->assertSame([$this->cell5_2a, $this->cell5_2b, $this->cell1_111a, $this->cell1_111b, $this->cell2_11a12a, $this->cell2_11a12b, $this->cell2_11b12a, $this->cell2_11b12b, $this->cell2_11c12a, $this->cell2_11c12b, $this->cell3_11a12a2a, $this->cell3_11a12a2b, $this->cell3_11a12b2a, $this->cell3_11a12b2b, $this->cell3_11b12a2a, $this->cell3_11b12a2b, $this->cell3_11b12b2a, $this->cell3_11b12b2b, $this->cell3_11c12a2a, $this->cell3_11c12a2b, $this->cell3_11c12b2a, $this->cell3_11c12b2b, $this->cell4_1a2a, $this->cell4_1a2b, $this->cell4_1b2a, $this->cell4_1b2b, $this->cell4_1c2a, $this->cell4_1c2b, $this->cell4_1d2a, $this->cell4_1d2b, $this->cell4_1e2a, $this->cell4_1e2b, $this->cell4_1f2a, $this->cell4_1f2b], $this->cell0_0->getChildCells());
 
-        $this->assertSame([$this->cell2_11a12a, $this->cell2_11a12b, $this->cell4_1a2a, $this->cell4_1a2b, $this->cell4_1b2a, $this->cell4_1b2b, $this->cell3_11a12a2a, $this->cell3_11a12a2b, $this->cell3_11a12b2a, $this->cell3_11a12b2b], $this->cell1_111a->getChildCells());
+        $this->assertSame([$this->cell2_11a12a, $this->cell2_11a12b, $this->cell3_11a12a2a, $this->cell3_11a12a2b, $this->cell3_11a12b2a, $this->cell3_11a12b2b, $this->cell4_1a2a, $this->cell4_1a2b, $this->cell4_1b2a, $this->cell4_1b2b], $this->cell1_111a->getChildCells());
 
         $this->assertSame([$this->cell4_1e2b], $this->cell3_11c12a2b->getChildCells());
 
-        $this->assertSame([$this->cell4_1a2b, $this->cell4_1b2b, $this->cell4_1c2b, $this->cell4_1d2b, $this->cell4_1e2b, $this->cell4_1f2b, $this->cell3_11a12a2b, $this->cell3_11a12b2b, $this->cell3_11b12a2b, $this->cell3_11b12b2b, $this->cell3_11c12a2b, $this->cell3_11c12b2b], $this->cell5_2b->getChildCells());
+        $this->assertSame([$this->cell3_11a12a2b, $this->cell3_11a12b2b, $this->cell3_11b12a2b, $this->cell3_11b12b2b, $this->cell3_11c12a2b, $this->cell3_11c12b2b, $this->cell4_1a2b, $this->cell4_1b2b, $this->cell4_1c2b, $this->cell4_1d2b, $this->cell4_1e2b, $this->cell4_1f2b], $this->cell5_2b->getChildCells());
     }
 
 }

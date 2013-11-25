@@ -34,7 +34,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_ORGANIZATION, $organization);
-        $this->request->order->addOrder(Orga_Model_Granularity::QUERY_TAG);
+        $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         /**@var Orga_Model_Granularity $granularity */
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
             $data = array();
