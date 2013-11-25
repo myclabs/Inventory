@@ -342,6 +342,11 @@ class Core_Model_Query
     protected function addAclFilterToQueryBuilder(Doctrine\ORM\QueryBuilder $queryBuilder)
     {
         if ($this->aclFilter->enabled) {
+            // On est obligé d'ajouter distinct car la jointure crée des lignes en double
+            // -> double autorisation = double apparition dans les résultats
+            // Pas top au niveau perfs, à voir si on peut trouver mieux
+            $queryBuilder->distinct();
+
             $queryBuilder->innerJoin($this->rootAlias . '.acl', 'authorization');
 
             $queryBuilder->andWhere('authorization.user = :aclUser');

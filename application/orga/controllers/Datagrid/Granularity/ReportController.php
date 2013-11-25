@@ -15,7 +15,7 @@ class Orga_Datagrid_Granularity_ReportController extends UI_Controller_Datagrid
 {
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     * @Secure("viewReport")
+     * @Secure("viewGranularityReports")
      */
     public function getelementsAction()
     {
@@ -36,7 +36,7 @@ class Orga_Datagrid_Granularity_ReportController extends UI_Controller_Datagrid
 
     /**
      * Fonction supprimant un élément.
-     * @Secure("deleteReport")
+     * @Secure("deleteGranularityReports")
      */
     public function deleteelementAction()
     {
