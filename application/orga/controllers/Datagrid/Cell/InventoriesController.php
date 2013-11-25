@@ -161,6 +161,11 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $this->view->idGranularity = $granularity->getId();
 
         $this->view->acls = [];
+        $organizationACLs = [];
+        foreach ($cell->getOrganization()->getAdminRoles() as $role) {
+            $organizationACLs[$role->getLabel()][] = $role->getUser()->getEmail();
+        }
+        $this->view->acls[$cell->getOrganization()->getLabel()] = $organizationACLs;
         foreach ($granularity->getOrganization()->getGranularities() as $granularityACL) {
             if ($granularityACL->getCellsWithACL()) {
                 $granularityACLs = [];
@@ -183,11 +188,12 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                         $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
                     }
                 } else {
+                    Core_Tools::dump($granularityACL->getLabel());
                     try {
                         $crossedGranularity = $granularity->getCrossedGranularity($granularityACL);
+                        Core_Tools::dump($crossedGranularity->getLabel());
                         foreach ($cell->getChildCellsForGranularity($crossedGranularity) as $childCrossedGranularity) {
-                            $cellResource = User_Model_Resource_Entity::loadByEntity($childCrossedGranularity->getParentCellForGranularity($granularityACL));
-                            $this->addUserToArray($cellResource, $granularityACLs);
+                            $this->addUserToArray($childCrossedGranularity->getParentCellForGranularity($granularityACL), $granularityACLs);
                         }
                         if (!empty($granularityACLs)) {
                             $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
@@ -206,7 +212,9 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
     protected function addUserToArray(Orga_Model_Cell $cell, &$granularityACLs)
     {
         foreach ($cell->getAllRoles() as $role) {
-            $granularityACLs[$role->getLabel()][] = $role->getUser()->getEmail();
+            if (!isset($granularityACLs[$role->getLabel()]) || !in_array($role->getUser()->getEmail(), $granularityACLs[$role->getLabel()])) {
+                $granularityACLs[$role->getLabel()][] = $role->getUser()->getEmail();
+            }
         }
     }
 }
