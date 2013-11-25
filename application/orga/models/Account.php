@@ -2,7 +2,6 @@
 
 namespace Orga\Model;
 
-use AF\Model\AFCatalog;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,16 +27,10 @@ class Account extends Core_Model_Entity
      */
     protected $organizations;
 
-    /**
-     * @var AFCatalog[]|Collection
-     */
-    protected $afCatalogs;
-
     public function __construct($label)
     {
         $this->label = $label;
         $this->organizations = new ArrayCollection();
-        $this->afCatalogs = new ArrayCollection();
     }
 
     /**
