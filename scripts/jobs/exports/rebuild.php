@@ -50,6 +50,7 @@ class RebuildExports
                 foreach ($inputGranularity->getCells() as $inputCell) {
                     $inputCell = Orga_Model_Cell::load($inputCell->getId());
                     $this->exportService->saveCellInput($inputCell);
+                    echo "\t".$inputCell->getExtendedLabel().PHP_EOL;
                 }
                 unset($inputGranularity);
             }
