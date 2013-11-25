@@ -68,7 +68,7 @@ trait CellResourceTrait
     protected function updateACL()
     {
         // Supprime les autorisations héritées
-        $this->acl->forAll(function (CellAuthorization $authorization) {
+        $this->acl->forAll(function ($key, CellAuthorization $authorization) {
             if (! $authorization->isRoot()) {
                 $this->acl->removeElement($authorization);
             }
