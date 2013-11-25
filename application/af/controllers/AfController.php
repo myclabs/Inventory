@@ -257,12 +257,19 @@ class AF_AfController extends Core_Controller
         if ($newRef == '' || $newLabel == '') {
             UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'), UI_Message::TYPE_ERROR);
             $this->redirect('af/af/list');
+            return;
         }
 
         $newAF = $this->afCopyService->copyAF($af, $newRef, $newLabel);
 
         $newAF->save();
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            UI_Message::addMessageStatic(__('UI', 'formValidation', 'alreadyUsedIdentifier'), UI_Message::TYPE_ERROR);
+            $this->redirect('af/af/list');
+            return;
+        }
 
         UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
         $this->redirect('af/af/list');

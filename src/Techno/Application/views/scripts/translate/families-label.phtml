@@ -1,12 +1,7 @@
+<div class="page-header">
+    <h1><?=__('Techno', 'translate', 'familyLabels')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
+</div>
+
 <?php
-/**
- * @author valentin.claras
- * @package Techno
- * Traduction des Family
- */
-?>
-    <div class="page-header">
-        <h1><?=__('Techno', 'translate', 'familyLabels')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
-    </div>
-<?php
-echo $this->translateDatagrid('Techno\Domain\Family\Family', 'label', 'datagrid_translate_families_label', 'techno')->simple();
+echo $this->translateDatagrid('Techno\Domain\Family\Family', 'label', 'datagrid_translate_families_label', 'techno')
+    ->simple();

@@ -422,6 +422,9 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         if ($xmlReport->hasAttribute('withUncertainty')) {
             $report->setWithUncertainty(($xmlReport->getAttribute('withUncertainty') == 'true'));
         }
+        if ($xmlReport->hasAttribute('sortType')) {
+            $report->setSortType($xmlReport->getAttribute('sortType'));
+        }
 
         foreach ($xmlReport->getElementsByTagName('filter') as $xmlFilter) {
             $prefix = substr($xmlFilter->getAttribute('source'), 0, 1).'_';
