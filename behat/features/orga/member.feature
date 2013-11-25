@@ -20,8 +20,8 @@ Feature: Organizational member feature
   # Ajout d'un membre, saisie correcte (parent renseigné en partie)
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
-    And I fill in "listMemberssite_broaderpays_addForm" with "france"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Affichage suivant l'ordre alphabétique des identifiants
@@ -56,8 +56,8 @@ Feature: Organizational member feature
     Then the field "listMemberssite_broaderpays_addForm" should have error: "Merci de renseigner ce champ."
     And the field "listMemberssite_broadermarque_addForm" should have error: "Merci de renseigner ce champ."
   # Ajout, identifiant déjà utilisé, membres axes parents remplis
-    When I fill in "listMemberssite_broaderpays_addForm" with "france"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a"
+    When I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
     And I click "Valider"
     Then the field "listMemberssite_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
@@ -110,7 +110,7 @@ Feature: Organizational member feature
       | label  | ref      | broaderpays |
       | Annecy | annecy   | France      |
   # Modification du membre parent suivant l'axe "Marque"
-    When I set "marque_b" for column "broadermarque" of row 1 of the "listMemberssite" datagrid with a confirmation message
+    When I set "marque_b#da39a3ee5e6b4b0d3255bfef95601890afd80709" for column "broadermarque" of row 1 of the "listMemberssite" datagrid with a confirmation message
     And I wait 15 seconds
     Then the "listMemberssite" datagrid should contain a row:
       | label  | ref      | broaderpays    | broadermarque |

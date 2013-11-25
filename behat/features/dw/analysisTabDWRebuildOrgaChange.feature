@@ -116,7 +116,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then I should see the popup "Ajout d'un membre à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "Test"
     And I fill in "listMemberssite_ref_addForm" with "test"
-    And I fill in "listMemberssite_broaderpays_addForm" with "france"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
     And I click "Valider"
     And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
@@ -162,7 +162,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Ajout membre parent à un membre
     When I open tab "Éléments"
     And I open collapse "Site"
-    When I set "france" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
+    When I set "france#da39a3ee5e6b4b0d3255bfef95601890afd80709" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
@@ -178,23 +178,7 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
   # Modification membre parent d'un membre
     When I open tab "Éléments"
     And I open collapse "Site"
-    When I set "italie" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
-    And I wait 5 seconds
-    Then the following message is shown and closed: "Modification effectuée."
-  # Détection modification
-    When I am on "orga/cell/details/idCell/1/tab/organization"
-    And I wait for the page to finish loading
-    And I click "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
-  # Régénération
-    When I click "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
-    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
-    When I click "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse de l'organisation est à jour."
-  # Suppression membre parent d'un membre
-    When I open tab "Éléments"
-    And I open collapse "Site"
-    When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
+    When I set "italie#da39a3ee5e6b4b0d3255bfef95601890afd80709" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
     And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Détection modification
