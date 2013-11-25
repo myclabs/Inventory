@@ -2,6 +2,7 @@
 
 use Doc\Domain\Library;
 use Orga\Model\ACL\Action\CellAction;
+use Orga\Model\ACL\Action\OrganizationAction;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
 use User\Domain\ACL\Action;
@@ -354,7 +355,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
         }
 
-        throw new ForbiddenException();
+        return false;
     }
 
     /**
@@ -376,6 +377,26 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $idReport = $request->getParam('index');
         return $this->aclService->isAllowed($identity, Action::DELETE(), DW_Model_Report::load($idReport));
+    }
+
+    protected function viewGranularityReportsRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $granularity = Orga_Model_Granularity::load($request->getParam('idGranularity'));
+        return $this->aclService->isAllowed(
+            $identity,
+            OrganizationAction::EDIT_GRANULARITY_REPORTS(),
+            $granularity->getOrganization()
+        );
+    }
+
+    protected function deleteGranularityReportsRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $granularity = Orga_Model_Granularity::load($request->getParam('idGranularity'));
+        return $this->aclService->isAllowed(
+            $identity,
+            OrganizationAction::EDIT_GRANULARITY_REPORTS(),
+            $granularity->getOrganization()
+        );
     }
 
     /**
