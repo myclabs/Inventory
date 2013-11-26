@@ -117,6 +117,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             $this->send();
             return;
         }
+
         $role = $this->getAddElementValue('userRole');
         switch ($role) {
             case 'CellAdminRole':
@@ -134,6 +135,16 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             default:
                 $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
         }
+
+        // Vérifie que l'utilisateur n'a pas déjà le role
+        try {
+            $user = User::loadByEmail($userEmail);
+            if ($user->hasRole($role)) {
+                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+            }
+        } catch (Core_Exception_NotFound $e) {
+        }
+
         if (!empty($this->_addErrorMessages)) {
             $this->send();
             return;
