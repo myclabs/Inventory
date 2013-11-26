@@ -115,7 +115,7 @@ Feature: AF numeric parameter algo feature
     And the row 1 of the "coordinatesAlgo" datagrid should contain:
       | dimension | algo                                      |
       | processus | expression_sel_coord_param |
-  # Modification membre coordonnée fixée
+  # Modification élément coordonnée fixée
     When I set "gaz naturel" for column "member" of row 1 of the "coordinatesFixed" datagrid
   # On ferme le popup pour aller fermer le message en arrière-plan
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
@@ -154,7 +154,7 @@ Feature: AF numeric parameter algo feature
     When I click "Valider"
     Then the field "coordinatesFixed_dimension_addForm" should have error: "Merci de renseigner ce champ."
     When I select "processus" from "coordinatesFixed_dimension_addForm"
-  # Le membre lui-même n'est pas déterminé dans le popup (car dépend dynamiquement du choix de la dimension).
+  # Le élément lui-même n'est pas déterminé dans le popup (car dépend dynamiquement du choix de la dimension).
     And I click "Valider"
   # On ferme le popup pour aller fermer le message en arrière-plan
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"

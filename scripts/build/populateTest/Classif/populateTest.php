@@ -31,7 +31,7 @@ class Classif_PopulateTest extends Classif_Populate
         $axis_type_deplacement = $this->createAxis('type_deplacement', 'Type de déplacement');
         $axis_axe_vide = $this->createAxis('axe_vide', 'Axe vide');
 
-        // Création des membres.
+        // Création des éléments.
         $member_gaz_co2 = $this->createMember($axis_gaz, 'co2', 'CO2');
         $member_gaz_ch4 = $this->createMember($axis_gaz, 'ch4', 'CH4');
 
@@ -40,7 +40,7 @@ class Classif_PopulateTest extends Classif_Populate
         $member_scope_3 = $this->createMember($axis_scope, '3', '3');
 
         $member_poste_article_75_source_fixe_combustion = $this->createMember($axis_poste_article_75, 'source_fixe_combustion', '1 - Sources fixes de combustion', [$member_scope_1]);
-        $member_poste_article_75_electricite = $this->createMember($axis_poste_article_75, 'membre_sans_parent', 'Membre sans parent');
+        $member_poste_article_75_electricite = $this->createMember($axis_poste_article_75, 'element_sans_parent', 'Élément sans parent');
 
         $member_deplacement = $this->createMember($axis_type_deplacement, 'domicile_travail', 'Domicile - travail');
         $member_deplacement = $this->createMember($axis_type_deplacement, 'professionnel', 'Professionnel');

@@ -148,15 +148,15 @@
         </tu>
         <tu tuid="noMember">
             <tuv xml:lang="fr">
-                <seg>La coordonnée fixée associée à la dimension « [REF_DIMENSION] » de l'algorithme de type paramètre « [REF_ALGO] » n'a pas de membre.</seg>
+                <seg>La coordonnée fixée associée à la dimension « [REF_DIMENSION] » de l'algorithme de type paramètre « [REF_ALGO] » n'a pas d'élément.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Fixed coordinate corresponding to dimension "[REF_DIMENSION]" of parameter algorithm "[REF_ALGO]" does not have any member.</seg>
+                <seg>Fixed coordinate corresponding to dimension "[REF_DIMENSION]" of parameter algorithm "[REF_ALGO]" does not have any element.</seg>
             </tuv>
         </tu>
         <tu tuid="invalidMember">
             <tuv xml:lang="fr">
-                <seg>La coordonnée fixée associée à la dimension « [REF_DIMENSION] » de l'algorithme de type paramètre « [REF_ALGO] » a un membre « [REF_MEMBER] » invalide.</seg>
+                <seg>La coordonnée fixée associée à la dimension « [REF_DIMENSION] » de l'algorithme de type paramètre « [REF_ALGO] » a un élément « [REF_MEMBER] » invalide.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Fixed coordinate corresponding to dimension "[REF_DIMENSION]" of parameter algorithm "[REF_ALGO]" has a member "[REF_MEMBER]" which is not valid.</seg>

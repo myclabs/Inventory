@@ -14,12 +14,12 @@ Feature: Family one dimension edit feature
     And I should see the "membersDatagrid" datagrid
     And the "membersDatagrid" datagrid should contain 2 row
     When I click "Ajouter"
-    Then I should see the popup "Ajout d'un membre"
+    Then I should see the popup "Ajout d'un élément"
     When I select "amont_combustion" from "membersDatagrid_refKeyword_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the "membersDatagrid" datagrid should contain 3 row
-  # Le nouveau membre a été ajouté à la fin
+  # Le nouvel élément a été ajouté à la fin
     And the row 3 of the "membersDatagrid" datagrid should contain:
       | label                  | refKeyword       |
       | amont de la combustion | amont_combustion |
@@ -29,7 +29,7 @@ Feature: Family one dimension edit feature
     Given I am on "techno/dimension/details/id/4"
     And I wait for the page to finish loading
     And I click "Ajouter"
-    Then I should see the popup "Ajout d'un membre"
+    Then I should see the popup "Ajout d'un élément"
     When I click "Valider"
     Then the field "Identifiant" should have error: "Merci de renseigner ce champ."
     And I click "Annuler"

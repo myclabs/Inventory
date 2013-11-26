@@ -34,7 +34,7 @@ class Orga_PopulateTest extends Orga_Populate
         $axis_categorie = $this->createAxis($organization, 'categorie', 'Catégorie');
         $axis_vide = $this->createAxis($organization, 'axe_vide', 'Axe vide');
 
-        // Création des membres.
+        // Création des éléments.
         $member_annee_2012 = $this->createMember($axis_annee, '2012', '2012');
         $member_annee_2013 = $this->createMember($axis_annee, '2013', '2013');
         $member_zone_europe = $this->createMember($axis_zone, 'europe', 'Europe');

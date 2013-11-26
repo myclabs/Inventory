@@ -31,10 +31,10 @@
         </tu>
         <tu tuid="contextualizingLabel">
             <tuv xml:lang="fr">
-                <seg>Rôle des membres de cet axe vis-à-vis des membres des axes plus fins</seg>
+                <seg>Rôle des éléments de cet axe vis-à-vis des éléments des axes plus fins</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Role of the members of this axis with respect to members of narrower axes</seg>
+                <seg>Role of the elements of this axis with respect to elements of narrower axes</seg>
             </tuv>
         </tu>
         <tu tuid="contextualizingOption">
@@ -82,7 +82,7 @@
         </tu>    
         <tu tuid="axisHasMembers">
             <tuv xml:lang="fr">
-                <seg>Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses membres.</seg>
+                <seg>Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses éléments.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Before deleting this axis, please delete its members first.</seg>

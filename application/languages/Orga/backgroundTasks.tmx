@@ -14,10 +14,10 @@
         </tu>
         <tu tuid="addMember">
             <tuv xml:lang="fr">
-                <seg>Ajout du membre :[MEMBER] à l’axe : [AXIS]</seg>
+                <seg>Ajout de l'élément :[MEMBER] à l’axe : [AXIS]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of member: [MEMBER] into axis: [AXIS]</seg>
+                <seg>Creation of element: [MEMBER] into axis: [AXIS]</seg>
             </tuv>
         </tu>
         <tu tuid="addGranularity">
