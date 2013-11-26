@@ -10,9 +10,6 @@ killall() {
     echo DONE
 }
 
-# Git pull
-git pull
-
 # Start virtual display
 #Xvfb :99 -ac > /dev/null 2>&1 &
 #export DISPLAY=:99
