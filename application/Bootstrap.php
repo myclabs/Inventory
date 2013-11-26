@@ -1,11 +1,22 @@
 <?php
 
 use Core\Autoloader;
+use DI\Container;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Keyword\Application\Service\KeywordService;
+use Orga\Model\ACL\CellAuthorization;
+use Orga\Model\ACL\OrganizationAuthorization;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
+use User\Application\Plugin\ACLPlugin;
+use User\Application\ViewHelper\IsAllowedHelper;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Authorization\RepositoryAuthorization;
+use User\Domain\ACL\Authorization\UserAuthorization;
+use User\Domain\User;
 
 /**
  * Application bootstrap
@@ -125,7 +136,7 @@ class Bootstrap extends Core_Bootstrap
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
-        $view->registerHelper($this->container->get(User_ViewHelper_IsAllowed::class, true), 'isAllowed');
+        $view->registerHelper($this->container->get(IsAllowedHelper::class, true), 'isAllowed');
     }
 
     /**
@@ -157,7 +168,7 @@ class Bootstrap extends Core_Bootstrap
         // Plugin des Acl
         if ($this->container->get('enable.acl')) {
             $front->registerPlugin($this->container->get(Inventory_Plugin_Acl::class));
-            Zend_Registry::set('pluginAcl', User_Plugin_Acl::class);
+            Zend_Registry::set('pluginAcl', ACLPlugin::class);
         }
     }
 
@@ -170,7 +181,7 @@ class Bootstrap extends Core_Bootstrap
         $eventDispatcher = $this->container->get(EventDispatcher::class);
 
         // User events (plus prioritaire)
-        $userEventListener = $this->container->get(User\Event\EventListener::class, true);
+        $userEventListener = $this->container->get(\User\Domain\Event\EventListener::class, true);
         $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
         $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
 
@@ -179,5 +190,4 @@ class Bootstrap extends Core_Bootstrap
         $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
         $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }
-
 }

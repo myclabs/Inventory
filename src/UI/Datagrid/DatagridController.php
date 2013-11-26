@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe Datagrid.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Controller
- */
 
 namespace UI\Datagrid;
 
@@ -22,54 +14,52 @@ use DateTime;
 use Core_Exception_InvalidHTTPQuery;
 
 /**
- * Description of Datagrid\Controller.
+ * Classe générique des controleurs de datagrid.
  *
- * Classe générique des controleurs de la Datagrid.
- * La classe donne accès à des méthodes permettant de récupérer, envoyer et modifier les données.
+ * La classe donne accès à des méthodes permettant de récupérer, envoyer et modifier le contenu du datagrid.
  *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 abstract class DatagridController extends Core_Controller
 {
     /**
-     * Identifiant de la Datagrid.
+     * Identifiant du datagrid.
      *
-     * @var   string
+     * @var string
      */
-    public $id = null;
+    public $id;
 
     /**
      * Objet Requête.
      *
-     * @var   Criteria
+     * @var Criteria
      */
-    public $criteria = null;
+    public $criteria;
 
     /**
      * Tableau des champs du formulaire d'ajout.
      *
-     * @var   array
+     * @var array
      *
      * @see getAddElementValue
      */
-    protected $_add = null;
+    protected $_add;
 
     /**
      * Tableau des messages d'erreurs des champs du formulaire d'ajout.
      *
-     * @var   array
+     * @var array
      *
      * @see setAddElementErrorMessage
      */
-    protected $_addErrorMessages = array();
+    protected $_addErrorMessages = [];
 
     /**
      * Identifiant de la ligne à supprimer.
      *
      * @var   string
      */
-    public $delete = null;
+    public $delete;
 
     /**
      * Tableau des paramètres nécéssaires à la mise à jour.
@@ -78,35 +68,34 @@ abstract class DatagridController extends Core_Controller
      * column.
      * value.
      *
-     * @var   array
+     * @var array
      */
-    public $update = null;
+    public $update;
 
     /**
      * Contient le message qui sera renvoyé.
      *
-     * @var   string
+     * @var string
      */
-    public $message = null;
+    public $message;
 
     /**
-     * Tableau des données de la datagrid.
+     * Tableau des données du datagrid.
      *
-     * @var   array
+     * @var array
      */
-    public $data = array();
+    public $data = [];
 
     /**
-     * Nombre total d'éléments de la datagrid.
+     * Nombre total d'éléments du datagrid.
      *
-     * @var   int
+     * @var int
      */
-    public $totalElements = null;
+    public $totalElements;
 
 
     /**
      * Permet de récupérer automatiquement les informations envoyées par la datagrid.
-     *
      */
     public function init()
     {
@@ -206,7 +195,7 @@ abstract class DatagridController extends Core_Controller
                 $this->update['value'] = str_replace('<br>', PHP_EOL, $this->getParam('value'));
                 break;
 
-            default :
+            default:
                 break;
         }
     }
@@ -221,9 +210,8 @@ abstract class DatagridController extends Core_Controller
      *  $this->getParam('nomArgument').
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      */
-    abstract function getelementsAction();
+    abstract public function getelementsAction();
 
     /**
      * Fonction ajoutant un élément.
@@ -233,7 +221,7 @@ abstract class DatagridController extends Core_Controller
      * @see getAddElementValue
      * @see setAddElementErrorMessage
      */
-    function addelementAction()
+    public function addelementAction()
     {
         throw new Core_Exception_InvalidHTTPQuery();
     }
@@ -248,9 +236,8 @@ abstract class DatagridController extends Core_Controller
      *  $this->getParam('nomArgument').
      *
      * Renvoie un message d'information.
-     *
      */
-    function deleteelementAction()
+    public function deleteelementAction()
     {
         throw new Core_Exception_InvalidHTTPQuery();
     }
@@ -273,7 +260,7 @@ abstract class DatagridController extends Core_Controller
      * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
      *
      */
-    function updateelementAction()
+    public function updateelementAction()
     {
         throw new Core_Exception_InvalidHTTPQuery();
     }
@@ -287,7 +274,7 @@ abstract class DatagridController extends Core_Controller
      *
      * @return array
      */
-    protected function baseCell($value, $content=null, $editable=true)
+    protected function baseCell($value, $content = null, $editable = true)
     {
         $cell = array(
                 'value'    => $value,
@@ -302,10 +289,8 @@ abstract class DatagridController extends Core_Controller
      *
      * @param  array &$cell       Cellule à définir.
      * @param  bool  $possibility Autorise, ou non, l'édition dans la cellule donnéee.
-     *
-     * @return void
      */
-    public function editableCell(&$cell, $possibility=true)
+    public function editableCell(&$cell, $possibility = true)
     {
         if (is_array($cell) === false) {
             $cell = $this->baseCell($cell, null, $possibility);
@@ -321,7 +306,7 @@ abstract class DatagridController extends Core_Controller
      *
      * @return array
      */
-    public function cellDate(DateTime $date, $content=null)
+    public function cellDate(DateTime $date, $content = null)
     {
         //@todo Date -> Datagrid::cellDate -> afficher la date au format de l'utilisateur.
         if ($date instanceof Core_Date) {
@@ -346,7 +331,7 @@ abstract class DatagridController extends Core_Controller
      *
      * @return array
      */
-    public function cellLink($url, $text=null, $icon=null)
+    public function cellLink($url, $text = null, $icon = null)
     {
         if (($text !== null) || ($icon !== null)) {
             $content = '';
@@ -373,7 +358,7 @@ abstract class DatagridController extends Core_Controller
      *
      * @return array
      */
-    public function cellList($index, $content=null)
+    public function cellList($index, $content = null)
     {
         if (is_array($index)) {
             $value = array();
@@ -395,7 +380,7 @@ abstract class DatagridController extends Core_Controller
      *
      * @return array
      */
-    public function cellNumber($number, $significantFigures=null, $numberDecimal=null)
+    public function cellNumber($number, $significantFigures = null, $numberDecimal = null)
     {
         $locale = Core_Locale::loadDefault();
         $content = $locale->formatNumber($number, $significantFigures, $numberDecimal);
@@ -411,13 +396,13 @@ abstract class DatagridController extends Core_Controller
      *
      * @return array
      */
-    public function cellPercent($percent, $color=null)
+    public function cellPercent($percent, $color = null)
     {
         if ($percent === false) {
             $percent = 0;
-        } else if ($percent === true) {
+        } elseif ($percent === true) {
             $percent = 100;
-        } else if (!(is_int($percent))) {
+        } elseif (!(is_int($percent))) {
             $percent = (int) $percent;
         }
         if ($percent < 0) {
@@ -429,12 +414,12 @@ abstract class DatagridController extends Core_Controller
     /**
      * Formate les données à renvoyer pour une cellule nombre.
      *
-     * @param int               $number  Nombre de la cellule.
-     * @param mixed(int|string) $content Nombre à afficher dans la cellule.
+     * @param int        $number  Nombre de la cellule.
+     * @param int|string $content Nombre à afficher dans la cellule.
      *
      * @return array
      */
-    public function cellCustomNumber($number, $content=null)
+    public function cellCustomNumber($number, $content = null)
     {
         return $this->baseCell($number, (string) $content);
     }
@@ -442,19 +427,19 @@ abstract class DatagridController extends Core_Controller
     /**
      * Formate les données à renvoyer pour une cellule texte long.
      *
-     * @param string $urlPopup     Lien a partir duquel sera chargé le contenu du popup de description.
-     * @param string $urlBrutText  Lien à partir duquel sera chargé le texte brute.
-     * @param string $text         Texte affiché dans la cellule.
-     * @param string $icon         Icône (twitter bootstrapà qui sera affichée à gauche du texte.
+     * @param string $urlPopup   Lien a partir duquel sera chargé le contenu du popup de description.
+     * @param string $urlRawText Lien à partir duquel sera chargé le texte brute.
+     * @param string $text       Texte affiché dans la cellule.
+     * @param string $icon       Icône (twitter bootstrapà qui sera affichée à gauche du texte.
      *
      * @return array
      */
-    public function cellLongText($urlPopup, $urlBrutText=null, $text=null, $icon=null)
+    public function cellLongText($urlPopup, $urlRawText = null, $text = null, $icon = null)
     {
-        $urls = array(
-                'desc' => $urlPopup,
-                'brut' => $urlBrutText,
-            );
+        $urls = [
+            'desc' => $urlPopup,
+            'brut' => $urlRawText,
+        ];
         return $this->cellLink($urls, $text, $icon);
     }
 
@@ -463,43 +448,43 @@ abstract class DatagridController extends Core_Controller
      *
      * Possibilité d'inverser les arguments 2 et 3 (texte/image) pour inverser l'ordre.
      *
-     * @param string $urlpopup Lien a partir duquel sera chargé le contenu du popup.
+     * @param string $urlPopup Lien a partir duquel sera chargé le contenu du popup.
      * @param string $text     Texte affiché dans la cellule.
      * @param string $icon     Image qui sera affiché à gauche du texte.
      *
      * @return array
      */
-    public function cellPopup($urlpopup, $text=null, $icon=null)
+    public function cellPopup($urlPopup, $text = null, $icon = null)
     {
-        return $this->cellLink($urlpopup, $text, $icon);
+        return $this->cellLink($urlPopup, $text, $icon);
     }
 
     /**
      * Formate les données à renvoyer pour une cellule position.
      *
-     * @param int  $position Position de l'élément.
-     * @param bool $canUp    False si il s'agit du premier élément.
-     * @param bool $canDown  False si il s'agit du dernier élément.
+     * @param int  $position    Position de l'élément.
+     * @param bool $canMoveUp   False si il s'agit du premier élément.
+     * @param bool $canMoveDown False si il s'agit du dernier élément.
      *
      * @return array
      */
-    public function cellPosition($position, $canUp=true, $canDown=true)
+    public function cellPosition($position, $canMoveUp = true, $canMoveDown = true)
     {
         $baseCell = $this->baseCell((string) $position);
-        $baseCell['up'] = $canUp;
-        $baseCell['down'] = $canDown;
+        $baseCell['up'] = $canMoveUp;
+        $baseCell['down'] = $canMoveDown;
         return $baseCell;
     }
 
     /**
      * Formate les données à renvoyer pour une cellule texte.
      *
-     * @param string $value    Texte source de la cellule.
+     * @param string $value   Texte source de la cellule.
      * @param string $content Texte affiché dans la cellule
      *
      * @return array
      */
-    public function cellText($value, $content=null)
+    public function cellText($value, $content = null)
     {
         if ($content !== null) {
             $content = (string) $content;
@@ -511,7 +496,6 @@ abstract class DatagridController extends Core_Controller
      * Ajoute une ligne à la réponse.
      *
      * @param array $ligne Ligne de la Datagrid à ajouter aux données.
-     *
      */
     public function addLine($ligne)
     {
@@ -523,7 +507,6 @@ abstract class DatagridController extends Core_Controller
      *
      * @param string $index Index du label dans la liste.
      * @param string $label Label qui sera afficher dans la liste.
-     *
      */
     public function addElementList($index, $label)
     {
@@ -535,7 +518,6 @@ abstract class DatagridController extends Core_Controller
      *
      * @param string $index Index du label dans la liste.
      * @param string $label Label qui sera afficher dans la liste.
-     *
      */
     public function addElementAutocompleteList($index, $label)
     {
@@ -570,7 +552,7 @@ abstract class DatagridController extends Core_Controller
      */
     public function send()
     {
-        $response = array();
+        $response = [];
 
         // Définition du message.
         $response['message'] = $this->message;
@@ -601,5 +583,4 @@ abstract class DatagridController extends Core_Controller
         // Envoie des données.
         $this->sendJsonResponse($response);
     }
-
 }

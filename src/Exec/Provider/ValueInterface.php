@@ -1,17 +1,11 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Exec
- * @subpackage Provider
- */
 
 namespace Exec\Provider;
 
 /**
  * Interface à implémenter pour récupérer une valeur d'un Input.
  *
- * @package    Exec
- * @subpackage Provider
+ * @author valentin.claras
  */
 interface ValueInterface
 {

@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe LongTextColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -14,12 +6,9 @@ use UI\Datagrid\Datagrid;
 use UI_Form_Element_Textarea;
 
 /**
- * Description of LongTextColumn.
+ * Classe représentant une colonne contenant des textes longs.
  *
- * Une classe permettant de générer une colonne contenant des textes longs.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class LongTextColumn extends PopupColumn
 {
@@ -28,29 +17,26 @@ class LongTextColumn extends PopupColumn
      *
      * @var string
      */
-    public $loadingText = null;
+    public $loadingText;
 
     /**
      * Définition du message affiché lorsqu'une erreur se produit au chargement de texte brut.
      *
      * @var string
      */
-    public $errorText = null;
+    public $errorText;
 
     /**
      * Permet de savoir si le texte est textile et sera édité avec MarkItUp.
      *
      * Par défaut oui.
      *
-     * @var   bool
+     * @var bool
      */
     public $textileEditor = true;
 
 
-     /**
-      * {@inheritdoc}
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         // Définition des pseudo-constantes pouvant être redéfinies.
@@ -164,5 +150,4 @@ class LongTextColumn extends PopupColumn
 
         return $addFormElement;
     }
-
 }

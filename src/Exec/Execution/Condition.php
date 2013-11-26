@@ -1,9 +1,4 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Exec
- * @subpackage Execution
- */
 
 namespace Exec\Execution;
 
@@ -14,23 +9,18 @@ use TEC\Component\Composite;
 use TEC\Component\Leaf;
 
 /**
- * classe Condition
- * @package    Exec
- * @subpackage Execution
+ * Exécute une expression d'opération sur des conditions.
+ *
+ * @author valentin.claras
  */
 class Condition extends Execution
 {
     /**
-     * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
-     *
-     * @param Component $node
-     * @param \Exec\Provider\ValueInterface $valueProvider
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getErrorsFromComponent(Component $node, ValueInterface $valueProvider)
     {
-        $errors = array();
+        $errors = [];
 
         if ($node instanceof Leaf) {
             $errors = array_merge($errors, $valueProvider->checkValueForExecution($node->getName()));
@@ -46,12 +36,7 @@ class Condition extends Execution
     }
 
     /**
-     * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
-     *
-     * @param Component $node
-     * @param \Exec\Provider\ValueInterface $valueProvider
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     protected function executeComponent(Component $node, ValueInterface $valueProvider)
     {
@@ -85,5 +70,4 @@ class Condition extends Execution
 
         return $result;
     }
-
 }

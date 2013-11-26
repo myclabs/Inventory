@@ -6,17 +6,22 @@
  * @package    Orga
  * @subpackage Model
  */
+
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Selectable;
+use Orga\Model\ACL\OrganizationResourceTrait;
+use User\Domain\ACL\Resource\Resource;
 
 /**
- * Organization organisationnel.
+ * Organization.
  * @package    Orga
  * @subpackage Model
  */
-class Orga_Model_Organization extends Core_Model_Entity
+class Orga_Model_Organization extends Core_Model_Entity implements Resource
 {
     use Core_Model_Entity_Translatable;
+    use OrganizationResourceTrait;
 
     // Constantes de path des Axis, Member, Granularity et Cell.
     const PATH_SEPARATOR = '/';
@@ -65,6 +70,8 @@ class Orga_Model_Organization extends Core_Model_Entity
     {
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
+
+        $this->constructACL();
     }
 
     /**
@@ -248,6 +255,39 @@ class Orga_Model_Organization extends Core_Model_Entity
         return $axes;
     }
 
+    public function orderGranularities()
+    {
+        $granularities = array();
+        foreach ($this->getGranularities() as $granularity) {
+            $granularities[spl_object_hash($granularity)] = array(
+                'granularity' => $granularity,
+                'position'    => ''
+            );
+        }
+        foreach ($this->getFirstOrderedAxes() as $axis) {
+            foreach ($this->getGranularities() as $granularity) {
+                if (!$axis->hasGranularity($granularity)) {
+                    $granularities[spl_object_hash($granularity)]['position'] .= '1';
+                } else {
+                    $granularities[spl_object_hash($granularity)]['position'] .= '0';
+                }
+            }
+        }
+
+        /** @var Orga_Model_Granularity[] $orderedGranularities */
+        $orderedGranularities = array();
+        foreach ($granularities as $granularity) {
+            $orderedGranularities[$granularity['position']] = $granularity['granularity'];
+        }
+        ksort($orderedGranularities);
+
+        $position = 1;
+        foreach (array_reverse($orderedGranularities) as $orderedGranularity) {
+            $orderedGranularity->setPosition($position);
+            $position++;
+        }
+    }
+
     /**
      * Ajoute une Granularity au Organization
      *
@@ -263,6 +303,7 @@ class Orga_Model_Organization extends Core_Model_Entity
 
         if (!$this->hasGranularity($granularity)) {
             $this->granularities->add($granularity);
+            $this->orderGranularities();
         }
     }
 
@@ -296,10 +337,8 @@ class Orga_Model_Organization extends Core_Model_Entity
 
         if (empty($granularity)) {
             throw new Core_Exception_NotFound('No Granularity in Organization matching ref "'.$ref.'".');
-        } else {
-            if (count($granularity) > 1) {
-                throw new Core_Exception_TooMany('Too many Granularity in Organization matching ref "'.$ref.'".');
-            }
+        } else if (count($granularity) > 1) {
+            throw new Core_Exception_TooMany('Too many Granularity in Organization matching ref "'.$ref.'".');
         }
 
         return array_pop($granularity);
@@ -342,55 +381,13 @@ class Orga_Model_Organization extends Core_Model_Entity
     /**
      * Renvoie un tableau des Granularity du Organization.
      *
-     * @return Collection|Orga_Model_Granularity[]
+     * @return Collection|Selectable|Orga_Model_Granularity[]
      */
     public function getGranularities()
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->orderBy(['tag' => 'ASC']);
+        $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria);
-    }
-
-    /**
-     * Ordonne les Granularity dans le Organization.
-     *
-     * @return array
-     */
-    public function orderGranularities()
-    {
-        $granularities = array();
-        foreach ($this->getGranularities() as $granularity) {
-            $granularities[spl_object_hash($granularity)] = array(
-                'granularity' => $granularity,
-                'position'    => ''
-            );
-        }
-
-        if (count($granularities) > 1) {
-            foreach ($this->getFirstOrderedAxes() as $index => $axis) {
-                foreach ($this->getGranularities() as $granularity) {
-                    if (!$axis->hasGranularity($granularity)) {
-                        $granularities[spl_object_hash($granularity)]['position'] .= '1';
-                    } else {
-                        $granularities[spl_object_hash($granularity)]['position'] .= '0';
-                    }
-                }
-            }
-        }
-
-        $orderedGranularities = array();
-        foreach ($granularities as $granularity) {
-            $orderedGranularities[$granularity['position']] = $granularity['granularity'];
-        }
-        ksort($orderedGranularities);
-
-        foreach ($orderedGranularities as $position => $orderedGranularity) {
-            try {
-                $orderedGranularity->setPosition(1);
-            } catch (Core_Exception_UndefinedAttribute $e) {
-                // La Granularity n'a pas de position, elle est donc en train d'être supprimée.
-            }
-        }
     }
 
     /**
@@ -436,8 +433,7 @@ class Orga_Model_Organization extends Core_Model_Entity
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->where(Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null));
-        $criteria->orderBy(['tag' => 'ASC']);
+        $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
     }
-
 }

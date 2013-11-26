@@ -5,6 +5,7 @@
  * @subpackage Test
  */
 
+use Core\Test\TestCase;
 use Doctrine\DBAL\DBALException;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\DBAL\DBALException;
  * @package    Core
  * @subpackage Test
  */
-class Core_Test_DBExceptionParserTest extends Core_Test_TestCase
+class Core_Test_DBExceptionParserTest extends TestCase
 {
 
     /**

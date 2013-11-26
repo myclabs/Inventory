@@ -6,6 +6,11 @@
  */
 
 use Core\Annotation\Secure;
+use User\Domain\ACL\Role\Role;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
 
 /**
  * Controlleur du Datagrid listant les Roles d'une Cellule.
@@ -16,50 +21,35 @@ use Core\Annotation\Secure;
 class Orga_Datagrid_Organization_Acls_ChildcellsController extends UI_Controller_Datagrid
 {
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("allowCell")
      */
-    function getelementsAction()
+    public function getelementsAction()
     {
         $this->request->setCustomParameters($this->request->filter->getConditions());
-        $this->request->filter->setConditions(array());
+        $this->request->filter->setConditions([]);
 
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
-        $this->request->order->addOrder(Orga_Model_Cell::QUERY_MEMBERS_HASHKEY);
+        $this->request->order->addOrder(Orga_Model_Cell::QUERY_TAG);
         foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
-            $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
-
-            $data = array();
+            $data = [];
             $data['index'] = $childCell->getId();
             foreach ($childCell->getMembers() as $member) {
-                $data[$member->getAxis()->getRef()] = $member->getRef();
+                $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
             }
 
-            $listLinkedUser = array();
-            $listAdministrator = array();
-            foreach ($childCellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                if ($linkedIdentity instanceof User_Model_Role) {
-                    $userNumber = 0;
-                    foreach ($linkedIdentity->getUsers() as $user) {
-                        if ($linkedIdentity->getRef() === 'cellAdministrator_'.$childCell->getId()
-                            || $linkedIdentity->getRef() === 'cellContributor_'.$childCell->getId()) {
-                            $listAdministrator[] = $user->getName();
-                        }
-                        $userNumber ++;
-                    }
-                    $listLinkedUser[] = $userNumber;  //  . ' ' . $linkedIdentity->getName() . '(s)';
+            $listLinkedUser = [];
+            $listLinkedUser[CellAdminRole::class] = 0;
+            $listLinkedUser[CellManagerRole::class] = 0;
+            $listLinkedUser[CellContributorRole::class] = 0;
+            $listLinkedUser[CellObserverRole::class] = 0;
+            $listAdministrator = [];
+            foreach ($childCell->getAllRoles() as $role) {
+                $listLinkedUser[get_class($role)]++;
+                if (!($role instanceof \Orga\Model\ACL\Role\CellObserverRole)) {
+                    $listAdministrator[] = $role->getUser()->getName();
                 }
             }
 
@@ -78,8 +68,6 @@ class Orga_Datagrid_Organization_Acls_ChildcellsController extends UI_Controller
     }
 
     /**
-     * Donne les détails sur un utilisateur.
-     *
      * @Secure("allowCell")
      */
     public function listAction()
@@ -89,17 +77,14 @@ class Orga_Datagrid_Organization_Acls_ChildcellsController extends UI_Controller
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
         $this->view->assign('idGranularity', $cell->getGranularity()->getId());
-        $cellACLResource = User_Model_Resource_Entity::loadByEntity($cell);
 
-        $listRoles = array();
-        foreach ($cellACLResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-            if ($linkedIdentity instanceof User_Model_Role) {
-                $listRoles[$linkedIdentity->getRef()] = __('Orga', 'role', $linkedIdentity->getName());
-            }
-        }
-        $this->view->assign('listRoles', $listRoles);
-
+        $this->view->listRoles = [
+            'CellAdminRole' => CellAdminRole::getLabel(),
+            'CellManagerRole' => CellManagerRole::getLabel(),
+            'CellContributorRole' => CellContributorRole::getLabel(),
+            'CellObserverRole' => CellObserverRole::getLabel(),
+        ];
+        
         $this->view->assign('labelPopup', __('Orga', 'acls', 'childCell', ['CELL' => $cell->getExtendedLabel()]));
     }
-
 }

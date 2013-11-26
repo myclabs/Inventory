@@ -46,6 +46,7 @@ if ($inputSet) {
 
 <?php
 if ($this->mode != AF_ViewConfiguration::MODE_READ) {
+
     $loadingText = __('UI', 'loading', 'loading');
     // Boutons
     $actionGroup = new UI_Form_Element_HTML('formActionGroup');
@@ -53,6 +54,17 @@ if ($this->mode != AF_ViewConfiguration::MODE_READ) {
     $resetButtonLabel = __('UI', 'verb', 'reset');
     $resultsPreviewButtonLabel = __('AF', 'inputInput', 'resultsPreview');
     $quitButtonLabel = __('UI', 'verb', 'quit');
+
+    if ($this->withResultsPreview) {
+        $resultsPreviewButton = <<<HTML
+            <button type="button" class="inputPreview btn" data-loading-text="$loadingText">
+                $resultsPreviewButtonLabel
+            </button>
+HTML;
+    } else {
+        $resultsPreviewButton = '';
+    }
+
     $actionGroup->content = <<<HTML
         <button type="button" class="inputSave btn" data-loading-text="$loadingText" disabled>
             $saveButtonLabel
@@ -60,15 +72,16 @@ if ($this->mode != AF_ViewConfiguration::MODE_READ) {
         <button type="button" class="inputReset btn" disabled>
             $resetButtonLabel
         </button>
-        <button type="button" class="inputPreview btn" data-loading-text="$loadingText">
-            $resultsPreviewButtonLabel
-        </button>
+        $resultsPreviewButton
         <button type="button" class="inputExit btn btn-primary">
             $quitButtonLabel
         </button>
 HTML;
+
     $form->addActionElement($actionGroup);
+
 } else {
+
     // Boutons
     $actionGroup = new UI_Form_Element_HTML('formActionGroup');
     $quitButtonLabel = __('UI', 'verb', 'quit');
@@ -77,7 +90,9 @@ HTML;
             $quitButtonLabel
         </button>
 HTML;
+
     $form->addActionElement($actionGroup);
+
 }
 
 echo $form->render();

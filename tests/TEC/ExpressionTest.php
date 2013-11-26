@@ -5,6 +5,7 @@
  * @subpackage Test
  */
 
+use Core\Test\TestCase;
 use TEC\Expression;
 use TEC\Exception\InvalidExpressionException;
 
@@ -30,7 +31,7 @@ class TEC_Test_ExpressionTest
  * @package    TEC
  * @subpackage Test
  */
-class TEC_Test_Expression extends Core_Test_TestCase
+class TEC_Test_Expression extends TestCase
 {
     /**
      * @expectedException TEC\Exception\InvalidExpressionException

@@ -94,9 +94,8 @@ class Orga_Service_ETLData
      */
     private function calculateCellResults(Orga_Model_Cell $cell)
     {
-        try {
-            $inputSet = $cell->getAFInputSetPrimary();
-        } catch (Core_Exception_UndefinedAttribute $e) {
+        $inputSet = $cell->getAFInputSetPrimary();
+        if ($inputSet === null) {
             // Pas de saisie.
             return;
         }

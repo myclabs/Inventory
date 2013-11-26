@@ -6,8 +6,8 @@
  */
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use User\Domain\ACL\Role\Role;
 
 /**
  * Datagrid de granularity
@@ -15,7 +15,6 @@ use MyCLabs\Work\Dispatcher\WorkDispatcher;
  */
 class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 {
-
     /**
      * @Inject
      * @var WorkDispatcher
@@ -29,23 +28,13 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     private $waitDelay;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("viewOrganization")
      */
     public function getelementsAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_ORGANIZATION, $organization);
-        $this->request->order->addOrder(Orga_Model_Granularity::QUERY_TAG);
+        $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         /**@var Orga_Model_Granularity $granularity */
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
             $data = array();
@@ -73,13 +62,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction ajoutant un élément.
-     *
-     * Renvoie un message d'information.
-     *
-     * @see getAddElementValue
-     * @see setAddElementErrorMessage
-     *
      * @Secure("editOrganization")
      */
     public function addelementAction()
@@ -145,21 +127,12 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction supprimant un élément.
-     *
-     * Récupération de la ligne à supprimer de la manière suivante :
-     *  $this->delete.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie un message d'information.
-     *
      * @Secure("editOrganization")
      */
     public function deleteelementAction()
     {
         $granularity = Orga_Model_Granularity::load($this->delete);
+        // TODO logique métier -> pas dans le contrôleur
         if ($granularity->getCellsWithACL()) {
             throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
         }
@@ -178,22 +151,6 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction modifiant un élément.
-     *
-     * Récupération de la ligne à modifier de la manière suivante :
-     *  $this->update['index'].
-     *
-     * Récupération de la colonne à modifier de la manière suivante :
-     *  $this->update['column'].
-     *
-     * Récupération de la nouvelle valeur à modifier de la manière suivante :
-     *  $this->update['value'].
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
-     *
      * @Secure("editOrganization")
      */
     public function updateelementAction()
@@ -207,11 +164,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 break;
             case 'aCL':
                 foreach ($granularity->getCells() as $cell) {
-                    $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
-                    foreach ($cellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                        if (!($linkedIdentity instanceof User_Model_Role) || (count($linkedIdentity->getUsers()) > 0)) {
-                            throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
-                        }
+                    if (count($cell->getAllRoles()) > 0) {
+                        throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
                     }
                 }
                 $granularity->setCellsWithACL((bool) $this->update['value']);

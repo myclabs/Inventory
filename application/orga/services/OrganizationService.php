@@ -1,19 +1,12 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Orga
- * @subpackage Service
- */
 
 use Doctrine\ORM\EntityManager;
+use User\Domain\ACL\Role\AdminRole;
+use User\Domain\ACL\Role\Role;
+use User\Domain\User;
 
-/**
- * @package Orga
- * @subpackage Service
- */
 class Orga_Service_OrganizationService
 {
-
     /**
      * @var EntityManager
      */
@@ -37,12 +30,12 @@ class Orga_Service_OrganizationService
     /**
      * Crée un projet et assigne un utilisateur comme administrateur
      *
-     * @param User_Model_User $administrator
+     * @param User $administrator
      * @param array $formData
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganization(User_Model_User $administrator, array $formData)
+    public function createOrganization(User $administrator, array $formData)
     {
         $this->entityManager->beginTransaction();
 
@@ -83,8 +76,7 @@ class Orga_Service_OrganizationService
                         $mainAxisRef .= '_'.$i;
                     }
 
-                    $mainAxis = new Orga_Model_Axis($organization);
-                    $mainAxis->setRef($mainAxisRef);
+                    $mainAxis = new Orga_Model_Axis($organization, $mainAxisRef);
                     $mainAxis->setLabel($mainAxisData['value']);
                     if ($mainParentAxis) {
                         $mainAxis->setDirectNarrower($mainParentAxis);
@@ -99,8 +91,7 @@ class Orga_Service_OrganizationService
                     $organization->getAxisByRef($timeAxisRef);
                     $timeAxisRef = 't_'.$timeAxisRef;
                 } catch (Core_Exception_NotFound $e) {}
-                $timeAxis = new Orga_Model_Axis($organization);
-                $timeAxis->setRef($timeAxisRef);
+                $timeAxis = new Orga_Model_Axis($organization, $timeAxisRef);
                 $timeAxis->setLabel($timeAxisLabel);
                 $axes['timeAxis'] = $timeAxis;
                 // Création de l'axe de subdivision.
@@ -111,8 +102,7 @@ class Orga_Service_OrganizationService
                         $organization->getAxisByRef($subdivisionAxisRef);
                         $subdivisionAxisRef = 'd_'.$subdivisionAxisRef;
                     } catch (Core_Exception_NotFound $e) {}
-                    $subdivisionAxis = new Orga_Model_Axis($organization);
-                    $subdivisionAxis->setRef($subdivisionAxisRef);
+                    $subdivisionAxis = new Orga_Model_Axis($organization, $subdivisionAxisRef);
                     $subdivisionAxis->setLabel($subdivisionAxisLabel);
                     $axes['subdivisionAxis'] = $subdivisionAxis;
                 }
@@ -142,11 +132,10 @@ class Orga_Service_OrganizationService
                             }
                             $memberRef .= '_'.$i;
                         }
-                        $member = new Orga_Model_Member($membersAxis);
+                        $member = new Orga_Model_Member($membersAxis, $memberRef);
                         foreach ($parentMembers as $parentMember) {
                             $member->addDirectParent($parentMember);
                         }
-                        $member->setRef($memberRef);
                         $member->setLabel($memberData['value']);
                         $members[$axisId][$memberId] = $member;
                     }
@@ -236,8 +225,16 @@ class Orga_Service_OrganizationService
             $organization->save();
 
             // Ajout de l'utilisateur courant en tant qu'administrateur.
-            $this->aclManager->addOrganizationAdministrator($organization, $administrator, false);
+            $this->aclManager->addOrganizationAdministrator($organization, $administrator->getEmail(), false);
             $this->entityManager->flush();
+
+            // Ajout des superadmins en tant qu'administrateur de l'organisation
+            foreach (AdminRole::loadList() as $adminRole) {
+                /** @var AdminRole $adminRole */
+                $email = $adminRole->getUser()->getEmail();
+                $this->aclManager->addOrganizationAdministrator($organization, $email, false);
+                $this->entityManager->flush();
+            }
 
             $this->entityManager->commit();
 
@@ -261,17 +258,6 @@ class Orga_Service_OrganizationService
         $this->entityManager->beginTransaction();
 
         try {
-            // Suppression des autorisations de tous les utilisateurs.
-            $this->clearAttachedUsers(User_Model_Resource_Entity::loadByEntity($organization));
-            foreach ($organization->getGranularities() as $granularity) {
-                foreach ($granularity->getCells() as $cell) {
-                    $this->clearAttachedUsers(User_Model_Resource_Entity::loadByEntity($cell));
-                }
-            }
-
-            $this->entityManager->flush();
-            $this->entityManager->clear();
-
             $organization = Orga_Model_Organization::load($organization->getId());
             $organization->setGranularityForInventoryStatus();
 
@@ -279,7 +265,7 @@ class Orga_Service_OrganizationService
             $this->entityManager->clear();
 
             $organization = Orga_Model_Organization::load($organization->getId());
-            $granularities = $organization->getGranularities();
+            $granularities = $organization->getGranularities()->toArray();
             foreach (array_reverse($granularities) as $granularity) {
                 $granularity = Orga_Model_Granularity::load($granularity->getId());
                 $granularity->setInputConfigGranularity();
@@ -301,19 +287,4 @@ class Orga_Service_OrganizationService
             throw $e;
         }
     }
-
-    /**
-     * @param User_Model_Resource_Entity $resource
-     */
-    protected function clearAttachedUsers(User_Model_Resource_Entity $resource)
-    {
-        foreach ($resource->getLinkedSecurityIdentities() as $securityIdentity) {
-            if ($securityIdentity instanceof User_Model_Role) {
-                foreach ($securityIdentity->getUsers() as $attachedUser) {
-                    $attachedUser->removeRole($securityIdentity);
-                }
-            }
-        }
-    }
-
 }

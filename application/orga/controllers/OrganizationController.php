@@ -1,15 +1,14 @@
 <?php
-/**
- * Classe Orga_OrganizationController
- * @author valentin.claras
- * @package Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Model\ACL\Role\AbstractCellRole;
 use Orga\ViewModel\OrganizationViewModelFactory;
+use User\Domain\ACL\Action;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Resource\NamedResource;
+use User\Domain\User;
 
 /**
  * @author valentin.claras
@@ -22,7 +21,7 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -56,14 +55,13 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function indexAction()
     {
-        /** @var User_Model_User $connectedUser */
+        /** @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
-        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
-
+        $organizationResource = NamedResource::loadByName(Orga_Model_Organization::class);
         $isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::CREATE(),
+            Action::CREATE(),
             $organizationResource
         );
 
@@ -71,12 +69,12 @@ class Orga_OrganizationController extends Core_Controller
             $aclQuery = new Core_Model_Query();
             $aclQuery->aclFilter->enabled = true;
             $aclQuery->aclFilter->user = $connectedUser;
-            $aclQuery->aclFilter->action = User_Model_Action_Default::DELETE();
+            $aclQuery->aclFilter->action = Action::DELETE();
 
             $isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
 
             if (!$isConnectedUserAbleToDeleteOrganizations) {
-                $aclQuery->aclFilter->action = User_Model_Action_Default::VIEW();
+                $aclQuery->aclFilter->action = Action::VIEW();
                 $isConnectedUserAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
             }
         }
@@ -93,6 +91,8 @@ class Orga_OrganizationController extends Core_Controller
                 $this->redirect('orga/organization/view/idOrganization/'.$idOrganization);
             }
         }
+
+        $this->forward('noaccess', 'organization', 'orga');
     }
 
     /**
@@ -107,7 +107,7 @@ class Orga_OrganizationController extends Core_Controller
         $query = new Core_Model_Query();
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $connectedUser;
-        $query->aclFilter->action = User_Model_Action_Default::VIEW();
+        $query->aclFilter->action = Action::VIEW();
         $organizations = Orga_Model_Organization::loadList($query);
 
         // Crée les ViewModel
@@ -117,10 +117,10 @@ class Orga_OrganizationController extends Core_Controller
         }
         $this->view->assign('organizations', $organizationsViewModel);
 
-        $organizationResource = User_Model_Resource_Entity::loadByEntityName('Orga_Model_Organization');
+        $organizationResource = NamedResource::loadByName(Orga_Model_Organization::class);
         $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::CREATE(),
+            Action::CREATE(),
             $organizationResource
         ));
     }

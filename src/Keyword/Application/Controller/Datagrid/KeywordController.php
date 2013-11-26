@@ -1,10 +1,4 @@
 <?php
-/**
- * Classe Keyword_Datagrid_KeywordController
- * @author valentin.claras
- * @author bertrand.ferry
- * @package Keyword
- */
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
@@ -13,8 +7,10 @@ use Keyword\Domain\Keyword;
 use Keyword\Domain\KeywordRepository;
 
 /**
- * Classe controleur de la datagrid de Keyword.
- * @package Keyword
+ * Datagrid de la liste des mots-clés.
+ *
+ * @author valentin.claras
+ * @author bertrand.ferry
  */
 class Keyword_Datagrid_KeywordController extends DatagridController
 {
@@ -25,9 +21,6 @@ class Keyword_Datagrid_KeywordController extends DatagridController
     private $keywordRepository;
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
-     *
      * @Secure("viewKeyword")
      */
     public function getelementsAction()
@@ -51,9 +44,6 @@ class Keyword_Datagrid_KeywordController extends DatagridController
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
-     *
      * @Secure("editKeyword")
      */
     public function addelementAction()
@@ -76,9 +66,6 @@ class Keyword_Datagrid_KeywordController extends DatagridController
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
-     *
      * @Secure("deleteKeyword")
      */
     public function deleteelementAction()
@@ -90,9 +77,6 @@ class Keyword_Datagrid_KeywordController extends DatagridController
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
-     *
      * @Secure("editKeyword")
      */
     public function updateelementAction()
@@ -116,5 +100,4 @@ class Keyword_Datagrid_KeywordController extends DatagridController
 
         $this->send();
     }
-
 }

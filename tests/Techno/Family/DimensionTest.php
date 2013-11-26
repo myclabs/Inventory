@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Keyword\Domain\KeywordRepository;
 use Techno\Domain\Family\Dimension;
@@ -51,7 +52,7 @@ class Techno_Test_Family_DimensionTest
     }
 }
 
-class Techno_Test_Family_DimensionSetUp extends Core_Test_TestCase
+class Techno_Test_Family_DimensionSetUp extends TestCase
 {
     public static function setUpBeforeClass()
     {
@@ -143,7 +144,7 @@ class Techno_Test_Family_DimensionSetUp extends Core_Test_TestCase
     }
 }
 
-class Techno_Test_Family_DimensionMetier extends Core_Test_TestCase
+class Techno_Test_Family_DimensionMetier extends TestCase
 {
     public static function setUpBeforeClass()
     {

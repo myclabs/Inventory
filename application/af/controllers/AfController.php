@@ -59,6 +59,7 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->setDisplayConfigurationLink(true);
         $viewConfiguration->addBaseTabs();
         $viewConfiguration->setPageTitle($af->getLabel());
+        $viewConfiguration->setUseSession(true);
         if ($this->hasParam('fromTree')) {
             $viewConfiguration->setExitUrl($this->_helper->url('tree', 'af', 'af'));
         } else {
@@ -110,9 +111,11 @@ class AF_AfController extends Core_Controller
         if ($idInputSet) {
             // Charge la saisie depuis la BDD
             $inputSet = AF_Model_InputSet_Primary::load($idInputSet);
-        } else {
+        } elseif ($this->getParam('useSession')) {
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+        } else {
+            $inputSet = new AF_Model_InputSet_Primary($af);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->af = $af;
@@ -122,6 +125,8 @@ class AF_AfController extends Core_Controller
         $this->view->mode = $mode;
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->exitURL = $exitURL;
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->view->withResultsPreview = $this->getParam('resultsPreview');
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->resultsPreviewUrl = $resultsPreviewUrl;
         // Génère le formulaire
@@ -231,6 +236,16 @@ class AF_AfController extends Core_Controller
     }
 
     /**
+     * Popup de copie d'un AF
+     * @Secure("editAF")
+     */
+    public function duplicatePopupAction()
+    {
+        $this->view->assign('id', $this->getParam('id'));
+        $this->_helper->layout->disableLayout();
+    }
+
+    /**
      * Duplique un AF
      * @Secure("editAF")
      */
@@ -239,14 +254,26 @@ class AF_AfController extends Core_Controller
         /** @var $af AF_Model_AF */
         $af = AF_Model_AF::load($this->getParam('id'));
 
-        $newRef = $af->getRef() . '_copy';
-        $newAF = $this->afCopyService->copyAF($af, $newRef);
+        $newRef = $this->getParam('ref');
+        $newLabel = $this->getParam('label');
+        if ($newRef == '' || $newLabel == '') {
+            UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'), UI_Message::TYPE_ERROR);
+            $this->redirect('af/af/list');
+            return;
+        }
+
+        $newAF = $this->afCopyService->copyAF($af, $newRef, $newLabel);
 
         $newAF->save();
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (Core_ORM_DuplicateEntryException $e) {
+            UI_Message::addMessageStatic(__('UI', 'formValidation', 'alreadyUsedIdentifier'), UI_Message::TYPE_ERROR);
+            $this->redirect('af/af/list');
+            return;
+        }
 
         UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
         $this->redirect('af/af/list');
     }
-
 }

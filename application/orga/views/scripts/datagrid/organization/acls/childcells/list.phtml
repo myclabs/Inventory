@@ -25,6 +25,7 @@ $columnRole->list = $this->listRoles;
 $datagridACLs->addCol($columnRole);
 
 $datagridACLs->addParam('idCell', $this->idCell);
+$datagridACLs->pagination = false;
 
 echo $datagridACLs->render();
 ?>

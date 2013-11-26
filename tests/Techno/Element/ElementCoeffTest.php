@@ -1,11 +1,12 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Techno\Domain\Component;
 use Techno\Domain\Element\CoeffElement;
 use Unit\UnitAPI;
 
-class Techno_Test_Element_CoeffTest extends Core_Test_TestCase
+class Techno_Test_Element_CoeffTest extends TestCase
 {
     /**
      * Méthode appelée avant les tests

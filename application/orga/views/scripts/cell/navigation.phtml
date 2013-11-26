@@ -8,7 +8,7 @@
 ?>
 
 <?php
-$parentCells = array_reverse($this->cell->getParentCells());
+$parentCells = $this->cell->getParentCells();
 if (count($parentCells) > 0) {
 ?>
 <ul id="navigationParent">

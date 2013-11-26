@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe DateColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -14,48 +6,42 @@ use UI\Datagrid\Datagrid;
 use UI_Form_Element_Pattern_Date;
 
 /**
- * Description of DateColumn.
+ * Une classe représentant une colonne contenant des dates.
  *
- * Une classe permettant de générer une colonne contenant des dates.
- *
- * @package UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class DateColumn extends GenericColumn
 {
     /**
      * Définition du mot clef du filtre pour l'infériorité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterLower = null;
+    public $keywordFilterLower;
 
     /**
      * Définition du mot clef du filtre pour la supériorité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterHigher = null;
+    public $keywordFilterHigher;
 
     /**
      * Définition de la constante utilisé pour le filtre inférieur sur la colonne.
      *
-     * @var   string
+     * @var string
      */
-    public $criteriaFilterOperatorLower = null;
+    public $criteriaFilterOperatorLower;
 
     /**
      * Définition de la constante utilisé pour le filtre supérieur sur la colonne.
      *
-     * @var   string
+     * @var string
      */
-    public $criteriaFilterOperatorHigher = null;
+    public $criteriaFilterOperatorHigher;
 
 
-     /**
-      * {@inheritdoc}
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         // Définition des pseudo-constantes pouvant être redéfinies.
@@ -72,19 +58,17 @@ class DateColumn extends GenericColumn
      */
     public function getFormatter(Datagrid $datagrid)
     {
-        $format = '';
-
-        $format .= 'if (typeof(sData) != "object") {';
-        $format .= 'content = sData;';
-        $format .= '} else {';
-        $format .= 'if (sData.content != null) {';
-        $format .= 'content = sData.content;';
-        $format .= '} else {';
-        $format .= 'content = sData.value;';
-        $format .= '}';
-        $format .= '}';
-
-        return $format;
+        return <<<JS
+if (typeof(sData) != "object") {
+    content = sData;
+} else {
+    if (sData.content != null) {
+        content = sData.content;
+    } else {
+        content = sData.value;
+    }
+}
+JS;
     }
 
     /**
@@ -109,30 +93,28 @@ class DateColumn extends GenericColumn
      */
     public function getEditorValue(Datagrid $datagrid)
     {
-        $editorValue = '';
-
-        $editorValue .= 'if (typeof(sData) != "string") {';
-        $editorValue .= 'var date = sData.value;';
-        $editorValue .= '} else {';
-        $editorValue .= 'var date = sData';
-        $editorValue .= '}';
         // @ todo Date -> Col_Date::getEditorValue -> utiliser le format de l'utilisateur.
-        $editorValue .= 'var dateComponents = date.split(\'/\');';
-        $editorValue .= 'var day = dateComponents[0];';
-        $editorValue .= 'var month = dateComponents[1];';
-        $editorValue .= 'var year = dateComponents[2];';
-        $editorValue .= 'record.setData(column.key, new Date(month + \'/\' + day + \'/\' + year));';
-        $editorValue .= 'this.onEventShowCellEditor(oArgs);';
-        $editorValue .= '$(\'#\' + column.editor.calendar.id).parent().parent().addClass(\'yui-skin-sam\');';
-        $editorValue .= 'record.setData(column.key, sData);';
-
-        return $editorValue;
+        return <<<JS
+if (typeof(sData) != "string") {
+    var date = sData.value;
+} else {
+    var date = sData;
+}
+var dateComponents = date.split(\'/\');
+var day = dateComponents[0];
+var month = dateComponents[1];
+var year = dateComponents[2];
+record.setData(column.key, new Date(month + '/' + day + '/' + year));
+this.onEventShowCellEditor(oArgs);
+$('#' + column.editor.calendar.id).parent().parent().addClass('yui-skin-sam');
+record.setData(column.key, sData);
+JS;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         // Champs pour le fitre >=.
         $filterFormElementSuperior = new UI_Form_Element_Pattern_Date($this->getFilterFormId($datagrid).'_higher');
@@ -199,7 +181,7 @@ class DateColumn extends GenericColumn
     /**
      * {@inheritdoc}
      */
-    function getResettingFilter(Datagrid $datagrid)
+    public function getResettingFilter(Datagrid $datagrid)
     {
         $resetFields = '';
 
@@ -220,5 +202,4 @@ class DateColumn extends GenericColumn
 
         return $addFormElement;
     }
-
 }

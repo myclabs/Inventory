@@ -25,7 +25,7 @@ Feature: Identification feature
     When I fill in "email" with "admin@myc-sense.com"
     And I fill in "password" with "myc-53n53"
     And I click "connection"
-    Then I should see "Applications"
+    Then I should see "Workspaces"
 
   @javascript
   Scenario: Logging out

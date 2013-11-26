@@ -5,9 +5,9 @@ namespace Orga\ViewModel;
 use Core_Exception_UndefinedAttribute;
 use Orga_Model_Axis;
 use Orga_Model_Organization;
-use User_Model_User;
-use User_Model_Action_Default;
-use User_Service_ACL;
+use User\Domain\User;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Action;
 
 /**
  * Factory de OrganizationViewModel.
@@ -15,16 +15,16 @@ use User_Service_ACL;
 class OrganizationViewModelFactory
 {
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
-    public function __construct(User_Service_ACL $aclService)
+    public function __construct(ACLService $aclService)
     {
         $this->aclService = $aclService;
     }
 
-    public function createOrganizationViewModel(Orga_Model_Organization $organization, User_Model_User $connectedUser)
+    public function createOrganizationViewModel(Orga_Model_Organization $organization, User $connectedUser)
     {
         $viewModel = new OrganizationViewModel();
         $viewModel->id = $organization->getId();
@@ -41,12 +41,12 @@ class OrganizationViewModelFactory
         );
         $viewModel->canBeEdited = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            Action::EDIT(),
             $organization
         );
         $viewModel->canBeDeleted = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::DELETE(),
+            Action::DELETE(),
             $organization
         );
 

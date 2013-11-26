@@ -7,8 +7,10 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Model\ACL\Role\OrganizationAdminRole;
+use User\Domain\ACL\Role\Role;
+use User\Domain\User;
 
 /**
  * Controlleur du Datagrid listant les Roles du projet d'une cellule.
@@ -18,12 +20,6 @@ use MyCLabs\Work\Dispatcher\WorkDispatcher;
  */
 class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var User_Service_User
-     */
-    private $userService;
-
     /**
      * @Inject
      * @var WorkDispatcher
@@ -37,26 +33,16 @@ class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controll
     private $waitDelay;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
-     * @Secure("allowOrganization")
+     * @Secure("editOrganization")
      */
-    function getelementsAction()
+    public function getelementsAction()
     {
-        $idOrganization = $this->getParam('idOrganization');
-        $organizationAdministratorRole = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        foreach ($organizationAdministratorRole->getUsers() as $user) {
+        foreach ($organization->getAdminRoles() as $role) {
+            $user = $role->getUser();
             $data = array();
-            $data['index'] = $user->getId();
+            $data['index'] = $role->getId();
             $data['userFirstName'] = $user->getFirstName();
             $data['userLastName'] = $user->getLastName();
             $data['userEmail'] = $user->getEmail();
@@ -67,25 +53,34 @@ class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controll
     }
 
     /**
-     * Fonction ajoutant un élément.
-     *
-     * Renvoie un message d'information.
-     *
-     * @see getAddElementValue
-     * @see setAddElementErrorMessage
-     * @Secure("allowOrganization")
+     * @Secure("editOrganization")
      */
-    function addelementAction()
+    public function addelementAction()
     {
-        $idOrganization = $this->getParam('idOrganization');
-        $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
-        $organization = Orga_Model_Organization::load($idOrganization);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->send();
             return;
+        } elseif (! filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+            $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'invalidEmail'));
+            $this->send();
+            return;
+        }
+
+        // Vérifie que l'utilisateur n'a pas déjà le role
+        try {
+            $user = User::loadByEmail($userEmail);
+            foreach ($user->getRoles() as $role) {
+                if ($role instanceof OrganizationAdminRole && $role->getOrganization() === $organization) {
+                    $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                    $this->send();
+                    return;
+                }
+            }
+        } catch (Core_Exception_NotFound $e) {
         }
 
         $success = function () {
@@ -98,56 +93,29 @@ class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controll
             throw $e;
         };
 
-        if (User_Model_User::isEmailUsed($userEmail)) {
-            $user = User_Model_User::loadByEmail($userEmail);
-            if ($user->hasRole($role)) {
-                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
-                $this->send();
-                return;
-            }
-            $task = new ServiceCallTask(
-                'Orga_Service_ACLManager',
-                'addOrganizationAdministrator',
-                [$organization, $user, false],
-                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-            );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-        } else {
-            $user = $this->userService->inviteUser(
-                $userEmail
-            );
-            $task = new ServiceCallTask(
-                'Orga_Service_ACLManager',
-                'createUserAndAddRole',
-                [$user, 'addOrganizationAdministrator', $organization],
-                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
-            );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-        }
+        $taskLabel = __('Orga', 'backgroundTasks', 'addRoleToUser', [
+            'ROLE' => OrganizationAdminRole::getLabel(), 'USER' => $userEmail
+        ]);
+
+        $task = new ServiceCallTask(
+            Orga_Service_ACLManager::class,
+            'addOrganizationAdministrator',
+            [$organization, $userEmail, false],
+            $taskLabel
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
 
     /**
-     * Fonction supprimant un élément.
-     *
-     * Récupération de la ligne à supprimer de la manière suivante :
-     *  $this->delete.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie un message d'information.
-     * @Secure("allowOrganization")
+     * @Secure("allowCell")
      */
-    function deleteelementAction()
+    public function deleteelementAction()
     {
-        $idOrganization = $this->getParam('idOrganization');
-        $organization = Orga_Model_Organization::load($idOrganization);
-        $user = User_Model_User::load($this->delete);
-        $role = User_Model_Role::loadByRef('organizationAdministrator_'.$idOrganization);
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $role = Role::load($this->delete);
 
-        // worker.
         $success = function () {
             $this->message = __('UI', 'message', 'deleted');
         };
@@ -159,14 +127,18 @@ class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controll
         };
 
         $task = new ServiceCallTask(
-            'Orga_Service_ACLManager',
+            Orga_Service_ACLManager::class,
             'removeOrganizationAdministrator',
-            [$organization, $user, false],
-            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+            [$organization, $role, false],
+            __(
+                'Orga',
+                'backgroundTasks',
+                'removeRoleFromUser',
+                ['ROLE' => $role->getLabel(), 'USER' => $role->getUser()->getEmail()]
+            )
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
-
 }

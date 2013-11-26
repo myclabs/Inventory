@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe BoolColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -17,55 +9,49 @@ use UI_Form_Element_Option;
 use UI_HTML_Button;
 
 /**
- * Description of BoolColumn.
+ * Classe représentant une colonne contenant des booleens.
  *
- * Une classe permettant de générer une colonne contenant des booleens.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class BoolColumn extends GenericColumn
 {
     /**
      * Définition du mot clef du filtre pour l'égalité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterEqual = null;
+    public $keywordFilterEqual;
 
     /**
      * Définition de la valeur qui sera affiché dans la cellule si le booléen vaut 'true'.
      *
-     * @var   string
+     * @var string
      */
-    public $valueTrue = null;
+    public $valueTrue;
 
     /**
      * Définition de la valeur qui sera affiché dans la cellule si le booléen vaut 'false'.
      *
-     * @var   string
+     * @var string
      */
-    public $valueFalse = null;
+    public $valueFalse;
 
     /**
      * Définition du texte qui sera affiché dans l'editeur pour coché la valeur 'true'.
      *
-     * @var   string
+     * @var string
      */
-    public $textTrue = null;
+    public $textTrue;
 
     /**
      * Définition du texte qui sera affiché dans l'editeur pour coché la valeur 'false'.
      *
-     * @var   string
+     * @var string
      */
-    public $textFalse = null;
+    public $textFalse;
 
 
-     /**
-      * {@inheritdoc}
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         // Définition des pseudo-constantes pouvant être redéfinies.
@@ -83,20 +69,21 @@ class BoolColumn extends GenericColumn
      */
     public function getFormatter(Datagrid $datagrid)
     {
-        $format = '';
+        $escapedTrueValue = addslashes($this->valueTrue);
+        $escapedFalseValue = addslashes($this->valueFalse);
 
-        $format .= 'if (typeof(sData) != "object") {';
-        $format .= 'var value = sData;';
-        $format .= '} else {';
-        $format .= 'var value = sData.value;';
-        $format .= '}';
-        $format .= 'if (value == true) {';
-        $format .= 'content = \''.addslashes($this->valueTrue).'\';';
-        $format .= '} else {';
-        $format .= 'content = \''.addslashes($this->valueFalse).'\';';
-        $format .= '}';
-
-        return $format;
+        return <<<JS
+if (typeof(sData) != "object") {
+    var value = sData;
+} else {
+    var value = sData.value;
+}
+if (value == true) {
+    content = '$escapedTrueValue';
+} else {
+    content = '$escapedFalseValue';
+}
+JS;
     }
 
     /**
@@ -124,35 +111,33 @@ class BoolColumn extends GenericColumn
      */
     public function getEditorValue(Datagrid $datagrid)
     {
-        $editorValue = '';
-
-        $editorValue .= 'this.onEventShowCellEditor(oArgs);';
-        $editorValue .= 'var radioSelect = column.editor.radios;';
-        $editorValue .= 'if ((typeof(sData) != "undefined") && (sData !== null)) {';
-        $editorValue .= 'if (typeof(sData) != "object") {';
-        $editorValue .= 'var value = sData;';
-        $editorValue .= '} else {';
-        $editorValue .= 'var value = sData.value;';
-        $editorValue .= '}';
-        $editorValue .= 'if (value == true) {';
-        $editorValue .= 'radioSelect[1].checked = "";';
-        $editorValue .= 'radioSelect[0].checked = "checked";';
-        $editorValue .= '} else {';
-        $editorValue .= 'radioSelect[0].checked = "";';
-        $editorValue .= 'radioSelect[1].checked = "checked";';
-        $editorValue .= '}';
-        $editorValue .= '} else {';
-        $editorValue .= 'radioSelect[0].checked = "";';
-        $editorValue .= 'radioSelect[1].checked = "";';
-        $editorValue .= '}';
-
-        return $editorValue;
+        return <<<JS
+this.onEventShowCellEditor(oArgs);
+var radioSelect = column.editor.radios;
+if ((typeof(sData) != "undefined") && (sData !== null)) {
+    if (typeof(sData) != "object") {
+        var value = sData;
+    } else {
+        var value = sData.value;
+    }
+    if (value == true) {
+        radioSelect[1].checked = "";
+        radioSelect[0].checked = "checked";
+    } else {
+        radioSelect[0].checked = "";
+        radioSelect[1].checked = "checked";
+    }
+} else {
+    radioSelect[0].checked = "";
+    radioSelect[1].checked = "";
+}
+JS;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         $filterFormElement = new UI_Form_Element_Radio($this->getFilterFormId($datagrid));
         $filterFormElement->setLabel($this->getFilterFormLabel());
@@ -211,11 +196,7 @@ class BoolColumn extends GenericColumn
      */
     public function getResettingFilter(Datagrid $datagrid)
     {
-        $resetFields = '';
-
-        $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).' :checked\').removeAttr(\'checked\');';
-
-        return $resetFields;
+        return "$('#" . $this->getFilterFormId($datagrid) . " :checked').removeAttr('checked');";
     }
 
     /**
@@ -234,9 +215,8 @@ class BoolColumn extends GenericColumn
         $optionFalse->label = $this->textFalse;
         $addFormElement->addOption($optionFalse);
 
-        $addFormElement->setValue(($this->defaultAddValue) ? 1 : 0);
+        $addFormElement->setValue($this->defaultAddValue ? 1 : 0);
 
         return $addFormElement;
     }
-
 }

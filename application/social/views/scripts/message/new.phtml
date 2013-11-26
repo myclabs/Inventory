@@ -1,9 +1,11 @@
 <div class="page-header">
-    <h1><?=__('Social', 'message', 'newMessage')?></h1>
+    <h1><?= use User\Domain\User;
+
+        __('Social', 'message', 'newMessage')?></h1>
 </div>
 
 <?php
-/** @var $recipient User_Model_User|Social_Model_UserGroup */
+/** @var $recipient User|Social_Model_UserGroup */
 $recipient = $this->recipient;
 
 $form = new UI_Form('newMessage');
@@ -12,7 +14,7 @@ $form->setAjax(true, 'sendMessageSuccess');
 
 $recipientField = new UI_Form_Element_HTML('recipient');
 $recipientField->setLabel(__('Social', 'message', 'to'));
-if ($recipient instanceof User_Model_User) {
+if ($recipient instanceof User) {
     $recipientField->content = $recipient->getName();
 } elseif ($recipient instanceof Social_Model_UserGroup) {
     $recipientField->content = $recipient->getLabel();
@@ -23,7 +25,7 @@ $recipientIdField = new UI_Form_Element_Hidden('recipientId');
 $recipientIdField->setValue($recipient->getId());
 $form->addElement($recipientIdField);
 $recipientTypeField = new UI_Form_Element_Hidden('recipientType');
-if ($recipient instanceof User_Model_User) {
+if ($recipient instanceof User) {
     $recipientTypeField->setValue('user');
 } elseif ($recipient instanceof Social_Model_UserGroup) {
     $recipientTypeField->setValue('usergroup');

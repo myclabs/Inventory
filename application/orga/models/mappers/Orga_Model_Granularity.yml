@@ -1,7 +1,7 @@
 # orga\models\mappers\Orga_Model_Granularity.yml
 Orga_Model_Granularity:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: Core_Model_Repository_Ordered
   table: Orga_Granularity
 
   id:
@@ -20,6 +20,10 @@ Orga_Model_Granularity:
     tag:
       column: tag
       type: text
+      nullable: false
+    position:
+      column: position
+      type: integer
       nullable: false
     cellsWithACL:
       column: cellsWithACL
@@ -90,13 +94,15 @@ Orga_Model_Granularity:
         inverseJoinColumns:
           idAxis:
             referencedColumnName: id
+      orderBy:
+        narrowerTag: ASC
 
   oneToMany:
     cells:
       targetEntity: Orga_Model_Cell
       mappedBy: granularity
       orderBy:
-        membersHashKey: ASC
+        tag: ASC
       orphanRemoval: true
       cascade: [ persist, remove ]
     inputGranularities:

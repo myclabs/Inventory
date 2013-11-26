@@ -177,6 +177,9 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function preDelete()
     {
+        if ($this->axis !== null) {
+            $this->removeFromAxis();
+        }
         $this->deletePosition();
     }
 
@@ -197,7 +200,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function buildParentMembersHashKey($contextualizingParentMembers)
     {
-        @usort($contextualizingParentMembers, ['Orga_Model_Member', 'orderMembers']);
+        @usort($contextualizingParentMembers, [Orga_Model_Member::class, 'orderMembers']);
         $parentMembersRef = [];
 
         foreach ($contextualizingParentMembers as $parentMember) {
@@ -217,14 +220,14 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function orderMembers(Orga_Model_Member $a, Orga_Model_Member $b)
     {
-        if ($a->axis === $b->axis)  {
-            if ($a->axis->isMemberPositioning()) {
-                return strcmp($a->tag, $b->tag);
+        if ($a->getAxis() === $b->getAxis())  {
+            if ($a->getAxis()->isMemberPositioning()) {
+                return strcmp($a->getTag(), $b->getTag());
             } else {
-                return strcmp($a->label, $b->label);
+                return strcmp($a->getLabel(), $b->getLabel());
             }
         }
-        return Orga_Model_Axis::firstOrderAxes($a->axis, $b->axis);
+        return Orga_Model_Axis::firstOrderAxes($a->getAxis(), $b->getAxis());
     }
 
     /**
@@ -372,6 +375,17 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
+     *
+     */
+    public function removeFromAxis()
+    {
+        if ($this->axis !== null) {
+            $this->axis->removeMember($this);
+            $this->axis = null;
+        }
+    }
+
+    /**
      * Renvoie l'Axis du Member.
      *
      * @throws Core_Exception_UndefinedAttribute
@@ -399,7 +413,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function updateTag()
     {
-        $this->tag = '';
+        $this->tag = Orga_Model_Organization::PATH_SEPARATOR;
         if ($this->hasDirectParents()) {
             $pathTags = [];
             foreach ($this->getDirectParents() as $directParentMember) {
@@ -407,10 +421,10 @@ class Orga_Model_Member extends Core_Model_Entity
                     $pathTags[] = $pathTag;
                 }
             }
-            $pathLink = Orga_Model_Organization::PATH_SEPARATOR . $this->getMemberTag() . Orga_Model_Organization::PATH_JOIN;
+            $pathLink = $this->getMemberTag() . Orga_Model_Organization::PATH_SEPARATOR . Orga_Model_Organization::PATH_JOIN;
             $this->tag = implode($pathLink, $pathTags);
         }
-        $this->tag .= Orga_Model_Organization::PATH_SEPARATOR . $this->getMemberTag();
+        $this->tag .=  $this->getMemberTag() . Orga_Model_Organization::PATH_SEPARATOR;
     }
 
     /**
@@ -597,7 +611,7 @@ class Orga_Model_Member extends Core_Model_Entity
                 $parents[] = $recursiveParents;
             }
         }
-        @usort($parents, ['Orga_Model_Member', 'orderMembers']);
+        @usort($parents, [Orga_Model_Member::class, 'orderMembers']);
         return $parents;
     }
 
@@ -621,7 +635,7 @@ class Orga_Model_Member extends Core_Model_Entity
         $s = Orga_Model_Organization::PATH_SEPARATOR;
         $j = Orga_Model_Organization::PATH_JOIN;
         $parentMemberTag = $axis->getAxisTag() . ':' . ($axis->isMemberPositioning() ? '[0-9]+-' : '');
-        preg_match('#([^\\'.$j.']*\\'.$s.$parentMemberTag.'[a-z0-9_]+)\\'.$s.'#', $this->getTag(), $parentMemberPathTags);
+        preg_match('#([^\\'.$j.']*\\'.$s.$parentMemberTag.'[a-z0-9_]+\\'.$s.')#', $this->getTag(), $parentMemberPathTags);
         array_shift($parentMemberPathTags);
 
         if (count($parentMemberPathTags) > 0) {

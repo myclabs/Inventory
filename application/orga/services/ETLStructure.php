@@ -190,7 +190,7 @@ class Orga_Service_ETLStructure
         } else {
             $axes = $granularity->getAxes();
             // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-            @uasort($axes, array('Orga_Model_Axis', 'orderAxes'));
+            @uasort($axes, [Orga_Model_Axis::class, 'orderAxes']);
             foreach (Zend_Registry::get('languages') as $localeId) {
                 $labelParts = [];
                 foreach ($axes as $axis) {
@@ -428,7 +428,7 @@ class Orga_Service_ETLStructure
 
             $memberIdentifier = $orgaMember->getAxis()->getRef().'_'.$orgaMember->getCompleteRef();
             $associationArray['members'][$memberIdentifier] = $dWMember;
-            foreach ($orgaMember->getDirectChildren() as $narrowerOrgaMember) {
+            foreach ($orgaMember->getDirectChildren()->toArray() as $narrowerOrgaMember) {
                 $narrowerIdentifier = $narrowerOrgaMember->getAxis()->getRef().'_'
                     .$narrowerOrgaMember->getCompleteRef();
                 if (isset($associationArray['members'][$narrowerIdentifier])) {
@@ -483,7 +483,7 @@ class Orga_Service_ETLStructure
      *
      * @param Orga_Model_Cell $cell
      */
-    public function addGranularityDWReportsToCellDWCube($cell)
+    public function addGranularityDWReportsToCellDWCube(Orga_Model_Cell $cell)
     {
         $queryDWCube = new Core_Model_Query();
         $queryDWCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $cell->getGranularity()->getDWCube());
@@ -497,11 +497,14 @@ class Orga_Service_ETLStructure
      * Copie le Report d'un Cube de DW d'un Granularity dans le Cube d'un Cell.
      *
      * @param Orga_Model_GranularityReport $granularityReport
-     * @param DW_Model_Cube $dWCube
+     * @param DW_Model_Cube                $dWCube
      */
-    protected function copyGranularityReportToCellDWCube($granularityReport, $dWCube)
-    {
-        $granularityReport->addCellDWReport($granularityReport->getGranularityDWReport()->copyToCube($dWCube));
+    protected function copyGranularityReportToCellDWCube(
+        Orga_Model_GranularityReport $granularityReport,
+        DW_Model_Cube $dWCube
+    ) {
+        $reportCopy = $granularityReport->getGranularityDWReport()->copyToCube($dWCube);
+        $granularityReport->addCellDWReport($reportCopy);
     }
 
     /**
@@ -511,7 +514,7 @@ class Orga_Service_ETLStructure
      *
      * @return bool
      */
-    public function areOrganizationDWCubesUpToDate($organization)
+    public function areOrganizationDWCubesUpToDate(Orga_Model_Organization $organization)
     {
         foreach ($organization->getGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
@@ -578,9 +581,9 @@ class Orga_Service_ETLStructure
      */
     protected function isDWCubeUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
-        return !(
+        return (
             $this->areDWIndicatorsUpToDate($dWCube)
-            || $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
+            && $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
         );
     }
 
@@ -607,10 +610,9 @@ class Orga_Service_ETLStructure
         }
 
         if ((count($classifIndicators) > 0) || (count($dWIndicators) > 0)) {
-            return true;
+            return false;
         }
-
-        return false;
+        return true;
     }
 
     /**
@@ -677,10 +679,10 @@ class Orga_Service_ETLStructure
         }
 
         if ((count($classifRootAxes) > 0) || (count($orgaRootAxes) > 0) || (count($dWRootAxes) > 1)) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -874,7 +876,6 @@ class Orga_Service_ETLStructure
                 if (!($this->isDWMemberDifferentFromOrga($dWMember, $orgaMember, $orgaFilters))) {
                     unset($orgaMembers[$orgaIndex]);
                     unset($dWMembers[$dWIndex]);
-                } else {
                 }
             }
         }
@@ -902,7 +903,7 @@ class Orga_Service_ETLStructure
         ) {
             return true;
         } else {
-            $orgaParentMembers = $orgaMember->getDirectParents();
+            $orgaParentMembers = $orgaMember->getDirectParents()->toArray();
             $dWParentMembers = $dWMember->getDirectParents();
 
             foreach ($orgaMember->getDirectParents() as $index => $orgaParentMember) {

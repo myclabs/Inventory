@@ -25,7 +25,7 @@ AuditTrail\Domain\Entry:
 
   manyToOne:
     user:
-      targetEntity: \User_Model_User
+      targetEntity: User\Domain\User
       joinColumn:
         nullable: true
 

@@ -20,7 +20,7 @@ Core\Work\Notification\TaskNotifier:
   class: Core\Work\Notification\EmailTaskNotifier
 Core\Work\Notification\EmailTaskNotifier:
   constructor:
-    userService: User_Service_User
+    userService: User\Domain\UserService
     applicationName: email.noreply.name
 
 # Délai d'attente pour les taches de fond (attend 5 secondes)

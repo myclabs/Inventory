@@ -1,31 +1,18 @@
-<?php
-/**
- * @author valentin.claras
- * @package Orga
- * @subpackage View
- */
-foreach ($this->acls as $granularityLabel => $roles) {
-?>
+<?php foreach ($this->acls as $granularityLabel => $roles) : ?>
     <fieldset class="wrapper">
         <legend style="cursor: default"><?=$granularityLabel?></legend>
         <div>
-<?php
-    foreach ($roles as $roleLabel => $usersRoles) {
-?>
+            <?php foreach ($roles as $roleLabel => $usersRoles) : ?>
             <fieldset class="wrapper">
-                <legend style="cursor: default"><?=__('Orga', 'role', $roleLabel.'s')?></legend>
+                <legend style="cursor: default"><?=$roleLabel?></legend>
                 <div>
                     <pre><?=implode("\n", $usersRoles);?></pre>
                 </div>
             </fieldset>
-<?php
-    }
-?>
+            <?php endforeach; ?>
         </div>
     </fieldset>
-<?php
-}
-?>
+<?php endforeach; ?>
 
 <script>
     $('#inventories<?=$this->idGranularity?>_users_popup .modal-header h3').html("<?=$this->labelPopup?>");

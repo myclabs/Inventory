@@ -1,0 +1,11 @@
+Orga\Model\ACL\Role\CellAdminRole:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Orga_ACL_Role_CellAdmin
+
+  manyToOne:
+    cell:
+      targetEntity: \Orga_Model_Cell
+      inversedBy: adminRoles
+      joinColumn:
+        nullable: false

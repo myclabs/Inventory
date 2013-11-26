@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe LinkColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -14,43 +6,37 @@ use UI\Datagrid\Datagrid;
 use UI_Form_Element_Text;
 
 /**
- * Description of LinkColumn.
+ * Classe représentant une colonne contenant des liens.
  *
- * Une classe permettant de générer une colonne contenant des liens.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class LinkColumn extends GenericColumn
 {
     /**
      * Définition du mot clef du filtre pour l'égalité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterEqual = null;
+    public $keywordFilterEqual;
 
     /**
      * Définition de la valeur par defaut qui sera affiché dans la cellule.
      *
-     * @var   string
+     * @var string
      */
-    public $defaultValue = null;
+    public $defaultValue;
 
     /**
      * Définit si la valeur de la cellule est l'url du lien (true) ou le texte affiché (false).
      *
      * Par défaut il s'agit de l'url du lien (true).
      *
-     * @var   bool
+     * @var bool
      */
     public $linkValue = true;
 
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         // Définition des pseudo-constantes pouvant être redéfinies.
@@ -117,7 +103,7 @@ class LinkColumn extends GenericColumn
     /**
      * {@inheritdoc}
      */
-    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         if ($this->linkValue !== true) {
             $filterFormElement = new UI_Form_Element_Text($this->getFilterFormId($datagrid));
@@ -176,5 +162,4 @@ class LinkColumn extends GenericColumn
             return null;
         }
     }
-
 }

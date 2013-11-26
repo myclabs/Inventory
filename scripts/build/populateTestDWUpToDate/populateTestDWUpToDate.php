@@ -21,11 +21,9 @@ class Inventory_PopulateTestDWUpToDate extends Inventory_PopulateTest
      */
     public function populateEnvironment($environment)
     {
-        if ($environment === 'test') {
-            return;
-        }
-        $this->init($environment);
-
+        // Initalisation Unit.
+        $populateUnit = new Unit_Populate();
+        $populateUnit->initUnitEntityManager($environment);
 
         // Classif.
         $populateClassif = new Classif_PopulateTestDWUpToDate();
@@ -35,7 +33,9 @@ class Inventory_PopulateTestDWUpToDate extends Inventory_PopulateTest
         $populateOrga = new Orga_PopulateTestDWUpToDate();
         $populateOrga->runEnvironment($environment);
 
-        $this->close($environment);
+        // Fermeture Unit.
+        $populateUnit = new Unit_Populate();
+        $populateUnit->resetUnitEntityManager();
     }
 
 }

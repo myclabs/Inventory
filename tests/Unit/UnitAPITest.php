@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Unit\Domain\Unit\DiscreteUnit;
 use Unit\Domain\Unit\ExtendedUnit;
 use Unit\Domain\Unit\StandardUnit;
@@ -15,7 +16,7 @@ use Unit\UnitAPI;
  * @author hugo.charboniere
  * @author yoann.croizer
  */
-class Unit_Test_UnitAPITest extends Core_Test_TestCase
+class Unit_Test_UnitAPITest extends TestCase
 {
     protected $massStandardUnit;
     protected $timeStandardUnit;

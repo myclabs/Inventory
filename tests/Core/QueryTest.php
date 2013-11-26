@@ -271,7 +271,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
 }
 
 /**
- * Vérifie les exceptions lancées par la classe Core_Model_AclFilter
+ * Vérifie les exceptions lancées par la classe Core_Model_ACLFilter
  * @package    Core
  * @subpackage Test
  */
