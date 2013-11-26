@@ -1,0 +1,58 @@
+User\Domain\User:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: User_User
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    lastName:
+      type: string
+      nullable: true
+    firstName:
+      type: string
+      nullable: true
+    email:
+      type: string
+      nullable: false
+      unique: true
+    emailValidated:
+      type: boolean
+      nullable: false
+    emailKey:
+      type: string
+      nullable: true
+    enabled:
+      type: boolean
+      nullable: false
+    password:
+      type: string
+      nullable: false
+    creationDate:
+      type: datetime
+      nullable: false
+    locale:
+      type: core_locale
+      nullable: true
+
+  oneToMany:
+    roles:
+      targetEntity: User\Domain\ACL\Role\Role
+      mappedBy: user
+      cascade: [ all ]
+      orphanRemoval: true
+    authorizations:
+      targetEntity: User\Domain\ACL\Authorization\Authorization
+      mappedBy: user
+      cascade: [ all ]
+      orphanRemoval: true
+      fetch: EXTRA_LAZY
+    acl:
+      targetEntity: User\Domain\ACL\Authorization\UserAuthorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true

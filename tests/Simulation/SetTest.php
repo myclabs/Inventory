@@ -1,4 +1,6 @@
 <?php
+use User\Domain\User;
+
 /**
  * @package Simulation
  * @subpackage Tests
@@ -26,7 +28,7 @@ class Simulation_Test_SetTest
      * Génere un objet pret à l'emploi pour les tests.
      * @param int $i
      * @param AF_Model_AF $aF
-     * @param User_Model_User $user
+     * @param User $user
      * @return Simulation_Model_Set
      */
     public static function generateObject($i=0, $aF=null, $user=null)
@@ -37,7 +39,7 @@ class Simulation_Test_SetTest
         }
 
         if ($user === null) {
-            $user = new User_Model_User();
+            $user = new User();
             $user->setEmail('courriel@simulation.set'.$i);
             $user->setPassword('test');
             $user->save();
@@ -102,7 +104,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
     protected $_aF = null;
 
     /**
-     * @var User_Model_User
+     * @var User
      */
     protected $_user = null;
 
@@ -132,7 +134,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
         $aF = new AF_Model_AF('test');
         $aF->save();
 
-        $user = new User_Model_User();
+        $user = new User();
         $user->setEmail('courriel@simulation.set');
         $user->setPassword('test');
         $user->save();

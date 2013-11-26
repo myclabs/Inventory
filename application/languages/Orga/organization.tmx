@@ -12,6 +12,7 @@
                 <seg>Organization creation</seg>
             </tuv>
         </tu>
+        <!--
         <tu tuid="organization">
             <tuv xml:lang="fr">
                 <seg>Workspace</seg>
@@ -20,12 +21,21 @@
                 <seg>Workspace</seg>
             </tuv>
         </tu>
+        -->
         <tu tuid="organizations">
             <tuv xml:lang="fr">
                 <seg>Workspaces</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Workspaces</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationalStructure">
+            <tuv xml:lang="fr">
+                <seg>Structure organisationnelle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational structure</seg>
             </tuv>
         </tu>
         <tu tuid="structure">

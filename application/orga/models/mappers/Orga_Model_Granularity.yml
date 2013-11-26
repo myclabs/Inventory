@@ -21,6 +21,10 @@ Orga_Model_Granularity:
       column: tag
       type: text
       nullable: false
+    position:
+      column: position
+      type: integer
+      nullable: false
     navigable:
       column: navigable
       type: boolean

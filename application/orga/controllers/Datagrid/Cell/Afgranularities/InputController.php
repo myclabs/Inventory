@@ -6,6 +6,8 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Orga\Model\ACL\Action\CellAction;
+use User\Domain\ACL\ACLService;
 
 /**
  * Controller du datagrid des saisies des formulaires des cellules.
@@ -15,7 +17,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 {
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -87,7 +89,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                 Orga_Model_Cell::getAlias()
             );
             $this->request->order->addOrder(
-                Orga_Model_Cell::QUERY_MEMBERS_HASHKEY,
+                Orga_Model_Cell::QUERY_TAG,
                 Core_Model_Order::ORDER_ASC,
                 Orga_Model_Cell::getAlias()
             );
@@ -105,7 +107,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
         $data = array();
         $data['index'] = $cell->getId();
         foreach ($cell->getMembers() as $member) {
-            $data[$member->getAxis()->getRef()] = $member->getRef();
+            $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
         }
 
         if ($isInputInInventory) {
@@ -126,11 +128,11 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
 
                 $isUserAllowedToInputCell = $this->aclService->isAllowed(
                     $this->_helper->auth(),
-                    Orga_Action_Cell::INPUT(),
+                    CellAction::INPUT(),
                     $cell
                 );
-                try {
-                    $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+                $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+                if ($aFInputSetPrimary !== null) {
                     $percent = $aFInputSetPrimary->getCompletion();
                     $progressBarColor = null;
                     switch ($aFInputSetPrimary->getStatus()) {
@@ -149,8 +151,7 @@ class Orga_Datagrid_Cell_Afgranularities_InputController extends UI_Controller_D
                     }
                     $data['advancementInput'] = $this->cellPercent($percent, $progressBarColor);
                     $data['stateInput'] = $aFInputSetPrimary->getStatus();
-                } catch (Core_Exception_UndefinedAttribute $e) {
-                    $aFInputSetPrimary = null;
+                } else {
                     $data['advancementInput'] = $this->cellPercent(0, 'danger');
                     $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
                 }

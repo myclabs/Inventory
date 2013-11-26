@@ -7,8 +7,14 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
+use User\Domain\ACL\Role\Role;
+use User\Domain\User;
+use User\Domain\UserService;
 
 /**
  * Controlleur du Datagrid listant les utilisateurs d'un ensemble de cellules.
@@ -20,7 +26,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
 {
     /**
      * @Inject
-     * @var User_Service_User
+     * @var UserService
      */
     private $userService;
 
@@ -37,74 +43,55 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
     private $waitDelay;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("allowCell")
      */
     public function getelementsAction()
     {
         $this->request->setCustomParameters($this->request->filter->getConditions());
-        $this->request->filter->setConditions(array());
+        $this->request->filter->setConditions([]);
 
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
-        $this->request->order->addOrder(Orga_Model_Cell::QUERY_MEMBERS_HASHKEY);
-        foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
-            $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
-
-            $data = array();
+        $this->request->order->addOrder(Orga_Model_Cell::QUERY_TAG);
+        $childCells = $cell->loadChildCellsForGranularity($granularity, $this->request);
+        foreach ($childCells as $childCell) {
+            $data = [];
             foreach ($childCell->getMembers() as $member) {
-                $data[$member->getAxis()->getRef()] = $member->getRef();
+                $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
             }
 
-            foreach ($childCellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                if ($linkedIdentity instanceof User_Model_Role) {
-                    foreach ($linkedIdentity->getUsers() as $user) {
-                        $data['index'] = $linkedIdentity->getRef().'#'.$user->getId();
-                        $data['userFirstName'] = $user->getFirstName();
-                        $data['userLastName'] = $user->getLastName();
-                        $data['userEmail'] = $user->getEmail();
-                        $data['userRole'] = $linkedIdentity->getName();
-                        $this->addLine($data);
-                    }
+            foreach ($childCell->getAllRoles() as $role) {
+                $data['index'] = $role->getId();
+                $data['userFirstName'] = $role->getUser()->getFirstName();
+                $data['userLastName'] = $role->getUser()->getLastName();
+                $data['userEmail'] = $role->getUser()->getEmail();
+                switch (true) {
+                    case $role instanceof CellAdminRole:
+                        $data['userRole'] = 'CellAdminRole';
+                        break;
+                    case $role instanceof CellManagerRole:
+                        $data['userRole'] = 'CellManagerRole';
+                        break;
+                    case $role instanceof CellContributorRole:
+                        $data['userRole'] = 'CellContributorRole';
+                        break;
+                    case $role instanceof CellObserverRole:
+                        $data['userRole'] = 'CellObserverRole';
+                        break;
                 }
+                $this->addLine($data);
             }
         }
-
-        $totalElement = 0;
-        foreach ($cell->loadChildCellsForGranularity($granularity, $this->request) as $childCell) {
-            $childCellResource = User_Model_Resource_Entity::loadByEntity($childCell);
-            foreach ($childCellResource->getLinkedSecurityIdentities() as $linkedIdentity) {
-                if ($linkedIdentity instanceof User_Model_Role) {
-                    $totalElement += count($linkedIdentity->getUsers());
-                }
-            }
-        }
-        $this->totalElements = $totalElement;
 
         $this->send();
     }
 
     /**
-     * Fonction ajoutant un élément.
-     *
-     * Renvoie un message d'information.
-     *
-     * @see getAddElementValue
-     * @see setAddElementErrorMessage
      * @Secure("allowCell")
      */
-    function addelementAction()
+    public function addelementAction()
     {
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
@@ -116,7 +103,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         }
         foreach ($granularity->getAxes() as $axis) {
             if (isset($this->_add[$this->id.'_'.$axis->getRef().'_addForm'])) {
-                $members[] = $axis->getMemberByCompleteRef($this->getAddElementValue($axis->getRef()).'#');
+                $members[] = $axis->getMemberByCompleteRef($this->getAddElementValue($axis->getRef()));
             }
         }
         $granularityCell = $granularity->getCellByMembers($members);
@@ -125,28 +112,48 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         $userEmail = $this->getAddElementValue('userEmail');
         if (empty($userEmail)) {
             $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
+        } elseif (! filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+            $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'invalidEmail'));
+            $this->send();
+            return;
         }
-        $userRoleRef = $this->getAddElementValue('userRole');
-        if (empty($userRoleRef)) {
-            $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
-        } else {
-            $baseUserRoleRef = explode('_', $userRoleRef)[0];
-            $role = User_Model_Role::loadByRef($baseUserRoleRef.'_'.$granularityCell->getId());
+
+        $role = $this->getAddElementValue('userRole');
+        switch ($role) {
+            case 'CellAdminRole':
+                $role = CellAdminRole::class;
+                break;
+            case 'CellManagerRole':
+                $role = CellManagerRole::class;
+                break;
+            case 'CellContributorRole':
+                $role = CellContributorRole::class;
+                break;
+            case 'CellObserverRole':
+                $role = CellObserverRole::class;
+                break;
+            default:
+                $this->setAddElementErrorMessage('userRole', __('UI', 'formValidation', 'emptyRequiredField'));
         }
+
+        // Vérifie que l'utilisateur n'a pas déjà le role
+        try {
+            $user = User::loadByEmail($userEmail);
+            foreach ($user->getRoles() as $userRole) {
+                if ($userRole instanceof $role && $userRole->getCell() === $cell) {
+                    $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                    $this->send();
+                    return;
+                }
+            }
+        } catch (Core_Exception_NotFound $e) {
+        }
+
         if (!empty($this->_addErrorMessages)) {
             $this->send();
             return;
         }
 
-        if (strpos($role->getRef(), 'Administrator') !==false) {
-            $serviceName = 'addCellAdministrator';
-        } else if (strpos($role->getRef(), 'Contributor') !== false) {
-            $serviceName = 'addCellContributor';
-        } else if (strpos($role->getRef(), 'Observer') !== false) {
-            $serviceName = 'addCellObserver';
-        } else {
-            throw new Core_Exception_InvalidArgument();
-        }
         $success = function () {
             $this->message = __('UI', 'message', 'added');
         };
@@ -157,32 +164,14 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
             throw $e;
         };
 
-        if (User_Model_User::isEmailUsed($userEmail)) {
-            $user = User_Model_User::loadByEmail($userEmail);
-            if ($user->hasRole($role)) {
-                $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
-                $this->send();
-                return;
-            }
-            $task = new ServiceCallTask(
-                'Orga_Service_ACLManager',
-                $serviceName,
-                [$granularityCell, $user, false],
-                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
-            );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-        } else {
-            $user = $this->userService->inviteUser(
-                $userEmail
-            );
-            $task = new ServiceCallTask(
-                'Orga_Service_ACLManager',
-                'createUserAndAddRole',
-                [$user, $serviceName, $granularityCell],
-                __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $userEmail])
-            );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-        }
+        $serviceCallTask = new ServiceCallTask(
+            'Orga_Service_ACLManager',
+            'addCellRole',
+            [$cell, $role, $userEmail, false],
+            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $userEmail])
+        );
+
+        $this->workDispatcher->runBackground($serviceCallTask, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
@@ -199,11 +188,10 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
      * Renvoie un message d'information.
      * @Secure("allowCell")
      */
-    function deleteelementAction()
+    public function deleteelementAction()
     {
-        list($userRoleRef, $userId) = explode('#', $this->delete);
-        $user = User_Model_User::load($userId);
-        $role = User_Model_Role::loadByRef($userRoleRef);
+        $role = Role::load($this->delete);
+        $user = $role->getUser();
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $success = function () {
@@ -218,13 +206,17 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
 
         $task = new ServiceCallTask(
             'Orga_Service_ACLManager',
-            'removeCellUser',
-            [$cell, $user, $role, false],
-            __('Orga', 'backgroundTasks', 'removeRoleFromUser', ['ROLE' => __('Orga', 'role', $role->getName()), 'USER' => $user->getEmail()])
+            'removeCellRole',
+            [$user, $role, false],
+            __(
+                'Orga',
+                'backgroundTasks',
+                'removeRoleFromUser',
+                ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()]
+            )
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
-
 }

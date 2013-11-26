@@ -1,12 +1,4 @@
-<?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
-?>
-    use Techno\Domain\Techno_Model_Category;
-
-    <div class="page-header">
+<div class="page-header">
     <h1><?=__('Techno', 'familyList', 'familyList')?></h1>
 </div>
 
@@ -20,7 +12,7 @@ $columns = [];
 $columns['category'] = new UI_Datagrid_Col_List('category', __('UI', 'name', 'category'));
 $list = [];
 foreach ($this->categoryList as $category) {
-    /** @var $category Techno_Model_Category */
+    /** @var $category Techno\Domain\Category */
     $list[$category->getId()] = $category->getLabel();
 }
 $columns['category']->list = $list;

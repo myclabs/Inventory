@@ -2,7 +2,7 @@
 
 namespace Core\Work\Notification;
 
-use User_Model_User;
+use User\Domain\User;
 
 /**
  * Notifies users about background tasks.
@@ -14,16 +14,16 @@ interface TaskNotifier
     /**
      * Notify a user that a task has finished.
      *
-     * @param User_Model_User $user
+     * @param \User\Domain\User $user
      * @param string          $taskLabel
      */
-    function notifyTaskFinished(User_Model_User $user, $taskLabel);
+    function notifyTaskFinished(User $user, $taskLabel);
 
     /**
      * Notify a user that a task has errored.
      *
-     * @param User_Model_User $user
+     * @param \User\Domain\User $user
      * @param string          $taskLabel
      */
-    function notifyTaskError(User_Model_User $user, $taskLabel);
+    function notifyTaskError(User $user, $taskLabel);
 }

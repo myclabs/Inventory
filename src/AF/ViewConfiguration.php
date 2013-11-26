@@ -12,7 +12,6 @@
  */
 class AF_ViewConfiguration
 {
-
     /**
      * Constants for base tabs
      */
@@ -79,6 +78,14 @@ class AF_ViewConfiguration
      * @var array
      */
     protected $urlParams = array();
+
+    protected $useSession = false;
+
+    /**
+     * Est-ce qu'on peut afficher l'aperçu des résultats
+     * @var bool
+     */
+    protected $resultsPreview = true;
 
 
     /**
@@ -183,7 +190,6 @@ class AF_ViewConfiguration
         $this->tabs[] = self::TAB_INPUT;
         $this->tabs[] = self::TAB_RESULT;
         $this->tabs[] = self::TAB_CALCULATION_DETAILS;
-//        $this->tabs[] = self::TAB_DOCUMENTATION;
     }
 
     /**
@@ -307,4 +313,35 @@ class AF_ViewConfiguration
         $this->urlParams[$name] = $value;
     }
 
+    /**
+     * @return boolean
+     */
+    public function getUseSession()
+    {
+        return $this->useSession;
+    }
+
+    /**
+     * @param boolean $useSession
+     */
+    public function setUseSession($useSession)
+    {
+        $this->useSession = $useSession;
+    }
+
+    /**
+     * @return boolean Est-ce qu'on peut afficher l'aperçu des résultats
+     */
+    public function withResultsPreview()
+    {
+        return $this->resultsPreview;
+    }
+
+    /**
+     * @param boolean $resultsPreview Est-ce qu'on peut afficher l'aperçu des résultats
+     */
+    public function setResultsPreview($resultsPreview)
+    {
+        $this->resultsPreview = (bool) $resultsPreview;
+    }
 }

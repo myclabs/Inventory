@@ -5,11 +5,12 @@
 
 use AuditTrail\Domain\Context\Context;
 use AuditTrail\Domain\Entry;
+use Core\Test\TestCase;
 
 /**
  * EntryTest
  */
-class AuditTrail_EntryTest extends Core_Test_TestCase
+class AuditTrail_EntryTest extends TestCase
 {
     public function testDate()
     {

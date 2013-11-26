@@ -1,25 +1,23 @@
 <?php
-/**
- * Classe Orga_Model_Cell
- * @author     valentin.claras
- * @author     simon.rieu
- * @package    Orga
- * @subpackage Model
- */
 
 use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Orga\Model\ACL\CellResourceTrait;
+use User\Domain\ACL\Resource\Resource;
 
 /**
  * Definit une cellule organisationnelle.
- * @package    Orga
- * @subpackage Model
+ *
+ * @author valentin.claras
+ * @author simon.rieu
  */
-class Orga_Model_Cell extends Core_Model_Entity
+class Orga_Model_Cell extends Core_Model_Entity implements Resource
 {
+    use CellResourceTrait;
+
     // Constantes de tris et de filtres.
     const QUERY_GRANULARITY = 'granularity';
     const QUERY_TAG = 'tag';
@@ -192,7 +190,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      * @param Orga_Model_Granularity $granularity
      * @param Orga_Model_Member[]    $members
      */
-    public function __construct(Orga_Model_Granularity $granularity, array $members=[])
+    public function __construct(Orga_Model_Granularity $granularity, array $members = [])
     {
         $this->members = new ArrayCollection();
         $this->cellsGroups = new ArrayCollection();
@@ -200,6 +198,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         $this->dWResults = new ArrayCollection();
         $this->socialGenericActions = new ArrayCollection();
         $this->socialContextActions = new ArrayCollection();
+        $this->constructACL();
 
         $this->granularity = $granularity;
         foreach ($members as $member) {
@@ -213,7 +212,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         $this->createDWCube();
         // Création du CellsGroup.
         foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
-            $cellsGroup = new Orga_Model_CellsGroup($this, $inputGranularity);
+            new Orga_Model_CellsGroup($this, $inputGranularity);
         }
         // Création de la Bibliography des Input.
         if ($this->granularity->isInput()) {
@@ -316,6 +315,14 @@ class Orga_Model_Cell extends Core_Model_Entity
     }
 
     /**
+     * @return Orga_Model_Organization
+     */
+    public function getOrganization()
+    {
+        return $this->granularity->getOrganization();
+    }
+
+    /**
      * Vérifie si le Member donné indexe la Cell.
      *
      * @param Orga_Model_Member $member
@@ -386,7 +393,7 @@ class Orga_Model_Cell extends Core_Model_Entity
      */
     public static function buildMembersHashKey($listMembers)
     {
-        @usort($listMembers, ['Orga_Model_Member', 'orderMembers']);
+        @usort($listMembers, [Orga_Model_Member::class, 'orderMembers']);
         $membersRef = [];
 
         foreach ($listMembers as $member) {
@@ -406,7 +413,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         } else {
             $membersTagParts = array();
             $members = $this->getMembers();
-            @usort($members, ['Orga_Model_Member', 'orderMembers']);
+            @usort($members, [Orga_Model_Member::class, 'orderMembers']);
             foreach ($members as $member) {
                 $membersTagParts[] = $member->getTag();
             }
@@ -433,30 +440,55 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         if ($relevant != $this->relevant) {
             $this->relevant = $relevant;
-            // Si les cellules supérieures ne sont pas pertinentes,
-            //  alors modifier celle-ci n'impactera pas les cellules inférieures.
+            // Si les cellules parentes ne sont pas pertinentes,
+            //  alors modifier celle-ci n'impactera pas les cellules enfantes.
             if ($this->getAllParentsRelevant() === true) {
-                // Nécessaire pour mettre à jour l'intégralité des cellules filles.
-                foreach ($this->getChildCells() as $childCell) {
-                    $childAccess = $relevant;
-                    if ($childAccess) {
-                        foreach ($childCell->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-                            try {
-                                $parentCell= $childCell->getParentCellForGranularity($broaderGranularity);
-                            } catch (Core_Exception_NotFound $e) {
-                                // Pas de cellule parente pour cette granularité.
-                                $parentCell = null;
-                            }
-                            if (($parentCell === null) || (!$parentCell->getRelevant())) {
-                                $childAccess = false;
-                                break;
-                            }
-                        }
+                if ($this->relevant) {
+                    // Vérification de l'état des cellules filles.
+                    foreach ($this->getChildCells() as $childCell) {
+                        $childCell->enable();
                     }
-                    $childCell->setAllParentsRelevant($childAccess);
+                } else {
+                    // Désactivation de totes les cellules filles.
+                    foreach ($this->getChildCells() as $childCell) {
+                        $childCell->disable();
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Désactive la cellule (utilisé dans le cas d'une hiérarchie cassée).
+     */
+    public function disable()
+    {
+        $this->allParentsRelevant = false;
+    }
+
+    /**
+     * Réactive la cellule et met à jour la pertinence de ses cellules parentes.
+     */
+    public function enable()
+    {
+        $this->allParentsRelevant = false;
+        foreach ($this->getMembers() as $member) {
+            if (count($member->getAxis()->getDirectBroaders()) !== count($member->getDirectParents())) {
+                return;
+            }
+        }
+        foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
+            try {
+                $parentCell = $this->getParentCellForGranularity($broaderGranularity);
+                if (!$parentCell->getRelevant()) {
+                    return;
+                }
+            } catch (Core_Exception_NotFound $e) {
+                // Pas de cellule parente pour cette granularité.
+                return;
+            }
+        }
+        $this->allParentsRelevant = true;
     }
 
     /**
@@ -467,16 +499,6 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function getRelevant()
     {
         return $this->relevant;
-    }
-
-    /**
-     * Définit si tous les parents de la Cell sont pertinents.
-     *
-     * @param bool $allParentsRelevant
-     */
-    protected function setAllParentsRelevant($allParentsRelevant)
-    {
-        $this->allParentsRelevant = $allParentsRelevant;
     }
 
     /**
@@ -497,38 +519,6 @@ class Orga_Model_Cell extends Core_Model_Entity
     public function isRelevant()
     {
         return ($this->getRelevant() && $this->getAllParentsRelevant());
-    }
-
-    /**
-     * Désactive la cellule (utilisé dans le cas d'une hiérarchie cassée).
-     */
-    public function disable()
-    {
-        $this->allParentsRelevant = false;
-    }
-
-    /**
-     * Réactive la cellule et met à jour la pertinence de ses cellules parentes.
-     */
-    public function enable()
-    {
-        $access = true;
-        foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-            try {
-                $parentCell= $this->getParentCellForGranularity($broaderGranularity);
-            } catch (Core_Exception_NotFound $e) {
-                // Pas de cellule parente pour cette granularité.
-                $parentCell = null;
-            } catch (Core_Exception_TooMany $e) {
-                // Pas de cellule parente pour cette granularité.
-                $parentCell = null;
-            }
-            if (($parentCell === null) || (!$parentCell->getRelevant())) {
-                $access = false;
-                break;
-            }
-        }
-        $this->allParentsRelevant = $access;
     }
 
     /**
@@ -618,6 +608,9 @@ class Orga_Model_Cell extends Core_Model_Entity
                 }
             }
         }
+
+        // MAJ des ACL
+        $this->updateACL();
     }
 
     /**
@@ -633,7 +626,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 
         $labels = [];
         $members = $this->getMembers();
-        @usort($members, ['Orga_Model_Member', 'orderMembers']);
+        @usort($members, [Orga_Model_Member::class, 'orderMembers']);
         foreach ($members as $member) {
             $labels[] = $member->getLabel();
         }
@@ -654,7 +647,7 @@ class Orga_Model_Cell extends Core_Model_Entity
 
         $labels = [];
         $members = $this->getMembers();
-        @usort($members, ['Orga_Model_Member', 'orderMembers']);
+        @usort($members, [Orga_Model_Member::class, 'orderMembers']);
         foreach ($members as $member) {
             $labels[] = $member->getExtendedLabel();
         }
@@ -677,10 +670,8 @@ class Orga_Model_Cell extends Core_Model_Entity
             foreach ($broaderGranularity->getAxes() as $broaderAxis) {
                 if ($member->getAxis()->isNarrowerThan($broaderAxis)) {
                     $parentMembers[$broaderAxis->getRef()] = $member->getParentForAxis($broaderAxis);
-                } else {
-                    if ($member->getAxis() === $broaderAxis) {
-                        $parentMembers[$broaderAxis->getRef()] = $member;
-                    }
+                } else if ($member->getAxis() === $broaderAxis) {
+                    $parentMembers[$broaderAxis->getRef()] = $member;
                 }
             }
         }
@@ -861,7 +852,7 @@ class Orga_Model_Cell extends Core_Model_Entity
         // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
         foreach ($childMembersForGranularity as $childAxisMembersForGranularity) {
             if (empty($childAxisMembersForGranularity)) {
-                return array();
+                return 0;
             }
         }
 
@@ -1052,15 +1043,10 @@ class Orga_Model_Cell extends Core_Model_Entity
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @throws Core_Exception_UndefinedAttribute
-     *
      * @return AF_Model_InputSet_Primary
      */
     public function getAFInputSetPrimary()
     {
-        if ($this->aFInputSetPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute('InputSetPrimary has not be defined.');
-        }
         return $this->aFInputSetPrimary;
     }
 
@@ -1673,5 +1659,4 @@ class Orga_Model_Cell extends Core_Model_Entity
     {
         return $this->getMembersHashKey();
     }
-
 }

@@ -5,14 +5,12 @@
  */
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 
 /**
  * @package Social
  */
 class Social_CommentController extends Core_Controller
 {
-
     use UI_Controller_Helper_Form;
 
     /**
@@ -31,6 +29,7 @@ class Social_CommentController extends Core_Controller
         $comment = $this->getParam('comment');
 
         $this->view->assign('comment', $comment);
+        $this->view->assign('currentUser', $this->_helper->auth());
         $data = $this->view->render('comment/view.phtml');
 
         $this->setFormMessage(__('UI', 'message', 'added'));
@@ -53,6 +52,7 @@ class Social_CommentController extends Core_Controller
 
         $comment = Social_Model_Comment::load($this->getParam('id'));
         $this->view->assign('comment', $comment);
+        $this->view->assign('currentUser', $this->_helper->auth());
         $data['html'] = $this->view->render('comment/view.phtml');
         $data['commentId'] = $this->getParam('id');
 
@@ -69,5 +69,4 @@ class Social_CommentController extends Core_Controller
 
         $this->sendFormResponse($comment->getText());
     }
-
 }

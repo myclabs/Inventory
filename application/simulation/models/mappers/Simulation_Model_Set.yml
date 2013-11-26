@@ -44,7 +44,7 @@ Simulation_Model_Set:
 
   manyToOne:
     user:
-      targetEntity: User_Model_User
+      targetEntity: User\Domain\User
       joinColumn:
         name: idUser
         referencedColumnName: id

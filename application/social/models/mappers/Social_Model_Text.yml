@@ -17,7 +17,7 @@ Social_Model_Text:
 
   manyToOne:
     author:
-      targetEntity: User_Model_User
+      targetEntity: User\Domain\User
       joinColumn:
         name: idAuthor
         referencedColumnName: id

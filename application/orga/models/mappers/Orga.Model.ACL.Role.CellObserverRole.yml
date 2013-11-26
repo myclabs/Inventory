@@ -1,0 +1,11 @@
+Orga\Model\ACL\Role\CellObserverRole:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Orga_ACL_Role_CellObserver
+
+  manyToOne:
+    cell:
+      targetEntity: \Orga_Model_Cell
+      inversedBy: observerRoles
+      joinColumn:
+        nullable: false

@@ -5,6 +5,7 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use User\Domain\User;
 
 /**
  * @author  joseph.rouffet
@@ -30,7 +31,7 @@ class Social_Model_Message extends Social_Model_Text
     protected $title;
 
     /**
-     * @var Collection|User_Model_User[]
+     * @var Collection|User[]
      */
     protected $userRecipients;
 
@@ -48,10 +49,10 @@ class Social_Model_Message extends Social_Model_Text
 
     /**
      * Charge une liste de messages par son auteur
-     * @param User_Model_User $author
+     * @param User $author
      * @return Social_Model_Message[]
      */
-    static public function loadByAuthor(User_Model_User $author)
+    static public function loadByAuthor(User $author)
     {
         $query = new Core_Model_Query();
         $query->filter->addCondition(self::QUERY_AUTHOR, $author);
@@ -59,10 +60,10 @@ class Social_Model_Message extends Social_Model_Text
     }
 
     /**
-     * @param User_Model_User|null $author Auteur du message
+     * @param User|null $author Auteur du message
      * @param string $title Titre du message
      */
-    public function __construct(User_Model_User $author = null, $title = null)
+    public function __construct(User $author = null, $title = null)
     {
         parent::__construct($author);
         $this->userRecipients = new ArrayCollection();
@@ -103,7 +104,7 @@ class Social_Model_Message extends Social_Model_Text
     }
 
     /**
-     * @return User_Model_User[]
+     * @return User[]
      */
     public function getUserRecipients()
     {
@@ -111,9 +112,9 @@ class Social_Model_Message extends Social_Model_Text
     }
 
     /**
-     * @param User_Model_User $user
+     * @param User $user
      */
-    public function addUserRecipient(User_Model_User $user)
+    public function addUserRecipient(User $user)
     {
         if (! $this->hasUserRecipient($user)) {
             $this->userRecipients->add($user);
@@ -121,10 +122,10 @@ class Social_Model_Message extends Social_Model_Text
     }
 
     /**
-     * @param User_Model_User $user
+     * @param User $user
      * @return boolean
      */
-    function hasUserRecipient(User_Model_User $user)
+    function hasUserRecipient(User $user)
     {
         return $this->userRecipients->contains($user);
     }

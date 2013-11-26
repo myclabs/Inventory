@@ -5,6 +5,8 @@
  */
 
 use Doctrine\ORM\EntityManager;
+use User\Domain\User;
+use User\Domain\UserService;
 
 /**
  * Service de gestion des messages entre utilisateurs.
@@ -19,15 +21,15 @@ class Social_Service_MessageService
     private $entityManager;
 
     /**
-     * @var User_Service_User
+     * @var UserService
      */
     private $userService;
 
     /**
      * @param EntityManager     $entityManager
-     * @param User_Service_User $userService
+     * @param UserService $userService
      */
-    public function __construct(EntityManager $entityManager, User_Service_User $userService)
+    public function __construct(EntityManager $entityManager, UserService $userService)
     {
         $this->entityManager = $entityManager;
         $this->userService = $userService;
@@ -36,20 +38,20 @@ class Social_Service_MessageService
     /**
      * Envoie un nouveau message
      *
-     * @param User_Model_User $author
+     * @param User $author
      * @param array           $recipients
      * @param string          $title
      * @param string          $text
      *
      * @return Social_Model_Message
      */
-    public function sendNewMessage(User_Model_User $author, array $recipients, $title, $text)
+    public function sendNewMessage(User $author, array $recipients, $title, $text)
     {
         // Création du message
         $message = new Social_Model_Message($author, $title);
         $message->setText($text);
         foreach ($recipients as $recipient) {
-            if ($recipient instanceof User_Model_User) {
+            if ($recipient instanceof User) {
                 $message->addUserRecipient($recipient);
             } elseif ($recipient instanceof Social_Model_UserGroup) {
                 $message->addGroupRecipient($recipient);
@@ -79,7 +81,7 @@ class Social_Service_MessageService
 
         foreach ($recipients as $recipient) {
 
-            if ($recipient instanceof User_Model_User) {
+            if ($recipient instanceof User) {
                 $subject = $message->getTitle();
                 $this->userService->sendEmail($recipient, $subject, $content);
 
@@ -97,12 +99,12 @@ class Social_Service_MessageService
     /**
      * Retourne la liste des messages reçus pour un utilisateur
      *
-     * @param User_Model_User $user
+     * @param User $user
      * @param int             $count Nombre maximum de messages à retourner
      *
      * @return Social_Model_Message[]
      */
-    public function getUserInbox(User_Model_User $user, $count)
+    public function getUserInbox(User $user, $count)
     {
         $query = $this->entityManager->createQuery("SELECT m FROM Social_Model_Message m
             LEFT JOIN m.userRecipients user
@@ -121,11 +123,11 @@ class Social_Service_MessageService
     /**
      * Retourne le nombre de messages reçus pour un utilisateur
      *
-     * @param User_Model_User $user
+     * @param User $user
      *
      * @return int Nombre de messages dans la boite de réception
      */
-    public function getUserInboxSize(User_Model_User $user)
+    public function getUserInboxSize(User $user)
     {
         $query = $this->entityManager->createQuery("SELECT COUNT(m) FROM Social_Model_Message m
             LEFT JOIN m.userRecipients user
@@ -142,12 +144,12 @@ class Social_Service_MessageService
     /**
      * Retourne la liste des messages envoyés pour un utilisateur
      *
-     * @param User_Model_User $user
+     * @param User $user
      * @param int             $count Nombre maximum de messages à retourner
      *
      * @return Social_Model_Message[]
      */
-    public function getUserOutbox(User_Model_User $user, $count)
+    public function getUserOutbox(User $user, $count)
     {
         $query = new Core_Model_Query();
         $query->order->addOrder(Social_Model_Message::QUERY_CREATION_DATE, Core_Model_Order::ORDER_DESC);
@@ -161,11 +163,11 @@ class Social_Service_MessageService
     /**
      * Retourne le nombre de messages envoyés pour un utilisateur
      *
-     * @param User_Model_User $user
+     * @param User $user
      *
      * @return int Nombre de messages dans la boite de messages envoyés
      */
-    public function getUserOutboxSize(User_Model_User $user)
+    public function getUserOutboxSize(User $user)
     {
         $query = new Core_Model_Query();
         $query->filter->addCondition(Social_Model_Message::QUERY_SENT, true);

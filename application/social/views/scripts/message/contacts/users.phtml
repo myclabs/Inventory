@@ -1,20 +1,22 @@
 <?php
+use User\Domain\User;
+
 $datagrid = new UI_Datagrid('users', 'datagrid_message_contact_user', 'social');
 $datagrid->pagination = true;
 
 // Prénom
 $firstNameColumn = new UI_Datagrid_Col_Text('firstName', __('User', 'user', 'firstName'));
-$firstNameColumn->filterName = User_Model_User::QUERY_FIRSTNAME;
+$firstNameColumn->filterName = User::QUERY_FIRSTNAME;
 $datagrid->addCol($firstNameColumn);
 
 // Nom
 $lastNameColumn = new UI_Datagrid_Col_Text('lastName', __('User', 'user', 'lastName'));
-$lastNameColumn->filterName = User_Model_User::QUERY_LASTNAME;
+$lastNameColumn->filterName = User::QUERY_LASTNAME;
 $datagrid->addCol($lastNameColumn);
 
 // Adresse mail
 $emailColumn = new UI_Datagrid_Col_Text('email', __('UI', 'name', 'emailAddress'));
-$emailColumn->filterName = User_Model_User::QUERY_EMAIL;
+$emailColumn->filterName = User::QUERY_EMAIL;
 $datagrid->addCol($emailColumn);
 
 // Infos

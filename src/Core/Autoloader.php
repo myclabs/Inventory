@@ -120,7 +120,10 @@ class Autoloader
     protected function autoloadModule($class, $namespace, $basePath)
     {
         // Check the namespace
-        $segments = explode('_', $class);
+        $segments = explode('\\', $class);
+        if (count($segments) == 1) {
+            $segments = explode('_', $class);
+        }
         $classNamespace = array_shift($segments);
         if ($namespace != $classNamespace) {
             // the namespace doesn't match

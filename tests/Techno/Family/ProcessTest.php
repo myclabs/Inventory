@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Keyword\Domain\KeywordRepository;
 use Techno\Domain\Family\ProcessFamily;
@@ -56,7 +57,7 @@ class Techno_Test_Family_ProcessTest
     }
 }
 
-class Techno_Test_Family_ProcessSetUpTest extends Core_Test_TestCase
+class Techno_Test_Family_ProcessSetUpTest extends TestCase
 {
     public static  function setUpBeforeClass()
     {
@@ -149,7 +150,7 @@ class Techno_Test_Family_ProcessSetUpTest extends Core_Test_TestCase
     }
 }
 
-class Techno_Test_Family_ProcessMetierTest extends Core_Test_TestCase
+class Techno_Test_Family_ProcessMetierTest extends TestCase
 {
     public static function setUpBeforeClass()
     {

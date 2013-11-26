@@ -13,7 +13,7 @@ Social_Model_Message:
 
   manyToMany:
     userRecipients:
-      targetEntity: User_Model_User
+      targetEntity: User\Domain\User
       joinTable:
         name: Social_Message_User_Recipients
         joinColumns:

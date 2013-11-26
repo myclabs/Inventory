@@ -1,4 +1,6 @@
 <?php
+use User\Domain\User;
+
 /**
  * @author     matthieu.napoli
  * @package    Social
@@ -21,7 +23,7 @@ class Social_Model_TextTest extends PHPUnit_Framework_TestCase
 
     public function testSetAuthorInConstructor()
     {
-        $author = $this->getMockForAbstractClass('User_Model_User');
+        $author = $this->getMockForAbstractClass(User::class);
         /** @var $text Social_Model_Text */
         $text = $this->getMockForAbstractClass('Social_Model_Text', [$author]);
         $this->assertEquals($author, $text->getAuthor());

@@ -32,7 +32,7 @@ class Classif_Test_ContextIndicatorTest
      *
      * @return Classif_Model_ContextIndicator
      */
-    public static function generateObject($context=null, $indicator=null)
+    public static function generateObject($context = null, $indicator = null)
     {
         $o = new Classif_Model_ContextIndicator();
         $o->setContext(($context ===null) ? Classif_Test_ContextTest::generateObject() : $context);
@@ -49,7 +49,7 @@ class Classif_Test_ContextIndicatorTest
      * @param bool $deleteContext
      * @param bool $deleteIndicator
      */
-    public static function deleteObject($o, $deleteContext=true, $deleteIndicator=true)
+    public static function deleteObject($o, $deleteContext = true, $deleteIndicator = true)
     {
         if ($deleteContext) {
             $o->getContext()->delete();
@@ -325,7 +325,9 @@ class Classif_Test_ContextIndicatorOther extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        Classif_Test_ContextIndicatorTest::deleteObject($this->contextIndicator);
+        if ($this->contextIndicator) {
+            Classif_Test_ContextIndicatorTest::deleteObject($this->contextIndicator);
+        }
     }
 
     /**

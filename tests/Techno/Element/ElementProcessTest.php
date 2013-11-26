@@ -1,11 +1,12 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Techno\Domain\Component;
 use Techno\Domain\Element\ProcessElement;
 use Unit\UnitAPI;
 
-class Techno_Test_Element_ProcessTest extends Core_Test_TestCase
+class Techno_Test_Element_ProcessTest extends TestCase
 {
     /**
      * Méthode appelée avant les tests

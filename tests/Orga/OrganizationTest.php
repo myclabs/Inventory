@@ -1,4 +1,6 @@
 <?php
+use Core\Test\TestCase;
+
 /**
  * Class Orga_Test_OrganizationTest
  * @author valentin.claras
@@ -26,7 +28,7 @@ class Orga_Test_OrganizationTest
 
 }
 
-class Orga_Test_OrganizationAxes extends Core_Test_TestCase
+class Orga_Test_OrganizationAxes extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -268,7 +270,7 @@ class Orga_Test_OrganizationAxes extends Core_Test_TestCase
 
 }
 
-class Orga_Test_OrganizationGranularities extends Core_Test_TestCase
+class Orga_Test_OrganizationGranularities extends TestCase
 {
     /**
      * @var Orga_Model_Organization
@@ -460,11 +462,11 @@ class Orga_Test_OrganizationGranularities extends Core_Test_TestCase
         $this->assertCount(6, $granularities);
 
         $this->assertSame($this->granularity0, $granularities[0]);
-        $this->assertSame($this->granularity1, $granularities[1]);
-        $this->assertSame($this->granularity2, $granularities[2]);
-        $this->assertSame($this->granularity4, $granularities[3]);
-        $this->assertSame($this->granularity5, $granularities[4]);
-        $this->assertSame($this->granularity3, $granularities[5]);
+        $this->assertSame($this->granularity1, $granularities[3]);
+        $this->assertSame($this->granularity2, $granularities[4]);
+        $this->assertSame($this->granularity3, $granularities[1]);
+        $this->assertSame($this->granularity4, $granularities[5]);
+        $this->assertSame($this->granularity5, $granularities[2]);
     }
 
 }

@@ -5,6 +5,7 @@
  * @package Keyword
  * @subpackage Test
  */
+use Core\Test\TestCase;
 use Keyword\Domain\Keyword;
 use Keyword\Domain\Predicate;
 use Keyword\Domain\Association;
@@ -14,7 +15,7 @@ use Keyword\Domain\Association;
  * @package Keyword
  * @subpackage Test
  */
-class Keyword_Test_KeywordTest extends Core_Test_TestCase
+class Keyword_Test_KeywordTest extends TestCase
 {
     /**
      * Creation de la suite de test.
@@ -32,7 +33,7 @@ class Keyword_Test_KeywordTest extends Core_Test_TestCase
  * @package Keyword
  * @subpackage Test
  */
-class Keyword_Test_KeywordEntity extends Core_Test_TestCase
+class Keyword_Test_KeywordEntity extends TestCase
 {
 
     /**
@@ -57,7 +58,7 @@ class Keyword_Test_KeywordEntity extends Core_Test_TestCase
  * @package Keyword
  * @subpackage Test
  */
-class Keyword_Test_AssociationEntity extends Core_Test_TestCase
+class Keyword_Test_AssociationEntity extends TestCase
 {
 
     /**

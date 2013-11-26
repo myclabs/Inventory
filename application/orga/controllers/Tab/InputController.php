@@ -7,6 +7,8 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Orga\Model\ACL\Action\CellAction;
+use User\Domain\ACL\ACLService;
 
 /**
  * Controlleur des onglets de la saisie d'une cellule.
@@ -20,7 +22,7 @@ class Orga_Tab_InputController extends Core_Controller
 
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -44,9 +46,10 @@ class Orga_Tab_InputController extends Core_Controller
 
         $this->view->idCell = $idCell;
         $this->view->comments = $cell->getSocialCommentsForInputSetPrimary();
+        $this->view->currentUser = $this->_helper->auth();
         $this->view->isUserAbleToComment = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $cell
         );
     }
@@ -75,9 +78,10 @@ class Orga_Tab_InputController extends Core_Controller
             $comment = $this->commentService->addComment($author, $content);
             $cell->addSocialCommentForInputSetPrimary($comment);
             $cell->save();
+            $this->entityManager->flush();
 
             // Retourne la vue du commentaire
-            $this->forward('comment-added', 'comment', 'social', ['comment' => $comment]);
+            $this->forward('comment-added', 'comment', 'social', ['comment' => $comment, 'currentUser' => $author]);
             return;
         }
         $this->sendFormResponse();
@@ -123,5 +127,4 @@ class Orga_Tab_InputController extends Core_Controller
         }
         $this->view->documentBibliography = $cell->getDocBibliographyForAFInputSetPrimary();
     }
-
 }

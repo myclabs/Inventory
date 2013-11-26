@@ -62,6 +62,15 @@
         <se:group ref="report"/>
 
         <se:attribute name="label" type="se:string" use="required"/>
+        <se:attribute name="sortType">
+            <se:simpleType>
+                <se:restriction base="se:string">
+                    <se:enumeration value="orderResultByIncreasingValue"/>
+                    <se:enumeration value="orderResultByDecreasingValue"/>
+                    <se:enumeration value="orderResultByMembers"/>
+                </se:restriction>
+            </se:simpleType>
+        </se:attribute>
         <se:attribute name="format" use="required">
             <se:simpleType>
                 <se:restriction base="se:string">

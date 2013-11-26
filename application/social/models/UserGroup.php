@@ -5,6 +5,7 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use User\Domain\User;
 
 /**
  * @author  joseph.rouffet
@@ -32,7 +33,7 @@ class Social_Model_UserGroup extends Core_Model_Entity
     protected $label;
 
     /**
-     * @var Collection|User_Model_User[]
+     * @var Collection|User[]
      */
     protected $users;
 
@@ -73,7 +74,7 @@ class Social_Model_UserGroup extends Core_Model_Entity
     }
 
     /**
-     * @return User_Model_User[]
+     * @return User[]
      */
     public function getUsers()
     {
@@ -82,9 +83,9 @@ class Social_Model_UserGroup extends Core_Model_Entity
 
     /**
      * Ajoute un utilisateur au groupe
-     * @param User_Model_User $user
+     * @param User $user
      */
-    public function addUser(User_Model_User $user)
+    public function addUser(User $user)
     {
         if (! $this->hasUser($user)) {
             $this->users->add($user);
@@ -93,9 +94,9 @@ class Social_Model_UserGroup extends Core_Model_Entity
 
     /**
      * Supprime un utilisateur du groupe
-     * @param User_Model_User $user
+     * @param User $user
      */
-    public function removeUser(User_Model_User $user)
+    public function removeUser(User $user)
     {
         if ($this->hasUser($user)) {
             $this->users->removeElement($user);
@@ -103,10 +104,10 @@ class Social_Model_UserGroup extends Core_Model_Entity
     }
 
     /**
-     * @param User_Model_User $user
+     * @param User $user
      * @return boolean
      */
-    public function hasUser(User_Model_User $user)
+    public function hasUser(User $user)
     {
         return $this->users->contains($user);
     }

@@ -5,7 +5,10 @@
  */
 
 use Core\Annotation\Secure;
-
+use Orga\Model\ACL\Role\AbstractCellRole;
+use User\Domain\ACL\Action;
+use User\Domain\ACL\Role\Role;
+use User\Domain\User;
 
 /**
  * Controller de cells
@@ -20,42 +23,35 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        /* @var User_Model_User $connectedUser */
+        /* @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
-        $listCellResource = array();
-        foreach ($connectedUser->getLinkedResources() as $cellResource) {
-            if (($cellResource instanceof User_Model_Resource_Entity)
-                && ($cellResource->getEntity() instanceof Orga_Model_Cell)
-                && ($cellResource->getEntity()->getGranularity()->getOrganization() === $organization)
-                && (!in_array($cellResource, $listCellResource))
-            ) {
-                $listCellResource[] = $cellResource;
-            }
-        }
-        foreach ($connectedUser->getRoles() as $userRole) {
-            foreach ($userRole->getLinkedResources() as $cellResource) {
-                if (($cellResource instanceof User_Model_Resource_Entity)
-                    && ($cellResource->getEntity() instanceof Orga_Model_Cell)
-                    && ($cellResource->getEntity()->getGranularity()->getOrganization() === $organization)
-                    && (!in_array($cellResource, $listCellResource))
-                ) {
-                    $listCellResource[] = $cellResource;
+        /** @var Orga_Model_Cell[] $cells */
+        $cells = [];
+        $roles = [];
+        foreach ($connectedUser->getRoles() as $role) {
+            if ($role instanceof AbstractCellRole) {
+                $cell = $role->getCell();
+                if ($cell->getGranularity()->getOrganization() === $organization) {
+                    if (! in_array($cell, $cells)) {
+                        $cells[] = $cell;
+                        $roles[$cell->getId()] = [$role];
+                    } else {
+                        $roles[$cell->getId()][] = $role;
+                    }
                 }
             }
         }
 
-        foreach ($listCellResource as $cellResource) {
-            $cell = $cellResource->getEntity();
-            $data = array();
+        foreach ($cells as $cell) {
+            $data = [];
             $data['index'] = $cell->getId();
             $data['label'] = $cell->getLabel();
 
-            $access = array();
-            foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {
-                if (($securityIdentity instanceof User_Model_Role) && ($connectedUser->hasRole($securityIdentity))) {
-                    $access[] = $securityIdentity->getName();
-                }
+            $access = [];
+            foreach ($roles[$cell->getId()] as $role) {
+                /** @var \User\Domain\ACL\Role\Role $role */
+                $access[] = $role->getLabel();
             }
             $data['access'] = $this->cellList($access);
 
