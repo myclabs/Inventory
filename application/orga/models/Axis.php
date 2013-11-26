@@ -676,6 +676,9 @@ class Orga_Model_Axis extends Core_Model_Entity
                 $cellChildCells[$cell->getMembersHashKey()] = $cell->getChildCells();
             }
 
+            if ($this->isMemberPositioning()) {
+                $member->setPosition($member->getLastEligiblePosition());
+            }
             $this->members->removeElement($member);
             foreach ($member->getDirectChildren() as $directChildMember) {
                 $directChildMember->removeDirectParentForAxis($member);
@@ -693,6 +696,7 @@ class Orga_Model_Axis extends Core_Model_Entity
                     }
                 }
             }
+            $member->removeFromAxis();
         }
     }
 

@@ -20,6 +20,7 @@ foreach (Orga_Model_Organization::loadList() as $organization) {
         }
     }
     echo "\tGranularities" . PHP_EOL;
+    $organization->orderGranularities();
     foreach ($organization->getGranularities() as $granularity) {
         $granularity->updateRef();
         $granularity->updateTag();

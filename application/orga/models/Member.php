@@ -177,6 +177,9 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function preDelete()
     {
+        if ($this->axis !== null) {
+            $this->removeFromAxis();
+        }
         $this->deletePosition();
     }
 
@@ -369,6 +372,17 @@ class Orga_Model_Member extends Core_Model_Entity
         }
 
         return $this->getLabel() . ((count($broaderLabelParts) > 0) ? ' (' . implode(', ', $broaderLabelParts) . ')' : '');
+    }
+
+    /**
+     *
+     */
+    public function removeFromAxis()
+    {
+        if ($this->axis !== null) {
+            $this->axis->removeMember($this);
+            $this->axis = null;
+        }
     }
 
     /**
