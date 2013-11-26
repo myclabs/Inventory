@@ -207,7 +207,7 @@ class User extends Core_Model_Entity implements Resource
 
     /**
      * Renvoie la liste des rôles de l'utilisateur
-     * @return \User\Domain\ACL\Role\Role[]
+     * @return Role[]
      */
     public function getRoles()
     {
@@ -219,7 +219,7 @@ class User extends Core_Model_Entity implements Resource
      * @param string $roleClass
      * @return bool
      */
-    public function hasRole($roleClass)
+    public function hasRoleOfType($roleClass)
     {
         foreach ($this->roles as $role) {
             if ($role instanceof $roleClass) {

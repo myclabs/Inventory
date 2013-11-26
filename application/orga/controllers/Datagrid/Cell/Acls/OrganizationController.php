@@ -73,10 +73,12 @@ class Orga_Datagrid_Cell_Acls_OrganizationController extends UI_Controller_Datag
         // Vérifie que l'utilisateur n'a pas déjà le role
         try {
             $user = User::loadByEmail($userEmail);
-            if ($user->hasRole(OrganizationAdminRole::class)) {
-                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
-                $this->send();
-                return;
+            foreach ($user->getRoles() as $role) {
+                if ($role instanceof OrganizationAdminRole && $role->getOrganization() === $organization) {
+                    $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                    $this->send();
+                    return;
+                }
             }
         } catch (Core_Exception_NotFound $e) {
         }
