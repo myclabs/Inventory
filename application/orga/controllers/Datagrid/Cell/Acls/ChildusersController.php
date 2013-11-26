@@ -140,7 +140,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         try {
             $user = User::loadByEmail($userEmail);
             if ($user->hasRole($role)) {
-                $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
             }
         } catch (Core_Exception_NotFound $e) {
         }
