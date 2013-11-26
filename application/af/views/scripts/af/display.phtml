@@ -35,6 +35,7 @@ $urlArray = array(
     'idAF'              => $af->getId(),
     'mode'              => $viewConfiguration->getMode(),
     'exitURL'           => urlencode($viewConfiguration->getExitURL()),
+    'resultsPreview'    => $viewConfiguration->withResultsPreview(),
     'resultsPreviewUrl' => urlencode(json_encode($viewConfiguration->getResultsPreviewUrl())),
     'useSession'        => $viewConfiguration->getUseSession(),
 );
@@ -42,7 +43,7 @@ $urlArray += $viewConfiguration->getUrlParams();
 if ($viewConfiguration->getIdInputSet()) {
     $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
 }
-$url = $this->url($urlArray, null, true);;
+$url = $this->url($urlArray, null, true);
 $url .= '?actionStack=' . urlencode(json_encode($viewConfiguration->getActionStack()));
 $baseTabs[AF_ViewConfiguration::TAB_INPUT]->dataSource = $url;
 

@@ -126,6 +126,8 @@ class AF_AfController extends Core_Controller
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->exitURL = $exitURL;
         /** @noinspection PhpUndefinedFieldInspection */
+        $this->view->withResultsPreview = $this->getParam('resultsPreview');
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->view->resultsPreviewUrl = $resultsPreviewUrl;
         // Génère le formulaire
         $form = $af->generateForm($inputSet, $mode);

@@ -451,6 +451,7 @@ class Orga_CellController extends Core_Controller
             $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_RESULT);
             $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_CALCULATION_DETAILS);
         }
+        $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
         $this->forward('display', 'af', 'af', array(
                 'id' => $aF->getId(),

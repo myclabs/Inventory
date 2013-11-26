@@ -81,6 +81,12 @@ class AF_ViewConfiguration
 
     protected $useSession = false;
 
+    /**
+     * Est-ce qu'on peut afficher l'aperçu des résultats
+     * @var bool
+     */
+    protected $resultsPreview = true;
+
 
     /**
      * @return int
@@ -321,5 +327,21 @@ class AF_ViewConfiguration
     public function setUseSession($useSession)
     {
         $this->useSession = $useSession;
+    }
+
+    /**
+     * @return boolean Est-ce qu'on peut afficher l'aperçu des résultats
+     */
+    public function withResultsPreview()
+    {
+        return $this->resultsPreview;
+    }
+
+    /**
+     * @param boolean $resultsPreview Est-ce qu'on peut afficher l'aperçu des résultats
+     */
+    public function setResultsPreview($resultsPreview)
+    {
+        $this->resultsPreview = (bool) $resultsPreview;
     }
 }
