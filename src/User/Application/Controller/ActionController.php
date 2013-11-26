@@ -70,6 +70,46 @@ class User_ActionController extends UI_Controller_Captcha
     }
 
     /**
+     * Inscription d'un utilisateur
+     * @Secure("public")
+     */
+    public function registerAction()
+    {
+        // Si l'utilisateur est déjà connecté, on redirige
+        if ($this->_helper->auth()) {
+            $this->redirect('orga/organization/manage');
+            return;
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $formData = $this->getFormData("login");
+            $email = $formData->getValue('email');
+            $password = $formData->getValue('password');
+            $password2 = $formData->getValue('password2');
+
+            // Validation
+            if (! $email) {
+                $this->addFormError('email', __('UI', 'formValidation', 'emptyRequiredField'));
+            }
+            if (! $password) {
+                $this->addFormError('password', __('UI', 'formValidation', 'emptyRequiredField'));
+            }
+            if (! $password2) {
+                $this->addFormError('password2', __('UI', 'formValidation', 'emptyRequiredField'));
+            }
+            if ($password && ($password != $password2)) {
+                $this->addFormError('password2', __('User', 'editPassword', 'passwordsAreNotIdentical'));
+            }
+
+            if (! $this->hasFormError()) {
+                $this->userService->register();
+            }
+            $this->sendFormResponse();
+        }
+        $this->view->user = $this->_helper->auth();
+    }
+
+    /**
      * Logout d'un utilisateur
      * @Secure("public")
      */

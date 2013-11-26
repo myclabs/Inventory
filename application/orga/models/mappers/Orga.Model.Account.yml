@@ -20,3 +20,13 @@ Orga\Model\Account:
       mappedBy: account
       orphanRemoval: true
       cascade: [ all ]
+    acl:
+      targetEntity: Orga\Model\ACL\AccountAuthorization
+      mappedBy: resource
+      cascade: [ all ]
+      orphanRemoval: true
+    adminRoles:
+      targetEntity: Orga\Model\ACL\Role\AccountAdminRole
+      mappedBy: account
+      cascade: [ all ]
+      orphanRemoval: true

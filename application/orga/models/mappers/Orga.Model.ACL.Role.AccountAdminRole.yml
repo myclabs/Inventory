@@ -1,0 +1,11 @@
+Orga\Model\ACL\Role\AccountAdminRole:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Orga_ACL_Role_AccountAdmin
+
+  manyToOne:
+    account:
+      targetEntity: Orga\Model\Account
+      inversedBy: adminRoles
+      joinColumn:
+        nullable: false

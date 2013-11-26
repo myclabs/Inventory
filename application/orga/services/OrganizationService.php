@@ -1,8 +1,8 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use Orga\Model\Account;
 use User\Domain\ACL\Role\AdminRole;
-use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 class Orga_Service_OrganizationService
@@ -30,12 +30,13 @@ class Orga_Service_OrganizationService
     /**
      * Crée un projet et assigne un utilisateur comme administrateur
      *
+     * @param Account $account
      * @param User $administrator
      * @param array $formData
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganization(User $administrator, array $formData)
+    public function createOrganization(Account $account, User $administrator, array $formData)
     {
         $this->entityManager->beginTransaction();
 
@@ -44,9 +45,9 @@ class Orga_Service_OrganizationService
             $dWGranularities = [];
 
             // Création de l'organization.
-            $organization = new Orga_Model_Organization();
+            $organization = new Orga_Model_Organization($account);
             $organization->setLabel($formData['organization']['elements']['organizationLabel']['value']);
-            
+
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
             $defaultGranularity->setCellsWithACL(true);

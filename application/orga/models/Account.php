@@ -5,13 +5,17 @@ namespace Orga\Model;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Orga\Model\ACL\AccountResourceTrait;
 use Orga_Model_Organization;
+use User\Domain\ACL\Resource\Resource;
 
 /**
  * Compte client.
  */
-class Account extends Core_Model_Entity
+class Account extends Core_Model_Entity implements Resource
 {
+    use AccountResourceTrait;
+
     /**
      * @var int
      */
