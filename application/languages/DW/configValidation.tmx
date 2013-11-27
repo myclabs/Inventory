@@ -75,7 +75,7 @@
             </tuv>
         </tu>
 
-    <!-- Les filtres sur plusieurs membres doivent en sélectionner au moins un -->
+    <!-- Les filtres sur plusieurs éléments doivent en sélectionner au moins un -->
     
         <tu tuid="filterMemberInvalid">
             <tuv xml:lang="fr">

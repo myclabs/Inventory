@@ -10,9 +10,6 @@ killall() {
     echo DONE
 }
 
-# Git pull
-git pull
-
 # Start virtual display
 #Xvfb :99 -ac > /dev/null 2>&1 &
 #export DISPLAY=:99
@@ -36,4 +33,4 @@ mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/
 #export NODE_PATH=/usr/local/lib/node_modules
 
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml --rerun failed.txt && rm -f failed.txt
+php ../vendor/behat/behat/bin/behat --config behat.yml --format pretty,failed --rerun failed.txt && rm -f failed.txt

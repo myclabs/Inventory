@@ -59,7 +59,7 @@
         </tu>    
         <tu tuid="axisHasMembers">
             <tuv xml:lang="fr">
-                <seg>Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses membres.</seg>
+                <seg>Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses éléments.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Before deleting this axis, please delete its members first.</seg>

@@ -140,6 +140,9 @@ Feature: Granularity dataware analysis feature
     And the "report" datagrid should contain a row:
       | label                      |
       | Analyse préconfigurée test |
+    And the row 1 of the "report" datagrid should contain:
+      | label                      |
+      | Analyse préconfigurée test |
   # Accès à l'analyse de la cellule
     When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
     Then I should see "Analyse préconfigurée test Vue globale"

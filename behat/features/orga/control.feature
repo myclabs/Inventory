@@ -14,13 +14,13 @@ Feature: Control of organizational data feature
     Then I should see the "consistency" datagrid
     And the row 1 of the "consistency" datagrid should contain:
       | control                        | diagnostic | failure  |
-      | Axe ne contenant aucun membre  | NOT OK     | Axe vide |
+      | Axe ne contenant aucun élément  | NOT OK     | Axe vide |
     And the row 2 of the "consistency" datagrid should contain:
       | control                                    | diagnostic | failure |
-      | Membre pour lequel manque un membre parent | OK         |         |
+      | Élément pour lequel manque un élément parent | OK         |         |
     And the row 3 of the "consistency" datagrid should contain:
       | control                                           | diagnostic | failure                                   |
-      | Membre sans enfant d'un axe non situé à la racine | NOT OK     | Axe : Marque ; élément : Marque sans site |
+      | Élément sans enfant d'un axe non situé à la racine | NOT OK     | Axe : Marque ; élément : Marque sans site |
     And the row 4 of the "consistency" datagrid should contain:
       | control                                                                  | diagnostic | failure |
       | Niveau organisationnel manquant pour l'affichage de l'onglet "Collectes" | OK         |         |

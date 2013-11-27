@@ -8,10 +8,10 @@
         
         <tu tuid="analysisTabRebuildAlert">
             <tuv xml:lang="fr">
-                <seg>Les données de structure du cube d'analyse (axes, membres, indicateurs) ne sont plus à jour.</seg>
+                <seg>Les données de structure du cube d'analyse (axes, éléments, indicateurs) ne sont plus à jour.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Structure data of the analysis cube (axes, members, indicators) are not up to date.</seg>
+                <seg>Structure data of the analysis cube (axes, elements, indicators) are not up to date.</seg>
             </tuv>
         </tu>
         <tu tuid="cellAdministratorWarningMessage">

@@ -89,7 +89,7 @@ Feature: Organization role for subcells feature
     And I open tab "Rôles"
     And I open collapse "Zone | Marque — par utilisateur"
     Then I should see the "granularityUserACL2" datagrid
-    And the "granularityUserACL2" datagrid should contain 3 row
+    And the "granularityUserACL2" datagrid should contain 4 row
   # Ajout, utilisateur non existant (rôle contributeur)
     When I click "Ajouter"
     Then I should see the popup "Création d'un utilisateur ou attribution d'un rôle à un utilisateur existant"
@@ -99,7 +99,7 @@ Feature: Organization role for subcells feature
     And I select "Contributeur" from "granularityUserACL2_userRole_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the "granularityUserACL2" datagrid should contain 4 row
+    And the "granularityUserACL2" datagrid should contain 5 row
     And the "granularityUserACL2" datagrid should contain a row:
       | zone   | marque   | userEmail                     | userRole     |
       | Europe | Marque B | emmanuel.risler.abo@gmail.com | Contributeur |
@@ -112,7 +112,7 @@ Feature: Organization role for subcells feature
     And I select "Contributeur" from "granularityUserACL2_userRole_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the "granularityUserACL2" datagrid should contain 5 row
+    And the "granularityUserACL2" datagrid should contain 6 row
     And the "granularityUserACL2" datagrid should contain a row:
       | zone   | marque   | userEmail                     | userRole     |
       | Europe | Marque B | emmanuel.risler.pro@gmail.com | Contributeur |
@@ -124,12 +124,12 @@ Feature: Organization role for subcells feature
     And I open tab "Rôles"
     And I open collapse "Zone | Marque — par utilisateur"
     Then I should see the "granularityUserACL2" datagrid
-    And the "granularityUserACL2" datagrid should contain 3 row
+    And the "granularityUserACL2" datagrid should contain 4 row
     When I click "Supprimer" in the row 1 of the "granularityUserACL2" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée"
-    And the "granularityUserACL2" datagrid should contain 2 row
+    And the "granularityUserACL2" datagrid should contain 3 row
 
   @javascript
   Scenario: Display of collapses of roles by cell for subcells scenario
@@ -193,7 +193,7 @@ Feature: Organization role for subcells feature
     And I open tab "Rôles"
     And I open collapse "Site — par élément d'organisation"
     Then I should see the "granularityCellACL3" datagrid
-    And the "granularityCellACL3" datagrid should contain 4 row
+    And the "granularityCellACL3" datagrid should contain 3 row
     When I open collapse "Filtres"
     And I select "Chambéry" from "granularityCellACL3_site_filterForm"
     And I click "Filtrer"

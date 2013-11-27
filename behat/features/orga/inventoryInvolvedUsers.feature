@@ -60,9 +60,9 @@ Feature: Organization inventory tab, involved users column feature
   # Libellé granularités pour les granularités non plus grossières que ou égales à la granularité de la cellule associée
     # Aucune
   # Rôles associés à l'organisation
-    # TODO : Faut-il afficher ou non les administrateurs système et workspace ? 
+    # TODO : Faut-il afficher ou non les administrateurs système et workspace ? 
     # Then I should see "admin@myc-sense.com"
-    # And I should see "administrateur.workspace@toto.com"
+    # And I should see "administrateur.workspace@toto.com"
   # Rôles associés à la cellule globale
     And I should see "administrateur.global@toto.com"
     And I should see "contributeur.global@toto.com"
