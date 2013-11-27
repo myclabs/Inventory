@@ -23,9 +23,14 @@ class CellViewModel
     public $extendedLabel;
 
     /**
+     * @var bool
+     */
+    public $relevant;
+
+    /**
      * @var string
      */
-    public $path;
+    public $tag;
 
     /**
      * @var string

@@ -1,8 +1,12 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
-use Orga\Model\ACL\Role\AbstractCellRole;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
+use Orga\Model\ACL\Role\AbstractCellRole;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\Role;
 use User\Domain\User;
@@ -158,23 +162,59 @@ class Orga_Service_ACLManager
     /**
      * @param User $user
      * @param Orga_Model_Organization $organization
+     * @param array $askedRoles
      *
-     * @return Orga_Model_Cell[]
+     * @throws Core_Exception_InvalidArgument
+     * @return array ['cells' => Orga_Model_Cell[], 'access' => string]
      */
-    public function getCellsWithAccessForOrganization(User $user, Orga_Model_Organization $organization)
+    public function getTopCellsWithAccessForOrganization(User $user, Orga_Model_Organization $organization, $askedRoles=[])
     {
         foreach ($organization->getAdminRoles() as $role) {
             if ($role->getUser() === $user) {
-                return [$organization->getGranularityByRef('global')->getCellByMembers([])];
+                return [
+                    'cells' => [$organization->getGranularityByRef('global')->getCellByMembers([])],
+                    'accesses' => [$role->getLabel()]
+                ];
             }
         }
 
+        $cellRoles = [CellAdminRole::class, CellManagerRole::class, CellContributorRole::class, CellObserverRole::class];
+        if (empty($askedRole)) {
+            $askedRoles = $cellRoles;
+        }
+        foreach ($askedRoles as $askedRole) {
+            if (!in_array($askedRole, $cellRoles)) {
+                throw new Core_Exception_InvalidArgument('Invalid role "'.$askedRoles.'" given');
+            }
+            $var = 'cellsWith'.$askedRole.'Access';
+            $$var = [];
+        }
+
         $cellsWithAccess = [];
+        $cellsAccess = [];
         foreach ($user->getRoles() as $role) {
-            if (($role instanceof AbstractCellRole) && ($role->getCell()->getOrganization() === $organization)) {
-                $cellsWithAccess[] = $role->getCell();
+            foreach ($askedRoles as $askedRole) {
+                /** @var AbstractCellRole $role */
+                if (($role instanceof $askedRole) && ($role->getCell()->getOrganization() === $organization)) {
+                    $cell = $role->getCell();
+                    $var = 'cellsWith'.$askedRole.'Access';
+                    foreach ($$var as $cellWithAccess) {
+                        if ($cell->isChildOf($cellWithAccess)) {
+                            continue 3;
+                        }
+                    }
+                    array_push($$var, $cell);
+                    $cellsWithAccess[$cell->getId()] = $cell;
+                    $cellsAccess[$cell->getId()] = $role->getLabel();
+                }
             }
         }
-        return $cellsWithAccess;
+
+        usort(
+            $cellsWithAccess,
+            function (Orga_Model_Cell $a, Orga_Model_Cell $b) { return strcmp($a->getTag(), $b->getTag()); }
+        );
+        return ['cells' => $cellsWithAccess, 'accesses' => $cellsAccess];
     }
+
 }

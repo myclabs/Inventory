@@ -37,7 +37,13 @@ $organizations = $this->organizations;
             <?php endif; ?>
 
             <h3>
-                <a href="orga/organization/view/idOrganization/<?=$organization->id?>"><?=$organization->label?></a>
+                <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
+                    <?=$organization->label?>
+                    <small>
+                        <i class="icon-share-alt"></i>
+                        <?=__('Orga', 'view', 'linkDetails')?>
+                    </small>
+                </a>
             </h3>
 
             <p>

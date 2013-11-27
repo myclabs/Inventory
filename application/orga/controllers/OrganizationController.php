@@ -214,18 +214,19 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $cellsWithAccess = $this->aclManager->getCellsWithAccessForOrganization($connectedUser, $organization);
-        if (count($cellsWithAccess) === 1) {
-            $this->redirect('orga/cell/view/idCell/'.array_pop($cellsWithAccess)->getId());
+        $cellsWithAccess = $this->aclManager->getTopCellsWithAccessForOrganization($connectedUser, $organization);
+        if (count($cellsWithAccess['cells']) === 1) {
+            $this->redirect('orga/cell/view/idCell/'.array_pop($cellsWithAccess['cells'])->getId());
         }
         
         $organizationViewModel = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
         $this->view->assign('organization', $organizationViewModel);
         $cellViewModels = [];
-        foreach ($cellsWithAccess as $cellWithAccess) {
+        foreach ($cellsWithAccess['cells'] as $cellWithAccess) {
             $cellViewModels[] = $this->cellVMFactory->createCellViewModel($cellWithAccess, $connectedUser);
         }
         $this->view->assign('cells', $cellViewModels);
+        $this->view->assign('cellsAccess', $cellsWithAccess['accesses']);
     }
 
     /**

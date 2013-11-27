@@ -86,7 +86,8 @@ class CellViewModelFactory
         $cellViewModel->id = $cell->getId();
         $cellViewModel->shortLabel = $cell->getLabel();
         $cellViewModel->extendedLabel = $cell->getExtendedLabel();
-        $cellViewModel->path = implode(' ', array_map(function (Orga_Model_Member $member) { return $member->getCompleteRef(); }, $cell->getMembers()));
+        $cellViewModel->relevant = $cell->isRelevant();
+        $cellViewModel->tag = $cell->getTag();
 
         // Administrateurs
         if ($withAdministrators === true) {

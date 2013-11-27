@@ -752,6 +752,18 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
+     * Indique si la cellule donnée est parente de la courante.
+     *
+     * @param Orga_Model_Cell $cell
+     *
+     * @return bool
+     */
+    public function isParentOf(Orga_Model_Cell $cell)
+    {
+        return $cell->isChildOf($this);
+    }
+
+    /**
      * Renvoie les Cell enfantes pour une Granularity donnée.
      *
      * @param Orga_Model_Granularity $narrowerGranularity
@@ -789,6 +801,23 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         }
 
         return $childCells;
+    }
+
+    /**
+     * Indique si la cellule donnée est parente de la courante.
+     *
+     * @param Orga_Model_Cell $cell
+     *
+     * @return bool
+     */
+    public function isChildOf(Orga_Model_Cell $cell)
+    {
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $pathTag) {
+            if (strpos($this->getTag(), $pathTag) === false) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

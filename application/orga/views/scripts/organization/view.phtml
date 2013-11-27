@@ -1,8 +1,10 @@
 <?php
 /** @var \Orga\ViewModel\OrganizationViewModel $organization */
 $organization = $this->organization;
+/** @var \Orga\ViewModel\CellViewModel[] $cells */
+$cells = $this->cells;
 ?>
-<div class="organization well alert-info">
+<div class="organization page-header">
     <?php if ($organization->canBeEdited) : ?>
         <div class="pull-right">
             <a class="editOrganization btn btn-small btn-primary"
@@ -18,11 +20,16 @@ $organization = $this->organization;
     </h1>
 </div>
 
-<?php foreach ($this->cells as $cell) : ?>
+<?php foreach ($cells as $cell) : ?>
 <div class="well">
     <h2>
         <a href="orga/cell/view/idCell/<?=$cell->id?>">
+            <?=$this->cellsAccess[$cell->id]?>
             <?=$cell->extendedLabel?>
+            <small>
+                <i class="icon-share-alt"></i>
+                <?=__('Orga', 'view', 'linkDetails')?>
+            </small>
         </a>
     </h2>
 </div>
