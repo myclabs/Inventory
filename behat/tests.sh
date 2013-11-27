@@ -22,11 +22,13 @@ java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 sleep 8
 
 # Export the databases
-php ../scripts/build/build.php create update populate
+php ../scripts/build/build.php create update
+php ../scripts/build/build.php populate
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/emptyOneUser.sql
 php ../scripts/build/build.php populateTest
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/full.sql
-php ../scripts/build/build.php create update populate populateTestDWUpToDate
+php ../scripts/build/build.php create update
+php ../scripts/build/build.php populate populateTestDWUpToDate
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/forTestDWUpToDate.sql
 
 # Zombie.js
