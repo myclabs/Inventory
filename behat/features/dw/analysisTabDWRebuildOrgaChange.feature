@@ -159,22 +159,6 @@ Feature: Analysis data rebuild after a change in organizational data feature (an
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
-  # Ajout élément parent à un élément
-    When I open tab "Éléments"
-    And I open collapse "Site"
-    When I set "france#da39a3ee5e6b4b0d3255bfef95601890afd80709" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
-    And I wait 5 seconds
-    Then the following message is shown and closed: "Modification effectuée."
-  # Détection modification
-    When I am on "orga/cell/details/idCell/1/tab/organization"
-    And I wait for the page to finish loading
-    And I click "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
-  # Régénération
-    When I click "La structure des données d'analyse de l'organisation n'est pas à jour. Merci de cliquer une nouvelle fois sur ce bouton si vous souhaitez la mettre à jour."
-    Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
-    When I click "Tester si la structure des données d'analyse est à jour"
-    Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification élément parent d'un élément
     When I open tab "Éléments"
     And I open collapse "Site"
