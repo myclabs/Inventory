@@ -45,8 +45,8 @@ class UserRoleTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = $this->userService->createUser('user', 'user');
-        $this->otherUser = $this->userService->createUser('otherUser', 'otherUser');
+        $this->user = $this->userService->createUser('user@example.com', 'user');
+        $this->otherUser = $this->userService->createUser('otherUser@example.com', 'otherUser');
 
         $this->entityManager->flush();
     }

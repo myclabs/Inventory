@@ -193,7 +193,6 @@ class AF_Model_Component_Select_Option extends Core_Model_Entity
         $entityManagers = Zend_Registry::get('EntityManagers');
         $unitOfWork = $entityManagers['default']->getUnitOfWork();
         foreach ($algos as $algo) {
-            var_dump($unitOfWork->getEntityState($algo));
             if ($unitOfWork->getEntityState($algo) === \Doctrine\ORM\UnitOfWork::STATE_MANAGED) {
                 throw new Core_ORM_ForeignKeyViolationException(get_class(current($algos)), 'value',
                                                                 get_class($this), 'id');

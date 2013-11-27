@@ -22,7 +22,7 @@ class UserServiceTest extends TestCase
      */
     public function testLogin()
     {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
+        $user = $this->userService->createUser(Core_Tools::generateString(20) . '@example.com', 'test');
         $this->entityManager->flush();
 
         $o = $this->userService->login($user->getEmail(), 'test');
@@ -39,7 +39,7 @@ class UserServiceTest extends TestCase
      */
     public function testWrongPassword()
     {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
+        $user = $this->userService->createUser(Core_Tools::generateString(20) . '@example.com', 'test');
         $this->entityManager->flush();
 
         try {
@@ -57,7 +57,7 @@ class UserServiceTest extends TestCase
      */
     public function testWrongLogin()
     {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
+        $user = $this->userService->createUser(Core_Tools::generateString(20) . '@example.com', 'test');
         $this->entityManager->flush();
 
         try {

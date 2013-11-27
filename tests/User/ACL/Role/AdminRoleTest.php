@@ -47,9 +47,9 @@ class AdminRoleTest extends TestCase
     {
         parent::setUp();
 
-        $this->targetUser = $this->userService->createUser('target', 'target');
+        $this->targetUser = $this->userService->createUser('target@example.com', 'target');
         $this->entityManager->flush();
-        $this->admin = $this->userService->createUser('admin', 'admin');
+        $this->admin = $this->userService->createUser('admin@example.com', 'admin');
         $this->aclService->addRole($this->admin, new AdminRole($this->admin));
 
         $this->entityManager->flush();
