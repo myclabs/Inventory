@@ -107,13 +107,11 @@ Feature: Organizational member feature
     And I open tab "Éléments"
     When I open collapse "Site"
     Then the row 1 of the "listMemberssite" datagrid should contain:
-      | label  | ref      | broaderpays |
-      | Annecy | annecy   | France      |
+      | label  | ref      | broaderpays | broadermarque |
+      | Annecy | annecy   | France      | Marque A      |
   # Modification de l'élément parent suivant l'axe "Marque"
     When I set "marque_b#da39a3ee5e6b4b0d3255bfef95601890afd80709" for column "broadermarque" of row 1 of the "listMemberssite" datagrid with a confirmation message
-    # When I set "marque_b" for column "broadermarque" of row 1 of the "listMemberssite" datagrid with a confirmation message
-    # When I set "Marque B" for column "broadermarque" of row 1 of the "listMemberssite" datagrid with a confirmation message
-    And I wait 15 seconds
+    And I wait 5 seconds
     Then the "listMemberssite" datagrid should contain a row:
       | label  | ref      | broaderpays    | broadermarque |
       | Annecy | annecy   | France         | Marque B      |
