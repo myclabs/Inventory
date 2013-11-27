@@ -31,7 +31,9 @@ class Orga_Datagrid_Cell_ReportController extends UI_Controller_Datagrid
     {
         // Rapports préconfigurés
         $cube = DW_Model_Cube::load($this->getParam('idCube'));
-        foreach ($cube->getReports() as $report) {
+        $reports = $cube->getReports();
+        usort($reports, function(DW_Model_Report $a, DW_Model_Report $b) { return strcmp($a->getLabel(), $b->getLabel()); });
+        foreach ($reports as $report) {
             if (! Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($report)) {
                 continue;
             }
