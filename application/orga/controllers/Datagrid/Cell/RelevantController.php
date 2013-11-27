@@ -107,7 +107,7 @@ class Orga_Datagrid_Cell_RelevantController extends UI_Controller_Datagrid
             'Orga_Service_CellService',
             'setCellRelevance',
             [$childCell, (bool) $this->update['value']],
-            __('Orga', 'backgroundTasks', 'setCellRelevance', ['CELL' => $childCell->getLabel()])
+            __('Orga', 'backgroundTasks', 'setCellRelevance', ['LABEL' => $childCell->getLabel()])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 

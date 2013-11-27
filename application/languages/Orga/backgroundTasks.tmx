@@ -62,10 +62,10 @@
         </tu>
         <tu tuid="resetDWCellAndResults">
             <tuv xml:lang="fr">
-                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle : [CELL]</seg>
+                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle : [LABEL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Computations restart and analysis data rebuild for organizational unit: [CELL]</seg>
+                <seg>Computations restart and analysis data rebuild for organizational unit: [LABEL]</seg>
             </tuv>
         </tu>
         <tu tuid="setCellRelevance">
