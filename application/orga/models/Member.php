@@ -584,6 +584,16 @@ class Orga_Model_Member extends Core_Model_Entity
             throw new Core_Exception_InvalidArgument('The given Axis is not a direct broader of the Member\'s Axis');
         }
 
+        //@todo Doctrine : Problème de matching ManyToMany sr des PersistentCollection.
+        if ($this->directParents instanceof \Doctrine\ORM\PersistentCollection) {
+            foreach ($this->getDirectParents() as $directParent) {
+                if ($directParent->getAxis() === $axis) {
+                    return $directParent;
+                }
+            }
+            throw new Core_Exception_NotFound('No direct parent Member matching Axis "'.$axis->getRef().'".');
+        }
+
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->where($criteria->expr()->eq('axis', $axis));
         $member = $this->getDirectParents()->matching($criteria)->toArray();
