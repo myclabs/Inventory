@@ -233,10 +233,11 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 if (!empty($this->update['value'])) {
                     $parentMember = $broaderAxis->getMemberByCompleteRef($this->update['value']);
                     $member->setDirectParentForAxis($parentMember);
+                    $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
                 } else {
-                    $member->removeDirectParentForAxis($member->getDirectParentForAxis($broaderAxis));
+                    throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
+//                    $member->removeDirectParentForAxis($member->getDirectParentForAxis($broaderAxis));
                 }
-                $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
                 break;
         }
         $this->data = $this->update['value'];
