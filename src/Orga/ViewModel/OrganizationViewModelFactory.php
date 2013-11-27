@@ -3,11 +3,13 @@
 namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
-use Orga_Model_Axis;
 use Orga_Model_Organization;
+use Orga_Model_Axis;
+use Orga_Model_Cell;
 use User\Domain\User;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Action;
+use Core_Model_Query;
 
 /**
  * Factory de OrganizationViewModel.
@@ -44,6 +46,18 @@ class OrganizationViewModelFactory
             Action::EDIT(),
             $organization
         );
+        if (!$viewModel->canBeEdited) {
+            foreach ($organization->getGranularities() as $granularity) {
+                $query = new Core_Model_Query();
+                $query->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+                $query->aclFilter->enabled = true;
+                $query->aclFilter->user = $connectedUser;
+                $query->aclFilter->action = Action::EDIT();
+                if (Orga_Model_Cell::countTotal($query) > 0) {
+                    $viewModel->canBeEdited = true;
+                }
+            }
+        }
         $viewModel->canBeDeleted = $this->aclService->isAllowed(
             $connectedUser,
             Action::DELETE(),

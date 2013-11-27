@@ -154,4 +154,27 @@ class Orga_Service_ACLManager
             );
         }
     }
+
+    /**
+     * @param User $user
+     * @param Orga_Model_Organization $organization
+     *
+     * @return Orga_Model_Cell[]
+     */
+    public function getCellsWithAccessForOrganization(User $user, Orga_Model_Organization $organization)
+    {
+        foreach ($organization->getAdminRoles() as $role) {
+            if ($role->getUser() === $user) {
+                return [$organization->getGranularityByRef('global')->getCellByMembers([])];
+            }
+        }
+
+        $cellsWithAccess = [];
+        foreach ($user->getRoles() as $role) {
+            if (($role instanceof AbstractCellRole) && ($role->getCell()->getOrganization() === $organization)) {
+                $cellsWithAccess[] = $role->getCell();
+            }
+        }
+        return $cellsWithAccess;
+    }
 }

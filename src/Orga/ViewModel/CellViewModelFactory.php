@@ -3,17 +3,12 @@
 namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Orga_Model_Cell;
-use Orga_Model_Granularity;
 use Orga_Model_Member;
-use User_Model_User;
-use User_Model_Role;
-use User_Model_Action_Default;
-use Orga_Action_Cell;
-use User_Service_ACL;
-use Core_Locale;
+use User\Domain\User;
+use User\Domain\ACL\ACLService;
+use Orga\Model\ACL\Action\CellAction;
 use UI_HTML_Image;
 use AF_Model_InputSet_Primary;
 
@@ -23,7 +18,7 @@ use AF_Model_InputSet_Primary;
 class CellViewModelFactory
 {
     /**
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -43,9 +38,9 @@ class CellViewModelFactory
     private $inputStatusStyleList;
 
     /**
-     * @param User_Service_ACL $aclService
+     * @param ACLService $aclService
      */
-    public function __construct(User_Service_ACL $aclService)
+    public function __construct(ACLService $aclService)
     {
         $this->aclService = $aclService;
 
@@ -77,14 +72,14 @@ class CellViewModelFactory
 
     /**
      * @param Orga_Model_Cell $cell
-     * @param User_Model_User $user
+     * @param User $user
      * @param bool $withAdministrators
      * @param bool $withDW
      * @param bool $withInventory
      * @param bool $withInput
      * @return CellViewModel
      */
-    public function createCellViewModel(Orga_Model_Cell $cell, User_Model_User $user,
+    public function createCellViewModel(Orga_Model_Cell $cell, User $user,
         $withAdministrators=null, $withDW=null, $withInventory=null, $withInput=null)
     {
         $cellViewModel = new CellViewModel();
@@ -95,14 +90,12 @@ class CellViewModelFactory
 
         // Administrateurs
         if ($withAdministrators === true) {
-            $cellAdministrators = User_Model_Role::loadByRef('cellAdministrator_'.$cell->getId());
-            foreach ($cellAdministrators->getUsers() as $administrator) {
-                $cellViewModel->administrators[] = $administrator->getEmail();
+            foreach ($cell->getAdminRoles() as $administrator) {
+                $cellViewModel->administrators[] = $administrator->getUser()->getEmail();
             }
             foreach ($cell->getParentCells() as $parentCell) {
-                $parentCellAdministrators = User_Model_Role::loadByRef('cellAdministrator_'.$parentCell->getId());
-                foreach ($parentCellAdministrators->getUsers() as $parentAdministrator) {
-                    $cellViewModel->administrators[] = $parentAdministrator->getEmail();
+                foreach ($parentCell->getAdminRoles() as $parentAdministrator) {
+                    $cellViewModel->administrators[] = $parentAdministrator->getUser()->getEmail();
                 }
             }
         }
@@ -151,8 +144,10 @@ class CellViewModelFactory
                             $relevantCriteria->where($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
                             $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
                             $relevantChildInputCells = $cell->getChildCellsForGranularity($narrowerInputGranularity)->matching($relevantCriteria);
+                            /** @var Orga_Model_Cell $childInputCell */
                             foreach ($relevantChildInputCells as $childInputCell) {
-                                try {
+                                $childAFInputSetPrimary = $childInputCell->getAFInputSetPrimary();
+                                if ($childAFInputSetPrimary !== null) {
                                     $cellViewModel->inventoryCompletion += $childInputCell->getAFInputSetPrimary()->getCompletion();
                                     if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
                                         $cellViewModel->inventoryNotStartedInputsNumber ++;
@@ -161,7 +156,7 @@ class CellViewModelFactory
                                     } else {
                                         $cellViewModel->inventoryCompletedInputsNumber ++;
                                     }
-                                } catch (Core_Exception_UndefinedAttribute $e) {
+                                } else {
                                     $cellViewModel->inventoryNotStartedInputsNumber ++;
                                 }
                             }
@@ -181,15 +176,15 @@ class CellViewModelFactory
         // Saisie.
         if (($withInput === true)
             || (($withInput !== false) && ($cell->getGranularity()->getInputConfigGranularity() !== null))) {
-            $cellViewModel->canBeInputted = $this->aclService->isAllowed($user, Orga_Action_Cell::INPUT(), $cell);
+            $cellViewModel->canBeInputted = $this->aclService->isAllowed($user, CellAction::INPUT(), $cell);
 
-            try {
-                $afInputSetPrimary = $cell->getAFInputSetPrimary();
-                $cellViewModel->inputStatus = $afInputSetPrimary->getStatus();
+            $aFInputSetPrimary = $cell->getAFInputSetPrimary();
+            if ($aFInputSetPrimary !== null) {
+                $cellViewModel->inputStatus = $aFInputSetPrimary->getStatus();
                 $cellViewModel->inputStatusTitle = $this->inputStatusList[$cellViewModel->inputStatus];
                 $cellViewModel->inputStatusStyle = $this->inputStatusStyleList[$cellViewModel->inputStatus];
-                $cellViewModel->inputCompletion = $afInputSetPrimary->getCompletion();
-            } catch (Core_Exception_UndefinedAttribute $e) {
+                $cellViewModel->inputCompletion = $aFInputSetPrimary->getCompletion();
+            } else {
                 $cellViewModel->inputStatus = null;
                 $cellViewModel->inputStatusTitle = $this->inputStatusList[null];
                 $cellViewModel->inputStatusStyle = $this->inputStatusStyleList[null];

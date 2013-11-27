@@ -1,20 +1,32 @@
 <?php
-// Liste des Cellules d'un Organization (auxquelles l'utilisateur a accès).
+/** @var \Orga\ViewModel\OrganizationViewModel $organization */
+$organization = $this->organization;
+?>
+<div class="organization well alert-info">
+    <?php if ($organization->canBeEdited) : ?>
+        <div class="pull-right">
+            <a class="editOrganization btn btn-small btn-primary"
+               href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                <i class="icon-cog icon-white"></i>
+                <?=__('UI', 'verb', 'edit')?>
+            </a>
+        </div>
+    <?php endif; ?>
 
-$datagridCells = new UI_Datagrid('listCells', 'datagrid_organization_cells', 'orga');
+    <h1>
+        <?=$organization->label?>
+    </h1>
+</div>
 
-$columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
-$datagridCells->addCol($columnLabel);
-
-$columnAccess = new UI_Datagrid_Col_List('access', __('User', 'role', 'role'));
-$columnAccess->list = $this->listAccess;
-$columnAccess->multiple = true;
-$datagridCells->addCol($columnAccess);
-
-$columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
-$datagridCells->addCol($columnDetails);
-
-$datagridCells->addParam('idOrganization', $this->idOrganization);
-$datagridCells->pagination = false;
-
-$datagridCells->display();
+<?php foreach ($this->cells as $cell) : ?>
+<div class="well">
+    <h2>
+        <a href="orga/cell/view/idCell/<?=$cell->id?>">
+            <?=$cell->extendedLabel?>
+        </a>
+    </h2>
+</div>
+<?php endforeach; ?>
+<?php if (count($this->cells) === 0) : ?>
+<p><?=__('UI', 'message', 'noAccess')?></p>
+<?php endif; ?>
