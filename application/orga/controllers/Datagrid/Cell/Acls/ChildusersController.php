@@ -140,8 +140,8 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         try {
             $user = User::loadByEmail($userEmail);
             foreach ($user->getRoles() as $userRole) {
-                if ($userRole instanceof $role && $userRole->getCell() === $cell) {
-                    $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                if ($userRole instanceof $role && $userRole->getCell() === $granularityCell) {
+                    $this->setAddElementErrorMessage('userRole', __('Orga', 'role', 'userAlreadyHasRole'));
                     $this->send();
                     return;
                 }
@@ -167,7 +167,7 @@ class Orga_Datagrid_Cell_Acls_ChildusersController extends UI_Controller_Datagri
         $serviceCallTask = new ServiceCallTask(
             'Orga_Service_ACLManager',
             'addCellRole',
-            [$cell, $role, $userEmail, false],
+            [$granularityCell, $role, $userEmail, false],
             __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $userEmail])
         );
 
