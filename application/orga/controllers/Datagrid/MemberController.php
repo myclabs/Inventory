@@ -173,6 +173,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             throw new Core_Exception_User('Orga', 'member', 'memberHasChild');
         }
 
+        foreach ($member->getCells() as $memberCell) {
+            if (count($memberCell->getAllRoles()) > 0) {
+                throw new Core_Exception_User('Orga', 'member', 'deleteMemberWithUsersToCells');
+            }
+        }
+
         try {
             $this->entityManager->beginTransaction();
 
@@ -184,8 +190,6 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             $this->message = __('UI', 'message', 'deleted', array('LABEL' => $member->getLabel()));
         } catch (ErrorException $e) {
             $this->entityManager->rollback();
-
-            throw new Core_Exception_User('Orga', 'member', 'deleteMemberWithUsersToCells');
         }
 
         $this->send();
