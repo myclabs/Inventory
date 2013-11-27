@@ -42,7 +42,7 @@ Feature: Cell coordinator feature
     And the "listCells" datagrid should contain 2 row
     And the row 1 of the "listCells" datagrid should contain:
       | label  | access       |
-      | Annecy | Contributeur |
+      | Annecy | Coordinateur |
   # Accès à une des cellules
     When I click "Accéder aux saisies" in the row 1 of the "listCells" datagrid
     Then I should see "Annecy Workspace avec données"
