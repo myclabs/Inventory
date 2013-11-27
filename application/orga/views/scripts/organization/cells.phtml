@@ -6,9 +6,7 @@ $datagridCells = new UI_Datagrid('listCells', 'datagrid_organization_cells', 'or
 $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $datagridCells->addCol($columnLabel);
 
-$columnAccess = new UI_Datagrid_Col_List('access', __('User', 'role', 'role'));
-$columnAccess->list = $this->listAccess;
-$columnAccess->multiple = true;
+$columnAccess = new UI_Datagrid_Col_Text('access', __('User', 'role', 'role'));
 $datagridCells->addCol($columnAccess);
 
 $columnDetails = new UI_Datagrid_Col_Link('details', __('UI', 'name', 'details'));
