@@ -9,6 +9,7 @@
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Core\Work\ServiceCall\ServiceCallTask;
 
 /**
  * Enter description here ...
@@ -147,11 +148,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 };
 
                 // Lance la tache en arrière plan
-                $task = new Orga_Work_Task_AddMember(
-                    $axis,
-                    $ref,
-                    $label,
-                    $broaderMembers,
+                $task = new ServiceCallTask(
+                    'Orga_Service_OrganizationService',
+                    'addMember',
+                    [$axis, $ref, $label, $broaderMembers],
                     __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
                 );
                 $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
@@ -179,18 +179,24 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             }
         }
 
-        try {
-            $this->entityManager->beginTransaction();
+        $success = function () {
+            $this->message = __('UI', 'message', 'deleted');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'deletedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
 
-            $member->delete();
-
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-
-            $this->message = __('UI', 'message', 'deleted', array('LABEL' => $member->getLabel()));
-        } catch (ErrorException $e) {
-            $this->entityManager->rollback();
-        }
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'deleteMember',
+            [$member],
+            __('Orga', 'backgroundTasks', 'deleteMember', ['MEMBER' => $member->getLabel(), 'AXIS' => $member->getAxis()->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
