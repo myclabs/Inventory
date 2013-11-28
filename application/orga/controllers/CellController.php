@@ -16,6 +16,7 @@ use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Doctrine\Common\Collections\Criteria;
 use Orga\Model\ACL\Action\CellAction;
+use User\Domain\User;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
 
@@ -77,11 +78,20 @@ class Orga_CellController extends Core_Controller
     private $entryRepository;
 
     /**
+     * Redirection sur la liste.
+     * @Secure("loggedIn")
+     */
+    public function indexAction()
+    {
+        $this->redirect('orga/organization/');
+    }
+
+    /**
      * @Secure("viewCell")
      */
     public function viewAction()
     {
-        /** @var User_Model_User $connectedUser */
+        /** @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
         $idCell = $this->getParam('idCell');
@@ -102,6 +112,15 @@ class Orga_CellController extends Core_Controller
         }
         foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
             $purpose = '';
+            // ACL purpose.
+            $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL());
+            if ($isNarrowerGranularityACL) {
+                if ($purpose !== '') {
+                    $purpose .= __('UI', 'view', '&separator');
+                }
+                $purpose .= __('Orga', 'granlarity', 'ACLPurpose');
+            }
+            // Inventory purpose.
             $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
                 && (($narrowerGranularity === $granularityForInventoryStatus)
                     || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
@@ -116,24 +135,28 @@ class Orga_CellController extends Core_Controller
             if ($isNarrowerGranularityInventory) {
                 $purpose .= __('Orga', 'granlarity', 'InventoryPurpose');
             }
+            // Input purpose.
             $isNarrowerGranularityInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
             if ($isNarrowerGranularityInput) {
-                if ($isNarrowerGranularityInventory) {
+                if ($purpose !== '') {
                     $purpose .= __('UI', 'view', '&separator');
                 }
                 $purpose .= __('Orga', 'granlarity', 'InputPurpose');
             }
+            // Reports purpose.
             $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes());
             if ($isNarrowerGranularityAnalyses) {
-                if ($isNarrowerGranularityInventory || $isNarrowerGranularityInput) {
+                if ($purpose !== '') {
                     $purpose .= __('UI', 'view', '&separator');
                 }
                 $purpose .= __('Orga', 'granlarity', 'AnalysesPurpose');
             }
+            // Filter Axes.
             if ($purpose !== '') {
                 $narrowerGranularities[] = [
                     'granularity' => $narrowerGranularity,
                     'purpose' => $purpose,
+                    'isACL' => $isNarrowerGranularityACL,
                     'isInventory' => $isNarrowerGranularityInventory,
                     'isInput' => $isNarrowerGranularityInput,
                     'isAnalyses' => $isNarrowerGranularityAnalyses,
@@ -141,11 +164,10 @@ class Orga_CellController extends Core_Controller
             }
         }
         $this->view->assign('narrowerGranularities', $narrowerGranularities);
-        $this->view->assign('granularityForInventoryStatus', $granularityForInventoryStatus);
 
         // Formulaire d'ajout des membres enfants.
         $addMembersForm = new UI_Form('addMembers');
-        $addMembersForm->setAction('orga/cell/addmember/idCell/'.$idCell);
+        $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
         $selectAxis = new UI_Form_Element_Select('axis');
         $selectAxis->addNullOption('');
         $addMembersForm->addElement($selectAxis);
@@ -190,9 +212,9 @@ class Orga_CellController extends Core_Controller
     /**
      * @Secure("viewCell")
      */
-    public function viewchildrenAction()
+    public function viewChildrenAction()
     {
-        /** @var User_Model_User $connectedUser */
+        /** @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
         $idCell = $this->getParam('idCell');

@@ -172,10 +172,10 @@ $organization = $this->organization;
                 <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
                 <form class="form-inline cells-filter">
                     <?php foreach ($narrowerGranularity->getAxes() as $axis) : ?>
-                        <select data-filter="path">
+                        <select data-filter="tag">
                             <option value="">Tout <?=$axis->getLabel()?></option>
                             <?php foreach ($axis->getMembers() as $member) : ?>
-                                <option value="<?=$member->getCompleteRef()?>"><?=$member->getLabel()?></option>
+                                <option value="<?=$member->getTag()?>"><?=$member->getLabel()?></option>
                             <?php endforeach; ?>
                         </select>
                     <?php endforeach; ?>
@@ -256,7 +256,7 @@ $organization = $this->organization;
         if (!granularity.data('initialized')) {
             var granularityId = $(this).attr('id').substr(11, $(this).attr('id').length);
             $.get(
-                'orga/cell/viewchildren/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId,
+                'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId,
                 function(o) {
                     granularity.html('');
                     $(o).each(function() {
@@ -327,7 +327,7 @@ $organization = $this->organization;
                                 '</div>';
                         }
                         granularity.append(
-                        '<div class="span4 well cell" data-path="' + this.path + '" data-inputstatus="' + this.inputStatus + '" data-inventorystatus="' + this.inventoryStatus + '">' +
+                        '<div class="span4 well cell" data-tag="' + this.tag + '" data-inputstatus="' + this.inputStatus + '" data-inventorystatus="' + this.inventoryStatus + '">' +
                             '<h4>' + cellTitle + '</h4>' +
                             reportsP +
                             exportsP +
