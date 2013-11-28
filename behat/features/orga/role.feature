@@ -120,7 +120,7 @@ Feature: Organization role feature
   # Tentative d'ajout, format email correct, le rôle existe déjà pour cet utilisateur
     When I fill in "granularityUserACL3_userEmail_addForm" with "contributeur.site@toto.com"
     And I click "Valider"
-    Then the field "granularityUserACL3_userEmail_addForm" should have error: "Ce rôle est déjà attribué à l'utilisateur indiqué."
+    Then the field "granularityUserACL3_userRole_addForm" should have error: "Ce rôle est déjà attribué à l'utilisateur indiqué."
   # Tentative d'ajout, format email correct, extension incorrecte
     When I fill in "granularityUserACL3_userEmail_addForm" with "auie@auie.auie"
     And I click "Valider"
