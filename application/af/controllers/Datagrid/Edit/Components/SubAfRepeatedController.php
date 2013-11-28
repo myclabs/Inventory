@@ -79,7 +79,6 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
                 return;
             }
             $subAF->setLabel($this->getAddElementValue('label'));
-            $subAF->setFoldaway($this->getAddElementValue('foldaway'));
             $subAF->setVisible($isVisible);
             $subAF->setHelp($this->getAddElementValue('help'));
             /** @var $calledAF AF_Model_AF */
