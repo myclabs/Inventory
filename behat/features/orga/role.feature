@@ -47,22 +47,22 @@ Feature: Organization role feature
   # Tentative d'ajout, email vide
     And I click "Valider"
     Then the field "organizationACL1_userEmail_addForm" should have error: "Merci de renseigner ce champ."
-    # Tentative d'ajout, format email non respecté
+  # Tentative d'ajout, format email non respecté
     When I fill in "organizationACL1_userEmail_addForm" with "auie"
     And I click "Valider"
     Then the field "organizationACL1_userEmail_addForm" should have error: "Merci de saisir une adresse e-mail valide."
-    # Tentative d'ajout, format email non respecté (2)
+  # Tentative d'ajout, format email non respecté (2)
     When I fill in "organizationACL1_userEmail_addForm" with "auie@auie"
-    And I click "Valider"
-    Then the field "organizationACL1_userEmail_addForm" should have error: "Merci de saisir une adresse e-mail valide."
-    # Tentative d'ajout, format email non respecté (3)
-    When I fill in "organizationACL1_userEmail_addForm" with "auie@auie.auie"
     And I click "Valider"
     Then the field "organizationACL1_userEmail_addForm" should have error: "Merci de saisir une adresse e-mail valide."
   # Tentative d'ajout, format email correct, le rôle existe déjà pour cet utilisateur
     When I fill in "organizationACL1_userEmail_addForm" with "administrateur.workspace@toto.com"
     And I click "Valider"
     Then the field "organizationACL1_userEmail_addForm" should have error: "Ce rôle est déjà attribué à l'utilisateur indiqué."
+  # Tentative d'ajout, format email correct, extension incorrecte
+    When I fill in "organizationACL1_userEmail_addForm" with "auie@auie.auie"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
 
   @javascript
   Scenario: Creation/deletion of a role of (global) cell administrator, correct input
@@ -104,24 +104,24 @@ Feature: Organization role feature
     And I open tab "Rôles"
     And I open collapse "Site — par utilisateur"
     And I click "Ajouter"
-      # Tentative de validation, adresse email vide, rôle vide
+  # Tentative de validation, adresse email vide, rôle vide
     And I click "Valider"
     Then the field "granularityUserACL3_userEmail_addForm" should have error: "Merci de renseigner ce champ."
     And the field "granularityUserACL3_userRole_addForm" should have error: "Merci de renseigner ce champ."
-      # Tentative d'ajout, format email non respecté
+  # Tentative d'ajout, format email non respecté
     When I fill in "granularityUserACL3_userRole_addForm" with "Contributeur"
     When I fill in "granularityUserACL3_userEmail_addForm" with "auie"
     And I click "Valider"
     Then the field "granularityUserACL3_userEmail_addForm" should have error: "Merci de saisir une adresse e-mail valide."
-      # Tentative d'ajout, format email non respecté (2)
+  # Tentative d'ajout, format email non respecté (2)
     When I fill in "granularityUserACL3_userEmail_addForm" with "auie@auie"
     And I click "Valider"
     Then the field "granularityUserACL3_userEmail_addForm" should have error: "Merci de saisir une adresse e-mail valide."
-      # Tentative d'ajout, format email non respecté (3)
-    When I fill in "granularityUserACL3_userEmail_addForm" with "auie@auie.auie"
-    And I click "Valider"
-    Then the field "granularityUserACL3_userEmail_addForm" should have error: "Merci de saisir une adresse e-mail valide."
-    # Tentative d'ajout, format email correct, le rôle existe déjà pour cet utilisateur
+  # Tentative d'ajout, format email correct, le rôle existe déjà pour cet utilisateur
     When I fill in "granularityUserACL3_userEmail_addForm" with "contributeur.site@toto.com"
     And I click "Valider"
-    Then the field "granularityUserACL3_userEmail_addForm" should have error: "Ce rôle est déjà attribué à l'utilisateur indiqué."
+    Then the field "granularityUserACL3_userRole_addForm" should have error: "Ce rôle est déjà attribué à l'utilisateur indiqué."
+  # Tentative d'ajout, format email correct, extension incorrecte
+    When I fill in "granularityUserACL3_userEmail_addForm" with "auie@auie.auie"
+    And I click "Valider"
+    Then the following message is shown and closed: "Ajout effectué."
