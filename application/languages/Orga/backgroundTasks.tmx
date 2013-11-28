@@ -36,6 +36,14 @@
                 <seg>Creation of role: [ROLE] for user: [USER]</seg>
             </tuv>
         </tu>
+        <tu tuid="deleteMember">
+            <tuv xml:lang="fr">
+                <seg>Suppression du membre : [MEMBER] de l'axe : [AXIS]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion of member: [MEMBER] from axis: [AXIS]</seg>
+            </tuv>
+        </tu>
         <tu tuid="removeRoleFromUser">
             <tuv xml:lang="fr">
                 <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
