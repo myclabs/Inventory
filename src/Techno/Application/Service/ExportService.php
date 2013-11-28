@@ -15,7 +15,7 @@ use Xport\MappingReader\YamlMappingReader;
 /**
  * @author valentin.claras
  */
-class Techno_Service_Export
+class ExportService
 {
     /**
      * Exporte la version de techno.
@@ -31,7 +31,16 @@ class Techno_Service_Export
         $modelBuilder->bind('categories', Category::loadRootCategories());
         $modelBuilder->bind('cellDigitalValue', __('UI', 'name', 'value'));
         $modelBuilder->bind('cellRelativeUncertainty', '+/- (%)');
-        $modelBuilder->bindFunction('getAllFamilies', 'getAllFamilies');
+        $getAllFamilies = function(Category $category) use (&$getAllFamilies)
+        {
+            $families = [];
+            $families = array_merge($families, $category->getFamilies()->toArray());
+            foreach ($category->getChildCategories() as $childCategory) {
+                $families = array_merge($families, $getAllFamilies($childCategory));
+            }
+            return $families;
+        };
+        $modelBuilder->bindFunction('getAllFamilies', $getAllFamilies);
         $modelBuilder->bindFunction(
             'getFamilyLabel',
             function (Family $family) {
