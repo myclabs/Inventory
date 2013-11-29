@@ -109,8 +109,8 @@ Feature: Organization role feature
     Then the field "granularityUserACL3_userEmail_addForm" should have error: "Merci de renseigner ce champ."
     And the field "granularityUserACL3_userRole_addForm" should have error: "Merci de renseigner ce champ."
   # Tentative d'ajout, format email non respecté
-    When I fill in "granularityUserACL3_userRole_addForm" with "Contributeur"
-    When I fill in "granularityUserACL3_userEmail_addForm" with "auie"
+    When I select "Contributeur" from "granularityUserACL3_userRole_addForm"
+    And I fill in "granularityUserACL3_userEmail_addForm" with "auie"
     And I click "Valider"
     Then the field "granularityUserACL3_userEmail_addForm" should have error: "Merci de saisir une adresse e-mail valide."
   # Tentative d'ajout, format email non respecté (2)
