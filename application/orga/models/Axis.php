@@ -318,8 +318,8 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function updateNarrowerTag()
     {
         $this->narrowerTag = Orga_Model_Organization::PATH_SEPARATOR;
-        if ($this->directNarrower !== null) {
-            $this->narrowerTag = $this->directNarrower->narrowerTag;
+        if ($this->getDirectNarrower() !== null) {
+            $this->narrowerTag = $this->getDirectNarrower()->getNarrowerTag();
         }
         $this->narrowerTag .= $this->getAxisTag() . Orga_Model_Organization::PATH_SEPARATOR;
 
@@ -358,8 +358,8 @@ class Orga_Model_Axis extends Core_Model_Entity
         }
         $this->broaderTag .= $this->getAxisTag() . Orga_Model_Organization::PATH_SEPARATOR;
 
-        if ($this->directNarrower !== null) {
-            $this->directNarrower->updateBroaderTag();
+        if ($this->getDirectNarrower() !== null) {
+            $this->getDirectNarrower()->updateBroaderTag();
         }
 
         foreach ($this->getGranularities() as $granularity) {
@@ -426,12 +426,12 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function moveTo(Orga_Model_Axis $newDirectNarrowerAxis=null)
     {
-        if ($this->directNarrower !== $newDirectNarrowerAxis) {
+        if ($this->getDirectNarrower() !== $newDirectNarrowerAxis) {
             if ($newDirectNarrowerAxis !== null && $newDirectNarrowerAxis->isBroaderThan($this)) {
                 throw new Core_Exception_InvalidArgument('The given Axis is broader than the current one.');
             }
 
-            $oldDirectNarrowerAxis = $this->directNarrower;
+            $oldDirectNarrowerAxis = $this->getDirectNarrower();
             if ($oldDirectNarrowerAxis !== null) {
                 if ($oldDirectNarrowerAxis->hasDirectBroader($this)) {
                     $oldDirectNarrowerAxis->directBroaders->removeElement($this);
