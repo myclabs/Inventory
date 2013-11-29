@@ -435,7 +435,8 @@ class Orga_Model_Member extends Core_Model_Entity
         $this->updateTag();
 
         foreach ($this->getCells() as $cell) {
-            $cell->updateTags();
+            $cell->updateMembersHashKey();
+            $cell->updateTag();
         }
 
         foreach ($this->getDirectChildren() as $directChildMember) {
