@@ -201,14 +201,19 @@ class Orga_Model_Axis extends Core_Model_Entity
         $this->updateNarrowerTag();
         $this->updateBroaderTag();
         foreach ($this->getMembers() as $member) {
-            // Update simple des tag, les cellules seront mises à jour ensuite.
             $member->updateTags();
         }
-        foreach ($this->getGranularities() as $granularity) {
-            $granularity->updateRef();
-            foreach ($granularity->getCells() as $cell) {
-                $cell->updateTags();
-            }
+    }
+
+    /**
+     * Met à jour les hashKey des membres et des cellules.
+     */
+    public function updateTagsAndHierarchy()
+    {
+        $this->updateNarrowerTag();
+        $this->updateBroaderTag();
+        foreach ($this->getMembers() as $member) {
+            $member->updateTagsAndHierarchy();
         }
     }
 
@@ -241,6 +246,9 @@ class Orga_Model_Axis extends Core_Model_Entity
             } catch (Core_Exception_NotFound $e) {
                 $this->ref = $ref;
                 $this->updateTags();
+                foreach ($this->getGranularities() as $granularity) {
+                    $granularity->updateRef();
+                }
             }
         }
     }
@@ -449,7 +457,7 @@ class Orga_Model_Axis extends Core_Model_Entity
 
             // L'update des tags est effectué pas hasMove().
             $this->setPosition();
-            $this->updateTags();
+            $this->updateTagsAndHierarchy();
         }
     }
 

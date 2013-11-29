@@ -141,7 +141,7 @@ class Orga_Model_Member extends Core_Model_Entity
         }
 
         $this->setPosition();
-        $this->updateTags();
+        $this->updateTagsAndHierarchy();
 
         $axis->addMember($this);
     }
@@ -435,12 +435,28 @@ class Orga_Model_Member extends Core_Model_Entity
         $this->updateTag();
 
         foreach ($this->getCells() as $cell) {
-            $cell->updateMembersHashKey();
             $cell->updateTag();
+            $cell->updateMembersHashKey();
         }
 
         foreach ($this->getDirectChildren() as $directChildMember) {
             $directChildMember->updateTags();
+        }
+    }
+
+    /**
+     * Mets à jour le tag du membre, de ses cellules, et ceux des enfants.
+     */
+    public function updateTagsAndHierarchy()
+    {
+        $this->updateTag();
+
+        foreach ($this->getCells() as $cell) {
+            $cell->updateTags();
+        }
+
+        foreach ($this->getDirectChildren() as $directChildMember) {
+            $directChildMember->updateTagsAndHierarchy();
         }
     }
 
@@ -512,7 +528,7 @@ class Orga_Model_Member extends Core_Model_Entity
             }
             $this->updateParentMembersHashKeys();
             $this->addPosition();
-            $this->updateTags();
+            $this->updateTagsAndHierarchy();
         }
     }
 
@@ -531,7 +547,7 @@ class Orga_Model_Member extends Core_Model_Entity
             }
             $this->updateParentMembersHashKeys();
             $this->addPosition();
-            $this->updateTags();
+            $this->updateTagsAndHierarchy();
             $this->disableCells();
         }
     }
