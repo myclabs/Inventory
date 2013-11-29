@@ -16,6 +16,8 @@ $inputStatusFilters = [
 ?>
 
 <style>
+    .cellActions a { margin-left: 8px; padding: 5px; }
+    .cellActions a i:hover { background-image: url("bootstrap/img/glyphicons-halflings-white.png"); }
     .granularity > .cell.firstRowCell { margin-left: 0; }
     .progress { margin-bottom: 5px; }
     .history h3 small, .comments h3 small { margin-top: 15px; cursor: pointer; }
@@ -37,18 +39,19 @@ $inputStatusFilters = [
 $organization = $this->organization;
 ?>
 <div class="organization page-header">
-    <?php if ($organization->canBeEdited) : ?>
-        <div class="pull-right">
-            <a class="editOrganization btn btn-small btn-primary"
-               href="orga/organization/edit/idOrganization/<?=$organization->id?>">
-                <i class="icon-cog icon-white"></i>
-                <?=__('UI', 'verb', 'edit')?>
-            </a>
-        </div>
-    <?php endif; ?>
-
     <h1>
         <?=$organization->label?>
+        <?php if ($organization->canBeEdited) : ?>
+        <div class="pull-right">
+            <small>
+                <a class="editOrganization btn btn-small btn-primary"
+                   href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                    <i class="icon-cog icon-white"></i>
+                    <?=__('UI', 'verb', 'edit')?>
+                </a>
+            </small>
+        </div>
+        <?php endif; ?>
     </h1>
 </div>
 
@@ -68,42 +71,65 @@ $organization = $this->organization;
                     <?=$currentCell->extendedLabel?>
                     <?php if ($currentCell->canBeInputted) : ?>
                 </a>
-            <?php endif; ?>
+                <?php endif; ?>
+                <small class="cellActions">
+                    <a data-toggle="modal" data-target="#administrators<?=$currentCell->id?>" href="#" title="<?=__('Orga', 'view', 'viewAdministrators')?>"><i class="icon-envelope"></i></a>
+                    <?php if ($currentCell->allowACL) : ?>
+                    <a data-toggle="modal" data-target="#users<?=$currentCell->id?>" href="orga/cell/edit-users/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewUsers')?>"><i class="icon-user"></i></a>
+                    <?php endif; ?>
+                    <?php if ($currentCell->canBeAnalyzed) : ?>
+                    <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="orga/cell/view-reports/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewReports')?>"><i class="icon-tasks"></i></a>
+                    <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/view-exports/exports/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewExports')?>"><i class="icon-download-alt"></i></a>
+                    <?php endif; ?>
+                </small>
             </h2>
+            <!--
             <p>
-                <a data-toggle="modal" data-target="#administrators<?=$currentCell->id?>" href="#">
-                    <i class="icon-search"></i>
-                    Contacter les administrateurs
+                <a data-toggle="modal" data-target="#administrators<?=$currentCell->id?>"
+                   href="#"
+                   title="<?=__('Orga', 'view', 'viewAdministrators')?>">
+                    <i class="icon-envelope"></i>
+                    <?=__('Orga', 'view', 'viewAdministrators')?>
                 </a>
             </p>
+            <?php if ($currentCell->allowACL) : ?>
+                <p>
+                    <a data-toggle="modal" data-target="#users<?=$currentCell->id?>" href="orga/cell/edit-users/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewUsers')?>">
+                        <i class="icon-user"></i>
+                        <?=__('Orga', 'view', 'viewUsers')?>
+                    </a>
+                </p>
+            <?php endif; ?>
             <?php if ($currentCell->canBeAnalyzed) : ?>
             <p>
-                <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="orga/tab_celldetails/analyses/idCell/<?=$currentCell->id?>">
+                <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="orga/cell/view-reports/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewReports')?>">
                     <i class="icon-tasks"></i>
-                    Voir les rapports
+                    <?=__('Orga', 'view', 'viewReports')?>
+                </a>
+            </p>
+            <p>
+                <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/view-exports/exports/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewExports')?>">
+                    <i class="icon-download-alt"></i>
+                    <?=__('Orga', 'view', 'viewExports')?>
                 </a>
             </p>
             <?php endif; ?>
-            <p>
-                <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/tab_celldetails/exports/idCell/<?=$currentCell->id?>">
-                    <i class="icon-download-alt"></i>
-                    Voir les exports
-                </a>
-            </p>
+            -->
             <?php if ($currentCell->inventoryStatus !== null) : ?>
             <p>
                 <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
                 <?=$currentCell->inventoryStatus?>
             </p>
             <p>
-                <?=$currentCell->inventoryNotStartedInputsNumber?> non commencée
-                <?php if ($currentCell->inventoryNotStartedInputsNumber > 1) : echo 's'; endif; ?>
+                <?=$currentCell->inventoryNotStartedInputsNumber?>
+                <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?>
                 |
-                <?=$currentCell->inventoryStartedInputsNumber?> en cours
-                <?php if ($currentCell->inventoryStartedInputsNumber > 1) : echo 's'; endif; ?>
+                <?=$currentCell->inventoryStartedInputsNumber?>
+                <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?>
+                <?php if ($currentCell->inventoryStartedInputsNumber > 1) : echo 's'; endif; ?>
                 |
-                <?=$currentCell->inventoryCompletedInputsNumber?> terminée
-                <?php if ($currentCell->inventoryCompletedInputsNumber > 1) : echo 's'; endif; ?>
+                <?=$currentCell->inventoryCompletedInputsNumber?>
+                <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>
             </p>
             <div class="progress">
                 <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%"><?=$currentCell->inventoryCompletion?> %</div>
@@ -122,37 +148,50 @@ $organization = $this->organization;
             <div id="administrators<?=$currentCell->id?>" class="modal hide fade">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>Administrateur de <?=$currentCell->shortLabel?></h4>
+                    <h4><?=__('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?></h4>
                 </div>
                 <div class="modal-body">
                     <pre><?=implode("\n", $currentCell->administrators)?></pre>
                 </div>
             </div>
-
+            <?php if ($currentCell->allowACL) : ?>
+            <div id="users<?=$currentCell->id?>" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4><?=__('Orga', 'view', 'usersFrom')?> <?=$currentCell->shortLabel?></h4>
+                </div>
+                <div class="modal-body">
+                    <img src="images/ui/ajax-loader_large.gif">
+                    <?=__('Orga', 'view', 'loadingUsers')?>
+                </div>
+            </div>
+            <?php endif; ?>
             <?php if ($currentCell->canBeAnalyzed) : ?>
             <div id="reports<?=$currentCell->id?>" class="modal reports hide fade large">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>Rapports de <?=$currentCell->shortLabel?></h4>
+                    <h4><?=__('Orga', 'view', 'reportsFrom')?> <?=$currentCell->shortLabel?></h4>
                 </div>
                 <div class="modal-body">
                     <div class="granularity row-fluid">
-                        <img src="images/ui/ajax-loader_large.gif"> Chargement des rapports en cours
+                        <img src="images/ui/ajax-loader_large.gif">
+                        <?=__('Orga', 'view', 'loadingReports')?>
+                    </div>
+                </div>
+            </div>
+            <div id="exports<?=$currentCell->id?>" class="modal exports hide fade large">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4><?=__('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="granularity row-fluid">
+                        <img src="images/ui/ajax-loader_large.gif">
+                        <?=__('Orga', 'view', 'loadingExports')?>
                     </div>
                 </div>
             </div>
             <?php endif; ?>
-            <div id="exports<?=$currentCell->id?>" class="modal exports hide fade large">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>Exports de <?=$currentCell->shortLabel?></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="granularity row-fluid">
-                        <img src="images/ui/ajax-loader_large.gif"> Chargement des exports en cours
-                    </div>
-                </div>
-            </div>
         </div>
 
         <?php foreach ($this->narrowerGranularities as $narrowerGranularityArray) :
@@ -171,11 +210,10 @@ $organization = $this->organization;
             <div id="granularity<?=$narrowerGranularity->getId()?>" class="collapse">
                 <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
                 <form class="form-inline cells-filter">
-                    <?php foreach ($narrowerGranularity->getAxes() as $axis) : ?>
+                    <?php foreach ($narrowerGranularityArray['filterAxes'] as $memberOptions) : ?>
                         <select data-filter="tag">
-                            <option value="">Tout <?=$axis->getLabel()?></option>
-                            <?php foreach ($axis->getMembers() as $member) : ?>
-                                <option value="<?=$member->getTag()?>"><?=$member->getLabel()?></option>
+                            <?php foreach ($memberOptions as $memberTag => $memberLabel) : ?>
+                                <option value="<?=$memberTag?>"><?=$memberLabel?></option>
                             <?php endforeach; ?>
                         </select>
                     <?php endforeach; ?>
@@ -202,7 +240,8 @@ $organization = $this->organization;
                 <?php endif; ?>
 
                 <div class="granularity row-fluid">
-                    <img src="images/ui/ajax-loader_large.gif"> Chargement des cellules en cours
+                    <img src="images/ui/ajax-loader_large.gif">
+                    <?=__('Orga', 'view', 'loadingCells')?>
                 </div>
             </div>
         </fieldset>
@@ -232,15 +271,17 @@ $organization = $this->organization;
             </div>
         </div>
         <?php if ($organization->canBeEdited) : ?>
-            <div class="well">
+            <div class="well addMember">
                 <h3>
-                    Ajouter un membre
+                    <?=__('Orga', 'view', 'addMember')?>
                     <div class="pull-right">
-                        <a class="editOrganization btn btn-small btn-primary"
-                           href="orga/organization/edit/idOrganization/<?=$organization->id?>/tab/members">
-                            <i class="icon-cog icon-white"></i>
-                            <?=__('UI', 'verb', 'edit')?>
-                        </a>
+                        <small>
+                            <a class="editOrganization btn btn-small btn-primary"
+                               href="orga/organization/edit/idOrganization/<?=$organization->id?>/tab/members">
+                                <i class="icon-cog icon-white"></i>
+                                <?=__('UI', 'verb', 'edit')?>
+                            </a>
+                        </small>
                     </div>
                 </h3>
                 <hr/>

@@ -101,7 +101,7 @@ class Orga_CellController extends Core_Controller
         $organization = $granularity->getOrganization();
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
 
-        $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser));
+        $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
 
         // Cellules enfants.
         $narrowerGranularities = [];
@@ -152,10 +152,31 @@ class Orga_CellController extends Core_Controller
                 $purpose .= __('Orga', 'granlarity', 'AnalysesPurpose');
             }
             // Filter Axes.
+            $filterAxes = [];
+            $granularityAxes = $granularity->getAxes();
+            $filter = $cell->getChildMembersForGranularity($narrowerGranularity);
+            $narrowerGranularityAxes = $narrowerGranularity->getAxes();
+            foreach ($narrowerGranularity->getAxes() as $narrowerAxis) {
+                $narrowerGranularityAxes = array_merge($narrowerGranularityAxes, $narrowerAxis->getAllBroadersFirstOrdered());
+            }
+            usort($narrowerGranularityAxes, [Orga_Model_Axis::class, 'lastOrderAxes']);
+            foreach ($narrowerGranularityAxes as $narrowerAxis) {
+                if ($narrowerAxis->isTransverse($granularityAxes)) {
+                    $filterAxes[$narrowerAxis->getRef()] = $this->getFilterAxisOptions($narrowerAxis, $filter);
+                } else {
+                    foreach ($granularity->getAxes() as $granularityAxis) {
+                        if (($narrowerAxis->isBroaderThan($granularityAxis)) || ($narrowerAxis === $granularityAxis)) {
+                            continue 2;
+                        }
+                    }
+                    $filterAxes[$narrowerAxis->getRef()] = $this->getFilterAxisOptions($narrowerAxis, $filter);
+                }
+            }
             if ($purpose !== '') {
                 $narrowerGranularities[] = [
                     'granularity' => $narrowerGranularity,
                     'purpose' => $purpose,
+                    'filterAxes' => $filterAxes,
                     'isACL' => $isNarrowerGranularityACL,
                     'isInventory' => $isNarrowerGranularityInventory,
                     'isInput' => $isNarrowerGranularityInput,
@@ -207,6 +228,30 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('addMembersForm', $addMembersForm);
 
         UI_Datagrid::addHeader();
+    }
+
+    /**
+     * @param Orga_Model_Axis $axis
+     * @param array $filter
+     *
+     * @return array
+     */
+    protected function getFilterAxisOptions(Orga_Model_Axis $axis, $filter=[])
+    {
+        $memberOptions = [];
+        $memberOptions[''] = __('Orga', 'view', 'allMembers', ['AXIS' => $axis->getLabel()]);
+
+        /** @var Orga_Model_Member[] $members */
+        if ((count($filter) > 0) && isset($filter[$axis->getRef()])) {
+            $members = $filter[$axis->getRef()];
+        } else {
+            $members = $axis->getMembers()->toArray();
+        }
+        foreach ($members as $member) {
+            $memberOptions[$member->getTag()] = $member->getLabel();
+        }
+
+        return $memberOptions;
     }
 
     /**

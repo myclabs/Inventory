@@ -9,16 +9,19 @@
 $organization = $this->organization;
 ?>
 <div class="organization page-header">
-    <div class="pull-right">
-        <a class="viewOrganization btn btn-small btn-primary"
-           href="orga/organization/view/idOrganization/<?=$organization->id?>">
-            <i class="icon-share-alt icon-white"></i>
-            <?=__('UI', 'verb', 'consult')?>
-        </a>
-    </div>
-
     <h1>
         <?=$organization->label?>
+        <?php if ($organization->canBeEdited) : ?>
+            <div class="pull-right">
+                <small>
+                    <a class="editOrganization btn btn-small btn-primary"
+                       href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                        <i class="icon-cog icon-white"></i>
+                        <?=__('UI', 'verb', 'edit')?>
+                    </a>
+                </small>
+            </div>
+        <?php endif; ?>
     </h1>
 </div>
 <?php

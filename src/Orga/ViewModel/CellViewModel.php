@@ -96,4 +96,9 @@ class CellViewModel
      * @var array
      */
     public $administrators = [];
+
+    /**
+     * @var boolean
+     */
+    public $allowACL = false;
 }

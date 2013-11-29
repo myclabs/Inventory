@@ -6,6 +6,7 @@ use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Criteria;
 use Orga_Model_Cell;
 use Orga_Model_Member;
+use User\Domain\ACL\Action;
 use User\Domain\User;
 use User\Domain\ACL\ACLService;
 use Orga\Model\ACL\Action\CellAction;
@@ -74,13 +75,14 @@ class CellViewModelFactory
      * @param Orga_Model_Cell $cell
      * @param User $user
      * @param bool $withAdministrators
+     * @param bool $withACL
      * @param bool $withDW
      * @param bool $withInventory
      * @param bool $withInput
      * @return CellViewModel
      */
     public function createCellViewModel(Orga_Model_Cell $cell, User $user,
-        $withAdministrators=null, $withDW=null, $withInventory=null, $withInput=null)
+        $withAdministrators=null, $withACL=null, $withDW=null, $withInventory=null, $withInput=null)
     {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
@@ -92,23 +94,41 @@ class CellViewModelFactory
         // Administrateurs
         if ($withAdministrators === true) {
             foreach ($cell->getAdminRoles() as $administrator) {
-                $cellViewModel->administrators[] = $administrator->getUser()->getEmail();
+                array_unshift($cellViewModel->administrators, $administrator->getUser()->getEmail());
             }
-            foreach ($cell->getParentCells() as $parentCell) {
+            foreach (array_reverse($cell->getParentCells()) as $parentCell) {
                 foreach ($parentCell->getAdminRoles() as $parentAdministrator) {
-                    $cellViewModel->administrators[] = $parentAdministrator->getUser()->getEmail();
+                    array_unshift($cellViewModel->administrators, $parentAdministrator->getUser()->getEmail());
                 }
             }
+            foreach ($cell->getOrganization()->getAdminRoles() as $organizationAdministrator) {
+                array_unshift($cellViewModel->administrators, $organizationAdministrator->getUser()->getEmail());
+            }
+        }
+
+        // Utilisateurs
+        if (($withACL === true)
+            || (($withACL !== false)
+                && ($cell->getGranularity()->getCellsWithACL())
+                && ($this->aclService->isAllowed($user, Action::ALLOW(), $cell)))
+        ) {
+            $cellViewModel->allowACL = true;
         }
 
         // DW
         if (($withDW === true)
-            || (($withDW !== false) && ($cell->getGranularity()->getCellsGenerateDWCubes()))) {
+            || (($withDW !== false)
+                && ($cell->getGranularity()->getCellsGenerateDWCubes())
+                && ($this->aclService->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
+        ) {
             $cellViewModel->canBeAnalyzed = true;
         }
 
         // Inventory
-        if ($withInventory !== false) {
+        if (($withInventory === true)
+            || (($withInventory !== false)
+                && (($this->aclService->isAllowed($user, CellAction::VIEW_REPORTS(), $cell))))
+        ) {
             try {
                 $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
@@ -176,7 +196,10 @@ class CellViewModelFactory
 
         // Saisie.
         if (($withInput === true)
-            || (($withInput !== false) && ($cell->getGranularity()->getInputConfigGranularity() !== null))) {
+            || (($withInput !== false)
+                && ($cell->getGranularity()->getInputConfigGranularity() !== null)
+                && (($this->aclService->isAllowed($user, CellAction::INPUT(), $cell))))
+        ) {
             $cellViewModel->canBeInputted = $this->aclService->isAllowed($user, CellAction::INPUT(), $cell);
 
             $aFInputSetPrimary = $cell->getAFInputSetPrimary();
