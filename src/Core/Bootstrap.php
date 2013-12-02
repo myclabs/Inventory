@@ -119,7 +119,9 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $diConfig = $configuration->get('di', null);
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
             $cache = new MemcachedCache();
-            $cache->setMemcached(new Memcached());
+            $memcached = new Memcached();
+            $memcached->addServer('localhost', 11211);
+            $cache->setMemcached($memcached);
             $cache->setNamespace($configuration->get('applicationName', ''));
             $builder->setDefinitionCache($cache);
         }
