@@ -32,27 +32,34 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
 
     public function reloadEntities(EntityManager $entityManager)
     {
-        $this->reloadArray($this->parameters, $entityManager);
-    }
-
-    protected function reloadArray(array &$entitiesArray, EntityManager $entityManager)
-    {
-        foreach ($entitiesArray as $i => $entity) {
+        foreach ($this->parameters as $i => $parameter) {
             // Gère les proxies.
-            if ($entity instanceof Proxy) {
-                $realClassName = $entityManager->getClassMetadata(get_class($entity))->getName();
-                $entitiesArray[$i] = $entityManager->find($realClassName, $entity->getId());
+            if ($parameter instanceof Proxy) {
+                $realClassName = $entityManager->getClassMetadata(get_class($parameter))->getName();
+                $this->parameters[$i] = $entityManager->find($realClassName, $parameter->getId());
                 continue;
             }
 
             // Vérifie que c'est une entité Doctrine.
-            if (is_object($entity) && !$entityManager->getMetadataFactory()->isTransient(get_class($entity))) {
-                $entitiesArray[$i] = $entityManager->find(get_class($entity), $entity->getId());
+            if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
+                $this->parameters[$i] = $entityManager->find(get_class($parameter), $parameter->getId());
             }
 
             // Gère les tableaux.
-            if (is_array($entity)) {
-                $this->reloadArray($entity, $entityManager);
+            if (is_array($parameter)) {
+                foreach ($this->parameters[$i] as $j => $entity) {
+                    // Gère les proxies.
+                    if ($parameter instanceof Proxy) {
+                        $realClassName = $entityManager->getClassMetadata(get_class($entity))->getName();
+                        $this->parameters[$i][$j] = $entityManager->find($realClassName, $entity->getId());
+                        continue;
+                    }
+
+                    // Vérifie que c'est une entité Doctrine.
+                    if (is_object($entity) && !$entityManager->getMetadataFactory()->isTransient(get_class($entity))) {
+                        $this->parameters[$i][$j] = $entityManager->find(get_class($entity), $parameter->getId());
+                    }
+                }
             }
         }
     }
