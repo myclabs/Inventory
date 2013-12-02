@@ -44,23 +44,6 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
             if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
                 $this->parameters[$i] = $entityManager->find(get_class($parameter), $parameter->getId());
             }
-
-            // Gère les tableaux.
-            if (is_array($parameter)) {
-                foreach ($this->parameters[$i] as $j => $entity) {
-                    // Gère les proxies.
-                    if ($entity instanceof Proxy) {
-                        $realClassName = $entityManager->getClassMetadata(get_class($entity))->getName();
-                        $this->parameters[$i][$j] = $entityManager->find($realClassName, $entity->getId());
-                        continue;
-                    }
-
-                    // Vérifie que c'est une entité Doctrine.
-                    if (is_object($entity) && !$entityManager->getMetadataFactory()->isTransient(get_class($entity))) {
-                        $this->parameters[$i][$j] = $entityManager->find(get_class($entity), $parameter->getId());
-                    }
-                }
-            }
         }
     }
 

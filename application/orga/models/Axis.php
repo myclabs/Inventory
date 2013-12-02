@@ -679,9 +679,15 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function removeMember(Orga_Model_Member $member)
     {
         if ($this->hasMember($member)) {
+            /** @var Orga_Model_Cell[] $cellChildCells */
             $cellChildCells = [];
             foreach ($member->getCells() as $cell) {
-                $cellChildCells[$cell->getMembersHashKey()] = $cell->getChildCells();
+                foreach ($cell->getChildCells() as $childCell) {
+                    // Inutile de mettre à jour les cellules possédant ce membre.
+                    if (!$childCell->hasMember($member)) {
+                        $cellChildCells[] = $childCell;
+                    }
+                }
             }
 
             if ($this->isMemberPositioning()) {
@@ -695,14 +701,8 @@ class Orga_Model_Axis extends Core_Model_Entity
                 $granularity->removeCellsFromMember($member);
             }
 
-            /** @var Orga_Model_Cell[] $childCells */
-            foreach ($cellChildCells as $childCells) {
-                foreach ($childCells as $childCell) {
-                    if (!$childCell->hasMember($member)) {
-                        // Inutile de mettre à jour les cellules possédant ce membre.
-                        $childCell->updateHierarchy();
-                    }
-                }
+            foreach ($cellChildCells as $childCell) {
+                $childCell->updateHierarchy();
             }
             $member->removeFromAxis();
         }
