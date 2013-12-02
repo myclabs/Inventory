@@ -5,6 +5,8 @@
 
 - Installer memcached et le plugin New Relic (cf. projet server)
 
+- Mettre à jour le script `deploy` (`git pull` dans `/home/deploy`)
+
 - Déployer l'application SANS build update ni redémarrage du worker
 
 ```
