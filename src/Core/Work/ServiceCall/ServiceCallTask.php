@@ -38,11 +38,6 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
     protected function reloadArray(array &$entitiesArray, EntityManager $entityManager)
     {
         foreach ($entitiesArray as $i => $entity) {
-            // Gère les tableaux.
-            if (is_array($entity)) {
-                $this->reloadArray($entity, $entityManager);
-            }
-
             // Gère les proxies.
             if ($entity instanceof Proxy) {
                 $realClassName = $entityManager->getClassMetadata(get_class($entity))->getName();
@@ -53,6 +48,11 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
             // Vérifie que c'est une entité Doctrine.
             if (is_object($entity) && !$entityManager->getMetadataFactory()->isTransient(get_class($entity))) {
                 $entitiesArray[$i] = $entityManager->find(get_class($entity), $entity->getId());
+            }
+
+            // Gère les tableaux.
+            if (is_array($entity)) {
+                $this->reloadArray($entity, $entityManager);
             }
         }
     }
