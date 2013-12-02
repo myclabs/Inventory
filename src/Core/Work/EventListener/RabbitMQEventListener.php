@@ -79,7 +79,7 @@ class RabbitMQEventListener extends \MyCLabs\Work\EventListener
     {
         // Traitement spécial pour les entités Doctrine
         if ($task instanceof ServiceCallTask) {
-            $task->mergeEntities($this->entityManager);
+            $task->reloadEntities($this->entityManager);
         }
     }
 

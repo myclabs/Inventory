@@ -30,19 +30,29 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
         $this->setTaskLabel($taskLabel);
     }
 
-    public function mergeEntities(EntityManager $entityManager)
+    public function reloadEntities(EntityManager $entityManager)
     {
-        foreach ($this->parameters as $i => $parameter) {
-            // Gère les proxies
-            if ($parameter instanceof Proxy) {
-                $realClassName = $entityManager->getClassMetadata(get_class($parameter))->getName();
-                $this->parameters[$i] = $entityManager->find($realClassName, $parameter->getId());
+        $this->reloadArray($this->parameters, $entityManager);
+    }
+
+    protected function reloadArray(array &$entitiesArray, EntityManager $entityManager)
+    {
+        foreach ($entitiesArray as $i => $entity) {
+            // Gère les tableaux.
+            if (is_array($entity)) {
+                $this->reloadArray($entity, $entityManager);
+            }
+
+            // Gère les proxies.
+            if ($entity instanceof Proxy) {
+                $realClassName = $entityManager->getClassMetadata(get_class($entity))->getName();
+                $entitiesArray[$i] = $entityManager->find($realClassName, $entity->getId());
                 continue;
             }
 
-            // Vérifie que c'est une entité Doctrine
-            if (is_object($parameter) && !$entityManager->getMetadataFactory()->isTransient(get_class($parameter))) {
-                $this->parameters[$i] = $entityManager->find(get_class($parameter), $parameter->getId());
+            // Vérifie que c'est une entité Doctrine.
+            if (is_object($entity) && !$entityManager->getMetadataFactory()->isTransient(get_class($entity))) {
+                $entitiesArray[$i] = $entityManager->find(get_class($entity), $entity->getId());
             }
         }
     }
