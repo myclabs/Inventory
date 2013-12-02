@@ -5,6 +5,14 @@
 
 - Installer memcached et le plugin New Relic (cf. projet server)
 
+- Modifier le php.ini apache (`/etc/php5/apache2/php.ini`) pour utiliser Memcached pour les sessions :
+
+```
+session.save_handler = memcached
+...
+session.save_path = "localhost:11211"
+```
+
 - Mettre à jour le script `deploy` (`git pull` dans `/home/deploy`)
 
 - Déployer l'application SANS build update ni redémarrage du worker
