@@ -296,12 +296,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "5fdedc4f8f304e8035580807bd36d59e97a87265"
+                "reference": "8b28a9a1d1dfafb7cb973bb0bacf057d097885aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/5fdedc4f8f304e8035580807bd36d59e97a87265",
-                "reference": "5fdedc4f8f304e8035580807bd36d59e97a87265",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/8b28a9a1d1dfafb7cb973bb0bacf057d097885aa",
+                "reference": "8b28a9a1d1dfafb7cb973bb0bacf057d097885aa",
                 "shasum": ""
             },
             "require": {
@@ -359,7 +359,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-11-15 14:43:05"
+            "time": "2013-11-28 01:19:42"
         },
         {
             "name": "doctrine/inflector",
@@ -1157,16 +1157,16 @@
         },
         {
             "name": "ocramius/proxy-manager",
-            "version": "0.4.1",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/ProxyManager.git",
-                "reference": "880ea3f2458d21781bcf3319b6756e69e9b322c4"
+                "reference": "3b3b7101b1eea62afe039db50faee0d3a9e3e330"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/880ea3f2458d21781bcf3319b6756e69e9b322c4",
-                "reference": "880ea3f2458d21781bcf3319b6756e69e9b322c4",
+                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/3b3b7101b1eea62afe039db50faee0d3a9e3e330",
+                "reference": "3b3b7101b1eea62afe039db50faee0d3a9e3e330",
                 "shasum": ""
             },
             "require": {
@@ -1177,16 +1177,19 @@
                 "phpmd/phpmd": "1.4.*",
                 "phpunit/phpunit": ">=3.7",
                 "satooshi/php-coveralls": "~0.6",
-                "squizlabs/php_codesniffer": "1.4.*",
-                "zendframework/zend-stdlib": "2.*"
+                "squizlabs/php_codesniffer": "1.4.*"
             },
             "suggest": {
-                "zendframework/zend-stdlib": "To use the hydrator proxy"
+                "ocramius/generated-hydrator": "To have very fast object to array to object conversion for ghost objects",
+                "zendframework/zend-json": "To have the JsonRpc adapter (Remote Object feature)",
+                "zendframework/zend-soap": "To have the Soap adapter (Remote Object feature)",
+                "zendframework/zend-stdlib": "To use the hydrator proxy",
+                "zendframework/zend-xmlrpc": "To have the XmlRpc adapter (Remote Object feature)"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.4.x-dev"
+                    "dev-master": "0.5.x-dev"
                 }
             },
             "autoload": {
@@ -1215,7 +1218,7 @@
                 "proxy pattern",
                 "service proxies"
             ],
-            "time": "2013-06-30 16:44:31"
+            "time": "2013-11-30 15:00:46"
         },
         {
             "name": "pear/console_commandline",
@@ -1745,16 +1748,16 @@
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.2.2",
+            "version": "v2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
-                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c"
+                "reference": "4451a22ef7b819e080112c7c5e8e91a8d989b591"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/ffed6c575260d9ccf796e213f1383e3489b3256c",
-                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/4451a22ef7b819e080112c7c5e8e91a8d989b591",
+                "reference": "4451a22ef7b819e080112c7c5e8e91a8d989b591",
                 "shasum": ""
             },
             "require": {
@@ -1786,7 +1789,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2013-10-04 16:26:56"
+            "time": "2013-11-28 16:02:20"
         },
         {
             "name": "zendframework/zend-code",

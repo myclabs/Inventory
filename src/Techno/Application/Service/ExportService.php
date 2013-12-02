@@ -27,20 +27,24 @@ class ExportService
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
 
-        // Feuilles des Category.
-        $modelBuilder->bind('categories', Category::loadRootCategories());
-        $modelBuilder->bind('cellDigitalValue', __('UI', 'name', 'value'));
-        $modelBuilder->bind('cellRelativeUncertainty', '+/- (%)');
-        $getAllFamilies = function(Category $category) use (&$getAllFamilies)
-        {
-            $families = [];
-            $families = array_merge($families, $category->getFamilies()->toArray());
+        $getAllFamilies = function (Category $category) use (&$getAllFamilies) {
+            $families = $category->getFamilies()->toArray();
             foreach ($category->getChildCategories() as $childCategory) {
                 $families = array_merge($families, $getAllFamilies($childCategory));
             }
             return $families;
         };
         $modelBuilder->bindFunction('getAllFamilies', $getAllFamilies);
+
+        // Skip les catégories vides sinon onglet vide et -> https://github.com/PHPOffice/PHPExcel/issues/193
+        $categories = array_filter(Category::loadRootCategories(), function (Category $category) use ($getAllFamilies) {
+            $families = $getAllFamilies($category);
+            return !empty($families);
+        });
+        $modelBuilder->bind('categories', $categories);
+        $modelBuilder->bind('cellDigitalValue', __('UI', 'name', 'value'));
+        $modelBuilder->bind('cellRelativeUncertainty', '+/- (%)');
+
         $modelBuilder->bindFunction(
             'getFamilyLabel',
             function (Family $family) {
@@ -58,6 +62,7 @@ class ExportService
                 return $label;
             }
         );
+
         $modelBuilder->bindFunction(
             'displayCellMemberForDimension',
             function (Cell $cell, Dimension $dimension) {
