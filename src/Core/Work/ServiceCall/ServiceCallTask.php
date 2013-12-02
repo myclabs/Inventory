@@ -51,7 +51,7 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
             }
 
             if (is_array($entity)) {
-                $this->reloadArray($entity, $entityManager);
+                $this->reloadArray($entitiesArray[$i], $entityManager);
             }
         }
     }
