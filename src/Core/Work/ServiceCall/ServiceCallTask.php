@@ -30,7 +30,7 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
         $this->setTaskLabel($taskLabel);
     }
 
-    public function reloadEntities(EntityManager $entityManager)
+    public function mergeEntities(EntityManager $entityManager)
     {
         foreach ($this->parameters as $i => $parameter) {
             // Gère les proxies.
@@ -49,7 +49,7 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
             if (is_array($parameter)) {
                 foreach ($this->parameters[$i] as $j => $entity) {
                     // Gère les proxies.
-                    if ($parameter instanceof Proxy) {
+                    if ($entity instanceof Proxy) {
                         $realClassName = $entityManager->getClassMetadata(get_class($entity))->getName();
                         $this->parameters[$i][$j] = $entityManager->find($realClassName, $entity->getId());
                         continue;
