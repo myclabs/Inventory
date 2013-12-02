@@ -3,6 +3,8 @@
 
 ## 2.9
 
+- Installer memcached et le plugin New Relic (cf. projet server)
+
 - Déployer l'application SANS build update ni redémarrage du worker
 
 ```
