@@ -16,9 +16,9 @@ use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\EntityManager;
@@ -118,7 +118,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
         $diConfig = $configuration->get('di', null);
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
-            $cache = new ApcCache();
+            $cache = new MemcachedCache();
             $cache->setNamespace($configuration->get('applicationName', ''));
             $builder->setDefinitionCache($cache);
         }
