@@ -41,13 +41,13 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
             // Gère les proxies
             if ($entity instanceof Proxy) {
                 $realClassName = $entityManager->getClassMetadata(get_class($entity))->getName();
-                $this->parameters[$i] = $entityManager->find($realClassName, $entity->getId());
+                $entitiesArray[$i] = $entityManager->find($realClassName, $entity->getId());
                 continue;
             }
 
             // Vérifie que c'est une entité Doctrine
             if (is_object($entity) && !$entityManager->getMetadataFactory()->isTransient(get_class($entity))) {
-                $this->parameters[$i] = $entityManager->find(get_class($entity), $entity->getId());
+                $entitiesArray[$i] = $entityManager->find(get_class($entity), $entity->getId());
             }
 
             if (is_array($entity)) {
