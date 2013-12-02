@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "2ab2ff0c730345b8b4a6c52961a752d4",
+    "hash": "8f659d4b3ff0884519c6022c51cbf5ec",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1748,16 +1748,16 @@
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.2.3",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
-                "reference": "4451a22ef7b819e080112c7c5e8e91a8d989b591"
+                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/4451a22ef7b819e080112c7c5e8e91a8d989b591",
-                "reference": "4451a22ef7b819e080112c7c5e8e91a8d989b591",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/ffed6c575260d9ccf796e213f1383e3489b3256c",
+                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c",
                 "shasum": ""
             },
             "require": {
@@ -1789,7 +1789,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2013-11-28 16:02:20"
+            "time": "2013-10-04 16:26:56"
         },
         {
             "name": "zendframework/zend-code",
