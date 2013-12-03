@@ -177,9 +177,6 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function preDelete()
     {
-        if ($this->axis !== null) {
-            $this->removeFromAxis();
-        }
         $this->deletePosition();
     }
 
@@ -380,8 +377,11 @@ class Orga_Model_Member extends Core_Model_Entity
     public function removeFromAxis()
     {
         if ($this->axis !== null) {
-            $this->axis->removeMember($this);
-            $this->axis = null;
+            if ($this->axis->hasMember($this)) {
+                $this->axis->removeMember($this);
+            } else {
+                $this->axis = null;
+            }
         }
     }
 
