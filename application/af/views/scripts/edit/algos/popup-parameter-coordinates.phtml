@@ -33,7 +33,7 @@ foreach ($family->getDimensions() as $dimension) {
 }
 $datagridFixed->addCol($dimensionColumn);
 // Colonne membre
-$keywordColumn = new UI_Datagrid_Col_List('member', __('UI', 'name', 'member'));
+$keywordColumn = new UI_Datagrid_Col_List('member', __('UI', 'name', 'element'));
 $keywordColumn->editable = true;
 $keywordColumn->addable = false;
 $keywordColumn->dynamicList = true;

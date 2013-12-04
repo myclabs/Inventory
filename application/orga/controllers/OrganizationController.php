@@ -342,12 +342,6 @@ class Orga_OrganizationController extends Core_Controller
                 $this->view->listGranularities[$granularity->getRef()] = $granularity->getLabel();
             }
         }
-
-        $this->view->listAccess = array(
-            'cellAdministrator' => __('Orga', 'role', 'cellAdministrator'),
-            'cellContributor' => __('Orga', 'role', 'cellContributor'),
-            'cellObserver' => __('Orga', 'role', 'cellObserver'),
-        );
     }
 
     /**

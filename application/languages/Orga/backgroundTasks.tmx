@@ -14,10 +14,10 @@
         </tu>
         <tu tuid="addMember">
             <tuv xml:lang="fr">
-                <seg>Ajout du membre :[MEMBER] à l’axe : [AXIS]</seg>
+                <seg>Ajout de l'élément :[MEMBER] à l’axe : [AXIS]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of member: [MEMBER] into axis: [AXIS]</seg>
+                <seg>Creation of element: [MEMBER] into axis: [AXIS]</seg>
             </tuv>
         </tu>
         <tu tuid="addGranularity">
@@ -34,6 +34,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Creation of role: [ROLE] for user: [USER]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="deleteMember">
+            <tuv xml:lang="fr">
+                <seg>Suppression du membre : [MEMBER] de l'axe : [AXIS]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion of member: [MEMBER] from axis: [AXIS]</seg>
             </tuv>
         </tu>
         <tu tuid="removeRoleFromUser">
@@ -66,6 +74,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Computations restart and analysis data rebuild for organizational unit: [LABEL]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="setCellRelevance">
+            <tuv xml:lang="fr">
+                <seg>Modification de la pertinence de l’unité organisationnelle : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Relevance change for organizational unit: [LABEL]</seg>
             </tuv>
         </tu>
 

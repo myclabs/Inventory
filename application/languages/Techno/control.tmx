@@ -29,10 +29,10 @@
         </tu>
         <tu tuid="controlMembersKeywords">
             <tuv xml:lang="fr">
-                <seg>Membres des dimensions des familles</seg>
+                <seg>Éléments des dimensions des familles</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Members of family dimensions</seg>
+                <seg>Elements of family dimensions</seg>
             </tuv>
         </tu>
         <tu tuid="noError">

@@ -16,9 +16,9 @@ use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\EntityManager;
@@ -118,7 +118,10 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
         $diConfig = $configuration->get('di', null);
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
-            $cache = new ApcCache();
+            $cache = new MemcachedCache();
+            $memcached = new Memcached();
+            $memcached->addServer('localhost', 11211);
+            $cache->setMemcached($memcached);
             $cache->setNamespace($configuration->get('applicationName', ''));
             $builder->setDefinitionCache($cache);
         }
@@ -401,10 +404,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $worker->registerTaskExecutor(
                 Orga_Work_Task_AddGranularity::class,
                 $c->get(Orga_Work_TaskExecutor_AddGranularityExecutor::class)
-            );
-            $worker->registerTaskExecutor(
-                Orga_Work_Task_AddMember::class,
-                $c->get(Orga_Work_TaskExecutor_AddMemberExecutor::class)
             );
             $worker->registerTaskExecutor(
                 Orga_Work_Task_SetGranularityCellsGenerateDWCubes::class,

@@ -178,7 +178,7 @@ Feature: Classification axis feature
   Scenario:  Deletion of a classification axis
     Given I am on "classif/axis/manage"
     Then I should see "Axes de classification"
-  # Axe contenant un membre
+  # Axe contenant un élément
     When I wait 4 seconds
     And I click "Gaz"
     Then I should see the popup "Édition d'un axe"
@@ -186,7 +186,7 @@ Feature: Classification axis feature
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     And I wait 3 seconds
-    Then the following message is shown and closed: "Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses membres."
+    Then the following message is shown and closed: "Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses éléments."
   # Axe relié à un axe plus grossier
     When I click "Poste article 75"
     Then I should see the popup "Édition d'un axe"

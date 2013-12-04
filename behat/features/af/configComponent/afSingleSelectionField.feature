@@ -225,7 +225,7 @@ Feature: AF single selection field feature
   # Algo de sélection simple utilisé comme coordonnée de paramètre ou indexation d'algorithme numérique
     Given I am on "af/edit/menu/id/4"
     And I wait for the page to finish loading
-  # Modifier la config pour que l'algo de sélection simple "c_s_s" soit utilisé comme membre d'axe de classification pour l'indexation d'un algo numérique
+  # Modifier la config pour que l'algo de sélection simple "c_s_s" soit utilisé comme élément d'axe de classification pour l'indexation d'un algo numérique
     And I open tab "Traitement"
     And I open collapse "Algorithmes numériques"
     And I open collapse "Saisies de champs numériques"

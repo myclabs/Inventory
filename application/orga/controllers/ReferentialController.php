@@ -7,7 +7,7 @@
  */
 
 use Core\Annotation\Secure;
-use Techno\Application\Service\Techno_Service_Export;
+use Techno\Application\Service\ExportService;
 use User\Domain\User;
 
 /**
@@ -90,6 +90,7 @@ class Orga_ReferentialController extends Core_Controller
      */
     public function exportAction()
     {
+        session_write_close();
         set_time_limit(0);
         PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip);
 
@@ -107,7 +108,7 @@ class Orga_ReferentialController extends Core_Controller
             $baseFilename = __('Classif', 'classification', 'classification');
             break;
             case 'Techno':
-                $exportService = new Techno_Service_Export();
+                $exportService = new ExportService();
                 $streamFunction = 'stream';
                 $baseFilename = __('UI', 'name', 'parameters');
                 break;

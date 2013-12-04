@@ -33,12 +33,12 @@
 		<tu tuid="member">
 			<tuv xml:lang="fr">
 				<seg>
-					<em>Membre non trouvé</em>
+					<em>Élément non trouvé</em>
 				</seg>
 			</tuv>
 			<tuv xml:lang="en">
 				<seg>
-					<em>Member not found</em>
+					<em>Element not found</em>
 				</seg>
 			</tuv>
 		</tu>

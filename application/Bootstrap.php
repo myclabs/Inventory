@@ -1,22 +1,13 @@
 <?php
 
 use Core\Autoloader;
-use DI\Container;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Keyword\Application\Service\KeywordService;
-use Orga\Model\ACL\CellAuthorization;
-use Orga\Model\ACL\OrganizationAuthorization;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
 use User\Application\Plugin\ACLPlugin;
 use User\Application\ViewHelper\IsAllowedHelper;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Authorization\RepositoryAuthorization;
-use User\Domain\ACL\Authorization\UserAuthorization;
-use User\Domain\User;
 
 /**
  * Application bootstrap

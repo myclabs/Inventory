@@ -35,9 +35,9 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
                 if ($cell->getGranularity()->getOrganization() === $organization) {
                     if (! in_array($cell, $cells)) {
                         $cells[] = $cell;
-                        $roles[$cell->getId()] = [$role];
+                        $roles[$cell->getId()] = [$role->getLabel()];
                     } else {
-                        $roles[$cell->getId()][] = $role;
+                        $roles[$cell->getId()][] = $role->getLabel();
                     }
                 }
             }
@@ -47,14 +47,7 @@ class Orga_Datagrid_Organization_CellsController extends UI_Controller_Datagrid
             $data = [];
             $data['index'] = $cell->getId();
             $data['label'] = $cell->getLabel();
-
-            $access = [];
-            foreach ($roles[$cell->getId()] as $role) {
-                /** @var \User\Domain\ACL\Role\Role $role */
-                $access[] = $role->getLabel();
-            }
-            $data['access'] = $this->cellList($access);
-
+            $data['access'] = implode(', ', $roles[$cell->getId()]);
             $data['details'] = $this->cellLink('orga/cell/details/idCell/'.$cell->getId(), __('Orga', 'home', 'dataInputLink'), 'share-alt');
             $this->addLine($data);
         }

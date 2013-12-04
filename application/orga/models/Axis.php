@@ -201,14 +201,19 @@ class Orga_Model_Axis extends Core_Model_Entity
         $this->updateNarrowerTag();
         $this->updateBroaderTag();
         foreach ($this->getMembers() as $member) {
-            // Update simple des tag, les cellules seront mises à jour ensuite.
             $member->updateTags();
         }
-        foreach ($this->getGranularities() as $granularity) {
-            $granularity->updateRef();
-            foreach ($granularity->getCells() as $cell) {
-                $cell->updateTags();
-            }
+    }
+
+    /**
+     * Met à jour les hashKey des membres et des cellules.
+     */
+    public function updateTagsAndHierarchy()
+    {
+        $this->updateNarrowerTag();
+        $this->updateBroaderTag();
+        foreach ($this->getMembers() as $member) {
+            $member->updateTagsAndHierarchy();
         }
     }
 
@@ -241,6 +246,9 @@ class Orga_Model_Axis extends Core_Model_Entity
             } catch (Core_Exception_NotFound $e) {
                 $this->ref = $ref;
                 $this->updateTags();
+                foreach ($this->getGranularities() as $granularity) {
+                    $granularity->updateRef();
+                }
             }
         }
     }
@@ -310,8 +318,8 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function updateNarrowerTag()
     {
         $this->narrowerTag = Orga_Model_Organization::PATH_SEPARATOR;
-        if ($this->directNarrower !== null) {
-            $this->narrowerTag = $this->directNarrower->narrowerTag;
+        if ($this->getDirectNarrower() !== null) {
+            $this->narrowerTag = $this->getDirectNarrower()->getNarrowerTag();
         }
         $this->narrowerTag .= $this->getAxisTag() . Orga_Model_Organization::PATH_SEPARATOR;
 
@@ -350,8 +358,8 @@ class Orga_Model_Axis extends Core_Model_Entity
         }
         $this->broaderTag .= $this->getAxisTag() . Orga_Model_Organization::PATH_SEPARATOR;
 
-        if ($this->directNarrower !== null) {
-            $this->directNarrower->updateBroaderTag();
+        if ($this->getDirectNarrower() !== null) {
+            $this->getDirectNarrower()->updateBroaderTag();
         }
 
         foreach ($this->getGranularities() as $granularity) {
@@ -418,12 +426,12 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function moveTo(Orga_Model_Axis $newDirectNarrowerAxis=null)
     {
-        if ($this->directNarrower !== $newDirectNarrowerAxis) {
+        if ($this->getDirectNarrower() !== $newDirectNarrowerAxis) {
             if ($newDirectNarrowerAxis !== null && $newDirectNarrowerAxis->isBroaderThan($this)) {
                 throw new Core_Exception_InvalidArgument('The given Axis is broader than the current one.');
             }
 
-            $oldDirectNarrowerAxis = $this->directNarrower;
+            $oldDirectNarrowerAxis = $this->getDirectNarrower();
             if ($oldDirectNarrowerAxis !== null) {
                 if ($oldDirectNarrowerAxis->hasDirectBroader($this)) {
                     $oldDirectNarrowerAxis->directBroaders->removeElement($this);
@@ -449,7 +457,7 @@ class Orga_Model_Axis extends Core_Model_Entity
 
             // L'update des tags est effectué pas hasMove().
             $this->setPosition();
-            $this->updateTags();
+            $this->updateTagsAndHierarchy();
         }
     }
 
@@ -671,9 +679,15 @@ class Orga_Model_Axis extends Core_Model_Entity
     public function removeMember(Orga_Model_Member $member)
     {
         if ($this->hasMember($member)) {
-            $cellChildCells = [];
+            /** @var Orga_Model_Cell[] $memberCellsChildCells */
+            $memberCellsChildCells = [];
             foreach ($member->getCells() as $cell) {
-                $cellChildCells[$cell->getMembersHashKey()] = $cell->getChildCells();
+                foreach ($cell->getChildCells() as $childCell) {
+                    // Inutile de mettre à jour les cellules possédant ce membre.
+                    if (!$childCell->hasMember($member)) {
+                        $memberCellsChildCells[] = $childCell;
+                    }
+                }
             }
 
             if ($this->isMemberPositioning()) {
@@ -687,14 +701,8 @@ class Orga_Model_Axis extends Core_Model_Entity
                 $granularity->removeCellsFromMember($member);
             }
 
-            /** @var Orga_Model_Cell[] $childCells */
-            foreach ($cellChildCells as $childCells) {
-                foreach ($childCells as $childCell) {
-                    if (!$childCell->hasMember($member)) {
-                        // Inutile de mettre à jour les cellules possédant ce membre.
-                        $childCell->updateHierarchy();
-                    }
-                }
+            foreach ($memberCellsChildCells as $childCell) {
+                $childCell->updateHierarchy();
             }
             $member->removeFromAxis();
         }

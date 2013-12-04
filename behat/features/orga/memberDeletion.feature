@@ -5,7 +5,7 @@ Feature: Organizational member deletion feature
     Given I am logged in
 
   @javascript
-  Scenario: Deletion of an organizational member generating cells with inputs and DW, but no cell with roles
+  Scenario: Deletion of an organizational member generating cells with inputs and DW, without or with roles
     # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
@@ -22,32 +22,32 @@ Feature: Organizational member deletion feature
     And I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "listMemberssite" datagrid should contain 2 row
-    # Tentative de suppression d'un membre générant une cellule associée à des rôles
+    # Tentative de suppression d'un élément générant une cellule associée à des rôles
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label  |
       | Annecy |
     When I click "Supprimer" in the row 1 of the "listMemberssite" datagrid
     And I click "Confirmer"
-    Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il existe au moins un rôle organisationnel pour une unité organisationnelle associée à ce membre."
+    Then the following message is shown and closed: "Cet élément ne peut pas être supprimé, car il existe au moins un rôle organisationnel pour une unité organisationnelle associée à cet élément."
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label  |
       | Annecy |
 
   @javascript
   Scenario: Deletion of an organizational member scenario
-  #6268 Exceptions non capturées suppression d'un membre organisationnel
+  #6268 Exceptions non capturées suppression d'un élément organisationnel
   # Accès à l'onglet "Éléments"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"
     And I open tab "Éléments"
-  # Membre jouant le rôle de parent direct pour au moins un autre membre
+  # Élément jouant le rôle de parent direct pour au moins un autre élément
     And I open collapse "Pays"
     When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Ce membre ne peut pas être supprimé, car il joue le rôle de parent direct pour au moins un autre membre."
-    # Suppression d'un membre, sans obstacle
+    Then the following message is shown and closed: "Cet élément ne peut pas être supprimé, car il joue le rôle de parent direct pour au moins un autre élément."
+    # Suppression d'un élément, sans obstacle
     When I open collapse "Année"
     And I click "Supprimer" in the row 1 of the "listMembersannee" datagrid
     Then I should see the popup "Demande de confirmation"
