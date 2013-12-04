@@ -15,7 +15,7 @@ use Xport\MappingReader\YamlMappingReader;
 /**
  * @author valentin.claras
  */
-class Techno_Service_Export
+class ExportService
 {
     /**
      * Exporte la version de techno.
@@ -27,11 +27,24 @@ class Techno_Service_Export
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
 
-        // Feuilles des Category.
-        $modelBuilder->bind('categories', Category::loadRootCategories());
+        $getAllFamilies = function (Category $category) use (&$getAllFamilies) {
+            $families = $category->getFamilies()->toArray();
+            foreach ($category->getChildCategories() as $childCategory) {
+                $families = array_merge($families, $getAllFamilies($childCategory));
+            }
+            return $families;
+        };
+        $modelBuilder->bindFunction('getAllFamilies', $getAllFamilies);
+
+        // Skip les catégories vides sinon onglet vide et -> https://github.com/PHPOffice/PHPExcel/issues/193
+        $categories = array_filter(Category::loadRootCategories(), function (Category $category) use ($getAllFamilies) {
+            $families = $getAllFamilies($category);
+            return !empty($families);
+        });
+        $modelBuilder->bind('categories', $categories);
         $modelBuilder->bind('cellDigitalValue', __('UI', 'name', 'value'));
         $modelBuilder->bind('cellRelativeUncertainty', '+/- (%)');
-        $modelBuilder->bindFunction('getAllFamilies', 'getAllFamilies');
+
         $modelBuilder->bindFunction(
             'getFamilyLabel',
             function (Family $family) {
@@ -49,6 +62,7 @@ class Techno_Service_Export
                 return $label;
             }
         );
+
         $modelBuilder->bindFunction(
             'displayCellMemberForDimension',
             function (Cell $cell, Dimension $dimension) {

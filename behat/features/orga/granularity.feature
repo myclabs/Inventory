@@ -238,6 +238,8 @@ Feature: Organization granularity feature
     And I click element "#goTo3"
     And I open tab "Rôles"
     And I open collapse "Site"
+    And I click "Supprimer" in the row 4 of the "granularityACL3" datagrid
+    And I click "Confirmer"
     And I click "Supprimer" in the row 3 of the "granularityACL3" datagrid
     And I click "Confirmer"
     And I click "Supprimer" in the row 2 of the "granularityACL3" datagrid
@@ -252,6 +254,8 @@ Feature: Organization granularity feature
     And I click element "#goTo3"
     And I open tab "Rôles"
     And I open collapse "Site"
+    And I click "Supprimer" in the row 4 of the "granularityACL3" datagrid
+    And I click "Confirmer"
     And I click "Supprimer" in the row 3 of the "granularityACL3" datagrid
     And I click "Confirmer"
     And I click "Supprimer" in the row 2 of the "granularityACL3" datagrid

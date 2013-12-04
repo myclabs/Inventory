@@ -408,10 +408,9 @@ class Orga_OrganizationController extends Core_Controller
      * Action de détails d'un organization.
      * @Secure("editOrganization")
      */
-    public function editOrganizationAction()
+    public function detailsAction()
     {
         $idOrganization = $this->getParam('idOrganization');
-        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->idOrganization = $idOrganization;
@@ -429,23 +428,24 @@ class Orga_OrganizationController extends Core_Controller
             }
         }
 
+
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
-            $this->view->assign('display', false);
+            $this->view->display = false;
+            $this->view->granularityReportBaseUrl = 'orga/granularity/report/idCell/'.$this->getParam('idCell');
         } else {
-            $this->view->assign('display', true);
+            $this->view->display = true;
+            $this->view->granularityReportBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
         }
-        $this->view->granularityReportBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
     }
 
     /**
      * Action de détails d'un organization.
      * @Secure("editOrganization")
      */
-    public function editOrganizationSubmitAction()
+    public function editAction()
     {
         $idOrganization = $this->getParam('idOrganization');
-        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
         $formData = $this->getFormData('organizationDetails');
 

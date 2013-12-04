@@ -287,4 +287,54 @@ class Orga_Service_OrganizationService
             throw $e;
         }
     }
+
+    /**
+     * @param Orga_Model_Axis $axis
+     * @param $ref
+     * @param $label
+     * @param array $parentMembers
+     *
+     * @throws Exception
+     */
+    public function addMember(Orga_Model_Axis $axis, $ref, $label, array $parentMembers)
+    {
+        $member = new Orga_Model_Member($axis, $ref, $parentMembers);
+        $member->setLabel($label);
+
+        try {
+            $this->entityManager->beginTransaction();
+
+            $member->save();
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @param Orga_Model_Member $member
+     *
+     * @throws Exception
+     */
+    public function deleteMember(Orga_Model_Member $member)
+    {
+        try {
+            $this->entityManager->beginTransaction();
+
+            $member->removeFromAxis();
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+
+            throw $e;
+        }
+    }
 }

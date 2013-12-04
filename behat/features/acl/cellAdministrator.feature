@@ -94,9 +94,9 @@ Feature: Cell administrator feature
   # On tombe sur l'onglet "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
-  # Ajout d'un membre, saisie correcte (parent renseigné en partie)
+  # Ajout d'un élément, saisie correcte (parent renseigné en partie)
     When I click "Ajouter"
-    Then I should see the popup "Ajout d'un membre à l'axe « Site »"
+    Then I should see the popup "Ajout d'un élément à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
     And I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
@@ -106,7 +106,7 @@ Feature: Cell administrator feature
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label | ref | broaderpays | broadermarque |
       | AAA   | aaa | France      | Marque A      |
-  # Modification d'un membre
+  # Modification d'un élément
     When I set "Annecy modifiée" for column "label" of row 2 of the "listMemberssite" datagrid with a confirmation message
     And I set "annecy_modifie" for column "ref" of row 2 of the "listMemberssite" datagrid with a confirmation message
     Then the row 2 of the "listMemberssite" datagrid should contain:
@@ -122,10 +122,10 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
     And I open tab "Paramétrage"
-  # Ajout et suppression d'un membre à l'axe "Pays"
+  # Ajout et suppression d'un élément à l'axe "Pays"
     And I open collapse "Pays"
     And I click "Ajouter"
-    Then I should see the popup "Ajout d'un membre à l'axe « Pays »"
+    Then I should see the popup "Ajout d'un élément à l'axe « Pays »"
     When I fill in "listMemberspays_label_addForm" with "AAA"
     And I fill in "listMemberspays_ref_addForm" with "aaa"
     And I fill in "listMemberspays_broaderzone_addForm" with "europe#da39a3ee5e6b4b0d3255bfef95601890afd80709"
@@ -140,7 +140,7 @@ Feature: Cell administrator feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "listMemberspays" datagrid should contain 1 row
-  # TODO : Suppression d'un membre entraînant la suppression de cellules associées à des DWs (par exemple un site).
+  # TODO : Suppression d'un élément entraînant la suppression de cellules associées à des DWs (par exemple un site).
 
 
   @javascript

@@ -141,7 +141,7 @@ class Orga_Model_Member extends Core_Model_Entity
         }
 
         $this->setPosition();
-        $this->updateTags();
+        $this->updateTagsAndHierarchy();
 
         $axis->addMember($this);
     }
@@ -177,9 +177,6 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function preDelete()
     {
-        if ($this->axis !== null) {
-            $this->removeFromAxis();
-        }
         $this->deletePosition();
     }
 
@@ -380,8 +377,11 @@ class Orga_Model_Member extends Core_Model_Entity
     public function removeFromAxis()
     {
         if ($this->axis !== null) {
-            $this->axis->removeMember($this);
-            $this->axis = null;
+            if ($this->axis->hasMember($this)) {
+                $this->axis->removeMember($this);
+            } else {
+                $this->axis = null;
+            }
         }
     }
 
@@ -435,11 +435,28 @@ class Orga_Model_Member extends Core_Model_Entity
         $this->updateTag();
 
         foreach ($this->getCells() as $cell) {
-            $cell->updateTags();
+            $cell->updateTag();
+            $cell->updateMembersHashKey();
         }
 
         foreach ($this->getDirectChildren() as $directChildMember) {
             $directChildMember->updateTags();
+        }
+    }
+
+    /**
+     * Mets à jour le tag du membre, de ses cellules, et ceux des enfants.
+     */
+    public function updateTagsAndHierarchy()
+    {
+        $this->updateTag();
+
+        foreach ($this->getCells() as $cell) {
+            $cell->updateTags();
+        }
+
+        foreach ($this->getDirectChildren() as $directChildMember) {
+            $directChildMember->updateTagsAndHierarchy();
         }
     }
 
@@ -511,7 +528,7 @@ class Orga_Model_Member extends Core_Model_Entity
             }
             $this->updateParentMembersHashKeys();
             $this->addPosition();
-            $this->updateTags();
+            $this->updateTagsAndHierarchy();
         }
     }
 
@@ -530,7 +547,7 @@ class Orga_Model_Member extends Core_Model_Entity
             }
             $this->updateParentMembersHashKeys();
             $this->addPosition();
-            $this->updateTags();
+            $this->updateTagsAndHierarchy();
             $this->disableCells();
         }
     }
@@ -582,6 +599,16 @@ class Orga_Model_Member extends Core_Model_Entity
     {
         if (!$this->getAxis()->hasDirectBroader($axis)) {
             throw new Core_Exception_InvalidArgument('The given Axis is not a direct broader of the Member\'s Axis');
+        }
+
+        //@todo Doctrine : Problème de matching ManyToMany sr des PersistentCollection.
+        if ($this->directParents instanceof \Doctrine\ORM\PersistentCollection) {
+            foreach ($this->getDirectParents() as $directParent) {
+                if ($directParent->getAxis() === $axis) {
+                    return $directParent;
+                }
+            }
+            throw new Core_Exception_NotFound('No direct parent Member matching Axis "'.$axis->getRef().'".');
         }
 
         $criteria = Doctrine\Common\Collections\Criteria::create();

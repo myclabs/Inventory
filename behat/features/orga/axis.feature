@@ -137,13 +137,13 @@ Feature: Organizational axis feature
     And I open tab "Paramétrage"
     And I open tab "Axes"
     And I wait 5 seconds
-  # Axe contenant un membre
+  # Axe contenant un élément
     When I click "Pays"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
-    Then the following message is shown and closed: "Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses membres."
+    Then the following message is shown and closed: "Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses éléments."
   # Axe utilisé dans la définition d'une granularité
     When I click "Année"
     Then I should see the popup "Édition d'un axe"

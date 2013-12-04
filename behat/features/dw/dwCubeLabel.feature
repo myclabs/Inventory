@@ -6,7 +6,7 @@ Feature: Dw cube label feature
 
   @javascript
   Scenario: DW cube label scenario
-  # On modifie le libellé du membre "Europe"
+  # On modifie le libellé de l'élément "Europe"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Paramétrage"

@@ -5,10 +5,10 @@
     
           <tu tuid="pageTitle">
             <tuv xml:lang="fr">
-                <seg>Membres des axes de classification</seg>
+                <seg>Éléments des axes de classification</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Members of classification axes</seg>
+                <seg>Elements of classification axes</seg>
             </tuv>
         </tu>
  
@@ -16,10 +16,10 @@
 
         <tu tuid="addPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Ajout d'un membre à l'axe « [AXIS_LABEL] »</seg>
+                <seg>Ajout d'un élément à l'axe « [AXIS_LABEL] »</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Addition of a member to axis "[AXIS_LABEL]"</seg>
+                <seg>Addition of an element to axis "[AXIS_LABEL]"</seg>
             </tuv>
         </tu>
 

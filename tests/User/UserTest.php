@@ -120,7 +120,7 @@ class UserMetierTest extends TestCase
      */
     public function testTestPassword()
     {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
+        $user = $this->userService->createUser(Core_Tools::generateString(20) . '@example.com', 'test');
         $this->entityManager->flush();
 
         $user->setPassword('password1');
@@ -140,7 +140,7 @@ class UserMetierTest extends TestCase
      */
     public function testMailUtilise()
     {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
+        $user = $this->userService->createUser(Core_Tools::generateString(20) . '@example.com', 'test');
         $this->entityManager->flush();
 
         $this->assertTrue(User::isEmailUsed($user->getEmail()));
@@ -155,7 +155,7 @@ class UserMetierTest extends TestCase
      */
     public function testLoadByEmailKey()
     {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
+        $user = $this->userService->createUser(Core_Tools::generateString(20) . '@example.com', 'test');
         $user->generateKeyEmail();
         $this->entityManager->flush();
 
@@ -172,7 +172,7 @@ class UserMetierTest extends TestCase
     public function testInviteUser()
     {
         $_SERVER['SERVER_NAME'] = 'http://127.0.0.1';
-        $email = Core_Tools::generateString(20);
+        $email = Core_Tools::generateString(20) . '@example.com';
 
         $user = $this->userService->inviteUser($email);
         $this->entityManager->flush();
@@ -193,7 +193,7 @@ class UserMetierTest extends TestCase
      */
     public function testGenerateEmailKey()
     {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
+        $user = $this->userService->createUser(Core_Tools::generateString(20) . '@example.com', 'test');
         $this->entityManager->flush();
 
         // Supprime la clé mail
@@ -215,7 +215,7 @@ class UserMetierTest extends TestCase
      */
     public function testLocaleDefault()
     {
-        $user = $this->userService->createUser(Core_Tools::generateString(20), 'test');
+        $user = $this->userService->createUser(Core_Tools::generateString(20) . '@example.com', 'test');
         $this->entityManager->flush();
 
         $locale = $user->getLocale();

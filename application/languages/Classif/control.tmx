@@ -34,7 +34,7 @@
         </tu>
         <tu tuid="axisWithNoMember">
             <tuv xml:lang="fr">
-                <seg>Axe ne contenant aucun membre</seg>
+                <seg>Axe ne contenant aucun élément</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Axis containing no member</seg>
@@ -42,18 +42,18 @@
         </tu>
         <tu tuid="memberWithNoDirectChild">
             <tuv xml:lang="fr">
-                <seg>Membre sans enfant d'un axe non situé à la racine</seg>
+                <seg>Élément sans enfant d'un axe non situé à la racine</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Member with no child in an axis not placed at root</seg>
+                <seg>Element with no child in an axis not placed at root</seg>
             </tuv>
         </tu>
         <tu tuid="memberWithMissingDirectParent">
             <tuv xml:lang="fr">
-                <seg>Membre pour lequel manque un membre parent</seg>
+                <seg>Élément pour lequel manque un élément parent</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Member for which a parent is missing</seg>
+                <seg>Element for which a parent is missing</seg>
             </tuv>
         </tu>
         <tu tuid="indicatorWithNoUnit">

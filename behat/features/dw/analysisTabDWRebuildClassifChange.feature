@@ -131,12 +131,12 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     And I wait for the page to finish loading
     And I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
-  # Ajout d'un membre
+  # Ajout d'un élément
     When I am on "classif/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
     And I click "Ajouter"
-    Then I should see the popup "Ajout d'un membre à l'axe « Poste article 75 »"
+    Then I should see the popup "Ajout d'un élément à l'axe « Poste article 75 »"
     When I fill in "membersposte_article_75_label_addForm" with "Test"
     And I fill in "membersposte_article_75_ref_addForm" with "test"
     And I select "1" from "membersposte_article_75_broaderscope_addForm"
@@ -152,7 +152,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
-  # Modification du libellé d'un membre
+  # Modification du libellé d'un élément
     When I am on "classif/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
@@ -167,7 +167,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
-  # Modification de l'identifiant d'un membre
+  # Modification de l'identifiant d'un élément
     When I am on "classif/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
@@ -182,7 +182,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
-  # Modification membre parent d'un membre
+  # Modification élément parent d'un élément
     When I am on "classif/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
@@ -197,7 +197,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
-  # Suppression d'un membre
+  # Suppression d'un élément
     When I am on "classif/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"

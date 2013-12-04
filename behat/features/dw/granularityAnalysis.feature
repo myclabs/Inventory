@@ -140,8 +140,13 @@ Feature: Granularity dataware analysis feature
     And the "report" datagrid should contain a row:
       | label                      |
       | Analyse préconfigurée test |
+    And the row 1 of the "report" datagrid should contain:
+    # And the row 3 of the "report" datagrid should contain:
+      | label                      |
+      | Analyse préconfigurée test |
   # Accès à l'analyse de la cellule
     When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
+    # When I click "Cliquer pour accéder" in the row 3 of the "report" datagrid
     Then I should see "Analyse préconfigurée test Vue globale"
 
   @javascript
@@ -164,10 +169,12 @@ Feature: Granularity dataware analysis feature
   # Vérification que le filtre sur 2013 est bien présent sur les analyses de la ou des cellule(s) correspondant à cette granularité
     And I click "Retour"
     And I open tab "Analyses"
+    # Then the row 1 of the "report" datagrid should contain:
     Then the row 2 of the "report" datagrid should contain:
       | label                        |
       | Chiffre d'affaire, par année |
     When I click "Cliquer pour accéder" in the row 2 of the "report" datagrid
+    # When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
     And I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 1 row
     And the row 1 of the "reportValues" datagrid should contain:

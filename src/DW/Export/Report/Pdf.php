@@ -139,13 +139,13 @@ class DW_Export_Report_Pdf extends Export_Pdf
                 $this->html .= '</tr>';
             }
 
-            if ($numeratorAxis1 !== null) {
+            if ($denominatorAxis1 !== null) {
                 $this->html .= '<tr>';
                 $this->html .= '<td>'.__('UI', 'name', 'axis').' 1 '.__('DW', 'name', 'denominatorMin').' :'.'</td>';
                 $this->html .= '<td>'.($denominatorAxis1 !== null) ? $denominatorAxis1->getLabel() : '--'.'</td>';
                 $this->html .= '</tr>';
             }
-            if ($numeratorAxis2 !== null) {
+            if ($denominatorAxis2 !== null) {
                 $this->html .= '<tr>';
                 $this->html .= '<td>'.__('UI', 'name', 'axis').' 2 '.__('DW', 'name', 'denominatorMin').' :'.'</td>';
                 $this->html .= '<td>'.($denominatorAxis2 !== null) ? $denominatorAxis2->getLabel() : '--'.'</td>';
