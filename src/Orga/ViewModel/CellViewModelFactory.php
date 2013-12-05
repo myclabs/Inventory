@@ -145,7 +145,7 @@ class CellViewModelFactory
                     if (($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
                         || ($cell->getGranularity() === $granularityForInventoryStatus))
                         && ($cell->getGranularity()->getInputConfigGranularity() !== null)) {
-                        try {
+                        if ($cell->getAFInputSetPrimary() !== null) {
                             $cellViewModel->inventoryCompletion += $cell->getAFInputSetPrimary()->getCompletion();
                             if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
                                 $cellViewModel->inventoryNotStartedInputsNumber ++;
@@ -154,7 +154,7 @@ class CellViewModelFactory
                             } else {
                                 $cellViewModel->inventoryCompletedInputsNumber ++;
                             }
-                        } catch (Core_Exception_UndefinedAttribute $e) {
+                        } else {
                             $cellViewModel->inventoryNotStartedInputsNumber ++;
                         }
                     }

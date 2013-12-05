@@ -97,7 +97,7 @@ trait CellResourceTrait
     }
 
     /**
-     * @return CellAdminRole[]
+     * @return Collection|CellAdminRole[]
      */
     public function getAdminRoles()
     {
@@ -125,7 +125,7 @@ trait CellResourceTrait
     }
 
     /**
-     * @return CellManagerRole[]
+     * @return Collection|CellManagerRole[]
      */
     public function getManagerRoles()
     {
@@ -153,7 +153,7 @@ trait CellResourceTrait
     }
 
     /**
-     * @return CellContributorRole[]
+     * @return Collection|CellContributorRole[]
      */
     public function getContributorRoles()
     {
@@ -181,7 +181,7 @@ trait CellResourceTrait
     }
 
     /**
-     * @return CellObserverRole[]
+     * @return Collection|CellObserverRole[]
      */
     public function getObserverRoles()
     {

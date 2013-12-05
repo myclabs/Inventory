@@ -19,6 +19,12 @@ use Orga\Model\ACL\Action\CellAction;
 use User\Domain\User;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Role\Role;
+use Orga\Model\ACL\Role\AbstractCellRole;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
 
 /**
  * Classe controleur de cell.
@@ -231,6 +237,14 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
+     * @Secure("viewCell")
+     */
+    public function viewTableAction()
+    {
+        $this->viewAction();
+    }
+
+    /**
      * @param Orga_Model_Axis $axis
      * @param array $filter
      *
@@ -270,7 +284,8 @@ class Orga_CellController extends Core_Controller
         $narrowerGranularity = Orga_Model_Granularity::load($idNarrowerGranularity);
 
         // ACL.
-        $displayAdministrators = $narrowerGranularity->getCellsWithACL();
+        $displayAdministrators = false;
+        $displayACL = $narrowerGranularity->getCellsWithACL() && $this->aclService->isAllowed($connectedUser, Action::ALLOW(), $cell);
 
         // DW.
         $displayDW = $narrowerGranularity->getCellsGenerateDWCubes();
@@ -307,6 +322,7 @@ class Orga_CellController extends Core_Controller
                 $childCell,
                 $connectedUser,
                 $displayAdministrators,
+                $displayACL,
                 $displayDW,
                 $displayInventory,
                 $displayInput
@@ -320,6 +336,8 @@ class Orga_CellController extends Core_Controller
      */
     public function viewhistoryAction()
     {
+        session_write_close();
+
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
@@ -347,6 +365,8 @@ class Orga_CellController extends Core_Controller
      */
     public function viewcommentsAction()
     {
+        session_write_close();
+
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
@@ -369,6 +389,159 @@ class Orga_CellController extends Core_Controller
     public function addmemberAction()
     {
         $this->sendJsonResponse(['message' => 'Fonctionnalité non développée']);
+    }
+
+    /**
+     * @Secure("allowCell")
+     */
+    public function editUsersAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $this->view->assign('idCell', $idCell);
+        $usersLinked = $cell->getAllRoles();
+        usort(
+            $usersLinked,
+            function(AbstractCellRole $a, AbstractCellRole $b) {
+                $aUser = $a->getUser();
+                $bUser = $b->getUser();
+                if (get_class($a) === get_class($b)) {
+                    if ($aUser->getFirstName() === $bUser->getFirstName()) {
+                        if ($aUser->getLastName() === $bUser->getLastName()) {
+                            return strcmp($aUser->getEmail(), $bUser->getEmail());
+                        }
+                        return strcmp($aUser->getLastName(), $bUser->getLastName());
+                    }
+                    return strcmp($aUser->getFirstName(), $bUser->getFirstName());
+                }
+                if ($a instanceof CellAdminRole)
+                    return -1;
+                if ($b instanceof CellAdminRole)
+                    return 1;
+                if ($a instanceof CellManagerRole)
+                    return -1;
+                if ($b instanceof CellManagerRole)
+                    return 1;
+                if ($a instanceof CellContributorRole)
+                    return -1;
+                if ($b instanceof CellContributorRole)
+                    return 1;
+                if ($a instanceof CellObserverRole)
+                    return -1;
+                if ($b instanceof CellObserverRole)
+                    return 1;
+                return 0;
+            }
+        );
+        $this->view->assign('cellUsers', $usersLinked);
+
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+    }
+
+    /**
+     * @Secure("allowCell")
+     */
+    public function removeUserAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $idRole = $this->getParam('idRole');
+        /** @var AbstractCellRole $role */
+        $role = Role::load($idRole);
+        $user = $role->getUser();
+
+        $success = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'deleted'));
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'deletedLater'));
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        $task = new ServiceCallTask(
+            Orga_Service_ACLManager::class,
+            'removeCellRole',
+            [$user, $role, false],
+            __(
+                'Orga',
+                'backgroundTasks',
+                'removeRoleFromUser',
+                ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()]
+            )
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+    }
+
+    /**
+     * @Secure("allowCell")
+     */
+    public function addUserAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        // Validation
+        $userEmail = $this->getParam('userEmail');
+        if (empty($userEmail)) {
+            throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
+        } elseif (! filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+            throw new Core_Exception_User('UI', 'formValidation', 'invalidEmail');
+        }
+        $role = $this->getParam('userRole');
+        switch ($role) {
+            case 'CellAdminRole':
+                $role = CellAdminRole::class;
+                break;
+            case 'CellManagerRole':
+                $role = CellManagerRole::class;
+                break;
+            case 'CellContributorRole':
+                $role = CellContributorRole::class;
+                break;
+            case 'CellObserverRole':
+                $role = CellObserverRole::class;
+                break;
+            default:
+                throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
+                return;
+        }
+
+        // Vérifie que l'utilisateur n'a pas déjà le role
+        try {
+            $user = User::loadByEmail($userEmail);
+            foreach ($user->getRoles() as $userRole) {
+                if ($userRole instanceof $role && $userRole->getCell() === $cell) {
+                    throw new Core_Exception_User('Orga', 'role', 'userAlreadyHasRole');
+                }
+            }
+        } catch (Core_Exception_NotFound $e) {
+        }
+
+        $success = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'added'));
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'addedLater'));
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        $task = new ServiceCallTask(
+            Orga_Service_ACLManager::class,
+            'addCellRole',
+            [$cell, $role, $userEmail, false],
+            __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $userEmail])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**

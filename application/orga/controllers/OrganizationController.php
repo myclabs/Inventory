@@ -408,14 +408,15 @@ class Orga_OrganizationController extends Core_Controller
      * Action de détails d'un organization.
      * @Secure("editOrganization")
      */
-    public function detailsAction()
+    public function editOrganizationAction()
     {
         $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $this->view->idOrganization = $idOrganization;
-        $this->view->organizationLabel = $organization->getLabel();
-        $this->view->granularities = $organization->getGranularities();
+        $this->view->assign('idOrganization', $idOrganization);
+        $this->view->assign('organizationLabel', $organization->getLabel());
+        $this->view->assign('granularities', $organization->getGranularities());
         try {
             $this->view->granularityRefForInventoryStatus = $organization->getGranularityForInventoryStatus()->getRef();
         } catch (Core_Exception_UndefinedAttribute $e) {
@@ -428,24 +429,23 @@ class Orga_OrganizationController extends Core_Controller
             }
         }
 
-
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
-            $this->view->display = false;
-            $this->view->granularityReportBaseUrl = 'orga/granularity/report/idCell/'.$this->getParam('idCell');
+            $this->view->assign('display', false);
         } else {
-            $this->view->display = true;
-            $this->view->granularityReportBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
+            $this->view->assign('display', true);
         }
+        $this->view->granularityReportBaseUrl = 'orga/granularity/report/idOrganization/'.$idOrganization;
     }
 
     /**
      * Action de détails d'un organization.
      * @Secure("editOrganization")
      */
-    public function editAction()
+    public function editOrganizationSubmitAction()
     {
         $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
         $formData = $this->getFormData('organizationDetails');
 

@@ -1,8 +1,4 @@
 <?php
-use Orga\Model\ACL\Role\CellAdminRole;
-use Orga\Model\ACL\Role\CellManagerRole;
-use Orga\Model\ACL\Role\CellContributorRole;
-use Orga\Model\ACL\Role\CellObserverRole;
 $inventoryStatusFilters = [
     null => 'Toute collecte',
     Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
@@ -20,15 +16,8 @@ $inputStatusFilters = [
 ?>
 
 <style>
-    .users .modal-body { padding: 0; }
-    .users .modal-body tr.userMessage td:first-child { text-align: center; }
-    .users .modal-body tr.userMessage .btn { margin: 0 5px 0 5px; }
-    .users .modal-footer div.userMessage { text-align: center; margin-bottom: 5px; text-align: center; }
-    .users .modal-footer form { margin: 0; }
     .cellActions a { margin-left: 8px; padding: 5px; }
     .cellActions a i:hover { background-image: url("bootstrap/img/glyphicons-halflings-white.png"); }
-    .granularity .cellActions { float: right; }
-    .granularity > .cell.firstRowCell { margin-left: 0; }
     .progress { margin-bottom: 5px; }
     .history h3 small, .comments h3 small { margin-top: 15px; cursor: pointer; }
     .history .dl-horizontal, .comments .dl-horizontal { max-height: 200px; margin-top: 0; overflow-y: scroll}
@@ -85,11 +74,11 @@ $organization = $this->organization;
                 <small class="cellActions">
                     <a data-toggle="modal" data-target="#administrators<?=$currentCell->id?>" href="#" title="<?=__('Orga', 'view', 'viewAdministrators')?>"><i class="icon-envelope"></i></a>
                     <?php if ($currentCell->allowACL) : ?>
-                        <a data-toggle="modal" data-target="#users<?=$currentCell->id?>" href="#" title="<?=__('Orga', 'view', 'viewUsers')?>"><i class="icon-user"></i></a>
+                    <a data-toggle="modal" data-target="#users<?=$currentCell->id?>" href="orga/cell/edit-users/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewUsers')?>"><i class="icon-user"></i></a>
                     <?php endif; ?>
                     <?php if ($currentCell->canBeAnalyzed) : ?>
-                        <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="orga/cell/view-reports/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewReports')?>"><i class="icon-tasks"></i></a>
-                        <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/view-exports/exports/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewExports')?>"><i class="icon-download-alt"></i></a>
+                    <a data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="orga/cell/view-reports/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewReports')?>"><i class="icon-tasks"></i></a>
+                    <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/view-exports/exports/idCell/<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewExports')?>"><i class="icon-download-alt"></i></a>
                     <?php endif; ?>
                 </small>
             </h2>
@@ -125,7 +114,6 @@ $organization = $this->organization;
             </p>
             <?php endif; ?>
             -->
-            <?php // Inventory ?>
             <?php if ($currentCell->inventoryStatus !== null) : ?>
             <p>
                 <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
@@ -146,7 +134,6 @@ $organization = $this->organization;
                 <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%"><?=$currentCell->inventoryCompletion?> %</div>
             </div>
             <?php endif; ?>
-            <?php // Input ?>
             <?php if ($currentCell->canBeInputted) : ?>
             <p>
                 <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
@@ -157,7 +144,7 @@ $organization = $this->organization;
             </div>
             <?php endif; ?>
 
-            <div id="administrators<?=$currentCell->id?>" class="modal administrators hide fade">
+            <div id="administrators<?=$currentCell->id?>" class="modal hide fade">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4><?=__('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?></h4>
@@ -167,24 +154,14 @@ $organization = $this->organization;
                 </div>
             </div>
             <?php if ($currentCell->allowACL) : ?>
-            <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
+            <div id="users<?=$currentCell->id?>" class="modal hide fade">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4><?=__('Orga', 'view', 'usersFrom')?> <?=$currentCell->shortLabel?></h4>
                 </div>
                 <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>">
-                        <input type="text" name="userEmail" placeholder="<?=__('Orga', 'view', 'userEmailPlaceholder')?>">
-                        <select name="userRole">
-                            <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
-                            <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
-                            <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
-                            <option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>
-                        </select>
-                        <input type="submit" class="btn btn-primary" value="<?=__('Orga', 'view', 'addUser')?>">
-                    </form>
+                    <img src="images/ui/ajax-loader_large.gif">
+                    <?=__('Orga', 'view', 'loadingUsers')?>
                 </div>
             </div>
             <?php endif; ?>
@@ -261,10 +238,16 @@ $organization = $this->organization;
                 </form>
                 <?php endif; ?>
 
-                <div class="granularity row-fluid">
-                    <img src="images/ui/ajax-loader_large.gif">
-                    <?=__('Orga', 'view', 'loadingCells')?>
-                </div>
+                <table class="granularity row-fluid table table-condensed table-hover">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="images/ui/ajax-loader_large.gif">
+                                <?=__('Orga', 'view', 'loadingCells')?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </fieldset>
         <?php endforeach; ?>
@@ -272,7 +255,7 @@ $organization = $this->organization;
     </div>
 
     <div class="span3">
-        <div class="history">
+        <div class="well history">
             <h3>
                 <?=__('UI', 'history', 'history')?>
                 <small class="pull-right"><i class="icon-refresh"></i></small>
@@ -282,7 +265,7 @@ $organization = $this->organization;
                 <?=__('Orga', 'view', 'notLoadedHistory')?>
             </div>
         </div>
-        <div class="comments">
+        <div class="well comments">
             <h3>
                 <?=__('Social', 'comment', 'comment')?>
                 <small class="pull-right"><i class="icon-refresh"></i></small>
@@ -293,7 +276,7 @@ $organization = $this->organization;
             </div>
         </div>
         <?php if ($organization->canBeEdited) : ?>
-            <div class="addMember">
+            <div class="well addMember">
                 <h3>
                     <?=__('Orga', 'view', 'addMember')?>
                     <div class="pull-right">
@@ -314,69 +297,25 @@ $organization = $this->organization;
 
 </div>
 <script>
-    $('.history .icon-refresh').click(function(e) {
-        $('.history > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'history', 'loadingHistory'))?>');
-        $.ajax({
-            url: 'orga/cell/viewhistory/idCell/<?=$currentCell->id?>',
-            type: "GET",
-            success: function(data) {
-                if (data.length > 0) {
-                    $('.history > div').html('<dl class="dl-horizontal"></dl>');
-                    $.each(data, function() {
-                        $('.history > div dl').append('<dt><span class="badge badge-info">' + this.date + '</span></dt>');
-                        $('.history > div dl').append('<dd>' + this.event + '</dd>');
-                    });
-                } else {
-                    $('.history > div').html('<p><?=__('UI', 'history', 'noHistory')?></p>');
-                }
-            },
-            error: function(jqXHR) {
-                $('.history > div').html('<?=addslashes(__('UI', 'history', 'errorWhileLoadingHistory'))?>');
-            }
-        });
-    });
-    $('.comments .icon-refresh').click(function(e) {
-        $('.comments > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'comment', 'loadingComments'))?>');
-        $.ajax({
-            url: 'orga/cell/viewcomments/idCell/<?=$currentCell->id?>',
-            type: "GET",
-            success: function(data) {
-                if (data.length > 0) {
-                    $('.comments > div').html('<dl class="dl-horizontal"></dl>');
-                    $.each(data, function() {
-                        $('.comments > div dl').append('<dt><span class="badge badge-info">' + this.date + '</span></dt>');
-                        $('.comments > div dl').append('<dd>' + this.event + '</dd>');
-                    });
-                } else {
-                    $('.comments > div').html('<p><?=addslashes(__('UI', 'comment', 'noComment'))?></p>');
-                }
-            },
-            error: function(jqXHR) {
-                $('.comments > div').html('<?=addslashes(__('UI', 'comment', 'errorWhileLoadingComments'))?>');
-            }
-        });
-    });
     $('div.collapse[id^="granularity"]').on('show', function(e) {
-        if (e.target != this) {
-            return;
-        }
         var granularity = $('.granularity', $(this));
         if (!granularity.data('initialized')) {
             var granularityId = $(this).attr('id').substr(11, $(this).attr('id').length);
-            $.ajax({
-                url: 'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId,
-                type: "GET",
-                success: function(data) {
-                    granularity.html('');
-                    $(data).each(function() {
+            $.get(
+                'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId,
+                function(o) {
+                    granularity.html('<tbody></tbody>');
+                    $(o).each(function() {
                         var cellTitle = this.extendedLabel;
                         if (this.canBeInputted) {
                             cellTitle = '<a href="orga/cell/input/idCell/23/fromIdCell/' + this.id + '">' + cellTitle + '</a>';
                         }
                         var exportsP =
-                            '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/tab_celldetails/exports/idCell/' + this.id + '" title="<?=__('Orga', 'view', 'viewExports')?>">' +
+                            '<p>' +
+                                '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/tab_celldetails/exports/idCell/' + this.id + '" title="Voir les exports">' +
                                 '<i class="icon-download-alt"></i>' +
-                            '</a>';
+                                '</a>' +
+                            '</p>';
                         var exportsPopup =
                             '<div id="exports' + this.id + '" class="modal exports hide fade large">' +
                                 '<div class="modal-header">' +
@@ -387,42 +326,15 @@ $organization = $this->organization;
                                     '<img src="images/ui/ajax-loader_large.gif"> Chargement des exports en cours' +
                                 '</div>' +
                             '</div>';
-                        var usersP = '';
-                        var usersPopup = '';
-                        if (this.allowACL) {
-                            usersP =
-                                '<a data-toggle="modal" data-target="#users' + this.id + '" href="#" title="<?=__('Orga', 'view', 'viewUsers')?>">' +
-                                    '<i class="icon-user"></i>' +
-                                '</a>';
-                            usersPopup =
-                                '<div id="users' + this.id + '" class="modal users hide fade large" data-cell="' + this.id + '">' +
-                                    '<div class="modal-header">' +
-                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                        '<h4><?=__('Orga', 'view', 'usersFrom')?> ' + this.extendedLabel + '</h4>' +
-                                    '</div>' +
-                                    '<div class="modal-body">' +
-                                    '</div>' +
-                                    '<div class="modal-footer">' +
-                                        '<form class="form-inline addUser" action="orga/cell/add-user/idCell/' + this.id + '">' +
-                                            '<input type="text" placeholder="<?=__('Orga', 'view', 'userEmailPlaceholder')?>" name="userEmail"> ' +
-                                            '<select name="userRole">' +
-                                                '<option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>' +
-                                                '<option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>' +
-                                                '<option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>' +
-                                                '<option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>' +
-                                            '</select> ' +
-                                            '<input type="submit" class="btn btn-primary" value="<?=__('Orga', 'view', 'addUser')?>"> ' +
-                                        '</form>' +
-                                    '</div>' +
-                                '</div>';
-                        }
                         var reportsP = '';
                         var reportsPopup = '';
                         if (this.canBeAnalyzed) {
                             reportsP =
-                                '<a data-toggle="modal" data-target="#reports' + this.id + '" href="orga/tab_celldetails/analyses/idCell/' + this.id + '" title="<?=__('Orga', 'view', 'viewReports')?>">' +
-                                    '<i class="icon-tasks"></i>' +
-                                '</a>';
+                                '<p>' +
+                                    '<a data-toggle="modal" data-target="#reports' + this.id + '" href="orga/tab_celldetails/analyses/idCell/' + this.id + '" title="Voir les rapports">' +
+                                        '<i class="icon-tasks"></i>' +
+                                    '</a>' +
+                                '</p>';
                             reportsPopup =
                                 '<div id="reports' + this.id + '" class="modal reports hide fade large">' +
                                     '<div class="modal-header">' +
@@ -438,7 +350,8 @@ $organization = $this->organization;
                         if ((this.inventoryStatus != null) && ((this.inventoryNotStartedInputsNumber + this.inventoryStartedInputsNumber + this.inventoryCompletedInputsNumber) > 1)) {
                             inventoryP =
                                 '<p><b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>' + this.inventoryStatusTitle + '</p>' +
-                                '<p>' +
+                                '<div class="progress">' +
+                                '   <div class="bar" style="width: ' + this.inventoryCompletion + '%">' +
                                     this.inventoryNotStartedInputsNumber + ' non commencée' +
                                     ((this.inventoryNotStartedInputsNumber > 1) ? 's' : '') +
                                     ' | ' +
@@ -447,9 +360,7 @@ $organization = $this->organization;
                                     ' | ' +
                                     this.inventoryCompletedInputsNumber + ' terminée' +
                                     ((this.inventoryCompletedInputsNumber > 1) ? 's' : '') +
-                                '</p>' +
-                                '<div class="progress">' +
-                                '   <div class="bar" style="width: ' + this.inventoryCompletion + '%">' + this.inventoryCompletion + ' %</div>' +
+                                    '</div>' +
                                 '</div>';
                         }
                         var inputStatusP = '';
@@ -460,28 +371,22 @@ $organization = $this->organization;
                                 '   <div class="bar" style="width: ' + this.inputCompletion + '%">' + this.inputCompletion + ' %</div>' +
                                 '</div>';
                         }
-                        granularity.append(
-                        '<div class="span4 well cell" data-tag="' + this.tag + '" data-inputstatus="' + this.inputStatus + '" data-inventorystatus="' + this.inventoryStatus + '">' +
-                            '<h4>'
-                            + cellTitle +
-                            '<small class="cellActions">' +
-                            usersP +
-                            reportsP +
-                            exportsP +
-                            '</small>' +
-                            '</h4>' +
-                            inventoryP +
-                            inputStatusP +
-                            usersPopup +
-                            reportsPopup +
-                            exportsPopup +
-                        '</div>'
+                        $('tbody', granularity).append(
+                        '<tr class="cell" data-tag="' + this.tag + '" data-inputstatus="' + this.inputStatus + '" data-inventorystatus="' + this.inventoryStatus + '">' +
+                            '<td>' + cellTitle + '</td>' +
+                            '<td>' + reportsP + '</td>' +
+                            '<td>' + exportsP + '</td>' +
+                            '<td>' + inventoryP + '</td>' +
+                            '<td>' + inputStatusP + '</td>' +
+                        '</tr>'
                         );
+                        granularity.parent().append(reportsPopup + exportsPopup);
                     });
                     $('select:first', granularity.parent()).trigger('change');
-//                    granularity.data('initialized', true);
-                },
-                error: function(jqXHR) {}
+                    granularity.data('initialized', true);
+                }
+            ).error(function(o) {
+
             });
         }
     });
@@ -490,8 +395,6 @@ $organization = $this->organization;
         var form = $(e.target).parent();
         var granularity = form.next();
         $('.cell', granularity).removeClass('hide');
-        $('.cell', granularity).removeClass('firstRowCell');
-        $('.cell:nth-child(3n+1)', granularity).each(function() { $(this).addClass('firstRowCell'); });
         $('select', form).each(function() { $(this).val(''); });
     });
     $('.cells-filter select').change(function(e) {
@@ -500,7 +403,6 @@ $organization = $this->organization;
         var granularity = form.next();
 
         $('.cell', granularity).removeClass('hide');
-        $('.cell', granularity).removeClass('firstRowCell');
 
         var test = '';
         $('select', form).each(function() {
@@ -515,121 +417,43 @@ $organization = $this->organization;
         if (test != '') {
             $('.cell:not('+ test + ')', granularity).addClass('hide');
         }
-
-        var numberElement = 0;
-        $('.cell:not(.hide)', granularity).each(function() {
-            if ((numberElement % 3) == 0) {
-                $(this).addClass('firstRowCell');
+    });
+    $('.history .icon-refresh').click(function(e) {
+        $('.history > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'history', 'loadingHistory'))?>');
+        $.get(
+            'orga/cell/viewhistory/idCell/<?=$currentCell->id?>',
+            function(o) {
+                if (o.length > 0) {
+                    $('.history > div').html('<dl class="dl-horizontal"></dl>');
+                    $.each(o, function() {
+                        $('.history > div dl').append('<dt><span class="badge badge-info">' + this.date + '</span></dt>');
+                        $('.history > div dl').append('<dd>' + this.event + '</dd>');
+                    });
+                } else {
+                    $('.history > div').html('<p><?=__('UI', 'history', 'noHistory')?></p>');
+                }
             }
-            numberElement++;
+        ).error(function(o) {
+            $('.history > div').html('<?=addslashes(__('UI', 'history', 'errorWhileLoadingHistory'))?>');
         });
     });
-
-    $('body').on('show', '.users', function(e) {
-        var popup = $(this);
-        $('.modal-body', popup).html(
-            '<img src="images/ui/ajax-loader_large.gif"> <?=__('Orga', 'view', 'loadingUsers')?>'
-        );
-        $.ajax({
-            url: 'orga/cell/edit-users/idCell/' + popup.data('cell'),
-            type: "GET",
-            success: function(data) {
-                $('.modal-body', popup).html(data);
-            },
-            error: function(jqXHR) {
-                $('.modal-body', popup).html('<?=__('Orga', 'view', 'errorWhileLoadingUsers')?>');
-            }
-        });
-    });
-    $('body').on('hidden', '.users', function(e) {
-        var popup = $(this);
-        $('.userMessage', popup).remove();
-        $('.modal-footer form input[name="userEmail"]', popup).val('');
-    });
-    $('body').on('click', '.deleteUser', function(e) {
-        e.preventDefault();
-        $('.userMessage').remove();
-        $(this).parent().parent().after(
-            '<tr class="info userMessage">' +
-                '<td colspan="5">' +
-                    '<?=__('Orga', 'view', 'comfirmDeleteUser')?>' +
-                    $(this).parent().prev().prev().html() +
-                    '<button class="btn btn-primary confirm">Confirmer</button>' +
-                    '<button class="btn closeUserMessage">Annuler</button>' +
-                '</td>' +
-            '</tr>'
-        );
-    });
-    $('body').on('click', 'tr.userMessage .confirm', function(e) {
-        var row = $(this).parent().parent();
-        row.html('<td colspan="5"><img src="images/ui/ajax-loader.gif"></td>');
-        $.ajax({
-            url: $('a.deleteUser', row.prev()).attr('href'),
-            type: "POST",
-            success: function(data) {
-                row.prev().remove();
-                row.removeClass('info');
-                row.addClass('success');
-                row.html(
-                    '<td colspan="4">' + data + '</td>' +
-                    '<td><a href="#" class="closeUserMessage"><i class="icon-remove"></i></a></td>'
-                );
-            },
-            error: function(jqXHR) {
-                row.removeClass('info');
-                var response = $.parseJSON(jqXHR.responseText);
-                if (typeof(response.typeError) == 'string') {
-                    row.addClass(response.typeError);
+    $('.comments .icon-refresh').click(function(e) {
+        $('.comments > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'comment', 'loadingComments'))?>');
+        $.get(
+            'orga/cell/viewcomments/idCell/<?=$currentCell->id?>',
+            function(o) {
+                if (o.length > 0) {
+                    $('.comments > div').html('<dl class="dl-horizontal"></dl>');
+                    $.each(o, function() {
+                        $('.comments > div dl').append('<dt><span class="badge badge-info">' + this.date + '</span></dt>');
+                        $('.comments > div dl').append('<dd>' + this.event + '</dd>');
+                    });
                 } else {
-                    row.addClass('error');
-                }
-                if (typeof(response.message) == 'string') {
-                    row.html(
-                        '<td colspan="4">' + response.message + '</td>' +
-                        '<td><a href="#" class="closeUserMessage"><i class="icon-remove"></i></a></td>'
-                    );
-                } else {
-                    row.html(
-                        '<td colspan="4"><?=__('Orga', 'view', 'errorWhileDeletingUser')?></td>' +
-                        '<td><a href="#" class="closeUserMessage"><i class="icon-remove"></i></a></td>'
-                    );
+                    $('.comments > div').html('<p><?=__('UI', 'comment', 'noComment')?></p>');
                 }
             }
-        });
-    });
-    $('body').on('click', 'tr.userMessage .closeUserMessage', function(e) {
-        e.preventDefault();
-        $(this).parent().parent().remove();
-    });
-    $('body').on('submit', '.addUser', function(e) {
-        e.preventDefault();
-        var form = $(this);
-        $('.userMessage').remove();
-        form.before('<div class="userMessage alert alert-info"><img src="images/ui/ajax-loader.gif"></div>')
-        $.ajax({
-            url: form.attr('action'),
-            type: "POST",
-            data: form.serialize(),
-            success: function(data) {
-                form.prev().removeClass('alert-info');
-                form.prev().addClass('alert-success');
-                form.prev().html(data);
-                form.parent().parent().trigger('show');
-            },
-            error: function(jqXHR) {
-                form.prev().removeClass('alert-info');
-                var response = $.parseJSON(jqXHR.responseText);
-                if (typeof(response.typeError) == 'string') {
-                    form.prev().addClass('alert-' + response.typeError);
-                } else {
-                    form.prev().addClass('alert-error');
-                }
-                if (typeof(response.message) == 'string') {
-                    form.prev().html(response.message);
-                } else {
-                    form.prev().html('<?=__('Orga', 'view', 'errorWhileAddingUser')?>');
-                }
-            }
+        ).error(function(o) {
+            $('.comments > div').html('<?=addslashes(__('UI', 'comment', 'errorWhileLoadingComments'))?>');
         });
     });
 
