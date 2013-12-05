@@ -73,7 +73,7 @@ class User_ActionController extends UI_Controller_Captcha
                     $this->sendFormResponse();
                 } else {
                     $messages = $result->getMessages();
-                    $this->setFormMessage(implode(', ', $messages), UI_Message::TYPE_ALERT);
+                    $this->setFormMessage(implode(', ', $messages), UI_Message::TYPE_WARNING);
                 }
             }
             $this->sendFormResponse();
