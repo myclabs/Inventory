@@ -159,6 +159,7 @@ class Orga_Service_OrganizationService
             $this->entityManager->beginTransaction();
 
             $member->removeFromAxis();
+            $member->delete();
 
             $this->entityManager->flush();
             $this->entityManager->commit();
