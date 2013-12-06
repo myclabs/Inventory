@@ -29,8 +29,8 @@ class Unit_Datagrids_StandardunitsController extends UI_Controller_Datagrid
             $data['name'] = $unit->label;
             $data['ref'] = $unit->id;
             $data['symbol'] = $unit->symbol;
-            $data['physicalQuantity'] = '';
-            $data['unitSystem'] = $unit->unitSystem;
+            $data['physicalQuantity'] = $this->cellList($unit->physicalQuantity);
+            $data['unitSystem'] = $this->cellList($unit->unitSystem);
 
             $this->addLine($data);
         }

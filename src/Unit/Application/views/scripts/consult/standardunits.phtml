@@ -1,9 +1,8 @@
-<div class="page-header">
-    <h1><?=__('Unit', 'name', 'standardUnits')?></h1>
-</div>
+<?php
+use MyCLabs\UnitAPI\DTO\PhysicalQuantityDTO;
+use MyCLabs\UnitAPI\DTO\UnitSystemDTO;
 
-<?
-$datagrid = new UI_Datagrid ('ListStandardUnits', 'datagrids_standardunits', 'unit');
+$datagrid = new UI_Datagrid('ListStandardUnits', 'datagrids_standardunits', 'unit');
 
 $nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));
 $datagrid->addCol($nameColumn);
@@ -14,11 +13,29 @@ $datagrid->addCol($refColumn);
 $symbolColumn = new UI_Datagrid_Col_Text('symbol', __('Unit', 'name', 'symbol'));
 $datagrid->addCol($symbolColumn);
 
-$physicalQuantityColumn = new UI_Datagrid_Col_Text('physicalQuantity', __('Unit', 'name', 'physicalQuantity'));
+$physicalQuantityColumn = new UI_Datagrid_Col_List('physicalQuantity', __('Unit', 'name', 'physicalQuantity'));
+$physicalQuantityColumn->list = $this->physicalQuantities;
+$physicalQuantityColumn->list = [];
+foreach ($this->physicalQuantities as $physicalQuantity) {
+    /** @var PhysicalQuantityDTO $physicalQuantity */
+    $physicalQuantityColumn->list[$physicalQuantity->id] = $physicalQuantity->label;
+}
 $datagrid->addCol($physicalQuantityColumn);
 
-$unitSystemColumn = new UI_Datagrid_Col_Text('unitSystem', __('Unit', 'name', 'unitSystem'));
+$unitSystemColumn = new UI_Datagrid_Col_List('unitSystem', __('Unit', 'name', 'unitSystem'));
+$unitSystemColumn->list = [];
+foreach ($this->unitSystems as $unitSystem) {
+    /** @var UnitSystemDTO $unitSystem */
+    $unitSystemColumn->list[$unitSystem->id] = $unitSystem->label;
+}
 $datagrid->addCol($unitSystemColumn);
 
 $datagrid->pagination = false;
+?>
+
+<div class="page-header">
+    <h1><?=__('Unit', 'name', 'standardUnits')?></h1>
+</div>
+
+<?php
 $datagrid->display();
