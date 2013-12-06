@@ -1,22 +1,22 @@
 <?php
-/**
- * @author valentin.claras
- * @package Unit
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
+use MyCLabs\UnitAPI\UnitService;
 use Unit\Domain\Unit\StandardUnit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\ComposedUnit\ComposedUnit;
 
 /**
- * Unit_ConsultController
- * @package Unit
- * @subpackage Controller
+ * @author valentin.claras
+ * @author matthieu.napoli
  */
 class Unit_ConsultController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var UnitService
+     */
+    private $unitService;
 
     /**
      * Liste les PhysicalQuantity.
@@ -65,12 +65,14 @@ class Unit_ConsultController extends Core_Controller
     }
 
     /**
-     * Liste les DiscreteUnit.
+     * Liste les unités standards.
      *
      * @Secure("viewUnit")
      */
     public function standardunitsAction()
     {
+        $this->view->assign('unitSystems', $this->unitService->getUnitSystems());
+        $this->view->assign('physicalQuantities', $this->unitService->getPhysicalQuantities());
     }
 
     /**
@@ -94,5 +96,4 @@ class Unit_ConsultController extends Core_Controller
             $this->view->composedUnits[] = new ComposedUnit($composedUnitRef);
         }
     }
-
 }
