@@ -313,6 +313,20 @@ class Inventory_Plugin_Acl extends ACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
+    protected function analyseCellRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->aclService->isAllowed(
+            $identity,
+            CellAction::VIEW_REPORTS(),
+            $this->getCell($request)
+        );
+    }
+
+    /**
+     * @param User      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
     protected function editCommentRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $comment = Social_Model_Comment::load($request->getParam('id'));
@@ -451,7 +465,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function deleteReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idReport = $request->getParam('index');
+        $idReport = $request->getParam('idReport');
         return $this->aclService->isAllowed($identity, Action::DELETE(), DW_Model_Report::load($idReport));
     }
 

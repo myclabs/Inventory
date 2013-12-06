@@ -334,7 +334,7 @@ class Orga_CellController extends Core_Controller
     /**
      * @Secure("viewCell")
      */
-    public function viewhistoryAction()
+    public function viewHistoryAction()
     {
         session_write_close();
 
@@ -363,7 +363,7 @@ class Orga_CellController extends Core_Controller
     /**
      * @Secure("viewCell")
      */
-    public function viewcommentsAction()
+    public function viewCommentsAction()
     {
         session_write_close();
 
@@ -394,7 +394,7 @@ class Orga_CellController extends Core_Controller
     /**
      * @Secure("allowCell")
      */
-    public function editUsersAction()
+    public function viewUsersAction()
     {
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
@@ -439,44 +439,6 @@ class Orga_CellController extends Core_Controller
 
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
-    }
-
-    /**
-     * @Secure("allowCell")
-     */
-    public function removeUserAction()
-    {
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-
-        $idRole = $this->getParam('idRole');
-        /** @var AbstractCellRole $role */
-        $role = Role::load($idRole);
-        $user = $role->getUser();
-
-        $success = function () {
-            $this->sendJsonResponse(__('UI', 'message', 'deleted'));
-        };
-        $timeout = function () {
-            $this->sendJsonResponse(__('UI', 'message', 'deletedLater'));
-        };
-        $error = function (Exception $e) {
-            throw $e;
-        };
-
-        $task = new ServiceCallTask(
-            Orga_Service_ACLManager::class,
-            'removeCellRole',
-            [$user, $role, false],
-            __(
-                'Orga',
-                'backgroundTasks',
-                'removeRoleFromUser',
-                ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()]
-            )
-        );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -545,8 +507,379 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
-     * Affiche le détail d'une cellule.
-     * @Secure("viewCell")
+     * @Secure("allowCell")
+     */
+    public function removeUserAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $idRole = $this->getParam('idRole');
+        /** @var AbstractCellRole $role */
+        $role = Role::load($idRole);
+        $user = $role->getUser();
+
+        $success = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'deleted'));
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(__('UI', 'message', 'deletedLater'));
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        $task = new ServiceCallTask(
+            Orga_Service_ACLManager::class,
+            'removeCellRole',
+            [$user, $role, false],
+            __(
+                'Orga',
+                'backgroundTasks',
+                'removeRoleFromUser',
+                ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()]
+            )
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+    }
+
+    /**
+     * @Secure("analyseCell")
+     */
+    public function viewReportsAction()
+    {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $this->view->assign('idCell', $idCell);
+        $cellReports = [];
+        // Specific Reports.
+        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificReports/'.
+            $cell->getGranularity()->getOrganization()->getId().'/'.
+            str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
+        if (is_dir($specificReportsDirectoryPath)) {
+            $specificReportsDirectory = dir($specificReportsDirectoryPath);
+            while (false !== ($entry = $specificReportsDirectory->read())) {
+                if ((is_file($specificReportsDirectoryPath.$entry)) && (preg_match('#\.xml$#', $entry))) {
+                    $fileName = substr($entry, null, -4);
+                    if (DW_Export_Specific_Pdf::isValid($specificReportsDirectoryPath.$entry)) {
+                        $cellReports[] = [
+                            'label' => $fileName,
+                            'link' => 'orga/cell/view-report-specific/idCell/'.$idCell.'/report/'.$fileName,
+                            'type' => 'specificReports',
+                        ];
+                    }
+                }
+            }
+        }
+        // Copied Reports.
+        $dWReports = $cell->getDWCube()->getReports();
+        usort($dWReports, function(DW_Model_Report $a, DW_Model_Report $b) { return strcmp($a->getLabel(), $b->getLabel()); });
+        foreach ($dWReports as $dWReport) {
+            if (! Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
+                continue;
+            }
+            $cellReports[] = [
+                'label' => $dWReport->getLabel(),
+                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/idReport/'.$dWReport->getId(),
+                'type' => 'copiedReport',
+            ];
+        }
+        // User Reports.
+        $query = new Core_Model_Query();
+        $query->aclFilter->enabled = true;
+        $query->aclFilter->user = $connectedUser;
+        $query->aclFilter->action = Action::VIEW();
+        $query->filter->addCondition(DW_Model_Report::QUERY_CUBE, $cell->getDWCube());
+        $query->order->addOrder(DW_Model_Report::QUERY_LABEL);
+        foreach (DW_Model_Report::loadList($query) as $dWReport) {
+            /** @var DW_Model_Report $dWReport */
+            $cellReports[] = [
+                'label' => $dWReport->getLabel(),
+                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/idReport/'.$dWReport->getId(),
+                'type' => 'userReport',
+                'delete' => $dWReport->getId()
+            ];
+        }
+        $this->view->assign('cellReports', $cellReports);
+
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+    }
+
+    /**
+     * @Secure("deleteReport")
+     */
+    public function removeReportAction()
+    {
+        DW_Model_Report::load($this->getParam('idReport'))->delete();
+        $this->sendJsonResponse(__('UI', 'message', 'deleted'));
+    }
+
+    /**
+     * @Secure("analyseCell")
+     */
+    public function viewReportAction()
+    {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        if ($this->hasParam('idReport')) {
+            $reportCanBeUpdated = $this->aclService->isAllowed(
+                $connectedUser,
+                Action::EDIT(),
+                DW_Model_Report::load($this->getParam('idReport'))
+            );
+        } else {
+            $reportCanBeUpdated = false;
+        }
+
+        $viewConfiguration = new DW_ViewConfiguration();
+        $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
+        $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$cell->getId().'/');
+        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$cell->getId());
+        $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
+        $viewConfiguration->setCanBeSavedAs(true);
+        if ($this->hasParam('idReport')) {
+            $this->forward('details', 'report', 'dw',
+                [
+                    'idReport' => $this->getParam('idReport'),
+                    'viewConfiguration' => $viewConfiguration
+                ]
+            );
+        } else {
+            $this->forward('details', 'report', 'dw',
+                [
+                    'idCube' => $cell->getDWCube()->getId(),
+                    'viewConfiguration' => $viewConfiguration
+                ]
+            );
+        }
+    }
+
+    /**
+     * @Secure("analyseCell")
+     */
+    public function viewReportSpecificAction()
+    {
+        $idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($idCell);
+
+        if (!($this->hasParam('display') && ($this->getParam('display') == true))) {
+            $exportUrl = 'orga/cell/specificexport/'.
+                'idCell/'.$idCell.'/export/'.$this->getParam('export').'/display/true';
+        } else {
+            $exportUrl = null;
+        }
+
+        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
+            $cell->getGranularity()->getOrganization()->getId().'/'.
+            str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
+        $specificReports = new DW_Export_Specific_Pdf(
+            $specificReportsDirectoryPath.$this->getParam('export').'.xml',
+            $cell->getDWCube(),
+            $exportUrl
+        );
+
+        if ($exportUrl !== null) {
+            $this->view->html = $specificReports->html;
+        } else {
+            Zend_Layout::getMvcInstance()->disableLayout();
+            $specificReports->display();
+        }
+    }
+
+    /**
+     * @Secure("analyseCell")
+     */
+    public function viewExportsAction()
+    {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+        $organization = $cell->getGranularity()->getOrganization();
+
+        $this->view->assign('idCell', $idCell);
+
+        // Formats d'exports.
+        $this->view->defaultFormat = 'xls';
+        $this->view->formats = [
+            'xls' => __('UI', 'export', 'xls'),
+//            'xlsx' => __('UI', 'export', 'xlsx'),
+//            'ods' => __('UI', 'export', 'ods'),
+        ];
+
+        // Liste des exports.
+        $this->view->exports = [];
+
+        $displayOrgaExport = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization
+        );
+        if ($displayOrgaExport) {
+            if (!$cell->getGranularity()->hasAxes()) {
+                // Orga Structure.
+                $this->view->exports['Organization'] = [
+                    'label' => __('Orga', 'organization', 'organizationalStructure'),
+                ];
+            } else {
+                // Orga Cell.
+                $this->view->exports['Cell'] = [
+                    'label' => __('Orga', 'organization', 'organizationalStructure'),
+                ];
+            }
+        }
+
+        // Orga ACL.
+        $displayACLExport = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::ALLOW(),
+            $organization
+        );;
+        if ($cell->getGranularity()->getCellsWithACL()) {
+            $displayACLExport = true;
+        } else {
+            foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+                if ($narrowerGranularity->getCellsWithACL()) {
+                    $displayACLExport = true;
+                    break;
+                }
+            }
+        }
+        if ($displayACLExport) {
+            $this->view->exports['Users'] = [
+                'label' => __('User', 'role', 'roles'),
+            ];
+        }
+
+        // Orga Inputs.
+        $displayInputsOutputsExport = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::VIEW(),
+            $organization
+        );;
+        if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
+            $displayInputsOutputsExport = true;
+        } else {
+            foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+                if ($narrowerGranularity->getInputConfigGranularity() !== null) {
+                    $displayInputsOutputsExport = true;
+                    break;
+                }
+            }
+        }
+        if ($displayInputsOutputsExport) {
+            $this->view->exports['Inputs'] = [
+                'label' => __('UI', 'name', 'inputs'),
+            ];
+        }
+
+        // Orga Inputs et Outputs.
+        $displayInputsOutputsExport = $this->aclService->isAllowed(
+            $connectedUser,
+            CellAction::VIEW_REPORTS(),
+            $organization
+        );;;
+        if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
+            $displayInputsOutputsExport = true;
+        } else {
+            foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+                if ($narrowerGranularity->getInputConfigGranularity() !== null) {
+                    $displayInputsOutputsExport = true;
+                    break;
+                }
+            }
+        }
+        if ($displayInputsOutputsExport) {
+            // Orga Outputs.
+            $this->view->exports['Outputs'] = [
+                'label' => __('UI', 'name', 'results'),
+            ];
+        }
+
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+    }
+
+    /**
+     * @Secure("analyseCell")
+     */
+    public function exportAction()
+    {
+        session_write_close();
+        set_time_limit(0);
+        PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip);
+
+        $idCell = $this->getParam('idCell');
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $format = $this->getParam('format');
+        switch ($this->getParam('export')) {
+            case 'Organization':
+                $streamFunction = 'streamOrganization';
+                $baseFilename = __('Orga', 'organization', 'structure');
+                break;
+            case 'Cell':
+                $streamFunction = 'streamCell';
+                $baseFilename = __('Orga', 'organization', 'structure');
+                break;
+            case 'Users':
+                $streamFunction = 'streamUsers';
+                $baseFilename = __('User', 'role', 'roles');
+                break;
+            case 'Inputs':
+                $streamFunction = 'streamInputs';
+                $baseFilename = __('UI', 'name', 'inputs');
+                break;
+            case 'Outputs':
+                $streamFunction = 'streamOutputs';
+                $baseFilename = __('UI', 'name', 'results');
+                break;
+            default:
+                UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);
+                $this->redirect('orga/cell/view/idCell/'.$idCell.'/');
+                break;
+        }
+
+        $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
+        $filename = $date.'_'.$baseFilename.'.'.$format;
+
+        switch ($format) {
+            case 'xlsx':
+                $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                break;
+            case 'xls':
+                $contentType = "Content-type: application/vnd.ms-excel";
+                break;
+            case 'ods':
+                $contentType = "Content-type: application/vnd.oasis.opendocument.spreadsheet";
+                break;
+        }
+        header($contentType);
+        header('Content-Disposition:attachement;filename='.$filename);
+        header('Cache-Control: max-age=0');
+
+        Zend_Layout::getMvcInstance()->disableLayout();
+        Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
+
+        $exportService = new Orga_Service_Export();
+        $exportService->$streamFunction($format, $cell);
+    }
+
+    /**
      */
     public function detailsAction()
     {
@@ -1057,39 +1390,6 @@ class Orga_CellController extends Core_Controller
                 ' <small>'.$cell->getLabel().'</small>',
                 'returnUrl' => 'orga/cell/details/idCell/'.$idCell.'/tab/contextActions',
             ));
-    }
-
-    /**
-     * Action fournissant un export spécifique.
-     * @Secure("viewCell")
-     */
-    public function specificexportAction()
-    {
-        $idCell = $this->getParam('idCell');
-        $cell = Orga_Model_Cell::load($idCell);
-
-        if (!($this->hasParam('display') && ($this->getParam('display') == true))) {
-            $exportUrl = 'orga/cell/specificexport/'.
-                'idCell/'.$idCell.'/export/'.$this->getParam('export').'/display/true';
-        } else {
-            $exportUrl = null;
-        }
-
-        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
-            $cell->getGranularity()->getOrganization()->getId().'/'.
-            str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
-        $specificReports = new DW_Export_Specific_Pdf(
-            $specificReportsDirectoryPath.$this->getParam('export').'.xml',
-            $cell->getDWCube(),
-            $exportUrl
-        );
-
-        if ($exportUrl !== null) {
-            $this->view->html = $specificReports->html;
-        } else {
-            Zend_Layout::getMvcInstance()->disableLayout();
-            $specificReports->display();
-        }
     }
 
 }

@@ -38,7 +38,7 @@ $cellUsers = $this->cellUsers;
                 <?=$cellRole->getLabel()?>
             </td>
             <td>
-                <a href="orga/cell/remove-user/idCell/<?=$this->idCell?>/idRole/<?=$cellRole->getId()?>/" class="deleteUser">
+                <a href="orga/cell/remove-user/idCell/<?=$this->idCell?>/idRole/<?=$cellRole->getId()?>/" class="deleteUser withTooltip" title="<?=__('Orga', 'view', 'deleteUser')?>">
                     <i class="icon-trash"></i>
                 </a>
             </td>
@@ -46,5 +46,6 @@ $cellUsers = $this->cellUsers;
         <?php endforeach; ?>
     </tbody>
 </table>
-<?php
-?>
+<script>
+    $('#users<?=$this->idCell?> .withTooltip').tooltip({placement: 'left'});
+</script>

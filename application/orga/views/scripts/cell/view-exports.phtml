@@ -1,0 +1,70 @@
+<?php
+/**
+ * Vue générale des exports
+ * @author valentin.claras
+ * @package Orga
+ */
+?>
+
+<div class="alert alert-info hide">
+    <?=__('Orga', 'analysis', 'detailedExcelExportPopup')?>
+</div>
+<?php if (count($this->exports) > 0) : ?>
+<form class="form-inline" action="orga/cell/export/idCell/<?=$this->idCell?>">
+    <div class="input-prepend input-append">
+        <span class="add-on format">
+            <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
+        </span>
+        <?php if (count($this->formats) > 1) : ?>
+        <select name="format" class="input format">
+            <?php foreach ($this->formats as $formatRef => $formatLabel) : ?>
+                <option value="<?=$formatRef?>"><?=$formatLabel?></option>
+            <?php endforeach; ?>
+        </select>
+        <?php else: ?>
+        <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
+        <?php endif; ?>
+        <?php if (count($this->exports) > 1) : ?>
+            <select name="export" class="input">
+                <?php foreach ($this->exports as $exportRef => $exportArray) : ?>
+                    <option value="<?=$exportRef?>"><?=$exportArray['label']?></option>
+                <?php endforeach ?>
+            </select>
+        <?php else: ?>
+            <?php foreach ($this->exports as $exportRef => $exportArray) : ?>
+                <span class="add-on">
+            <strong>
+                <?=$exportArray['label']?>
+            </strong>
+        </span>
+                <input name="export" type="hidden" value="<?=$exportRef?>">
+            <?php endforeach ?>
+        <?php endif; ?>
+        <button class="btn btn-primary" type="submit">
+            <i class="icon-download-alt icon-white"></i>
+            <?=__('UI', 'verb', 'export')?>
+        </button>
+    </div>
+</form>
+
+<script type="text/javascript">
+    <?php if (count($this->formats) > 1) : ?>
+    $('#exports<?=$this->idCell?> .format').on(
+        'change',
+        function() {
+            var imgAddOn = $(this).parent().children('span.format').children('img');
+            imgAddOn.attr('alt', $(this).val());
+            imgAddOn.attr('src', 'images/dw/'+$(this).val()+'.png');
+        }
+    );
+    <?php endif; ?>
+    $("#exports<?=$this->idCell?> button.btn-primary[type=submit]").click(function(e) {
+        $('#exports<?=$this->idCell?> div.alert').removeClass('hide');
+    });
+    $("#exports<?=$this->idCell?>").on('hidden', function(e) {
+        $('#exports<?=$this->idCell?> div.alert').addClass('hide');
+    });
+</script>
+<?php else: ?>
+<?=__('Orga', 'view', 'noExportAvailable')?>
+<?php endif; ?>
