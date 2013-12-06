@@ -19,6 +19,11 @@ class Unit_Datagrids_StandardunitsController extends UI_Controller_Datagrid
     {
         $units = $this->unitService->getUnits();
 
+        // Trie par grandeur physique
+        usort($units, function (UnitDTO $a, UnitDTO $b) {
+            return strcmp($a->physicalQuantity, $b->physicalQuantity);
+        });
+
         foreach ($units as $unit) {
             if ($unit->type !== UnitDTO::TYPE_STANDARD) {
                 continue;
