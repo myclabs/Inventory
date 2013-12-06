@@ -88,10 +88,6 @@ class Inventory_PopulateTest extends Core_Script_Populate
         // Filtre des ACL
         $aclFilterService->enabled = true;
         $aclFilterService->generate();
-
-        // Initalisation Unit.
-        $populateUnit = new Unit_Populate();
-        $populateUnit->initUnitEntityManager($environment);
     }
 
     /**
@@ -109,10 +105,6 @@ class Inventory_PopulateTest extends Core_Script_Populate
         echo "\tRégénération des ACL…";
         $aclFilterService->generate();
         echo "… done!".PHP_EOL;
-
-        // Fermeture Unit.
-        $populateUnit = new Unit_Populate();
-        $populateUnit->resetUnitEntityManager();
     }
 
 }
