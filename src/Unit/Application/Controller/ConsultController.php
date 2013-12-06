@@ -8,7 +8,6 @@
 use Core\Annotation\Secure;
 use Unit\Domain\Unit\StandardUnit;
 use Unit\Domain\PhysicalQuantity;
-use Unit\Domain\UnitSystem;
 use Unit\Domain\ComposedUnit\ComposedUnit;
 
 /**
@@ -72,19 +71,6 @@ class Unit_ConsultController extends Core_Controller
      */
     public function standardunitsAction()
     {
-        $this->view->listPhysicalQuantities = array();
-        /* @var $physicalQuantity PhysicalQuantity */
-        foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
-            $idPhysicalQuantity = $physicalQuantity->getKey();
-            $this->view->listPhysicalQuantities[$idPhysicalQuantity['id']] = $physicalQuantity->getName();
-        }
-
-        $this->view->listUnitSystems = array();
-        /* @var $idUnitSystem UnitSystem */
-        foreach (UnitSystem::loadList() as $unitSystem) {
-            $idUnitSystem = $unitSystem->getKey();
-            $this->view->listUnitSystems[$idUnitSystem['id']] = $unitSystem->getName();
-        }
     }
 
     /**

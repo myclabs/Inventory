@@ -1,24 +1,15 @@
-<?php
-/**
- * Liste les DiscreteUnit.
- * @author valentin.claras
- * @package Unit
- * @subpackage View
- */
-
-?>
 <div class="page-header">
-	<h1><?=__('Unit', 'name', 'discreteUnits')?></h1>
+    <h1><?=__('Unit', 'name', 'discreteUnits')?></h1>
 </div>
+
 <?
+$datagrid = new UI_Datagrid('discreteUnits', 'datagrids_discreteunits', 'unit');
 
-    $datagrid = new UI_Datagrid('ListDiscreteUnit', 'datagrids_discreteunits', 'unit');
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$datagrid->addCol($labelColumn);
 
-    $nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));
-    $datagrid->addCol($nameColumn);
+$idColumn = new UI_Datagrid_Col_Text('id', __('UI', 'name', 'identifier'));
+$datagrid->addCol($idColumn);
 
-    $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
-    $datagrid->addCol($refColumn);
-
-    $datagrid->pagination = false;
-    $datagrid->display();
+$datagrid->pagination = false;
+$datagrid->display();
