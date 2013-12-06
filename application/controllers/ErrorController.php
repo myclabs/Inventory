@@ -1,5 +1,6 @@
 <?php
 
+use MyCLabs\UnitAPI\WebService\WebServiceException;
 use User\ForbiddenException;
 
 /**
@@ -37,6 +38,11 @@ class ErrorController extends Core_Controller
                     $this->logger->info('400 Bad request', ['exception' => $exception]);
                     $httpStatus = 400;
                     $errorMessage = $exception->getMessage();
+                } elseif ($exception instanceof WebServiceException) {
+                    // 500 Server error: un service majeur est indispo (BDD, webservice) -> alert
+                    $this->logger->alert($exception->getMessage(), ['exception' => $exception]);
+                    $httpStatus = 500;
+                    $errorMessage = __('Core', 'exception', 'applicationError');
                 } else {
                     // 500 Server error
                     $this->logger->error($exception->getMessage(), ['exception' => $exception]);
