@@ -1,7 +1,3 @@
-<?php
-use Unit\Domain\Unit\StandardUnit;
-?>
-
 <div class="page-header">
     <h1><?=__('Unit', 'name', 'standardUnits')?></h1>
 </div>
@@ -10,27 +6,18 @@ use Unit\Domain\Unit\StandardUnit;
 $datagrid = new UI_Datagrid ('ListStandardUnits', 'datagrids_standardunits', 'unit');
 
 $nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));
-$nameColumn->filterName = StandardUnit::QUERY_NAME;
 $datagrid->addCol($nameColumn);
 
 $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
 $datagrid->addCol($refColumn);
 
 $symbolColumn = new UI_Datagrid_Col_Text('symbol', __('Unit', 'name', 'symbol'));
-$symbolColumn->filterName = StandardUnit::QUERY_SYMBOL;
 $datagrid->addCol($symbolColumn);
 
-$physicalQuantityColumn = new UI_Datagrid_Col_List('physicalQuantity', __('Unit', 'name', 'physicalQuantity'));
-$physicalQuantityColumn->list = $this->listPhysicalQuantities;
-$physicalQuantityColumn->filterName = StandardUnit::QUERY_PHYSICALQUANTITY;
+$physicalQuantityColumn = new UI_Datagrid_Col_Text('physicalQuantity', __('Unit', 'name', 'physicalQuantity'));
 $datagrid->addCol($physicalQuantityColumn);
 
-$multiplierColumn = new UI_Datagrid_Col_Number('multiplier', __('Unit', 'name', 'multiplier'));
-$datagrid->addCol($multiplierColumn);
-
-$unitSystemColumn = new UI_Datagrid_Col_List('unitSystem', __('Unit', 'name', 'unitSystem'));
-$unitSystemColumn->filterName = StandardUnit::QUERY_UNITSYSTEM;
-$unitSystemColumn->list = $this->listUnitSystems;
+$unitSystemColumn = new UI_Datagrid_Col_Text('unitSystem', __('Unit', 'name', 'unitSystem'));
 $datagrid->addCol($unitSystemColumn);
 
 $datagrid->pagination = false;

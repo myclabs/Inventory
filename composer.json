@@ -21,6 +21,7 @@
         "myclabs/xport": "0.2.*",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
+        "myclabs/units-api": "dev-master",
         "mnapoli/php-di": "3.5.*",
         "mnapoli/php-di-zf1": "~1.0",
         "psr/log": "~1.0",
@@ -53,6 +54,10 @@
         {
             "type": "git",
             "url": "git://github.com/myclabs/DoctrineExtensions.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "https://github.com/myclabs/Units-API.git"
         }
     ]
 }

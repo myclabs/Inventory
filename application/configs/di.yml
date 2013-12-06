@@ -33,3 +33,17 @@ PhpAmqpLib\Connection\AMQPConnection:
     port: rabbitmq.port
     user: rabbitmq.user
     password: rabbitmq.password
+
+# Units API
+units.webservice.url: "http://localhost:8000/api/"
+units.webservice.httpClient:
+  class: Guzzle\Http\Client
+  constructor: [ units.webservice.url ]
+
+MyCLabs\UnitAPI\UnitService:
+  class: MyCLabs\UnitAPI\WebService\UnitWebService
+  constructor: [ units.webservice.httpClient ]
+
+MyCLabs\UnitAPI\ConversionService:
+  class: MyCLabs\UnitAPI\WebService\ConversionWebService
+  constructor: [ units.webservice.httpClient ]
