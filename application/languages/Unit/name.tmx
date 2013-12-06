@@ -12,14 +12,6 @@
                 <seg>Discrete units</seg>
             </tuv>
         </tu>
-        <tu tuid="extendedUnits">
-            <tuv xml:lang="fr">
-                <seg>Unités étendues</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Extended units</seg>
-            </tuv>
-        </tu>
         <tu tuid="multiplier">
             <tuv xml:lang="fr">
                 <seg>Multiplicateur</seg>

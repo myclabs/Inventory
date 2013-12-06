@@ -46,50 +46,6 @@ echo $this->translateDatagrid(
      )->simple(false);
 ?>
 
-<h2>Extensions (nom)</h2>
-
-<?php
-echo $this->translateDatagrid(
-         'Unit\Domain\UnitExtension',
-         'name',
-         'datagrids_translate_extension-name',
-         'unit'
-     )->simple(false);
-?>
-
-<h2>Extensions (symbole)</h2>
-
-<?php
-echo $this->translateDatagrid(
-         'Unit\Domain\UnitExtension',
-         'symbol',
-         'datagrids_translate_extension-symbol',
-         'unit'
-     )->simple(false);
-?>
-
-<h2>Unités étendues (nom)</h2>
-
-<?php
-echo $this->translateDatagrid(
-         'Unit\Domain\ExtendedUnit',
-         'name',
-         'datagrids_translate_extended-unit-name',
-         'unit'
-     )->simple(false);
-?>
-
-<h2>Unités étendues (symbole)</h2>
-
-<?php
-echo $this->translateDatagrid(
-         'Unit\Domain\ExtendedUnit',
-         'symbol',
-         'datagrids_translate_extended-unit-symbol',
-         'unit'
-     )->simple(false);
-?>
-
 <h2>Unités discrètes</h2>
 
 <?php

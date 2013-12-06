@@ -38,7 +38,7 @@ class Unit_ConsultController extends Core_Controller
     }
 
     /**
-     * Liste les UnitSystem.
+     * Liste les systèmes d'unités.
      *
      * @Secure("viewUnit")
      */
@@ -47,20 +47,11 @@ class Unit_ConsultController extends Core_Controller
     }
 
     /**
-     * Liste les DiscreteUnit.
+     * Liste les unités discrètes.
      *
      * @Secure("viewUnit")
      */
     public function discreteunitsAction()
-    {
-    }
-
-    /**
-     * Liste les DiscreteUnit.
-     *
-     * @Secure("viewUnit")
-     */
-    public function extendedunitsAction()
     {
     }
 
@@ -73,27 +64,5 @@ class Unit_ConsultController extends Core_Controller
     {
         $this->view->assign('unitSystems', $this->unitService->getUnitSystems());
         $this->view->assign('physicalQuantities', $this->unitService->getPhysicalQuantities());
-    }
-
-    /**
-     * Liste exemple de ComposedUnit.
-     *
-     * @Secure("viewUnit")
-     */
-    public function composedunitsAction()
-    {
-        $composedUnitRefs = [
-            'homme.jour',
-            'km.h^-1',
-            'kg.m3^-1',
-            'g_co2e.vehicule^-1.km^-1',
-            'passager.vehicule^-1',
-            't_co2e.mwh^-1'
-        ];
-
-        $this->view->composedUnits = [];
-        foreach ($composedUnitRefs as $composedUnitRef) {
-            $this->view->composedUnits[] = new ComposedUnit($composedUnitRef);
-        }
     }
 }
