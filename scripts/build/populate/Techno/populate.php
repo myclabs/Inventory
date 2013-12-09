@@ -133,7 +133,7 @@ class Techno_Populate extends Core_Script_Action
         $dimension->save();
     }
 
-    protected function createParameter(Family $family, array $refMembers, $value, $uncertainty = 0)
+    protected function setParameter(Family $family, array $refMembers, $value, $uncertainty = 0)
     {
         // Récupère la cellule
         $members = [];

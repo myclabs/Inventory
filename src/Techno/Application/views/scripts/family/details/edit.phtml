@@ -1,0 +1,39 @@
+<?php
+
+use Techno\Domain\Family\Family;
+
+/** @var Family $family */
+$family = $this->family;
+?>
+
+<h4>
+    <?=__('Techno', 'name', 'dimensions')?>
+</h4>
+
+<?php foreach ($family->getDimensions() as $dimension) : ?>
+
+    <h5>
+        <?=$dimension->getLabel()?>: <code><?=$dimension->getRef()?></code>
+    </h5>
+
+    <ul>
+        <?php foreach ($dimension->getMembers() as $member) : ?>
+            <li>
+                <?=$member->getLabel()?>: <code><?=$member->getRef()?></code>
+            </li>
+        <?php endforeach; ?>
+        <li>
+            <a class="addMember" href="#" data-dimension="<?=$dimension->getRef()?>">
+                <?=__('UI', 'verb', 'add')?></a>
+        </li>
+    </ul>
+
+<?php endforeach; ?>
+
+<script>
+    $('.addMember').click(function(e) {
+        e.preventDefault();
+
+        var dimension = $(this).data('dimension');
+    });
+</script>

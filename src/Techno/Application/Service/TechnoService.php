@@ -28,22 +28,22 @@ class TechnoService
     /**
      * Retourne la valeur dans une famille aux coordonnées spécifiées
      * @param Family   $family
-     * @param string[] $members Ref des membres indexés par le ref des dimensions
+     * @param string[] $membersRef Ref des membres indexés par le ref des dimensions
      * @throws Core_Exception_InvalidArgument
      * @return null|Calc_UnitValue
      */
-    public function getFamilyValueByCoordinates(Family $family, array $members)
+    public function getFamilyValueByCoordinates(Family $family, array $membersRef)
     {
-        if (count($members) != count($family->getDimensions())) {
+        if (count($membersRef) != count($family->getDimensions())) {
             throw new Core_Exception_InvalidArgument(sprintf(
-                'The family has %s dimensions, %s given',
+                'The family has %s dimensions, %s members given',
                 count($family->getDimensions()),
-                count($members)
+                count($membersRef)
             ));
         }
 
         $members = [];
-        foreach ($members as $dimensionRef => $memberRef) {
+        foreach ($membersRef as $dimensionRef => $memberRef) {
             $dimension = $family->getDimension($dimensionRef);
             $members[] = $dimension->getMember($memberRef);
         }

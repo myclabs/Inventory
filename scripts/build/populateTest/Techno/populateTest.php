@@ -63,26 +63,44 @@ class Techno_PopulateTest extends Techno_Populate
 
 
         // Combustion de combustible, mesuré en unité de masse
-        $this->createVerticalDimension($family_combustion_combustible_masse, 'combustible', 'Combustible', ['charbon', 'gaz_naturel']);
-        $this->createHorizontalDimension($family_combustion_combustible_masse, 'processus', 'Processus', ['amont_combustion', 'combustion']);
+        $this->createVerticalDimension($family_combustion_combustible_masse, 'combustible', 'Combustible', [
+            'charbon' => 'Charbon',
+            'gaz_naturel' => 'Gaz naturel'
+        ]);
+        $this->createHorizontalDimension($family_combustion_combustible_masse, 'processus', 'Processus', [
+            'amont_combustion' => 'Amont combustion',
+            'combustion' => 'Combustion'
+        ]);
 
-        $this->createParameter($family_combustion_combustible_masse, ['charbon', 'amont_combustion'], 254, 20);
-        $this->createParameter($family_combustion_combustible_masse, ['charbon', 'combustion'], 3077, 20);
+        $this->setParameter($family_combustion_combustible_masse, ['charbon', 'amont_combustion'], 254, 20);
+        $this->setParameter($family_combustion_combustible_masse, ['charbon', 'combustion'], 3077, 20);
 
         // Masse volumique de combustible
-        $this->createVerticalDimension($family_masse_volumique_combustible, 'combustible', 'Combustible', ['charbon', 'gaz_naturel']);
-        $this->createParameter($family_masse_volumique_combustible, ['charbon'], 900, 10);
+        $this->createVerticalDimension($family_masse_volumique_combustible, 'combustible', 'Combustible', [
+            'charbon' => 'Charbon',
+            'gaz_naturel' => 'Gaz naturel'
+        ]);
+        $this->setParameter($family_masse_volumique_combustible, ['charbon'], 900, 10);
 
         // Forfait émissions en fonction de la marque
-        $this->createVerticalDimension($family_forfait_emissions_fonction_marque, 'marque', 'Marque', ['marque_a', 'marque_b']);
-        $this->createParameter($family_forfait_emissions_fonction_marque, ['marque_a'], 1, 10);
-        $this->createParameter($family_forfait_emissions_fonction_marque, ['marque_b'], 2, 10);
+        $this->createVerticalDimension($family_forfait_emissions_fonction_marque, 'marque', 'Marque', [
+            'marque_a' => 'Marque A',
+            'marque_b' => 'Marque B'
+        ]);
+        $this->setParameter($family_forfait_emissions_fonction_marque, ['marque_a'], 1, 10);
+        $this->setParameter($family_forfait_emissions_fonction_marque, ['marque_b'], 2, 10);
 
         // Famille test
-        $this->createVerticalDimension($family_test, 'combustible', 'Combustible', ['charbon', 'gaz_naturel']);
-        $this->createHorizontalDimension($family_test, 'processus', 'Processus', ['amont_combustion', 'combustion']);
-        $this->createParameter($family_test, ['charbon', 'combustion'], 12345.6789, 15.9);
-        $this->createParameter($family_test, ['charbon', 'amont_combustion'], 0.1234, 15.9);
+        $this->createVerticalDimension($family_test, 'combustible', 'Combustible', [
+            'charbon' => 'Charbon',
+            'gaz_naturel' => 'Gaz naturel'
+        ]);
+        $this->createHorizontalDimension($family_test, 'processus', 'Processus', [
+            'amont_combustion' => 'Amont combustion',
+            'combustion' => 'Combustion'
+        ]);
+        $this->setParameter($family_test, ['charbon', 'combustion'], 12345.6789, 15.9);
+        $this->setParameter($family_test, ['charbon', 'amont_combustion'], 0.1234, 15.9);
 
         // Famille test de coefficients
 

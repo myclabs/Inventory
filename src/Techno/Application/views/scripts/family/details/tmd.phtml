@@ -39,13 +39,13 @@ foreach ($dimensions as $dimension) {
     // Ajoute la dimension
     if ($dimension->getOrientation() == Dimension::ORIENTATION_HORIZONTAL) {
         $tmd->addDimensionIndexCol(
-            Core_Tools::ucFirst($dimension->getLabel()),
+            $dimension->getLabel(),
             $values,
             $dimension->getPosition()
         );
     } else {
         $tmd->addDimensionIndexLine(
-            Core_Tools::ucFirst($dimension->getLabel()),
+            $dimension->getLabel(),
             $values,
             $dimension->getPosition()
         );
@@ -64,10 +64,10 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
     $membersCoordinates = [];
     $index = 0;
     foreach ($dimensions as $dimension) {
-        $memberIndex = $coordinates[$index];
-        $member = $dimension->getMembers()[$memberIndex];
+        $memberRef = $coordinates[$index];
+        $member = $dimension->getMember($memberRef);
         $members[] = $member;
-        $membersCoordinates[$member->getDimension()->getRef()] = $member->getRef();
+        $membersCoordinates[$member->getDimension()->getRef()] = $memberRef;
         $index++;
     }
     $cell = $family->getCell($members);
