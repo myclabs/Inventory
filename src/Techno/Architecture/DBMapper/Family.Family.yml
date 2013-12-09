@@ -7,6 +7,12 @@ Techno\Domain\Family\Family:
     translation:
       locale: translationLocale
 
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
   fields:
     ref:
       type: string
@@ -19,6 +25,15 @@ Techno\Domain\Family\Family:
     position:
       type: integer
       nullable: false
+    documentation:
+      type: text
+      nullable: true
+      gedmo:
+        - translatable
+    refBaseUnit:
+      type: string
+    refUnit:
+      type: string
 
   oneToMany:
     cells:
@@ -43,21 +58,6 @@ Techno\Domain\Family\Family:
         name: idCategory
         referencedColumnName: id
         nullable: true
-
-  manyToMany:
-    cellsCommonTags:
-      targetEntity: Techno\Domain\Tag
-      joinTable:
-        name: Techno_Family_Cells_Common_Tags
-        joinColumns:
-          idFamily:
-            referencedColumnName: id
-        inverseJoinColumns:
-          idTag:
-            referencedColumnName: id
-            unique: true
-      cascade: [all]
-      orphanRemoval: true
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

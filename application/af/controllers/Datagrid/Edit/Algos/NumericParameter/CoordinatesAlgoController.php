@@ -1,21 +1,14 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Dimension;
 
 /**
- * @package AF
+ * @author matthieu.napoli
  */
 class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -33,7 +26,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
                     // Si la dimension n'existe plus
                     $data['dimension'] = $this->cellList(null, __('AF', 'configTreatmentInvalidRef', 'dimension'));
                 }
-                $data['algo'] = $coordinate->getAlgoKeyword()->getId();
+                $data['algo'] = $coordinate->getSelectionAlgo()->getId();
                 $this->addLine($data);
             }
         }
@@ -41,8 +34,6 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
@@ -55,20 +46,20 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
         if (empty($idDimension)) {
             $this->setAddElementErrorMessage('dimension', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $idAlgoKeyword = $this->getAddElementValue('algo');
-        if (empty($idAlgoKeyword)) {
+        $idSelectionAlgo = $this->getAddElementValue('algo');
+        if (empty($idSelectionAlgo)) {
             $this->setAddElementErrorMessage('algo', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
             /** @var $dimension Dimension */
             $dimension = Dimension::load($idDimension);
-            /** @var $algoKeyword Algo_Model_Selection_TextKey */
-            $algoKeyword = Algo_Model_Selection_TextKey::load($idAlgoKeyword);
+            /** @var $selectionAlgo Algo_Model_Selection_TextKey */
+            $selectionAlgo = Algo_Model_Selection_TextKey::load($idSelectionAlgo);
             $coordinate = new Algo_Model_ParameterCoordinate_Algo();
             /** @noinspection PhpUndefinedVariableInspection */
-            $coordinate->setDimension($dimension);
-            $coordinate->setAlgoKeyword($algoKeyword);
+            $coordinate->setDimensionRef($dimension->getRef());
+            $coordinate->setSelectionAlgo($selectionAlgo);
             $coordinate->save();
             $algo->addParameterCoordinates($coordinate);
             $algo->save();
@@ -79,8 +70,6 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
@@ -93,9 +82,9 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
                 if (empty($newValue)) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
-                /** @var $algoKeyword Algo_Model_Selection_TextKey */
-                $algoKeyword = Algo_Model_Selection_TextKey::load($newValue);
-                $coordinate->setAlgoKeyword($algoKeyword);
+                /** @var $selectionAlgo Algo_Model_Selection_TextKey */
+                $selectionAlgo = Algo_Model_Selection_TextKey::load($newValue);
+                $coordinate->setSelectionAlgo($selectionAlgo);
                 $this->data = $newValue;
                 break;
         }
@@ -106,8 +95,6 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -123,5 +110,4 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
-
 }

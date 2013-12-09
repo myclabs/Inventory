@@ -33,12 +33,12 @@ foreach ($family->getDimensions() as $dimension) {
 }
 $datagridFixed->addCol($dimensionColumn);
 // Colonne membre
-$keywordColumn = new UI_Datagrid_Col_List('member', __('UI', 'name', 'element'));
-$keywordColumn->editable = true;
-$keywordColumn->addable = false;
-$keywordColumn->dynamicList = true;
-$keywordColumn->list = $this->baseUrl('af/datagrid_edit_algos_numeric-parameter_coordinates-fixed/get-member-list/');
-$datagridFixed->addCol($keywordColumn);
+$memberRef = new UI_Datagrid_Col_List('member', __('UI', 'name', 'element'));
+$memberRef->editable = true;
+$memberRef->addable = false;
+$memberRef->dynamicList = true;
+$memberRef->list = $this->baseUrl('af/datagrid_edit_algos_numeric-parameter_coordinates-fixed/get-member-list/');
+$datagridFixed->addCol($memberRef);
 
 // Datagrid des coordonnées déterminées par un algorithme
 $datagridAlgo = new UI_Datagrid('coordinatesAlgo', 'datagrid_edit_algos_numeric-parameter_coordinates-algo', 'af');

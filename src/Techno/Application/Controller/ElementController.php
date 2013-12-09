@@ -1,13 +1,9 @@
 <?php
 
 use Core\Annotation\Secure;
-use Techno\Domain\Element\Element;
-use Techno\Domain\Element\CoeffElement;
-use Techno\Domain\Element\ProcessElement;
-use Unit\UnitAPI;
+use Techno\Domain\Family\Family;
 
 /**
- * Controleur des éléments
  * @author matthieu.napoli
  */
 class Techno_ElementController extends Core_Controller
@@ -20,9 +16,19 @@ class Techno_ElementController extends Core_Controller
      */
     public function detailsAction()
     {
+        $family = Family::load($this->getParam('idFamily'));
+
+        $coordinates = json_decode($this->getParam('coordinates'));
+        $cell = $family->getCell($this->getMembersFromCoordinates($family, $coordinates));
+
+        $value = $cell->getValue();
+
+        $value = $value ?: new Calc_Value();
+
+        $this->view->assign('family', $family);
+        $this->view->assign('coordinates', $coordinates);
+        $this->view->assign('value', $value);
         $this->_helper->layout()->disableLayout();
-        $idElement = $this->getParam('id');
-        $this->view->element = Element::load($idElement);
     }
 
     /**
@@ -34,9 +40,12 @@ class Techno_ElementController extends Core_Controller
         $locale = Core_Locale::loadDefault();
 
         $formData = $this->getFormData('element_editForm');
-        $idElement = $formData->getValue('id');
-        /** @var $element ProcessElement|CoeffElement */
-        $element = Element::load($idElement);
+
+        $family = Family::load($formData->getValue('idFamily'));
+
+        $coordinates = json_decode($formData->getValue('coordinates'));
+        $cell = $family->getCell($this->getMembersFromCoordinates($family, $coordinates));
+
         // Validation du formulaire
         try {
             $digitalValue = $locale->readNumber($formData->getValue('digitalValue'));
@@ -51,35 +60,36 @@ class Techno_ElementController extends Core_Controller
         } catch (Core_Exception_InvalidArgument $e) {
             $this->addFormError('uncertainty', __('UI', 'formValidation', 'invalidUncertainty'));
         }
-//        $refUnit = $formData->getValue('unit');
-//        if (empty($refUnit)) {
-//            $this->addFormError('unit', __('UI', 'formValidation', 'emptyRequiredField'));
-//        }
-//        $documentation = $formData->getValue('documentation');
-        // Modification
+
         if (! $this->hasFormError()) {
-//            $unit = new UnitAPI($refUnit);
-//            if ($element->getUnit()->getRef() != $unit->getRef()) {
-//                try {
-//                    $element->setUnit($unit);
-//                } catch (Core_Exception_InvalidArgument $e) {
-//                    throw new Core_Exception_User('Techno', 'element', 'incompatibleUnit');
-//                }
-//            }
-            $element->setValue(new Calc_Value($digitalValue, $uncertainty));
-//            $element->setDocumentation($documentation);
-            $element->save();
+            /** @noinspection PhpUndefinedVariableInspection */
+            $value = new Calc_Value($digitalValue, $uncertainty);
+            $cell->setValue($value);
+            $cell->save();
             $this->entityManager->flush();
             $this->setFormMessage(__('UI', 'message', 'updated'));
-        } else {
-            $this->setFormMessage('Erreur de validation du formulaire.');
+
+            $this->sendFormResponse([
+                'elementId' => implode('-', (array) $coordinates),
+                'value' => $locale->formatNumber($value->getDigitalValue(), 3),
+                'uncertainty' => $locale->formatUncertainty($value->getRelativeUncertainty()),
+            ]);
+            return;
         }
-        $this->sendFormResponse(
-            [
-                'elementId' => $element->getId(),
-                'value' => $locale->formatNumber($element->getValue()->getDigitalValue(), 3),
-                'uncertainty' => $element->getValue()->getRelativeUncertainty(),
-            ]
-        );
+
+        $this->setFormMessage('Erreur de validation du formulaire.');
+        $this->sendFormResponse();
+    }
+
+    private function getMembersFromCoordinates(family $family, $coordinates)
+    {
+        $members = [];
+
+        foreach ($coordinates as $dimensionRef => $memberRef) {
+            $dimension = $family->getDimension($dimensionRef);
+            $members[] = $dimension->getMember($memberRef);
+        }
+
+        return $members;
     }
 }

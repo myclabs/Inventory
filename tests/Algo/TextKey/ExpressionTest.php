@@ -7,14 +7,10 @@
  */
 
 use Core\Test\TestCase;
-use Keyword\Domain\Keyword;
 use TEC\Expression;
 
 /**
  * Creation of the Test Suite.
- *
- * @package Algo
- * @subpackage Keyword
  */
 class TextKey_ExpressionTest
 {
@@ -29,45 +25,35 @@ class TextKey_ExpressionTest
         return $suite;
     }
 
-	/**
-	 * Permet de générer un objet de base sur lequel on pourra travailler
-	 * @return Expression $o
-	 */
-	public static function generateExpression()
-	{
-		return 'ConditionCheckbox:(:KeywordFixed;ConditionMulti:KeywordOption)';
-	}
-
+    /**
+     * Permet de générer un objet de base sur lequel on pourra travailler
+     * @return Expression $o
+     */
+    public static function generateExpression()
+    {
+        return 'ConditionCheckbox:(:KeywordFixed;ConditionMulti:KeywordOption)';
+    }
 }
 
 
 /**
  * TextKey_ExpressionSetUpTest
- * @package Algo
  */
 class TextKey_ExpressionSetUpTest extends TestCase
 {
-
-	/**
-	 * Méthode appelée avant l'appel à la classe de test
-	 */
-	public static function setUpBeforeClass()
-	{
+    /**
+     * Méthode appelée avant l'appel à la classe de test
+     */
+    public static function setUpBeforeClass()
+    {
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = Zend_Registry::get('EntityManagers')['default'];
-		// Vérification qu'il ne reste aucun objet en base, sinon suppression
-		foreach (Algo_Model_Set::loadList() as $o) {
-			$o->delete();
-		}
-		foreach (Algo_Model_Algo::loadList() as $o) {
-			$o->delete();
-		}
-        /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        if ($keywordRepository->count() > 0) {
-            foreach ($keywordRepository->getAll() as $o) {
-                $keywordRepository->remove($o);
-            }
+        // Vérification qu'il ne reste aucun objet en base, sinon suppression
+        foreach (Algo_Model_Set::loadList() as $o) {
+            $o->delete();
+        }
+        foreach (Algo_Model_Algo::loadList() as $o) {
+            $o->delete();
         }
         foreach (Classif_Model_ContextIndicator::loadList() as $o) {
             $o->delete();
@@ -75,51 +61,50 @@ class TextKey_ExpressionSetUpTest extends TestCase
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
         }
-		$entityManager->flush();
-	}
-
+        $entityManager->flush();
+    }
 
     /**
      * @return Algo_Model_Selection_TextKey_Expression
      */
-    function testConstruct()
+    public function testConstruct()
     {
-		$set = new Algo_Model_Set();
-		$set->save();
-		$expression = TextKey_ExpressionTest::generateExpression();
-		$this->entityManager->flush();
+        $set = new Algo_Model_Set();
+        $set->save();
+        $expression = TextKey_ExpressionTest::generateExpression();
+        $this->entityManager->flush();
 
-		$o = new Algo_Model_Selection_TextKey_Expression();
-		$o->setSet($set);
-		$o->setRef('test');
-		$o->setExpression($expression);
-		$o->save();
-		$this->entityManager->flush();
+        $o = new Algo_Model_Selection_TextKey_Expression();
+        $o->setSet($set);
+        $o->setRef('test');
+        $o->setExpression($expression);
+        $o->save();
+        $this->entityManager->flush();
 
-		$this->assertEquals('test', $o->getRef());
-		$this->assertEquals($expression, str_replace(' ', '', $o->getExpression()));
+        $this->assertEquals('test', $o->getRef());
+        $this->assertEquals($expression, str_replace(' ', '', $o->getExpression()));
 
-		return $o;
+        return $o;
     }
 
     /**
      * @depends testConstruct
-	 * @param Algo_Model_Selection_TextKey_Expression $o
-	 * @return Algo_Model_Selection_TextKey_Expression
+     * @param Algo_Model_Selection_TextKey_Expression $o
+     * @return Algo_Model_Selection_TextKey_Expression
      */
     function testLoad(Algo_Model_Selection_TextKey_Expression $o)
     {
-		$this->entityManager->clear();
-		/** @var $oLoaded Algo_Model_Selection_TextKey_Expression */
-		$oLoaded = Algo_Model_Selection_TextKey_Expression::load($o->getId());
+        $this->entityManager->clear();
+        /** @var $oLoaded Algo_Model_Selection_TextKey_Expression */
+        $oLoaded = Algo_Model_Selection_TextKey_Expression::load($o->getId());
 
-		$this->assertInstanceOf('Algo_Model_Selection_TextKey_Expression', $oLoaded);
-		$this->assertNotSame($o, $oLoaded);
-		$this->assertEquals($o->getId(), $oLoaded->getId());
-		$this->assertEquals($o->getRef(), $oLoaded->getRef());
+        $this->assertInstanceOf('Algo_Model_Selection_TextKey_Expression', $oLoaded);
+        $this->assertNotSame($o, $oLoaded);
+        $this->assertEquals($o->getId(), $oLoaded->getId());
+        $this->assertEquals($o->getRef(), $oLoaded->getRef());
         $this->assertNotNull($oLoaded->getExpression());
         $this->assertEquals($o->getExpression(), $oLoaded->getExpression());
-		return $oLoaded;
+        return $oLoaded;
     }
 
     /**
@@ -128,13 +113,16 @@ class TextKey_ExpressionSetUpTest extends TestCase
      */
     function testDelete(Algo_Model_Selection_TextKey_Expression $o)
     {
-		$o->delete();
-		$o->getSet()->delete();
-		$this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-			$this->entityManager->getUnitOfWork()->getEntityState($o));
-		$this->entityManager->flush();
-		$this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-			$this->entityManager->getUnitOfWork()->getEntityState($o));
+        $o->delete();
+        $o->getSet()->delete();
+        $this->assertEquals(
+            \Doctrine\ORM\UnitOfWork::STATE_REMOVED,
+            $this->entityManager->getUnitOfWork()->getEntityState($o)
+        );
+        $this->entityManager->flush();
+        $this->assertEquals(
+            \Doctrine\ORM\UnitOfWork::STATE_NEW,
+            $this->entityManager->getUnitOfWork()->getEntityState($o)
+        );
     }
-
 }

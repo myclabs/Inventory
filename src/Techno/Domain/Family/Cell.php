@@ -2,9 +2,10 @@
 
 namespace Techno\Domain\Family;
 
+use Calc_UnitValue;
+use Calc_Value;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;
-use Techno\Domain\Element\Element;
 
 /**
  * Cellule d'une famille.
@@ -39,10 +40,10 @@ class Cell extends Core_Model_Entity
     protected $membersHashKey;
 
     /**
-     * Élément choisi de la cellule
-     * @var Element
+     * Valeur dans cette cellule.
+     * @var Calc_Value $value
      */
-    protected $chosenElement;
+    protected $value;
 
     /**
      * @param Family              $family  Famille de la cellule
@@ -73,21 +74,21 @@ class Cell extends Core_Model_Entity
     }
 
     /**
-     * Définit l'élément choisi
-     * @param Element $element
+     * Définit la valeur dans cette cellule.
+     * @param Calc_Value $value
      */
-    public function setChosenElement($element = null)
+    public function setValue($value)
     {
-        $this->chosenElement = $element;
+        $this->value = $value;
     }
 
     /**
-     * Retourne L'élément choisi de la cellule (si il existe)
-     * @return Element|null
+     * Retourne la valeur associée à cette cellule.
+     * @return Calc_Value
      */
-    public function getChosenElement()
+    public function getValue()
     {
-        return $this->chosenElement;
+        return $this->value;
     }
 
     /**
@@ -118,7 +119,7 @@ class Cell extends Core_Model_Entity
     /**
      * Construit une chaine de caractère représentant les coordonnées (= les membres)
      *
-     * Les membres sont ordonnés dans la hashkey par le ref du keyword du meaning de la dimension
+     * Les membres sont ordonnés dans la hashkey par le ref de la dimension
      * afin de persister l'association dimension => membre et non pas juste une liste de membres
      *
      * @param Member[] $members Liste des membres/coordonnées
@@ -126,13 +127,13 @@ class Cell extends Core_Model_Entity
      */
     public static function buildMembersHashKey($members)
     {
-        $membersKeywords = [];
+        $membersId = [];
         foreach ($members as $member) {
-            $refKeywordMeaning = $member->getDimension()->getMeaning()->getRef();
-            $membersKeywords[$refKeywordMeaning] = $member->getRef();
+            $dimensionId = $member->getDimension()->getRef();
+            $membersId[$dimensionId] = $member->getRef();
         }
         // Trie le tableau par la clé (donc l'id de la dimension)
-        ksort($membersKeywords);
-        return implode('|', $membersKeywords);
+        ksort($membersId);
+        return implode('|', $membersId);
     }
 }

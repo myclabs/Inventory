@@ -13,7 +13,6 @@
             <directory>./tests/TEC</directory>
             <directory>./tests/Exec</directory>
             <directory>./tests/Classif</directory>
-            <directory>./tests/Keyword</directory>
             <directory>./tests/Export</directory>
             <directory>./tests/Techno</directory>
             <directory>./tests/Algo</directory>
@@ -60,10 +59,8 @@
                 <!-- DW -->
                 <directory suffix=".php">application/dw/controllers</directory>
                 <directory suffix=".php">application/dw/forms</directory>
-                <!-- Keyword -->
-                <directory suffix=".php">application/keyword/controllers</directory>
                 <!-- Orga -->
-                <directory suffix=".php">application/keyword/controllers</directory>
+                <directory suffix=".php">application/orga/controllers</directory>
                 <file>application/orga/Bootstrap.php</file>
                 <!-- Simulation -->
                 <directory suffix=".php">application/simulation/controllers</directory>

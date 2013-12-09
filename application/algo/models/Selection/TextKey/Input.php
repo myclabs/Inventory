@@ -1,23 +1,16 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
 
 /**
- * @package    Algo
- * @subpackage Keyword
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
 class Algo_Model_Selection_TextKey_Input extends Algo_Model_Selection_TextKey
 {
-
     /**
      * @var string
      */
     protected $inputRef;
-
 
     /**
      * @param string $ref
@@ -63,5 +56,4 @@ class Algo_Model_Selection_TextKey_Input extends Algo_Model_Selection_TextKey
     {
         $this->inputRef = $inputRef;
     }
-
 }

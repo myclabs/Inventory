@@ -13,7 +13,6 @@ require_once dirname(__FILE__).'/../Numeric/ConstantTest.php';
  */
 class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -33,13 +32,6 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
         foreach (Algo_Model_Algo::loadList() as $o) {
             $o->delete();
         }
-        /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        if ($keywordRepository->count() > 0) {
-            foreach ($keywordRepository->getAll() as $o) {
-                $keywordRepository->remove($o);
-            }
-        }
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
         }
@@ -55,7 +47,7 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
     /**
      * Set up
      */
-    function setUp()
+    public function setUp()
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $this->entityManager = $entityManagers['default'];
@@ -64,7 +56,7 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
     /**
      * @return Algo_Model_Index_Algo $o
      */
-    function testConstruct()
+    public function testConstruct()
     {
         // Fixtures
         $classifAxis = new Classif_Model_Axis();
@@ -72,16 +64,16 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
         $classifAxis->setLabel('Classif Axis');
         $classifAxis->save();
         $algoNumeric = Numeric_ConstantTest::generateObject();
-        $algoKeyword = TextKey_InputTest::generateObject();
+        $selectionAlgo = TextKey_InputTest::generateObject();
 
         $o = new Algo_Model_Index_Algo($classifAxis, $algoNumeric);
-        $o->setAlgo($algoKeyword);
+        $o->setAlgo($selectionAlgo);
         $o->save();
         $this->entityManager->flush();
 
         $this->assertSame($classifAxis, $o->getClassifAxis());
         $this->assertSame($algoNumeric, $o->getAlgoNumeric());
-        $this->assertSame($algoKeyword, $o->getAlgo());
+        $this->assertSame($selectionAlgo, $o->getAlgo());
 
         return $o;
     }
@@ -91,7 +83,7 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
      * @param Algo_Model_Index_Algo $o
      * @return Algo_Model_Index_Algo $o
      */
-    function testLoad(Algo_Model_Index_Algo $o)
+    public function testLoad(Algo_Model_Index_Algo $o)
     {
         $this->entityManager->clear();
         /** @var $oLoaded Algo_Model_Index_Algo */
@@ -107,7 +99,7 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param Algo_Model_Index_Algo $o
      */
-    function testDelete(Algo_Model_Index_Algo $o)
+    public function testDelete(Algo_Model_Index_Algo $o)
     {
         $o->delete();
         $o->getClassifAxis()->delete();
@@ -119,5 +111,4 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
         Numeric_ConstantTest::deleteObject($o->getAlgoNumeric());
         TextKey_InputTest::deleteObject($o->getAlgo());
     }
-
 }
