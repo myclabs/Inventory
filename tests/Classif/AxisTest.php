@@ -257,7 +257,9 @@ class Classif_Test_AxisOther extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        Classif_Test_AxisTest::deleteObject($this->axis);
+        if ($this->axis) {
+            Classif_Test_AxisTest::deleteObject($this->axis);
+        }
     }
 
     /**

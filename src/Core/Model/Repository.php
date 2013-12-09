@@ -127,7 +127,7 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
         $queryParameters->entityName = $entityName;
 
         $queryBuilderCountTotal = $this->createQueryBuilder($entityAlias);
-        $queryBuilderCountTotal->select($queryBuilderCountTotal->expr()->count($entityAlias));
+        $queryBuilderCountTotal->select($queryBuilderCountTotal->expr()->countDistinct($entityAlias));
         $this->addCustomParametersToQueryBuilder($queryBuilderCountTotal, $queryParameters);
         $queryParameters->parseToQueryBuilderWithoutLimit($queryBuilderCountTotal);
 

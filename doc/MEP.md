@@ -1,6 +1,47 @@
 # Mise en production
 
 
+## 2.9
+
+- Installer memcached et le plugin New Relic (cf. projet server)
+
+- Modifier le php.ini apache (`/etc/php5/apache2/php.ini`) pour utiliser Memcached pour les sessions :
+
+```
+session.save_handler = memcached
+...
+session.save_path = "localhost:11211"
+```
+
+- Mettre à jour le script `deploy` (`git pull` dans `/home/deploy`)
+
+- Déployer l'application SANS build update ni redémarrage du worker
+
+```
+sudo deploy 2.9.?
+```
+
+- Exécuter le script de migration
+
+```
+php scripts/migration/2.9/migrate.php
+```
+
+Le script va effectuer un build update
+
+- Exécuter le job de rebuild des exports (long)
+
+```
+php scripts/job/exports/rebuild.php
+```
+
+- Redémarrer le worker
+
+```
+sudo supervisiorctl restart XXX-worker
+```
+
+
 ## 2.8
 
 - Déployer normalement l'application (avec build update)

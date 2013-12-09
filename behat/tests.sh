@@ -10,9 +10,6 @@ killall() {
     echo DONE
 }
 
-# Git pull
-git pull
-
 # Start virtual display
 #Xvfb :99 -ac > /dev/null 2>&1 &
 #export DISPLAY=:99
@@ -24,8 +21,18 @@ java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
 sleep 8
 
+# Export the databases
+php ../scripts/build/build.php create update
+php ../scripts/build/build.php populate
+mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/emptyOneUser.sql
+php ../scripts/build/build.php populateTest
+mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/full.sql
+php ../scripts/build/build.php create update
+php ../scripts/build/build.php populate populateTestDWUpToDate
+mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/forTestDWUpToDate.sql
+
 # Zombie.js
 #export NODE_PATH=/usr/local/lib/node_modules
 
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml --rerun failed.txt && rm failed.txt
+php ../vendor/behat/behat/bin/behat --config behat.yml --format pretty,failed --rerun failed.txt && rm -f failed.txt

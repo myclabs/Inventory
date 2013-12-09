@@ -53,7 +53,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
                 Orga_Model_Cell::getAlias()
             );
             $this->request->order->addOrder(
-                Orga_Model_Cell::QUERY_MEMBERS_HASHKEY,
+                Orga_Model_Cell::QUERY_TAG,
                 Core_Model_Order::ORDER_ASC,
                 Orga_Model_Cell::getAlias()
             );
@@ -76,7 +76,7 @@ class Orga_Datagrid_Cell_Afgranularities_ConfigController extends UI_Controller_
         $data = array();
         $data['index'] = $cell->getId();
         foreach ($cell->getMembers() as $member) {
-            $data[$member->getAxis()->getRef()] = $member->getRef();
+            $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
         }
         try {
             $cellsGroupDataProvider = $cell->getCellsGroupForInputGranularity($inputGranularity);

@@ -6,53 +6,63 @@ Feature: Organization role for subcells feature
 
   @javascript
   Scenario: Display of collapses of roles by user for subcells scenario
+  # Affichage des datagrids "par utilisateur"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Rôles"
+  # Zone | Marque, par utilisateur, depuis cellule globale
     And I open collapse "Zone | Marque — par utilisateur"
     Then I should see the "granularityUserACL2" datagrid
     And the row 1 of the "granularityUserACL2" datagrid should contain:
       | zone   | marque   | userEmail                           | userRole       |
       | Europe | Marque A | administrateur.zone-marque@toto.com | Administrateur |
     When I close collapse "Zone | Marque — par utilisateur"
+  # Site, par utilisateur, depuis cellule globale
     And I open collapse "Site — par utilisateur"
     Then I should see the "granularityUserACL3" datagrid
     And the row 1 of the "granularityUserACL3" datagrid should contain:
       | site   | userEmail                           | userRole       |
       | Annecy | administrateur.site@toto.com        | Administrateur |
+  # Descendre dans la cellule "Europe | Marque A"
     When I click element ".icon-plus"
     And I click element "#goTo2"
     And I open tab "Rôles"
+  # Site, par utilisateur, depuis cellule "Europe | Marque A"
     And I open collapse "Site — par utilisateur"
     Then I should see the "granularityUserACL3" datagrid
     And the row 1 of the "granularityUserACL3" datagrid should contain:
       | site   | userEmail                           | userRole       |
       | Annecy | administrateur.site@toto.com        | Administrateur |
+  # Descendre dans la cellule "Annecy"
     When I click element ".icon-plus"
     And I click element "#goTo3"
     And I open tab "Rôles"
+  # Plus de datagrid de sous-cellule
     Then I should not see "Site — par utilisateur"
 
   @javascript
   Scenario: Display of collapses of roles by user for subcells with filters scenario
+  # Affichage des datagrids "par utilisateur", avec filtres
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
     And I open tab "Rôles"
+  # Zone | Marque, par utilisateur, depuis cellule globale
     And I open collapse "Zone | Marque — par utilisateur"
     Then I should see the "granularityUserACL2" datagrid
-    And the "granularityUserACL2" datagrid should contain 3 row
+    And the "granularityUserACL2" datagrid should contain 4 row
     When I open collapse "Filtres"
     And I select "Marque B" from "granularityUserACL2_marque_filterForm"
     And I click "Filtrer"
     Then the "granularityUserACL2" datagrid should contain 0 row
     When I close collapse "Zone | Marque — par utilisateur"
+  # Site, par utilisateur, depuis cellule globale
     And I open collapse "Site — par utilisateur"
     Then I should see the "granularityUserACL3" datagrid
-    And the "granularityUserACL3" datagrid should contain 6 row
+    And the "granularityUserACL3" datagrid should contain 8 row
     When I open collapse "Filtres"
     And I select "Chambéry" from "granularityUserACL3_site_filterForm"
     And I click "Filtrer"
-    Then the "granularityUserACL3" datagrid should contain 3 row
+    Then the "granularityUserACL3" datagrid should contain 4 row
 
   @javascript
   Scenario: Create role for subcell, incorrect input scenario
@@ -79,8 +89,8 @@ Feature: Organization role for subcells feature
     And I open tab "Rôles"
     And I open collapse "Zone | Marque — par utilisateur"
     Then I should see the "granularityUserACL2" datagrid
-    And the "granularityUserACL2" datagrid should contain 3 row
-  # Ajout, utilisateur non existant
+    And the "granularityUserACL2" datagrid should contain 4 row
+  # Ajout, utilisateur non existant (rôle contributeur)
     When I click "Ajouter"
     Then I should see the popup "Création d'un utilisateur ou attribution d'un rôle à un utilisateur existant"
     When I select "Europe" from "granularityUserACL2_zone_addForm"
@@ -89,11 +99,11 @@ Feature: Organization role for subcells feature
     And I select "Contributeur" from "granularityUserACL2_userRole_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the "granularityUserACL2" datagrid should contain 4 row
+    And the "granularityUserACL2" datagrid should contain 5 row
     And the "granularityUserACL2" datagrid should contain a row:
       | zone   | marque   | userEmail                     | userRole     |
       | Europe | Marque B | emmanuel.risler.abo@gmail.com | Contributeur |
-  # Ajout, utilisateur existant
+  # Ajout, utilisateur existant (rôle contributeur)
     When I click "Ajouter"
     Then I should see the popup "Création d'un utilisateur ou attribution d'un rôle à un utilisateur existant"
     When I select "Europe" from "granularityUserACL2_zone_addForm"
@@ -102,7 +112,7 @@ Feature: Organization role for subcells feature
     And I select "Contributeur" from "granularityUserACL2_userRole_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the "granularityUserACL2" datagrid should contain 5 row
+    And the "granularityUserACL2" datagrid should contain 6 row
     And the "granularityUserACL2" datagrid should contain a row:
       | zone   | marque   | userEmail                     | userRole     |
       | Europe | Marque B | emmanuel.risler.pro@gmail.com | Contributeur |
@@ -114,12 +124,12 @@ Feature: Organization role for subcells feature
     And I open tab "Rôles"
     And I open collapse "Zone | Marque — par utilisateur"
     Then I should see the "granularityUserACL2" datagrid
-    And the "granularityUserACL2" datagrid should contain 3 row
+    And the "granularityUserACL2" datagrid should contain 4 row
     When I click "Supprimer" in the row 1 of the "granularityUserACL2" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée"
-    And the "granularityUserACL2" datagrid should contain 2 row
+    And the "granularityUserACL2" datagrid should contain 3 row
 
   @javascript
   Scenario: Display of collapses of roles by cell for subcells scenario
@@ -130,10 +140,10 @@ Feature: Organization role for subcells feature
     And I open collapse "Zone | Marque — par élément d'organisation"
     Then I should see the "granularityCellACL2" datagrid
     And the row 1 of the "granularityCellACL2" datagrid should contain:
-      | zone   | marque   | administrators                                                           | details     |
-      | Europe | Marque A | administrateur.zone-marque@toto.com \| contributeur.zone-marque@toto.com | 1 \| 1 \| 1 |
+      | zone   | marque   | administrators                                                                                                | details          |
+      | Europe | Marque A | administrateur.zone-marque@toto.com \| coordinateur.zone-marque@toto.com \| contributeur.zone-marque@toto.com | 1 \| 1 \| 1 \| 1 |
   # Contenu popup
-    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL2" datagrid
+    When I click "1 | 1 | 1 | 1" in the row 1 of the "granularityCellACL2" datagrid
     Then I should see the "cellACLs2" datagrid
     And the row 1 of the "cellACLs2" datagrid should contain:
       | userEmail                           | userRole       |
@@ -144,10 +154,10 @@ Feature: Organization role for subcells feature
     And I open collapse "Site — par élément d'organisation"
     Then I should see the "granularityCellACL3" datagrid
     And the row 1 of the "granularityCellACL3" datagrid should contain:
-      | site   | administrators                                            | details     |
-      | Annecy | administrateur.site@toto.com | contributeur.site@toto.com | 1 \| 1 \| 1 |
+      | site   | administrators                                                                           | details          |
+      | Annecy | administrateur.site@toto.com \| coordinateur.site@toto.com \| contributeur.site@toto.com | 1 \| 1 \| 1 \| 1 |
   # Contenu popup
-    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL3" datagrid
+    When I click "1 | 1 | 1 | 1" in the row 1 of the "granularityCellACL3" datagrid
     Then I should see the "cellACLs5" datagrid
     And the row 1 of the "cellACLs5" datagrid should contain:
       | userEmail                    | userRole       |
@@ -161,10 +171,10 @@ Feature: Organization role for subcells feature
     And I open collapse "Site — par élément d'organisation"
     Then I should see the "granularityCellACL3" datagrid
     And the row 1 of the "granularityCellACL3" datagrid should contain:
-      | site   | administrators                                            | details     |
-      | Annecy | administrateur.site@toto.com | contributeur.site@toto.com | 1 \| 1 \| 1 |
+      | site   | administrators                                                                           | details          |
+      | Annecy | administrateur.site@toto.com \| coordinateur.site@toto.com \| contributeur.site@toto.com | 1 \| 1 \| 1 \| 1 |
   # Contenu popup
-    When I click "1 | 1 | 1" in the row 1 of the "granularityCellACL3" datagrid
+    When I click "1 | 1 | 1 | 1" in the row 1 of the "granularityCellACL3" datagrid
     Then I should see the "cellACLs5" datagrid
     And the row 1 of the "cellACLs5" datagrid should contain:
       | userEmail                    | userRole       |
@@ -183,7 +193,7 @@ Feature: Organization role for subcells feature
     And I open tab "Rôles"
     And I open collapse "Site — par élément d'organisation"
     Then I should see the "granularityCellACL3" datagrid
-    And the "granularityCellACL3" datagrid should contain 4 row
+    And the "granularityCellACL3" datagrid should contain 3 row
     When I open collapse "Filtres"
     And I select "Chambéry" from "granularityCellACL3_site_filterForm"
     And I click "Filtrer"

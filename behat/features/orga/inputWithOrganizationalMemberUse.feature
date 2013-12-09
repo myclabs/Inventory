@@ -13,7 +13,7 @@ Feature: Input with organization member use feature
     And I open collapse "Année | Zone | Marque"
     Then the row 2 of the "inventories6" datagrid should contain:
       | annee | zone   | marque   | inventoryStatus |
-      | 2012  | Europe | Marque B | Fermé
+      | 2012  | Europe | Marque B | Fermé           |
     And I set "Ouvert" for column "inventoryStatus" of row 2 of the "inventories6" datagrid with a confirmation message
   # Accès à la saisie voulue
     And I open tab "Saisies"

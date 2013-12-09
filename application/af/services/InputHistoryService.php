@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Loggable\Entity\LogEntry;
 use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
+use User\Domain\User;
 
 /**
  * Service responsable de l'historique des saisies des AF
@@ -93,7 +94,7 @@ class AF_Service_InputHistoryService
 
             // Author
             if ($logEntry->getUsername()) {
-                $author = User_Model_User::load($logEntry->getUsername());
+                $author = User::load($logEntry->getUsername());
             } else {
                 $author = null;
             }

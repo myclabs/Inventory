@@ -6,7 +6,7 @@ Feature: Organization input input feature
 
   @javascript
   Scenario: Global administrator direct access to input scenario
-    Given I am on "orga/cell/input/idCell/31/fromIdCell/1"
+    Given I am on "orga/cell/input/idCell/30/fromIdCell/1"
     And I wait for the page to finish loading
     Then I should see "Saisie 2012 | Annecy | Énergie"
 

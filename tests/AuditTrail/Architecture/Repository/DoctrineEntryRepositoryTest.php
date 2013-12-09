@@ -7,16 +7,23 @@ use AuditTrail\Architecture\Repository\DoctrineEntryRepository;
 use AuditTrail\Domain\Context\GlobalContext;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\Entry;
+use Core\Test\TestCase;
 
 /**
  * EntryRepositoryTest tests
  */
-class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
+class AuditTrail_DoctrineEntryRepositoryTest extends TestCase
 {
     /**
      * @var DoctrineEntryRepository
      */
     private $entryRepository;
+
+    /**
+     * @Inject
+     * @var Orga_Service_OrganizationService
+     */
+    private $organizationService;
 
     public function testFindLatest()
     {
@@ -60,8 +67,8 @@ class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
         $this->entryRepository->remove($entry1);
         $this->entryRepository->remove($entry2);
         $this->entryRepository->remove($entry3);
-        $organization->delete();
         $this->entityManager->flush();
+        $this->organizationService->deleteOrganization($organization);
 
         $this->assertCount(1, $entries);
         $this->assertSame($entry2, current($entries));
@@ -70,12 +77,12 @@ class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
     public function testFindLatestForCell()
     {
         $organization = new Orga_Model_Organization();
-        $axis = new Orga_Model_Axis($organization);
-        $axis->setRef('axis');
+        $axis = new Orga_Model_Axis($organization, 'axis');
         $axis->setLabel('axis');
-        $member = new Orga_Model_Member($axis);
-        $member->setRef('member');
+        $member = new Orga_Model_Member($axis, 'member');
         $member->setLabel('member');
+        $organization->save();
+        $this->entityManager->flush();
         new Orga_Model_Granularity($organization, [$axis]);
         $organization->save();
         $this->entityManager->flush();
@@ -105,7 +112,9 @@ class AuditTrail_DoctrineEntryRepositoryTest extends Core_Test_TestCase
         $this->entryRepository->remove($entry2);
         $this->entryRepository->remove($entry3);
         $this->entryRepository->remove($entry4);
-        $organization->delete();
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        $this->organizationService->deleteOrganization(Orga_Model_Organization::load($organization->getId()));
         $this->entityManager->flush();
 
         $this->assertCount(1, $entries);

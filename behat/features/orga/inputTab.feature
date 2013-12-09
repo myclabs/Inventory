@@ -11,7 +11,7 @@ Feature: Organization input tab feature
     And I open tab "Saisies"
     And I open collapse "Année | Site"
     Then I should see the "aFGranularity1Input7" datagrid
-    And the "aFGranularity1Input7" datagrid should contain 8 row
+    And the "aFGranularity1Input7" datagrid should contain 6 row
   # Filtre sur le site "Annecy"
     When I open collapse "Filtres"
     And I select "Annecy" from "aFGranularity1Input7_site_filterForm"
@@ -20,7 +20,7 @@ Feature: Organization input tab feature
   # Bouton "Réinitialiser"
     When I open collapse "Filtres"
     And I click "Réinitialiser"
-    Then the "aFGranularity1Input7" datagrid should contain 8 row
+    Then the "aFGranularity1Input7" datagrid should contain 6 row
 
   @javascript
   Scenario: Display of input tab when the inventory granularity has not been defined

@@ -17,14 +17,17 @@ Orga_Model_Granularity:
       type: string
       length: 255
       nullable: false
-    navigable:
-      column: navigable
-      type: boolean
+    tag:
+      column: tag
+      type: text
       nullable: false
     position:
       column: position
       type: integer
-      length: 2
+      nullable: false
+    navigable:
+      column: navigable
+      type: boolean
       nullable: false
     cellsWithACL:
       column: cellsWithACL
@@ -95,24 +98,20 @@ Orga_Model_Granularity:
         inverseJoinColumns:
           idAxis:
             referencedColumnName: id
+      orderBy:
+        narrowerTag: ASC
 
   oneToMany:
     cells:
       targetEntity: Orga_Model_Cell
       mappedBy: granularity
       orderBy:
-        membersHashKey: ASC
+        tag: ASC
       orphanRemoval: true
       cascade: [ persist, remove ]
     inputGranularities:
       targetEntity: Orga_Model_Granularity
       mappedBy: inputConfigGranularity
-
-  lifecycleCallbacks:
-    prePersist: [ preSave ]
-    preUpdate: [ preUpdate ]
-    preRemove: [ preDelete ]
-    postLoad: [ postLoad ]
 
   uniqueConstraints:
     granularityRefUniquenessInOrganization:

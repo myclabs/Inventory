@@ -1,5 +1,6 @@
 <?php
 
+use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Keyword\Domain\KeywordRepository;
 use Techno\Domain\Family\CoeffFamily;
@@ -56,7 +57,7 @@ class Techno_Test_Family_CoeffTest
     }
 }
 
-class Techno_Test_Family_CoeffSetUpTest extends Core_Test_TestCase
+class Techno_Test_Family_CoeffSetUpTest extends TestCase
 {
     public static function setUpBeforeClass()
     {
@@ -149,7 +150,7 @@ class Techno_Test_Family_CoeffSetUpTest extends Core_Test_TestCase
     }
 }
 
-class Techno_Test_Family_CoeffMetierTest extends Core_Test_TestCase
+class Techno_Test_Family_CoeffMetierTest extends TestCase
 {
     public static function setUpBeforeClass()
     {

@@ -53,10 +53,10 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                                                              )),
                 __('UI', 'name', 'test'), 'share-alt'
             );
-            $data['duplicate'] = $this->cellLink($this->view->url(array(
+            $data['duplicate'] = $this->cellPopup($this->view->url(array(
                                                                   'module'     => 'af',
                                                                   'controller' => 'af',
-                                                                  'action'     => 'duplicate',
+                                                                  'action'     => 'duplicate-popup',
                                                                   'id'         => $af->getId(),
                                                              )),
                 __('UI', 'verb', 'duplicate'), 'plus-sign'

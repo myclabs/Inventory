@@ -6,6 +6,7 @@
  */
 
 use Core\Annotation\Secure;
+use User\Domain\User;
 
 /**
  * @package Social
@@ -19,9 +20,9 @@ class Social_Datagrid_Message_Contact_UserController extends UI_Controller_Datag
      */
     public function getelementsAction()
     {
-        /** @var $contacts User_Model_User[] */
-        $contacts = User_Model_User::loadList($this->request);
-        $this->totalElements = User_Model_User::countTotal($this->request);
+        /** @var $contacts User[] */
+        $contacts = User::loadList($this->request);
+        $this->totalElements = User::countTotal($this->request);
 
         foreach ($contacts as $contact) {
             $data = [];

@@ -9,8 +9,10 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Model\ACL\Action\CellAction;
+use User\Domain\ACL\Action;
+use User\Domain\ACL\ACLService;
 
 /**
  * Classe controleur de cell.
@@ -23,7 +25,7 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var User_Service_ACL
+     * @var ACLService
      */
     private $aclService;
 
@@ -79,12 +81,12 @@ class Orga_CellController extends Core_Controller
 
 
         $this->view->tabView = new UI_Tab_View('container');
-        $this->view->pageTitle = $cell->getLabelExtended().' <small>'.$organization->getLabel().'</small>';
+        $this->view->pageTitle = $cell->getExtendedLabel().' <small>'.$organization->getLabel().'</small>';
         $this->view->isParentCellReachable = array();
         foreach ($cell->getParentCells() as $parentCell) {
             $isUserAllowedToViewParentCell = $this->aclService->isAllowed(
                 $connectedUser,
-                User_Model_Action_Default::VIEW(),
+                Action::VIEW(),
                 $parentCell
             );
             if (!$isUserAllowedToViewParentCell) {
@@ -96,12 +98,12 @@ class Orga_CellController extends Core_Controller
         // TAB ORGA.
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            Action::EDIT(),
             $organization
         );
         $isUserAllowedToEditCell = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::EDIT(),
+            Action::EDIT(),
             $cell
         );
         if (($isUserAllowedToEditOrganization || $isUserAllowedToEditCell) && $granularity->getCellsWithOrgaTab()) {
@@ -120,7 +122,7 @@ class Orga_CellController extends Core_Controller
         // TAB ACL
         $isUserAllowedToAllowAuthorizations = $this->aclService->isAllowed(
             $connectedUser,
-            User_Model_Action_Default::ALLOW(),
+            Action::ALLOW(),
             $cell
         );
         if (($isUserAllowedToAllowAuthorizations === true) && ($granularity->getCellsWithACL() === false)) {
@@ -157,26 +159,33 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB INVENTORIES
-        try {
-            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
-            if ($granularityForInventoryStatus->isNarrowerThan($granularity) || ($granularityForInventoryStatus === $granularity)) {
-                $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
-            } else {
+        $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
+            $connectedUser,
+            CellAction::VIEW_REPORTS(),
+            $cell
+        );
+        if ($isUserAllowedToViewCellReports) {
+            try {
+                $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+                if ($granularityForInventoryStatus->isNarrowerThan($granularity) || ($granularityForInventoryStatus === $granularity)) {
+                    $crossedOrgaGranularity = $granularityForInventoryStatus->getCrossedGranularity($cell->getGranularity());
+                } else {
+                    $crossedOrgaGranularity = null;
+                }
+            } catch (Core_Exception_UndefinedAttribute $e) {
+                $crossedOrgaGranularity = null;
+            } catch (Core_Exception_NotFound $e) {
                 $crossedOrgaGranularity = null;
             }
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $crossedOrgaGranularity = null;
-        } catch (Core_Exception_NotFound $e) {
-            $crossedOrgaGranularity = null;
-        }
-        if ($crossedOrgaGranularity !== null) {
-            $inventoriesTab = new UI_Tab('inventories');
-            if ($tab === 'inventories') {
-                $inventoriesTab->active = true;
+            if ($crossedOrgaGranularity !== null) {
+                $inventoriesTab = new UI_Tab('inventories');
+                if ($tab === 'inventories') {
+                    $inventoriesTab->active = true;
+                }
+                $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
+                $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
+                $this->view->tabView->addTab($inventoriesTab);
             }
-            $inventoriesTab->label = __('Orga', 'inventory', 'inventories');
-            $inventoriesTab->dataSource = 'orga/tab_celldetails/inventories/idCell/'.$idCell;
-            $this->view->tabView->addTab($inventoriesTab);
         }
 
 
@@ -192,7 +201,7 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB ANALYSES
-        if ($granularity->getCellsGenerateDWCubes() === true) {
+        if (($isUserAllowedToViewCellReports) && ($granularity->getCellsGenerateDWCubes() === true)) {
             $analysisTab = new UI_Tab('analyses');
             if ($tab === 'analyses') {
                 $analysisTab->active = true;
@@ -205,14 +214,16 @@ class Orga_CellController extends Core_Controller
 
 
         // TAB EXPORTS
-        $exportsTab = new UI_Tab('exports');
-        if ($tab === 'exports') {
-            $exportsTab->active = true;
+        if ($isUserAllowedToViewCellReports) {
+            $exportsTab = new UI_Tab('exports');
+            if ($tab === 'exports') {
+                $exportsTab->active = true;
+            }
+            $exportsTab->label = __('UI', 'name', 'exports');
+            $exportsTab->dataSource = 'orga/tab_celldetails/exports/idCell/'.$idCell;
+            $exportsTab->useCache = true;
+            $this->view->tabView->addTab($exportsTab);
         }
-        $exportsTab->label = __('UI', 'name', 'exports');
-        $exportsTab->dataSource = 'orga/tab_celldetails/exports/idCell/'.$idCell;
-        $exportsTab->useCache = true;
-        $this->view->tabView->addTab($exportsTab);
 
 
         // TAB GENERIC ACTIONS
@@ -242,8 +253,8 @@ class Orga_CellController extends Core_Controller
         // TAB DOCUMENTS
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $connectedUser,
-            Orga_Action_Cell::INPUT(),
-            User_Model_Resource_Entity::loadByEntity($cell)
+            CellAction::INPUT(),
+            $cell
         );
         if (($isUserAllowedToInputCell)
             && (($granularity->getCellsWithSocialContextActions() === true)
@@ -397,7 +408,7 @@ class Orga_CellController extends Core_Controller
 
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
-            Orga_Action_Cell::INPUT(),
+            CellAction::INPUT(),
             $cell
         );
 
@@ -414,11 +425,9 @@ class Orga_CellController extends Core_Controller
                 ['idCell' => $this->getParam('fromIdCell')]));
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
-        $aFViewConfiguration->addBaseTabs();
-        try {
+        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_INPUT);
+        if ($cell->getAFInputSetPrimary() !== null) {
             $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            // Pas d'inputSetPrimary : nouvelle saisie.
         }
 
         $tabComments = new UI_Tab('inputComments');
@@ -432,6 +441,17 @@ class Orga_CellController extends Core_Controller
         $tabDocs->dataSource = 'orga/tab_input/docs/idCell/'.$idCell;
         $tabDocs->cacheData = true;
         $aFViewConfiguration->addTab($tabDocs);
+
+        $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
+            $this->_helper->auth(),
+            CellAction::VIEW_REPORTS(),
+            $cell
+        );
+        if ($isUserAllowedToViewCellReports) {
+            $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_RESULT);
+            $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_CALCULATION_DETAILS);
+        }
+        $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
         $this->forward('display', 'af', 'af', array(
                 'id' => $aF->getId(),

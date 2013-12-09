@@ -5,6 +5,7 @@
  * @subpackage Test
  */
 
+use Core\Test\TestCase;
 use Gedmo\Loggable\Entity\LogEntry;
 
 /**
@@ -13,7 +14,7 @@ use Gedmo\Loggable\Entity\LogEntry;
  * @package Core
  * @subpackage Event
  */
-class Core_Test_EntityVersionedTest extends Core_Test_TestCase
+class Core_Test_EntityVersionedTest extends TestCase
 {
 
     public function setUp()

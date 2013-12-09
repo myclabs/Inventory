@@ -1,8 +1,10 @@
 <?php
+use User\Domain\User;
+
 if (Zend_Auth::getInstance()->hasIdentity()) {
     try {
-        /** @var User_Model_User $connectedUser */
-        $connectedUser = User_Model_User::load(Zend_Auth::getInstance()->getIdentity());
+        /** @var User $connectedUser */
+        $connectedUser = User::load(Zend_Auth::getInstance()->getIdentity());
     } catch (Core_Exception_NotFound $e) {
         $connectedUser = null;
     }

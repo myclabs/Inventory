@@ -6,6 +6,8 @@
 
         <!-- Libellés des différents rôles -->
 
+        <!-- Administrateur d'organisation -->
+
         <tu tuid="organizationAdministrator">
             <tuv xml:lang="fr">
                 <seg>Administrateur de workspace</seg>
@@ -22,6 +24,9 @@
                 <seg>Workspace administrators</seg>
             </tuv>
         </tu>
+
+        <!-- Administrateur de cellule -->
+
         <tu tuid="cellAdministrator">
             <tuv xml:lang="fr">
                 <seg>Administrateur</seg>
@@ -38,6 +43,28 @@
                 <seg>Administrator(s)</seg>
             </tuv>
         </tu>
+
+        <!-- Coordinateur de cellule -->
+
+        <tu tuid="cellManager">
+            <tuv xml:lang="fr">
+                <seg>Coordinateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Coordinator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellManagers">
+            <tuv xml:lang="fr">
+                <seg>Coordinateur(s)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Coordinator(s)</seg>
+            </tuv>
+        </tu>
+
+        <!-- Contributeur de cellule -->
+
         <tu tuid="cellContributor">
             <tuv xml:lang="fr">
                 <seg>Contributeur</seg>
@@ -54,6 +81,9 @@
                 <seg>Contributor(s)</seg>
             </tuv>
         </tu>
+
+        <!-- Observateur de cellule -->
+
         <tu tuid="cellObserver">
             <tuv xml:lang="fr">
                 <seg>Observateur</seg>
@@ -94,18 +124,18 @@
 
          <tu tuid="cellGenericAdministrators">
             <tuv xml:lang="fr">
-                <seg>Administrateurs &amp; contributeurs</seg>
+                <seg>Administrateurs, coordinateur, contributeurs</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Administrators &amp; contributors</seg>
+                <seg>Administrators, coordinators, contributors</seg>
             </tuv>
         </tu>
         <tu tuid="detailCellRolesHeader">
             <tuv xml:lang="fr">
-                <seg>Adm. | Cont. | Obs.</seg>
+                <seg>Adm. | Coord. | Cont. | Obs.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Adm. | Cont. | Obs.</seg>
+                <seg>Adm. | Coord. | Cont. | Obs.</seg>
             </tuv>
         </tu>
  

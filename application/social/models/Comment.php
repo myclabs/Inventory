@@ -1,4 +1,6 @@
 <?php
+use User\Domain\User;
+
 /**
  * @package Social
  */
@@ -12,9 +14,9 @@ class Social_Model_Comment extends Social_Model_Text
 {
     /**
      * {@inheritdoc}
-     * @param User_Model_User $author Auteur (obligatoire)
+     * @param User $author Auteur (obligatoire)
      */
-    public function __construct(User_Model_User $author)
+    public function __construct(User $author)
     {
         parent::__construct($author);
     }

@@ -1,21 +1,24 @@
 <?php
 
 use Core\Autoloader;
+use Core\Controller\FlushPlugin;
 use Core\Log\ChromePHPFormatter;
 use Core\Log\ErrorHandler;
 use Core\Log\ExtendedLineFormatter;
 use Core\Log\QueryLogger;
+use Core\Log\UserInfoProcessor;
 use Core\Mail\NullTransport;
-use Core\Work\EventListener;
+use Core\Work\EventListener\RabbitMQEventListener;
+use Core\Work\EventListener\SimpleEventListener;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\EntityManager;
@@ -115,7 +118,10 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
         $diConfig = $configuration->get('di', null);
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
-            $cache = new ApcCache();
+            $cache = new MemcachedCache();
+            $memcached = new Memcached();
+            $memcached->addServer('localhost', 11211);
+            $cache->setMemcached($memcached);
             $cache->setNamespace($configuration->get('applicationName', ''));
             $builder->setDefinitionCache($cache);
         }
@@ -177,6 +183,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         /** @noinspection PhpParamsInspection */
         $logger->pushProcessor(new PsrLogMessageProcessor());
+        // Log l'email de l'utilisateur
+        $logger->pushProcessor(new UserInfoProcessor());
 
         $this->container->set(LoggerInterface::class, $logger);
 
@@ -374,29 +382,28 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             if ($useRabbitMQ) {
                 $channel = $c->get(AMQPChannel::class);
                 $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
-                $workDispatcher->addEventListener($this->container->get(EventListener::class));
-                return $workDispatcher;
+                $workDispatcher->addEventListener($c->get(RabbitMQEventListener::class));
+            } else {
+                $workDispatcher = new SimpleWorkDispatcher($c->get(Worker::class));
+                $workDispatcher->addEventListener($c->get(SimpleEventListener::class));
             }
-            return new SimpleWorkDispatcher($c->get(Worker::class));
+            return $workDispatcher;
         });
 
         $this->container->set(Worker::class, function (Container $c) use ($useRabbitMQ) {
             if ($useRabbitMQ) {
                 $channel = $c->get(AMQPChannel::class);
                 $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));
-                $worker->addEventListener($c->get(EventListener::class));
+                $worker->addEventListener($c->get(RabbitMQEventListener::class));
             } else {
                 $worker = $c->get(SimpleWorker::class);
+                $worker->addEventListener($c->get(SimpleEventListener::class));
             }
 
             $worker->registerTaskExecutor(ServiceCallTask::class, new ServiceCallExecutor($c));
             $worker->registerTaskExecutor(
                 Orga_Work_Task_AddGranularity::class,
                 $c->get(Orga_Work_TaskExecutor_AddGranularityExecutor::class)
-            );
-            $worker->registerTaskExecutor(
-                Orga_Work_Task_AddMember::class,
-                $c->get(Orga_Work_TaskExecutor_AddMemberExecutor::class)
             );
             $worker->registerTaskExecutor(
                 Orga_Work_Task_SetGranularityCellsGenerateDWCubes::class,
@@ -451,7 +458,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initPluginCore()
     {
         $front = Zend_Controller_Front::getInstance();
-        $front->registerPlugin(new Core_Plugin_Flush());
+        $front->registerPlugin(new FlushPlugin());
     }
 
     /**

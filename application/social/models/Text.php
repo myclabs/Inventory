@@ -1,4 +1,6 @@
 <?php
+use User\Domain\User;
+
 /**
  * @package Social
  */
@@ -20,7 +22,7 @@ abstract class Social_Model_Text extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var User_Model_User|null
+     * @var User|null
      */
     protected $author;
 
@@ -38,9 +40,9 @@ abstract class Social_Model_Text extends Core_Model_Entity
 
     /**
      * Assigne la date du jour de création de l'instance à creationDate
-     * @param User_Model_User|null $author Auteur
+     * @param User|null $author Auteur
      */
-    public function __construct(User_Model_User $author = null)
+    public function __construct(User $author = null)
     {
         $this->setCreationDate(new DateTime());
         $this->setAuthor($author);
@@ -55,7 +57,7 @@ abstract class Social_Model_Text extends Core_Model_Entity
     }
 
     /**
-     * @return User_Model_User|null
+     * @return User|null
      */
     public function getAuthor()
     {
@@ -63,9 +65,9 @@ abstract class Social_Model_Text extends Core_Model_Entity
     }
 
     /**
-     * @param User_Model_User|null $author
+     * @param User|null $author
      */
-    public function setAuthor(User_Model_User $author = null)
+    public function setAuthor(User $author = null)
     {
         $this->author = $author;
     }

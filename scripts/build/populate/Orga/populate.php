@@ -1,23 +1,39 @@
 <?php
-/**
- * @package Orga
- */
 
+use Doctrine\ORM\EntityManager;
+use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
+use Orga\Model\ACL\Role\CellContributorRole;
+use Orga\Model\ACL\Role\CellObserverRole;
+use Orga\Model\ACL\Role\OrganizationAdminRole;
+use Psr\Log\LoggerInterface;
+use User\Domain\ACL\ACLService;
+use User\Domain\User;
+use User\Domain\UserService;
 
 /**
  * Remplissage de la base de données avec des données de test
- * @package Orga
  */
 class Orga_Populate extends Core_Script_Action
 {
+    /**
+     * @var ACLService
+     */
+    private $aclService;
+
     /**
      * {@inheritdoc}
      */
     public function runEnvironment($environment)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager \Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
+        /** @var DI\Container $container */
+        $container = Zend_Registry::get('container');
+
+        $entityManager = $container->get(EntityManager::class);
+
+        // On crée le service, car sinon il n'a pas la bonne instance de l'entity manager
+        // car Script_Populate recrée l'EM (donc différent de celui créé dans le bootstrap)
+        $this->aclService = new ACLService($entityManager, $container->get(LoggerInterface::class));
 
 
         // Création d'une organisation.
@@ -50,9 +66,6 @@ class Orga_Populate extends Core_Script_Action
         //  + setInput: finished=false
 
 
-        $entityManager->flush();
-
-
         // Création de rapport personnalisés.
         // Params : Granularity granularity
         //  + createSimpleGranularityReport : refIndicator, refAxis
@@ -78,11 +91,6 @@ class Orga_Populate extends Core_Script_Action
         //  + addCellContributor : -
         //  + addCellObserver : -
         // Params : email, Granularity, [Member]
-
-
-        $entityManager->flush();
-
-        echo "\t\tOrganization created".PHP_EOL;
     }
 
     /**
@@ -104,14 +112,10 @@ class Orga_Populate extends Core_Script_Action
      * @param Orga_Model_Axis $narrower
      * @return Orga_Model_Axis
      */
-    protected function createAxis(Orga_Model_Organization $organization, $ref, $label, Orga_Model_Axis $narrower=null)
+    protected function createAxis(Orga_Model_Organization $organization, $ref, $label, Orga_Model_Axis $narrower = null)
     {
-        $axis = new Orga_Model_Axis($organization);
-        $axis->setRef($ref);
+        $axis = new Orga_Model_Axis($organization, $ref, $narrower);
         $axis->setLabel($label);
-        if ($narrower !== null) {
-            $axis->setDirectNarrower($narrower);
-        }
         $axis->save();
         return $axis;
     }
@@ -123,15 +127,10 @@ class Orga_Populate extends Core_Script_Action
      * @param array $parents
      * @return Orga_Model_Member
      */
-    protected function createMember(Orga_Model_Axis $axis, $ref, $label, array $parents=[])
+    protected function createMember(Orga_Model_Axis $axis, $ref, $label, array $parents = [])
     {
-        $member = new Orga_Model_Member($axis);
-        $member->setRef($ref);
+        $member = new Orga_Model_Member($axis, $ref, $parents);
         $member->setLabel($label);
-        foreach ($parents as $directParent)
-        {
-            $member->addDirectParent($directParent);
-        }
         $member->save();
         return $member;
     }
@@ -149,9 +148,18 @@ class Orga_Populate extends Core_Script_Action
      * @param bool $inputDocs
      * @return Orga_Model_Granularity
      */
-    protected function createGranularity(Orga_Model_Organization $organization, array $axes=[], $navigable,
-        $orgaTab=false, $aCL=true, $aFTab=false, $dWCubes=false, $genericAction=false, $contextAction=false, $inputDocs=false)
-    {
+    protected function createGranularity(
+        Orga_Model_Organization $organization,
+        array $axes = [],
+        $navigable,
+        $orgaTab = false,
+        $aCL = true,
+        $aFTab = false,
+        $dWCubes = false,
+        $genericAction = false,
+        $contextAction = false,
+        $inputDocs = false
+    ) {
         $granularity = new Orga_Model_Granularity($organization, $axes);
         $granularity->setNavigability($navigable);
         $granularity->setCellsWithOrgaTab($orgaTab);
@@ -181,11 +189,17 @@ class Orga_Populate extends Core_Script_Action
      * @param Orga_Model_Granularity $granularity
      * @param Orga_Model_Member[] $members
      * @param Orga_Model_Granularity $inputGranularity
-     * @param string $refAF
+     * @param string                 $refAF
      */
-    protected function setAFForChildCells(Orga_Model_Granularity $granularity, array $members, Orga_Model_Granularity $inputGranularity, $refAF)
-    {
-        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->setAF(AF_Model_AF::loadByRef($refAF));
+    protected function setAFForChildCells(
+        Orga_Model_Granularity $granularity,
+        array $members,
+        Orga_Model_Granularity $inputGranularity,
+        $refAF
+    ) {
+        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->setAF(
+            AF_Model_AF::loadByRef($refAF)
+        );
     }
 
     /**
@@ -194,7 +208,7 @@ class Orga_Populate extends Core_Script_Action
      * @param array $values
      * @param bool $finished
      */
-    protected function setInput(Orga_Model_Granularity $granularity, array $members, array $values, $finished=false)
+    protected function setInput(Orga_Model_Granularity $granularity, array $members, array $values, $finished = false)
     {
         $container = Zend_Registry::get('container');
 
@@ -203,7 +217,9 @@ class Orga_Populate extends Core_Script_Action
         if ($granularity === $inputConfigGranularity) {
             $aF = $inputCell->getCellsGroupForInputGranularity($granularity)->getAF();
         } else {
-            $aF = $inputCell->getParentCellForGranularity($inputConfigGranularity)->getCellsGroupForInputGranularity($granularity)->getAF();
+            $aF = $inputCell->getParentCellForGranularity($inputConfigGranularity)->getCellsGroupForInputGranularity(
+                $granularity
+            )->getAF();
         }
 
         $inputSetPrimary = new AF_Model_InputSet_Primary($aF);
@@ -257,7 +273,7 @@ class Orga_Populate extends Core_Script_Action
      * @param array $filters
      * @return DW_Model_Report
      */
-    private function createReport(DW_Model_Cube $cube, $label, $chartType, $displayUncertainty, $filters=array())
+    private function createReport(DW_Model_Cube $cube, $label, $chartType, $displayUncertainty, $filters = array())
     {
         $report = new DW_Model_Report($cube);
         $report->setLabel($label);
@@ -284,9 +300,16 @@ class Orga_Populate extends Core_Script_Action
      * @param string $chartType
      * @param string $sortType
      */
-    protected function createSimpleGranularityReport(Orga_Model_Granularity $granularity, $label, $refIndicator, $refAxis,
-        $filters=array(), $displayUncertainty=false, $chartType=DW_Model_Report::CHART_PIE, $sortType=DW_Model_Report::SORT_VALUE_DECREASING)
-    {
+    protected function createSimpleGranularityReport(
+        Orga_Model_Granularity $granularity,
+        $label,
+        $refIndicator,
+        $refAxis,
+        $filters = array(),
+        $displayUncertainty = false,
+        $chartType = DW_Model_Report::CHART_PIE,
+        $sortType = DW_Model_Report::SORT_VALUE_DECREASING
+    ) {
         $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty, $filters);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refAxis, $granularity->getDWCube()));
@@ -306,15 +329,24 @@ class Orga_Populate extends Core_Script_Action
      * @param string $chartType
      * @param string $sortType
      */
-    protected function createSimpleRatioGranularityReport(Orga_Model_Granularity $granularity, $label,
-        $refNumeratorIndicator, $refNumeratorAxis,
-        $refDenominatorIndicator, $refDenominatorAxis,
-        $filters=array(), $displayUncertainty=false, $chartType=DW_Model_Report::CHART_PIE, $sortType=DW_Model_Report::SORT_VALUE_DECREASING)
-    {
+    protected function createSimpleRatioGranularityReport(
+        Orga_Model_Granularity $granularity,
+        $label,
+        $refNumeratorIndicator,
+        $refNumeratorAxis,
+        $refDenominatorIndicator,
+        $refDenominatorAxis,
+        $filters = array(),
+        $displayUncertainty = false,
+        $chartType = DW_Model_Report::CHART_PIE,
+        $sortType = DW_Model_Report::SORT_VALUE_DECREASING
+    ) {
         $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty, $filters);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refNumeratorIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis, $granularity->getDWCube()));
-        $report->setDenominator(DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube()));
+        $report->setDenominator(
+            DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube())
+        );
         $report->setDenominatorAxis1(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis, $granularity->getDWCube()));
         $report->setSortType($sortType);
         $report->save();
@@ -330,10 +362,16 @@ class Orga_Populate extends Core_Script_Action
      * @param bool $displayUncertainty
      * @param string $chartType
      */
-    protected function createDoubleGranularityReport(Orga_Model_Granularity $granularity, $label,
-        $refIndicator, $refAxis1, $refAxis2,
-        $filters=array(), $displayUncertainty=false, $chartType=DW_Model_Report::CHART_VERTICAL_GROUPED)
-    {
+    protected function createDoubleGranularityReport(
+        Orga_Model_Granularity $granularity,
+        $label,
+        $refIndicator,
+        $refAxis1,
+        $refAxis2,
+        $filters = array(),
+        $displayUncertainty = false,
+        $chartType = DW_Model_Report::CHART_VERTICAL_GROUPED
+    ) {
         $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty, $filters);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refAxis1, $granularity->getDWCube()));
@@ -355,16 +393,26 @@ class Orga_Populate extends Core_Script_Action
      * @param bool $displayUncertainty
      * @param string $chartType
      */
-    protected function createDoubleRatioGranularityReport(Orga_Model_Granularity $granularity, $label,
-        $refNumeratorIndicator, $refNumeratorAxis1, $refNumeratorAxis2,
-        $refDenominatorIndicator, $refDenominatorAxis1, $refDenominatorAxis2,
-        $filters=array(), $displayUncertainty=false, $chartType=DW_Model_Report::CHART_VERTICAL_GROUPED)
-    {
+    protected function createDoubleRatioGranularityReport(
+        Orga_Model_Granularity $granularity,
+        $label,
+        $refNumeratorIndicator,
+        $refNumeratorAxis1,
+        $refNumeratorAxis2,
+        $refDenominatorIndicator,
+        $refDenominatorAxis1,
+        $refDenominatorAxis2,
+        $filters = array(),
+        $displayUncertainty = false,
+        $chartType = DW_Model_Report::CHART_VERTICAL_GROUPED
+    ) {
         $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty, $filters);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refNumeratorIndicator, $granularity->getDWCube()));
         $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis1, $granularity->getDWCube()));
         $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis2, $granularity->getDWCube()));
-        $report->setDenominator(DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube()));
+        $report->setDenominator(
+            DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube())
+        );
         $report->setDenominatorAxis1(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis1, $granularity->getDWCube()));
         $report->setDenominatorAxis2(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis2, $granularity->getDWCube()));
         $report->save();
@@ -377,7 +425,7 @@ class Orga_Populate extends Core_Script_Action
     {
         /** @var DI\Container $container */
         $container = Zend_Registry::get('container');
-        $container->get(User_Service_User::class)->createUser($email, $email);
+        $container->get(UserService::class)->createUser($email, $email);
     }
 
     /**
@@ -386,10 +434,8 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function addOrganizationAdministrator($email, Orga_Model_Organization $organization)
     {
-        $user = User_Model_User::loadByEmail($email);
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
-        $container->get(Orga_Service_ACLManager::class)->addOrganizationAdministrator($organization, $user, false);
+        $user = User::loadByEmail($email);
+        $this->aclService->addRole($user, new OrganizationAdminRole($user, $organization));
     }
 
     /**
@@ -399,7 +445,19 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function addCellAdministrator($email, Orga_Model_Granularity $granularity, array $members)
     {
-        $this->addUserToCell('administrator', $email, $granularity, $members);
+        $user = User::loadByEmail($email);
+        $this->aclService->addRole($user, new CellAdminRole($user, $granularity->getCellByMembers($members)));
+    }
+
+    /**
+     * @param $email
+     * @param Orga_Model_Granularity $granularity
+     * @param array $members
+     */
+    protected function addCellManager($email, Orga_Model_Granularity $granularity, array $members)
+    {
+        $user = User::loadByEmail($email);
+        $this->aclService->addRole($user, new CellManagerRole($user, $granularity->getCellByMembers($members)));
     }
 
     /**
@@ -409,7 +467,8 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function addCellContributor($email, Orga_Model_Granularity $granularity, array $members)
     {
-        $this->addUserToCell('contributor', $email, $granularity, $members);
+        $user = User::loadByEmail($email);
+        $this->aclService->addRole($user, new CellContributorRole($user, $granularity->getCellByMembers($members)));
     }
 
     /**
@@ -419,21 +478,7 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function addCellObserver($email, Orga_Model_Granularity $granularity, array $members)
     {
-        $this->addUserToCell('observer', $email, $granularity, $members);
+        $user = User::loadByEmail($email);
+        $this->aclService->addRole($user, new CellObserverRole($user, $granularity->getCellByMembers($members)));
     }
-
-    /**
-     * @param $role
-     * @param $email
-     * @param Orga_Model_Granularity $granularity
-     * @param array $members
-     */
-    protected function addUserToCell($role, $email, Orga_Model_Granularity $granularity, array $members)
-    {
-        $cell = $granularity->getCellByMembers($members);
-
-        $user = User_Model_User::loadByEmail($email);
-        $user->addRole(User_Model_Role::loadByRef('cell'.ucfirst(strtolower($role)).'_'.$cell->getId()));
-    }
-
 }

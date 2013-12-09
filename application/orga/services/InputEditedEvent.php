@@ -3,8 +3,8 @@
  * @author matthieu.napoli
  */
 
-use User\Event\UserEvent;
-use User\Event\UserEventTrait;
+use User\Domain\Event\UserEvent;
+use User\Domain\Event\UserEventTrait;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class Orga_Service_InputEditedEvent extends Event implements UserEvent
 {
-    use UserEventTrait;
+    use \User\Domain\Event\UserEventTrait;
 
     const NAME = 'orga.inputEdited';
 

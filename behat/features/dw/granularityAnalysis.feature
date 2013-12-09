@@ -140,8 +140,13 @@ Feature: Granularity dataware analysis feature
     And the "report" datagrid should contain a row:
       | label                      |
       | Analyse préconfigurée test |
+    And the row 1 of the "report" datagrid should contain:
+    # And the row 3 of the "report" datagrid should contain:
+      | label                      |
+      | Analyse préconfigurée test |
   # Accès à l'analyse de la cellule
     When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
+    # When I click "Cliquer pour accéder" in the row 3 of the "report" datagrid
     Then I should see "Analyse préconfigurée test Vue globale"
 
   @javascript
@@ -164,15 +169,47 @@ Feature: Granularity dataware analysis feature
   # Vérification que le filtre sur 2013 est bien présent sur les analyses de la ou des cellule(s) correspondant à cette granularité
     And I click "Retour"
     And I open tab "Analyses"
+    # Then the row 1 of the "report" datagrid should contain:
     Then the row 2 of the "report" datagrid should contain:
       | label                        |
       | Chiffre d'affaire, par année |
     When I click "Cliquer pour accéder" in the row 2 of the "report" datagrid
+    # When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
     And I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 1 row
     And the row 1 of the "reportValues" datagrid should contain:
       | valueAxiso_annee |
       | 2013                |
+
+  @javascript
+  Scenario: Create a granularity analysis, modify it, and save as another configuration scenario
+  # Configuration et lancement d'une nouvelle analyse préconfigurée
+    Given I am on "orga/granularity/report/idCell/1/idGranularity/1/idCube/1"
+    When I click element "#indicatorRatio_indicator"
+    And I select "Camembert" from "chartType"
+    And I click "Lancer"
+    Then the following message is shown and closed: "Analyse effectuée."
+  # Enregistrement de l'analyse préconfigurée
+    When I click "Enregistrer"
+    Then I should see the popup "Enregistrer la configuration de l'analyse"
+    When I fill in "Libellé" with "Analyse préconfigurée test"
+    When I click element "#saveReport .btn:contains('Enregistrer')"
+    Then I should see "Analyse préconfigurée test Niveau organisationnel global"
+    And I should see "Configuration enregistrée"
+  # Modification de l'analyse (dans la même interface) et lancement
+    When I select "Histogramme vertical" from "chartType"
+    And I click "Lancer"
+    Then the following message is shown and closed: "Analyse effectuée."
+  # Enregistrement comme une nouvelle analyse
+    When I click "Enregistrer"
+    Then I should see the popup "Enregistrer la configuration de l'analyse"
+    When I click element "label:contains('Créer une nouvelle configuration')"
+    And I fill in "Libellé" with "Analyse préconfigurée test modifiée"
+    And I click element "#saveReport .btn:contains('Enregistrer')"
+    Then I should see "Analyse préconfigurée test modifiée Niveau organisationnel global"
+
+
+
 
 
 

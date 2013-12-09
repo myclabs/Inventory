@@ -31,24 +31,18 @@ class Orga_Forms_NavigationController extends Core_Controller
                         if ($member->getAxis() === $narrowerAxis) {
                             $listMembers[] = $member;
                         } elseif (!$departureCell->getGranularity()->hasAxis($narrowerAxis)) {
-                            $listMembers[] = Orga_Model_Member::loadByCompleteRefAndAxis(
-                                $this->getParam($narrowerAxis->getRef()),
-                                $narrowerAxis
-                            );
+                            $listMembers[] = $narrowerAxis->getMemberByCompleteRef($this->getParam($narrowerAxis->getRef()));
                         }
                     }
                 }
                 $listMembers = array_unique($listMembers);
             } else {
                 foreach ($narrowerGranularity->getAxes() as $narrowerAxis) {
-                    $listMembers[] = Orga_Model_Member::loadByCompleteRefAndAxis(
-                        $this->getParam($narrowerAxis->getRef()),
-                        $narrowerAxis
-                    );
+                    $listMembers[] = $narrowerAxis->getMemberByCompleteRef($this->getParam($narrowerAxis->getRef()));
                 }
             }
 
-            $arrivalCell = Orga_Model_Cell::loadByGranularityAndListMembers($narrowerGranularity, $listMembers);
+            $arrivalCell = $narrowerGranularity->getCellByMembers($listMembers);
             if (!$arrivalCell->isRelevant()) {
                 UI_Message::addMessageStatic(
                     __('Orga', 'navigation', 'irrelevantCell',

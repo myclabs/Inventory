@@ -39,7 +39,6 @@ sheets:
                 do:
                   - label: "{{ axis.label }}"
               - label: "{{ cellColumnRelevant }}"
-              - label: "{{ cellColumnAllParentsRelevant }}"
             lines:
               - foreach: getChildCellsForGranularity(cell, narrowerGranularity) as childCell
                 do:
@@ -47,5 +46,4 @@ sheets:
                       - foreach: narrowerGranularity.axes as axis
                         do:
                           - "{{ displayCellMemberForAxis(childCell, axis) }}"
-                      - "{{ childCell.relevant }}"
-                      - "{{ childCell.allParentsRelevant }}"
+                      - "{{ childCell.isRelevant }}"

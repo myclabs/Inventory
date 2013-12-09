@@ -201,10 +201,10 @@
         </tu>
         <tu tuid="sortByMembers">
             <tuv xml:lang="fr">
-                <seg>Ordre des membres de l'axe</seg>
+                <seg>Ordre des éléments de l'axe</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Sort according to axis members</seg>
+                <seg>Sort according to axis elements</seg>
             </tuv>
         </tu>
         <tu tuid="withUncertaintyCheckbox">

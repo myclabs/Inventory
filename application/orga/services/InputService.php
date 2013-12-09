@@ -50,11 +50,7 @@ class Orga_Service_InputService
      */
     public function editInput(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $newValues)
     {
-        try {
-            $inputSet = $cell->getAFInputSetPrimary();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $inputSet = null;
-        }
+        $inputSet = $cell->getAFInputSetPrimary();
 
         // Si l'AF de la cellule a été changé, on discarde l'ancienne saisie
         if ($inputSet && $inputSet->getAF() !== $newValues->getAF()) {
@@ -99,6 +95,10 @@ class Orga_Service_InputService
                 new ServiceCallTask('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
             );
         }
+        // Regénère l'exports de la cellule.
+        $this->workDispatcher->runBackground(
+            new ServiceCallTask('Orga_Service_Export', 'saveCellInput', [$cell])
+        );
     }
 
     /**

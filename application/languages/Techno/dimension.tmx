@@ -21,10 +21,10 @@
         </tu>
         <tu tuid="addPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Ajout d'un membre</seg>
+                <seg>Ajout d'un élément</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of a member</seg>
+                <seg>Creation of an element</seg>
             </tuv>
         </tu>
 

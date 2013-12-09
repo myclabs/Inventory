@@ -15,22 +15,10 @@ use Core\Annotation\Secure;
  */
 class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
 {
-
-
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("viewCell")
      */
-    function getelementsAction()
+    public function getelementsAction()
     {
         $idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($idCell);
@@ -64,7 +52,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                 Orga_Model_Cell::getAlias()
             );
             $this->request->order->addOrder(
-                Orga_Model_Cell::QUERY_MEMBERS_HASHKEY,
+                Orga_Model_Cell::QUERY_TAG,
                 Core_Model_Order::ORDER_ASC,
                 Orga_Model_Cell::getAlias()
             );
@@ -89,7 +77,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $data = array();
         $data['index'] = $cell->getId();
         foreach ($cell->getMembers() as $member) {
-            $data[$member->getAxis()->getRef()] = $member->getRef();
+            $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
         }
 
         if ($crossedGranularity === $granularityForInventoryStatus) {
@@ -108,31 +96,27 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
             $totalChildInputCells = 0;
             foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
                 if ($inputGranularity === $cell->getGranularity()) {
-                    try {
-                        $afInputSetPrimary = $cell->getAFInputSetPrimary();
+                    $afInputSetPrimary = $cell->getAFInputSetPrimary();
+                    if ($afInputSetPrimary !== null) {
                         if ($afInputSetPrimary->isInputComplete()) {
                             $data['advancementInput'] ++;
                         }
                         if ($afInputSetPrimary->isFinished()) {
                             $data['advancementFinishedInput'] ++;
                         }
-                    } catch (Core_Exception_UndefinedAttribute $e) {
-                        // Pas de saisie pour l'instant = pas d'avancement.
                     }
                     $totalChildInputCells ++;
                 } elseif ($inputGranularity->isNarrowerThan($cell->getGranularity())) {
                     $inputCells = $cell->getChildCellsForGranularity($inputGranularity);
                     foreach ($inputCells as $inputCell) {
-                        try {
-                            $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
+                        $childAfInputSetPrimary = $inputCell->getAFInputSetPrimary();
+                        if ($childAfInputSetPrimary !== null) {
                             if ($childAfInputSetPrimary->isInputComplete()) {
                                 $data['advancementInput'] ++;
                             }
                             if ($childAfInputSetPrimary->isFinished()) {
                                 $data['advancementFinishedInput'] ++;
                             }
-                        } catch (Core_Exception_UndefinedAttribute $e) {
-                            // Pas de saisie pour l'instant = pas d'avancement.
                         }
                         $totalChildInputCells ++;
                     }
@@ -149,25 +133,9 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction modifiant un élément.
-     *
-     * Récupération de la ligne à modifier de la manière suivante :
-     *  $this->update['index'].
-     *
-     * Récupération de la colonne à modifier de la manière suivante :
-     *  $this->update['colonne'].
-     *
-     * Récupération de la nouvelle valeur à modifier de la manière suivante :
-     *  $this->update['valeur'].
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie un message d'information et la nouvelle donnée à afficher dans la cellule.
-     *
      * @Secure("inputCell")
      */
-    function updateelementAction()
+    public function updateelementAction()
     {
         if ($this->update['column'] !== 'inventoryStatus') {
             parent::updateelementAction();
@@ -184,7 +152,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
     /**
      * @secure("viewCell")
      */
-    function getusersdetailsAction()
+    public function getusersdetailsAction()
     {
         $this->view->idCell = $this->getParam('idCell');
         $cell = Orga_Model_Cell::load($this->view->idCell);
@@ -193,26 +161,28 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
         $this->view->idGranularity = $granularity->getId();
 
         $this->view->acls = [];
+        $organizationACLs = [];
+        foreach ($cell->getOrganization()->getAdminRoles() as $role) {
+            $organizationACLs[$role->getLabel()][] = $role->getUser()->getEmail();
+        }
+        $this->view->acls[$cell->getOrganization()->getLabel()] = $organizationACLs;
         foreach ($granularity->getOrganization()->getGranularities() as $granularityACL) {
             if ($granularityACL->getCellsWithACL()) {
                 $granularityACLs = [];
                 if ($granularityACL->isBroaderThan($granularity)) {
                     $parentCell = $cell->getParentCellForGranularity($granularityACL);
-                    $cellResource = User_Model_Resource_Entity::loadByEntity($parentCell);
-                    $this->addUserToArray($cellResource, $granularityACLs);
+                    $this->addUserToArray($parentCell, $granularityACLs);
                     if (!empty($granularityACLs)) {
                         $this->view->acls[$parentCell->getLabel()] = $granularityACLs;
                     }
-                } else if ($granularityACL === $granularity) {
-                    $cellResource = User_Model_Resource_Entity::loadByEntity($cell);
-                    $this->addUserToArray($cellResource, $granularityACLs);
+                } elseif ($granularityACL === $granularity) {
+                    $this->addUserToArray($cell, $granularityACLs);
                     if (!empty($granularityACLs)) {
                         $this->view->acls[$cell->getLabel()] = $granularityACLs;
                     }
-                } else if ($granularityACL->isNarrowerThan($granularity)) {
+                } elseif ($granularityACL->isNarrowerThan($granularity)) {
                     foreach ($cell->getChildCellsForGranularity($granularityACL) as $childCell) {
-                        $cellResource = User_Model_Resource_Entity::loadByEntity($childCell);
-                        $this->addUserToArray($cellResource, $granularityACLs);
+                        $this->addUserToArray($childCell, $granularityACLs);
                     }
                     if (!empty($granularityACLs)) {
                         $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
@@ -221,8 +191,7 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
                     try {
                         $crossedGranularity = $granularity->getCrossedGranularity($granularityACL);
                         foreach ($cell->getChildCellsForGranularity($crossedGranularity) as $childCrossedGranularity) {
-                            $cellResource = User_Model_Resource_Entity::loadByEntity($childCrossedGranularity->getParentCellForGranularity($granularityACL));
-                            $this->addUserToArray($cellResource, $granularityACLs);
+                            $this->addUserToArray($childCrossedGranularity->getParentCellForGranularity($granularityACL), $granularityACLs);
                         }
                         if (!empty($granularityACLs)) {
                             $this->view->acls[$granularityACL->getLabel()] = $granularityACLs;
@@ -235,25 +204,15 @@ class Orga_Datagrid_Cell_InventoriesController extends UI_Controller_Datagrid
     }
 
     /**
-     * @param User_Model_Resource_Entity $cellResource
+     * @param Orga_Model_Cell $cell
      * @param $granularityACLs
      */
-    protected function addUserToArray(User_Model_Resource_Entity $cellResource, &$granularityACLs)
+    protected function addUserToArray(Orga_Model_Cell $cell, &$granularityACLs)
     {
-        foreach ($cellResource->getLinkedSecurityIdentities() as $securityIdentity) {
-            if ($securityIdentity instanceof User_Model_Role) {
-                $roleUsers = isset($granularityACLs[$securityIdentity->getName()]) ? $granularityACLs[$securityIdentity->getName()] : [];
-                foreach ($securityIdentity->getUsers() as $user) {
-                    if (!in_array($user->getEmail(), $roleUsers)) {
-                        $roleUsers[] = $user->getEmail();
-                    }
-                }
-                if (!empty($roleUsers)) {
-                    $granularityACLs[$securityIdentity->getName()] = $roleUsers;
-                }
+        foreach ($cell->getAllRoles() as $role) {
+            if (!isset($granularityACLs[$role->getLabel()]) || !in_array($role->getUser()->getEmail(), $granularityACLs[$role->getLabel()])) {
+                $granularityACLs[$role->getLabel()][] = $role->getUser()->getEmail();
             }
         }
     }
-
-
 }

@@ -17,7 +17,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     When I fill in "addAxis_label" with "Test"
     And I fill in "addAxis_ref" with "test"
     And I click "Valider"
-    And I wait 3 seconds
+    And I wait 5 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Détection modification
     When I am on "orga/cell/details/idCell/1/tab/organization"

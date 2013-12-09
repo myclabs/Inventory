@@ -13,10 +13,10 @@
         </tu>
         <tu tuid="organizationalMembers">
             <tuv xml:lang="fr">
-                <seg>Membres des axes organisationnels</seg>
+                <seg>Éléments des axes organisationnels</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organizational members</seg>
+                <seg>Organizational elements</seg>
             </tuv>
         </tu>
         <tu tuid="granularityReports">

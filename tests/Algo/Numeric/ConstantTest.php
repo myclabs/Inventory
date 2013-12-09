@@ -6,6 +6,7 @@
  * @package Algo
  */
 
+use Core\Test\TestCase;
 use Keyword\Domain\Keyword;
 use Unit\UnitAPI;
 
@@ -114,7 +115,7 @@ class Numeric_ConstantTest
  * constantSetUpTest
  * @package Algo
  */
-class Numeric_ConstantSetUpTest extends Core_Test_TestCase
+class Numeric_ConstantSetUpTest extends TestCase
 {
 
     /**

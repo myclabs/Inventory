@@ -1,4 +1,6 @@
 <?php
+use User\Domain\User;
+
 /**
  * @package Simulation
  * @subpackage Model
@@ -64,7 +66,7 @@ class Simulation_Model_Set extends Core_Model_Entity
     /**
      * Utilisateur effectuant les Simulations.
      *
-     * @var User_Model_User
+     * @var User
      */
     protected $user = null;
 
@@ -101,7 +103,6 @@ class Simulation_Model_Set extends Core_Model_Entity
         $this->dWAxis = new DW_Model_Axis($this->dWCube);
         $this->dWAxis->setRef('set');
         $this->dWAxis->setLabel(__('Simulation', 'name', 'scenario'));
-        $this->dWAxis->setPosition();
 
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
@@ -189,9 +190,9 @@ class Simulation_Model_Set extends Core_Model_Entity
 
     /**
      * Spécifie le PrimarySet du jeu de simulation.
-     * @param User_Model_User $user
+     * @param User $user
      */
-    public function setUser(User_Model_User $user)
+    public function setUser(User $user)
     {
         if ($this->user !== $user) {
             if ($this->user !== null) {
@@ -203,7 +204,7 @@ class Simulation_Model_Set extends Core_Model_Entity
 
     /**
      * Renvoie l'User du Set.
-     * @return User_Model_User
+     * @return User
      */
     public function getUser()
     {

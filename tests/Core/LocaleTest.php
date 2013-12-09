@@ -1,4 +1,6 @@
 <?php
+use Core\Test\TestCase;
+
 /**
  * @author matthieu.napoli
  */
@@ -6,7 +8,7 @@
 /**
  * Test pour Core_Locale
  */
-class Core_Test_LocaleTest extends Core_Test_TestCase
+class Core_Test_LocaleTest extends TestCase
 {
     /**
      * @expectedException Core_Exception_InvalidArgument

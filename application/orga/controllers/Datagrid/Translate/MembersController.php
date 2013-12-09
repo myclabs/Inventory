@@ -33,9 +33,8 @@ class Orga_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
     {
         $this->request->filter->addCondition(
             Orga_Model_Member::QUERY_AXIS,
-            Orga_Model_Axis::loadByRefAndOrganization(
-                $this->getParam('refAxis'),
-                Orga_Model_Organization::load($this->getParam('idOrganization'))
+            Orga_Model_Organization::load($this->getParam('idOrganization'))->getAxisByRef(
+                $this->getParam('refAxis')
             )
         );
 
@@ -67,10 +66,9 @@ class Orga_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $member = Orga_Model_Member::loadByCompleteRefAndAxis(
-            $this->update['index'],
-            Orga_Model_Axis::loadByRefAndOrganization($this->getParam('refAxis'), Orga_Model_Organization::load($this->getParam('idOrganization')))
-        );
+        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $axis = $organization->getAxisByRef($this->getParam('refAxis'));
+        $member = $axis->getMemberByCompleteRef($this->update['index']);
         $member->reloadWithLocale(Core_Locale::load($this->update['column']));
         $member->setLabel($this->update['value']);
         $this->data = $member->getLabel();

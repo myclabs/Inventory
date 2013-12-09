@@ -64,7 +64,7 @@ class Orga_DatagridConfiguration
         $columnAxis->list = array();
 
         if ($axis->hasMembers()) {
-            $childMembers = $axis->getMembers();
+            $childMembers = $axis->getMembers()->toArray();
             foreach ($cell->getMembers() as $cellMember) {
                 if ($cellMember->getAxis()->isBroaderThan($axis)) {
                     $childMembers = array_intersect($childMembers, $cellMember->getChildrenForAxis($axis));
@@ -72,7 +72,7 @@ class Orga_DatagridConfiguration
             }
             $columnAxis->list = array();
             foreach ($childMembers as $childMember) {
-                $columnAxis->list[$childMember->getRef()] = $childMember->getLabel();
+                $columnAxis->list[$childMember->getCompleteRef()] = $childMember->getLabel();
             }
             if (count($columnAxis->list) > 5) {
                 $sizeFilter = 5;

@@ -2,10 +2,31 @@
 Feature: Cell administrator feature
 
   @javascript
+  Scenario: Global cell administrator login scenario
+    Given I am on the homepage
+    And I wait for the page to finish loading
+  # Login en tant qu'administrateur de la cellule globale
+    When I fill in "email" with "administrateur.global@toto.com"
+    And I fill in "password" with "administrateur.global@toto.com"
+    And I click "connection"
+  # On tombe sur la page de la cellule globale
+    Then I should see "Vue globale Workspace avec données"
+    When I wait 5 seconds
+  # Vérification onglets visibles et invisibles
+    When I open tab "Paramétrage"
+  # Vérification que, sous l'onglet "Paramétrage", l'utilisateur voit uniquement "Éléments" et "Pertinence"
+    And I open tab "Éléments"
+    And I open tab "Pertinence"
+    Then I should not see "Informations générales"
+    And I should not see "Axes"
+    And I should not see "Niveaux"
+    And I should not see "Contrôle"
+
+  @javascript
   Scenario: Single cell administrator login scenario
     Given I am on the homepage
     And I wait for the page to finish loading
-  # Login en tant qu'utilisateur connecté
+  # Login
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
@@ -66,25 +87,26 @@ Feature: Cell administrator feature
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
+    And I wait 5 seconds
     Then I should see "Europe | Marque A Workspace avec données"
   # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
     When I open tab "Paramétrage"
   # On tombe sur l'onglet "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
-  # Ajout d'un membre, saisie correcte (parent renseigné en partie)
+  # Ajout d'un élément, saisie correcte (parent renseigné en partie)
     When I click "Ajouter"
-    Then I should see the popup "Ajout d'un membre à l'axe « Site »"
+    Then I should see the popup "Ajout d'un élément à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
-    And I fill in "listMemberssite_broaderpays_addForm" with "france#"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label | ref | broaderpays | broadermarque |
       | AAA   | aaa | France      | Marque A      |
-  # Modification d'un membre
+  # Modification d'un élément
     When I set "Annecy modifiée" for column "label" of row 2 of the "listMemberssite" datagrid with a confirmation message
     And I set "annecy_modifie" for column "ref" of row 2 of the "listMemberssite" datagrid with a confirmation message
     Then the row 2 of the "listMemberssite" datagrid should contain:
@@ -100,13 +122,13 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
     And I open tab "Paramétrage"
-  # Ajout et suppression d'un membre à l'axe "Pays"
+  # Ajout et suppression d'un élément à l'axe "Pays"
     And I open collapse "Pays"
     And I click "Ajouter"
-    Then I should see the popup "Ajout d'un membre à l'axe « Pays »"
+    Then I should see the popup "Ajout d'un élément à l'axe « Pays »"
     When I fill in "listMemberspays_label_addForm" with "AAA"
     And I fill in "listMemberspays_ref_addForm" with "aaa"
-    And I fill in "listMemberspays_broaderzone_addForm" with "europe#"
+    And I fill in "listMemberspays_broaderzone_addForm" with "europe#da39a3ee5e6b4b0d3255bfef95601890afd80709"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the "listMemberspays" datagrid should contain 2 row
@@ -118,7 +140,7 @@ Feature: Cell administrator feature
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
     And the "listMemberspays" datagrid should contain 1 row
-  # TODO : Suppression d'un membre entraînant la suppression de cellules associées à des DWs (par exemple un site).
+  # TODO : Suppression d'un élément entraînant la suppression de cellules associées à des DWs (par exemple un site).
 
 
   @javascript

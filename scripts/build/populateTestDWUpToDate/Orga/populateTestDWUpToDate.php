@@ -18,6 +18,8 @@ class Orga_PopulateTestDWUpToDate extends Orga_Populate
      */
     public function runEnvironment($environment)
     {
+        parent::runEnvironment($environment);
+
         $entityManagers = Zend_Registry::get('EntityManagers');
         /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = $entityManagers['default'];
