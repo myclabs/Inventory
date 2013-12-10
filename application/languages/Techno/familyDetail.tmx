@@ -2,7 +2,7 @@
 <tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
-    
+
         <!-- Onglet « Général » -->
 
         <!-- Formulaire des données générales -->
@@ -16,39 +16,6 @@
             </tuv>
         </tu>
 
-        <!-- Tags de description -->
-
-        <!-- 
-        <tu tuid="descriptionTagTitle">
-            <tuv xml:lang="fr">
-                <seg>Tags de description</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Description tags</seg>
-            </tuv>
-        </tu>
-        -->
-        <tu tuid="descriptionTagAddPanelTitle">
-            <tuv xml:lang="fr">
-                <seg>Ajout d'un tag</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Creation of a tag</seg>
-            </tuv>
-        </tu>
-
-        <!-- Tags communs des éléments -->
-        <!-- 
-        <tu tuid="commonTagTitle">
-            <tuv xml:lang="fr">
-                <seg>Tags communs des éléments de la famille</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Family elements common tags</seg>
-            </tuv>
-        </tu>
-        -->
-        
         <!-- Dimensions -->
 
         <tu tuid="dimensionAddPanelTitle">

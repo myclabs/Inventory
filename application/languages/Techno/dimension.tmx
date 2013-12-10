@@ -3,6 +3,14 @@
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
+        <tu tuid="deleteDimension">
+            <tuv xml:lang="fr">
+                <seg>Supprimer cette dimension</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Delete this dimension</seg>
+            </tuv>
+        </tu>
         <tu tuid="pageTitle">
             <tuv xml:lang="fr">
                 <seg>Édition d'une dimension</seg>
@@ -19,12 +27,12 @@
                 <seg>Return to family</seg>
             </tuv>
         </tu>
-        <tu tuid="addMember">
+        <tu tuid="addMembers">
             <tuv xml:lang="fr">
-                <seg>Ajout d'un membre</seg>
+                <seg>Ajout de membres</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of a member</seg>
+                <seg>Creation of members</seg>
             </tuv>
         </tu>
         <tu tuid="addMemberList">
@@ -36,17 +44,17 @@
             </tuv>
         </tu>
 
-        <tu tuid="warningEditingMembers">
+        <tu tuid="warningEditingDimensions">
             <tuv xml:lang="fr">
                 <seg>
                     Attention! Si vous modifiez les dimensions, il est nécessaire de
-                    réouvrir (rafraichir) cette page si vous voulez ensuite modifier les élements ci-dessus.
+                    réouvrir (rafraichir) cette page si vous voulez ensuite modifier les élements.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
                     Warning! If you edit the dimensions, you will need to reopen (refresh)
-                    this page if you then want to edit the elements above.
+                    this page if you then want to edit the elements.
                 </seg>
             </tuv>
         </tu>

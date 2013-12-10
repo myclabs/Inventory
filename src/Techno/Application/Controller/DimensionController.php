@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use Techno\Domain\Family\Dimension;
 use Techno\Domain\Family\Family;
 use Techno\Domain\Family\Member;
 
@@ -9,6 +10,49 @@ use Techno\Domain\Family\Member;
  */
 class Techno_DimensionController extends Core_Controller
 {
+    /**
+     * Ajout d'une dimension
+     * @Secure("editTechno")
+     */
+    public function addAction()
+    {
+        $family = Family::load($this->getParam('idFamily'));
+
+        $ref = trim($this->getParam('ref'));
+        $label = trim($this->getParam('label'));
+        $orientation = $this->getParam('orientation');
+
+        try {
+            Core_Tools::checkRef($ref);
+        } catch (Core_Exception_User $e) {
+            UI_Message::addMessageStatic($e->getMessage());
+            $this->redirect('techno/family/edit/id/' . $family->getId());
+            return;
+        }
+
+        $dimension = new Dimension($family, $ref, $label, $orientation);
+        $dimension->save();
+        $family->addDimension($dimension);
+        $this->entityManager->flush();
+
+        UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
+        $this->redirect('techno/family/edit/id/' . $family->getId());
+    }
+    /**
+     * Suppression d'une dimension
+     * @Secure("editTechno")
+     */
+    public function deleteAction()
+    {
+        $dimension = Dimension::load($this->getParam('id'));
+        $dimension->getFamily()->removeDimension($dimension);
+        $dimension->delete();
+        $this->entityManager->flush();
+
+        UI_Message::addMessageStatic(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
+        $this->redirect('techno/family/edit/id/' . $dimension->getFamily()->getId());
+    }
+
     /**
      * Ajout de membres
      * @Secure("editTechno")
