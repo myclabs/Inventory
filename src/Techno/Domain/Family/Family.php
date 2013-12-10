@@ -177,20 +177,20 @@ class Family extends Core_Model_Entity
 
     /**
      * Retourne une dimension en la recherchant par son mot-clé
-     * @param string $dimensionId
+     * @param string $dimensionRef
      * @return Dimension
      * @throws Core_Exception_NotFound La dimension est introuvable
      */
-    public function getDimension($dimensionId)
+    public function getDimension($dimensionRef)
     {
         $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('ref', $dimensionId));
+        $criteria->where(Criteria::expr()->eq('ref', $dimensionRef));
         /** @var Collection $results */
         $results = $this->dimensions->matching($criteria);
         if (count($results) > 0) {
             return $results->first();
         }
-        throw new Core_Exception_NotFound("La dimension $dimensionId est introuvable dans la famille {$this->ref}");
+        throw new Core_Exception_NotFound("La dimension $dimensionRef est introuvable dans la famille {$this->ref}");
     }
 
     /**

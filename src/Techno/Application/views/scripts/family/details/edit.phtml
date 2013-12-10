@@ -10,30 +10,154 @@ $family = $this->family;
     <?=__('Techno', 'name', 'dimensions')?>
 </h4>
 
+<div class="alert">
+    <?=__('Techno', 'dimension', 'warningEditingMembers');?>
+</div>
+
 <?php foreach ($family->getDimensions() as $dimension) : ?>
 
     <h5>
         <?=$dimension->getLabel()?>: <code><?=$dimension->getRef()?></code>
     </h5>
 
-    <ul>
-        <?php foreach ($dimension->getMembers() as $member) : ?>
-            <li>
-                <?=$member->getLabel()?>: <code><?=$member->getRef()?></code>
-            </li>
-        <?php endforeach; ?>
-        <li>
-            <a class="addMember" href="#" data-dimension="<?=$dimension->getRef()?>">
-                <?=__('UI', 'verb', 'add')?></a>
-        </li>
-    </ul>
+    <?php
+    // Datagrid des membres de la dimension
+    $datagrid = new UI_Datagrid('membersDatagrid' . $dimension->getRef(), 'datagrid_member-datagrid', 'techno');
+    $datagrid->pagination = false;
+    $datagrid->addParam('id', $dimension->getId());
+    $datagrid->deleteElements = true;
+    $datagrid->addElements = false;
+    // Colonne ref
+    $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+    $refColumn->editable = true;
+    $datagrid->addCol($refColumn);
+    // Colonne label
+    $labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+    $labelColumn->editable = true;
+    $datagrid->addCol($labelColumn);
+    // Colonne Position
+    $orderColumn = new UI_Datagrid_Col_Order('position');
+    $orderColumn->editable = true;
+    $datagrid->addCol($orderColumn);
+    $datagrid->display();
+    ?>
+
+    <p>
+        <button type="button" class="btn addMemberButton" data-dimension="<?=$dimension->getRef()?>">
+            <?=__('UI', 'verb', 'add')?>
+        </button>
+    </p>
 
 <?php endforeach; ?>
 
+<div id="addMemberPopup" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>
+            <?=__('Techno', 'dimension', 'addMemberList')?>
+        </h3>
+    </div>
+    <div class="modal-body">
+        <form id="addMemberForm" class="form-horizontal"
+              action="<?=$this->baseUrl('techno/dimension/add-members')?>" method="post">
+            <div class="control-group">
+                <label class="control-label" for="inputMemberList">
+                    <?=__('Techno', 'dimension', 'addMemberList')?>
+                </label>
+                <div class="controls">
+                    <textarea id="inputMemberList" name="inputMemberList" class="input-block-level" rows="8"></textarea>
+                    <p class="help-block">
+                        <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
+                        <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
+                    </p>
+                    <p>
+                        <span class="help-block">
+                            <?=__('Techno', 'import', 'addMemberListHelp')?>
+                        </span>
+                    </p>
+                    <pre><code><?=__('Techno', 'import', 'addMemberListExample')?></code></pre>
+                </div>
+                <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
+                <input type="hidden" name="dimension" id="inputDimension" />
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="addMemberFormSubmit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
+        <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+    </div>
+</div>
+
 <script>
-    $('.addMember').click(function(e) {
+    // Ajout de membres
+    $('.addMemberButton').click(function(e) {
         e.preventDefault();
 
         var dimension = $(this).data('dimension');
+
+        $('#inputMemberListValidationOK').text('');
+        $('#inputMemberListValidationNOK').text('');
+
+        $('#inputDimension').val(dimension);
+        $('#addMemberPopup').modal('show');
+    });
+
+    // Validation des champs
+    $('#inputMemberList').keyup(function() {
+        var text = $.trim($(this).val());
+        var lines = text.split(/\r?\n/);
+        var valid = true;
+        var message = '';
+
+        for (var i = 0; i < lines.length; ++i) {
+            var line = lines[i];
+            var array = line.split(/,/);
+
+            if (array.length != 2) {
+                message = <?=json_encode(__('Techno', 'import', 'errorOneCommaPerLine'))?>;
+                valid = false;
+                break;
+            }
+
+            var ref = $.trim(array[0]);
+            var label = $.trim(array[1]);
+
+            // Validate ref
+            if ((ref.length == 0) || (! /^[a-z0-9_]+$/.test(ref))) {
+                message = <?=json_encode(__('Techno', 'import', 'errorInvalidRef'))?>;
+                message = message.replace('{line}', (i + 1).toString());
+                valid = false;
+                break;
+            }
+
+            // Validate label
+            if (label.length == 0) {
+                message = <?=json_encode(__('Techno', 'import', 'errorInvalidLabel'))?>;
+                message = message.replace('{line}', (i + 1).toString());
+                valid = false;
+                break;
+            }
+        }
+
+        $('#addMemberFormSubmit').prop('disabled', !valid);
+
+        if (valid) {
+            $('#inputMemberListValidationOK').text(
+                lines.length + ' ' +
+                <?=json_encode(__('Techno', 'import', 'membersFound'))?>
+            );
+            $('#inputMemberListValidationNOK').text('');
+        } else {
+            $('#inputMemberListValidationOK').text('');
+            $('#inputMemberListValidationNOK').text(
+                <?=json_encode(__('Techno', 'import', 'invalidMembersInput'))?> + ' ' + message
+            );
+        }
+    });
+
+    // Soumission du formulaire
+    $('#addMemberFormSubmit').click(function(e) {
+        e.preventDefault();
+        $('#addMemberForm').submit();
     });
 </script>

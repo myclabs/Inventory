@@ -93,6 +93,14 @@ class Member extends Core_Model_Entity
     }
 
     /**
+     * @param string $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+    }
+
+    /**
      * @return string
      */
     public function getLabel()
