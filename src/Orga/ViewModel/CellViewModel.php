@@ -33,6 +33,36 @@ class CellViewModel
     public $tag;
 
     /**
+     * @var array
+     */
+    public $administrators = [];
+
+    /**
+     * @var boolean
+     */
+    public $showsUsers = false;
+
+    /**
+     * @var boolean
+     */
+    public $showReports = false;
+
+    /**
+     * @var boolean
+     */
+    public $showExports = false;
+
+    /**
+     * @var boolean
+     */
+    public $showInventory = false;
+
+    /**
+     * @var bool
+     */
+    public $canEditInventory = false;
+
+    /**
      * @var string
      */
     public $inventoryStatus = null;
@@ -41,6 +71,11 @@ class CellViewModel
      * @var string
      */
     public $inventoryStatusTitle = '';
+
+    /**
+     * @var string
+     */
+    public $inventoryStatusStyle = '';
 
     /**
      * @var int
@@ -65,7 +100,7 @@ class CellViewModel
     /**
      * @var boolean
      */
-    public $canBeInputted = false;
+    public $showInput = false;
 
     /**
      * @var string
@@ -86,19 +121,4 @@ class CellViewModel
      * @var int
      */
     public $inputCompletion = 0;
-
-    /**
-     * @var boolean
-     */
-    public $canBeAnalyzed = false;
-
-    /**
-     * @var array
-     */
-    public $administrators = [];
-
-    /**
-     * @var boolean
-     */
-    public $allowACL = false;
 }

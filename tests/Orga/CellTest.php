@@ -571,7 +571,7 @@ class Orga_Test_CellAttributes extends TestCase
         $this->axis2->setPosition(1);
         $this->axis12->setPosition(1);
 
-        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCell'), $this->cell0_0->getExtendedLabel());
+        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel());
 
         $this->assertSame('Label 111 A', $this->cell1_111a->getExtendedLabel());
         $this->assertSame('Label 111 B', $this->cell1_111b->getExtendedLabel());

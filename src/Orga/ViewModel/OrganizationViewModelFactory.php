@@ -47,7 +47,7 @@ class OrganizationViewModelFactory
             $organization
         );
         if (!$viewModel->canBeEdited) {
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
                 $query = new Core_Model_Query();
                 $query->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
                 $query->aclFilter->enabled = true;

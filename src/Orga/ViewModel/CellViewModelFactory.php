@@ -26,17 +26,22 @@ class CellViewModelFactory
     /**
      * @var array
      */
-    private $inventoryStatusList;
+    public $inventoryStatusList;
 
     /**
      * @var array
      */
-    private $inputStatusList;
+    public $inventoryStatusStyles;
 
     /**
      * @var array
      */
-    private $inputStatusStyleList;
+    public $inputStatusList;
+
+    /**
+     * @var array
+     */
+    public $inputStatusStyles;
 
     /**
      * @param ACLService $aclService
@@ -50,24 +55,24 @@ class CellViewModelFactory
             Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
             Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
         ];
-        $imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
-        $imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
-        $imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
-        $imageInputIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
-        $imageInputNotStarted = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
-        $this->inputStatusList = [
-            AF_Model_InputSet_Primary::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
-            AF_Model_InputSet_Primary::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
-            AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => $imageCalculationIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusCalculationIncomplete'),
-            AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
-            null => $imageInputNotStarted->render() . ' ' . __('AF', 'inputInput', 'statusNotStarted')
+        $this->inventoryStatusStyles = [
+            Orga_Model_Cell::STATUS_NOTLAUNCHED => 'inverse',
+            Orga_Model_Cell::STATUS_ACTIVE => 'info',
+            Orga_Model_Cell::STATUS_CLOSED => 'info'
         ];
-        $this->inputStatusStyleList = [
-            AF_Model_InputSet_Primary::STATUS_FINISHED => 'progress-success',
-            AF_Model_InputSet_Primary::STATUS_COMPLETE => 'progress-warning',
-            AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'progress-danger',
-            AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'progress-danger',
-            null => 'progress-danger'
+        $this->inputStatusList = [
+            AF_Model_InputSet_Primary::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
+            AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
+            AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
+            AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
+            null => __('AF', 'inputInput', 'statusNotStarted')
+        ];
+        $this->inputStatusStyles = [
+            AF_Model_InputSet_Primary::STATUS_FINISHED => 'success',
+            AF_Model_InputSet_Primary::STATUS_COMPLETE => 'warning',
+            AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'danger',
+            AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'danger',
+            null => 'danger'
         ];
     }
 
@@ -76,13 +81,16 @@ class CellViewModelFactory
      * @param User $user
      * @param bool $withAdministrators
      * @param bool $withACL
-     * @param bool $withDW
+     * @param bool $withReports
+     * @param bool $withExports
      * @param bool $withInventory
+     * @param bool $editInventory
      * @param bool $withInput
      * @return CellViewModel
      */
     public function createCellViewModel(Orga_Model_Cell $cell, User $user,
-        $withAdministrators=null, $withACL=null, $withDW=null, $withInventory=null, $withInput=null)
+        $withAdministrators=null, $withACL=null, $withReports=null, $withExports=null,
+        $withInventory=null, $editInventory=null, $withInput=null)
     {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
@@ -91,7 +99,7 @@ class CellViewModelFactory
         $cellViewModel->relevant = $cell->isRelevant();
         $cellViewModel->tag = $cell->getTag();
 
-        // Administrateurs
+        // Administrateurs.
         if ($withAdministrators === true) {
             foreach ($cell->getAdminRoles() as $administrator) {
                 array_unshift($cellViewModel->administrators, $administrator->getUser()->getEmail());
@@ -106,25 +114,34 @@ class CellViewModelFactory
             }
         }
 
-        // Utilisateurs
+        // Utilisateurs.
         if (($withACL === true)
             || (($withACL !== false)
                 && ($cell->getGranularity()->getCellsWithACL())
                 && ($this->aclService->isAllowed($user, Action::ALLOW(), $cell)))
         ) {
-            $cellViewModel->allowACL = true;
+            $cellViewModel->showsUsers = true;
         }
 
-        // DW
-        if (($withDW === true)
-            || (($withDW !== false)
+        // Reports.
+        if (($withReports === true)
+            || (($withReports !== false)
                 && ($cell->getGranularity()->getCellsGenerateDWCubes())
                 && ($this->aclService->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
         ) {
-            $cellViewModel->canBeAnalyzed = true;
+            $cellViewModel->showReports = true;
+        }
+
+        // Exports.
+        if (($withExports === true)
+            || (($withExports !== false)
+                && ($this->aclService->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
+        ) {
+            $cellViewModel->showExports = true;
         }
 
         // Inventory
+        $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
         if (($withInventory === true)
             || (($withInventory !== false)
                 && (($this->aclService->isAllowed($user, CellAction::VIEW_REPORTS(), $cell))))
@@ -132,11 +149,19 @@ class CellViewModelFactory
             try {
                 $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
+                if (($editInventory)
+                    || (($cell->getGranularity() === $granularityForInventoryStatus)
+                        && ($this->aclService->isAllowed($user, Action::EDIT(), $cell)))) {
+                    $cellViewModel->canEditInventory = true;
+                }
+
                 if (($cell->getGranularity() === $granularityForInventoryStatus)
                     || ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus))
                 ) {
-                    $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
+                    $cellViewModel->showInventory = true;
+
                     $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
+                    $cellViewModel->inventoryStatusStyle = $this->inventoryStatusStyles[$cellViewModel->inventoryStatus];
 
                     $cellViewModel->inventoryCompletion = 0;
                     $cellViewModel->inventoryNotStartedInputsNumber = 0;
@@ -200,18 +225,18 @@ class CellViewModelFactory
                 && ($cell->getGranularity()->getInputConfigGranularity() !== null)
                 && (($this->aclService->isAllowed($user, CellAction::INPUT(), $cell))))
         ) {
-            $cellViewModel->canBeInputted = $this->aclService->isAllowed($user, CellAction::INPUT(), $cell);
+            $cellViewModel->showInput = true;
 
             $aFInputSetPrimary = $cell->getAFInputSetPrimary();
             if ($aFInputSetPrimary !== null) {
                 $cellViewModel->inputStatus = $aFInputSetPrimary->getStatus();
                 $cellViewModel->inputStatusTitle = $this->inputStatusList[$cellViewModel->inputStatus];
-                $cellViewModel->inputStatusStyle = $this->inputStatusStyleList[$cellViewModel->inputStatus];
+                $cellViewModel->inputStatusStyle = $this->inputStatusStyles[$cellViewModel->inputStatus];
                 $cellViewModel->inputCompletion = $aFInputSetPrimary->getCompletion();
             } else {
                 $cellViewModel->inputStatus = null;
                 $cellViewModel->inputStatusTitle = $this->inputStatusList[null];
-                $cellViewModel->inputStatusStyle = $this->inputStatusStyleList[null];
+                $cellViewModel->inputStatusStyle = $this->inputStatusStyles[null];
                 $cellViewModel->inputCompletion = 0;
             }
         }

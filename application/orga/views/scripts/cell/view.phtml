@@ -1,8 +1,12 @@
 <?php
+use Orga\ViewModel\CellViewModelFactory;
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
+
+/** @var CellViewModelFactory $cellVWFactory */
+$cellVWFactory = $this->cellVWFactory;
 $inventoryStatusFilters = [
     null => 'Toute collecte',
     Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
@@ -20,10 +24,9 @@ $inputStatusFilters = [
 ?>
 
 <style>
-    .progress { margin-bottom: 5px; }
-    .progress { position: relative; }
-    .bar { z-index: 1; position: absolute; }
-    .progress span { position: absolute; top: 0; z-index: 2; color: #000000; opacity: 0.8; text-align: center; width: 100%; }
+    .label-danger, .badge-danger { background-color: #b94a48; }
+    .label-important[href], .badge-important[href] { background-color: #953B39; }
+    .progress { margin-bottom: 5px; margin-top: 5px; }
 
     .cellActions a { margin-left: 8px; padding: 5px; }
     .cellActions a:hover, .users .modal-body a:hover, .reports .modal-body a:hover { opacity: 0.25; }
@@ -50,15 +53,20 @@ $inputStatusFilters = [
     .exports .modal-body .alert { margin-bottom: 5px; }
     .exports .modal-body form { margin: 0; }
 
-    .granularity .cellActions { float: right; }
-    .granularity > .cell.firstRowCell { margin-left: 0; }
+    .inventoryStatus .label { font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
+    .inputStatus .badge { font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
 
-    #addMembers { margin: 0; }
-    #addMembers .controls { margin-left: 0; }
-    #addMembers .subGroup { margin-left: 0; }
-    #addMembers label { text-align: left; width: 35%; }
-    #addMembers .input { width: auto; }
-    #addMembers .form-actions { padding: 10px 0 0 0; margin: 0; background-color: inherit; text-align: center; border: none; }
+    .granularityWrapper .cells-filter > * { margin-top: 2px; }
+    .granularityWrapper .cells-filter .badge { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
+    .granularityWrapper .granularity .cellActions { float: right; }
+    .granularityWrapper .granularity > .cell.firstRowCell { margin-left: 0; }
+
+    #addMember { margin: 0; }
+    #addMember .controls { margin-left: 0; }
+    #addMember .subGroup { margin-left: 0; }
+    #addMember label { text-align: left; width: 35%; }
+    #addMember .input { width: auto; }
+    #addMember .form-actions { padding: 10px 0 0 0; margin: 0; background-color: inherit; text-align: center; border: none; }
 </style>
 
 <?php
@@ -92,51 +100,70 @@ $organization = $this->organization;
         ?>
         <div class="currentCell well">
             <h2>
-                <?php if ($currentCell->canBeInputted) : ?>
+                <?php if ($currentCell->showInput) : ?>
                 <a href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'viewInput')?>" class="withTooltip">
-                    <?php endif; ?>
-                    <?=$currentCell->extendedLabel?>
-                <?php if ($currentCell->canBeInputted) : ?>
+                <?php endif; ?>
+                <?=$currentCell->extendedLabel?>
+                <?php if ($currentCell->showInput) : ?>
                 </a>
                 <?php endif; ?>
                 <small class="cellActions">
                     <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewAdministrators')?>" class="withTooltip"><i class="icon-envelope"></i></a>
-                    <?php if ($currentCell->allowACL) : ?>
+                    <?php if ($currentCell->showsUsers) : ?>
                         <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewUsers')?>" class="withTooltip"><i class="icon-user"></i></a>
                     <?php endif; ?>
-                    <?php if ($currentCell->canBeAnalyzed) : ?>
+                    <?php if ($currentCell->showReports) : ?>
                         <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewReports')?>" class="withTooltip"><i class="icon-tasks"></i></a>
                         <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'viewExports')?>" class="withTooltip"><i class="icon-download-alt"></i></a>
                     <?php endif; ?>
                 </small>
             </h2>
             <?php // Inventory ?>
-            <?php if ($currentCell->inventoryStatus !== null) : ?>
-            <p>
+            <?php if ($currentCell->showInventory) : ?>
+            <div class="inventoryStatus">
                 <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
-                <?=$currentCell->inventoryStatus?>
-            </p>
-            <div class="progress">
-                <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%"></div>
-                <span>
-                    <?=$currentCell->inventoryNotStartedInputsNumber?>
-                    <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?>
-                    |
-                    <?=$currentCell->inventoryStartedInputsNumber?>
-                    <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?>
-                    |
-                    <?=$currentCell->inventoryCompletedInputsNumber?>
-                    <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>
+                <?php if ($currentCell->canEditInventory) : ?>
+                <div class="btn-group">
+                    <button class="btn dropdown-toggle btn-<?=$currentCell->inventoryStatusStyle?>" data-toggle="dropdown" data-inventory="<?=$currentCell->inventoryStatus?>">
+                        <?=$currentCell->inventoryStatusTitle?>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <?php foreach ($cellVWFactory->inventoryStatusList as $inventoryStatusValue => $inventoryStatusLabel) : ?>
+                            <li>
+                                <a href="orga/cell/edit-inventory-status/idCell/<?=$currentCell->id?>/" data-inventory="<?=$inventoryStatusValue?>">
+                                    <?=$inventoryStatusLabel?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php else: ?>
+                <span class="label label-<?=$currentCell->inventoryStatusStyle?>">
+                    <?=$currentCell->inventoryStatusTitle?>
                 </span>
+                <?php endif; ?>
+                <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>"
+                   data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true"
+                   data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>">
+                    <i class="icon-info-sign"></i>
+                </a>
+            </div>
+            <div class="progress">
+                <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%">
+                    <?=$currentCell->inventoryCompletion?> %
+                </div>
             </div>
             <?php endif; ?>
             <?php // Input ?>
-            <?php if ($currentCell->canBeInputted) : ?>
-            <p>
+            <?php if ($currentCell->showInput) : ?>
+            <div class="inputStatus">
                 <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
-                <?=$currentCell->inputStatusTitle?>
-            </p>
-            <div class="progress <?=$currentCell->inputStatusStyle?>">
+                <span class="badge badge-<?=$currentCell->inputStatusStyle?>">
+                    <?=$currentCell->inputStatusTitle?>
+                </span>
+            </div>
+            <div class="progress progress-<?=$currentCell->inputStatusStyle?>">
                 <div class="bar" style="width: <?=$currentCell->inputCompletion?>%"><?=$currentCell->inputCompletion?> %</div>
             </div>
             <?php endif; ?>
@@ -150,7 +177,7 @@ $organization = $this->organization;
                     <pre><?=implode("\n", $currentCell->administrators)?></pre>
                 </div>
             </div>
-            <?php if ($currentCell->allowACL) : ?>
+            <?php if ($currentCell->showsUsers) : ?>
             <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -175,7 +202,7 @@ $organization = $this->organization;
                 </div>
             </div>
             <?php endif; ?>
-            <?php if ($currentCell->canBeAnalyzed) : ?>
+            <?php if ($currentCell->showReports) : ?>
             <div id="reports<?=$currentCell->id?>" class="modal reports hide fade large" data-cell="<?=$currentCell->id?>">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -196,7 +223,7 @@ $organization = $this->organization;
                     <h4><?=__('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="granularity row-fluid">
+                    <div class="granularityCells row-fluid">
                         <img src="images/ui/ajax-loader_large.gif">
                         <?=__('Orga', 'view', 'loadingExports')?>
                     </div>
@@ -209,7 +236,7 @@ $organization = $this->organization;
             /** @var Orga_Model_Granularity $narrowerGranularity */
             $narrowerGranularity = $narrowerGranularityArray['granularity'];
         ?>
-        <fieldset class="wrapper">
+        <fieldset class="wrapper granularityWrapper">
             <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
                 <i class="filterChevron icon-chevron-down"></i>
                 <?=$narrowerGranularity->getLabel()?>
@@ -222,21 +249,23 @@ $organization = $this->organization;
                 <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
                 <form class="form-inline cells-filter">
                     <?php foreach ($narrowerGranularityArray['filterAxes'] as $memberOptions) : ?>
-                        <select data-filter="tag">
-                            <?php foreach ($memberOptions as $memberTag => $memberLabel) : ?>
-                                <option value="<?=$memberTag?>"><?=$memberLabel?></option>
-                            <?php endforeach; ?>
-                        </select>
+                    <?php if (count($memberOptions) > 2) : ?>
+                    <select data-filter="tag">
+                        <?php foreach ($memberOptions as $memberTag => $memberLabel) : ?>
+                        <option value="<?=$memberTag?>"><?=$memberLabel?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php endif; ?>
                     <?php endforeach; ?>
                     <?php if ($narrowerGranularityArray['isInput']) : ?>
-                        <select data-filter="inputstatus">
+                        <select data-filter="input-status">
                             <?php foreach ($inputStatusFilters as $statusValue => $statusLabel) : ?>
                                 <option value="<?=$statusValue?>"><?=$statusLabel?></option>
                             <?php endforeach; ?>
                         </select>
                     <?php endif; ?>
                     <?php if ($narrowerGranularityArray['isInventory']) : ?>
-                        <select data-filter="inventorystatus">
+                        <select data-filter="inventory-status">
                             <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
                                 <? if ($statusValue === Orga_Model_Cell::STATUS_ACTIVE) : ?>
                                     <option value="<?=$statusValue?>" selected><?=$statusLabel?></option>
@@ -247,12 +276,11 @@ $organization = $this->organization;
                         </select>
                     <?php endif; ?>
                     <button class="btn reset"><i class="icon-zoom-out"></i> Reset</button>
+                    <span class="badge badge-info granularityInfo"></span>
                 </form>
                 <?php endif; ?>
 
-                <div class="granularity row-fluid">
-                    <img src="images/ui/ajax-loader_large.gif">
-                    <?=__('Orga', 'view', 'loadingCells')?>
+                <div class="granularity row-fluid" data-total-cells="">
                 </div>
             </div>
         </fieldset>
@@ -303,7 +331,7 @@ $organization = $this->organization;
 
 </div>
 <script>
-    $('.history .icon-refresh').click(function(e) {
+    $('.history').on('click', function(e) {
         $('.history > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'history', 'loadingHistory'))?>');
         $.ajax({
             url: 'orga/cell/view-history/idCell/<?=$currentCell->id?>/',
@@ -324,7 +352,7 @@ $organization = $this->organization;
             }
         });
     });
-    $('.comments .icon-refresh').click(function(e) {
+    $('.comments').on('click', function(e) {
         $('.comments > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'comment', 'loadingComments'))?>');
         $.ajax({
             url: 'orga/cell/view-comments/idCell/<?=$currentCell->id?>/',
@@ -345,31 +373,37 @@ $organization = $this->organization;
             }
         });
     });
-    $('div.collapse[id^="granularity"]').on('show', function(e) {
+
+    $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
         if (e.target != this) {
             return;
         }
         var granularity = $('.granularity', $(this));
-        if (!granularity.data('initialized')) {
+        if (!granularity.attr('data-initialized')) {
+            var granularityInfo = $('.granularityInfo', granularity.parent());
+            granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
+            granularityInfo.addClass('badge-info');
+            granularityInfo.html('<img src="images/ui/ajax-loader.gif"> <?=__('Orga', 'view', 'loadingCells')?>');
             var granularityId = $(this).attr('id').substr(11, $(this).attr('id').length);
             $.ajax({
                 url: 'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId + '/',
                 type: "GET",
                 success: function(data) {
                     granularity.html('');
-                    $(data).each(function() {
+                    granularity.attr('data-total-cells', data.totalCells);
+                    $(data.childCells).each(function() {
                         var cellTitle = this.extendedLabel;
-                        if (this.canBeInputted) {
+                        if (this.showInput) {
                             cellTitle = '<a href="orga/cell/input/idCell/23/fromIdCell/' + this.id + '/" title="<?=__('Orga', 'view', 'viewInput')?>" class="withTooltip">' + cellTitle + '</a>';
                         }
                         var usersP = '';
                         var usersPopup = '';
-                        if (this.allowACL) {
-                            usersP =
+                        if (this.showUsers) {
+                            usersP +=
                                 '<a data-toggle="modal" href="#users' + this.id + '" title="<?=__('Orga', 'view', 'viewUsers')?>" class="withTooltip">' +
                                     '<i class="icon-user"></i>' +
                                 '</a>';
-                            usersPopup =
+                            usersPopup +=
                                 '<div id="users' + this.id + '" class="modal users hide fade large" data-cell="' + this.id + '">' +
                                     '<div class="modal-header">' +
                                         '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
@@ -393,14 +427,12 @@ $organization = $this->organization;
                         }
                         var reportsP = '';
                         var reportsPopup = '';
-                        var exportsP = '';
-                        var exportsPopup = '';
-                        if (this.canBeAnalyzed) {
-                            reportsP =
+                        if (this.showReports) {
+                            reportsP +=
                                 '<a data-toggle="modal" href="#reports' + this.id + '" title="<?=__('Orga', 'view', 'viewReports')?>" class="withTooltip">' +
                                     '<i class="icon-tasks"></i>' +
                                 '</a>';
-                            reportsPopup =
+                            reportsPopup +=
                                 '<div id="reports' + this.id + '" class="modal reports hide fade large" data-cell="' + this.id + '">' +
                                     '<div class="modal-header">' +
                                         '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
@@ -415,50 +447,89 @@ $organization = $this->organization;
                                         '</a>' +
                                     '</div>' +
                                 '</div>';
-                        exportsP =
-                            '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=__('Orga', 'view', 'viewExports')?>" class="withTooltip">' +
-                                '<i class="icon-download-alt"></i>' +
-                            '</a>';
-                        exportsPopup =
-                            '<div id="exports' + this.id + '" class="modal exports hide fade">' +
-                                '<div class="modal-header">' +
+                        }
+                        var exportsP = '';
+                        var exportsPopup = '';
+                        if (this.showExports) {
+                            exportsP +=
+                                '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=__('Orga', 'view', 'viewExports')?>" class="withTooltip">' +
+                                    '<i class="icon-download-alt"></i>' +
+                                    '</a>';
+                            exportsPopup +=
+                                '<div id="exports' + this.id + '" class="modal exports hide fade">' +
+                                    '<div class="modal-header">' +
                                     '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
                                     '<h4><?=__('Orga', 'view', 'exportsFrom')?> ' + this.shortLabel + '</h4>' +
-                                '</div>' +
-                                '<div class="modal-body">' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
                                     '<img src="images/ui/ajax-loader_large.gif"> ' +
                                     '<?=__('Orga', 'view', 'loadingExports')?>' +
-                                '</div>' +
-                            '</div>';
+                                    '</div>' +
+                                    '</div>';
                         }
                         var inventoryP = '';
-                        if ((this.inventoryStatus != null) && ((this.inventoryNotStartedInputsNumber + this.inventoryStartedInputsNumber + this.inventoryCompletedInputsNumber) > 1)) {
-                            inventoryP =
-                                '<p><b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>' + this.inventoryStatusTitle + '</p>' +
-                                '<p>' +
-                                    this.inventoryNotStartedInputsNumber + ' ' +
-                                    ((this.inventoryNotStartedInputsNumber > 1) ? '<?=__('Orga', 'view', 'inputsNotStartedMany')?>' : '<?=__('Orga', 'view', 'inputsNotStartedSingle')?>') +
-                                    ' | ' +
-                                    this.inventoryStartedInputsNumber + ' ' +
-                                    ((this.inventoryStartedInputsNumber > 1) ? '<?=__('Orga', 'view', 'inputsStartedMany')?>' : '<?=__('Orga', 'view', 'inputsStartedSingle')?>') +
-                                    ' | ' +
-                                    this.inventoryCompletedInputsNumber + ' ' +
-                                    ((this.inventoryCompletedInputsNumber > 1) ? '<?=__('Orga', 'view', 'inputsCompletedMany')?>' : '<?=__('Orga', 'view', 'inputsCompletedSingle')?>') +
-                                '</p>' +
+                        if (this.showInventory) {
+                            inventoryP +=
+                                '<div class="inventoryStatus">' +
+                                    '<b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>';
+                            if (this.canEditInventory) {
+                                inventoryP +=
+                                    '<div class="btn-group">' +
+                                        '<button class="btn dropdown-toggle btn-' + this.inventoryStatusStyle + '" data-toggle="dropdown" data-inventory="' + this.inventoryStatus + '">' +
+                                            this.inventoryStatusTitle +
+                                            ' <span class="caret"></span>' +
+                                        '</button>' +
+                                        '<ul class="dropdown-menu">' +
+                                            <?php foreach ($cellVWFactory->inventoryStatusList as $inventoryStatusValue => $inventoryStatusLabel) : ?>
+                                            '<li>' +
+                                                '<a href="orga/cell/edit-inventory-status/idCell/' + this.id + '/" data-inventory="<?=$inventoryStatusValue?>">' +
+                                                    '<?=$inventoryStatusLabel?>' +
+                                                '</a>' +
+                                            '</li>' +
+                                            <?php endforeach; ?>
+                                        '</ul>' +
+                                    '</div>';
+                            } else {
+                                inventoryP +=
+                                    '<span class="label label-' + this.inventoryStatusStyle + '">' +
+                                        this.inventoryStatusTitle +
+                                    '</span>';
+                            }
+                            inventoryP +=
+                                    ' <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>"' +
+                                    'data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true"' +
+                                    'data-content="' +
+                                        this.inventoryNotStartedInputsNumber + ' ' +
+                                        ((this.inventoryNotStartedInputsNumber > 1) ? '<?=__('Orga', 'view', 'inputsNotStartedMany')?>' : '<?=__('Orga', 'view', 'inputsNotStartedSingle')?>') +
+                                        ' <br> ' +
+                                        this.inventoryStartedInputsNumber + ' ' +
+                                        ((this.inventoryStartedInputsNumber > 1) ? '<?=__('Orga', 'view', 'inputsStartedMany')?>' : '<?=__('Orga', 'view', 'inputsStartedSingle')?>') +
+                                        ' <br> ' +
+                                        this.inventoryCompletedInputsNumber + ' ' +
+                                        ((this.inventoryCompletedInputsNumber > 1) ? '<?=__('Orga', 'view', 'inputsCompletedMany')?>' : '<?=__('Orga', 'view', 'inputsCompletedSingle')?>') +
+                                        '">' +
+                                        '<i class="icon-info-sign"></i>' +
+                                    '</a>' +
+                                '</div>' +
                                 '<div class="progress">' +
                                     '<div class="bar" style="width: ' + this.inventoryCompletion + '%">' + this.inventoryCompletion + '%</div>' +
                                 '</div>';
                         }
                         var inputStatusP = '';
-                        if (this.canBeInputted) {
+                        if (this.showInput) {
                             inputStatusP =
-                                '<p><b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>' + this.inputStatusTitle + '</p>' +
-                                '<div class="progress ' + this.inputStatusStyle + '">' +
+                                '<div class="inputStatus">' +
+                                    '<b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>' +
+                                    '<span class="badge badge-' + this.inputStatusStyle + '">' +
+                                        this.inputStatusTitle +
+                                    '</span>' +
+                                '</div>' +
+                                '<div class="progress progress-' + this.inputStatusStyle + '">' +
                                 '   <div class="bar" style="width: ' + this.inputCompletion + '%">' + this.inputCompletion + ' %</div>' +
                                 '</div>';
                         }
                         granularity.append(
-                        '<div class="span4 well cell" data-tag="' + this.tag + '" data-inputstatus="' + this.inputStatus + '" data-inventorystatus="' + this.inventoryStatus + '">' +
+                        '<div class="span4 well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
                             '<h4>'
                             + cellTitle +
                             '<small class="cellActions">' +
@@ -475,39 +546,64 @@ $organization = $this->organization;
                         '</div>'
                         );
                     });
-                    $('select:first', granularity.parent()).trigger('change');
+                    var maxHeight = 0;
+                    $('.cell h4', granularity).each(function() { if ($(this).outerHeight() > maxHeight) { maxHeight = $(this).outerHeight(); } });
+                    $('.cell h4', granularity).height(maxHeight);
                     $('.withTooltip', granularity).tooltip();
-//                    granularity.data('initialized', true);
+                    $('.withPopover', granularity).popover();
+                    $('select:first', granularity.parent()).trigger('change');
                 },
-                error: function(jqXHR) {}
+                error: function(jqXHR) {
+                    granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
+                    var response = $.parseJSON(jqXHR.responseText);
+                    if (typeof(response.typeError) == 'string') {
+                        granularityInfo.addClass('badge-' + response.typeError);
+                    } else {
+                        granularityInfo.addClass('badge-error');
+                    }
+                    if (typeof(response.message) == 'string') {
+                        granularityInfo.html(response.message);
+                    } else {
+                        granularityInfo.html('<?=__('Orga', 'view', 'errorWhileLoadingChildCells')?>');
+                    }
+                }
             });
         }
     });
+
     $('.cells-filter button.reset').click(function(e) {
-        e.preventDefault();
-        var form = $(e.target).parent();
-        var granularity = form.next();
-        $('.cell', granularity).removeClass('hide');
-        $('.cell', granularity).removeClass('firstRowCell');
-        $('.cell:nth-child(3n+1)', granularity).each(function() { $(this).addClass('firstRowCell'); });
-        $('select', form).each(function() { $(this).val(''); });
+        $('.cells-filter').trigger('resetCellsFilter');
+        $('.cells-filter').trigger('filterCells');
     });
-    $('.cells-filter select').change(function(e) {
+    $('.cells-filter').on('resetCellsFilter', function(e) {
         e.preventDefault();
-        var form = $(e.target).parent();
-        var granularity = form.next();
+        var form = $(this).parent();
+        $('select', form).each(function() { $(this).val(''); });
+        $('select:first', form).trigger('change');
+    });
+    $('.cells-filter select').on('change', function(e) {
+        $('.cells-filter').trigger('filterCells');
+    });
+    $('.cells-filter').on('filterCells', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var granularity = $('.granularity', form.parent());
 
         $('.cell', granularity).removeClass('hide');
         $('.cell', granularity).removeClass('firstRowCell');
 
         var test = '';
         $('select', form).each(function() {
-            var filter = $(this).data('filter');
+            var filter = $(this).attr('data-filter');
             var value = $(this).val();
-            if ((filter == 'inputstatus') && (value == 'notStarted')) {
-                test += '[data-' + filter + '=\'\']';
+            if ((filter == 'input-status') && (value == 'notStarted')) {
+                test += '[data-' + filter + '=\'null\']';
             } else if (value != '') {
-                test += '[data-' + filter + '*=\'' + value + '\']';
+                if (filter == 'tag') {
+                    test += '[data-' + filter + '*=\'' + value + '\']';
+                } else {
+                    test += '[data-' + filter + '=\'' + value + '\']';
+                }
             }
         });
         if (test != '') {
@@ -521,6 +617,9 @@ $organization = $this->organization;
             }
             numberElement++;
         });
+
+        var infoSpan = $('.granularityInfo', form);
+        infoSpan.html(numberElement + ' / ' + granularity.attr('data-total-cells'));
     });
 
     $('body').on('show', '.users', function(e) {
@@ -532,7 +631,7 @@ $organization = $this->organization;
             '<img src="images/ui/ajax-loader_large.gif"> <?=__('Orga', 'view', 'loadingUsers')?>'
         );
         $.ajax({
-            url: 'orga/cell/view-users/idCell/' + popup.data('cell') + '/',
+            url: 'orga/cell/view-users/idCell/' + popup.attr('data-cell') + '/',
             type: "GET",
             success: function(data) {
                 $('.modal-body', popup).html(data);
@@ -647,7 +746,7 @@ $organization = $this->organization;
             '<img src="images/ui/ajax-loader_large.gif"> <?=__('Orga', 'view', 'loadingReports')?>'
         );
         $.ajax({
-            url: 'orga/cell/view-reports/idCell/' + popup.data('cell') + '/',
+            url: 'orga/cell/view-reports/idCell/' + popup.attr('data-cell') + '/',
             type: "GET",
             success: function(data) {
                 $('.modal-body', popup).html(data);
@@ -721,9 +820,62 @@ $organization = $this->organization;
         $(this).parent().parent().remove();
     });
 
+    $('body').on('click', '.inventoryStatus .dropdown-menu a', function(e) {
+        e.preventDefault();
+        var link = $(this);
+        var button = link.parent().parent().prev();
+        if (link.attr('data-inventory') != button.attr('data-inventory')) {
+            button.html('<img src="images/ui/ajax-loader.gif">');
+            button.attr('class', 'btn dropdown-toggle');
+            $.ajax({
+                url: link.attr('href'),
+                type: "POST",
+                data: { inventoryStatus: link.attr('data-inventory') },
+                success: function (data) {
+                    button.attr('data-inventory', data.status);
+                    button.addClass('btn-' + data.style);
+                    button.html(data.label + ' <span class="caret"></span>');
+                    button.parent().parent().parent().attr('data-inventory-status', data.status);
+                    $('select:first', button.parent().parent().parent().parent().parent()).trigger('change');
+                },
+                error: function (jqXHR) {
+                    button.attr('data-inventory', null);
+                    var response = $.parseJSON(jqXHR.responseText);
+                    if ((typeof(response.typeError) == 'string') && (response.typeError != 'error')) {
+                        button.addClass('btn-' + response.typeError);
+                    } else {
+                        button.addClass('btn-danger');
+                    }
+                    if (typeof(response.message) == 'string') {
+                        button.html(response.message + ' <span class="caret"></span>');
+                    } else {
+                        button.html('<?=__('Orga', 'view', 'errorWhileEditingInventoryStatus')?> <span class="caret"></span>');
+                    }
+                }
+            });
+        }
+    });
+
+    $('.collapse').on({
+        shown: function(e) {
+            if (e.target == this) { $(this).css('overflow','visible');
+            }
+        },
+        hide: function(e) {
+            if (e.target == this) {
+                $(this).css('overflow','hidden');
+            }
+        }
+    });
+    $('body').on('click', 'a.inventoryInputsDetails', function(e) {
+        e.preventDefault();
+    });
+
     $(document).ready(function() {
         $('.withTooltip').tooltip();
-        $('.history .icon-refresh').trigger('click');
-        $('.comments .icon-refresh').trigger('click');
+        $('.withPopover').popover();
+        $('div.collapse[id^="granularity"]').trigger('loadCells');
+//        $('.history .icon-refresh').trigger('click');
+//        $('.comments .icon-refresh').trigger('click');
     });
 </script>

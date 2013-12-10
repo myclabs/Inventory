@@ -99,7 +99,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
             $organization
         );
         if (!$isUserAllowedToEditOrganizationAndCells) {
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $identity;
@@ -130,7 +130,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
             $organization
         );
         if (!$isUserAllowedToEditOrganizationAndCells) {
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $identity;

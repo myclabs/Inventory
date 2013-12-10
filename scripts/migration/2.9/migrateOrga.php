@@ -9,25 +9,25 @@ foreach (Orga_Model_Organization::loadList() as $organization) {
         $rootAxis->updateNarrowerTag();
     }
     echo "\tAxes & members" . PHP_EOL;
-    $axes = $organization->getAxes()->toArray();
+    $axes = $organization->getFirstOrderedAxes()->toArray();
     $axes = array_reverse($axes);
     /** @var Orga_Model_Axis $axis */
     foreach ($axes as $axis) {
         $axis->updateBroaderTag();
-        foreach ($axis->getMembers() as $member) {
+        foreach ($axis->getOrderedMembers() as $member) {
             $member->updateParentMembersHashKeys();
             $member->updateTag();
         }
     }
     echo "\tGranularities" . PHP_EOL;
     $organization->orderGranularities();
-    foreach ($organization->getGranularities() as $granularity) {
+    foreach ($organization->getOrderedGranularities() as $granularity) {
         $granularity->updateRef();
         $granularity->updateTag();
     }
     echo "\tCells" . PHP_EOL;
-    foreach ($organization->getGranularities() as $granularity) {
-        foreach ($granularity->getCells() as $cell) {
+    foreach ($organization->getOrderedGranularities() as $granularity) {
+        foreach ($granularity->getOrderedCells() as $cell) {
             $cell->updateMembersHashKey();
             $cell->updateTag();
         }
@@ -48,7 +48,7 @@ $wrongTagMembers = [];
 $wrongTagGranularities = [];
 $wrongTagCells = [];
 foreach (Orga_Model_Organization::loadList() as $organization) {
-    foreach ($organization->getAxes() as $axis) {
+    foreach ($organization->getFirstOrderedAxes() as $axis) {
         $expectedNarrowerTag = buildAxisNarrowerTag($axis);
         if ($expectedNarrowerTag !== $axis->getNarrowerTag()) {
             $wrongNarrowerTagAxes[] = [$axis, $expectedNarrowerTag];
@@ -58,22 +58,22 @@ foreach (Orga_Model_Organization::loadList() as $organization) {
             $wrongBroaderTagAxes[] = [$axis, $expectedBroaderTag];
         }
     }
-    foreach ($organization->getAxes() as $axis) {
-        foreach ($axis->getMembers() as $member) {
+    foreach ($organization->getFirstOrderedAxes() as $axis) {
+        foreach ($axis->getOrderedMembers() as $member) {
             $expectedTag = buildMemberTag($member);
             if ($expectedTag !== $member->getTag()) {
                 $wrongTagMembers[] = [$member, $expectedTag];
             }
         }
     }
-    foreach ($organization->getGranularities() as $granularity) {
+    foreach ($organization->getOrderedGranularities() as $granularity) {
         $expectedTag = buildGranularityTag($granularity);
         if ($expectedTag !== $granularity->getTag()) {
             $wrongTagGranularities[] = [$granularity, $expectedTag];
         }
     }
-    foreach ($organization->getGranularities() as $granularity) {
-        foreach ($granularity->getCells() as $cell) {
+    foreach ($organization->getOrderedGranularities() as $granularity) {
+        foreach ($granularity->getOrderedCells() as $cell) {
             $expectedTag = buildCellTag($cell);
             if ($expectedTag !== $cell->getTag()) {
                 $wrongTagCells[] = [$cell, $expectedTag];

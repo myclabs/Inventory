@@ -6612,7 +6612,7 @@ class Orga_Test_ACL extends TestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        foreach (Orga_Model_Organization::load($this->organization->getId())->getGranularities() as $granularity) {
+        foreach (Orga_Model_Organization::load($this->organization->getId())->getOrderedGranularities() as $granularity) {
             $granularity->delete();
         }
 

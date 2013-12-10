@@ -265,7 +265,7 @@ class Orga_Service_OrganizationService
             $this->entityManager->clear();
 
             $organization = Orga_Model_Organization::load($organization->getId());
-            $granularities = $organization->getGranularities()->toArray();
+            $granularities = $organization->getOrderedGranularities()->toArray();
             foreach (array_reverse($granularities) as $granularity) {
                 $granularity = Orga_Model_Granularity::load($granularity->getId());
                 $granularity->setInputConfigGranularity();

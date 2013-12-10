@@ -55,7 +55,7 @@ class Orga_TranslateController extends Core_Controller
     {
         $this->view->idOrganization = $this->getParam('idOrganization');
         $organization = Orga_Model_Organization::load($this->view->idOrganization);
-        $this->view->granularities = $organization->getGranularities();
+        $this->view->granularities = $organization->getOrderedGranularities();
     }
 
 }

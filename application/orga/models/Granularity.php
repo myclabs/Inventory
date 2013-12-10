@@ -430,6 +430,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getCells()
     {
+        return $this->cells;
+    }
+
+    /**
+     * Renvoie un tableau ordonné des Cell de la Granularity.
+     *
+     * @return Collection|Orga_Model_Cell[]
+     */
+    public function getOrderedCells()
+    {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         //@todo Ordre des Cellules suivant les tag (?Position- & Ref) !== ordre réel (Position || Label).
         $criteria->orderBy(['tag' => 'ASC']);
@@ -566,7 +576,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getBroaderGranularities()
     {
         $broaderGranularities = [];
-        foreach ($this->getOrganization()->getGranularities() as $granularity) {
+        foreach ($this->getOrganization()->getOrderedGranularities() as $granularity) {
             if ($this->isNarrowerThan($granularity)) {
                 $broaderGranularities[] = $granularity;
             }

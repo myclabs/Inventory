@@ -253,7 +253,7 @@ class Orga_OrganizationController extends Core_Controller
         );
         if (!$isUserAllowedToEditOrganization) {
             $numberCellsUserCanEdit = 0;
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $connectedUser;
@@ -267,7 +267,7 @@ class Orga_OrganizationController extends Core_Controller
             }
             $isUserAllowedToEditCells = ($numberCellsUserCanEdit > 0);
             $numberCellsUserCanAllow = 0;
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $connectedUser;
@@ -416,14 +416,14 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('idOrganization', $idOrganization);
         $this->view->assign('organizationLabel', $organization->getLabel());
-        $this->view->assign('granularities', $organization->getGranularities());
+        $this->view->assign('granularities', $organization->getOrderedGranularities());
         try {
             $this->view->granularityRefForInventoryStatus = $organization->getGranularityForInventoryStatus()->getRef();
         } catch (Core_Exception_UndefinedAttribute $e) {
             $this->view->granularityRefForInventoryStatus = null;
         }
         $this->view->granularitiesWithDWCube = array();
-        foreach ($organization->getGranularities() as $granularity) {
+        foreach ($organization->getOrderedGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 $this->view->granularitiesWithDWCube[] = $granularity;
             }
@@ -491,7 +491,7 @@ class Orga_OrganizationController extends Core_Controller
         );
         if (!$isUserAllowedToEditOrganization) {
             $granularities = [];
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $connectedUser;
@@ -504,7 +504,7 @@ class Orga_OrganizationController extends Core_Controller
                 }
             }
         } else {
-            $granularities = $organization->getGranularities();
+            $granularities = $organization->getOrderedGranularities();
             uasort($granularities, function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) { return $b->getPosition() - $a->getPosition(); });
             // Pas de reglage de la pertinence de la cellule globale.
             array_pop($granularities);
@@ -573,7 +573,7 @@ class Orga_OrganizationController extends Core_Controller
         );
         if (!$isUserAllowedToAllowOrganization) {
             $granularities = [];
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $connectedUser;
@@ -586,7 +586,7 @@ class Orga_OrganizationController extends Core_Controller
                 }
             }
         } else {
-            $granularities = $organization->getGranularities();
+            $granularities = $organization->getOrderedGranularities();
             uasort($granularities, function(Orga_Model_Granularity $a, Orga_Model_Granularity $b) { return $b->getPosition() - $a->getPosition(); });
             // La granularité globale subit un traitement a part.
             $globalGranularity = array_pop($granularities);

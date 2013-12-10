@@ -147,11 +147,11 @@ class Orga_Model_Axis extends Core_Model_Entity
         $this->organization->addAxis($this);
 
         if ($directNarrowerAxis !== null) {
-            foreach ($directNarrowerAxis->getMembers() as $member) {
+            foreach ($directNarrowerAxis->getOrderedMembers() as $member) {
                 $member->setPosition();
             }
             $directNarrowerAxis->directBroaders->add($this);
-            foreach ($directNarrowerAxis->getMembers() as $member) {
+            foreach ($directNarrowerAxis->getOrderedMembers() as $member) {
                 $member->setPosition();
             }
         }
@@ -725,6 +725,16 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getMembers()
     {
+        return $this->members;
+    }
+
+    /**
+     * Retourne un tableau contenant les members de l'Axis.
+     *
+     * @return Collection|Orga_Model_Member[]
+     */
+    public function getOrderedMembers()
+    {
         $criteria = \Doctrine\Common\Collections\Criteria::create();
         if ($this->isMemberPositioning()) {
             $criteria->orderBy(['parentMembersHashKey' => 'ASC', 'position' => 'ASC']);
@@ -781,7 +791,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getGranularities()
     {
-        return $this->granularities->toArray();
+        return $this->granularities;
     }
 
     /**
