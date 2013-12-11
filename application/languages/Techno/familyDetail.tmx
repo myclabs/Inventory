@@ -26,12 +26,12 @@
                 <seg>Creation of a dimension</seg>
             </tuv>
         </tu>
-        <tu tuid="meaningAlreadyUsed">
+        <tu tuid="dimensionEditPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Merci de choisir une autre signification, celle-ci est déjà associée à une autre dimension de cette famille.</seg>
+                <seg>Modification d'une dimension</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Please choose another meaning, this one already corresponds to another dimension of this family.</seg>
+                <seg>Modification of a dimension</seg>
             </tuv>
         </tu>
 

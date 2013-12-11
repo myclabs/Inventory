@@ -44,6 +44,6 @@ $collapseTMD->display();
 if ($this->edit) {
     $collapseEditDimensions = new UI_HTML_Collapse('collapseEditDimensions');
     $collapseEditDimensions->title = __('Techno', 'name', 'dimensions');
-    $collapseEditDimensions->body = $this->partial('family/details/edit.phtml', ['family' => $family]);
+    $collapseEditDimensions->body = $this->partial('family/details/edit-dimensions.phtml', ['family' => $family]);
     echo $collapseEditDimensions->render();
 }

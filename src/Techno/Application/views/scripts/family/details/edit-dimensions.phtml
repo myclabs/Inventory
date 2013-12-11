@@ -1,0 +1,266 @@
+<?php
+
+use Techno\Domain\Family\Dimension;
+use Techno\Domain\Family\Family;
+
+/** @var Family $family */
+$family = $this->family;
+?>
+
+<div class="alert">
+    <?=__('Techno', 'dimension', 'warningEditingDimensions');?>
+</div>
+<p></p>
+
+<?php foreach ($family->getDimensions() as $dimension) : ?>
+
+    <div class="well well-small">
+
+        <h5>
+            <?=$dimension->getLabel() . __('UI', 'other', ':')?> <code><?=$dimension->getRef()?></code>
+
+            <a class="btn btn-mini btn-warning pull-right deleteDimensionButton"
+                    href="<?=$this->baseUrl('techno/dimension/delete/id/' . $dimension->getId())?>"
+                    data-dimension="<?=$dimension->getId()?>" title="<?=__('Techno', 'dimension', 'deleteDimension')?>">
+                <?=__('UI', 'verb', 'delete')?>
+            </a>
+
+            <a class="btn btn-mini pull-right editDimensionButton" data-dimension-ref="<?=$dimension->getRef()?>"
+               data-dimension-label="<?=$dimension->getLabel()?>" style="margin-right: 5px">
+                <?=__('UI', 'verb', 'edit')?>
+            </a>
+        </h5>
+
+        <?php
+        // Datagrid des membres de la dimension
+        $datagrid = new UI_Datagrid($dimension->getRef() . 'MembersDatagrid', 'datagrid_member-datagrid', 'techno');
+        $datagrid->pagination = false;
+        $datagrid->addParam('id', $dimension->getId());
+        $datagrid->deleteElements = true;
+        $datagrid->addElements = false;
+        // Colonne ref
+        $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+        $refColumn->editable = true;
+        $datagrid->addCol($refColumn);
+        // Colonne label
+        $labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+        $labelColumn->editable = true;
+        $datagrid->addCol($labelColumn);
+        // Colonne Position
+        $orderColumn = new UI_Datagrid_Col_Order('position');
+        $orderColumn->editable = true;
+        $datagrid->addCol($orderColumn);
+        $datagrid->display();
+        ?>
+
+        <p>
+            <button type="button" id="<?=$dimension->getRef()?>AddMemberButton" class="btn addMemberButton"
+                    data-dimension="<?=$dimension->getRef()?>">
+                <?=__('Techno', 'dimension', 'addMembers')?>
+            </button>
+        </p>
+
+    </div>
+
+<?php endforeach; ?>
+
+<p>
+    <button type="button" class="btn addDimensionButton">
+        <?=__('Techno', 'familyDetail', 'dimensionAddPanelTitle')?>
+    </button>
+</p>
+
+
+<div id="addDimensionPopup" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3><?=__('Techno', 'familyDetail', 'dimensionAddPanelTitle')?></h3>
+    </div>
+    <form class="form-horizontal" action="<?=$this->baseUrl('techno/dimension/add')?>" method="post">
+        <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" for="addDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
+                <div class="controls">
+                    <input type="text" id="addDimensionRef" name="ref" required />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="addDimensionLabel"><?=__('UI', 'name', 'label')?></label>
+                <div class="controls">
+                    <input type="text" id="addDimensionLabel" name="label" required />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"><?=__('Techno', 'name', 'orientation')?></label>
+                <div class="controls">
+                    <label class="radio">
+                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_VERTICAL?>" checked>
+                        <?=__('Techno', 'property', 'verticalFem')?>
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_HORIZONTAL?>">
+                        <?=__('Techno', 'property', 'horizontalFem')?>
+                    </label>
+                </div>
+            </div>
+            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
+            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+        </div>
+    </form>
+</div>
+
+
+<div id="editDimensionPopup" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3><?=__('Techno', 'familyDetail', 'dimensionEditPanelTitle')?></h3>
+    </div>
+    <form class="form-horizontal" action="<?=$this->baseUrl('techno/dimension/edit')?>" method="post">
+        <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" for="editDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
+                <div class="controls">
+                    <input type="text" id="editDimensionRef" name="ref" required />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="editDimensionLabel"><?=__('UI', 'name', 'label')?></label>
+                <div class="controls">
+                    <input type="text" id="editDimensionLabel" name="label" required />
+                </div>
+            </div>
+            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
+            <input type="hidden" name="refDimension" id="refDimension" />
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+        </div>
+    </form>
+</div>
+
+
+<div id="addMemberPopup" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3><?=__('Techno', 'dimension', 'addMemberList')?></h3>
+    </div>
+    <form id="addMemberForm" class="form-horizontal"
+          action="<?=$this->baseUrl('techno/dimension/add-members')?>" method="post">
+        <div class="modal-body">
+                <div class="control-group">
+                    <label class="control-label" for="inputMemberList">
+                        <?=__('Techno', 'dimension', 'addMemberList')?>
+                    </label>
+                    <div class="controls">
+                        <textarea id="inputMemberList" name="members" class="input-block-level" rows="8"></textarea>
+                        <p class="help-block">
+                            <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
+                            <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
+                        </p>
+                        <p><span class="help-block"><?=__('Techno', 'import', 'addMemberListHelp')?></span></p>
+                        <pre><code><?=__('Techno', 'import', 'addMemberListExample')?></code></pre>
+                    </div>
+                </div>
+                <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
+                <input type="hidden" name="dimension" id="inputDimension" />
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
+            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    // Ajout d'une dimension
+    $('.addDimensionButton').click(function() {
+        $('#addDimensionPopup').modal('show');
+    });
+    // Modification d'une dimension
+    $('.editDimensionButton').click(function() {
+        $('#refDimension').val($(this).data('dimension-ref'));
+        $('#editDimensionRef').val($(this).data('dimension-ref'));
+        $('#editDimensionLabel').val($(this).data('dimension-label'));
+        $('#editDimensionPopup').modal('show');
+    });
+
+    // Suppression d'une dimension
+    $(function() {
+        $('.deleteDimensionButton')
+            .tooltip()
+            .confirm({
+                text: <?=json_encode(__('UI', 'message', 'areYouSure'))?>,
+                confirmButton: <?=json_encode(__('UI', 'verb', 'confirm'))?>,
+                cancelButton: <?=json_encode(__('UI', 'verb', 'cancel'))?>
+            });
+    });
+
+    // Ajout de membres
+    $('.addMemberButton').click(function() {
+        var dimension = $(this).data('dimension');
+
+        $('#inputMemberListValidationOK').text('');
+        $('#inputMemberListValidationNOK').text('');
+
+        $('#inputDimension').val(dimension);
+        $('#addMemberPopup').modal('show');
+    });
+
+    // Validation des champs
+    $('#inputMemberList').keyup(function() {
+        var text = $.trim($(this).val());
+        var lines = text.split(/\r?\n/);
+        var valid = true;
+        var message = '';
+
+        for (var i = 0; i < lines.length; ++i) {
+            var line = lines[i];
+            var array = line.split(/,/);
+
+            if (array.length != 2) {
+                message = <?=json_encode(__('Techno', 'import', 'errorOneCommaPerLine'))?>;
+                valid = false;
+                break;
+            }
+
+            var ref = $.trim(array[0]);
+            var label = $.trim(array[1]);
+
+            // Validate ref
+            if ((ref.length == 0) || (! /^[a-z0-9_]+$/.test(ref))) {
+                message = <?=json_encode(__('Techno', 'import', 'errorInvalidRef'))?>;
+                message = message.replace('{line}', (i + 1).toString());
+                valid = false;
+                break;
+            }
+
+            // Validate label
+            if (label.length == 0) {
+                message = <?=json_encode(__('Techno', 'import', 'errorInvalidLabel'))?>;
+                message = message.replace('{line}', (i + 1).toString());
+                valid = false;
+                break;
+            }
+        }
+
+        $('#addMemberForm').find(':submit').prop('disabled', !valid);
+
+        if (valid) {
+            $('#inputMemberListValidationOK').text(
+                lines.length + ' ' +
+                <?=json_encode(__('Techno', 'import', 'membersFound'))?>
+            );
+            $('#inputMemberListValidationNOK').text('');
+        } else {
+            $('#inputMemberListValidationOK').text('');
+            $('#inputMemberListValidationNOK').text(
+                <?=json_encode(__('Techno', 'import', 'invalidMembersInput'))?> + ' ' + message
+            );
+        }
+    });
+</script>

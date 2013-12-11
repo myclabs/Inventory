@@ -38,6 +38,35 @@ class Techno_DimensionController extends Core_Controller
         UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
         $this->redirect('techno/family/edit/id/' . $family->getId());
     }
+
+    /**
+     * Édition d'une dimension
+     * @Secure("editTechno")
+     */
+    public function editAction()
+    {
+        $family = Family::load($this->getParam('idFamily'));
+
+        $ref = trim($this->getParam('ref'));
+        $label = trim($this->getParam('label'));
+
+        try {
+            Core_Tools::checkRef($ref);
+        } catch (Core_Exception_User $e) {
+            UI_Message::addMessageStatic($e->getMessage());
+            $this->redirect('techno/family/edit/id/' . $family->getId());
+            return;
+        }
+
+        $dimension = $family->getDimension($this->getParam('refDimension'));
+        $dimension->setRef($ref);
+        $dimension->setLabel($label);
+        $this->entityManager->flush();
+
+        UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
+        $this->redirect('techno/family/edit/id/' . $family->getId());
+    }
+
     /**
      * Suppression d'une dimension
      * @Secure("editTechno")
@@ -63,7 +92,7 @@ class Techno_DimensionController extends Core_Controller
         $dimensionRef = $this->getParam('dimension');
         $dimension = $family->getDimension($dimensionRef);
 
-        $memberList = trim($this->getParam('inputMemberList'));
+        $memberList = trim($this->getParam('members'));
 
         $lines = preg_split('/$\R?^/m', $memberList);
 

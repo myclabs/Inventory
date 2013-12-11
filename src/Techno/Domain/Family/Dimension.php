@@ -111,6 +111,30 @@ class Dimension extends Core_Model_Entity
     }
 
     /**
+     * @param string $ref
+     */
+    public function setRef($ref)
+    {
+        $this->ref = $ref;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+    }
+
+    /**
      * Définit l'orientation de la dimension
      * - self::ORIENTATION_HORIZONTAL
      * - self::ORIENTATION_VERTICAL
@@ -207,14 +231,6 @@ class Dimension extends Core_Model_Entity
         if ($this->hasMember($member)) {
             $this->members->removeElement($member);
         }
-    }
-
-    /**
-     * @return string Label du meaning de la dimension
-     */
-    public function getLabel()
-    {
-        return $this->label;
     }
 
     /**
