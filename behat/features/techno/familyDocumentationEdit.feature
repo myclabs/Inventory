@@ -1,5 +1,5 @@
 @dbFull
-Feature: Family documentation tab edit feature
+Feature: Family documentation edit feature
 
   Background:
     Given I am logged in
@@ -17,9 +17,9 @@ Feature: Family documentation tab edit feature
   # Vérification que la documentation est bien affichée en consultation
     Given I am on "techno/family/details/id/4"
     And I wait for the page to finish loading
-    Then I should see a "#container_documentation h1:contains('Test documentation')" element
+    Then I should see a "h1:contains('Test documentation')" element
   # Vérification que la documentation est bien réaffichée en édition
     Given I am on "techno/family/edit/id/4"
     And I wait for the page to finish loading
     When I open collapse "Général"
-    Then the "documentation" field should contain "h1. Test documentation"
+    Then the "Documentation" field should contain "h1. Test documentation"

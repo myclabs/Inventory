@@ -14,14 +14,14 @@ $family = $this->family;
 
 <?php foreach ($family->getDimensions() as $dimension) : ?>
 
-    <div class="well well-small">
+    <div class="well well-small" data-dimension="<?=$dimension->getRef()?>">
 
         <h5>
             <?=$dimension->getLabel() . __('UI', 'other', ':')?> <code><?=$dimension->getRef()?></code>
 
             <a class="btn btn-mini btn-warning pull-right deleteDimensionButton"
                     href="<?=$this->baseUrl('techno/dimension/delete/id/' . $dimension->getId())?>"
-                    data-dimension="<?=$dimension->getId()?>" title="<?=__('Techno', 'dimension', 'deleteDimension')?>">
+                    title="<?=__('Techno', 'dimension', 'deleteDimension')?>">
                 <?=__('UI', 'verb', 'delete')?>
             </a>
 
