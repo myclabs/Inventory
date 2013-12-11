@@ -140,9 +140,13 @@ $currentCell = $this->currentCell;
         <h2>
             <?php if ($currentCell->showInput) : ?>
             <a href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'viewInput')?>" class="withTooltip">
-                <?php endif; ?>
-                <?=$currentCell->extendedLabel?>
-                <?php if ($currentCell->showInput) : ?>
+            <?php endif; ?>
+            <?=$currentCell->extendedLabel?>
+            <?php if ($currentCell->showInput) : ?>
+            <small>
+                <i class="icon-share-alt"></i>
+                <?=__('Orga', 'view', 'inputLinkDetail')?>
+            </small>
             </a>
             <?php endif; ?>
             <small class="cellActions">
@@ -458,7 +462,13 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 $(data.childCells).each(function() {
                     var cellTitle = this.extendedLabel;
                     if (this.showInput) {
-                        cellTitle = '<a href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'viewInput')?>" class="withTooltip">' + cellTitle + '</a>';
+                        cellTitle = '<a href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'viewInput')?>" class="withTooltip">' +
+                            cellTitle +
+                            '<small>' +
+                            ' <i class="icon-share-alt"></i> ' +
+                            '<?=__('Orga', 'view', 'inputLinkDetail')?>' +
+                            '</small>' +
+                        '</a>';
                     }
                     var usersP = '';
                     var usersPopup = '';
