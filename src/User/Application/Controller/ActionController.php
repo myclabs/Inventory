@@ -20,6 +20,12 @@ class User_ActionController extends UI_Controller_Captcha
     private $userService;
 
     /**
+     * @Inject
+     * @var Orga_Service_OrganizationService
+     */
+    private $organizationService;
+
+    /**
      * Par défaut : redirige vers l'action de login.
      * @Secure("public")
      */
@@ -102,7 +108,9 @@ class User_ActionController extends UI_Controller_Captcha
             }
 
             if (! $this->hasFormError()) {
-                $this->userService->register();
+                $user = $this->userService->createUser($email, $password);
+                $label = __('Orga', 'organization', 'defaultWorkspaceLabel');
+                $this->organizationService->createOrganization($user, $label);
             }
             $this->sendFormResponse();
         }

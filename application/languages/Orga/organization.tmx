@@ -55,5 +55,14 @@
             </tuv>
         </tu>
 
+        <tu tuid="defaultWorkspaceLabel">
+            <tuv xml:lang="fr">
+                <seg>Workspace</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Workspace</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

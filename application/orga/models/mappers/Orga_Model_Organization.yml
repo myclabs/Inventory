@@ -58,10 +58,3 @@ Orga_Model_Organization:
       mappedBy: organization
       cascade: [ all ]
       orphanRemoval: true
-
-  manyToOne:
-    account:
-      targetEntity: Orga\Model\Account
-      inversedBy: organizations
-      joinColumn:
-        nullable: false
