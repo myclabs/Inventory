@@ -1,15 +1,12 @@
 <?php
+
+use DI\Container;
+use MyCLabs\UnitAPI\OperationService;
+
 /**
  * @author valentin.claras
  * @author hugo.charbonnier
  * @author yoann.croizer
- * @package    Calc
- * @subpackage Calculation
- */
-
-/**
- * @package    Calc
- * @subpackage Calculation
  */
 class Calc_Calculation_UnitValue extends Calc_Calculation
 {
@@ -86,7 +83,7 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
         // On calcul la somme des valeurs.
         $calculationValue = $calcValue->calculate();
 
-        // On rempli une unitValue avec avec la valeur et l' unité calculées.
+        // On rempli une unitValue avec avec la valeur et l'unité calculées.
         return new Calc_UnitValue(
             $calculationUnit,
             $calculationValue->getDigitalValue(),
@@ -148,5 +145,4 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
             $calculationValue->getRelativeUncertainty()
         );
     }
-
 }

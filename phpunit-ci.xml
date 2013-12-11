@@ -22,7 +22,6 @@
             <directory>./tests/Orga</directory>
             <directory>./tests/Simulation</directory>
             <directory>./tests/AuditTrail</directory>
-            <exclude>./tests/Unit</exclude>
         </testsuite>
 
     </testsuites>
@@ -74,9 +73,6 @@
                 <!-- Techno -->
                 <directory suffix=".php">application/techno/controllers</directory>
                 <directory suffix=".php">application/techno/forms</directory>
-                <!-- Unit -->
-                <directory suffix=".php">application/unit/controllers</directory>
-                <file>application/unit/Bootstrap.php</file>
                 <!-- User -->
                 <directory suffix=".php">application/user/controllers</directory>
                 <directory suffix=".php">application/user/forms</directory>

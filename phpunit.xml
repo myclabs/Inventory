@@ -22,7 +22,6 @@
             <directory>./tests/Orga</directory>
             <directory>./tests/Simulation</directory>
             <directory>./tests/AuditTrail</directory>
-            <exclude>./tests/Unit</exclude>
         </testsuite>
 
     </testsuites>

@@ -21,19 +21,19 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 
         $value = new Calc_UnitValue($km, 3, 10);
 
-        $mValue = $value->convertTo($m);
+        $mValue = $value->convertTo('m');
 
         $this->assertEquals(3000, $mValue->getDigitalValue());
         $this->assertEquals(10, $mValue->getRelativeUncertainty());
         $this->assertSame($m, $mValue->getUnit());
 
-        $centkmValue = $value->convertTo($centkm);
+        $centkmValue = $value->convertTo('100km');
 
         $this->assertEquals(0.03, $centkmValue->getDigitalValue());
         $this->assertEquals(10, $centkmValue->getRelativeUncertainty());
         $this->assertSame($centkm, $centkmValue->getUnit());
 
-        $this->assertEquals($value->convertTo($centkm), $mValue->convertTo($centkm));
+        $this->assertEquals($value->convertTo('100km'), $mValue->convertTo('100km'));
     }
 
     /**
@@ -57,7 +57,7 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         $result = $unitValue->calculate();
 
         $this->assertEquals(0.00000075, $result->getDigitalValue());
-        $this->assertEquals('m^4.animal^-1.s^-4', $result->getUnit()->getRef());
+        $this->assertEquals('m^4.animal^-1.s^-4', $result->getUnit());
     }
 
     /**
@@ -79,7 +79,7 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         $result = $unitValue->calculate();
 
         $this->assertEquals(2.5, $result->getDigitalValue());
-        $this->assertEquals('m^2.kg^2.s^-2', $result->getUnit()->getRef());
+        $this->assertEquals('m^2.kg^2.s^-2', $result->getUnit());
 
 
          //Test somme d'unité non compatible.
@@ -152,7 +152,7 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         $unserialized = Calc_UnitValue::createFromString($str);
 
         $this->assertInstanceOf('Calc_UnitValue', $unserialized);
-        $this->assertEquals($value->getUnit()->getRef(), $unserialized->getUnit()->getRef(), "String: '$str'");
+        $this->assertEquals($value->getUnit(), $unserialized->getUnit(), "String: '$str'");
         $this->assertSame($value->getDigitalValue(), $unserialized->getDigitalValue(), "String: '$str'");
         $this->assertSame($value->getRelativeUncertainty(), $unserialized->getRelativeUncertainty(), "String: '$str'");
     }

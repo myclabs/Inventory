@@ -1,16 +1,14 @@
 <?php
+
+use DI\Container;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
+use MyCLabs\UnitAPI\OperationService;
+use Unit\UnitAPI;
+
 /**
  * @author valentin.claras
  * @author hugo.charbonnier
  * @author yoann.croizer
- * @package    Calc
- * @subpackage Calculation
- */
-use Unit\UnitAPI;
-
-/**
- * @package    Calc
- * @subpackage Calculation
  */
 class Calc_Calculation_Unit extends Calc_Calculation
 {
@@ -49,19 +47,37 @@ class Calc_Calculation_Unit extends Calc_Calculation
     /**
      * Calcul d'une somme d'unités.
      *
-     * @return UnitAPI
+     * L'opération vérifie juste que les unités sont compatibles.
+     *
+     * @throws IncompatibleUnitsException
+     * @return string Unité
      */
     protected function calculateSum()
     {
-        // Tableau d'unités envoyé pour la somme.
-        $unitTab = array();
+        /** @var Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var OperationService $operationService */
+        $operationService = $container->get(OperationService::class);
 
-        $components = $this->components;
-        foreach ($components as $component) {
-            $unitTab[] = $component['operand']->getRef();
+        $returnedUnit = null;
+
+        foreach ($this->components as $component) {
+            if ($returnedUnit === null) {
+                $returnedUnit = $component['operand'];
+                continue;
+            }
+
+            $unit = $component['operand'];
+            if (!$operationService->areCompatible($returnedUnit, $unit)) {
+                throw new IncompatibleUnitsException(sprintf(
+                    'Impossible to add units %s and %s because they are incompatible',
+                    $returnedUnit,
+                    $unit
+                ));
+            }
         }
 
-        return UnitAPI::calculateSum($unitTab);
+        return $returnedUnit;
     }
 
     /**
@@ -81,5 +97,4 @@ class Calc_Calculation_Unit extends Calc_Calculation
 
         return UnitAPI::multiply($unitTab);
     }
-
 }

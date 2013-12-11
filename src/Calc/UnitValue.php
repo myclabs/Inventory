@@ -1,21 +1,18 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Calc
- */
 
+use DI\Container;
+use MyCLabs\UnitAPI\OperationService;
 use Unit\UnitAPI;
 
 /**
  * Opérande de type unité/valeur.
  *
- * @package Calc
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
 class Calc_UnitValue
 {
-
     // Constantes de classe.
     const RELATION_EQUAL = '==';
     const RELATION_NOTEQUAL = '!=';
@@ -27,7 +24,7 @@ class Calc_UnitValue
     /**
      * Unité.
      *
-     * @var UnitAPI
+     * @var string
      */
     private $unit;
 
@@ -40,13 +37,15 @@ class Calc_UnitValue
 
 
     /**
-     * @param UnitAPI    $unit
+     * @param string     $unit
      * @param float|null $digitalValue
      * @param float|null $relativeUncertainty
      */
-    public function __construct(UnitAPI $unit = null, $digitalValue = null, $relativeUncertainty = null)
+    public function __construct($unit = null, $digitalValue = null, $relativeUncertainty = null)
     {
-        $this->unit = $unit ? : new UnitAPI();
+        if ($unit) {
+            $this->unit = $unit;
+        }
         $this->value = new Calc_Value($digitalValue, $relativeUncertainty);
     }
 
@@ -72,16 +71,23 @@ class Calc_UnitValue
 
     /**
      * Convert the value to a different unit
-     * @param UnitAPI $unit
+     * @param string $unit
      * @return Calc_UnitValue
      */
-    public function convertTo(UnitAPI $unit)
+    public function convertTo($unit)
     {
         $digitalValue = $this->value->getDigitalValue();
         if (is_null($digitalValue)) {
             $newDigitalValue = null;
         } else {
-            $newDigitalValue = (float) $digitalValue * $unit->getConversionFactor($this->unit->getRef());
+            /** @var Container $container */
+            $container = Zend_Registry::get('container');
+            /** @var OperationService $operationService */
+            $operationService = $container->get(OperationService::class);
+
+            $conversionFactor = $operationService->getConversionFactor($this->unit, $unit);
+
+            $newDigitalValue = (float) $digitalValue * $conversionFactor;
         }
 
         return new Calc_UnitValue($unit, $newDigitalValue, $this->value->getRelativeUncertainty());
@@ -104,14 +110,15 @@ class Calc_UnitValue
         if (is_null($this->value->getDigitalValue())) {
             $unitValue1 = null;
         } else {
-            $unitValue1 = (float) $this->value->getDigitalValue() * $this->unit->getConversionFactor();
+            $unitValue1 = $this->value->getDigitalValue();
         }
 
         // Si l'utilisateur n'a pas entré de valeur.
         if (is_null($uvToCompare->value->getDigitalValue())) {
             $unitValue2 = null;
         } else {
-            $unitValue2 = (float) $uvToCompare->value->getDigitalValue() * $uvToCompare->unit->getConversionFactor();
+            // Convertit pour avoir la même unité
+            $unitValue2 = $uvToCompare->convertTo($this->unit)->getDigitalValue();
         }
 
         switch ($operator) {
@@ -185,7 +192,7 @@ class Calc_UnitValue
      */
     public function exportToString()
     {
-        return $this->value->exportToString() . '|' . $this->unit->getRef();
+        return $this->value->exportToString() . '|' . $this->unit;
     }
 
     /**
@@ -205,7 +212,7 @@ class Calc_UnitValue
 
         $value = Calc_Value::createFromString($strValue);
 
-        return new static(new UnitAPI($unitRef), $value->getDigitalValue(), $value->getRelativeUncertainty());
+        return new static($unitRef, $value->getDigitalValue(), $value->getRelativeUncertainty());
     }
 
     /**

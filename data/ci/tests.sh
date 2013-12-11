@@ -10,6 +10,3 @@ php scripts/build/build.php -e testsunitaires populate
 phpunit -c phpunit.xml
 
 php scripts/build/build.php -e testsunitaires create update
-
-# Tests de unit
-phpunit --bootstrap tests/init.php tests/Unit

@@ -1,30 +1,21 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
 
 use Exec\Execution\Calc;
 use Exec\Provider\UnitInterface;
 use Exec\Provider\ValueInterface;
 use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
-use Unit\IncompatibleUnitsException;
-use Unit\UnitAPI;
 
 /**
- * @package    Algo
- * @subpackage Numeric
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
-class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
-    implements ValueInterface, UnitInterface
+class Algo_Model_Numeric_Expression extends Algo_Model_Numeric implements ValueInterface, UnitInterface
 {
-
     /**
      * Unité pour contrôle automatique de la cohérence des unités.
-     * @var UnitAPI
+     * @var string
      */
     protected $unit;
 
@@ -51,9 +42,7 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
         $result = $calc->executeExpression($this);
 
         // Convertit à l'unité de l'algo
-        $convertedValue = $result->getDigitalValue() / $result->getUnit()->getConversionFactor($this->getUnit());
-
-        return new Calc_UnitValue($this->getUnit(), $convertedValue, $result->getRelativeUncertainty());
+        return $result->convertTo($this->getUnit());
     }
 
     /**
