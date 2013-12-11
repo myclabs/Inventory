@@ -368,17 +368,25 @@ class Orga_CellController extends Core_Controller
         $locale = Core_Locale::loadDefault();
 
         $events = [];
-        foreach ($this->entryRepository->findLatestForOrganizationContext($context, 100) as $entry) {
+        foreach ($this->entryRepository->findLatestForOrganizationContext($context, 10) as $entry) {
             $eventText = __('Orga', 'auditTrail', $entry->getEventName(),
                 [
-                    'INPUT' => $entry->getContext()->getCell()->getLabel(),
-                    'USER' => $entry->getUser()->getName()
+                    'INPUT' => '<a href="orga/cell/input/idCell/' . $entry->getContext()->getCell()->getId() . '/fromIdCell/' . $cell->getId() . '/">'
+                                    . $entry->getContext()->getCell()->getLabel()
+                                . '</a>',
+                    'USER' => '<b>'.$entry->getUser()->getName().'</b>'
                 ]
             );
-            $events[] = ['date' => $locale->formatDateTime($entry->getDate()), 'event' => $eventText];
+
+            $date = $locale->formatDate($entry->getDate());
+            $time = $locale->formatTime($entry->getDate());
+            if (!isset($events[$date])) {
+                $events[$date] = ['date' => $date, 'events' => []];
+            }
+            $events[$date]['events'][] = ['time' => $time, 'event' => $eventText];
         }
 
-        $this->sendJsonResponse($events);
+        $this->sendJsonResponse(array_values($events));
     }
 
     /**
@@ -395,13 +403,23 @@ class Orga_CellController extends Core_Controller
         $locale = Core_Locale::loadDefault();
 
         $comments = [];
-        foreach ($cell->getInputSetLatestComments(20) as $comment) {
-            $commentText = __('Social', 'comment', 'by') . '<b>' . $comment->getAuthor()->getName() . '</b>'
-                . __('Orga', 'input', 'aboutInput') . $comment->getCell()->getLabel() . __('UI', 'other', ':')
-                . '« ' . Core_Tools::truncateString($comment->getText(), 200) . ' ».';
-            $comments[] = ['date' => $locale->formatDateTime($comment->getCreationDate()), 'comment' => $commentText];
+        /** @var Orga_Model_InputComment|Social_Model_Comment $comment */
+        foreach ($cell->getInputSetLatestComments(10) as $comment) {
+            $commentText = __('Social', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
+                . __('Orga', 'input', 'aboutInput')
+                . ' <a href="orga/cell/input/idCell/' . $comment->getCell()->getId() . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
+                    . $comment->getCell()->getLabel()
+                . '</a>' . __('UI', 'other', ':')
+                . '« ' . Core_Tools::truncateString($comment->getText(), 150) . ' ».';
+
+            $date = $locale->formatDate($comment->getCreationDate());
+            $time = $locale->formatTime($comment->getCreationDate());
+            if (!isset($comments[$date])) {
+                $comments[$date] = ['date' => $date, 'comments' => []];
+            }
+            $comments[$date]['comments'][] = ['time' => $time, 'comment' => $commentText];
         }
-        $this->sendJsonResponse($comments);
+        $this->sendJsonResponse(array_values($comments));
     }
 
     /**
@@ -415,7 +433,13 @@ class Orga_CellController extends Core_Controller
 
         $formData = json_decode($this->getRequest()->getParam('addMember'), true);
 
-        $axis = $cell->getOrganization()->getAxisByRef($formData['axis']['value']);
+        $axisRef = $formData['axis']['value'];
+        if (empty($axisRef)) {
+            $this->addFormError('axis', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->sendFormResponse();
+            return;
+        }
+        $axis = $cell->getOrganization()->getAxisByRef($axisRef);
 
         $axisData = $formData[$axis->getRef().'_group']['elements'];
         $parentMembers = [];
@@ -435,6 +459,11 @@ class Orga_CellController extends Core_Controller
         $parentMembersHashkey = Orga_Model_Member::buildParentMembersHashKey($contextualizingParentMembers);
 
         $label = $axisData[$axis->getRef() . '_member']['value'];
+        if (empty($label)) {
+            $this->addFormError($axis->getRef() . '_member', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->sendFormResponse();
+            return;
+        }
         $ref = Core_Tools::refactor($label);
 
         $refIsUnique = false;
@@ -1321,7 +1350,7 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $aFViewConfiguration->addToActionStack('inputsave', 'cell', 'orga', array('idCell' => $idCell));
         $aFViewConfiguration->setResultsPreviewUrl('orga/cell/inputpreview');
-        $aFViewConfiguration->setExitUrl($this->_helper->url('details', 'cell', 'orga',
+        $aFViewConfiguration->setExitUrl($this->_helper->url('view', 'cell', 'orga',
                 ['idCell' => $this->getParam('fromIdCell')]));
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
