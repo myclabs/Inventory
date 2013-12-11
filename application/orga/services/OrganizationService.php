@@ -3,6 +3,7 @@
 use Doctrine\ORM\EntityManager;
 use User\Domain\ACL\Role\AdminRole;
 use User\Domain\User;
+use User\Domain\UserService;
 
 class Orga_Service_OrganizationService
 {
@@ -17,13 +18,23 @@ class Orga_Service_OrganizationService
     private $aclManager;
 
     /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
+     * @param UserService             $userService
      */
-    public function __construct(EntityManager $entityManager, Orga_Service_ACLManager $aclManager)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        Orga_Service_ACLManager $aclManager,
+        UserService $userService
+    ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
+        $this->userService = $userService;
     }
 
     /**
@@ -384,5 +395,19 @@ class Orga_Service_OrganizationService
 
             throw $e;
         }
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return Orga_Model_Organization
+     */
+    public function initDemoUserAndWorkspace($email, $password)
+    {
+        $user = $this->userService->createUser($email, $password);
+
+        $label = __('Orga', 'organization', 'defaultWorkspaceLabel');
+
+        return $this->createOrganization($user, $label);
     }
 }
