@@ -6,8 +6,8 @@ Feature: Identification feature
     Given I am on the homepage
     And I wait for the page to finish loading
     Then I should be on "user/action/login"
+    And I should see "Vous n'êtes pas connecté"
     And I should see "Connexion"
-    And I should see a "#loginButton" element
 
   @javascript
   Scenario: Logging in with wrong password

@@ -1,9 +1,4 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    User
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use User\Application\Service\AuthAdapter;
@@ -12,8 +7,7 @@ use User\Domain\UserService;
 
 /**
  * Contrôleur de gestion des actions de l'utilisateurs
- * @package    User
- * @subpackage Controller
+ * @author matthieu.napoli
  */
 class User_ActionController extends UI_Controller_Captcha
 {
@@ -40,43 +34,37 @@ class User_ActionController extends UI_Controller_Captcha
      */
     public function loginAction()
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->referer = Zend_Controller_Front::getInstance()->getBaseUrl().'/'.$this->getReferer();
-
         if ($this->getRequest()->isPost()) {
-            $formData = $this->getFormData("login");
-            $email = $formData->getValue('email');
-            $password = $formData->getValue('password');
+            $email = $this->getParam('email');
+            $password = $this->getParam('password');
 
             // Validation
             if (! $email) {
-                $this->addFormError('email', __('UI', 'formValidation', 'emptyRequiredField'));
+                UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'));
+                return;
             }
             if (! $password) {
-                $this->addFormError('password', __('UI', 'formValidation', 'emptyRequiredField'));
+                UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'));
+                return;
             }
 
-            if (! $this->hasFormError()) {
-                // Obtention d'une référence de l'instance du Singleton de Zend_Auth.
-                $auth = Zend_Auth::getInstance();
-                // Définition de l'adaptateur d'authentification.
-                $authAdapter = new AuthAdapter($this->userService, $email, $password);
-                // Tentative d'authentification et stockage du résultat.
-                $result = $auth->authenticate($authAdapter);
-                if ($result->isValid()) {
-                    /** @var $user User */
-                    $user = $this->_helper->auth();
-                    if ($user->isEmailValidated() === false) {
-                        $user->setEmailValidated(true);
-                        $user->save();
-                    }
-                    $this->sendFormResponse();
-                } else {
-                    $messages = $result->getMessages();
-                    $this->setFormMessage(implode(', ', $messages), UI_Message::TYPE_ALERT);
+            // Obtention d'une référence de l'instance du Singleton de Zend_Auth.
+            $auth = Zend_Auth::getInstance();
+            // Définition de l'adaptateur d'authentification.
+            $authAdapter = new AuthAdapter($this->userService, $email, $password);
+            // Tentative d'authentification et stockage du résultat.
+            $result = $auth->authenticate($authAdapter);
+            if ($result->isValid()) {
+                /** @var $user User */
+                $user = $this->_helper->auth();
+                if ($user->isEmailValidated() === false) {
+                    $user->setEmailValidated(true);
+                    $user->save();
                 }
+                $this->redirect($this->getReferer());
+            } else {
+                UI_Message::addMessageStatic(implode(', ', $result->getMessages()));
             }
-            $this->sendFormResponse();
         }
         $this->view->user = $this->_helper->auth();
     }

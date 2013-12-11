@@ -1,63 +1,40 @@
-<div class="page-header">
-    <h1><?=__('User', 'login', 'connection')?></h1>
+<div class="login-form">
+
+    <h3><?=__('User', 'login', 'connection')?></h3>
+
+
+    <?php
+    if ($this->user) {
+        ?>
+        <p>
+            <?=__('User', 'login', 'youAreConnected')?>
+            <?=$this->user->getName()?>.
+        </p>
+        <?php
+    } else {
+        ?>
+        <p>
+            <?=__('User', 'login', 'youAreNotConnected')?>
+        </p>
+        <form action="user/action/login" method="post">
+            <input type="text" name="email" class="input-block-level"
+                   placeholder="<?=__('UI', 'name', 'emailAddress')?>">
+            <input type="password" name="password" class="input-block-level"
+                   placeholder="<?=__('User', 'login', 'password')?>">
+
+            <input type="submit" id="connection" class="btn btn-primary btn-block"
+                   value="<?=__('User', 'login', 'connection')?>">
+
+            <p>
+                <a class="fieldForgotPassword" href="user/password/forgotten">
+                    <?=__('User', 'login', 'forgottenPassword')?></a>
+            </p>
+        </form>
+        <?php
+    }
+    ?>
+
 </div>
-
-<?php
-if ($this->user) {
-    ?>
-    <p>
-        <?=__('User', 'login', 'youAreConnected')?>
-        <?=$this->user->getName()?>.
-    </p>
-    <?php
-} else {
-    ?>
-    <p>
-        <?=__('User', 'login', 'youAreNotConnected')?>
-    </p>
-    <?php
-
-    $form = new UI_Form("login");
-    $form->setAction('user/action/login');
-    $form->setAjax(true, 'loginSuccess');
-
-    $email = new UI_Form_Element_Text('email');
-    $email->setLabel(__('UI', 'name', 'emailAddress'));
-    $form->addElement($email);
-
-    $password = new UI_Form_Element_Password('password');
-    $password->setLabel(__('User', 'login', 'password'));
-    $form->addElement($password);
-
-    $forgotPassword = new UI_Form_Element_HTML('forgotPasswordLogin');
-    $forgotPassword->content = '<a class="fieldForgotPassword" href="user/password/forgotten">'
-        . __('User', 'login', 'forgottenPassword')
-        . '</a>';
-    $form->addElement($forgotPassword);
-
-    $form->addSubmitButton(__('User', 'login', 'connection'), 'connection');
-    $form->display();
-}
-
-// Partial de création d'un compte.
-// Recherche du partial de l'application.
-if (Zend_Registry::isRegistered('user_actionlogin_forgotpassword')) {
-    $path = Zend_Registry::get('user_actionlogin_forgotpassword');
-    $this->setScriptPath(APPLICATION_PATH.'/views/scripts');
-    $patialForgotPassword = $this->partial($path, []);
-} else {
-    $patialForgotPassword = null;
-}
-
-// Si le partial fournit une vue, elle est affichée dans un onglet.
-if ($patialForgotPassword !== '') {
-    ?>
-    <div>
-        <?=$patialForgotPassword?>
-    </div>
-    <?php
-}
-?>
 
 <script>
     $.fn.loginSuccess = function () {
