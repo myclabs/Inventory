@@ -131,7 +131,14 @@ class Orga_CellController extends Core_Controller
             $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
                 && (($narrowerGranularity === $granularityForInventoryStatus)
                     || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
-            if ($isNarrowerGranularityInventory) {
+            $narrowerGranularityHasSubInputGranlarities = false;
+            foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
+                if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
+                    $narrowerGranularityHasSubInputGranlarities = true;
+                    break;
+                }
+            }
+            if ($isNarrowerGranularityInventory && $narrowerGranularityHasSubInputGranlarities) {
                 $purpose .= __('Orga', 'granlarity', 'InventoryPurpose');
             }
             // Input purpose.

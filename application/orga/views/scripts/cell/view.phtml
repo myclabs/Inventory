@@ -281,14 +281,14 @@ $currentCell = $this->currentCell;
     ?>
     <fieldset class="wrapper granularityWrapper">
         <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
-            <i class="filterChevron icon-chevron-down"></i>
-            <?=$narrowerGranularity->getLabel()?>
+            <i class="filterChevron icon-chevron-<?=((count($this->narrowerGranularities) === 1)?'down':'right')?>"></i>
+            <?=$narrowerGranularityArray['purpose']?>
             <small>
-                <?=$narrowerGranularityArray['purpose']?>
+                <?=$narrowerGranularity->getLabel()?>
             </small>
         </legend>
 
-        <div id="granularity<?=$narrowerGranularity->getId()?>" class="collapse">
+        <div id="granularity<?=$narrowerGranularity->getId()?>" class="collapse<?=((count($this->narrowerGranularities) === 1)?' in':'')?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $memberOptions) : ?>
@@ -439,6 +439,22 @@ $('.comments a.refresh').on('click', function(e) {
             $('.comments > div').html('<?=addslashes(__('UI', 'comment', 'errorWhileLoadingComments'))?>');
         }
     });
+});
+
+$('.granularityWrapper > div').on('show', function(e) {
+    console.log($(this));
+    console.log(e.target);
+    console.log(e.currentTarget);
+    if (e.currentTarget == e.target) {
+        $('legend > i.filterChevron', $(this).parent()).removeClass('icon-chevron-right');
+        $('legend > i.filterChevron', $(this).parent()).addClass('icon-chevron-down');
+    }
+});
+$('.granularityWrapper > div').on('hidden', function(e) {
+    if (e.currentTarget == e.target) {
+        $('legend > i.filterChevron', $(this).parent()).removeClass('icon-chevron-down');
+        $('legend > i.filterChevron', $(this).parent()).addClass('icon-chevron-right');
+    }
 });
 
 $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
@@ -650,8 +666,9 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
 
 $('.cells-filter button.reset').on('click', function(e) {
     e.preventDefault();
-    $('.cells-filter').trigger('resetCellsFilter');
-    $('.cells-filter').trigger('filterCells');
+    var form = $(this).parent();
+    form.trigger('resetCellsFilter');
+    form.trigger('filterCells');
 });
 $('.cells-filter').on('resetCellsFilter', function(e) {
     e.preventDefault();
@@ -660,7 +677,8 @@ $('.cells-filter').on('resetCellsFilter', function(e) {
     $('select:first', form).trigger('change');
 });
 $('.cells-filter select').on('keyup change', function(e) {
-    $('.cells-filter').trigger('filterCells');
+    var form = $(this).parent();
+    form.trigger('filterCells');
 });
 $('.cells-filter').on('filterCells', function(e) {
     e.preventDefault();
