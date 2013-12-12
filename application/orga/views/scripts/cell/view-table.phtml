@@ -442,9 +442,6 @@ $('.comments a.refresh').on('click', function(e) {
 });
 
 $('.granularityWrapper > div').on('show', function(e) {
-    console.log($(this));
-    console.log(e.target);
-    console.log(e.currentTarget);
     if (e.currentTarget == e.target) {
         $('legend > i.filterChevron', $(this).parent()).removeClass('icon-chevron-right');
         $('legend > i.filterChevron', $(this).parent()).addClass('icon-chevron-down');
@@ -749,6 +746,9 @@ $('body').on('hidden', '.users', function(e) {
 });
 $('body').on('click', '.deleteUser', function(e) {
     e.preventDefault();
+    if ($(this).attr('data-submitting') === 'true') {
+        return false;
+    }
     $('.userMessage').remove();
     $(this).parent().parent().after(
         '<tr class="info userMessage">' +
@@ -764,6 +764,11 @@ $('body').on('click', '.deleteUser', function(e) {
 $('body').on('click', 'tr.userMessage .confirm', function(e) {
     e.preventDefault();
     var row = $(this).parent().parent();
+    var deleteUser = $('.deleteUser', row.prev());
+    if (deleteUser.attr('data-submitting') === 'true') {
+        return false;
+    }
+    deleteUser.attr('data-submitting', true);
     row.html('<td colspan="5"><img src="images/ui/ajax-loader.gif"></td>');
     $.ajax({
         url: $('a.deleteUser', row.prev()).attr('href'),
@@ -778,6 +783,7 @@ $('body').on('click', 'tr.userMessage .confirm', function(e) {
             );
         },
         error: function(jqXHR) {
+            deleteUser.attr('data-submitting', false);
             row.removeClass('info');
             var response = $.parseJSON(jqXHR.responseText);
             if (typeof(response.typeError) == 'string') {
@@ -806,6 +812,10 @@ $('body').on('click', 'tr.userMessage .closeUserMessage', function(e) {
 $('body').on('submit', '.addUser', function(e) {
     e.preventDefault();
     var form = $(this);
+    if (form.attr('data-submitting') === 'true') {
+        return false;
+    }
+    form.attr('data-submitting', true);
     $('.userMessage').remove();
     form.before('<div class="userMessage alert alert-info"><img src="images/ui/ajax-loader.gif"></div>')
     $.ajax({
@@ -817,6 +827,7 @@ $('body').on('submit', '.addUser', function(e) {
             form.prev().addClass('alert-success');
             form.prev().html(data);
             form.parent().parent().trigger('show');
+            form.attr('data-submitting', false);
         },
         error: function(jqXHR) {
             form.prev().removeClass('alert-info');
@@ -830,6 +841,7 @@ $('body').on('submit', '.addUser', function(e) {
                 form.prev().html(response.message);
             } else {
                 form.prev().html('<?=__('Orga', 'view', 'errorWhileAddingUser')?>');
+                form.attr('data-submitting', false);
             }
         }
     });
@@ -863,6 +875,9 @@ $('body').on('hidden', '.reports', function(e) {
 });
 $('body').on('click', '.deleteReport', function(e) {
     e.preventDefault();
+    if ($(this).attr('data-submitting') === 'true') {
+        return false;
+    }
     $('.reportMessage').remove();
     $(this).parent().parent().after(
         '<tr class="info reportMessage">' +
@@ -878,6 +893,11 @@ $('body').on('click', '.deleteReport', function(e) {
 $('body').on('click', 'tr.reportMessage .confirm', function(e) {
     e.preventDefault();
     var row = $(this).parent().parent();
+    var deleteReport = $('.deleteReport', row.prev());
+    if (deleteReport.attr('data-submitting') === 'true') {
+        return false;
+    }
+    deleteReport.attr('data-submitting', true);
     row.html('<td colspan="3"><img src="images/ui/ajax-loader.gif"></td>');
     $.ajax({
         url: $('a.deleteReport', row.prev()).attr('href'),
@@ -892,6 +912,7 @@ $('body').on('click', 'tr.reportMessage .confirm', function(e) {
             );
         },
         error: function(jqXHR) {
+            deleteReport.attr('data-submitting', false);
             row.removeClass('info');
             var response = $.parseJSON(jqXHR.responseText);
             if (typeof(response.typeError) == 'string') {
