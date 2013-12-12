@@ -144,6 +144,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->container->set('email.contact.address', $configuration->emails->contact->adress);
         $this->container->set('email.noreply.name', $configuration->emails->noreply->name);
         $this->container->set('email.noreply.address', $configuration->emails->noreply->adress);
+        $this->container->set('feature.register', $configuration->feature->register);
 
         // Configuration pour injecter dans les controleurs (intégration ZF1)
         $dispatcher = new \DI\ZendFramework1\Dispatcher();

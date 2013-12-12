@@ -26,6 +26,12 @@ class User_ActionController extends UI_Controller_Captcha
     private $organizationService;
 
     /**
+     * @Inject("feature.register")
+     * @var boolean
+     */
+    private $enableRegister;
+
+    /**
      * Par défaut : redirige vers l'action de login.
      * @Secure("public")
      */
@@ -72,7 +78,8 @@ class User_ActionController extends UI_Controller_Captcha
                 UI_Message::addMessageStatic(implode(', ', $result->getMessages()));
             }
         }
-        $this->view->user = $this->_helper->auth();
+        $this->view->assign('user', $this->_helper->auth());
+        $this->view->assign('enableRegister', $this->enableRegister);
     }
 
     /**
@@ -81,6 +88,11 @@ class User_ActionController extends UI_Controller_Captcha
      */
     public function registerAction()
     {
+        if (! $this->enableRegister) {
+            $this->redirect('user/action/login');
+            return;
+        }
+
         // Si l'utilisateur est déjà connecté, on redirige
         if ($this->_helper->auth()) {
             $this->redirect('orga/organization/manage');
