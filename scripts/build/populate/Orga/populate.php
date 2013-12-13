@@ -138,32 +138,22 @@ class Orga_Populate extends Core_Script_Action
     /**
      * @param Orga_Model_Organization $organization
      * @param array $axes
-     * @param bool $orgaTab
-     * @param bool $aCL
-     * @param bool $aFTab
+     * @param bool $relevance
      * @param bool $dWCubes
-     * @param bool $genericAction
-     * @param bool $contextAction
-     * @param bool $inputDocs
+     * @param bool $acl
      * @return Orga_Model_Granularity
      */
     protected function createGranularity(
         Orga_Model_Organization $organization,
         array $axes = [],
-        $orgaTab = false,
-        $aCL = true,
-        $aFTab = false,
+        $relevance = false,
         $dWCubes = false,
-        $genericAction = false,
-        $contextAction = false,
-        $inputDocs = false
+        $acl = true
     ) {
         $granularity = new Orga_Model_Granularity($organization, $axes);
-        $granularity->setCellsWithACL($aCL);
+        $granularity->setCellsControlRelevance($relevance);
         $granularity->setCellsGenerateDWCubes($dWCubes);
-        $granularity->setCellsWithSocialGenericActions($genericAction);
-        $granularity->setCellsWithSocialContextActions($contextAction);
-        $granularity->setCellsWithInputDocuments($inputDocs);
+        $granularity->setCellsWithACL($acl);
         $granularity->save();
         return $granularity;
     }
