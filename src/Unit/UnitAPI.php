@@ -4,7 +4,7 @@ namespace Unit;
 
 use DI\Container;
 use MyCLabs\UnitAPI\Exception\UnknownUnitException;
-use MyCLabs\UnitAPI\OperationService;
+use MyCLabs\UnitAPI\UnitOperationService;
 use MyCLabs\UnitAPI\UnitService;
 use Unit\Domain\ComposedUnit\ComposedUnit;
 
@@ -24,7 +24,6 @@ class UnitAPI
     protected $ref;
 
     /**
-     * Constructeur.
      * @param string $ref
      */
     public function __construct($ref = null)
@@ -101,8 +100,8 @@ class UnitAPI
     {
         /** @var Container $container */
         $container = \Zend_Registry::get('container');
-        /** @var OperationService $operationService */
-        $operationService = $container->get(OperationService::class);
+        /** @var UnitOperationService $operationService */
+        $operationService = $container->get(UnitOperationService::class);
 
         return $operationService->areCompatible($this->ref, $ref);
     }
@@ -121,8 +120,8 @@ class UnitAPI
     {
         /** @var Container $container */
         $container = \Zend_Registry::get('container');
-        /** @var OperationService $operationService */
-        $operationService = $container->get(OperationService::class);
+        /** @var UnitOperationService $operationService */
+        $operationService = $container->get(UnitOperationService::class);
 
         return $operationService->getConversionFactor($this->ref, $refUnit);
     }
@@ -193,5 +192,4 @@ class UnitAPI
         $composedUnit->reverseUnit();
         return new UnitAPI($composedUnit->getRef());
     }
-
 }
