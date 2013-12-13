@@ -10,12 +10,12 @@
 <form class="form form-horizontal" id="addOrganization" action="orga/organization/add-submit">
     <ul class="nav nav-tabs" id="organizationSteps">
         <li class="active"><a href="#organization">Organisation</a></li>
-        <li class="disabled"><a href="#"> >>> </a></li>
-        <li class="disabled"><a href="#axes">Axes</a></li>
-        <li class="disabled"><a href="#"> >>> </a></li>
-        <li class="disabled"><a href="#members">Éléments</a></li>
-        <li class="disabled"><a href="#"> >>> </a></li>
-        <li class="disabled"><a href="#granularities">Granularités</a></li>
+        <li class="disabled hide"><a href="#"> >>> </a></li>
+        <li class="disabled hide"><a href="#axes">Axes</a></li>
+        <li class="disabled hide"><a href="#"> >>> </a></li>
+        <li class="disabled hide"><a href="#members">Éléments</a></li>
+        <li class="disabled hide"><a href="#"> >>> </a></li>
+        <li class="disabled hide"><a href="#granularities">Granularités</a></li>
         <li class="disabled hide"><a href="#"> >>> </a></li>
         <li class="disabled hide"><a href="#dw">Données</a></li>
         <li class="disabled"><a href="#"> >>> </a></li>
@@ -59,8 +59,10 @@
                             <div class="input">
                                 <select id="organizationType" name="organizationType">
                                     <option value="empty">Vide</option>
+                                    <!--
                                     <option selected value="collecte">Collecte</option>
                                     <option value="reporting">Reporting</option>
+                                    -->
                                 </select>
                             </div>
                         </div>
