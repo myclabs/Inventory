@@ -2,9 +2,10 @@
 
 namespace Unit;
 
-use Core_Exception;
-use Unit\Domain\Unit\Unit;
-use Unit\IncompatibleUnitsException;
+use DI\Container;
+use MyCLabs\UnitAPI\Exception\UnknownUnitException;
+use MyCLabs\UnitAPI\OperationService;
+use MyCLabs\UnitAPI\UnitService;
 use Unit\Domain\ComposedUnit\ComposedUnit;
 
 /**
@@ -21,30 +22,6 @@ class UnitAPI
      * @var string
      */
     protected $ref;
-
-    /**
-     * Cache des facteurs de conversion
-     *  tableau à deux dimensions : this->ref,ref de l'unité vers laquelle on converti
-     *  les valeurs sont les facteurs de conversion
-     *  la deuxième clef est égale à la première si le facteur de conversion est vers les unités de base
-     * @var array
-     */
-    protected static $conversionFactors = array();
-
-    /**
-     * Cache des équivalence entre unités
-     *  tableau à deux dimensions : this->ref,ref de l'unité que l'on test
-     *  les valeurs sont des booléens indiquant si les deux unités sont équivalentes
-     * @var array
-     */
-    protected static $equivalentUnits = array();
-
-    /**
-     * Cache des symboles des unités
-     *  tableau à une dimension : this->ref
-     * @var array
-     */
-    protected static $symbols = array();
 
     /**
      * Constructeur.
@@ -71,12 +48,18 @@ class UnitAPI
      */
     public function exists()
     {
+        /** @var Container $container */
+        $container = \Zend_Registry::get('container');
+        /** @var UnitService $unitService */
+        $unitService = $container->get(UnitService::class);
+
         try {
-            $this->getNormalizedUnit();
-            return !empty($this->ref);
-        } catch (Core_Exception $e) {
+            $unitService->getUnit($this->ref);
+        } catch (UnknownUnitException $e) {
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -98,11 +81,14 @@ class UnitAPI
      */
     public function getSymbol()
     {
-        if (!array_key_exists($this->ref, self::$symbols)) {
-            $composedUnit = new ComposedUnit($this->ref);
-            self::$symbols[$this->ref] = $composedUnit->getSymbol();
-        }
-        return self::$symbols[$this->ref];
+        /** @var Container $container */
+        $container = \Zend_Registry::get('container');
+        /** @var UnitService $unitService */
+        $unitService = $container->get(UnitService::class);
+
+        $unit = $unitService->getUnit($this->ref);
+
+        return $unit->symbol;
     }
 
 
@@ -113,12 +99,12 @@ class UnitAPI
      */
     public function isEquivalent($ref)
     {
-        if (!array_key_exists($this->ref, self::$equivalentUnits)
-            || !array_key_exists((string) $ref, self::$equivalentUnits[$this->ref])) {
-            $composedUnit = new ComposedUnit($this->ref);
-            self::$equivalentUnits[$this->ref][(string) $ref] = $composedUnit->isEquivalent(new ComposedUnit($ref));
-        }
-        return self::$equivalentUnits[$this->ref][(string) $ref];
+        /** @var Container $container */
+        $container = \Zend_Registry::get('container');
+        /** @var OperationService $operationService */
+        $operationService = $container->get(OperationService::class);
+
+        return $operationService->areCompatible($this->ref, $ref);
     }
 
     /**
@@ -131,34 +117,14 @@ class UnitAPI
      * @throws IncompatibleUnitsException
      * @return float Le facteur de conversion.
      */
-    public function getConversionFactor($refUnit = null)
+    public function getConversionFactor($refUnit)
     {
-        // Dans le cas ou on veut passer l'unité apellé dans l'unité passée en paramètre
-        if (isset($refUnit)) {
-            if (!array_key_exists($this->ref, self::$conversionFactors)
-                || !array_key_exists((string) $refUnit, self::$conversionFactors[$this->ref])
-            ) {
-                if ($this->isEquivalent($refUnit)) {
-                    $unit1 = new ComposedUnit($this->ref);
-                    $factor1 = $unit1->getConversionFactor();
-                    $unit2 = new ComposedUnit($refUnit);
-                    $factor2 = $unit2->getConversionFactor();
-                    self::$conversionFactors[$this->ref][(string) $refUnit] = $factor2 / $factor1;
-                } else {
-                    throw new IncompatibleUnitsException("Unit {$this->ref} is incompatible with $refUnit");
-                }
-            }
-        } // Dans le cas ou on veut récupérer le facteur de conversion de l'unité de base
-		else {
-			$refUnit = $this->ref;
-			if (!array_key_exists($this->ref, self::$conversionFactors)
-                || !array_key_exists($this->ref, self::$conversionFactors[$this->ref])
-			) {
-				$unit = new ComposedUnit($this->ref);
-				self::$conversionFactors[$this->ref][$this->ref] = $unit->getConversionFactor();
-			}
-		}
-        return self::$conversionFactors[$this->ref][(string) $refUnit];
+        /** @var Container $container */
+        $container = \Zend_Registry::get('container');
+        /** @var OperationService $operationService */
+        $operationService = $container->get(OperationService::class);
+
+        return $operationService->getConversionFactor($this->ref, $refUnit);
     }
 
     /**

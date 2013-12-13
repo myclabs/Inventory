@@ -345,36 +345,13 @@ class Unit_Test_UnitAPITest extends TestCase
      */
     function testGetConversionFactor()
     {
-        $unit1 = new UnitAPI('m^2.animal^-1.m^-2.kg.kg_ce');
-        $result = $unit1->getConversionFactor();
-        $this->assertEquals(true, $result == 3.7);
+        $unit1 = new UnitAPI('m^2.animal^-1.m^-2.kg');
+        $result = $unit1->getConversionFactor(new UnitAPI('m^2.animal^-1.m^-2.kg'));
+        $this->assertEquals(1, $result);
 
         $unit1 = new UnitAPI('kg^2.g');
-        $result = $unit1->getConversionFactor();
-        $this->assertEquals(true, $result == 0.001);
-
-        //Test de l'exception levée lorsque le coefficient multiplicateur d'une extension est null.
-        $this->extension->setMultiplier(null);
-
-        $this->unit7->setExtension($this->extension);
-
-        $unit1 = new UnitAPI('kg_co2e');
-        try {
-            $result = $unit1->getConversionFactor();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->assertEquals('Multiplier has not be defined', $e->getMessage());
-        }
-
-        //Test de l'exception levée lorsque le coefficient multiplicateur d'une extension est null.
-        $this->unit2->setMultiplier(null);
-
-        $unit1 = new UnitAPI('g');
-        try {
-            $result = $unit1->getConversionFactor();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->assertEquals('Multiplier has not be defined', $e->getMessage());
-        }
-
+        $result = $unit1->getConversionFactor(new UnitAPI('kg^3'));
+        $this->assertEquals(0.001, $result);
     }
 
     /**

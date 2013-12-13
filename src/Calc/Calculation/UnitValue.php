@@ -74,8 +74,8 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
             /** @var Calc_UnitValue $unitValue */
             $unitValue = $component['operand'];
 
-            // Multiplication des valeurs par leur facteur de Conversion.
-            $newDigitalValue = $unitValue->getDigitalValue() * $unitValue->getUnit()->getConversionFactor();
+            // Conversion dans l'unité de résultat
+            $newDigitalValue = $unitValue->convertTo($calculationUnit)->getDigitalValue();
 
             $value = new Calc_Value($newDigitalValue, $unitValue->getRelativeUncertainty());
 
@@ -146,5 +146,4 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
             $calculationValue->getRelativeUncertainty()
         );
     }
-
 }

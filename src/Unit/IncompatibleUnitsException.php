@@ -15,6 +15,7 @@ use Core_Exception;
  * @package    Unit
  * @subpackage Exception
  *
+ * @todo Remplacer par l'exception de UnitAPI
  */
 class IncompatibleUnitsException extends Core_Exception
 {
