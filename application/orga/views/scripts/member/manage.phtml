@@ -1,10 +1,4 @@
 <?php
-/**
- * @author valentin.claras
- * @author sidoine.tardieu
- * @package Orga
- * Datagrids des membres d'un organization.
- */
 
 $resetSelectParentFieldScript = '';
 foreach ($this->axes as $axis) {
@@ -26,7 +20,7 @@ foreach ($this->axes as $axis) {
     foreach ($axis->getDirectBroaders() as $broaderAxis) {
         // Construction de la liste de membres.
         $columnBroader = new UI_Datagrid_Col_List('broader'.$broaderAxis->getRef(), $broaderAxis->getLabel());
-        $columnBroader->list = 'orga/datagrid_member/getparents/refParentAxis/'.$broaderAxis->getRef();
+        $columnBroader->list = 'orga/datagrid_member/get-parents/refParentAxis/'.$broaderAxis->getRef();
         $columnBroader->dynamicList = true;
         $columnBroader->editable = true;
         $columnBroader->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
@@ -38,10 +32,7 @@ foreach ($this->axes as $axis) {
     }
 
     $datagridAxisMembers->deleteElements = true;
-    if ($this->idCell !== null) {
-        $datagridAxisMembers->addParam('idCell', $this->idCell);
-    }
-    if (!empty($this->idCell)) {
+    if (!$this->isUserAllowToEditAllMembers) {
         $datagridAxisMembers->pagination = false;
     }
     $datagridAxisMembers->addParam('idOrganization', $this->idOrganization);

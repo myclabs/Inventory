@@ -7,6 +7,9 @@
  */
 
 use Core\Annotation\Secure;
+use DW\Model\ACL\Role\ReportOwnerRole;
+use User\Domain\ACL\ACLService;
+use User\Domain\User;
 
 /**
  * Classe du controler de Data Warehouse
@@ -14,6 +17,12 @@ use Core\Annotation\Secure;
  */
 class DW_ReportController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var ACLService
+     */
+    private $aclService;
+
     /**
      * Récupère un report enregistré en session par son hash.
      *
@@ -316,7 +325,7 @@ class DW_ReportController extends Core_Controller
                 )
             );
         } else {
-            if (($savePost['isNew']['value'] != '1')
+            if (($savePost['isNew']['hiddenValues']['isNew'] != '1')
                 && (isset($savePost['saveType']))
                 && ($savePost['saveType']['value'] == 'saveAs')
             ) {
@@ -328,6 +337,19 @@ class DW_ReportController extends Core_Controller
             $report->setLabel($reportLabel);
             $report->save();
             $this->entityManager->flush($report);
+
+            if (($savePost['isNew']['hiddenValues']['isNew'] == '1')
+                || ((isset($savePost['saveType']))
+                    && ($savePost['saveType']['value'] == 'saveAs'))
+            ) {
+                // ACL.
+                /** @var User $connectedUser */
+                $connectedUser = $this->_helper->auth();
+                $role = new ReportOwnerRole($connectedUser, $report);
+                $this->aclService->addRole($connectedUser, $role);
+                $role->save();
+                $this->entityManager->flush($role);
+            }
 
             $this->sendJsonResponse(
                 [

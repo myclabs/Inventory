@@ -1,0 +1,88 @@
+<?php
+
+foreach ($this->granularities as $inputGranularity) {
+    /** @var $inputGranularity Orga_Model_Granularity */
+    $configGranularity = $inputGranularity->getInputConfigGranularity();
+
+    $datagridGranularityAfs = new UI_Datagrid(
+        'datagridCellAfs'.$inputGranularity->getId(),
+        'datagrid_organization_afs',
+        'orga'
+    );
+
+    foreach ($configGranularity->getAxes() as $axis) {
+        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $axis->getLabel());
+        $members = [];
+        foreach ($axis->getMembers() as $member) {
+            $members[$member->getTag()] = $member->getLabel();
+        }
+        $columnAxis->list = $members;
+        $columnAxis->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
+        $columnAxis->filterName = Orga_Model_Cell::QUERY_TAG;
+        $datagridGranularityAfs->addCol($columnAxis);
+    }
+
+    $columnAf = new UI_Datagrid_Col_List('af', __('Orga', 'edit', 'af'));
+    $columnAf->list = $this->afs;
+    $columnAf->editable = true;
+    $datagridGranularityAfs->addCol($columnAf);
+
+    $datagridGranularityAfs->addParam('idOrganization', $this->organization->getId());
+    $datagridGranularityAfs->addParam('idGranularity', $inputGranularity->getId());
+    $datagridGranularityAfs->initialLoading = false;
+
+    echo $this->collapse(
+        'cellAfs'.$inputGranularity->getId(),
+        $configGranularity->getLabel() . ' <small>' . $inputGranularity->getLabel() . '</small>',
+        $datagridGranularityAfs->getHTML()
+    )->collapsed();
+
+    $script = '';
+    $script .= '$(\'#cellAfs'.$inputGranularity->getId().'\').on(\'show\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'cellAfs'.$inputGranularity->getId().'_wrapper\') {';
+    $script .= 'datagridCellAfs'.$inputGranularity->getId().'.filter();';
+    $script .= '}';
+    $script .= '});';
+
+    if ($this->display === false) {
+        echo '<script type="text/javascript">'.$datagridGranularityAfs->getScript().$script.'</script>';
+    } else {
+        UI_Datagrid::addHeader($datagridGranularityAfs);
+        $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+    }
+}
+
+if ($this->isUserAllowedToEditOrganization) {
+    if (count($this->granularities) > 0) {
+        echo '<hr>';
+    }
+    $complementaryFields = '<input type="text" name="inputConfigAxes" class="inputConfigAxes" style="min-width: 250px;">';
+    $complementaryFields .= '<script>' .
+    '$(\'#addGranularity'.$this->organization->getId().'_afs .inputConfigAxes\').select2({' .
+            'closeOnSelect: false,' .
+            'placeholder: \'' . __('Orga', 'edit', 'inputConfigGranularitySelectAxes') . '\',' .
+            'multiple: true,' .
+            'data: [';
+    foreach ($this->organization->getFirstOrderedAxes() as $axis) {
+        $complementaryFields .= '{ id: "' . $axis->getRef() . '", text: "' . $axis->getLabel() . '" },';
+    }
+    $complementaryFields .= ']});'.
+    '</script>';
+    echo $this->partial(
+        'granularity/add.phtml',
+        [
+            'organization' => $this->organization,
+            'purpose' => 'afs',
+            'complementaryFields' => $complementaryFields
+        ]
+    );
+    if ($this->display === true) {
+?>
+<script>
+    $('#addGranularity<?=$this->organization->getId()?>_afs').on('granularityAdded', function(e) {
+        location.reload(true);
+    });
+</script>
+<?php
+    }
+}

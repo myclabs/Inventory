@@ -1,104 +1,66 @@
 <?php
-/**
- * @author valentin.claras
- * @package Orga
- */
 
 use Core\Annotation\Secure;
+use User\Domain\ACL\Action;
+use User\Domain\User;
 
 /**
- * Controller du datagrid de configuration des formulaires des cellules.
- * @package Orga
+ * @author valentin.claras
  */
 class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
 {
-
     /**
-     * Methode appelee pour remplir le tableau.
-     * @Secure("editOrganization")
+     * @Secure("editOrganizationAndCells")
      */
     public function getelementsAction()
     {
-        $idCell = $this->getParam('idCell');
-        $cell = Orga_Model_Cell::load($idCell);
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
 
-        $inputConfigGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
-        $inputGranularity = Orga_Model_Granularity::load($this->getParam('idInputGranularity'));
+        $idGranularity = $this->getParam('idGranularity');
+        /** @var Orga_Model_Granularity $granularity */
+        $inputGranularity = Orga_Model_Granularity::load($idGranularity);
+        $configGranularity = $inputGranularity->getInputConfigGranularity();
 
-        if ($cell->getGranularity()->getRef() === $inputConfigGranularity->getRef()) {
-            $this->addLineData($cell, $inputGranularity);
-            $this->totalElements = 1;
-        } else {
-            $customParameters = array();
-            $filterConditions = array();
-            foreach ($this->request->filter->getConditions() as $filterConditionArray) {
-                if ($filterConditionArray['alias'] == Orga_Model_Member::getAlias()) {
-                    $customParameters[] = $filterConditionArray;
-                } else {
-                    $filterConditions[] = $filterConditionArray;
-                }
+        $this->request->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
+        $this->request->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
+        $this->request->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $configGranularity);
+        $this->request->aclFilter->enabled = true;
+        $this->request->aclFilter->user = $connectedUser;
+        $this->request->aclFilter->action = Action::EDIT();
+
+        $this->request->order->addOrder(Orga_Model_Cell::QUERY_TAG);
+        /** @var Orga_Model_Cell $configCell */
+        foreach (Orga_Model_Cell::loadList($this->request) as $configCell) {
+            $data = [];
+            $data['index'] = $configCell->getId();
+            foreach ($configCell->getMembers() as $member) {
+                $data[$member->getAxis()->getRef()] = $member->getTag();
             }
-            $this->request->setCustomParameters($customParameters);
-            $this->request->filter->setConditions($filterConditions);
-            $this->request->filter->addCondition(
-                Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT,
-                true,
-                Core_Model_Filter::OPERATOR_EQUAL,
-                Orga_Model_Cell::getAlias()
-            );
-            $this->request->filter->addCondition(
-                Orga_Model_Cell::QUERY_RELEVANT,
-                true,
-                Core_Model_Filter::OPERATOR_EQUAL,
-                Orga_Model_Cell::getAlias()
-            );
-            $this->request->order->addOrder(
-                Orga_Model_Cell::QUERY_TAG,
-                Core_Model_Order::ORDER_ASC,
-                Orga_Model_Cell::getAlias()
-            );
-            foreach ($cell->loadChildCellsForGranularity($inputConfigGranularity, $this->request) as $configChildCell) {
-                $this->addLineData($configChildCell, $inputGranularity);
+            try {
+                $cellsGroupDataProvider = $configCell->getCellsGroupForInputGranularity($inputGranularity);
+                $data['af'] = $this->cellList($cellsGroupDataProvider->getAF()->getRef());
+            } catch (Core_Exception_UndefinedAttribute $e) {
+                // Aucun AF n'a encore été spécifié pour cette cellule et granularité.
             }
-            $this->totalElements = $cell->countTotalChildCellsForGranularity($inputConfigGranularity, $this->request);
+
+            $this->addLine($data);
         }
+        $this->totalElements = Orga_Model_Cell::countTotal($this->request);
 
         $this->send();
     }
 
     /**
-     * @param Orga_Model_Cell $cell
-     * @param Orga_Model_Granularity $inputGranularity
-     * @return array
-     */
-    private function addLineData(Orga_Model_Cell $cell, Orga_Model_Granularity $inputGranularity)
-    {
-        $data = array();
-        $data['index'] = $cell->getId();
-        foreach ($cell->getMembers() as $member) {
-            $data[$member->getAxis()->getRef()] = $member->getCompleteRef();
-        }
-        try {
-            $cellsGroupDataProvider = $cell->getCellsGroupForInputGranularity($inputGranularity);
-            $data['aF'] = $this->cellList($cellsGroupDataProvider->getAF()->getRef());
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            // Aucun AF n'a encore été spécifié pour cette cellule et granularité.
-        }
-
-        $this->addLine($data);
-    }
-
-    /**
-     * Modifie les valeurs d'un element.
-     * @Secure("editOrganization")
+     * @Secure("editOrganizationAndCells")
      */
     public function updateelementAction()
     {
-        if ($this->update['column'] !== 'aF') {
+        if ($this->update['column'] !== 'af') {
             parent::updateelementAction();
         }
 
-        $inputGranularity = Orga_Model_Granularity::load($this->getParam('idInputGranularity'));
+        $inputGranularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
 
         $configCell = Orga_Model_Cell::load($this->update['index']);
 
@@ -110,12 +72,7 @@ class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
         }
 
         $cellsGroupDataProvider = $configCell->getCellsGroupForInputGranularity($inputGranularity);
-        if ($aF !== null) {
-            $cellsGroupDataProvider->setAF($aF);
-        } else {
-            $cellsGroupDataProvider->setAF();
-        }
-        $this->data = $this->cellList($aF);
+        $cellsGroupDataProvider->setAF($aF);
 
         if ($aF !== null) {
             $this->data = $this->cellList($aF->getRef());
@@ -126,6 +83,5 @@ class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
 
         $this->send();
     }
-
 
 }

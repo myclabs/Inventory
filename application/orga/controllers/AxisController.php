@@ -1,23 +1,13 @@
 <?php
-/**
- * Classe Orga_AxisController
- * @author valentin.claras
- * @author sidoine.tardieu
- * @package    Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 
 /**
- * Classe controleur de Axis.
- * @package    Orga
- * @subpackage Controller
+ * @author valentin.claras
  */
 class Orga_AxisController extends Core_Controller
 {
     /**
-     * Controller de la vue des Axis d'un organization.
      * @Secure("viewOrganization")
      */
     public function manageAction()

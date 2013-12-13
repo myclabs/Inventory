@@ -159,9 +159,7 @@ class Orga_Populate extends Core_Script_Action
         $inputDocs = false
     ) {
         $granularity = new Orga_Model_Granularity($organization, $axes);
-        $granularity->setCellsWithOrgaTab($orgaTab);
         $granularity->setCellsWithACL($aCL);
-        $granularity->setCellsWithAFConfigTab($aFTab);
         $granularity->setCellsGenerateDWCubes($dWCubes);
         $granularity->setCellsWithSocialGenericActions($genericAction);
         $granularity->setCellsWithSocialContextActions($contextAction);

@@ -1,10 +1,4 @@
 <?php
-/**
- * Classe Orga_ReferentialController
- * @author valentin.claras
- * @package Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use Techno\Application\Service\ExportService;
@@ -12,8 +6,6 @@ use User\Domain\User;
 
 /**
  * @author valentin.claras
- * @package Orga
- * @subpackage Controller
  */
 class Orga_ReferentialController extends Core_Controller
 {
@@ -35,7 +27,6 @@ class Orga_ReferentialController extends Core_Controller
     }
 
     /**
-     * Liste des exports.
      * @Secure("loggedIn")
      */
     public function exportsAction()

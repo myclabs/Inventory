@@ -1,0 +1,65 @@
+<?php
+/** @var Orga_Model_Organization $organization */
+$organization = $this->organization;
+?>
+<form class="form form-inline" id="addGranularity<?=$organization->getId()?>_<?=$this->purpose?>"
+      action="orga/organization/add-granularity-<?=$this->purpose?>/idOrganization/<?=$organization->getId()?>/">
+    <input type="text" name="axes" class="axes" style="min-width: 250px;">
+    <?=$this->complementaryFields?>
+    <button class="btn btn-primary addGranularity">
+        <i class="icon-plus icon-white"></i>
+        <?=__('UI', 'verb', 'add')?>
+    </button>
+</form>
+
+<script>
+    $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?> .axes').select2(
+        {
+            closeOnSelect: false,
+            placeholder: '<?=__('Orga', 'edit', 'addGranularitySelectAxes')?>',
+            multiple: true,
+            data: [
+                <?php foreach ($organization->getFirstOrderedAxes() as $axis) : ?>
+                { id: "<?=$axis->getRef()?>", text: "<?=$axis->getLabel()?>" },
+                <?php endforeach; ?>
+            ]
+        }
+    );
+    $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?>').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        if (form.attr('data-submitting') === 'true') {
+            return false;
+        }
+        form.attr('data-submitting', true);
+        $('.granularityAddInfo', form.parent()).remove();
+        form.after('<div class="alert alert-info granularityAddInfo"></div>');
+        var granularityInfo = $('.granularityAddInfo', form.parent());
+        granularityInfo.html('<img class="granularityLoading" src="images/ui/ajax-loader.gif"> <?=__('Orga', 'view', 'loadingAddGranularity')?>');
+        $.ajax({
+            url: form.attr('action'),
+            type: "POST",
+            data: form.serialize(),
+            success: function(data) {
+                $('.granularityLoading', granularityInfo).remove();
+                $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?>').trigger('granularityAdded', data);
+                form.attr('data-submitting', false);
+            },
+            error: function(jqXHR) {
+                granularityInfo[0].className = granularityInfo[0].className.replace(/\balert-.*?\b/g, '');
+                var response = $.parseJSON(jqXHR.responseText);
+                if (typeof(response.typeError) == 'string') {
+                    granularityInfo.addClass('alert-' + response.typeError);
+                } else {
+                    granularityInfo.addClass('alert-error');
+                }
+                if (typeof(response.message) == 'string') {
+                    granularityInfo.html(response.message);
+                } else {
+                    granularityInfo.html('<?=__('Orga', 'view', 'errorWhileLoadingChildCells')?>');
+                }
+                form.attr('data-submitting', false);
+            }
+        });
+    });
+</script>

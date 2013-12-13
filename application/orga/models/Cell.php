@@ -435,9 +435,14 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      * Définit si la Cell est pertinente ou non.
      *
      * @param bool $relevant
+     * @throws Core_Exception
      */
     public function setRelevant($relevant)
     {
+        if (!$this->getGranularity()->getCellsControlRelevance()) {
+            throw new Core_Exception('Relevance can only be defined if the granularity permits it.');
+        }
+
         if ($relevant != $this->relevant) {
             $this->relevant = $relevant;
             // Si les cellules parentes ne sont pas pertinentes,

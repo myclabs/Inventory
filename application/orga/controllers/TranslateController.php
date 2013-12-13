@@ -1,23 +1,13 @@
 <?php
-/**
- * @author valentin.claras
- * @package Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 
 /**
- * Orga_TranslateController
- * @package Orga
- * @subpackage Controller
+ * @author valentin.claras
  */
 class Orga_TranslateController extends Core_Controller
 {
-
     /**
-     * Liste des libellés des Orga_Model_Organization en mode traduction.
-     *
      * @Secure("editOrganizations")
      */
     public function organizationsAction()
@@ -25,8 +15,6 @@ class Orga_TranslateController extends Core_Controller
     }
 
     /**
-     * Liste des libellés des Orga_Model_Axis en mode traduction.
-     *
      * @Secure("editOrganization")
      */
     public function axesAction()
@@ -35,8 +23,6 @@ class Orga_TranslateController extends Core_Controller
     }
 
     /**
-     * Liste des libellés des Orga_Model_Member en mode traduction.
-     *
      * @Secure("editOrganization")
      */
     public function membersAction()
@@ -47,8 +33,6 @@ class Orga_TranslateController extends Core_Controller
     }
 
     /**
-     * Liste des libellés des DW_Model_Report issus des DW des Granularity en mode traduction.
-     *
      * @Secure("editOrganization")
      */
     public function granularityreportsAction()

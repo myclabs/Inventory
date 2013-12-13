@@ -117,7 +117,7 @@ $currentCell = $this->currentCell;
             </small>
             <small>
                 <a class="btn btn-small btn-info disabled"
-                   href="orga/cell/view-mixitup/idCell/<?=$currentCell->id?>/">
+                   href="orga/cell/mixitup-view/idCell/<?=$currentCell->id?>/">
                     <i class="icon-fire icon-white"></i>
                     Cellules mixitup
                 </a>
@@ -288,7 +288,12 @@ $currentCell = $this->currentCell;
             </small>
         </legend>
 
-        <div id="granularity<?=$narrowerGranularity->getId()?>" class="collapse<?=((count($this->narrowerGranularities) === 1)?' in':'')?>">
+        <div id="granularity<?=$narrowerGranularity->getId()?>"
+            <?=$narrowerGranularityArray['isAcl'] ? ' data-acl' : ''?>
+            <?=$narrowerGranularityArray['isInventory'] ? ' data-inventory' : ''?>
+            <?=$narrowerGranularityArray['isInput'] ? ' data-input' : ''?>
+            <?=$narrowerGranularityArray['isAnalyses'] ? ' data-analyses' : ''?>
+             class="collapse<?=((count($this->narrowerGranularities) === 1)?' in':'')?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $memberOptions) : ?>
@@ -310,7 +315,7 @@ $currentCell = $this->currentCell;
                 <?php if ($narrowerGranularityArray['isInventory']) : ?>
                 <select data-filter="inventory-status">
                     <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
-                    <? if ($statusValue === Orga_Model_Cell::STATUS_ACTIVE) : ?>
+                        <? if (($statusValue === Orga_Model_Cell::STATUS_ACTIVE) && (!$narrowerGranularityArray['isGranularityForInventoryStatus'])) : ?>
                     <option value="<?=$statusValue?>" selected><?=$statusLabel?></option>
                     <?php else: ?>
                     <option value="<?=$statusValue?>"><?=$statusLabel?></option>
@@ -951,11 +956,19 @@ $('body').on('click', '.inventoryStatus .dropdown-menu a', function(e) {
             type: "POST",
             data: { inventoryStatus: link.attr('data-inventory') },
             success: function (data) {
+                var oldInventoryValue = button.attr('data-inventory');
                 button.attr('data-inventory', data.status);
                 button.addClass('btn-' + data.style);
-                button.html(data.label + ' <span class="caret"></span>');
+                button.html('<i class="icon-edit icon-white"></i> ' + data.label + ' <span class="caret"></span>');
                 button.parent().parent().parent().attr('data-inventory-status', data.status);
-                $('select:first', button.parent().parent().parent().parent().parent()).trigger('change');
+                var collapse = button.parent().parent().parent().parent().parent().parent().parent().parent();
+                $('select:first', collapse).trigger('change');
+                $('.collapse[data-inventory][id!="' + collapse.attr('id') + '"]').each(function() {
+                    var filterInventoryValue = $('select[data-filter="inventory-status"]', $(this)).val();
+                    if ((filterInventoryValue == oldInventoryValue) || (filterInventoryValue == data.status)) {
+                        $(this).trigger('loadCells');
+                    }
+                });
             },
             error: function (jqXHR) {
                 button.attr('data-inventory', null);

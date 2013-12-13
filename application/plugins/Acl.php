@@ -199,6 +199,10 @@ class Inventory_Plugin_Acl extends ACLPlugin
         if ($idOrganization !== null) {
             return Orga_Model_Organization::load($idOrganization);
         }
+        $idGranularity = $request->getParam('idGranularity');
+        if ($idGranularity !== null) {
+            return Orga_Model_Granularity::load($idGranularity)->getOrganization();
+        }
         $index = $request->getParam('index');
         if ($index !== null) {
             return Orga_Model_Organization::load($index);
@@ -407,7 +411,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
             if ($isAllowed) {
                 return $isAllowed;
             } else {
-                return $this->viewCellRule($identity, $request);
+                return $this->editOrganizationAndCellsRule($identity, $request);
             }
         }
 
@@ -419,7 +423,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
                 $granularity = Orga_Model_Granularity::loadByDWCube($dWCube);
                 $organization = $granularity->getOrganization();
                 $request->setParam('idOrganization', $organization->getKey()['id']);
-                return $this->editOrganizationRule($identity, $request);
+                return $this->editOrganizationAndCellsRule($identity, $request);
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un Granularity.
             }
@@ -438,11 +442,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un SimulationSet.
             }
-        }
-
-        $idCell = $request->getParam('idCube');
-        if ($idCell !== null) {
-
         }
 
         return false;

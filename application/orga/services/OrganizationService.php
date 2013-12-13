@@ -40,6 +40,7 @@ class Orga_Service_OrganizationService
         $this->entityManager->beginTransaction();
 
         try {
+            /** @var Orga_Model_Granularity[] $dWGranularities */
             $dWGranularities = [];
 
             // Création de l'organization.
@@ -48,9 +49,7 @@ class Orga_Service_OrganizationService
             
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
-            $defaultGranularity->setCellsWithOrgaTab(true);
             $defaultGranularity->setCellsWithACL(true);
-            $defaultGranularity->setCellsWithAFConfigTab(true);
             $dWGranularities[] = $defaultGranularity;
 
             if ($formData['organization']['elements']['organizationType']['value'] !== 'empty') {
@@ -76,11 +75,8 @@ class Orga_Service_OrganizationService
                         $mainAxisRef .= '_'.$i;
                     }
 
-                    $mainAxis = new Orga_Model_Axis($organization, $mainAxisRef);
+                    $mainAxis = new Orga_Model_Axis($organization, $mainAxisRef, $mainParentAxis);
                     $mainAxis->setLabel($mainAxisData['value']);
-                    if ($mainParentAxis) {
-                        $mainAxis->setDirectNarrower($mainParentAxis);
-                    }
 
                     $axes[$mainAxisId] = $mainAxis;
                 }
@@ -119,6 +115,7 @@ class Orga_Service_OrganizationService
                         if (($memberId === 'addMember'.$axisId) || (empty($memberRef))) {
                             continue;
                         }
+                        /** @var Orga_Model_Member[] $parentMembers */
                         $parentMembers = [];
                         foreach ($memberData['children'] as $parentMemberAxisId => $parentMemberData) {
                             $parentAxisId = substr($parentMemberAxisId, strlen('parent'.ucfirst($memberId)));
@@ -132,6 +129,7 @@ class Orga_Service_OrganizationService
                             }
                             $memberRef .= '_'.$i;
                         }
+                        /** @var Orga_Model_Member $member */
                         $member = new Orga_Model_Member($membersAxis, $memberRef);
                         foreach ($parentMembers as $parentMember) {
                             $member->addDirectParent($parentMember);
@@ -153,10 +151,8 @@ class Orga_Service_OrganizationService
                     }
                 }
                 $inventoryGranularity = new Orga_Model_Granularity($organization, $inventoryGranularityAxes);
-                $inventoryGranularity->setNavigability(false);
                 $organization->setGranularityForInventoryStatus($inventoryGranularity);
                 $navigableInventoryGranularity = new Orga_Model_Granularity($organization, $inventoryNavigableGranularityAxes);
-                $navigableInventoryGranularity->setNavigability(true);
                 $navigableInventoryGranularity->setCellsWithACL(true);
                 // Création des granularités de saisie
                 $inputGranularitiesData = $granularitiesData['elements']['inputGranularitiesGroup']['elements']['inputGranularities'];
@@ -177,7 +173,6 @@ class Orga_Service_OrganizationService
                         $inputGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputGranularityAxes));
                     } catch (Core_Exception_NotFound $e) {
                         $inputGranularity = new Orga_Model_Granularity($organization, $inputGranularityAxes);
-                        $inputGranularity->setNavigability(false);
                     }
                     if ($inputGranularityAxes !== $inputNavigableGranularityAxes) {
                         try {
@@ -188,7 +183,6 @@ class Orga_Service_OrganizationService
                     } else {
                         $navigableInputGranularity = $inputGranularity;
                     }
-                    $navigableInputGranularity->setNavigability(true);
                     $navigableInputGranularity->setCellsWithACL(true);
                     $inputGranularity->setInputConfigGranularity($navigableInputGranularity);
                 }
@@ -208,7 +202,6 @@ class Orga_Service_OrganizationService
                         } catch (Core_Exception_NotFound $e) {
                             $dWGranularity = new Orga_Model_Granularity($organization, $dWGranularityAxes);
                         }
-                        $dWGranularity->setNavigability(true);
                         $dWGranularity->setCellsWithACL(true);
                         $dWGranularities[] = $dWGranularity;
                     }
@@ -286,6 +279,65 @@ class Orga_Service_OrganizationService
 
             throw $e;
         }
+    }
+
+    /**
+     * @param Orga_Model_Organization $organization
+     * @param Orga_Model_Axis[] $axes
+     * @param array $configuration [$attribute => $value] : relevance(bool), dWCube(bool)
+     *
+     * @throws Exception
+     *
+     * @return \Orga_Model_Granularity
+     */
+    public function addGranularity(Orga_Model_Organization $organization, array $axes, array $configuration=[])
+    {
+        try {
+            $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
+        } catch (Core_Exception_NotFound $e) {
+            $granularity = new Orga_Model_Granularity($organization, $axes);
+        }
+
+        foreach ($configuration as $attribute => $value) {
+            switch ($attribute) {
+                case 'relevance':
+                    $granularity->setCellsControlRelevance($value);
+                    break;
+                case 'afs':
+                    try {
+                        $inputConfigGranularity = $organization->getGranularityByRef(
+                            Orga_Model_Granularity::buildRefFromAxes($value)
+                        );
+                    } catch (Core_Exception_NotFound $e) {
+                        $inputConfigGranularity = new Orga_Model_Granularity($organization, $value);
+                        $inputConfigGranularity->save();
+                    }
+                    $granularity->setInputConfigGranularity($inputConfigGranularity);
+                    break;
+                case 'reports':
+                    $granularity->setCellsGenerateDWCubes($value);
+                    break;
+                case 'acl':
+                    $granularity->setCellsWithACL($value);
+                    break;
+            }
+        }
+
+        try {
+            $this->entityManager->beginTransaction();
+
+            $granularity->save();
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+
+            throw $e;
+        }
+
+        return $granularity;
     }
 
     /**

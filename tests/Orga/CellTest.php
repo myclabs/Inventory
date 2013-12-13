@@ -346,11 +346,17 @@ class Orga_Test_CellAttributes extends TestCase
         $this->member2b->setLabel('Label 2 B');
 
         $this->granularity0 = new Orga_Model_Granularity($this->organization, []);
+        $this->granularity0->setCellsControlRelevance(true);
         $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
+        $this->granularity1->setCellsControlRelevance(true);
         $this->granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
+        $this->granularity2->setCellsControlRelevance(true);
         $this->granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12, $this->axis2]);
+        $this->granularity3->setCellsControlRelevance(true);
         $this->granularity4 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
+        $this->granularity4->setCellsControlRelevance(true);
         $this->granularity5 = new Orga_Model_Granularity($this->organization, [$this->axis2]);
+        $this->granularity5->setCellsControlRelevance(true);
 
         $this->cell0_0 = $this->granularity0->getCellByMembers([]);
 
@@ -787,10 +793,22 @@ class Orga_Test_CellAttributes extends TestCase
         $this->assertTrue($this->cell5_2b->isRelevant());
     }
 
+    /**
+     * @expectedException Core_Exception
+     * @expectedexceptionMessage Relevance can only be defined if the granularity permits it.
+     */
+    function testSetRelevantWrongGranularity()
+    {
+        // Désactivation de la partie member12b pour vérifier les mises à jour vers Relevant et NotRelevant.
+        $granularity6 = new Orga_Model_Granularity($this->organization, [$this->axis12]);
+        $granularity6->getCellByMembers([$this->member12b])->setRelevant(false);
+    }
+
     function testEnableDisable()
     {
         // Désactivation de la partie member12b pour vérifier les mises à jour vers Relevant et NotRelevant.
         $granularity6 = new Orga_Model_Granularity($this->organization, [$this->axis12]);
+        $granularity6->setCellsControlRelevance(true);
         $granularity6->getCellByMembers([$this->member12b])->setRelevant(false);
 
         $this->assertTrue($this->cell0_0->isRelevant());

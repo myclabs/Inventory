@@ -595,7 +595,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
             }
         }
         foreach ($this->list as $idElement => $element) {
-            $filterFormElement->addOption(new UI_Form_Element_Option($idElement, $idElement, $element));
+            $filterFormElement->addOption(new UI_Form_Element_Option($idElement, urlencode($idElement), $element));
         }
 
         // Récupération des valeurs par défaut.

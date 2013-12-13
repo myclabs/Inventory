@@ -1048,14 +1048,14 @@ class Orga_Test_AxisMembers extends TestCase
 
     public function testGetMembers()
     {
-        $members = $this->axis->getMembers()->toArray();
+        $members = $this->axis->getOrderedMembers()->toArray();
         $this->assertSame($this->member1, $members[0]);
         $this->assertSame($this->member2, $members[1]);
         $this->assertSame($this->member3, $members[2]);
 
         $this->member2->setLabel('Label 0');
 
-        $members = $this->axis->getMembers();
+        $members = $this->axis->getOrderedMembers();
         $this->assertSame($this->member2, $members[0]);
         $this->assertSame($this->member1, $members[1]);
         $this->assertSame($this->member3, $members[2]);

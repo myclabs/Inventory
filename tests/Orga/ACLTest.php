@@ -324,14 +324,11 @@ class Orga_Test_ACL extends TestCase
 
         // Création de la granularité globale.
         $this->granularityGlobale = new Orga_Model_Granularity($this->organization);
-        $this->granularityGlobale->setCellsWithOrgaTab(true);
         $this->granularityGlobale->setCellsWithACL(true);
-        $this->granularityGlobale->setCellsWithAFConfigTab(true);
         $this->granularityGlobale->setCellsGenerateDWCubes(true);
 
         // Création de la granularité zone marque.
         $this->granularityZoneMarque = new Orga_Model_Granularity($this->organization, [$this->axisZone, $this->axisMarque]);
-        $this->granularityZoneMarque->setCellsWithOrgaTab(true);
         $this->granularityZoneMarque->setCellsWithACL(true);
         $this->granularityZoneMarque->setCellsGenerateDWCubes(true);
 

@@ -1,17 +1,10 @@
 <?php
-/**
- * Classe Orga_Datagrid_ConsistencyController
- * @author valentin.claras
- * @author diana.dragusin
- * @package Orga
- */
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 
 /**
- * Controller du datagrid de coherence
- * @package Orga
+ * @author valentin.claras
  */
 class Orga_Datagrid_Organization_ConsistencyController extends UI_Controller_Datagrid
 {
@@ -22,17 +15,7 @@ class Orga_Datagrid_Organization_ConsistencyController extends UI_Controller_Dat
     private $organizationConsistency;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
-     * @Secure("viewOrganization")
+     * @Secure("editOrganization")
      */
     public function getelementsAction()
     {

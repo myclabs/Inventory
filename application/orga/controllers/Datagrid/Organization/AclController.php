@@ -1,9 +1,4 @@
 <?php
-/**
- * @author valentin.claras
- * @package Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
@@ -13,12 +8,9 @@ use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 /**
- * Controlleur du Datagrid listant les Roles du projet d'une cellule.
  * @author valentin.claras
- * @package Orga
- * @subpackage Controller
  */
-class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controller_Datagrid
+class Orga_Datagrid_Organization_AclController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
@@ -33,19 +25,21 @@ class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controll
     private $waitDelay;
 
     /**
-     * @Secure("editOrganization")
+     * @Secure("allowOrganization")
      */
     public function getelementsAction()
     {
-        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
 
         foreach ($organization->getAdminRoles() as $role) {
             $user = $role->getUser();
             $data = array();
             $data['index'] = $role->getId();
-            $data['userFirstName'] = $user->getFirstName();
-            $data['userLastName'] = $user->getLastName();
-            $data['userEmail'] = $user->getEmail();
+            $data['firstName'] = $user->getFirstName();
+            $data['lastName'] = $user->getLastName();
+            $data['email'] = $user->getEmail();
             $this->addLine($data);
         }
 
@@ -53,19 +47,19 @@ class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controll
     }
 
     /**
-     * @Secure("editOrganization")
+     * @Secure("allowOrganization")
      */
     public function addelementAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
-        $userEmail = $this->getAddElementValue('userEmail');
+        $userEmail = $this->getAddElementValue('email');
         if (empty($userEmail)) {
-            $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->setAddElementErrorMessage('email', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->send();
             return;
         } elseif (! filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
-            $this->setAddElementErrorMessage('userEmail', __('UI', 'formValidation', 'invalidEmail'));
+            $this->setAddElementErrorMessage('email', __('UI', 'formValidation', 'invalidEmail'));
             $this->send();
             return;
         }
@@ -75,7 +69,7 @@ class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controll
             $user = User::loadByEmail($userEmail);
             foreach ($user->getRoles() as $role) {
                 if ($role instanceof OrganizationAdminRole && $role->getOrganization() === $organization) {
-                    $this->setAddElementErrorMessage('userEmail', __('Orga', 'role', 'userAlreadyHasRole'));
+                    $this->setAddElementErrorMessage('email', __('Orga', 'role', 'userAlreadyHasRole'));
                     $this->send();
                     return;
                 }
@@ -109,7 +103,7 @@ class Orga_Datagrid_Organization_Acls_OrganizationController extends UI_Controll
     }
 
     /**
-     * @Secure("allowCell")
+     * @Secure("allowOrganization")
      */
     public function deleteelementAction()
     {
