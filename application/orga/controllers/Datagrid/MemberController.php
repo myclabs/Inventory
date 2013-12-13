@@ -1,22 +1,30 @@
 <?php
-/**
- * Classe Orga_Datagrid_MemberController
- * @author valentin.claras
- * @author cyril.perraud
- * @package Orga
- */
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Core\Work\ServiceCall\ServiceCallTask;
+use Orga\Model\ACL\Role\CellAdminRole;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Action;
+use User\Domain\User;
 
 /**
- * Enter description here ...
- * @package Orga
+ * @author valentin.claras
  */
 class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var ACLService
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ACLManager
+     */
+    private $aclManager;
 
     /**
      * @Inject
@@ -41,47 +49,72 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewMembers")
+     * @Secure("editOrganizationAndCells")
      */
     public function getelementsAction()
     {
-        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
         $axis = $organization->getAxisByRef($this->getParam('refAxis'));
 
-        $this->request->filter->addCondition(Orga_Model_Member::QUERY_AXIS, $axis);
-        $this->request->order->addOrder(Orga_Model_Member::QUERY_REF);
-        $members = Orga_Model_Member::loadList($this->request);
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization
+        );
+        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization->getGranularityByRef('global')->getCellByMembers([])
+        );
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $isUserAllowedToEditGlobalCell;
 
-        $idCell = $this->getParam('idCell');
-        if (!empty($idCell)) {
-            $cell = Orga_Model_Cell::load($idCell);
-            foreach ($cell->getMembers() as $cellMember) {
-                $cellMember->getAxis()->getRef();
-                if ($cellMember->getAxis()->isBroaderThan($axis)) {
-                    $members = array_intersect($members, $cellMember->getChildrenForAxis($axis));
+        if (!$isUserAllowToEditAllMembers) {
+            $members = [];
+            /** @var Orga_Model_Cell[] $topCellsWithEditAccess */
+            $topCellsWithEditAccess = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            )['cells'];
+            foreach ($topCellsWithEditAccess as $cell) {
+                if (!$axis->isTransverse($cell->getGranularity()->getAxes())) {
+                    foreach ($cell->getMembers() as $cellMember) {
+                        if ($axis->isBroaderThan($cellMember->getAxis())) {
+                            continue 2;
+                        }
+                    }
+                    $cell->getChildMembersForAxes([$axis])[$axis->getRef()];
                 }
             }
+            $members = array_unique($members);
+            usort($members, [Orga_Model_Member::class, 'orderMembers']);
+        } else {
+            $this->request->filter->addCondition(Orga_Model_Member::QUERY_AXIS, $axis);
+            $this->request->order->addOrder(Orga_Model_Member::QUERY_REF);
+            /** @var Orga_Model_Member[] $members */
+            $members = Orga_Model_Member::loadList($this->request);
         }
 
         foreach ($members as $member) {
-            $data = array();
-            /** @var $member Orga_Model_Member */
+            $data = [];
             $data['index'] = $member->getId();
             $data['label'] = $this->cellText($member->getLabel());
             $data['ref'] = $this->cellText($member->getRef());
-            $parentMembers = $member->getDirectParents();
-            foreach ($axis->getDirectBroaders() as $broaderAxis) {
-                $cellAxis = $this->cellList(null, '');
-                foreach ($parentMembers as $parentMember) {
-                    if (in_array($parentMember, $broaderAxis->getMembers()->toArray())) {
-                        $cellAxis = $this->cellList($parentMember->getRef(), $parentMember->getLabel());
-                    }
-                }
-                $data['broader'.$broaderAxis->getRef()] = $cellAxis;
+            foreach ($member->getDirectParents() as $directParentMember) {
+                $data['broader'.$directParentMember->getAxis()->getRef()] = $this->cellList(
+                    $directParentMember->getCompleteRef(),
+                    $directParentMember->getLabel()
+                );
             }
             $this->addLine($data);
         }
-        if (empty($idCell)) {
+
+        if ($isUserAllowToEditAllMembers) {
             $this->totalElements = Orga_Model_Member::countTotal($this->request);
         }
 
@@ -91,11 +124,13 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Ajoute un nouvel element.
-     * @Secure("editMembers")
+     * @Secure("editOrganizationAndCells")
      */
     public function addelementAction()
     {
-        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
         $axis = $organization->getAxisByRef($this->getParam('refAxis'));
 
         $label = $this->getAddElementValue('label');
@@ -207,8 +242,11 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
         $axis = $organization->getAxisByRef($this->getParam('refAxis'));
+
         $member = Orga_Model_Member::load($this->update['index']);
 
         switch ($this->update['column']) {
@@ -242,7 +280,6 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
                 } else {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
-//                    $member->removeDirectParentForAxis($member->getDirectParentForAxis($broaderAxis));
                 }
                 break;
         }
@@ -255,24 +292,51 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
      * Renvoie la liste des parents éligibles pour un membre.
      * @Secure("viewMembers")
      */
-    public function getparentsAction()
+    public function getParentsAction()
     {
-        $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
         $broaderAxis = $organization->getAxisByRef($this->getParam('refParentAxis'));
 
-        $members = $broaderAxis->getMembers()->toArray();
-        $idCell = $this->getParam('idCell');
-        if (!empty($idCell)) {
-            $cell = Orga_Model_Cell::load($idCell);
-            foreach ($cell->getMembers() as $cellMember) {
-                $cellMember->getAxis()->getRef();
-                if ($cellMember->getAxis()->isBroaderThan($broaderAxis)) {
-                    $members = array_intersect($members, $cellMember->getChildrenForAxis($broaderAxis));
-                } else if ($cellMember->getAxis() === $broaderAxis) {
-                    $members = array($cellMember);
-                    break;
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization
+        );
+        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+                $connectedUser,
+                Action::EDIT(),
+                $organization->getGranularityByRef('global')->getCellByMembers([])
+            );
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $isUserAllowedToEditGlobalCell;
+
+        if (!$isUserAllowToEditAllMembers) {
+            /** @var Orga_Model_Member[] $members */
+            $members = [];
+            /** @var Orga_Model_Cell[] $topCellsWithEditAccess */
+            $topCellsWithEditAccess = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            )['cells'];
+            foreach ($topCellsWithEditAccess as $cell) {
+                if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                    foreach ($cell->getMembers() as $cellMember) {
+                        if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
+                            continue 2;
+                        }
+                    }
+                    $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()];
                 }
             }
+            $members = array_unique($members);
+            usort($members, [Orga_Model_Member::class, 'orderMembers']);
+        } else {
+            $members = $broaderAxis->getOrderedMembers()->toArray();
         }
 
         $query = $this->getParam('q');
@@ -285,7 +349,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         }
 
         foreach ($members as $eligibleParentMember) {
-            $this->addElementAutocompleteList($eligibleParentMember->getCompleteRef(), $eligibleParentMember->getLabel());
+            $this->addElementAutocompleteList(
+                $eligibleParentMember->getCompleteRef(),
+                $eligibleParentMember->getLabel()
+            );
         }
 
         $this->send();

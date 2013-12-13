@@ -183,7 +183,7 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
         $request->setControllerName('action');
         $request->setActionName('login');
         // Affiche un message
-        UI_Message::addMessageStatic(__('User', 'login', 'youAreNotConnected'), UI_Message::TYPE_ALERT);
+        UI_Message::addMessageStatic(__('User', 'login', 'youAreNotConnected'), UI_Message::TYPE_WARNING);
     }
 
     /**

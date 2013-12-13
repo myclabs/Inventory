@@ -87,7 +87,7 @@ class AuditTrail_DoctrineEntryRepositoryTest extends TestCase
         $organization->save();
         $this->entityManager->flush();
 
-        $cell = $organization->getGranularities()[0]->getCells()[0];
+        $cell = $organization->getOrderedGranularities()[0]->getOrderedCells()[0];
 
         $organizationContext = new OrganizationContext($organization);
         $organizationContext->setCell($cell);

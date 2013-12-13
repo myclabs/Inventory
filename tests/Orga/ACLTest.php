@@ -324,22 +324,16 @@ class Orga_Test_ACL extends TestCase
 
         // Création de la granularité globale.
         $this->granularityGlobale = new Orga_Model_Granularity($this->organization);
-        $this->granularityGlobale->setNavigability(true);
-        $this->granularityGlobale->setCellsWithOrgaTab(true);
         $this->granularityGlobale->setCellsWithACL(true);
-        $this->granularityGlobale->setCellsWithAFConfigTab(true);
         $this->granularityGlobale->setCellsGenerateDWCubes(true);
 
         // Création de la granularité zone marque.
         $this->granularityZoneMarque = new Orga_Model_Granularity($this->organization, [$this->axisZone, $this->axisMarque]);
-        $this->granularityZoneMarque->setNavigability(true);
-        $this->granularityZoneMarque->setCellsWithOrgaTab(true);
         $this->granularityZoneMarque->setCellsWithACL(true);
         $this->granularityZoneMarque->setCellsGenerateDWCubes(true);
 
         // Création de la granularité site.
         $this->granularitySite = new Orga_Model_Granularity($this->organization, [$this->axisSite]);
-        $this->granularitySite->setNavigability(true);
         $this->granularitySite->setCellsWithACL(true);
         $this->granularitySite->setCellsGenerateDWCubes(true);
 
@@ -6615,7 +6609,7 @@ class Orga_Test_ACL extends TestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        foreach (Orga_Model_Organization::load($this->organization->getId())->getGranularities() as $granularity) {
+        foreach (Orga_Model_Organization::load($this->organization->getId())->getOrderedGranularities() as $granularity) {
             $granularity->delete();
         }
 

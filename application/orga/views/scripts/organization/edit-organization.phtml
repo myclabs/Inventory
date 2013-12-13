@@ -1,0 +1,69 @@
+<?php
+$organizationForm = new UI_Form('organizationDetails');
+$organizationForm->setAction('orga/organization/edit-organization-submit/idOrganization/'.$this->idOrganization);
+
+$labelElementForm = new UI_Form_Element_Text('label');
+$labelElementForm->setLabel(__('UI', 'name', 'label'));
+$labelElementForm->setValue($this->organizationLabel);
+$organizationForm->addElement($labelElementForm);
+
+if (!empty($this->granularities)) {
+    $granularityForInventoryStatusElementForm = new UI_Form_Element_Select('granularityForInventoryStatus');
+    $granularityForInventoryStatusElementForm->setLabel(__('Orga', 'configuration', 'granularityForInventoryStatus'));
+    $granularityForInventoryStatusElementForm->setValue($this->granularityRefForInventoryStatus);
+    $organizationForm->addElement($granularityForInventoryStatusElementForm);
+
+    if (empty($this->granularityRefForInventoryStatus)) {
+        $granularityForInventoryStatusElementForm->addNullOption('');
+    }
+    foreach ($this->granularities as $granularity) {
+        $granularityOption = new UI_Form_Element_Option(
+            $granularity->getId(),
+            $granularity->getRef(),
+            $granularity->getLabel()
+        );
+        $granularityForInventoryStatusElementForm->addOption($granularityOption);
+    }
+}
+
+$organizationForm->addSubmitButton();
+?>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('UI', 'name', 'general')?></legend>
+    <div>
+        <?php if ($this->display) { $organizationForm->display(); } else { echo $organizationForm->render(); } ?>
+    </div>
+</fieldset>
+
+<hr>
+
+<?php
+$datagridUsers = new UI_Datagrid(
+    'datagridUsers'.$this->idOrganization,
+    'datagrid_organization_acl',
+    'orga'
+);
+
+$columnFirstName = new UI_Datagrid_Col_Text('firstName', __('Orga', 'view', 'userFirstName'));
+$columnFirstName->addable = false;
+$datagridUsers->addCol($columnFirstName);
+
+$columnLastName = new UI_Datagrid_Col_Text('lastName', __('Orga', 'view', 'userLastName'));
+$columnLastName->addable = false;
+$datagridUsers->addCol($columnLastName);
+
+$columnEmail = new UI_Datagrid_Col_Text('email', __('Orga', 'view', 'userEmail'));
+$columnEmail->addable = true;
+$datagridUsers->addCol($columnEmail);
+
+$datagridUsers->addParam('idOrganization', $this->idOrganization);
+$datagridUsers->addElements = true;
+$datagridUsers->deleteElements = true;
+$datagridUsers->pagination = false;
+
+if ($this->display === false) {
+    echo $datagridUsers->render();
+} else {
+    $datagridUsers->display();
+}

@@ -1,0 +1,166 @@
+<?php
+
+foreach ($this->granularities as $granularity) {
+    /** @var $granularity Orga_Model_Granularity */
+
+    $datagridGranularityReports = new UI_Datagrid(
+        'datagridCellReports'.$granularity->getId(),
+        'datagrid_organization_reports',
+        'orga'
+    );
+
+    $columnReport = new UI_Datagrid_Col_Text('report', __('Orga', 'edit', 'report'));
+    $datagridGranularityReports->addCol($columnReport);
+
+    $columnLink = new UI_Datagrid_Col_Link('link', __('Orga', 'edit', 'report'));
+    $datagridGranularityReports->addCol($columnLink);
+
+    $datagridGranularityReports->addParam('idOrganization', $this->organization->getId());
+    $datagridGranularityReports->addParam('idGranularity', $granularity->getId());
+    $datagridGranularityReports->initialLoading = false;
+    $datagridGranularityReports->deleteElements = true;
+
+
+    $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
+    $addButton->icon = 'plus-sign';
+    $addButton->link = 'orga/granularity/view-report/idGranularity/' . $granularity->getId() . '/';
+
+    echo $this->collapse(
+        'cellReports'.$granularity->getId(),
+        $granularity->getLabel(),
+        $datagridGranularityReports->getHTML() . $addButton->getHTML()
+    )->collapsed();
+
+    $script = '';
+    $script .= '$(\'#cellReports'.$granularity->getId().'\').on(\'show\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'cellReports'.$granularity->getId().'_wrapper\') {';
+    $script .= 'datagridCellReports'.$granularity->getId().'.filter();';
+    $script .= '}';
+    $script .= '});';
+
+    if ($this->display === false) {
+        echo '<script type="text/javascript">'.$datagridGranularityReports->getScript().$script.'</script>';
+    } else {
+        UI_Datagrid::addHeader($datagridGranularityReports);
+        $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+    }
+}
+
+if ($this->isUserAllowedToEditOrganization) {
+    if (count($this->granularities) > 0) {
+        echo '<hr>';
+    }
+    echo $this->partial(
+        'granularity/add.phtml',
+        [
+            'organization' => $this->organization,
+            'purpose' => 'reports',
+            'complementaryFields' => ''
+        ]
+    );
+    if ($this->display === true) {
+?>
+<script>
+    $('#addGranularity<?=$this->organization->getId()?>_reports').on('granularityAdded', function(e) {
+        location.reload(true);
+    });
+</script>
+<?php
+    }
+}
+?>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=__('Orga', 'configuration', 'organizationDWCubesState')?></legend>
+<p><?=__('Orga', 'configuration', 'organizationDWCubesStateComment')?></p>
+<div>
+    <?=
+    $this->button(
+        '<span>'.__('Orga', 'configuration', 'dWCubesState').'</span>',
+        'info-sign icon-white',
+        ['id' => 'organizationDW', 'class' => 'btn-primary']
+    );
+    ?>
+    <script type="text/javascript">
+        var checkOrganizationDWState = function() {
+            setMask(true);
+            $.ajax({
+                type: 'GET',
+                url: 'orga/organization/dw-state/idOrganization/<?=$this->organization->getId()?>/',
+                success: function (data) {
+                    setMask(false);
+                    var button = $('#organizationDW');
+                    if (data.organizationDWState) {
+                        button.attr('class', 'btn btn-success')
+                        button.children('i').attr('class', 'icon-info-sign icon-white');
+                        button.children('span').html(
+                            '<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesUpToDate'), ENT_QUOTES)?>'
+                        );
+                    } else {
+                        button.attr('class', 'btn btn-danger');
+                        button.children('i').attr('class', 'icon-refresh icon-white');
+                        button.children('span').html(
+                            '<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesOutDated'), ENT_QUOTES)?>'
+                        );
+                        button.unbind('click');
+                        button.bind('click', resetOrganizationDW);
+                    }
+                },
+                error: function(jqXHR) {
+                    setMask(false);
+                    errorHandler(jqXHR);
+                }
+            });
+        };
+        var resetOrganizationDW = function() {
+            setMask(true);
+            $.ajax({
+                type: 'GET',
+                usl: 'orga/organization/dw-reset/idOrganization/<?=$this->organization->getId()?>',
+                success: function (data) {
+                    setMask(false);
+                    var button = $('#organizationDW');
+                    button.attr('class', 'btn btn-primary');
+                    button.children('i').attr('class', 'icon-info-sign icon-white');
+                    button.children('span').html(
+                        '<?=htmlentities(__('Orga', 'configuration', 'dWCubesState'), ENT_QUOTES)?>'
+                    );
+                    addMessage(data, 'success');
+                    button.unbind('click');
+                    button.bind('click', checkOrganizationDWState);
+                },
+                error: function(jqXHR) {
+                    setMask(false);
+                    errorHandler(jqXHR);
+                }
+            });
+        };
+        $('#organizationDW').unbind('click').bind('click', checkOrganizationDWState);
+    </script>
+</div>
+</fieldset>
+
+<?php if ($this->isUserAllowedToEditOrganization) : ?>
+<fieldset class="wrapper">
+    <legend style="cursor: default"><?=__('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
+    <p><?=__('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
+    <?= $this->button(__('DW', 'rebuild', 'outputDataRebuildButton'), 'refresh icon-white', array('id' => 'calculateInputs', 'class' => 'btn-primary')) ?>
+    <script>
+        $('#calculateInputs').click(function() {
+            setMask(true);
+            $.ajax({
+                type: 'POST',
+                url: 'orga/organization/inputs-calculate/idOrganization/<?=$this->organization->getId()?>',
+                success: function(data){
+                    setMask(false);
+                    addMessage(data.message, 'success');
+                },
+                error: function(jqXHR) {
+                    setMask(false);
+                    errorHandler(jqXHR);
+                }
+            });
+        });
+    </script>
+</fieldset>
+<?php endif; ?>

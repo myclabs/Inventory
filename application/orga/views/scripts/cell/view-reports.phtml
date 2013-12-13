@@ -1,0 +1,42 @@
+<?php
+use Orga\Model\ACL\Role\AbstractCellRole;
+$cellReports = $this->cellReports;
+?>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <?=__('Orga', 'view', 'reportLabel')?>
+            </th>
+            <th>
+                <?=__('Orga', 'view', 'reportType')?>
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($cellReports as $cellReport): ?>
+        <tr>
+            <td>
+                <a href="<?=$cellReport['link']?>">
+                    <?=$cellReport['label']?>
+                </a>
+            </td>
+            <td>
+                <?=__('Orga', 'view', 'cellReport_'.$cellReport['type'])?>
+            </td>
+            <td>
+                <?php if (isset($cellReport['delete'])): ?>
+                <a href="orga/cell/remove-report/idCell/<?=$this->idCell?>/idReport/<?=$cellReport['delete']?>/" class="deleteReport withTooltip" title="<?=__('Orga', 'view', 'deleteReport')?>">
+                    <i class="icon-trash"></i>
+                </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<script>
+    $('#reports<?=$this->idCell?> .withTooltip').tooltip({placement: 'left'});
+</script>

@@ -82,11 +82,11 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected $cells = array();
 
     /**
-     * Définit si la Granularity est navigable.
+     * Défini si les cellules de la granularité définissent la pertinence.
      *
-     * @var Bool
+     * @var bool
      */
-    protected $navigable = true;
+    protected $cellsControlRelevance = false;
 
     /**
      * Indique la Granularity configurant cette Granularity de saisie.
@@ -122,20 +122,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
      * @var bool
      */
     protected $cellsWithACL = false;
-
-    /**
-     * Défini si les cellules de la granularité affichent l'onglet d'Orga.
-     *
-     * @var bool
-     */
-    protected $cellsWithOrgaTab = false;
-
-    /**
-     * Défini si les cellules de la granularité affichent l'onglet de configuration des AF.
-     *
-     * @var bool
-     */
-    protected $cellsWithAFConfigTab = false;
 
     /**
      * Défini si les cellules de la granularité comportent des GenericAction.
@@ -437,6 +423,16 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getCells()
     {
+        return $this->cells;
+    }
+
+    /**
+     * Renvoie un tableau ordonné des Cell de la Granularity.
+     *
+     * @return Collection|Orga_Model_Cell[]
+     */
+    public function getOrderedCells()
+    {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         //@todo Ordre des Cellules suivant les tag (?Position- & Ref) !== ordre réel (Position || Label).
         $criteria->orderBy(['tag' => 'ASC']);
@@ -514,26 +510,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Définit la navigabilité de la Granularity.
-     *
-     * @param boolean $navigable
-     */
-    public function setNavigability($navigable)
-    {
-        $this->navigable = (bool) $navigable;
-    }
-
-    /**
-     * Indique si la Granularity es navigable.
-     *
-     * @return boolean
-     */
-    public function isNavigable()
-    {
-        return $this->navigable;
-    }
-
-    /**
      * Indique si la Granularity courante est narrower (ou égale) de la Granularity donnée.
      *
      * @param Orga_Model_Granularity $broaderGranularity
@@ -593,7 +569,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getBroaderGranularities()
     {
         $broaderGranularities = [];
-        foreach ($this->getOrganization()->getGranularities() as $granularity) {
+        foreach ($this->getOrganization()->getOrderedGranularities() as $granularity) {
             if ($this->isNarrowerThan($granularity)) {
                 $broaderGranularities[] = $granularity;
             }
@@ -629,7 +605,34 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Défini la Granularity utilisé pour configerer cett Granularity de saisie..
+     * Défini si la Granularity est utilisé pour configurer la pertinence des cellules.
+     * 
+     * @param $bool
+     */
+    public function setCellsControlRelevance($bool)
+    {
+        if ($this->cellsControlRelevance !== $bool) {
+            if ($this->cellsControlRelevance) {
+                foreach ($this->getCells() as $cell) {
+                    $cell->setRelevant(true);
+                }
+            }
+            $this->cellsControlRelevance = $bool;
+        }
+    }
+
+    /**
+     * Indique si les cellules de la granularité configurent la pertinence.
+     *
+     * @return bool
+     */
+    public function getCellsControlRelevance()
+    {
+        return $this->cellsControlRelevance;
+    }
+
+    /**
+     * Défini la Granularity utilisé pour configurer cette Granularity de saisie.
      *
      * @param Orga_Model_Granularity $configGranularity
      */
@@ -844,46 +847,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getCellsWithACL()
     {
         return $this->cellsWithACL;
-    }
-
-    /**
-     * Défini si les cellules de la granularité afficheront le tab d'Orga.
-     *
-     * @param bool $bool
-     */
-    public function setCellsWithOrgaTab($bool)
-    {
-        $this->cellsWithOrgaTab = (bool) $bool;
-    }
-
-    /**
-     * Indique si les cellules de la granularité affichent le tab d'Orga.
-     *
-     * @return bool
-     */
-    public function getCellsWithOrgaTab()
-    {
-        return $this->cellsWithOrgaTab;
-    }
-
-    /**
-     * Défini si les cellules de la granularité afficheront le tab de configuration d'AF.
-     *
-     * @param bool $bool
-     */
-    public function setCellsWithAFConfigTab($bool)
-    {
-        $this->cellsWithAFConfigTab = (bool) $bool;
-    }
-
-    /**
-     * Indique si les cellules de la granularité affichent le tab de configuration d'AF.
-     *
-     * @return bool
-     */
-    public function getCellsWithAFConfigTab()
-    {
-        return $this->cellsWithAFConfigTab;
     }
 
     /**

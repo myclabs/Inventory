@@ -604,20 +604,20 @@ class Orga_Test_GranularityCells extends TestCase
     {
         $granularity0 = new Orga_Model_Granularity($this->organization, []);
 
-        $granularity0Cells = $granularity0->getCells();
+        $granularity0Cells = $granularity0->getOrderedCells();
         $this->assertCount(1, $granularity0Cells);
         $this->assertSame([], $granularity0Cells[0]->getMembers());
 
         $granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
 
-        $granularity1Cells = $granularity1->getCells();
+        $granularity1Cells = $granularity1->getOrderedCells();
         $this->assertCount(2, $granularity1Cells);
         $this->assertSame([$this->member111a], $granularity1Cells[0]->getMembers());
         $this->assertSame([$this->member111b], $granularity1Cells[1]->getMembers());
 
         $granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis2]);
 
-        $granularity2Cells = $granularity2->getCells();
+        $granularity2Cells = $granularity2->getOrderedCells();
         $this->assertCount(6, $granularity2Cells);
         $this->assertSame([$this->member11a, $this->member2a], $granularity2Cells[0]->getMembers());
         $this->assertSame([$this->member11b, $this->member2a], $granularity2Cells[2]->getMembers());
@@ -628,7 +628,7 @@ class Orga_Test_GranularityCells extends TestCase
 
         $granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
 
-        $granularity3Cells = $granularity3->getCells();
+        $granularity3Cells = $granularity3->getOrderedCells();
         $this->assertCount(12, $granularity3Cells);
         $this->assertSame([$this->member1a, $this->member2a], $granularity3Cells[0]->getMembers());
         $this->assertSame([$this->member1b, $this->member2a], $granularity3Cells[2]->getMembers());

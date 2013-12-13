@@ -3,12 +3,13 @@
 namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
-use Core_Model_Query;
+use Orga_Model_Organization;
 use Orga_Model_Axis;
 use Orga_Model_Cell;
-use Orga_Model_Organization;
+use User\Domain\User;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Action;
+use Core_Model_Query;
 
 /**
  * Factory de OrganizationViewModel.
@@ -25,7 +26,7 @@ class OrganizationViewModelFactory
         $this->aclService = $aclService;
     }
 
-    public function createOrganizationViewModel(Orga_Model_Organization $organization, $connectedUser)
+    public function createOrganizationViewModel(Orga_Model_Organization $organization, User $connectedUser)
     {
         $viewModel = new OrganizationViewModel();
         $viewModel->id = $organization->getId();
@@ -40,6 +41,23 @@ class OrganizationViewModelFactory
             },
             $organization->getRootAxes()
         );
+        $viewModel->canBeEdited = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization
+        );
+        if (!$viewModel->canBeEdited) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
+                $query = new Core_Model_Query();
+                $query->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+                $query->aclFilter->enabled = true;
+                $query->aclFilter->user = $connectedUser;
+                $query->aclFilter->action = Action::EDIT();
+                if (Orga_Model_Cell::countTotal($query) > 0) {
+                    $viewModel->canBeEdited = true;
+                }
+            }
+        }
         $viewModel->canBeDeleted = $this->aclService->isAllowed(
             $connectedUser,
             Action::DELETE(),
@@ -50,29 +68,6 @@ class OrganizationViewModelFactory
             $viewModel->inventory =  $organization->getGranularityForInventoryStatus()->getLabel();
         } catch (Core_Exception_UndefinedAttribute $e) {
         };
-        $canUserSeeManyCells = false;
-        $numberCellsUserCanSee = 0;
-        foreach ($organization->getGranularities() as $granularity) {
-            $aclCellQuery = new Core_Model_Query();
-            $aclCellQuery->aclFilter->enabled = true;
-            $aclCellQuery->aclFilter->user = $connectedUser;
-            $aclCellQuery->aclFilter->action = Action::VIEW();
-            $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
-            $numberCellsUserCanSee = Orga_Model_Cell::countTotal($aclCellQuery);
-            if ($numberCellsUserCanSee > 1) {
-                $canUserSeeManyCells = true;
-                break;
-            } elseif ($numberCellsUserCanSee == 1) {
-                break;
-            }
-        }
-
-        if ($canUserSeeManyCells) {
-            $viewModel->link = 'orga/organization/cells/idOrganization/' . $organization->getId();
-        } elseif ($numberCellsUserCanSee == 1) {
-            $cellWithAccess = Orga_Model_Cell::loadList($aclCellQuery);
-            $viewModel->link = 'orga/cell/details/idCell/' . array_pop($cellWithAccess)->getId();
-        }
 
         return $viewModel;
     }

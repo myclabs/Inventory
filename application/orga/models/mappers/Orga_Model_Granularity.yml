@@ -25,8 +25,8 @@ Orga_Model_Granularity:
       column: position
       type: integer
       nullable: false
-    navigable:
-      column: navigable
+    cellsControlRelevance:
+      column: cellsControlRelevance
       type: boolean
       nullable: false
     cellsWithACL:
@@ -35,14 +35,6 @@ Orga_Model_Granularity:
       nullable: false
     cellsGenerateDWCubes:
       column: cellsGenerateDWCubes
-      type: boolean
-      nullable: false
-    cellsWithOrgaTab:
-      column: cellsWithOrgaTab
-      type: boolean
-      nullable: false
-    cellsWithAFConfigTab:
-      column: cellsWithAFConfigTab
       type: boolean
       nullable: false
     cellsWithSocialGenericActions:

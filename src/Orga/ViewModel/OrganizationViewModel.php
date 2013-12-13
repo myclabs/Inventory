@@ -20,6 +20,11 @@ class OrganizationViewModel
     /**
      * @var boolean
      */
+    public $canBeEdited;
+
+    /**
+     * @var boolean
+     */
     public $canBeDeleted;
 
     /**
@@ -31,9 +36,4 @@ class OrganizationViewModel
      * @var string
      */
     public $inventory;
-
-    /**
-     * @var string
-     */
-    public $link;
 }

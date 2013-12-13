@@ -1,11 +1,4 @@
-<?php
-/**
- * Vue générale des exports
- * @author valentin.claras
- * @package Orga
- */
-
-foreach ($this->exports as $exportRef => $exportArray) { ?>
+<?php foreach ($this->exports as $exportRef => $exportArray) : ?>
 <fieldset class="wrapper">
     <legend style="cursor:default"><?=$exportArray['label']?></legend>
     <div>
@@ -15,35 +8,33 @@ foreach ($this->exports as $exportRef => $exportArray) { ?>
                     <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
                 </span>
                 <input name="export" type="hidden" value="<?=$exportRef?>">
-                <?php if (count($this->formats) > 1) { ?>
+                <?php if (count($this->formats) > 1) : ?>
                 <select name="format" class="input format">
-                    <?php foreach($this->formats as $formatRef => $formatLabel) { ?>
+                    <?php foreach($this->formats as $formatRef => $formatLabel) : ?>
                         <option value="<?=$formatRef?>"><?=$formatLabel?></option>
-                    <?php } ?>
+                    <?php endforeach; ?>
                 </select>
-                <?php } else { ?>
+                <?php else: ?>
                 <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
-                <?php } ?>
-                <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 0)) { ?>
-                    <?php if (count($this->formats) > 1) { ?>
+                <?php endif; ?>
+                <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 0)) : ?>
+                    <?php if (count($this->formats) > 1) : ?>
                         <span class="add-on">
                             -
                         </span>
-                    <?php } ?>
+                    <?php endif; ?>
                     <select name="version" >
-                        <?php foreach($exportArray['version'] as $versionRef => $versionLabel) { ?>
+                        <?php foreach($exportArray['version'] as $versionRef => $versionLabel) : ?>
                             <option value="<?=$versionRef?>"><?=$versionLabel?></option>
-                        <?php } ?>
+                        <?php endforeach; ?>
                     </select>
-                <?php } ?>
+                <?php endif; ?>
                 <button class="btn btn-primary" type="submit"><?=__('UI', 'verb', 'export')?></button>
             </div>
         </form>
     </div>
 </fieldset>
-<?php
-}
-?>
+<?php endforeach; ?>
 <script type="text/javascript">
     $('.format').on(
         'change',

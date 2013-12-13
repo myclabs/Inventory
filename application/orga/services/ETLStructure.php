@@ -408,7 +408,7 @@ class Orga_Service_ETLStructure
             $dWAxis->setDirectNarrower($associationArray['axes'][$narrowerAxis->getRef()]);
         }
 
-        foreach ($orgaAxis->getMembers() as $orgaMember) {
+        foreach ($orgaAxis->getOrderedMembers() as $orgaMember) {
             if (isset($orgaFilters['members'])) {
                 foreach ($filteringOrgaBroaderAxes as $filteringOrgaAxis) {
                     foreach ($orgaFilters['members'] as $filteringOrgaMember) {
@@ -516,7 +516,7 @@ class Orga_Service_ETLStructure
      */
     public function areOrganizationDWCubesUpToDate(Orga_Model_Organization $organization)
     {
-        foreach ($organization->getGranularities() as $granularity) {
+        foreach ($organization->getOrderedGranularities() as $granularity) {
             if ($granularity->getCellsGenerateDWCubes()) {
                 if (!($this->isGranularityDWCubeUpToDate($granularity))) {
                     return false;
@@ -854,10 +854,10 @@ class Orga_Service_ETLStructure
             }
         }
 
-        $orgaMembers = $orgaAxis->getMembers()->toArray();
+        $orgaMembers = $orgaAxis->getOrderedMembers()->toArray();
         $dWMembers = $dWAxis->getMembers();
 
-        foreach ($orgaAxis->getMembers()->toArray() as $orgaIndex => $orgaMember) {
+        foreach ($orgaAxis->getOrderedMembers()->toArray() as $orgaIndex => $orgaMember) {
             if (isset($orgaFilters['members'])) {
                 foreach ($filteringOrgaBroaderAxes as $filteringOrgaAxis) {
                     foreach ($orgaFilters['members'] as $filteringOrgaMember) {
@@ -935,7 +935,7 @@ class Orga_Service_ETLStructure
      */
     public function resetOrganizationDWCubes(Orga_Model_Organization $organization)
     {
-        foreach ($organization->getGranularities() as $granularity) {
+        foreach ($organization->getOrderedGranularities() as $granularity) {
             // Optimisation de la mémoire.
             $this->entityManager->clear();
             $granularity = Orga_Model_Granularity::load($granularity->getId());
@@ -1011,6 +1011,8 @@ class Orga_Service_ETLStructure
      * Régénère la structure du Cube de DW d'une cellule.
      *
      * @param Orga_Model_Cell $cell
+     * @throws ErrorException
+     * @throws Exception
      */
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {

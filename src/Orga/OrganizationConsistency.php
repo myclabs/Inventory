@@ -31,13 +31,13 @@ class Orga_OrganizationConsistency
         $checkNarrowerMember = __('Orga', 'control', 'memberWithNoDirectChild');
         $checkCrossedGranularities = __('Orga', 'control', 'crossedGranularities');
 
-        foreach ($organization->getAxes() as $axis) {
+        foreach ($organization->getFirstOrderedAxes() as $axis) {
             if (!$axis->hasMembers()) {
                 $listAxes[] = $axis->getLabel();
             }
             if ($axis->hasDirectBroaders()) {
                 foreach ($axis->getDirectBroaders() as $broaderAxis) {
-                    foreach ($axis->getMembers() as $member) {
+                    foreach ($axis->getOrderedMembers() as $member) {
                         try {
                             $member->getParentForAxis($broaderAxis);
                         } catch (Core_Exception_NotFound $e) {
@@ -45,7 +45,7 @@ class Orga_OrganizationConsistency
                             $listParentsMembers[] = $member->getLabel();
                         }
                     }
-                    foreach ($broaderAxis->getMembers() as $parentMember) {
+                    foreach ($broaderAxis->getOrderedMembers() as $parentMember) {
                         if (count($parentMember->getChildrenForAxis($axis)) === 0) {
                             $listChildrenAxes[] = $broaderAxis->getLabel();
                             $listChildrenMembers[] = $parentMember->getLabel();
@@ -61,7 +61,7 @@ class Orga_OrganizationConsistency
             $granularityForInventoryStatus = null;
         }
         if ($granularityForInventoryStatus !== null) {
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
                 if ($granularity->getCellsWithACL()) {
                     try {
                         $granularityForInventoryStatus->getCrossedGranularity($granularity);

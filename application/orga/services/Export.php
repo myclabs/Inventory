@@ -154,7 +154,7 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell) {
                 $organization = $cell->getGranularity()->getOrganization();
                 $axes = [];
-                foreach ($organization->getAxes() as $organizationAxis) {
+                foreach ($organization->getFirstOrderedAxes() as $organizationAxis) {
                     foreach ($cell->getMembers() as $member) {
                         if ($organizationAxis->isNarrowerThan($member->getAxis())) {
                             continue;
@@ -519,7 +519,7 @@ class Orga_Service_Export
         $queryOrganizationAxes->order->addOrder(Orga_Model_Axis::QUERY_NARROWER);
         $queryOrganizationAxes->order->addOrder(Orga_Model_Axis::QUERY_POSITION);
         $orgaAxes = [];
-        foreach ($cell->getGranularity()->getOrganization()->getAxes() as $organizationAxis) {
+        foreach ($cell->getGranularity()->getOrganization()->getFirstOrderedAxes() as $organizationAxis) {
             foreach ($cell->getGranularity()->getAxes() as $granularityAxis) {
                 if ($organizationAxis->isNarrowerThan($granularityAxis)) {
                     continue;

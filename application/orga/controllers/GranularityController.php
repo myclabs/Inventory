@@ -1,24 +1,14 @@
 <?php
-/**
- * Classe Orga_GranularityController
- * @author valentin.claras
- * @author sidoine.tardieu
- * @package    Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 
 /**
- * Classe controleur de cell.
- * @package    Orga
- * @subpackage Controller
+ * @author valentin.claras
  */
 class Orga_GranularityController extends Core_Controller
 {
     /**
-     * Controller de la vue des Granularity d'un organization.
-     * @Secure("viewOrganization")
+     * @Secure("editOrganization")
      */
     public function manageAction()
     {
@@ -43,31 +33,31 @@ class Orga_GranularityController extends Core_Controller
     }
 
     /**
-     * Affiche le Report de DW d'un Granularity.
-     * @Secure("viewReport")
+     * @Secure("editOrganizationAndCells")
      */
-    public function reportAction()
+    public function viewReportAction()
     {
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
+        $idOrganization = $granularity->getOrganization()->getId();
 
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$granularity->getLabel().'</small>');
-        if ($this->hasParam('idCell')) {
-            $viewConfiguration->setOutputUrl('orga/cell/details/idCell/'.$this->getParam('idCell').'/tab/organization');
-        } else {
-            $viewConfiguration->setOutputUrl('orga/organization/details/idOrganization/'.$this->getParam('idOrganization'));
-        }
-        $viewConfiguration->setSaveURL('orga/granularity/report/idGranularity/'.$granularity->getId().'/idCell/'.$this->getParam('idCell'));
+        $viewConfiguration->setOutputUrl('orga/organization/edit/idOrganization/' . $idOrganization . '/tab/reports/');
+        $viewConfiguration->setSaveURL('orga/granularity/view-report/idGranularity/' . $granularity->getId());
+
         if ($this->hasParam('idReport')) {
-            $this->forward('details', 'report', 'dw', array(
-                    'idReport' => $this->getParam('idReport'),
+            $this->forward('details', 'report', 'dw',
+                [
                     'viewConfiguration' => $viewConfiguration
-                ));
+                ]
+            );
         } else {
-            $this->forward('details', 'report', 'dw', array(
-                    'idOrganization' => $this->getParam('idOrganization'),
+            $this->forward('details', 'report', 'dw',
+                [
+                    'idCube' => $granularity->getDWCube()->getId(),
                     'viewConfiguration' => $viewConfiguration
-                ));
+                ]
+            );
         }
     }
 

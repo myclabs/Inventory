@@ -1048,14 +1048,14 @@ class Orga_Test_AxisMembers extends TestCase
 
     public function testGetMembers()
     {
-        $members = $this->axis->getMembers()->toArray();
+        $members = $this->axis->getOrderedMembers()->toArray();
         $this->assertSame($this->member1, $members[0]);
         $this->assertSame($this->member2, $members[1]);
         $this->assertSame($this->member3, $members[2]);
 
         $this->member2->setLabel('Label 0');
 
-        $members = $this->axis->getMembers();
+        $members = $this->axis->getOrderedMembers();
         $this->assertSame($this->member2, $members[0]);
         $this->assertSame($this->member1, $members[1]);
         $this->assertSame($this->member3, $members[2]);
@@ -1065,28 +1065,28 @@ class Orga_Test_AxisMembers extends TestCase
     {
         $this->axis->setMemberPositioning(true);
 
-        $members = $this->axis->getMembers()->toArray();
+        $members = $this->axis->getOrderedMembers()->toArray();
         $this->assertSame($this->member1, $members[0]);
         $this->assertSame($this->member2, $members[1]);
         $this->assertSame($this->member3, $members[2]);
 
         $this->member2->setLabel('Label 0');
 
-        $members = $this->axis->getMembers();
+        $members = $this->axis->getOrderedMembers();
         $this->assertSame($this->member1, $members[0]);
         $this->assertSame($this->member2, $members[1]);
         $this->assertSame($this->member3, $members[2]);
 
         $this->member2->setPosition(3);
 
-        $members = $this->axis->getMembers();
+        $members = $this->axis->getOrderedMembers();
         $this->assertSame($this->member1, $members[0]);
         $this->assertSame($this->member3, $members[1]);
         $this->assertSame($this->member2, $members[2]);
 
         $this->axis->setMemberPositioning(false);
 
-        $members = $this->axis->getMembers();
+        $members = $this->axis->getOrderedMembers();
         $this->assertSame($this->member2, $members[0]);
         $this->assertSame($this->member1, $members[1]);
         $this->assertSame($this->member3, $members[2]);
@@ -1106,14 +1106,14 @@ class Orga_Test_AxisMembers extends TestCase
         $this->member2->setDirectParentForAxis($memberB);
         $this->member3->setDirectParentForAxis($memberA);
 
-        $members = $this->axis->getMembers()->toArray();
+        $members = $this->axis->getOrderedMembers()->toArray();
         $this->assertSame($this->member1, $members[1]);
         $this->assertSame($this->member2, $members[0]);
         $this->assertSame($this->member3, $members[2]);
 
         $this->member3->setPosition(1);
 
-        $members = $this->axis->getMembers()->toArray();
+        $members = $this->axis->getOrderedMembers()->toArray();
         $this->assertSame($this->member1, $members[2]);
         $this->assertSame($this->member2, $members[0]);
         $this->assertSame($this->member3, $members[1]);

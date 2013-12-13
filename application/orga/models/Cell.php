@@ -435,9 +435,14 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      * Définit si la Cell est pertinente ou non.
      *
      * @param bool $relevant
+     * @throws Core_Exception
      */
     public function setRelevant($relevant)
     {
+        if (!$this->getGranularity()->getCellsControlRelevance()) {
+            throw new Core_Exception('Relevance can only be defined if the granularity permits it.');
+        }
+
         if ($relevant != $this->relevant) {
             $this->relevant = $relevant;
             // Si les cellules parentes ne sont pas pertinentes,
@@ -682,32 +687,32 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie la liste des Member enfants aux Member de la Cell courante pour une Granularity narrower donnée.
      *
-     * @param Orga_Model_Granularity $narrowerGranularity
+     * @param Orga_Model_Axis[] $axes
      *
      * @return Orga_Model_Member[]
      */
-    public function getChildMembersForGranularity(Orga_Model_Granularity $narrowerGranularity)
+    public function getChildMembersForAxes(array $axes)
     {
         $childMembers = array();
 
-        foreach ($narrowerGranularity->getAxes() as $narrowerAxis) {
-            $refNarrowerAxis = $narrowerAxis->getRef();
-            foreach ($this->getMembers() as $member) {
-                if ($member->getAxis()->isBroaderThan($narrowerAxis)) {
+        foreach ($axes as $axis) {
+            $refNarrowerAxis = $axis->getRef();
+            foreach ($this->getMembers() as $cellMember) {
+                if ($cellMember->getAxis()->isBroaderThan($axis)) {
                     if (!isset($childMembers[$refNarrowerAxis])) {
-                        $childMembers[$refNarrowerAxis] = $member->getChildrenForAxis($narrowerAxis);
+                        $childMembers[$refNarrowerAxis] = $cellMember->getChildrenForAxis($axis);
                     } else {
                         $childMembers[$refNarrowerAxis] = array_intersect(
                             $childMembers[$refNarrowerAxis],
-                            $member->getChildrenForAxis($narrowerAxis)
+                            $cellMember->getChildrenForAxis($axis)
                         );
                     }
-                } else if ($member->getAxis() === $narrowerAxis) {
-                    $childMembers[$refNarrowerAxis] = [$member];
+                } else if ($cellMember->getAxis() === $axis) {
+                    $childMembers[$refNarrowerAxis] = [$cellMember];
                 }
             }
             if (!isset($childMembers[$refNarrowerAxis])) {
-                $childMembers[$refNarrowerAxis] = $narrowerAxis->getMembers()->toArray();
+                $childMembers[$refNarrowerAxis] = $axis->getOrderedMembers()->toArray();
             }
         }
 
@@ -752,6 +757,18 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
+     * Indique si la cellule donnée est parente de la courante.
+     *
+     * @param Orga_Model_Cell $cell
+     *
+     * @return bool
+     */
+    public function isParentOf(Orga_Model_Cell $cell)
+    {
+        return $cell->isChildOf($this);
+    }
+
+    /**
      * Renvoie les Cell enfantes pour une Granularity donnée.
      *
      * @param Orga_Model_Granularity $narrowerGranularity
@@ -792,6 +809,23 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
+     * Indique si la cellule donnée est parente de la courante.
+     *
+     * @param Orga_Model_Cell $cell
+     *
+     * @return bool
+     */
+    public function isChildOf(Orga_Model_Cell $cell)
+    {
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $pathTag) {
+            if (strpos($this->getTag(), $pathTag) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Renvoie les Cell enfantes pour une Granularity donnée.
      *
      * @param Orga_Model_Granularity $narrowerGranularity
@@ -810,7 +844,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             $queryParameters->order->addOrder('tag');
         }
 
-        $childMembersForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
+        $childMembersForGranularity = $this->getChildMembersForAxes($narrowerGranularity->getAxes());
 
         // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
         foreach ($childMembersForGranularity as $childAxisMembersForGranularity) {
@@ -844,10 +878,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         }
         if ($queryParameters === null) {
             $queryParameters = new Core_Model_Query();
-            $queryParameters->order->addOrder(self::QUERY_MEMBERS_HASHKEY);
+            $queryParameters->order->addOrder(self::QUERY_TAG);
         }
 
-        $childMembersForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
+        $childMembersForGranularity = $this->getChildMembersForAxes($narrowerGranularity->getAxes());
 
         // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
         foreach ($childMembersForGranularity as $childAxisMembersForGranularity) {

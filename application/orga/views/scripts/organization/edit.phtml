@@ -1,0 +1,44 @@
+<?php
+/**
+ * Vue générale d'un organization
+ * @author valentin.claras
+ * @package Orga
+ */
+
+/** @var \Orga\ViewModel\OrganizationViewModel $organization */
+$organization = $this->organization;
+?>
+<div class="organization page-header">
+    <h1>
+        <?=$organization->label?>
+        <?php if ($organization->canBeEdited) : ?>
+            <div class="pull-right">
+                <small>
+                    <a class="editOrganization btn btn-small btn-primary"
+                       href="orga/organization/view/idOrganization/<?=$organization->id?>">
+                        <i class="icon-share-alt icon-white"></i>
+                        <?=__('UI', 'verb', 'view')?>
+                    </a>
+                </small>
+            </div>
+        <?php endif; ?>
+    </h1>
+</div>
+<?php
+$this->tabView->display();
+?>
+
+<script>
+    $('#orga_relevance').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_relevance'), function(e, data) {
+        addMessage(data.message, 'success');
+        $.fn.loadTaborga_relevance();
+    });
+    $('#orga_afs').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_afs'), function(e, data) {
+        addMessage(data.message, 'success');
+        $.fn.loadTaborga_afs();
+    });
+    $('#orga_reports').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_reports'), function(e, data) {
+        addMessage(data.message, 'success');
+        $.fn.loadTaborga_reports();
+    });
+</script>

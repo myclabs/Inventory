@@ -457,7 +457,7 @@ class Orga_Test_OrganizationGranularities extends TestCase
 
     public function testGetGranularities()
     {
-        $granularities = $this->organization->getGranularities()->toArray();
+        $granularities = $this->organization->getOrderedGranularities()->toArray();
 
         $this->assertCount(6, $granularities);
 

@@ -401,14 +401,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             }
 
             $worker->registerTaskExecutor(ServiceCallTask::class, new ServiceCallExecutor($c));
-            $worker->registerTaskExecutor(
-                Orga_Work_Task_AddGranularity::class,
-                $c->get(Orga_Work_TaskExecutor_AddGranularityExecutor::class)
-            );
-            $worker->registerTaskExecutor(
-                Orga_Work_Task_SetGranularityCellsGenerateDWCubes::class,
-                $c->get(Orga_Work_TaskExecutor_SetGranularityCellsGenerateDWCubesExecutor::class)
-            );
 
             return $worker;
         });

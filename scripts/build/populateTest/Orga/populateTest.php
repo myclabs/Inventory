@@ -50,14 +50,14 @@ class Orga_PopulateTest extends Orga_Populate
         $member_categorie_forfait_marque = $this->createMember($axis_categorie, 'forfait_marque', 'Forfait marque');
 
         // Création des granularités.
-        $granularityGlobal = $this->createGranularity($organization, [],                                                        true,  true,  true,  true,   true,  false, false, false);
-        $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  true,  true,  false,  true,  false, false, false);
-        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               true,  false, true,  false,  true,  false, false, true );
-        $granularity_annee = $this->createGranularity($organization, [$axis_annee],                                             false, false, false, false,  false, false, false, false);
-        $granularity_annee_categorie = $this->createGranularity($organization, [$axis_annee, $axis_categorie],                  false, false, false, false,  false, false, false, false);
-        $granularity_annee_zone_marque = $this->createGranularity($organization, [$axis_annee, $axis_zone, $axis_marque],       false, false, false, false,  false, false, false, false);
-        $granularity_annee_site = $this->createGranularity($organization, [$axis_annee, $axis_site],                            false, false, false, false,  false, false, false, false);
-        $granularity_annee_site_categorie = $this->createGranularity($organization, [$axis_annee, $axis_site, $axis_categorie], false, false, false, false,  false, false, false, false);
+        $granularityGlobal = $this->createGranularity($organization, [],                                                        true,  true,  true,   true,  false, false, false);
+        $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  true,  false,  true,  false, false, false);
+        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               true,  false, false,  true,  false, false, true );
+        $granularity_annee = $this->createGranularity($organization, [$axis_annee],                                             false, false, false,  false, false, false, false);
+        $granularity_annee_categorie = $this->createGranularity($organization, [$axis_annee, $axis_categorie],                  false, false, false,  false, false, false, false);
+        $granularity_annee_zone_marque = $this->createGranularity($organization, [$axis_annee, $axis_zone, $axis_marque],       false, false, false,  false, false, false, false);
+        $granularity_annee_site = $this->createGranularity($organization, [$axis_annee, $axis_site],                            false, false, false,  false, false, false, false);
+        $granularity_annee_site_categorie = $this->createGranularity($organization, [$axis_annee, $axis_site, $axis_categorie], false, false, false,  false, false, false, false);
 
         // Granularité des collectes
         $organization->setGranularityForInventoryStatus($granularity_annee_zone_marque);
