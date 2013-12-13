@@ -1,0 +1,8 @@
+# Config tests unitaires
+
+# Units API
+MyCLabs\UnitAPI\UnitService:
+  class: Unit\Mock\FakeUnitService
+
+MyCLabs\UnitAPI\UnitOperationService:
+  class: Unit\Mock\FakeUnitOperationService

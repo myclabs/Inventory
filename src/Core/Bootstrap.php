@@ -115,7 +115,14 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $configuration = new Zend_Config($this->getOptions());
 
         $builder = new ContainerBuilder();
-        $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
+
+        $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/config.yml'));
+        if (APPLICATION_ENV == 'testsunitaires') {
+            $builder->addDefinitionsFromFile(
+                new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/config.testsunitaires.yml')
+            );
+        }
+
         $diConfig = $configuration->get('di', null);
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
             $cache = new MemcachedCache();

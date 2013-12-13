@@ -45,7 +45,7 @@ MyCLabs\UnitAPI\UnitService:
   constructor:
     httpClient: units.webservice.httpClient
 
-MyCLabs\UnitAPI\ConversionService:
-  class: MyCLabs\UnitAPI\WebService\ConversionWebService
+MyCLabs\UnitAPI\UnitOperationService:
+  class: MyCLabs\UnitAPI\WebService\UnitOperationWebService
   constructor:
     httpClient: units.webservice.httpClient
