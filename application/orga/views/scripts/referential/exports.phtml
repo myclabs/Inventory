@@ -1,41 +1,55 @@
-<?php foreach ($this->exports as $exportRef => $exportArray) : ?>
-<fieldset class="wrapper">
-    <legend style="cursor:default"><?=$exportArray['label']?></legend>
-    <div>
-        <form class="form-inline" action="orga/referential/export">
-            <div class="input-prepend input-append">
-                <span class="add-on format">
-                    <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
-                </span>
-                <input name="export" type="hidden" value="<?=$exportRef?>">
-                <?php if (count($this->formats) > 1) : ?>
-                <select name="format" class="input format">
-                    <?php foreach($this->formats as $formatRef => $formatLabel) : ?>
-                        <option value="<?=$formatRef?>"><?=$formatLabel?></option>
-                    <?php endforeach; ?>
-                </select>
-                <?php else: ?>
-                <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
-                <?php endif; ?>
-                <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 0)) : ?>
+<div class="page-header">
+    <h1><?=__('UI', 'name', 'exports')?></h1>
+</div>
+
+<div class="row-fluid">
+
+    <?php foreach ($this->exports as $exportRef => $exportArray) : ?>
+
+        <div class="span3 well well-small text-center">
+            <h4><?=$exportArray['label']?></h4>
+
+            <form class="form-inline" action="orga/referential/export">
+                <div class="input-prepend input-append">
+                    <span class="add-on format">
+                        <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
+                    </span>
+
+                    <input name="export" type="hidden" value="<?=$exportRef?>">
+
                     <?php if (count($this->formats) > 1) : ?>
-                        <span class="add-on">
-                            -
-                        </span>
+                        <select name="format" class="input format">
+                            <?php foreach($this->formats as $formatRef => $formatLabel) : ?>
+                                <option value="<?=$formatRef?>"><?=$formatLabel?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php else : ?>
+                        <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
                     <?php endif; ?>
-                    <select name="version" >
-                        <?php foreach($exportArray['version'] as $versionRef => $versionLabel) : ?>
-                            <option value="<?=$versionRef?>"><?=$versionLabel?></option>
-                        <?php endforeach; ?>
-                    </select>
-                <?php endif; ?>
-                <button class="btn btn-primary" type="submit"><?=__('UI', 'verb', 'export')?></button>
-            </div>
-        </form>
-    </div>
-</fieldset>
-<?php endforeach; ?>
-<script type="text/javascript">
+
+                    <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 0)) { ?>
+                        <?php if (count($this->formats) > 1) : ?>
+                            <span class="add-on">
+                                -
+                            </span>
+                        <?php endif; ?>
+                        <select name="version" >
+                            <?php foreach($exportArray['version'] as $versionRef => $versionLabel) { ?>
+                                <option value="<?=$versionRef?>"><?=$versionLabel?></option>
+                            <?php } ?>
+                        </select>
+                    <?php } ?>
+
+                    <button class="btn btn-primary" type="submit"><?=__('UI', 'verb', 'export')?></button>
+                </div>
+            </form>
+        </div>
+
+    <?php endforeach; ?>
+
+</div>
+
+<script>
     $('.format').on(
         'change',
         function() {
