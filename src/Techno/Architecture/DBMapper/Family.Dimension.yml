@@ -10,14 +10,19 @@ Techno\Domain\Family\Dimension:
         strategy: AUTO
 
   fields:
+    ref:
+      type: string
+      nullable: false
+    label:
+      type: string
+      nullable: false
+      gedmo:
+        - translatable
     position:
       type: integer
       nullable: false
     orientation:
       type: integer
-    query:
-      type: string
-      nullable: true
 
   manyToOne:
     family:
@@ -25,12 +30,6 @@ Techno\Domain\Family\Dimension:
       inversedBy: dimensions
       joinColumn:
         name: idFamily
-        referencedColumnName: id
-        nullable: false
-    meaning:
-      targetEntity: Techno\Domain\Meaning
-      joinColumn:
-        name: idMeaning
         referencedColumnName: id
         nullable: false
 
@@ -44,8 +43,8 @@ Techno\Domain\Family\Dimension:
         position: ASC
 
   uniqueConstraints:
-    family_meaning:
-      columns: [idFamily, idMeaning]
+    family_refDimension:
+      columns: [idFamily, ref]
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

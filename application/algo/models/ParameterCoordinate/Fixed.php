@@ -1,8 +1,5 @@
 <?php
 
-use Keyword\Application\Service\KeywordDTO;
-use Techno\Domain\Family\Member;
-
 /**
  * @author matthieu.napoli
  * @author cyril.perraud
@@ -12,34 +9,26 @@ class Algo_Model_ParameterCoordinate_Fixed extends Algo_Model_ParameterCoordinat
     /**
      * @var string|null
      */
-    protected $refMemberKeyword;
+    protected $idMember;
 
 
     /**
      * {@inheritdoc}
      */
-    public function getMemberKeyword(Algo_Model_InputSet $inputSet = null)
+    public function getMember(Algo_Model_InputSet $inputSet = null)
     {
-        if (! $this->refMemberKeyword) {
+        if (! $this->idMember) {
             throw new Core_Exception_UndefinedAttribute("The member of the parameter coordinate is not defined");
         }
-        return new KeywordDTO($this->refMemberKeyword);
+        return $this->idMember;
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $memberId
      */
-    public function getMemberKeywordRef()
+    public function setMember($memberId)
     {
-        return $this->refMemberKeyword;
-    }
-
-    /**
-     * @param Member $member
-     */
-    public function setMember(Member $member)
-    {
-        $this->refMemberKeyword = $member->getKeyword()->getRef();
+        $this->idMember = $memberId;
     }
 
     /**
@@ -49,26 +38,22 @@ class Algo_Model_ParameterCoordinate_Fixed extends Algo_Model_ParameterCoordinat
     {
         $errors = parent::checkConfiguration();
 
-        if (!$this->refMemberKeyword) {
-            $refDimension = $this->getDimension()->getMeaning()->getRef();
-            $configError = new Algo_ConfigError(__('Algo', 'configControl', 'noMember',
-                                        [
-                                        'REF_DIMENSION' => $refDimension,
-                                        'REF_ALGO' => $this->getAlgoParameter()->getRef()
-                                        ]),
-                                        true);
+        if (!$this->idMember) {
+            $configError = new Algo_ConfigError(__('Algo', 'configControl', 'noMember', [
+                'REF_DIMENSION' => $this->getDimension(),
+                'REF_ALGO' => $this->getAlgoParameter()->getRef()
+            ]), true);
             $errors[] = $configError;
         } else {
             try {
-                $this->getDimension()->getMember($this->getMemberKeyword());
+                $this->getDimension()->getMember($this->getMember());
             } catch (Core_Exception_NotFound $e) {
-                $refDimension = $this->getDimension()->getMeaning()->getRef();
-                $errors[] = new Algo_ConfigError(__('Algo', 'configControl', 'invalidMember',
-                                        [
-                                        'REF_DIMENSION' => $refDimension,
-                                        'REF_ALGO' => $this->getAlgoParameter()->getRef(),
-                                        'REF_MEMBER' => $this->refMemberKeyword
-                                        ]), true);
+                $refDimension = $this->getDimension()->getRef();
+                $errors[] = new Algo_ConfigError(__('Algo', 'configControl', 'invalidMember', [
+                    'REF_DIMENSION' => $refDimension,
+                    'REF_ALGO' => $this->getAlgoParameter()->getRef(),
+                    'REF_MEMBER' => $this->idMember
+                ]), true);
             }
         }
 

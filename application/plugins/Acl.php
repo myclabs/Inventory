@@ -596,21 +596,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->editRepository($identity);
     }
 
-    protected function viewKeywordRule(User $identity)
-    {
-        return $this->viewReferential($identity);
-    }
-
-    protected function editKeywordRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
-    protected function deleteKeywordRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
     protected function viewUnitRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);

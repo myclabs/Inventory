@@ -12,12 +12,6 @@ class Orga_ReferentialController extends Core_Controller
     use UI_Controller_Helper_Form;
 
     /**
-     * @Inject
-     * @var \Keyword\Application\Service\KeywordExport
-     */
-    protected $keywordExportService;
-
-    /**
      * Redirection sur la liste.
      * @Secure("loggedIn")
      */
@@ -61,14 +55,6 @@ class Orga_ReferentialController extends Core_Controller
             ]
         ];
 
-        // Keyword.
-        $this->view->exports['Keyword'] = [
-            'label' => __('Keyword', 'menu', 'semanticResources'),
-            'versions' => [
-                'latest' => __('Keyword', 'menu', 'semanticResources')
-            ]
-        ];
-
         // Unit.
         $this->view->exports['Unit'] = [
             'label' => __('Unit', 'name', 'units'),
@@ -102,11 +88,6 @@ class Orga_ReferentialController extends Core_Controller
                 $exportService = new ExportService();
                 $streamFunction = 'stream';
                 $baseFilename = __('UI', 'name', 'parameters');
-                break;
-            case 'Keyword':
-                $exportService = $this->keywordExportService;
-                $streamFunction = 'stream';
-                $baseFilename = __('Keyword', 'export', 'baseFileName');
                 break;
             case 'Unit':
                 $exportService = new \Unit\Application\Service\UnitExport();

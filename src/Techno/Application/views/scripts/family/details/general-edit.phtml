@@ -1,0 +1,33 @@
+<?php
+
+use Techno\Application\Form\EditFamilyForm;
+use Techno\Domain\Family\Family;
+
+/** @var $family Family */
+$family = $this->family;
+
+// Delete button
+$deleteButton = new UI_HTML_Button(__('Techno', 'familyDetail', 'deleteButtonLabel'));
+$deleteButton->id = "deleteFamily";
+$deleteButton->addAttribute('class', 'btn-danger');
+
+// Edit form
+$editFamilyForm = new EditFamilyForm('editFamily', $family);
+$deleteElement = new UI_Form_Element_HTML('deleteElement', $deleteButton->render());
+$editFamilyForm->addActionElement($deleteElement);
+
+echo $editFamilyForm->render();
+?>
+
+<script>
+    $("#deleteFamily").click(function(e) {
+        e.preventDefault();
+
+        var url = "<?=$this->baseUrl('techno/family/delete')?>";
+
+        $.post(url, {id: <?=$family->getId()?>}, function() {
+            window.location = "<?=$this->baseUrl('techno/family/tree-edit')?>";
+        })
+            .error(errorHandler);
+    });
+</script>

@@ -3,7 +3,19 @@
 
 ## 2.10
 
-- Déployer normalement l'application (avec build update)
+- Déployer normalement l'application **sans build update**
+
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/2.10/migrate.sql
+```
+
+- Faire le build update
+
+```
+php scripts/build/build.php update
+```
 
 - Exécuter le script de migration
 

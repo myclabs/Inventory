@@ -1,28 +1,12 @@
 <?php
 
-use Keyword\Domain\Keyword;
 use Techno\Domain\Family\Family;
-use Techno\Domain\Meaning;
-use Keyword\Application\Service\KeywordService;
 
 /**
  * Remplissage de la base de données avec des données de test
  */
 class AF_Populate extends Core_Script_Action
 {
-    /**
-     * @var KeywordService
-     */
-    protected $keywordService;
-
-
-    function __construct()
-    {
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get(KeywordService::class);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -71,8 +55,8 @@ class AF_Populate extends Core_Script_Action
         //  + createFixedIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => refMember]
         //  + createAlgoIndexForAlgoNumeric : Numeric numeric, refContext, refIndicator, [refAxis => Selection_TextKey algo]
         //  + createAlgoNumericParameter : ref, label, refFamily
-        //  + createFixedCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => refMemberKeyword]
-        //  + createAlgoCoordinateForAlgoParameter : Parameter parameter, [refDimensionKeyword => Selection_TextKey algo]
+        //  + createFixedCoordinateForAlgoParameter : Parameter parameter, [refDimension => refMember]
+        //  + createAlgoCoordinateForAlgoParameter : Parameter parameter, [refDimension => Selection_TextKey algo]
         //  + createAlgoSelectTextkeyExpression : ref, expression
         //  + createAlgoSelectTextkeyContextValue : ref, name, defaultValue
         //  + createAlgoConditionElementary : Component input, ref
@@ -508,15 +492,14 @@ class AF_Populate extends Core_Script_Action
 
     /**
      * @param Algo_Model_Numeric_Parameter $parameter
-     * @param array $indexes Sous la forme [$reDimensionKeyword =» $refMemberKeyword]
+     * @param array $indexes Sous la forme [$reDimension => $refMember]
      */
     protected function createFixedCoordinateForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, $indexes)
     {
-        foreach ($indexes as $refDimensionKeyword => $refMemberKeyword) {
-            $dimension = $parameter->getFamily()->getDimensionByMeaning(Meaning::loadByRef($refDimensionKeyword));
+        foreach ($indexes as $dimensionRef => $memberRef) {
             $index = new Algo_Model_ParameterCoordinate_Fixed();
-            $index->setDimension($dimension);
-            $index->setMember($dimension->getMember($this->keywordService->get($refMemberKeyword)));
+            $index->setDimensionRef($dimensionRef);
+            $index->setMember($memberRef);
             $index->setAlgoParameter($parameter);
             $index->save();
         }
@@ -528,11 +511,10 @@ class AF_Populate extends Core_Script_Action
      */
     protected function createAlgoCoordinateForAlgoParameter(Algo_Model_Numeric_Parameter $parameter, $indexes)
     {
-        foreach ($indexes as $refDimensionKeyword => $algo) {
-            $dimension = $parameter->getFamily()->getDimensionByMeaning(Meaning::loadByRef($refDimensionKeyword));
+        foreach ($indexes as $dimensionRef => $algo) {
             $index = new Algo_Model_ParameterCoordinate_Algo();
-            $index->setDimension($dimension);
-            $index->setAlgoKeyword($algo);
+            $index->setDimensionRef($dimensionRef);
+            $index->setSelectionAlgo($algo);
             $index->setAlgoParameter($parameter);
             $index->save();
         }

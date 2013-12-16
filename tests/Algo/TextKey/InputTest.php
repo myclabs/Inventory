@@ -5,17 +5,12 @@
  * @author hugo.charbonnier
  * @package Algo
  */
-use Keyword\Domain\Keyword;
 
 /**
  * Creation of the Test Suite.
- *
- * @package Algo
- * @subpackage Keyword
  */
 class TextKey_InputTest
 {
-
     /**
      * Creation of the test suite
      */
@@ -58,7 +53,6 @@ class TextKey_InputTest
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
     }
-
 }
 
 /**
@@ -67,7 +61,6 @@ class TextKey_InputTest
  */
 class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -87,13 +80,6 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
         foreach (Algo_Model_Algo::loadList() as $o) {
             $o->delete();
         }
-        /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        if ($keywordRepository->count() > 0) {
-            foreach ($keywordRepository->getAll() as $o) {
-                $keywordRepository->remove($o);
-            }
-        }
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
         }
@@ -103,7 +89,7 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
     /**
      * Set up
      */
-    function setUp()
+    public function setUp()
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $this->entityManager = $entityManagers['default'];
@@ -113,7 +99,7 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
     /**
      * @return Algo_Model_Selection_TextKey_Input $o
      */
-    function testConstruct()
+    public function testConstruct()
     {
         $set = new Algo_Model_Set();
         $set->save();
@@ -130,13 +116,12 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
         return $o;
     }
 
-
     /**
      * @depends testConstruct
      * @param Algo_Model_Selection_TextKey_Input $o
      * @return Algo_Model_Selection_TextKey_Input
      */
-    function testLoad(Algo_Model_Selection_TextKey_Input $o)
+    public function testLoad(Algo_Model_Selection_TextKey_Input $o)
     {
         $this->entityManager->clear();
         /** @var $oLoaded Algo_Model_Selection_TextKey_Input */
@@ -153,31 +138,32 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param Algo_Model_Selection_TextKey_Input $o
      */
-    function testDelete(Algo_Model_Selection_TextKey_Input $o)
+    public function testDelete(Algo_Model_Selection_TextKey_Input $o)
     {
         $o->delete();
-		$o->getSet()->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $o->getSet()->delete();
+        $this->assertEquals(
+            \Doctrine\ORM\UnitOfWork::STATE_REMOVED,
+            $this->entityManager->getUnitOfWork()->getEntityState($o)
+        );
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(
+            \Doctrine\ORM\UnitOfWork::STATE_NEW,
+            $this->entityManager->getUnitOfWork()->getEntityState($o)
+        );
     }
-
 }
 
 
 /**
  * TextKey_InputLogiqueMetierTest
- * @package Algo
  */
 class TextKey_InputLogiqueMetierTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * Test de la méthode execute()
      */
-    function testExecute1()
+    public function testExecute1()
     {
         $algoTextKeyInput = new Algo_Model_Selection_TextKey_Input();
         $algoTextKeyInput->setInputRef('myInput');
@@ -203,7 +189,7 @@ class TextKey_InputLogiqueMetierTest extends PHPUnit_Framework_TestCase
      * Input non trouvé
      * @expectedException Core_Exception_NotFound
      */
-    function testExecute2()
+    public function testExecute2()
     {
         $algoTextKeyInput = new Algo_Model_Selection_TextKey_Input();
         $algoTextKeyInput->setInputRef('myInput');
@@ -217,5 +203,4 @@ class TextKey_InputLogiqueMetierTest extends PHPUnit_Framework_TestCase
         /** @var $inputSet Algo_Model_InputSet */
         $algoTextKeyInput->execute($inputSet);
     }
-
 }

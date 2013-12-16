@@ -1,17 +1,11 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  cyril.perraud
- * @package Algo
- */
-use Keyword\Application\Service\KeywordDTO;
 
 /**
- * @package Algo
+ * @author matthieu.napoli
+ * @author cyril.perraud
  */
 class Algo_Model_ParameterCoordinate_Algo extends Algo_Model_ParameterCoordinate
 {
-
     /**
      * Algo Keyword associé
      * @var Algo_Model_Selection_TextKey
@@ -22,28 +16,27 @@ class Algo_Model_ParameterCoordinate_Algo extends Algo_Model_ParameterCoordinate
      * Renvoi le ref de keyword calculé par l'Algo_Model_ParameterCoordinate_Algo associé
      * {@inheritdoc}
      */
-    public function getMemberKeyword(Algo_Model_InputSet $inputSet = null)
+    public function getMember(Algo_Model_InputSet $inputSet = null)
     {
         if (!$inputSet) {
             throw new Core_Exception_InvalidArgument("The InputSet can't be null");
         }
-        return new KeywordDTO($this->algoKeyword->execute($inputSet));
+        return $this->algoKeyword->execute($inputSet);
     }
 
     /**
      * @return Algo_Model_Selection_TextKey
      */
-    public function getAlgoKeyword()
+    public function getSelectionAlgo()
     {
         return $this->algoKeyword;
     }
 
     /**
-     * @param Algo_Model_Selection_TextKey $algoKeyword
+     * @param Algo_Model_Selection_TextKey $selectionAlgo
      */
-    public function setAlgoKeyword(Algo_Model_Selection_TextKey $algoKeyword)
+    public function setSelectionAlgo(Algo_Model_Selection_TextKey $selectionAlgo)
     {
-        $this->algoKeyword = $algoKeyword;
+        $this->algoKeyword = $selectionAlgo;
     }
-
 }

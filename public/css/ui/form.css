@@ -249,3 +249,8 @@
 .input-prepend .select2-offscreen {
     position: absolute;
 }
+
+/* Form dans un popup : correction d'un margin en trop */
+.modal>.form-horizontal {
+    margin-bottom: 0;
+}

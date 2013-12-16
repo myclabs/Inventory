@@ -173,7 +173,7 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
             $calc->executeExpression($valueProvider);
             $this->fail("Erreur d'exception");
         } catch (Core_Exception_InvalidArgument $e) {
-            $this->assertEquals($e->getMessage(), 'Array of components is not coherent.');
+            $this->assertEquals('Calculation expects an array of Calc_UnitValue, Unit\UnitAPI given', $e->getMessage());
         }
     }
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
 
 use Exec\Execution\Select;
 use Exec\Provider\ValueInterface;
@@ -12,11 +6,12 @@ use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 
 /**
- * @package Algo
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
 class Algo_Model_Selection_Main extends Algo_Model_Selection implements ValueInterface
 {
-
     /**
      * @var string|null
      */
@@ -161,12 +156,11 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements ValueInt
         $indicatorUnit = $algo->getContextIndicator()->getIndicator()->getUnit();
         try {
             if (!$algoUnit->isEquivalent($indicatorUnit)) {
-                $message = __('Algo', 'configControl', 'algoUnitIncompatibleWithIndicator',
-                              [
-                              'REF_OPERAND'    => $ref,
-                              'ALGO_UNIT'      => $algoUnit->getSymbol(),
-                              'INDICATOR_UNIT' => $indicatorUnit->getSymbol(),
-                              ]);
+                $message = __('Algo', 'configControl', 'algoUnitIncompatibleWithIndicator', [
+                    'REF_OPERAND'    => $ref,
+                    'ALGO_UNIT'      => $algoUnit->getSymbol(),
+                    'INDICATOR_UNIT' => $indicatorUnit->getSymbol(),
+                ]);
                 $errors[] = new Algo_ConfigError($message, true);
             }
         } catch (Exception $e) {
@@ -262,5 +256,4 @@ class Algo_Model_Selection_Main extends Algo_Model_Selection implements ValueInt
         }
         return $subAlgos;
     }
-
 }

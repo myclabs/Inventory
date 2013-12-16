@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="addMemberListHelp">
+            <tuv xml:lang="fr">
+                <seg>
+                    Le format attendu est un membre par ligne : identifiant suivi d'une virgule et du libellé.
+                    Exemple :
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    The expected format is one member per line: the identifier followed by a comma and the label.
+                    Example:
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="addMemberListExample">
+            <tuv xml:lang="fr">
+                <seg>membre1, Libellé du membre 1
+membre2, Libellé du membre 2</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>member1, Label of member 1
+member2, Label of member 2</seg>
+            </tuv>
+        </tu>
+        <tu tuid="membersFound">
+            <tuv xml:lang="fr">
+                <seg>membre(s) prêts à être ajoutés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>member(s) ready to be created</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidMembersInput">
+            <tuv xml:lang="fr">
+                <seg>Saisie non reconnue, merci de respecter le format précisé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Unrecognized input, please follow the expected format.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="errorOneCommaPerLine">
+            <tuv xml:lang="fr">
+                <seg>Chaque ligne doit contenir une virgule séparant l'identifiant du libellé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Each line should contain a comma separating the identifier from the label.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="errorInvalidRef">
+            <tuv xml:lang="fr">
+                <seg>L'identifiant ligne {line} doit être non vide et utiliser uniquement les caractères "a..z" (minuscules), "0..9", et "_".</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The identifier line {line} must be non-empty and contain only the characters "a..z" (lower case), "0..9", and "_".</seg>
+            </tuv>
+        </tu>
+        <tu tuid="errorInvalidLabel">
+            <tuv xml:lang="fr">
+                <seg>Le libellé ligne {line} ne peut pas être vide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The label line {line} cannot be empty.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="importSuccessful">
+            <tuv xml:lang="fr">
+                <seg>[NUMBER] membres ont été ajoutés.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>[NUMBER] members have been added.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="dimensionHasMember">
+            <tuv xml:lang="fr">
+                <seg>Le membre [REF] existe déjà dans la dimension.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The member [REF] already exists in that dimension.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

@@ -33,13 +33,4 @@ class Techno_TranslateController extends Core_Controller
     public function familiesDocumentationAction()
     {
     }
-
-    /**
-     * Liste des documentation des familles en mode traduction.
-     *
-     * @Secure("editTechno")
-     */
-    public function elementsDocumentationAction()
-    {
-    }
 }

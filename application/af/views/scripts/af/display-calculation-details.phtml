@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
-
 /** @var $af AF_Model_AF */
 $af = $this->af;
 /** @var $inputSet AF_Model_InputSet_Primary|null */
@@ -124,8 +119,6 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
     $view = Zend_Controller_Action_HelperBroker::getStaticHelper('Layout')->getView();
 
     $container = Zend_Registry::get('container');
-    /** @var Keyword\Application\Service\KeywordService $keywordService */
-    $keywordService = $container->get('Keyword\Application\Service\KeywordService');
     $locale = Core_Locale::loadDefault();
 
     $title = $algo->getRef();
@@ -170,14 +163,18 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
         $collapse->body .= '</p>';
         $collapse->body .= '<ul>';
         foreach ($algo->getParameterCoordinates() as $parameterCoordinate) {
-            $memberKeyword = $parameterCoordinate->getMemberKeyword($inputSet);
-            if ($keywordService->exists($memberKeyword)) {
-                $memberKeyword = $keywordService->get($memberKeyword->getRef());
+            $memberRef = $parameterCoordinate->getMember($inputSet);
+            try {
+                $dimension = $family->getDimension($parameterCoordinate->getDimensionRef());
+                $member = $dimension->getMember($memberRef);
+                $dimensionLabel = $dimension->getLabel();
+                $memberLabel = $member->getLabel();
+            } catch (Core_Exception_NotFound $e) {
+                $dimensionLabel = $parameterCoordinate->getDimensionRef();
+                $memberLabel = $memberRef;
             }
             $collapse->body .= '<li>';
-            $collapse->body .= ucfirst($parameterCoordinate->getDimension()->getLabel())
-                . __('UI', 'other', ':')
-                . $memberKeyword->getLabel();
+            $collapse->body .= ucfirst($dimensionLabel) . __('UI', 'other', ':') . $memberLabel;
             $collapse->body .= '</li>';
         }
         $collapse->body .= '</ul>';
