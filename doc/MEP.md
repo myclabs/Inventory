@@ -1,6 +1,17 @@
 # Mise en production
 
 
+## 2.10
+
+- Déployer normalement l'application (avec build update)
+
+- Exécuter le script de migration
+
+```
+scripts/migration/2.10/migrate.php
+```
+
+
 ## 2.9
 
 - Installer memcached et le plugin New Relic (cf. projet server)
