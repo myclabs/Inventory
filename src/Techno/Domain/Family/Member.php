@@ -6,7 +6,7 @@ use Core_Exception_InvalidArgument;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
 use Core_Strategy_Ordered;
-use Keyword\Application\Service\KeywordDTO;
+use Core_Tools;
 
 /**
  * Membre d'une dimension.
@@ -24,10 +24,14 @@ class Member extends Core_Model_Entity
     protected $id;
 
     /**
-     * Mot-clé associé
-     * @var KeywordDTO
+     * @var string
      */
-    protected $keyword;
+    protected $ref;
+
+    /**
+     * @var string
+     */
+    protected $label;
 
     /**
      * @var Dimension
@@ -44,12 +48,16 @@ class Member extends Core_Model_Entity
 
     /**
      * @param Dimension  $dimension
-     * @param KeywordDTO $keyword
+     * @param string     $ref
+     * @param string     $label
      */
-    public function __construct(Dimension $dimension, KeywordDTO $keyword)
+    public function __construct(Dimension $dimension, $ref, $label)
     {
-        $this->keyword = $keyword;
         $this->dimension = $dimension;
+        Core_Tools::checkRef($ref);
+        $this->ref = $ref;
+        $this->label = $label;
+
         // Ajout réciproque à la dimension
         $dimension->addMember($this);
     }
@@ -64,11 +72,11 @@ class Member extends Core_Model_Entity
     }
 
     /**
-     * @param KeywordDTO $keyword
+     * @param string $ref
      */
-    public function setKeyword(KeywordDTO $keyword)
+    public function setRef($ref)
     {
-        $this->keyword = $keyword;
+        $this->ref = $ref;
 
         // Update les coordonnées des cellules
         foreach ($this->cells as $cell) {
@@ -77,19 +85,19 @@ class Member extends Core_Model_Entity
     }
 
     /**
-     * @return KeywordDTO
-     */
-    public function getKeyword()
-    {
-        return $this->keyword;
-    }
-
-    /**
      * @return string
      */
     public function getRef()
     {
-        return $this->keyword->getRef();
+        return $this->ref;
+    }
+
+    /**
+     * @param string $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
     }
 
     /**
@@ -97,7 +105,7 @@ class Member extends Core_Model_Entity
      */
     public function getLabel()
     {
-        return $this->keyword->getLabel();
+        return $this->label;
     }
 
     /**

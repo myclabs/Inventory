@@ -161,14 +161,6 @@ if ($connectedUser) {
                     'name' => __('Techno', 'familyList', 'familyListConsult'),
                     'url' => 'techno/family/list'
                 ],
-                [
-                    'name' => __('Techno', 'name', 'meanings'),
-                    'url' => 'techno/meaning/list'
-                ],
-                [
-                    'name' => __('UI', 'name', 'control'),
-                    'url' => 'techno/validation/results'
-                ],
             ],
         ];
     } else {
@@ -183,30 +175,6 @@ if ($connectedUser) {
                 [
                     'name' => __('Techno', 'familyList', 'familyList'),
                     'url' => 'techno/family/list'
-                ],
-            ]
-        ];
-    }
-    if ($isAllowedToEditRepository) {
-        $subMenuRepository[] = [
-            'name' => __('Keyword', 'menu', 'semanticResources'),
-            'url' => '#',
-            'submenu' => [
-                [
-                    'name' => __('Keyword', 'menu', 'keywordGraph'),
-                    'url' => 'keyword/graph/root'
-                ],
-                [
-                    'name' => __('Keyword', 'menu', 'keywordList'),
-                    'url' => 'keyword/keyword/manage'
-                ],
-                [
-                    'name' => __('Keyword', 'relation', 'pageTitle'),
-                    'url' => 'keyword/association/manage'
-                ],
-                [
-                    'name' => __('Keyword', 'name', 'predicates'),
-                    'url' => 'keyword/predicate/manage'
                 ],
             ]
         ];
@@ -358,29 +326,6 @@ if ($connectedUser) {
                     [
                         'name' => __('Techno', 'translate', 'familyDocumentations'),
                         'url' => 'techno/translate/families-documentation'
-                    ],
-                    [
-                        'name' => __('Techno', 'translate', 'parameterDocumentations'),
-                        'url' => 'techno/translate/elements-documentation'
-                    ],
-                ]
-            ];
-
-            $subMenuTranslation[] = [
-                'name' => __('Keyword', 'menu', 'semanticResources'),
-                'url' => '#',
-                'submenu' => [
-                    [
-                        'name' => __('Keyword', 'name', 'keywords'),
-                        'url' => 'keyword/translate/keywords'
-                    ],
-                    [
-                        'name' => __('Keyword', 'translate', 'directPredicates'),
-                        'url' => 'keyword/translate/predicates-label'
-                    ],
-                    [
-                        'name' => __('Keyword', 'translate', 'reversePredicates'),
-                        'url' => 'keyword/translate/predicates-reverselabel'
                     ],
                 ]
             ];

@@ -1,29 +1,17 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Techno
- */
-
-use Techno\Domain\Element\CoeffElement;
-use Techno\Domain\Element\ProcessElement;
 
 $locale = Core_Locale::loadDefault();
 
-/** @var $element CoeffElement|ProcessElement */
-$element = $this->element;
+$coordinates = $this->coordinates;
 
-if ($element instanceof ProcessElement) {
-    $title = __('Techno', 'name', 'emissionFactor');
-} else {
-    $title = __('Techno', 'element', 'element');
-}
+/** @var $value Calc_Value */
+$value = $this->value;
+
+$title = __('Techno', 'element', 'element');
 ?>
 
 <script type="text/javascript">
     $('#element_edit').children('div.modal-header').children('h3').html(<?=json_encode($title)?>);
-    $('#element_delete').children('div.modal-footer').children('button.btn-primary').attr('data-element', <?=$element->getId()?>);
-    $('#element_delete').children('div.modal-footer').children('a.btn').attr('data-element', <?=$element->getId()?>);
-    $('#element_delete').children('div.modal-footer').children('a.btn').attr('href', 'techno/element/details/id/<?=$element->getId()?>');
 </script>
 
 <?php
@@ -31,34 +19,27 @@ $editForm = new UI_Form('element_editForm');
 $editForm->setAction('techno/element/edit-submit');
 $editForm->setAjax(true, 'elementEditSuccess');
 
-//// Unité
-//$unitField = new UI_Form_Element_Text('unit');
-//$unitField->setLabel(__('Unit', 'name', 'unit'));
-//$unitField->setValue($element->getUnit()->getRef());
-//$editForm->addElement($unitField);
-
 // Valeur
 $digitalValueField = new UI_Form_Element_Text('digitalValue');
 $digitalValueField->setLabel(__('UI', 'name', 'value'));
-$digitalValueField->setValue($locale->formatNumberForInput($element->getValue()->getDigitalValue()));
+$digitalValueField->setValue($locale->formatNumberForInput($value->getDigitalValue()));
 $digitalValueField->setRequired(true);
 $editForm->addElement($digitalValueField);
 
 // Incertitude
 $uncertaintyField = new UI_Form_Element_Text('uncertainty');
 $uncertaintyField->setLabel(__('UI', 'name', 'uncertainty'));
-$uncertaintyField->setValue($locale->formatNumberForInput($element->getValue()->getRelativeUncertainty()));
+$uncertaintyField->setValue($locale->formatNumberForInput($value->getRelativeUncertainty()));
 $editForm->addElement($uncertaintyField);
 
-//// Documentation
-//$documentationField = new UI_Form_Element_Textarea('documentation');
-//$documentationField->setLabel(__('UI', 'name', 'documentation'));
-//$documentationField->setValue($element->getDocumentation());
-//$documentationField->setAttrib('rows', 7);
-//$editForm->addElement($documentationField);
+// Famille
+$familyField = new UI_Form_Element_Hidden('idFamily');
+$familyField->setValue($this->family->getId());
+$editForm->addElement($familyField);
 
-// Valeur
-$elementIdField = new UI_Form_Element_Hidden('id');
-$elementIdField->setValue($element->getId());
-$editForm->addElement($elementIdField);
+// Coordonnées
+$coordinatesField = new UI_Form_Element_Hidden('coordinates');
+$coordinatesField->setValue(json_encode($coordinates));
+$editForm->addElement($coordinatesField);
+
 echo $editForm->render();

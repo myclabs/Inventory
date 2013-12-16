@@ -1,25 +1,16 @@
 <?php
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
-use Keyword\Application\Service\KeywordService;
 use Techno\Domain\Family\Family;
-use Techno\Domain\Meaning;
 use Techno\Domain\Category;
 
 /**
  * Controleur des familles
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
 class Techno_FamilyController extends Core_Controller
 {
     use UI_Controller_Helper_Form;
-
-    /**
-     * @Inject
-     * @var KeywordService
-     */
-    protected $keywordService;
 
     /**
      * Arbre des familles en édition
@@ -95,77 +86,6 @@ class Techno_FamilyController extends Core_Controller
     }
 
     /**
-     * Détails d'une famille - Onglet Général
-     * AJAX
-     * @Secure("editTechno")
-     */
-    public function detailsMainTabAction()
-    {
-        $this->view->family = Family::load($this->getParam('id'));
-        $this->view->meanings = Meaning::loadList();
-        $this->view->keywords = $this->keywordService->getAll();
-        $this->_helper->layout()->disableLayout();
-    }
-
-    /**
-     * Détails d'une famille - Onglet Éléments
-     * AJAX
-     * @Secure("viewTechno")
-     */
-    public function detailsElementsTabAction()
-    {
-        $mode = $this->getParam('mode');
-        if (empty($mode)) {
-            $mode = 'consultation';
-        }
-        if ($mode == 'consultation') {
-            $this->view->edit = false;
-        } else {
-            $this->view->edit = true;
-        }
-        $this->view->mode = $mode;
-        $this->view->family = Family::load($this->getParam('id'));
-        $this->view->keywordService = $this->keywordService;
-        $this->_helper->layout()->disableLayout();
-    }
-
-    /**
-     * Détails d'une famille - Onglet Documentation
-     * AJAX
-     * @Secure("viewTechno")
-     */
-    public function detailsDocumentationTabAction()
-    {
-        $mode = $this->getParam('mode');
-        if (empty($mode)) {
-            $mode = 'consultation';
-        }
-        if ($mode == 'consultation') {
-            $this->view->edit = false;
-        } else {
-            $this->view->edit = true;
-        }
-        $this->view->family = Family::load($this->getParam('id'));
-        $this->_helper->layout()->disableLayout();
-    }
-
-    /**
-     * AJAX
-     * @Secure("editTechno")
-     */
-    public function submitDocumentationAction()
-    {
-        /** @var $family Family */
-        $family = Family::load($this->getParam('id'));
-        $formData = $this->getFormData('documentationForm');
-        $family->setDocumentation($formData->getValue('documentation'));
-        $family->save();
-        $this->entityManager->flush();
-        $this->setFormMessage(__('UI', 'message', 'updated'));
-        $this->sendFormResponse();
-    }
-
-    /**
      * Suppression d'une famille
      * AJAX
      * @Secure("editTechno")
@@ -175,16 +95,12 @@ class Techno_FamilyController extends Core_Controller
         $idFamily = $this->getParam('id');
         /** @var $family Family */
         $family = Family::load($idFamily);
-        if ($family->hasChosenElements()) {
-            throw new Core_Exception_User('Techno', 'familyDetail', 'cantDeleteFamily');
-        }
         $family->delete();
         $this->entityManager->flush();
         UI_Message::getInstance()->addMessage(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
         $this->sendJsonResponse([
-                                'message' => __('UI', 'message', 'deleted'),
-                                'type'    => 'success',
-                                ]);
+            'message' => __('UI', 'message', 'deleted'),
+            'type'    => 'success',
+        ]);
     }
-
 }

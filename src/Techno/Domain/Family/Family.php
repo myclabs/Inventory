@@ -6,6 +6,8 @@ use Closure;
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
+use Core_Model_Entity;
+use Core_Model_Entity_Translatable;
 use Core_Model_Query;
 use Core_Strategy_Ordered;
 use Core_Tools;
@@ -13,24 +15,29 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Techno\Domain\Category;
-use Techno\Domain\Component;
-use Techno\Domain\Meaning;
-use Techno\Domain\Tag;
+use Unit\UnitAPI;
 use Zend_Registry;
 
 /**
- * Famille abstraite.
+ * Famille de paramètres.
  *
  * @author simon.rieu
  * @author bertrand.ferry
  * @author maxime.fourt
+ * @author ronan.gorain
  * @author matthieu.napoli
  */
-abstract class Family extends Component
+class Family extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
+    use Core_Model_Entity_Translatable;
 
     const QUERY_REF = 'ref';
+
+    /**
+     * @var int
+     */
+    protected $id;
 
     /**
      * Identifiant textuel
@@ -62,16 +69,42 @@ abstract class Family extends Component
     protected $dimensions;
 
     /**
-     * Liste des tags communs
-     * @var Collection
+     * Référence de l'unité de base
+     * @var string
      */
-    protected $cellsCommonTags;
+    protected $refBaseUnit;
 
-    public function __construct()
+    /**
+     * Cache
+     * @var UnitAPI
+     */
+    protected $baseUnit;
+
+    /**
+     * Référence de l'unité du composant
+     * @var string
+     */
+    protected $refUnit;
+
+    /**
+     * Cache
+     * @var UnitAPI
+     */
+    protected $unit;
+
+    /**
+     * Documentation
+     * @var string
+     */
+    protected $documentation;
+
+    public function __construct($ref, $label)
     {
+        $this->setRef($ref);
+        $this->label = $label;
+
         $this->dimensions = new ArrayCollection();
         $this->cells = new ArrayCollection();
-        $this->cellsCommonTags = new ArrayCollection();
     }
 
     /**
@@ -95,11 +128,13 @@ abstract class Family extends Component
         // Vérifie le nombre de dimensions
         if (count($members) != count($this->getDimensions())) {
             throw new Core_Exception_InvalidArgument(
-                "The number of members given doesn't match the number of dimensions in the family");
+                "The number of members given doesn't match the number of dimensions in the family"
+            );
         }
         $criteria = Criteria::create();
         $hashKey = Cell::buildMembersHashKey($members);
         $criteria->where(Criteria::expr()->eq('membersHashKey', $hashKey));
+        /** @var Collection $matchingCells */
         $matchingCells = $this->cells->matching($criteria);
         if (count($matchingCells) >= 1) {
             return $matchingCells->first();
@@ -141,20 +176,21 @@ abstract class Family extends Component
     }
 
     /**
-     * Retourne un membre de la dimension en le recherchant par son mot-clé
-     * @param Meaning $meaning
+     * Retourne une dimension en la recherchant par son mot-clé
+     * @param string $dimensionRef
      * @return Dimension
      * @throws Core_Exception_NotFound La dimension est introuvable
      */
-    public function getDimensionByMeaning(Meaning $meaning)
+    public function getDimension($dimensionRef)
     {
         $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('meaning', $meaning));
+        $criteria->where(Criteria::expr()->eq('ref', $dimensionRef));
+        /** @var Collection $results */
         $results = $this->dimensions->matching($criteria);
         if (count($results) > 0) {
             return $results->first();
         }
-        throw new Core_Exception_NotFound("La dimension $meaning est introuvable dans la famille {$this->ref}");
+        throw new Core_Exception_NotFound("La dimension $dimensionRef est introuvable dans la famille {$this->ref}");
     }
 
     /**
@@ -199,43 +235,6 @@ abstract class Family extends Component
             // Reconstruit les cellules
             $this->buildCells();
         }
-    }
-
-    /**
-     * Retourne la liste des tags communs des cellules de la famille
-     * @return Collection|Tag[]
-     */
-    public function getCellsCommonTags()
-    {
-        return $this->cellsCommonTags;
-    }
-
-    /**
-     * Ajoute un élément à la liste des tags communs des cellules de la famille
-     * @param Tag $tag
-     */
-    public function addCellsCommonTag(Tag $tag)
-    {
-        $this->cellsCommonTags->add($tag);
-    }
-
-    /**
-     * Retourne true si le tags appartient à la liste des tags communs des cellules de la famille
-     * @param Tag $tag
-     * @return boolean
-     */
-    public function hasCellsCommonTag(Tag $tag)
-    {
-        return $this->cellsCommonTags->contains($tag);
-    }
-
-    /**
-     * Supprime l'élément de la liste des tags communs des cellules de la famille
-     * @param Tag $tag
-     */
-    public function removeCellsCommonTag(Tag $tag)
-    {
-        $this->cellsCommonTags->removeElement($tag);
     }
 
     /**
@@ -365,20 +364,6 @@ abstract class Family extends Component
     }
 
     /**
-     * @return bool True si des cellules de la famille ont des éléments choisis
-     */
-    public function hasChosenElements()
-    {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->gt('chosenElement', 0));
-        $cellsWithChosenElement = $this->cells->matching($criteria);
-        if ($cellsWithChosenElement->isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Retourne une famille par son référent textuel
      * @param string $ref
      * @throws \Core_Exception_NotFound
@@ -393,6 +378,101 @@ abstract class Family extends Component
             throw new Core_Exception_NotFound("No family was found with the ref '$ref'");
         }
         return current($list);
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param UnitAPI $baseUnit
+     */
+    public function setBaseUnit(UnitAPI $baseUnit)
+    {
+        $this->refBaseUnit = $baseUnit->getRef();
+        $this->baseUnit = $baseUnit;
+    }
+
+    /**
+     * @return UnitAPI
+     * @throws Core_Exception_UndefinedAttribute
+     */
+    public function getBaseUnit()
+    {
+        if ($this->refBaseUnit === null) {
+            throw new Core_Exception_UndefinedAttribute("The component base unit has not been defined");
+        }
+        // Lazy loading
+        if ($this->baseUnit === null) {
+            $this->baseUnit = new UnitAPI($this->refBaseUnit);
+        }
+        return $this->baseUnit;
+    }
+
+    /**
+     * @param UnitAPI $unit
+     * @throws Core_Exception_UndefinedAttribute
+     * @throws Core_Exception_InvalidArgument
+     */
+    public function setUnit(UnitAPI $unit)
+    {
+        if ($this->refBaseUnit === null) {
+            throw new Core_Exception_UndefinedAttribute("A base unit needs to be set for this component");
+        }
+        // Vérifie que l'unité est compatible avec l'unité de base
+        if (!$unit->isEquivalent($this->refBaseUnit)) {
+            throw new Core_Exception_InvalidArgument(
+                "The unit given is not compatible with the base unit of the component"
+            );
+        }
+        $this->refUnit = $unit->getRef();
+        $this->unit = $unit;
+    }
+
+    /**
+     * @return UnitAPI
+     * @throws Core_Exception_UndefinedAttribute
+     */
+    public function getUnit()
+    {
+        if ($this->refUnit === null) {
+            throw new Core_Exception_UndefinedAttribute("The component unit has not been defined");
+        }
+        // Lazy loading
+        if ($this->unit === null) {
+            $this->unit = new UnitAPI($this->refUnit);
+        }
+        return $this->unit;
+    }
+
+    /**
+     * Retourne l'unité de la valeur de l'élément (!= unité de l'élément)
+     * @return UnitAPI
+     * @throws Core_Exception_UndefinedAttribute
+     */
+    public function getValueUnit()
+    {
+        return $this->getUnit();
+    }
+
+    /**
+     * @param string $documentation
+     */
+    public function setDocumentation($documentation)
+    {
+        $this->documentation = $documentation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentation()
+    {
+        return $this->documentation;
     }
 
     /**

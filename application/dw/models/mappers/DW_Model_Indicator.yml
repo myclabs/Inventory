@@ -7,6 +7,7 @@ DW_Model_Indicator:
   gedmo:
     translation:
       locale: translationLocale
+      entity: \DW_Model_Translation_IndicatorTranslation
 
   id:
     id:

@@ -4,6 +4,6 @@ Algo_Model_ParameterCoordinate_Fixed:
   table: Algo_ParameterCoordinate_Fixed
 
   fields:
-    refMemberKeyword:
+    idMember:
       type: string
       nullable: true

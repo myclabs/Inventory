@@ -7,6 +7,7 @@ DW_Model_Cube:
   gedmo:
     translation:
       locale: translationLocale
+      entity: \DW_Model_Translation_CubeTranslation
 
   id:
     id:

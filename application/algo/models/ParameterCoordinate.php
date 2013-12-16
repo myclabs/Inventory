@@ -1,21 +1,16 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  cyril.perraud
- * @package Algo
- */
-use Keyword\Domain\Keyword;
-use Techno\Application\Service\TechnoService;
+
 use Techno\Domain\Family\Dimension;
 
 /**
  * Classe qui permet de récupérer les coordonnées d'un élément d'une famille
  * de techno à l'aide d'une liste de keyword et d'une ref de famille.
- * @package Algo
+ *
+ * @author matthieu.napoli
+ * @author cyril.perraud
  */
 abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
 {
-
     /**
      * @var int
      */
@@ -42,9 +37,9 @@ abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
     /**
      * Renvoie le membre de famille associé au parameterCoordinate
      * @param Algo_Model_InputSet|null $inputSet
-     * @return Keyword
+     * @return string
      */
-    public abstract function getMemberKeyword(Algo_Model_InputSet $inputSet = null);
+    public abstract function getMember(Algo_Model_InputSet $inputSet = null);
 
     /**
      * @return int
@@ -60,29 +55,24 @@ abstract class Algo_Model_ParameterCoordinate extends Core_Model_Entity
     public function getDimension()
     {
         if (!$this->dimension) {
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
-            /** @var TechnoService $technoService */
-            $technoService = $container->get('Techno\Application\Service\TechnoService');
-            $meaning = $technoService->getMeaning($this->refDimensionMeaning);
-            $this->dimension = $this->getAlgoParameter()->getFamily()->getDimensionByMeaning($meaning);
+            $this->dimension = $this->getAlgoParameter()->getFamily()->getDimension($this->refDimensionMeaning);
         }
         return $this->dimension;
     }
 
     /**
-     * @param Dimension $dimension
+     * @param string $dimensionRef
      */
-    public function setDimension(Dimension $dimension)
+    public function setDimensionRef($dimensionRef)
     {
-        $this->refDimensionMeaning = $dimension->getMeaning()->getKeyword()->getRef();
-        $this->dimension = $dimension;
+        $this->refDimensionMeaning = $dimensionRef;
+        $this->dimension = null;
     }
 
     /**
      * @return string
      */
-    public function getDimensionRefMeaning()
+    public function getDimensionRef()
     {
         return $this->refDimensionMeaning;
     }

@@ -3,9 +3,7 @@
 use Core\Autoloader;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
-use Keyword\Application\Service\KeywordService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
 use User\Application\Plugin\ACLPlugin;
 use User\Application\ViewHelper\IsAllowedHelper;
 
@@ -33,7 +31,6 @@ class Bootstrap extends Core_Bootstrap
             'User',
             'TEC',
             'Classif',
-            'Keyword',
             'Techno',
             'Doc',
             'DW',
@@ -137,17 +134,6 @@ class Bootstrap extends Core_Bootstrap
     {
         Type::addType(Calc_TypeMapping_Value::TYPE_NAME, Calc_TypeMapping_Value::class);
         Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, Calc_TypeMapping_UnitValue::class);
-    }
-
-    /**
-     * Initialise le mapping des types en BDD
-     */
-    protected function _initKeywordTypeMapping()
-    {
-        Type::addType(DoctrineKeywordType::TYPE_NAME, DoctrineKeywordType::class);
-        /** @var DoctrineKeywordType $doctrineKeyword */
-        $doctrineKeyword = Type::getType(DoctrineKeywordType::TYPE_NAME);
-        $doctrineKeyword->setKeywordService($this->container->get(KeywordService::class));
     }
 
     /**

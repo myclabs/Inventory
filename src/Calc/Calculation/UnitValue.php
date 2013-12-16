@@ -1,15 +1,9 @@
 <?php
+
 /**
  * @author valentin.claras
  * @author hugo.charbonnier
  * @author yoann.croizer
- * @package    Calc
- * @subpackage Calculation
- */
-
-/**
- * @package    Calc
- * @subpackage Calculation
  */
 class Calc_Calculation_UnitValue extends Calc_Calculation
 {
@@ -22,7 +16,11 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
     {
         foreach ($this->components as $component) {
             if (!($component['operand'] instanceof Calc_UnitValue)) {
-                throw new Core_Exception_InvalidArgument('Array of components is not coherent.');
+                throw new Core_Exception_InvalidArgument(sprintf(
+                    'Calculation expects an array of %s, %s given',
+                    Calc_UnitValue::class,
+                    is_object($component['operand']) ? get_class($component['operand']) : gettype($component['operand'])
+                ));
             }
         }
     }

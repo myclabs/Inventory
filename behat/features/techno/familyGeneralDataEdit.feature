@@ -9,7 +9,7 @@ Feature: Family general data edit feature
     Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
-    When I open tab "Général"
+    When I open collapse "Général"
   # Vérification du contenu des différents champs du formulaire "Général"
     And the "Libellé" field should contain "Famille test non vide"
     And the "Identifiant" field should contain "famille_test"
@@ -33,7 +33,7 @@ Feature: Family general data edit feature
   Scenario: Family edit general data scenario, incorrect input
     Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
-    When I open tab "Général"
+    When I open collapse "Général"
   # Libellé et identifiant et unité vides
     And I fill in "Libellé" with ""
     And I fill in "Identifiant" with ""
@@ -56,4 +56,3 @@ Feature: Family general data edit feature
     Then the field "Identifiant" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # TODO : modifier le message d'erreur pour préciser que le problème n'est pas que l'unité est invalide, mais qu'elle est incompatible avec l'unité initiale.
     And the field "Unité" should have error: "Merci de saisir un identifiant d'unité valide."
-

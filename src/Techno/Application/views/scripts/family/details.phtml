@@ -1,100 +1,49 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Techno
- */
+
 use Techno\Domain\Family\Family;
+
+UI_Form::addHeader();
+UI_Datagrid::addHeader();
+UI_TMD::addHeader();
 
 /** @var $family Family */
 $family = $this->family;
+
+if ($this->edit) {
+    $collapseGeneralData = new UI_HTML_Collapse('collapseGeneralData');
+    $collapseGeneralData->title = __('Techno', 'familyDetail', 'generalDataTitle');
+    $collapseGeneralData->foldedByDefault = true;
+    $collapseGeneralData->body = $this->partial('family/details/general-edit.phtml', [
+        'family' => $family,
+    ]);
+    $generalData = $collapseGeneralData->render();
+} else {
+    $generalData = $this->partial('family/details/general-view.phtml', [
+         'family' => $family,
+    ]);
+}
+
 ?>
 
 <div class="page-header">
     <h1><?=$this->escape($family->getLabel())?></h1>
 </div>
 
-
-<?php if (! $this->edit) : ?>
-
-    <div class="well">
-        <strong><?=__('UI', 'name', 'category') . __('UI', 'other', ':')?></strong>
-        <?php
-        $category = $family->getCategory();
-        if ($category) {
-            $categories = '';
-            while ($category) {
-                $categories = $category->getLabel() . ' / ' . $categories;
-                $category = $category->getParentCategory();
-            }
-            echo substr($categories, 0, -3);
-        } else {
-            echo '<span class="muted">'.__('UI', 'other', 'noneFem').'</span>';
-        }
-        ?>
-        | <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
-        <?=$family->getValueUnit()->getSymbol()?>
-        | <strong><?=__('Techno', 'name', 'tags') . __('UI', 'other', ':')?></strong>
-        <?php
-        $tags = [];
-        foreach ($family->getTags() as $tag) {
-            $tags[] = $tag->getValueLabel();
-        }
-        if (count($tags) > 0) {
-            echo implode(', ', $tags);
-        } else {
-            echo '<span class="muted">'.__('UI', 'other', 'none').'</span>';
-        }
-        ?>
-    </div>
-
-<?php endif; ?>
-
 <?php
-$tabView = new UI_Tab_View('container');
+echo $generalData;
 
-// Onglet "Général"
+// TMD
+$collapseTMD = new UI_HTML_Collapse('collapseTMD', __('UI', 'name', 'elements'));
+$collapseTMD->body = $this->partial('family/details/tmd.phtml', [
+    'family' => $family,
+    'edit'   => $this->edit,
+]);
+$collapseTMD->display();
+
+// Edition
 if ($this->edit) {
-    $mainTab = new UI_Tab('main');
-    $mainTab->label = __('UI', 'name', 'general');
-    $mainTab->dataSource = $this->url([
-                                      'action'     => 'details-main-tab',
-                                      'controller' => 'family',
-                                      'module'     => 'techno',
-                                      'id'         => $family->getId(),
-                                      ]);
-    $mainTab->useCache = false;
-    $tabView->addTab($mainTab);
+    $collapseEditDimensions = new UI_HTML_Collapse('collapseEditDimensions');
+    $collapseEditDimensions->title = __('Techno', 'name', 'dimensions');
+    $collapseEditDimensions->body = $this->partial('family/details/edit-dimensions.phtml', ['family' => $family]);
+    echo $collapseEditDimensions->render();
 }
-
-// Onglet "Éléments"
-$elementsTMDTab = new UI_Tab('tmd');
-$elementsTMDTab->label = __('UI', 'name', 'elements');
-$elementsTMDTab->active = true;
-$elementsTMDTab->dataSource = $this->url([
-                                         'action'     => 'details-elements-tab',
-                                         'controller' => 'family',
-                                         'module'     => 'techno',
-                                         'id'         => $family->getId(),
-                                         'mode'       => $this->mode,
-                                         ]);
-$elementsTMDTab->useCache = false;
-$tabView->addTab($elementsTMDTab);
-
-// Onglet "Documentation"
-$documentationTab = new UI_Tab('documentation');
-$documentationTab->label = __('UI', 'name', 'documentation');
-$documentationTab->dataSource = $this->url([
-                                         'action'     => 'details-documentation-tab',
-                                         'controller' => 'family',
-                                         'module'     => 'techno',
-                                         'id'         => $family->getId(),
-                                         'mode'       => $this->mode,
-                                         ]);
-$documentationTab->useCache = false;
-$tabView->addTab($documentationTab);
-
-$tabView->display();
-
-UI_Form::addHeader();
-UI_Datagrid::addHeader();
-UI_TMD::addHeader();

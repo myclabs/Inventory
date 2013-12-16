@@ -3,13 +3,29 @@
 
 ## 2.10
 
-- Déployer normalement l'application (avec build update)
+- Déployer normalement l'application **sans build update**
+
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/2.10/migrate.sql
+```
+
+- Faire le build update
+
+```
+php scripts/build/build.php update
+```
 
 - Exécuter le script de migration
 
 ```
 scripts/migration/2.10/migrate.php
 ```
+
+- Faire un rebuild de DW (pour regénérer les traductions)
+
+- Si il reste des traductions de DW dans `ext_translations`, les supprimer
 
 
 ## 2.9

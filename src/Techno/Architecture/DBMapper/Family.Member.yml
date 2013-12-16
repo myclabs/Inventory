@@ -10,9 +10,14 @@ Techno\Domain\Family\Member:
         strategy: AUTO
 
   fields:
-    keyword:
-      type: keyword_dto
+    ref:
+      type: string
       nullable: false
+    label:
+      type: string
+      nullable: false
+      gedmo:
+        - translatable
     position:
       type: integer
       nullable: false
@@ -34,7 +39,7 @@ Techno\Domain\Family\Member:
 
   uniqueConstraints:
     uniqueMembers:
-      columns: [idDimension, keyword]
+      columns: [ idDimension, ref ]
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

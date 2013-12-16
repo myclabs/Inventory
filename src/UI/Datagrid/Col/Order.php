@@ -328,7 +328,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             $complementaryFunction .= 'this.updateOrder'.$this->id.' = function(modif, index) {';
             $complementaryFunction .= $datagrid->id.'.StartLoading();';
 
-            $complementaryFunction .= 'var params = \'/index/\' + index + \'/column/'.$this->id.'/value/\' + modif;';
+            $complementaryFunction .= 'var params = \'index=\' + index + \'&column='.$this->id.'&value=\' + modif;';
             $complementaryFunction .= '$.post(';
             $complementaryFunction .= '\''.$datagrid->getActionUrl('updateelement').'\', ';
             $complementaryFunction .= 'params, ';

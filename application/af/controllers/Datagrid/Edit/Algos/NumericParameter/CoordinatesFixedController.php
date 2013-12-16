@@ -5,22 +5,13 @@
  */
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
-use Keyword\Application\Service\KeywordService;
 use Techno\Domain\Family\Dimension;
-use Techno\Domain\Family\Member;
 
 /**
  * @package AF
  */
 class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var KeywordService
-     */
-    protected $keywordService;
-
     /**
      * (non-PHPdoc)
      * @see UI_Controller_Datagrid::getelementsAction()
@@ -41,7 +32,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
                     // Si la dimension n'existe plus
                     $data['dimension'] = $this->cellList(null, __('AF', 'configTreatmentInvalidRef', 'dimension'));
                 }
-                $data['member'] = $coordinate->getMemberKeywordRef();
+                $data['member'] = $coordinate->getMember();
                 $this->addLine($data);
             }
         }
@@ -66,7 +57,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
             /** @var $dimension Dimension */
             $dimension = Dimension::load($idDimension);
             $coordinate = new Algo_Model_ParameterCoordinate_Fixed();
-            $coordinate->setDimension($dimension);
+            $coordinate->setDimensionRef($dimension->getRef());
             $coordinate->save();
             $algo->addParameterCoordinates($coordinate);
             $algo->save();
@@ -83,8 +74,6 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
      */
     public function updateelementAction()
     {
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
         /** @var $coordinate Algo_Model_ParameterCoordinate_Fixed */
         $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->update['index']);
         $newValue = $this->update['value'];
@@ -93,10 +82,8 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
                 if (empty($newValue)) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
-                /** @var $member Member */
-                $keyword = $this->keywordService->get($newValue);
-                $member = $coordinate->getDimension()->getMember($keyword);
-                $coordinate->setMember($member);
+                $member = $coordinate->getDimension()->getMember($newValue);
+                $coordinate->setMember($member->getRef());
                 $this->data = $newValue;
                 break;
         }
@@ -146,5 +133,4 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
         }
         $this->send();
     }
-
 }

@@ -13,6 +13,8 @@ Feature: Family consult feature
     And I should see "Catégorie contenant une famille / Sous-catégorie contenant une famille"
   # Affichage de l'unité
     And I should see "kg équ. CO2/t"
+  # Documentation
+    And I should see a "h1:contains('Documentation de la famille test')" element
   # En-têtes de dimensions commencent par une majuscule
     And I should see "Combustible"
     And I should see "Processus"
@@ -23,10 +25,6 @@ Feature: Family consult feature
     And I should see "12 300 ± 15 %" in the "#elements-charbon-combustion" element
   # Affichage cellules vides
     And I should see "-" in the "#elements-gaz_naturel-amont_combustion" element
-  # Onglet "Documentation"
-    When I open tab "Documentation"
-    Then I should see a "#container_documentation h1:contains('Documentation de la famille test')" element
-
 
   @javascript
   Scenario: Empty family consult scenario
@@ -34,6 +32,5 @@ Feature: Family consult feature
     And I wait for the page to finish loading
     Then I should see "Famille test vide"
     And I should see "Aucune donnée à afficher."
-  # Onglet "Documentation"
-    When I open tab "Documentation"
-    Then I should see "Il n'y a aucune documentation pour cette famille."
+  # Documentation
+    And I should see "Il n'y a aucune documentation pour cette famille."

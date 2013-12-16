@@ -1,10 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  thibaud.rolland
- * @package Algo
- */
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,12 +7,12 @@ use Techno\Domain\Family\Family;
 use Unit\UnitAPI;
 
 /**
- * @package    Algo
- * @subpackage Numeric
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author thibaud.rolland
  */
 class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
 {
-
     /**
      * @var string
      */
@@ -42,27 +36,31 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
     /**
      * Exécution de l'algorithme
      * @param Algo_Model_InputSet $inputSet
+     * @throws Algo_Model_ExecutionException No value was found for the parameter and the coordinates
      * @return Calc_UnitValue
      */
     public function execute(Algo_Model_InputSet $inputSet)
     {
         $coordinates = [];
         foreach ($this->getParameterCoordinates() as $parameterCoordinate) {
-            $dimensionRef = $parameterCoordinate->getDimension()->getMeaning()->getKeyword()->getRef();
-            $coordinates[$dimensionRef] = $parameterCoordinate->getMemberKeyword($inputSet);
+            $dimensionRef = $parameterCoordinate->getDimensionRef();
+            $coordinates[$dimensionRef] = $parameterCoordinate->getMember($inputSet);
         }
 
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
         /** @var TechnoService $technoService */
-        $technoService = $container->get('Techno\Application\Service\TechnoService');
+        $technoService = $container->get(TechnoService::class);
 
         $value = $technoService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
 
         if (!$value) {
-            throw new Algo_Model_ExecutionException("No value was found for parameter $this->familyRef"
-                . " and coordinates " . implode(', ', $coordinates)
-                . " in algorithm $this->ref");
+            throw new Algo_Model_ExecutionException(sprintf(
+                'No value was found for parameter %s and coordinates %s in algorithm %s',
+                $this->familyRef,
+                implode(', ', $coordinates),
+                $this->ref
+            ));
         }
 
         return $value;
@@ -86,11 +84,10 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
         } catch (Core_Exception_NotFound $e) {
             $configError = new Algo_ConfigError();
             $configError->isFatal(true);
-            $configError->setMessage(__('Algo', 'configControl', 'invalidFamily',
-                                        [
-                                        'REF_ALGO' => $this->ref,
-                                        'REF_FAMILY' => $this->familyRef
-                                        ]), true);
+            $configError->setMessage(__('Algo', 'configControl', 'invalidFamily', [
+                'REF_ALGO' => $this->ref,
+                'REF_FAMILY' => $this->familyRef
+            ]), true);
             $errors[] = $configError;
             return $errors;
         }
@@ -109,11 +106,10 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
             if (! $match) {
                 $configError = new Algo_ConfigError();
                 $configError->isFatal(true);
-                $configError->setMessage(__('Algo', 'configControl', 'missingCoordinate',
-                                        [
-                                        'REF_ALGO' => $this->ref,
-                                        'REF_DIMENSION' => $dimension->getLabel()
-                                        ]), true);
+                $configError->setMessage(__('Algo', 'configControl', 'missingCoordinate', [
+                    'REF_ALGO' => $this->ref,
+                    'REF_DIMENSION' => $dimension->getLabel()
+                ]), true);
                 $errors[] = $configError;
             }
         }
@@ -123,11 +119,10 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
             } catch (Core_Exception_NotFound $e) {
                 $configError = new Algo_ConfigError();
                 $configError->isFatal(true);
-                $configError->setMessage(__('Algo', 'configControl', 'invalidDimension',
-                                        [
-                                        'REF_ALGO' => $this->ref,
-                                        'REF_DIMENSION' => $coordinate->getDimensionRefMeaning()
-                                        ]), true);
+                $configError->setMessage(__('Algo', 'configControl', 'invalidDimension', [
+                    'REF_ALGO' => $this->ref,
+                    'REF_DIMENSION' => $coordinate->getDimensionRef()
+                ]), true);
                 $errors[] = $configError;
             }
         }
@@ -150,7 +145,7 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
         /** @var \DI\Container $container */
         $container = Zend_Registry::get('container');
         /** @var TechnoService $technoService */
-        $technoService = $container->get('Techno\Application\Service\TechnoService');
+        $technoService = $container->get(TechnoService::class);
 
         return $technoService->getFamily($this->familyRef);
     }
@@ -213,5 +208,4 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
     {
         return $this->getFamily()->getValueUnit();
     }
-
 }

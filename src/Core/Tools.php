@@ -63,6 +63,25 @@ abstract class Core_Tools
     }
 
     /**
+     * Génère un ref aléatoire. Utile uniquement pour les tests.
+     *
+     * @param int $count Nombre de caractères de la chaine générée.
+     *
+     * @return string Chaine de caractère.
+     */
+    public static function generateRef($count = 10)
+    {
+        $chars = "abcdefghijklmnopqrstuvwxyz";
+        $charsLength = mb_strlen($chars);
+        srand((double) microtime() * 1000000);
+        $str = '';
+        for ($i = 0; $i < $count; $i++) {
+            $str .= $chars[rand(0, $charsLength - 1)];
+        }
+        return $str;
+    }
+
+    /**
      * Vérifie qu'une chaîne donnée remplit les critères d'une référence.
      *
      * @param string $ref
