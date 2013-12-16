@@ -1226,36 +1226,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Renvoi les derniers commentaires pour cette cellule et ses sous-cellules.
-     *
-     * @param int $count
-     * @return Orga_Model_InputComment[]
-     */
-    public function getInputSetLatestComments($count)
-    {
-        // Ce code est un peu lourdingue, mais bon.
-        // Transforme les Social_Model_Comment en Orga_Model_InputComment
-        $comments = $this->socialCommentsForAFInputSetPrimary->map(
-            function (Social_Model_Comment $comment) {
-                return new Orga_Model_InputComment($this, $comment);
-            }
-        );
-        /** @var \Doctrine\Common\Collections\Selectable|Collection $comments */
-        // Ajoute à la collection les commentaires des sous-cellules
-        foreach ($this->getChildCells() as $subCell) {
-            foreach ($subCell->getSocialCommentsForInputSetPrimary() as $comment) {
-                $comments->add(new Orga_Model_InputComment($subCell, $comment));
-            }
-        }
-
-        // Trie par date et garde les X derniers seulement
-        $criteria = Criteria::create();
-        $criteria->orderBy(['creationDate' => Criteria::DESC]);
-        $criteria->setMaxResults($count);
-        return $comments->matching($criteria);
-    }
-
-    /**
      * Créé le Organization pour la simulation.
      *
      * @return int Identifiant unique du Organization.

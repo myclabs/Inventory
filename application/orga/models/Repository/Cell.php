@@ -269,4 +269,30 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
         );
     }
 
+    /**
+     * Retourne les derniers commentaires pour la cellule et ses sous-cellules.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param int             $count
+     *
+     * @return Orga_Model_InputComment[]
+     */
+    public function getLatestComments(Orga_Model_Cell $cell, $count)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('comment')
+            ->from('Social_Model_Comment', 'comment')
+            ->from('Orga_Model_Cell', 'cell')
+            ->where('comment MEMBER OF cell.socialCommentsForAFInputSetPrimary')
+            ->orderBy('comment.creationDate', 'DESC');
+        $qb->setMaxResults($count);
+
+        $this->addChildCellsConditionsToQueryBuilder($qb, $cell, 'cell');
+
+        $comments = $qb->getQuery()->getResult();
+
+        return array_map(function (Social_Model_Comment $comment) use ($cell) {
+            return new Orga_Model_InputComment($cell, $comment);
+        }, $comments);
+    }
 }

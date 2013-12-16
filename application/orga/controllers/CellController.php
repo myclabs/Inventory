@@ -362,6 +362,7 @@ class Orga_CellController extends Core_Controller
      */
     public function viewHistoryAction()
     {
+        // TODO wat?
         session_write_close();
 
         $idCell = $this->getParam('idCell');
@@ -374,14 +375,13 @@ class Orga_CellController extends Core_Controller
 
         $events = [];
         foreach ($this->entryRepository->findLatestForOrganizationContext($context, 10) as $entry) {
-            $eventText = __('Orga', 'auditTrail', $entry->getEventName(),
-                [
-                    'INPUT' => '<a href="orga/cell/input/idCell/' . $entry->getContext()->getCell()->getId() . '/fromIdCell/' . $cell->getId() . '/">'
-                                    . $entry->getContext()->getCell()->getLabel()
-                                . '</a>',
-                    'USER' => '<b>'.$entry->getUser()->getName().'</b>'
-                ]
-            );
+            $eventText = __('Orga', 'auditTrail', $entry->getEventName(), [
+                'INPUT' => '<a href="orga/cell/input/idCell/' . $entry->getContext()->getCell()->getId()
+                                . '/fromIdCell/' . $cell->getId() . '/">'
+                                . $entry->getContext()->getCell()->getLabel()
+                            . '</a>',
+                'USER' => '<b>'.$entry->getUser()->getName().'</b>'
+            ]);
 
             $date = $locale->formatDate($entry->getDate());
             $time = $locale->formatTime($entry->getDate());
@@ -399,20 +399,24 @@ class Orga_CellController extends Core_Controller
      */
     public function viewCommentsAction()
     {
+        // TODO wat?
         session_write_close();
 
-        $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+
+        /** @var Orga_Model_Repository_Cell $cellRepository */
+        $cellRepository = $this->entityManager->getRepository(Orga_Model_Cell::class);
 
         $locale = Core_Locale::loadDefault();
 
         $comments = [];
         /** @var Orga_Model_InputComment|Social_Model_Comment $comment */
-        foreach ($cell->getInputSetLatestComments(10) as $comment) {
+        foreach ($cellRepository->getLatestComments($cell, 10) as $comment) {
             $commentText = __('Social', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
                 . __('Orga', 'input', 'aboutInput')
-                . ' <a href="orga/cell/input/idCell/' . $comment->getCell()->getId() . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
+                . ' <a href="orga/cell/input/idCell/' . $comment->getCell()->getId()
+                    . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
                     . $comment->getCell()->getLabel()
                 . '</a>' . __('UI', 'other', ':')
                 . '« ' . Core_Tools::truncateString($comment->getText(), 150) . ' ».';
