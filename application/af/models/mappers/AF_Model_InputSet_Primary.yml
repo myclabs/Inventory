@@ -10,6 +10,9 @@ AF_Model_InputSet_Primary:
     calculationComplete:
       type: boolean
       nullable: false
+    errorMessage:
+      type: string
+      nullable: true
 
   oneToOne:
     outputSet:

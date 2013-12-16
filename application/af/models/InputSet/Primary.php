@@ -1,22 +1,12 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @author     thibaud.rolland
- * @author     hugo.charbonnier
- * @package    AF
- * @subpackage Input
- */
-
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @package    AF
- * @subpackage Input
+ * @author matthieu.napoli
+ * @author thibaud.rolland
+ * @author hugo.charbonnier
  */
 class AF_Model_InputSet_Primary extends AF_Model_InputSet
 {
-
     const QUERY_AF = 'af';
 
     const STATUS_FINISHED = "finished";
@@ -29,6 +19,12 @@ class AF_Model_InputSet_Primary extends AF_Model_InputSet
      * @var bool
      */
     protected $calculationComplete = false;
+
+    /**
+     * Message d'erreur pour l'utilisateur lors de l'exécution des calculs.
+     * @var string
+     */
+    protected $errorMessage;
 
     /**
      * Est-ce que la saisie est marquée comme terminée
@@ -76,11 +72,13 @@ class AF_Model_InputSet_Primary extends AF_Model_InputSet
     }
 
     /**
-     * @param bool $calculationComplete
+     * @param bool        $calculationComplete
+     * @param string|null $errorMessage Message d'erreur pour l'utilisateur si les calculs ont échoué.
      */
-    public function setCalculationComplete($calculationComplete)
+    public function setCalculationComplete($calculationComplete, $errorMessage = null)
     {
         $this->calculationComplete = $calculationComplete;
+        $this->errorMessage = $errorMessage;
     }
 
     /**
@@ -134,4 +132,11 @@ class AF_Model_InputSet_Primary extends AF_Model_InputSet
         }
     }
 
+    /**
+     * @return string Message d'erreur pour l'utilisateur lors de l'exécution des calculs.
+     */
+    public function getErrorMessage()
+    {
+        return $this->errorMessage;
+    }
 }

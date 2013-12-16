@@ -117,11 +117,26 @@
 				<seg>Enregistrement effectué (saisie complète).</seg>
 			</tuv>
 			<tuv xml:lang="en">
-				<seg>Saving done (complete input).</seg>
+				<seg>Input saved (complete input).</seg>
 			</tuv>
 		</tu>
+        <tu tuid="completeInputSavedCalculationErrorUnknownTechnoMember">
+            <tuv xml:lang="fr">
+                <seg>
+                    Enregistrement effectué.
+                    La saisie est complète, mais un problème est intervenu dans l'exécution des calculs :
+                    le membre « [MEMBER] » pour la coordonnée « [DIMENSION] » de la famille « [FAMILY] » est introuvable.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Input saved. The input is complete, but the calculation failed:
+                    the parameter "[PARAMETER]" of the family "[FAMILY]" doesn't exist.
+                </seg>
+            </tuv>
+        </tu>
 
-		<!-- Contenus des popups de confirmation au clic sur « Réinitialiser » 
+		<!-- Contenus des popups de confirmation au clic sur « Réinitialiser »
 			ou « Quitter » -->
 
 		<tu tuid="confirmReinitializeInput">
@@ -141,7 +156,7 @@
 			</tuv>
 		</tu>
 
-		<!-- Messages à afficher pour l'aperçu des résultats, les résultats, les 
+		<!-- Messages à afficher pour l'aperçu des résultats, les résultats, les
 			détails calculs -->
 
 		<tu tuid="incompleteInput">
@@ -192,4 +207,3 @@
 
 	</body>
 </tmx>
-        

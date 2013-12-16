@@ -1,12 +1,4 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @author     thibaud.rolland
- * @author     hugo.charbonnier
- * @author     yoann.croizer
- * @package    AF
- * @subpackage Input
- */
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,8 +6,10 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\PersistentCollection;
 
 /**
- * @package    AF
- * @subpackage Input
+ * @author matthieu.napoli
+ * @author thibaud.rolland
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
 abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model_InputSet
 {
@@ -286,5 +280,4 @@ abstract class AF_Model_InputSet extends Core_Model_Entity implements Algo_Model
 
         return $subInputSets;
     }
-
 }

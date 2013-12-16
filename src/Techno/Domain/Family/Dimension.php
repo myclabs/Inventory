@@ -192,7 +192,7 @@ class Dimension extends Core_Model_Entity
         if (count($results) > 0) {
             return $results->first();
         }
-        throw new Core_Exception_NotFound("Le membre $memberId est introuvable dans cette dimension");
+        throw MemberNotFoundException::create($this->getFamily()->getRef(), $this->getRef(), $memberId);
     }
 
     /**
