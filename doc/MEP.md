@@ -23,6 +23,10 @@ php scripts/build/build.php update
 scripts/migration/2.10/migrate.php
 ```
 
+- Faire un rebuild de DW (pour regénérer les traductions)
+
+- Si il reste des traductions de DW dans `ext_translations`, les supprimer
+
 
 ## 2.9
 

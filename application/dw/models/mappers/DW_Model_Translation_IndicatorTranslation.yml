@@ -1,0 +1,32 @@
+DW_Model_Translation_IndicatorTranslation:
+  type: entity
+  repositoryClass: Gedmo\Translatable\Entity\Repository\TranslationRepository
+  table: DW_Translation_IndicatorTranslation
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    locale:
+      type: string
+      length: 8
+    objectClass:
+      column: object_class
+      type: string
+      length: 255
+    field:
+      type: string
+      length: 32
+    foreignKey:
+      column: foreign_key
+      type: integer
+    content:
+      type: text
+      nullable: true
+
+  indexes:
+    translation_index:
+      columns: [ locale, object_class, field, foreign_key ]
