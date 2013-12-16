@@ -1,4 +1,6 @@
 <?php
+use Doctrine\ORM\QueryBuilder;
+
 /**
  * Classe Orga_Model_Repository_Cell
  * @author     valentin.claras
@@ -13,11 +15,10 @@
  */
 class Orga_Model_Repository_Cell extends Core_Model_Repository
 {
-
     /**
      * Ajoute des paramètres personnalisés au QueryBuilder utilisé par le loadList et le countTotal.
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      * @param Core_Model_Query $queryParameters
      */
     protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters=null)
@@ -106,7 +107,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
 
     /**
      * @param Core_Model_Query $queryParameters
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      */
     protected function addMembersFiltersToQueryBuilder($queryParameters, $queryBuilder)
     {
@@ -146,7 +147,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
      * Ajoute les membres du tableau au queryBuilder.
      *
      * @param array $arrayMembers
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      */
     protected function parseArrayMembersToQueryBuilder($arrayMembers, $queryBuilder)
     {
@@ -179,7 +180,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
      *
      * @param int $granularityIndex
      * @param array $granularityMembers
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      *
      * @return array('expression' => \Doctrine\ORM\Query\Expr\Andx, 'parameters' => array())
      */
@@ -225,6 +226,47 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
         $parameters['granularity'.$granularityIndex] = $granularityMembers['granularity'];
 
         return array('expression' => $granularityMembersExpression, 'parameters' => $parameters);
+    }
+
+    /**
+     * Ajoute au $queryBuilder les conditions pour récupérer les cellles enfantes de la cellule donnée.
+     *
+     * @param QueryBuilder $qb
+     * @param Orga_Model_Cell $cell
+     * @param string $cellAlias
+     */
+    public function addChildCellsConditionsToQueryBuilder(QueryBuilder $qb, Orga_Model_Cell $cell, $cellAlias)
+    {
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $ci => $pathTag) {
+            $qb->andWhere(
+                $qb->expr()->like($cellAlias.'.tag', ':cPathTag_'.$ci)
+            );
+            $qb->setParameter('cPathTag_'.$ci, '%'.$pathTag.'%');
+        }
+
+        $qbGranularities = $this->getEntityManager()->createQueryBuilder();
+        $qbGranularities->select('granularities.id');
+        $qbGranularities->from(Orga_Model_Granularity::class, 'granularities');
+
+        $qbGranularities->where(
+            $qbGranularities->expr()->eq('granularities.organization', ':organization')
+        );
+        $qb->setParameter('organization', $cell->getOrganization());
+
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getGranularity()->getTag()) as $gi => $pathTag) {
+            $qbGranularities->andWhere(
+                $qbGranularities->expr()->like('granularities.tag', ':gPathTag_'.$gi)
+            );
+            $qb->setParameter('gPathTag_'.$gi, '%'.$pathTag.'%');
+        }
+        $qbGranularities->andWhere(
+            $qbGranularities->expr()->neq('granularities.tag', ':gPathTag')
+        );
+        $qb->setParameter('gPathTag', $cell->getGranularity()->getTag());
+
+        $qb->andWhere(
+            $qb->expr()->in($cellAlias.'.granularity', $qbGranularities->getDQL())
+        );
     }
 
 }
