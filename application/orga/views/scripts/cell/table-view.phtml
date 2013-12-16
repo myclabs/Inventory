@@ -64,6 +64,7 @@ $currentCell = $this->currentCell;
     .granularityWrapper .cells-filter > * { margin-top: 2px; }
     .granularityWrapper .cells-filter .granularityInfo { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
     .granularityWrapper .granularity .cellActions { float: right; }
+    .granularityWrapper .displayMoreCells { margin-left: 0; }
 
     .history { margin-bottom: 15px; }
     .history > h3 { margin: 0; }
@@ -327,7 +328,7 @@ $currentCell = $this->currentCell;
             </form>
             <?php endif; ?>
 
-            <table class="granularity table table-hover table-condensed" data-total-cells="" data-displayed-cells="12">
+            <table class="granularity table table-hover table-condensed" data-total-cells="">
             </table>
         </div>
     </fieldset>
@@ -643,7 +644,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 $('.withTooltip', granularity).tooltip();
                 $('.withPopover', granularity).popover();
                 $('.granularityLoading', granularityInfo.parent()).remove();
-                $('select:first', granularity.parent()).trigger('filterCells');
+                $('.cells-filter', granularity.parent()).trigger('filterCells');
             },
             error: function(jqXHR) {
                 granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
@@ -668,18 +669,15 @@ $('.cells-filter button.reset').on('click', function(e) {
     e.preventDefault();
     var form = $(this).parent();
     form.trigger('resetCellsFilter');
+});
+$('.cells-filter select').on('keyup change', function(e) {
+    var form = $(this).parent();
     form.trigger('filterCells');
 });
 $('.cells-filter').on('resetCellsFilter', function(e) {
     e.preventDefault();
     var form = $(this).parent();
     $('select', form).each(function() { $(this).val(''); });
-    $('select:first', form).trigger('change');
-});
-$('.cells-filter select').on('keyup change', function(e) {
-    var form = $(this).parent();
-    var granularity = $('.granularity', form.parent());
-    granularity.attr('data-displayed-cells', 12);
     form.trigger('filterCells');
 });
 $('.cells-filter').on('filterCells', function(e) {
@@ -687,8 +685,7 @@ $('.cells-filter').on('filterCells', function(e) {
     var form = $(this);
     var granularity = $('.granularity', form.parent());
 
-    $('.displayMoreCells', granularity.parent()).remove();
-    $('.cell:not(.hide)', granularity).addClass('hide');
+    $('.cell', granularity).addClass('hide').removeClass('firstRowCell').removeAttr('data-filtered');
 
     var test = '';
     $('select', form).each(function() {
@@ -705,22 +702,29 @@ $('.cells-filter').on('filterCells', function(e) {
         }
     });
 
-    var displayedCells = granularity.attr('data-displayed-cells');
+    $('.cell' + test, granularity).attr('data-filtered', '');
+    var granularityInfo = $('.granularityInfo', form);
+    granularityInfo.html($('.cell' + test, granularity).length + ' / ' + granularity.attr('data-total-cells'));
+
+    granularity.trigger('showCells');
+});
+$('div.collapse[id^="granularity"]').on('showCells', function(e) {
+    var granularity = $('.granularity', $(this));
+    $('.displayMoreCells', granularity.parent()).remove();
+
     var numberElement = 0;
-    $('.cell' + test, granularity).each(function() {
+    $('.cell[data-filtered]', granularity).each(function() {
         var cell = $(this);
         cell.removeClass('hide');
+        cell.removeAttr('data-filtered');
 
         numberElement++;
-        if (numberElement > (displayedCells - 1)) {
+        if (numberElement > 5) {
             return false;
         }
     });
 
-    var granularityInfo = $('.granularityInfo', form);
-    granularityInfo.html(numberElement + ' / ' + granularity.attr('data-total-cells'));
-
-    if ($('.cell' + test, granularity).length > numberElement) {
+    if ($('.cell[data-filtered]', granularity).length > 0) {
         granularity.after(
             '<div class="btn btn-primary span displayMoreCells">' +
                 '<?=__('Orga', 'view', 'displayMoreCells')?>' +
@@ -729,9 +733,7 @@ $('.cells-filter').on('filterCells', function(e) {
     }
 });
 $('body').on('click', '.displayMoreCells', function (e) {
-    var granularity = $('.granularity', $(this).parent());
-    granularity.attr('data-displayed-cells', (granularity.attr('data-displayed-cells') * 1 + 18));
-    $('.cells-filter', granularity.parent()).trigger('filterCells');
+    $(this).parent().trigger('showCells');
 });
 
 $('body').on('show', '.users', function(e) {
@@ -974,7 +976,7 @@ $('body').on('click', '.inventoryStatus .dropdown-menu a', function(e) {
                 button.html('<i class="icon-edit icon-white"></i> ' + data.label + ' <span class="caret"></span>');
                 button.parent().parent().parent().attr('data-inventory-status', data.status);
                 var collapse = button.parent().parent().parent().parent().parent().parent().parent().parent();
-                $('select:first', collapse).trigger('change');
+                $('.cells-filter', collapse).trigger('filterCells');
                 $('.collapse[data-inventory][id!="' + collapse.attr('id') + '"]').each(function() {
                     var filterInventoryValue = $('select[data-filter="inventory-status"]', $(this)).val();
                     if ((filterInventoryValue == oldInventoryValue) || (filterInventoryValue == data.status)) {
