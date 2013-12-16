@@ -72,7 +72,7 @@ class Orga_CellController extends Core_Controller
      * @Inject
      * @var EntryRepository
      */
-    private $entryRepository;
+    private $auditTrailRepository;
 
     /**
      * @Inject
@@ -374,7 +374,7 @@ class Orga_CellController extends Core_Controller
         $locale = Core_Locale::loadDefault();
 
         $events = [];
-        foreach ($this->entryRepository->findLatestForOrganizationContext($context, 10) as $entry) {
+        foreach ($this->auditTrailRepository->findLatestForOrganizationContext($context, 10) as $entry) {
             $eventText = __('Orga', 'auditTrail', $entry->getEventName(), [
                 'INPUT' => '<a href="orga/cell/input/idCell/' . $entry->getContext()->getCell()->getId()
                                 . '/fromIdCell/' . $cell->getId() . '/">'
