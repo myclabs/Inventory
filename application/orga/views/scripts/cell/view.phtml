@@ -65,6 +65,7 @@ $currentCell = $this->currentCell;
     .granularityWrapper .cells-filter .granularityInfo { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
     .granularityWrapper .granularity .cellActions { float: right; }
     .granularityWrapper .granularity > .cell.firstRowCell { margin-left: 0; }
+    .granularityWrapper .displayMoreCells { margin-left: 0; }
 
     .history { margin-bottom: 15px; }
     .history > h3 { margin: 0; }
@@ -328,7 +329,7 @@ $currentCell = $this->currentCell;
             </form>
             <?php endif; ?>
 
-            <div class="granularity row-fluid" data-total-cells="">
+            <div class="granularity row-fluid" data-total-cells="" data-displayed-cells="12">
             </div>
         </div>
     </fieldset>
@@ -622,7 +623,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '</div>';
                     }
                     granularity.append(
-                        '<div class="span4 well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
+                        '<div class="span4 well cell hide" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
                             '<h4>'+
                                 cellTitle +
                                 '<small class="cellActions">' +
@@ -639,13 +640,10 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                         '</div>'
                     );
                 });
-                var maxHeight = 0;
-                $('.cell h4', granularity).each(function() { if ($(this).outerHeight() > maxHeight) { maxHeight = $(this).outerHeight(); } });
-                $('.cell h4', granularity).height(maxHeight);
                 $('.withTooltip', granularity).tooltip();
                 $('.withPopover', granularity).popover();
                 $('.granularityLoading', granularityInfo.parent()).remove();
-                $('select:first', granularity.parent()).trigger('change');
+                $('select:first', granularity.parent()).trigger('filterCells');
             },
             error: function(jqXHR) {
                 granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
@@ -680,6 +678,8 @@ $('.cells-filter').on('resetCellsFilter', function(e) {
 });
 $('.cells-filter select').on('keyup change', function(e) {
     var form = $(this).parent();
+    var granularity = $('.granularity', form.parent());
+    granularity.attr('data-displayed-cells', 12);
     form.trigger('filterCells');
 });
 $('.cells-filter').on('filterCells', function(e) {
@@ -687,7 +687,8 @@ $('.cells-filter').on('filterCells', function(e) {
     var form = $(this);
     var granularity = $('.granularity', form.parent());
 
-    $('.cell', granularity).removeClass('hide');
+    $('.displayMoreCells', granularity).remove();
+    $('.cell:not(.hide)', granularity).addClass('hide');
     $('.cell', granularity).removeClass('firstRowCell');
 
     var test = '';
@@ -704,20 +705,45 @@ $('.cells-filter').on('filterCells', function(e) {
             }
         }
     });
-    if (test != '') {
-        $('.cell:not('+ test + ')', granularity).addClass('hide');
-    }
 
+    var displayedCells = granularity.attr('data-displayed-cells');
     var numberElement = 0;
-    $('.cell:not(.hide)', granularity).each(function() {
+    var maxHeight = 0;
+    $('.cell' + test, granularity).each(function() {
+        var cell = $(this);
+        cell.removeClass('hide');
         if ((numberElement % 3) == 0) {
             $(this).addClass('firstRowCell');
         }
+
+        var cellTitle = $('h4', cell);
+        cellTitle.css('height', 'auto');
+        if (cellTitle.height() > maxHeight) {
+            maxHeight = cellTitle.height();
+        }
+
         numberElement++;
+        if (numberElement > (displayedCells - 1)) {
+            return false;
+        }
     });
+    $('.cell:not(.hide) h4', granularity).css('height', maxHeight);
 
     var granularityInfo = $('.granularityInfo', form);
-    granularityInfo.html(numberElement + ' / ' + granularity.attr('data-total-cells'));
+    granularityInfo.html($('.cell' + test, granularity).length + ' / ' + granularity.attr('data-total-cells'));
+
+    if ($('.cell' + test, granularity).length > numberElement) {
+        granularity.append(
+            '<div class="btn btn-primary displayMoreCells span firstRowCell">' +
+                '<?=__('Orga', 'view', 'displayMoreCells')?>' +
+            '</div>'
+        );
+    }
+});
+$('body').on('click', '.displayMoreCells', function (e) {
+    var granularity = $(this).parent();
+    granularity.attr('data-displayed-cells', (granularity.attr('data-displayed-cells') * 1 + 18));
+    $('.cells-filter', granularity.parent()).trigger('filterCells');
 });
 
 $('body').on('show', '.users', function(e) {
