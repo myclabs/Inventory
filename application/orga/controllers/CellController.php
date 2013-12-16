@@ -75,6 +75,12 @@ class Orga_CellController extends Core_Controller
     private $entryRepository;
 
     /**
+     * @Inject
+     * @var Social_Service_CommentService
+     */
+    private $commentService;
+
+    /**
      * Redirection sur la liste.
      * @Secure("loggedIn")
      */
@@ -1055,7 +1061,7 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $idCell]);
         $aFViewConfiguration->setResultsPreviewUrl('orga/cell/input-preview');
-        $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $idCell . '/');
+        $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $this->getParam('fromIdCell') . '/');
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
         $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_INPUT);
@@ -1065,14 +1071,14 @@ class Orga_CellController extends Core_Controller
 
         $tabComments = new UI_Tab('inputComments');
         $tabComments->label = __('Social', 'comment', 'comments');
-        $tabComments->dataSource = 'orga/tab_input/comments/idCell/'.$idCell;
-        $tabComments->cacheData = true;
+        $tabComments->dataSource = 'orga/cell/input-comments/idCell/'.$idCell;
+        $tabComments->useCache = true;
         $aFViewConfiguration->addTab($tabComments);
 
 //        $tabDocs = new UI_Tab('inputDocs');
 //        $tabDocs->label = __('Doc', 'name', 'documents');
-//        $tabDocs->dataSource = 'orga/tab_input/docs/idCell/'.$idCell;
-//        $tabDocs->cacheData = true;
+//        $tabDocs->dataSource = 'orga/cell/input-docs/idCell/'.$idCell;
+//        $tabDocs->useCache = true;
 //        $aFViewConfiguration->addTab($tabDocs);
 
         $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
@@ -1092,6 +1098,41 @@ class Orga_CellController extends Core_Controller
                 'viewConfiguration' => $aFViewConfiguration
             ]
         );
+    }
+
+    /**
+     * @see \AF_InputController::resultsPreviewAction
+     * @Secure("inputCell")
+     */
+    public function inputPreviewAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        /** @var $af AF_Model_AF */
+        $af = AF_Model_AF::load($idCell);
+
+        // Form data
+        $formContent = json_decode($this->getParam($af->getRef()), true);
+        $errorMessages = [];
+
+        // Remplit l'InputSet
+        $inputSet = $this->inputFormParser->parseForm($formContent, $af, $errorMessages);
+        $this->inputService->updateResults($cell, $inputSet);
+
+        $this->addFormErrors($errorMessages);
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->view->inputSet = $inputSet;
+
+        // Moche mais sinon je me petit-suicide
+        $this->view->addScriptPath(APPLICATION_PATH . '/af/views/scripts/');
+        $data = $this->view->render('af/display-results.phtml');
+
+        // Force le statut en success (sinon les handlers JS ne sont pas exécutés)
+        $this->setFormMessage(null, UI_Message::TYPE_SUCCESS);
+        $this->sendFormResponse($data);
     }
 
     /**
@@ -1118,38 +1159,119 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
-     * @see \AF_InputController::resultsPreviewAction
+     * @Secure("viewCell")
+     */
+    public function inputCommentsAction()
+    {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $this->view->assign('idCell', $idCell);
+
+        $this->view->assign('idCell', $idCell);
+        $this->view->assign('comments', $cell->getSocialCommentsForInputSetPrimary());
+        $this->view->assign('currentUser', $connectedUser);
+        $this->view->assign(
+            'isUserAbleToComment',
+            $this->aclService->isAllowed($connectedUser, CellAction::INPUT(), $cell)
+        );
+
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+    }
+
+    /**
      * @Secure("inputCell")
      */
-    public function inputPreviewAction()
+    public function inputCommentAddAction()
+    {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $this->view->assign('idCell', $idCell);
+
+        $formData = $this->getFormData('addCommentForm');
+
+        $content = $formData->getValue('addContent');
+        if (empty($content)) {
+            $this->addFormError('addContent', __('UI', 'formValidation', 'emptyRequiredField'));
+        }
+        if (!$this->hasFormError()) {
+            // Ajoute le commentaire
+            $comment = $this->commentService->addComment($connectedUser, $content);
+            $cell->addSocialCommentForInputSetPrimary($comment);
+            $cell->save();
+            $this->entityManager->flush();
+
+            // Retourne la vue du commentaire
+            $this->forward('comment-added', 'comment', 'social',
+                [
+                    'comment' => $comment,
+                    'currentUser' => $connectedUser
+                ]
+            );
+            return;
+        }
+
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
+
+        $this->sendFormResponse();
+    }
+
+    /**
+     * @Secure("deleteComment")
+     */
+    public function inputCommentDeleteAction()
     {
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
-        /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($this->getParam('id'));
+        $comment = Social_Model_Comment::load($this->getParam('id'));
 
-        // Form data
-        $formContent = json_decode($this->getParam($af->getRef()), true);
-        $errorMessages = [];
+        $cell->removeSocialCommentForInputSetPrimary($comment);
+        $this->commentService->deleteComment($comment->getId());
 
-        // Remplit l'InputSet
-        $inputSet = $this->inputFormParser->parseForm($formContent, $af, $errorMessages);
-        $this->inputService->updateResults($cell, $inputSet);
+        $this->sendFormResponse();
+    }
 
-        $this->addFormErrors($errorMessages);
+    /**
+     * @Secure("viewCell")
+     */
+    public function inputDocsAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
 
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->inputSet = $inputSet;
+        $this->view->assign('idCell', $idCell);
 
-        // Moche mais sinon je me petit-suicide
-        $this->view->addScriptPath(APPLICATION_PATH . '/af/views/scripts/');
-        $data = $this->view->render('af/display-results.phtml');
+        if ($cell->getGranularity()->getCellsWithInputDocuments()) {
+            $documentLibrary = $cell->getDocLibraryForAFInputSetsPrimary();
+        } else {
+            $documentLibrary = null;
+            foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
+                if ($granularity->getCellsWithInputDocuments()) {
+                    $parentCell = $cell->getParentCellForGranularity($granularity);
+                    $documentLibrary = $parentCell->getDocLibraryForAFInputSetsPrimary();
+                    break;
+                }
+            }
+        }
+        $this->view->assign('documentLibrary', $documentLibrary);
+        $this->view->assign('documentBibliography', $cell->getDocBibliographyForAFInputSetPrimary());
 
-        // Force le statut en success (sinon les handlers JS ne sont pas exécutés)
-        $this->setFormMessage(null, UI_Message::TYPE_SUCCESS);
-        $this->sendFormResponse($data);
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
     }
 
 }
