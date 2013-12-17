@@ -50,7 +50,7 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
                 ->innerJoin('context.cell', 'cell');
             /** @var Orga_Model_Repository_Cell $cellRepository */
             $cellRepository = $this->getEntityManager()->getRepository(Orga_Model_Cell::class);
-            $cellRepository->addChildCellsConditionsToQueryBuilder($subQuery, $context->getCell(), 'cell');
+            $cellRepository->addCellAndChildrenConditionsToQueryBuilder($subQuery, $context->getCell(), 'cell');
 
             $qb->andWhere('e.context IN (' . $subQuery->getDQL() . ')');
 

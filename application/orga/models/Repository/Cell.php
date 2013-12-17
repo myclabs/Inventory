@@ -235,7 +235,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
      * @param Orga_Model_Cell $cell
      * @param string $cellAlias
      */
-    public function addChildCellsConditionsToQueryBuilder(QueryBuilder $qb, Orga_Model_Cell $cell, $cellAlias)
+    public function addCellAndChildrenConditionsToQueryBuilder(QueryBuilder $qb, Orga_Model_Cell $cell, $cellAlias)
     {
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $ci => $pathTag) {
             $qb->andWhere(
@@ -259,10 +259,6 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
             );
             $qb->setParameter('gPathTag_'.$gi, '%'.$pathTag.'%');
         }
-        $qbGranularities->andWhere(
-            $qbGranularities->expr()->neq('granularities.tag', ':gPathTag')
-        );
-        $qb->setParameter('gPathTag', $cell->getGranularity()->getTag());
 
         $qb->andWhere(
             $qb->expr()->in($cellAlias.'.granularity', $qbGranularities->getDQL())
@@ -287,7 +283,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
             ->orderBy('comment.creationDate', 'DESC');
         $qb->setMaxResults($count);
 
-        $this->addChildCellsConditionsToQueryBuilder($qb, $cell, 'cell');
+        $this->addCellAndChildrenConditionsToQueryBuilder($qb, $cell, 'cell');
 
         $comments = $qb->getQuery()->getResult();
 
