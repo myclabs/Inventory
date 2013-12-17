@@ -1,13 +1,13 @@
 <?php
 
 use Core\Test\TestCase;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\Domain\Unit\DiscreteUnit;
 use Unit\Domain\Unit\ExtendedUnit;
 use Unit\Domain\Unit\StandardUnit;
 use Unit\Domain\PhysicalQuantity;
 use Unit\Domain\UnitSystem;
 use Unit\Domain\UnitExtension;
-use Unit\IncompatibleUnitsException;
 use Unit\Domain\Unit\Unit;
 use Unit\UnitAPI;
 

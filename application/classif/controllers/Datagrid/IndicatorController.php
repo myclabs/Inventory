@@ -7,8 +7,8 @@
  */
 
 use Core\Annotation\Secure;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\UnitAPI;
-use Unit\IncompatibleUnitsException;
 
 /**
  * Classe du controller du datagrid des indicateurs
@@ -25,6 +25,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         foreach (Classif_Model_Indicator::loadList($this->request) as $indicator) {
+            /** @var Classif_Model_Indicator $indicator */
             $data = array();
             $data['index'] = $indicator->getRef();
             $data['label'] = $this->cellText($indicator->getLabel());
@@ -157,7 +158,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                     throw new Core_Exception_User('Unit', 'message', 'incorrectUnitIdentifier');
                 }
                 break;
-            case 'position' :
+            case 'position':
                 switch ($this->update['value']) {
                     case 'goFirst':
                         $indicator->setPosition(1);
@@ -171,7 +172,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
                     case 'goLast':
                         $indicator->setPosition($indicator->getLastEligiblePosition());
                         break;
-                    default :
+                    default:
                         if ($this->update['value'] > $indicator->getLastEligiblePosition()) {
                             $this->update['value'] = $indicator->getLastEligiblePosition();
                         }

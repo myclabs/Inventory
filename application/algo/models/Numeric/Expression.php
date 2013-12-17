@@ -1,27 +1,20 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
 
 use Exec\Execution\Calc;
 use Exec\Provider\UnitInterface;
 use Exec\Provider\ValueInterface;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
-use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
- * @package    Algo
- * @subpackage Numeric
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
-class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
-    implements ValueInterface, UnitInterface
+class Algo_Model_Numeric_Expression extends Algo_Model_Numeric implements ValueInterface, UnitInterface
 {
-
     /**
      * Unité pour contrôle automatique de la cohérence des unités.
      * @var UnitAPI
@@ -107,25 +100,18 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
         try {
             $calculationUnit = $calc->checkUnitCompatibility($this);
             if (!$calculationUnit->isEquivalent($this->getUnit())) {
-                $errors[] = new Algo_ConfigError(
-                    __('Algo', 'configControl', 'operandUnitsNotCompatibleWithAlgoUnit',
-                       [
-                       'REF_ALGO'   => $this->ref,
-                       'ALGO_UNIT'   => $this->getUnit(),
-                       'EXPRESSION' => $this->expression,
-                       'EXPRESSION_UNIT' => $calculationUnit,
-                       ]
-                    ),
-                    true
-                );
+                $errors[] = new Algo_ConfigError(__('Algo', 'configControl', 'operandUnitsNotCompatibleWithAlgoUnit', [
+                   'REF_ALGO'   => $this->ref,
+                   'ALGO_UNIT'   => $this->getUnit(),
+                   'EXPRESSION' => $this->expression,
+                   'EXPRESSION_UNIT' => $calculationUnit,
+                ]), true);
             }
         } catch (IncompatibleUnitsException $e) {
-            $errors[] = new Algo_ConfigError(__('Algo', 'configControl', 'incompatibleUnitsAmongOperands',
-                                                [
-                                                    'REF_ALGO' => $this->ref,
-                                                    'EXPRESSION' => $this->expression
-                                                ]),
-                                             true);
+            $errors[] = new Algo_ConfigError(__('Algo', 'configControl', 'incompatibleUnitsAmongOperands', [
+                'REF_ALGO' => $this->ref,
+                'EXPRESSION' => $this->expression
+            ]), true);
         } catch (Core_Exception_NotFound $e) {
             // Problème référence de famille, dimension, etc.
         }
@@ -216,5 +202,4 @@ class Algo_Model_Numeric_Expression extends Algo_Model_Numeric
         }
         return $subAlgos;
     }
-
 }

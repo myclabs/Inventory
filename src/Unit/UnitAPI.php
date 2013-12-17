@@ -3,10 +3,10 @@
 namespace Unit;
 
 use DI\Container;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use MyCLabs\UnitAPI\Exception\UnknownUnitException;
 use MyCLabs\UnitAPI\UnitOperationService;
 use MyCLabs\UnitAPI\UnitService;
-use Unit\Domain\ComposedUnit\ComposedUnit;
 
 /**
  * API

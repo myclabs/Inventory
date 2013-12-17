@@ -6,7 +6,7 @@
  * @package Calc
  */
 
-use Unit\IncompatibleUnitsException;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
