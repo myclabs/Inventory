@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "2e0ae70bef4a5b7914037f2f92b02aac",
+    "hash": "180a9b381d082e2180f8ce5932af4358",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -177,7 +177,7 @@
                     "Doctrine\\Common\\Collections\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -296,12 +296,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "f3f6b7ddb7d6af6c3fa42882bc0e2e6715c873fd"
+                "reference": "390db30f686f3a7ab555178ac22d3f94198e378f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/f3f6b7ddb7d6af6c3fa42882bc0e2e6715c873fd",
-                "reference": "f3f6b7ddb7d6af6c3fa42882bc0e2e6715c873fd",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/390db30f686f3a7ab555178ac22d3f94198e378f",
+                "reference": "390db30f686f3a7ab555178ac22d3f94198e378f",
                 "shasum": ""
             },
             "require": {
@@ -359,7 +359,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-12-06 11:52:45"
+            "time": "2013-12-13 22:32:11"
         },
         {
             "name": "doctrine/inflector",
@@ -384,7 +384,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -408,7 +408,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -447,7 +447,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -478,11 +478,11 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "dev-CriteriaContains",
+            "version": "dev-master-myclabs",
             "source": {
                 "type": "git",
                 "url": "git://github.com/myclabs/doctrine2.git",
-                "reference": "6f538c509ced72dfe538f4ab2200f67121067d55"
+                "reference": "1899bcf00012712ba1326e740e6b1746845c9f1b"
             },
             "archive": {
                 "exclude": [
@@ -555,7 +555,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2013-09-16 12:56:04"
+            "time": "2013-11-04 15:01:05"
         },
         {
             "name": "dompdf/dompdf",
@@ -679,16 +679,16 @@
         },
         {
             "name": "guzzle/guzzle",
-            "version": "v3.7.4",
+            "version": "v3.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "b170b028c6bb5799640e46c8803015b0f9a45ed9"
+                "reference": "b4a3ce8c05e777fa18b802956d5d0e38ad338a69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b170b028c6bb5799640e46c8803015b0f9a45ed9",
-                "reference": "b170b028c6bb5799640e46c8803015b0f9a45ed9",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b4a3ce8c05e777fa18b802956d5d0e38ad338a69",
+                "reference": "b4a3ce8c05e777fa18b802956d5d0e38ad338a69",
                 "shasum": ""
             },
             "require": {
@@ -732,7 +732,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.7-dev"
+                    "dev-master": "3.8-dev"
                 }
             },
             "autoload": {
@@ -767,7 +767,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2013-10-02 20:47:00"
+            "time": "2013-12-05 23:39:20"
         },
         {
             "name": "jms/parser-lib",
@@ -1127,12 +1127,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Units-API.git",
-                "reference": "1cafb83a3e9d3c9d2efdbb748cae45427f2259d9"
+                "reference": "a3c58b112a53d340e669ae5158462889039fd2dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/1cafb83a3e9d3c9d2efdbb748cae45427f2259d9",
-                "reference": "1cafb83a3e9d3c9d2efdbb748cae45427f2259d9",
+                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/a3c58b112a53d340e669ae5158462889039fd2dd",
+                "reference": "a3c58b112a53d340e669ae5158462889039fd2dd",
                 "shasum": ""
             },
             "require": {
@@ -1150,7 +1150,7 @@
                 "source": "https://github.com/myclabs/Units-API/tree/master",
                 "issues": "https://github.com/myclabs/Units-API/issues"
             },
-            "time": "2013-12-13 14:31:12"
+            "time": "2013-12-17 10:08:17"
         },
         {
             "name": "myclabs/work",
@@ -1367,7 +1367,7 @@
                     "Console_CommandLine": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -1414,7 +1414,7 @@
                     "PEAR": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 "."
             ],
@@ -1458,7 +1458,7 @@
                     "classes/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -1610,17 +1610,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.3.7",
+            "version": "v2.3.8",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "00848d3e13cf512e77c7498c2b3b0192f61f4b18"
+                "reference": "15031c5ca7583997de218c1f5b1b406f621d18c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/00848d3e13cf512e77c7498c2b3b0192f61f4b18",
-                "reference": "00848d3e13cf512e77c7498c2b3b0192f61f4b18",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/15031c5ca7583997de218c1f5b1b406f621d18c3",
+                "reference": "15031c5ca7583997de218c1f5b1b406f621d18c3",
                 "shasum": ""
             },
             "require": {
@@ -1659,7 +1659,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-13 21:27:40"
+            "time": "2013-12-15 18:46:51"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1822,16 +1822,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.14.2",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64"
+                "reference": "85e4ff98000157ff753d934b9f13659a953f5666"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ca445842fcea4f844d68203ffa2d00f5e3cdea64",
-                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/85e4ff98000157ff753d934b9f13659a953f5666",
+                "reference": "85e4ff98000157ff753d934b9f13659a953f5666",
                 "shasum": ""
             },
             "require": {
@@ -1840,7 +1840,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.14-dev"
+                    "dev-master": "1.15-dev"
                 }
             },
             "autoload": {
@@ -1867,20 +1867,20 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-10-30 08:20:53"
+            "time": "2013-12-06 07:47:10"
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.2.4",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
-                "reference": "20d50074e6a2904737d23d93e36fd22ece46add2"
+                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/20d50074e6a2904737d23d93e36fd22ece46add2",
-                "reference": "20d50074e6a2904737d23d93e36fd22ece46add2",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/ffed6c575260d9ccf796e213f1383e3489b3256c",
+                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c",
                 "shasum": ""
             },
             "require": {
@@ -1912,7 +1912,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2013-12-02 17:07:25"
+            "time": "2013-10-04 16:26:56"
         },
         {
             "name": "zendframework/zend-code",
@@ -2083,7 +2083,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],
@@ -2789,7 +2789,7 @@
         {
             "alias": "2.4.99",
             "alias_normalized": "2.4.99.0",
-            "version": "dev-CriteriaContains",
+            "version": "dev-master-myclabs",
             "package": "doctrine/orm"
         },
         {
