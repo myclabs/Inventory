@@ -340,7 +340,7 @@ $currentCell = $this->currentCell;
 <div class="span3">
     <div class="comments">
         <h3>
-            <?=__('Orga', 'view', 'comments')?>
+            <?=__('Social', 'comment', 'comments')?>
             <small class="pull-right">
                 <a href="orga/cell/view-comments/idCell/<?=$currentCell->id?>/" class="refresh">
                     <i class="icon-refresh"></i>
@@ -419,7 +419,7 @@ $('.history a.refresh').on('click', function(e) {
 });
 $('.comments a.refresh').on('click', function(e) {
     e.preventDefault();
-    $('.comments > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'comment', 'loadingComments'))?>');
+    $('.comments > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('Social', 'comment', 'loadingComments'))?>');
     $.ajax({
         url: $(this).attr('href'),
         type: "GET",
@@ -438,11 +438,11 @@ $('.comments a.refresh').on('click', function(e) {
                     });
                 });
             } else {
-                $('.comments > div').html('<p><?=addslashes(__('UI', 'comment', 'noComment'))?></p>');
+                $('.comments > div').html('<p><?=addslashes(__('Social', 'comment', 'noComment'))?></p>');
             }
         },
         error: function(jqXHR) {
-            $('.comments > div').html('<?=addslashes(__('UI', 'comment', 'errorWhileLoadingComments'))?>');
+            $('.comments > div').html('<?=addslashes(__('Social', 'comment', 'errorWhileLoadingComments'))?>');
         }
     });
 });

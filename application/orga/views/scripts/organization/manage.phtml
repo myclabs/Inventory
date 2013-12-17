@@ -33,7 +33,7 @@ $organizations = $this->organizations;
                     <a class="editOrganization btn btn-small btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>">
                         <i class="icon-cog icon-white"></i>
-                        <?=__('UI', 'verb', 'edit')?>
+                        <?=__('UI', 'name', 'configurationOrga')?>
                     </a>
                 </div>
             <?php endif; ?>
@@ -43,7 +43,7 @@ $organizations = $this->organizations;
                     <?=$organization->label?>
                     <small>
                         <i class="icon-share-alt"></i>
-                        <?=__('Orga', 'view', 'linkDetails')?>
+                        <?=__('Orga', 'organizationList', 'goToData')?>
                     </small>
                 </a>
             </h3>

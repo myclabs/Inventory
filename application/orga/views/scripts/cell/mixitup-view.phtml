@@ -367,7 +367,7 @@ $organization = $this->organization;
         });
     });
     $('.comments .icon-refresh').click(function(e) {
-        $('.comments > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('UI', 'comment', 'loadingComments'))?>');
+        $('.comments > div').html('<img src="images/ui/ajax-loader_large.gif"> <?=addslashes(__('Social', 'comment', 'loadingComments'))?>');
         $.ajax({
             url: 'orga/cell/view-comments/idCell/<?=$currentCell->id?>/',
             type: "GET",
@@ -379,11 +379,11 @@ $organization = $this->organization;
                         $('.comments > div dl').append('<dd>' + this.event + '</dd>');
                     });
                 } else {
-                    $('.comments > div').html('<p><?=addslashes(__('UI', 'comment', 'noComment'))?></p>');
+                    $('.comments > div').html('<p><?=addslashes(__('Social', 'comment', 'noComment'))?></p>');
                 }
             },
             error: function(jqXHR) {
-                $('.comments > div').html('<?=addslashes(__('UI', 'comment', 'errorWhileLoadingComments'))?>');
+                $('.comments > div').html('<?=addslashes(__('Social', 'comment', 'errorWhileLoadingComments'))?>');
             }
         });
     });

@@ -83,6 +83,14 @@
 				<seg>Configuration</seg>
 			</tuv>
 		</tu>
+        <tu tuid="configurationOrga">
+            <tuv xml:lang="fr">
+                <seg>Configuration</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Paramétrage</seg>
+            </tuv>
+        </tu>
         <tu tuid="constant">
             <tuv xml:lang="fr">
                 <seg>Constante</seg>

@@ -44,6 +44,22 @@
                 <seg>Add comment</seg>
             </tuv>
         </tu>
+        <tu tuid="loadingComments">
+            <tuv xml:lang="fr">
+                <seg>Chargement des commentaires…</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Loading comments…</seg>
+            </tuv>
+        </tu>
+        <tu tuid="errorWhileLoadingComments">
+            <tuv xml:lang="fr">
+                <seg>Une erreur est intervenue lors du chargement des commentaires.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>An error occurred while loading comments.</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>    
