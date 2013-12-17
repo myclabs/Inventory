@@ -33,38 +33,38 @@ $currentCell = $this->currentCell;
     .label-important[href], .badge-important[href] { background-color: #953B39; }
     .progress { margin-bottom: 5px; margin-top: 5px; }
 
-    .cellActions a { margin-left: 8px; padding: 5px; }
-    .cellActions a:hover, .users .modal-body a:hover, .reports .modal-body a:hover { opacity: 0.25; }
+    .cell-actions a { margin-left: 8px; padding: 5px; }
+    .cell-actions a:hover, .users .modal-body a:hover, .reports .modal-body a:hover { opacity: 0.25; }
 
-    .users .userMessage { font-weight: bold; }
+    .users .user-message { font-weight: bold; }
     .users .modal-body { padding: 0; }
     .users .modal-body table { margin: 0; }
-    .users .modal-body tr.userMessage td:first-child { text-align: center; }
-    .users .modal-body tr.userMessage .btn { margin: 0 5px 0 5px; }
-    .users .modal-body tr.userMessage .closeUserMessage { float: none; font-size: inherit; opacity: 1; }
-    .users .modal-body .deleteUser + .tooltip.left { margin-left: -15px; }
-    .users .modal-footer div.userMessage { text-align: center; margin-bottom: 5px; }
+    .users .modal-body tr.user-message td:first-child { text-align: center; }
+    .users .modal-body tr.user-message .btn { margin: 0 5px 0 5px; }
+    .users .modal-body tr.user-message .close-user-message { float: none; font-size: inherit; opacity: 1; }
+    .users .modal-body .delete-user + .tooltip.left { margin-left: -15px; }
+    .users .modal-footer div.user-message { text-align: center; margin-bottom: 5px; }
     .users .modal-footer form { margin: 0; }
 
-    .reports .reportMessage { font-weight: bold; }
+    .reports .report-message { font-weight: bold; }
     .reports .modal-body { padding: 0; }
     .reports .modal-body table { margin: 0; }
-    .reports .modal-body tr.reportMessage td:first-child { text-align: center; }
-    .reports .modal-body tr.reportMessage .btn { margin: 0 5px 0 5px; }
-    .reports .modal-body tr.reportMessage .closeReportMessage { float: none; font-size: inherit; opacity: 1; }
-    .reports .modal-body .deleteReport + .tooltip.left { margin-left: -15px; }
+    .reports .modal-body tr.report-message td:first-child { text-align: center; }
+    .reports .modal-body tr.report-message .btn { margin: 0 5px 0 5px; }
+    .reports .modal-body tr.report-message .close-report-message { float: none; font-size: inherit; opacity: 1; }
+    .reports .modal-body .delete-report + .tooltip.left { margin-left: -15px; }
 
     .exports .modal-body { text-align: center; }
     .exports .modal-body .alert { margin-bottom: 5px; }
     .exports .modal-body form { margin: 0; }
 
-    .inventoryStatus .label { font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
-    .inputStatus .badge { font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
+    .inventory-status .label { font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
+    .input-status .badge { font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
 
-    .granularityWrapper .cells-filter > * { margin-top: 2px; }
-    .granularityWrapper .cells-filter .granularityInfo { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
-    .granularityWrapper .granularity .cellActions { float: right; }
-    .granularityWrapper .displayMoreCells { margin-left: 0; }
+    .granularity-wrapper .cells-filter > * { margin-top: 2px; }
+    .granularity-wrapper .cells-filter .granularity-info { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
+    .granularity-wrapper .granularity .cell-actions { float: right; }
+    .granularity-wrapper .display-more-cells { margin-left: 0; }
 
     .history { margin-bottom: 15px; }
     .history > h3 { margin: 0; }
@@ -149,7 +149,7 @@ $currentCell = $this->currentCell;
             </small>
             </a>
             <?php endif; ?>
-            <small class="cellActions">
+            <small class="cell-actions">
                 <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewAdministrators')?>" class="withTooltip"><i class="icon-envelope"></i></a>
                 <?php if ($currentCell->showsUsers) : ?>
                 <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewUsers')?>" class="withTooltip"><i class="icon-user"></i></a>
@@ -162,7 +162,7 @@ $currentCell = $this->currentCell;
         </h2>
         <?php // Inventory ?>
         <?php if ($currentCell->showInventory) : ?>
-        <div class="inventoryStatus">
+        <div class="inventory-status">
             <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
             <?php if ($currentCell->canEditInventory) : ?>
             <div class="btn-group">
@@ -200,7 +200,7 @@ $currentCell = $this->currentCell;
         <?php endif; ?>
         <?php // Input ?>
         <?php if ($currentCell->showInput) : ?>
-        <div class="inputStatus">
+        <div class="input-status">
             <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
             <span class="badge badge-<?=$currentCell->inputStatusStyle?>">
                 <?=$currentCell->inputStatusTitle?>
@@ -279,7 +279,7 @@ $currentCell = $this->currentCell;
     /** @var Orga_Model_Granularity $narrowerGranularity */
     $narrowerGranularity = $narrowerGranularityArray['granularity'];
     ?>
-    <fieldset class="wrapper granularityWrapper">
+    <fieldset class="wrapper granularity-wrapper">
         <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
             <i class="filterChevron icon-chevron-<?=((count($this->narrowerGranularities) === 1)?'down':'right')?>"></i>
             <?=$narrowerGranularityArray['purpose']?>
@@ -324,7 +324,7 @@ $currentCell = $this->currentCell;
                 </select>
                 <?php endif; ?>
                 <button class="btn reset"><i class="icon-zoom-out"></i> Reset</button>
-                <span class="badge badge-info granularityInfo"></span>
+                <span class="badge badge-info granularity-info"></span>
             </form>
             <?php endif; ?>
 
@@ -446,13 +446,13 @@ $('.comments a.refresh').on('click', function(e) {
     });
 });
 
-$('.granularityWrapper > div').on('show', function(e) {
+$('.granularity-wrapper > div').on('show', function(e) {
     if (e.currentTarget == e.target) {
         $('legend > i.filterChevron', $(this).parent()).removeClass('icon-chevron-right');
         $('legend > i.filterChevron', $(this).parent()).addClass('icon-chevron-down');
     }
 });
-$('.granularityWrapper > div').on('hidden', function(e) {
+$('.granularity-wrapper > div').on('hidden', function(e) {
     if (e.currentTarget == e.target) {
         $('legend > i.filterChevron', $(this).parent()).removeClass('icon-chevron-down');
         $('legend > i.filterChevron', $(this).parent()).addClass('icon-chevron-right');
@@ -465,7 +465,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
     }
     var granularity = $('.granularity', $(this));
     if (!granularity.attr('data-initialized')) {
-        var granularityInfo = $('.granularityInfo', granularity.parent());
+        var granularityInfo = $('.granularity-info', granularity.parent());
         granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
         granularityInfo.addClass('badge-info');
         granularityInfo.html('<?=__('Orga', 'view', 'loadingCells')?>');
@@ -562,7 +562,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var inventoryP = '';
                     if (this.showInventory) {
                         inventoryP +=
-                            '<div class="inventoryStatus">' +
+                            '<div class="inventory-status">' +
                                 '<b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>';
                         if (this.canEditInventory) {
                             inventoryP +=
@@ -611,7 +611,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var inputStatusP = '';
                     if (this.showInput) {
                         inputStatusP =
-                            '<div class="inputStatus">' +
+                            '<div class="input-status">' +
                                 '<b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>' +
                                 '<span class="badge badge-' + this.inputStatusStyle + '">' +
                                     this.inputStatusTitle +
@@ -703,14 +703,14 @@ $('.cells-filter').on('filterCells', function(e) {
     });
 
     $('.cell' + test, granularity).attr('data-filtered', '');
-    var granularityInfo = $('.granularityInfo', form);
+    var granularityInfo = $('.granularity-info', form);
     granularityInfo.html($('.cell' + test, granularity).length + ' / ' + granularity.attr('data-total-cells'));
 
     granularity.trigger('showCells');
 });
 $('div.collapse[id^="granularity"]').on('showCells', function(e) {
     var granularity = $('.granularity', $(this));
-    $('.displayMoreCells', granularity.parent()).remove();
+    $('.display-more-cells', granularity.parent()).remove();
 
     var numberElement = 0;
     $('.cell[data-filtered]', granularity).each(function() {
@@ -726,13 +726,13 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
 
     if ($('.cell[data-filtered]', granularity).length > 0) {
         granularity.after(
-            '<div class="btn btn-primary span displayMoreCells">' +
-                '<?=__('Orga', 'view', 'displayMoreCells')?>' +
+            '<div class="btn btn-primary span display-more-cells">' +
+                '<?=__('Orga', 'view', 'display-more-cells')?>' +
             '</div>'
         );
     }
 });
-$('body').on('click', '.displayMoreCells', function (e) {
+$('body').on('click', '.display-more-cells', function (e) {
     $(this).parent().trigger('showCells');
 });
 
@@ -760,37 +760,37 @@ $('body').on('hidden', '.users', function(e) {
         return;
     }
     var popup = $(this);
-    $('.userMessage', popup).remove();
+    $('.user-message', popup).remove();
     $('.modal-footer form input[name="userEmail"]', popup).val('');
 });
-$('body').on('click', '.deleteUser', function(e) {
+$('body').on('click', '.delete-user', function(e) {
     e.preventDefault();
     if ($(this).attr('data-submitting') === 'true') {
         return false;
     }
-    $('.userMessage').remove();
+    $('.user-message').remove();
     $(this).parent().parent().after(
-        '<tr class="info userMessage">' +
+        '<tr class="info user-message">' +
             '<td colspan="5">' +
                 '<?=__('Orga', 'view', 'askConfirmDeleteUser')?>' +
                 $(this).parent().prev().prev().html() +
                 '<button class="btn btn-primary confirm"><i class="icon-ok icon-white"></i> <?=__('Orga', 'view', 'confirmDeleteUser')?></button>' +
-                '<button class="btn closeUserMessage"><i class="icon-remove"></i> <?=__('Orga', 'view', 'confirmDeleteUser')?></button>' +
+                '<button class="btn close-user-message"><i class="icon-remove"></i> <?=__('Orga', 'view', 'confirmDeleteUser')?></button>' +
             '</td>' +
         '</tr>'
     );
 });
-$('body').on('click', 'tr.userMessage .confirm', function(e) {
+$('body').on('click', 'tr.user-message .confirm', function(e) {
     e.preventDefault();
     var row = $(this).parent().parent();
-    var deleteUser = $('.deleteUser', row.prev());
+    var deleteUser = $('.delete-user', row.prev());
     if (deleteUser.attr('data-submitting') === 'true') {
         return false;
     }
     deleteUser.attr('data-submitting', true);
     row.html('<td colspan="5"><img src="images/ui/ajax-loader.gif"></td>');
     $.ajax({
-        url: $('a.deleteUser', row.prev()).attr('href'),
+        url: $('a.delete-user', row.prev()).attr('href'),
         type: "POST",
         success: function(data) {
             row.prev().remove();
@@ -798,7 +798,7 @@ $('body').on('click', 'tr.userMessage .confirm', function(e) {
             row.addClass('success');
             row.html(
                 '<td colspan="4">' + data + '</td>' +
-                '<td><button class="close closeUserMessage"><i class="icon-remove"></i></button></td>'
+                '<td><button class="close close-user-message"><i class="icon-remove"></i></button></td>'
             );
         },
         error: function(jqXHR) {
@@ -813,18 +813,18 @@ $('body').on('click', 'tr.userMessage .confirm', function(e) {
             if (typeof(response.message) == 'string') {
                 row.html(
                     '<td colspan="4">' + response.message + '</td>' +
-                    '<td><button class="close closeUserMessage"><i class="icon-remove"></i></button></td>'
+                    '<td><button class="close close-user-message"><i class="icon-remove"></i></button></td>'
                 );
             } else {
                 row.html(
                     '<td colspan="4"><?=__('Orga', 'view', 'errorWhileDeletingUser')?></td>' +
-                    '<td><button class="close closeUserMessage"><i class="icon-remove"></i></button></td>'
+                    '<td><button class="close close-user-message"><i class="icon-remove"></i></button></td>'
                 );
             }
         }
     });
 });
-$('body').on('click', 'tr.userMessage .closeUserMessage', function(e) {
+$('body').on('click', 'tr.user-message .close-user-message', function(e) {
     e.preventDefault();
     $(this).parent().parent().remove();
 });
@@ -835,8 +835,8 @@ $('body').on('submit', '.addUser', function(e) {
         return false;
     }
     form.attr('data-submitting', true);
-    $('.userMessage').remove();
-    form.before('<div class="userMessage alert alert-info"><img src="images/ui/ajax-loader.gif"></div>')
+    $('.user-message').remove();
+    form.before('<div class="user-message alert alert-info"><img src="images/ui/ajax-loader.gif"></div>')
     $.ajax({
         url: form.attr('action'),
         type: "POST",
@@ -890,36 +890,36 @@ $('body').on('hidden', '.reports', function(e) {
         return;
     }
     var popup = $(this);
-    $('.reportMessage', popup).remove();
+    $('.report-message', popup).remove();
 });
-$('body').on('click', '.deleteReport', function(e) {
+$('body').on('click', '.delete-report', function(e) {
     e.preventDefault();
     if ($(this).attr('data-submitting') === 'true') {
         return false;
     }
-    $('.reportMessage').remove();
+    $('.report-message').remove();
     $(this).parent().parent().after(
-        '<tr class="info reportMessage">' +
+        '<tr class="info report-message">' +
             '<td colspan="3">' +
                 '<?=__('Orga', 'view', 'askConfirmDeleteReport')?>' +
                 $('a', $(this).parent().prev().prev()).html() +
                 '<button class="btn btn-primary confirm"><i class="icon-ok icon-white"></i> <?=__('Orga', 'view', 'confirmDeleteReport')?></button>' +
-                '<button class="btn closeReportMessage"><i class="icon-remove"></i> <?=__('Orga', 'view', 'cancelDeleteReport')?></button>' +
+                '<button class="btn close-report-message"><i class="icon-remove"></i> <?=__('Orga', 'view', 'cancelDeleteReport')?></button>' +
             '</td>' +
         '</tr>'
     );
 });
-$('body').on('click', 'tr.reportMessage .confirm', function(e) {
+$('body').on('click', 'tr.report-message .confirm', function(e) {
     e.preventDefault();
     var row = $(this).parent().parent();
-    var deleteReport = $('.deleteReport', row.prev());
+    var deleteReport = $('.delete-report', row.prev());
     if (deleteReport.attr('data-submitting') === 'true') {
         return false;
     }
     deleteReport.attr('data-submitting', true);
     row.html('<td colspan="3"><img src="images/ui/ajax-loader.gif"></td>');
     $.ajax({
-        url: $('a.deleteReport', row.prev()).attr('href'),
+        url: $('a.delete-report', row.prev()).attr('href'),
         type: "POST",
         success: function(data) {
             row.prev().remove();
@@ -927,7 +927,7 @@ $('body').on('click', 'tr.reportMessage .confirm', function(e) {
             row.addClass('success');
             row.html(
                 '<td colspan="2">' + data + '</td>' +
-                '<td><button class="close closeReportMessage"><i class="icon-remove"></i></button></td>'
+                '<td><button class="close close-report-message"><i class="icon-remove"></i></button></td>'
             );
         },
         error: function(jqXHR) {
@@ -942,23 +942,23 @@ $('body').on('click', 'tr.reportMessage .confirm', function(e) {
             if (typeof(response.message) == 'string') {
                 row.html(
                     '<td colspan="2">' + response.message + '</td>' +
-                    '<td><button class="close closeReportMessage"><i class="icon-remove"></i></button></td>'
+                    '<td><button class="close close-report-message"><i class="icon-remove"></i></button></td>'
                 );
             } else {
                 row.html(
                     '<td colspan="2"><?=__('Orga', 'view', 'errorWhileDeletingReport')?></td>' +
-                    '<td><button class="close closeReportMessage"><i class="icon-remove"></i></button></td>'
+                    '<td><button class="close close-report-message"><i class="icon-remove"></i></button></td>'
                 );
             }
         }
     });
 });
-$('body').on('click', 'tr.reportMessage .closeReportMessage', function(e) {
+$('body').on('click', 'tr.report-message .close-report-message', function(e) {
     e.preventDefault();
     $(this).parent().parent().remove();
 });
 
-$('body').on('click', '.inventoryStatus .dropdown-menu a', function(e) {
+$('body').on('click', '.inventory-status .dropdown-menu a', function(e) {
     e.preventDefault();
     var link = $(this);
     var button = link.parent().parent().prev();
