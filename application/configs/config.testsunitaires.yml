@@ -6,3 +6,4 @@ MyCLabs\UnitAPI\UnitService:
 
 MyCLabs\UnitAPI\UnitOperationService:
   class: Unit\Mock\FakeUnitOperationService
+  constructor: [ MyCLabs\UnitAPI\UnitService ]

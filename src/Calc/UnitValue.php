@@ -81,7 +81,7 @@ class Calc_UnitValue
         if (is_null($digitalValue)) {
             $newDigitalValue = null;
         } else {
-            $newDigitalValue = (float) $digitalValue * $unit->getConversionFactor($this->unit->getRef());
+            $newDigitalValue = (float) $digitalValue * $this->unit->getConversionFactor($unit->getRef());
         }
 
         return new Calc_UnitValue($unit, $newDigitalValue, $this->value->getRelativeUncertainty());

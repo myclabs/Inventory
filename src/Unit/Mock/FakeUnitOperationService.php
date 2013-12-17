@@ -3,6 +3,7 @@
 namespace Unit\Mock;
 
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
+use MyCLabs\UnitAPI\Exception\UnknownUnitException;
 use MyCLabs\UnitAPI\UnitOperationService;
 use MyCLabs\UnitAPI\UnitService;
 
@@ -35,13 +36,36 @@ class FakeUnitOperationService implements UnitOperationService
                 switch ($unit2) {
                     case 'm':
                         return 1;
+                    case 'km':
+                        return 0.001;
+                    case '100km':
+                        return 0.00001;
                     default:
-                        throw new IncompatibleUnitsException();
+                        throw new IncompatibleUnitsException(
+                            "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
+                        );
+                }
+                break;
+
+            case 'km':
+                switch ($unit2) {
+                    case 'km':
+                        return 1;
+                    case 'm':
+                        return 1000;
+                    case '100km':
+                        return 0.01;
+                    default:
+                        throw new IncompatibleUnitsException(
+                            "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
+                        );
                 }
                 break;
 
             default:
-                throw new IncompatibleUnitsException();
+                throw new IncompatibleUnitsException(
+                    "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
+                );
         }
     }
 
@@ -50,7 +74,12 @@ class FakeUnitOperationService implements UnitOperationService
      */
     public function areCompatible($unit1, $unit2)
     {
-        throw new \Exception("Not implemented");
+        try {
+            $this->getConversionFactor($unit1, $unit2);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -58,6 +87,19 @@ class FakeUnitOperationService implements UnitOperationService
      */
     public function multiply($unit1, $unit2)
     {
-        throw new \Exception("Not implemented");
+        throw new \Exception("multiply not implemented yet");
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function inverse($unit)
+    {
+        switch ($unit) {
+            case 'm':
+                return 'm^-1';
+        }
+
+        throw UnknownUnitException::create($unit);
     }
 }

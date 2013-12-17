@@ -105,6 +105,10 @@ class UnitAPI
      */
     public function isEquivalent($ref)
     {
+        if ($ref instanceof UnitAPI) {
+            $ref = $ref->getRef();
+        }
+
         /** @var Container $container */
         $container = \Zend_Registry::get('container');
         /** @var UnitOperationService $operationService */
@@ -147,6 +151,7 @@ class UnitAPI
      */
     public static function multiply($components)
     {
+        throw new \Exception("Not implemented yet");
         $unit = new ComposedUnit();
         $result = $unit->multiply($components);
         $api = new UnitAPI($result->getRef());
@@ -164,6 +169,7 @@ class UnitAPI
      */
     public static function calculateSum($components)
     {
+        throw new \Exception("Not implemented yet");
         $unit = new ComposedUnit();
         $result = $unit->calculateSum($components);
         $api = new UnitAPI($result->getRef());
@@ -199,6 +205,7 @@ class UnitAPI
      */
     public function getNormalizedUnit()
     {
+        throw new \Exception("Not implemented yet");
         $unit = new ComposedUnit($this->ref);
         return new UnitAPI($unit->getNormalizedUnit()->getRef());
     }

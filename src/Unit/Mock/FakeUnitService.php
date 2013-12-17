@@ -20,8 +20,20 @@ class FakeUnitService implements UnitService
         $m->label = 'metre';
         $m->symbol = 'm';
 
+        $km = new UnitDTO();
+        $km->id = 'km';
+        $km->label = 'kilometre';
+        $km->symbol = 'km';
+
+        $centkm = new UnitDTO();
+        $centkm->id = '100km';
+        $centkm->label = '100 kilometres';
+        $centkm->symbol = '100km';
+
         $this->units = [
-            'm' => $m,
+            'm'     => $m,
+            'km'    => $km,
+            '100km' => $centkm,
         ];
     }
 
@@ -50,7 +62,7 @@ class FakeUnitService implements UnitService
      */
     public function getUnitSystems()
     {
-        throw new \Exception("Not implemented");
+        throw new \Exception("getUnitSystems not implemented yet");
     }
 
     /**
@@ -58,6 +70,19 @@ class FakeUnitService implements UnitService
      */
     public function getPhysicalQuantities()
     {
-        throw new \Exception("Not implemented");
+        throw new \Exception("getPhysicalQuantities not implemented yet");
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCompatibleUnits($id)
+    {
+        switch ($id) {
+            case 'm':
+                return [];
+        }
+
+        throw UnknownUnitException::create($id);
     }
 }
