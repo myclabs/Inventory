@@ -151,10 +151,24 @@ class Orga_OrganizationController extends Core_Controller
         $label = $formData['organization']['elements']['organizationLabel']['value'];
 
         $success = function () {
-            $this->sendJsonResponse('ok');
+            $this->sendJsonResponse(
+                [
+                    'message' => __('UI', 'message', 'added'),
+                    'typeMessage' => 'success',
+                    'info' => __('Orga', 'add', 'complementaryInfo')
+                ]
+            );
         };
         $timeout = function () {
-            $this->sendJsonResponse('processing');
+            $this->sendJsonResponse(
+                [
+                    [
+                        'message' => __('UI', 'message', 'addedLater'),
+                        'typeMessage' => 'info',
+                        'info' => __('Orga', 'add', 'addOrganizationComplementaryInfo')
+                    ]
+                ]
+            );
         };
         $error = function (Exception $e) {
             throw $e;
