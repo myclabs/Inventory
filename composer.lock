@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "575c38cd640941b22f9ebc1065c18e1b",
+    "hash": "e9d232678c4001206152d06db5b91818",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -781,24 +781,25 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.5.1",
+            "version": "4.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "a039bcd574cce6b2370577f927fbda5e90c7540f"
+                "reference": "a872d08c96776596dc396a43cc5cad65e33be8f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/a039bcd574cce6b2370577f927fbda5e90c7540f",
-                "reference": "a039bcd574cce6b2370577f927fbda5e90c7540f",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/a872d08c96776596dc396a43cc5cad65e33be8f0",
+                "reference": "a872d08c96776596dc396a43cc5cad65e33be8f0",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
                 "doctrine/cache": "1.*",
+                "mnapoli/phpdocreader": "~1.1",
                 "myclabs/php-enum": "1.*",
                 "ocramius/proxy-manager": "~0.3",
-                "php": ">=5.3.0",
+                "php": ">=5.3.3",
                 "symfony/yaml": "2.*"
             },
             "type": "library",
@@ -807,7 +808,10 @@
                     "DI": "src/",
                     "IntegrationTests": "tests/",
                     "UnitTests": "tests/"
-                }
+                },
+                "files": [
+                    "src/DI/functions.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -820,30 +824,30 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-10-29 09:22:31"
+            "time": "2014-01-07 18:07:53"
         },
         {
             "name": "mnapoli/php-di-zf1",
-            "version": "1.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI-ZF1.git",
-                "reference": "fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43"
+                "reference": "dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43",
-                "reference": "fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9",
+                "reference": "dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9",
                 "shasum": ""
             },
             "require": {
-                "mnapoli/php-di": "~3.3",
+                "mnapoli/php-di": "~4.0",
                 "zendframework/zendframework1": "1.12.*"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "DI\\ZendFramework1": "src/"
+                    "DI\\Bridge\\ZendFramework1\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -851,8 +855,43 @@
                 "MIT"
             ],
             "description": "Integrates PHP-DI to Zend Framework 1",
-            "homepage": "http://mnapoli.github.io/PHP-DI-ZF1/",
-            "time": "2013-08-12 07:23:17"
+            "homepage": "https://github.com/mnapoli/PHP-DI-ZF1",
+            "time": "2014-01-08 10:14:14"
+        },
+        {
+            "name": "mnapoli/phpdocreader",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnapoli/PhpDocReader.git",
+                "reference": "94eed8fb141f989fe044ae3b6743cc1d87b05a7f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/PhpDocReader/zipball/94eed8fb141f989fe044ae3b6743cc1d87b05a7f",
+                "reference": "94eed8fb141f989fe044ae3b6743cc1d87b05a7f",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "1.*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PhpDocReader": "src/",
+                    "UnitTest": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "keywords": [
+                "phpdoc",
+                "reflection"
+            ],
+            "time": "2013-12-15 22:24:08"
         },
         {
             "name": "monolog/monolog",
@@ -1606,53 +1645,6 @@
             "time": "2013-12-28 08:12:03"
         },
         {
-            "name": "symfony/finder",
-            "version": "v2.4.1",
-            "target-dir": "Symfony/Component/Finder",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Finder.git",
-                "reference": "6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a",
-                "reference": "6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Finder\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Finder Component",
-            "homepage": "http://symfony.com",
-            "time": "2014-01-01 08:14:50"
-        },
-        {
             "name": "symfony/property-access",
             "version": "v2.4.1",
             "target-dir": "Symfony/Component/PropertyAccess",
@@ -1709,61 +1701,6 @@
                 "reflection"
             ],
             "time": "2013-11-13 21:30:16"
-        },
-        {
-            "name": "symfony/translation",
-            "version": "v2.4.1",
-            "target-dir": "Symfony/Component/Translation",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Translation.git",
-                "reference": "7f76dffd7eaf2c9a3a8f47649404c71440d18c8b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/7f76dffd7eaf2c9a3a8f47649404c71440d18c8b",
-                "reference": "7f76dffd7eaf2c9a3a8f47649404c71440d18c8b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "symfony/config": "~2.0",
-                "symfony/yaml": "~2.2"
-            },
-            "suggest": {
-                "symfony/config": "",
-                "symfony/yaml": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Translation\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Translation Component",
-            "homepage": "http://symfony.com",
-            "time": "2013-12-31 13:43:26"
         },
         {
             "name": "symfony/yaml",
@@ -1863,16 +1800,16 @@
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.2.6",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
-                "reference": "6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f"
+                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f",
-                "reference": "6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/ffed6c575260d9ccf796e213f1383e3489b3256c",
+                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c",
                 "shasum": ""
             },
             "require": {
@@ -1904,7 +1841,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2013-12-22 12:49:53"
+            "time": "2013-10-04 16:26:56"
         },
         {
             "name": "zendframework/zend-code",
@@ -2673,6 +2610,108 @@
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
             "time": "2013-12-31 13:43:26"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "v2.4.1",
+            "target-dir": "Symfony/Component/Finder",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Finder.git",
+                "reference": "6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a",
+                "reference": "6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Finder\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Finder Component",
+            "homepage": "http://symfony.com",
+            "time": "2014-01-01 08:14:50"
+        },
+        {
+            "name": "symfony/translation",
+            "version": "v2.4.1",
+            "target-dir": "Symfony/Component/Translation",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Translation.git",
+                "reference": "7f76dffd7eaf2c9a3a8f47649404c71440d18c8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/7f76dffd7eaf2c9a3a8f47649404c71440d18c8b",
+                "reference": "7f76dffd7eaf2c9a3a8f47649404c71440d18c8b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/config": "~2.0",
+                "symfony/yaml": "~2.2"
+            },
+            "suggest": {
+                "symfony/config": "",
+                "symfony/yaml": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Translation\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Translation Component",
+            "homepage": "http://symfony.com",
+            "time": "2013-12-31 13:43:26"
         }
     ],
     "aliases": [
@@ -2699,6 +2738,12 @@
             "alias_normalized": "1.7.99.0",
             "version": "dev-WriterExcel5OptionalConstructor",
             "package": "phpoffice/phpexcel"
+        },
+        {
+            "alias": "4.0.0",
+            "alias_normalized": "4.0.0.0",
+            "version": "4.0.9999999.9999999-dev",
+            "package": "mnapoli/php-di"
         }
     ],
     "minimum-stability": "dev",
@@ -2709,11 +2754,13 @@
         "pear/console_commandline": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
+        "mnapoli/php-di": 20,
+        "mnapoli/php-di-zf1": 20,
         "mnapoli/metaconsole": 20
     },
-    "platform": [
-
-    ],
+    "platform": {
+        "php": ">=5.5.0"
+    },
     "platform-dev": [
 
     ]

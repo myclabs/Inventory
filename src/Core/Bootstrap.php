@@ -13,7 +13,6 @@ use Core\Work\EventListener\SimpleEventListener;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Container;
 use DI\ContainerBuilder;
-use DI\Definition\FileLoader\YamlDefinitionFileLoader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
@@ -69,14 +68,10 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'UTF8',
                 'Container',
                 'Translations',
-                'Log',
                 'ErrorHandler',
                 // Il faut initialiser le front controller pour que l'ajout de dossiers
                 // de controleurs soit pris en compte
                 'FrontController',
-                'Doctrine',
-                'DefaultEntityManager',
-                'Work',
             ];
             parent::_bootstrap($resources);
             // Lance toutes les autres méthodes (moins prioritaires)
@@ -89,8 +84,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initAutoloader()
     {
-        /** @noinspection PhpIncludeInspection */
-        require PACKAGE_PATH . '/vendor/autoload.php';
         Autoloader::getInstance()->register();
     }
 
@@ -115,7 +108,31 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $configuration = new Zend_Config($this->getOptions());
 
         $builder = new ContainerBuilder();
-        $builder->addDefinitionsFromFile(new YamlDefinitionFileLoader(APPLICATION_PATH . '/configs/di.yml'));
+        $builder->addDefinitions(APPLICATION_PATH . '/configs/config.php');
+        $builder->addDefinitions(APPLICATION_PATH . '/configs/config.log.php');
+        $container = $builder->build();
+        $container->get('translation.languages');
+
+        $builder = new ContainerBuilder();
+        $builder->addDefinitions(APPLICATION_PATH . '/configs/config.php');
+        $builder->addDefinitions(APPLICATION_PATH . '/configs/config.log.php');
+        $builder->addDefinitions(APPLICATION_PATH . '/configs/config.doctrine.php');
+
+        switch (APPLICATION_ENV) {
+            case 'testsunitaires':
+                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.tests.php');
+                break;
+            case 'developpement':
+                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.dev.php');
+                break;
+            case 'test':
+            case 'production':
+                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.prod.php');
+                break;
+        }
+
+        $builder->addDefinitions(APPLICATION_PATH . '/configs/parameters.php');
+
         $diConfig = $configuration->get('di', null);
 
         // Cache de prod
@@ -139,67 +156,11 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
         Zend_Registry::set('container', $this->container);
 
-        // Copie des éléments de configuration dans le container
-        $this->container->set('application.name', $configuration->get('applicationName', ''));
-        $this->container->set('email.contact.address', $configuration->emails->contact->adress);
-        $this->container->set('email.noreply.name', $configuration->emails->noreply->name);
-        $this->container->set('email.noreply.address', $configuration->emails->noreply->adress);
-        $this->container->set('feature.register', $configuration->feature->register);
-
         // Configuration pour injecter dans les controleurs (intégration ZF1)
-        $dispatcher = new \DI\ZendFramework1\Dispatcher();
+        $dispatcher = new \DI\Bridge\ZendFramework1\Dispatcher();
         $dispatcher->setContainer($this->container);
         $frontController = Zend_Controller_Front::getInstance();
         $frontController->setDispatcher($dispatcher);
-    }
-
-    /**
-     * Log des erreurs
-     */
-    protected function _initLog()
-    {
-        $configuration = Zend_Registry::get('configuration');
-        $cli = (PHP_SAPI == 'cli');
-
-        $logger = new Logger('log');
-
-        // Log vers la console (si configuré ou PHP CLI)
-        if ($configuration->log->stdout || $cli) {
-            $loggerHandler = new StreamHandler('php://stdout', Logger::DEBUG);
-            $loggerHandler->setFormatter(new ExtendedLineFormatter());
-            $logger->pushHandler($loggerHandler);
-        }
-        // Log dans un fichier
-        if ($configuration->log->file && !$cli) {
-            $file = $this->container->get('log.file');
-            $fileHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
-            $fileHandler->setFormatter(new ExtendedLineFormatter());
-            $logger->pushHandler($fileHandler);
-        }
-        // Log FirePHP
-        if ($configuration->log->firephp && !$cli) {
-            ini_set('html_errors', false);
-            $logger->pushHandler(new FirePHPHandler());
-            $chromePHPHandler = new ChromePHPHandler();
-            $chromePHPHandler->setFormatter(new ChromePHPFormatter());
-            $logger->pushHandler($chromePHPHandler);
-        }
-
-        /** @noinspection PhpParamsInspection */
-        $logger->pushProcessor(new PsrLogMessageProcessor());
-        // Log l'email de l'utilisateur
-        $logger->pushProcessor(new UserInfoProcessor());
-
-        $this->container->set(LoggerInterface::class, $logger);
-
-        // Log des requetes
-        if ($configuration->log->queries) {
-            $file = $this->container->get('log.query.file');
-            $queryLoggerHandler = new StreamHandler(PACKAGE_PATH . '/' . $file, Logger::DEBUG);
-            $queryLoggerHandler->setFormatter(new LineFormatter("%message%" . PHP_EOL));
-            $queryLogger = new Logger('log.query', [$queryLoggerHandler]);
-            $this->container->set('log.query', $queryLogger);
-        }
     }
 
     /**
@@ -214,75 +175,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             set_exception_handler([$errorHandler, 'myExceptionHandler']);
             register_shutdown_function([$errorHandler, 'myShutdownFunction']);
         }
-    }
-
-    /**
-     * Initialise Doctrine pour utiliser l'autoloader de Zend.
-     */
-    protected function _initDoctrine()
-    {
-        $configuration = Zend_Registry::get('configuration');
-        // Création de la configuration de Doctrine.
-        $doctrineConfig = new Doctrine\ORM\Configuration();
-
-        $cache = $this->container->get(Cache::class);
-
-        /** @see AbstractProxyFactory */
-        $doctrineAutoGenerateProxy = (int) $configuration->doctrine->proxies->mode;
-
-        // Choix du driver utilisé par le schema.
-        //  Utilisation d'un driver YAML.
-        //  Les fichiers de mapping porteront l'extension '.yml'.
-        $doctrineYAMLDriver = new YamlDriver([APPLICATION_PATH . '/models/mappers'], '.yml');
-
-        // Annotations pour les extensions Doctrine
-        $driverChain = new \Doctrine\ORM\Mapping\Driver\DriverChain();
-        $driverChain->setDefaultDriver($doctrineYAMLDriver);
-        // Juste pour enregistrer les annotations doctrine dans le registry
-        $doctrineConfig->newDefaultAnnotationDriver();
-        $cachedAnnotationReader = new CachedReader(new AnnotationReader(), $cache);
-        Gedmo\DoctrineExtensions::registerMappingIntoDriverChainORM(
-            $driverChain, // our metadata driver chain, to hook into
-            $cachedAnnotationReader // our cached annotation reader
-        );
-        Zend_Registry::set('annotationReader', $cachedAnnotationReader);
-
-        $doctrineConfig->setMetadataDriverImpl($driverChain);
-
-        // Configuration de Doctrine pour utiliser le cache
-        //  pour la création des requêtes, des résults, et du parsing des Métadata.
-        $doctrineConfig->setQueryCacheImpl($cache);
-        $doctrineConfig->setResultCacheImpl($cache);
-        $doctrineConfig->setMetadataCacheImpl($cache);
-        // Configuration des Proxies.
-        $doctrineConfig->setProxyNamespace('Doctrine_Proxies');
-        $doctrineConfig->setAutoGenerateProxyClasses($doctrineAutoGenerateProxy);
-        $doctrineConfig->setProxyDir(PACKAGE_PATH . '/data/proxies');
-        if ($doctrineAutoGenerateProxy !== AbstractProxyFactory::AUTOGENERATE_EVAL) {
-            DoctrineProxyAutoloader::register($doctrineConfig->getProxyDir(), $doctrineConfig->getProxyNamespace());
-        }
-
-        // Log des requêtes
-        if ($configuration->log->queries) {
-            $doctrineConfig->setSQLLogger($this->container->get(QueryLogger::class));
-        }
-
-        // Enregistrement de la configuration Doctrine dans le Registry.
-        //  Utile pour créer d'autres EntityManager.
-        Zend_Registry::set('doctrineConfiguration', $doctrineConfig);
-    }
-
-    /**
-     * Initialize Doctrine
-     */
-    protected function _initDefaultEntityManager()
-    {
-        $entityManager = $this->createDefaultEntityManager();
-
-        // Enregistrement de l'entityManager par défault dans le Registry.
-        // Les prochains devront être ajouté au tableau.
-        Zend_Registry::set('EntityManagers', ['default' => $entityManager]);
-        $this->container->set(EntityManager::class, $entityManager);
     }
 
     /**
@@ -303,22 +195,30 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     public function createDefaultEntityManager($connectionSettings = null)
     {
         if ($connectionSettings == null) {
-            // Récupération de la configuration de la connexion dans l'application.ini
-            /** @var mixed $connectionSettings */
-            $connectionSettings = Zend_Registry::get('configuration')->doctrine->default->connection;
+            $connectionArray = [
+                'driver'        => $this->container->get('db.driver'),
+                'user'          => $this->container->get('db.user'),
+                'password'      => $this->container->get('db.password'),
+                'dbname'        => $this->container->get('db.name'),
+                'host'          => $this->container->get('db.host'),
+                'port'          => $this->container->get('db.port'),
+                'driverOptions' => [
+                    1002 => 'SET NAMES utf8'
+                ],
+            ];
+        } else {
+            $connectionArray = [
+                'driver'        => $connectionSettings->driver,
+                'user'          => $connectionSettings->user,
+                'password'      => $connectionSettings->password,
+                'dbname'        => $connectionSettings->dbname,
+                'host'          => $connectionSettings->host,
+                'port'          => $connectionSettings->port,
+                'driverOptions' => [
+                    1002 => 'SET NAMES utf8'
+                ],
+            ];
         }
-
-        $connectionArray = [
-            'driver'        => $connectionSettings->driver,
-            'user'          => $connectionSettings->user,
-            'password'      => $connectionSettings->password,
-            'dbname'        => $connectionSettings->dbname,
-            'host'          => $connectionSettings->host,
-            'port'          => $connectionSettings->port,
-            'driverOptions' => [
-                1002 => 'SET NAMES utf8'
-            ],
-        ];
 
         /* @var $doctrineConfig Doctrine\ORM\Configuration */
         $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
@@ -329,7 +229,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Extension de traduction de champs
         $translatableListener = new TranslatableListener();
         $translatableListener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
-        $translatableListener->setDefaultLocale(Zend_Registry::get('configuration')->translation->defaultLocale);
+        $translatableListener->setDefaultLocale($this->container->get('translation.defaultLocale'));
         $translatableListener->setPersistDefaultLocaleTranslation(true);
         $translatableListener->setTranslationFallback(true);
         $em->getEventManager()->addEventSubscriber($translatableListener);
@@ -408,14 +308,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initTranslations()
     {
         // Langues
-        $configuration = Zend_Registry::get('configuration');
-        if (isset($configuration->translation)) {
-            $languages = $configuration->translation->languages->toArray();
-        } else {
-            $languages = [];
-        }
-
-        Zend_Registry::set('languages', $languages);
+        Zend_Registry::set('languages', $this->container->get('translation.languages'));
     }
 
     /**
@@ -424,12 +317,7 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initSessionNamespace()
     {
         $auth = Zend_Auth::getInstance();
-        $name = $this->container->get('application.name');
-        if ($name == '') {
-            $configuration = Zend_Registry::get('configuration');
-            $name = $configuration->sessionStorage->name;
-        }
-        $auth->setStorage(new Zend_Auth_Storage_Session($name));
+        $auth->setStorage(new Zend_Auth_Storage_Session($this->container->get('application.name')));
     }
 
     /**
