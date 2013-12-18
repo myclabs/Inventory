@@ -26,8 +26,8 @@ foreach ($this->granularities as $granularity) {
     $columnRelevance->editable = true;
     $columnRelevance->textTrue = __('Orga', 'cellRelevance', 'relevantFem');
     $columnRelevance->textFalse = __('Orga', 'cellRelevance', 'irrelevantFem');
-    $columnRelevance->valueTrue = '<i class="icon-ok"></i> '.__('Orga', 'cellRelevance', 'relevantFem');
-    $columnRelevance->valueFalse = '<i class="icon-remove"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
+    $columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.__('Orga', 'cellRelevance', 'relevantFem');
+    $columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
     $datagridGranularityRelevance->addCol($columnRelevance);
 
     $datagridGranularityRelevance->addParam('idOrganization', $this->organization->getId());

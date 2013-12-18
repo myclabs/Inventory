@@ -59,7 +59,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                                                                   'action'     => 'duplicate-popup',
                                                                   'id'         => $af->getId(),
                                                              )),
-                __('UI', 'verb', 'duplicate'), 'plus-sign'
+                __('UI', 'verb', 'duplicate'), 'plus-circle'
             );
             $this->addLine($data);
         }

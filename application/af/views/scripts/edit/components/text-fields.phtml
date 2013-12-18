@@ -33,8 +33,8 @@ $isVisibleCheckbox->editable = true;
 $isVisibleCheckbox->defaultAddValue = true;
 $isVisibleCheckbox->textTrue = __('UI', 'property', 'visible');
 $isVisibleCheckbox->textFalse = __('UI', 'property', 'masked');
-$isVisibleCheckbox->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'visible');
-$isVisibleCheckbox->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'masked');
+$isVisibleCheckbox->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'visible');
+$isVisibleCheckbox->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'masked');
 $datagrid->addCol($isVisibleCheckbox);
 
 // Enable / Disable
@@ -43,8 +43,8 @@ $enabledColumn->editable = true;
 $enabledColumn->defaultAddValue = true;
 $enabledColumn->textTrue = __('UI', 'property', 'enabled');
 $enabledColumn->textFalse = __('UI', 'property', 'disabled');
-$enabledColumn->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'enabled');
-$enabledColumn->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'disabled');
+$enabledColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'enabled');
+$enabledColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'disabled');
 $datagrid->addCol($enabledColumn);
 
 // Required
@@ -53,8 +53,8 @@ $requiredColumn->editable = true;
 $requiredColumn->defaultAddValue = false;
 $requiredColumn->textTrue = __('UI', 'property', 'required');
 $requiredColumn->textFalse = __('UI', 'property', 'optional');
-$requiredColumn->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'required');
-$requiredColumn->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'optional');
+$requiredColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'required');
+$requiredColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'optional');
 $datagrid->addCol($requiredColumn);
 
 // Type

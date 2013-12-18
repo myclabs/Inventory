@@ -233,7 +233,7 @@ Feature: Organization granularity feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # Accès à "Annecy"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I select "Annecy" from "site"
     And I click element "#goTo3"
     And I open tab "Rôles"
@@ -247,9 +247,9 @@ Feature: Organization granularity feature
     And I click "Supprimer" in the row 1 of the "granularityACL3" datagrid
     And I click "Confirmer"
   # Accès à "Chambéry"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I click "Vue globale"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I select "Chambéry" from "site"
     And I click element "#goTo3"
     And I open tab "Rôles"
@@ -263,7 +263,7 @@ Feature: Organization granularity feature
     And I click "Supprimer" in the row 1 of the "granularityACL3" datagrid
     And I click "Confirmer"
   # Modification de l'attribut "with roles" pour la granularité "site"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I click "Vue globale"
     And I open tab "Paramétrage"
     And I open tab "Niveaux"

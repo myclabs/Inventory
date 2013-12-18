@@ -34,8 +34,8 @@ $isVisibleCheckbox->editable = true;
 $isVisibleCheckbox->defaultAddValue = true;
 $isVisibleCheckbox->textTrue = __('UI', 'property', 'visible');
 $isVisibleCheckbox->textFalse = __('UI', 'property', 'masked');
-$isVisibleCheckbox->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'visible');
-$isVisibleCheckbox->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'masked');
+$isVisibleCheckbox->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'visible');
+$isVisibleCheckbox->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'masked');
 $checkboxDatagrid->addCol($isVisibleCheckbox);
 // Enable / Disable
 $enabledColumn = new UI_Datagrid_Col_Bool('enabled', __('AF', 'configComponentDatagrid', 'initialActivationHeader'));
@@ -43,8 +43,8 @@ $enabledColumn->editable = true;
 $enabledColumn->defaultAddValue = true;
 $enabledColumn->textTrue = __('UI', 'property', 'enabled');
 $enabledColumn->textFalse = __('UI', 'property', 'disabled');
-$enabledColumn->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'enabled');
-$enabledColumn->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'disabled');
+$enabledColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'enabled');
+$enabledColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'disabled');
 $checkboxDatagrid->addCol($enabledColumn);
 // Checked / Uncheked
 $defaultValueColumn = new UI_Datagrid_Col_Bool('defaultValue', __('AF', 'configComponentDatagrid', 'initialValueHeader'));
@@ -52,8 +52,8 @@ $defaultValueColumn->editable = true;
 $defaultValueColumn->defaultAddValue = false;
 $defaultValueColumn->textFalse = __('UI', 'property', 'unchecked');
 $defaultValueColumn->textTrue = __('UI', 'property', 'checked');
-$defaultValueColumn->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'unchecked');
-$defaultValueColumn->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'checked');
+$defaultValueColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'unchecked');
+$defaultValueColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'checked');
 $checkboxDatagrid->addCol($defaultValueColumn);
 
 echo $checkboxDatagrid->render();

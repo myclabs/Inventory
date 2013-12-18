@@ -23,7 +23,7 @@ $organizations = $this->organizations;
                 <div class="pull-right">
                     <a class="deleteOrganization btn btn-small btn-warning"
                        href="orga/organization/delete/idOrganization/<?=$organization->id?>">
-                        <i class="icon-trash icon-white"></i>
+                        <i class="fa fa-trash-o"></i>
                         <?=__('UI', 'verb', 'delete')?>
                     </a>
                 </div>
@@ -32,7 +32,7 @@ $organizations = $this->organizations;
                 <div class="pull-right">
                     <a class="editOrganization btn btn-small btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>">
-                        <i class="icon-cog icon-white"></i>
+                        <i class="fa fa-wrench"></i>
                         <?=__('UI', 'name', 'configurationOrga')?>
                     </a>
                 </div>
@@ -42,7 +42,7 @@ $organizations = $this->organizations;
                 <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
                     <?=$organization->label?>
                     <small>
-                        <i class="icon-share-alt"></i>
+                        <i class="fa fa-external-link"></i>
                         <?=__('Orga', 'organizationList', 'goToData')?>
                     </small>
                 </a>
@@ -64,7 +64,7 @@ $organizations = $this->organizations;
     <?php if ($this->canCreateOrganization) : ?>
         <p>
             <a href="orga/organization/add" class="btn">
-                <i class="icon-plus-sign"></i>
+                <i class="fa fa-plus"></i>
                 <?=__('UI', 'verb', 'add')?>
             </a>
         </p>
@@ -75,9 +75,9 @@ $organizations = $this->organizations;
 <script>
     $(function() {
         $(".deleteOrganization").confirm({
-            text: "<?=__('UI', 'message', 'areYouSure')?>",
-            confirmButton: "<?=__('UI', 'verb', 'confirm')?>",
-            cancelButton: "<?=__('UI', 'verb', 'cancel')?>",
+            text: '<?=__('UI', 'message', 'areYouSure')?>',
+            confirmButton: '<i class="fa fa-check"></i> <?=__('UI', 'verb', 'confirm')?>',
+            cancelButton: '<i class="fa fa-times"></i> <?=__('UI', 'verb', 'cancel')?>',
             post: true
         });
     });

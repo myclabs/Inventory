@@ -21,8 +21,8 @@ $columnRelevance->editable = true;
 $columnRelevance->defaultAddValue = false;
 $columnRelevance->textTrue = __('UI', 'other', 'yes');
 $columnRelevance->textFalse = __('UI', 'other', 'no');
-$columnRelevance->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
-$columnRelevance->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
+$columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'other', 'yes');
+$columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'no');
 $datagridGranularities->addCol($columnRelevance);
 
 $columnInput = new UI_Datagrid_Col_Bool('afs', __('DW', 'name', 'input'));
@@ -38,8 +38,8 @@ $columnCube->editable = true;
 $columnCube->defaultAddValue = false;
 $columnCube->textTrue = __('UI', 'other', 'yes');
 $columnCube->textFalse = __('UI', 'other', 'no');
-$columnCube->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'yes');
-$columnCube->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'no');
+$columnCube->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'other', 'yes');
+$columnCube->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'no');
 $datagridGranularities->addCol($columnCube);
 
 $columnAcl = new UI_Datagrid_Col_Bool('acl', __('User', 'role', 'roles'));
@@ -48,8 +48,8 @@ $columnAcl->editable = true;
 $columnAcl->defaultAddValue = false;
 $columnAcl->textTrue = __('UI', 'other', 'yes');
 $columnAcl->textFalse = __('UI', 'other', 'no');
-$columnAcl->valueTrue = '<i CLass="icon-ok"></i> '.__('UI', 'other', 'yes');
-$columnAcl->valueFalse = '<i CLass="icon-remove"></i> '.__('UI', 'other', 'no');
+$columnAcl->valueTrue = '<i CLass="fa fa-check"></i> '.__('UI', 'other', 'yes');
+$columnAcl->valueFalse = '<i CLass="fa fa-times"></i> '.__('UI', 'other', 'no');
 $datagridGranularities->addCol($columnAcl);
 
 $datagridGranularities->pagination = false;

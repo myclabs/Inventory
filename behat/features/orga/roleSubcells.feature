@@ -24,7 +24,7 @@ Feature: Organization role for subcells feature
       | site   | userEmail                           | userRole       |
       | Annecy | administrateur.site@toto.com        | Administrateur |
   # Descendre dans la cellule "Europe | Marque A"
-    When I click element ".icon-plus"
+    When I click element ".fa-plus"
     And I click element "#goTo2"
     And I open tab "Rôles"
   # Site, par utilisateur, depuis cellule "Europe | Marque A"
@@ -34,7 +34,7 @@ Feature: Organization role for subcells feature
       | site   | userEmail                           | userRole       |
       | Annecy | administrateur.site@toto.com        | Administrateur |
   # Descendre dans la cellule "Annecy"
-    When I click element ".icon-plus"
+    When I click element ".fa-plus"
     And I click element "#goTo3"
     And I open tab "Rôles"
   # Plus de datagrid de sous-cellule
@@ -164,7 +164,7 @@ Feature: Organization role for subcells feature
       | administrateur.site@toto.com | Administrateur |
   # On descend au niveau zone | marque
     When I click "×"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I click element "#goTo2"
     And I open tab "Rôles"
   # Contenu collapse au niveau Site
@@ -181,7 +181,7 @@ Feature: Organization role for subcells feature
       | administrateur.site@toto.com | Administrateur |
   # On descend au niveau site
     When I click "×"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I click element "#goTo3"
     And I open tab "Rôles"
     Then I should not see "Site — par élément d'organisation"

@@ -37,7 +37,7 @@ class UI_Form_Element_Pattern_Date extends UI_Form_Element_Text
     {
         $component = '';
 
-        $component .= '<i class="icon-th date"></i>';
+        $component .= '<i class="fa fa-th date"></i>';
 
         return $component;
     }

@@ -1,5 +1,4 @@
 <?php
-use Orga\Model\ACL\Role\AbstractCellRole;
 $cellReports = $this->cellReports;
 ?>
 <table class="table table-striped">
@@ -29,7 +28,7 @@ $cellReports = $this->cellReports;
             <td>
                 <?php if (isset($cellReport['delete'])): ?>
                 <a href="orga/cell/remove-report/idCell/<?=$this->idCell?>/idReport/<?=$cellReport['delete']?>/" class="deleteReport withTooltip" title="<?=__('Orga', 'view', 'deleteReport')?>">
-                    <i class="icon-trash"></i>
+                    <i class="fa fa-trash-o"></i>
                 </a>
                 <?php endif; ?>
             </td>

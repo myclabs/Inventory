@@ -60,8 +60,8 @@ class BoolColumn extends GenericColumn
         $this->criteriaFilterOperator = 'eq';
         $this->textTrue = __('UI', 'property', 'true');
         $this->textFalse = __('UI', 'property', 'false');
-        $this->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'true');
-        $this->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'false');
+        $this->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'true');
+        $this->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'false');
     }
 
     /**

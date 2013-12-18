@@ -208,14 +208,14 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $this->filterOperatorHigher = Core_Model_Filter::OPERATOR_HIGHER;
         $this->loadingText = __('UI', 'loading', 'loading');
         $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
-        $this->labelGoFirst = '<i class="icon-fast-backward"></i>';
-        $this->labelForbiddenGoFirst = '<i class="icon-fast-backward icon-white"></i>';
-        $this->labelGoUp = '<i class="icon-step-backward"></i>';
-        $this->labelForbiddenGoUp = '<i class="icon-step-backward icon-white"></i>';
-        $this->labelGoDown = '<i class="icon-step-forward"></i>';
-        $this->labelForbiddenGoDown = '<i class="icon-step-forward icon-white"></i>';
-        $this->labelGoLast = '<i class="icon-fast-forward"></i>';
-        $this->labelForbiddenGoLast = '<i class="icon-fast-forward icon-white"></i>';
+        $this->labelGoFirst = '<i class="fa fa-angle-double-up"></i>';
+        $this->labelForbiddenGoFirst = '<i class="fa fa-angle-double-up"></i>';
+        $this->labelGoUp = '<i class="fa fa-angle-up"></i>';
+        $this->labelForbiddenGoUp = '<i class="fa fa-angle-up"></i>';
+        $this->labelGoDown = '<i class="fa fa-angle-down"></i>';
+        $this->labelForbiddenGoDown = '<i class="fa fa-angle-down"></i>';
+        $this->labelGoLast = '<i class="fa fa-angle-double-down"></i>';
+        $this->labelForbiddenGoLast = '<i class="fa fa-angle-double-down"></i>';
         $this->labelAddFirst = __('UI', 'other', 'first');
         $this->labelAddLast = __('UI', 'other', 'last');
         $this->labelAddAfter = __('UI', 'other', 'after');
@@ -406,7 +406,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             $filterFormElementInferior->setValue($defaultValue[$this->filterOperatorLower]);
         }
         $resetFieldInferior = '<i ';
-        $resetFieldInferior .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+        $resetFieldInferior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
         $resetFieldInferior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_lower\').val(\'\');"';
         $resetFieldInferior .= '>';
         $resetFieldInferior .= '</i>';
@@ -421,7 +421,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             $filterFormElementSuperior->setValue($defaultValue[$this->filterOperatorHigher]);
         }
         $resetFieldSuperior = '<i ';
-        $resetFieldSuperior .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+        $resetFieldSuperior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
         $resetFieldSuperior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');"';
         $resetFieldSuperior .= '>';
         $resetFieldSuperior .= '</i>';

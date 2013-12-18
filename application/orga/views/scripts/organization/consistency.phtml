@@ -2,8 +2,8 @@
 $columnControl = new UI_Datagrid_Col_Text('control', __('Orga', 'control', 'seekedIssue'));
 
 $columnDiag = new UI_Datagrid_Col_Bool('diagnostic', __('UI', 'name', 'diagnostic'));
-$columnDiag->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'ok');
-$columnDiag->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'nok');
+$columnDiag->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'other', 'ok');
+$columnDiag->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'nok');
 
 $columnEchec = new UI_Datagrid_Col_Text('failure', __('Orga', 'control', 'abnormalItems'));
 

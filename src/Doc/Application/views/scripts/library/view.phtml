@@ -53,7 +53,7 @@ $popup->footer = $validateButton->render() . ' ' . $cancelButton->render();
 $popup->display();
 
 // Bouton d'ajout
-$addButton = new UI_HTML_Button('<i class="icon-plus-sign"></i> ' . __('Doc', 'bibliography', 'addNewDocument'));
+$addButton = new UI_HTML_Button('<i class="fa fa-plus"></i> ' . __('Doc', 'bibliography', 'addNewDocument'));
 $addButton->addAttribute('id', 'addDocumentButton'.$library->getId());
 echo $addButton->render();
 ?>

@@ -34,9 +34,9 @@ $user = $this->user;
         </span>
         <?php
         if ($user->isEmailValidated()) {
-            $labelValidEmail = '<i class="icon-ok"></i> '.__('User', 'property', 'performedFem');
+            $labelValidEmail = '<i class="fa fa-check"></i> '.__('User', 'property', 'performedFem');
         } else {
-            $labelValidEmail = '<i class="icon-remove"></i> '.__('User', 'property', 'notPerformedFem');
+            $labelValidEmail = '<i class="fa fa-times"></i> '.__('User', 'property', 'notPerformedFem');
         }
         ?>
         <?=$labelValidEmail?>
@@ -48,9 +48,9 @@ $user = $this->user;
         </span>
         <?php
         if ($user->isEnabled()) {
-            $labelEnable = '<i class="icon-ok"></i> '.__('UI', 'property', 'enabled');
+            $labelEnable = '<i class="fa fa-check"></i> '.__('UI', 'property', 'enabled');
         } else {
-            $labelEnable = '<i class="icon-remove"></i> '.__('UI', 'property', 'disabled');
+            $labelEnable = '<i class="fa fa-times"></i> '.__('UI', 'property', 'disabled');
         }
         ?>
         <?=$labelEnable?>

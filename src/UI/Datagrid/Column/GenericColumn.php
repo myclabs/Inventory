@@ -164,7 +164,7 @@ abstract class GenericColumn
         $this->id = $id;
         $this->label = $label;
         // Définition des pseudo-constantes pouvant être redéfinies.
-        $this->editableLabel = '<i class="icon-pencil"></i>';
+        $this->editableLabel = '<i class="fa fa-pencil-square-o"></i>';
         $this->editLabelSave = __('UI', 'verb', 'save');
         $this->editLabelCancel = __('UI', 'verb', 'cancel');
     }
@@ -412,7 +412,7 @@ abstract class GenericColumn
         $resetField = '';
 
         $resetField .= '<i ';
-        $resetField .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+        $resetField .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
         $resetField .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');"';
         $resetField .= '>';
         $resetField .= '</i>';

@@ -42,15 +42,15 @@ $datagrid->addCol($colCreationDate);
 // 1ère connexion
 $colEmailValidated = new UI_Datagrid_Col_Bool('emailValidated', __('User', 'list', 'firstConnectionHeader'));
 $colEmailValidated->addable = false;
-$colEmailValidated->valueTrue = '<i class="icon-ok"></i> '.__('User', 'property', 'performedFem');
-$colEmailValidated->valueFalse = '<i class="icon-remove"></i> '.__('User', 'property', 'notPerformedFem');
+$colEmailValidated->valueTrue = '<i class="fa fa-check"></i> '.__('User', 'property', 'performedFem');
+$colEmailValidated->valueFalse = '<i class="fa fa-times"></i> '.__('User', 'property', 'notPerformedFem');
 $datagrid->addCol($colEmailValidated);
 
 // Compte activé
 $colEnabled = new UI_Datagrid_Col_Bool('enabled', __('UI', 'name', 'activation'));
 $colEnabled->addable = false;
-$colEnabled->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'enabled');
-$colEnabled->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'disabled');
+$colEnabled->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'enabled');
+$colEnabled->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'disabled');
 $datagrid->addCol($colEnabled);
 
 // Rôles

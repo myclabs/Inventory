@@ -28,17 +28,17 @@
         <div class="control-group navigation-buttons">
             <div class="control-label">
                 <button class="btn btn-warning navigation-previous hide" type="button">
-                    <i class="icon-chevron-left icon-white"></i> <?=__('Orga', 'add', 'navigationPrevious')?>
+                    <i class="fa fa-chevron-left"></i> <?=__('Orga', 'add', 'navigationPrevious')?>
                 </button>
             </div>
             <div class="controls">
                 <button class="btn btn-primary navigation-next" type="button">
-                    <?=__('Orga', 'add', 'navigationNext')?> <i class="icon-chevron-right icon-white"></i>
+                    <?=__('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
                 </button>
             </div>
             <div class="controls">
                 <button class="btn btn-primary navigation-end hide" type="button">
-                    <?=__('Orga', 'add', 'navigationEnd')?> <i class="icon-ok icon-white"></i>
+                    <?=__('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
                 </button>
             </div>
         </div>
@@ -58,7 +58,7 @@
                         <label class="control-label" for="organizationType">
                             <?=__('Orga', 'add', 'organizationType')?>
                             <a href="#" data-toggle="tooltip" data-placement="top" title="<?=__('Orga', 'add', 'organizationTypeExplanation')?>">
-                                <i class="icon-question-sign"></i>
+                                <i class="fa fa-question-circle"></i>
                             </a>
                         </label>
                         <div class="controls">
@@ -86,7 +86,7 @@
                                 <label class="control-label" for="mainAxis">
                                     <?=__('Orga', 'add', 'organizationMainAxisLabel')?>
                                     <a href="#" data-toggle="tooltip" data-placement="top" title="<?=__('Orga', 'add', 'organizationMainAxisHelp')?>">
-                                        <i class="icon-question-sign"></i>
+                                        <i class="fa fa-question-circle"></i>
                                     </a>
                                 </label>
                                 <div class="controls">
@@ -94,7 +94,7 @@
                                         <input type="text" id="mainAxis" name="mainAxis" placeholder="<?=__('Orga', 'add', 'organizationMainAxisPlaceholder')?>" required>
                                     </div>
                                     <div class="input">
-                                        <button class="btn addAggregation"><i class="icon-plus"></i> <?=__('Orga', 'add', 'organizationAddMainSubAxis')?></button>
+                                        <button class="btn addAggregation"><i class="fa fa-plus"></i> <?=__('Orga', 'add', 'organizationAddMainSubAxis')?></button>
                                     </div>
                                 </div>
                             </div>
@@ -195,17 +195,17 @@
         <div class="control-group navigation-buttons">
             <div class="control-label">
                 <button class="btn btn-warning navigation-previous hide" type="button">
-                    <i class="icon-chevron-left icon-white"></i> <?=__('Orga', 'add', 'navigationPrevious')?>
+                    <i class="fa fa-chevron-left"></i> <?=__('Orga', 'add', 'navigationPrevious')?>
                 </button>
             </div>
             <div class="controls">
                 <button class="btn btn-primary navigation-next" type="button">
-                    <?=__('Orga', 'add', 'navigationNext')?> <i class="icon-chevron-right icon-white"></i>
+                    <?=__('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
                 </button>
             </div>
             <div class="controls">
                 <button class="btn btn-primary navigation-end hide" type="button">
-                    <?=__('Orga', 'add', 'navigationEnd')?> <i class="icon-ok icon-white"></i>
+                    <?=__('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
                 </button>
             </div>
         </div>
@@ -219,7 +219,7 @@
     </div>
     <div class="modal-body">
         <div class="alert alert-info">
-            <img src="images/ui/ajax-loader.gif">
+            <i class="fa fa-spinner fa-spin"></i>
             <?=__('Orga', 'add', 'organizationBuildingMessage')?>
         </div>
     </div>
@@ -263,7 +263,7 @@
                     '<hr />' +
                     '<p>' + data.info + '</p>' +
                     '<a class="btn btn-primary" href="orga/organization">' +
-                        '<i class="icon-home icon-white"></i> ' +
+                        '<i class="fa fa-home"></i> ' +
                         '<?=__('Orga', 'add', 'organizationBuildingGoHome')?>' +
                     '</a>'
                 );
@@ -291,11 +291,11 @@
                     '<hr />' +
                     '<p>' + complementaryInfo + '</p>' +
                     '<a class="btn btn-warning pull-right" href="#organizationBuilding" data-dismiss="modal">' +
-                        '<i class="icon-remove icon-white"></i> ' +
+                        '<i class="fa fa-minus"></i> ' +
                         '<?=__('Orga', 'add', 'organizationBuildingClosePopup')?>' +
                     '</a>' +
                     '<a class="btn btn-primary pull-left" href="orga/organization">' +
-                        '<i class="icon-home icon-white"></i> ' +
+                        '<i class="fa fa-home"></i> ' +
                         '<?=__('Orga', 'add', 'organizationBuildingGoHome')?>' +
                     '</a>'
                 );
@@ -305,7 +305,7 @@
     $('#organizationBuilding').on('hidden', function() {
         $('#organizationBuilding .modal-body').html(
             '<div class="alert alert-info">' +
-                '<img src="images/ui/ajax-loader.gif">' +
+                '<i class="fa fa-spinner fa-spin"></i>' +
                 ' <?=__('Orga', 'add', 'organizationBuildingMessage')?>' +
             '</div>'
         );
@@ -381,10 +381,10 @@
                         '<input type="hidden" id="' + identifier + '-parent" name="' + identifier + '-parent" value="' + parentAxisId + '">' +
                     '</div>' +
                     '<div class="input">' +
-                        '<button class="btn addAggregation"><i class="icon-plus"></i></button>' +
+                        '<button class="btn addAggregation"><i class="fa fa-plus"></i></button>' +
                     '</div>' +
                     '<div class="input">' +
-                        '<button class="btn removeAggregation"><i class="icon-minus"></i></button>' +
+                        '<button class="btn removeAggregation"><i class="fa fa-minus"></i></button>' +
                     '</div>' +
                 '</div>' +
             '</div>'
@@ -535,7 +535,7 @@
                                             '<div class="controls">' +
                                                 '<div class="input">' +
                                                     '<button class="btn addMember" data-parent-axes="' + parentAxes + '">' +
-                                                        '<i class="icon-plus"></i> <?=__('Orga', 'add', 'addMember')?>' +
+                                                        '<i class="fa fa-plus"></i> <?=__('Orga', 'add', 'addMember')?>' +
                                                     '</button>' +
                                                 '</div>' +
                                             '</div>' +
@@ -728,8 +728,6 @@
     {
         var data = 'addOrganization={';
 
-        console.log($('#addOrganization div.tab-content'));
-        console.log($('#addOrganization div.tab-content').children());
         var children = $('#addOrganization div.tab-content').children();
         for(var key = 0; key < children.length; key++) {
             var child = $(children[key]);

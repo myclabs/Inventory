@@ -13,7 +13,7 @@ if (!$this->isSetDWCubeUpToDate) {
         <?=__('DW', 'rebuild', 'analysisTabRebuildAlert') ?>
         <?=__('DW', 'rebuild', 'analysisDataRebuildWarningMessageSimulation') ?>
     </p>
-    <?= $this->button(__('DW', 'rebuild', 'analysisDataRebuildButton'), 'refresh icon-white', array('id' => 'resetDWCube', 'class' => 'btn-primary')) ?>
+    <?= $this->button(__('DW', 'rebuild', 'analysisDataRebuildButton'), 'refresh', array('id' => 'resetDWCube', 'class' => 'btn-primary')) ?>
     <script type="text/javascript">
         $('#resetDWCube').click(function() {
             setMask(true);
@@ -53,5 +53,5 @@ $datagrid->deleteElements = true;
 $datagrid->display();
 ?>
 <div>
-    <?=$this->button(__('DW', 'reportList', 'add'), 'plus-sign')->link('simulation/set/report?idSet='.$this->idSet.'&idCube='.$this->idCube)?>
+    <?=$this->button(__('DW', 'reportList', 'add'), 'plus-circle')->link('simulation/set/report?idSet='.$this->idSet.'&idCube='.$this->idCube)?>
 </div>

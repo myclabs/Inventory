@@ -616,7 +616,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
         } else {
             if ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
                 $resetFieldSuffix = '<i ';
-                $resetFieldSuffix .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+                $resetFieldSuffix .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
                 $resetFieldSuffix .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\').trigger(\'change\');"';
                 $resetFieldSuffix .= '>';
                 $resetFieldSuffix .= '</i>';
