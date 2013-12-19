@@ -153,12 +153,12 @@ $currentCell = $this->currentCell;
             </a>
             <?php endif; ?>
             <small class="cell-actions">
-                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'role', 'cellAdministrators')?>" class="withTooltip"><i class="fa fa-envelope"></i></a>
+                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'role', 'cellAdministrators')?>" class="withTooltip"><i class="fa fa-briefcase"></i></a>
                 <?php if ($currentCell->showsUsers) : ?>
                 <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('User', 'user', 'users')?>" class="withTooltip"><i class="fa fa-user"></i></a>
                 <?php endif; ?>
                 <?php if ($currentCell->showReports) : ?>
-                <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewReports')?>" class="withTooltip"><i class="fa fa-bar-chart-o"></i></a>
+                <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=__('DW', 'name', 'analyses')?>" class="withTooltip"><i class="fa fa-bar-chart-o"></i></a>
                 <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=__('UI', 'name', 'exports')?>" class="withTooltip"><i class="fa fa-download"></i></a>
                 <?php endif; ?>
             </small>
@@ -457,7 +457,7 @@ $('.history a.refresh').on('click', function(e) {
         },
         error: function(jqXHR) {
             $('.history > h3 i').removeClass('fa-spin');
-            $('.history > div').html('<?=addslashes(__('UI', 'history', 'errorWhileLoadingHistory'))?>');
+            $('.history > div').html('<?=addslashes(__('UI', 'loading', 'error'))?>');
         }
     });
 });
@@ -508,7 +508,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var usersPopup = '';
                     if (this.showUsers) {
                         usersP +=
-                            '<a data-toggle="modal" href="#users' + this.id + '" title="<?=__('Orga', 'view', 'viewUsers')?>" class="withTooltip">' +
+                            '<a data-toggle="modal" href="#users' + this.id + '" title="<?=__('User', 'user', 'users')?>" class="withTooltip">' +
                                 '<i class="fa fa-user"></i>' +
                             '</a>';
                         usersPopup +=
@@ -537,7 +537,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var reportsPopup = '';
                     if (this.showReports) {
                         reportsP +=
-                            '<a data-toggle="modal" href="#reports' + this.id + '" title="<?=__('Orga', 'view', 'viewReports')?>" class="withTooltip">' +
+                            '<a data-toggle="modal" href="#reports' + this.id + '" title="<?=__('DW', 'name', 'analyses')?>" class="withTooltip">' +
                                 '<i class="fa fa-bar-chart-o"></i>' +
                             '</a>';
                         reportsPopup +=
@@ -779,7 +779,7 @@ $('body').on('show', '.users', function(e) {
     }
     var popup = $(this);
     $('.modal-body', popup).html(
-        '<i class="fa fa-spinner fa-spin fa-3x"></i> <?=__('Orga', 'view', 'loadingUsers')?>'
+        '<i class="fa fa-spinner fa-spin fa-3x"></i> <?=__('UI', 'loading', 'loading')?>'
     );
     $.ajax({
         url: 'orga/cell/view-users/idCell/' + popup.attr('data-cell') + '/',
@@ -788,7 +788,7 @@ $('body').on('show', '.users', function(e) {
             $('.modal-body', popup).html(data);
         },
         error: function(jqXHR) {
-            $('.modal-body', popup).html('<?=__('Orga', 'view', 'errorWhileLoadingUsers')?>');
+            $('.modal-body', popup).html('<?=__('UI', 'loading', 'error')?>');
         }
     });
 });
@@ -811,8 +811,8 @@ $('body').on('click', '.delete-user', function(e) {
             '<td colspan="5">' +
                 '<?=__('Orga', 'view', 'askConfirmDeleteUser')?>' +
                 $(this).parent().prev().prev().html() +
-                '<button class="btn btn-primary confirm"><i class="fa fa-check"></i> <?=__('Orga', 'view', 'confirmDeleteUser')?></button>' +
-                '<button class="btn close-user-message"><i class="fa fa-times"></i> <?=__('Orga', 'view', 'confirmDeleteUser')?></button>' +
+                '<button class="btn btn-primary confirm"><i class="fa fa-check"></i> <?=__('UI', 'verb', 'confirm')?></button>' +
+                '<button class="btn close-user-message"><i class="fa fa-times"></i> <?=__('UI', 'verb', 'cancel')?></button>' +
             '</td>' +
         '</tr>'
     );
@@ -854,7 +854,7 @@ $('body').on('click', 'tr.user-message .confirm', function(e) {
                 );
             } else {
                 row.html(
-                    '<td colspan="4"><?=__('Orga', 'view', 'errorWhileDeletingUser')?></td>' +
+                    '<td colspan="4"><?=__('Core', 'exception', 'applicationError')?></td>' +
                     '<td><button class="close close-user-message"><i class="fa fa-times"></i></button></td>'
                 );
             }
@@ -896,7 +896,7 @@ $('body').on('submit', '.addUser', function(e) {
             if (typeof(response.message) == 'string') {
                 form.prev().html(response.message);
             } else {
-                form.prev().html('<?=__('Orga', 'view', 'errorWhileAddingUser')?>');
+                form.prev().html('<?=__('Core', 'exception', 'applicationError')?>');
             }
             form.attr('data-submitting', false);
         }
@@ -909,7 +909,7 @@ $('body').on('show', '.reports', function(e) {
     }
     var popup = $(this);
     $('.modal-body', popup).html(
-        '<i class="fa fa-spinner fa-spin fa-3x"></i> <?=__('Orga', 'view', 'loadingReports')?>'
+        '<i class="fa fa-spinner fa-spin fa-3x"></i> <?=__('UI', 'loading', 'loading')?>'
     );
     $.ajax({
         url: 'orga/cell/view-reports/idCell/' + popup.attr('data-cell') + '/',
@@ -918,7 +918,7 @@ $('body').on('show', '.reports', function(e) {
             $('.modal-body', popup).html(data);
         },
         error: function(jqXHR) {
-            $('.modal-body', popup).html('<?=__('Orga', 'view', 'errorWhileLoadingReports')?>');
+            $('.modal-body', popup).html('<?=__('UI', 'loading', 'error')?>');
         }
     });
 });
@@ -940,8 +940,8 @@ $('body').on('click', '.delete-report', function(e) {
             '<td colspan="3">' +
                 '<?=__('Orga', 'view', 'askConfirmDeleteReport')?>' +
                 $('a', $(this).parent().prev().prev()).html() +
-                '<button class="btn btn-primary confirm"><i class="fa fa-check"></i> <?=__('Orga', 'view', 'confirmDeleteReport')?></button>' +
-                '<button class="btn close-report-message"><i class="fa fa-times"></i> <?=__('Orga', 'view', 'cancelDeleteReport')?></button>' +
+                '<button class="btn btn-primary confirm"><i class="fa fa-check"></i> <?=__('UI', 'verb', 'confirm')?></button>' +
+                '<button class="btn close-report-message"><i class="fa fa-times"></i> <?=__('UI', 'verb', 'cancel')?></button>' +
             '</td>' +
         '</tr>'
     );
@@ -983,7 +983,7 @@ $('body').on('click', 'tr.report-message .confirm', function(e) {
                 );
             } else {
                 row.html(
-                    '<td colspan="2"><?=__('Orga', 'view', 'errorWhileDeletingReport')?></td>' +
+                    '<td colspan="2"><?=__('Core', 'exception', 'applicationError')?></td>' +
                     '<td><button class="close close-report-message"><i class="fa fa-times"></i></button></td>'
                 );
             }
@@ -1032,7 +1032,7 @@ $('body').on('click', '.inventoryStatus .dropdown-menu a', function(e) {
                 if (typeof(response.message) == 'string') {
                     button.html(response.message + ' <span class="caret"></span>');
                 } else {
-                    button.html('<?=__('Orga', 'view', 'errorWhileEditingInventoryStatus')?> <span class="caret"></span>');
+                    button.html('<?=__('Core', 'exception', 'applicationError')?> <span class="caret"></span>');
                 }
             }
         });

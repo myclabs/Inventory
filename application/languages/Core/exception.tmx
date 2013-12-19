@@ -13,7 +13,7 @@
 		</tu>
 		<tu tuid="applicationError">
 			<tuv xml:lang="fr">
-				<seg>L'application a rencontré une erreur.</seg>
+				<seg>L application a rencontré une erreur.</seg>
 			</tuv>
             <tuv xml:lang="en">
                 <seg>Application encountered an error.</seg>
