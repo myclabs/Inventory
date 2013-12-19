@@ -121,6 +121,7 @@ class Bootstrap extends Core_Bootstrap
         $translator->addLoader('tmx', new TmxLoader());
         $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'fr');
         $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'en');
+        $translator->setFallbackLocales(['fr']);
         $this->container->set(Translator::class, $translator);
     }
 
