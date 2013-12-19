@@ -10,6 +10,8 @@ use Symfony\Component\Translation\Translator;
  */
 class Core_Translate
 {
+    const CACHE_NAMESPACE = '/translations/';
+
     /**
      * @var Translator
      */
@@ -48,7 +50,15 @@ class Core_Translate
     {
         $id = $package . '.' . $file . '.' . $ref;
 
-        return $this->translator->trans($id, $replacements, null, $locale);
+        $message = $this->getFromCache($id, $replacements, $locale);
+
+        if ($message === false) {
+            $message = $this->translator->trans($id, $replacements, null, $locale);
+
+            $this->saveToCache($id, $replacements, $locale, $message);
+        }
+
+        return $message;
     }
 
     /**
@@ -76,5 +86,30 @@ class Core_Translate
             json_encode($ref),
             json_encode($message)
         );
+    }
+
+    private function getFromCache($id, $replacements, $locale)
+    {
+        $key = $this->buildCacheKey($id, $replacements, $locale);
+
+        return $this->cache->fetch($key);
+    }
+
+    private function saveToCache($id, $replacements, $locale, $message)
+    {
+        $key = $this->buildCacheKey($id, $replacements, $locale);
+
+        $this->cache->save($key, $message);
+    }
+
+    private function buildCacheKey($id, $replacements, $locale)
+    {
+        if (count($replacements) === 0) {
+            return $locale . '-' . $id;
+        }
+
+        $replacementsHash = crc32(implode('', $replacements));
+
+        return sprintf('%s-%s-%u', $locale, $id, $replacementsHash);
     }
 }
