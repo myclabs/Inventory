@@ -149,7 +149,7 @@ class Orga_Service_ETLStructure
         $labels = [];
         if (!$cell->hasMembers()) {
             foreach (Zend_Registry::get('languages') as $localeId) {
-                $labels[$localeId] = Core_Translate::get('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
+                $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
             }
         } else {
             foreach (Zend_Registry::get('languages') as $localeId) {
@@ -185,7 +185,7 @@ class Orga_Service_ETLStructure
         $labels = [];
         if (!$granularity->hasAxes()) {
             foreach (Zend_Registry::get('languages') as $localeId) {
-                $labels[$localeId] = Core_Translate::get('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
+                $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
             }
         } else {
             $axes = $granularity->getAxes();
