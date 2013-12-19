@@ -21,5 +21,32 @@
             </tuv>
         </tu>
 
+        <!-- Types de rapport -->
+
+        <tu tuid="cellReport_copiedReport">
+            <tuv xml:lang="fr">
+                <seg>Pré-configuré</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Preconfigured</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellReport_specificReport">
+            <tuv xml:lang="fr">
+                <seg>Composé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Composed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="cellReport_userReport">
+            <tuv xml:lang="fr">
+                <seg>Personnel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Personal</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

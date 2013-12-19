@@ -8,13 +8,13 @@ use Orga\Model\ACL\Role\CellObserverRole;
 /** @var CellViewModelFactory $cellVWFactory */
 $cellVWFactory = $this->cellVWFactory;
 $inventoryStatusFilters = [
-    null => 'Toute collecte',
+    null => __('Orga', 'view', 'allInventoryStatus'),
     Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
     Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
     Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'),
 ];
 $inputStatusFilters = [
-    null => 'Tout status',
+    null => __('Orga', 'view', 'allInputStatus'),
     AF_Model_InputSet_Primary::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
     AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
     AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
@@ -153,7 +153,7 @@ $currentCell = $this->currentCell;
             </a>
             <?php endif; ?>
             <small class="cell-actions">
-                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewAdministrators')?>" class="withTooltip"><i class="fa fa-envelope"></i></a>
+                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'role', 'cellAdministrators')?>" class="withTooltip"><i class="fa fa-envelope"></i></a>
                 <?php if ($currentCell->showsUsers) : ?>
                 <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('User', 'user', 'users')?>" class="withTooltip"><i class="fa fa-user"></i></a>
                 <?php endif; ?>
@@ -224,13 +224,13 @@ $currentCell = $this->currentCell;
         <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=__('Orga', 'view', 'usersFrom')?> <?=$currentCell->shortLabel?></h4>
+                <h4><?=__('Orga', 'view', 'rolesFrom')?> <?=$currentCell->shortLabel?></h4>
             </div>
             <div class="modal-body">
             </div>
             <div class="modal-footer">
                 <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>/">
-                    <input type="text" name="userEmail" placeholder="<?=__('Orga', 'view', 'userEmailPlaceholder')?>">
+                    <input type="text" name="userEmail" placeholder="<?=__('User', 'user', 'emailAddress')?>">
                     <select name="userRole">
                         <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
                         <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
@@ -239,7 +239,7 @@ $currentCell = $this->currentCell;
                     </select>
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-plus"></i>
-                        <?=__('Orga', 'view', 'addUser')?>
+                        <?=__('UI', 'verb', 'add')?>
                     </button>
                 </form>
             </div>
@@ -256,7 +256,7 @@ $currentCell = $this->currentCell;
             <div class="modal-footer">
                 <a href="orga/cell/view-report/idCell/<?=$currentCell->id?>/" class="btn btn-primary">
                     <i class="fa fa-plus"></i>
-                    <?=__('Orga', 'view', 'addReport')?>
+                    <?=__('UI', 'verb', 'add')?>
                 </a>
             </div>
         </div>
@@ -268,7 +268,7 @@ $currentCell = $this->currentCell;
             <div class="modal-body">
                 <div class="granularityCells row-fluid">
                     <i class="fa fa-spinner fa-spin fa-3x"></i>
-                    <?=__('Orga', 'view', 'loadingExports')?>
+                    <?=__('UI', 'loading', 'loading')?>
                 </div>
             </div>
         </div>
@@ -333,7 +333,7 @@ $currentCell = $this->currentCell;
                     <?php endforeach ?>
                 </select>
                 <?php endif; ?>
-                <button class="btn reset"><i class="fa fa-search-minus"></i> <?=__('Orga', 'view', 'resetCellsFilter')?></button>
+                <button class="btn reset"><i class="fa fa-search-minus"></i> <?=__('UI', 'verb', 'reset')?></button>
                 <span class="badge badge-info granularity-info"></span>
             </form>
             <?php endif; ?>
@@ -358,7 +358,7 @@ $currentCell = $this->currentCell;
         </h3>
         <hr/>
         <div>
-            <?=__('Orga', 'view', 'notLoadedComments')?>
+            <?=__('UI', 'loading', 'error')?>
         </div>
     </div>
     <div class="history">
@@ -372,7 +372,7 @@ $currentCell = $this->currentCell;
         </h3>
         <hr/>
         <div>
-            <?=__('Orga', 'view', 'notLoadedHistory')?>
+            <?=__('UI', 'loading', 'error')?>
         </div>
     </div>
     <?php if ($organization->canBeEdited) : ?>
@@ -484,7 +484,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
         var granularityInfo = $('.granularity-info', granularity.parent());
         granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
         granularityInfo.addClass('badge-info');
-        granularityInfo.html('<i class="fa fa-spinner fa-spin"></i> <?=__('Orga', 'view', 'loadingCells')?>');
+        granularityInfo.html('<i class="fa fa-spinner fa-spin"></i> <?=__('UI', 'loading', 'loading')?>');
         var granularityId = $(this).attr('id').substr(11, $(this).attr('id').length);
         $.ajax({
             url: 'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId + '/',
@@ -515,20 +515,20 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '<div id="users' + this.id + '" class="modal users hide fade large" data-cell="' + this.id + '">' +
                                 '<div class="modal-header">' +
                                     '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                    '<h4><?=__('Orga', 'view', 'usersFrom')?> ' + this.shortLabel + '</h4>' +
+                                    '<h4><?=__('Orga', 'view', 'rolesFrom')?> ' + this.shortLabel + '</h4>' +
                                 '</div>' +
                                 '<div class="modal-body">' +
                                 '</div>' +
                                 '<div class="modal-footer">' +
                                     '<form class="form-inline addUser" action="orga/cell/add-user/idCell/' + this.id + '/">' +
-                                        '<input type="text" placeholder="<?=__('Orga', 'view', 'userEmailPlaceholder')?>" name="userEmail"> ' +
+                                        '<input type="text" placeholder="<?=__('User', 'user', 'emailAddress')?>" name="userEmail"> ' +
                                         '<select name="userRole">' +
                                             '<option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>' +
                                             '<option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>' +
                                             '<option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>' +
                                             '<option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>' +
                                         '</select> ' +
-                                        '<input type="submit" class="btn btn-primary" value="<?=__('Orga', 'view', 'addUser')?>"> ' +
+                                        '<input type="submit" class="btn btn-primary" value="<?=__('UI', 'verb', 'add')?>"> ' +
                                     '</form>' +
                                 '</div>' +
                             '</div>';
@@ -551,7 +551,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                 '<div class="modal-footer">' +
                                     '<a href="orga/cell/view-report/idCell/' + this.id + '/" class="btn btn-primary">' +
                                         '<i class="fa fa-plus"></i> ' +
-                                        '<?=__('Orga', 'view', 'addReport')?>' +
+                                        '<?=__('UI', 'verb', 'add')?>' +
                                     '</a>' +
                                 '</div>' +
                             '</div>';
@@ -571,7 +571,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                 '</div>' +
                                 '<div class="modal-body">' +
                                     '<i class="fa fa-spinner fa-spin fa-3x"></i> ' +
-                                    '<?=__('Orga', 'view', 'loadingExports')?>' +
+                                    '<?=__('UI', 'loading', 'loading')?>' +
                                 '</div>' +
                             '</div>';
                     }
@@ -1047,7 +1047,7 @@ $('body').on('show', '.inventory-users', function(e) {
     }
     var popup = $(this);
     $('.modal-body', popup).html(
-        '<i class="fa fa-spinner fa-spin fa-3x"></i> <?=__('Orga', 'view', 'loadingInventoryUsers')?>'
+        '<i class="fa fa-spinner fa-spin fa-3x"></i> <?=__('UI', 'loading', 'loading')?>'
     );
     $.ajax({
         url: 'orga/cell/view-inventory-users/idCell/' + popup.attr('data-cell') + '/',
@@ -1056,7 +1056,7 @@ $('body').on('show', '.inventory-users', function(e) {
             $('.modal-body', popup).html(data);
         },
         error: function(jqXHR) {
-            $('.modal-body', popup).html('<?=__('Orga', 'view', 'errorWhileLoadingInventoryUsers')?>');
+            $('.modal-body', popup).html('<?=__('UI', 'loading', 'error')?>');
         }
     });
 });

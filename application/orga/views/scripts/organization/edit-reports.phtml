@@ -9,10 +9,10 @@ foreach ($this->granularities as $granularity) {
         'orga'
     );
 
-    $columnReport = new UI_Datagrid_Col_Text('report', __('Orga', 'edit', 'report'));
+    $columnReport = new UI_Datagrid_Col_Text('report', __('UI', 'name', 'label'));
     $datagridGranularityReports->addCol($columnReport);
 
-    $columnLink = new UI_Datagrid_Col_Link('link', __('Orga', 'edit', 'report'));
+    $columnLink = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'details'));
     $datagridGranularityReports->addCol($columnLink);
 
     $datagridGranularityReports->addParam('idOrganization', $this->organization->getId());
@@ -77,7 +77,7 @@ if ($this->isUserAllowedToEditOrganization) {
     <?=
     $this->button(
         '<span>'.__('Orga', 'configuration', 'dWCubesState').'</span>',
-        'info',
+        'info-circle',
         ['id' => 'organizationDW', 'class' => 'btn-primary']
     );
     ?>

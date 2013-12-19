@@ -121,9 +121,9 @@ class Orga_CellController extends Core_Controller
             $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL());
             if ($isNarrowerGranularityACL) {
                 if ($purpose !== '') {
-                    $purpose .= __('UI', 'view', '&separator');
+                    $purpose .= __('Orga', 'view', 'separator');
                 }
-                $purpose .= __('Orga', 'granlarity', 'ACLPurpose');
+                $purpose .= __('User', 'user', 'userRoles');
             }
             // Inventory purpose.
             $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
@@ -137,23 +137,23 @@ class Orga_CellController extends Core_Controller
                 }
             }
             if ($isNarrowerGranularityInventory && $narrowerGranularityHasSubInputGranlarities) {
-                $purpose .= __('Orga', 'granlarity', 'InventoryPurpose');
+                $purpose .= __('Orga', 'inventory', 'inventories');
             }
             // Input purpose.
             $isNarrowerGranularityInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
             if ($isNarrowerGranularityInput) {
                 if ($purpose !== '') {
-                    $purpose .= __('UI', 'view', '&separator');
+                    $purpose .= __('Orga', 'view', 'separator');
                 }
-                $purpose .= __('Orga', 'granlarity', 'InputPurpose');
+                $purpose .= __('UI', 'name', 'inputs');
             }
             // Reports purpose.
             $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes());
             if ($isNarrowerGranularityAnalyses) {
                 if ($purpose !== '') {
-                    $purpose .= __('UI', 'view', '&separator');
+                    $purpose .= __('Orga', 'view', 'separator');
                 }
-                $purpose .= __('Orga', 'granlarity', 'AnalysesPurpose');
+                $purpose .= __('DW', 'name', 'analyses');
             }
             // Filter Axes.
             $filterAxes = [];
@@ -690,7 +690,7 @@ class Orga_CellController extends Core_Controller
                         $cellReports[] = [
                             'label' => $fileName,
                             'link' => 'orga/cell/view-report-specific/idCell/'.$idCell.'/report/'.$fileName,
-                            'type' => 'specificReports',
+                            'type' => 'specificReport',
                         ];
                     }
                 }

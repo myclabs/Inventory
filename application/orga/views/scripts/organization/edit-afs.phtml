@@ -60,7 +60,7 @@ if ($this->isUserAllowedToEditOrganization) {
     $complementaryFields .= '<script>' .
     '$(\'#addGranularity'.$this->organization->getId().'_afs .inputConfigAxes\').select2({' .
             'closeOnSelect: false,' .
-            'placeholder: \'' . __('Orga', 'granularity', 'addGranularitySelectAxes') . '\',' .
+            'placeholder: \'' . __('Orga', 'granularity', 'addGranularityFormChoiceSelectAxes') . '\',' .
             'multiple: true,' .
             'data: [';
     foreach ($this->organization->getFirstOrderedAxes() as $axis) {
