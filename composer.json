@@ -2,7 +2,10 @@
     "autoload": {
         "psr-0": {
             "": "src/"
-        }
+        },
+        "files": [
+            "src/Core/Translation/functions.php"
+        ]
     },
     "require": {
         "php": ">=5.5.0",
@@ -11,8 +14,10 @@
         "doctrine/annotations": "~1.0",
         "doctrine/common": "dev-ProxyStaticProperties as 2.4.1",
         "gedmo/doctrine-extensions": "dev-OptimizedTranslatable as 2.99",
-        "symfony/yaml": "~2.3",
         "symfony/event-dispatcher": "~2.3",
+        "symfony/finder": "~2.3",
+        "symfony/translation": "~2.3",
+        "symfony/yaml": "~2.3",
         "pear/console_commandline": "dev-trunk",
         "netcarver/textile": "~3.5",
         "dompdf/dompdf": "dev-master",

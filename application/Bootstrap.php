@@ -1,9 +1,11 @@
 <?php
 
 use Core\Autoloader;
+use Core\Translation\TmxLoader;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Translation\Translator;
 use User\Application\Plugin\ACLPlugin;
 use User\Application\ViewHelper\IsAllowedHelper;
 
@@ -111,8 +113,15 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initI18n()
     {
-        Zend_Registry::set(Core_Translate::registryKey, $this->container->get(Core_Translate::class));
-        Zend_Registry::set(Core_Locale::registryKey, Core_Locale::loadDefault());
+        $locale = Core_Locale::loadDefault();
+
+        Zend_Registry::set(Core_Locale::registryKey, $locale);
+
+        $translator = new Translator($locale->getId());
+        $translator->addLoader('tmx', new TmxLoader());
+        $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'fr');
+        $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'en');
+        $this->container->set(Translator::class, $translator);
     }
 
     /**
