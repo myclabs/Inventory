@@ -16,7 +16,7 @@ $organization = $this->organization;
     $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?> .axes').select2(
         {
             closeOnSelect: false,
-            placeholder: '<?=__('Orga', 'edit', 'addGranularitySelectAxes')?>',
+            placeholder: '<?=__('Orga', 'granularity', 'addGranularitySelectAxes')?>',
             multiple: true,
             data: [
                 <?php foreach ($organization->getFirstOrderedAxes() as $axis) : ?>
@@ -35,7 +35,7 @@ $organization = $this->organization;
         $('.granularityAddInfo', form.parent()).remove();
         form.after('<div class="alert alert-info granularityAddInfo"></div>');
         var granularityInfo = $('.granularityAddInfo', form.parent());
-        granularityInfo.html('<img class="granularityLoading" src="images/ui/ajax-loader.gif"> <?=__('Orga', 'view', 'loadingAddGranularity')?>');
+        granularityInfo.html('<img class="granularityLoading" src="images/ui/ajax-loader.gif"> <?=__('UI', 'loading', 'loading')?>');
         $.ajax({
             url: form.attr('action'),
             type: "POST",
@@ -56,7 +56,7 @@ $organization = $this->organization;
                 if (typeof(response.message) == 'string') {
                     granularityInfo.html(response.message);
                 } else {
-                    granularityInfo.html('<?=__('Orga', 'view', 'errorWhileLoadingChildCells')?>');
+                    granularityInfo.html('<?=__('UI', 'loading', 'error')?>');
                 }
                 form.attr('data-submitting', false);
             }

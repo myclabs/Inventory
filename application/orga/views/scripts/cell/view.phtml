@@ -104,7 +104,7 @@ $currentCell = $this->currentCell;
                 <a class="editOrganization btn btn-small btn-primary"
                    href="orga/organization/edit/idOrganization/<?=$organization->id?>/">
                     <i class="fa fa-wrench"></i>
-                    <?=__('UI', 'verb', 'edit')?>
+                    <?=__('UI', 'name', 'configurationOrga')?>
                 </a>
             </small>
         </div>
@@ -155,11 +155,11 @@ $currentCell = $this->currentCell;
             <small class="cell-actions">
                 <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewAdministrators')?>" class="withTooltip"><i class="fa fa-envelope"></i></a>
                 <?php if ($currentCell->showsUsers) : ?>
-                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewUsers')?>" class="withTooltip"><i class="fa fa-user"></i></a>
+                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('User', 'user', 'users')?>" class="withTooltip"><i class="fa fa-user"></i></a>
                 <?php endif; ?>
                 <?php if ($currentCell->showReports) : ?>
                 <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewReports')?>" class="withTooltip"><i class="fa fa-bar-chart-o"></i></a>
-                <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'viewExports')?>" class="withTooltip"><i class="fa fa-download"></i></a>
+                <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=__('UI', 'name', 'exports')?>" class="withTooltip"><i class="fa fa-download"></i></a>
                 <?php endif; ?>
             </small>
         </h2>
@@ -384,7 +384,7 @@ $currentCell = $this->currentCell;
                     <a class="editOrganization btn btn-small btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>/tab/members/">
                         <i class="fa fa-wrench"></i>
-                        <?=__('UI', 'verb', 'edit')?>
+                        <?=__('UI', 'name', 'configurationOrga')?>
                     </a>
                 </small>
             </div>
@@ -560,7 +560,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var exportsPopup = '';
                     if (this.showExports) {
                         exportsP +=
-                            '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=__('Orga', 'view', 'viewExports')?>" class="withTooltip">' +
+                            '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=__('UI', 'name', 'exports')?>" class="withTooltip">' +
                                 '<i class="fa fa-download"></i>' +
                             '</a>';
                         exportsPopup +=
@@ -684,7 +684,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 if (typeof(response.message) == 'string') {
                     granularityInfo.html(response.message);
                 } else {
-                    granularityInfo.html('<?=__('Orga', 'view', 'errorWhileLoadingChildCells')?>');
+                    granularityInfo.html('<?=__('UI', 'loading', 'error')?>');
                 }
             }
         });

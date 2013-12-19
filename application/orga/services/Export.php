@@ -285,7 +285,7 @@ class Orga_Service_Export
         );
         $modelBuilder->bind('userColumnFirstName', __('User', 'user', 'firstName'));
         $modelBuilder->bind('userColumnLastName', __('User', 'user', 'lastName'));
-        $modelBuilder->bind('userColumnEmail', __('UI', 'name', 'emailAddress'));
+        $modelBuilder->bind('userColumnEmail',  __('User', 'user', 'emailAddress'));
         $modelBuilder->bind('userColumnRole', __('User', 'role', 'role'));
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',

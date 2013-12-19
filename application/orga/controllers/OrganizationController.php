@@ -336,7 +336,7 @@ class Orga_OrganizationController extends Core_Controller
         // Tab DW
         if ($isUserAllowedToEditCells) {
             $dwTab = new UI_Tab('reports');
-            $dwTab->label = __('Orga', 'edit', 'reports');
+            $dwTab->label = __('DW', 'name', 'analyses');
             $dwTab->dataSource = 'orga/organization/edit-reports'.$parameters;
             $dwTab->useCache = !$isUserAllowedToEditOrganization;
             $tabView->addTab($dwTab);

@@ -15,7 +15,7 @@ $columnAxes->withEmptyElement = false;
 $columnAxes->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $datagridGranularities->addCol($columnAxes);
 
-$columnRelevance = new UI_Datagrid_Col_Bool('relevance', __('Orga', 'cell', 'relevanceTab'));
+$columnRelevance = new UI_Datagrid_Col_Bool('relevance', __('Orga', 'cellRelevance', 'relevance'));
 $columnRelevance->addable = true;
 $columnRelevance->editable = true;
 $columnRelevance->defaultAddValue = false;
@@ -25,7 +25,7 @@ $columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'other', '
 $columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'no');
 $datagridGranularities->addCol($columnRelevance);
 
-$columnInput = new UI_Datagrid_Col_Bool('afs', __('DW', 'name', 'input'));
+$columnInput = new UI_Datagrid_Col_Bool('afs', __('UI', 'name', 'input'));
 $columnInput->addable = false;
 $columnInput->editable = true;
 $columnInput->textTrue = __('UI', 'other', 'yes');

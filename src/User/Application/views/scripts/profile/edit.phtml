@@ -30,7 +30,7 @@ $html = <<<HTML
     </div>
 HTML;
 $editEmail = new UI_Form_Element_HTML('email', $html);
-$editEmail->setLabel(__('UI', 'name', 'emailAddress'));
+$editEmail->setLabel( __('User', 'user', 'emailAddress'));
 $form->addElement($editEmail);
 
 // Password

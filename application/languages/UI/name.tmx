@@ -139,6 +139,14 @@
                 <seg>Date</seg>
             </tuv>
         </tu>
+        <tu tuid="data">
+            <tuv xml:lang="fr">
+                <seg>Données</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Data</seg>
+            </tuv>
+        </tu>
         <tu tuid="deletion">
             <tuv xml:lang="fr">
                 <seg>Suppression</seg>
@@ -225,14 +233,6 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Elements</seg>
-            </tuv>
-        </tu>
-        <tu tuid="emailAddress">
-            <tuv xml:lang="fr">
-                <seg>Adresse e-mail</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>E-mail address</seg>
             </tuv>
         </tu>
         <tu tuid="errors">

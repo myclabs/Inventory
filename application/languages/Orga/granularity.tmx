@@ -72,6 +72,14 @@
 
         <!-- Ajout -->
 
+        <tu tuid="addGranularitySelectAxes">
+            <tuv xml:lang="fr">
+                <seg>Sélectionner les axes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Select axes</seg>
+            </tuv>
+        </tu>
         <tu tuid="emptyGranularity">
             <tuv xml:lang="fr">
                 <seg>Merci de sélectionner au moins un axe.</seg>

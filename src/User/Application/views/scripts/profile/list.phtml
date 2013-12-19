@@ -27,7 +27,7 @@ $colLastName->sortName = User::QUERY_LASTNAME;
 $datagrid->addCol($colLastName);
 
 // Courriel
-$colEmail = new UI_Datagrid_Col_Text('email', __('UI', 'name', 'emailAddress'));
+$colEmail = new UI_Datagrid_Col_Text('email',  __('User', 'user', 'emailAddress'));
 $colEmail->filterName = User::QUERY_EMAIL;
 $colEmail->sortName = User::QUERY_EMAIL;
 $datagrid->addCol($colEmail);

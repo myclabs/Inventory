@@ -11,7 +11,7 @@ $form = new UI_Form('passwordForgotten');
 $form->setAction('user/password/forgotten');
 
 $email = new UI_Form_Element_Pattern_Email('email');
-$email->setLabel(__('UI', 'name', 'emailAddress'));
+$email->setLabel( __('User', 'user', 'emailAddress'));
 $email->setRequired();
 $form->addElement($email);
 

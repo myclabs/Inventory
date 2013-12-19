@@ -20,7 +20,7 @@ class UI_Form_Element_Pattern_Email extends UI_Form_Element_Text
     {
         parent::__construct($name);
 
-        $this->setLabel(__('UI', 'name', 'emailAddress'));
+        $this->setLabel( __('User', 'user', 'emailAddress'));
         $this->setAttrib('size', 50);
         $this->addValidator('EmailAddress');
     }
