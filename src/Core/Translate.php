@@ -58,6 +58,10 @@ class Core_Translate
             $this->saveToCache($id, $replacements, $locale, $message);
         }
 
+        if ($message === $id) {
+            $this->logger->warning('Missing translation: ' . $id);
+        }
+
         return $message;
     }
 
