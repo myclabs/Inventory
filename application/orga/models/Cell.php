@@ -743,7 +743,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     public function getParentCells()
     {
-        $parentCells = array();
+        $parentCells = [];
 
         foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
             try {

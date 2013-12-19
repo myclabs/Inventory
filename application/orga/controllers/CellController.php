@@ -791,6 +791,7 @@ class Orga_CellController extends Core_Controller
     public function viewReportSpecificAction()
     {
         $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
         if (!($this->hasParam('display') && ($this->getParam('display') == true))) {
@@ -810,7 +811,7 @@ class Orga_CellController extends Core_Controller
         );
 
         if ($exportUrl !== null) {
-            $this->view->html = $specificReports->html;
+            $this->view->assign('html', $specificReports->html);
         } else {
             Zend_Layout::getMvcInstance()->disableLayout();
             $specificReports->display();
@@ -1030,6 +1031,40 @@ class Orga_CellController extends Core_Controller
                 'style' => $this->cellVMFactory->inventoryStatusStyles[$cell->getInventoryStatus()],
             ]
         );
+    }
+
+    /**
+     * @Secure("editCell")
+     */
+    public function viewInventoryUsersAction()
+    {
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $users = [];
+
+        /** @var Orga_Model_Cell[] $inventoryCells */
+        $inventoryCells = array_merge([$cell], $cell->getParentCells(), $cell->getChildCells());
+        foreach ($inventoryCells as $inventoryCell) {
+            foreach ($inventoryCell->getAdminRoles() as $adminRole) {
+                $users[] = $adminRole->getUser()->getEmail();
+            }
+            foreach ($inventoryCell->getManagerRoles() as $managerRole) {
+                $users[] = $managerRole->getUser()->getEmail();
+            }
+            foreach ($inventoryCell->getContributorRoles() as $contributorRole) {
+                $users[] = $contributorRole->getUser()->getEmail();
+            }
+        }
+
+        $users = array_unique($users);
+        asort($users);
+
+        $this->view->assign('users', $users);
+
+        // Désactivation du layout.
+        $this->_helper->layout()->disableLayout();
     }
 
     /**
