@@ -85,4 +85,12 @@ class FakeUnitService implements UnitService
 
         throw UnknownUnitException::create($id);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUnitOfReference($id)
+    {
+        throw new \Exception("getUnitOfReference not implemented yet");
+    }
 }

@@ -205,9 +205,12 @@ class UnitAPI
      */
     public function getNormalizedUnit()
     {
-        throw new \Exception("Not implemented yet");
-        $unit = new ComposedUnit($this->ref);
-        return new UnitAPI($unit->getNormalizedUnit()->getRef());
+        /** @var Container $container */
+        $container = \Zend_Registry::get('container');
+        /** @var UnitService $unitService */
+        $unitService = $container->get(UnitService::class);
+
+        return new UnitAPI($unitService->getUnitOfReference($this->ref));
     }
 
     /**
