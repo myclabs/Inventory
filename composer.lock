@@ -296,12 +296,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "390db30f686f3a7ab555178ac22d3f94198e378f"
+                "reference": "2196da9cd9fc72e343560fce818affbcfbdf93d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/390db30f686f3a7ab555178ac22d3f94198e378f",
-                "reference": "390db30f686f3a7ab555178ac22d3f94198e378f",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2196da9cd9fc72e343560fce818affbcfbdf93d0",
+                "reference": "2196da9cd9fc72e343560fce818affbcfbdf93d0",
                 "shasum": ""
             },
             "require": {
@@ -332,7 +332,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -359,7 +359,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-12-13 22:32:11"
+            "time": "2013-12-23 05:23:06"
         },
         {
             "name": "doctrine/inflector",
@@ -563,12 +563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "ae1e0d4987741b1d0a153b48f671b10a45c1cb59"
+                "reference": "6838903ecc14bd8d355df083bd056b3608c19b5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/ae1e0d4987741b1d0a153b48f671b10a45c1cb59",
-                "reference": "ae1e0d4987741b1d0a153b48f671b10a45c1cb59",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/6838903ecc14bd8d355df083bd056b3608c19b5c",
+                "reference": "6838903ecc14bd8d355df083bd056b3608c19b5c",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +596,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2013-12-04 04:50:54"
+            "time": "2013-12-21 02:51:38"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -920,12 +920,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI-ZF1.git",
-                "reference": "1.1.0"
+                "reference": "fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/1.1.0",
-                "reference": "1.1.0",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43",
+                "reference": "fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43",
                 "shasum": ""
             },
             "require": {
@@ -1127,12 +1127,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Units-API.git",
-                "reference": "38fe150471826d9c8f467e8f70dc0da28294d0db"
+                "reference": "fcf52c2c31edc00e014a6ed232155f8bd1f28221"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/38fe150471826d9c8f467e8f70dc0da28294d0db",
-                "reference": "38fe150471826d9c8f467e8f70dc0da28294d0db",
+                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/fcf52c2c31edc00e014a6ed232155f8bd1f28221",
+                "reference": "fcf52c2c31edc00e014a6ed232155f8bd1f28221",
                 "shasum": ""
             },
             "require": {
@@ -1150,7 +1150,7 @@
                 "source": "https://github.com/myclabs/Units-API/tree/master",
                 "issues": "https://github.com/myclabs/Units-API/issues"
             },
-            "time": "2013-12-19 10:31:27"
+            "time": "2013-12-23 10:58:02"
         },
         {
             "name": "myclabs/work",

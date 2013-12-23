@@ -52,9 +52,10 @@ class UnitAPI
         $container = \Zend_Registry::get('container');
         /** @var UnitService $unitService */
         $unitService = $container->get(UnitService::class);
+        $locale = \Core_Locale::loadDefault()->getId();
 
         try {
-            $unitService->getUnit($this->ref);
+            $unitService->getUnit($this->ref, $locale);
         } catch (UnknownUnitException $e) {
             return false;
         }
@@ -88,8 +89,9 @@ class UnitAPI
         $container = \Zend_Registry::get('container');
         /** @var UnitService $unitService */
         $unitService = $container->get(UnitService::class);
+        $locale = \Core_Locale::loadDefault()->getId();
 
-        $unit = $unitService->getUnit($this->ref);
+        $unit = $unitService->getUnit($this->ref, $locale);
 
         return $unit->symbol;
     }
@@ -188,8 +190,9 @@ class UnitAPI
         $container = \Zend_Registry::get('container');
         /** @var UnitService $unitService */
         $unitService = $container->get(UnitService::class);
+        $locale = \Core_Locale::loadDefault()->getId();
 
-        $unitDTOs = $unitService->getCompatibleUnits($this->ref);
+        $unitDTOs = $unitService->getCompatibleUnits($this->ref, $locale);
 
         return array_map(function (UnitDTO $unitDTO) {
             return new UnitAPI($unitDTO->id);
@@ -209,8 +212,9 @@ class UnitAPI
         $container = \Zend_Registry::get('container');
         /** @var UnitService $unitService */
         $unitService = $container->get(UnitService::class);
+        $locale = \Core_Locale::loadDefault()->getId();
 
-        return new UnitAPI($unitService->getUnitOfReference($this->ref));
+        return new UnitAPI($unitService->getUnitOfReference($this->ref, $locale)->id);
     }
 
     /**
