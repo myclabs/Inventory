@@ -17,23 +17,35 @@ class FakeUnitService implements UnitService
     {
         $m = new UnitDTO();
         $m->id = 'm';
-        $m->label = 'metre';
+        $m->label = 'meter';
         $m->symbol = 'm';
 
         $km = new UnitDTO();
         $km->id = 'km';
-        $km->label = 'kilometre';
+        $km->label = 'kilometer';
         $km->symbol = 'km';
 
         $centkm = new UnitDTO();
         $centkm->id = '100km';
-        $centkm->label = '100 kilometres';
+        $centkm->label = '100 kilometers';
         $centkm->symbol = '100km';
+
+        $g = new UnitDTO();
+        $g->id = 'g';
+        $g->label = 'gram';
+        $g->symbol = 'g';
+
+        $kg = new UnitDTO();
+        $kg->id = 'kg';
+        $kg->label = 'kilogram';
+        $kg->symbol = 'kg';
 
         $this->units = [
             'm'     => $m,
             'km'    => $km,
             '100km' => $centkm,
+            'g'     => $g,
+            'kg'    => $kg,
         ];
     }
 

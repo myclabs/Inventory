@@ -9,6 +9,8 @@ use MyCLabs\UnitAPI\Exception\UnknownUnitException;
 use MyCLabs\UnitAPI\Operation\Addition;
 use MyCLabs\UnitAPI\Operation\Multiplication;
 use MyCLabs\UnitAPI\Operation\OperationComponent;
+use MyCLabs\UnitAPI\Operation\Result\AdditionResult;
+use MyCLabs\UnitAPI\Operation\Result\OperationResult;
 use MyCLabs\UnitAPI\UnitOperationService;
 use MyCLabs\UnitAPI\UnitService;
 
@@ -152,7 +154,7 @@ class UnitAPI
      * @param array $components
      *
      * @throws UnknownUnitException
-     * @return UnitAPI $api
+     * @return OperationResult
      */
     public static function multiply($components)
     {
@@ -167,7 +169,7 @@ class UnitAPI
             $operation->addComponent(new OperationComponent($component['unit'], $component['signExponent']));
         });
 
-        return new UnitAPI($operationService->execute($operation));
+        return $operationService->execute($operation);
     }
 
     /**
@@ -177,7 +179,7 @@ class UnitAPI
      * @param array $components
      *
      * @throws UnknownUnitException
-     * @return UnitAPI
+     * @return AdditionResult
      */
     public static function calculateSum($components)
     {
@@ -191,7 +193,7 @@ class UnitAPI
             $operation->addComponent(new OperationComponent($component, 1));
         });
 
-        return new UnitAPI($operationService->execute($operation));
+        return $operationService->execute($operation);
     }
 
     /**

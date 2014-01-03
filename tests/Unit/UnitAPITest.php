@@ -2,6 +2,8 @@
 
 use Core\Test\TestCase;
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
+use MyCLabs\UnitAPI\Operation\Result\AdditionResult;
+use MyCLabs\UnitAPI\Operation\Result\MultiplicationResult;
 use Unit\UnitAPI;
 
 /**
@@ -90,8 +92,8 @@ class Unit_Test_UnitAPITest extends TestCase
         $operande[1]['signExponent'] = -1;
 
         $result = UnitAPI::multiply($operande);
-        $this->assertTrue($result instanceof UnitAPI);
-        $this->assertEquals('kg^3.kg_co2e.s^-2.animal^-2', $result->getRef());
+        $this->assertTrue($result instanceof MultiplicationResult);
+        $this->assertEquals('kg^3.kg_co2e.s^-2.animal^-2', $result->getUnitId());
     }
 
     /**
@@ -107,7 +109,7 @@ class Unit_Test_UnitAPITest extends TestCase
         $unit = new UnitAPI();
 
         try {
-            $result = $unit->calculateSum($operande);
+            $unit->calculateSum($operande);
         } catch (IncompatibleUnitsException $e) {
             $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
@@ -118,8 +120,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $result = $unit->calculateSum($operande);
 
-        $this->assertTrue($result instanceof UnitAPI);
-        $this->assertEquals('kg^2.s^2.animal^-1', $result->getRef());
+        $this->assertTrue($result instanceof AdditionResult);
+        $this->assertEquals('kg^2.s^2.animal^-1', $result->getUnitId());
     }
 
     /**

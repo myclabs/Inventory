@@ -5,6 +5,8 @@ namespace Unit\Mock;
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use MyCLabs\UnitAPI\Exception\UnknownUnitException;
 use MyCLabs\UnitAPI\Operation\Operation;
+use MyCLabs\UnitAPI\Operation\Result\AdditionResult;
+use MyCLabs\UnitAPI\Operation\Result\MultiplicationResult;
 use MyCLabs\UnitAPI\UnitOperationService;
 use MyCLabs\UnitAPI\UnitService;
 
@@ -30,34 +32,37 @@ class FakeUnitOperationService implements UnitOperationService
     {
         // Cas spéciaux utilisés dans les tests
         if ((string) $operation == 'g + kg') {
-            return 'kg';
+            return new AdditionResult('kg');
         }
         if ((string) $operation == 'kg + kg') {
-            return 'kg';
+            return new AdditionResult('kg');
         }
         if ((string) $operation == 't + g') {
-            return 'kg';
+            return new AdditionResult('kg');
         }
         if ((string) $operation == 'kg.j + g.j') {
-            return 'm^2.kg^2.s^-2';
+            return new AdditionResult('m^2.kg^2.s^-2');
         }
         if ((string) $operation == 'j.animal * (g^2.animal)^-1') {
-            return 'm^2.kg^-1.s^-2';
+            return new MultiplicationResult('m^2.kg^-1.s^-2', 1000000.);
         }
         if ((string) $operation == 'j.animal * kg * (kg.m^2.s^-2.animal)^-1') {
-            return 'kg';
+            return new MultiplicationResult('kg', 1);
         }
         if ((string) $operation == 'g + kg + kg + g') {
-            return 'kg';
+            return new AdditionResult('kg');
         }
         if ((string) $operation == 'j.animal + animal.m^2.kg^1.s^-2') {
-            return 'm^2.animal.kg.s^-2';
+            return new AdditionResult('m^2.animal.kg.s^-2');
         }
         if ((string) $operation == 'g.animal + g^2.animal') {
             throw new IncompatibleUnitsException();
         }
         if ((string) $operation == 'gramme.animal + g^2.animal') {
             throw UnknownUnitException::create('gramme');
+        }
+        if ((string) $operation == 'j^2.animal^-1 * (t^2)^-1') {
+            return new MultiplicationResult('m^4.animal^-1.s^-4', 0.000001);
         }
 
         throw new \Exception("Operation not implemented: $operation");
@@ -96,6 +101,28 @@ class FakeUnitOperationService implements UnitOperationService
                         return 1000;
                     case '100km':
                         return 0.01;
+                    default:
+                        throw new IncompatibleUnitsException(
+                            "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
+                        );
+                }
+                break;
+
+            case 'g':
+                switch ($unit2) {
+                    case 'kg':
+                        return 0.001;
+                    default:
+                        throw new IncompatibleUnitsException(
+                            "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
+                        );
+                }
+                break;
+
+            case 'kg':
+                switch ($unit2) {
+                    case 'kg':
+                        return 1.;
                     default:
                         throw new IncompatibleUnitsException(
                             "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
