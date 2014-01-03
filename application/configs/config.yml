@@ -38,12 +38,15 @@ PhpAmqpLib\Connection\AMQPConnection:
 units.webservice.url: "http://localhost:8000/api/"
 units.webservice.httpClient:
   class: Guzzle\Http\Client
-  constructor: [ units.webservice.url ]
+  constructor:
+    baseUrl: units.webservice.url
 
 MyCLabs\UnitAPI\UnitService:
   class: MyCLabs\UnitAPI\WebService\UnitWebService
-  constructor: [ units.webservice.httpClient ]
+  constructor:
+    httpClient: units.webservice.httpClient
 
 MyCLabs\UnitAPI\UnitOperationService:
   class: MyCLabs\UnitAPI\WebService\UnitOperationWebService
-  constructor: [ units.webservice.httpClient ]
+  constructor:
+    httpClient: units.webservice.httpClient
