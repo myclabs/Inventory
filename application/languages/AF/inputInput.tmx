@@ -8,15 +8,23 @@
 
 		<!-- Statuts d'avancement -->
 
-		<tu tuid="statusInProgress">
-			<tuv xml:lang="fr">
-				<seg>Saisie en cours</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>In progress</seg>
-			</tuv>
-		</tu>
-		<tu tuid="statusInputIncomplete">
+        <tu tuid="statusNotStarted">
+            <tuv xml:lang="fr">
+                <seg>Saisie non démarrée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusInProgress">
+            <tuv xml:lang="fr">
+                <seg>Saisie en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>In progress</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusInputIncomplete">
 			<tuv xml:lang="fr">
 				<seg>Saisie incomplète</seg>
 			</tuv>

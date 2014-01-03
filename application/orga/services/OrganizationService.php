@@ -129,11 +129,7 @@ class Orga_Service_OrganizationService
                             }
                             $memberRef .= '_'.$i;
                         }
-                        /** @var Orga_Model_Member $member */
-                        $member = new Orga_Model_Member($membersAxis, $memberRef);
-                        foreach ($parentMembers as $parentMember) {
-                            $member->addDirectParent($parentMember);
-                        }
+                        $member = new Orga_Model_Member($membersAxis, $memberRef, $parentMembers);
                         $member->setLabel($memberData['value']);
                         $members[$axisId][$memberId] = $member;
                     }
@@ -155,43 +151,43 @@ class Orga_Service_OrganizationService
                 $navigableInventoryGranularity = new Orga_Model_Granularity($organization, $inventoryNavigableGranularityAxes);
                 $navigableInventoryGranularity->setCellsWithACL(true);
                 // Création des granularités de saisie
-                $inputGranularitiesData = $granularitiesData['elements']['inputGranularitiesGroup']['elements']['inputGranularities'];
-                foreach ($inputGranularitiesData['value'] as $inputGranularityId) {
-                    $inputGranularityAxes = [];
+                $inputsGranularitiesData = $granularitiesData['elements']['inputsGranularitiesGroup']['elements']['inputsGranularities'];
+                foreach ($inputsGranularitiesData['value'] as $inputsGranularityId) {
+                    $inputsGranularityAxes = [];
                     $inputNavigableGranularityAxes = [];
-                    if ($inputGranularityId === 'global') {
+                    if ($inputsGranularityId === 'global') {
                         $defaultGranularity->setInputConfigGranularity($defaultGranularity);
                         break;
                     }
-                    foreach (explode('|', $inputGranularityId) as $inputGranularityAxisId) {
-                        $inputGranularityAxes[] = $axes[$inputGranularityAxisId];
-                        if ($inputGranularityAxisId !== 'timeAxis' && $inputGranularityAxisId !== 'subdivisionAxis') {
-                            $inputNavigableGranularityAxes[] = $axes[$inputGranularityAxisId];
+                    foreach (explode('|', $inputsGranularityId) as $inputsGranularityAxisId) {
+                        $inputsGranularityAxes[] = $axes[$inputsGranularityAxisId];
+                        if ($inputsGranularityAxisId !== 'timeAxis' && $inputsGranularityAxisId !== 'subdivisionAxis') {
+                            $inputNavigableGranularityAxes[] = $axes[$inputsGranularityAxisId];
                         }
                     }
                     try {
-                        $inputGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputGranularityAxes));
+                        $inputsGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputsGranularityAxes));
                     } catch (Core_Exception_NotFound $e) {
-                        $inputGranularity = new Orga_Model_Granularity($organization, $inputGranularityAxes);
+                        $inputsGranularity = new Orga_Model_Granularity($organization, $inputsGranularityAxes);
                     }
-                    if ($inputGranularityAxes !== $inputNavigableGranularityAxes) {
+                    if ($inputsGranularityAxes !== $inputNavigableGranularityAxes) {
                         try {
-                            $navigableInputGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputNavigableGranularityAxes));
+                            $navigableInputsGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputNavigableGranularityAxes));
                         } catch (Core_Exception_NotFound $e) {
-                            $navigableInputGranularity = new Orga_Model_Granularity($organization, $inputNavigableGranularityAxes);
+                            $navigableInputsGranularity = new Orga_Model_Granularity($organization, $inputNavigableGranularityAxes);
                         }
                     } else {
-                        $navigableInputGranularity = $inputGranularity;
+                        $navigableInputsGranularity = $inputsGranularity;
                     }
-                    $navigableInputGranularity->setCellsWithACL(true);
-                    $inputGranularity->setInputConfigGranularity($navigableInputGranularity);
+                    $navigableInputsGranularity->setCellsWithACL(true);
+                    $inputsGranularity->setInputConfigGranularity($navigableInputsGranularity);
                 }
 
                 if ($formData['organization']['elements']['organizationType']['value'] === 'reporting') {
                     $dWGranularitiesData = $formData['dw']['elements']['dwGranularitiesGroup']['elements']['dwGranularities'];
                     foreach ($dWGranularitiesData['value'] as $dWGranularityId) {
                         $dWGranularityAxes = [];
-                        if ($dWGranularityId === 'global') {
+                        if ($dWGranularityId === 'global ') {
                             break;
                         }
                         foreach (explode('|', $dWGranularityId) as $dWGranularityAxisId) {

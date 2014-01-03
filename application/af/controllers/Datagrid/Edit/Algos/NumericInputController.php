@@ -42,7 +42,7 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
                                                                             'edit_algos',
                                                                             'af',
                                                                             ['id' => $algo->getId()]),
-                    '<i class="icon-zoom-in"></i> '.__('Algo', 'name', 'indexation'));
+                    '<i class="fa fa-search-plus"></i> '.__('Algo', 'name', 'indexation'));
                 $this->addLine($data);
             }
         }

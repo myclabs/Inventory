@@ -124,20 +124,23 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
 
         $diConfig = $configuration->get('di', null);
+
+        // Cache de prod
         if ($diConfig && (bool) $diConfig->get('cache', false)) {
             $cache = new MemcachedCache();
             $memcached = new Memcached();
             $memcached->addServer('localhost', 11211);
             $cache->setMemcached($memcached);
-            $cache->setNamespace($configuration->get('applicationName', ''));
-            $builder->setDefinitionCache($cache);
+        } else {
+            // Cache de dev très simple
+            $cache = new ArrayCache();
         }
+        $cache->setNamespace($configuration->get('applicationName', ''));
+        $builder->setDefinitionCache($cache);
 
         $this->container = $builder->build();
 
-        if (isset($cache)) {
-            $this->container->set(Cache::class, $cache);
-        }
+        $this->container->set(Cache::class, $cache);
 
         Zend_Registry::set('configuration', $configuration);
         Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
@@ -228,16 +231,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Création de la configuration de Doctrine.
         $doctrineConfig = new Doctrine\ORM\Configuration();
 
-        // Définition du cache en fonction de l'environement.
-        switch (APPLICATION_ENV) {
-            case 'test':
-            case 'production':
-                $cache = $this->container->get(Cache::class);
-                break;
-            default:
-                $cache = new ArrayCache();
-                break;
-        }
+        $cache = $this->container->get(Cache::class);
+
         /** @see AbstractProxyFactory */
         $doctrineAutoGenerateProxy = (int) $configuration->doctrine->proxies->mode;
 

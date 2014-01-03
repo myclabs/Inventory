@@ -431,22 +431,22 @@ class Datagrid extends UI_Generic
 
         // Colonne de suppression et popup de confirmation de suppression
         $this->deleteElementTitle = '<span>'.__('UI', 'name', 'deletion').'</span>';
-        $this->deleteElementValue = '<i class="icon-trash"></i> '.__('UI', 'verb', 'delete');
+        $this->deleteElementValue = '<i class="fa fa-trash-o"></i> '.__('UI', 'verb', 'delete');
         $this->deleteElementNullValue = '';
         $this->deletePanelTitle = __('UI', 'deletionConfirmationPopup', 'title');
         $this->deletePanelText = __('UI', 'deletionConfirmationPopup', 'text');
-        $this->deletePanelConfirmIcon = 'ok icon-white';
+        $this->deletePanelConfirmIcon = 'check';
         $this->deletePanelConfirmLabel = __('UI', 'verb', 'confirm');
-        $this->deletePanelCancelIcon = 'remove';
+        $this->deletePanelCancelIcon = 'minus';
         $this->deletePanelCancelLabel = __('UI', 'verb', 'cancel');
 
         // Bouton et popup d'ajout
         $this->addButtonLabel = __('UI', 'verb', 'add');
-        $this->addButtonIcon = 'plus-sign';
+        $this->addButtonIcon = 'plus-circle';
         $this->addPanelTitle = __('UI', 'name', 'addition');
-        $this->addPanelConfirmIcon = 'ok icon-white';
+        $this->addPanelConfirmIcon = 'check';
         $this->addPanelConfirmLabel = __('UI', 'verb', 'validate');
-        $this->addPanelCancelIcon = 'remove';
+        $this->addPanelCancelIcon = 'minus';
         $this->addPanelCancelLabel = __('UI', 'verb', 'cancel');
 
         // Filtres
@@ -455,10 +455,10 @@ class Datagrid extends UI_Generic
         $this->filterCollapse = new UI_HTML_Collapse();
         $this->filterCollapse->title = $this->filterCollapseTitle;
         $this->filterConfirmButton = new UI_HTML_Button(__('UI', 'verb', 'filter'));
-        $this->filterConfirmButton->icon = 'zoom-in';
+        $this->filterConfirmButton->icon = 'search-plus';
         $this->filterResetButton = new UI_HTML_Button(__('UI', 'verb', 'reset'));
-        $this->filterResetButton->icon = 'zoom-out';
-        $this->filterIconResetFieldSuffix = 'remove';
+        $this->filterResetButton->icon = 'search-minus';
+        $this->filterIconResetFieldSuffix = 'minus';
         $this->defaultSorting['state'] = false;
         $this->defaultSorting['column'] = null;
         $this->defaultSorting['direction'] = Criteria::ASC;
@@ -611,7 +611,7 @@ class Datagrid extends UI_Generic
         // Vérification de la présence de valeur par défaut nécéssitant l'affichage du l'indicateur.
         if (($datagridSession['filters'] !== null) && (count($datagridSession['filters']) != 0)) {
             $this->filterCollapse->title = $this->filterCollapseTitle.
-                ' <i class="filterActive icon-filter" title="'.$this->filterCollapseActiveHint.'"></i>';
+                ' <i class="filterActive fa fa-filter" title="'.$this->filterCollapseActiveHint.'"></i>';
         }
     }
 
@@ -988,7 +988,7 @@ JS;
         $datagridScript .= '$(\'#'.$this->id.'_filter legend i.filterActive\').remove();';
         $datagridScript .= 'if (filter != \'{}\') {';
         $datagridScript .= '$(\'#'.$this->id.'_filter legend\').append(\'';
-        $datagridScript .= ' <i class="filterActive icon-filter" title="'.$this->filterCollapseActiveHint.'"></i>';
+        $datagridScript .= ' <i class="filterActive fa fa-filter" title="'.$this->filterCollapseActiveHint.'"></i>';
         $datagridScript .= '\');';
         $datagridScript .= '}';
         // Création de requête.

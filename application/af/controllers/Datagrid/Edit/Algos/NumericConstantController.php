@@ -44,7 +44,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                                                                             'edit_algos',
                                                                             'af',
                                                                             ['id' => $algo->getId()]),
-                    '<i class="icon-zoom-in"></i> '.__('Algo', 'name', 'indexation'));
+                    '<i class="fa fa-search-plus"></i> '.__('Algo', 'name', 'indexation'));
                 $this->addLine($data);
             }
         }

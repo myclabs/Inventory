@@ -15,7 +15,7 @@ $lastNameColumn->filterName = User::QUERY_LASTNAME;
 $datagrid->addCol($lastNameColumn);
 
 // Adresse mail
-$emailColumn = new UI_Datagrid_Col_Text('email', __('UI', 'name', 'emailAddress'));
+$emailColumn = new UI_Datagrid_Col_Text('email',  __('User', 'user', 'emailAddress'));
 $emailColumn->filterName = User::QUERY_EMAIL;
 $datagrid->addCol($emailColumn);
 

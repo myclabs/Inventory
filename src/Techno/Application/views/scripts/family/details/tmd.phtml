@@ -21,9 +21,9 @@ if ($this->edit) {
     $editPopup->title = __('UI', 'loading', 'loading');
     $editPopup->addAttribute('class', 'large');
     $editPopup->footer .= '<button class="btn btn-primary" onclick="$(\'#element_editForm\').submit();">'
-        .'<i class="icon-ok icon-white"></i> '.__('UI', 'verb', 'save').'</button>';
+        .'<i class="fa fa-check"></i> '.__('UI', 'verb', 'save').'</button>';
     $editPopup->footer .= '<button class="btn" data-dismiss="modal">'
-        .'<i class="icon-remove"></i> '.__('UI', 'verb', 'close').'</button>';
+        .'<i class="fa fa-times"></i> '.__('UI', 'verb', 'close').'</button>';
     echo $editPopup->render();
 } else {
     $tmd->formatCells = '{value} ± {uncertainty}';

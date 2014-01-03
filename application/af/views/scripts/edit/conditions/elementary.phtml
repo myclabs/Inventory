@@ -60,14 +60,14 @@ $editValueColumn->popup->title = __('AF', 'configInteractionDatagrid', 'elementa
 $editValueColumn->popup->addAttribute('class', 'large');
 $editValueColumn->popup->footer = (string) $this->button(
     __('UI', 'verb', 'save'),
-    'ok icon-white',
+    'check',
     [
          'class'   => 'btn-primary',
          'onclick' => '$(\'#updateCondition\').submit();',
     ]
 );
 $closeButton = '<button type="button" class="btn" data-dismiss="modal">' .
-    '<i class="icon-remove"></i> ' . __('UI', 'verb', 'cancel') .
+    '<i class="fa fa-times"></i> ' . __('UI', 'verb', 'cancel') .
     '</button>';
 $editValueColumn->popup->footer .= $closeButton;
 $datagrid->addCol($editValueColumn);

@@ -72,6 +72,30 @@
 
         <!-- Ajout -->
 
+        <tu tuid="addGranularitySelectAxes">
+            <tuv xml:lang="fr">
+                <seg>Axes du niveau à ajouter</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Axes of the level to be created</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityFormChoiceSelectAxes">
+            <tuv xml:lang="fr">
+                <seg>Niveau de choix des formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Level for the choice of forms</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityInputSelectAxes">
+            <tuv xml:lang="fr">
+                <seg>Niveau pour la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Level for input</seg>
+            </tuv>
+        </tu>
         <tu tuid="emptyGranularity">
             <tuv xml:lang="fr">
                 <seg>Merci de sélectionner au moins un axe.</seg>

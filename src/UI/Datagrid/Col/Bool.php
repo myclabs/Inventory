@@ -73,8 +73,8 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
         $this->filterOperator = Core_Model_Filter::OPERATOR_EQUAL;
         $this->textTrue = __('UI', 'property', 'true');
         $this->textFalse = __('UI', 'property', 'false');
-        $this->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'true');
-        $this->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'false');
+        $this->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'true');
+        $this->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'false');
     }
 
     /**

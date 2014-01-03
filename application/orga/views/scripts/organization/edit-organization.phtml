@@ -45,15 +45,15 @@ $datagridUsers = new UI_Datagrid(
     'orga'
 );
 
-$columnFirstName = new UI_Datagrid_Col_Text('firstName', __('Orga', 'view', 'userFirstName'));
+$columnFirstName = new UI_Datagrid_Col_Text('firstName', __('User', 'user', 'firstName'));
 $columnFirstName->addable = false;
 $datagridUsers->addCol($columnFirstName);
 
-$columnLastName = new UI_Datagrid_Col_Text('lastName', __('Orga', 'view', 'userLastName'));
+$columnLastName = new UI_Datagrid_Col_Text('lastName', __('User', 'user', 'lastName'));
 $columnLastName->addable = false;
 $datagridUsers->addCol($columnLastName);
 
-$columnEmail = new UI_Datagrid_Col_Text('email', __('Orga', 'view', 'userEmail'));
+$columnEmail = new UI_Datagrid_Col_Text('email', __('User', 'user', 'emailAddress'));
 $columnEmail->addable = true;
 $datagridUsers->addCol($columnEmail);
 

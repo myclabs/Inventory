@@ -1,110 +1,41 @@
 <?php
 
-use Core\Cache;
+use DI\Container;
+use Doctrine\Common\Cache\Cache;
 use Psr\Log\LoggerInterface;
-
-include_once('TranslateAdapter.php');
-
-/**
- * Alias de la fonction statique de traduction.
- * Permet de gagner du temps dans les vues.
- *
- * @param string $package      Nom du module d'où est issue la traducation.
- * @param string $file         Nom du fichier tmx dans lequel chercher la traduction.
- * @param string $ref          Référence du texte (datagrids, champs etc...)
- * @param array  $replacements (optionnel) Tableau de remplacement à effectuer,
- *                             ces remplacement prennent la forme suivante : array('RECHERCHE' => 'remplacement').
- *
- * @return string Texte traduit
- */
-function __($package, $file, $ref, array $replacements = [])
-{
-    // Force la locale par défaut, sinon Zend ne prend pas en compte les changements en cours d'exécution de l'appli
-    return Core_Translate::get($package, $file, $ref, $replacements, Core_Locale::loadDefault()->getId());
-}
-
+use Symfony\Component\Translation\Translator;
 
 /**
- * Classe Translate
+ * Gère la traduction.
  */
-class Core_Translate extends Zend_Translate
+class Core_Translate
 {
-
-    // Emplacement des traductions.
-    const registryKey = 'Core_Translate';
-    const DATA_FOLDER = '/languages';
-    const ADAPTER_CLASS = 'Core_Translate_Adapter_Tmx';
-
-    private $options = array(
-        'scan' => 'directory',
-        // L'option override permet de dire si on écrase ou non les texte déjà chargés
-        // (par défaut à true : dans ce cas, les textes des modules écrasent ceux de l'application)
-        'override' => false,
-        'useId' => true
-    );
-
-    public function __construct(LoggerInterface $logger)
-    {
-        // Création des options
-        // Si on est en environnement de dev ou de test, on log les traductions manquantes
-        if ((APPLICATION_ENV == 'developpement') || (APPLICATION_ENV == 'test')) {
-            $this->options['disableNotices'] = false;
-            $this->options['logUntranslated'] = true;
-        } else {
-            $this->options['disableNotices'] = true;
-            $this->options['logUntranslated'] = false;
-        }
-
-        // Paramétrage du cache si on est pas en développement ou test
-        if (false && (APPLICATION_ENV == 'production' || APPLICATION_ENV == 'test')) {
-            $cache = Core_Cache::factory('translate');
-
-            if (!$cache) {
-                throw new Core_Exception_NotFound("Le cache des traductions n'a pas été créé "
-                    . "(vérifiez que le dossier contenant le cache a été créé dans public/cache et "
-                    . "qu'il est accessible en écriture)");
-            }
-
-            Zend_Translate::setCache($cache);
-        }
-
-        $this->options['adapter'] = $this::ADAPTER_CLASS;
-        $this->options['content'] = APPLICATION_PATH.$this::DATA_FOLDER;
-        $this->options['locale'] = 'auto';
-
-        parent::__construct($this->options);
-
-        /** @var Core_Translate_Adapter_Tmx $adapter */
-        $adapter = $this->getAdapter();
-        $adapter->setLogger($logger);
-    }
+    const CACHE_NAMESPACE = '/translations/';
 
     /**
-     * Permet d'ajouter les textes/traductions d'un module.
-     *
-     * @param string $moduleName Nom du module
-     * @param string $moduleDir Répertoire du module
+     * @var Translator
      */
-    public function addModule($moduleName, $moduleDir)
+    private $translator;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var Cache
+     */
+    private $cache;
+
+    public function __construct(Translator $translator, LoggerInterface $logger, Cache $cache)
     {
-        if (is_dir($moduleDir.'/application'.$this::DATA_FOLDER)) {
-            $chemin = $moduleDir.'/application'.$this::DATA_FOLDER;
-        } else {
-            throw new Core_Exception_NotFound("Le répertoire '".$moduleDir."' est introuvable.");
-        }
-
-        // Ajout de l'emplacement aux options
-        $this->options['folder'] = $moduleName;
-
-        $this->addTranslation(
-                $chemin,
-                'auto',
-                $this->options
-        );
+        $this->translator = $translator;
+        $this->logger = $logger;
+        $this->cache = $cache;
     }
 
     /**
-     * Va chercher le texte correspondant à la référence dans la langue du poste client.
+     * Va chercher le texte correspondant à la référence dans la langue voulue.
      *
      * @param string $package      Nom du module d'où est issue la traducation.
      * @param string $file         Nom du fichier tmx dans lequel chercher la traduction.
@@ -113,46 +44,25 @@ class Core_Translate extends Zend_Translate
      *  ces remplacement prennent la forme suivante : array('RECHERCHE' => 'remplacement').
      * @param string $locale
      *
-     * @return string Texte traduit
+     * @return string Traduction.
      */
-    public static function get($package, $file, $ref, $replacements=array(), $locale=null)
+    public function get($package, $file, $ref, $replacements = [], $locale = null)
     {
-        // Chargement de la traduction.
-        $translate = Zend_Registry::get(Core_Translate::registryKey);
-        // Traduction du texte.
-        $translation = $translate->_($ref, $file, $package, $locale);
+        $id = $package . '.' . $file . '.' . $ref;
 
-        // Insertion d'espaces insécables, et des sauts de lignes.
-        $exceptionList = array(
-                                '?' => '# +\?#',
-                                '!' => '# +!#',
-                                ':' => '# +:#',
-                                ';' => '#[^(&nbsp)] *;#',
-                                'R' => '#\R#',
-                            );
-        // Chaque caractères de la liste d'exceptions sera remplacé par son équivalent dans la liste de remplacement.
-        // Ici on remplace tout espace suivi par ?/!/:/; par un seul espace suivi du même caractère.
-        // Les retours à la la ligne sont aussi remplacés par un espace simple.
-        $exceptionReplacements = array(
-                                    '?' => ' ?',
-                                    '!' => ' !',
-                                    ':' => ' :',
-                                    ';' => ' ;',
-                                    'R' => "\n",
-                                );
-        $translation = preg_replace($exceptionList, $exceptionReplacements, $translation);
+        $message = $this->getFromCache($id, $replacements, $locale);
 
-        // Opération de remplacement.
-        $searchs = array();
-        $replaces = array();
-        foreach ($replacements as $search => $replace) {
-            $searchs[] = '['.strtoupper($search).']';
-            $replaces[] = $replace;
+        if ($message === false) {
+            $message = $this->translator->trans($id, $replacements, null, $locale);
+
+            $this->saveToCache($id, $replacements, $locale, $message);
         }
-        $translation = str_replace($searchs, $replaces, $translation);
 
-        // Retourne la traduction avec les termes recherchés remplacés.
-        return $translation;
+        if ($message === $id) {
+            $this->logger->warning('Missing translation: ' . $id);
+        }
+
+        return $message;
     }
 
     /**
@@ -165,14 +75,45 @@ class Core_Translate extends Zend_Translate
      */
     public static function exportJS($package, $file, $ref)
     {
-        $translate = Zend_Registry::get(Core_Translate::registryKey);
-        $message = $translate->_($ref, $file, $package);
+        /** @var Container $container */
+        $container = Zend_Registry::get('container');
+        /** @var Core_Translate $translate */
+        $translate = $container->get('Core_Translate');
+
+        $message = $translate->get($package, $file, $ref);
 
         // Encode pour échapper tous les caractères qui pourraient casser la chaine de caractère JS
-        $jsMessage = json_encode($message);
-
-        $js = "Translate.addTranslation('$package', '$file', '$ref', $jsMessage);";
-        return $js;
+        return sprintf(
+            'Translate.addTranslation(%s, %s, %s, %s);',
+            json_encode($package),
+            json_encode($file),
+            json_encode($ref),
+            json_encode($message)
+        );
     }
 
+    private function getFromCache($id, $replacements, $locale)
+    {
+        $key = $this->buildCacheKey($id, $replacements, $locale);
+
+        return $this->cache->fetch($key);
+    }
+
+    private function saveToCache($id, $replacements, $locale, $message)
+    {
+        $key = $this->buildCacheKey($id, $replacements, $locale);
+
+        $this->cache->save($key, $message);
+    }
+
+    private function buildCacheKey($id, $replacements, $locale)
+    {
+        if (count($replacements) === 0) {
+            return $locale . '-' . $id;
+        }
+
+        $replacementsHash = crc32(implode('', $replacements));
+
+        return sprintf('%s-%s-%u', $locale, $id, $replacementsHash);
+    }
 }

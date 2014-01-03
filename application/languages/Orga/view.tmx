@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <!-- Volet d'ajout d'un membre d'axe -->
+
+        <tu tuid="addMember">
+            <tuv xml:lang="fr">
+                <seg>Ajouter un élément d'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Add an organization element</seg>
+            </tuv>
+        </tu>
+
+        <!-- Désignation des granularités -->
+
+        <tu tuid="separator">
+            <tuv xml:lang="fr">
+                <seg> | </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg> | </seg>
+            </tuv>
+        </tu>
+
+        <!-- Lien d'accès à la saisie -->
+
+        <tu tuid="inputLinkDetail">
+            <tuv xml:lang="fr">
+                <seg>Saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input</seg>
+            </tuv>
+        </tu>
+        <tu tuid="viewInput">
+            <tuv xml:lang="fr">
+                <seg>Cliquer pour accéder à la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Click to access input</seg>
+            </tuv>
+        </tu>
+
+        <!-- Traductions pour les filtres -->
+
+        <tu tuid="allInputStatus">
+            <tuv xml:lang="fr">
+                <seg>Tous statuts de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All input status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="allInventoryStatus">
+            <tuv xml:lang="fr">
+                <seg>Tous statuts d'inventaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All collection status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="allMembers">
+            <tuv xml:lang="fr">
+                <seg>Tous éléments ([AXIS])</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All elements ([AXIS])</seg>
+            </tuv>
+        </tu>
+
+        <!-- Titres des popups -->
+
+        <tu tuid="administratorsFrom">
+            <tuv xml:lang="fr">
+                <seg>Administrateurs — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administrators — </seg>
+            </tuv>
+        </tu>
+        <tu tuid="rolesFrom">
+            <tuv xml:lang="fr">
+                <seg>Rôles utilisateur — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User roles — </seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportsFrom">
+            <tuv xml:lang="fr">
+                <seg>Analyses — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analyses — </seg>
+            </tuv>
+        </tu>
+        <tu tuid="exportsFrom">
+            <tuv xml:lang="fr">
+                <seg>Exports — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Exports — </seg>
+            </tuv>
+        </tu>
+        <tu tuid="viewInventoryUsers">
+            <tuv xml:lang="fr">
+                <seg>Participants à la collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users involved in this collection</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryUsersFrom">
+            <tuv xml:lang="fr">
+                <seg>Participants à la collecte — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users involved in collection — </seg>
+            </tuv>
+        </tu>
+
+        <!-- Détails du statut des saisies d'un inventaire -->
+
+        <tu tuid="inventoryInputsDetails">
+            <tuv xml:lang="fr">
+                <seg>Statuts des saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inputs statuts</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsNotStartedSingle">
+            <tuv xml:lang="fr">
+                <seg>non démarrée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsNotStartedMany">
+            <tuv xml:lang="fr">
+                <seg>non démarrées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsStartedSingle">
+            <tuv xml:lang="fr">
+                <seg>non terminée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>not finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsStartedMany">
+            <tuv xml:lang="fr">
+                <seg>non terminées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>not finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsCompletedSingle">
+            <tuv xml:lang="fr">
+                <seg>terminée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsCompletedMany">
+            <tuv xml:lang="fr">
+                <seg>terminées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>finished</seg>
+            </tuv>
+        </tu>
+
+        <!-- Boutons pour afficher davantage de cellules -->
+
+        <tu tuid="display-more-cells">
+            <tuv xml:lang="fr">
+                <seg>Afficher davantage d'éléments</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Display more elements</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

@@ -11,7 +11,7 @@ $documents = $bibliography->getReferencedDocuments();
 $datagrid = new UI_Datagrid('bibliography', 'datagrid_bibliography', 'doc');
 $datagrid->addParam('id', $bibliography->getId());
 $datagrid->deleteElements = true;
-$datagrid->deleteElementValue = '<i class="icon-trash"></i> ' . __('Doc', 'bibliography', 'deleteReference');
+$datagrid->deleteElementValue = '<i class="fa fa-trash-o"></i> ' . __('Doc', 'bibliography', 'deleteReference');
 $datagrid->deletePanelText = __('Doc', 'bibliography', 'deletionPopupInformation');
 
 // Name
@@ -52,7 +52,7 @@ $popup->footer = $validateButton->render() . ' ' . $cancelButton->render();
 echo $popup->render();
 
 // Bouton d'ajout
-$addButton = new UI_HTML_Button('<i class="icon-plus-sign"></i> ' . __('UI', 'verb', 'add'));
+$addButton = new UI_HTML_Button('<i class="fa fa-plus"></i> ' . __('UI', 'verb', 'add'));
 $addButton->addAttribute('class', 'addDocumentReferenceButton');
 echo $addButton->render();
 ?>

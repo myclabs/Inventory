@@ -339,7 +339,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
         if (($text !== null) || ($icon !== null)) {
             $content = '';
             if ($icon !== null) {
-                $content .= '<i class="icon-'.$icon.'"></i>';
+                $content .= '<i class="fa fa-'.$icon.'"></i>';
             }
             if (($text !== null) && ($icon !== null)) {
                 $content .= ' ';

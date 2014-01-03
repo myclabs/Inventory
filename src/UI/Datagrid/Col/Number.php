@@ -153,7 +153,7 @@ class UI_Datagrid_Col_Number extends UI_Datagrid_Col_Generic
             $filterFormElementInferior->setValue($defaultValue[$this->filterOperatorLower]);
         }
         $resetFieldInferior = '<i ';
-        $resetFieldInferior .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+        $resetFieldInferior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
         $resetFieldInferior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_lower\').val(\'\');"';
         $resetFieldInferior .= '>';
         $resetFieldInferior .= '</i>';
@@ -168,7 +168,7 @@ class UI_Datagrid_Col_Number extends UI_Datagrid_Col_Generic
             $filterFormElementSuperior->setValue($defaultValue[$this->filterOperatorHigher]);
         }
         $resetFieldSuperior = '<i ';
-        $resetFieldSuperior .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+        $resetFieldSuperior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
         $resetFieldSuperior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');"';
         $resetFieldSuperior .= '>';
         $resetFieldSuperior .= '</i>';

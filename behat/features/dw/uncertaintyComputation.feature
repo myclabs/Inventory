@@ -9,7 +9,7 @@ Feature: Check uncertainty computation feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # Accès cellule "Annecy"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I click element "#goTo3"
     And I open tab "Analyses"
     And I click "Nouvelle analyse"

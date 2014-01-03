@@ -15,8 +15,8 @@ $cells = $this->cells;
                 <small>
                     <a class="editOrganization btn btn-small btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>">
-                        <i class="icon-cog icon-white"></i>
-                        <?=__('UI', 'verb', 'edit')?>
+                        <i class="fa fa-wrench"></i>
+                        <?=__('UI', 'name', 'configurationOrga')?>
                     </a>
                 </small>
             </div>
@@ -31,7 +31,7 @@ $cells = $this->cells;
             <?=$this->cellsAccess[$cell->id]?>
             <?=$cell->extendedLabel?>
             <small>
-                <i class="icon-share-alt"></i>
+                <i class="fa fa-external-link"></i>
                 <?=__('Orga', 'view', 'linkDetails')?>
             </small>
         </a>

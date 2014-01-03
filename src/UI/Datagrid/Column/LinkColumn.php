@@ -43,7 +43,7 @@ class LinkColumn extends GenericColumn
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
         $this->keywordFilterEqual = __('UI', 'datagridFilter', 'ColLinkEqual');
         $this->criteriaFilterOperator = 'contains';
-        $this->defaultValue = '<i class="icon-share-alt"></i> '.__('UI', 'datagridContent', 'linkLabel');
+        $this->defaultValue = '<i class="fa fa-external-link"></i> '.__('UI', 'datagridContent', 'linkLabel');
     }
 
     /**

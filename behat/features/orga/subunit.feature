@@ -37,7 +37,7 @@ Feature: Organizational subunits tab feature
   # Accès à la cellule "Europe / Marque B"
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
-    When I click element ".icon-plus"
+    When I click element ".fa-plus"
     And I select "Marque B" from "marque"
     And I click element "#goTo2"
     Then I should see "Europe | Marque B Workspace avec données"

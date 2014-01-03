@@ -4,7 +4,19 @@
 		creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
 	<body>
 
-		<!-- Datagrid -->
+
+        <tu tuid="goToData">
+            <tuv xml:lang="fr">
+                <seg>Accéder aux données</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Go to data</seg>
+            </tuv>
+        </tu>
+
+        <!-- Obsolète ? -->
+
+        <!-- Datagrid -->
 		
         <tu tuid="InputGranularityNotNarrowerThanNewInventoryGranularity">
             <tuv xml:lang="fr">

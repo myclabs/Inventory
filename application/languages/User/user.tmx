@@ -20,6 +20,14 @@
                 <seg>Last name</seg>
             </tuv>
         </tu>
+        <tu tuid="emailAddress">
+            <tuv xml:lang="fr">
+                <seg>Adresse e-mail</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>E-mail address</seg>
+            </tuv>
+        </tu>
         <tu tuid="users">
             <tuv xml:lang="fr">
                 <seg>Utilisateurs</seg>

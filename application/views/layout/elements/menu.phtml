@@ -66,18 +66,18 @@ if ($connectedUser) {
     $connection = array(
         'name'    => $connectedUser->getName() . ' ',
         'id'      => 'currentUserButton',
-        'icon'    => 'off',
+        'icon'    => 'power-off',
         'url'     => 'user/action/logout?refer='.$refer,
         'submenu' => array(
-            array(
+            [
                 'name' => __('User', 'menu', 'myAccount'),
                 'url'  => 'user/profile/edit/',
-            ),
-            array(
+            ],
+            [
                 'name'  => __('User', 'menu', 'logout'),
                 'id'    => 'logoutButton',
                 'url'   => 'user/action/logout?refer=' . $refer,
-            ),
+            ],
         ),
     );
 
@@ -213,7 +213,7 @@ if ($connectedUser) {
     }
 
     $subMenuRepository[] = [
-        'name' => '<i class="icon-download-alt"></i> '.__('UI', 'name', 'exports'),
+        'name' => '<i class="fa fa-download"></i> '.__('UI', 'name', 'exports'),
         'url' => 'orga/referential/exports',
         'submenu' => null
     ];
@@ -320,7 +320,7 @@ if ($connectedUser) {
     $connection = array(
         'name'    => __('User', 'login', 'connection'),
         'id'      => 'loginButton',
-        'icon'    => 'off',
+        'icon'    => 'power-off',
         'url'     => 'user/action/login?refer='.$refer,
         'submenu' => null,
     );
@@ -347,7 +347,7 @@ $rightMenu = [ $connection ];
                         }
                         ?>
                         <a id="<?=$linkId?>" class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?><span class="caret"></span>
+                            <i class="fa fa-<?=$node['icon']?>"></i> <?=$node['name']?><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <?php foreach ($node['submenu'] as $submenu) { ?>
@@ -370,7 +370,8 @@ $rightMenu = [ $connection ];
                             $linkId = $node['id'];
                         }
                         ?>
-                        <a id="<?=$linkId?>" class="btn" href="<?=$node['url']?>"><i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?>
+                        <a id="<?=$linkId?>" class="btn" href="<?=$node['url']?>">
+                            <i class="fa fa-<?=$node['icon']?>"></i> <?=$node['name']?>
                         </a>
                     <?php } ?>
                 <?php } ?>

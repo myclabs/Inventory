@@ -9,10 +9,10 @@ foreach ($this->granularities as $granularity) {
         'orga'
     );
 
-    $columnReport = new UI_Datagrid_Col_Text('report', __('Orga', 'edit', 'report'));
+    $columnReport = new UI_Datagrid_Col_Text('report', __('UI', 'name', 'label'));
     $datagridGranularityReports->addCol($columnReport);
 
-    $columnLink = new UI_Datagrid_Col_Link('link', __('Orga', 'edit', 'report'));
+    $columnLink = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'details'));
     $datagridGranularityReports->addCol($columnLink);
 
     $datagridGranularityReports->addParam('idOrganization', $this->organization->getId());
@@ -22,7 +22,7 @@ foreach ($this->granularities as $granularity) {
 
 
     $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
-    $addButton->icon = 'plus-sign';
+    $addButton->icon = 'plus-circle';
     $addButton->link = 'orga/granularity/view-report/idGranularity/' . $granularity->getId() . '/';
 
     echo $this->collapse(
@@ -77,7 +77,7 @@ if ($this->isUserAllowedToEditOrganization) {
     <?=
     $this->button(
         '<span>'.__('Orga', 'configuration', 'dWCubesState').'</span>',
-        'info-sign icon-white',
+        'info-circle',
         ['id' => 'organizationDW', 'class' => 'btn-primary']
     );
     ?>
@@ -92,13 +92,13 @@ if ($this->isUserAllowedToEditOrganization) {
                     var button = $('#organizationDW');
                     if (data.organizationDWState) {
                         button.attr('class', 'btn btn-success')
-                        button.children('i').attr('class', 'icon-info-sign icon-white');
+                        button.children('i').attr('class', 'fa fa-info-circle');
                         button.children('span').html(
                             '<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesUpToDate'), ENT_QUOTES)?>'
                         );
                     } else {
                         button.attr('class', 'btn btn-danger');
-                        button.children('i').attr('class', 'icon-refresh icon-white');
+                        button.children('i').attr('class', 'fa fa-refresh');
                         button.children('span').html(
                             '<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesOutDated'), ENT_QUOTES)?>'
                         );
@@ -121,7 +121,7 @@ if ($this->isUserAllowedToEditOrganization) {
                     setMask(false);
                     var button = $('#organizationDW');
                     button.attr('class', 'btn btn-primary');
-                    button.children('i').attr('class', 'icon-info-sign icon-white');
+                    button.children('i').attr('class', 'fa fa-info-circle');
                     button.children('span').html(
                         '<?=htmlentities(__('Orga', 'configuration', 'dWCubesState'), ENT_QUOTES)?>'
                     );
@@ -144,7 +144,7 @@ if ($this->isUserAllowedToEditOrganization) {
 <fieldset class="wrapper">
     <legend style="cursor: default"><?=__('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
     <p><?=__('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
-    <?= $this->button(__('DW', 'rebuild', 'outputDataRebuildButton'), 'refresh icon-white', array('id' => 'calculateInputs', 'class' => 'btn-primary')) ?>
+    <?= $this->button(__('DW', 'rebuild', 'outputDataRebuildButton'), 'refresh', array('id' => 'calculateInputs', 'class' => 'btn-primary')) ?>
     <script>
         $('#calculateInputs').click(function() {
             setMask(true);

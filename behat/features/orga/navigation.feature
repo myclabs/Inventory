@@ -9,7 +9,7 @@ Feature: Organization navigation feature
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
   # Descendre depuis la cellule globale dans une cellule de granularité site
-    When I click element ".icon-plus"
+    When I click element ".fa-plus"
     And I select "Chambéry" from "site"
     And I click element "#goTo3"
     Then I should see "Chambéry Workspace avec données"
@@ -17,21 +17,21 @@ Feature: Organization navigation feature
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity6Input8" datagrid
   # Remonter au niveau zone-marque
-    When I click element ".icon-plus"
+    When I click element ".fa-plus"
     And I click "Europe | Marque A"
     Then I should see "Europe | Marque A Workspace avec données"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity2Input8" datagrid
   # Remonter au niveau global
-    When I click element ".icon-plus"
+    When I click element ".fa-plus"
     And I click "Vue globale"
     Then I should see "Vue globale"
   # Vérification qu'on tombe bien sur l'onglet "Saisies"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
   # Descendre au niveau zone|marque
-    When I click element ".icon-plus"
+    When I click element ".fa-plus"
     And I select "Marque sans site" from "marque"
     And I click element "#goTo2"
     Then I should see "Europe | Marque sans site Workspace avec données"
@@ -56,7 +56,7 @@ Feature: Organization navigation feature
       | zone   | marque   | relevant       |
       | Europe | Marque A | Non pertinente |
   # Essayer d'atteindre la cellule "Europe|Marque A" avec le volet de navigation
-    When I click element ".icon-plus"
+    When I click element ".fa-plus"
     And I select "Europe" from "zone"
     And I select "Marque A" from "marque"
     And I click element "#goTo2"
