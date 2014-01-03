@@ -54,6 +54,26 @@ class FakeUnitService implements UnitService
             return $this->units[$id];
         }
 
+        // Cas particuliers d'unités composées utilisées dans les tests
+        if ($id === 'g.j') {
+            $unit = new UnitDTO();
+            $unit->id = 'g.j';
+            $unit->symbol = 'g.j';
+            return $unit;
+        }
+        if ($id === 'kg.j') {
+            $unit = new UnitDTO();
+            $unit->id = 'kg.j';
+            $unit->symbol = 'kg.j';
+            return $unit;
+        }
+        if ($id === 'm^2.kg^2.s^-2') {
+            $unit = new UnitDTO();
+            $unit->id = 'm^2.kg^2.s^-2';
+            $unit->symbol = 'm^2.kg^2.s^-2';
+            return $unit;
+        }
+
         throw UnknownUnitException::create($id);
     }
 

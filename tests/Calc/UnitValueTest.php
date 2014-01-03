@@ -5,12 +5,8 @@
  * @package Calc
  */
 
-use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
-/**
- * @package Calc
- */
 class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 {
     public function testConversion()
@@ -36,9 +32,6 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($value->convertTo($centkm), $mValue->convertTo($centkm));
     }
 
-    /**
-     * Test de la fonction calculateProduct()
-     */
     public function testCalculateProduct()
     {
         //Test multiplication ok
@@ -60,9 +53,6 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('m^4.animal^-1.s^-4', $result->getUnit()->getRef());
     }
 
-    /**
-     * Test de la fonction calculateSum()
-     */
     public function testCalculateSum()
     {
         $unitValue = new Calc_Calculation_UnitValue();
@@ -80,10 +70,13 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(2.5, $result->getDigitalValue());
         $this->assertEquals('m^2.kg^2.s^-2', $result->getUnit()->getRef());
+    }
 
-
-         //Test somme d'unité non compatible.
-
+    /**
+     * @expectedException \MyCLabs\UnitAPI\Exception\IncompatibleUnitsException
+     */
+    public function testCalculateSumIncompatibleUnits()
+    {
         $unitValue2 = new Calc_Calculation_UnitValue();
         $unitValue2->setOperation(Calc_Calculation::ADD_OPERATION);
 
@@ -95,15 +88,14 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 
         $unitValue2->addComponents($calcUnitValue3, Calc_Calculation::SUM);
         $unitValue2->addComponents($calcUnitValue4, Calc_Calculation::SUBSTRACTION);
+        $unitValue2->calculate();
+    }
 
-        try {
-             $unitValue2->calculate();
-        } catch (IncompatibleUnitsException $e) {
-             $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
-        }
-
-        //Test somme d'unité ionexistante.
-
+    /**
+     * @expectedException \MyCLabs\UnitAPI\Exception\UnknownUnitException
+     */
+    public function testCalculateSumUnknownUnit()
+    {
         $unitValue3 = new Calc_Calculation_UnitValue();
         $unitValue3->setOperation(Calc_Calculation::ADD_OPERATION);
 
@@ -115,12 +107,7 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 
         $unitValue3->addComponents($calcUnitValue5, Calc_Calculation::SUM);
         $unitValue3->addComponents($calcUnitValue6, Calc_Calculation::SUBSTRACTION);
-
-        try {
-             $unitValue3->calculate();
-        } catch (Core_Exception_NotFound $e) {
-            $this->assertEquals("No 'Unit\\Domain\\Unit\\Unit' matching (ref == gramme)", $e->getMessage());
-        }
+        $unitValue3->calculate();
     }
 
     /**

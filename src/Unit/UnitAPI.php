@@ -6,6 +6,7 @@ use DI\Container;
 use MyCLabs\UnitAPI\DTO\UnitDTO;
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use MyCLabs\UnitAPI\Exception\UnknownUnitException;
+use MyCLabs\UnitAPI\Operation\Addition;
 use MyCLabs\UnitAPI\Operation\Multiplication;
 use MyCLabs\UnitAPI\Operation\OperationComponent;
 use MyCLabs\UnitAPI\UnitOperationService;
@@ -185,7 +186,7 @@ class UnitAPI
         /** @var UnitOperationService $operationService */
         $operationService = $container->get(UnitOperationService::class);
 
-        $operation = new Multiplication();
+        $operation = new Addition();
         array_walk($components, function ($component) use ($operation) {
             $operation->addComponent(new OperationComponent($component, 1));
         });

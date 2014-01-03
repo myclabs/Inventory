@@ -28,7 +28,39 @@ class FakeUnitOperationService implements UnitOperationService
      */
     public function execute(Operation $operation)
     {
-        throw new \Exception("Not implemented");
+        // Cas spéciaux utilisés dans les tests
+        if ((string) $operation == 'g + kg') {
+            return 'kg';
+        }
+        if ((string) $operation == 'kg + kg') {
+            return 'kg';
+        }
+        if ((string) $operation == 't + g') {
+            return 'kg';
+        }
+        if ((string) $operation == 'kg.j + g.j') {
+            return 'm^2.kg^2.s^-2';
+        }
+        if ((string) $operation == 'j.animal * (g^2.animal)^-1') {
+            return 'm^2.kg^-1.s^-2';
+        }
+        if ((string) $operation == 'j.animal * kg * (kg.m^2.s^-2.animal)^-1') {
+            return 'kg';
+        }
+        if ((string) $operation == 'g + kg + kg + g') {
+            return 'kg';
+        }
+        if ((string) $operation == 'j.animal + animal.m^2.kg^1.s^-2') {
+            return 'm^2.animal.kg.s^-2';
+        }
+        if ((string) $operation == 'g.animal + g^2.animal') {
+            throw new IncompatibleUnitsException();
+        }
+        if ((string) $operation == 'gramme.animal + g^2.animal') {
+            throw UnknownUnitException::create('gramme');
+        }
+
+        throw new \Exception("Operation not implemented: $operation");
     }
 
     /**
@@ -64,6 +96,28 @@ class FakeUnitOperationService implements UnitOperationService
                         return 1000;
                     case '100km':
                         return 0.01;
+                    default:
+                        throw new IncompatibleUnitsException(
+                            "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
+                        );
+                }
+                break;
+
+            case 'kg.j':
+                switch ($unit2) {
+                    case 'm^2.kg^2.s^-2':
+                        return 1;
+                    default:
+                        throw new IncompatibleUnitsException(
+                            "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
+                        );
+                }
+                break;
+
+            case 'g.j':
+                switch ($unit2) {
+                    case 'm^2.kg^2.s^-2':
+                        return 0.001;
                     default:
                         throw new IncompatibleUnitsException(
                             "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
