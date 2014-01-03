@@ -40,7 +40,7 @@ class FakeUnitService implements UnitService
     /**
      * {@inheritdoc}
      */
-    public function getUnits()
+    public function getUnits($locale)
     {
         return array_values($this->units);
     }
@@ -48,7 +48,7 @@ class FakeUnitService implements UnitService
     /**
      * {@inheritdoc}
      */
-    public function getUnit($id)
+    public function getUnit($id, $locale)
     {
         if (isset($this->units[$id])) {
             return $this->units[$id];
@@ -60,7 +60,7 @@ class FakeUnitService implements UnitService
     /**
      * {@inheritdoc}
      */
-    public function getUnitSystems()
+    public function getUnitSystems($locale)
     {
         throw new \Exception("getUnitSystems not implemented yet");
     }
@@ -68,7 +68,7 @@ class FakeUnitService implements UnitService
     /**
      * {@inheritdoc}
      */
-    public function getPhysicalQuantities()
+    public function getPhysicalQuantities($locale)
     {
         throw new \Exception("getPhysicalQuantities not implemented yet");
     }
@@ -76,7 +76,7 @@ class FakeUnitService implements UnitService
     /**
      * {@inheritdoc}
      */
-    public function getCompatibleUnits($id)
+    public function getCompatibleUnits($id, $locale)
     {
         switch ($id) {
             case 'm':
@@ -89,7 +89,7 @@ class FakeUnitService implements UnitService
     /**
      * {@inheritdoc}
      */
-    public function getUnitOfReference($id)
+    public function getUnitOfReference($id, $locale)
     {
         throw new \Exception("getUnitOfReference not implemented yet");
     }

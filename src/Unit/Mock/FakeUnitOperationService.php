@@ -4,6 +4,7 @@ namespace Unit\Mock;
 
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use MyCLabs\UnitAPI\Exception\UnknownUnitException;
+use MyCLabs\UnitAPI\Operation\Operation;
 use MyCLabs\UnitAPI\UnitOperationService;
 use MyCLabs\UnitAPI\UnitService;
 
@@ -25,10 +26,18 @@ class FakeUnitOperationService implements UnitOperationService
     /**
      * {@inheritdoc}
      */
+    public function execute(Operation $operation)
+    {
+        throw new \Exception("Not implemented");
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getConversionFactor($unit1, $unit2)
     {
-        $this->unitService->getUnit($unit1);
-        $this->unitService->getUnit($unit2);
+        $this->unitService->getUnit($unit1, 'en');
+        $this->unitService->getUnit($unit2, 'en');
 
         switch ($unit1) {
 

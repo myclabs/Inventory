@@ -59,13 +59,6 @@ class Calc_Test_Calculation_UnitSetUp extends PHPUnit_Framework_TestCase
 class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
 {
     /**
-     * Méthode appelée avant chaque méthode de test.
-     */
-    function setUp()
-    {
-    }
-
-    /**
      * Test de la méthode calculate.
      */
     function testCalculate()
@@ -119,7 +112,7 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o2->addComponents($unit1, Calc_Calculation::SUM);
         $o2->addComponents($unit2, Calc_Calculation::SUBSTRACTION);
         try {
-            $result = $o2->calculate();
+            $o2->calculate();
         } catch (IncompatibleUnitsException $e) {
              $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
@@ -133,7 +126,7 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o3->addComponents($unit1, Calc_Calculation::SUM);
         $o3->addComponents($unit2, Calc_Calculation::SUBSTRACTION);
         try {
-            $result = $o3->calculate();
+            $o3->calculate();
         } catch (Core_Exception_NotFound $e) {
             $this->assertEquals("No 'Unit\\Domain\\Unit\\Unit' matching (ref == gramme)", $e->getMessage());
         }
@@ -147,10 +140,9 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o->addComponents($unit2, -1);
 
         try {
-            $result = $o->calculate();
+            $o->calculate();
         } catch (Core_Exception_InvalidArgument $e) {
             $this->assertEquals('Unknow operation', $e->getMessage());
         }
     }
-
 }

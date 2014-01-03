@@ -6,6 +6,8 @@ use DI\Container;
 use MyCLabs\UnitAPI\DTO\UnitDTO;
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use MyCLabs\UnitAPI\Exception\UnknownUnitException;
+use MyCLabs\UnitAPI\Operation\Multiplication;
+use MyCLabs\UnitAPI\Operation\OperationComponent;
 use MyCLabs\UnitAPI\UnitOperationService;
 use MyCLabs\UnitAPI\UnitService;
 
@@ -153,11 +155,18 @@ class UnitAPI
      */
     public static function multiply($components)
     {
-        throw new \Exception("Not implemented yet");
-        $unit = new ComposedUnit();
-        $result = $unit->multiply($components);
-        $api = new UnitAPI($result->getRef());
-        return $api;
+        /** @var Container $container */
+        $container = \Zend_Registry::get('container');
+        /** @var UnitOperationService $operationService */
+        $operationService = $container->get(UnitOperationService::class);
+
+        $operation = new Multiplication();
+
+        array_walk($components, function ($component) use ($operation) {
+            $operation->addComponent(new OperationComponent($component['unit'], $component['signExponent']));
+        });
+
+        return new UnitAPI($operationService->execute($operation));
     }
 
     /**
@@ -171,11 +180,17 @@ class UnitAPI
      */
     public static function calculateSum($components)
     {
-        throw new \Exception("Not implemented yet");
-        $unit = new ComposedUnit();
-        $result = $unit->calculateSum($components);
-        $api = new UnitAPI($result->getRef());
-        return $api;
+        /** @var Container $container */
+        $container = \Zend_Registry::get('container');
+        /** @var UnitOperationService $operationService */
+        $operationService = $container->get(UnitOperationService::class);
+
+        $operation = new Multiplication();
+        array_walk($components, function ($component) use ($operation) {
+            $operation->addComponent(new OperationComponent($component, 1));
+        });
+
+        return new UnitAPI($operationService->execute($operation));
     }
 
     /**
