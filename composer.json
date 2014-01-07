@@ -32,7 +32,7 @@
         "monolog/monolog": "~1.6",
         "mnapoli/number-two": "~0.2.0",
         "myclabs/work": "~0.2.0",
-        "videlalvaro/php-amqplib": "2.2.2"
+        "videlalvaro/php-amqplib": "~2.2"
     },
     "require-dev": {
         "behat/behat": "~2.4",
