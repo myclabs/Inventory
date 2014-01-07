@@ -15,7 +15,7 @@ Orga_Model_Cell:
     membersHashKey:
       column: membersHashKey
       type: string
-      length: 7650
+      length: 40
       nullable: false
     tag:
       column: tag
@@ -201,3 +201,7 @@ Orga_Model_Cell:
             unique: true
             onDelete: CASCADE
       cascade: [ persist, remove ]
+
+  indexes:
+    membersHashKey:
+      columns: [membersHashKey]
