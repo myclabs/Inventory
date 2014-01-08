@@ -8,7 +8,6 @@
         ]
     },
     "require": {
-        "php": ">=5.5.0",
         "zendframework/zendframework1": "1.12.*",
         "doctrine/orm": "dev-master-myclabs as 2.4.99",
         "doctrine/annotations": "~1.0",
