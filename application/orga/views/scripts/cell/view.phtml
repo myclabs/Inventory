@@ -177,8 +177,8 @@ $currentCell = $this->currentCell;
                 <?=$currentCell->inventoryStatusTitle?>
             </span>
             <?php endif; ?>
-            <a data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip" ><i class="fa fa-users"></i></a>
-            <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>"><i class="fa fa-info-circle"></i></a>
+            <a data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip"><i class="fa fa-users"></i></a>
+            <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="right" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>"><i class="fa fa-info-circle"></i></a>
         </div>
         <div class="progress withTooltip" title="<?=__('Orga', 'view', 'inventoryPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">
             <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%">
@@ -322,7 +322,7 @@ $currentCell = $this->currentCell;
                 </select>
                 <?php endif; ?>
                 <button class="btn reset"><i class="fa fa-search-minus"></i> <?=__('UI', 'verb', 'reset')?></button>
-                <span class="badge badge-info granularity-info"></span>
+                <span class="badge badge-info granularity-info withTooltip" title="<?=__('Orga', 'view', 'filterExplanations')?>" data-toggle="tooltip" data-placement="right" data-trigger="hover"></span>
             </form>
             <?php endif; ?>
 
