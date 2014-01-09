@@ -412,6 +412,47 @@ class Orga_Service_OrganizationService
             __('Orga', 'organization', 'defaultWorkspaceLabel');
         $formData['organization']['elements']['organizationType']['value'] = 'empty';
 
-        return $this->createOrganization($user, $formData);
+        $organization = $this->createOrganization($user, $formData);
+
+        // Axe Catégorie
+        $categoryAxis = new Orga_Model_Axis($organization, 'categorie');
+        $categoryAxis->setLabel('Catégorie');
+        $categoryAxis->save();
+        $categoryEnergy = new Orga_Model_Member($categoryAxis, 'energie');
+        $categoryEnergy->setLabel('Énergie');
+        $categoryEnergy->save();
+        $categoryTravel = new Orga_Model_Member($categoryAxis, 'deplacement');
+        $categoryTravel->setLabel('Déplacement');
+        $categoryTravel->save();
+
+        // Axe Année
+        $timeAxis = new Orga_Model_Axis($organization, 'annee');
+        $timeAxis->setLabel('Année');
+        $timeAxis->save();
+        $annee2013 = new Orga_Model_Member($timeAxis, '2013');
+        $annee2013->setLabel('2013');
+        $annee2013->save();
+        $annee2014 = new Orga_Model_Member($timeAxis, '2014');
+        $annee2014->setLabel('2014');
+        $annee2014->save();
+
+        // Granularités
+        $granularityGlobal = $organization->getGranularityByRef('global');
+        $granularityCategory = new Orga_Model_Granularity($organization, [$categoryAxis]);
+        $granularityCategory->setCellsControlRelevance(false);
+        $granularityCategory->setCellsGenerateDWCubes(false);
+        $granularityCategory->setCellsWithACL(false);
+        $granularityCategory->save();
+
+        // Configuration
+        $granularityGlobal->setInputConfigGranularity($granularityCategory);
+        $granularityCategory->getCellByMembers([$categoryEnergy])
+            ->getCellsGroupForInputGranularity($granularityGlobal)
+            ->setAF(AF_Model_AF::loadByRef('energie'));
+        $granularityCategory->getCellByMembers([$categoryTravel])
+            ->getCellsGroupForInputGranularity($granularityGlobal)
+            ->setAF(AF_Model_AF::loadByRef('deplacement'));
+
+        return $organization;
     }
 }
