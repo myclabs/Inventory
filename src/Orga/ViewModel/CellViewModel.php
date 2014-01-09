@@ -7,6 +7,9 @@ namespace Orga\ViewModel;
  */
 class CellViewModel
 {
+    const AF_STATUS_NOT_STARTED = 'statusNotStarted';
+    const AF_STATUS_NOT_CONFIGURED = 'statusNotConfigured';
+
     /**
      * @var int
      */
@@ -40,7 +43,7 @@ class CellViewModel
     /**
      * @var boolean
      */
-    public $showsUsers = false;
+    public $showUsers = false;
 
     /**
      * @var boolean

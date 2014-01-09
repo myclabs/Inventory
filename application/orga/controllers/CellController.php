@@ -1076,15 +1076,6 @@ class Orga_CellController extends Core_Controller
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
-        $inputGranularity = $cell->getGranularity();
-        if ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
-            $aF = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
-        } else {
-            $aF = $cell->getParentCellForGranularity(
-                $inputGranularity->getInputConfigGranularity()
-            )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
-        }
-
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
             CellAction::INPUT(),
@@ -1133,7 +1124,7 @@ class Orga_CellController extends Core_Controller
 
         $this->forward('display', 'af', 'af',
             [
-                'id' => $aF->getId(),
+                'id' => $cell->getInputAFUsed()->getId(),
                 'viewConfiguration' => $aFViewConfiguration
             ]
         );

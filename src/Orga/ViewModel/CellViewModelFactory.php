@@ -5,12 +5,10 @@ namespace Orga\ViewModel;
 use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Criteria;
 use Orga_Model_Cell;
-use Orga_Model_Member;
 use User\Domain\ACL\Action;
 use User\Domain\User;
 use User\Domain\ACL\ACLService;
 use Orga\Model\ACL\Action\CellAction;
-use UI_HTML_Image;
 use AF_Model_InputSet_Primary;
 
 /**
@@ -65,14 +63,16 @@ class CellViewModelFactory
             AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
             AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
             AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
-            null => __('AF', 'inputInput', 'statusNotStarted')
+            CellViewModel::AF_STATUS_NOT_STARTED => __('AF', 'inputInput', 'statusNotStarted'),
+            CellViewModel::AF_STATUS_NOT_CONFIGURED => __('AF', 'inputInput', 'statusNotConfigured')
         ];
         $this->inputStatusStyles = [
             AF_Model_InputSet_Primary::STATUS_FINISHED => 'success',
             AF_Model_InputSet_Primary::STATUS_COMPLETE => 'warning',
             AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'danger',
             AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'danger',
-            null => 'danger'
+            CellViewModel::AF_STATUS_NOT_STARTED => 'danger',
+            CellViewModel::AF_STATUS_NOT_CONFIGURED => 'danger'
         ];
     }
 
@@ -120,7 +120,7 @@ class CellViewModelFactory
                 && ($cell->getGranularity()->getCellsWithACL())
                 && ($this->aclService->isAllowed($user, Action::ALLOW(), $cell)))
         ) {
-            $cellViewModel->showsUsers = true;
+            $cellViewModel->showUsers = true;
         }
 
         // Reports.
@@ -234,9 +234,10 @@ class CellViewModelFactory
                 $cellViewModel->inputStatusStyle = $this->inputStatusStyles[$cellViewModel->inputStatus];
                 $cellViewModel->inputCompletion = $aFInputSetPrimary->getCompletion();
             } else {
-                $cellViewModel->inputStatus = null;
-                $cellViewModel->inputStatusTitle = $this->inputStatusList[null];
-                $cellViewModel->inputStatusStyle = $this->inputStatusStyles[null];
+                $inputStatus = ($cell->getInputAFUsed() !== null) ? CellViewModel::AF_STATUS_NOT_STARTED : CellViewModel::AF_STATUS_NOT_CONFIGURED;
+                $cellViewModel->inputStatus = $inputStatus;
+                $cellViewModel->inputStatusTitle = $this->inputStatusList[$inputStatus];
+                $cellViewModel->inputStatusStyle = $this->inputStatusStyles[$inputStatus];
                 $cellViewModel->inputCompletion = 0;
             }
         }

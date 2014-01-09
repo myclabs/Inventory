@@ -19,7 +19,8 @@ $inputStatusFilters = [
     AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
     AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
     AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
-    'notStarted' => __('AF', 'inputInput', 'statusNotStarted'),
+    \Orga\ViewModel\CellViewModel::AF_STATUS_NOT_STARTED => __('AF', 'inputInput', 'statusNotStarted'),
+    \Orga\ViewModel\CellViewModel::AF_STATUS_NOT_CONFIGURED => __('AF', 'inputInput', 'statusNotConfigured'),
 ];
 
 /** @var \Orga\ViewModel\OrganizationViewModel $organization */
@@ -118,19 +119,6 @@ $currentCell = $this->currentCell;
                     Cellules table
                 </a>
             </small>
-            <small>
-                <a class="btn btn-small btn-info disabled"
-                   href="orga/cell/view-mixitup/idCell/<?=$currentCell->id?>/">
-                    <i class="fa fa-exclamation"></i>
-                    Cellules mixitup
-                </a>
-                <script>
-                    $('a.disabled').on('click', function(e) {
-                        e.preventDefault();
-                        alert('En cours de développement !');
-                    });
-                </script>
-            </small>
         </div>
     </h1>
 </div>
@@ -153,8 +141,8 @@ $currentCell = $this->currentCell;
             </a>
             <?php endif; ?>
             <small class="cell-actions">
-                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'role', 'cellAdministrators')?>" class="withTooltip"><i class="fa fa-briefcase"></i></a>
-                <?php if ($currentCell->showsUsers) : ?>
+                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'role', 'cellAdministrators')?>" class="withTooltip"><i class="fa fa-envelope"></i></a>
+                <?php if ($currentCell->showUsers) : ?>
                 <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('User', 'user', 'users')?>" class="withTooltip"><i class="fa fa-user"></i></a>
                 <?php endif; ?>
                 <?php if ($currentCell->showReports) : ?>
@@ -169,7 +157,7 @@ $currentCell = $this->currentCell;
             <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
             <?php if ($currentCell->canEditInventory) : ?>
             <div class="btn-group">
-                <button class="btn dropdown-toggle btn-<?=$currentCell->inventoryStatusStyle?>" data-toggle="dropdown" data-inventory="<?=$currentCell->inventoryStatus?>">
+                <button class="btn btn-small dropdown-toggle btn-<?=$currentCell->inventoryStatusStyle?>" data-toggle="dropdown" data-inventory="<?=$currentCell->inventoryStatus?>">
                     <i class="fa fa-pencil-square-o"></i>
                     <?=$currentCell->inventoryStatusTitle?>
                     <span class="caret"></span>
@@ -189,10 +177,10 @@ $currentCell = $this->currentCell;
                 <?=$currentCell->inventoryStatusTitle?>
             </span>
             <?php endif; ?>
-            <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>"><i class="fa fa-info-circle"></i></a>
             <a data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip" ><i class="fa fa-users"></i></a>
+            <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>"><i class="fa fa-info-circle"></i></a>
         </div>
-        <div class="progress">
+        <div class="progress withTooltip" title="<?=__('Orga', 'view', 'inventoryPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">
             <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%">
                 <?=$currentCell->inventoryCompletion?> %
             </div>
@@ -206,7 +194,7 @@ $currentCell = $this->currentCell;
                 <?=$currentCell->inputStatusTitle?>
             </span>
         </div>
-        <div class="progress progress-<?=$currentCell->inputStatusStyle?>">
+        <div class="progress progress-<?=$currentCell->inputStatusStyle?> withTooltip" title="<?=__('Orga', 'view', 'inputPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">
             <div class="bar" style="width: <?=$currentCell->inputCompletion?>%"><?=$currentCell->inputCompletion?> %</div>
         </div>
         <?php endif; ?>
@@ -220,7 +208,7 @@ $currentCell = $this->currentCell;
                 <pre><?=implode("\n", $currentCell->administrators)?></pre>
             </div>
         </div>
-        <?php if ($currentCell->showsUsers) : ?>
+        <?php if ($currentCell->showUsers) : ?>
         <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -378,7 +366,6 @@ $currentCell = $this->currentCell;
     <?php if ($organization->canBeEdited) : ?>
     <div class="addMember">
         <h3>
-            <?=__('Orga', 'view', 'addMember')?>
             <div class="pull-right">
                 <small>
                     <a class="editOrganization btn btn-small btn-primary"
@@ -388,6 +375,7 @@ $currentCell = $this->currentCell;
                     </a>
                 </small>
             </div>
+            <?=__('Orga', 'view', 'addMember')?>
         </h3>
         <hr/>
         <?=$this->addMembersForm->display()?>
@@ -494,7 +482,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 granularity.attr('data-total-cells', data.totalCells);
                 $(data.childCells).each(function() {
                     var cellTitle = this.extendedLabel;
-                    if (this.showInput) {
+                    if (this.showInput && (this.inputStatus != '<?=\Orga\ViewModel\CellViewModel::AF_STATUS_NOT_CONFIGURED?>')) {
                         cellTitle =
                         '<a href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'viewInput')?>" class="withTooltip">' +
                             cellTitle +
@@ -584,7 +572,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                         if (this.canEditInventory) {
                             inventoryP +=
                                 '<div class="btn-group">' +
-                                    '<button class="btn dropdown-toggle btn-' + this.inventoryStatusStyle + '" data-toggle="dropdown" data-inventory="' + this.inventoryStatus + '">' +
+                                    '<button class="btn btn-small dropdown-toggle btn-' + this.inventoryStatusStyle + '" data-toggle="dropdown" data-inventory="' + this.inventoryStatus + '">' +
                                         '<i class="fa fa-pencil-square-o"></i> ' +
                                         this.inventoryStatusTitle +
                                         ' <span class="caret"></span>' +
@@ -606,6 +594,9 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                 '</span>';
                         }
                         inventoryP +=
+                                '<a data-toggle="modal" href="#inventoryUsers' + this.id + '" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip">' +
+                                    '<i class="fa fa-users"></i>' +
+                                '</a>' +
                                 ' <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>"' +
                                     'data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true"' +
                                     'data-content="' +
@@ -620,11 +611,8 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                     '">' +
                                     '<i class="fa fa-info-circle"></i>' +
                                 '</a>' +
-                                '<a data-toggle="modal" href="#inventoryUsers' + this.id + '" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip">' +
-                                    '<i class="fa fa-users"></i>' +
-                                '</a>' +
                             '</div>' +
-                            '<div class="progress">' +
+                            '<div class="progress withTooltip" title="<?=__('Orga', 'view', 'inventoryPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">' +
                                 '<div class="bar" style="width: ' + this.inventoryCompletion + '%">' + this.inventoryCompletion + '%</div>' +
                             '</div>';
                         inventoryPopup +=
@@ -646,7 +634,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                     this.inputStatusTitle +
                                 '</span>' +
                             '</div>' +
-                            '<div class="progress progress-' + this.inputStatusStyle + '">' +
+                            '<div class="progress progress-' + this.inputStatusStyle + ' withTooltip" title="<?=__('Orga', 'view', 'inputPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">' +
                                 '   <div class="bar" style="width: ' + this.inputCompletion + '%">' + this.inputCompletion + ' %</div>' +
                             '</div>';
                     }
@@ -717,9 +705,7 @@ $('.cells-filter').on('filterCells', function(e) {
     $('select', form).each(function() {
         var filter = $(this).attr('data-filter');
         var value = $(this).val();
-        if ((filter == 'input-status') && (value == 'notStarted')) {
-            test += '[data-' + filter + '=\'null\']';
-        } else if (value != '') {
+        if (value != '') {
             if (filter == 'tag') {
                 test += '[data-' + filter + '*=\'' + value + '\']';
             } else {
@@ -763,7 +749,7 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
 
     if ($('.cell[data-filtered]', granularity).length > 0) {
         granularity.append(
-            '<div class="btn btn-primary display-more-cells span firstRowCell">' +
+            '<div class="btn display-more-cells span firstRowCell">' +
                 '<?=__('Orga', 'view', 'display-more-cells')?>' +
             '</div>'
         );
@@ -995,7 +981,7 @@ $('body').on('click', 'tr.report-message .close-report-message', function(e) {
     $(this).parent().parent().remove();
 });
 
-$('body').on('click', '.inventoryStatus .dropdown-menu a', function(e) {
+$('body').on('click', '.inventory-status .dropdown-menu a', function(e) {
     e.preventDefault();
     var link = $(this);
     var button = link.parent().parent().prev();

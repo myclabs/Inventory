@@ -19,10 +19,10 @@
 
         <tu tuid="separator">
             <tuv xml:lang="fr">
-                <seg> | </seg>
+                <seg> &amp; </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg> | </seg>
+                <seg> &amp; </seg>
             </tuv>
         </tu>
 

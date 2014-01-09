@@ -160,9 +160,11 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 $this->data = $granularity->getCellsControlRelevance();
                 break;
             case 'acl':
-                foreach ($granularity->getCells() as $cell) {
-                    if (count($cell->getAllRoles()) > 0) {
-                        throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
+                if (!$this->update['value']) {
+                    foreach ($granularity->getCells() as $cell) {
+                        if (count($cell->getAllRoles()) > 0) {
+                            throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
+                        }
                     }
                 }
                 $granularity->setCellsWithACL((bool) $this->update['value']);

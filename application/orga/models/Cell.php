@@ -1085,6 +1085,28 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
+     * Renvoie l'AF utilisé par la cellule.
+     *
+     * @return AF_Model_AF
+     */
+    public function getInputAFUsed()
+    {
+        $granularity = $this->getGranularity();
+        try {
+            if ($granularity === $granularity->getInputConfigGranularity()) {
+                return $this->getCellsGroupForInputGranularity($granularity)->getAF();
+            } else {
+                return $this->getParentCellForGranularity(
+                    $granularity->getInputConfigGranularity()
+                )->getCellsGroupForInputGranularity($granularity)->getAF();
+            }
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            // Pas d'AF spécifié.
+        }
+        return null;
+    }
+
+    /**
      * Spécifie la DocLibrary pour les AFInputSetPrimary de la cellule.
      *
      * @param Library $docLibrary
