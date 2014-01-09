@@ -50,14 +50,13 @@ class Core_Test_EntityAssociationRepository extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
         // Vérification qu'il ne reste aucun Inventory_Model_Association en base, sinon suppression !
         if (Inventory_Model_Association::countTotal() > 0) {
             echo PHP_EOL . 'Des AssociationEntity restantes ont été trouvé avant les tests, suppression en cours !';
             foreach (Inventory_Model_Association::loadList() as $associationEntity) {
                 $associationEntity->delete();
             }
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Inventory_Model_Simple en base, sinon suppression !
         if (Inventory_Model_Simple::countTotal() > 0) {
@@ -65,7 +64,7 @@ class Core_Test_EntityAssociationRepository extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -152,8 +151,7 @@ class Core_Test_EntityAssociationRepository extends PHPUnit_Framework_TestCase
             $associationEntity->save();
         }
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -208,15 +206,14 @@ class Core_Test_EntityAssociationRepository extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
         foreach ($this->_associationEntities as $associationEntity) {
             $associationEntity->delete();
         }
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         foreach ($this->_simpleEntities as $simpleEntity) {
             $simpleEntity->delete();
         }
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -224,14 +221,13 @@ class Core_Test_EntityAssociationRepository extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
         // Vérification qu'il ne reste aucun Inventory_Model_Simple en base, sinon suppression !
         if (Inventory_Model_Simple::countTotal() > 0) {
             echo PHP_EOL . 'Des SimpleEntity restantes ont été trouvé après les tests, suppression en cours !';
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Inventory_Model_Association en base, sinon suppression !
         if (Inventory_Model_Association::countTotal() > 0) {
@@ -239,7 +235,7 @@ class Core_Test_EntityAssociationRepository extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Association::loadList() as $associationEntity) {
                 $associationEntity->delete();
             }
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

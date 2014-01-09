@@ -44,8 +44,7 @@ class Simulation_Test_SetTest
             $user->setPassword('test');
             $user->save();
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         // Création d'un nouvel objet.
         $set = new Simulation_Model_Set();
@@ -53,8 +52,7 @@ class Simulation_Test_SetTest
         $set->setAF($aF);
         $set->setUser($user);
         $set->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         return $set;
     }
@@ -76,8 +74,7 @@ class Simulation_Test_SetTest
 
         // Suppression de l'objet.
         $set->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         if ($deleteAF) {
             $aF->delete();
@@ -85,8 +82,7 @@ class Simulation_Test_SetTest
         if ($deleteUser) {
             $user->delete();
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
 
@@ -120,8 +116,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Set::loadList() as $set) {
                 $set->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -139,8 +134,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
         $user->setPassword('test');
         $user->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         $o = new Simulation_Model_Set();
         $o->setUser($user);
@@ -148,8 +142,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
         $o->save();
         $this->assertInstanceOf('Simulation_Model_Set', $o);
         $this->assertEquals($o->getKey(), array());
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
 
         return $o;
@@ -180,13 +173,11 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
     function testDelete($o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
         $o->getAF()->delete();
         $o->getUser()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -200,8 +191,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Set::loadList() as $set) {
                 $set->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }

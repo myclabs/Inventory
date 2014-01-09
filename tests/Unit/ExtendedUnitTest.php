@@ -71,8 +71,7 @@ class Unit_Test_ExtendedUnitTest
         }
         $o->setStandardUnit($standardUnit);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -85,8 +84,7 @@ class Unit_Test_ExtendedUnitTest
     public static function deleteObject(ExtendedUnit $o, $deleteExtension=true, $deleteStandardUnit=true)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         if ($deleteExtension == true) {
             Unit_Test_UnitExtensionTest::deleteObject($o->getExtension());
         }
@@ -114,8 +112,7 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
             foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
         if (UnitExtension::countTotal() > 0) {
@@ -123,8 +120,7 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
             foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
         if (PhysicalQuantity::countTotal() > 0) {
@@ -132,8 +128,7 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
             foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
         if (UnitSystem::countTotal() > 0) {
@@ -141,16 +136,8 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
-    }
-
-    /**
-     * Méthode appelée avant chaque test
-     */
-    protected function setUp()
-    {
     }
 
     /**
@@ -173,8 +160,7 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
 
         return $o;
@@ -186,8 +172,7 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
      */
     function testLoad($o)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear($o);
+        \Core\ContainerSingleton::getEntityManager()->clear($o);
         // On tente de charger l'unité enregistrée dans la base lors du test de la méthode save().
         $oLoaded = ExtendedUnit::load($o->getKey());
         $this->assertInstanceOf('Unit\Domain\Unit\ExtendedUnit', $oLoaded);
@@ -209,21 +194,12 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
     function testDelete(ExtendedUnit $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
 
         Unit_Test_UnitExtensionTest::deleteObject($o->getExtension());
         Unit_Test_StandardUnitTest::deleteObject($o->getStandardUnit());
     }
-
-    /**
-     * Méthode appelée à la fin de chaque test
-     */
-    protected function tearDown()
-    {
-    }
-
 
     /**
      * On verifie que les tables soient vides après les tests
@@ -236,8 +212,7 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
             foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
         if (UnitExtension::countTotal() > 0) {
@@ -245,8 +220,7 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
             foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
         if (PhysicalQuantity::countTotal() > 0) {
@@ -254,8 +228,7 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
             foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
         if (UnitSystem::countTotal() > 0) {
@@ -263,11 +236,9 @@ class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
-
 }
 
 
@@ -298,8 +269,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
             foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
         if (UnitExtension::countTotal() > 0) {
@@ -307,8 +277,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
             foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
         if (PhysicalQuantity::countTotal() > 0) {
@@ -316,8 +285,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
             foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
         if (UnitSystem::countTotal() > 0) {
@@ -325,8 +293,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -335,8 +302,6 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         //On créer un système d'unité (obligatoire pour une unité standard).
         $this->unitSystem = new UnitSystem();
         $this->unitSystem->setRef('international');
@@ -380,7 +345,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
         $this->physicalQuantity1->setIsBase(false);
         $this->physicalQuantity1->save();
 
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         $this->physicalQuantity1->addPhysicalQuantityComponent($this->_lengthPhysicalQuantity, 2);
         $this->physicalQuantity1->addPhysicalQuantityComponent($this->_massPhysicalQuantity, 1);
@@ -403,7 +368,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
         $this->standardUnit->setUnitSystem($this->unitSystem);
         $this->standardUnit->save();
 
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         $this->physicalQuantity1->setReferenceUnit($this->standardUnit);
 
@@ -416,7 +381,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
         $this->_extendedUnit->setStandardUnit($this->standardUnit);
         $this->_extendedUnit->save();
 
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -481,8 +446,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
         $extendedReferenceUnit->setExtension($this->_extendedUnit->getExtension());
 
         // L'unité étendue servant uniquement de proxy, elle est supprimée de l'entité manager.
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->detach($extendedReferenceUnit);
+         \Core\ContainerSingleton::getEntityManager()->detach($extendedReferenceUnit);
 
         // On vérifie que ces deux unités sont bien les mêmes
         $this->assertEquals($this->_extendedUnit->getReferenceUnit(), $extendedReferenceUnit);
@@ -494,14 +458,12 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $this->physicalQuantity1->setReferenceUnit(null);
 
         $this->_extendedUnit->delete();
         $this->standardUnit->delete();
 
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         $this->physicalQuantity1->delete();
 
@@ -513,7 +475,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
         $this->unitSystem->delete();
         $this->extension->delete();
 
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
 
@@ -528,8 +490,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
             foreach (Unit::loadList() as $unit) {
                 $unit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
         if (UnitExtension::countTotal() > 0) {
@@ -537,8 +498,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
             foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
         if (PhysicalQuantity::countTotal() > 0) {
@@ -546,8 +506,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
             foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
                 $physicalQuantity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
         if (UnitSystem::countTotal() > 0) {
@@ -555,8 +514,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

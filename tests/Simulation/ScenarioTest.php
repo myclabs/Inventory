@@ -45,8 +45,7 @@ class Simulation_Test_ScenarioTest
         $scenario->setSet($set);
         $scenario->setAFInputSetPrimary($aFInputSetPrimary);
         $scenario->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         return $scenario;
     }
@@ -68,13 +67,11 @@ class Simulation_Test_ScenarioTest
 
         // Suppression de l'objet.
         $scenario->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         if ($deleteAFInputSetPrimary) {
             $aFInputSetPrimary->delete();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         if ($deleteSet) {
             Simulation_Test_SetTest::deleteObject($set);
@@ -100,8 +97,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Scenario::loadList() as $scenario) {
                 $scenario->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Simulation_Model_Set en base, sinon suppression !
         if (Simulation_Model_Set::countTotal() > 0) {
@@ -109,8 +105,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Set::loadList() as $set) {
                 $set->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -130,8 +125,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
         $set = Simulation_Test_SetTest::generateObject();
         $aFInputSetPrimary = new AF_Model_InputSet_Primary($set->getAF());
         $aFInputSetPrimary->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         $o = new Simulation_Model_Scenario();
         $o->setSet($set);
@@ -139,8 +133,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
         $o->save();
         $this->assertInstanceOf('Simulation_Model_Scenario', $o);
         $this->assertEquals($o->getKey(), array());
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
 
         return $o;
@@ -171,20 +164,11 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
     function testDelete($o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
         $o->getAFInputSetPrimary()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         Simulation_Test_SetTest::deleteObject($o->getSet());
-    }
-
-    /**
-     * Méthode appelée à la fin des test
-     */
-    protected function tearDown()
-    {
     }
 
     /**
@@ -198,8 +182,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Scenario::loadList() as $scenario) {
                 $scenario->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Simulation_Model_Set en base, sinon suppression !
         if (Simulation_Model_Set::countTotal() > 0) {
@@ -207,8 +190,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Set::loadList() as $set) {
                 $set->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }

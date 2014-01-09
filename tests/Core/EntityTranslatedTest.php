@@ -26,8 +26,7 @@ class Core_Test_EntityTranslatedTest extends TestCase
             foreach (Inventory_Model_Translated::loadList() as $o) {
                 $o->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

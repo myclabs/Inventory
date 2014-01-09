@@ -18,8 +18,7 @@ class Techno_Test_FamilyTest extends TestCase
         $family = new Family(Core_Tools::generateRef(), 'Test');
         $family->setUnit(new UnitAPI('m'));
         $family->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $family;
     }
 
@@ -30,14 +29,12 @@ class Techno_Test_FamilyTest extends TestCase
     public static function deleteObject(Family $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
+        $entityManager = \Core\ContainerSingleton::getEntityManager();
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Cell::loadList() as $o) {
             $o->delete();

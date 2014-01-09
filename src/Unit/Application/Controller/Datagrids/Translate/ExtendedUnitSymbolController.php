@@ -14,6 +14,11 @@ use Unit\Domain\Unit\ExtendedUnit;
  */
 class Unit_Datagrids_Translate_ExtendedUnitSymbolController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * @Secure("viewUnit")
@@ -26,7 +31,7 @@ class Unit_Datagrids_Translate_ExtendedUnitSymbolController extends UI_Controlle
 
             $data['identifier'] = $unit->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $unit->reloadWithLocale($locale);
                 $data[$language] = $unit->getSymbol();

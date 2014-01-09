@@ -58,8 +58,7 @@ class Core_Test_EntitySimpleCRUD extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = \Core\ContainerSingleton::getEntityManager();
         $this->_simpleEntityRepository = $this->entityManager->getRepository('Inventory_Model_Simple');
     }
 
@@ -153,8 +152,7 @@ class Core_Test_EntitySimpleCRUD extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -187,8 +185,7 @@ class Core_Test_EntitySimpleOthers extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -197,8 +194,7 @@ class Core_Test_EntitySimpleOthers extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = \Core\ContainerSingleton::getEntityManager();
     }
 
     /**
@@ -217,23 +213,6 @@ class Core_Test_EntitySimpleOthers extends PHPUnit_Framework_TestCase
     public function testGetPoolName()
     {
         $this->assertEquals(Inventory_Model_Simple::getActivePoolName(), 'default');
-    }
-
-    /**
-     * Vérifie qu'il est impossible de spécifier un poolName sans EntityManager correspondant.
-     * @expectedException Core_Exception_Database
-     */
-    public function testSetInvalidPoolName()
-    {
-        $poolName = 'InexistentPoolName';
-        try {
-            Inventory_Model_Simple::setActivePoolName($poolName);
-        } catch (Core_Exception_Database $e) {
-            if ($e->getMessage() == 'Invalid name given, there is no EntityManager matching '.$poolName) {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
     }
 
     /**
@@ -380,8 +359,7 @@ class Core_Test_EntitySimpleOthers extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des algos.
@@ -16,13 +17,16 @@ use Core\Annotation\Secure;
 class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
 {
     /**
-     * Désactivation du fallback des traductions.
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -31,12 +35,13 @@ class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         foreach (Algo_Model_Numeric::loadList($this->request) as $algo) {
             $data = array();
             $data['index'] = $algo->getId();
             $data['identifier'] = $algo->getId();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $algo->reloadWithLocale($locale);
                 $data[$language] = $algo->getLabel();
@@ -55,6 +60,7 @@ class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $algo = Algo_Model_Numeric::load($this->update['index']);
         $algo->reloadWithLocale(Core_Locale::load($this->update['column']));
         $algo->setLabel($this->update['value']);

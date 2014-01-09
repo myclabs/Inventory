@@ -787,10 +787,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $this->dWCube = new DW_Model_Cube();
             $this->dWCube->setLabel($this->getLabel());
 
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
             /** @var Orga_Service_ETLStructure $etlStructureService */
-            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+            $etlStructureService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLStructure::class);
 
             $etlStructureService->populateGranularityDWCube($this);
         }

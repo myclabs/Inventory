@@ -58,8 +58,7 @@ class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = \Core\ContainerSingleton::getEntityManager();
         $this->_orderedEntityRepository = $this->entityManager->getRepository('Inventory_Model_Ordered');
     }
 
@@ -158,8 +157,7 @@ class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -192,8 +190,7 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -202,8 +199,7 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = \Core\ContainerSingleton::getEntityManager();
     }
 
     /**
@@ -545,8 +541,7 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

@@ -35,8 +35,7 @@ abstract class Core_Script_Populate extends Core_Script_Action
             return;
         }
 
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $bootstrap Core_Bootstrap */
         $bootstrap = Zend_Registry::get('bootstrap');
 
@@ -51,22 +50,12 @@ abstract class Core_Script_Populate extends Core_Script_Action
         $connectionSettings = $config->doctrine->default->connection;
         $entityManager = $bootstrap->createDefaultEntityManager($connectionSettings);
 
-        // Enregistrement de l'entityManager par défault dans le Registry.
-        //  Les prochains devront être ajouté au tableau.
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default'] = $entityManager;
-        Zend_Registry::set('EntityManagers', $entityManagers);
         $container->set(EntityManager::class, $entityManager);
 
         // Lancement du populate.
         $this->populateEnvironment($environment);
 
-        // Suppression de l'entityManager.
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManager = $entityManagers['default'];
-        unset($entityManagers['default']);
         $entityManager->close();
-        Zend_Registry::set('EntityManagers', $entityManagers);
         $container->set(EntityManager::class, null);
     }
 

@@ -1,28 +1,30 @@
 <?php
-/**
- * @author matthieu.napoli
- */
 
 namespace AuditTrail\Application;
 
+use AuditTrail\Domain\Entry;
+use AuditTrail\Domain\EntryRepository;
 use Core_Package_Bootstrap;
 use DI\Container;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Bootstrap
+ *
+ * @author matthieu.napoli
  */
 class Bootstrap extends Core_Package_Bootstrap
 {
     /**
      * Enregistrement des repository
      */
-    protected function _initAuditrailRepositories()
+    protected function _initAuditTrailRepositories()
     {
         $this->container->set(
-            'AuditTrail\Domain\EntryRepository',
-            function(Container $c) {
-                return $c->get('Doctrine\ORM\EntityManager')->getRepository('AuditTrail\Domain\Entry');
-            }
+            EntryRepository::class,
+            \DI\factory(function (Container $c) {
+                return $c->get(EntityManager::class)->getRepository(Entry::class);
+            })
         );
     }
 }

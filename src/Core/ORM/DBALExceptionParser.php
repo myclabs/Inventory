@@ -151,9 +151,7 @@ class Core_ORM_DBALExceptionParser
      */
     protected function getClassNameFromTableName($table)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $entityManagers['default'];
+        $em = \Core\ContainerSingleton::getEntityManager();
         // Go through all the classes
         $classNames = $em->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
         foreach ($classNames as $className) {
@@ -175,9 +173,7 @@ class Core_ORM_DBALExceptionParser
         if (!$className || !class_exists($className)) {
             return null;
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $em \Doctrine\ORM\EntityManager */
-        $em = $entityManagers['default'];
+        $em = \Core\ContainerSingleton::getEntityManager();
         $classMetaData = $em->getClassMetadata($className);
         if ($classMetaData) {
             return $classMetaData->getFieldForColumn($column);

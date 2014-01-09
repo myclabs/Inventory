@@ -406,8 +406,7 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
      */
     public function testUndefinedAlias()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $simpleRepository = $entityManagers['default']->getRepository('Inventory_Model_Simple');
+        $simpleRepository = \Core\ContainerSingleton::getEntityManager()->getRepository('Inventory_Model_Simple');
         $queryBuilder = $simpleRepository->createQueryBuilder('test');
         $conditionName = 'test';
         $query = new Core_Model_Query();
@@ -503,8 +502,7 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
             $simpleEntity->save();
         }
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -887,8 +885,7 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
         foreach ($this->_simpleEntities as $simpleEntity) {
             $simpleEntity->delete();
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -902,8 +899,7 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
