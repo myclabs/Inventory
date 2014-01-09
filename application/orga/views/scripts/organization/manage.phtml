@@ -71,7 +71,6 @@ $organizations = $this->organizations;
     <?php endif; ?>
 </div>
 
-<?php if ($organization->canBeDeleted) : ?>
 <script>
     $(function() {
         $(".deleteOrganization").confirm({
@@ -82,4 +81,3 @@ $organizations = $this->organizations;
         });
     });
 </script>
-<?php endif; ?>
