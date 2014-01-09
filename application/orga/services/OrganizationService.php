@@ -406,8 +406,12 @@ class Orga_Service_OrganizationService
     {
         $user = $this->userService->createUser($email, $password);
 
-        $label = __('Orga', 'organization', 'defaultWorkspaceLabel');
+        // MOCHE
+        $formData = [];
+        $formData['organization']['elements']['organizationLabel']['value'] =
+            __('Orga', 'organization', 'defaultWorkspaceLabel');
+        $formData['organization']['elements']['organizationType']['value'] = 'empty';
 
-        return $this->createOrganization($user, $label);
+        return $this->createOrganization($user, $formData);
     }
 }
