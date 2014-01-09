@@ -24,6 +24,11 @@ class DW_ReportController extends Core_Controller
     private $aclService;
 
     /**
+     * @Inject("session.storage.name")
+     */
+    private $sessionStorageName;
+
+    /**
      * Récupère un report enregistré en session par son hash.
      *
      * @param string $hash
@@ -32,9 +37,7 @@ class DW_ReportController extends Core_Controller
      */
     protected function getReportByHash($hash)
     {
-        $configuration = Zend_Registry::get('configuration');
-        $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
-        $zendSessionReport = new Zend_Session_Namespace($sessionName);
+        $zendSessionReport = new Zend_Session_Namespace($this->sessionStorageName);
 
         return DW_Model_Report::getFromString($zendSessionReport->$hash);
     }
@@ -47,9 +50,7 @@ class DW_ReportController extends Core_Controller
      */
     protected function setReportByHash($hash, $report)
     {
-        $configuration = Zend_Registry::get('configuration');
-        $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
-        $zendSessionReport = new Zend_Session_Namespace($sessionName);
+        $zendSessionReport = new Zend_Session_Namespace($this->sessionStorageName);
 
         $this->entityManager->clear();
 

@@ -43,8 +43,7 @@ class Classif_Test_IndicatorTest
         $o->setUnit(($unit === null) ? new UnitAPI('m') : $unit);
         $o->setRatioUnit(($ratioUnit === null) ? new UnitAPI('m') : $ratioUnit);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -55,8 +54,7 @@ class Classif_Test_IndicatorTest
     public static function deleteObject($o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
 }
@@ -79,8 +77,7 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Indicator::loadList() as $indicator) {
                 $indicator->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -100,8 +97,7 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
         $o->setRatioUnit($ratioUnit);
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
         return $o;
     }
@@ -130,8 +126,7 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
     function testDelete(Classif_Model_Indicator $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
     }
 
@@ -146,8 +141,7 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Indicator::loadList() as $indicator) {
                 $indicator->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

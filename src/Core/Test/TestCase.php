@@ -4,7 +4,6 @@ namespace Core\Test;
 
 use Doctrine\ORM\EntityManager;
 use PHPUnit_Framework_TestCase;
-use Zend_Registry;
 
 /**
  * Classe de test de base.
@@ -24,9 +23,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        /** @var $container \DI\Container */
-        $container = Zend_Registry::get('container');
-        $container->injectOn($this);
+        \Core\ContainerSingleton::getContainer()->injectOn($this);
     }
 
     /**
@@ -36,9 +33,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
      */
     protected function get($name)
     {
-        /** @var $container \DI\Container */
-        $container = Zend_Registry::get('container');
-        return $container->get($name);
+        return \Core\ContainerSingleton::getContainer()->get($name);
     }
 
     /**
@@ -50,8 +45,6 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
      */
     protected static function getEntityManager()
     {
-        /** @var $container \DI\Container */
-        $container = Zend_Registry::get('container');
-        return $container->get(EntityManager::class);
+        return \Core\ContainerSingleton::getContainer()->get(EntityManager::class);
     }
 }

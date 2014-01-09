@@ -606,7 +606,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
     /**
      * Défini si la Granularity est utilisé pour configurer la pertinence des cellules.
-     * 
+     *
      * @param $bool
      */
     public function setCellsControlRelevance($bool)
@@ -668,7 +668,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      * Renvoi la Granularity de configuration des saisies.
      *
      * @throws Core_Exception_UndefinedAttribute
-     * 
+     *
      * @return Orga_Model_Granularity
      */
     public function getInputConfigGranularity()
@@ -793,10 +793,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $this->dWCube = new DW_Model_Cube();
             $this->dWCube->setLabel($this->getLabel());
 
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
             /** @var Orga_Service_ETLStructure $etlStructureService */
-            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+            $etlStructureService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLStructure::class);
 
             $etlStructureService->populateGranularityDWCube($this);
         }

@@ -38,8 +38,7 @@ class Social_Model_ContextActionTest
         $o = new Social_Model_ContextAction($genericAction);
         $o->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         return $o;
     }
@@ -52,8 +51,7 @@ class Social_Model_ContextActionTest
         $o->delete();
         $o->getGenericAction()->delete();
         $o->getGenericAction()->getTheme()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
 }

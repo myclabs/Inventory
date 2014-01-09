@@ -16,10 +16,8 @@ use DI\Container;
  */
 function __($package, $file, $ref, array $replacements = [])
 {
-    /** @var Container $container */
-    $container = Zend_Registry::get('container');
     /** @var Core_Translate $translate */
-    $translate = $container->get('Core_Translate');
+    $translate = \Core\ContainerSingleton::getContainer()->get('Core_Translate');
 
     // Force la locale par défaut, sinon Zend ne prend pas en compte les changements en cours d'exécution de l'appli
     $locale = Core_Locale::loadDefault()->getId();

@@ -37,8 +37,7 @@ class TextKey_InputTest
 
         $o->setSet($set);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -50,8 +49,7 @@ class TextKey_InputTest
     {
         $o->delete();
         $o->getSet()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
 
@@ -71,8 +69,6 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Algo_Model_Set::loadList() as $o) {
             $o->delete();
@@ -83,7 +79,7 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -91,8 +87,7 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = \Core\ContainerSingleton::getEntityManager();
     }
 
 

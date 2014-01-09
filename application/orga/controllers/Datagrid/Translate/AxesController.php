@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des axes.
@@ -16,13 +17,16 @@ use Core\Annotation\Secure;
 class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
 {
     /**
-     * Désativation du fallback des traduction
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -31,6 +35,7 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $this->request->filter->addCondition(
             Orga_Model_Axis::QUERY_ORGANIZATION,
             Orga_Model_Organization::load($this->getParam('idOrganization'))
@@ -41,7 +46,7 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
             $data['index'] = $axis->getRef();
             $data['identifier'] = $axis->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $axis->reloadWithLocale($locale);
                 $data[$language] = $axis->getLabel();
@@ -60,6 +65,7 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $axis = Orga_Model_Organization::load($this->getParam('idOrganization'))->getAxisByRef($this->update['index']);
         $axis->reloadWithLocale(Core_Locale::load($this->update['column']));
         $axis->setLabel($this->update['value']);

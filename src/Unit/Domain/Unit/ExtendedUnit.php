@@ -150,8 +150,7 @@ class ExtendedUnit extends Unit
         $extendedReferenceUnit->setExtension($this->getExtension());
 
         // L'unité étendue servant uniquement de proxy, elle est supprimée de l'entité manager.
-        $entityManagers = \Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->detach($extendedReferenceUnit);
+        \Core\ContainerSingleton::getEntityManager()->detach($extendedReferenceUnit);
 
         return $extendedReferenceUnit;
     }

@@ -24,8 +24,7 @@ class Techno_Test_CategoryTest
     {
         $category = new Category();
         $category->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $category;
     }
 
@@ -36,8 +35,7 @@ class Techno_Test_CategoryTest
     public static function deleteObject($o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
 
@@ -49,8 +47,7 @@ class Techno_Test_CategorySetUp extends TestCase
         foreach (Category::loadList() as $o) {
             $o->delete();
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**

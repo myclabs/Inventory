@@ -32,8 +32,7 @@ class Numeric_ConstantTest
     {
         $set = new Algo_Model_Set();
         $set->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         $o = new Algo_Model_Numeric_Constant();
         $o->setSet($set);
@@ -42,8 +41,7 @@ class Numeric_ConstantTest
         $o->setContextIndicator(self::generateContextIndicator());
         $o->setLabel('labelNumericConstant');
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -56,8 +54,7 @@ class Numeric_ConstantTest
         $o->delete();
         $o->getSet()->delete();
         self::deleteContextIndicator($o->getContextIndicator());
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -83,14 +80,12 @@ class Numeric_ConstantTest
         $indicator->setUnit(new UnitAPI('g'));
         $indicator->setRatioUnit($indicator->getUnit());
         $indicator->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $contextIndicator = new Classif_Model_ContextIndicator();
         $contextIndicator->setContext($context);
         $contextIndicator->setIndicator($indicator);
         $contextIndicator->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $contextIndicator;
     }
 
@@ -102,8 +97,7 @@ class Numeric_ConstantTest
         $contextIndicator->delete();
         $contextIndicator->getIndicator()->delete();
         $contextIndicator->getContext()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
 
@@ -119,8 +113,6 @@ class Numeric_ConstantSetUpTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Algo_Model_Set::loadList() as $o) {
             $o->delete();
@@ -137,7 +129,7 @@ class Numeric_ConstantSetUpTest extends TestCase
         foreach (Classif_Model_ContextIndicator::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -210,8 +202,6 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Algo_Model_Set::loadList() as $o) {
             $o->delete();
@@ -222,7 +212,7 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -230,8 +220,7 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
+        $this->entityManager = \Core\ContainerSingleton::getEntityManager();
     }
 
     /**

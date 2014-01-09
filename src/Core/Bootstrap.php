@@ -1,45 +1,17 @@
 <?php
 
 use Core\Autoloader;
+use Core\ContainerSingleton;
 use Core\Controller\FlushPlugin;
-use Core\Log\ChromePHPFormatter;
 use Core\Log\ErrorHandler;
-use Core\Log\ExtendedLineFormatter;
-use Core\Log\QueryLogger;
-use Core\Log\UserInfoProcessor;
 use Core\Mail\NullTransport;
-use Core\Work\EventListener\RabbitMQEventListener;
-use Core\Work\EventListener\SimpleEventListener;
-use Core\Work\ServiceCall\ServiceCallTask;
 use DI\Container;
 use DI\ContainerBuilder;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
-use Doctrine\Common\Proxy\AbstractProxyFactory;
-use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Gedmo\Loggable\LoggableListener;
 use Gedmo\Translatable\TranslatableListener;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\ChromePHPHandler;
-use Monolog\Handler\FirePHPHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Monolog\Processor\PsrLogMessageProcessor;
-use MyCLabs\Work\Dispatcher\RabbitMQWorkDispatcher;
-use MyCLabs\Work\Dispatcher\SimpleWorkDispatcher;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use MyCLabs\Work\TaskExecutor\ServiceCallExecutor;
-use MyCLabs\Work\Worker\RabbitMQWorker;
-use MyCLabs\Work\Worker\SimpleWorker;
-use MyCLabs\Work\Worker\Worker;
-use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AMQPConnection;
-use Psr\Log\LoggerInterface;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
@@ -67,7 +39,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'Autoloader',
                 'UTF8',
                 'Container',
-                'Translations',
                 'ErrorHandler',
                 // Il faut initialiser le front controller pour que l'ajout de dossiers
                 // de controleurs soit pris en compte
@@ -110,13 +81,8 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $builder = new ContainerBuilder();
         $builder->addDefinitions(APPLICATION_PATH . '/configs/config.php');
         $builder->addDefinitions(APPLICATION_PATH . '/configs/config.log.php');
-        $container = $builder->build();
-        $container->get('translation.languages');
-
-        $builder = new ContainerBuilder();
-        $builder->addDefinitions(APPLICATION_PATH . '/configs/config.php');
-        $builder->addDefinitions(APPLICATION_PATH . '/configs/config.log.php');
         $builder->addDefinitions(APPLICATION_PATH . '/configs/config.doctrine.php');
+        $builder->addDefinitions(APPLICATION_PATH . '/configs/config.work.php');
 
         switch (APPLICATION_ENV) {
             case 'testsunitaires':
@@ -150,11 +116,12 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $this->container = $builder->build();
 
+        // Temporary static access to the container
+        ContainerSingleton::setContainer($this->container);
+
         $this->container->set(Cache::class, $cache);
 
         Zend_Registry::set('configuration', $configuration);
-        Zend_Registry::set('applicationName', $configuration->get('applicationName', ''));
-        Zend_Registry::set('container', $this->container);
 
         // Configuration pour injecter dans les controleurs (intégration ZF1)
         $dispatcher = new \DI\Bridge\ZendFramework1\Dispatcher();
@@ -242,73 +209,6 @@ abstract class Core_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->container->set(LoggableListener::class, $loggableListener);
 
         return $em;
-    }
-
-    /**
-     * Work dispatcher
-     */
-    protected function _initWork()
-    {
-        // Détermine si on utilise RabbitMQ
-        $useRabbitMQ = false;
-        $configuration = Zend_Registry::get('configuration');
-        if (isset($configuration->rabbitmq) && isset($configuration->rabbitmq->enabled)) {
-            $useRabbitMQ = (bool) $configuration->rabbitmq->enabled;
-            if ($useRabbitMQ) {
-                $this->container->set('rabbitmq.host', $configuration->rabbitmq->host);
-                $this->container->set('rabbitmq.port', $configuration->rabbitmq->port);
-                $this->container->set('rabbitmq.user', $configuration->rabbitmq->user);
-                $this->container->set('rabbitmq.password', $configuration->rabbitmq->password);
-            }
-        }
-
-        // Connexion RabbitMQ
-        $this->container->set('rabbitmq.queue', $this->container->get('application.name') . '-work');
-        $this->container->set(AMQPChannel::class, function (Container $c) {
-            $queue = $c->get('rabbitmq.queue');
-            /** @var AMQPConnection $connection */
-            $connection = $c->get(AMQPConnection::class);
-            $channel = $connection->channel();
-            // Queue durable (= sauvegardée sur disque)
-            $channel->queue_declare($queue, false, true, false, false);
-            return $channel;
-        });
-
-        $this->container->set(WorkDispatcher::class, function (Container $c) use ($useRabbitMQ) {
-            if ($useRabbitMQ) {
-                $channel = $c->get(AMQPChannel::class);
-                $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
-                $workDispatcher->addEventListener($c->get(RabbitMQEventListener::class));
-            } else {
-                $workDispatcher = new SimpleWorkDispatcher($c->get(Worker::class));
-                $workDispatcher->addEventListener($c->get(SimpleEventListener::class));
-            }
-            return $workDispatcher;
-        });
-
-        $this->container->set(Worker::class, function (Container $c) use ($useRabbitMQ) {
-            if ($useRabbitMQ) {
-                $channel = $c->get(AMQPChannel::class);
-                $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));
-                $worker->addEventListener($c->get(RabbitMQEventListener::class));
-            } else {
-                $worker = $c->get(SimpleWorker::class);
-                $worker->addEventListener($c->get(SimpleEventListener::class));
-            }
-
-            $worker->registerTaskExecutor(ServiceCallTask::class, new ServiceCallExecutor($c));
-
-            return $worker;
-        });
-    }
-
-    /**
-     * Traductions
-     */
-    protected function _initTranslations()
-    {
-        // Langues
-        Zend_Registry::set('languages', $this->container->get('translation.languages'));
     }
 
     /**

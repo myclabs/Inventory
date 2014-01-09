@@ -20,8 +20,7 @@ class Unit_Script_Populate_PhysicalQuantities
     public function run()
     {
         $this->generatePhysicalQuantities();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -42,8 +41,6 @@ class Unit_Script_Populate_PhysicalQuantities
      */
     protected function parsePhysicalQuantity(DOMElement $element)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $physicalQuantity = new PhysicalQuantity();
         $physicalQuantity->setRef($element->getAttribute('ref'));
         if ($element->getElementsByTagName('symbol')->item(0)->hasChildNodes()) {
@@ -67,7 +64,7 @@ class Unit_Script_Populate_PhysicalQuantities
             $physicalQuantity->setTranslationLocale(Core_Locale::load($lang));
             $physicalQuantity->setName($value);
             $physicalQuantity->save();
-            $entityManagers['unit']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -77,8 +74,7 @@ class Unit_Script_Populate_PhysicalQuantities
     public function update()
     {
         $this->updatePhysicalQuantities();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**

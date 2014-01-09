@@ -114,9 +114,8 @@ abstract class UI_Controller_Datagrid extends Core_Controller
 
             case 'getelements':
                 // Préparation de la sauvegarde en session des paramètres d'affichage utilisateur.
-                $configuration = Zend_Registry::get('configuration');
-                $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
-                $zendSessionDatagrid = new Zend_Session_Namespace($sessionName);
+                $container = \Core\ContainerSingleton::getContainer();
+                $zendSessionDatagrid = new Zend_Session_Namespace($container->get('session.storage.name'));
                 $idDatagrid = 'datagrid'.$this->id;
                 if ((!(isset($zendSessionDatagrid->$idDatagrid))) || (!(is_array($zendSessionDatagrid->$idDatagrid)))) {
                     $zendSessionDatagrid->$idDatagrid = array();

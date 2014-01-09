@@ -37,8 +37,7 @@ class Classif_Test_ContextTest
         $o->setRef(($ref ===null) ? 'ref' : $ref);
         $o->setLabel(($label ===null) ? 'label' : $label);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -49,8 +48,7 @@ class Classif_Test_ContextTest
     public static function deleteObject($o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
 }
@@ -73,8 +71,7 @@ class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Context::loadList() as $context) {
                 $context->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -90,8 +87,7 @@ class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
         $o->setLabel('LabelContextTest');
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
         return $o;
     }
@@ -117,8 +113,7 @@ class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
     function testDelete(Classif_Model_Context $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
     }
 
@@ -133,8 +128,7 @@ class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Context::loadList() as $context) {
                 $context->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

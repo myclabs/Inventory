@@ -1255,12 +1255,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function createDWCube()
     {
         if (($this->dWCube === null) && ($this->getGranularity()->getCellsGenerateDWCubes())) {
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
+            $container = \Core\ContainerSingleton::getContainer();
             /** @var Orga_Service_ETLStructure $etlStructureService */
-            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+            $etlStructureService = $container->get(Orga_Service_ETLStructure::class);
             /** @var Orga_Service_ETLData $etlDataService */
-            $etlDataService = $container->get('Orga_Service_ETLData');
+            $etlDataService = $container->get(Orga_Service_ETLData::class);
 
             $this->dWCube = new DW_model_cube();
             $this->dWCube->setLabel($this->getLabel());
@@ -1279,10 +1278,8 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function deleteDWCube()
     {
         if ($this->dWCube !== null) {
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
             /** @var Orga_Service_ETLData $etlDataService */
-            $etlDataService = $container->get('Orga_Service_ETLData');
+            $etlDataService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLData::class);
 
             $etlDataService->clearDWResultsForCell($this);
             $this->dWCube->delete();

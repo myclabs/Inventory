@@ -25,8 +25,7 @@ class Techno_Test_Family_DimensionTest
         $family = Techno_Test_FamilyTest::generateObject();
         $o = new Dimension($family, Core_Tools::generateRef(), 'Dimension', Dimension::ORIENTATION_HORIZONTAL);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -37,8 +36,7 @@ class Techno_Test_Family_DimensionTest
     public static function deleteObject($o)
     {
         Techno_Test_FamilyTest::deleteObject($o->getFamily());
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
 
@@ -46,13 +44,11 @@ class Techno_Test_Family_DimensionSetUp extends TestCase
 {
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Family::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -117,8 +113,6 @@ class Techno_Test_Family_DimensionMetier extends TestCase
 {
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Dimension::loadList() as $o) {
             $o->delete();
@@ -126,7 +120,7 @@ class Techno_Test_Family_DimensionMetier extends TestCase
         foreach (Family::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**

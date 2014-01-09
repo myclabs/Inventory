@@ -1597,9 +1597,9 @@ class UI_Datagrid extends UI_Generic
      */
     protected function getDatagridSession()
     {
+        $container = \Core\ContainerSingleton::getContainer();
         // Récupération de la session pour connaitre les préférences de l'utilisateur sur cette Datagrid.
-        $configuration = Zend_Registry::get('configuration');
-        $zendSessionDatagrid = new Zend_Session_Namespace($configuration->sessionStorage->name.'_'.APPLICATION_ENV);
+        $zendSessionDatagrid = new Zend_Session_Namespace($container->get('session.storage.name'));
         $idDatagrid = 'datagrid'.$this->id;
         if ((!(isset($zendSessionDatagrid->$idDatagrid))) || (!(is_array($zendSessionDatagrid->$idDatagrid)))) {
             $zendSessionDatagrid->$idDatagrid = array();

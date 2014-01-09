@@ -84,7 +84,8 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      */
     public function addLanguagesTextCols($editable=true)
     {
-        foreach (Zend_Registry::get('languages') as $language) {
+        $container = \Core\ContainerSingleton::getContainer();
+        foreach ($container->get('translation.languages') as $language) {
             $languageColumn = new UI_Datagrid_Col_Text($language, __('UI', 'translate', 'language' . $language));
             $languageColumn->editable = $editable;
             $this->_datagrid->addCol($languageColumn);
@@ -102,7 +103,8 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      */
     public function addLanguagesLongTextCols($editable=true)
     {
-        foreach (Zend_Registry::get('languages') as $language) {
+        $container = \Core\ContainerSingleton::getContainer();
+        foreach ($container->get('translation.languages') as $language) {
             $languageColumn = new UI_Datagrid_Col_LongText($language, __('UI', 'translate', 'language' . $language));
             $languageColumn->editable = $editable;
             $this->_datagrid->addCol($languageColumn);

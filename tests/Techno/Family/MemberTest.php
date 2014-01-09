@@ -24,16 +24,13 @@ class Techno_Test_Family_MemberTest
      */
     public static function generateObject()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
-
         $member = new Member(
             Techno_Test_Family_DimensionTest::generateObject(),
             strtolower(Core_Tools::generateRef()),
             Core_Tools::generateString(10)
         );
         $member->save();
-        $entityManager->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         return $member;
     }
@@ -46,9 +43,7 @@ class Techno_Test_Family_MemberTest
         // Delete fixtures
         Techno_Test_Family_DimensionTest::deleteObject($o->getDimension());
 
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
-        $entityManager->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
 
@@ -56,8 +51,6 @@ class Techno_Test_Family_MemberMetierTest extends TestCase
 {
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Member::loadList() as $o) {
             $o->delete();
@@ -68,7 +61,7 @@ class Techno_Test_Family_MemberMetierTest extends TestCase
         foreach (Family::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**

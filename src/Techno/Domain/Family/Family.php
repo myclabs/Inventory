@@ -16,7 +16,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Techno\Domain\Category;
 use Unit\UnitAPI;
-use Zend_Registry;
 
 /**
  * Famille de paramètres.
@@ -275,8 +274,7 @@ class Family extends Core_Model_Entity
             $cell->delete();
         }
         // Obligé pour l'instant de faire comme ça
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         if (count($this->dimensions) == 0) {
             return;
         }

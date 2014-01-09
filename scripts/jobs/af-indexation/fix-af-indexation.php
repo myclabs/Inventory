@@ -30,6 +30,4 @@ foreach ($mainAlgos as $mainAlgo) {
 
 echo "Flush" . PHP_EOL;
 
-/** @var $entityManager Doctrine\ORM\EntityManager */
-$entityManager = Zend_Registry::get('EntityManagers')['default'];
-$entityManager->flush();
+\Core\ContainerSingleton::getEntityManager()->flush();

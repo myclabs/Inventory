@@ -38,8 +38,7 @@ class Classif_Test_MemberTest
         $o->setLabel(($label ===null) ? 'label' : $label);
         $o->setAxis(($axis ===null) ? Classif_Test_AxisTest::generateObject($o->getRef(), $o->getLabel()) : $axis);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -54,8 +53,7 @@ class Classif_Test_MemberTest
             $o->getAxis()->delete();
         }
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
 }
@@ -78,8 +76,7 @@ class Classif_Test_MemberSetUp extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Member::loadList() as $member) {
                 $member->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Classif_Model_Axis en base, sinon suppression !
         if (Classif_Model_Axis::countTotal() > 0) {
@@ -87,8 +84,7 @@ class Classif_Test_MemberSetUp extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -106,8 +102,7 @@ class Classif_Test_MemberSetUp extends PHPUnit_Framework_TestCase
         $o->setAxis($axis);
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
         return $o;
     }
@@ -134,8 +129,7 @@ class Classif_Test_MemberSetUp extends PHPUnit_Framework_TestCase
     function testDelete(Classif_Model_Member $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
         Classif_Test_AxisTest::deleteObject($o->getAxis());
     }
@@ -151,8 +145,7 @@ class Classif_Test_MemberSetUp extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Member::loadList() as $member) {
                 $member->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Classif_Model_Axis en base, sinon suppression !
         if (Classif_Model_Axis::countTotal() > 0) {
@@ -160,8 +153,7 @@ class Classif_Test_MemberSetUp extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -189,8 +181,7 @@ class Classif_Test_MemberOther extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Member::loadList() as $member) {
                 $member->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Classif_Model_Axis en base, sinon suppression !
         if (Classif_Model_Axis::countTotal() > 0) {
@@ -198,8 +189,7 @@ class Classif_Test_MemberOther extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -356,8 +346,7 @@ class Classif_Test_MemberOther extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Member::loadList() as $member) {
                 $member->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Classif_Model_Axis en base, sinon suppression !
         if (Classif_Model_Axis::countTotal() > 0) {
@@ -365,8 +354,7 @@ class Classif_Test_MemberOther extends PHPUnit_Framework_TestCase
             foreach (Classif_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

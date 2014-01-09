@@ -3,12 +3,12 @@
 use Core\Log\QueryLogger;
 use DI\Container;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\DriverChain;
+use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Gedmo\Loggable\LoggableListener;
 use Gedmo\Translatable\TranslatableListener;
@@ -17,6 +17,7 @@ return [
 
     // Configuration de la connexion à la BDD
     'db.host'     => 'localhost',
+    'db.port'     => 3336,
     'db.driver'   => 'pdo_mysql',
     'db.name'     => 'inventory',
     'db.user'     => 'myc-sense',
@@ -29,22 +30,44 @@ return [
 
         $cache = $c->get(Cache::class);
 
-        // Choix du driver utilisé par le schema.
-        //  Utilisation d'un driver YAML.
-        //  Les fichiers de mapping porteront l'extension '.yml'.
-        $doctrineYAMLDriver = new YamlDriver([APPLICATION_PATH . '/models/mappers'], '.yml');
+        $paths = [
+            APPLICATION_PATH . '/models/mappers',
+            APPLICATION_PATH . '/classif/models/mappers',
+            APPLICATION_PATH . '/dw/models/mappers',
+            APPLICATION_PATH . '/algo/models/mappers',
+            APPLICATION_PATH . '/af/models/mappers',
+            APPLICATION_PATH . '/social/models/mappers',
+            APPLICATION_PATH . '/orga/models/mappers',
+            APPLICATION_PATH . '/simulation/models/mappers',
+        ];
+        $doctrineYAMLDriver = new YamlDriver($paths, '.yml');
 
         // Annotations pour les extensions Doctrine
         $driverChain = new DriverChain();
         $driverChain->setDefaultDriver($doctrineYAMLDriver);
         // Juste pour enregistrer les annotations doctrine dans le registry
         $doctrineConfig->newDefaultAnnotationDriver();
-        $cachedAnnotationReader = new CachedReader(new AnnotationReader(), $cache);
+        $annotationReader = new AnnotationReader();
         Gedmo\DoctrineExtensions::registerMappingIntoDriverChainORM(
             $driverChain, // our metadata driver chain, to hook into
-            $cachedAnnotationReader // our cached annotation reader
+            $annotationReader // our annotation reader
         );
-        Zend_Registry::set('annotationReader', $cachedAnnotationReader);
+
+        // Nouveaux packages utilisent le simplified driver
+        $modules = [
+            'Unit',
+            'User',
+            'Techno',
+            'Doc',
+            'AuditTrail',
+        ];
+        foreach ($modules as $module) {
+            $yamlDriver = new SimplifiedYamlDriver(
+                [PACKAGE_PATH . '/src/' . $module . '/Architecture/DBMapper' => $module . '\Domain'],
+                '.yml'
+            );
+            $driverChain->addDriver($yamlDriver, $module . '\Domain');
+        }
 
         $doctrineConfig->setMetadataDriverImpl($driverChain);
 
@@ -96,13 +119,12 @@ return [
     }),
 
     // Extensions Doctrine
-    TranslatableListener::class => DI\factory(function () {
+    TranslatableListener::class => DI\factory(function (Container $c) {
         $listener = new TranslatableListener();
         $listener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
-        $listener->setDefaultLocale(Zend_Registry::get('configuration')->translation->defaultLocale);
+        $listener->setDefaultLocale($c->get('translation.defaultLocale'));
         $listener->setPersistDefaultLocaleTranslation(true);
         $listener->setTranslationFallback(true);
-        Zend_Registry::set('doctrineTranslate', $listener);
         return $listener;
     }),
 

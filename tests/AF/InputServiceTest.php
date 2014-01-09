@@ -115,8 +115,7 @@ class InputServiceTest extends TestCase
             foreach (AF_Model_AF::loadList() as $o) {
                 $o->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }
