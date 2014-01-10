@@ -120,7 +120,7 @@ class User_ActionController extends UI_Controller_Captcha
 
             try {
                 $this->entityManager->beginTransaction();
-                $this->organizationService->initDemoUserAndWorkspace($email, $password);
+                $this->organizationService->createDemoOrganizationAndUser($email, $password);
                 $this->entityManager->flush();
                 $this->entityManager->commit();
             } catch (Core_ORM_DuplicateEntryException $e) {

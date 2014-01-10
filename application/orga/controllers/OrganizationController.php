@@ -44,6 +44,12 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
+     * @var Orga_Service_OrganizationService
+     */
+    private $organizationService;
+
+    /**
+     * @Inject
      * @var Orga_Service_ETLStructure
      */
     private $etlStructureService;
@@ -139,6 +145,7 @@ class Orga_OrganizationController extends Core_Controller
     public function addAction()
     {
         UI_Form::addHeader();
+        $this->view->assign('templates', $this->organizationService->getOrganizationTemplates());
     }
 
     /**
@@ -177,7 +184,7 @@ class Orga_OrganizationController extends Core_Controller
         // Lance la tache en arrière plan
         $task = new ServiceCallTask(
             'Orga_Service_OrganizationService',
-            'createOrganization',
+            'createOrganizationFromTemplatesForm',
             [$user, $formData],
             __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
         );

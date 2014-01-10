@@ -11,14 +11,14 @@
 <form class="form form-horizontal" id="addOrganization" action="orga/organization/add-submit">
     <ul class="nav nav-tabs" id="organizationSteps">
         <li class="active"><a href="#organization"><?=__('Orga', 'add', 'organization')?></a></li>
-        <li class="step-separator">>>></li>
-        <li class="disabled"><a href="#axes"><?=__('Orga', 'add', 'axes')?></a></li>
-        <li class="step-separator">>>></li>
-        <li class="disabled"><a href="#members"><?=__('Orga', 'add', 'members')?></a></li>
-        <li class="step-separator">>>></li>
-        <li class="disabled"><a href="#granularities"><?=__('Orga', 'add', 'granularities')?></a></li>
-        <li class="step-separator">>>></li>
-        <li class="disabled"><a href="#dw"><?=__('DW', 'name', 'analyses')?></a></li>
+        <li class="step-separator hide">>>></li>
+        <li class="disabled hide"><a href="#axes"><?=__('Orga', 'add', 'axes')?></a></li>
+        <li class="step-separator hide">>>></li>
+        <li class="disabled hide"><a href="#members"><?=__('Orga', 'add', 'members')?></a></li>
+        <li class="step-separator hide">>>></li>
+        <li class="disabled hide"><a href="#granularities"><?=__('Orga', 'add', 'granularities')?></a></li>
+        <li class="step-separator hide">>>></li>
+        <li class="disabled hide"><a href="#dw"><?=__('DW', 'name', 'analyses')?></a></li>
         <li class="step-separator">>>></li>
         <li class="disabled"><a href="#validation"><?=__('Orga', 'add', 'validation')?></a></li>
     </ul>
@@ -54,19 +54,19 @@
                             </div>
                         </div>
                     </div>
-                    <div id="organizationType-line" class="control-group">
-                        <label class="control-label" for="organizationType">
-                            <?=__('Orga', 'add', 'organizationType')?>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="<?=__('Orga', 'add', 'organizationTypeExplanation')?>">
+                    <div id="organizationTemplate-line" class="control-group">
+                        <label class="control-label" for="organizationTemplate">
+                            <?=__('Orga', 'add', 'organizationTemplate')?>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="<?=__('Orga', 'add', 'organizationTemplateExplanation')?>">
                                 <i class="fa fa-question-circle"></i>
                             </a>
                         </label>
                         <div class="controls">
                             <div class="input">
-                                <select id="organizationType" name="organizationType">
-                                    <option value="empty"><?=__('Orga', 'add', 'organizationTypeEmpty')?></option>
-                                    <option value="collect"><?=__('Orga', 'add', 'organizationTypeCollect')?></option>
-                                    <option selected value="reporting"><?=__('Orga', 'add', 'organizationReports')?></option>
+                                <select id="organizationTemplate" name="organizationTemplate">
+                                    <? foreach ($this->templates as $templateRef => $templateName) : ?>
+                                    <option value="<?=$templateRef?>"><?=$templateName?></option>
+                                    <? endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -265,7 +265,11 @@
                     '<a class="btn btn-primary" href="orga/organization">' +
                         '<i class="fa fa-home"></i> ' +
                         '<?=__('Orga', 'add', 'organizationBuildingGoHome')?>' +
-                    '</a>'
+                    '</a> ' +
+                    '<a class="btn" href="orga/organization/add">' +
+                        '<i class="fa fa-plus"></i> ' +
+                        '<?=__('Orga', 'add', 'organizationBuildingAddMore')?>' +
+                    '</a> '
                 );
             },
             error: function(jqXHR) {
@@ -331,13 +335,13 @@
         }
     });
 
-    $('#organizationType').on('change', function() {
+    $('#organizationTemplate').on('change', function() {
         var axesStep = $('#organizationSteps li a[href="#axes"]').parent();
         var membersStep = $('#organizationSteps li a[href="#members"]').parent();
         var granularitiesStep = $('#organizationSteps li a[href="#granularities"]').parent();
         var dwStep = $('#organizationSteps li a[href="#dw"]').parent();
 
-        var organizationType = $('#organizationType').val();
+        var organizationTemplate = $('#organizationTemplate').val();
 
         axesStep.removeClass('hide');
         axesStep.prev().removeClass('hide');
@@ -348,7 +352,8 @@
         dwStep.removeClass('hide');
         dwStep.prev().removeClass('hide');
 
-        if (organizationType == 'empty') {
+        if ((organizationTemplate != '<?=Orga_Service_OrganizationService::TEMPLATE_USER_INVENTORY?>')
+            && (organizationTemplate != '<?=Orga_Service_OrganizationService::TEMPLATE_USER_REPORTING?>')) {
             axesStep.addClass('hide');
             axesStep.prev().addClass('hide');
             membersStep.addClass('hide');
@@ -359,7 +364,7 @@
             dwStep.prev().addClass('hide');
         }
 
-        if (organizationType == 'collect') {
+        if (organizationTemplate == '<?=Orga_Service_OrganizationService::TEMPLATE_USER_INVENTORY?>') {
             dwStep.addClass('hide');
             dwStep.prev().addClass('hide');
         }
@@ -452,7 +457,7 @@
         $('#addOrganization div.control-group').removeClass('error');
         $('#addOrganization div.control-group').removeClass('warning');
 
-        var organizationType = $('#organizationType').val();
+        var organizationTemplate = $('#organizationTemplate').val();
 
         var state = true;
         switch ($('#organizationSteps li.active a').attr('href')) {
@@ -465,6 +470,9 @@
                         $('#organizationLabel').val() +
                     '</li>'
                 );
+                if (organizationTemplate == '<?=Orga_Service_OrganizationService::TEMPLATE_DEMO?>') {
+                    alert('Résumé de validation non développé pour les templates');
+                }
             break;
 
             case '#axes':
