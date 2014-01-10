@@ -463,7 +463,10 @@
         switch ($('#organizationSteps li.active a').attr('href')) {
 
             case '#organization':
+                $('#validationMembers').html('');
+                $('#validationGranularities').html('');
                 $('#validationOrganization ul li.organizationLabel').remove();
+                $('#validationOrganization ul li.inventoryGranularity').remove();
                 $('#validationOrganization ul').prepend(
                     '<li class="organizationLabel">' +
                         '<strong><?=__('Orga', 'add', 'organizationLabel')?> : </strong>' +
@@ -718,7 +721,7 @@
                     dwsGranularities += '<li>' + $(this).next().html() + '</li>';
                 });
                 $('#validationGranularities .reportsGranularities').remove();
-                $('#validationGranularities').html(
+                $('#validationGranularities').append(
                     '<fieldset class="reportsGranularities">' +
                         '<legend><?=__('Orga', 'add', 'reportsGranularitiesLabel')?></legend>' +
                         '<ul>' +
