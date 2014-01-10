@@ -63,16 +63,18 @@ class CellViewModelFactory
             AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
             AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
             AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
+            CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('AF', 'inputInput', 'statusInventoryNotStarted'),
+            CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('AF', 'inputInput', 'statusAFNotConfigured'),
             CellViewModel::AF_STATUS_NOT_STARTED => __('AF', 'inputInput', 'statusNotStarted'),
-            CellViewModel::AF_STATUS_NOT_CONFIGURED => __('AF', 'inputInput', 'statusNotConfigured')
         ];
         $this->inputStatusStyles = [
             AF_Model_InputSet_Primary::STATUS_FINISHED => 'success',
             AF_Model_InputSet_Primary::STATUS_COMPLETE => 'warning',
             AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'danger',
             AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'danger',
+            CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => 'danger',
+            CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => 'danger',
             CellViewModel::AF_STATUS_NOT_STARTED => 'danger',
-            CellViewModel::AF_STATUS_NOT_CONFIGURED => 'danger'
         ];
     }
 
@@ -86,11 +88,12 @@ class CellViewModelFactory
      * @param bool $withInventory
      * @param bool $editInventory
      * @param bool $withInput
+     * @param bool $withInputLink
      * @return CellViewModel
      */
     public function createCellViewModel(Orga_Model_Cell $cell, User $user,
         $withAdministrators=null, $withACL=null, $withReports=null, $withExports=null,
-        $withInventory=null, $editInventory=null, $withInput=null)
+        $withInventory=null, $editInventory=null, $withInput=null, $withInputLink=null)
     {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
@@ -226,6 +229,21 @@ class CellViewModelFactory
                 && (($this->aclService->isAllowed($user, CellAction::INPUT(), $cell))))
         ) {
             $cellViewModel->showInput = true;
+            $cellViewModel->showInputLink = (($withInputLink !== true) && ($withInputLink !== false)) ? true : $withInputLink;
+            $inputStatus = ($cell->getInputAFUsed() !== null) ? CellViewModel::AF_STATUS_NOT_STARTED : CellViewModel::AF_STATUS_AF_NOT_CONFIGURED;
+            try {
+                $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+                if (($cell->getInventoryStatus() === Orga_Model_Cell::STATUS_NOTLAUNCHED)
+                    && (($cell->getGranularity() === $granularityForInventoryStatus)
+                        || ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)))) {
+                    if ($withInputLink !== false) {
+                        $cellViewModel->showInputLink = false;
+                    }
+                    $inputStatus = CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED;
+                }
+            } catch (Core_Exception_UndefinedAttribute $e) {
+            } catch (\Core_Exception_NotFound $e) {
+            }
 
             $aFInputSetPrimary = $cell->getAFInputSetPrimary();
             if ($aFInputSetPrimary !== null) {
@@ -234,7 +252,6 @@ class CellViewModelFactory
                 $cellViewModel->inputStatusStyle = $this->inputStatusStyles[$cellViewModel->inputStatus];
                 $cellViewModel->inputCompletion = $aFInputSetPrimary->getCompletion();
             } else {
-                $inputStatus = ($cell->getInputAFUsed() !== null) ? CellViewModel::AF_STATUS_NOT_STARTED : CellViewModel::AF_STATUS_NOT_CONFIGURED;
                 $cellViewModel->inputStatus = $inputStatus;
                 $cellViewModel->inputStatusTitle = $this->inputStatusList[$inputStatus];
                 $cellViewModel->inputStatusStyle = $this->inputStatusStyles[$inputStatus];

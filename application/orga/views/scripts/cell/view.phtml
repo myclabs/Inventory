@@ -20,7 +20,8 @@ $inputStatusFilters = [
     AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
     AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
     \Orga\ViewModel\CellViewModel::AF_STATUS_NOT_STARTED => __('AF', 'inputInput', 'statusNotStarted'),
-    \Orga\ViewModel\CellViewModel::AF_STATUS_NOT_CONFIGURED => __('AF', 'inputInput', 'statusNotConfigured'),
+    \Orga\ViewModel\CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('AF', 'inputInput', 'statusAFNotConfigured'),
+    \Orga\ViewModel\CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('AF', 'inputInput', 'statusInventoryNotStarted'),
 ];
 
 /** @var \Orga\ViewModel\OrganizationViewModel $organization */
@@ -482,7 +483,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 granularity.attr('data-total-cells', data.totalCells);
                 $(data.childCells).each(function() {
                     var cellTitle = this.extendedLabel;
-                    if (this.showInput && (this.inputStatus != '<?=\Orga\ViewModel\CellViewModel::AF_STATUS_NOT_CONFIGURED?>')) {
+                    if (this.showInputLink) {
                         cellTitle =
                         '<a href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'viewInput')?>" class="withTooltip">' +
                             cellTitle +
@@ -993,7 +994,6 @@ $('body').on('click', '.inventory-status .dropdown-menu a', function(e) {
             type: "POST",
             data: { inventoryStatus: link.attr('data-inventory') },
             success: function (data) {
-                var oldInventoryValue = button.attr('data-inventory');
                 button.attr('data-inventory', data.status);
                 button.addClass('btn-' + data.style);
                 button.html('<i class="fa fa-pencil-square-o"></i> ' + data.label + ' <span class="caret"></span>');
@@ -1001,10 +1001,7 @@ $('body').on('click', '.inventory-status .dropdown-menu a', function(e) {
                 var collapse = button.parent().parent().parent().parent().parent();
                 $('.cells-filter', collapse).trigger('filterCells');
                 $('.collapse[data-inventory][id!="' + collapse.attr('id') + '"]').each(function() {
-                    var filterInventoryValue = $('select[data-filter="inventory-status"]', $(this)).val();
-                    if ((filterInventoryValue == oldInventoryValue) || (filterInventoryValue == data.status)) {
-                        $(this).trigger('loadCells');
-                    }
+                    $(this).trigger('loadCells');
                 });
             },
             error: function (jqXHR) {

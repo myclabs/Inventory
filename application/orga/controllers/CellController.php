@@ -310,7 +310,7 @@ class Orga_CellController extends Core_Controller
         }
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
             && $this->aclService->isAllowed($connectedUser, Action::EDIT(), $cell));
-        $showInventory = (($narrowerGranularity === $granularityForInventoryStatus)
+        $isInventory = (($narrowerGranularity === $granularityForInventoryStatus)
                 || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)));
         $narrowerGranularityHasSubInputGranlarities = false;
         foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
@@ -319,7 +319,7 @@ class Orga_CellController extends Core_Controller
                 break;
             }
         }
-        $showInventory = $showInventory && $narrowerGranularityHasSubInputGranlarities;
+        $showInventory = $isInventory && $narrowerGranularityHasSubInputGranlarities;
 
         // Input.
         $showInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
@@ -331,10 +331,9 @@ class Orga_CellController extends Core_Controller
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $pathTag) {
             $relevantCriteria->andWhere($relevantCriteria->expr()->contains('tag', $pathTag));
         }
-//        $relevantCriteria->setFirstResult(0);
-//        $relevantCriteria->setMaxResults(250);
 
         $childCells = [];
+        /** @var Orga_Model_Cell $childCell */
         foreach ($narrowerGranularity->getCells()->matching($relevantCriteria) as $childCell) {
             $childCells[] = $this->cellVMFactory->createCellViewModel(
                 $childCell,
@@ -362,7 +361,6 @@ class Orga_CellController extends Core_Controller
      */
     public function viewHistoryAction()
     {
-        // TODO wat?
         session_write_close();
 
         $idCell = $this->getParam('idCell');
@@ -399,7 +397,6 @@ class Orga_CellController extends Core_Controller
      */
     public function viewCommentsAction()
     {
-        // TODO wat?
         session_write_close();
 
         /** @var Orga_Model_Cell $cell */

@@ -426,8 +426,7 @@ class Orga_Service_OrganizationService
 
         $organization = $this->createOrganization(null, $formData);
         // Ajoute en tant qu'admin de la cellule globale
-        $cellGlobale = $organization->getGranularityByRef('global')->getCellByMembers([]);
-        $this->aclService->addRole($user, new CellAdminRole($user, $cellGlobale));
+        $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
 
         // Axe Catégorie
         $categoryAxis = new Orga_Model_Axis($organization, 'categorie');
@@ -444,12 +443,12 @@ class Orga_Service_OrganizationService
         $timeAxis = new Orga_Model_Axis($organization, 'annee');
         $timeAxis->setLabel('Année');
         $timeAxis->save();
-        $annee2013 = new Orga_Model_Member($timeAxis, '2013');
-        $annee2013->setLabel('2013');
-        $annee2013->save();
-        $annee2014 = new Orga_Model_Member($timeAxis, '2014');
-        $annee2014->setLabel('2014');
-        $annee2014->save();
+        $year2013 = new Orga_Model_Member($timeAxis, '2013');
+        $year2013->setLabel('2013');
+        $year2013->save();
+        $year2014 = new Orga_Model_Member($timeAxis, '2014');
+        $year2014->setLabel('2014');
+        $year2014->save();
 
         // Granularités
         $granularityCategory = new Orga_Model_Granularity($organization, [$categoryAxis]);
@@ -470,8 +469,15 @@ class Orga_Service_OrganizationService
             ->setAF(AF_Model_AF::loadByRef('deplacement'));
 
         // Lance l'inventaire 2014
-        $granularityYear->getCellByMembers([$annee2014])
+        $granularityYear->getCellByMembers([$year2014])
             ->setInventoryStatus(Orga_Model_Cell::STATUS_ACTIVE);
+
+        // Flush pour persistence des cellules avant l'ajout du role.
+        $this->entityManager->flush();
+
+        $this->aclService->addRole($user, new CellAdminRole($user, $globalCell));
+
+        $this->entityManager->flush();
 
         return $organization;
     }
