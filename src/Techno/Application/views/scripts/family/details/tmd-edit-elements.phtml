@@ -2,29 +2,27 @@
 
 use Techno\Domain\Family\Dimension;
 use Techno\Domain\Family\Family;
-use Techno\Domain\Family\Member;
 
 /** @var $family Family */
 $family = $this->family;
 
 // Prépare la liste des éléments existant pour le popup
-$members = array_map(
-    function (Dimension $dimension) {
-        return $dimension->getMembers()->toArray();
-    },
-    $family->getDimensions()->toArray()
-);
 $members = $family->getDimensions()->map(function (Dimension $dimension) {
     return $dimension->getMembers()->toArray();
 })->toArray();
 $product = Core_Tools::arrayCartesianProduct($members);
+
 $helpText = '';
 foreach ($product as $members) {
     foreach ($members as $member) {
         $helpText .= $member->getRef() . ', ';
     }
-    $cell = $family->getCell($members);
-    $helpText .= $cell->getValue()->getDigitalValue() . ', ' . $cell->getValue()->getRelativeUncertainty() . PHP_EOL;
+    $value = $family->getCell($members)->getValue();
+    if ($value) {
+        $helpText .= $value->getDigitalValue() . ', ' . $value->getRelativeUncertainty() . PHP_EOL;
+    } else {
+        $helpText .= ', ' . PHP_EOL;
+    }
 }
 ?>
 
