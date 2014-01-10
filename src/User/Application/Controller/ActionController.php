@@ -119,8 +119,12 @@ class User_ActionController extends UI_Controller_Captcha
             }
 
             try {
+                $this->entityManager->beginTransaction();
                 $this->organizationService->initDemoUserAndWorkspace($email, $password);
+                $this->entityManager->flush();
+                $this->entityManager->commit();
             } catch (Core_ORM_DuplicateEntryException $e) {
+                $this->entityManager->rollback();
                 UI_Message::addMessageStatic(__('User', 'editEmail', 'emailAlreadyUsed'));
                 return;
             }
@@ -130,8 +134,8 @@ class User_ActionController extends UI_Controller_Captcha
             $authAdapter = new AuthAdapter($this->userService, $email, $password);
             $auth->authenticate($authAdapter);
 
-            // Redirige sur le workspace
-            $this->redirect('orga/organization/manage');
+            // Redirige sur l'accueil
+            $this->redirect('');
             return;
         }
     }

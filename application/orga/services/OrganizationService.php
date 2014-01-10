@@ -1,6 +1,8 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use Orga\Model\ACL\Role\CellAdminRole;
+use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\AdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -23,29 +25,37 @@ class Orga_Service_OrganizationService
     private $userService;
 
     /**
+     * @var ACLService
+     */
+    private $aclService;
+
+    /**
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
      * @param UserService             $userService
+     * @param ACLService              $aclService
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
-        UserService $userService
+        UserService $userService,
+        ACLService $aclService
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->userService = $userService;
+        $this->aclService = $aclService;
     }
 
     /**
      * Crée un projet et assigne un utilisateur comme administrateur
      *
-     * @param User $administrator
-     * @param array $formData
+     * @param User|null $administrator
+     * @param array     $formData
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganization(User $administrator, array $formData)
+    public function createOrganization($administrator, array $formData)
     {
         $this->entityManager->beginTransaction();
 
@@ -224,8 +234,10 @@ class Orga_Service_OrganizationService
             $organization->save();
 
             // Ajout de l'utilisateur courant en tant qu'administrateur.
-            $this->aclManager->addOrganizationAdministrator($organization, $administrator->getEmail(), false);
-            $this->entityManager->flush();
+            if ($administrator) {
+                $this->aclManager->addOrganizationAdministrator($organization, $administrator->getEmail(), false);
+                $this->entityManager->flush();
+            }
 
             // Ajout des superadmins en tant qu'administrateur de l'organisation
             foreach (AdminRole::loadList() as $adminRole) {
@@ -412,7 +424,10 @@ class Orga_Service_OrganizationService
             __('Orga', 'organization', 'defaultWorkspaceLabel');
         $formData['organization']['elements']['organizationType']['value'] = 'empty';
 
-        $organization = $this->createOrganization($user, $formData);
+        $organization = $this->createOrganization(null, $formData);
+        // Ajoute en tant qu'admin de la cellule globale
+        $cellGlobale = $organization->getGranularityByRef('global')->getCellByMembers([]);
+        $this->aclService->addRole($user, new CellAdminRole($user, $cellGlobale));
 
         // Axe Catégorie
         $categoryAxis = new Orga_Model_Axis($organization, 'categorie');
@@ -437,21 +452,26 @@ class Orga_Service_OrganizationService
         $annee2014->save();
 
         // Granularités
-        $granularityGlobal = $organization->getGranularityByRef('global');
         $granularityCategory = new Orga_Model_Granularity($organization, [$categoryAxis]);
-        $granularityCategory->setCellsControlRelevance(false);
-        $granularityCategory->setCellsGenerateDWCubes(false);
-        $granularityCategory->setCellsWithACL(false);
         $granularityCategory->save();
+        $granularityYear = new Orga_Model_Granularity($organization, [$timeAxis]);
+        $granularityYear->save();
+        $granularityYearCategory = new Orga_Model_Granularity($organization, [$timeAxis, $categoryAxis]);
+        $granularityYearCategory->save();
 
         // Configuration
-        $granularityGlobal->setInputConfigGranularity($granularityCategory);
+        $organization->setGranularityForInventoryStatus($granularityYear);
+        $granularityYearCategory->setInputConfigGranularity($granularityCategory);
         $granularityCategory->getCellByMembers([$categoryEnergy])
-            ->getCellsGroupForInputGranularity($granularityGlobal)
+            ->getCellsGroupForInputGranularity($granularityYearCategory)
             ->setAF(AF_Model_AF::loadByRef('energie'));
         $granularityCategory->getCellByMembers([$categoryTravel])
-            ->getCellsGroupForInputGranularity($granularityGlobal)
+            ->getCellsGroupForInputGranularity($granularityYearCategory)
             ->setAF(AF_Model_AF::loadByRef('deplacement'));
+
+        // Lance l'inventaire 2014
+        $granularityYear->getCellByMembers([$annee2014])
+            ->setInventoryStatus(Orga_Model_Cell::STATUS_ACTIVE);
 
         return $organization;
     }
