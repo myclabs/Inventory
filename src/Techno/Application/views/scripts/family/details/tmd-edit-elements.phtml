@@ -1,0 +1,72 @@
+<?php
+
+use Techno\Domain\Family\Dimension;
+use Techno\Domain\Family\Family;
+use Techno\Domain\Family\Member;
+
+/** @var $family Family */
+$family = $this->family;
+
+// Prépare la liste des éléments existant pour le popup
+$members = array_map(
+    function (Dimension $dimension) {
+        return $dimension->getMembers()->toArray();
+    },
+    $family->getDimensions()->toArray()
+);
+$members = $family->getDimensions()->map(function (Dimension $dimension) {
+    return $dimension->getMembers()->toArray();
+})->toArray();
+$product = Core_Tools::arrayCartesianProduct($members);
+$helpText = '';
+foreach ($product as $members) {
+    foreach ($members as $member) {
+        $helpText .= $member->getRef() . ', ';
+    }
+    $cell = $family->getCell($members);
+    $helpText .= $cell->getValue()->getDigitalValue() . ', ' . $cell->getValue()->getRelativeUncertainty() . PHP_EOL;
+}
+?>
+
+<p>
+    <button class="btn btn-default editElementsButton" type="button">
+        <?=__('Techno', 'element', 'editManyElements')?>
+    </button>
+</p>
+
+<div id="editElementsPopup" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3><?=__('Techno', 'element', 'editManyElements')?></h3>
+    </div>
+    <form id="editElementsForm" action="<?=$this->baseUrl('techno/edit-elements/edit-elements')?>" method="post">
+        <div class="modal-body">
+            <div class="control-group">
+                <div class="controls">
+                    <textarea id="inputElementList" name="elements" class="pre input-block-level" rows="12"><?=$helpText?></textarea>
+                    <p class="help-block">
+                        <strong><span id="inputElementListValidationOK" class="text-success"></span></strong>
+                        <strong><span id="inputElementListValidationNOK" class="text-error"></span></strong>
+                    </p>
+                    <p><span class="help-block"><?=__('Techno', 'import', 'editElementListHelp')?></span></p>
+                    <pre><code><?=__('Techno', 'import', 'editElementListExample')?></code></pre>
+                </div>
+            </div>
+            <input type="hidden" name="idFamily" value="<?=$this->family->getId()?>" />
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'validate')?></button>
+            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Ajout de membres
+    $('.editElementsButton').click(function() {
+        $('#inputElementListValidationOK').text('');
+        $('#inputElementListValidationNOK').text('');
+
+        $('#editElementsPopup').modal('show');
+    });
+</script>
