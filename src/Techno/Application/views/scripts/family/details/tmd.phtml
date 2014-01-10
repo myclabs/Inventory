@@ -97,6 +97,8 @@ echo $tmd->render();
 
 <?php if ($this->edit) : ?>
 
+    <?=$this->partial('family/details/tmd-edit-elements.phtml', ['family' => $family])?>
+
     <script>
         $.fn.elementEditSuccess = function (response) {
             addMessage(response.message, response.type);

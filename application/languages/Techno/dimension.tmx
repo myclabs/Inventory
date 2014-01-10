@@ -29,10 +29,10 @@
         </tu>
         <tu tuid="addMembers">
             <tuv xml:lang="fr">
-                <seg>Ajout de membres</seg>
+                <seg>Ajouter des membres</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of members</seg>
+                <seg>Add members</seg>
             </tuv>
         </tu>
         <tu tuid="addMemberList">
