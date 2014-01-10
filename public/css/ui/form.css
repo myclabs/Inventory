@@ -251,6 +251,6 @@
 }
 
 /* Form dans un popup : correction d'un margin en trop */
-.modal>.form-horizontal {
+.modal > form {
     margin-bottom: 0;
 }
