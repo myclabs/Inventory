@@ -4,6 +4,7 @@
 # email.noreply.name
 # email.noreply.address
 # log.query
+# feature.register
 
 # Activation des ACL
 enable.acl: true

@@ -24,7 +24,7 @@
             <tuv xml:lang="en">
                 <seg>Please enter your password again</seg>
             </tuv>
-        </tu>   
+        </tu>
         <tu tuid="oldEmail">
             <tuv xml:lang="fr">
                 <seg>Ancienne adresse e-mail</seg>
@@ -32,7 +32,7 @@
             <tuv xml:lang="en">
                 <seg>Old e-mail address</seg>
             </tuv>
-        </tu>   
+        </tu>
         <tu tuid="newEmail">
             <tuv xml:lang="fr">
                 <seg>Nouvelle adresse e-mail</seg>
@@ -40,7 +40,7 @@
             <tuv xml:lang="en">
                 <seg>New e-mail address</seg>
             </tuv>
-        </tu>   
+        </tu>
         <tu tuid="confirmNewEmail">
             <tuv xml:lang="fr">
                 <seg>Nouvelle adresse e-mail (confirmation)</seg>
@@ -48,10 +48,26 @@
             <tuv xml:lang="en">
                 <seg>Please confirm new e-mail address</seg>
             </tuv>
-        </tu>   
+        </tu>
 
         <!-- Validation du formulaire -->
 
+        <tu tuid="invalidEmail">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir une adresse email valide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please provide a valid email address.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="emailAlreadyUsed">
+            <tuv xml:lang="fr">
+                <seg>Cette adresse email correspond à un compte utilisateur existant.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This email address matches an existing account.</seg>
+            </tuv>
+        </tu>
         <tu tuid="emailsAreNotIdentical">
             <tuv xml:lang="fr">
                 <seg>Cette saisie de la nouvelle adresse e-mail n'est pas identique à la précédente.</seg>
@@ -59,7 +75,7 @@
             <tuv xml:lang="en">
                 <seg>This typing of the new e-mail address is not identical to the one above.</seg>
             </tuv>
-        </tu>   
+        </tu>
 
         <!-- Messages -->
 
@@ -70,7 +86,7 @@
             <tuv xml:lang="en">
                 <seg> User has been informed by e-mail (to old and new address).</seg>
             </tuv>
-        </tu>   
+        </tu>
 
     </body>
 </tmx>

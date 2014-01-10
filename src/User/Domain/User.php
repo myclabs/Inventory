@@ -113,12 +113,19 @@ class User extends Core_Model_Entity implements Resource
     protected $acl;
 
 
-    public function __construct()
+    public function __construct($email = null, $password = null)
     {
         $this->creationDate = new DateTime();
         $this->roles = new ArrayCollection();
         $this->authorizations = new ArrayCollection();
         $this->acl = new ArrayCollection();
+
+        if ($email) {
+            $this->setEmail($email);
+        }
+        if ($password) {
+            $this->setPassword($password);
+        }
 
         // Hérite des droits sur "tous les utilisateurs"
         $allUsers = NamedResource::loadByName(self::class);

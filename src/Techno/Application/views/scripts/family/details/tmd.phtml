@@ -8,7 +8,7 @@ $family = $this->family;
 $dimensions = $family->getDimensions();
 
 if (count($dimensions) === 0) {
-    echo "<p class='muted'>" . __('', '', 'Aucune donnée à afficher.') . "</p>";
+    echo "<p class='muted'>" . __('UI', 'loading', 'empty') . "</p>";
     return;
 }
 

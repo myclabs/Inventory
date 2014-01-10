@@ -2,8 +2,8 @@
 
 use Doctrine\ORM\EntityManager;
 use User\Domain\ACL\Role\AdminRole;
-use User\Domain\ACL\Role\Role;
 use User\Domain\User;
+use User\Domain\UserService;
 
 class Orga_Service_OrganizationService
 {
@@ -18,13 +18,23 @@ class Orga_Service_OrganizationService
     private $aclManager;
 
     /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
+     * @param UserService             $userService
      */
-    public function __construct(EntityManager $entityManager, Orga_Service_ACLManager $aclManager)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        Orga_Service_ACLManager $aclManager,
+        UserService $userService
+    ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
+        $this->userService = $userService;
     }
 
     /**
@@ -46,7 +56,7 @@ class Orga_Service_OrganizationService
             // Création de l'organization.
             $organization = new Orga_Model_Organization();
             $organization->setLabel($formData['organization']['elements']['organizationLabel']['value']);
-            
+
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
             $defaultGranularity->setCellsWithACL(true);
@@ -385,5 +395,64 @@ class Orga_Service_OrganizationService
 
             throw $e;
         }
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return Orga_Model_Organization
+     */
+    public function initDemoUserAndWorkspace($email, $password)
+    {
+        $user = $this->userService->createUser($email, $password);
+
+        // MOCHE
+        $formData = [];
+        $formData['organization']['elements']['organizationLabel']['value'] =
+            __('Orga', 'organization', 'defaultWorkspaceLabel');
+        $formData['organization']['elements']['organizationType']['value'] = 'empty';
+
+        $organization = $this->createOrganization($user, $formData);
+
+        // Axe Catégorie
+        $categoryAxis = new Orga_Model_Axis($organization, 'categorie');
+        $categoryAxis->setLabel('Catégorie');
+        $categoryAxis->save();
+        $categoryEnergy = new Orga_Model_Member($categoryAxis, 'energie');
+        $categoryEnergy->setLabel('Énergie');
+        $categoryEnergy->save();
+        $categoryTravel = new Orga_Model_Member($categoryAxis, 'deplacement');
+        $categoryTravel->setLabel('Déplacement');
+        $categoryTravel->save();
+
+        // Axe Année
+        $timeAxis = new Orga_Model_Axis($organization, 'annee');
+        $timeAxis->setLabel('Année');
+        $timeAxis->save();
+        $annee2013 = new Orga_Model_Member($timeAxis, '2013');
+        $annee2013->setLabel('2013');
+        $annee2013->save();
+        $annee2014 = new Orga_Model_Member($timeAxis, '2014');
+        $annee2014->setLabel('2014');
+        $annee2014->save();
+
+        // Granularités
+        $granularityGlobal = $organization->getGranularityByRef('global');
+        $granularityCategory = new Orga_Model_Granularity($organization, [$categoryAxis]);
+        $granularityCategory->setCellsControlRelevance(false);
+        $granularityCategory->setCellsGenerateDWCubes(false);
+        $granularityCategory->setCellsWithACL(false);
+        $granularityCategory->save();
+
+        // Configuration
+        $granularityGlobal->setInputConfigGranularity($granularityCategory);
+        $granularityCategory->getCellByMembers([$categoryEnergy])
+            ->getCellsGroupForInputGranularity($granularityGlobal)
+            ->setAF(AF_Model_AF::loadByRef('energie'));
+        $granularityCategory->getCellByMembers([$categoryTravel])
+            ->getCellsGroupForInputGranularity($granularityGlobal)
+            ->setAF(AF_Model_AF::loadByRef('deplacement'));
+
+        return $organization;
     }
 }
