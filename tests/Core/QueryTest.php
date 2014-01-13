@@ -1,42 +1,37 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Core
- * @subpackage Test
- */
 
-/**
- * Test l'utilisation des filtres et des tris.
- * @package    Core
- * @subpackage Test
- */
-class Core_Test_QueryTest
+namespace Tests\Core;
+
+use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
+use Core_Exception_UndefinedAttribute;
+use Core_Model_Filter;
+use Core_Model_Order;
+use Core_Model_Query;
+use DateTime;
+use Inventory_Model_Simple;
+use PHPUnit_Framework_TestSuite;
+
+class QueryTest
 {
-    /**
-     * Déclaration de la suite de test à effectuer.
-     * @return PHPUnit_Framework_TestSuite
-     */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Core_Test_OrderExceptions');
-        $suite->addTestSuite('Core_Test_FilterExceptions');
-        $suite->addTestSuite('Core_Test_AclFilterExceptions');
-        $suite->addTestSuite('Core_Test_QueryExceptions');
-        $suite->addTestSuite('Core_Test_QueryOthers');
-        $suite->addTestSuite('Core_Test_LoadListWithQuety');
+        $suite->addTestSuite(OrderExceptions::class);
+        $suite->addTestSuite(FilterExceptions::class);
+        $suite->addTestSuite(AclFilterExceptions::class);
+        $suite->addTestSuite(QueryExceptions::class);
+        $suite->addTestSuite(QueryOthers::class);
+        $suite->addTestSuite(LoadListWithQuery::class);
         return $suite;
     }
 }
 
 /**
  * Vérifie les exceptions lancées par la classe Core_Model_Order
- * @package    Core
- * @subpackage Test
  */
-class Core_Test_OrderExceptions extends PHPUnit_Framework_TestCase
+class OrderExceptions extends TestCase
 {
-
     /**
      * Vérifie qu'il est impossible de spécifer le tri sur un même attribut deux fois.
      * @expectedException Core_Exception_InvalidArgument
@@ -46,14 +41,7 @@ class Core_Test_OrderExceptions extends PHPUnit_Framework_TestCase
         $query = new Core_Model_Query();
         $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_ASC);
         $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_DESC);
-        try {
-            $query->order->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'Order for '.Inventory_Model_Simple::QUERY_ID.'" has already been specified.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->order->validate();
     }
 
     /**
@@ -64,26 +52,15 @@ class Core_Test_OrderExceptions extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, 'asc');
-        try {
-            $query->order->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'Sort direction for "'.Inventory_Model_Simple::QUERY_ID.'" is invald.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->order->validate();
     }
-
 }
 
 /**
  * Vérifie les exceptions lancées par la classe Core_Model_Filter
- * @package    Core
- * @subpackage Test
  */
-class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
+class FilterExceptions extends TestCase
 {
-
     /**
      * Vérifie qu'il est nécéssaire d'utiliser les constantes de la classe pour spécidifer la condition.
      * @expectedException Core_Exception_InvalidArgument
@@ -92,14 +69,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->filter->condition = 'et';
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'The logical connector has to be a class constant : "CONDITION".') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
 
     /**
@@ -110,14 +80,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->filter->setConditions('conditions');
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'Invalid data format for attribute "_conditions".') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
 
     /**
@@ -130,14 +93,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
         $conditionValue = 'test';
         $query = new Core_Model_Query();
         $query->filter->addCondition($conditionName, $conditionValue);
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'One of the conditions has no name.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
 
     /**
@@ -151,14 +107,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
         $conditionOperator = null;
         $query = new Core_Model_Query();
         $query->filter->addCondition($conditionName, $conditionValue, $conditionOperator);
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'Condition "'.$conditionName.'" has no operator.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
 
     /**
@@ -171,14 +120,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
         $conditionValue = null;
         $query = new Core_Model_Query();
         $query->filter->addCondition($conditionName, $conditionValue);
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'Condition "'.$conditionName.'" has no value.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
 
     /**
@@ -192,14 +134,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
         $conditionOperator = 'et';
         $query = new Core_Model_Query();
         $query->filter->addCondition($conditionName, $conditionValue, $conditionOperator);
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'Condition "'.$conditionName.'" has an invalid operator.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
 
     /**
@@ -214,14 +149,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
         $conditionOperator = Core_Model_Filter::OPERATOR_SUB_FILTER;
         $query = new Core_Model_Query();
         $query->filter->addCondition($conditionName, $conditionValue, $conditionOperator);
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'SubFilter name "'.$conditionName.'" is the main Filter.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
 
     /**
@@ -236,14 +164,7 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
         $conditionOperator = Core_Model_Filter::OPERATOR_SUB_FILTER;
         $query = new Core_Model_Query();
         $query->filter->addCondition($conditionName, $conditionValue, $conditionOperator);
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'SubFilter "'.$conditionName.'" must be a Filter.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
 
     /**
@@ -258,26 +179,15 @@ class Core_Test_FilterExceptions extends PHPUnit_Framework_TestCase
         $conditionOperator = Core_Model_Filter::OPERATOR_SUB_FILTER;
         $query = new Core_Model_Query();
         $query->filter->addCondition($conditionName, $conditionValue, $conditionOperator);
-        try {
-            $query->filter->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'SubFilter "'.$conditionName.'" must have one condition.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->filter->validate();
     }
-
 }
 
 /**
  * Vérifie les exceptions lancées par la classe Core_Model_ACLFilter
- * @package    Core
- * @subpackage Test
  */
-class Core_Test_AclFilterExceptions extends PHPUnit_Framework_TestCase
+class AclFilterExceptions extends TestCase
 {
-
     /**
      * Vérifie qu'il est nécéssaire d'utiliser les constantes de la classe pour spécidifer la condition.
      * @expectedException Core_Exception_InvalidArgument
@@ -288,17 +198,13 @@ class Core_Test_AclFilterExceptions extends PHPUnit_Framework_TestCase
         $query->aclFilter->enabled = true;
         $query->aclFilter->validate();
     }
-
 }
 
 /**
  * Vérifie les exceptions lancées par la classe Core_Model_Query
- * @package    Core
- * @subpackage Test
  */
-class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
+class QueryExceptions extends TestCase
 {
-
     /**
      * Vérifie que startIndex est un entier positif.
      * @expectedException Core_Exception_InvalidArgument
@@ -307,14 +213,7 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->startIndex = 'start';
-        try {
-            $query->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'startIndex has invalid value (should be 0 or positive int)') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->validate();
     }
 
     /**
@@ -325,14 +224,7 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->startIndex = -1;
-        try {
-            $query->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'startIndex has invalid value (should be 0 or positive int)') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->validate();
     }
 
     /**
@@ -343,14 +235,7 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->totalElements = 'total';
-        try {
-            $query->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'totalElements has invalid value (should be a positive int)') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->validate();
     }
 
     /**
@@ -361,14 +246,7 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->totalElements = -1;
-        try {
-            $query->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'totalElements has invalid value (should be a positive int)') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->validate();
     }
 
     /**
@@ -379,14 +257,7 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
     {
         $query = new Core_Model_Query();
         $query->startIndex = 2;
-        try {
-            $query->validate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            if ($e->getMessage() == 'When totalElements is null, startIndex has to be null too.') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->validate();
     }
 
     /**
@@ -406,31 +277,20 @@ class Core_Test_QueryExceptions extends PHPUnit_Framework_TestCase
      */
     public function testUndefinedAlias()
     {
-        $simpleRepository = \Core\ContainerSingleton::getEntityManager()->getRepository('Inventory_Model_Simple');
+        $simpleRepository = $this->entityManager->getRepository(Inventory_Model_Simple::class);
         $queryBuilder = $simpleRepository->createQueryBuilder('test');
         $conditionName = 'test';
         $query = new Core_Model_Query();
         $query->order->addOrder($conditionName);
-        try {
-            $query->parseToQueryBuilderWithoutLimit($queryBuilder);
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            if ($e->getMessage() == 'Neither Alias or RootAlias for condition "'.$conditionName.'" are defined') {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        $query->parseToQueryBuilderWithoutLimit($queryBuilder);
     }
-
 }
 
 /**
  * Vérifie les exceptions lancées par la classe Core_Model_Query
- * @package    Core
- * @subpackage Test
  */
-class Core_Test_QueryOthers extends PHPUnit_Framework_TestCase
+class QueryOthers extends TestCase
 {
-
     /**
      * Vérifie le bon fonctionnement du clonage.
      */
@@ -458,67 +318,64 @@ class Core_Test_QueryOthers extends PHPUnit_Framework_TestCase
         $this->assertEquals($query->test2, 2);
         $this->assertEquals($query->getCustomParameters(), array('test1' => 1, 'test2' => 2));
     }
-
 }
 
 /**
  * Test l'execution des LoadList avec des Query.
- * @package    Core
- * @subpackage Test
  */
-class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
+class LoadListWithQuery extends TestCase
 {
+    private $simpleEntities = [];
 
-    /**
-     * Méthode appelée avant l'exécution des tests.
-     */
     public function setUp()
     {
+        parent::setUp();
+
         // Création de 5 objets.
         $simpleEntityA1 = new Inventory_Model_Simple();
         $simpleEntityA1->setName('Atest1');
         $simpleEntityA1->setCreationDate(new DateTime('2008-01-01'));
-        $this->_simpleEntities[] = $simpleEntityA1;
+        $this->simpleEntities[] = $simpleEntityA1;
         $simpleEntityB1 = new Inventory_Model_Simple();
         $simpleEntityB1->setName('Btest1');
         $simpleEntityB1->setCreationDate(new DateTime('2009-01-01'));
-        $this->_simpleEntities[] = $simpleEntityB1;
+        $this->simpleEntities[] = $simpleEntityB1;
         $simpleEntityA2 = new Inventory_Model_Simple();
         $simpleEntityA2->setName('Atest2');
         $simpleEntityA2->setCreationDate(new DateTime('2012-01-01'));
-        $this->_simpleEntities[] = $simpleEntityA2;
+        $this->simpleEntities[] = $simpleEntityA2;
         $simpleEntityC1 = new Inventory_Model_Simple();
         $simpleEntityC1->setName('Ctest1');
         $simpleEntityC1->setCreationDate(new DateTime('2010-01-01'));
-        $this->_simpleEntities[] = $simpleEntityC1;
+        $this->simpleEntities[] = $simpleEntityC1;
         $simpleEntityA1b = new Inventory_Model_Simple();
         $simpleEntityA1b->setName('Atest1');
         $simpleEntityA1b->setCreationDate(new DateTime('2011-01-01'));
-        $this->_simpleEntities[] = $simpleEntityA1b;
+        $this->simpleEntities[] = $simpleEntityA1b;
         $simpleEntityNull = new Inventory_Model_Simple();
-        $this->_simpleEntities[] = $simpleEntityNull;
+        $this->simpleEntities[] = $simpleEntityNull;
 
-        foreach ($this->_simpleEntities as $simpleEntity) {
+        foreach ($this->simpleEntities as $simpleEntity) {
             $simpleEntity->save();
         }
 
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        $this->entityManager->flush();
     }
 
     /**
      * Vérifie l'ordre par défault lors d'un loadList.
      */
-    function testDefaultOrder()
+    public function testDefaultOrder()
     {
         foreach (Inventory_Model_Simple::loadList() as $index => $simpleEntity) {
-            $this->assertSame($simpleEntity, $this->_simpleEntities[$index]);
+            $this->assertSame($simpleEntity, $this->simpleEntities[$index]);
         }
     }
 
     /**
      * Vérifie l'ordre avec un tri sur un seul attribut.
      */
-    function testOrderNameASC()
+    public function testOrderNameASC()
     {
         $query = new Core_Model_Query();
         $query->order->addOrder(Inventory_Model_Simple::QUERY_NAME);
@@ -526,18 +383,18 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(6, count($simpleEntities));
         $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[4], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[5], $this->_simpleEntities[3]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[5]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[4], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[5], $this->simpleEntities[3]);
     }
 
     /**
      * Vérifie l'ordre avec un tri inverse sur un seul attribut.
      */
-    function testOrderIDDESC()
+    public function testOrderIDDESC()
     {
         $query = new Core_Model_Query();
         $query->order->addOrder(Inventory_Model_Simple::QUERY_ID, Core_Model_Order::ORDER_DESC);
@@ -545,18 +402,18 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(6, count($simpleEntities));
         $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[4], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[5], $this->_simpleEntities[0]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[5]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[3]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[4], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[5], $this->simpleEntities[0]);
     }
 
     /**
      * Vérifie l'ordre avec deux tris.
      */
-    function testOrderNAMEASCIDDESC()
+    public function testOrderNAMEASCIDDESC()
     {
         $query = new Core_Model_Query();
         $query->order->addOrder(Inventory_Model_Simple::QUERY_NAME, Core_Model_Order::ORDER_ASC);
@@ -565,34 +422,34 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(6, count($simpleEntities));
         $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[4], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[5], $this->_simpleEntities[3]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[5]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[4], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[5], $this->simpleEntities[3]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un nombre d'élément maximum.
      */
-    function testListWithMaxElements()
+    public function testListWithMaxElements()
     {
         $query = new Core_Model_Query();
         $query->totalElements = 4;
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
         $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[3]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[3]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un offset et un nombre d'élément maximum.
      */
-    function testListWithStartIndexAndLargeMaxElements()
+    public function testListWithStartIndexAndLargeMaxElements()
     {
         $query = new Core_Model_Query();
         $query->startIndex = 2;
@@ -600,16 +457,16 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
         $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[3]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[5]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[3]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[5]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un offset et un nombre d'élément maximum.
      */
-    function testListWithStartIndexAndSmallMaxElements()
+    public function testListWithStartIndexAndSmallMaxElements()
     {
         $query = new Core_Model_Query();
         $query->startIndex = 2;
@@ -617,58 +474,58 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(2, count($simpleEntities));
         $this->assertEquals(6, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[3]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[3]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur le nom qui contient A.
      */
-    function testFilterCOUNTAINSNametest1()
+    public function testFilterCOUNTAINSNametest1()
     {
         $query = new Core_Model_Query();
         $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'test1', Core_Model_Filter::OPERATOR_CONTAINS);
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
         $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[4]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[3]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[4]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur le nom qui commence par A1.
      */
-    function testFilterBEGINSNameA()
+    public function testFilterBEGINSNameA()
     {
         $query = new Core_Model_Query();
         $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'A', Core_Model_Filter::OPERATOR_BEGINS);
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(3, count($simpleEntities));
         $this->assertEquals(3, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[4]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[4]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur le nom qui se termine par 2.
      */
-    function testFilterENDSName2()
+    public function testFilterENDSName2()
     {
         $query = new Core_Model_Query();
         $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, '2', Core_Model_Filter::OPERATOR_ENDS);
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(1, count($simpleEntities));
         $this->assertEquals(1, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[2]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[2]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur le nom égal à A.
      */
-    function testFilterEQUALNameA()
+    public function testFilterEQUALNameA()
     {
         $query = new Core_Model_Query();
         $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'A', Core_Model_Filter::OPERATOR_EQUAL);
@@ -680,227 +537,273 @@ class Core_Test_LoadListWithQuety extends PHPUnit_Framework_TestCase
     /**
      * Vérifie la liste d'éléments avec un filtre sur le nom égal à Btest1.
      */
-    function testFilterEQUALNameBtest1()
+    public function testFilterEQUALNameBtest1()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'Btest1',
-                Core_Model_Filter::OPERATOR_EQUAL);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_NAME,
+            'Btest1',
+            Core_Model_Filter::OPERATOR_EQUAL
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(1, count($simpleEntities));
         $this->assertEquals(1, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[1]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[1]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur le nom pas égal à Ctest1.
      */
-    function testFilterNOTEQUALNameCtest1()
+    public function testFilterNOTEQUALNameCtest1()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'Ctest1',
-                Core_Model_Filter::OPERATOR_NOT_EQUAL);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_NAME,
+            'Ctest1',
+            Core_Model_Filter::OPERATOR_NOT_EQUAL
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
         $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[4]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[4]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur la date supérieure à 2009.
      */
-    function testFilterHIGHERDate2009()
+    public function testFilterHIGHERDate2009()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
-                Core_Model_Filter::OPERATOR_HIGHER);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_DATE,
+            new DateTime('2009-01-01'),
+            Core_Model_Filter::OPERATOR_HIGHER
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
         $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[3]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[5]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[3]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[5]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur la date supérieure ou égale à 2009.
      */
-    function testFilterHIGHEREQUALDate2009()
+    public function testFilterHIGHEREQUALDate2009()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
-                Core_Model_Filter::OPERATOR_HIGHER_EQUAL);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_DATE,
+            new DateTime('2009-01-01'),
+            Core_Model_Filter::OPERATOR_HIGHER_EQUAL
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(5, count($simpleEntities));
         $this->assertEquals(5, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[4], $this->_simpleEntities[5]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[3]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[4], $this->simpleEntities[5]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur la date supérieure ou égale à 2009.
      */
-    function testFilterLOWERDate2011()
+    public function testFilterLOWERDate2011()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
-                Core_Model_Filter::OPERATOR_LOWER);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_DATE,
+            new DateTime('2011-01-01'),
+            Core_Model_Filter::OPERATOR_LOWER
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(3, count($simpleEntities));
         $this->assertEquals(3, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[3]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur la date supérieure ou égale à 2009.
      */
-    function testFilterLOWEREQUALDate2011()
+    public function testFilterLOWEREQUALDate2011()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
-                Core_Model_Filter::OPERATOR_LOWER_EQUAL);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_DATE,
+            new DateTime('2011-01-01'),
+            Core_Model_Filter::OPERATOR_LOWER_EQUAL
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
         $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[3]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[4]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[3]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[4]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur le nom étant null.
      */
-    function testFilterNULLName()
+    public function testFilterNULLName()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, null,
-                Core_Model_Filter::OPERATOR_NULL);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_NAME,
+            null,
+            Core_Model_Filter::OPERATOR_NULL
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(1, count($simpleEntities));
         $this->assertEquals(1, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[5]);
     }
 
     /**
      * Vérifie la liste d'éléments avec un filtre sur le nom n'étant pas null.
      */
-    function testFilterNOTNULLName()
+    public function testFilterNOTNULLName()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, null,
-                Core_Model_Filter::OPERATOR_NOT_NULL);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_NAME,
+            null,
+            Core_Model_Filter::OPERATOR_NOT_NULL
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(5, count($simpleEntities));
         $this->assertEquals(5, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[0]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[3]);
-        $this->assertSame($simpleEntities[4], $this->_simpleEntities[4]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[0]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[3]);
+        $this->assertSame($simpleEntities[4], $this->simpleEntities[4]);
     }
 
     /**
      * Vérifie la liste avec plusieurs options de filtre et de tri lié par un connecteur logique AND.
      */
-    function testAdvancedQueryAnd()
+    public function testAdvancedQueryAnd()
     {
         $query = new Core_Model_Query();
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
-                Core_Model_Filter::OPERATOR_LOWER_EQUAL);
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'Ctest1',
-                Core_Model_Filter::OPERATOR_NOT_EQUAL);
-        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID,
-                Core_Model_Order::ORDER_DESC);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_DATE,
+            new DateTime('2011-01-01'),
+            Core_Model_Filter::OPERATOR_LOWER_EQUAL
+        );
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_NAME,
+            'Ctest1',
+            Core_Model_Filter::OPERATOR_NOT_EQUAL
+        );
+        $query->order->addOrder(
+            Inventory_Model_Simple::QUERY_ID,
+            Core_Model_Order::ORDER_DESC
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(3, count($simpleEntities));
         $this->assertEquals(3, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[0]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[0]);
     }
 
     /**
      * Vérifie la liste avec plusieurs options de filtre et de tri lié par un connecteur logique OR.
      */
-    function testAdvancedQueryOR()
+    public function testAdvancedQueryOR()
     {
         $query = new Core_Model_Query();
         $query->filter->condition = Core_Model_Filter::CONDITION_OR;
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2009-01-01'),
-                Core_Model_Filter::OPERATOR_EQUAL);
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, 'A',
-                Core_Model_Filter::OPERATOR_CONTAINS);
-        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID,
-                Core_Model_Order::ORDER_DESC);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_DATE,
+            new DateTime('2009-01-01'),
+            Core_Model_Filter::OPERATOR_EQUAL
+        );
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_NAME,
+            'A',
+            Core_Model_Filter::OPERATOR_CONTAINS
+        );
+        $query->order->addOrder(
+            Inventory_Model_Simple::QUERY_ID,
+            Core_Model_Order::ORDER_DESC
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
         $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[2]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[0]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[2]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[0]);
     }
 
     /**
      * Vérifie la liste avec deux sous-filtres.
      */
-    function testAdvancedSubQuery()
+    public function testAdvancedSubQuery()
     {
         $subQuery = new Core_Model_Filter();
-        $subQuery->addCondition(Inventory_Model_Simple::QUERY_DATE, new DateTime('2011-01-01'),
-                Core_Model_Filter::OPERATOR_LOWER_EQUAL);
-        $subQuery->addCondition(Inventory_Model_Simple::QUERY_NAME, 'Ctest1',
-                Core_Model_Filter::OPERATOR_NOT_EQUAL);
+        $subQuery->addCondition(
+            Inventory_Model_Simple::QUERY_DATE,
+            new DateTime('2011-01-01'),
+            Core_Model_Filter::OPERATOR_LOWER_EQUAL
+        );
+        $subQuery->addCondition(
+            Inventory_Model_Simple::QUERY_NAME,
+            'Ctest1',
+            Core_Model_Filter::OPERATOR_NOT_EQUAL
+        );
         $query = new Core_Model_Query();
         $query->filter->condition = Core_Model_Filter::CONDITION_OR;
-        $query->filter->addCondition(Inventory_Model_Simple::QUERY_NAME, null,
-                Core_Model_Filter::OPERATOR_NULL);
-        $query->filter->addCondition('SubQuery', $subQuery,
-                Core_Model_Filter::OPERATOR_SUB_FILTER);
-        $query->order->addOrder(Inventory_Model_Simple::QUERY_ID,
-                Core_Model_Order::ORDER_DESC);
+        $query->filter->addCondition(
+            Inventory_Model_Simple::QUERY_NAME,
+            null,
+            Core_Model_Filter::OPERATOR_NULL
+        );
+        $query->filter->addCondition(
+            'SubQuery',
+            $subQuery,
+            Core_Model_Filter::OPERATOR_SUB_FILTER
+        );
+        $query->order->addOrder(
+            Inventory_Model_Simple::QUERY_ID,
+            Core_Model_Order::ORDER_DESC
+        );
         $simpleEntities = Inventory_Model_Simple::loadList($query);
         $this->assertEquals(4, count($simpleEntities));
         $this->assertEquals(4, Inventory_Model_Simple::countTotal($query));
-        $this->assertSame($simpleEntities[0], $this->_simpleEntities[5]);
-        $this->assertSame($simpleEntities[1], $this->_simpleEntities[4]);
-        $this->assertSame($simpleEntities[2], $this->_simpleEntities[1]);
-        $this->assertSame($simpleEntities[3], $this->_simpleEntities[0]);
+        $this->assertSame($simpleEntities[0], $this->simpleEntities[5]);
+        $this->assertSame($simpleEntities[1], $this->simpleEntities[4]);
+        $this->assertSame($simpleEntities[2], $this->simpleEntities[1]);
+        $this->assertSame($simpleEntities[3], $this->simpleEntities[0]);
     }
 
-    /**
-     * Méthode appelée à la fin des test.
-     */
     protected function tearDown()
     {
-        foreach ($this->_simpleEntities as $simpleEntity) {
+        foreach ($this->simpleEntities as $simpleEntity) {
             $simpleEntity->delete();
         }
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        $this->entityManager->flush();
     }
 
-    /**
-     * Méthode appelée à la fin de tous les tests
-     */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Inventory_Model_Simple en base, sinon suppression !
         if (Inventory_Model_Simple::countTotal() > 0) {
             echo PHP_EOL . 'Des SimpleEntity restantes ont été trouvé après les tests, suppression en cours !';
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }

@@ -1,16 +1,18 @@
 <?php
 
+namespace Tests\Techno;
+
 use Core\Test\TestCase;
+use Core_Tools;
 use Techno\Domain\Family\Family;
 use Techno\Domain\Family\Cell;
 use Techno\Domain\Family\Dimension;
 use Techno\Domain\Family\Member;
 use Unit\UnitAPI;
 
-class Techno_Test_FamilyTest extends TestCase
+class FamilyTest extends TestCase
 {
     /**
-     * Génere un objet dérivé prêt à l'emploi pour les tests.
      * @return Family
      */
     public static function generateObject()
@@ -18,23 +20,22 @@ class Techno_Test_FamilyTest extends TestCase
         $family = new Family(Core_Tools::generateRef(), 'Test');
         $family->setUnit(new UnitAPI('m'));
         $family->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
         return $family;
     }
 
     /**
-     * Deletion of an object created with generateObject
      * @param Family $o
      */
     public static function deleteObject(Family $o)
     {
         $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
     }
 
     public static function setUpBeforeClass()
     {
-        $entityManager = \Core\ContainerSingleton::getEntityManager();
+        $entityManager = self::getEntityManager();
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Cell::loadList() as $o) {
             $o->delete();
@@ -71,7 +72,7 @@ class Techno_Test_FamilyTest extends TestCase
     }
 
     /**
-     * @expectedException Core_Exception_InvalidArgument
+     * @expectedException \Core_Exception_InvalidArgument
      */
     public function testCells1()
     {
@@ -80,7 +81,7 @@ class Techno_Test_FamilyTest extends TestCase
     }
 
     /**
-     * @expectedException Core_Exception_NotFound
+     * @expectedException \Core_Exception_NotFound
      */
     public function testCells2()
     {

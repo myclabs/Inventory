@@ -1,14 +1,17 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
+
+namespace Tests\AF;
+
+use AF_Model_AF;
+use AF_Model_Component_Checkbox;
+use AF_Model_Component_Numeric;
+use AF_Model_Input_Checkbox;
+use AF_Model_Input_Numeric;
+use AF_Model_InputSet_Primary;
+use AF_Service_InputService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
 
-/**
- * @package AF
- */
 class InputServiceTest extends TestCase
 {
     /**
@@ -76,7 +79,7 @@ class InputServiceTest extends TestCase
         parent::setUp();
 
         /** @var AF_Service_InputService $inputService */
-        $this->inputService = $this->get('AF_Service_InputService');
+        $this->inputService = $this->get(AF_Service_InputService::class);
 
         $this->af = new AF_Model_AF('test');
 
@@ -115,7 +118,7 @@ class InputServiceTest extends TestCase
             foreach (AF_Model_AF::loadList() as $o) {
                 $o->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
 }

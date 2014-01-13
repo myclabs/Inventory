@@ -1,36 +1,28 @@
 <?php
 
+namespace Tests\Techno\Family;
+
 use Core\Test\TestCase;
+use Core_Tools;
 use Doctrine\ORM\UnitOfWork;
 use Techno\Domain\Family\Dimension;
 use Techno\Domain\Family\Family;
 use Techno\Domain\Family\Member;
 
-class Techno_Test_Family_MemberTest
+class MemberTest extends TestCase
 {
     /**
-     * Creation of the test suite
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Techno_Test_Family_MemberMetierTest');
-        return $suite;
-    }
-
-    /**
-     * Génere un objet dérivé prêt à l'emploi pour les tests.
      * @return Member
      */
     public static function generateObject()
     {
         $member = new Member(
-            Techno_Test_Family_DimensionTest::generateObject(),
+            DimensionTest::generateObject(),
             strtolower(Core_Tools::generateRef()),
             Core_Tools::generateString(10)
         );
         $member->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
 
         return $member;
     }
@@ -41,14 +33,11 @@ class Techno_Test_Family_MemberTest
         // Remove from the family to avoid cascade problems
         $o->getDimension()->removeMember($o);
         // Delete fixtures
-        Techno_Test_Family_DimensionTest::deleteObject($o->getDimension());
+        DimensionTest::deleteObject($o->getDimension());
 
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
     }
-}
 
-class Techno_Test_Family_MemberMetierTest extends TestCase
-{
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
@@ -61,7 +50,7 @@ class Techno_Test_Family_MemberMetierTest extends TestCase
         foreach (Family::loadList() as $o) {
             $o->delete();
         }
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
     }
 
     /**
@@ -69,7 +58,7 @@ class Techno_Test_Family_MemberMetierTest extends TestCase
      */
     public function testPosition()
     {
-        $dimension = Techno_Test_Family_DimensionTest::generateObject();
+        $dimension = DimensionTest::generateObject();
 
         $ref1 = strtolower(Core_Tools::generateRef());
         $ref2 = strtolower(Core_Tools::generateRef());
@@ -103,7 +92,7 @@ class Techno_Test_Family_MemberMetierTest extends TestCase
         $o2->delete();
         $this->assertEquals(1, $o1->getPosition());
 
-        Techno_Test_Family_DimensionTest::deleteObject($dimension);
+        DimensionTest::deleteObject($dimension);
         $this->entityManager->flush();
     }
 
@@ -113,7 +102,7 @@ class Techno_Test_Family_MemberMetierTest extends TestCase
     public function testCascadeFromFamily()
     {
         // Fixtures
-        $dimension = Techno_Test_Family_DimensionTest::generateObject();
+        $dimension = DimensionTest::generateObject();
 
         $o = new Member($dimension, Core_Tools::generateRef(), 'Test');
 
@@ -123,7 +112,7 @@ class Techno_Test_Family_MemberMetierTest extends TestCase
         $this->assertEquals(UnitOfWork::STATE_MANAGED, $this->entityManager->getUnitOfWork()->getEntityState($o));
 
         // Vérification de la cascade de la suppression
-        Techno_Test_Family_DimensionTest::deleteObject($dimension);
+        DimensionTest::deleteObject($dimension);
         $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
         $this->entityManager->flush();
     }

@@ -1,17 +1,13 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Core
- * @subpackage Test
- */
 
-/**
- * Creation of the Test Suite.
- *
- * @package    Core
- * @subpackage Test
- */
-class Core_Test_EntityOrderedTest
+namespace Tests\Core;
+
+use Core\Test\TestCase;
+use Doctrine\ORM\EntityRepository;
+use Inventory_Model_Ordered;
+use PHPUnit_Framework_TestSuite;
+
+class EntityOrderedTest
 {
     /**
      * Déclaration de la suite de test à éffectuer.
@@ -19,70 +15,47 @@ class Core_Test_EntityOrderedTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Core_Test_EntityOrderedCRUD');
-        $suite->addTestSuite('Core_Test_EntityOrderedOthers');
+        $suite->addTestSuite(EntityOrderedCRUD::class);
+        $suite->addTestSuite(EntityOrderedOthers::class);
         return $suite;
     }
 }
 
 /**
  * Test les fonctionnalités basiques de la strategy Core_Strategy_Ordered.
- *
- * @package Core
- * @subpackage Event
  */
-class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
+class EntityOrderedCRUD extends TestCase
 {
-    // Attributs des Tests.
-
     /**
-     * @var Doctrine\ORM\EntityManager
+     * @var EntityRepository
      */
-    protected $entityManager;
+    protected $orderedEntityRepository;
 
-    /**
-     * @var Doctrine\ORM\EntityRepository
-     */
-    protected $_orderedEntityRepository;
-
-
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-    }
-
-    /**
-     * Méthode appelée avant l'exécution des tests.
-     */
-    protected function setUp()
-    {
-        $this->entityManager = \Core\ContainerSingleton::getEntityManager();
-        $this->_orderedEntityRepository = $this->entityManager->getRepository('Inventory_Model_Ordered');
+        parent::setUp();
+        $this->orderedEntityRepository = $this->entityManager->getRepository('Inventory_Model_Ordered');
     }
 
     /**
      * Test de la création d'une entité.
-     * @return Inventory_Model_Ordered
      */
     public function testCreateEntity()
     {
         $orderedEntity = new Inventory_Model_Ordered();
         $orderedEntity->save();
 
-        $this->assertInstanceOf('Inventory_Model_Ordered', $orderedEntity);
         // Vérification que la orderedEntity est gérée par l'EntityManager.
         //  Tant qu'aucun flush n'est fait, l'id reste nulle.
         $this->assertTrue($this->entityManager->contains($orderedEntity));
         $this->assertEmpty($orderedEntity->getKey());
-        $this->assertEmpty($this->_orderedEntityRepository->findAll());
+        $this->assertEmpty($this->orderedEntityRepository->findAll());
         $this->assertEquals($orderedEntity->getPosition(), 1);
         // Flush !
         $this->entityManager->flush();
         //  Vérification que l'id est non nulle.
         $this->assertNotEmpty($orderedEntity->getKey());
-        $this->assertNotEmpty($this->_orderedEntityRepository->findAll());
+        $this->assertNotEmpty($this->orderedEntityRepository->findAll());
 
         return $orderedEntity;
     }
@@ -129,77 +102,42 @@ class Core_Test_EntityOrderedCRUD extends PHPUnit_Framework_TestCase
         // Vérification que l'entity existe toujours bien.
         //  Tant qu'aucun flush n'est fait, l'id existe toujours.
         $this->assertNotEmpty($orderedEntity->getKey());
-        $this->assertNotEmpty($this->_orderedEntityRepository->findAll());
+        $this->assertNotEmpty($this->orderedEntityRepository->findAll());
         $this->assertEquals($orderedEntity->getPosition(), null);
         // Flush !
         $this->entityManager->flush();
         //  Vérification que l'id est nulle.
         $this->assertEmpty($orderedEntity->getKey());
-        $this->assertEmpty($this->_orderedEntityRepository->findAll());
+        $this->assertEmpty($this->orderedEntityRepository->findAll());
         $this->assertEquals($orderedEntity->getPosition(), null);
     }
 
-    /**
-     * Méthode appelée à la fin des test.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * Méthode appelée à la fin des test
-     */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Inventory_Model_Ordered en base, sinon suppression !
         if (Inventory_Model_Ordered::countTotal() > 0) {
             echo PHP_EOL . 'Des OrderedEntity restantes ont été trouvé après les tests, suppression en cours !';
             foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }
 
 /**
  * Test les fonctionnalités avancés de Core_Model_Entity.
- *
- * @package Core
- * @subpackage Event
  */
-class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
+class EntityOrderedOthers extends TestCase
 {
-    // Attributs des Tests.
-
-    /**
-     * @var Doctrine\ORM\EntityManager
-     */
-    protected $entityManager;
-
-
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
         if (Inventory_Model_Ordered::countTotal() > 0) {
             echo PHP_EOL . 'Des OrderedEntity restantes ont été trouvé avant les tests, suppression en cours !';
             foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
-    }
-
-    /**
-     * Méthode appelée avant l'exécution des tests.
-     */
-    protected function setUp()
-    {
-        $this->entityManager = \Core\ContainerSingleton::getEntityManager();
     }
 
     /**
@@ -476,7 +414,7 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
 
     /**
      * Déplacement après une autre entité
-     * @expectedException Core_Exception_InvalidArgument
+     * @expectedException \Core_Exception_InvalidArgument
      */
     public function testMoveAfterDifferentContexts()
     {
@@ -523,26 +461,14 @@ class Core_Test_EntityOrderedOthers extends PHPUnit_Framework_TestCase
         $this->entityManager->flush();
     }
 
-    /**
-     * Méthode appelée à la fin des test.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * Méthode appelée à la fin des test
-     */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
         if (Inventory_Model_Ordered::countTotal() > 0) {
             echo PHP_EOL . 'Des OrderedEntity restantes ont été trouvé après les tests, suppression en cours !';
             foreach (Inventory_Model_Ordered::loadList() as $orderedEntity) {
                 $orderedEntity->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }

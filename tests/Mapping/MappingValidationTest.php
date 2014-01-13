@@ -1,18 +1,12 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package Test
- */
+
+namespace Tests\Mapping;
 
 use Core\Test\TestCase;
 use Doctrine\ORM\Tools\SchemaValidator;
 
-/**
- * @package Test
- */
 class MappingValidationTest extends TestCase
 {
-
     /**
      * Doctrine schema validation
      */
@@ -29,5 +23,4 @@ class MappingValidationTest extends TestCase
             $this->fail($message);
         }
     }
-
 }

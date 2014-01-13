@@ -1,43 +1,18 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    TEC
- * @subpackage Test
- */
 
+namespace Tests\TEC\Algo;
+
+use Core\Test\TestCase;
 use TEC\Algo\Logic;
 use TEC\Component\Component;
 use TEC\Component\Composite;
 
-/**
- * @package    TEC
- * @subpackage Test
- */
-class TEC_Test_LogicTest
+class LogicTest extends TestCase
 {
-    /**
-     * lance les autre classe de tests
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('TEC_Test_AlgoLogic');
-        return $suite;
-    }
-
-}
-
-/**
- * @package    TEC
- * @subpackage Test
- */
-class TEC_Test_AlgoLogic extends PHPUnit_Framework_TestCase
-{
-
     /**
      * Test de la méthode getErrors()
      */
-    function testCheckLogic()
+    public function testCheckLogic()
     {
         $expression = new Logic('');
         $erreur = $expression->getErrors();
@@ -88,7 +63,6 @@ class TEC_Test_AlgoLogic extends PHPUnit_Framework_TestCase
         $expression = new Logic('a&(b&c!)');
         $erreur = $expression->getErrors();
         $this->assertEquals($erreur[0], __('TEC', 'syntaxError', 'invalidOperand', array('PART' => 'c!')));
-
     }
 
     /**
@@ -256,5 +230,4 @@ class TEC_Test_AlgoLogic extends PHPUnit_Framework_TestCase
                             .'[{v:"0-4-1-1-1",f:"J"},"0-4-1-1",""],';
         $this->assertEquals($expectedGraph, $treeAsGraph);
     }
-
 }
