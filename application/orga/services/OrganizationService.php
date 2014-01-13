@@ -73,12 +73,12 @@ class Orga_Service_OrganizationService
     public function createOrganization($labelOrganization='')
     {
         $this->entityManager->beginTransaction();
-        
+
         try {
             // Création de l'organization.
             $organization = new Orga_Model_Organization();
             $organization->setLabel($labelOrganization);
-            
+
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
             $defaultGranularity->setCellsWithACL(true);
@@ -455,7 +455,7 @@ class Orga_Service_OrganizationService
 
         $organization->save();
         $this->entityManager->flush();
-        
+
         // Définition de la création des DW après pour éviter un bug d'insertion.
         foreach ($dWGranularities as $granularityWithDW) {
             $granularityWithDW->setCellsGenerateDWCubes(true);
@@ -510,7 +510,7 @@ class Orga_Service_OrganizationService
             ->setAF(AF_Model_AF::loadByRef('deplacement'));
 
         // Lance l'inventaire 2014
-        $granularityYear->getCellByMembers([$year2014])
+        $granularityYear->getCellByMembers([$year2013])
             ->setInventoryStatus(Orga_Model_Cell::STATUS_ACTIVE);
     }
 
