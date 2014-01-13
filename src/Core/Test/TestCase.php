@@ -39,8 +39,6 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     /**
      * À utiliser uniquement dans des méthodes statiques.
      *
-     * Évite de passer par Zend_Registry.
-     *
      * @return \Doctrine\ORM\EntityManager
      */
     protected static function getEntityManager()
