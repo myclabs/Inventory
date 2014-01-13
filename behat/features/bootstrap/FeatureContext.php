@@ -53,6 +53,7 @@ class FeatureContext extends MinkContext
             new Step\Given('I fill in "email" with "admin@myc-sense.com"'),
             new Step\Given('I fill in "password" with "myc-53n53"'),
             new Step\Given('I press "connection"'),
+//            new Step\Given('I wait for 5 seconds'),
             new Step\Given('I wait for page to finish loading'),
         ];
     }
@@ -356,5 +357,14 @@ class FeatureContext extends MinkContext
             }
         }
         return true;
+    }
+    /**
+     * @Then /^(?:|I )should see the "(?P<form>[^"]*)" form$/
+     */
+    public function assertFormVisible($form)
+    {
+        $this->waitForPageToFinishLoading();
+
+        $this->assertSession()->elementExists('css', "#{$form}.form");
     }
 }
