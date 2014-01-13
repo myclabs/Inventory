@@ -1,29 +1,14 @@
 <?php
+
+namespace Tests\Simulation;
+
+use AF_Model_AF;
+use Core\Test\TestCase;
+use Simulation_Model_Set;
 use User\Domain\User;
 
-/**
- * @package Simulation
- * @subpackage Tests
- */
-
-/**
- * Classe de test de la classe Set du modèle.
- * @author valentin.claras
- * @package Simulation
- * @subpackage Test
- */
-class Simulation_Test_SetTest
+class SetTest extends TestCase
 {
-    /**
-     * Déclaration de la suite de test à éffectuer.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Simulation_Test_SetSetUp');
-        return $suite;
-    }
-
     /**
      * Génere un objet pret à l'emploi pour les tests.
      * @param int $i
@@ -31,7 +16,7 @@ class Simulation_Test_SetTest
      * @param User $user
      * @return Simulation_Model_Set
      */
-    public static function generateObject($i=0, $aF=null, $user=null)
+    public static function generateObject($i = 0, $aF = null, $user = null)
     {
         if ($aF === null) {
             $aF = new AF_Model_AF('af_set'.$i);
@@ -44,7 +29,7 @@ class Simulation_Test_SetTest
             $user->setPassword('test');
             $user->save();
         }
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
 
         // Création d'un nouvel objet.
         $set = new Simulation_Model_Set();
@@ -52,7 +37,7 @@ class Simulation_Test_SetTest
         $set->setAF($aF);
         $set->setUser($user);
         $set->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
 
         return $set;
     }
@@ -63,10 +48,10 @@ class Simulation_Test_SetTest
      * @param bool $deleteAF
      * @param bool $deleteUser
      */
-    public static function deleteObject(Simulation_Model_Set $set, $deleteAF=true, $deleteUser=true)
+    public static function deleteObject(Simulation_Model_Set $set, $deleteAF = true, $deleteUser = true)
     {
         if ($deleteAF) {
-            $aF = $set->getAF();
+            $af = $set->getAF();
         }
         if ($deleteUser) {
             $user = $set->getUser();
@@ -74,57 +59,40 @@ class Simulation_Test_SetTest
 
         // Suppression de l'objet.
         $set->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
 
         if ($deleteAF) {
-            $aF->delete();
+            $af->delete();
         }
         if ($deleteUser) {
             $user->delete();
         }
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
     }
-}
-
-/**
- * Test des méthodes de base de l'objet Simulation_Model_Set.
- * @package Simulation
- * @subpackage Test
- */
-class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
-{
 
     /**
      * @var AF_Model_AF
      */
-    protected $_aF = null;
+    protected $af;
 
     /**
      * @var User
      */
-    protected $_user = null;
+    protected $user;
 
 
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Simulation_Model_Set en base, sinon suppression !
         if (Simulation_Model_Set::countTotal() > 0) {
             echo PHP_EOL . 'Des Simulation_Set restants ont été trouvé avant les tests, suppression en cours !';
             foreach (Simulation_Model_Set::loadList() as $set) {
                 $set->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
 
-    /**
-     * Test le constructeur.
-     * @return Simulation_Model_Set
-     */
-    function testConstruct()
+    public function testConstruct()
     {
         $aF = new AF_Model_AF('test');
         $aF->save();
@@ -134,7 +102,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
         $user->setPassword('test');
         $user->save();
 
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        $this->entityManager->flush();
 
         $o = new Simulation_Model_Set();
         $o->setUser($user);
@@ -142,7 +110,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
         $o->save();
         $this->assertInstanceOf('Simulation_Model_Set', $o);
         $this->assertEquals($o->getKey(), array());
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        $this->entityManager->flush();
         $this->assertNotEquals(array(), $o->getKey());
 
         return $o;
@@ -154,7 +122,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
      * @param Simulation_Model_Set $o
      * @return Simulation_Model_Set
      */
-    function testLoad($o)
+    public function testLoad($o)
     {
         $oLoaded = Simulation_Model_Set::load($o->getKey());
         $this->assertInstanceOf('Simulation_Model_Set', $o);
@@ -170,19 +138,16 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param Simulation_Model_Set $o
      */
-    function testDelete($o)
+    public function testDelete($o)
     {
         $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        $this->entityManager->flush();
         $this->assertEquals(array(), $o->getKey());
         $o->getAF()->delete();
         $o->getUser()->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        $this->entityManager->flush();
     }
 
-    /**
-     * Méthode appelée à la fin des test
-     */
     public static function tearDownAfterClass()
     {
         // Vérification qu'il ne reste aucun Simulation_Model_Set en base, sinon suppression !
@@ -191,7 +156,7 @@ class Simulation_Test_SetSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Set::loadList() as $set) {
                 $set->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
 }

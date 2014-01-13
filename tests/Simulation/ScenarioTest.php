@@ -1,38 +1,25 @@
 <?php
-/**
- * @package Simulation
- * @subpackage Tests
- */
 
-/**
- * Classe de test de la classe Simulation du modèle.
- * @author valentin.claras
- * @package Simulation
- * @subpackage Test
- */
-class Simulation_Test_ScenarioTest
+namespace Tests\Simulation;
+
+use AF_Model_InputSet_Primary;
+use Core\Test\TestCase;
+use Simulation_Model_Scenario;
+use Simulation_Model_Set;
+
+class ScenarioTest extends TestCase
 {
     /**
-     * Déclaration de la suite de test à éffectuer.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Simulation_Test_ScenarioSetUp');
-        return $suite;
-    }
-
-    /**
      * Génere un objet pret à l'emploi pour les tests.
-     * @param string label
+     * @param string $label
      * @param AF_Model_InputSet_Primary $aFInputSetPrimary
      * @param Simulation_Model_Set $set
-     * @return Simulation_Model_Simulation
+     * @return Simulation_Model_Scenario
      */
-    public static function generateObject($label, $aFInputSetPrimary=null, $set=null)
+    public static function generateObject($label, $aFInputSetPrimary = null, $set = null)
     {
         if ($set === null) {
-            $set = Simulation_Test_SetTest::generateObject();
+            $set = SetTest::generateObject();
         }
         if ($aFInputSetPrimary === null) {
             $aFInputSetPrimary = new AF_Model_InputSet_Primary($set->getAF());
@@ -45,7 +32,7 @@ class Simulation_Test_ScenarioTest
         $scenario->setSet($set);
         $scenario->setAFInputSetPrimary($aFInputSetPrimary);
         $scenario->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
 
         return $scenario;
     }
@@ -56,8 +43,11 @@ class Simulation_Test_ScenarioTest
      * @param bool $deleteAFInputSetPrimary
      * @param bool $deleteSet
      */
-    public static function deleteObject(Simulation_Model_Scenario $scenario, $deleteAFInputSetPrimary=true, $deleteSet=true)
-    {
+    public static function deleteObject(
+        Simulation_Model_Scenario $scenario,
+        $deleteAFInputSetPrimary = true,
+        $deleteSet = true
+    ) {
         if ($deleteAFInputSetPrimary) {
             $aFInputSetPrimary = $scenario->getAFInputSetPrimary();
         }
@@ -67,28 +57,17 @@ class Simulation_Test_ScenarioTest
 
         // Suppression de l'objet.
         $scenario->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
 
         if ($deleteAFInputSetPrimary) {
             $aFInputSetPrimary->delete();
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
         if ($deleteSet) {
-            Simulation_Test_SetTest::deleteObject($set);
+            SetTest::deleteObject($set);
         }
     }
-}
 
-/**
- * Test des méthodes de base de l'objet Simulation_Model_Simulation.
- * @package Simulation
- * @subpackage Test
- */
-class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun Simulation_Model_Scenario en base, sinon suppression !
@@ -97,7 +76,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Scenario::loadList() as $scenario) {
                 $scenario->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Simulation_Model_Set en base, sinon suppression !
         if (Simulation_Model_Set::countTotal() > 0) {
@@ -105,35 +84,24 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Set::loadList() as $set) {
                 $set->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
 
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
-    protected function setUp()
+    public function testConstruct()
     {
-    }
-
-    /**
-     * Test le constructeur.
-     * @return Simulation_Model_Simulation
-     */
-    function testConstruct()
-    {
-        $set = Simulation_Test_SetTest::generateObject();
+        $set = SetTest::generateObject();
         $aFInputSetPrimary = new AF_Model_InputSet_Primary($set->getAF());
         $aFInputSetPrimary->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
 
         $o = new Simulation_Model_Scenario();
         $o->setSet($set);
         $o->setAFInputSetPrimary($aFInputSetPrimary);
         $o->save();
-        $this->assertInstanceOf('Simulation_Model_Scenario', $o);
+        $this->assertInstanceOf(Simulation_Model_Scenario::class, $o);
         $this->assertEquals($o->getKey(), array());
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
 
         return $o;
@@ -145,10 +113,10 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
      * @param Simulation_Model_Scenario $o
      * @return Simulation_Model_Scenario
      */
-    function testLoad($o)
+    public function testLoad($o)
     {
         $oLoaded = Simulation_Model_Scenario::load($o->getKey());
-        $this->assertInstanceOf('Simulation_Model_Scenario', $o);
+        $this->assertInstanceOf(Simulation_Model_Scenario::class, $o);
         $this->assertEquals($oLoaded->getKey(), $o->getKey());
         $this->assertSame($oLoaded->getLabel(), $o->getLabel());
         $this->assertSame($oLoaded->getSet(), $o->getSet());
@@ -161,19 +129,16 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param Simulation_Model_Scenario $o
      */
-    function testDelete($o)
+    public function testDelete($o)
     {
         $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
         $o->getAFInputSetPrimary()->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        Simulation_Test_SetTest::deleteObject($o->getSet());
+        self::getEntityManager()->flush();
+        SetTest::deleteObject($o->getSet());
     }
 
-    /**
-     * Méthode appelée à la fin des test
-     */
     public static function tearDownAfterClass()
     {
         // Vérification qu'il ne reste aucun Simulation_Model_Scenario en base, sinon suppression !
@@ -182,7 +147,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Scenario::loadList() as $scenario) {
                 $scenario->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
         // Vérification qu'il ne reste aucun Simulation_Model_Set en base, sinon suppression !
         if (Simulation_Model_Set::countTotal() > 0) {
@@ -190,7 +155,7 @@ class Simulation_Test_ScenarioSetUp extends PHPUnit_Framework_TestCase
             foreach (Simulation_Model_Set::loadList() as $set) {
                 $set->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
 }

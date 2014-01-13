@@ -1,41 +1,22 @@
 <?php
-/**
- * Classe Classif_Test_IndicatorTest
- * @author     valentin.claras
- * @author     cyril.perraud
- * @package    Classif
- * @subpackage Test
- */
 
+namespace Tests\Classif;
+
+use Classif_Model_Indicator;
+use Core\Test\TestCase;
 use Unit\UnitAPI;
 
-/**
- * Creation of the Test Suite
- * @package    Classif
- */
-class Classif_Test_IndicatorTest
+class IndicatorTest extends TestCase
 {
     /**
-     * Creation of the test suite
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Classif_Test_IndicatorSetUp');
-        return $suite;
-    }
-
-    /**
      * Generation de l'objet de test.
-     *
      * @param string $ref
      * @param string $label
      * @param UnitAPI $unit
      * @param UnitAPI $ratioUnit
-     *
      * @return Classif_Model_Indicator
      */
-    public static function generateObject($ref=null, $label=null, UnitAPI $unit=null, UnitAPI $ratioUnit=null)
+    public static function generateObject($ref = null, $label = null, UnitAPI $unit = null, UnitAPI $ratioUnit = null)
     {
         $o = new Classif_Model_Indicator();
         $o->setRef(($ref === null) ? 'ref' : $ref);
@@ -43,7 +24,7 @@ class Classif_Test_IndicatorTest
         $o->setUnit(($unit === null) ? new UnitAPI('m') : $unit);
         $o->setRatioUnit(($ratioUnit === null) ? new UnitAPI('m') : $ratioUnit);
         $o->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
         return $o;
     }
 
@@ -54,50 +35,32 @@ class Classif_Test_IndicatorTest
     public static function deleteObject($o)
     {
         $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        self::getEntityManager()->flush();
     }
 
-}
-
-/**
- * Test of the creation/modification/deletion of the entity
- * @package    Classif
- */
-class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
-{
-
-    /**
-     * Function called once, before all the tests
-     */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Classif_Model_Indicator en base, sinon suppression !
         if (Classif_Model_Indicator::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Indicator restants ont été trouvé avant les tests, suppression en cours !';
             foreach (Classif_Model_Indicator::loadList() as $indicator) {
                 $indicator->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
 
-    /**
-     * Test le constructeur
-     * @return Classif_Model_Indicator
-     */
-    function testConstruct()
+    public function testConstruct()
     {
         $unit = new UnitAPI('m');
         $ratioUnit = new UnitAPI('km');
         $o = new Classif_Model_Indicator();
-        $this->assertInstanceOf('Classif_Model_Indicator', $o);
         $o->setRef('RefContextTest');
         $o->setLabel('LabelIndicatorTest');
         $o->setUnit($unit);
         $o->setRatioUnit($ratioUnit);
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
+        $this->entityManager->flush();
         $this->assertNotEquals(array(), $o->getKey());
         return $o;
     }
@@ -107,10 +70,10 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
      * @param Classif_Model_Indicator $o
      * @return static
      */
-    function testLoad(Classif_Model_Indicator $o)
+    public function testLoad(Classif_Model_Indicator $o)
     {
          $oLoaded = Classif_Model_Indicator::load($o->getKey());
-         $this->assertInstanceOf('Classif_Model_Indicator', $o);
+         $this->assertInstanceOf(Classif_Model_Indicator::class, $o);
          $this->assertEquals($oLoaded->getKey(), $o->getKey());
          $this->assertEquals($oLoaded->getRef(), $o->getRef());
          $this->assertEquals($oLoaded->getLabel(), $o->getLabel());
@@ -123,11 +86,11 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param Classif_Model_Indicator $o
      */
-    function testDelete(Classif_Model_Indicator $o)
+    public function testDelete(Classif_Model_Indicator $o)
     {
         $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertEquals(array(), $o->getKey());
+        $this->entityManager->flush();
+        $this->assertEquals([], $o->getKey());
     }
 
     /**
@@ -135,14 +98,12 @@ class Classif_Test_IndicatorSetUp extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Classif_Model_Indicator en base, sinon suppression !
         if (Classif_Model_Indicator::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Indicator restants ont été trouvé après les tests, suppression en cours !';
             foreach (Classif_Model_Indicator::loadList() as $indicator) {
                 $indicator->delete();
             }
-            \Core\ContainerSingleton::getEntityManager()->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }

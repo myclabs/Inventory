@@ -1,89 +1,74 @@
 <?php
+
+namespace Tests\Core;
+
 use Core\Test\TestCase;
+use Core_Event_ObservableTrait;
+use Core_Event_ObserverInterface;
+use Core_EventDispatcher;
 
-/**
- * @author     valentin.claras
- * @package    Core
- * @subpackage Event
- */
-
-/**
- * Test des fonctionnalités de l'objet métier Core_Model_List.
- *
- * @package Core
- * @subpackage Event
- */
-class Core_Test_EventTest extends TestCase
+class EventTest extends TestCase
 {
-    // Attributs des Tests.
     protected $subject1;
     protected $subject2;
     protected $observer1;
     protected $observer2;
 
-
-    /**
-     * Méthode appelée avant l'exécution des tests.
-     */
     public function setUp()
     {
         parent::setUp();
 
         /** @var Core_EventDispatcher $eventDispatcher */
-        $eventDispatcher = $this->get('Core_EventDispatcher');
+        $eventDispatcher = $this->get(Core_EventDispatcher::class);
 
         $this->subject1 = new testSubject1();
         $this->subject2 = new testSubject2();
         $this->observer1 = new testObserver1();
         $this->observer2 = new testObserver2();
-        if (!$eventDispatcher->hasListener('testSubject1', 'testObserver1')) {
-            $eventDispatcher->addListener('testObserver1', 'testSubject1');
+        if (!$eventDispatcher->hasListener(testSubject1::class, testObserver1::class)) {
+            $eventDispatcher->addListener(testObserver1::class, testSubject1::class);
         }
-        if (!$eventDispatcher->hasListener('testSubject1', 'testObserver2')) {
-            $eventDispatcher->addListener('testObserver2', 'testSubject1');
+        if (!$eventDispatcher->hasListener(testSubject1::class, testObserver2::class)) {
+            $eventDispatcher->addListener(testObserver2::class, testSubject1::class);
         }
-        if (!$eventDispatcher->hasListener('testSubject2', 'testObserver2')) {
-            $eventDispatcher->addListener('testObserver2', 'testSubject2');
+        if (!$eventDispatcher->hasListener(testSubject2::class, testObserver2::class)) {
+            $eventDispatcher->addListener(testObserver2::class, testSubject2::class);
         }
     }
 
     /**
      * Test le lancement d'un évent.
      */
-    function testEvent()
+    public function testEvent()
     {
         testObserver1::$proof = null;
         $this->assertEquals(null, testObserver1::$proof);
         $this->subject1->start();
-        $this->assertEquals('event by testSubject1 : ', testObserver1::$proof);
+        $this->assertEquals('event by Tests\Core\testSubject1 : ', testObserver1::$proof);
     }
 
     /**
      * Test le lancement de plusieurs events.
      */
-    function testEvents()
+    public function testEvents()
     {
         testObserver2::$proof = null;
         $this->assertEquals(null, testObserver2::$proof);
         $this->subject2->launchEvent1();
-        $this->assertEquals('event 1 by testSubject2 : a - b', testObserver2::$proof);
+        $this->assertEquals('event 1 by Tests\Core\testSubject2 : a - b', testObserver2::$proof);
         $this->subject2->launchEvent2();
-        $this->assertEquals('event 2 by testSubject2 : c - d', testObserver2::$proof);
+        $this->assertEquals('event 2 by Tests\Core\testSubject2 : c - d', testObserver2::$proof);
     }
 }
 
 /**
  * Class de test Event.
- *
- * @package Core
- * @subpackage Event
  */
 class testSubject1
 {
     use Core_Event_ObservableTrait;
 
     const EVENT = 'event';
-
 
     /**
      * AfterEvent
@@ -93,11 +78,9 @@ class testSubject1
         $this->launchEvent(self::EVENT);
     }
 }
+
 /**
  * Class de test Event.
- *
- * @package Core
- * @subpackage Event
  */
 class testSubject2
 {
@@ -105,7 +88,6 @@ class testSubject2
 
     const EVENT_1 = 'event 1';
     const EVENT_2 = 'event 2';
-
 
     /**
      * BeforeEvent
@@ -122,27 +104,16 @@ class testSubject2
     {
         $this->launchEvent(self::EVENT_2, array('c', 'd'));
     }
-
 }
 
 /**
  * Class de test Observer.
- *
- * @package Core
- * @subpackage Event
  */
 class testObserver1 implements Core_Event_ObserverInterface
 {
     public static $proof;
 
-    /**
-     * Test the effect of an Event.
-     * @param string			$event
-     * @param Core_Model_Entity $subject
-     * @param array				$arguments
-     * @return array Array of messages (string)
-     */
-    public static function applyEvent($event, $subject, $arguments=array())
+    public static function applyEvent($event, $subject, $arguments = array())
     {
         self::$proof = $event . ' by ' . get_class($subject) . ' : ' . implode(' - ', $arguments);
     }
@@ -150,22 +121,12 @@ class testObserver1 implements Core_Event_ObserverInterface
 
 /**
  * Class de test Observer.
- *
- * @package Core
- * @subpackage Event
  */
 class testObserver2 implements Core_Event_ObserverInterface
 {
     public static $proof;
 
-    /**
-     * Test the effect of an Event.
-     * @param string			$event
-     * @param Core_Model_Entity $subject
-     * @param array				$arguments
-     * @return array Array of messages (string)
-     */
-    public static function applyEvent($event, $subject, $arguments=array())
+    public static function applyEvent($event, $subject, $arguments = array())
     {
         self::$proof = $event . ' by ' . get_class($subject) . ' : ' . implode(' - ', $arguments);
     }
