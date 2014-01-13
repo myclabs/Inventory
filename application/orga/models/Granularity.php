@@ -7,7 +7,6 @@
  * @subpackage Model
  */
 
-use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -606,7 +605,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
     /**
      * Défini si la Granularity est utilisé pour configurer la pertinence des cellules.
-     * 
+     *
      * @param $bool
      */
     public function setCellsControlRelevance($bool)
@@ -647,13 +646,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
             if ($configGranularity !== null) {
                 $configGranularity->addInputGranularity($this);
-
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocBibliographyForAFInputSetPrimary(new Bibliography());
-                }
             } else {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocBibliographyForAFInputSetPrimary();
                     try {
                         $cell->setAFInputSetPrimary();
                     } catch (Core_Exception_UndefinedAttribute $e) {
@@ -668,7 +662,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      * Renvoi la Granularity de configuration des saisies.
      *
      * @throws Core_Exception_UndefinedAttribute
-     * 
+     *
      * @return Orga_Model_Granularity
      */
     public function getInputConfigGranularity()

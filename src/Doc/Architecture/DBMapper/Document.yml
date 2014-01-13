@@ -31,8 +31,3 @@ Doc\Domain\Document:
         name: idLibrary
         referencedColumnName: id
         nullable: false
-
-  manyToMany:
-    referencingBibliographies:
-      targetEntity: Doc\Domain\Bibliography
-      mappedBy: referencedDocuments

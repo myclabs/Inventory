@@ -1295,7 +1295,6 @@ class Orga_CellController extends Core_Controller
             }
         }
         $this->view->assign('documentLibrary', $documentLibrary);
-        $this->view->assign('documentBibliography', $cell->getDocBibliographyForAFInputSetPrimary());
 
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();

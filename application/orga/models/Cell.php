@@ -1,6 +1,5 @@
 <?php
 
-use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -136,13 +135,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     protected $socialCommentsForAFInputSetPrimary = null;
 
     /**
-     * Bibliographie utiliséepar l'InputSets de la cellule.
-     *
-     * @var Bibliography
-     */
-    protected $docBibliographyForAFInputSetPrimary = null;
-
-    /**
      * Organization de DW généré par et propre à la Cell.
      *
      * @var DW_model_cube
@@ -213,10 +205,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         // Création du CellsGroup.
         foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
             new Orga_Model_CellsGroup($this, $inputGranularity);
-        }
-        // Création de la Bibliography des Input.
-        if ($this->granularity->isInput()) {
-            $this->docBibliographyForAFInputSetPrimary = new Bibliography();
         }
         // Création de la Library des Input.
         if ($this->granularity->getCellsWithInputDocuments()) {
@@ -553,64 +541,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             } catch (Core_Exception_NotFound $e) {
                 // Il n'y a pas de cellules parentes.
                 $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
-            }
-        }
-
-        // Vérification des bibliothèques.
-        if ($this->getGranularity()->isInput()) {
-            try {
-                $parentDocLibraryForAFInputSetsPrimary = $this->getParentDocLibraryForAFInputSetsPrimary();
-                $docBibliographyForAFInputSetPrimary = $this->getDocBibliographyForAFInputSetPrimary();
-                foreach ($docBibliographyForAFInputSetPrimary->getReferencedDocuments() as $document) {
-                    if (!$parentDocLibraryForAFInputSetsPrimary->hasDocument($document)) {
-                        $docBibliographyForAFInputSetPrimary->unreferenceDocument($document);
-                    }
-                }
-            } catch (Core_Exception_NotFound $e) {
-                $docBibliographyForAFInputSetPrimary = $this->getDocBibliographyForAFInputSetPrimary();
-                foreach ($docBibliographyForAFInputSetPrimary->getReferencedDocuments() as $document) {
-                    $docBibliographyForAFInputSetPrimary->unreferenceDocument($document);
-                }
-            }
-        }
-        if ($this->getGranularity()->getCellsWithSocialGenericActions()) {
-            try {
-                $parentDocLibraryForSocialGenericAction = $this->getParentDocLibraryForSocialGenericAction();
-                foreach ($this->getSocialGenericActions() as $socialGenericAction) {
-                    $docBibliographyForSocialGenericAction = $socialGenericAction->getDocumentBibliography();
-                    foreach ($docBibliographyForSocialGenericAction->getReferencedDocuments() as $document) {
-                        if (!$parentDocLibraryForSocialGenericAction->hasDocument($document)) {
-                            $docBibliographyForSocialGenericAction->unreferenceDocument($document);
-                        }
-                    }
-                }
-            } catch (Core_Exception_NotFound $e) {
-                foreach ($this->getSocialGenericActions() as $socialGenericAction) {
-                    $docBibliographyForSocialGenericAction = $socialGenericAction->getDocumentBibliography();
-                    foreach ($docBibliographyForSocialGenericAction->getReferencedDocuments() as $document) {
-                        $docBibliographyForSocialGenericAction->unreferenceDocument($document);
-                    }
-                }
-            }
-        }
-        if ($this->getGranularity()->isInput()) {
-            try {
-                $parentDocLibraryForSocialContextAction = $this->getParentDocLibraryForSocialContextAction();
-                foreach ($this->getSocialContextActions() as $sociaContextAction) {
-                    $docBibliographyForSocialContextAction = $sociaContextAction->getDocumentBibliography();
-                    foreach ($docBibliographyForSocialContextAction->getReferencedDocuments() as $document) {
-                        if (!$parentDocLibraryForSocialContextAction->hasDocument($document)) {
-                            $docBibliographyForSocialContextAction->unreferenceDocument($document);
-                        }
-                    }
-                }
-            } catch (Core_Exception_NotFound $e) {
-                foreach ($this->getSocialContextActions() as $sociaContextAction) {
-                    $docBibliographyForSocialContextAction = $sociaContextAction->getDocumentBibliography();
-                    foreach ($docBibliographyForSocialContextAction->getReferencedDocuments() as $document) {
-                        $docBibliographyForSocialContextAction->unreferenceDocument($document);
-                    }
-                }
             }
         }
 
@@ -1157,38 +1087,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             }
         }
         throw new Core_Exception_NotFound('No broader Granularity provides a Library for the AFInputSetsPrimary.');
-    }
-
-    /**
-     * Spécifie la DocBibliography pour l'AFInputSetPrimary de la cellule.
-     *
-     * @param Bibliography $docBibliography
-     *
-     * @throws Core_Exception_Duplicate
-     */
-    public function setDocBibliographyForAFInputSetPrimary(Bibliography $docBibliography=null)
-    {
-        if ($this->docBibliographyForAFInputSetPrimary !== $docBibliography) {
-            if ($this->docBibliographyForAFInputSetPrimary !== null) {
-                $this->docBibliographyForAFInputSetPrimary->delete();
-            }
-            $this->docBibliographyForAFInputSetPrimary = $docBibliography;
-        }
-    }
-
-    /**
-     * Renvoi la DocBibliography pour l'AFInputSetPrimary de la cellule.
-     *
-     * @throws Core_Exception_UndefinedAttribute
-     *
-     * @return Bibliography
-     */
-    public function getDocBibliographyForAFInputSetPrimary()
-    {
-        if ($this->docBibliographyForAFInputSetPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute('Doc Bibliography for InputSetPrimary has not be defined.');
-        }
-        return $this->docBibliographyForAFInputSetPrimary;
     }
 
     /**

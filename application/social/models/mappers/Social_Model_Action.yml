@@ -25,15 +25,6 @@ Social_Model_Action:
       type: string
       nullable: true
 
-  oneToOne:
-    documentBibliography:
-      targetEntity: Doc\Domain\Bibliography
-      joinColumn:
-        name: idBibliography
-        referencedColumnName: id
-      cascade: [ all ]
-      orphanRemoval: true
-
   manyToMany:
     comments:
       targetEntity: Social_Model_Comment

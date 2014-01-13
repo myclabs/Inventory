@@ -115,6 +115,5 @@ class Orga_Tab_InputController extends Core_Controller
                 }
             }
         }
-        $this->view->documentBibliography = $cell->getDocBibliographyForAFInputSetPrimary();
     }
 }
