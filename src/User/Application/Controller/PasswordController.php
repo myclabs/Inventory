@@ -147,7 +147,7 @@ class User_PasswordController extends UI_Controller_Captcha
 
             // Log in automatiquement l'utilisateur
             $auth = Zend_Auth::getInstance();
-            $authAdapter = new AuthAdapter($user->getEmail(), $password1);
+            $authAdapter = new AuthAdapter($this->userService, $user->getEmail(), $password1);
             $auth->authenticate($authAdapter);
 
             UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
