@@ -84,6 +84,16 @@ class Orga_Service_OrganizationService
             $defaultGranularity->setCellsWithACL(true);
 
             $organization->save();
+            $this->entityManager->flush();
+
+            // Ajout des superadmins en tant qu'administrateur de l'organisation
+            foreach (AdminRole::loadList() as $adminRole) {
+                /** @var AdminRole $adminRole */
+                $email = $adminRole->getUser()->getEmail();
+                $this->aclManager->addOrganizationAdministrator($organization, $email, false);
+                $this->entityManager->flush();
+            }
+
             $this->entityManager->commit();
             return $organization;
         } catch (Exception $e) {
@@ -124,14 +134,6 @@ class Orga_Service_OrganizationService
             // Ajout de l'utilisateur courant en tant qu'administrateur.
             $this->aclManager->addOrganizationAdministrator($organization, $administrator->getEmail(), false);
             $this->entityManager->flush();
-
-            // Ajout des superadmins en tant qu'administrateur de l'organisation
-            foreach (AdminRole::loadList() as $adminRole) {
-                /** @var AdminRole $adminRole */
-                $email = $adminRole->getUser()->getEmail();
-                $this->aclManager->addOrganizationAdministrator($organization, $email, false);
-                $this->entityManager->flush();
-            }
 
             $this->entityManager->commit();
             return $organization;
