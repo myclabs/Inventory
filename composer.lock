@@ -563,12 +563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "96ba7417d90b589e4a2044cbf7a05eb683f85e3c"
+                "reference": "3c700e1323033f8366059654288c20af7e1cd735"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/96ba7417d90b589e4a2044cbf7a05eb683f85e3c",
-                "reference": "96ba7417d90b589e4a2044cbf7a05eb683f85e3c",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/3c700e1323033f8366059654288c20af7e1cd735",
+                "reference": "3c700e1323033f8366059654288c20af7e1cd735",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +596,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2014-01-09 04:07:15"
+            "time": "2014-01-12 04:11:03"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -750,12 +750,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.2.1"
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
-                "reference": "0.2.1",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
                 "shasum": ""
             },
             "type": "library",
@@ -785,12 +785,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "3a5856ff1ed19ec8378c6b89d52e38df874ebd2d"
+                "reference": "29408ca1f87ae49ec041f958cf3d1a2a65208022"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/3a5856ff1ed19ec8378c6b89d52e38df874ebd2d",
-                "reference": "3a5856ff1ed19ec8378c6b89d52e38df874ebd2d",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/29408ca1f87ae49ec041f958cf3d1a2a65208022",
+                "reference": "29408ca1f87ae49ec041f958cf3d1a2a65208022",
                 "shasum": ""
             },
             "require": {
@@ -824,7 +824,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2014-01-08 21:11:36"
+            "time": "2014-01-11 23:45:49"
         },
         {
             "name": "mnapoli/php-di-zf1",
