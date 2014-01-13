@@ -5,5 +5,5 @@ return [
 
     'db.user' => 'root',
 
-    'feature.register' => false,
+    'feature.register' => true,
 ];
