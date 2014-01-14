@@ -899,7 +899,7 @@ $('body').on('show', '.reports', function(e) {
         '<i class="fa fa-spinner fa-spin fa-3x"></i> <?=__('UI', 'loading', 'loading')?>'
     );
     $.ajax({
-        url: 'orga/cell/view-reports/idCell/' + popup.attr('data-cell') + '/',
+        url: 'orga/cell/view-reports/idCell/' + popup.attr('data-cell') + '/fromIdCell/<?=$currentCell->id?>/',
         type: "GET",
         success: function(data) {
             $('.modal-body', popup).html(data);
