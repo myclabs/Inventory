@@ -671,6 +671,7 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         $this->view->assign('idCell', $idCell);
         $cellReports = [];
@@ -686,7 +687,7 @@ class Orga_CellController extends Core_Controller
                     if (DW_Export_Specific_Pdf::isValid($specificReportsDirectoryPath.$entry)) {
                         $cellReports[] = [
                             'label' => $fileName,
-                            'link' => 'orga/cell/view-report-specific/idCell/'.$idCell.'/report/'.$fileName,
+                            'link' => 'orga/cell/view-report-specific/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/report/'.$fileName,
                             'type' => 'specificReport',
                         ];
                     }
@@ -702,7 +703,7 @@ class Orga_CellController extends Core_Controller
             }
             $cellReports[] = [
                 'label' => $dWReport->getLabel(),
-                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/idReport/'.$dWReport->getId(),
+                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$dWReport->getId(),
                 'type' => 'copiedReport',
             ];
         }
@@ -717,7 +718,7 @@ class Orga_CellController extends Core_Controller
             /** @var DW_Model_Report $dWReport */
             $cellReports[] = [
                 'label' => $dWReport->getLabel(),
-                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/idReport/'.$dWReport->getId(),
+                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$dWReport->getId(),
                 'type' => 'userReport',
                 'delete' => $dWReport->getId()
             ];
@@ -748,6 +749,7 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         if ($this->hasParam('idReport')) {
             $reportCanBeUpdated = $this->aclService->isAllowed(
@@ -761,8 +763,8 @@ class Orga_CellController extends Core_Controller
 
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
-        $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$cell->getId().'/');
-        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$cell->getId());
+        $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$fromIdCell.'/');
+        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$fromIdCell.'/');
         $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
         $viewConfiguration->setCanBeSavedAs(true);
 
@@ -790,10 +792,11 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         if (!($this->hasParam('display') && ($this->getParam('display') == true))) {
             $exportUrl = 'orga/cell/specificexport/'.
-                'idCell/'.$idCell.'/export/'.$this->getParam('export').'/display/true';
+                'idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/export/'.$this->getParam('export').'/display/true';
         } else {
             $exportUrl = null;
         }
@@ -1072,6 +1075,7 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
@@ -1088,7 +1092,7 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $idCell]);
         $aFViewConfiguration->setResultsPreviewUrl('orga/cell/input-preview');
-        $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $this->getParam('fromIdCell') . '/');
+        $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
         $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_INPUT);
