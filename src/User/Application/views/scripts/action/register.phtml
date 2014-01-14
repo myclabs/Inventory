@@ -4,7 +4,8 @@
 
     <form action="user/action/register" method="post">
         <input type="text" name="email" class="input-block-level"
-               placeholder="<?=__('UI', 'name', 'emailAddress')?>">
+               placeholder="<?=__('User', 'user', 'emailAddress')?>"
+               value="<?=$this->email?>">
         <input type="password" name="password" class="input-block-level"
                placeholder="<?=__('User', 'login', 'password')?>">
         <input type="password" name="password2" class="input-block-level"

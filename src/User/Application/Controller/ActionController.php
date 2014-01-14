@@ -101,6 +101,7 @@ class User_ActionController extends UI_Controller_Captcha
 
         if ($this->getRequest()->isPost()) {
             $email = $this->getParam('email');
+            $this->view->email = $email;
             $password = $this->getParam('password');
             $password2 = $this->getParam('password2');
 

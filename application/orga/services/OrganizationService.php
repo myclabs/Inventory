@@ -497,6 +497,7 @@ class Orga_Service_OrganizationService
         $granularityCategory = new Orga_Model_Granularity($organization, [$categoryAxis]);
         $granularityCategory->save();
         $granularityYear = new Orga_Model_Granularity($organization, [$timeAxis]);
+        $granularityYear->setCellsGenerateDWCubes(true);
         $granularityYear->save();
         $granularityYearCategory = new Orga_Model_Granularity($organization, [$timeAxis, $categoryAxis]);
         $granularityYearCategory->save();
@@ -511,9 +512,45 @@ class Orga_Service_OrganizationService
             ->getCellsGroupForInputGranularity($granularityYearCategory)
             ->setAF(AF_Model_AF::loadByRef('deplacement'));
 
+        //$this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire 2012, marques A et B, par site', 'chiffre_affaire', 'o_site', ['o_annee' => ['2012'], 'o_marque' => ['marque_a', 'marque_b']], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
+        //$this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', 'chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
+
         // Lance l'inventaire 2014
         $granularityYear->getCellByMembers([$year2013])
             ->setInventoryStatus(Orga_Model_Cell::STATUS_ACTIVE);
+
+        $organization->save();
+        // Flush pour persistence des cellules avant l'ajout du role et ajout des rapports préconfigurés.
+        $this->entityManager->flush();
+
+        // Analyses préconfigurées
+        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report->setLabel('GES émis par catégorie');
+        $report->setChartType(DW_Model_Report::CHART_PIE);
+        $report->setWithUncertainty(false);
+        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
+        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
+        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->save();
+
+        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report->setLabel('GES émis par catégorie et poste article 75');
+        $report->setChartType(DW_Model_Report::CHART_VERTICAL_STACKED);
+        $report->setWithUncertainty(false);
+        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
+        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
+        $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube('c_poste_article_75', $granularityYear->getDWCube()));
+        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->save();
+
+        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report->setLabel('Energie finale consommée par catégorie');
+        $report->setChartType(DW_Model_Report::CHART_PIE);
+        $report->setWithUncertainty(false);
+        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('energie_finale', $granularityYear->getDWCube()));
+        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
+        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->save();
     }
 
     /**
@@ -527,10 +564,6 @@ class Orga_Service_OrganizationService
 
         $organization = $this->createOrganization();
         $this->initOrganizationDemo($organization);
-        $organization->save();
-
-        // Flush pour persistence des cellules avant l'ajout du role.
-        $this->entityManager->flush();
 
         // Ajoute en tant qu'admin de la cellule globale
         $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
