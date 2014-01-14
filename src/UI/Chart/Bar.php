@@ -80,9 +80,14 @@ class UI_Chart_Bar extends UI_Chart_Generic
         if (!$this->displaySeriesLabels) {
             $this->addAttribute('legend', 'none');
         }
+        if ($this->vertical) {
+            $this->addAttribute('vAxis', '{minValue: 0}');
+        } else {
+            $this->addAttribute('hAxis', '{minValue: 0}');
+        }
         if ($this->slantedText) {
             if ($this->vertical) {
-                $this->addAttribute('hAxis', '{slantedText: true, slantedTextAngle: '.$this->slantedTextAngle.'}');
+                $this->addAttribute('hAxis', '{minValue: 0, slantedText: true, slantedTextAngle: '.$this->slantedTextAngle.'}');
             }
         }
 
