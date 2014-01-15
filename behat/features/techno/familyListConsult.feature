@@ -11,8 +11,8 @@ Feature: Family list consult feature
     And I wait for the page to finish loading
     Then I should see the "familyDatagrid" datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:
-      | category                        | label                                               | ref                                | unit          |
-      | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | kg équ. CO2/t |
+      | category                        | label                                               | ref                                | unit           |
+      | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | kg équ. CO2/kg |
     And the row 2 of the "familyDatagrid" datagrid should contain:
       | category                        | label                          | ref                         | unit |
       | Catégorie contenant une famille | Masse volumique de combustible | masse_volumique_combustible | t/m³ |

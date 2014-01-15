@@ -11,7 +11,7 @@ Feature: Family list edit feature
   # Affichage du datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:
       | category                        | label                                               | ref                                | unit           |
-      | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | kg équ. CO2/t |
+      | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | kg équ. CO2/kg |
   # Ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une famille"
@@ -63,11 +63,3 @@ Feature: Family list edit feature
   # Clic sur "Cliquer pour accéder"
     When I click "Cliquer pour accéder" in the row 1 of the "familyDatagrid" datagrid
     Then I should see a "h1:contains('Combustion de combustible, mesuré en unité de masse')" element
-  # Vérification qu'on est bien sur l'interface d'édition
-    When I open tab "Général"
-
-
-
-
-
-
