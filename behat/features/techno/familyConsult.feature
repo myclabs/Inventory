@@ -12,7 +12,7 @@ Feature: Family consult feature
   # Affichage de la catégorie (hiérarchie des catégories en l'occurrence)
     And I should see "Catégorie contenant une famille / Sous-catégorie contenant une famille"
   # Affichage de l'unité
-    And I should see "kg équ. CO2/t"
+    And I should see "kg équ. CO2/kg"
   # Documentation
     And I should see a "h1:contains('Documentation de la famille test')" element
   # En-têtes de dimensions commencent par une majuscule

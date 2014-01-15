@@ -86,7 +86,7 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
         'url'         => 'techno/element/details/idFamily/' . $family->getId()
             . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
         'elementId'   => implode('-', $membersCoordinates),
-        'value'       => '?',
+        'value'       => '-',
         'unit'        => $family->getValueUnit()->getSymbol(),
     ];
 };
