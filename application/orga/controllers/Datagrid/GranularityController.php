@@ -134,7 +134,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             // Pas de granularité des inventares.
         }
 
-        if ($granularity->getCellsWithACL()) {
+        if ($granularity->getCellsWithACL() || $granularity->isInput() || $granularity->hasInputGranularities()) {
             throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
         }
 
