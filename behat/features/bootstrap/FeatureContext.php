@@ -170,7 +170,7 @@ class FeatureContext extends MinkContext
     {
         $value = $this->fixStepArgument($value);
 
-        $selector = ".control-group:contains(\"$label\") .input label:contains(\"$value\")>input";
+        $selector = ".control-group:contains(\"$label\") label:contains(\"$value\")>input";
 
         /** @var NodeElement[] $nodes */
         $nodes = $this->getSession()->getPage()->findAll('css', $selector);
