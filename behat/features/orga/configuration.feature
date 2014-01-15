@@ -67,10 +67,9 @@ Feature: General info of an organization feature
     And I additionally select "Année" from "inputConfigAxes"
     And I click "Ajouter"
     Then the following message is shown and closed: "Ajout effectué."
-    Then I should see "Année <small>Année</small>"
     And I open tab "Niveaux"
   # Vérification (au passage ordre / à l'ordre conventionnel sur les granularités)
-    And the row 4 of the "orga_granularities" datagrid should contain:
+    And the row 4 of the "granularity1" datagrid should contain:
       | axes  | afs  |
       | Année | Vrai |
   # Ajout, saisie correcte (granularité de saisie plus fine que ou égale à la granularité des collectes)
@@ -92,13 +91,13 @@ Feature: General info of an organization feature
     Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
     And I open tab "Niveaux"
-    Then I should see the "orga_granularities" datagrid
-    And the row 1 of the "orga_granularities" datagrid should contain:
+    Then I should see the "granularity1" datagrid
+    And the row 4 of the "granularity1" datagrid should contain:
       | axes  | afs  |
       | Année | Vrai |
   # Suppression d'une granularité de saisie avec des saisies
-    And I set "Non" for column "afs" of row 1 of the "orga_granularities" datagrid with a confirmation message
-    And the row 1 of the "orga_granularities" datagrid should contain:
+    And I set "Non" for column "afs" of row 4 of the "granularity" datagrid with a confirmation message
+    And the row 4 of the "granularity1" datagrid should contain:
       | axes  | afs  |
       | Année | Faux |
 
