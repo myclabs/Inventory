@@ -5,7 +5,7 @@
  * @package Orga
  * Contenu de l'onglet des grannularity
  */
-$datagridGranularities = new UI_Datagrid('granularity', 'datagrid_granularity', 'orga');
+$datagridGranularities = new UI_Datagrid('granularity'.$this->idOrganization, 'datagrid_granularity', 'orga');
 
 $columnAxes = new UI_Datagrid_Col_List('axes', __('UI', 'name', 'axes'));
 $columnAxes->list = $this->listAxes;
