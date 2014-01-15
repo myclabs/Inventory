@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
-use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\AdminRole;
 use User\Domain\User;
@@ -512,10 +512,7 @@ class Orga_Service_OrganizationService
             ->getCellsGroupForInputGranularity($granularityYearCategory)
             ->setAF(AF_Model_AF::loadByRef('deplacement'));
 
-        //$this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire 2012, marques A et B, par site', 'chiffre_affaire', 'o_site', ['o_annee' => ['2012'], 'o_marque' => ['marque_a', 'marque_b']], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
-        //$this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', 'chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
-
-        // Lance l'inventaire 2014
+        // Lance l'inventaire 2013
         $granularityYear->getCellByMembers([$year2013])
             ->setInventoryStatus(Orga_Model_Cell::STATUS_ACTIVE);
 
@@ -565,9 +562,9 @@ class Orga_Service_OrganizationService
         $organization = $this->createOrganization();
         $this->initOrganizationDemo($organization);
 
-        // Ajoute en tant qu'admin de la cellule globale
+        // Ajoute en tant que manager de la cellule globale
         $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
-        $this->aclService->addRole($user, new CellAdminRole($user, $globalCell));
+        $this->aclService->addRole($user, new CellManagerRole($user, $globalCell));
 
         $this->entityManager->flush();
 
