@@ -6,23 +6,20 @@ Feature: Family one dimension edit feature
 
   @javascript
   Scenario: Add member to a family dimension, correct input
-    Given I am on "techno/dimension/details/id/5"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
   # Affichage famille et en-tête
-    Then I should see "Famille : Famille test non vide"
-    And I should see "combustible"
+    Then I should see "Famille test non vide"
+    And I should see "Combustible : combustible"
     And I should see the "combustibleMembersDatagrid" datagrid
     And the "combustibleMembersDatagrid" datagrid should contain 2 row
     When I click element "#combustibleAddMemberButton"
     Then I should see the popup "Ajout d'une liste de membres"
-    When I select "amont_combustion" from "membersDatagrid_refKeyword_addForm"
-    And I fill in "Ajout d'une liste de membres" with
-      """
-      amont_combustion, Amont de la combustion
-      """
+    And I fill in "inputMemberList" with "amont_combustion, Amont de la combustion"
     Then I should see "1 membre(s) prêts à être ajoutés"
-    When I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
+    When I click element "#addMemberPopup button:contains('Ajouter')"
+    Then the following message is shown and closed: "1 membre(s) ont été ajouté(s)."
+    And I wait 1 seconds
     And the "combustibleMembersDatagrid" datagrid should contain 3 row
   # Le nouvel élément a été ajouté à la fin
     And the row 3 of the "combustibleMembersDatagrid" datagrid should contain:
