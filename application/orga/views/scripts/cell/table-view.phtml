@@ -294,9 +294,9 @@ $currentCell = $this->currentCell;
              class="collapse<?=((count($this->narrowerGranularities) === 1)?' in':'')?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
-                <?php foreach ($narrowerGranularityArray['filterAxes'] as $memberOptions) : ?>
+                <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>
                 <?php if (count($memberOptions) > 2) : ?>
-                <select data-filter="tag">
+                    <select name="granularity<?=$narrowerGranularity->getId()?>_axis<?=$refAxis?>" data-filter="tag">
                     <?php foreach ($memberOptions as $memberTag => $memberLabel) : ?>
                     <option value="<?=$memberTag?>"><?=$memberLabel?></option>
                     <?php endforeach; ?>
@@ -304,14 +304,14 @@ $currentCell = $this->currentCell;
                 <?php endif; ?>
                 <?php endforeach; ?>
                 <?php if ($narrowerGranularityArray['isInput']) : ?>
-                <select data-filter="input-status">
+                <select name="granularity<?=$narrowerGranularity->getId()?>_inputStatus" data-filter="input-status">
                     <?php foreach ($inputStatusFilters as $statusValue => $statusLabel) : ?>
                     <option value="<?=$statusValue?>"><?=$statusLabel?></option>
                     <?php endforeach; ?>
                 </select>
                 <?php endif; ?>
                 <?php if ($narrowerGranularityArray['isInventory']) : ?>
-                <select data-filter="inventory-status">
+                <select name="granularity<?=$narrowerGranularity->getId()?>_inventoryStatus" data-filter="inventory-status">
                     <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
                         <? if (($statusValue === Orga_Model_Cell::STATUS_ACTIVE) && (!$narrowerGranularityArray['isGranularityForInventoryStatus'])) : ?>
                     <option value="<?=$statusValue?>" selected><?=$statusLabel?></option>
