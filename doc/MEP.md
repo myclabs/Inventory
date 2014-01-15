@@ -35,6 +35,12 @@ Le script va effectuer un build update
 php scripts/job/exports/rebuild.php
 ```
 
+- En cas de dépassement de mémoire, ré-exécuter le script avec l'option --no-clear (ou -c)
+
+```
+php scripts/job/exports/rebuild.php -c
+```
+
 - Redémarrer le worker
 
 ```
